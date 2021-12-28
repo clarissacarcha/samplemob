@@ -131,3 +131,4 @@ export const POST_GENERATE_ACCOUNT_QR_CODE = gql`
         }
     }
 `
+

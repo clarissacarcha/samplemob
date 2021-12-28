@@ -6,7 +6,6 @@ import { useAlert } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { connect } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
-import { SomethingWentWrong } from 'src/components'
 
 
 const mapDispatchtoProps = (dispatch) => ({
@@ -59,7 +58,7 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
     })
 
     if(error){
-        return <SomethingWentWrong/>
+        return null
     }
 
     if(loading){
@@ -68,8 +67,8 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
 
     // if Account is Dormant
     if(data.getMyAccount.isDormant){
-      //  navigation.replace("ToktokWalletRestricted" , {component: "dormantAccount"})
         navigation.replace("ToktokWalletRestricted" , {component: "blockedAccount", data: { account: data.getMyAccount}})
+        // navigation.replace("ToktokWalletRestricted" , {component: "dormantAccount"})
         return null
     }
 

@@ -201,7 +201,6 @@ const styles = StyleSheet.create({
   },
   listItemText: {
     fontSize: FONT_SIZE.M,
-    marginTop: 5,
     textAlign: 'center',
     flexWrap: 'wrap',
     fontFamily: FONT.BOLD

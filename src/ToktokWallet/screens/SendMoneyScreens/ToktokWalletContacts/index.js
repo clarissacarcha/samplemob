@@ -164,7 +164,7 @@ export const ToktokWalletContacts = ({navigation,route})=> {
 
     const setRecipient = (recipient) => {
       route.params.setRecipientInfo(recipient)
-      return navigation.pop()
+      return navigation.navigate("ToktokWalletSendMoney")
     }
 
 

@@ -1,4 +1,3 @@
-export * from "./ToktokWalletPepVideoCallSchedule";
 export * from "./ToktokWalletSelfieImageCamera";
 export * from "./ToktokWalletValidIDCamera";
 export * from "./ToktokWalletSelfieImageWithIDCamera";

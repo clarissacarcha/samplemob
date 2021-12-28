@@ -17,52 +17,52 @@ import {arrow_right, email_ic, call_ic} from 'toktokfood/assets/images';
 import YellowButton from 'toktokfood/components/YellowButton';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import { POST_CONTACT_US } from 'toktokfood/graphql/toktokfood';
-import { onErrorAlert } from 'src/util/ErrorUtility';
-import { useAlert } from 'src/hooks';
+import {POST_CONTACT_US} from 'toktokfood/graphql/toktokfood';
+import {onErrorAlert} from 'src/util/ErrorUtility';
+import {useAlert} from 'src/hooks';
 
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
-export const ContactForm = ({  }) => {
-
+export const ContactForm = ({}) => {
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const {user} = useSelector((state) => state.session);
   const [message, setMessage] = useState('');
-  const [response, setResponse] = useState({ type: '', show: false, message: '' });
+  const [response, setResponse] = useState({type: '', show: false, message: ''});
   const alert = useAlert();
 
   const [postContactUs, {loading, error}] = useLazyQuery(POST_CONTACT_US, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: (error) => {
-      onErrorAlert({alert, error})
+      onErrorAlert({alert, error});
     },
     onCompleted: ({postContactUs}) => {
-      let { success, message } = postContactUs
-      if(success){
-        setResponse({ message, show: true, type: 'success' })
+      let {success, message} = postContactUs;
+      if (success) {
+        setResponse({message, show: true, type: 'success'});
       } else {
-        setResponse({ message, show: true, type: 'error' })
+        setResponse({message, show: true, type: 'error'});
       }
     },
   });
 
   const onPressSubmit = () => {
-    if(message != ''){
-      let { firstName, lastName, email } = customerInfo
+    if (message != '') {
+      let {firstName, lastName, email} = customerInfo;
       postContactUs({
         variables: {
           input: {
-            sendToEmail: "mmoran@cloudpanda.ph",
+            sendToEmail: 'mmoran@cloudpanda.ph',
             name: `${firstName} ${lastName}`,
             email: email,
             message: message,
-          }
-        }
-      })
+            // email_type: 'customer',
+          },
+        },
+      });
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -74,13 +74,13 @@ export const ContactForm = ({  }) => {
         type={response.type}
         onCloseModal={() => {
           setMessage('');
-          setResponse({ message: '', type: '', show: false });
+          setResponse({message: '', type: '', show: false});
         }}
       />
       <View style={styles.input}>
         <TextInput
           value={message}
-          style={{ textAlignVertical: 'top', marginTop: verticalScale(-10), height: verticalScale(230)}}
+          style={{textAlignVertical: 'top', marginTop: verticalScale(-10), height: verticalScale(230)}}
           placeholder={'Message'}
           placeholderTextColor={'#9E9E9E'}
           multiline={true}
@@ -89,12 +89,7 @@ export const ContactForm = ({  }) => {
         />
       </View>
       <View style={styles.btnContainer}>
-        <YellowButton
-          disabled={message == ''}
-          onPress={onPressSubmit}
-          label='Submit'
-          btnStyle={styles.btnStyle}
-        />
+        <YellowButton disabled={message == ''} onPress={onPressSubmit} label="Submit" btnStyle={styles.btnStyle} />
       </View>
     </View>
   );
@@ -113,10 +108,10 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     alignItems: 'center',
-    paddingVertical: verticalScale(30)
+    paddingVertical: verticalScale(30),
   },
   btnStyle: {
     width: '50%',
-    borderRadius: 5
-  }
+    borderRadius: 5,
+  },
 });

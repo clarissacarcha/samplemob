@@ -47,12 +47,14 @@ export const GET_CASH_OUTS = gql`
                     id
                     name
                 }
-                details
-                refNo
-                transaction {
-                    id
-                    refNo
-                    createdAt
+                cashOutDisplayInformations {
+                    accountInfo {
+                            accountNumber
+                            accountName
+                            bank {
+                                name 
+                            }
+                    }
                 }
                 transaction {
                     id

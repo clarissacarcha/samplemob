@@ -122,7 +122,6 @@ export const GET_TRANSACTIONS = gql`
     }
 `
 
-
 export const POST_VERIFY_TRANSACTION_QR_CODE = gql`
     mutation postVerifyTransactionQrCode($input: PostVerifyTransactionQrCodeInput){
         postVerifyTransactionQrCode(input: $input){

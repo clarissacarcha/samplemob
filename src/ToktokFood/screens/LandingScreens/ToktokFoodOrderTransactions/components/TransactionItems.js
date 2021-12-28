@@ -12,7 +12,7 @@ import { getOrderStatus, getSubMessageStatus, sameDay, dayTitle } from '../funct
 const orderStatusDate = (item, focusTab) => {
   let { dateOrdered, dateShipped, dateCancelledDeclined } = item;
   let orderStatus = getOrderStatus(focusTab)
-
+ 
   switch(orderStatus){
     case 's':
       return dateShipped;

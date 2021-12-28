@@ -13,7 +13,7 @@ import { AlertOverlay } from 'src/components'
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
 
-export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwaAccount , recipientDetails , proceed })=> {
+export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwaAccount , recipientDetails })=> {
 
     const prompt = usePrompt()
     const alert = useAlert()
@@ -121,7 +121,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
                 }}
                 walletinfoParams={walletinfoParams}
             />
-                 {   swipeEnabled && proceed
+                 {   swipeEnabled 
                      ? <YellowButton label="Proceed" onPress={reviewAndConfirm}/>
                      : <DisabledButton label="Proceed" />
                  }

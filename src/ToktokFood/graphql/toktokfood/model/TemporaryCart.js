@@ -6,6 +6,7 @@ const tempCart = `
     id
     shopid
     branchid
+    companyId
     productid
     quantity
     basePrice
@@ -15,6 +16,8 @@ const tempCart = `
     notes
     shopLatitude
     shopLongitude
+    shopCity
+    shopRegion
     parentProductId
     parentProductName
     shopName
@@ -27,7 +30,8 @@ const tempCart = `
       optionDetailsName
     }
   }
-`
+`;
+
 export const GET_TEMPORARY_CART = gql`
   query getTemporaryCart($input: GetTemporaryCartInput) {
     getTemporaryCart(input: $input) {
@@ -71,7 +75,7 @@ export const DELETE_SHOP_TEMPORARY_CART = gql`
     deleteShopTemporaryCart(input: $input) {
       status
       message
-    } 
+    }
   }
 `;
 export const CHECK_HAS_TEMPORARY_CART = gql`
@@ -82,3 +86,48 @@ export const CHECK_HAS_TEMPORARY_CART = gql`
   }
 `;
 
+export const GET_AUTO_SHIPPING = gql`
+  query getAutoShipping($input: ShippingInput) {
+    getAutoShipping(input: $input) {
+      success
+      message
+      type
+      voucher {
+        id
+        shopid
+        amount
+        minimum
+        minimum_price
+        sf_discount
+        valid
+        valid_until
+        vcode
+        vname
+        is_percentage
+      }
+    }
+  }
+`;
+
+export const GET_VOUCHER_CODE = gql`
+  query getVoucherCode($input: VoucherInput) {
+    getVoucherCode(input: $input) {
+      success
+      message
+      type
+      voucher {
+        id
+        shopid
+        amount
+        minimum
+        minimum_price
+        sf_discount
+        valid
+        valid_until
+        vcode
+        vname
+        is_percentage
+      }
+    }
+  }
+`;

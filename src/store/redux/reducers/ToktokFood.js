@@ -16,6 +16,7 @@ const INITIAL_STATE = {
   totalAmount: {},
   orderStatus: {status: 1},
   customerInfo: {},
+  customerWallet: {},
   location: {},
   receiver: {},
 };
@@ -36,6 +37,8 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, accountInfo: action.payload};
     case 'SET_TOKTOKFOOD_CUSTOMER_INFO':
       return {...state, customerInfo: action.payload};
+    case 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT':
+      return {...state, customerWallet: action.payload};
     case 'SET_TOKTOKFOOD_SHOP_COORDINATES':
       return {...state, shopLocation: action.payload};
     case 'SET_TOKTOKFOOD_ORDER_RECEIVER':

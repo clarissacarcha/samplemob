@@ -130,6 +130,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
         />
         <SuccessfulModal 
           amount={amount} 
+          setUpTpinCallBack={setUpTpinCallBack}
           onCashIn={onCashIn} 
           setUpTpinCallBack={setUpTpinCallBack}
           modalVisible={successModalVisible} 

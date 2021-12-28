@@ -13,7 +13,7 @@ import WebView from 'react-native-webview'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , MARGIN , COLOR } = CONSTANTS
 
-export const ToktokWalletTermsConditions = ({navigation, route})=> {
+export const ToktokWalletTermsConditions = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
@@ -52,9 +52,7 @@ export const ToktokWalletTermsConditions = ({navigation, route})=> {
         <Separator/>
         <View style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
-                <Text style={styles.textValue}>
-                    {termsAndConditions ? termsAndConditions :data.getGlobalSetting.keyValue}
-                </Text>
+                <Text>{data.getGlobalSetting.keyValue}</Text>
             </ScrollView>
         </View>
         </CheckIdleState>
@@ -88,9 +86,5 @@ const styles = StyleSheet.create({
     body: {
         margin: MARGIN.M,
         textAlign: 'justify',
-    },
-    textValue:{
-        fontFamily: FONT.REGULAR,
-        fontSize: FONT_SIZE.M,
-    }
+      },
 })

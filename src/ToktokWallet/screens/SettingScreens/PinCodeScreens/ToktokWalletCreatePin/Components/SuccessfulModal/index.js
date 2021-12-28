@@ -96,7 +96,6 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
           getMyAccount();
       }
 
-
     return (
         <Modal
              visible={modalVisible}

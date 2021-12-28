@@ -5,7 +5,6 @@ import { COLORS } from 'res/constants';
 import { FONT_SIZE, FONT } from 'res/variables';
 // Images
 import { chat, phoneBlack } from 'toktokfood/assets/images';
-import RatingModal from 'toktokfood/components/RatingModal';
 // Utils
 import { moderateScale, verticalScale } from 'toktokfood/helper/scale';
 import { checkRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
