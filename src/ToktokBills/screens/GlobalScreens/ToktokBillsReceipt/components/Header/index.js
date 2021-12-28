@@ -2,17 +2,17 @@ import React, {useContext, useEffect, useState} from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 
 //UTIL
-import { moderateScale } from "toktokload/helper";
+import { moderateScale } from "toktokbills/helper";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
-import { toktok_logo } from "src/ToktokLoad/assets/images";
+import { bills_logo } from "toktokbills/assets/images";
 
 export const Header = () => {
-
+  console.log(bills_logo)
   return (
     <View style={{ alignItems: "center" }}>
-      <Image source={toktok_logo} style={styles.logo} />
+      <Image source={bills_logo} style={styles.logo} />
       <View style={styles.logoTextContainer}>
         <Text>
           <Text style={styles.headerText} >Thank you for using </Text>
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   logo: {
     width: moderateScale(60),
     height: moderateScale(60),
-    marginVertical: moderateScale(20)
+    marginBottom: moderateScale(20)
   },
   logoTextContainer: {
     flexDirection: "row",

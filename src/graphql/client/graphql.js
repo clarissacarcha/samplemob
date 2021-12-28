@@ -18,8 +18,6 @@ const toktokWalletBaseUrl = `${ENVIRONMENTS.TOKTOKWALLET_SERVER}/`;
 const toktokBillsLoadBaseUrl = `${ENVIRONMENTS.TOKTOKBILLSLOAD_SERVER}/`;
 const toktokFoodBaseUrl = `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/`;
 
-console.log(toktokBillsLoadBaseUrl)
-
 // const errorLink = onError(({graphQLErrors, networkError}) => {
 //   if (graphQLErrors) {
 //     graphQLErrors.map(({message, locations, path, code}) => {
@@ -205,5 +203,5 @@ export const TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT = new ApolloClient({
 });
 export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
-  link: toktokFoodGraphqlLink,
+  link: toktokBillsLoadGraphqlLink,
 });

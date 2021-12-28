@@ -60,12 +60,13 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
       let { billerDetails, createAt } = postTransaction.data;
       let paymentDate = moment(createAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a');
 
-      prompt({
-        type: "success",
-        title: "Payment Successful",
-        message: `Your payment to ${billerDetails.descriptions} amounting to ₱${numberFormat(totalAmount)} has been successfully processed with ref no. ${referenceNumber} on ${paymentDate}.`,
-        onPress: () => { navigation.navigate("ToktokBillsReceipt", { receipt: postTransaction.data, paymentData }) }
-      });
+      // prompt({
+      //   type: "success",
+      //   title: "Payment Successful",
+      //   message: `Your payment to ${billerDetails.descriptions} amounting to ₱${numberFormat(totalAmount)} has been successfully processed with ref no. ${referenceNumber} on ${paymentDate}.`,
+      //   onPress: () => { navigation.navigate("ToktokBillsReceipt", { receipt: postTransaction.data, paymentData }) }
+      // });
+      navigation.navigate("ToktokBillsReceipt", { receipt: postTransaction.data, paymentData });
     }
   })
 
@@ -107,6 +108,7 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
       type: 1,
       comRateId: paymentData.billItemSettings.commissionRateDetails.id,
       email: paymentData.email.toLowerCase(),
+      referralCode: user.consumer.referralCode
     }
   
     postTransaction({

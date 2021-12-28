@@ -62,7 +62,7 @@ export const GET_OUTGOING_TRANSFER = gql`
     }
 `
 
-const WalletTransactions = `
+export const WalletTransactions = `
 id
 amount
 note
@@ -109,7 +109,6 @@ cashOutDisplayInformations {
     }
 }
 `
-
 export const GET_TRANSACTIONS = gql`
     query {
        getTransactions {
