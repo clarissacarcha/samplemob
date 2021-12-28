@@ -3,7 +3,8 @@ import {View, Text, StyleSheet, TextInput, StatusBar, ImageBackground, Touchable
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {LIGHT, PROTOCOL, HOST_PORT, FONT_REGULAR} from '../../../../../../../res/constants';
+import AsyncStorage from '@react-native-community/async-storage';
+import ENVIRONMENTS from '../../../../../../../common/res/environments';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
 import {debounce} from 'lodash';
 import axios from 'axios';
@@ -51,7 +52,7 @@ const SearchInput = ({onChangeText}) => {
 };
 
 export const Header = ({setSearchResult, setSearchLoading, setSearchText, searchText}) => {
-  const session = useSelector((state) => state.session);
+  const session = useSelector(state => state.session);
   const sessionToken = 'ABC123123';
 
   const navigation = useNavigation();
@@ -95,8 +96,15 @@ export const Header = ({setSearchResult, setSearchLoading, setSearchText, search
     if (searchText.length >= 3) {
       try {
         setSearchLoading(true);
+
+        const accessToken = await AsyncStorage.getItem('accessToken');
+        const authorizationHeader = `Bearer ${accessToken}`;
+
         const apiResult = await axios({
-          url: `${PROTOCOL}://${HOST_PORT}/graphql`,
+          url: `${ENVIRONMENTS.TOKTOK_SERVER}/graphql`,
+          headers: {
+            Authorization: authorizationHeader,
+          },
           method: 'post',
           data: {
             query: `
@@ -116,21 +124,25 @@ export const Header = ({setSearchResult, setSearchLoading, setSearchText, search
           },
         });
 
-        setSearchResult(apiResult.data.data.getGooglePlaceAutocomplete);
+        console.log(JSON.stringify({apiResult}, null, 4));
+
+        if (apiResult.data.data.getGooglePlaceAutocomplete) {
+          setSearchResult(apiResult.data.data.getGooglePlaceAutocomplete);
+        }
+
         setSearchLoading(false);
       } catch (error) {
         setSearchLoading(false);
-        // onSearchResultChange(ERROR_RESULT);
       }
     }
   };
 
   const debouncedGetGooglePlaceAutocomplete = useDebounce(
-    (value) => getGooglePlaceAutocomplete({searchString: value}),
+    value => getGooglePlaceAutocomplete({searchString: value}),
     1000,
   );
 
-  const onChangeText = async (value) => {
+  const onChangeText = async value => {
     setSearchText(value);
     if (value.length >= 3) {
       debouncedGetGooglePlaceAutocomplete(value);

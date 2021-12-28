@@ -59,7 +59,7 @@ export const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
     const [postCashOutBankAccount , {data,error,loading}] = useMutation(POST_CASH_OUT_BANK_ACCOUNT, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({postCashOutBankAccount})=> {
             console.log(postCashOutBankAccount)

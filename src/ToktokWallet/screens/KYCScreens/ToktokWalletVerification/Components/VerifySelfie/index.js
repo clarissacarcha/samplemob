@@ -72,7 +72,7 @@ const MainComponent = ({children , onPress })=> {
 export const VerifySelfie = ()=> {
 
     const VerifyUserData = useContext(VerifyContext)
-    const {setCurrentIndex , selfieImage, setSelfieImage , setTempSelfieImage , tempSelfieImage} = VerifyUserData
+    const {setCacheImagesList, setCurrentIndex , selfieImage, setSelfieImage , setTempSelfieImage , tempSelfieImage} = VerifyUserData
     const [cropperParams, setCropperParams] = useState({});
     const navigation = useNavigation()
     const cropSize = {
@@ -90,6 +90,9 @@ export const VerifySelfie = ()=> {
 
     const setImage = (data)=> {
         // setSelfieImage(data);
+        setCacheImagesList(state=> {
+            return [...state, data.uri]
+        })
         setTempSelfieImage(data);
         // setCurrentIndex(oldval => oldval + 1)
     }
@@ -221,6 +224,7 @@ const styles = StyleSheet.create({
         height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 10, 
         width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 10, 
         alignSelf:"center",
+        justifyContent:"center",
         marginTop: 7,
         padding: 2,
         borderStyle: "dashed",

@@ -5,9 +5,10 @@ const initialState = {
   type: "",
   title: "",
   message: "",
-  event: "",
   visible: false,
-  setVisible: ()=> null,
+  event: "",
+  setVisible: () => null,
+  onPress: () => null
 }
 
 export const PromptProviderContext = createContext(initialState);

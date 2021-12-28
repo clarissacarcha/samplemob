@@ -7,10 +7,10 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_IN_PAYPANDA_REQUEST,GET_GLOBAL_SETTINGS,POST_REQUEST_CASH_IN} from 'toktokwallet/graphql'
 import {onError,onErrorAlert} from 'src/util/ErrorUtility';
 import {numberFormat} from 'toktokwallet/helper'
-import { useAlert } from 'src/hooks'
+import { useAlert, usePrompt } from 'src/hooks'
 import { HeaderBack, YellowButton, HeaderTitle } from 'src/revamp'
 import { AlertOverlay } from 'src/components'
-import { CheckIdleState } from 'toktokwallet/components'
+import { CheckIdleState , FlagSecureScreen} from 'toktokwallet/components'
 import { TransactionUtility } from 'toktokwallet/util/TransactionUtility'
 import {
     DisabledButton,
@@ -31,6 +31,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
         headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
+    const prompt = usePrompt()
     const cashInAmount = route.params.amount
     const onCashIn = route.params.onCashIn
     const alert = useAlert()
@@ -50,7 +51,13 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 callBackFunc: proceedToPaypandaPortal,
             })
         },
-        onError: (error) => onErrorAlert({alert,error})
+        onError: (error) => {
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt
+            })
+        }
     })
 
     const [postCashInPayPandaRequest , {data,error,loading}] = useMutation(POST_CASH_IN_PAYPANDA_REQUEST , {
@@ -59,8 +66,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                alert,
-                onErrorAlert,
+                prompt
             })
         },
         onCompleted: ({postCashInPayPandaRequest})=>{
@@ -157,6 +163,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     },[amount])
 
     return (
+        <FlagSecureScreen>
       <CheckIdleState>
       <AlertOverlay visible={loading}/>
       <Separator />
@@ -224,6 +231,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
 
 
        </CheckIdleState>
+       </FlagSecureScreen>
     )
 }
 

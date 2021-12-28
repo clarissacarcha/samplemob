@@ -1,10 +1,16 @@
 import React from 'react';
-import {APP_FLAVOR, DARK, LIGHT, MEDIUM} from '../../../../../res/constants';
+import {APP_FLAVOR, MEDIUM} from '../../../../../res/constants';
 import {COLOR, FONT, SIZE, FONT_SIZE} from '../../../../../res/variables';
 import {VectorIcon, ICON_SET} from '../../../../../revamp/';
+import {AUTH_CLIENT, END_USER_SESSION} from '../../../../../graphql';
+import {onError} from '../../../../../util/ErrorUtility';
+import {AlertOverlay} from '../../../../../components';
+
+import {useMutation} from '@apollo/react-hooks';
 
 import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
+import RNFS from 'react-native-fs';
 
 import OneSignal from 'react-native-onesignal';
 import ToktokWashed from '../../../../../assets/images/ToktokWashed.png';
@@ -33,9 +39,17 @@ const DrawerButton = ({label, onPress, restrict}) => {
 };
 
 export const ToktokLandingMenu = ({navigation}) => {
-  const session = useSelector((state) => state.session);
-  const constants = useSelector((state) => state.constants);
+  const session = useSelector(state => state.session);
+  const constants = useSelector(state => state.constants);
   const dispatch = useDispatch();
+
+  const [endUserSession, {loading}] = useMutation(END_USER_SESSION, {
+    client: AUTH_CLIENT,
+    onError: onError,
+    onCompleted: ({endUserSession}) => {
+      onSignOut();
+    },
+  });
 
   let fullName = '';
   if (session.user) {
@@ -51,6 +65,9 @@ export const ToktokLandingMenu = ({navigation}) => {
   }
 
   const onSignOut = () => {
+    // End User Session
+
+    if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath)
     OneSignal.deleteTag('userId');
     dispatch({type: 'DESTROY_SESSION'});
     navigation.replace('UnauthenticatedStack', {
@@ -60,6 +77,7 @@ export const ToktokLandingMenu = ({navigation}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'space-between'}}>
+      <AlertOverlay visible={loading} />
       <View style={{flex: 1}}>
         <Header>
           <View style={{marginTop: StatusBar.currentHeight, margin: SIZE.MARGIN}}>
@@ -139,7 +157,7 @@ export const ToktokLandingMenu = ({navigation}) => {
             />
 
             {/*--------------- CHANGE PASSWORD ---------------*/}
-            <DrawerButton label="Sign Out" onPress={onSignOut} />
+            <DrawerButton label="Sign Out" onPress={endUserSession} />
           </ScrollView>
         </View>
       </View>

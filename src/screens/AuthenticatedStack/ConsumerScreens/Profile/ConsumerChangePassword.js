@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, ScrollView, StyleSheet, TouchableHighlight, TextInput, Alert} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import validator from 'validator';
@@ -32,7 +33,9 @@ const ChangePassword = ({navigation, session}) => {
     onError: onError,
     onCompleted: ({patchUserChangePassword}) => {
       navigation.pop();
-      Toast.show(patchUserChangePassword);
+
+      AsyncStorage.setItem('accessToken', patchUserChangePassword.accessToken);
+      Toast.show(patchUserChangePassword.message);
     },
   });
 
@@ -78,7 +81,7 @@ const ChangePassword = ({navigation, session}) => {
         <Text style={styles.label}>Current Password</Text>
         <TextInput
           value={currentPassword}
-          onChangeText={(value) => setCurrentPassword(value)}
+          onChangeText={value => setCurrentPassword(value)}
           style={styles.input}
           placeholder="Current Password"
           secureTextEntry
@@ -89,7 +92,7 @@ const ChangePassword = ({navigation, session}) => {
         <Text style={styles.label}>New Password</Text>
         <TextInput
           value={newPassword}
-          onChangeText={(value) => setNewPassword(value)}
+          onChangeText={value => setNewPassword(value)}
           style={styles.input}
           placeholder="New Password"
           secureTextEntry
@@ -100,7 +103,7 @@ const ChangePassword = ({navigation, session}) => {
         <Text style={styles.label}>Repeat Password</Text>
         <TextInput
           value={repeatPassword}
-          onChangeText={(value) => setRepeatPassword(value)}
+          onChangeText={value => setRepeatPassword(value)}
           style={styles.input}
           placeholder="Repeat Password"
           secureTextEntry
@@ -113,12 +116,12 @@ const ChangePassword = ({navigation, session}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword);

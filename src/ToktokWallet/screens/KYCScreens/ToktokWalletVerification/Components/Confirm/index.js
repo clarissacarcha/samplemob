@@ -14,6 +14,8 @@ import {connect} from 'react-redux'
 import { YellowButton } from 'src/revamp'
 import { DisabledButton, Separator } from 'toktokwallet/components'
 import CheckBox from 'react-native-check-box'
+import AsyncStorage from '@react-native-community/async-storage';
+import RNFS from 'react-native-fs'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
@@ -47,6 +49,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
     const VerifyUserData = useContext(VerifyContext)
     const navigation = useNavigation()
     const alert = useAlert()
+    const [cacheImages,setCacheImages] = useState(null)
 
     const [isCertify, setCertify] = useState(false)
 
@@ -57,6 +60,10 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         },
         onCompleted: (response)=> {
             let result = response.postKycRegister
+            // removeCacheImages({
+            //     VerifyUserData
+            // })
+            if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath)
             if(result.status == 2){
                 navigation.pop(2)
                 navigation.navigate("ToktokWalletVerifyResult")
@@ -65,7 +72,42 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         }
     })
 
-    const confirm = ()=> {
+    const deleteFile = (path)=> {
+        RNFS.exists(path)
+            .then(()=>RNFS.unlink(path))
+            .then(()=>RNFS.scanFile(path))
+            .catch(err=>console.log(err))
+            .finally(()=>console.log(path , " is deleted"))
+        return
+    }
+
+    const removeCacheImages = async ({VerifyUserData})=> {
+        const { cacheImagesList, selfieImage , selfieImageWithID , frontImage ,  backImage , tempSelfieImage , tempSelfieImageWithID } = VerifyUserData
+        const { rnSelfieFile, rnSelfieFileWithID, rnFrontIDFile, rnBackIDFile } = cacheImages
+
+        try {
+            if(rnSelfieFile)  await deleteFile(rnSelfieFile.uri)
+            if(rnSelfieFileWithID)  await deleteFile(rnSelfieFileWithID.uri)
+            if(rnFrontIDFile)  await deleteFile(rnFrontIDFile.uri)
+            if(rnBackIDFile)  await deleteFile(rnBackIDFile.uri)
+            if(tempSelfieImage)  await deleteFile(tempSelfieImage.uri)
+            if(tempSelfieImageWithID) await deleteFile(tempSelfieImageWithID.uri)
+            if(frontImage) await deleteFile(frontImage.uri)
+            if(backImage) await deleteFile(backImage.uri)
+            if(selfieImage) await deleteFile(selfieImage.uri)
+            if(selfieImageWithID) await deleteFile(selfieImageWithID.uri)
+            if(cacheImagesList.length > 0){
+                cacheImagesList.map(async (image)=>{
+                    await deleteFile(image)
+                })
+            }
+            return;
+        }catch (error){
+            throw error;
+        }
+    }
+
+    const confirm = async ()=> {
         const rnValidIDFile = new ReactNativeFile({
             ...VerifyUserData.verifyID.idImage,
             name: 'documentValidID.jpg',
@@ -100,10 +142,34 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         })
         : null
 
-        console.log(rnBackIDFile)
+        // RNFS.unlink(RNFS.CachesDirectoryPath).then(()=>{
+        //     console.log("Deleted")
+        // }).catch(err=>console.log(err))
+        // RNFS.unlink(RNFS.TemporaryDirectoryPath)
+
+        // RNFS.readDir(RNFS.CachesDirectoryPath)
+        // .then(arr => RNFS.readDir(arr[0].path)) // The Camera directory
+        //     .then(arr => arr.forEach(item => {
+        //        console.log(item.path)
+        //         // Linking.canOpenURL(contentURI)
+        //         // .then(able => able ? Linking.openURL(contentURI) : console.log('No application available'))
+        //         // .catch(console.log)
+        //     }))
+        // return;
+   
+    //    setCacheImages({
+    //     rnSelfieFile,
+    //     rnSelfieFileWithID,
+    //     rnFrontIDFile,
+    //     rnBackIDFile,
+    //    })
+
+        // removing / delete cache files
+       //removeCacheImages({VerifyUserData})
 
         const input = {
-            userId: session.user.id,
+            // userId: session.user.id,
+            userId: await AsyncStorage.getItem('accessToken'),
             mobileNumber: VerifyUserData.contactInfo.mobile_number,
             emailAddress: VerifyUserData.contactInfo.email,
             firstName: VerifyUserData.person.firstName,

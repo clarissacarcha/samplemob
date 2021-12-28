@@ -1,5 +1,5 @@
 import React , {useState,useRef,useCallback,useEffect} from 'react'
-import { View ,ActivityIndicator,StatusBar,Text,TouchableOpacity} from 'react-native'
+import { View ,ActivityIndicator,StatusBar,Text,TouchableOpacity, Alert} from 'react-native'
 import {SomethingWentWrong} from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import {GET_USER_TOKTOK_WALLET_DATA} from 'toktokwallet/graphql'
@@ -8,7 +8,9 @@ import {useLazyQuery, useQuery} from '@apollo/react-hooks'
 import {useSelector,useDispatch} from 'react-redux'
 import AsyncStorage from '@react-native-community/async-storage'
 import { useAccount } from 'toktokwallet/hooks'
+import { FlagSecureScreen } from 'toktokwallet/components'
 import { useFocusEffect } from '@react-navigation/native'
+import { isPinOrFingerprintSet , getApiLevel , getSystemVersion } from 'react-native-device-info';
 import JailMonkey from 'jail-monkey'
 
 //SELF IMPORTS
@@ -16,6 +18,9 @@ import {
     CheckTokwaKYCRegistration,
     CheckWalletAccountRestriction,
     LoginPage,
+    NotEncrypted,
+    NotMinApiLevel,
+    PinNotSet,
     RootedDevice
 } from "./Components";
 
@@ -27,27 +32,35 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
     })
 
     const session = useSelector(state=> state.session)
-    // const [isRooted,setIsRooted] = useState(false)
-    // const [canMockLocation,setCanMockLocation] = useState(false)
+    const [isRooted,setIsRooted] = useState(false)
+    const [canMockLocation,setCanMockLocation] = useState(false)
     const [isDebugMode,setIsDebugMode] = useState(false)
     const [trustFall,setTrustFall] = useState(false)
+    const [pinSet,setPinSet] = useState(false)
+    const [minApiLevel,setMinApiLevel] = useState(false)
+    const [minAndroidOS,setMinAndroidOS] = useState(false)
     const { refreshWallet } = useAccount();
     const dispatch = useDispatch()
 
     const CheckIfDeviceIsRooted = async ()=> {
-        // const isRooted = await JailMonkey.isJailBroken()
-        // const canMockLocation = await JailMonkey.canMockLocation()
+        const isRooted = await JailMonkey.isJailBroken()
+        const canMockLocation = await JailMonkey.canMockLocation()
         const isDebugMode = await JailMonkey.isDebuggedMode()
         const trustFall = await JailMonkey.trustFall()
-        // setIsRooted(isRooted)
-        // setCanMockLocation(canMockLocation)
+        const pinSet = await isPinOrFingerprintSet()
+        const minApiLevel = await getApiLevel() >= 21
+        const minAndroidOS = await getSystemVersion() >= 5
+        setIsRooted(isRooted)
+        setCanMockLocation(canMockLocation)
         setIsDebugMode(isDebugMode)
         setTrustFall(trustFall)
+        setPinSet(pinSet)
+        setMinApiLevel(minApiLevel)
+        setMinAndroidOS(minAndroidOS)
     }
-
-    CheckIfDeviceIsRooted();
  
      useEffect(()=>{
+         CheckIfDeviceIsRooted();
          refreshWallet();
      },[])
 
@@ -90,15 +103,32 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
         return <SomethingWentWrong />;
     }
 
+    const RenderRestricted = ()=> {
+        if(isRooted){
+            return <RootedDevice/>
+        }
+
+        if(!pinSet){
+            return <PinNotSet/>
+        }
+
+        if(!minApiLevel || !minAndroidOS){
+            return <NotMinApiLevel/>
+        }
+
+        return null
+    }
+
 
     return (
-        <>
+        <FlagSecureScreen>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             {
-                // isRooted || isDebugMode
-                trustFall
-                ? <RootedDevice/>
-                : <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
+                //isRooted || isDebugMode ||
+                !pinSet || (!minApiLevel && Platform.OS == "android") || (!minAndroidOS && Platform.OS == "android")
+                ? <RenderRestricted />
+                : 
+                <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
     
                         <CheckWalletAccountRestriction>
                         <LoginPage/>
@@ -107,6 +137,6 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
                 </CheckTokwaKYCRegistration>
             }
             
-        </>
+        </FlagSecureScreen>
     )
 }

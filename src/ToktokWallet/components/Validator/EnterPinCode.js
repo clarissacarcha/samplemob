@@ -86,7 +86,7 @@ export const EnterPinCode = ({
                 </TouchableOpacity>
                     <View style={styles.pincodeContent}>
                         <View style={{marginTop: 165, height: 200,width:width,alignItems:"center",paddingHorizontal: 16,}}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter your TPIN</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>Enter TPIN</Text>
                         <View style={{marginTop: 30,flexDirection:"row"}}>
                             <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
                             <TextInput
@@ -105,7 +105,7 @@ export const EnterPinCode = ({
                             />
                         </View>
                             {
-                                pinCodeAttempt < 6 && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect TPIN. You can try {numWordArray[pinCodeAttempt]} ({pinCodeAttempt}) more {pinCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily blocked.</Text>
+                                pinCodeAttempt < 6 && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>Incorrect TPIN. You can try {numWordArray[pinCodeAttempt]} ({pinCodeAttempt}) more {pinCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily suspended.</Text>
                             }
                             <TouchableOpacity
                                     style={{marginTop: 18,paddingVertical: 10, alignItems: "center"}}

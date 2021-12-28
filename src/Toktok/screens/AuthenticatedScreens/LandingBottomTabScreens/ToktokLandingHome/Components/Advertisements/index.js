@@ -7,18 +7,18 @@ import {SIZE, COLOR} from '../../../../../../../res/variables';
 import Banner from './Banner';
 import Grid from './Grid';
 
-export const Advertisements = () => {
+export const Advertisements = ({Header, Menu, setUserLocation, constants}) => {
   const [banner, setBanner] = useState(null);
   const [grid, setGrid] = useState(null);
 
   const {data, loading, error} = useQuery(GET_ADVERTISEMENTS, {
     fetchPolicy: 'network-only',
     onCompleted: ({getAdvertisements}) => {
-      const bannerAd = getAdvertisements.filter((ad) => {
+      const bannerAd = getAdvertisements.filter(ad => {
         return ad.isHighlighted;
       });
 
-      const gridAds = getAdvertisements.filter((ad) => {
+      const gridAds = getAdvertisements.filter(ad => {
         return !ad.isHighlighted;
       });
 
@@ -33,9 +33,14 @@ export const Advertisements = () => {
 
   return (
     <View>
-      <View style={styles.separator} />
-      <Banner ads={banner} />
-      <Grid ads={grid} />
+      <Grid
+        ads={grid}
+        Header={Header}
+        Menu={Menu}
+        setUserLocation={setUserLocation}
+        constants={constants}
+        Banner={() => <Banner ads={banner} />}
+      />
     </View>
   );
 };

@@ -3,7 +3,8 @@ import {StyleSheet,View,BackHandler,TouchableHighlight,Text,KeyboardAvoidingView
 import {useNavigation} from '@react-navigation/native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {useFocusEffect} from '@react-navigation/native'
-import {Separator,LeavePromptModal} from 'toktokwallet/components'
+import {Separator,LeavePromptModal,FlagSecureScreen} from 'toktokwallet/components'
+import RNFS from 'react-native-fs'
 import CONSTANTS from 'common/res/constants';
 
 //SELF IMPORTS 
@@ -117,7 +118,10 @@ const MainSetupComponent = ()=> {
         <LeavePromptModal
             visible={visible}
             setVisible={setVisible}
-            onConfirm={()=>navigation.goBack()}
+            onConfirm={()=>{
+                if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath)
+                navigation.goBack()
+            }}
         />
         <Separator />
         <View 
@@ -142,9 +146,11 @@ const MainSetupComponent = ()=> {
 
 export const ToktokWalletVerification = ()=> {
     return (
-        <VerifyContextProvider>
-             <MainSetupComponent/>
-        </VerifyContextProvider>
+        <FlagSecureScreen>
+            <VerifyContextProvider>
+                <MainSetupComponent/>
+            </VerifyContextProvider>
+        </FlagSecureScreen>
     )
 }
 

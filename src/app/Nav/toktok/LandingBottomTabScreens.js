@@ -3,7 +3,6 @@ import {Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import EIcon from 'react-native-vector-icons/Entypo';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -35,7 +34,7 @@ const ToktokLanding = () => (
         tabBarLabel: ({focused}) => (
           <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Home</Text>
         ),
-        tabBarIcon: ({color}) => <MCIcon name="home" color={color} size={30} />,
+        tabBarIcon: ({color}) => <MIcon name="home" color={color} size={30} />,
       }}
     />
     <ToktokLandingBottomTab.Screen

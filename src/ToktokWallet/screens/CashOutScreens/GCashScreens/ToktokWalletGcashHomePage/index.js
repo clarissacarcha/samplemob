@@ -1,7 +1,7 @@
 import React , {useEffect,useState} from 'react'
 import {View,StyleSheet,ActivityIndicator,Text,Image} from 'react-native'
 import { HeaderBack, HeaderTitle } from 'src/revamp'
-import { Separator , CheckIdleState } from 'toktokwallet/components'
+import { Separator , CheckIdleState , FlagSecureScreen } from 'toktokwallet/components'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_CASH_OUT_ENROLLMENT_GCASH } from 'toktokwallet/graphql'
 import {useQuery} from '@apollo/react-hooks'
@@ -19,6 +19,7 @@ const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 const MainComponent = ({children})=> {
     return (
+        <FlagSecureScreen>
         <CheckIdleState>
          <Separator />
             <View style={styles.container}>
@@ -32,6 +33,7 @@ const MainComponent = ({children})=> {
             {children}
         </View>
         </CheckIdleState>
+        </FlagSecureScreen>
     )
 }
 
@@ -85,10 +87,12 @@ export const ToktokWalletGcashHomePage = ({navigation,route})=> {
 
     // Linked and verified GCash Account
     return (
-       <CheckIdleState>
-        <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/>
-       <VerifiedAccount record={data.getCashOutEnrollmentGcash.linkedGcash.gcashEnrollmentRecord} provider={provider}/>
-       </CheckIdleState>
+        <FlagSecureScreen>
+        <CheckIdleState>
+            <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/>
+            <VerifiedAccount record={data.getCashOutEnrollmentGcash.linkedGcash.gcashEnrollmentRecord} provider={provider}/>
+        </CheckIdleState>
+       </FlagSecureScreen>
     )
 }
 

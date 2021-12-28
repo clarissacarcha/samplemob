@@ -37,7 +37,7 @@ export const WalletLandingPage = connect(null,mapDispatchtoProps)(({refreshing, 
                 </View>
                 <View>
                     <WalletRecentTransactions/>
-                    <Advertisements/>
+                     <Advertisements/> 
                 </View>
          
             </ScrollView>

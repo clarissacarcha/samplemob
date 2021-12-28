@@ -78,7 +78,7 @@ export const VerifyFullname = ()=> {
             return Alert.alert("","Last Name is required.")
         }
 
-        if (validator.isEmpty(person.middleName, {ignore_whitespace: true})) {
+        if (person.hasMiddleName && validator.isEmpty(person.middleName, {ignore_whitespace: true})) {
             return Alert.alert("","Middle Name is required.")
         }
         if (validator.isEmpty(person.firstName, {ignore_whitespace: true})) {
@@ -234,7 +234,7 @@ export const VerifyFullname = ()=> {
                             <CheckBox
                                 isChecked={!person.hasMiddleName}
                                 onClick={()=>{
-                                     changePersonInfo("middleName",person.hasMiddleName ? "MNU" : "")
+                                     changePersonInfo("middleName", "")
                                      changePersonInfo("hasMiddleName",!person.hasMiddleName)
                                      return
                                 }}

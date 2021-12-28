@@ -60,6 +60,7 @@ export const ToktokWalletMPINCreate = ({navigation,route})=> {
     const { tokwaAccount } = useAccount();
     const [pageIndex,setPageIndex] = useState(tokwaAccount.mpinCode ? 0 : 1)
     const [pinCode,setPinCode] = useState("")
+    const [oldMPIN,setOldMPIN] = useState("")
     const [successModalVisible,setSuccessModalVisible] = useState(false)
     const [LeaveModalvisible,setLeaveModalVisible] = useState(false)
     const alert = useAlert()
@@ -86,7 +87,7 @@ export const ToktokWalletMPINCreate = ({navigation,route})=> {
         setSuccessModalVisible(true)
       },
       onError: (error)=> {
-        onErrorAlert({alert,error})
+        onErrorAlert({alert,error,navigation})
       }
     })
 
@@ -94,7 +95,8 @@ export const ToktokWalletMPINCreate = ({navigation,route})=> {
       patchMPinCode({
         variables: {
           input: {
-            pinCode: pinCode
+            pinCode: pinCode,
+            oldMPIN: oldMPIN,
           }
         }
       })
@@ -103,7 +105,7 @@ export const ToktokWalletMPINCreate = ({navigation,route})=> {
     const DisplayComponent = ()=> {
         switch(pageIndex){
             case 0:
-                return <Verify pageIndex={pageIndex} setPageIndex={setPageIndex}/>
+                return <Verify pageIndex={pageIndex} setPageIndex={setPageIndex} setOldMPIN={setOldMPIN}/>
             case 1:
                 return <Create pinCode={pinCode} tokwaAccount={tokwaAccount} setPinCode={setPinCode} pageIndex={pageIndex} setPageIndex={setPageIndex}/>
             case 2:

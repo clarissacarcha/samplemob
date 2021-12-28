@@ -2,7 +2,7 @@ import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react';
 import {View, StyleSheet, Text, StatusBar, TouchableOpacity, TouchableHighlight, Image} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import BottomSheet, {BottomSheetBackdrop, BottomSheetView} from '@gorhom/bottom-sheet';
 import ScrollPicker from 'react-native-wheel-scrollview-picker';
 import {HeaderBack, HeaderTitle} from '../../../../../components';
@@ -72,7 +72,7 @@ const SCHEDULES = [
   {label: '11:30 PM', value: '23:30:00'},
 ];
 
-const SCHEDULE_TIME = SCHEDULES.map((item) => {
+const SCHEDULE_TIME = SCHEDULES.map(item => {
   return item.label;
 });
 
@@ -83,7 +83,7 @@ const AFTER_SCHEDULES = SCHEDULES.filter(({value}) => {
   return timeMoment.isAfter(TIME_NOW);
 });
 
-const SCHEDULE_TIME_AFTER = AFTER_SCHEDULES.map((item) => {
+const SCHEDULE_TIME_AFTER = AFTER_SCHEDULES.map(item => {
   return item.label;
 });
 
@@ -113,7 +113,7 @@ const createDays = () => {
 
 const SCHEDULESB = createDays();
 
-const SCHEDULE_DAYS = createDays().map((item) => {
+const SCHEDULE_DAYS = createDays().map(item => {
   return item.label;
 });
 
@@ -176,10 +176,10 @@ const ToktokDelivery = ({navigation, session, route}) => {
 
   const [getGoogleGeocodeReverse, {loading, error}] = useLazyQuery(GET_GOOGLE_GEOCODE_REVERSE, {
     fetchPolicy: 'network-only',
-    onCompleted: (data) => {
+    onCompleted: data => {
       console.log({data});
     },
-    onError: (error) => console.log({error}),
+    onError: error => console.log({error}),
   });
 
   navigation.setOptions({
@@ -195,14 +195,14 @@ const ToktokDelivery = ({navigation, session, route}) => {
 
   const snapPoints = useMemo(() => [0, 135, 350], []);
 
-  const onSenderConfirm = (value) => {
+  const onSenderConfirm = value => {
     setOrderData({
       ...orderData,
       senderStop: value,
     });
   };
 
-  const onRecipientConfirm = (value) => {
+  const onRecipientConfirm = value => {
     setOrderData({
       ...orderData,
       recipientStop: [value],
@@ -343,7 +343,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
           }}
           setRecipientStop={() => {}}
           setSenderStop={onSenderConfirm}
-          onLocationDetected={(coordinates) => {
+          onLocationDetected={coordinates => {
             console.log({coordinates});
             // setUserCoordinates(coordinates);
           }}
@@ -446,7 +446,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
               itemHeight={50}
               highlightColor={COLOR.LIGHT}
               highlightBorderWidth={1}
-              onPress={(selectedDay) => {
+              onPress={selectedDay => {
                 console.log({selectedDay});
               }}
               activeItemTextStyle={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}
@@ -468,7 +468,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
               itemHeight={50}
               highlightColor={COLORS.LIGHT}
               highlightBorderWidth={1}
-              onPress={(selectedTime) => {
+              onPress={selectedTime => {
                 console.log({selectedTime});
               }}
               activeItemTextStyle={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}
@@ -489,11 +489,11 @@ const ToktokDelivery = ({navigation, session, route}) => {
                 }
               }
 
-              const formattedDate = SCHEDULESB.find((date) => {
+              const formattedDate = SCHEDULESB.find(date => {
                 return date.label === scheduledDate;
               });
 
-              const formattedTime = SCHEDULES.find((date) => {
+              const formattedTime = SCHEDULES.find(date => {
                 return date.label === scheduledTime;
               });
 
@@ -529,7 +529,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 

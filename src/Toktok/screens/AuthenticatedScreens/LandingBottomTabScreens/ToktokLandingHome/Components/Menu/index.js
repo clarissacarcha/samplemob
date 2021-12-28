@@ -5,6 +5,7 @@ import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
 
 import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/Toktok.png';
+import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/ToktokfoodMenu.png';
 import WalletIcon from '../../../../../../../assets/toktok/icons/menu/ToktokWallet.png';
 import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/Pabili.png';
 import ProfileIcon from '../../../../../../../assets/icons/ProfileIcon.png';
@@ -12,7 +13,7 @@ import ToktokMallIcon from '../../../../../../../assets/toktokmall-assets/icons/
 import OthersIcon from '../../../../../../../assets/icons/OthersIcon.png';
 import ToktokLoadIcon from '../../../../../../../assets/toktok/icons/menu/ToktokLoad.png';
 
-const MenuIcon = ({label, icon, onPress}) => {
+const MenuIcon = ({label, icon, onPress, isNew = false}) => {
   const useThrottle = (cb, delayDuration) => {
     const options = {leading: true, trailing: false}; // add custom lodash options
     const cbRef = useRef(cb);
@@ -31,6 +32,11 @@ const MenuIcon = ({label, icon, onPress}) => {
   return (
     <TouchableOpacity style={styles.menuButton} onPress={onPressThrottled}>
       <View style={styles.menuIconBox}>
+        {isNew && (
+          <View style={styles.new}>
+            <Text style={styles.newText}>NEW</Text>
+          </View>
+        )}
         <Image style={styles.menuIcon} source={icon} />
       </View>
       <Text style={styles.label}>{label}</Text>
@@ -38,7 +44,7 @@ const MenuIcon = ({label, icon, onPress}) => {
   );
 };
 
-export const Menu = ({setUserLocation}) => {
+export const Menu = ({setUserLocation, constants}) => {
   const navigation = useNavigation();
 
   return (
@@ -49,13 +55,26 @@ export const Menu = ({setUserLocation}) => {
         onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
       />
       <MenuIcon label={'pabili'} icon={PabiliIcon} onPress={() => navigation.push('Pabili')} />
-      <MenuIcon
+      {/* <MenuIcon
         label={'toktokwallet'}
         icon={WalletIcon}
         onPress={() => {
           navigation.push('ToktokWalletLoginPage');
         }}
-      />
+      /> */}
+
+      {/* TOKTOKFOOD COMING SOON */}
+      {constants.isToktokfoodComingSoonDisplayed == 1 && (
+        <MenuIcon
+          label={'toktokfood'}
+          icon={ToktokfoodIcon}
+          onPress={() => {
+            navigation.push('ToktokfoodMerchantComingSoon');
+          }}
+          isNew
+        />
+      )}
+
       <MenuIcon
         label={'profile'}
         icon={ProfileIcon}
@@ -75,6 +94,13 @@ export const Menu = ({setUserLocation}) => {
         icon={ToktokLoadIcon}
         onPress={() => {
           navigation.push('ToktokLoadHome');
+        }}
+      />
+      <MenuIcon
+        label={'toktokwallet'}
+        icon={WalletIcon}
+        onPress={() => {
+          navigation.push('ToktokWalletLoginPage');
         }}
       />
       {/* <MenuIcon
@@ -119,10 +145,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     backgroundColor: COLOR.TRANSPARENT_YELLOW,
+    overflow: 'hidden',
   },
   menuIcon: {
     height: 40,
     width: 40,
     resizeMode: 'contain',
+  },
+  new: {
+    height: 12,
+    width: 25,
+    backgroundColor: COLOR.ORANGE,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9,
+  },
+  newText: {
+    fontSize: 8,
+    color: 'white',
   },
 });

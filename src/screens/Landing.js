@@ -12,18 +12,24 @@ const imageWidth = Dimensions.get('window').width - 80;
 
 import SplashImage from '../assets/images/Splash.png';
 import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
+import ToktokSuperApp from '../assets/images/ToktokSuperApp.png';
 
 const Landing = ({createSession, destroySession, navigation}) => {
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
     client: AUTH_CLIENT,
-    onError: (error) => {
+    onError: error => {
       const {graphQLErrors, networkError} = error;
       console.log(error);
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, code}) => {
-          if (code === 'INTERNAL_SERVER_ERROR') {
+          if (message === 'Session expired. Please log in again.') {
+            Alert.alert('', message);
+            AsyncStorage.removeItem('accessToken');
+            destroySession();
+            navigation.replace('UnauthenticatedStack');
+          } else if (code === 'INTERNAL_SERVER_ERROR') {
             Alert.alert('', 'Something went wrong.');
           } else if (code === 'USER_INPUT_ERROR') {
             Alert.alert('', message);
@@ -43,7 +49,7 @@ const Landing = ({createSession, destroySession, navigation}) => {
     onCompleted: ({getUserSession}) => {
       try {
         const {user, accessToken} = getUserSession;
-        // AsyncStorage.setItem('accessToken', accessToken);
+        AsyncStorage.setItem('accessToken', accessToken);
 
         if (user.status == 3) {
           destroySession();
@@ -120,17 +126,17 @@ const Landing = ({createSession, destroySession, navigation}) => {
 
   return (
     <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
-      <Image source={ToktokMotorcycle} style={styles.image} resizeMode="contain" />
+      <Image source={ToktokSuperApp} style={styles.image} resizeMode="contain" />
     </ImageBackground>
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
 });
 

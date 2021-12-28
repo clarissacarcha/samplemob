@@ -1,7 +1,7 @@
 import React , {useState,useEffect} from 'react'
 import {View,StyleSheet,ActivityIndicator,Text,Image} from 'react-native'
 import { HeaderBack, HeaderTitle } from 'src/revamp'
-import { Separator , CheckIdleState} from 'toktokwallet/components'
+import { Separator , CheckIdleState, FlagSecureScreen} from 'toktokwallet/components'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_CASH_OUT_ENROLLMENT_BDO } from 'toktokwallet/graphql'
 import {useQuery} from '@apollo/react-hooks'
@@ -19,19 +19,21 @@ const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 const MainComponent = ({children})=> {
     return (
-        <CheckIdleState>
-         <Separator />
-            <View style={styles.container}>
-            <View style={styles.header}>
-                        <Image resizeMode="contain" style={{height: 50,width: 60,alignSelf:"center"}} source={require('toktokwallet/assets/images/cash-out-providers/bdo.png')}/>
-                        <View style={{justifyContent:"center",alignItems:"flex-start",marginLeft: 10,}}>
-                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Register and verify</Text>
-                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>your BDO account details.</Text>
-                        </View>
+        <FlagSecureScreen>
+            <CheckIdleState>
+            <Separator />
+                <View style={styles.container}>
+                <View style={styles.header}>
+                            <Image resizeMode="contain" style={{height: 50,width: 60,alignSelf:"center"}} source={require('toktokwallet/assets/images/cash-out-providers/bdo.png')}/>
+                            <View style={{justifyContent:"center",alignItems:"flex-start",marginLeft: 10,}}>
+                                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Register and verify</Text>
+                                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>your BDO account details.</Text>
+                            </View>
+                </View>
+                {children}
             </View>
-            {children}
-        </View>
-        </CheckIdleState>
+            </CheckIdleState>
+        </FlagSecureScreen>
     )
 }
 
@@ -86,10 +88,12 @@ export const ToktokWalletBDOHomePage = ({navigation,route})=> {
 
        // Linked and verified BDO Account
        return (
-        <CheckIdleState>
-          <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/>
-         <VerifiedAccount record={data.getCashOutEnrollmentBdo.linkedBDO.bdoEnrollmentRecord} provider={provider}/>
-        </CheckIdleState>
+        <FlagSecureScreen>
+            <CheckIdleState>
+            <SuccessfulModal visible={modalSuccessVisible} setVisible={setModalSuccessVisible} provider={provider}/>
+            <VerifiedAccount record={data.getCashOutEnrollmentBdo.linkedBDO.bdoEnrollmentRecord} provider={provider}/>
+            </CheckIdleState>
+        </FlagSecureScreen>
      )
 
    
