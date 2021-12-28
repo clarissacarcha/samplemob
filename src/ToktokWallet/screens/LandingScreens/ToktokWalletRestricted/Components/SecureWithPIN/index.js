@@ -46,10 +46,6 @@ export const SecurewithPIN = ({navigation,walletinfo,amount = null,onCashIn = nu
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.ORANGE}}>Never share</Text> your TPIN with anyone</Text>
                             </Reminder>
-                            <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>If you think your TPIN is no longer a secret, </Text>      
-                            </Reminder>
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 28}}><Text style={{color: COLOR.ORANGE}}>change your</Text> TPIN immediately</Text>
                         </View>
                    
                 </View>
