@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     },  
     walletMethod: {
         height: "100%",
-        width: (width * 0.9) / 5,
+        width: (width * 0.8) / 4,
         justifyContent:"center",
         alignItems:"center",
         zIndex: 99999
