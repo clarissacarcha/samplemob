@@ -15,10 +15,8 @@ const baseUrl = `${ENVIRONMENTS.TOKTOK_SERVER}/`;
 const wsUrl = `ws://${HOST_PORT}/graphql`;
 
 const toktokWalletBaseUrl = `${ENVIRONMENTS.TOKTOKWALLET_SERVER}/`;
-const tokstokBillsLoadBaseUrl = `${ENVIRONMENTS.TOKTOKBILLSLOAD_SERVER}/`;
+const toktokBillsLoadBaseUrl = `${ENVIRONMENTS.TOKTOKBILLSLOAD_SERVER}/`;
 const toktokFoodBaseUrl = `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/`;
-
-console.log(toktokBillsLoadBaseUrl)
 
 // const errorLink = onError(({graphQLErrors, networkError}) => {
 //   if (graphQLErrors) {

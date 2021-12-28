@@ -18,7 +18,7 @@ export const SearchInput = ({search = "", setSearch, placeholder}) => {
   return (
     <View style={styles.searchField}>
       <View style={[styles.inputContainer,{flexDirection: "row"}]}>
-        <Image style={styles.icon} resizeMode="center" source={search_ic}/>
+        <Image style={styles.icon} resizeMode="contain" source={search_ic}/>
         <TextInput 
           style={styles.input}
           placeholder={placeholder}
