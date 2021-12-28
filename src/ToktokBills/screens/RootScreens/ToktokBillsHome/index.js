@@ -26,7 +26,6 @@ export const ToktokBillsHome = ({navigation,route})=> {
     headerTitle: () => <HeaderTitle label={"toktokbills"} isRightIcon/>,
   });
 
-  const { tokwaAccount, getMyAccount, getMyAccountLoading, getMyAccountError } = useAccount(true);
   const isFocused = useIsFocused();
   const [billTypes, setBillTypes] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -50,14 +49,14 @@ export const ToktokBillsHome = ({navigation,route})=> {
     refetch();
   }
 
-  if((loading || getMyAccountLoading) && billTypes.length === 0){
+  if(loading && billTypes.length === 0){
     return(
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
       </View>
     )
   }
-  if(error || getMyAccountError){
+  if(error){
     return (
       <View style={styles.container}>
         <SomethingWentWrong onRefetch={onRefresh} />

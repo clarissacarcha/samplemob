@@ -10,7 +10,7 @@ user {
   userId
   username
   status
-
+  toktokWalletAccountId
   person {
     id
     firstName

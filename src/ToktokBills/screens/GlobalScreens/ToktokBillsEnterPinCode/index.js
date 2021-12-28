@@ -107,6 +107,7 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
       type: 1,
       comRateId: paymentData.billItemSettings.commissionRateDetails.id,
       email: paymentData.email.toLowerCase(),
+      referralCode: user.consumer.referralCode
     }
   
     postTransaction({

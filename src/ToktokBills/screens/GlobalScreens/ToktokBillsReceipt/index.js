@@ -27,28 +27,37 @@ import { Header, ReceiptDetails } from "./components";
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
-const MainComponent = ({ navigation, route, viewRef }) => {
+const MainComponent = ({ navigation, route, viewRef, onCapturingScreen }) => {
   return (
-    <>
+    <View style={{ paddingTop: onCapturingScreen ? moderateScale(50) : moderateScale(20) }}>
       <Header />
       <ReceiptDetails route={route} />
       <View style={styles.buttonContainer}>
         <Text style={styles.emailText}>A copy of this receipt will be delivered on the email provided.</Text>
-        <OrangeButton label="Ok" onPress={() => navigation.navigate("ToktokBillsHome")} />
+        { !onCapturingScreen && (
+          <OrangeButton label="Ok" onPress={() => navigation.navigate("ToktokBillsHome")} />
+        )}
       </View>
-    </>
+    </View>
   );
 };
 
 export const ToktokBillsReceipt = ({ navigation, route }) => {
+
+  const [onCapturingScreen, setOnCapturingScreen] = useState(false);
   const viewshotRef = useRef();
   const headerHeight = useHeaderHeight();
   const imageHeight = height - headerHeight - ( Platform.OS == 'ios' ? getStatusbarHeight : 0);
-
+  
   navigation.setOptions({
     headerLeft: () => null,
     headerTitle: () => <HeaderTitle label={"toktokload Receipt"} />,
-    headerRight: () => <HeaderDownloadReceipt viewshotRef={viewshotRef} refNo={"10292"} />,
+    headerRight: () =>
+      <HeaderDownloadReceipt
+        viewshotRef={viewshotRef}
+        refNo={route.params.receipt.referenceNumber}
+        onPressDownloadReceipt={(val) => { setOnCapturingScreen(val) }}
+      />,
   });
 
   useEffect(() => {
@@ -73,7 +82,7 @@ export const ToktokBillsReceipt = ({ navigation, route }) => {
           ref={viewshotRef}
           options={{ format: "jpg", quality: 0.9, result: 'tmpfile' }}
         >
-          <MainComponent navigation={navigation} route={route} />
+          <MainComponent navigation={navigation} route={route} onCapturingScreen={onCapturingScreen} />
         </ViewShot>
       </ScrollView>
     </>
@@ -85,12 +94,10 @@ export const ToktokBillsReceipt = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   headerContainer: {
-    alignItems: "center",
-    marginTop: moderateScale(20),
-    marginBottom: moderateScale(10)
+    paddingTop: moderateScale(30),
   },
   headerText: {
     color: "#F6841F",

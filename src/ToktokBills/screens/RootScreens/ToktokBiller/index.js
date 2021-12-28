@@ -64,7 +64,7 @@ export const ToktokBiller = ({navigation, route})=> {
         setRefreshing(false);
       },
       onCompleted: ({ getSearchBillItems }) => {
-        setFilteredData(getSearchBillItems);
+        setTimeout(() => setFilteredData(getSearchBillItems), 0);
       }
     }
   )
@@ -125,7 +125,7 @@ export const ToktokBiller = ({navigation, route})=> {
 
   return (
     <>
-    <View style={styles.container}>
+    <View  style={styles.container}>
       <View style={styles.searchContainer}>
         <SearchInput search={search} setSearch={setSearch} placeholder="Search Biller" />
       </View>

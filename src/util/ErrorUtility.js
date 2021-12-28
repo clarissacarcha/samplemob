@@ -4,7 +4,6 @@ import {ApolloError} from 'apollo-client';
 import { navigate,replace } from 'src/app/Nav/RootNavigation';
 
 export const onError = (error) => {
-  console.log(JSON.stringify(error), 'asdasd');
   const {graphQLErrors, networkError} = error;
 
   if (networkError) {

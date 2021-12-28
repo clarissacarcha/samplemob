@@ -11,7 +11,17 @@ import moment from "moment";
 export const ReceiptDetails = ({ route }) => {
 
   const { receipt, paymentData } = route.params;
-  const { destinationNumber, destinationIdentifier, amount, email, billerDetails, convenienceFee, referenceNumber, createdAt } = receipt;
+  const {
+    senderMobileNumber,
+    destinationNumber,
+    destinationIdentifier,
+    amount,
+    email,
+    billerDetails,
+    convenienceFee,
+    referenceNumber,
+    createdAt
+  } = receipt;
   const { firstFieldName, secondFieldName } = paymentData.billItemSettings;
   const totalAmount = parseInt(amount) + convenienceFee;
   const [ logo, setLogo ] = useState({ height: 0, width: 0 });
@@ -50,6 +60,10 @@ export const ReceiptDetails = ({ route }) => {
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>{secondFieldName}: </Text>
           <Text style={styles.description}>{destinationIdentifier}</Text>
+        </View>
+        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
+          <Text style={styles.title}>toktokwallet Account Number: </Text>
+          <Text style={styles.description}>+{senderMobileNumber}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Biller: </Text>
