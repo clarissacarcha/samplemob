@@ -15,7 +15,10 @@ export default ({Navigator}) => (
       options={{
         headerTitleAlign: 'center',
         headerStyle: {
-          elevation: 1,
+          borderBottomWidth: .5,
+          borderBottomColor: "#DDDDDD",
+          elevation: 0,
+          shadowOpacity: 0,
           height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80)
         },
       }}
@@ -26,7 +29,10 @@ export default ({Navigator}) => (
       options={{
         headerTitleAlign: 'center',
         headerStyle: {
-          elevation: 1,
+          borderBottomWidth: .5,
+          borderBottomColor: "#DDDDDD",
+          elevation: 0,
+          shadowOpacity: 0,
           height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80)
         },
       }}
@@ -37,7 +43,10 @@ export default ({Navigator}) => (
       options={{
         headerTitleAlign: 'center',
         headerStyle: {
-          elevation: 1,
+          borderBottomWidth: .5,
+          borderBottomColor: "#DDDDDD",
+          elevation: 0,
+          shadowOpacity: 0,
           height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80)
         },
       }}

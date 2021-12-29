@@ -13,7 +13,7 @@ export const SearchInput = ({value = "", onChangeText}) => {
   return (
     <View style={styles.searchField}>
       <View style={[styles.inputContainer,{flexDirection: "row"}]}>
-        <Image style={styles.icon} resizeMode="center" source={search_icon}/>
+        <Image style={styles.icon} resizeMode="contain" source={search_icon}/>
         <TextInput 
           style={styles.input}
           placeholder="Search Contacts"

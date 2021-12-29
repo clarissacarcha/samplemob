@@ -6,13 +6,13 @@ import { moderateScale } from "toktokload/helper";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
-import { toktok_logo } from "src/ToktokLoad/assets/images";
+import { load_logo } from "src/ToktokLoad/assets/images";
 
 export const Header = () => {
 
   return (
     <View style={{ alignItems: "center" }}>
-      <Image source={toktok_logo} style={styles.logo} />
+      <Image source={load_logo} style={styles.logo} />
       <View style={styles.logoTextContainer}>
         <Text>
           <Text style={styles.headerText} >Thank you for using </Text>
