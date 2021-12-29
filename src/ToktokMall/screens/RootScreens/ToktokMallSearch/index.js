@@ -8,7 +8,7 @@ import Toast from 'react-native-simple-toast';
 
 import {LandingSubHeader} from '../../../Components';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import {SEARCH_PRODUCT, SEARCH_PRODUCT_SUGGESTIONS} from '../../../../graphql/toktokmall/model';
+import {GET_TOP_PRODUCTS, SEARCH_PRODUCT, SEARCH_PRODUCT_SUGGESTIONS} from '../../../../graphql/toktokmall/model';
 
 import { connect } from 'react-redux';
 
@@ -46,7 +46,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       }else if(response && response.searchProduct.length > 0){
 
         temp = temp.concat(response.searchProduct)
-        route.params?.origin ? setSearchedProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold )) : setSearchedProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
+        setSearchedProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
         setEmptySearch(false)
         setSuggest(false)
         
@@ -92,6 +92,29 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     }
   })
 
+  const [getTopProducts] = useLazyQuery(GET_TOP_PRODUCTS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        offset: offset,
+        limit: 10
+      }
+    },
+    onCompleted: (response) => {
+      let temp = searchedProducts
+      if(response){
+        temp = temp.concat(response.getTopProducts)
+        setSearchedProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
+      }else{
+        setSearchedProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
   const [lazyLoading, {errorlazyload, loading3}] = useLazyQuery(SEARCH_PRODUCT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -108,7 +131,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       }else if(response && response.searchProduct.length > 0){
 
         temp = temp.concat(response.searchProduct)
-        setSearchedProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold )) 
+        setSearchedProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
         setEmptySearch(false)
         setSuggest(false)
         
@@ -150,7 +173,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
   }, [searchHistory])
 
   useEffect(() => {
-		if(route.params?.searchValue && route.params?.origin !== "relevant"){
+		if(route.params?.searchValue && route.params?.origin !== "relevant" && route.params?.origin !== "suggestion"){
       setInitialSearch(true)
 			setSearchValue(route.params.searchValue)
 			searchProduct({
@@ -172,6 +195,11 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 			setSearchValue(route.params.searchValue)
       console.log("datra", route.params.data)
       setSearchedProducts(route.params?.data)
+    }
+    if( route.params?.origin === "suggestion"){
+      setInitialSearch(true)
+			setSearchValue(route.params.searchValue)
+      getTopProducts()
     }
   }, [route.params])
   
@@ -229,8 +257,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
               variables: {
                 input: {
                   search: searchValue,
-                  origin: route.params?.origin ? route.params.origin : "all",
-                  category: route.params?.categoryId ? route.params?.categoryId : null,
+                  origin: "all",
                   offset: 0,
                   limit: 10
                 }

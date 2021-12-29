@@ -218,7 +218,6 @@ export const SEARCH_PRODUCT = gql`
 		discountRate
 		compareAtPrice
 		soldCount
-		weeklySold
     	images {
       	arrangement
       	filename

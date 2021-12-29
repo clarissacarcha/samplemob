@@ -114,22 +114,24 @@ const Component =  ({
     }
   })
 
-  
+  const initCartItem = () => {
+    AsyncStorage.getItem("ToktokMallUser").then((raw) => {
+      const data = JSON.parse(raw)
+      if(data.userId){
+        checkItemFromCart({
+          variables: {
+            input: {
+              userId: data.userId,
+              productId: product.Id
+            }
+          }
+        })
+      }
+    })
+  }
   useEffect(() => {
     if(product){
-      AsyncStorage.getItem("ToktokMallUser").then((raw) => {
-        const data = JSON.parse(raw)
-        if(data.userId){
-          checkItemFromCart({
-            variables: {
-              input: {
-                userId: data.userId,
-                productId: product.Id
-              }
-            }
-          })
-        }
-      })
+      initCartItem()
     }
   },[product])
 
@@ -317,8 +319,9 @@ const Component =  ({
       // createMyCartSession('push', raw)
       //setCartItems(CountCartItems)
       EventRegister.emit('refreshToktokmallShoppingCart')
-      createMyCartCountSession("add", input.qty)
+      // createMyCartCountSession("add", input.qty)
       setIsFetching(false)
+      initCartItem()
 
       dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
         type: 'Success',
