@@ -17,3 +17,4 @@ export * from "./CustomConfirmModal"
 export * from "./CustomMessageModal"
 export * from './CustomPlaceOrderModal'
 export * from "./PromotionBanner"
+export * from "./RefComDiscountRate"

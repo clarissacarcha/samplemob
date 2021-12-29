@@ -54,13 +54,13 @@ export const Menu = ({setUserLocation, constants}) => {
         onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
       />
       <MenuIcon label={'pabili'} icon={PabiliIcon} onPress={() => navigation.push('Pabili')} />
-      {/* <MenuIcon
+      <MenuIcon
         label={'toktokwallet'}
         icon={WalletIcon}
         onPress={() => {
           navigation.push('ToktokWalletHomePage');
         }}
-      /> */}
+      />
 
       {/* TOKTOKFOOD COMING SOON */}
       {constants.isToktokfoodComingSoonDisplayed == 1 && (

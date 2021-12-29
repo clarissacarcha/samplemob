@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
 import {Price} from '../../../../helpers';
 import { COLOR, FONT } from '../../../../../res/variables';
-import {LandingHeader, AdsCarousel, PromotionBanner} from '../../../../Components';
+import {LandingHeader, AdsCarousel, PromotionBanner, RefComDiscountRate} from '../../../../Components';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../Components/Icons';
 
@@ -112,6 +112,9 @@ const RenderItem = ({item}) => {
               <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>
+          {
+            item.refComDiscountRate && item.refComDiscountRate != "" ? <RefComDiscountRate value={item.refComDiscountRate} /> : null
+          }
         </TouchableOpacity>
       </View>
     </>

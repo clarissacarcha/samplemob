@@ -12,7 +12,7 @@ import { GET_TOP_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
 
 import {clothfacemask, medicalfacemask, placeholder} from '../../../../../assets'; 
 import { Price } from '../../../../../helpers';
-import { SwipeReloader, Loading, PromotionBanner } from '../../../../../Components';
+import { SwipeReloader, Loading, PromotionBanner, RefComDiscountRate } from '../../../../../Components';
 import Spinner from 'react-native-spinkit';
 
 import ContentLoader from 'react-native-easy-content-loader'
@@ -132,6 +132,9 @@ const RenderItem = ({item, loading}) => {
             </View>
             
           </View>
+          {
+            item.refComDiscountRate && item.refComDiscountRate != "" ? <RefComDiscountRate value={item.refComDiscountRate} /> : null
+          }          
         </TouchableOpacity>
       </View>
     </>
@@ -153,7 +156,7 @@ export const Suggestions = ({lazyload}) => {
       input: {
         offset: offset,
         limit: 10,
-        refCom: ""
+        refCom: "jc"
       }
     },
     onCompleted: (response) => {

@@ -166,7 +166,7 @@ const Component =  ({
     variables: {
       input: {
         id: Id,
-        refCom: ""
+        refCom: "jc"
       }
     },
     onCompleted: (response) => {

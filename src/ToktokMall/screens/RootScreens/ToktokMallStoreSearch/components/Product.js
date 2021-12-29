@@ -79,6 +79,9 @@ const RenderItem = ({item, navigation}) => {
               <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>
+          {
+            item.refComDiscountRate && item.refComDiscountRate != null ? <RefComDiscountRate value={item.refComDiscountRate} /> : null
+          }
         </View>
       </View>
     </>

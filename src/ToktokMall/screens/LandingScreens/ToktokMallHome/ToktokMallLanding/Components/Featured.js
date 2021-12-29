@@ -4,7 +4,7 @@ import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel'
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/core';
 import { COLOR, FONT } from '../../../../../../res/variables';
-import {LandingHeader, AdsCarousel, Loading} from '../../../../../Components';
+import {LandingHeader, AdsCarousel, Loading, RefComDiscountRate} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
 import {coppermask, chair, bottle, flashsalebg, flashsale, featuredflash, placeholder} from '../../../../../assets';
 import {Price} from '../../../../../helpers';
@@ -95,6 +95,7 @@ const Item = ({data}) => {
             <Text style={{fontSize: 9.5, alignSelf: 'center', color: "#FDBA1C"}}>{data?.discountRate}</Text>
           </View> */}
         </View>
+        {data.refComDiscountRate && data.refComDiscountRate != "" ? <RefComDiscountRate value={data.refComDiscountRate} w="80%" /> : null}        
       </TouchableOpacity>
     </>
   )
@@ -135,7 +136,7 @@ export const Featured = () => {
       input: {
         offset: 0,
         limit: 8,
-        refCom: ""
+        refCom: "jc"
       }
     },
     onCompleted: (response) => {

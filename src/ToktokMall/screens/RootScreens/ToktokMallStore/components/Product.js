@@ -6,7 +6,7 @@ import CustomIcon from '../../../../Components/Icons';
 import {placeholder} from '../../../../assets';
 import { useNavigation } from '@react-navigation/core';
 
-import { SwipeReloader, PromotionBanner } from '../../../../Components';
+import { SwipeReloader, PromotionBanner, RefComDiscountRate } from '../../../../Components';
 import { Price } from '../../../../helpers';
 
 import { Avatar } from 'react-native-elements';
@@ -102,6 +102,9 @@ const RenderItem = ({item}) => {
               <Text style={{fontSize: 8}}>{item?.soldCount || 0} sold</Text>
             </View>
           </View>
+          {
+            item.refComDiscountRate && item.refComDiscountRate != null ? <RefComDiscountRate value={item.refComDiscountRate} /> : null
+          }
         </TouchableOpacity>
       </View>
     </>

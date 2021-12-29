@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../../../../Components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import {placeholder} from '../../../../assets';
-import { SwipeReloader, PromotionBanner } from '../../../../Components';
+import { SwipeReloader, PromotionBanner, RefComDiscountRate } from '../../../../Components';
 import { Price } from '../../../../helpers';
 
 const RenderStars = ({value}) => {
@@ -78,6 +78,7 @@ const RenderItem = ({navigation, item}) => {
               <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>
+          {item.refComDiscountRate && item.refComDiscountRate != "" ? <RefComDiscountRate value={item.refComDiscountRate} /> : null}
         </TouchableOpacity>
       </View>
     </>
