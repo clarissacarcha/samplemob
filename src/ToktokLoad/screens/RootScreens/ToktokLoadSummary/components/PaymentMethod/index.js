@@ -32,7 +32,7 @@ export const PaymentMethod = ({ loadDetails, onCashIn }) => {
   };
 
   const onPressCreateAccount = () => {
-    navigation.navigate('ToktokWalletVerification');
+    navigation.navigate('ToktokWalletLoginPage');
   }
  
   const displayInsufficientBalance = () => {

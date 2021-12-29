@@ -12,7 +12,7 @@ import { ErrorUtility } from 'toktokload/util';
 //GRAPHQL & HOOKS
 import { useMutation } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
-import { POST_TRANSACTION } from 'toktokload/graphql/model';
+import { POST_LOAD_TRANSACTION } from 'toktokload/graphql/model';
 import { useAccount } from 'toktokwallet/hooks';
 import { usePrompt, useAlert } from 'src/hooks';
 import { onErrorAlert } from 'src/util/ErrorUtility';
@@ -43,7 +43,7 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
   const [otpTimer, setOtpTimer] = useState(120);
   const [showPin,setShowPin] = useState(false);
 
-  const [postTransaction, {loading, error}] = useMutation(POST_TRANSACTION, {
+  const [postLoadTransaction, {loading, error}] = useMutation(POST_LOAD_TRANSACTION, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: (error) => {
       ErrorUtility.StandardErrorHandling({
@@ -53,14 +53,14 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
         prompt
       });
     },
-    onCompleted: ({ postTransaction }) => {
+    onCompleted: ({ postLoadTransaction }) => {
       // prompt({
       //   type: "success",
       //   title: "Thank you",
       //   message: `₱ ${numberFormat(loadDetails.amount)} prepaid credit was loaded to your mobile number`,
-      //   onPress: () => { navigation.navigate("ToktokLoadReceipt", { receipt: postTransaction.data  }) }
+      //   onPress: () => { navigation.navigate("ToktokLoadReceipt", { receipt: postLoadTransaction.data  }) }
       // });
-      navigation.navigate("ToktokLoadReceipt", { receipt: postTransaction.data  })
+      navigation.navigate("ToktokLoadReceipt", { receipt: postLoadTransaction.data  })
     }
   })
 
@@ -96,11 +96,10 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
       senderWalletBalance: parseFloat(tokwaBalance),
       amount: parseFloat(loadDetails.amount),
       senderWalletEndingBalance: parseFloat(tokwaBalance) - parseFloat(loadDetails.amount),
-      type: 2,
       comRateId: loadDetails.comRateId,
     }
 
-    postTransaction({
+    postLoadTransaction({
       variables: {
         input
       }
