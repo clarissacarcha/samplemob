@@ -89,7 +89,7 @@ export const Product = ({data, state, fetch, lazyload, loading2}) => {
   }
 
   useEffect(() => {
-    setProducts(data.sort((a, b) => a.soldCount < b.soldCount ))
+    setProducts(data)
   }, [data])
 
     return (
