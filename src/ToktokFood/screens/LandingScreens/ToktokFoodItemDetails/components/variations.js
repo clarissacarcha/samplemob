@@ -30,7 +30,7 @@ export const Variations = ({data, productId}) => {
   useEffect(() => {
     if (data.variants.length > 0) {
       let selectedVar = productId
-        ? data.variants.find((val) => {
+        ? data.variants.find(val => {
             return productId == val.Id;
           })
         : data.variants[0];
@@ -42,7 +42,7 @@ export const Variations = ({data, productId}) => {
     if (optionsAmount) {
       setTotalPrice(count.quantity * (basePrice + optionsAmount));
     } else {
-      setTotalPrice((prev) => {
+      setTotalPrice(prev => {
         let amount = prev - (prev - basePrice);
         return count.quantity * amount;
       });
@@ -52,8 +52,8 @@ export const Variations = ({data, productId}) => {
   useEffect(() => {
     if (Object.values(selected).length > 0) {
       let amount = 0;
-      Object.values(selected).map((item) => {
-        item.map((val) => {
+      Object.values(selected).map(item => {
+        item.map(val => {
           amount += val.addon_price;
         });
       });
@@ -75,7 +75,7 @@ export const Variations = ({data, productId}) => {
         if (selected[item.optionName][index]) {
           if (selected[item.optionName].length > 1) {
             selected[item.optionName].splice(index, 1);
-            setSelected((prev) => {
+            setSelected(prev => {
               return {...prev, [item.optionName]: selected[item.optionName]};
             });
           } else {
@@ -85,20 +85,20 @@ export const Variations = ({data, productId}) => {
         } else {
           if (selected[item.optionName].length != item.noOfSelection) {
             temp = [...selected[item.optionName], opt];
-            setSelected((prev) => {
+            setSelected(prev => {
               return {...prev, [item.optionName]: temp};
             });
           } else {
             selected[item.optionName].splice(selected[item.optionName].length - 1, 1);
             temp = [...selected[item.optionName], opt];
-            setSelected((prev) => {
+            setSelected(prev => {
               return {...prev, [item.optionName]: temp};
             });
           }
         }
       } else {
         temp = [...temp, opt];
-        setSelected((prev) => {
+        setSelected(prev => {
           return {...prev, [item.optionName]: temp};
         });
       }
@@ -109,15 +109,55 @@ export const Variations = ({data, productId}) => {
   const renderOptions = ({item}) => {
     let temp = [];
     if (!requiredOptions[item.optionName] && item.isRequired) {
-      setRequiredOptions((prev) => {
+      setRequiredOptions(prev => {
         return {...prev, [item.optionName]: item.isRequired};
       });
     }
 
+    const variantNote = i => {
+      const {isRequired, noOfSelection, optionName} = i;
+      // Required ; 1 option - select 1
+      if (isRequired && noOfSelection === 1) {
+        return (
+          <Text style={styles.variationTitle}>
+            {optionName.toLowerCase()} (Select {item.noOfSelection})
+          </Text>
+        );
+      }
+      // Required ; multiple - select up to (n)
+      if (isRequired && noOfSelection > 1) {
+        return (
+          <Text style={styles.variationTitle}>
+            {optionName.toLowerCase()} (Select up to {item.noOfSelection})
+          </Text>
+        );
+      }
+      // Optional  ; 1 option -  select 1
+      if (!isRequired && noOfSelection === 1) {
+        return (
+          <Text style={styles.variationTitle}>
+            {optionName.toLowerCase()} (Select {item.noOfSelection})
+          </Text>
+        );
+      }
+      // Optional ; multiple - select up to (n)
+      if (!isRequired && noOfSelection > 1) {
+        return (
+          <Text style={styles.variationTitle}>
+            {optionName.toLowerCase()} (Select up to {item.noOfSelection})
+          </Text>
+        );
+      }
+    };
+
     return (
       <View style={styles.variations}>
         <View style={styles.flexCenter}>
-          <Text style={styles.variationTitle}>{item.optionName.toLowerCase()} (Choose at least 1)</Text>
+          {variantNote(item)}
+          {/* <Text style={styles.variationTitle}>
+            {console.log(item)}
+            {item.optionName.toLowerCase()} (Select up to {item.noOfSelection})
+          </Text> */}
           <View style={styles.requiredContainer}>
             <Text style={styles.requiredText}>{item.isRequired ? 'Required' : 'Optional'}</Text>
           </View>
@@ -126,7 +166,7 @@ export const Variations = ({data, productId}) => {
         {item.optionLogs.map((optionLogs, i) => {
           let index = -1;
           if (selected[item.optionName]) {
-            index = selected[item.optionName].findIndex((v) => {
+            index = selected[item.optionName].findIndex(v => {
               return v.addon_id == optionLogs.id;
             });
           }
@@ -134,7 +174,7 @@ export const Variations = ({data, productId}) => {
             <View style={styles.variationsWrapper}>
               <RadioButton
                 isMultiple={item.noOfSelection > 1}
-                onValueChange={(c) => {
+                onValueChange={c => {
                   onValueChange({item, optionLogs, index, temp});
                 }}
                 name={optionLogs.optionName}
@@ -153,7 +193,7 @@ export const Variations = ({data, productId}) => {
       <View style={styles.variantWrapper}>
         <View style={styles.variantSubWrapper}>
           <RadioButton
-            onValueChange={(c) => {
+            onValueChange={c => {
               setSelectedVariants(item);
             }}
             name={item.itemname}
@@ -176,24 +216,30 @@ export const Variations = ({data, productId}) => {
           <Separator />
         </>
       )}
-      <FlatList data={data.options} renderItem={renderOptions} style={{flex: 1}} />
-      <View style={styles.variations}>
-        <View style={styles.instructionContainer}>
-          <Text style={styles.variationTitle}>Special Instructions</Text>
-          <View style={styles.requiredContainer}>
-            <Text style={styles.requiredText}>Optional</Text>
+      <FlatList
+        ListFooterComponent={() => (
+          <View style={[styles.variations]}>
+            <View style={styles.instructionContainer}>
+              <Text style={styles.variationTitle}>Special Instructions</Text>
+              <View style={styles.requiredContainer}>
+                <Text style={styles.requiredText}>Optional</Text>
+              </View>
+            </View>
+            <TextInput
+              value={notes}
+              multiline={true}
+              numberOfLines={4}
+              style={styles.input}
+              placeholder="e.g. no cutlery."
+              placeholderTextColor={COLOR.MEDIUM}
+              onChangeText={notes => setNotes(notes)}
+            />
           </View>
-        </View>
-        <TextInput
-          value={notes}
-          multiline={true}
-          numberOfLines={4}
-          style={styles.input}
-          placeholder="e.g. no cutlery."
-          placeholderTextColor={COLOR.MEDIUM}
-          onChangeText={(notes) => setNotes(notes)}
-        />
-      </View>
+        )}
+        data={data.options}
+        renderItem={renderOptions}
+        style={{flex: 1}}
+      />
     </>
   );
 };
@@ -232,7 +278,7 @@ const styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
-    textTransform: 'capitalize',
+    // textTransform: 'capitalize',
   },
   variantTitle: {
     color: COLOR.BLACK,
