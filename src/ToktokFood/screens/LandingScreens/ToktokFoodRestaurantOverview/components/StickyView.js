@@ -155,7 +155,7 @@ export const StickyView = () => {
             <View style={styles.content}>
               <Image source={{uri: shopDetails.logo}} style={styles.logo} resizeMode="cover" />
               <View style={{flexShrink: 1, marginHorizontal: 10}}>
-                <Text numberOfLines={1} style={styles.titleText}>
+                <Text style={styles.titleText}>
                   {`${shopDetails.shopname} (${shopDetails.address})`}
                 </Text>
                 {/* <CustomStarRating
@@ -260,7 +260,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(10),
     flexDirection: 'row',
     paddingTop: 5,
-    alignItems: 'center',
   },
   contentContainer: {
     backgroundColor: 'white',
