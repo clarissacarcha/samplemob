@@ -46,7 +46,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       }else if(response && response.searchProduct.length > 0){
 
         temp = temp.concat(response.searchProduct)
-        setSearchedProducts(temp)
+        route.params?.origin ? setSearchedProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold )) : setSearchedProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
         setEmptySearch(false)
         setSuggest(false)
         
@@ -64,7 +64,6 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       }
 
       setIsLoading(false)
-      console.log("Search Result", response)
       
     },
     onError: (err) => {
@@ -74,6 +73,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       setIsLoading(false)
     }
   })
+  console.log("Search Result", searchedProducts)
+
 
   const [searchProductSuggestion, {error2, loading2}] = useLazyQuery(SEARCH_PRODUCT_SUGGESTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -107,7 +108,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       }else if(response && response.searchProduct.length > 0){
 
         temp = temp.concat(response.searchProduct)
-        setSearchedProducts(temp)
+        setSearchedProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold )) 
         setEmptySearch(false)
         setSuggest(false)
         
