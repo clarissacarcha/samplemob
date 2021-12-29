@@ -360,7 +360,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             return rates.original_shipping
           }         
         }else{
-          return "Calculating"
+          return 0
         }
       }
 
