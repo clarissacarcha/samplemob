@@ -331,7 +331,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         }
 
         {!loading && !loading2 && searchedProducts.length > 0 && searchValue != "" && 
-        <Product 
+         <Product 
           state={false} 
           data={searchedProducts} 
           fetch={() => {
@@ -371,7 +371,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
            
           }}
           loading2 = {loading3}
-        />}
+        />  }
 
         {loading && 
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

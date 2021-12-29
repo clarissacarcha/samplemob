@@ -56,6 +56,12 @@ export const LandingSubHeader = (props) => {
     if(props.onSubmit) props.onSubmit()
   }
 
+  const clearTextOnFocus = () => {
+    if(searchValue != ''){
+      setSearchValue('')
+    }
+  }
+
   useEffect(() => {
     setSearchValue(props.initialValue)
   }, [props.initialValue])
@@ -101,6 +107,10 @@ export const LandingSubHeader = (props) => {
                     console.log("Submitted")
                     searchFieldRef.current.isFocused(false)
                     handleOnSubmit()               
+                  }}
+                  // onP
+                  onFocus={() => {
+                    clearTextOnFocus()
                   }}
                 />}
               </View>
