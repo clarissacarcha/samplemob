@@ -73,7 +73,7 @@ const NearbyStores = ({navigation, route}) => {
     getGooglePlaceDetails({
       variables: {
         input: {
-          placeId: value.place_id,
+          placeId: value.placeId,
           sessionToken: 'NOT-AVAILABLE',
         },
       },

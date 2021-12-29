@@ -8,7 +8,7 @@ import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
 // Helpers
 import {getFormattedAddress, getLocation} from 'toktokfood/helper';
-import {getUserLocation} from 'toktokfood/helper/persistentLocation';
+import {getUserLocation} from 'toktokfood/helper/PersistentLocation';
 
 export const useUserLocation = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ export const useUserLocation = () => {
     } else {
       // Get user initial location
       getLocation()
-        .then(async (res) => {
+        .then(async res => {
           if (res) {
             // Do not spread address object from getFormattedAddress function and pass to payload
             // if the initial state structure of reducer is not equal to getFormattedAddress result.

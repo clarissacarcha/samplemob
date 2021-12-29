@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 // Fonts/Colors
-import { COLORS } from 'res/constants';
-import { FONT_SIZE, FONT } from 'res/variables';
+import {COLORS} from 'res/constants';
+import {FONT_SIZE, FONT} from 'res/variables';
 // Images
-import { chat, phoneBlack } from 'toktokfood/assets/images';
+import {chat, phoneBlack} from 'toktokfood/assets/images';
 // Utils
-import { moderateScale, verticalScale } from 'toktokfood/helper/scale';
-import { checkRiderDetails } from 'toktokfood/helper/showRiderDetails';
+import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+import {checkRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
 
-const OrderRider = ({ riderDetails, transaction, referenceNum }) => {
-  const { user, vehicle } = riderDetails;
+const OrderRider = ({riderDetails, transaction, referenceNum}) => {
+  const {user, vehicle} = riderDetails;
   const [showDriverModal, setShowDriverModal] = useState(false);
 
   useEffect(() => {
-    if(riderDetails != null && transaction.orderStatus != 's'){
+    if (riderDetails != null && transaction.orderStatus != 's') {
       handleCheckRiderDetails();
     }
   }, [riderDetails, transaction]);
 
-  const handleCheckRiderDetails = async() => {
-    let res = await checkRiderDetails(referenceNum)
-    setShowDriverModal(res?.status == 200)
-  }
+  const handleCheckRiderDetails = async () => {
+    let res = await checkRiderDetails(referenceNum);
+    setShowDriverModal(res?.status == 200);
+  };
 
   const onMessage = () => {
     const url = `sms:${user.person.mobileNumber}`;
@@ -36,13 +36,13 @@ const OrderRider = ({ riderDetails, transaction, referenceNum }) => {
 
   const renderAvatar = (rating = 4) => (
     <View style={styles.avatarContainer}>
-      <Image resizeMode="cover" style={styles.avatar} source={{ uri: user.person.avatar }} />
+      <Image resizeMode="cover" style={styles.avatar} source={{uri: user.person.avatar}} />
       <View style={styles.leftContainer}>
         <Text style={styles.riderName}>{`${user.person.firstName} ${user.person.lastName}`}</Text>
         <Text style={styles.orderNumber}>{user.person.mobileNumber}</Text>
         <Text style={styles.notes}>{vehicle.plateNumber}</Text>
         <Text style={styles.notes}>{`${vehicle.brand.brand} ${vehicle.model.model}`}</Text>
-          {/* <Text style={styles.notes}>{parseFloat(rating).toFixed(1)}</Text>
+        {/* <Text style={styles.notes}>{parseFloat(rating).toFixed(1)}</Text>
           <Rating startingValue={parseFloat(rating).toFixed(1)} imageSize={13} readonly style={styles.ratings} ratingColor={"#FFA700"} /> */}
         {/* <CustomStarRating
           rating={'0'}
@@ -71,7 +71,7 @@ const OrderRider = ({ riderDetails, transaction, referenceNum }) => {
 
   return (
     <View style={styles.container}>
-       {/* <RatingModal
+      {/* <RatingModal
         title={"We've found you a driver!"}
         visibility={showDriverModal}
         onCloseModal={() => setShowDriverModal(false)}
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     // paddingBottom: 10
   },
   leftContainer: {
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
   orderNumber: {
     fontWeight: '400',
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   },
   ratingContainer: {
     flexDirection: 'row',
-    alignItems: "center"
+    alignItems: 'center',
   },
   riderInfo: {
     borderTopWidth: 1,
@@ -160,6 +160,6 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: "center"
+    alignItems: 'center',
   },
 });
