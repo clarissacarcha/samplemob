@@ -71,7 +71,11 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
   const [stringDescription, setStringDescription] = useState(null);
   const maxValue = constants.maxCashOnDelivery;
   const [partnerBranch, setPartnerBranch] = useState(null);
-  const {data: balanceData, loading: balanceLoading, error: balanceError} = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+  const {
+    data: balanceData,
+    loading: balanceLoading,
+    error: balanceError,
+  } = useQuery(GET_TOKTOK_WALLET_BALANCE, {
     fetchPolicy: 'network-only',
   });
 
@@ -94,7 +98,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
 
   useEffect(() => {
     if (route.params.partnerBranch) {
-      const filteredOrders = route.params.partnerBranch.orders.filter((order) => {
+      const filteredOrders = route.params.partnerBranch.orders.filter(order => {
         return order.cargo.tenants.length > 0;
       });
 
@@ -114,10 +118,10 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
 
   const [getDeliveryPriceAndDirections, {loading}] = useLazyQuery(GET_DELIVERY_PRICE_AND_DIRECTIONS, {
     fetchPolicy: 'no-cache',
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert: AlertHook, error});
     },
-    onCompleted: (data) => {
+    onCompleted: data => {
       // console.log(JSON.stringify(data.getDeliveryPriceAndDirections, null, 4));
       const {hash, pricing, directions} = data.getDeliveryPriceAndDirections;
       const {price, distance, duration, discount, expressFee} = pricing;
@@ -137,6 +141,8 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
       if (itemDescription === 'Others') {
         finalItemDescription = otherItem;
       }
+
+      console.log(JSON.stringify({hash, pricing, directions}, null, 4));
 
       navigation.push('DeliverySummary', {
         orderData: {
@@ -160,14 +166,14 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     },
   });
 
-  const cleanEmptyItemsToPurchase = (value) => {
-    return value.filter((item) => item.description || item.quantity);
+  const cleanEmptyItemsToPurchase = value => {
+    return value.filter(item => item.description || item.quantity);
   };
 
-  const verifyItemsToPurchase = (value) => {
+  const verifyItemsToPurchase = value => {
     let verified = true;
 
-    value.map((item) => {
+    value.map(item => {
       if (!item.description) {
         verified = false;
       }
@@ -179,8 +185,8 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     return verified;
   };
 
-  const formatItemsToPurchase = (value) => {
-    return value.map((item) => `${item.quantity} - ${item.description}`);
+  const formatItemsToPurchase = value => {
+    return value.map(item => `${item.quantity} - ${item.description}`);
   };
 
   const onConfirmPabiliInformation = () => {
@@ -285,7 +291,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     });
   };
 
-  const onPaymentMethodChange = (paymentMethodValue) => {
+  const onPaymentMethodChange = paymentMethodValue => {
     // if (isCashOnDelivery && collectPaymentFromValue === 'SENDER') {
     //   AlertHook({message: 'Cannot collect payment from sender on cash on deliveries.'});
     //   return;
@@ -293,7 +299,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     setPaymentMethod(paymentMethodValue);
   };
 
-  const onPartnerBranchOrderSelect = (order) => {
+  const onPartnerBranchOrderSelect = order => {
     if (!selectedOrder) {
       setItemDescription(order.cargo.type);
       setTenants(order.cargo.tenants);
@@ -309,7 +315,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     }
   };
 
-  const onCashOnDeliveryValueChange = (value) => {
+  const onCashOnDeliveryValueChange = value => {
     const decimal = value.split('.')[1];
 
     if (isNaN(value)) {
@@ -407,7 +413,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
   constants: state.constants,
 });

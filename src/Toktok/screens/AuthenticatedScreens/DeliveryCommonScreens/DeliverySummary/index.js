@@ -39,7 +39,7 @@ const StopDetails = ({navigation, route}) => {
   const [booked, setBooked] = useState(false);
 
   const [postDelivery, {loading: postDeliveryLoading}] = useMutation(POST_DELIVERY, {
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert: AlertHook, error});
     },
     onCompleted: () => {
@@ -60,6 +60,8 @@ const StopDetails = ({navigation, route}) => {
         ...southwest,
       },
     ];
+
+    console.log({LALA: coordinates});
 
     mapViewRef.current.fitToCoordinates(
       coordinates,
@@ -128,7 +130,8 @@ const StopDetails = ({navigation, route}) => {
         provider={PROVIDER_GOOGLE}
         style={styles.container}
         initialRegion={PHILIPPINE_REGION}
-        onMapReady={onMapReady}
+        // onMapReady={onMapReady}
+        onLayout={onMapReady}
         // region={{
         //   // ...stopData,
         //   latitudeDelta: 0.015,

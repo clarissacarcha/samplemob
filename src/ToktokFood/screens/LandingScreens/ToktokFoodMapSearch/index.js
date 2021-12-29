@@ -11,7 +11,7 @@ import {verticalScale, scale, getStatusbarHeight} from 'toktokfood/helper/scale'
 
 import {useDispatch} from 'react-redux';
 
-import {saveUserLocation} from 'toktokfood/helper/persistentLocation';
+import {saveUserLocation} from 'toktokfood/helper/PersistentLocation';
 
 // Helpers
 import {getFormattedAddress} from 'toktokfood/helper';
@@ -35,7 +35,7 @@ const ToktokFoodMapSearch = () => {
   });
 
   // Add work around for this
-  const onMapMove = async (c) => {
+  const onMapMove = async c => {
     if (isLoaded) {
       const {latitude, longitude} = c;
       try {
@@ -58,7 +58,7 @@ const ToktokFoodMapSearch = () => {
     }
   };
 
-  const onConfirmAddress = (details) => {
+  const onConfirmAddress = details => {
     saveUserLocation({...mapInfo.fullInfo, details}).then(() => {
       dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...mapInfo.fullInfo, details}});
     });
@@ -80,7 +80,7 @@ const ToktokFoodMapSearch = () => {
               ...mapInfo.coordinates,
               ...MAP_DELTA_LOW,
             }}
-            onRegionChangeComplete={(r) => onMapMove(r)}
+            onRegionChangeComplete={r => onMapMove(r)}
           />
           <FA5Icon style={styles.mapMarker} name="map-pin" size={40} color={COLOR.BLACK} />
         </View>
@@ -88,11 +88,7 @@ const ToktokFoodMapSearch = () => {
           <FA5Icon name="chevron-left" size={25} color={COLOR.BLACK} />
         </TouchableOpacity>
       </View>
-      <PickUpDetails
-        isCart={route.params?.isCart}
-        pinAddress={mapInfo.address}
-        onConfirm={(d) => onConfirmAddress(d)}
-      />
+      <PickUpDetails isCart={route.params?.isCart} pinAddress={mapInfo.address} onConfirm={d => onConfirmAddress(d)} />
     </>
   );
 };
