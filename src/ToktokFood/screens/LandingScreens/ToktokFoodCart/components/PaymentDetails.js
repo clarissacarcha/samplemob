@@ -69,10 +69,7 @@ const PaymentDetails = ({refreshing, orderType}) => {
   };
 
   const onPressTopUp = () => {
-    navigation.navigate('ToktokWalletPaymentOptions', {
-      amount: 0,
-      onCashIn: onCashIn,
-    });
+    navigation.navigate('ToktokWalletLoginPage');
   };
 
   const onToktokWalletCashInNavigate = () => {
