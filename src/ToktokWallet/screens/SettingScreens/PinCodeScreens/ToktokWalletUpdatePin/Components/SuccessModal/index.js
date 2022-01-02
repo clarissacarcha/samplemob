@@ -18,11 +18,15 @@ const Reminder = ({children})=> {
     )
 }
 
-export const SuccessModal = ({modalVisible,setModalVisible})=> {
+export const SuccessModal = ({modalVisible,setModalVisible,event})=> {
     const navigation = useNavigation()
 
     const closeModal = ()=> {
         setModalVisible(false)
+        if(event){
+            navigation.pop(2)
+            return;
+        }
         navigation.navigate("ToktokWalletHomePage");
         navigation.replace("ToktokWalletHomePage")
     }

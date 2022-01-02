@@ -89,8 +89,21 @@ taking a selfie </Text>
 
 export const VerifySelfieWithID = ()=> {
 
+    const [showPepQuestionnaire,setShowPepQuestionnaire] = useState(false)
     const VerifyUserData = useContext(VerifyContext)
-    const {setCacheImagesList, setCurrentIndex , selfieImageWithID, setSelfieImageWithID , setTempSelfieImageWithID, tempSelfieImageWithID} = VerifyUserData
+    const {
+        setCacheImagesList,
+        setCurrentIndex , 
+        selfieImageWithID, 
+        setSelfieImageWithID ,
+        setTempSelfieImageWithID,
+        tempSelfieImageWithID,
+        person,
+        birthInfo,
+        nationalityId,
+        pepInfo,
+        setPepInfo
+    } = VerifyUserData
     const [cropperParams, setCropperParams] = useState({});
     const navigation = useNavigation()
     const cropSize = {
@@ -115,6 +128,24 @@ export const VerifySelfieWithID = ()=> {
         // setCurrentIndex(oldval => oldval + 1)
     }
 
+    const [postVerifyIfPep, {loading}] = useMutation(POST_VERIFY_IF_PEP, {
+        client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+        onError: (error)=> onErrorAlert({alert,error}),
+        onCompleted: ({postVerifyIfPep})=>{
+            if(postVerifyIfPep){
+                setPepInfo(state=> {
+                    return {
+                        ...state,
+                        isPep: true,
+                    }
+                })
+                return setShowPepQuestionnaire(true);
+            }
+
+            return setCurrentIndex(oldval => oldval + 1)
+        }
+    })
+
     const Proceed = async ()=> {
         if(tempSelfieImageWithID == null){
             return navigation.push("ToktokWalletSelfieImageWithIDCamera", {setImage})
@@ -132,14 +163,45 @@ export const VerifySelfieWithID = ()=> {
                 ...state,
                 uri: croppedResult
             }))
+
+            postVerifyIfPep({
+                variables: {
+                    input: {
+                        firstName: person.firstName,
+                        middleName: person.middleName,
+                        lastName: person.lastName,
+                        birthDate: birthInfo.birthdate,
+                        placeOfBirth: birthInfo.birthPlace,
+                        gender: person.gender,
+                        nationality: nationalityId
+                    }
+                }
+            })
         }catch(error){  
             throw error;
         }
-        return setCurrentIndex(oldval => oldval + 1)
+       
     }
 
     if(tempSelfieImageWithID){
         return(
+            <>
+             <AlertOverlay visible={loading}/>
+             <PepQuestionnaireModal 
+                visible={showPepQuestionnaire} 
+                setVisible={setShowPepQuestionnaire}
+                onRequestClose={()=>setShowPepQuestionnaire(false)}
+                pepInfo={pepInfo}
+                setPepInfo={setPepInfo}
+                callback={()=>{
+                    setShowPepQuestionnaire(false)
+                    navigation.navigate("ToktokWalletPepVideoCallSchedule" , {
+                        setCurrentIndex,
+                        pepInfo,
+                        setPepInfo
+                    })
+                }}
+            />
             <MainComponent onPress={Proceed}>
                 <View style={styles.PreviewImage}>
                     {/* <Image style={{height:290,width: 280,flex: 1}} resizeMode="stretch" source={{uri: selfieImageWithID.uri}}/> */}
@@ -159,6 +221,7 @@ export const VerifySelfieWithID = ()=> {
                 </TouchableOpacity>
                 </View>
             </MainComponent>
+            </>
         )
     }
     

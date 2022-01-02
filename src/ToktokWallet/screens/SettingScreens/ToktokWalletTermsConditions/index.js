@@ -52,7 +52,7 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
         <Separator/>
         <View style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
-                <Text>{data.getGlobalSetting.keyValue}</Text>
+                <Text style={styles.textValue}>{data.getGlobalSetting.keyValue}</Text>
             </ScrollView>
         </View>
         </CheckIdleState>
@@ -86,5 +86,9 @@ const styles = StyleSheet.create({
     body: {
         margin: MARGIN.M,
         textAlign: 'justify',
-      },
+    },
+    textValue:{
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.M,
+    }
 })
