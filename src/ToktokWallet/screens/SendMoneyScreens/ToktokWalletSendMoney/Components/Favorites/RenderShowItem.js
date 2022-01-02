@@ -43,6 +43,12 @@ const styles = StyleSheet.create({
         // margin: 20,
         minHeight: moderateScale(45)
     },
+    rowFront: {
+        alignItems: 'center',
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        height: 50,
+    },
 })
 
 export default RenderShowItem

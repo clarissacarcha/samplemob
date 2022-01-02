@@ -18,9 +18,13 @@ const RenderHiddenItem = ({
     const onPressThrottled = useThrottle(removeFavorite, 2000);
 
     return (
-        <TouchableOpacity onPress={onPressThrottled} style={styles.container}>
-                <VectorIcon iconSet={ICON_SET.Feather} name="trash" color="white" size={20}/>
-        </TouchableOpacity>
+        <View style={styles.rowBack}>
+        <View style={[styles.backRightBtn, styles.backRightBtnRight]}>
+            <TouchableOpacity onPress={onPressThrottled} style={styles.container}>
+                 <VectorIcon iconSet={ICON_SET.Feather} name="trash" color="white" size={20}/>
+            </TouchableOpacity>
+        </View>
+    </View>
     )
 }
 
@@ -32,6 +36,26 @@ const styles = StyleSheet.create({
         alignItems:"center",
         backgroundColor:COLOR.RED,
         alignSelf:"flex-end"
+    },
+    rowBack: {
+        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingLeft: 15,
+    },
+    backRightBtn: {
+        alignItems: 'center',
+        bottom: 0,
+        justifyContent: 'center',
+        position: 'absolute',
+        top: 0,
+        width: 75,
+    },
+    backRightBtnRight: {
+        backgroundColor: 'white',
+        right: 0,
+        paddingLeft: 10,
     }
 })
 
