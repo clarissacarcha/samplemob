@@ -66,9 +66,9 @@ export const POST_TOKTOKWALLET_REQUEST_MONEY = gql`
     }
   }
 `
-export const POST_TRANSACTION = gql`
-  mutation postTransaction($input: PostTransactionInput!) {
-    postTransaction(input: $input) {
+export const POST_BILLS_TRANSACTION = gql`
+  mutation postBillsTransaction($input: PostTransactionInput!) {
+    postBillsTransaction(input: $input) {
       status
       data {
         ${transaction}
