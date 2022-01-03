@@ -385,17 +385,29 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
             
             )
             setOffset(searchedProducts.length)
-            lazyLoading({
-              variables: {
-                input: {
-                  search: route.params?.origin ? "" : searchValue,
-                  origin: route.params?.origin ? route.params.origin : "all",
-                  category: route.params?.categoryId ? route.params?.categoryId : null,
-                  offset: searchedProducts.length,
-                  limit: 10
+
+            if( route.params?.origin === "suggestion"){
+              getTopProducts({
+                variables: {
+                  input: {
+                    offset: searchedProducts.length,
+                    limit: 10
+                  }
                 }
-              }
-            })
+              })
+            }else{
+              lazyLoading({
+                variables: {
+                  input: {
+                    search: route.params?.origin ? "" : searchValue,
+                    origin: route.params?.origin ? route.params.origin : "all",
+                    category: route.params?.categoryId ? route.params?.categoryId : null,
+                    offset: searchedProducts.length,
+                    limit: 10
+                  }
+                }
+              })
+            }            
            
           }}
           loading2 = {loading3}
