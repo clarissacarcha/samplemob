@@ -53,6 +53,7 @@ const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAcc
     const traceNumber = cashoutLogParams?.cashOutUbApiLog?.traceNumber ? cashoutLogParams?.cashOutUbApiLog?.traceNumber : null
     const remittanceId = cashoutLogParams?.cashOutUbApiLog?.remittanceId ?  cashoutLogParams?.cashOutUbApiLog?.remittanceId : null
     const type = cashoutLogParams?.cashOutUbApiLog?.type 
+    const cashOutRefNo = cashoutLogParams.referenceNumber ? cashoutLogParams.referenceNumber : MaskLeftZero(cashoutLogParams.id)
     
     return (
         <Modal
@@ -61,7 +62,7 @@ const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAcc
             onRequestClose={Proceed}
         >
             <Receipt
-                refNo={MaskLeftZero(cashoutLogParams.id)}
+                refNo={cashOutRefNo}
                 refDate={cashoutLogParams.createdAt}
                 onPress={Proceed}
                 savedAccounts={savedAccounts}
