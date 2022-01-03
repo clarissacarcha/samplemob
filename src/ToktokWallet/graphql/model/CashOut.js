@@ -73,3 +73,13 @@ export const POST_CASH_OUT_OTHER_BANKS = gql`
         }
       }
 `
+
+export const POST_COMPUTE_CONVENIENCE_FEE = gql`
+    mutation postComputeConvenienceFee($input: PostComputeConvenienceFeeInput){
+        postComputeConvenienceFee(input:$input){
+            providerServiceFee
+            systemServiceFee
+            type
+        }
+    }
+`
