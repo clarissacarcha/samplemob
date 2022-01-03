@@ -86,6 +86,7 @@ export const CityAddressModalAndroid = ({type, onSelect, isVisible, setVisible, 
         <View style={styles.search}>
           <TextInput 
             placeholder="Search city"
+            placeholderTextColor="grey"
             style={styles.input}
             onChangeText={filterSearch}
           />

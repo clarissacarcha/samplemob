@@ -414,7 +414,8 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
 
         await axios
           .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
-          .then(async (response) => {
+          .then((response) => {
+            EventRegister.emit("refreshCheckoutData")
             console.log("response.data", response.data)
           })
           .catch((error) => {
@@ -471,6 +472,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
               }
               setTimeout(() => {
                 setDeleteSuccessModal(true);
+            EventRegister.emit("refreshCheckoutData")
               }, 1000)
             }}
           />
