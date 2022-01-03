@@ -12,7 +12,7 @@ import { ErrorUtility } from 'toktokbills/util';
 //GRAPHQL & HOOKS
 import { useMutation } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
-import { POST_TRANSACTION } from 'toktokbills/graphql/model';
+import { POST_BILLS_TRANSACTION } from 'toktokbills/graphql/model';
 import { useAccount } from 'toktokwallet/hooks';
 import { usePrompt } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -44,7 +44,7 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
   const [otpTimer, setOtpTimer] = useState(120);
   const [showPin,setShowPin] = useState(false);
 
-  const [postTransaction, {loading, error}] = useMutation(POST_TRANSACTION, {
+  const [postBillsTransaction, {loading, error}] = useMutation(POST_BILLS_TRANSACTION, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: (error) => {
       ErrorUtility.StandardErrorHandling({
@@ -55,18 +55,18 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
         isPop: true
       });
     },
-    onCompleted: ({ postTransaction }) => {
+    onCompleted: ({ postBillsTransaction }) => {
       let { referenceNumber } = requestMoneyDetails;
-      let { billerDetails, createAt } = postTransaction.data;
+      let { billerDetails, createAt } = postBillsTransaction.data;
       let paymentDate = moment(createAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a');
 
       // prompt({
       //   type: "success",
       //   title: "Payment Successful",
       //   message: `Your payment to ${billerDetails.descriptions} amounting to ₱${numberFormat(totalAmount)} has been successfully processed with ref no. ${referenceNumber} on ${paymentDate}.`,
-      //   onPress: () => { navigation.navigate("ToktokBillsReceipt", { receipt: postTransaction.data, paymentData }) }
+      //   onPress: () => { navigation.navigate("ToktokBillsReceipt", { receipt: postBillsTransaction.data, paymentData }) }
       // });
-      navigation.navigate("ToktokBillsReceipt", { receipt: postTransaction.data, paymentData });
+      navigation.navigate("ToktokBillsReceipt", { receipt: postBillsTransaction.data, paymentData });
     }
   })
 
@@ -105,13 +105,12 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
       senderWalletEndingBalance: parseFloat(paymentSummary.tokwaBalance) - parseFloat(totalAmount),
       convenienceFee: parseFloat(paymentData.convenienceFee),
       discount: 0,
-      type: 1,
       comRateId: paymentData.billItemSettings.commissionRateDetails.id,
       email: paymentData.email.toLowerCase(),
       referralCode: user.consumer.referralCode
     }
   
-    postTransaction({
+    postBillsTransaction({
       variables: {
         input
       }

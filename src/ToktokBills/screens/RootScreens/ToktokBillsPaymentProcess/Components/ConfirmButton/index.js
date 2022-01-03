@@ -77,7 +77,6 @@ export const ConfirmButton = ({ billType, billItemSettings = {}, tokwaBalance = 
           name: billItemSettings.name,
           destinationNumber: firstField,
           destinationIdentifier: secondField,
-          type: 1,
           amount: parseFloat(amount),
           providerId
         }
