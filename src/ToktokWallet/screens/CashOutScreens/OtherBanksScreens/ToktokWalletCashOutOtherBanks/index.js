@@ -3,7 +3,9 @@ import {View,StyleSheet,Text,ScrollView,KeyboardAvoidingView,Platform,Dimensions
 import { 
     HeaderImageBackground,
     HeaderTitle,
-    Separator
+    Separator,
+    CheckIdleState,
+    FlagSecureScreen
 } from 'toktokwallet/components'
 import { numberFormat } from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants'
@@ -87,11 +89,13 @@ export const ToktokWalletCashOutOtherBanks = ({navigation, route})=> {
     const screenLabel = route.params ? route.params.screenLabel : null
 
     return (
-        <>
+        <FlagSecureScreen>
+        <CheckIdleState>
         <ContextProvider>
             <MainComponent navigation={navigation} screenLabel={screenLabel} />
          </ContextProvider>
-         </>
+         </CheckIdleState>
+         </FlagSecureScreen>
        )
 }
 

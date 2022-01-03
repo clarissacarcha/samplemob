@@ -38,6 +38,7 @@ export default styles = StyleSheet.create({
     borderRadius: 7,
   },
   restaurantInfo: {
+    justifyContent: 'center',
     paddingEnd: 8,
     paddingStart: 10,
     color: COLOR.BLACK,
@@ -45,11 +46,12 @@ export default styles = StyleSheet.create({
   restaurantName: {
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
+    marginBottom: 2
   },
   restaurantTitle: {
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.XL
+    fontSize: FONT_SIZE.XL,
   },
   ratings: {
     marginTop: 4,
@@ -73,7 +75,7 @@ export default styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     flex: 1,
-    paddingTop: verticalScale(80)
+    paddingTop: verticalScale(80),
   },
   emptyImg: {
     height: moderateScale(175),
@@ -84,18 +86,18 @@ export default styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
     marginTop: moderateScale(20),
     marginHorizontal: moderateScale(50),
-    textAlign: 'center'
+    textAlign: 'center',
   },
   ratingImg: {
     width: moderateScale(15),
     height: moderateScale(15),
-    marginVertical: 5
+    marginVertical: 5,
   },
   timeImg: {
     width: scale(13),
     height: scale(13),
     tintColor: COLOR.DARK,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
   searchBoxContainer: {
     left: 0,
@@ -148,5 +150,33 @@ export default styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.REGULAR,
     marginTop: Platform.OS === 'ios' ? 15 : 13,
-  }, 
+  },
+  historyContainer: {
+    height: '100%',
+  },
+  historyTextClearWrapper: {
+    marginEnd: scale(18),
+    alignSelf: 'flex-end',
+    marginVertical: verticalScale(12),
+  },
+  historyTextClear: {
+    color: COLOR.ORANGE,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.REGULAR,
+  },
+  historyListWrapper: {
+    width: '100%',
+    paddingHorizontal: scale(18),
+  },
+  historyItem: {
+    borderBottomWidth: 1,
+    borderColor: '#E6E6E6',
+    paddingHorizontal: 3,
+    paddingVertical: verticalScale(18),
+  },
+  historyText: {
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.REGULAR,
+    color: COLOR.BLACK,
+  },
 });

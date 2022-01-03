@@ -34,8 +34,8 @@ const DrawerButton = ({label, onPress, restrict}) => {
 };
 
 const Drawer = ({navigation}) => {
-  const session = useSelector((state) => state.session);
-  const constants = useSelector((state) => state.constants);
+  const session = useSelector(state => state.session);
+  const constants = useSelector(state => state.constants);
   const dispatch = useDispatch();
 
   let fullName = '';

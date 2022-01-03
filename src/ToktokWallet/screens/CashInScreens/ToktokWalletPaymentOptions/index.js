@@ -5,9 +5,9 @@ import FIcon from 'react-native-vector-icons/Feather'
 import {useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_CASH_IN_PROVIDERS } from 'toktokwallet/graphql'
-import { Separator, HeaderImageBackground, HeaderTitle } from 'toktokwallet/components'
+import { Separator, HeaderImageBackground, HeaderTitle , CheckIdleState } from 'toktokwallet/components'
 import { numberFormat } from 'toktokwallet/helper'
-import { useSelector } from 'react-redux'
+import { useSelector , useDispatch } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 import { SomethingWentWrong } from 'src/components';
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -27,12 +27,13 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
     const amount = route?.params?.amount ? route.params.amount : null
     const onCashIn = route?.params?.onCashIn ? route.params.onCashIn : null
     const { tokwaAccount , getMyAccountLoading , getMyAccount}  = useAccount();
+    const dispatch = useDispatch();
     const alert = useAlert()
     const { data: cashinmethods, error, loading } = useQuery(GET_CASH_IN_PROVIDERS, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy: 'network-only',
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error, navigation})
         }
     })
 
@@ -49,10 +50,22 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
 
     useEffect(()=>{
         if(onCashIn){
+            dispatch({
+                type: "SET_TOKWA_EVENTS_REDIRECT",
+                payload: {
+                    event: "cashInTopUp",
+                    value: true,
+                }
+            })
+        }
+    },[])
+
+    useEffect(()=>{
+        if(onCashIn){
            checkStatus();
+           cashInTopUp = false;
         }
     },[onCashIn, tokwaAccount])
-
 
     if (loading) {
         return (
@@ -106,7 +119,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
     }
 
     return (
-        <>
+        <CheckIdleState>
         <AlertOverlay visible={getMyAccountLoading}/>
         <View style={styles.container}>
             <View style={styles.headings}>
@@ -128,7 +141,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
                 renderItem={CashInMethod}
             />
         </View>
-        </>
+        </CheckIdleState>
     )
 }
 

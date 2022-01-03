@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Modal,Image,Dimensions} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Modal,Image,Dimensions,Alert} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { BlackButton, ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import {BuildingBottom} from 'toktokwallet/components'
-import CONSTANTS from 'common/res/constants'
 import { useAccount } from 'toktokwallet/hooks'
+import { AlertOverlay } from 'src/components'
+import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
 const {width,height} = Dimensions.get("window")
@@ -35,8 +36,8 @@ const NewPIN = ()=> {
             }}>
                 <Image style={{height: 89,width: 89}} source={require('toktokwallet/assets/icons/walletVerify.png')}/>
             </View>
-            <Text style={{fontSize: FONT_SIZE.XL,fontFamily: FONT.BOLD}}>Setup PIN Successful!</Text>
-            <Text style={{color: "#212529",marginTop:5,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,textAlign:"center"}}>You have secured your toktokwallet. Make sure to remember your PIN and do not share it with anyone.</Text>
+            <Text style={{fontSize: FONT_SIZE.XL,fontFamily: FONT.BOLD}}>Setup TPIN Successful!</Text>
+            <Text style={{color: "#212529",marginTop:5,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,textAlign:"center"}}>You have secured your toktokwallet. Make sure to remember your TPIN and do not share it with anyone.</Text>
         </View>
     )
 }
@@ -56,42 +57,51 @@ const UpdatePIN = ()=> {
         }}>
             <Image style={{height: 89,width: 89}} source={require('toktokwallet/assets/icons/walletVerify.png')}/>
         </View>
-        <Text style={{fontSize: FONT_SIZE.XL,fontFamily: FONT.BOLD}}>toktokwallet PIN changed successfully</Text>
-        <Text style={{color: "#212529",marginTop:5,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,textAlign:"center"}}>You can now use your new pin.</Text>
+        <Text style={{fontSize: FONT_SIZE.XL,fontFamily: FONT.BOLD}}>toktokwallet TPIN changed successfully</Text>
+        <Text style={{color: "#212529",marginTop:5,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,textAlign:"center"}}>You can now use your new TPIN.</Text>
     </View>
     )
 }
 
 
-export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSuccessModalVisible})=> {
+export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSuccessModalVisible,setUpTpinCallBack})=> {
     const navigation = useNavigation()
-    const { getMyAccount , tokwaAccount: tokwaAccountLatest } = useAccount()
-
+    const { getMyAccount , tokwaAccount: tokwaAccountLatest , getMyAccountLoading } = useAccount()
+    console.log(tokwaAccountLatest.pinCode && !onCashIn && !setUpTpinCallBack)
     useEffect(()=>{
-      if(tokwaAccountLatest.pinCode && onCashIn){
-        navigation.pop();
-        navigation.push("ToktokWalletPaymentOptions", {
-            amount: amount ? amount : 0,
-            onCashIn: onCashIn
-        })
+        if(modalVisible){
+            if(tokwaAccountLatest.pinCode && onCashIn){
+                if(navigation.canGoBack()) navigation.pop();
+                navigation.push("ToktokWalletPaymentOptions", {
+                    amount: amount ? amount : 0,
+                    onCashIn: onCashIn
+                })
+                setSuccessModalVisible(false);
+            }
+            if(tokwaAccountLatest.pinCode && setUpTpinCallBack){
+                setUpTpinCallBack()
+                if(navigation.canGoBack()) navigation.pop();
+                setSuccessModalVisible(false);
+                return;
+            }
+            if(tokwaAccountLatest.pinCode && !onCashIn && !setUpTpinCallBack){
+                navigation.navigate("ToktokWalletHomePage")
+                setSuccessModalVisible(false);
+                return;
+            }
+        }
+      },[tokwaAccountLatest,onCashIn,setUpTpinCallBack])
+  
+      const closeModal = async ()=> {
+          getMyAccount();
       }
-    },[tokwaAccountLatest,onCashIn])
-
-    const closeModal = async ()=> {
-        await getMyAccount();
-        if(onCashIn) return;
-        setSuccessModalVisible(false);
-        navigation.pop(2)
-        navigation.navigate("ToktokWalletHomePage")
-
-    }
-
 
     return (
         <Modal
              visible={modalVisible}
              onRequestClose={closeModal}
         >
+            <AlertOverlay visible={getMyAccountLoading}/>
              <View style={styles.container}>
                 { tokwaAccount.pinCode 
                     ? onCashIn ? <NewPIN/> : <UpdatePIN/> 
@@ -101,18 +111,14 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount,amount,onCashIn,setSu
                         <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
                         <View>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Use a <Text style={{color: COLOR.YELLOW}}>secure</Text> PIN combination</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Use a <Text style={{color: COLOR.YELLOW}}>secure</Text> TPIN combination</Text>
                             </Reminder>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Remember</Text> your PIN</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Remember</Text> your TPIN</Text>
                             </Reminder>
                             <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Never share</Text> your PIN with anyone</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Never share</Text> your TPIN with anyone</Text>
                             </Reminder>
-                            <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>If you think your PIN is no longer a secret, </Text>      
-                            </Reminder>
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 28}}><Text style={{color: COLOR.YELLOW}}>change your</Text> PIN immediately</Text>
                         </View>
                    
                 </View>

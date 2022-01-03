@@ -1,6 +1,6 @@
 import React from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, ScrollView} from 'react-native'
-import {Separator} from 'toktokwallet/components'
+import {Separator,CheckIdleState} from 'toktokwallet/components'
 import {HeaderBack, HeaderTitle} from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 
@@ -33,7 +33,7 @@ export const ToktokWalletHelpCentreMoneyProtected = ({navigation}) => {
     });
 
     return (
-        <>
+        <CheckIdleState>
             <View style={styles.container}>
                 <Separator />
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -74,7 +74,7 @@ export const ToktokWalletHelpCentreMoneyProtected = ({navigation}) => {
                 </ScrollView>
                 
             </View>
-        </>
+        </CheckIdleState>
     )
 }
 

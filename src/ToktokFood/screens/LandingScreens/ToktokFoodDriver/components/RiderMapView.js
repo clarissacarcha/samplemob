@@ -6,11 +6,8 @@ import MapViewDirections from 'react-native-maps-directions';
 import {rider_ic} from 'toktokfood/assets/images';
 
 import {useSelector} from 'react-redux';
-import CONSTANTS from 'common/res/constants';
 
-const {COLOR, MAP_DELTA_LOW} = CONSTANTS;
-
-import {MAPS_API_KEY} from 'res/constants';
+import {MAPS_API_KEY, MAP_DELTA_LOW, COLORS} from 'res/constants';
 
 const RiderMapView = (props) => {
   const {customerCoordinates, riderCoordinates} = props;
@@ -50,7 +47,7 @@ const RiderMapView = (props) => {
             coordinate={{latitude: customerCoordinates.latitude, longitude: customerCoordinates.longitude}}
             showsTraffic={true}>
             <Image
-              style={{width: 55, height: 55, borderRadius: 50, borderColor: COLOR.ORANGE}}
+              style={{width: 55, height: 55, borderRadius: 50, borderColor: COLORS.ORANGE}}
               resizeMode="contain"
               source={{uri: user.person.avatar}}
             />
@@ -58,7 +55,7 @@ const RiderMapView = (props) => {
           <MapViewDirections
             origin={customerCoordinates}
             destination={riderCoordinates}
-            strokeColor={COLOR.ORANGE}
+            strokeColor={COLORS.ORANGE}
             strokeWidth={6}
             mode="DRIVING"
             precision="high"

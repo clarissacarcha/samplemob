@@ -1,5 +1,15 @@
 import React, {useState, useRef, useMemo, useEffect, useCallback} from 'react';
-import {Text, View, TextInput, StyleSheet, TouchableHighlight, TouchableOpacity, StatusBar} from 'react-native';
+import {
+  Text,
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableHighlight,
+  TouchableOpacity,
+  StatusBar,
+  Alert,
+  Platform,
+} from 'react-native';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {throttle, debounce, set} from 'lodash';
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -44,7 +54,7 @@ const StopDetails = ({navigation, route}) => {
 
   const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
 
-  const onLocationSelect = (value) => {
+  const onLocationSelect = value => {
     console.log({value});
     setShowMap(true);
     setStopData({
@@ -148,7 +158,7 @@ const StopDetails = ({navigation, route}) => {
 
     if (result) {
       navigation.push('SearchContact', {
-        onContactSelectCallback: (value) => {
+        onContactSelectCallback: value => {
           console.log({value});
 
           setPerson(value.name);
@@ -158,7 +168,7 @@ const StopDetails = ({navigation, route}) => {
     }
   };
 
-  const onMobileChange = (value) => {
+  const onMobileChange = value => {
     if (value.length === 1 && value === '0') {
       setMobile('');
       return;
@@ -225,8 +235,8 @@ const StopDetails = ({navigation, route}) => {
           sessionToken={sessionToken}
           placeholder={route.params.searchPlaceholder}
           searchText={searchText}
-          onSearchTextChange={(value) => setSearchText(value)}
-          onSearchResultChange={(value) => setSearchResult(value)}
+          onSearchTextChange={value => setSearchText(value)}
+          onSearchResultChange={value => setSearchResult(value)}
           searchEnabled={!showMap}
         />
       </View>

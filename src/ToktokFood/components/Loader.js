@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
   },
   paddingBottom: {
-    marginBottom: moderateScale(20)
+    marginBottom: moderateScale(15),
+    marginTop: moderateScale(10),
   }
 });

@@ -38,6 +38,11 @@ export const GET_CASH_INS = gql`
                     id
                     name
                 }
+                transaction {
+                    id
+                    refNo
+                    createdAt
+                }
         }
     }
 `

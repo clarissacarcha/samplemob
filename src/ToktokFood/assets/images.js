@@ -61,11 +61,12 @@ export const cooking = require('./images/animations/cooking.gif');
 export const waiting_rider = require('./images/animations/waiting_rider.gif');
 export const rider = require('./images/animations/rider.gif');
 export const food_delivered = require('./images/animations/delivered.gif');
-
 export const timer = require('./images/animations/timer.gif');
 export const pot = require('./images/animations/pot.gif');
 export const toktok_rider = require('./images/animations/toktok_rider.gif');
 export const ordering = require('./images/animations/ordering_loader.gif');
+export const ready_for_pickup = require('./images/animations/ready_for_pickup.gif');
+
 
 // Test Banners
 export const starbucks = require('./images/sample_banners/starbucks.png');
@@ -84,8 +85,11 @@ export const rider1 = require('./images/riders/rider1.png');
 export const empty_orders = require('./images/empty_icons/empty-orders.png');
 export const empty_following = require('./images/empty_icons/empty-following.png');
 export const empty_shop = require('./images/empty_icons/empty-shop.png');
+export const empty_shop_2 = require('./images/empty_icons/empty-shop-2.png');
 export const empty_search = require('./images/empty_icons/empty-search.png');
 export const empty_cart = require('./images/empty_icons/empty-cart.png');
+export const no_image = require('./images/empty_icons/no-image.png');
+
 
 // Rider Map Icons
 export const rider_ic = require('./images/rider_map_ic.png');

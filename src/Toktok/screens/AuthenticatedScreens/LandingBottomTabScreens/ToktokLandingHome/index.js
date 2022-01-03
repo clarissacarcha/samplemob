@@ -1,7 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useCallback} from 'react';
 import {connect} from 'react-redux';
-import {View, StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl} from 'react-native';
+import {View, StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl , Platform} from 'react-native';
 import OneSignal from 'react-native-onesignal';
+import FlagSecure from 'react-native-flag-secure-android';
+import { useNavigation , useFocusEffect  , useRoute} from '@react-navigation/native';
 import {COLOR} from '../../../../../res/variables';
 
 //SELF IMPORTS
@@ -14,7 +16,10 @@ const Screen = ({navigation, constants}) => {
   //   formattedAddress,
   //   formattedAddressHash
   // }
-
+  useFocusEffect(useCallback(()=>{
+    if(Platform.OS == "android")  FlagSecure.deactivate();   
+  },[]))
+ 
   const [userLocation, setUserLocation] = useState(null);
 
   const onNotificationOpened = ({notification}) => {
@@ -24,7 +29,8 @@ const Screen = ({navigation, constants}) => {
 
       if (notification.additionalData.classification === 'toktokwallet') {
         setTimeout(() => {
-          navigation.navigate('ToktokWalletHomePage');
+          navigation.navigate('ToktokWalletLoginPage');
+          navigation.replace('ToktokWalletLoginPage');
         }, 10);
         return;
       }else if (notification.additionalData.classification === 'toktokmall') {

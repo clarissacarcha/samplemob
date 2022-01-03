@@ -10,7 +10,8 @@ user {
   userId
   username
   status
-
+  toktokfoodUserId
+  toktokWalletAccountId
   person {
     id
     firstName
@@ -108,5 +109,13 @@ export const FORGOT_PASSWORD_VERIFICATION = gql`
 export const FORGOT_PASSWORD_RESET = gql`
   mutation forgotPasswordReset($input: ForgotPasswordResetInput!) {
     forgotPasswordReset(input: $input)
+  }
+`;
+
+export const END_USER_SESSION = gql`
+  mutation {
+    endUserSession {
+      message
+    }
   }
 `;

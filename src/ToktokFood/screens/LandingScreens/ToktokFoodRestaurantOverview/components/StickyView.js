@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
 import React, {useEffect, useState, useContext, useRef, useMemo} from 'react';
@@ -6,9 +7,9 @@ import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {FONT_SIZE, FONT, COLOR} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import CustomStarRating from 'toktokfood/components/CustomStarRating';
-import ChangeAddress from 'toktokfood/components/ChangeAddress';
-import {time} from 'toktokfood/assets/images';
+// import CustomStarRating from 'toktokfood/components/CustomStarRating';
+// import ChangeAddress from 'toktokfood/components/ChangeAddress';
+import {time, email_ic} from 'toktokfood/assets/images';
 import ContentLoader from 'react-native-easy-content-loader';
 
 // Components
@@ -40,20 +41,10 @@ export const StickyView = () => {
   const [shopDetails, setShopDetails] = useState({});
   const searchProduct = useRef('');
   const {setNavBarHeight, temporaryCart, setTemporaryCart} = useContext(VerifyContext);
-  const {customerInfo, location} = useSelector((state) => state.toktokFood);
+  const {customerInfo, location} = useSelector(state => state.toktokFood);
 
-  const {
-    id,
-    address,
-    shopname,
-    ratings,
-    banner,
-    estimatedDeliveryTime,
-    estimatedDistance,
-    logo,
-    latitude,
-    longitude,
-  } = routes.params.item;
+  const {id, address, shopname, ratings, banner, estimatedDeliveryTime, estimatedDistance, logo, latitude, longitude} =
+    routes.params.item;
 
   const headerMaxHeight = verticalScale(450);
   const headerMinHeight = verticalScale(110);
@@ -78,28 +69,26 @@ export const StickyView = () => {
     },
   });
 
-  const [
-    checkShopValidations,
-    {data: checkShop, loading: shopValidationLoading, error: shopValidationError},
-  ] = useLazyQuery(CHECK_SHOP_VALIDATIONS, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-  });
+  const [checkShopValidations, {data: checkShop, loading: shopValidationLoading, error: shopValidationError}] =
+    useLazyQuery(CHECK_SHOP_VALIDATIONS, {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only',
+    });
 
   useEffect(() => {
     // checkShopValidations({ variables: { input: { shopId: id } }})
     if (isFocus && location) {
       dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       getProductCategories();
-      console.log(
-        JSON.stringify({
-          input: {
-            shopId: id,
-            userLongitude: location?.longitude,
-            userLatitude: location?.latitude,
-          },
-        }),
-      );
+      // console.log(
+      //   JSON.stringify({
+      //     input: {
+      //       shopId: id,
+      //       userLongitude: location?.longitude,
+      //       userLatitude: location?.latitude,
+      //     },
+      //   }),
+      // );
       getShopDetails({
         variables: {
           input: {
@@ -123,14 +112,14 @@ export const StickyView = () => {
     }
   }, [data]);
 
-  const getNavBarHeight = (event) => {
+  const getNavBarHeight = event => {
     let height = event.nativeEvent.layout.height;
     setNavBarHeight(height);
   };
 
   const renderNavBar = useMemo(() => {
     return (
-      <View onLayout={(event) => getNavBarHeight(event)} style={[styles.headerWrapper, styles.navbarWrapper]}>
+      <View onLayout={event => getNavBarHeight(event)} style={[styles.headerWrapper, styles.navbarWrapper]}>
         <HeaderTitleSearchBox />
         <View style={styles.tabContainer}>
           <CategoryTabs
@@ -149,7 +138,7 @@ export const StickyView = () => {
       <View style={styles.title}>
         <HeaderTitle backOnly searchBox={false} />
         <View style={styles.titleInfo}>
-          <ChangeAddress styleContainer={{paddingTop: moderateScale(10)}} />
+          {/* <ChangeAddress styleContainer={{paddingTop: moderateScale(10)}} /> */}
           {shopDetailsLoading || shopDetailsError || (shopDetails && Object.keys(shopDetails).length == 0) ? (
             <ContentLoader
               active
@@ -164,21 +153,21 @@ export const StickyView = () => {
             />
           ) : (
             <View style={styles.content}>
-              <Image source={{ uri: shopDetails.logo }} style={styles.logo} resizeMode="cover" />
+              <Image source={{uri: shopDetails.logo}} style={styles.logo} resizeMode="cover" />
               <View style={{flexShrink: 1, marginHorizontal: 10}}>
-                <Text numberOfLines={1} style={styles.titleText}>
+                <Text style={styles.titleText}>
                   {`${shopDetails.shopname} (${shopDetails.address})`}
                 </Text>
-                <CustomStarRating
+                {/* <CustomStarRating
                   rating={shopDetails.ratings ?? '0'}
                   starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
                   ratingStyle={{color: 'black', fontSize: FONT_SIZE.S}}
                   readOnly
                   showRating
                   rightRating
-                />
+                /> */}
                 <View style={styles.branchInfo}>
-                  <Image resizeMode="contain" source={time} style={styles.timeImg} />
+                  <Image source={time} style={styles.timeImg} />
                   <Text style={styles.branches}>{`${shopDetails.estimatedDeliveryTime} mins`}</Text>
                   <MCIcon name="map-marker-outline" color="#868686" size={13} />
                   <Text style={styles.branches}>{shopDetails.estimatedDistance}</Text>
@@ -186,12 +175,20 @@ export const StickyView = () => {
                 <Text style={{color: '#FFA700', fontSize: FONT_SIZE.S}}>
                   {shopDetails?.allowPickup ? 'Available for pick-up and delivery' : 'Available for delivery only'}
                 </Text>
-                <View style={{display: 'flex', flexDirection: 'row', paddingVertical: 3, marginTop: 2}}>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingVertical: 3,
+                    marginTop: 2,
+                  }}>
                   <MCIcon name="phone" color="#868686" size={13} />
                   <Text style={{fontSize: FONT_SIZE.S, marginHorizontal: 4}}>
                     {shopDetails?.mobile ? shopDetails?.mobile : ''}
                   </Text>
-                  <MCIcon name="email" color="#868686" size={13} />
+                  {/* <MCIcon name="email" color="#FFA700" size={13} /> */}
+                  <Image source={email_ic} style={styles.emailImg} />
                   <Text style={{color: '#FFA700', fontSize: FONT_SIZE.S, marginStart: 4}}>
                     {shopDetails?.mobile ? shopDetails?.email : ''}
                   </Text>
@@ -219,7 +216,6 @@ export const StickyView = () => {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" />
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
@@ -230,6 +226,7 @@ export const StickyView = () => {
         backgroundImageScale={1.1}
         title={renderTitle()}
         backgroundImage={{uri: shopDetails.banner}}
+        statusBarColor="transparent"
         navbarColor="white"
         backgroundColor="transparent"
         renderNavBar={() => renderNavBar}
@@ -237,8 +234,8 @@ export const StickyView = () => {
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
-          onScrollEndDrag: (event) => setOffset(event.nativeEvent.contentOffset.y),
-          onMomentumScrollEnd: (event) => setOffset(event.nativeEvent.contentOffset.y),
+          onScrollEndDrag: event => setOffset(event.nativeEvent.contentOffset.y),
+          onMomentumScrollEnd: event => setOffset(event.nativeEvent.contentOffset.y),
         }}
       />
     </>
@@ -263,7 +260,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(10),
     flexDirection: 'row',
     paddingTop: 5,
-    alignItems: 'center',
   },
   contentContainer: {
     backgroundColor: 'white',
@@ -322,6 +318,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   titleText: {
+    marginBottom: 6,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
   },
@@ -335,5 +332,10 @@ const styles = StyleSheet.create({
     width: scale(70),
     height: scale(70),
     borderRadius: 5,
+  },
+  emailImg: {
+    width: scale(13),
+    height: scale(13),
+    resizeMode: 'contain',
   },
 });

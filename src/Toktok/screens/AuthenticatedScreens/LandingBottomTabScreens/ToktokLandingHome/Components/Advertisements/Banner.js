@@ -57,8 +57,9 @@ export default BannerAds;
 const styles = StyleSheet.create({
   touchable: {
     borderRadius: 5,
-    margin: SIZE.MARGIN,
+    margin: SIZE.MARGIN / 2,
     marginBottom: 0,
+    overflow: 'hidden',
   },
   textBox: {
     height: 40,

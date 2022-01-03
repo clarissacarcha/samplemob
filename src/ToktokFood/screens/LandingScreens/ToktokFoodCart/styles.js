@@ -1,13 +1,28 @@
-import {StyleSheet, Platform} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 
 // Utils
 import {scale, verticalScale, moderateScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
-export default styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.WHITE,
+  },
+  createText: {textDecorationLine: 'underline', color: COLOR.YELLOW, fontWeight: '600', paddingBottom: 10},
+  deliveryFee: {
+    flexDirection: 'row',
+  },
+  deliveryFeeText: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.L,
+    marginRight: moderateScale(5),
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid',
+  },
+  errorText: {
+    color: COLOR.YELLOW,
+    paddingVertical: moderateScale(10),
   },
   sectionContainer: {
     paddingVertical: 10,
@@ -24,7 +39,7 @@ export default styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: verticalScale(10),
     borderBottomWidth: 1,
-    borderBottomColor: '#E6E6E6'
+    borderBottomColor: '#E6E6E6',
   },
   sectionTitle: {
     fontSize: FONT_SIZE.L,
@@ -53,20 +68,20 @@ export default styles = StyleSheet.create({
     height: moderateScale(15),
     marginRight: 4,
     resizeMode: 'contain',
-    tintColor: 'black'
+    tintColor: 'black',
   },
   foodItemImage: {
     width: moderateScale(80),
     height: moderateScale(80),
     marginRight: 8,
     borderRadius: 12,
-    resizeMode: 'contain'
+    resizeMode: 'cover',
   },
   orderItemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: verticalScale(18),
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   foodPrice: {
     marginEnd: 3,
@@ -82,7 +97,7 @@ export default styles = StyleSheet.create({
   orderInfoWrapper: {
     flex: 1,
     paddingHorizontal: scale(6),
-    flexShrink: 1
+    flexShrink: 1,
   },
   orderText: {
     color: COLOR.BLACK,
@@ -158,7 +173,6 @@ export default styles = StyleSheet.create({
     height: moderateScale(50),
     paddingHorizontal: scale(10),
     backgroundColor: COLOR.WHITE,
-
   },
   tokwaButtonTextWrapper: {
     flexDirection: 'row',
@@ -234,12 +248,11 @@ export default styles = StyleSheet.create({
   },
   rowBack: {
     alignItems: 'center',
-    backgroundColor: '#DDD',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingLeft: 15,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   backRightBtn: {
     alignItems: 'center',
@@ -254,7 +267,7 @@ export default styles = StyleSheet.create({
     right: 0,
   },
   shadow: {
-    backgroundColor:"white",
+    backgroundColor: 'white',
     borderRadius: 5,
     shadowColor: '#000',
     shadowOffset: {
@@ -266,3 +279,5 @@ export default styles = StyleSheet.create({
     elevation: 5,
   },
 });
+
+export default styles;

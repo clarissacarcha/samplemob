@@ -14,7 +14,6 @@ const RadioButton = (props) => {
   };
 
   if(isMultiple){
-    console.log(name)
     return (
       <TouchableOpacity onPress={() => componentClick()} style={styles.circleContainer}>
         <View

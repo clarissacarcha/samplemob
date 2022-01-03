@@ -20,7 +20,6 @@ import Nav from './Nav';
 import SplashImage from '../assets/images/Splash.png';
 import Maintenance from '../assets/images/Maintenance.png';
 import NoNetworkConnection from '../assets/images/NoNetworkConnection.png';
-import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
 import ToktokSuperApp from '../assets/images/ToktokSuperApp.png';
 import ServerDown from '../assets/images/ServerDown.png';
 
@@ -111,9 +110,9 @@ const Splash = ({setConstants}) => {
       const {isCurrent, enabled} = result.data.getAppVersionStatus;
       console.log(result.data.getAppVersionStatus)
 
-      // if (isCurrent && enabled) {
-      setcheckPoint('A');
-      // }
+      if (isCurrent && enabled) {
+        setcheckPoint('A');
+      }
 
       if (!isCurrent && enabled) {
         setcheckPoint('S');

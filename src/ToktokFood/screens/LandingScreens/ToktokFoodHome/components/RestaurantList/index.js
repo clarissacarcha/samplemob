@@ -1,52 +1,50 @@
 import React from 'react';
-import {FlatList, Platform, StyleSheet, Text, View, Image} from 'react-native';
+import { FlatList, Image, Platform, StyleSheet, Text, View } from 'react-native';
+// Fonts & Colors
+import { FONT_SIZE } from 'res/variables';
+import { empty_shop_2 } from 'toktokfood/assets/images';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 // Utils
-import {scale, verticalScale, moderateScale} from 'toktokfood/helper/scale';
+import { moderateScale, scale, verticalScale } from 'toktokfood/helper/scale';
 import RestaurantItem from './RestaurantItem';
-import {empty_shop} from 'toktokfood/assets/images';
-// Fonts & Colors
-import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 const RestaurantList = (props) => {
   const {loading, error, data, loadMore, location} = props;
 
-  const renderFooter = () => <LoadingIndicator style={{}} isLoading={loadMore} />;
+  const renderFooter = () => <LoadingIndicator isLoading={loadMore} />;
 
   const listEmpty = () => (
     <View style={styles.emptyContainer}>
-      <Image style={styles.emptyImg} resizeMode="contain" source={empty_shop} />
+      <Image style={styles.emptyImg} resizeMode="contain" source={empty_shop_2} />
       <Text style={styles.emptyText}>
         It seems like there is no open restaurant near you. Refresh or try again later.
       </Text>
     </View>
   );
-
+ 
   if (loading || error || location == undefined) {
     return <LoadingIndicator style={{marginVertical: 20}} isFlex isLoading={true} />;
   }
   return (
-    // <View style={styles.container}>
     <FlatList
-      data={data ? data.getShops : []}
+      data={data}
       extraData={loadMore}
       numColumns={2}
       renderItem={({item}) => <RestaurantItem item={item} />}
-      // columnWrapperStyle={styles.columnStyle}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       keyExtractor={(val, index) => index.toString()}
       ListFooterComponent={renderFooter()}
       ListEmptyComponent={listEmpty()}
-      style={{flex: 1}}
-      contentContainerStyle={{
-        backgroundColor: 'white',
+      style={{
+        flex: 1,
+        paddingTop: moderateScale(15),
         paddingHorizontal: 20,
+        backgroundColor: 'white',
         paddingTop: 15,
-        paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0,
+        paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0
       }}
     />
-    // </View>
   );
 };
 

@@ -3,7 +3,8 @@ import {StyleSheet,View,BackHandler,TouchableHighlight,Text,KeyboardAvoidingView
 import {useNavigation} from '@react-navigation/native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {useFocusEffect} from '@react-navigation/native'
-import {Separator,LeavePromptModal} from 'toktokwallet/components'
+import {Separator,LeavePromptModal,FlagSecureScreen} from 'toktokwallet/components'
+import RNFS from 'react-native-fs'
 import CONSTANTS from 'common/res/constants';
 
 //SELF IMPORTS 
@@ -14,7 +15,9 @@ import {
     VerifyContext,
     VerifyFullname,
     VerifyID,
-    VerifySelfie
+    VerifySelfie,
+    VerifySelfieWithID,
+    VerifySourceOfIncome
 } from "./Components";
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -82,7 +85,7 @@ const MainSetupComponent = ()=> {
     })
 
  
-    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","IDPic","SelfiePic","Confirm"])
+    const [screenSlides,setScreenSlides] = useState(["Fullname","Address","IDPic","SelfiePic","SelfiePicWithID","Confirm"])
  
     const cancelSetup = ()=> {
       console.log("Cancelling")
@@ -96,10 +99,14 @@ const MainSetupComponent = ()=> {
                 return <VerifyFullname/>
             case 1:
                 return <VerifyAddress/>
+            // case 2:
+            //     return <VerifySourceOfIncome/>
             case 2:
                 return <VerifyID/>
             case 3:
                 return <VerifySelfie/>
+            case 4:
+                return <VerifySelfieWithID/>
             default:
                 return <Confirm/>
         }
@@ -111,7 +118,10 @@ const MainSetupComponent = ()=> {
         <LeavePromptModal
             visible={visible}
             setVisible={setVisible}
-            onConfirm={()=>navigation.goBack()}
+            onConfirm={()=>{
+                if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath)
+                navigation.goBack()
+            }}
         />
         <Separator />
         <View 
@@ -136,9 +146,11 @@ const MainSetupComponent = ()=> {
 
 export const ToktokWalletVerification = ()=> {
     return (
-        <VerifyContextProvider>
-             <MainSetupComponent/>
-        </VerifyContextProvider>
+        <FlagSecureScreen>
+            <VerifyContextProvider>
+                <MainSetupComponent/>
+            </VerifyContextProvider>
+        </FlagSecureScreen>
     )
 }
 

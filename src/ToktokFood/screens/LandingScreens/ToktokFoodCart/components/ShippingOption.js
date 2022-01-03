@@ -1,19 +1,12 @@
 import React from 'react';
-import {Image, View, Text} from 'react-native';
+import {View, Text} from 'react-native';
 
-import {useSelector} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-
-import {markerIcon} from 'toktokfood/assets/images';
 import {verticalScale} from 'toktokfood/helper/scale';
 
 import styles from '../styles';
 
 const ShippingOption = ({ orderType, onPressChange }) => {
-  const navigation = useNavigation();
 
-  const {location} = useSelector((state) => state.toktokFood);
-  
   return (
     <>
       <View style={styles.sectionContainer}>

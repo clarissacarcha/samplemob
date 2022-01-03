@@ -5,25 +5,25 @@ import {useNavigation} from '@react-navigation/native';
 import {Separator, WalletLog} from 'toktokwallet/components';
 import { YellowButton } from 'src/revamp';
 import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants';
-import { CheckWalletAccountRestrictionContext } from '../CheckWalletAccountRestriction';
-import { useSelector } from 'react-redux';
+import { useAccount } from 'toktokwallet/hooks';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS
 const {height,width} = Dimensions.get("window")
 
 const WalletRecentTransactions = () => {
   const navigation = useNavigation();
-  const checkWallet = useContext(CheckWalletAccountRestrictionContext)
-  const tokwaAccount = useSelector(state=>state.toktokWallet)
-
+  const {checkIfTpinIsSet,tokwaAccount} = useAccount();
 
   const TopUpNow = ()=> {
       if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
           return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
       }
-      if(checkWallet.checkIfAllowed()){
-          return navigation.navigate("ToktokWalletPaymentOptions")
-      }
+
+      const tpinIsSet = checkIfTpinIsSet();
+      if(!tpinIsSet) return
+
+      return navigation.navigate("ToktokWalletPaymentOptions")
+  
   }
 
   const CashInNow = ()=> (
@@ -53,7 +53,19 @@ const RecentRecords = ()=> (
       </View>
 
       <View style={styles.transactions}>
-        <FlatList
+        {
+          tokwaAccount?.wallet?.recentTransactions?.map((item,index)=>{
+            return (
+              <WalletLog
+                key={`recentLog${index}`}
+                item={item}
+                itemsLength={tokwaAccount.wallet.recentTransactions}
+                index={index}
+              />
+            )
+          })
+        }
+        {/* <FlatList
           style={{flex: 1, backgroundColor: 'white'}}
           showsVerticalScrollIndicator={false}
           scrollEnabled={true}
@@ -69,7 +81,7 @@ const RecentRecords = ()=> (
               />
             );
           }}
-        />
+        /> */}
       </View>
   </>
 )
@@ -81,25 +93,13 @@ const RecentRecords = ()=> (
 
   return (
     <>
-     <View style={styles.container}>
+       <View style={styles.container}>
             {
               tokwaAccount?.wallet?.recentTransactions?.length == 0
               ? <CashInNow/>
               : <RecentRecords/>
             }
-    </View>
-    {/* {
-      pageLoading
-      ? <LoadingScreen/>
-      : <View style={styles.container}>
-        {
-          tokwaAccount.wallet?.recentTransactions?.length == 0
-          ? <CashInNow/>
-          : <RecentRecords/>
-          // <Text>{JSON.stringify(tokwaAccount.wallet.recentTransactions)}</Text>
-        }
       </View>
-    } */}
    </>
   );
 };

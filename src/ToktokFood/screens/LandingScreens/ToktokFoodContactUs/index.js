@@ -46,16 +46,14 @@ const ToktokFoodContactUs = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView enabled behavior={Platform.OS == 'ios' ? 'position' : 'padding'} style={styles.container}>
-
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => { navigation.goBack() }}>
+        <TouchableOpacity hitSlop={styles.hitSlop} onPress={() => { navigation.goBack() }}>
           <FIcon5 name="chevron-left" size={15} />
         </TouchableOpacity>
         <Text style={styles.headerLabel}>Contact Us</Text>
       </View>
       <Separator />
-      <View style={[styles.shadow, ]}>
-    
+      <View style={[styles.shadow]}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 10, backgroundColor: 'white' }}
@@ -150,5 +148,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: moderateScale(20)
+  },
+  hitSlop: {
+    top: moderateScale(40),
+    bottom: moderateScale(40),
+    left: moderateScale(40),
+    right: moderateScale(40)
   }
 });
