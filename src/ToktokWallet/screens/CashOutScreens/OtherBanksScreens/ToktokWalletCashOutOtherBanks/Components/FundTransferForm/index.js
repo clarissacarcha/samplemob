@@ -267,7 +267,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         }
     })
 
-    const [postComputeConvenienceFee, {data ,error , loading: CFLoading}] = useMutation(POST_COMPUTE_CONVENIENCE_FEE,{
+    const [postComputeConvenienceFee, {loading: CFLoading}] = useMutation(POST_COMPUTE_CONVENIENCE_FEE,{
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postComputeConvenienceFee})=>{
             const { providerServiceFee , systemServiceFee , type } = postComputeConvenienceFee

@@ -49,6 +49,10 @@ const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAcc
             navigation.replace("ToktokWalletHomePage")
         }
     }
+
+    const traceNumber = cashoutLogParams?.cashOutUbApiLog?.traceNumber ? cashoutLogParams?.cashOutUbApiLog?.traceNumber : null
+    const remittanceId = cashoutLogParams?.cashOutUbApiLog?.remittanceId ?  cashoutLogParams?.cashOutUbApiLog?.remittanceId : null
+    const type = cashoutLogParams?.cashOutUbApiLog?.type 
     
     return (
         <Modal
@@ -70,6 +74,23 @@ const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAcc
                      <TransactionInfo label="Bank" value={cashoutLogParams.bank?.name}/>
                      <TransactionInfo label="Account Name" value={cashoutLogParams.accountName}/>
                      <TransactionInfo label="Account Number" value={cashoutLogParams.accountNumber}/>
+                     <TransactionInfo label="Convenience Fee" value={numberFormat(+cashoutLogParams.providerServiceFee + +cashoutLogParams.systemServiceFee)}/>
+                    {
+                        traceNumber &&
+                        <TransactionInfo 
+                            label="Trace Number"
+                            value={traceNumber}
+                        />
+                    }
+
+                    {
+                        remittanceId &&
+                        <TransactionInfo 
+                            label="Remittance ID"
+                            value={remittanceId}
+                        />
+                    }
+                    
                      <TransactionInfo label="Status" value={status}/>
                      <TransactionInfo label="Amount" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(cashoutLogParams.amount)}`}/>
                      { note != "" && <TransactionInfo label="Note" value={cashoutLogParams.note}/>}

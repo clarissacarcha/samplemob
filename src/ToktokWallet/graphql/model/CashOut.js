@@ -69,7 +69,14 @@ export const POST_CASH_OUT_OTHER_BANKS = gql`
             id
             amount
             status
+            providerServiceFee
+            systemServiceFee
             createdAt
+            cashOutUbApiLog {
+                type
+                traceNumber
+                remittanceId
+            }
         }
       }
 `
