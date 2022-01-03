@@ -16,7 +16,7 @@ import {
   checkRiderDetails,
   getRiderDetails,
   clearRiderDetails,
-} from 'toktokfood/helper/ShowRiderDetails';
+} from 'toktokfood/helper/showRiderDetails';
 import {orderStatusMessageDelivery, orderStatusMessagePickUp} from 'toktokfood/helper/orderStatusMessage';
 
 const statusImage = (orderIsfor, orderStatus) => {

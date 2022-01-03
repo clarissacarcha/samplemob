@@ -8,7 +8,7 @@ import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
 // Helpers
 import {getFormattedAddress, getLocation} from 'toktokfood/helper';
-import {getUserLocation} from 'toktokfood/helper/PersistentLocation';
+import {getUserLocation} from 'toktokfood/helper/persistentLocation';
 
 export const useUserLocation = () => {
   const dispatch = useDispatch();
