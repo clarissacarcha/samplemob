@@ -2,7 +2,7 @@ import React from 'react'
 import { View , Text , StyleSheet , ActivityIndicator , FlatList , RefreshControl , TouchableHighlight , Image , Dimensions } from 'react-native'
 import { useSelector } from 'react-redux'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
-import { Separator, CheckIdleState } from 'toktokwallet/components'
+import { Separator, CheckIdleState , SwipeDownToRefresh , NoData} from 'toktokwallet/components'
 import {GET_NOTIFICATIONS_BY_CLASSIFICATION } from 'toktokwallet/graphql'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
@@ -10,18 +10,10 @@ import { SomethingWentWrong } from 'src/components'
 import { useQuery } from '@apollo/react-hooks'
 import {VectorIcon , ICON_SET } from 'src/revamp'
 import { useNavigation } from '@react-navigation/native'
-import NoData from 'src/assets/images/NoData.png'
 import CONSTANTS from 'common/res/constants';
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
 const imageWidth = Dimensions.get('window').width - 200;
-
-const SwipeDownToRefresh = ()=>   (<View style={{marginHorizontal: SIZE.MARGIN, flexDirection: 'row', paddingVertical: 8}}>
-<View style={{width: 22, height: 22, marginHorizontal:16, alignItems: 'center'}}>
-  <VectorIcon iconSet={ICON_SET.Entypo} name="arrow-long-down" color={COLOR.MEDIUM} />
-</View>
-<Text style={{color: COLOR.MEDIUM}}>Swipe down to refresh</Text>
-</View>)
 
 const NotificationCard = ({message, lastItem}) => {
     const {title, body, type, payload, delivery, createdAt, classification} = message;
@@ -134,11 +126,7 @@ export const ToktokWalletNotifications = ({navigation,route})=> {
             <View style={styles.container}>
                     <FlatList
                         ListHeaderComponent={() => (
-                            <View style={{paddingTop: 100}}>
-                            <View style={styles.center}>
-                                <Image source={NoData} style={styles.image} resizeMode={'contain'} />
-                            </View>
-                            </View>
+                           <NoData/>
                         )}
                         showsVerticalScrollIndicator={false}
                         data={data.getNotificationsByClassification}

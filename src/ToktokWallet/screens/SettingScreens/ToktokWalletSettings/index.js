@@ -63,9 +63,7 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <Separator/>
             <SettingHeaderTitle title="Logs"/>
             <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
-            <SettingOption route="ToktokWalletCashOutLogs" title="Cash Out"/>
-            <SettingOption route="ToktokWalletCashInLogs" title="Bills"/>
-            <SettingOption route="ToktokWalletCashOutLogs" title="Load"/>
+            <SettingOption route="ToktokWalletCashOutLogs" title="Fund Transfer"/>
             <Separator/>
             <SettingHeaderTitle title="Account Recovery"/>
             <SettingOption route="ToktokWalletAccountRecoverySetup" title="Account Recovery Setup"/>
