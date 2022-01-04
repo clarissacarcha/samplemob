@@ -112,3 +112,11 @@ export const POST_DENIED_REQUEST_MONEY = gql`
         postDeniedRequestMoney(input: $input)
     }
 `
+
+export const PATCH_DELETE_REQUEST_MONEY = gql`
+    mutation patchDeleteRequestMoney($input: PatchDeleteRequestMoneyInput){
+        patchDeleteRequestMoney(input: $input){
+            message
+        }
+    }
+`

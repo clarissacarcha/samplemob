@@ -132,52 +132,82 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
             <View style={styles.container}>
                 <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
 
-                    <RequestInfo
-                        label="Requester Name"
-                        value={`${requestMoney.destinationPerson.firstName} ${requestMoney.destinationPerson.lastName}`}
-                    />
-
-                    <RequestInfo
-                        label="Mobile Number"
-                        value={requestMoney.destinationAccount.mobileNumber}
-                    />
-
-                    <RequestInfo
-                        label="Amount Requested"
-                        value={`${tokwaAccount.wallet.currency.code} ${numberFormat(requestMoney.amount)}`}
-                    />
-
                     {
-                        requestMoney.destinationRemarks != "" &&
-                        <RequestInfo
-                            label="Note"
-                            value={requestMoney.destinationRemarks}
-                        />
-                    }
 
-                {
-                    !enableCancel && 
-                    <>
-                        <EnterAmount
+                        enableCancel 
+                        ? 
+                        <>
+                            <RequestInfo
+                                 label="Request No"
+                                value={`${requestMoney.referenceNumber}`}
+                            />
+                            <RequestInfo
+                                 label="Request to"
+                                value={`${requestMoney.sourcePerson.firstName} ${requestMoney.sourcePerson.lastName}`}
+                            />
+                            <RequestInfo
+                                label="Mobile Number"
+                                value={requestMoney.sourceAccount.mobileNumber}
+                            />
+                             <RequestInfo
+                                label="Amount Requested"
+                                value={`${tokwaAccount.wallet.currency.code} ${numberFormat(requestMoney.amount)}`}
+                            />
+
+                            {
+                                 requestMoney.destinationRemarks != "" &&
+                                 <RequestInfo
+                                     label="Note"
+                                     value={requestMoney.destinationRemarks}
+                                 />
+                            }
+
+                        </>
+                        :
+                        <>
+                           <RequestInfo
+                                 label="Requester Name"
+                                value={`${requestMoney.destinationPerson.firstName} ${requestMoney.destinationPerson.lastName}`}
+                            />
+
+                            <RequestInfo
+                                label="Mobile Number"
+                                value={requestMoney.destinationAccount.mobileNumber}
+                            />
+
+                            <RequestInfo
+                                label="Amount Requested"
+                                value={`${tokwaAccount.wallet.currency.code} ${numberFormat(requestMoney.amount)}`}
+                            />
+
+                            {
+                                 requestMoney.destinationRemarks != "" &&
+                                 <RequestInfo
+                                     label="Note"
+                                     value={requestMoney.destinationRemarks}
+                                 />
+                            }
+
+                            <EnterAmount
                                 amount={amount}
                                 setAmount={setAmount}
                                 setEnabled={setEnabled}
                                 tokwaAccount={tokwaAccount}
-                        />
+                             />
 
-                        <WalletBalance 
-                            tokwaAccount={tokwaAccount}
-                            navigation={navigation}
-                            amount={amount}
-                        />
-                    </>
-                }
+                            <WalletBalance 
+                                tokwaAccount={tokwaAccount}
+                                navigation={navigation}
+                                amount={amount}
+                            />
+                        </>
+                    }
                   
                 </ScrollView>
                 <View style={styles.actionBtns}>
                    {
                        enableCancel 
-                       ? <CancelButton/>
+                       ? <CancelButton requestMoneyId={requestMoney.id}/>
                        : <>
                             <TouchableOpacity onPress={throttledDeclined} style={[styles.btn, {backgroundColor:"#CBCBCB",marginRight: 10}]}>
                                 <Text style={[ styles.label ]}>Decline</Text>

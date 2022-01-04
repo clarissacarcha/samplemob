@@ -39,7 +39,7 @@ const RenderItem = ({item,index})=> {
         })
     }
 
-    const person = `${item.destinationPerson.firstName} ${item.destinationPerson.lastName}`
+    const person = `${item.sourcePerson.firstName} ${item.sourcePerson.lastName}`
     
     return (
         <>
