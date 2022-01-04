@@ -111,7 +111,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
             return <PinNotSet/>
         }
 
-        if(!minApiLevel || !minAndroidOS){
+        if(!minAndroidOS){
             return <NotMinApiLevel/>
         }
 
