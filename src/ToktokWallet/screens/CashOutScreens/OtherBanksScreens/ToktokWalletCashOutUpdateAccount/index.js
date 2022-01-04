@@ -37,6 +37,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
 
     const [errorListMessage, setErrorListMessage] = useState({
         alias: "",
+        accountName: "",
         accountNumber: "",
         address: "",
     })
@@ -64,6 +65,10 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
         let noError = true
         if(nickName == ""){
             changeErrorMessagge("alias","Alias is required.")
+            noError = false
+        }
+        if(accountName == ""){
+            changeErrorMessagge("accountName","Account Name is required.")
             noError = false
         }
         if(accountNumber == ""){
@@ -142,8 +147,9 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                             {errorListMessage.alias != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.alias}</Text>}
                         </Text>
                     </View>
-
-                    <View style={{marginVertical: 10,}}>
+                    
+                    {/* OLD ACCOUNT NAME */}
+                    {/* <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
                         <View style={[{justifyContent:"center"}]}>
                                <View
@@ -152,6 +158,25 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{accountName}</Text>
                                 </View>
                         </View>
+                    </View> */}
+
+                    {/* NEW ACCOUNT NAME */}
+                    <View style={{marginVertical: 10,}}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
+                        <View style={[{borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.accountName == "" ? "transparent" : COLOR.RED}]}>
+                            <TextInput
+                                    style={styles.input}
+                                    value={accountName}
+                                    onChangeText={setAccountName}
+                                    maxLength={30}
+                                    placeholder={`Enter bank account name here`}
+                                    returnKeyType="done"
+                                    keyboardType="default"
+                                />
+                        </View>
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountName.length}/30 
+                            {errorListMessage.accountName != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.accountName}</Text>}
+                        </Text>
                     </View>
                     
                     <View style={{marginVertical: 10,}}>
