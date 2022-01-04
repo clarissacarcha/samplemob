@@ -89,6 +89,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
     },
     onError: (err) => {
       console.log(err)
+      setAddressData([]);
+      setPaymentList([])
       setInitialLoading(false)
       // Toast.show("Something went wrong")
     }
