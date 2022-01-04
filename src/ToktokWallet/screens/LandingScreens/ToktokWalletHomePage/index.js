@@ -4,6 +4,7 @@ import {SomethingWentWrong,AlertOverlay} from 'src/components'
 import { useDispatch } from 'react-redux'
 import { useAccount } from 'toktokwallet/hooks'
 import { CheckIdleState } from 'toktokwallet/components'
+import { useFocusEffect } from '@react-navigation/native'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -38,7 +39,7 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
         })
     },[])
 
-    useEffect(() => {
+    useFocusEffect(() => {
         const backAction = () => {
           navigation.pop(2);
           return true;
