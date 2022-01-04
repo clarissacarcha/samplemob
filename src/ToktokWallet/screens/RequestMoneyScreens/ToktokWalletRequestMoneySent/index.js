@@ -21,16 +21,22 @@ const RenderItem = ({item,index})=> {
 
     const [openModal,setOpenModal] = useState(false)
     const [info,SetInfo] = useState({})
+    const navigation = useNavigation();
 
     const openRMDetails = ()=> {
-        SetInfo({
-            ...item,
-            amount: `PHP ${numberFormat(+item.amount)}`,
-            refDate: moment(item.createdAt).format("MMM D, YYYY hh:mm a"),
-            name: "Request Money",
-            phrase: `Sent request money to ${person}`,
+        // SetInfo({
+        //     ...item,
+        //     amount: `PHP ${numberFormat(+item.amount)}`,
+        //     refDate: moment(item.createdAt).format("MMM D, YYYY hh:mm a"),
+        //     name: "Request Money",
+        //     phrase: `Sent request money to ${person}`,
+        // })
+        // setOpenModal(true)
+
+        return navigation.navigate("ToktokWalletRequestMoneyViewDetails" , {
+            requestMoney: item,
+            enableCancel: true,
         })
-        setOpenModal(true)
     }
 
     const person = `${item.destinationPerson.firstName} ${item.destinationPerson.lastName}`
