@@ -68,7 +68,7 @@ const RenderItem = ({navigation, item}) => {
               {item.discountRate && item.discountRate != "" ?  <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}><Price amount={item.compareAtPrice} /></Text> : <></>}
             </View>
             <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
-              <Text style={{fontSize: 9}}>{item?.weeklySold} sold</Text>
+              <Text style={{fontSize: 9}}>{item.weeklySold || item.soldCount || 0} sold</Text>
             </View>
           </View>
         </TouchableOpacity>

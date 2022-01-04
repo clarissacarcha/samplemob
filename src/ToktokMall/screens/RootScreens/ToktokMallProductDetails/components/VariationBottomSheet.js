@@ -170,6 +170,18 @@ export const VariationBottomSheet = forwardRef(({
 
   useEffect(() => {
     reset()
+    if(item?.variations && item?.variations.length !== 0){
+      for(var variant of item.variations){
+        if(variant.noOfStocks !== 0){
+          setVariation(variant.Id)
+          setStock(variant.noOfStocks)
+          setItemPrice(variant.price)
+          setOriginalPrice(variant.compareAtPrice)
+          onSelectVariation(variant.Id, variant.images || [])
+          break;
+        }
+      }
+    }
   }, [item])
 
   return (

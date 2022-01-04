@@ -324,7 +324,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                 variables: {
                   input: {
                     search: item,
-                    origin: route.params?.origin ? route.params.origin : "all",
+                    origin: "all",
                     category: route.params?.categoryId ? route.params?.categoryId : null,
                     offset: 0,
                     limit: 10

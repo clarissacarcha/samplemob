@@ -86,6 +86,7 @@ export const AddressFinderModal = ({type, onSelect, isVisible, setVisible, setLo
         <View style={styles.search}>
           <TextInput 
             placeholder="Address(House #, Street, Village)"
+            placeholderTextColor="gray"
             style={styles.input}
             onChangeText={debounce((val) => googleApiSearch(val))}
           />
