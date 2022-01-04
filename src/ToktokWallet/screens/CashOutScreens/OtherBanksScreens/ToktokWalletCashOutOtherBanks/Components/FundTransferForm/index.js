@@ -3,7 +3,7 @@ import {View , Text , StyleSheet , TextInput,TouchableOpacity} from 'react-nativ
 import { ValidatorScreen } from 'toktokwallet/components'
 import { YellowButton ,VectorIcon ,ICON_SET} from 'src/revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
+import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT, POST_COMPUTE_CONVENIENCE_FEE } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert, usePrompt } from 'src/hooks'
@@ -242,6 +242,30 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         }
     },[bank,accountNumber,address])
 
+    const [postComputeConvenienceFee] = useMutation(POST_COMPUTE_CONVENIENCE_FEE, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error)=> onErrorAlert({alert,error}),
+        onCompleted: ({postComputeConvenienceFee})=> {
+            const { providerServiceFee , systemServiceFee , type } = postComputeConvenienceFee
+            navigation.navigate("ToktokWalletReviewAndConfirm", {
+                label: screenLabel ?? "Fund Transfer" , 
+                event: "Fund Transfer",
+                data: {
+                        method: bank.name,
+                        accountName: accountName,
+                        accountNumber: accountNumber,
+                        amount: amount,
+                        note: note,
+                        providerServiceFee,
+                        systemServiceFee
+                    },
+                isSwipe: true,
+                swipeTitle: `Confirm`,
+                onSwipeFail: onSwipeFail,
+                onSwipeSuccess: onSwipeSuccess,
+            })
+        }
+    })
 
     const [postRequestCashOut , {loading: requestLoading}] = useMutation(POST_REQUEST_CASH_OUT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -353,20 +377,13 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
         if(!noError) return
 
-        navigation.navigate("ToktokWalletReviewAndConfirm", {
-            label: screenLabel ?? "Fund Transfer" , 
-            event: "Fund Transfer",
-            data: {
-                    method: bank.name,
-                    accountName: accountName,
-                    accountNumber: accountNumber,
-                    amount: amount,
-                    note: note 
-                },
-            isSwipe: true,
-            swipeTitle: `Confirm`,
-            onSwipeFail: onSwipeFail,
-            onSwipeSuccess: onSwipeSuccess,
+        postComputeConvenienceFee({
+            variables: {
+                input: {
+                    amount: +amount,
+                    cashOutBankId: bank.id
+                }
+            }
         })
 
     }
