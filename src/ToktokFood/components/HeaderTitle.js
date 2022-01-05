@@ -43,7 +43,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
 
   useEffect(() => {
     if(isFocus && customerInfo){
-      console.log('FF: ' + JSON.stringify(customerInfo));
+      // console.log('FF: ' + JSON.stringify(customerInfo));
       getAllTemporaryCart({
         variables: {
           input: {

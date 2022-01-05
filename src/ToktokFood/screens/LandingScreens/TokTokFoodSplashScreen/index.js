@@ -68,9 +68,11 @@ const TokTokFoodSplashScreen = () => {
     },
     onCompleted: ({getKycStatus}) => {
       if (getKycStatus) {
-        return dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: {...getKycStatus}});
+        dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: {...getKycStatus}});
+        return showHomPage();
       }
-      return dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: null});
+      dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: null});
+      return showHomPage();
     },
     onError: error => console.log(error),
   });
@@ -84,9 +86,9 @@ const TokTokFoodSplashScreen = () => {
         setErrorModal({error, visible: true});
       },
       onCompleted: async ({getAccount}) => {
+        await getKycStatus();
         if (user.toktokfoodUserId != null) {
           dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
-          showHomPage();
         } else {
           addToktokFoodId(getAccount);
         }
@@ -112,7 +114,7 @@ const TokTokFoodSplashScreen = () => {
   useEffect(async () => {
     await AsyncStorage.removeItem('toktokWalletEnterpriseToken');
 
-    await getKycStatus(); // get kyc status on load
+    // await getKycStatus(); // get kyc status on load
   }, []);
 
   useEffect(() => {
