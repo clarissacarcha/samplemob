@@ -499,18 +499,17 @@ const MainComponent = () => {
   };
 
   const setUpTpinCallBack = ()=> {
-    console.log("Call again your function here");
     placeCustomerOrder();
-  }
+  };
 
 
   const handleNavigationTokWaSetupPin = () => {
     // redirect to this route
-    navigation.navigate("ToktokWalletRestricted", {
-      component: "noPin",
+    navigation.navigate('ToktokWalletRestricted', {
+      component: 'noPin',
       setUpTpinCallBack: setUpTpinCallBack,
-    })
-  }
+    });
+  };
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
