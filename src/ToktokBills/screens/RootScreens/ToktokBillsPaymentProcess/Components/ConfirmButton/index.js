@@ -129,12 +129,12 @@ const styles = StyleSheet.create({
     color: "#F6841F",
     fontSize: FONT_SIZE.S,
     textAlign: "center",
+    marginBottom: moderateScale(15)
   },
   paymentPolicy2: {
     color: "#F6841F",
     fontSize: FONT_SIZE.S,
     textAlign: "center",
-    marginBottom: moderateScale(30),
-    marginTop: moderateScale(10)
+    marginBottom: moderateScale(20),
   },
 })
