@@ -117,9 +117,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
     // console.log(JSON.stringify(payload.cart)) 
     let result = []
     const res = await ShippingApiCall("get_shipping_rate", payload, false)
+    console.log("SHipping Rates", JSON.stringify(res.responseData))
     if(res.responseData && res.responseData.success == 1){
       result = res.responseData.newCart
       CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
+      if(res.responseData?.removedCart){
+        CheckoutContextData.setUnserviceableShipping(res.responseData.removedCart)   
+      }
     }else if(res.responseError && res.responseError.success == 0){
       CheckoutContextData.setUnserviceableShipping(res.responseError.removedCart)      
     }else{

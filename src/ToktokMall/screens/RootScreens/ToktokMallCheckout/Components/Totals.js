@@ -33,17 +33,30 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
 
   const computeShippingDiscount = () => {
     let total = 0;
-    for (let i = 0; i < CheckoutContextData.shippingVouchers.length; i++) {
-      let shippingfee = CheckoutContextData.shippingFeeRates[i]?.shippingfee;
-      let voucheramount = CheckoutContextData.shippingVouchers[i]?.amount;
-      if (shippingfee && voucheramount && shippingfee - voucheramount < 0) {
-        total = total + 0;
-      } else {
-        total = total + parseFloat(CheckoutContextData.shippingVouchers[i].discountedAmount);
+    console.log("T Shipping Fee", CheckoutContextData.shippingFeeRates)
+    console.log("T VOuchers", CheckoutContextData.shippingVouchers)
+
+    for(var x=0;x<CheckoutContextData.shippingFeeRates.length;x++){
+
+      let shipping = CheckoutContextData.shippingFeeRates[x];
+      let voucherIndex = CheckoutContextData.shippingVouchers.findIndex((e) => e != null && e.shopid == shipping.shopid)
+
+      if(voucherIndex > -1){
+        let discount = CheckoutContextData.shippingVouchers[voucherIndex]
+        let voucheramount = discount?.amount;
+        if (shipping.shippingfee && voucheramount && shipping.shippingfee - voucheramount < 0) {
+          total = total + 0;
+        }else{
+          total = total + parseFloat(discount.discountedAmount)
+        }
+      }else{
+        total = total + parseFloat(shipping.shippingfee)
       }
     }
+
     setShippingDiscountTotal(total);
   };
+
   const computeShippingTotal = () => {
     let total = 0;
     for (let i = 0; i < CheckoutContextData.shippingFeeRates.length; i++) {

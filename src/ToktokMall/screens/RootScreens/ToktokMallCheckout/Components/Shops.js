@@ -115,7 +115,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
   const renderVoucherForm = (index, item, subTotal) => {
 
     const [voucherIsValid, setVoucherIsValid] = useState(0)
-    const [vcode, setvcode] = useState("")
+    const [vcode, setvcode] = useState("HOLIFS")
     const [loading, setloading] = useState(false)
     const [errormessage, seterrormessage] = useState("*Invalid voucher code. Please check your voucher code.")
 
@@ -136,7 +136,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       CheckoutContextData.setVoucherErrors(prevState => prevState.filter(id => item.shop.id !== id))
       if(req.responseData && req.responseData.success){
 
-        console.log(req.responseData.voucher)
+        console.log(req.responseData)
 
         if(req.responseData.type == "shipping"){
           
@@ -227,7 +227,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       setloading(false)
     }
 
-    console.log("test", CheckoutContextData.voucherErrors)
+    // console.log("test", CheckoutContextData.voucherErrors)
     return (
       <>
         <View>
@@ -332,27 +332,77 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         else return loc
       }
 
-      const getDiscount = (id, type) => {
-        if(type == "shipping"){
+      const getDeliveryFee = (id) => {
 
-          let index = CheckoutContextData.shippingFeeRates.findIndex((e) => e.shopid == shop.id)
-          console.log(index)
-          if(index > -1){
-            let shippingfee = CheckoutContextData.shippingFeeRates[index]?.shippingfee
-            let voucheramount = CheckoutContextData.shippingVouchers[index]?.amount
+        let discount = null
+        let shippingIndex = CheckoutContextData.shippingFeeRates.findIndex((e) => e.shopid == id)
+        let voucherIndex = CheckoutContextData.shippingVouchers.findIndex((e) => e != null && e.shopid == id)
+
+        // console.log("Get Discount", shippingIndex, voucherIndex)
+        if(shippingIndex > -1 && voucherIndex > -1){
+          
+          let shippingfee = CheckoutContextData.shippingFeeRates[shippingIndex]?.shippingfee
+          let voucheramount = CheckoutContextData.shippingVouchers[voucherIndex]?.amount
   
-            if(shippingfee && voucheramount && shippingfee - voucheramount < 0){
-              return 0
-            }else{
-              return CheckoutContextData.shippingVouchers[index]?.discount
-            }
+          if(shippingfee && voucheramount && shippingfee - voucheramount < 0){
+            discount = 0
+          }else{
+            discount = CheckoutContextData.shippingVouchers[voucherIndex]?.discount
           }
+        }
+
+        if(discount == null){
+          return (
+            <>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flex: 0}}>
+                  <Text>Delivery Fee: </Text>
+                </View>
+                <View style={{flex: 0}}>
+                  <Text 
+                    style={{
+                      textDecorationLine: "none",  
+                      color: '#000'
+                    }}
+                  >
+                    {FormatToText.currency(getOriginalShippingFee(id))}
+                  </Text>
+                </View>
+                <View style={{flex: 0}}>
+                  <Text></Text>
+                </View>
+              </View>
+            </>
+          )
+        }else{
+          return (
+            <>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flex: 0}}>
+                  <Text>Delivery Fee: </Text>
+                </View>
+                <View style={{flex: 0}}>
+                  <Text 
+                    style={{
+                      textDecorationLine: "line-through",  
+                      color: "#929191"
+                    }}
+                  >
+                    {FormatToText.currency(getOriginalShippingFee(id))}
+                  </Text>
+                </View>
+                <View style={{flex: 0}}>
+                  <Text> {FormatToText.currency(discount)}</Text>
+                </View>
+              </View>
+            </>
+          )
         }
       }
 
       const getOriginalShippingFee = (id) => {
         if(CheckoutContextData.shippingFeeRates.length > 0){
-          let index = CheckoutContextData.shippingFeeRates.findIndex((e) => e.shopid == shop.id)
+          let index = CheckoutContextData.shippingFeeRates.findIndex((e) => e.shopid == id)
 
           if(index > -1){
             let rates = CheckoutContextData.shippingFeeRates[index]
@@ -373,27 +423,16 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       }
 
       const renderValidShipping = (i, shipping, item, shopid) => {
-        return (
-          <>
-            <View style={{flexDirection: 'row'}}>
-              <View style={{flex: 0}}>
-                <Text>Delivery Fee: </Text>
-              </View>
-              <View style={{flex: 0}}>
-                <Text 
-                  style={{
-                    textDecorationLine: getDiscount(shopid, "shipping") != null ? "line-through" : "none",  
-                    color: getDiscount(shopid, "shipping") != null ? "#929191" :'#000'
-                  }}
-                >
-                  {FormatToText.currency(getOriginalShippingFee(shopid))}
-                </Text>
-              </View>
-              <View style={{flex: 0}}>
-                <Text> {getDiscount(shopid, "shipping") != null ? FormatToText.currency(getDiscount(shopid, "shipping")) : ""}</Text>
-              </View>
-            </View>
+        
+        // console.log("Index", i)
+        // console.log("shop id", shopid)
+        // console.log("Shipping", CheckoutContextData.shippingFeeRates)
+        // console.log("Discount", CheckoutContextData.shippingVouchers)
+        // console.log("Unserviceable", CheckoutContextData.unserviceableShipping)
 
+        return (
+          <>            
+            {getDeliveryFee(shopid)}
             <View>
               <Text>Order total ({countItems(item.data[0]) || 0} {countItems(item.data[0]) > 1 ? `items` : 'item'}): {computeTotal(item.data[0]) || 0} </Text>
               <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
