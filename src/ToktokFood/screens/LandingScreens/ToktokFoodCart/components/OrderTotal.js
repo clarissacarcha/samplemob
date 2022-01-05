@@ -69,7 +69,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
             </View>
           </View>
 
-          {(autoShipping?.success || shippingVoucher.length > 0) && (
+          {(autoShipping?.success || shippingVoucher.length > 0) && forDelivery && (
             <View style={styles.header}>
               <Text>Shipping Voucher Applied</Text>
               <Text style={styles.subtotal}>{`-PHP ${totalShipping.toFixed(2)}`}</Text>
