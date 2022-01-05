@@ -115,7 +115,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
   const renderVoucherForm = (index, item, subTotal) => {
 
     const [voucherIsValid, setVoucherIsValid] = useState(0)
-    const [vcode, setvcode] = useState("HOLIFS")
+    const [vcode, setvcode] = useState("")
     const [loading, setloading] = useState(false)
     const [errormessage, seterrormessage] = useState("*Invalid voucher code. Please check your voucher code.")
 
@@ -195,6 +195,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
         setVoucherIsValid(2)
         console.log(req.responseData)
+        CheckoutContextData.setVoucherErrors(prevState => prevState.filter(id => item.shop.id !== id))
 
       }else{
 

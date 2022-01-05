@@ -149,6 +149,7 @@ export const GET_ORDER_DETAILS = gql`
 			dateFulfilled
 			dateShipped
 			dateReceived
+			dateConfirmed
 			formattedDateOrdered
 			formattedDateReceived
 			shipping {
@@ -178,7 +179,10 @@ export const GET_ORDER_DETAILS = gql`
 				action
 				formatDate
 				formatTime
-			  }
+				formattedDateTime
+				dateCreated
+				username
+			}
     }
   }
 `

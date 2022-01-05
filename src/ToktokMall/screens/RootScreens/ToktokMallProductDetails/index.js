@@ -129,6 +129,7 @@ const Component =  ({
       }
     })
   }
+
   useEffect(() => {
     if(product){
       initCartItem()
@@ -201,12 +202,12 @@ const Component =  ({
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',   
     onCompleted: ({getVerifyAddToCart}) => {
-      const {productId, quantity, variant, status, code} = getVerifyAddToCart
+      const {productId, quantity, variant, status, code, price} = getVerifyAddToCart
       verificationCallback(status, code, () => {
         setIsFetching(false)
         navigation.push("ToktokMallCheckout", {
           type: "single",
-          data: [cartObject({productId: productId, qty: quantity, variation: variant})],
+          data: [cartObject({productId: productId, qty: quantity, variation: variant, price: price})],
           newCart: [],
           vouchers: [],
         })
@@ -253,6 +254,7 @@ const Component =  ({
     }
 
     product.Id = input.productId ? input.productId : product.Id
+    product.price = input.price ? input.price : product.price
 
     return {
       shop: store,

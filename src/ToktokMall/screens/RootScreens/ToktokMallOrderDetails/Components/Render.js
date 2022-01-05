@@ -83,13 +83,36 @@ const History = ({data}) => {
 
   console.log("HIstory", data.orderHistory)
 
-  const statuses = [
-    {state: "Preparing Order", value: data.dateOrderProcessed},
-    {state: "Order is ready to be picked up", value: data.dateReadyPickup},
-    {state: "Order has been picked up", value: data.bookingConfirmed},
-    {state: "Order is ready to be delivered", value: data.dateFulfilled},
-    {state: "Order delivered", value: data.dateShipped}
-  ]
+  // const statuses = [
+  //   {state: "Preparing Order", value: data.dateOrderProcessed},
+  //   {state: "Order is ready to be picked up", value: data.dateReadyPickup},
+  //   {state: "Order has been picked up", value: data.dateBookingConfirmed},
+  //   {state: "Order is ready to be delivered", value: data.dateFulfilled},
+  //   {state: "Order delivered", value: data.dateConfirmed}
+  // ]
+
+  const statuses = []
+
+  data?.orderHistory && data.orderHistory?.map((item, index) => {
+        
+    let existing = statuses.findIndex((a) => a.action === item.action)
+    if(existing > -1){
+      return
+    }
+
+    if(item.action == "Process Order"){
+      statuses.push({state: "Preparing Order", value: item.dateCreated, ...item})
+    }else if(item.action == "Ready for Pickup"){
+      statuses.push({state: "Order is ready to be picked up", value: item.dateCreated, ...item})
+    }else if(item.action == "Item picked up"){
+      statuses.push({state: "Order has been picked up", value: item.dateCreated, ...item})
+    }else if(item.action == "Mark as Fulfilled"){
+      statuses.push({state: "Order is ready to be delivered", value: item.dateCreated, ...item})
+    }else if(item.action == "Order Confirmed"){
+      statuses.push({state: "Order delivered", value: item.dateCreated, ...item})
+    }
+    
+  })
 
   const RenderRow = ({rows, item, index, active, value}) => {
 
