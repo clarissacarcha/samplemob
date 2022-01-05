@@ -28,7 +28,7 @@ export const Variations = ({data, productId}) => {
   } = useContext(VerifyContext);
 
   useEffect(() => {
-    if (data.variants.length > 0) {
+    if (Object.keys(data).length > 0 && data?.variants.length > 0) {
       let selectedVar = productId
         ? data.variants.find(val => {
             return productId == val.Id;

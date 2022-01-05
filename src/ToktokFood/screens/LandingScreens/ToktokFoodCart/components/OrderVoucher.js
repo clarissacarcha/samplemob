@@ -45,7 +45,7 @@ const OrderVoucher = ({autoShipping}) => {
 
       if (!success) {
         setShowError(!showError);
-        setVoucherError(`* ${message}`);
+        setVoucherError('* Oops! Voucher not applied for this order. Please review details of voucher and try again.');
       } else {
         if (type !== 'shipping') {
           setShippingVoucher([getVoucherCode]);

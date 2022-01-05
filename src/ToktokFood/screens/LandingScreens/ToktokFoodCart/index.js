@@ -499,18 +499,17 @@ const MainComponent = () => {
   };
 
   const setUpTpinCallBack = ()=> {
-    console.log("Call again your function here");
     placeCustomerOrder();
-  }
+  };
 
 
   const handleNavigationTokWaSetupPin = () => {
     // redirect to this route
-    navigation.navigate("ToktokWalletRestricted", {
-      component: "noPin",
+    navigation.navigate('ToktokWalletRestricted', {
+      component: 'noPin',
       setUpTpinCallBack: setUpTpinCallBack,
-    })
-  }
+    });
+  };
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
@@ -625,14 +624,18 @@ const MainComponent = () => {
           />
         )}
         <Separator />
-        {orderType == 'Delivery' && <ReceiverLocation />}
+        {orderType === 'Delivery' && <ReceiverLocation />}
         <Separator />
 
         <MyOrderList />
         <Separator />
 
-        <OrderVoucher autoShipping={autoShipping} />
-        <Separator />
+        {orderType === 'Delivery' && (
+          <>
+            <OrderVoucher autoShipping={autoShipping} />
+            <Separator />
+          </>
+        )}
 
         {/* <AlsoOrder /> */}
         {delivery === null ? (
@@ -654,7 +657,7 @@ const MainComponent = () => {
           forDelivery={orderType === 'Delivery'}
           showPlaceOrder={delivery == null || pmLoading || user?.toktokWalletAccountId == null}
           notes={riderNotes}
-          onNotesChange={(n) => setRiderNotes(n)}
+          onNotesChange={n => setRiderNotes(n)}
           onPlaceOrder={() => setShowConfirmation(true)}
         />
         {checkShop != null && (

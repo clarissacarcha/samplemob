@@ -38,12 +38,14 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         setTotalShipping(pAmount);
       }
       if (type === 'shipping' && amount === 0) {
-        setTotalShipping(0);
+        setTotalShipping(deliveryFee);
       }
       if (type !== 'shipping') {
         const totalBasketDiscount = amount > totalBasket ? amount - totalBasket : totalBasket - amount;
         setTotalBasket(totalBasketDiscount);
       }
+    } else {
+      setTotalShipping(0);
     }
   }, [autoShipping, shippingVoucher]);
 
@@ -69,7 +71,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
             </View>
           </View>
 
-          {(autoShipping?.success || shippingVoucher.length > 0) && (
+          {(autoShipping?.success || shippingVoucher.length > 0) && forDelivery && (
             <View style={styles.header}>
               <Text>Shipping Voucher Applied</Text>
               <Text style={styles.subtotal}>{`-PHP ${totalShipping.toFixed(2)}`}</Text>
