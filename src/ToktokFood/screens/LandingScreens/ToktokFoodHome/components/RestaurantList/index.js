@@ -1,14 +1,14 @@
 import React from 'react';
-import { FlatList, Image, Platform, StyleSheet, Text, View } from 'react-native';
+import {FlatList, Image, Platform, StyleSheet, Text, View} from 'react-native';
 // Fonts & Colors
-import { FONT_SIZE } from 'res/variables';
-import { empty_shop_2 } from 'toktokfood/assets/images';
+import {FONT_SIZE} from 'res/variables';
+import {empty_shop_2} from 'toktokfood/assets/images';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 // Utils
-import { moderateScale, scale, verticalScale } from 'toktokfood/helper/scale';
+import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 import RestaurantItem from './RestaurantItem';
 
-const RestaurantList = (props) => {
+const RestaurantList = props => {
   const {loading, error, data, loadMore, location} = props;
 
   const renderFooter = () => <LoadingIndicator isLoading={loadMore} />;
@@ -21,7 +21,7 @@ const RestaurantList = (props) => {
       </Text>
     </View>
   );
- 
+
   if (loading || error || location == undefined) {
     return <LoadingIndicator style={{marginVertical: 20}} isFlex isLoading={true} />;
   }
@@ -35,14 +35,13 @@ const RestaurantList = (props) => {
       showsVerticalScrollIndicator={false}
       keyExtractor={(val, index) => index.toString()}
       ListFooterComponent={renderFooter()}
-      ListEmptyComponent={listEmpty()}
+      // ListEmptyComponent={listEmpty()}
       style={{
         flex: 1,
         paddingTop: moderateScale(15),
         paddingHorizontal: 20,
         backgroundColor: 'white',
-        paddingTop: 15,
-        paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0
+        paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0,
       }}
     />
   );
@@ -106,6 +105,6 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
     textAlign: 'center',
     marginTop: moderateScale(20),
-    marginHorizontal: moderateScale(20)
+    marginHorizontal: moderateScale(20),
   },
 });

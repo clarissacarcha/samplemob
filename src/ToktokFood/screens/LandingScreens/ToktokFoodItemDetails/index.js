@@ -56,10 +56,11 @@ const MainComponent = () => {
     },
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails);
+      // console.log('getProductDetails', getProductDetails);
       getTemporaryCart({
         variables: {
           input: {
-            shopId: +getProductDetails.sysShop,
+            shopId: +getProductDetails?.sysShop,
             userId: customerInfo.userId,
           },
         },
@@ -164,7 +165,7 @@ const MainComponent = () => {
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle />
       </HeaderImageBackground>
-      {Object.entries(productDetails).length == 0 || getLoading || getError ? (
+      {productDetails === null || Object.entries(productDetails).length === 0 || getLoading || getError ? (
         <LoadingIndicator isLoading={true} isFlex />
       ) : (
         <>

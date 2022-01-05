@@ -180,7 +180,7 @@ const StickyView = () => {
   const sample = [
     {type: 'ADDRESS', data: []}, // Static sections.
     {type: 'CATEGORIES', data: []},
-    {type: 'RESTAURANTS', data: data ? data.getShops : [{index: 1}]},
+    {type: 'RESTAURANTS', data: data && data?.getShops.length > 0 ? data.getShops : [{index: 1}]},
   ];
 
   const EmptyList = () => {
@@ -214,6 +214,9 @@ const StickyView = () => {
         }}
         scrollEventThrottle={15}
         renderItem={props => {
+          if ((!data || data?.getShops?.length === 0) && props.index < 1) {
+            return EmptyList();
+          }
           if (props.index < 1) {
             return (
               <RestaurantList
