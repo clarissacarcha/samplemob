@@ -4,6 +4,8 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, ImageBackground, StyleSheet, StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
+
 import {COLOR} from 'res/variables';
 import {CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT, TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
 import {splash} from 'toktokfood/assets/images';
@@ -81,8 +83,7 @@ const TokTokFoodSplashScreen = () => {
       onError: error => {
         setErrorModal({error, visible: true});
       },
-      onCompleted: ({getAccount}) => {
-        // console.log(JSON.stringify({foodPerson}));
+      onCompleted: async ({getAccount}) => {
         if (user.toktokfoodUserId != null) {
           dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
           showHomPage();
@@ -108,8 +109,10 @@ const TokTokFoodSplashScreen = () => {
     navigation.replace('ToktokFoodLanding');
   };
 
-  useEffect(() => {
-    getKycStatus(); // get kyc status on load
+  useEffect(async () => {
+    await AsyncStorage.removeItem('toktokWalletEnterpriseToken');
+
+    await getKycStatus(); // get kyc status on load
   }, []);
 
   useEffect(() => {
