@@ -13,7 +13,8 @@ export const HeaderTitle = ({isRightIcon, rightIcon = null, rightIconOnPress, is
     return (
         <View style={[styles.header, headerStyle ]}>
             <View style={{flex: 1,flexDirection:"row"}}>
-                <HeaderBack onBack={leaveTokwa} color={backButtonColor} label={headerBackLabel}/>
+                {/* <HeaderBack onBack={leaveTokwa} color={backButtonColor} label={headerBackLabel}/> */}
+                <HeaderBack color={backButtonColor} label={headerBackLabel}/>
             </View>
             <View style={{width: 150,justifyContent:"center",alignItems:"center"}}>
             {

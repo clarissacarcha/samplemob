@@ -39,8 +39,10 @@ export const onErrorAlert = ({alert, error , navigation = null , title = null}) 
         // temporary added for toktokwallet deactivated account
         if(code === "FORBIDDEN" && message === "toktokwallet account not active"){
           //alert({message: 'toktokwallet account has been deactivated.'});
-          navigation.navigate("ToktokWalletLoginPage");
-          navigation.replace("ToktokWalletLoginPage");
+          // navigation.navigate("ToktokWalletLoginPage")
+          // navigation.replace("ToktokWalletLoginPage")
+          navigation.navigate("ToktokLandingHome")
+          navigation.push("ToktokWalletLoginPage")  
           return;
         }
         if (code === 'INTERNAL_SERVER_ERROR') {
