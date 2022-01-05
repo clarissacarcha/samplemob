@@ -33,7 +33,6 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
 
     const checkSensor = async ()=> {
         const { available, biometryType } = await ReactNativeBiometrics.isSensorAvailable()
-        console.log(available)
         if (available && biometryType === ReactNativeBiometrics.TouchID) {
             setIsSensorAvailable(true)
         } else if (available && biometryType === ReactNativeBiometrics.FaceID) {

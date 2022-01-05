@@ -51,6 +51,8 @@
 	<string>LaunchScreen</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to select avatar for your profile.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Used to access face id.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
