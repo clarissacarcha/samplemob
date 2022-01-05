@@ -5,7 +5,7 @@ import { AlertOverlay} from '../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 import {placeholder} from '../../../../assets';
-import {Price} from '../../../../helpers';
+import {ArrayCopy, Price} from '../../../../helpers';
 import AIcons from 'react-native-vector-icons/dist/Entypo'
 
 import { CartContext } from '../ContextProvider';
@@ -32,8 +32,13 @@ export const Item = ({
   const [product, setproduct] = useState({})
 
   useEffect(() => {
-    setQty(data.quantity)
-    setproduct(data.product)
+    getRealtimeItemQuantity()
+  }, [])
+
+  useEffect(() => {
+    // setQty(data.quantity)
+    getRealtimeItemQuantity()
+    setproduct(data.product)    
   },[data])
 
   useEffect(() => {
@@ -56,9 +61,28 @@ export const Item = ({
     } 
   }, [heldItem])
 
+  const getRealtimeItemQuantity = () => {
+    if(CartContextData.itemQuantity && CartContextData.itemQuantity.length > 0){
+      let index = CartContextData.itemQuantity.findIndex(a => a.id === data.product.Id)
+      if(index > -1){
+        setQty(CartContextData.itemQuantity[index].value)
+      }
+    }
+  }
+
+  const updateRealtimeItemQuantity = (value) => {
+    if(CartContextData.itemQuantity && CartContextData.itemQuantity.length > 0){
+      let index = CartContextData.itemQuantity.findIndex(a => a.id === data.product.Id)
+      if(index > -1){
+        let newList = ArrayCopy(CartContextData.itemQuantity)
+        newList[index].value = value
+        CartContextData.setItemQuantity(newList)
+      }
+    }
+  }
+
   const onPress = () => {
     
-
   }
 
   const getImageSource = (imgs) => {
@@ -173,6 +197,7 @@ export const Item = ({
                       // if(selected){
                         onChangeQuantity(qty - 1, product?.Id)
                         setQty(qty - 1)
+                        updateRealtimeItemQuantity(qty - 1)
                       // }
                     }}
                   >
@@ -197,6 +222,7 @@ export const Item = ({
                       // if(selected){
                         onChangeQuantity(qty + 1, product?.Id)
                         setQty(qty + 1)
+                        updateRealtimeItemQuantity(qty + 1)
                       // }
                     }}
                   >

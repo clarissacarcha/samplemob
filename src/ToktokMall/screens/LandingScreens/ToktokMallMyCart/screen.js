@@ -81,6 +81,15 @@ const Component = ({
           setSwiperReferences(swiperrefcopy)
         }
 
+        //SETUP INITIAL QUANTITIES AND TRACK THEIR VALUES BY PRODUCT ID
+        if(CartContextData.itemQuantity.length == 0){
+          let initialQty = ArrayCopy(CartContextData.itemQuantity)
+          response.getMyCart.raw.map(item => {      
+            initialQty.push({id: item.productid, value: item.quantity})
+          })
+          CartContextData.setItemQuantity(initialQty)
+        }
+
       }
     },
     onError: (err) => {
@@ -140,8 +149,7 @@ const Component = ({
 
   useEffect(() => {
     init()
-    EventRegister.addEventListener('refreshToktokmallShoppingCart', init)
-    
+    EventRegister.addEventListener('refreshToktokmallShoppingCart', init)    
   }, [])
 
   useFocusEffect(
