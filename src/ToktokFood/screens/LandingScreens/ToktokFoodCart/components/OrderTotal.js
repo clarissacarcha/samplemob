@@ -38,7 +38,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         setTotalShipping(pAmount);
       }
       if (type === 'shipping' && amount === 0) {
-        setTotalShipping(0);
+        setTotalShipping(deliveryFee);
       }
       if (type !== 'shipping') {
         const totalBasketDiscount = amount > totalBasket ? amount - totalBasket : totalBasket - amount;
