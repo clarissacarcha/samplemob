@@ -44,6 +44,8 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         const totalBasketDiscount = amount > totalBasket ? amount - totalBasket : totalBasket - amount;
         setTotalBasket(totalBasketDiscount);
       }
+    } else {
+      setTotalShipping(0);
     }
   }, [autoShipping, shippingVoucher]);
 
