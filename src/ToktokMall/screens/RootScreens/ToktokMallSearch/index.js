@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import {Product} from './components'
 import {emptysearch} from '../../../assets'
 import { FONT } from '../../../../res/variables';
+import { ArrayCopy } from '../../../helpers';
 
 const testdata = ["Gaming Chair", "Mousepad", "Face mask", "Pillow", "Ballpen"]
 
@@ -73,7 +74,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       setIsLoading(false)
     }
   })
-  console.log("Search Result", searchedProducts)
+  // console.log("Search Result", searchedProducts)
 
 
   const [searchProductSuggestion, {error2, loading2}] = useLazyQuery(SEARCH_PRODUCT_SUGGESTIONS, {
@@ -101,13 +102,15 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         limit: 10
       }
     },
-    onCompleted: (response) => {
-      let temp = searchedProducts
+    onCompleted: (response) => {      
+      let temp = ArrayCopy(searchedProducts)
       if(response){
         temp = temp.concat(response.getTopProducts)
-        setSearchedProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
+        setSearchedProducts(temp)
+        // setSearchedProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
       }else{
-        setSearchedProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
+        setSearchedProducts(temp)
+        // setSearchedProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
       }
     },
     onError: (err) => {
@@ -382,8 +385,9 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
               'search params', route.params?.origin ? "" : searchValue,
               'origin:', route.params?.origin ? route.params.origin : "all",
               'category:', route.params?.categoryId ? route.params?.categoryId : "null",
-            
+
             )
+            console.log("OFFSET", searchedProducts.length)
             setOffset(searchedProducts.length)
 
             if( route.params?.origin === "suggestion"){

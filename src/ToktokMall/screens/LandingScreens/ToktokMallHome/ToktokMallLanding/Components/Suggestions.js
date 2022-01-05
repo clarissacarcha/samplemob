@@ -11,7 +11,7 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
 import { GET_TOP_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
 
 import {clothfacemask, medicalfacemask, placeholder} from '../../../../../assets'; 
-import { Price } from '../../../../../helpers';
+import { ArrayCopy, Price } from '../../../../../helpers';
 import { SwipeReloader, Loading } from '../../../../../Components';
 import Spinner from 'react-native-spinkit';
 
@@ -144,12 +144,14 @@ export const Suggestions = ({lazyload}) => {
       }
     },
     onCompleted: (response) => {
-      let temp = products
+      let temp = ArrayCopy(products)
       if(response){
         temp = temp.concat(response.getTopProducts)
-        setProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
+        setProducts(temp)
+        // setProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
       }else{
-        setProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
+        setProducts(temp)
+        // setProducts(temp.sort((a, b) => a.weeklySold < b.weeklySold ))
       }
       setIsFetching(false)
     },
