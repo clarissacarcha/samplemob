@@ -95,7 +95,7 @@ const MainComponent = () => {
   const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({error: {}, visible: false});
   const alert = useAlert();
 
-  const [closeInfo, setCloseInfo] = useState({visible: true, shopName: ''});
+  const [closeInfo, setCloseInfo] = useState({visible: false, shopName: ''});
 
   useEffect(() => {
     if (temporaryCart && temporaryCart.items.length > 0) {
