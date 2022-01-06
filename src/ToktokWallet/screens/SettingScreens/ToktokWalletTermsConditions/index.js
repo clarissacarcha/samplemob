@@ -22,33 +22,6 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
         headerTitle: () => <HeaderTitle label={['']} />,
     });
 
-    const webviewRef = useRef()
-    const alert = useAlert()
-    const {data,error,loading} = useQuery(GET_GLOBAL_SETTING, {
-        fetchPolicy: "network-only",
-        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        variables: {
-            input: {
-                settingKey: "tokwaTermsAndCondition"
-            }
-        },
-        onError: (error)=> {
-            onErrorAlert({alert,error,navigation})
-        }
-    })
-
-    if(loading){
-        return (
-            <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
-                <ActivityIndicator color={COLOR.YELLOW} size={24}/>
-            </View>
-        )
-    }
-
-    if(error){
-        return <SomethingWentWrong/>
-    }
-
     return (
       <CheckIdleState>
       <Separator/>

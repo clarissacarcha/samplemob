@@ -43,7 +43,7 @@ export const PromptModal = ({visible , title , message , onPress , event , child
                     <Text style={styles.messageText}>{message}</Text>
                     {children}
                     <View style={{justifyContent:"flex-end",width: "50%",marginTop: 20}}>
-                            <YellowButton label="Ok" onPress={onPressThrottled}/>
+                            <YellowButton label="OK" onPress={onPressThrottled}/>
                     </View>
                 </View>
             </View>

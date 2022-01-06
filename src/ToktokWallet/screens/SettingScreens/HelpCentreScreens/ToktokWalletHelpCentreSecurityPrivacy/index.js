@@ -42,13 +42,13 @@ export const ToktokWalletHelpCentreSecurityPrivacy = ({navigation})=> {
                 />
                 <Card
                     title="Your money is protected"
-                    content="Your wallet balance is stored and protected with a trusted partner bank."
+                    content="Your wallet balance is stored and protected."
                     imageSource={require('toktokwallet/assets/images/SecurityAndPrivacy/money.png')}
                     onPress={() => navigation.navigate("ToktokWalletHelpCentreMoneyProtected")}
                 />
                 <Card
                     title="Help within reach"
-                    content="Having issues? Contact us through here."
+                    content="Having issues? Contact us here."
                     imageSource={require('toktokwallet/assets/images/SecurityAndPrivacy/HelpReach.png')}
                     onPress={() => navigation.navigate("ToktokWalletHelpCentreContactUs")}
                 />

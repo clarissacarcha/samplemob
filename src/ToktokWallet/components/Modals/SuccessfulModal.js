@@ -25,7 +25,7 @@ export const SuccessfulModal = ({ visible, title, description, redirect })=> {
                     </View>
                     <TouchableOpacity style={styles.buttonStyle} onPress={redirect}>
                         <Text style={[ styles.fontBoldStyle, { textAlign: "center" } ]}>
-                            Ok
+                            OK
                         </Text>
                     </TouchableOpacity>
                 </View>

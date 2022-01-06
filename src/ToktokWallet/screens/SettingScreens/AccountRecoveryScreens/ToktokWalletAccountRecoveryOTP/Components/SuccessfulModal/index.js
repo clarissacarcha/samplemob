@@ -33,7 +33,7 @@ export const SuccessfulModal = ({visible , setVisible})=> {
                     <Text style={styles.successText}>Successful!</Text>
                     <Text style={styles.messageText}>Your account has been recovered. If you forgot your MPIN go to settings and click "Change MPIN"</Text>
                     <View style={{justifyContent:"flex-end",width: "50%",marginTop: 20}}>
-                            <YellowButton label="Ok" onPress={onPressThrottled}/>
+                            <YellowButton label="OK" onPress={onPressThrottled}/>
                     </View>
                 </View>
             </View>
