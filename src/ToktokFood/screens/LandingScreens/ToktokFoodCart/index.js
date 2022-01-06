@@ -237,8 +237,6 @@ const MainComponent = () => {
           });
       } else {
         // error prompt
-        console.log(checkoutOrder);
-
         setShowLoader(false);
         setTimeout(() => {
           setTokWaPlaceOrderErr({
