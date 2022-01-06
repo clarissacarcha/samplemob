@@ -43,24 +43,24 @@ export const ToktokWalletSettings = ({navigation , route })=> {
         <CheckIdleState>
         <Separator />
         <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-            <SettingHeaderTitle title="Manage PIN"/>
-            <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN"/>
+            <SettingHeaderTitle title="Security"/>
             <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? "Change" : "Create"} TPIN`}/>
+            <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN"/>
+            {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
+            {/* <Biometrics/> */}
             <Separator/>   
-            <SettingHeaderTitle title="Help Centre"/>
+            <SettingHeaderTitle title="Account"/>
             <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>
             <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>
             {
                 +tokwaAccount.person.accountType.level < 3 &&
                 <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
             }
-            {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
-            {/* <Biometrics/> */}
-            <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us"/>
             <Separator/>
-            <SettingHeaderTitle title="Security and Privacy"/>
+            <SettingHeaderTitle title="Help Centre"/>
             <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy"/>
             <SettingOption route="ToktokWalletTermsConditions" title="Terms and Conditions"/>
+            <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us"/>
             <Separator/>
             <SettingHeaderTitle title="Logs"/>
             <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
