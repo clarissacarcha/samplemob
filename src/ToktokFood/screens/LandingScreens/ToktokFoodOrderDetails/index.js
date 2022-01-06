@@ -70,10 +70,10 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const [getToktokFoodRiderDetails, {error: riderError, loading: riderLoading, refetch: riderRefetch}] = useLazyQuery(
     GET_RIDER_DETAILS,
     {
-      client: CLIENT,
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
-      onCompleted: ({getDeliveryDriver}) => {
-        setRiderDetails(getDeliveryDriver.driver);
+      onCompleted: ({getDeliveryDetails}) => {
+        setRiderDetails(getDeliveryDetails.driver);
       },
     },
   );
