@@ -16,8 +16,7 @@ import {arrow_right, help_centre_ic} from 'toktokfood/assets/images';
 import { GET_MY_ACCOUNT } from 'toktokwallet/graphql';
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql';
 import { useLazyQuery } from '@apollo/react-hooks';
-import {useIsFocused} from '@react-navigation/native';
-
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import { HelpCentre, Me, VerifyContext, VerifyContextProvider } from './components';
@@ -33,7 +32,7 @@ const MainComponent = () => {
   const {user} = useSelector((state) => state.session);
   const { showHelpCentreList, setShowHelpCentreList, walletBalance, setWalletBalance } = useContext(VerifyContext);
   const isFocus = useIsFocused();
-
+  const navigation = useNavigation();
   const [ getMyAccount, {loading, error} ] = useLazyQuery(GET_MY_ACCOUNT , {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -56,18 +55,19 @@ const MainComponent = () => {
   }, [user, isFocus])
 
   const onBack = () => {
-    setShowHelpCentreList(false)
+    // setShowHelpCentreList(false)
+    navigation.goBack();
   }
 
   return (
     <View style={styles.container}>
       <HeaderImageBackground searchBox={false}>
         <View style={styles.header}>
-          { showHelpCentreList && (
+          {/* { showHelpCentreList && ( */}
             <TouchableOpacity onPress={onBack}>
               <FIcon5 name="chevron-left" size={15} />
             </TouchableOpacity>
-          )}
+          {/* )} */}
           <Image source={{ uri: user.person.avatar }} style={styles.avatar} />
           <Text style={styles.name}>
             {`${user.person.firstName} ${user.person.lastName}`}
@@ -102,7 +102,8 @@ const styles = StyleSheet.create({
     height: moderateScale(50),
     width: moderateScale(50),
     borderRadius: moderateScale(50),
-    resizeMode: 'cover'
+    resizeMode: 'cover',
+    marginLeft: moderateScale(15),
   },
   header: {
     flexDirection: 'row',
