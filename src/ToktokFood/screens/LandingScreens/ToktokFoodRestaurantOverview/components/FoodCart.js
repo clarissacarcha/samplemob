@@ -26,11 +26,13 @@ export const FoodCart = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getAllTemporaryCart}) => {
-      let {items, totalAmount} = getAllTemporaryCart;
+      let {items, totalAmount, totalAmountWithAddons} = getAllTemporaryCart;
+      console.log(totalAmountWithAddons)
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
         items: items,
+        totalAmountWithAddons
       });
     },
   });
@@ -76,7 +78,7 @@ export const FoodCart = () => {
           <Text style={styles.total}>{`${temporaryCart.cartItemsLength} ${
             temporaryCart.cartItemsLength > 1 ? 'items' : 'item'
           }`}</Text>
-          <Text style={styles.total}>Total: {temporaryCart.totalAmount.toFixed(2)}</Text>
+          <Text style={styles.total}>Total: {temporaryCart.totalAmountWithAddons.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
           disabled={temporaryCart.cartItemsLength == 0}
