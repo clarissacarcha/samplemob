@@ -66,6 +66,8 @@ export const GET_VERIFY_ADD_TO_CART = gql`
 			code
 			status
 			message
+			price
+			compareAtPrice
 		}
 	}
 `
