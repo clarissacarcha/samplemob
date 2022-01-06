@@ -21,7 +21,7 @@ const MyOrderList = () => {
   // const { cart } = route.params;
   const navigation = useNavigation();
   const {location, customerInfo, shopLocation} = useSelector((state) => state.toktokFood, _.isEqual);
-  const {totalAmount, setTotalAmount, temporaryCart, setTemporaryCart} = useContext(VerifyContext);
+  const {temporaryCart, setTemporaryCart} = useContext(VerifyContext);
   
   const swipeListViewRef = useRef(null)
 
@@ -70,6 +70,7 @@ const MyOrderList = () => {
       parentProductId,
       quantity,
       totalAmount,
+      addonsTotalAmount,
       productLogo,
       productName,
       addonsDetails,
@@ -77,7 +78,8 @@ const MyOrderList = () => {
       parentProductName
     } = item;
     const addons = arrangeAddons(addonsDetails);
-   
+    const totalAmountWithAddons = parseFloat(addonsTotalAmount) + parseFloat(totalAmount);
+
     return (
       <View style={styles.orderItemContainer}>
         { productLogo && (
@@ -94,12 +96,12 @@ const MyOrderList = () => {
         </View>
         <View style={styles.priceWrapper}>
           <Text
-            onPress={() => {onPressEdit(productid, parentProductId, addons, id, totalAmount, quantity, notes)}}
+            onPress={() => {onPressEdit(productid, parentProductId, addons, id, totalAmountWithAddons, quantity, notes)}}
             style={styles.actionText}
           >
             Edit
           </Text>
-          <Text style={styles.foodPrice}>PHP {totalAmount.toFixed(2)}</Text>
+          <Text style={styles.foodPrice}>PHP {totalAmountWithAddons.toFixed(2)}</Text>
         </View>
       </View>
     );
