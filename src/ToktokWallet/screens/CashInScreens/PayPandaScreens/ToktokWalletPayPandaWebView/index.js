@@ -4,7 +4,7 @@ import {useNavigation,useRoute} from '@react-navigation/native'
 import WebView from 'react-native-webview'
 import {useSelector} from 'react-redux'
 import { useFocusEffect } from '@react-navigation/native'
-import { CheckIdleState, FlagSecureScreen } from 'toktokwallet/components'
+import { CheckIdleState, FlagSecureScreen , Separator } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE , SIZE } = CONSTANTS
@@ -37,8 +37,15 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
     const session = useSelector(state=>state.session)
     const constants = useSelector(state=>state.constants)
 
-    const goBack = () => webviewRef.current.goBack();
-    const goForward = () => webviewRef.current.goForward();
+    const goBack = () => {
+        if(canGoBack){
+            return webviewRef.current.goBack();
+        }
+        return navigation.pop();
+    }
+    const goForward = () => {
+        if(canGoForward) webviewRef.current.goForward();
+    }
 
     useFocusEffect(()=>{
         const checkIfCanGoBack = ()=> {
@@ -108,6 +115,14 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
             <View style={styles.container}> 
             {
                 mounted & !donetransaction ? 
+                <>
+                <NavigationView
+                    canGoBack={canGoBack}
+                    canGoForward={canGoForward}
+                    goBack={goBack}
+                    goForward={goForward}
+                />
+                <Separator/>
                 <WebView
                     style={{flex: 1}}
                     ref={webviewRef}
@@ -125,6 +140,7 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
                         
                        const back = event.canGoBack;
                        const forward = event.canGoForward;
+                       console.log("WEBVIEW CAN GO BACK", back)
                        setCanGoBack(back);
                        setCanGoForward(forward);
                       
@@ -154,6 +170,7 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
 
                     }}
                 />  
+                </>
                 : mounted &&
                 <SuccessfulModal
                     amount={route.params.amount_to_pay}
