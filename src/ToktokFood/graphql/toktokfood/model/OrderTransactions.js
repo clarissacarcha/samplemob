@@ -68,6 +68,7 @@ const transaction = `
     currency
     curcode
     notes
+    totalAmountWithAddons
     productDetails {
       Id
       itemname

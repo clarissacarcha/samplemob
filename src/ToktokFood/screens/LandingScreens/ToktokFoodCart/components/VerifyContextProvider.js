@@ -38,11 +38,13 @@ export const VerifyContextProvider = ({children}) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getAllTemporaryCart}) => {
-      let {items, totalAmount} = getAllTemporaryCart;
+      let {items, totalAmount, totalAmountWithAddons, addonsTotalAmount} = getAllTemporaryCart;
       // console.log(getAllTemporaryCart, 'temp cart');
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
+        totalAmountWithAddons,
+        addonsTotalAmount,
         items: items,
       });
     },
