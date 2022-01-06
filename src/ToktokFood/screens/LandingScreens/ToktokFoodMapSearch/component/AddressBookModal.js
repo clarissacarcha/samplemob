@@ -178,7 +178,6 @@ const AddressBookModal = (props) => {
     <>
       <Modal
         onShow={() => goToContacts()}
-        presentationStyle="overFullScreen"
         animationType="slide"
         visible={visibility}
         style={styles.modal}>
@@ -207,8 +206,7 @@ const styles = StyleSheet.create({
   contactWrapper: {
     width: '100%',
     height: '100%',
-    paddingTop: 6,
-    marginTop: Platform.OS === 'ios' ? 16 : verticalScale(getStatusbarHeight + 7),
+    marginTop: Platform.OS === 'ios' ? 16 : 15,
   },
   header: {
     justifyContent: 'center',

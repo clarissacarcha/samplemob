@@ -27,7 +27,7 @@ const DialogMessage = (props) => {
     onCloseBtn1,
     onCloseBtn2,
     reasons,
-    btnTitle = 'OK'
+    btnTitle = 'OK',
   } = props;
 
   const getDialogIcon = () => {

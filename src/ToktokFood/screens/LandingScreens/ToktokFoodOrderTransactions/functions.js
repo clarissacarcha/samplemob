@@ -19,7 +19,7 @@ export const getOrderStatus = (focusTab) => {
 export const getSubMessageStatus = (item) => {
   switch(item.orderStatus){
     case 's':
-      return `Delivered at ${moment(item.dateShipped).format('lll')}`;
+      return `Pick up ${moment(item.dateShipped).format('lll')}`;
     case 'c':
       return `Cancelled at ${moment(item.dateCancelledDeclined).format('lll')}`;
     case 'rp':
