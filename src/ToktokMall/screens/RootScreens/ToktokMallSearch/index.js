@@ -37,7 +37,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     fetchPolicy: 'network-only',
     onCompleted: async (response) => {      
 
-      let temp = searchedProducts
+      let temp = ArrayCopy(searchedProducts)
       if(!response){
 
         setSearchedProducts(temp)
