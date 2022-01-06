@@ -56,7 +56,7 @@ const Column = ({data, rowindex})=> {
                        {
                            rowBody.map((row,index)=> {
                                let cellwidth
-
+                               let cellAlign = "left"
                                if(index == 0){
                                  cellwidth = "22%"
                                }
@@ -64,7 +64,7 @@ const Column = ({data, rowindex})=> {
                                   cellwidth = "24%"
                                }
                                if(index == 2){
-                                 cellwidth = "30%"
+                                 cellwidth = "32%"
                                }
                                if(index == 3){
                                   cellwidth = "24%"
@@ -82,7 +82,8 @@ const Column = ({data, rowindex})=> {
                                                     styles.headerTitle , 
                                                     {
                                                         fontFamily: rowIndex == 0 ? FONT.BOLD : FONT.REGULAR,
-                                                        fontSize: rowIndex == 0 ? moderateScale(FONT_SIZE.S) : moderateScale(FONT_SIZE.S)
+                                                        fontSize: rowIndex == 0 ? moderateScale(FONT_SIZE.S) : moderateScale(FONT_SIZE.S),
+                                                        textAlign: cellAlign 
                                                     }
                                                 ]}>
                                                     {displayText
@@ -122,7 +123,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor:"white",
         marginTop: 16,
-        paddingHorizontal: 10
     },
     headings: {
         flexDirection:"row",
