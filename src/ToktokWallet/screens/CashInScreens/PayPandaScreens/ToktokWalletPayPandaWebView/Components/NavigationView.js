@@ -24,7 +24,7 @@ export const NavigationView = ({
                 <VectorIcon iconSet={ICON_SET.FontAwesome5} size={moderateScale(16)} name="chevron-left" color={COLOR.YELLOW} />
             </TouchableOpacity>
             <View style={styles.cancel}>
-                <Text>can go back {JSON.stringify(canGoBack)}</Text>
+               
             </View>
         </View>
     )

@@ -13,7 +13,8 @@ export const NoData = ()=>{
         <View style={{paddingTop: 100}}>
             <View style={styles.center}>
                 <Image source={NoDataImage} style={styles.image} resizeMode={'contain'} />
-                <Text style={styles.text}>No Records Available</Text>
+                <Text style={styles.title}>No Record Found</Text>
+                <Text style={styles.text}>You have no transactions at the moment.</Text>
             </View>
         </View>
     )
@@ -33,6 +34,11 @@ const styles = StyleSheet.create({
         fontFamily: FONT.REGULAR,
         fontSize: moderateScale(FONT_SIZE.L),
         color: COLOR.DARK,
-        marginTop: 20,
+    },
+    title: {
+        fontFamily: FONT.BOLD,
+        fontSize: moderateScale(FONT_SIZE.XL),
+        color: COLOR.YELLOW,
+        marginVertical: 20,
     }
 })
