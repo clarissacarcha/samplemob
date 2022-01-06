@@ -2,6 +2,8 @@ import gql from 'graphql-tag';
 
 const tempCart = `
   totalAmount
+  addonsTotalAmount
+  totalAmountWithAddons
   items {
     id
     shopid
@@ -11,6 +13,7 @@ const tempCart = `
     quantity
     basePrice
     totalAmount
+    addonsTotalAmount
     productName
     productLogo
     notes

@@ -34,7 +34,7 @@ import {
   VerifyContextProvider,
   VerifyContext,
 } from './components';
-import {tokwaErrorBtnTitle, tokwaErrorMessage, tokwaErrorTitle} from './functions';
+import {getDeductedVoucher, tokwaErrorBtnTitle, tokwaErrorMessage, tokwaErrorTitle} from './functions';
 
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -217,6 +217,7 @@ const MainComponent = () => {
           onErrorAlert({alert, error});
         }, 500);
       } else {
+        console.log(error)
         setTokWaPlaceOrderErr({error, visible: true});
       }
     },
@@ -237,6 +238,8 @@ const MainComponent = () => {
           });
       } else {
         // error prompt
+        console.log(checkoutOrder)
+
         setShowLoader(false);
         setTimeout(() => {
           setTokWaPlaceOrderErr({
@@ -267,12 +270,12 @@ const MainComponent = () => {
   const fixItems = async () => {
     let items = [];
     return Promise.all(
-      temporaryCart.items.map(async item => {
+      temporaryCart.items.map(async (item) => {
         let data = {
           sys_shop: item.shopid,
           product_id: item.productid,
-          amount: item.totalAmount,
-          srp_amount: item.totalAmount,
+          amount: item.basePrice,
+          srp_amount: item.basePrice,
           srp_totalamount: item.totalAmount,
           total_amount: item.totalAmount,
           quantity: item.quantity,
@@ -293,6 +296,7 @@ const MainComponent = () => {
       addonsDetails.map(item => {
         let {id, optionPrice, optionName, optionDetailsName} = item;
         let data = {addon_id: id, addon_name: optionName, addon_price: optionPrice, option_name: optionDetailsName};
+        console.log(data)
         addons.push(data);
       }),
     ).then(() => {
@@ -340,6 +344,11 @@ const MainComponent = () => {
     if (delivery !== null && !pmLoading) {
       paymentMethod == 'COD' ? setShowLoader(true) : setLoadingWallet(true);
       const CUSTOMER_CART = await fixOrderLogs();
+      const SHIPPING_VOUCHERS = autoShipping?.success
+        ? await handleAutoShippingVouchers()
+        : await handleShippingVouchers();
+      const deductedFee = await getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
+
       await refetch({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}})
         .then(({data}) => {
           let {isOpen} = data.checkShopValidations;
@@ -347,10 +356,19 @@ const MainComponent = () => {
             if (paymentMethod == 'TOKTOKWALLET') {
               let totalPrice = 0;
               if (orderType === 'Delivery') {
-                totalPrice = parseInt(temporaryCart.totalAmount) + parseInt(delivery.price ? delivery.price : 0);
+                totalPrice = parseInt(temporaryCart.totalAmountWithAddons) + parseInt(delivery.price ? delivery.price : 0);
               } else {
-                totalPrice = parseInt(temporaryCart.totalAmount);
+                totalPrice = parseInt(temporaryCart.totalAmountWithAddons);
               }
+              console.log({
+                currency: toktokWallet.currency,
+                amount: totalPrice,
+                toktokuser_id: toktokWallet.toktokuser_id,
+                payment_method: paymentMethod,
+                name: toktokWallet.name,
+                notes: toktokWallet.notes,
+              })
+              // setShowLoader(false);
               postResquestTakeMoney({
                 variables: {
                   input: {
@@ -448,9 +466,13 @@ const MainComponent = () => {
 
   const processData = (WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS) => {
     if (shippingVoucher.length > 0 || autoShipping?.success) {
+      const deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
+
+      const DEDUCTVOUCHER = {...ORDER, order_logs: [{...ORDER.order_logs[0], delivery_amount: deductedFee}]};
+
       return WALLET
-        ? {...WALLET, ...CUSTOMER, ...ORDER, ...SHIPPING_VOUCHERS}
-        : {...CUSTOMER, ...ORDER, ...SHIPPING_VOUCHERS};
+        ? {...WALLET, ...CUSTOMER, ...DEDUCTVOUCHER, ...SHIPPING_VOUCHERS}
+        : {...CUSTOMER, ...DEDUCTVOUCHER, ...SHIPPING_VOUCHERS};
     } else {
       return WALLET ? {...WALLET, ...CUSTOMER, ...ORDER} : {...CUSTOMER, ...ORDER};
     }
@@ -488,9 +510,8 @@ const MainComponent = () => {
       payment_method: paymentMethod,
       order_logs: CUSTOMER_CART,
     };
-
     const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
-
+    console.log(JSON.stringify(data))
     // setShowLoader(false);
     postCustomerOrder({
       variables: {
