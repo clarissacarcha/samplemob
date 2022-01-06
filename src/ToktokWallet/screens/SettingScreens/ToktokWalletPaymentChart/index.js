@@ -27,24 +27,30 @@ export const ToktokWalletPaymentChart = ({navigation})=> {
                 showsVerticalScrollIndicator={false}
             >
                 <CustomTable
-                    headerData={["Method","Partner","Transaction Range","Transaction Fee"]}
+                    headerData={["Partner","Method","Transaction Range","Transaction Fee"]}
                     rowsData={
                         [
                             {
-                                firstCol: ["Over the Counter","Online Bank"],
-                                secondCol: ["UNIONBANK"],
+                                firstCol: ["Partner"],
+                                secondCol: ["Method"],
+                                thirdCol: ["Transaction","Range"],
+                                fourthCol: ["Transaction","Fee"],
+                            },
+                            {
+                                firstCol: ["UNIONBANK"],
+                                secondCol: ["Over the Counter","Online Bank"],
                                 thirdCol: ["--","--"],
                                 fourthCol: ["30","25"],
                             },
                             {
-                                firstCol: ["Over the Counter","Online Bank"],
-                                secondCol: ["BDO"],
+                                firstCol:  ["BDO"],
+                                secondCol: ["Over the Counter","Online Bank"],
                                 thirdCol: ["--","--"],
                                 fourthCol: ["30","25"],
                             },
                             {
-                                firstCol: ["Online Bank","ATM"],
-                                secondCol: ["CHINABANK"],
+                                firstCol: ["CHINABANK"],
+                                secondCol: ["Online Bank","ATM"],
                                 thirdCol: ["--","--"],
                                 fourthCol: ["25","25"],
                             },

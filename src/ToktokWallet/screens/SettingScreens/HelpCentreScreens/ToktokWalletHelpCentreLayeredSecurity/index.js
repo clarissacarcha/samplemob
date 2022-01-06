@@ -39,43 +39,57 @@ export const ToktokWalletHelpCentreLayeredSecurity = ({navigation}) => {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{flex: 1, backgroundColor: COLOR.WHITE}}>
                         
-                        <View style={{flex: 1, width: '100%', paddingVertical: 15, marginBottom: 8}}>
+                        {/* <View style={{flex: 1, width: '100%', paddingVertical: 15, marginBottom: 8}}>
                             <Image 
                                 style={{resizeMode: 'contain', width: '100%', height: 120}}
                                 source={require('toktokwallet/assets/images/SecurityAndPrivacy/security.png')}
                             />
-                        </View>
+                        </View> */}
 
                         <View style={{flex: 1, paddingHorizontal: 16, marginTop: 8}}>
                             
-                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Layered Security</Text>
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Multi-layered protection prevents intrusions, keeping your money and data safe.</Text>
+                            {/* <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Layered Security</Text> */}
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Multi-layered protection prevents intrusions, keeping your money and data safe.</Text>
                             
                             <View style={{flex: 1, marginTop: 12, marginBottom: 10}}>
 
-                                <ListItem
-                                    title="toktokwallet MPIN & TPIN authentication"
-                                    content="We protect your wallet by offering toktokwallet MPIN & TPIN authentication. They help prevent unauthorized access to your account."
-                                    imageSource={require('toktokwallet/assets/images/SecurityAndPrivacy/fingerprint.png')}
-                                    resizeMode="stretch"
-                                />
-                                
                                 {[{
+                                    title: "toktokwallet MPIN & TPIN authentication",
+                                    content: "We protect your wallet by offering toktokwallet MPIN & TPIN authentication. They help prevent unauthorized access to your account.",
+                                    imageSource: require('toktokwallet/assets/images/SecurityAndPrivacy/fingerprint.png'),
+                                    resizeMode: "stretch"
+                                },{
                                     title: "Fraud prevention",
-                                    content: "Your account and transaction are protected 24/7 by a fraud detection engine"
+                                    content: "Your account and transaction are protected 24/7 by a fraud detection engine.",
+                                    imageSource: require('toktokwallet/assets/images/SecurityAndPrivacy/fraud.png'),
+                                    resizeMode: "stretch"
                                 }, {
                                     title: "OTP for online transaction",
-                                    content: "Every online toktokwallet transaction is 3d Secure enabled and authenticated with an OTP."
+                                    content: "Every online toktokwallet transaction is 3d Secure enabled and authenticated with an OTP.",
+                                    imageSource: require('toktokwallet/assets/images/SecurityAndPrivacy/otp.png'),
+                                    resizeMode: "stretch"
                                 },{
                                     title: "Instant payment alerts",
-                                    content: "Push notifications are sent out after every toktokwallet payment, keeping you aware of all your transactions."
+                                    content: "Push notifications are sent out after every toktokwallet payment, keeping you aware of all your transactions.",
+                                    imageSource: require('toktokwallet/assets/images/SecurityAndPrivacy/alerts.png'),
+                                    resizeMode: "stretch"
                                 },{
                                     title: "Data encryption",
-                                    content: "Additional security for every transactions."
+                                    content: "Additional security for every transactions.",
+                                    imageSource: require('toktokwallet/assets/images/SecurityAndPrivacy/encryption.png'),
+                                    resizeMode: "stretch"
                                 },{
                                     title: "Data privacy",
-                                    content: "Your personal information will not be shared or used for external gain."
-                                }].map((data, i) => <ListItem title={data.title} content={data.content} />)}
+                                    content: "Your personal information will not be shared or used for external gain.",
+                                    imageSource: require('toktokwallet/assets/images/SecurityAndPrivacy/privacy.png'),
+                                    resizeMode: "stretch",
+                                }].map((data, i) => <ListItem 
+                                                        title={data.title} 
+                                                        content={data.content} 
+                                                        imageSource={data.imageSource}
+                                                        resizeMode={data.resizeMode}
+                                                    />
+                                )}
 
                             </View>
 
