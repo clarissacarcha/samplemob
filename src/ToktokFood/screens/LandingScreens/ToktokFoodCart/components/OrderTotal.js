@@ -50,7 +50,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
   }, [autoShipping, shippingVoucher]);
 
   useEffect(() => {
-    setTotalBasket(temporaryCart.totalAmount);
+    setTotalBasket(temporaryCart.totalAmountWithAddons);
   }, [temporaryCart]);
 
   return (
@@ -84,7 +84,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${(temporaryCart.totalAmount + deliveryFee - totalShipping).toFixed(
+          <Text style={styles.totalPrice}>{`PHP ${(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping).toFixed(
             2,
           )}`}</Text>
         ) : (
