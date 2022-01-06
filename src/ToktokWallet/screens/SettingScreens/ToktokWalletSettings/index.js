@@ -54,7 +54,8 @@ export const ToktokWalletSettings = ({navigation , route })=> {
                 +tokwaAccount.person.accountType.level < 3 &&
                 <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
             }
-            <Biometrics/>
+            {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
+            {/* <Biometrics/> */}
             <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us"/>
             <Separator/>
             <SettingHeaderTitle title="Security and Privacy"/>

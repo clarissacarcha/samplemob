@@ -140,10 +140,11 @@ export const LoginPage = ()=> {
                         {
                             errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,alignSelf:"center"}}>{errorMessage}</Text>   
                         }
-                        <Biometrics
+                        {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
+                        {/* <Biometrics
                             setErrorMessage={setErrorMessage}
                             setPinCode={setPinCode}
-                        />
+                        /> */}
                         <TouchableOpacity
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
