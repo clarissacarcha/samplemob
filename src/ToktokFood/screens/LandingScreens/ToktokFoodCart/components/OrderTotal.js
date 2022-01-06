@@ -23,7 +23,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         totalSF = totalSF > 0 ? totalSF : 0;
         setTotalShipping(totalSF);
       } else {
-        setTotalShipping(0);
+        setTotalShipping(deliveryFee);
       }
     }
 
@@ -34,7 +34,6 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         let pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
         // let totalSF = pAmount > deliveryFee ? pAmount - deliveryFee : deliveryFee - pAmount;
         pAmount = pAmount > 0 ? pAmount : 0;
-        // console.log(pAmount);
         setTotalShipping(pAmount);
       }
       if (type === 'shipping' && amount === 0) {
@@ -45,7 +44,9 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         setTotalBasket(totalBasketDiscount);
       }
     } else {
-      setTotalShipping(0);
+      if (!autoShipping?.success) {
+        setTotalShipping(0);
+      }
     }
   }, [autoShipping, shippingVoucher]);
 
