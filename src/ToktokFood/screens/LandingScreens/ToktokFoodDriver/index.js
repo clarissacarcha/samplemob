@@ -101,14 +101,14 @@ const ToktokFoodDriver = ({route, navigation}) => {
     return () => {
       BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
     };
-  }, [seconds, transaction]);
+  }, [seconds, transaction, isFocus]);
 
   useEffect(() => {
     handleMapRider();
     return () => {
       BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
     };
-  }, [riderSeconds]);
+  }, [riderSeconds, isFocus]);
 
   const handleGetTransactionByRefNum = () => {
     getTransactionByRefNum({
@@ -132,8 +132,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         });
         getRiderDetailsInterval.current = BackgroundTimer.setInterval(() => setRiderSeconds(riderSeconds - 20), 20000);
       } else {
-        console.log('jsjs');
-        setRiderSeconds(300);
+        setRiderSeconds(300)
       }
     }
     console.log('Rider Details Updated ' + riderSeconds);

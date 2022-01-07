@@ -29,7 +29,7 @@ const OrderList = ({ orderDetails }) => {
     let { parentProductId, filename, itemname, parentProductName} = item.productDetails
     let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
     let productName = parentProductId ? parentProductName : itemname
-    console.log(item)
+  
     return(
       <View style={styles.listContainer}> 
         { item.productDetails.filename && (

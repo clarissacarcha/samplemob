@@ -37,9 +37,10 @@ export const tokwaErrorBtnTitle = pinAttempt => {
 };
 
 export const getDeductedVoucher = (shipping, deliveryFee) => {
-  const {amount, is_percentage} = shipping;
+  
   let totalDelivery = 0;
-  if (amount > 0) {
+  if (shipping?.amount > 0) {
+    const {amount, is_percentage} = shipping;
     const pAmount = is_percentage !== 0 ? (amount / 100) * deliveryFee : amount;
     const totalSF = deliveryFee - pAmount;
     totalDelivery = totalSF;
