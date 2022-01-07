@@ -1,29 +1,32 @@
-import React, {useState, useEffect, useRef} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useEffect} from 'react';
 import {Image, StyleSheet, View, Text} from 'react-native';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
-import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
+import {FONT_SIZE, FONT} from 'res/variables';
 import {timer, pot, toktok_rider, ready_for_pickup} from 'toktokfood/assets/images';
 
 // Utils
 import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
-import DialogMessage from 'toktokfood/components/DialogMessage';
-import RatingModal from 'toktokfood/components/RatingModal';
+// import DialogMessage from 'toktokfood/components/DialogMessage';
+// import RatingModal from 'toktokfood/components/RatingModal';
 import {
-  saveRiderDetails,
+  // saveRiderDetails,
   checkRiderDetails,
-  getRiderDetails,
-  clearRiderDetails,
+  // getRiderDetails,
+  // clearRiderDetails,
 } from 'toktokfood/helper/showRiderDetails';
 import {orderStatusMessageDelivery, orderStatusMessagePickUp} from 'toktokfood/helper/orderStatusMessage';
 
-const statusImage = (orderIsfor, orderStatus) => {
+const statusImage = (riderDetails, orderIsfor, orderStatus) => {
   if (orderStatus == 'p') {
     return timer;
   } else if (orderIsfor == 2 && orderStatus == 'rp') {
     return ready_for_pickup;
+  } else if (riderDetails != null && (orderStatus == 'f' || orderStatus == 's')) {
+    return toktok_rider;
   } else {
     return pot;
   }
@@ -75,7 +78,7 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
           <Text style={styles.title}>{status.title}</Text>
         )}
         {orderIsfor == 2 && <Text style={styles.title}>{status.title}</Text>}
-        <Image style={styles.img} source={statusImage(orderIsfor, orderStatus)} resizeMode="contain" />
+        <Image style={styles.img} source={statusImage(riderDetails, orderIsfor, orderStatus)} resizeMode="contain" />
       </View>
     </View>
   );
