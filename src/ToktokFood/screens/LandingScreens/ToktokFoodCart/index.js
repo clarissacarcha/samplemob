@@ -211,6 +211,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
     onError: error => {
+      console.log(error);
       setShowLoader(false);
       if (toktokWallet.paymentMethod == 'COD') {
         setTimeout(() => {
@@ -343,7 +344,6 @@ const MainComponent = () => {
       const SHIPPING_VOUCHERS = autoShipping?.success
         ? await handleAutoShippingVouchers()
         : await handleShippingVouchers();
-      const deductedFee = await getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
 
       await refetch({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}})
         .then(({data}) => {
@@ -351,8 +351,13 @@ const MainComponent = () => {
           if (isOpen == 1) {
             if (paymentMethod == 'TOKTOKWALLET') {
               let totalPrice = 0;
+              let deductedFee = 0;
               if (orderType === 'Delivery') {
-                totalPrice = parseInt(temporaryCart.totalAmountWithAddons) + deductedFee;
+                if (SHIPPING_VOUCHERS.length) {
+                  deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
+                }
+                totalPrice =
+                  parseInt(temporaryCart.totalAmountWithAddons) + (deductedFee > 0 ? deductedFee : delivery?.price);
               } else {
                 totalPrice = parseInt(temporaryCart.totalAmountWithAddons);
               }
@@ -498,7 +503,6 @@ const MainComponent = () => {
       order_logs: CUSTOMER_CART,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
-    // setShowLoader(false);
     postCustomerOrder({
       variables: {
         input: data,
