@@ -260,29 +260,25 @@ export const Variations = ({data, productId}) => {
     );
   };
 
-  // const renderVariantComponent = () => {
-  //   let dataSource = [];
-  //   let remaining = [];
-
-  //   if (data.variants.length > 5) {
-  //     dataSource = data.variants.slice(0, 5);
-  //     remaining = data.variants.slice(4, -1);
-  //   } else {
-  //     dataSource = data.variants;
-  //   }
-
-  //   if (data?.variants.length) {
-  //     return (
-  //       <React.Fragment>
-  //         <View style={styles.variantContainer}>
-  //           <Text style={styles.variantTitle}>Variations</Text>
-  //           <FlatList data={data.variants} renderItem={renderVariants} style={{flex: 1}} />
-  //         </View>
-  //         <Separator />
-  //       </React.Fragment>
-  //     );
-  //   }
-  // };
+  const Notes = (
+    <View style={[styles.variations]}>
+      <View style={styles.instructionContainer}>
+        <Text style={styles.variationTitle}>Special Instructions</Text>
+        <View style={styles.requiredContainer}>
+          <Text style={styles.requiredText}>Optional</Text>
+        </View>
+      </View>
+      <TextInput
+        value={notes}
+        multiline={true}
+        numberOfLines={4}
+        style={styles.input}
+        placeholder="e.g. no cutlery."
+        placeholderTextColor={COLOR.MEDIUM}
+        onChangeText={notes => setNotes(notes)}
+      />
+    </View>
+  );
 
   return (
     <>
@@ -295,30 +291,7 @@ export const Variations = ({data, productId}) => {
           <Separator />
         </>
       )}
-      <FlatList
-        ListFooterComponent={
-          <View style={[styles.variations]}>
-            <View style={styles.instructionContainer}>
-              <Text style={styles.variationTitle}>Special Instructions</Text>
-              <View style={styles.requiredContainer}>
-                <Text style={styles.requiredText}>Optional</Text>
-              </View>
-            </View>
-            <TextInput
-              value={notes}
-              multiline={true}
-              numberOfLines={4}
-              style={styles.input}
-              placeholder="e.g. no cutlery."
-              placeholderTextColor={COLOR.MEDIUM}
-              onChangeText={notes => setNotes(notes)}
-            />
-          </View>
-        }
-        data={data.options}
-        renderItem={renderOptions}
-        style={{flex: 1}}
-      />
+      <FlatList ListFooterComponent={Notes} data={data.options} renderItem={renderOptions} style={{flex: 1}} />
     </>
   );
 };
