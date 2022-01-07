@@ -41,7 +41,7 @@ const CancelOrder = ({
 
   const navigation = useNavigation();
   const [showReason, setShowReason] = useState(false);
-  const [selectedReason, setSelectedReason] = useState('I changed my mind');
+  const [selectedReason, setSelectedReason] = useState('');
 
   const [postCancelOrder] = useMutation(PATCH_CANCEL_CUSTOMER_ORDER, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -72,6 +72,7 @@ const CancelOrder = ({
 
   const closeCancel = () => {
     onCloseSheet();
+    setSelectedReason('');
     setShowReason(false);
   };
 
@@ -141,8 +142,9 @@ const CancelOrder = ({
                 <Text style={styles.reasonButtonText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
+                disabled={selectedReason ? false : true}
                 onPress={() => proccessCancelOrder()}
-                style={[styles.reasonButtons, {backgroundColor: '#FFA700'}]}>
+                style={[styles.reasonButtons, {backgroundColor: selectedReason ? '#FFA700' : COLOR.DARK}]}>
                 <Text style={styles.reasonButtonText}>Proceed</Text>
               </TouchableOpacity>
             </View>
