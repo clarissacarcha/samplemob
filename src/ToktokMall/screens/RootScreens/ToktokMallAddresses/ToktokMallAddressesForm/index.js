@@ -234,6 +234,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               type: 'Success',
               message: 'Address Deleted!',
               onCloseCallback: () => {
+                EventRegister.emit("refreshCheckoutData")
                 updateUserAddress('remove', newAddressForm.id);
                 refresh()
                 navigation.goBack();

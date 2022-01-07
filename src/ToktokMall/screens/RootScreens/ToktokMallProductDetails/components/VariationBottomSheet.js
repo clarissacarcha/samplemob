@@ -49,6 +49,9 @@ export const VariationBottomSheet = forwardRef(({
   }
 
   const onSelectVariant = (variant, index) => {
+    if(variant.Id === variation){
+      return reset()
+    }
     setVariation(variant.Id)
     setImage(variant.images[0] || null)
     setStock(variant.noOfStocks)
