@@ -134,15 +134,16 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       setloading(true)
       const req = await ApiCall("validate_voucher", payload, false)
       CheckoutContextData.setVoucherErrors(prevState => prevState.filter(id => item.shop.id !== id))
-      if(req.responseData && req.responseData.success){
 
-        console.log(req.responseData)
+      console.log("Voucher", JSON.stringify(req))
+
+      if(req.responseData && req.responseData.success){
 
         if(req.responseData.type == "shipping"){
           
           let items = ArrayCopy(CheckoutContextData.shippingVouchers)
 
-          if(req.responseData.voucher.amount == 0){
+          if(req.responseData.voucher.amount == 0 && req.responseData.voucher.is_percentage == 0){
             
             //FREE SHIPPING
             items[index] = req.responseData.voucher
@@ -152,6 +153,24 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             getShippingHashDeliveryAmount({variables: {
               input: {
                 value: 0,
+                index: index
+              }
+            }})
+
+          }else if(req.responseData.voucher.is_percentage == 1){
+
+            let fee = parseFloat(CheckoutContextData.shippingFeeRates[index].shippingfee)
+            let pct = (parseFloat(req.responseData.voucher.amount) * 0.01)
+            let pctvalue = fee * pct
+            let calculatedDiscount = fee - pctvalue
+
+            items[index] = req.responseData.voucher
+            items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
+            items[index].discount = calculatedDiscount < 0 ? 0 : calculatedDiscount
+            CheckoutContextData.setShippingVouchers(items)
+            getShippingHashDeliveryAmount({variables: {
+              input: {
+                value: calculatedDiscount < 0 ? 0 : calculatedDiscount,
                 index: index
               }
             }})
