@@ -273,6 +273,7 @@ export const Variations = ({data, productId}) => {
         multiline={true}
         numberOfLines={4}
         style={styles.input}
+        maxLength={60}
         placeholder="e.g. no cutlery."
         placeholderTextColor={COLOR.MEDIUM}
         onChangeText={notes => setNotes(notes)}
