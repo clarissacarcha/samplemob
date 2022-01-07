@@ -115,6 +115,7 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
                         multiline={true}
                         textAlignVertical='top'
                         placeholder="Message"
+                        blurOnSubmit={true}
                     />
                 </View>
                 <View style={styles.submitBtn}>
