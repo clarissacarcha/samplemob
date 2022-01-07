@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useContext} from 'react';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import {
   KeyboardAvoidingView,
@@ -94,6 +94,7 @@ const MainComponent = () => {
   const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
   const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({error: {}, visible: false});
   const alert = useAlert();
+  const isFocus = useIsFocused();
 
   const [closeInfo, setCloseInfo] = useState({visible: false, shopName: ''});
 
@@ -113,7 +114,7 @@ const MainComponent = () => {
         },
       });
     }
-  }, [temporaryCart, location]);
+  }, [temporaryCart, location, isFocus]);
 
   const [getAutoShipping] = useLazyQuery(GET_AUTO_SHIPPING, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,

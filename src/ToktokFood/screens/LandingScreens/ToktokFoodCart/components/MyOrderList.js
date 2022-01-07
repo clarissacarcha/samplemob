@@ -142,7 +142,7 @@ const MyOrderList = () => {
         const addonsAmount = parseFloat(temporaryCart.addonsTotalAmount) - parseFloat(addonsTotalAmount);
         const index = temporaryCart.items.findIndex(val => val.id == item.id);
         temporaryCart.items.splice(index, 1);
-        console.log(temporaryCart.items, "Sdsdsd")
+     
         setTemporaryCart({
           totalAmountWithAddons,
           totalAmount: amount,
@@ -167,7 +167,10 @@ const MyOrderList = () => {
         <View style={[styles.myOrderWrapper]}>
           <Text style={styles.sectionTitle}>My Orders</Text>
           {/* Add Items */}
-          <Text onPress={() => navigation.goBack()} style={styles.actionText}>
+          <Text
+            onPress={() => navigation.navigate("ToktokFoodRestaurantOverview", { item: { id: `${temporaryCart.items[0]?.shopid}` } })}
+            style={styles.actionText}
+          >
             Add Items
           </Text>
         </View>
