@@ -7,7 +7,7 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import { time } from 'toktokfood/assets/images';
 
-import { getOrderStatus, getSubMessageStatus, sameDay, dayTitle } from '../functions';
+import { getOrderStatus, getSubMessageStatus, sameDay, dayTitle, isPastOrder } from '../functions';
 
 const orderStatusDate = (item, focusTab) => {
   let { dateOrdered, dateShipped, dateCancelledDeclined } = item;
@@ -28,7 +28,7 @@ export const TransactionItems = (props) => {
 
   const navigation = useNavigation();
 
-  const { item, index, data, focusTab } = props
+  const { item, index, data, focusTab } = props;
   let { address, orderStatus, shopDetails, orderDetails } = item;
   let nextItem = data[index + 1] ? data[index + 1]  : false
   let isSameDay = false, lowerText = '', upperText = '';
@@ -68,8 +68,8 @@ export const TransactionItems = (props) => {
               {orderDetails.length + ' items • ' + address}
             </Text>
             <View style={styles.activityWrapper}>
-              <Image resizeMode="contain" source={time} style={styles.timeImg} />
-              <Text numberOfLines={1} style={styles.statusMessage}>
+              <Image resizeMode="contain" source={time} style={{...styles.timeImg, tintColor: isPastOrder(item.dateOrdered, focusTab) ? '#F80000' : COLOR.DARK}} />
+              <Text numberOfLines={1} style={{...styles.statusMessage, color: isPastOrder(item.dateOrdered, focusTab) ? '#F80000' : COLOR.DARK }}>
                 { getSubMessageStatus(item) }
               </Text>
             </View>

@@ -29,9 +29,8 @@ export const getSubMessageStatus = (item) => {
       return 'Processing Order';
     case 'f':
       return 'Your order is on the way to you';
-    
     default:
-      return 'Pending Order'
+      return 'Pending';
   }
 }
 export const sameDay = (d1, d2) => {
@@ -50,3 +49,9 @@ export const dayTitle = (dateOrdered) => {
   }
   return date.calendar().split(' ')[0]; 
 }
+
+export const isPastOrder = (dateOrdered, focusTab) => {
+  const today = moment().format('YYYY-MM-DD');
+  const orderedDate = moment(dateOrdered).format('YYYY-MM-DD');
+  return moment(today).isAfter(orderedDate) && focusTab === 1;
+};

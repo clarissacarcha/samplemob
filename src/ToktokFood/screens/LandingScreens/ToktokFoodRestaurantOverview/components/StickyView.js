@@ -156,9 +156,7 @@ export const StickyView = () => {
             <View style={styles.content}>
               <Image source={{uri: shopDetails.logo}} style={styles.logo} resizeMode="cover" />
               <View style={{flexShrink: 1, marginHorizontal: 10}}>
-                <Text style={styles.titleText}>
-                  {`${shopDetails.shopname} (${shopDetails.address})`}
-                </Text>
+                <Text style={styles.titleText}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
                 {/* <CustomStarRating
                   rating={shopDetails.ratings ?? '0'}
                   starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
