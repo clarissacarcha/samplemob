@@ -25,8 +25,8 @@ import {useAlert} from 'src/hooks';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 export const ContactForm = ({}) => {
-  const {customerInfo} = useSelector((state) => state.toktokFood);
-  const {user} = useSelector((state) => state.session);
+  const {customerInfo} = useSelector(state => state.toktokFood);
+  const {user} = useSelector(state => state.session);
   const [message, setMessage] = useState('');
   const [response, setResponse] = useState({type: '', show: false, message: ''});
   const alert = useAlert();
@@ -34,7 +34,7 @@ export const ContactForm = ({}) => {
   const [postContactUs, {loading, error}] = useLazyQuery(POST_CONTACT_US, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert, error});
     },
     onCompleted: ({postContactUs}) => {
@@ -47,8 +47,11 @@ export const ContactForm = ({}) => {
     },
   });
 
+  //check if string is containing space only
+  const onlySpaces = str => str.trim().length === 0;
+
   const onPressSubmit = () => {
-    if (message != '') {
+    if (message != '' && !onlySpaces(message)) {
       let {firstName, lastName, email} = customerInfo;
       postContactUs({
         variables: {
@@ -85,11 +88,16 @@ export const ContactForm = ({}) => {
           placeholderTextColor={'#9E9E9E'}
           multiline={true}
           numberOfLines={5}
-          onChangeText={(msg) => setMessage(msg)}
+          onChangeText={msg => setMessage(msg)}
         />
       </View>
       <View style={styles.btnContainer}>
-        <YellowButton disabled={message == ''} onPress={onPressSubmit} label="Submit" btnStyle={styles.btnStyle} />
+        <YellowButton
+          disabled={message == '' || onlySpaces(message)}
+          onPress={onPressSubmit}
+          label="Submit"
+          btnStyle={styles.btnStyle}
+        />
       </View>
     </View>
   );

@@ -13,33 +13,27 @@ export const GET_RIDER = gql`
   }
 `;
 export const GET_RIDER_DETAILS = gql`
-  query getDeliveryDriver($input: GetDeliveryDriverInput) {
-    getDeliveryDriver(input: $input) {
+  query getDeliveryDetails($input: DeliveryDetailsInput) {
+    getDeliveryDetails(input: $input) {
+      deliveryId
+      distance
+      duration
       driver {
-        id
-        status
-        licenseNumber
-        isOnline
-        location {
-          latitude
-          longitude
-          lastUpdate
-        }
+        averageRating
+        lastLatitude
+        lastLongitude
         user {
-          id
           username
-          status
           person {
             firstName
             middleName
             lastName
-            mobileNumber
-            emailAddress
             avatar
             avatarThumbnail
           }
         }
-        vehicle{
+
+        vehicle {
           plateNumber
           brand {
             brand
@@ -48,6 +42,10 @@ export const GET_RIDER_DETAILS = gql`
             model
           }
         }
+      }
+      deliveryLogs {
+        status
+        createdAt
       }
     }
   }

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, {useEffect, useState, useContext, useCallback} from 'react';
-import {StyleSheet, Text, TextInput, View, FlatList} from 'react-native';
+import {StyleSheet, Text, TextInput, View, FlatList, TouchableOpacity} from 'react-native';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
@@ -8,6 +8,7 @@ import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 import {VerifyContext} from '.';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import Separator from 'toktokfood/components/Separator';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 export const Variations = ({data, productId}) => {
   const {
     totalPrice,
@@ -26,6 +27,8 @@ export const Variations = ({data, productId}) => {
     productDetails,
     basePrice,
   } = useContext(VerifyContext);
+
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     if (Object.keys(data).length > 0 && data?.variants.length > 0) {
@@ -108,6 +111,16 @@ export const Variations = ({data, productId}) => {
 
   const renderOptions = ({item}) => {
     let temp = [];
+    let dataSource = [];
+    let remaining = [];
+
+    if (item.optionLogs.length > 5) {
+      dataSource = item.optionLogs.slice(0, 5);
+      remaining = item.optionLogs.slice(4, -1);
+    } else {
+      dataSource = item.optionLogs;
+    }
+
     if (!requiredOptions[item.optionName] && item.isRequired) {
       setRequiredOptions(prev => {
         return {...prev, [item.optionName]: item.isRequired};
@@ -163,7 +176,49 @@ export const Variations = ({data, productId}) => {
           </View>
         </View>
 
-        {item.optionLogs.map((optionLogs, i) => {
+        <FlatList
+          data={isCollapsed ? item.optionLogs : dataSource}
+          renderItem={({item: optionLogs}) => {
+            let index = -1;
+            if (selected[item.optionName]) {
+              index = selected[item.optionName].findIndex(v => {
+                return v.addon_id == optionLogs.id;
+              });
+            }
+            return (
+              <View style={styles.variationsWrapper}>
+                <RadioButton
+                  isMultiple={item.noOfSelection > 1}
+                  onValueChange={c => {
+                    onValueChange({item, optionLogs, index, temp});
+                  }}
+                  name={optionLogs.optionName}
+                  selected={index > -1}
+                />
+                <Text style={styles.variationPrice}>+ {optionLogs.optionPrice.toFixed(2)}</Text>
+              </View>
+            );
+          }}
+          scrollEnabled={false}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={
+            item.optionLogs.length > 5 && (
+              <TouchableOpacity
+                onPress={() => setIsCollapsed(!isCollapsed)}
+                activeOpacity={0.9}
+                style={styles.showMore}>
+                <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>
+                  {isCollapsed
+                    ? `Hide ${remaining.length > 1 ? 'items' : 'item'}`
+                    : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
+                      'Show More'}
+                </Text>
+                <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={12} color={'#FFA700'} />
+              </TouchableOpacity>
+            )
+          }
+        />
+        {/* {item.optionLogs.map((optionLogs, i) => {
           let index = -1;
           if (selected[item.optionName]) {
             index = selected[item.optionName].findIndex(v => {
@@ -183,7 +238,7 @@ export const Variations = ({data, productId}) => {
               <Text style={styles.variationPrice}>+ {optionLogs.optionPrice.toFixed(2)}</Text>
             </View>
           );
-        })}
+        })} */}
       </View>
     );
   };
@@ -334,5 +389,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexShrink: 1,
+  },
+  showMore: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: moderateScale(20),
+    // paddingBottom: moderateScale(20),
+    // marginBottom: moderateScale(10),
+    borderBottomWidth: 1,
+    borderBottomColor: '#F7F7FA',
   },
 });
