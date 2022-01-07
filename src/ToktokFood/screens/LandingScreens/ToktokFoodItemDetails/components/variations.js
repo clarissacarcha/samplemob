@@ -29,7 +29,7 @@ export const Variations = ({data, productId}) => {
   } = useContext(VerifyContext);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
-
+  const [dataOptions, setDataOptions] = useState([]);
   useEffect(() => {
     if (Object.keys(data).length > 0 && data?.variants.length > 0) {
       let selectedVar = productId
@@ -40,6 +40,20 @@ export const Variations = ({data, productId}) => {
       setSelectedVariants(selectedVar);
     }
   }, [data.variants]);
+
+  useEffect(() => {
+    if (Object.keys(data).length && data?.options.length) {
+      let temp = [];
+      data.options.map(opt => {
+        const d = {
+          ...opt,
+          isCollapsed: false,
+        };
+        temp.push(d);
+      });
+      setDataOptions(temp);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (optionsAmount) {
@@ -109,7 +123,20 @@ export const Variations = ({data, productId}) => {
     [selected],
   );
 
-  const renderOptions = ({item}) => {
+  const onToggleItems = useCallback(
+    index => {
+      const updatedData = dataOptions.map((dataOpt, i) => {
+        if (index === i) {
+          return {...dataOpt, isCollapsed: !dataOpt.isCollapsed};
+        }
+        return dataOpt;
+      });
+      setDataOptions(updatedData);
+    },
+    [dataOptions],
+  );
+
+  const renderOptions = ({item, index}) => {
     let temp = [];
     let dataSource = [];
     let remaining = [];
@@ -177,7 +204,7 @@ export const Variations = ({data, productId}) => {
         </View>
 
         <FlatList
-          data={isCollapsed ? item.optionLogs : dataSource}
+          data={dataOptions[index].isCollapsed ? item.optionLogs : dataSource}
           renderItem={({item: optionLogs}) => {
             let index = -1;
             if (selected[item.optionName]) {
@@ -203,42 +230,22 @@ export const Variations = ({data, productId}) => {
           showsVerticalScrollIndicator={false}
           ListFooterComponent={
             item.optionLogs.length > 5 && (
-              <TouchableOpacity
-                onPress={() => setIsCollapsed(!isCollapsed)}
-                activeOpacity={0.9}
-                style={styles.showMore}>
+              <TouchableOpacity onPress={() => onToggleItems(index)} activeOpacity={0.9} style={styles.showMore}>
                 <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>
-                  {isCollapsed
-                    ? `Hide ${remaining.length > 1 ? 'items' : 'item'}`
+                  {dataOptions[index].isCollapsed
+                    ? `Hide ${remaining.length > 1 ? 'Items' : 'Item'}`
                     : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
                       'Show More'}
                 </Text>
-                <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={12} color={'#FFA700'} />
+                <FA5Icon
+                  name={dataOptions[index].isCollapsed ? 'chevron-up' : 'chevron-down'}
+                  size={12}
+                  color={'#FFA700'}
+                />
               </TouchableOpacity>
             )
           }
         />
-        {/* {item.optionLogs.map((optionLogs, i) => {
-          let index = -1;
-          if (selected[item.optionName]) {
-            index = selected[item.optionName].findIndex(v => {
-              return v.addon_id == optionLogs.id;
-            });
-          }
-          return (
-            <View style={styles.variationsWrapper}>
-              <RadioButton
-                isMultiple={item.noOfSelection > 1}
-                onValueChange={c => {
-                  onValueChange({item, optionLogs, index, temp});
-                }}
-                name={optionLogs.optionName}
-                selected={index > -1}
-              />
-              <Text style={styles.variationPrice}>+ {optionLogs.optionPrice.toFixed(2)}</Text>
-            </View>
-          );
-        })} */}
       </View>
     );
   };
@@ -260,41 +267,56 @@ export const Variations = ({data, productId}) => {
     );
   };
 
-  // const renderVariantComponent = () => {
-  //   let dataSource = [];
-  //   let remaining = [];
+  const renderVariantComponent = () => {
+    let dataSource = [];
+    let remaining = [];
 
-  //   if (data.variants.length > 5) {
-  //     dataSource = data.variants.slice(0, 5);
-  //     remaining = data.variants.slice(4, -1);
-  //   } else {
-  //     dataSource = data.variants;
-  //   }
+    if (data.variants.length > 5) {
+      dataSource = data.variants.slice(0, 5);
+      remaining = data.variants.slice(4, -1);
+    } else {
+      dataSource = data.variants;
+    }
 
-  //   if (data?.variants.length) {
-  //     return (
-  //       <React.Fragment>
-  //         <View style={styles.variantContainer}>
-  //           <Text style={styles.variantTitle}>Variations</Text>
-  //           <FlatList data={data.variants} renderItem={renderVariants} style={{flex: 1}} />
-  //         </View>
-  //         <Separator />
-  //       </React.Fragment>
-  //     );
-  //   }
-  // };
+    if (data?.variants.length) {
+      return (
+        <React.Fragment>
+          <View style={styles.variantContainer}>
+            <Text style={styles.variantTitle}>Variations</Text>
+            <FlatList
+              data={isCollapsed ? data.variants : dataSource}
+              renderItem={renderVariants}
+              style={{flex: 1}}
+              scrollEnabled={false}
+              showsVerticalScrollIndicator={false}
+              ListFooterComponent={
+                data.variants.length > 5 && (
+                  <TouchableOpacity
+                    onPress={() => setIsCollapsed(!isCollapsed)}
+                    activeOpacity={0.9}
+                    style={styles.showMore}>
+                    <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>
+                      {isCollapsed
+                        ? `Hide ${remaining.length > 1 ? 'Items' : 'Item'}`
+                        : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
+                          'Show More'}
+                    </Text>
+                    <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={12} color={'#FFA700'} />
+                  </TouchableOpacity>
+                )
+              }
+            />
+          </View>
+          <Separator />
+        </React.Fragment>
+      );
+    }
+    return null;
+  };
 
   return (
     <>
-      {data.variants && data.variants.length > 0 && (
-        <>
-          <View style={styles.variantContainer}>
-            <Text style={styles.variantTitle}>Variations</Text>
-            <FlatList data={data.variants} renderItem={renderVariants} style={{flex: 1}} />
-          </View>
-          <Separator />
-        </>
-      )}
+      {renderVariantComponent()}
       <FlatList
         ListFooterComponent={
           <View style={[styles.variations]}>
@@ -315,7 +337,7 @@ export const Variations = ({data, productId}) => {
             />
           </View>
         }
-        data={data.options}
+        data={dataOptions}
         renderItem={renderOptions}
         style={{flex: 1}}
       />
