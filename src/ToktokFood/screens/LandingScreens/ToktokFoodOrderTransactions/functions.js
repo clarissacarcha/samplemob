@@ -17,11 +17,12 @@ export const getOrderStatus = (focusTab) => {
 }
 
 export const getSubMessageStatus = (item) => {
+  const type = item.orderIsfor == 1 ? "Delivered" : "Picked up"
   switch(item.orderStatus){
     case 's':
-      return `Pick up ${moment(item.dateShipped).format('lll')}`;
+      return `${type} on ${moment(item.dateShipped).format('LL')} at ${moment(item.dateShipped).format('LT')}`;
     case 'c':
-      return `Cancelled at ${moment(item.dateCancelledDeclined).format('lll')}`;
+      return `Cancelled on ${moment(item.dateCancelledDeclined).format('LL')} at ${moment(item.dateCancelledDeclined).format('LT')}`;
     case 'rp':
       return 'Ready for Pickup';
     case 'po':
