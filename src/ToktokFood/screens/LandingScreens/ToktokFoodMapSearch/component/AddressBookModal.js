@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, View, StyleSheet, Text, ScrollView, TouchableOpacity, Platform, Alert} from 'react-native';
+import {Modal, View, StyleSheet, Text, ScrollView, TouchableOpacity, Platform, Alert, Appearance} from 'react-native';
 
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
@@ -180,10 +180,11 @@ const AddressBookModal = (props) => {
         onShow={() => goToContacts()}
         animationType="slide"
         visible={visibility}
+        onRequestClose={() => onClose()}
         style={styles.modal}>
         <View style={styles.contactWrapper}>
           <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center'}} onPress={() => onClose()}>
-            <FIcon name="chevron-down" size={30} />
+            <FIcon name="chevron-down" size={30} color={Appearance.getColorScheme() === 'dark' ? '#000' : '#000'} />
           </TouchableOpacity>
           <View style={styles.header}>
             <Text style={styles.headerLabel}>Contact List</Text>

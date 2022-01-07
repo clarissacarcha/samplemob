@@ -19,18 +19,19 @@ export const getOrderStatus = (focusTab) => {
 export const getSubMessageStatus = (item) => {
   switch(item.orderStatus){
     case 's':
-      return `Pick up ${moment(item.dateShipped).format('lll')}`;
+      return `${item.orderIsfor === 1 ? 'Delivered on' : 'Picked up on'} ${moment(item.dateShipped).format('ll')} at ${moment(item.dateShipped).format('hh:mm A')}`;
     case 'c':
-      return `Cancelled at ${moment(item.dateCancelledDeclined).format('lll')}`;
+      return `Cancelled on ${moment(item.dateCancelledDeclined).format('ll')} at ${moment(
+        item.dateCancelledDeclined,
+      ).format('hh:mm A')}`;
     case 'rp':
       return 'Ready for Pickup';
     case 'po':
       return 'Processing Order';
     case 'f':
       return 'Your order is on the way to you';
-    
     default:
-      return 'Pending Order'
+      return 'Pending';
   }
 }
 export const sameDay = (d1, d2) => {
@@ -49,3 +50,9 @@ export const dayTitle = (dateOrdered) => {
   }
   return date.calendar().split(' ')[0]; 
 }
+
+export const isPastOrder = (dateOrdered, focusTab) => {
+  const today = moment().format('YYYY-MM-DD');
+  const orderedDate = moment(dateOrdered).format('YYYY-MM-DD');
+  return moment(today).isAfter(orderedDate) && focusTab === 1;
+};
