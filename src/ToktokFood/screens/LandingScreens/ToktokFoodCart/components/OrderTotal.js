@@ -60,7 +60,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         <>
           <View style={styles.header}>
             <Text>Subtotal</Text>
-            <Text style={styles.subtotal}>{`PHP ${totalBasket.toFixed(2)}`}</Text>
+            <Text style={styles.subtotal}>{`PHP ${totalBasket?.toFixed(2)}`}</Text>
           </View>
           <View style={styles.header}>
             <Text>Delivery Fee</Text>
