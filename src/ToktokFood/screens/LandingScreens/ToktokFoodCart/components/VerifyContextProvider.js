@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {createContext, useState, useEffect} from 'react';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, useIsFocused, useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 
 // Components
@@ -20,6 +20,8 @@ const {Provider} = VerifyContext;
 
 export const VerifyContextProvider = ({children}) => {
   const routes = useRoute();
+  const isFocus = useIsFocused();
+  const navigation = useNavigation();
   const {user} = useSelector(state => state.session);
   const {userId} = routes.params;
   const [totalAmount, setTotalAmount] = useState(0);
@@ -51,14 +53,28 @@ export const VerifyContextProvider = ({children}) => {
   });
 
   useEffect(() => {
-    getAllTemporaryCart({
-      variables: {
-        input: {
-          userId: userId,
-        },
-      },
+    const unsubscribe = navigation.addListener('focus', () => {
+      setTemporaryCart({
+        cartItemsLength: 0,
+        totalAmount: 0,
+        items: [],
+      })
     });
-  }, []);
+
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
+    if(isFocus){
+      getAllTemporaryCart({
+        variables: {
+          input: {
+            userId: userId,
+          },
+        },
+      });
+    }
+  }, [isFocus]);
 
   return (
     <Provider
