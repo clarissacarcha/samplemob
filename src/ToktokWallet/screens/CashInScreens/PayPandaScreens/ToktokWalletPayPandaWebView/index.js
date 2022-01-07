@@ -1,19 +1,17 @@
 import React, { useState , useRef , useEffect} from 'react'
-import {StyleSheet,View,ActivityIndicator , Dimensions , BackHandler } from 'react-native'
+import {StyleSheet,View,ActivityIndicator , Dimensions} from 'react-native'
 import {useNavigation,useRoute} from '@react-navigation/native'
 import WebView from 'react-native-webview'
 import {useSelector} from 'react-redux'
-import { useFocusEffect } from '@react-navigation/native'
 import { CheckIdleState, FlagSecureScreen , Separator } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE , SIZE } = CONSTANTS
 
 //SELF IMPORTS
-// import SuccessfulModal from './SuccessfulModal'
+import SuccessfulModal from './SuccessfulModal'
 import {
     NavigationView,
-    SuccessfulModal,
 } from "./Components"
 
 
@@ -46,25 +44,6 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
     const goForward = () => {
         if(canGoForward) webviewRef.current.goForward();
     }
-
-    useFocusEffect(()=>{
-        const checkIfCanGoBack = ()=> {
-            if(!canGoBack){
-                navigation.pop();
-                return;
-            }
-            return goBack();
-        }
-
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', function () {
-            checkIfCanGoBack();
-            return true;
-        });
-
-        return () => {
-            backHandler.remove();
-        };
-    },[])
 
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
@@ -137,13 +116,8 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
                     startInLoadingState
                     renderLoading={()=> <LoadingIndicator/>}
                     onNavigationStateChange={(event)=> {
-                        
-                       const back = event.canGoBack;
-                       const forward = event.canGoForward;
-                       console.log("WEBVIEW CAN GO BACK", back)
-                       setCanGoBack(back);
-                       setCanGoForward(forward);
-                      
+
+                        console.log(JSON.stringify(event))
                        const checkreturnurl = event.url.search(route.params.paypandaReturnUrl)
                         if(checkreturnurl != -1){
                             const {url} = event
