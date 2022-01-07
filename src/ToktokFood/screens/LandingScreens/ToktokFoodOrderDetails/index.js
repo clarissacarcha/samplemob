@@ -73,7 +73,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onCompleted: ({getDeliveryDetails}) => {
-        setRiderDetails(getDeliveryDetails.driver);
+        setRiderDetails(getDeliveryDetails);
       },
     },
   );
@@ -259,7 +259,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
       setSeconds(300);
     }
   };
-
+  
   const displayOrderTitle = useMemo(() => {
     return <OrderTitle transaction={transaction} riderDetails={riderDetails} referenceNum={referenceNum} />;
   }, [transaction, riderDetails]);
@@ -307,7 +307,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
               <Separator />
             </>
           )}
-          {riderDetails != null && (
+          {riderDetails?.driver != null && (
             <>
               <OrderRider riderDetails={riderDetails} transaction={transaction} />
               <Separator />
@@ -328,7 +328,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
             label={transaction.paymentMethod == 'COD' ? 'Cash-On-Delivery' : transaction.paymentMethod}
           />
           <Separator />
-          <OrderLogs transaction={transaction} />
+          <OrderLogs transaction={transaction} riderDetails={riderDetails} />
         </ScrollView>
       )}
     </View>

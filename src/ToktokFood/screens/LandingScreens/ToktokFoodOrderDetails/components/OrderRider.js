@@ -10,7 +10,7 @@ import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 import {checkRiderDetails} from 'toktokfood/helper/showRiderDetails';
 
 const OrderRider = ({riderDetails, transaction, referenceNum}) => {
-  const {user, vehicle} = riderDetails;
+  const {user, vehicle} = riderDetails.driver;
   const [showDriverModal, setShowDriverModal] = useState(false);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const OrderRider = ({riderDetails, transaction, referenceNum}) => {
       handleCheckRiderDetails();
     }
   }, [riderDetails, transaction]);
-
+ 
   const handleCheckRiderDetails = async () => {
     let res = await checkRiderDetails(referenceNum);
     setShowDriverModal(res?.status == 200);

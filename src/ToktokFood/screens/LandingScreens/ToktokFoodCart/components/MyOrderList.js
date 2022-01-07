@@ -125,7 +125,9 @@ const MyOrderList = () => {
   };
 
   const deleteRow = useCallback(async(item) => {
-    const { id, shopid, totalAmount } = item;
+    const { id, shopid, addonsTotalAmount, totalAmount } = item;
+    const itemTotalAmount = parseFloat(addonsTotalAmount) + parseFloat(totalAmount);
+
     deleteTemporaryCartItem({
       variables: {
         input: {
@@ -135,11 +137,16 @@ const MyOrderList = () => {
     }).then(({ data }) =>{
       let { status, message } = data.deleteTemporaryCartItem
       if(status == 200){
-        const amount = temporaryCart.totalAmount - totalAmount;
+        const totalAmountWithAddons = parseFloat(temporaryCart.totalAmountWithAddons) - parseFloat(itemTotalAmount);
+        const amount = parseFloat(temporaryCart.totalAmount) - parseFloat(totalAmount);
+        const addonsAmount = parseFloat(temporaryCart.addonsTotalAmount) - parseFloat(addonsTotalAmount);
         const index = temporaryCart.items.findIndex(val => val.id == item.id);
         temporaryCart.items.splice(index, 1);
+     
         setTemporaryCart({
+          totalAmountWithAddons,
           totalAmount: amount,
+          addonsTotalAmount: addonsAmount,
           items: [...temporaryCart.items]
         })
         const isLastItem = temporaryCart.items.length == 0;
@@ -160,7 +167,10 @@ const MyOrderList = () => {
         <View style={[styles.myOrderWrapper]}>
           <Text style={styles.sectionTitle}>My Orders</Text>
           {/* Add Items */}
-          <Text onPress={() => navigation.goBack()} style={styles.actionText}>
+          <Text
+            onPress={() => navigation.navigate("ToktokFoodRestaurantOverview", { item: { id: `${temporaryCart.items[0]?.shopid}` } })}
+            style={styles.actionText}
+          >
             Add Items
           </Text>
         </View>

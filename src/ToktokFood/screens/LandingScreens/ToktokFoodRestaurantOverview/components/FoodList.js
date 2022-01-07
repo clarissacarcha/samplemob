@@ -1,5 +1,7 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, Image, Platform, FlatList} from 'react-native';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-native/no-inline-styles */
+import React, {useEffect, useContext} from 'react';
+import {View, StyleSheet, Text, TouchableOpacity, Image, Platform, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_PRODUCTS_BY_SHOP_CATEGORY, GET_SEARCH_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
@@ -9,21 +11,14 @@ import {VerifyContext} from '../components';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import ContentLoader from 'react-native-easy-content-loader';
 
-import {
-  verticalScale,
-  getDeviceHeight,
-  getStatusbarHeight,
-  moderateScale,
-  isIphoneXorAbove,
-  getIphoneNotchSize,
-} from 'toktokfood/helper/scale';
+import {verticalScale, getDeviceHeight, moderateScale, getIphoneNotchSize} from 'toktokfood/helper/scale';
 
 export const FoodList = props => {
   const {activeTab, id, tagsLoading} = props;
   const navigation = useNavigation();
   const {searchProduct, setSearchProduct, temporaryCart, foodCartHeight, navBartHeight} = useContext(VerifyContext);
   const navBar = Platform.OS == 'ios' ? navBartHeight + getIphoneNotchSize * 2 : navBartHeight;
-  const minHeight = getDeviceHeight - navBar - foodCartHeight;
+  // const minHeight = getDeviceHeight - navBar - foodCartHeight;
 
   // data fetching for product under specific category
   const [getProductsByShopCategory, {data: products, error: productsError, loading: productsLoading}] = useLazyQuery(
@@ -42,11 +37,19 @@ export const FoodList = props => {
   );
 
   // data fetching for product
-  const [getSearchProductsByShop, {data: searchProducts, error: searchProductsError, loading: searchProductsLoading}] =
-    useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
+  const [getSearchProductsByShop, {data: searchProducts, loading: searchProductsLoading}] = useLazyQuery(
+    GET_SEARCH_PRODUCTS_BY_SHOP,
+    {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
-    });
+    },
+  );
+
+  const listData = searchProduct
+    ? searchProducts?.getSearchProductsByShop
+    : products
+    ? products.getProductsByShopCategory
+    : [];
 
   useEffect(() => {
     if (activeTab?.id) {
@@ -72,32 +75,38 @@ export const FoodList = props => {
     navigation.navigate('ToktokFoodItemDetails', {Id, temporaryCart: temporaryCart.items});
   };
 
-  const renderItem = ({item, index}) => {
+  const ItemSepartor = () => <View style={styles.separtor} />;
+
+  const ItemList = ({item, index}) => {
     return (
-      <TouchableOpacity
-        onPress={() => onNavigateToFoodItemDetails(item.Id)}
-        style={[
-          styles.listContainer,
-          {
-            paddingBottom: index == 0 ? moderateScale(10) : 0,
-            marginVertical: index == 0 ? 0 : moderateScale(10),
-          },
-        ]}>
-        <View style={{flex: 1}}>
-          <Text style={styles.listText}>{item.itemname}</Text>
-          <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
-          {!!item.summary && (
-            <Text numberOfLines={1} style={styles.summary}>
-              {item.summary}
-            </Text>
-          )}
-        </View>
-        <View>
-          <Image resizeMode="cover" source={{uri: item.filename}} style={styles.img} />
-        </View>
-      </TouchableOpacity>
+      <>
+        <TouchableOpacity
+          onPress={() => onNavigateToFoodItemDetails(item.Id)}
+          style={[
+            styles.listContainer,
+            {
+              paddingBottom: index == 0 ? moderateScale(10) : 0,
+              marginVertical: index == 0 ? 0 : moderateScale(10),
+            },
+          ]}>
+          <View style={{flex: 1}}>
+            <Text style={styles.listText}>{item.itemname}</Text>
+            <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
+            {!!item.summary && (
+              <Text numberOfLines={1} style={styles.summary}>
+                {item.summary}
+              </Text>
+            )}
+          </View>
+          <View>
+            <Image resizeMode="cover" source={{uri: item.filename}} style={styles.img} />
+          </View>
+        </TouchableOpacity>
+        <ItemSepartor />
+      </>
     );
   };
+
   if (productsLoading || tagsLoading || productsError || searchProductsLoading) {
     let listSize = (getDeviceHeight / verticalScale(100)).toFixed(0);
 
@@ -120,37 +129,34 @@ export const FoodList = props => {
     );
   }
 
-  const itemSepartor = () => <View style={styles.separtor} />;
+  // const ItemList = () => {
+  //   const dataSet = searchProduct
+  //     ? searchProducts?.getSearchProductsByShop
+  //     : products
+  //     ? products.getProductsByShopCategory
+  //     : [];
 
-  const ItemList = () => {
-    const dataSet = searchProduct
-      ? searchProducts?.getSearchProductsByShop
-      : products
-      ? products.getProductsByShopCategory
-      : [];
-
-    return dataSet.map((v, i) => renderItem(v, i));
-  };
+  //   return dataSet.map((v, i) => renderItem(v, i));
+  // };
 
   return (
-    <>
-      {/* <ItemList /> */}
-      <FlatList
-        data={searchProduct ? searchProducts?.getSearchProductsByShop : products ? products.getProductsByShopCategory : []}
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      {listData.length > 0 && listData.map(item => <ItemList item={item} />)}
+      {/* <FlatList
+        data={
+          searchProduct ? searchProducts?.getSearchProductsByShop : products ? products.getProductsByShopCategory : []
+        }
         extraData={props}
         renderItem={renderItem}
-        contentContainerStyle={[
-          styles.container,
-          { minHeight }
-        ]}
+        contentContainerStyle={[styles.container, {minHeight}]}
         ItemSeparatorComponent={itemSepartor}
         ListEmptyComponent={() => (
           <Text style={{textAlign: 'center', marginVertical: 20}}>
-            { searchProduct ? 'No product found' : 'This restaurant has no products yet.' }
+            {searchProduct ? 'No product found' : 'This restaurant has no products yet.'}
           </Text>
         )}
-      />
-    </>
+      /> */}
+    </ScrollView>
   );
 };
 
@@ -195,4 +201,5 @@ const styles = StyleSheet.create({
     borderColor: '#E6E6E6',
     marginHorizontal: verticalScale(20),
   },
+  scrollContainer: {flex: 1, minHeight: 500},
 });

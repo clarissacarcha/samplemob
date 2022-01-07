@@ -43,8 +43,7 @@ export const StickyView = () => {
   const {setNavBarHeight, temporaryCart, setTemporaryCart} = useContext(VerifyContext);
   const {customerInfo, location} = useSelector(state => state.toktokFood);
 
-  const {id, address, shopname, ratings, banner, estimatedDeliveryTime, estimatedDistance, logo, latitude, longitude} =
-    routes.params.item;
+  const { id } = routes.params.item;
 
   const headerMaxHeight = verticalScale(450);
   const headerMinHeight = verticalScale(110);
@@ -65,6 +64,9 @@ export const StickyView = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getShopDetails}) => {
+      let { latitude, longitude } = getShopDetails;
+
+      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       setShopDetails(getShopDetails);
     },
   });
@@ -78,7 +80,6 @@ export const StickyView = () => {
   useEffect(() => {
     // checkShopValidations({ variables: { input: { shopId: id } }})
     if (isFocus && location) {
-      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       getProductCategories();
       // console.log(
       //   JSON.stringify({
@@ -99,7 +100,7 @@ export const StickyView = () => {
         },
       });
     }
-  }, [isFocus, location]);
+  }, [isFocus, location, shopDetails]);
 
   useEffect(() => {
     if (data) {
@@ -155,9 +156,7 @@ export const StickyView = () => {
             <View style={styles.content}>
               <Image source={{uri: shopDetails.logo}} style={styles.logo} resizeMode="cover" />
               <View style={{flexShrink: 1, marginHorizontal: 10}}>
-                <Text style={styles.titleText}>
-                  {`${shopDetails.shopname} (${shopDetails.address})`}
-                </Text>
+                <Text style={styles.titleText}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
                 {/* <CustomStarRating
                   rating={shopDetails.ratings ?? '0'}
                   starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
