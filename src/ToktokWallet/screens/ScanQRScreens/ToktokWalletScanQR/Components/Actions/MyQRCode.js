@@ -125,7 +125,7 @@ const MyQRCode = ({visible,setVisible,tokwaAccount})=> {
        
         viewshotRef.current.capture().then(async (uri ) => {
             const timestamp = +moment()
-            const filename = `${timestamp.toString()}_${tokwaAccount.mobileNumber}.jpg`
+            const filename = `${timestamp.toString()}_${tokwaAccount.mobileNumber}.png`
     
             RNFS.moveFile(uri, pathCache + `/${filename}`)
             const newFileUri = `${pathCache}/${filename}`
@@ -160,7 +160,7 @@ const MyQRCode = ({visible,setVisible,tokwaAccount})=> {
                             <ViewShot 
                                 ref={viewshotRef} 
                                 style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"white",borderRadius: 5,}}
-                                options={{ format: "jpg", quality: 0.9,width: 400,height: 400 ,result: 'tmpfile' }}
+                                options={{ format: "png","width/height": 1100/800,result: 'tmpfile' }}
                             >
                                      {/* <Image resizeMode="contain" style={{height: 23,width: 130,marginBottom: 15}} source={toktokwalletLogo}/> */}
                                     
