@@ -61,7 +61,7 @@ const StickyView = () => {
   const [pendingProcess, setPendingProcess] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   let variableInput = {
-    limit: 10,
+    limit: 20,
     radius: 3,
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
@@ -86,7 +86,7 @@ const StickyView = () => {
         variables: {
           input: {
             page: 0,
-            limit: 10,
+            limit: 20,
             radius: 3,
             userLongitude: location?.longitude,
             userLatitude: location?.latitude,
