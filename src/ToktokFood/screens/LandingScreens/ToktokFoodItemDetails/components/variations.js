@@ -204,7 +204,7 @@ export const Variations = ({data, productId}) => {
         </View>
 
         <FlatList
-          data={dataOptions[index].isCollapsed ? item.optionLogs : dataSource}
+          data={dataOptions[index]?.isCollapsed ? item.optionLogs : dataSource}
           renderItem={({item: optionLogs}) => {
             let index = -1;
             if (selected[item.optionName]) {
@@ -314,33 +314,31 @@ export const Variations = ({data, productId}) => {
     return null;
   };
 
+  const Notes = (
+    <View style={[styles.variations]}>
+      <View style={styles.instructionContainer}>
+        <Text style={styles.variationTitle}>Special Instructions</Text>
+        <View style={styles.requiredContainer}>
+          <Text style={styles.requiredText}>Optional</Text>
+        </View>
+      </View>
+      <TextInput
+        value={notes}
+        multiline={true}
+        numberOfLines={4}
+        style={styles.input}
+        maxLength={60}
+        placeholder="e.g. no cutlery."
+        placeholderTextColor={COLOR.MEDIUM}
+        onChangeText={notes => setNotes(notes)}
+      />
+    </View>
+  );
+
   return (
     <>
       {renderVariantComponent()}
-      <FlatList
-        ListFooterComponent={
-          <View style={[styles.variations]}>
-            <View style={styles.instructionContainer}>
-              <Text style={styles.variationTitle}>Special Instructions</Text>
-              <View style={styles.requiredContainer}>
-                <Text style={styles.requiredText}>Optional</Text>
-              </View>
-            </View>
-            <TextInput
-              value={notes}
-              multiline={true}
-              numberOfLines={4}
-              style={styles.input}
-              placeholder="e.g. no cutlery."
-              placeholderTextColor={COLOR.MEDIUM}
-              onChangeText={notes => setNotes(notes)}
-            />
-          </View>
-        }
-        data={dataOptions}
-        renderItem={renderOptions}
-        style={{flex: 1}}
-      />
+      <FlatList ListFooterComponent={Notes} data={data.options} renderItem={renderOptions} style={{flex: 1}} />
     </>
   );
 };
