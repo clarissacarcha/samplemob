@@ -2,7 +2,7 @@
 import React, {useState, useEffect, useRef, useMemo} from 'react';
 import {ScrollView, StyleSheet, View, Alert, Text} from 'react-native';
 import {useSelector} from 'react-redux';
-import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import {useLazyQuery} from '@apollo/react-hooks';
 import BackgroundTimer from 'react-native-background-timer';
 
 // Components
@@ -23,7 +23,7 @@ import {
 } from './components';
 
 // Queries
-import {TOKTOK_FOOD_GRAPHQL_CLIENT, CLIENT} from 'src/graphql';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_ORDER_TRANSACTION_BY_REF_NUM, GET_RIDER_DETAILS} from 'toktokfood/graphql/toktokfood';
 
 // Utils
@@ -33,7 +33,7 @@ import {useIsFocused} from '@react-navigation/native';
 import moment from 'moment';
 
 const ToktokFoodOrderDetails = ({route, navigation}) => {
-  const {price} = useSelector((state) => state.toktokFood.totalAmount);
+  const {price} = useSelector(state => state.toktokFood.totalAmount);
   const referenceNum = route.params ? route.params.referenceNum : '';
   const orderStatus = route.params ? route.params.orderStatus : '';
 
@@ -237,7 +237,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     ]);
   };
 
-  const selectedTab = (title) => {
+  const selectedTab = title => {
     switch (title) {
       case 'Order Complete':
         return 2;
@@ -251,7 +251,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
 
   const onCloseModal = () => {
     let {title} = showDialogMessage;
-    setShowDialogMessage((prev) => ({...prev, show: false}));
+    setShowDialogMessage(prev => ({...prev, show: false}));
     if (title == 'Order Complete' || title == 'OOPS! Order Declined!' || title == 'Order Cancelled') {
       let tab = selectedTab(title);
       navigation.navigate('ToktokFoodOrderTransactions', {tab});
@@ -259,7 +259,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
       setSeconds(300);
     }
   };
-  
+
   const displayOrderTitle = useMemo(() => {
     return <OrderTitle transaction={transaction} riderDetails={riderDetails} referenceNum={referenceNum} />;
   }, [transaction, riderDetails]);
@@ -276,7 +276,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           onCloseModal();
         }}
         onCloseBtn1={() => {
-          setShowDialogMessage((prev) => ({...prev, show: false}));
+          setShowDialogMessage(prev => ({...prev, show: false}));
           navigation.navigate('ToktokFoodHome');
         }}
         onCloseBtn2={() => {
