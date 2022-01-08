@@ -217,7 +217,11 @@ const StickyView = () => {
         scrollEventThrottle={15}
         renderItem={props => {
           if (loading || error || location == undefined) {
-            return <LoadingIndicator style={styles.loaderStyle} isFlex isLoading={true} />;
+            return (
+              <View style={styles.loaderContainer}>
+                <LoadingIndicator style={styles.loaderStyle} isFlex isLoading={true} />
+              </View>
+            );
           }
           if ((!data || data?.getShops?.length === 0) && props.index < 1) {
             return EmptyList();
@@ -298,9 +302,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   emptyContainer: {
-    height: verticalScale(300),
     alignItems: 'center',
-    justifyContent: 'center',
+    height: verticalScale(500),
+    paddingTop: moderateScale(60),
+    // justifyContent: 'center',
   },
   emptyImg: {
     height: moderateScale(175),
@@ -314,7 +319,13 @@ const styles = StyleSheet.create({
     marginHorizontal: moderateScale(20),
   },
   loaderStyle: {
-    marginVertical: 30,
+    // marginVertical: 30,
+    justifyContent: 'flex-start',
+  },
+  loaderContainer: {
+    justifyContent: 'flex-start',
+    height: verticalScale(500),
+    paddingTop: moderateScale(50),
   },
 });
 

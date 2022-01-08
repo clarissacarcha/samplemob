@@ -22,9 +22,9 @@ const RestaurantList = props => {
     </View>
   );
 
-  if (loading || error || location == undefined) {
-    return <LoadingIndicator style={{marginVertical: 20}} isFlex isLoading={true} />;
-  }
+  // if (loading || error || location == undefined) {
+  //   return <LoadingIndicator style={{marginVertical: 20}} isFlex isLoading={true} />;
+  // }
   return (
     <FlatList
       data={data}
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   },
   listStyle: {
     flex: 1,
+    // minHeight: 800,
     paddingTop: moderateScale(15),
     paddingHorizontal: 20,
     backgroundColor: 'white',
