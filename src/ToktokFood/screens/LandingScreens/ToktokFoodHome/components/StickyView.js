@@ -1,21 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useLazyQuery} from '@apollo/react-hooks';
-import React, {useEffect, useRef, useState} from 'react';
-import {Platform, RefreshControl, ScrollView, StyleSheet, View, SectionList, Text, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Platform, RefreshControl, StyleSheet, View, SectionList, Text, Image} from 'react-native';
 import {useSelector} from 'react-redux';
+
+// GraphQL & Queries
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import ChangeAddress from 'toktokfood/components/ChangeAddress';
-import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
+// Components
+import {CategoryList, ModalKycStatus, RestaurantList} from './index';
+import ChangeAddress from 'toktokfood/components/ChangeAddress';
+import HeaderTabs from 'toktokfood/components/HeaderTabs';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+
+// Assets
 import {FONT_SIZE} from 'res/variables';
 import {empty_shop_2} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
-// Components
-import {CategoryList, ModalKycStatus, RestaurantList} from './index';
-// import RestaurantItem from './RestaurantList/RestaurantItem';
 
 const tabs = [
   {
@@ -60,16 +64,13 @@ const StickyView = () => {
   const [loadMore, setLoadMore] = useState(false);
   const [pendingProcess, setPendingProcess] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  let variableInput = {
+  const variableInput = {
     limit: 20,
     radius: 3,
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
     tabId: activeTab.id,
   };
-
-  // console.log(variableInput);
-  // const scrollRef = useRef();
 
   // data fetching for shops
   const [getShops, {data, error, loading, fetchMore, refetch}] = useLazyQuery(GET_SHOPS, {
@@ -80,22 +81,29 @@ const StickyView = () => {
     fetchPolicy: 'network-only',
   });
 
-  useEffect(() => {
-    if (location) {
-      getShops({
-        variables: {
-          input: {
-            page: 0,
-            limit: 20,
-            radius: 3,
-            userLongitude: location?.longitude,
-            userLatitude: location?.latitude,
-            tabId: activeTab.id,
-          },
-        },
-      });
-    }
-  }, [location, activeTab]);
+  const sample = [
+    {type: 'ADDRESS', data: []}, // Static sections.
+    {type: 'CATEGORIES', data: []},
+    {type: 'RESTAURANTS', data: data && data?.getShops.length > 0 ? data.getShops : [{index: 1}]},
+  ];
+
+  // Commented for optimization
+  // useEffect(() => {
+  //   if (location) {
+  //     getShops({
+  //       variables: {
+  //         input: {
+  //           page: 0,
+  //           limit: 20,
+  //           radius: 3,
+  //           userLongitude: location?.longitude,
+  //           userLatitude: location?.latitude,
+  //           tabId: activeTab.id,
+  //         },
+  //       },
+  //     });
+  //   }
+  // }, [location, activeTab]);
 
   useEffect(() => {
     if (location) {
@@ -177,12 +185,6 @@ const StickyView = () => {
     });
   };
 
-  const sample = [
-    {type: 'ADDRESS', data: []}, // Static sections.
-    {type: 'CATEGORIES', data: []},
-    {type: 'RESTAURANTS', data: data && data?.getShops.length > 0 ? data.getShops : [{index: 1}]},
-  ];
-
   const EmptyList = () => {
     return (
       <>
@@ -203,7 +205,7 @@ const StickyView = () => {
         keyExtractor={(item, index) => item + index}
         stickyHeaderIndices={[2]}
         stickySectionHeadersEnabled
-        contentContainerStyle={{justifyContent: 'center'}}
+        // contentContainerStyle={{justifyContent: 'center'}}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
         }
@@ -214,6 +216,9 @@ const StickyView = () => {
         }}
         scrollEventThrottle={15}
         renderItem={props => {
+          if (loading || error || location == undefined) {
+            return <LoadingIndicator style={styles.loaderStyle} isFlex isLoading={true} />;
+          }
           if ((!data || data?.getShops?.length === 0) && props.index < 1) {
             return EmptyList();
           }
@@ -246,30 +251,32 @@ const StickyView = () => {
         }}
       />
       <ModalKycStatus />
-
-      {/* <ScrollView
-        stickyHeaderIndices={[2]}
-        nestedScrollEnabled
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
-        }
-        onScroll={({nativeEvent}) => {
-          if (isCloseToBottom(nativeEvent)) {
-            handleLoadMore(nativeEvent);
-          }
-        }}
-        scrollEventThrottle={15}> */}
-      {/* <View style={styles.adsContainer}>
-          <AdvertisementSection />
-        </View> */}
-      {/* <ChangeAddress />
-        <CategoryList horizontal homeRefreshing={refreshing} rightText="See all" />
-        <RenderNavBar /> */}
-      {/* <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} /> */}
-      {/* </ScrollView> */}
     </>
   );
 };
+
+{
+  /* <ScrollView
+  stickyHeaderIndices={[2]}
+  nestedScrollEnabled
+  refreshControl={
+    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
+  }
+  onScroll={({nativeEvent}) => {
+    if (isCloseToBottom(nativeEvent)) {
+      handleLoadMore(nativeEvent);
+    }
+  }}
+  scrollEventThrottle={15}>
+  <View style={styles.adsContainer}>
+    <AdvertisementSection />
+  </View>
+  <ChangeAddress />
+  <CategoryList horizontal homeRefreshing={refreshing} rightText="See all" />
+  <RenderNavBar />
+  <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} />
+  </ScrollView> */
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -305,6 +312,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: moderateScale(20),
     marginHorizontal: moderateScale(20),
+  },
+  loaderStyle: {
+    marginVertical: 30,
   },
 });
 
