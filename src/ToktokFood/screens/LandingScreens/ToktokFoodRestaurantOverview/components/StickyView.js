@@ -63,7 +63,7 @@ export const StickyView = () => {
 
   const [getShopDetails, {error: shopDetailsError, loading: shopDetailsLoading}] = useLazyQuery(GET_SHOP_DETAILS, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
       let {latitude, longitude} = getShopDetails;
 

@@ -159,7 +159,7 @@ const MainComponent = () => {
   //     </View>
   //   );
   // };
-
+  console.log(productDetails)
   return (
     <View style={styles.container}>
       <HeaderImageBackground searchBox={false}>
