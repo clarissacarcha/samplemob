@@ -3,10 +3,13 @@ import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 // Utils
 import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
-export default styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.WHITE,
+  },
+  flex: {
+    flex: 1,
   },
   foodDetails: {
     flexDirection: 'row',
@@ -51,7 +54,7 @@ export default styles = StyleSheet.create({
     borderBottomWidth: 8,
     borderBottomColor: COLOR.LIGHT,
     paddingHorizontal: Platform.OS === 'android' ? 12 : 14,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   ratingsWrapper: {
     paddingLeft: Platform.OS === 'android' ? 4 : 3,
@@ -63,3 +66,4 @@ export default styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
   },
 });
+export default styles;

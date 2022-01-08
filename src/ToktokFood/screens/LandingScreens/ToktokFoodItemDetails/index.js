@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useContext, useEffect} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {View, Text, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
@@ -28,13 +29,13 @@ const MainComponent = () => {
     routes.params;
   const {customerInfo} = useSelector(state => state.toktokFood);
   const {
-    totalPrice,
+    // temporaryCart,
+    // totalPrice,
     setTotalPrice,
     setSelected,
     productDetails,
     setProductDetails,
     setCount,
-    temporaryCart,
     setTemporaryCart,
     setNotes,
     selectedVariants,
@@ -43,7 +44,7 @@ const MainComponent = () => {
   const [bannerLoaded, setBannerLoaded] = useState(true);
   const stickyHeaderIndices = bannerLoaded ? [2] : [3];
 
-  const [getProductDetails, {data, loading, error}] = useLazyQuery(GET_PRODUCT_DETAILS, {
+  const [getProductDetails, {loading}] = useLazyQuery(GET_PRODUCT_DETAILS, {
     variables: {
       input: {
         product_id: parentProductId ? parentProductId : Id,
@@ -159,7 +160,7 @@ const MainComponent = () => {
   //     </View>
   //   );
   // };
-  console.log(productDetails)
+
   return (
     <View style={styles.container}>
       <HeaderImageBackground searchBox={false}>
@@ -171,7 +172,7 @@ const MainComponent = () => {
         <>
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
             <ScrollView stickyHeaderIndices={stickyHeaderIndices}>
-              <View style={{flex: 1}}>
+              <View style={styles.flex}>
                 {/* <ChangeAddress /> */}
                 {/* {!bannerLoaded && <BannerPlaceHolder />}
               <Image
@@ -179,7 +180,7 @@ const MainComponent = () => {
                 source={{uri: productDetails.filename}}
                 style={[styles.banner]}
               /> */}
-                <View style={{flex: 1}}>
+                <View style={styles.flex}>
                   <FoodImageSlider images={productDetails.productImages} />
                 </View>
                 <ItemDetails />
