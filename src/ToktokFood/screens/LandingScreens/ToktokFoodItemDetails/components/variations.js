@@ -30,6 +30,7 @@ export const Variations = ({data, productId}) => {
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [dataOptions, setDataOptions] = useState([]);
+
   useEffect(() => {
     if (Object.keys(data).length > 0 && data?.variants.length > 0) {
       let selectedVar = productId
@@ -204,7 +205,7 @@ export const Variations = ({data, productId}) => {
         </View>
 
         <FlatList
-          data={dataOptions[index]?.isCollapsed ? item.optionLogs : dataSource}
+          data={dataOptions.length > 0 ? dataOptions[index]?.isCollapsed ? item.optionLogs : dataSource : []}
           renderItem={({item: optionLogs}) => {
             let index = -1;
             if (selected[item.optionName]) {
@@ -232,13 +233,13 @@ export const Variations = ({data, productId}) => {
             item.optionLogs.length > 5 && (
               <TouchableOpacity onPress={() => onToggleItems(index)} activeOpacity={0.9} style={styles.showMore}>
                 <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>
-                  {dataOptions[index].isCollapsed
+                  {dataOptions.length > 0 && dataOptions[index].isCollapsed
                     ? `Hide ${remaining.length > 1 ? 'Items' : 'Item'}`
                     : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
                       'Show More'}
                 </Text>
                 <FA5Icon
-                  name={dataOptions[index].isCollapsed ? 'chevron-up' : 'chevron-down'}
+                  name={dataOptions.length > 0 ? dataOptions[index].isCollapsed ? 'chevron-up' : 'chevron-down' : ''}
                   size={12}
                   color={'#FFA700'}
                 />
@@ -246,7 +247,8 @@ export const Variations = ({data, productId}) => {
             )
           }
         />
-      </View>
+       
+      </View> 
     );
   };
 
