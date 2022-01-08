@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useContext} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -18,21 +18,20 @@ export const FoodCart = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const {id} = route.params.item;
-  const {customerInfo} = useSelector((state) => state.toktokFood);
+  const {customerInfo} = useSelector(state => state.toktokFood);
   const isFocus = useIsFocused();
   const {temporaryCart, setTemporaryCart, setFoodCartHeight} = useContext(VerifyContext);
 
-  const [getAllTemporaryCart, {loading: cartLoading, error: cartError}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
+  const [getAllTemporaryCart, {loading: cartLoading}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getAllTemporaryCart}) => {
       let {items, totalAmount, totalAmountWithAddons} = getAllTemporaryCart;
-      console.log(totalAmountWithAddons)
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
         items: items,
-        totalAmountWithAddons
+        totalAmountWithAddons,
       });
     },
   });
@@ -59,7 +58,7 @@ export const FoodCart = () => {
     }
   }, [isFocus, customerInfo]);
 
-  const getFoodCartHeight = (event) => {
+  const getFoodCartHeight = event => {
     let height = event.nativeEvent.layout.height;
     setFoodCartHeight(height);
   };
@@ -73,7 +72,7 @@ export const FoodCart = () => {
   }
   return (
     <>
-      <View onLayout={(event) => getFoodCartHeight(event)} style={[styles.container, styles.cartBorder]}>
+      <View onLayout={event => getFoodCartHeight(event)} style={[styles.container, styles.cartBorder]}>
         <View style={styles.foodItemTotalWrapper}>
           <Text style={styles.total}>{`${temporaryCart.cartItemsLength} ${
             temporaryCart.cartItemsLength > 1 ? 'items' : 'item'

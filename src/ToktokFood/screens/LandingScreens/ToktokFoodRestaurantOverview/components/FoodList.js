@@ -201,5 +201,5 @@ const styles = StyleSheet.create({
     borderColor: '#E6E6E6',
     marginHorizontal: verticalScale(20),
   },
-  scrollContainer: {flex: 1, minHeight: 500},
+  scrollContainer: {flex: 1, minHeight: 600},
 });
