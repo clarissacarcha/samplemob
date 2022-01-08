@@ -37,6 +37,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   const {location} = useSelector(state => state.toktokFood);
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState('');
   const [additionalMins, setAdditionalMins] = useState(0);
+  const [etaMinutes, setEtaMinutes] = useState(0);
   const [newETA, setNewETA] = useState(false);
   const [newStartDateTime, setNewStartDateTime] = useState(null);
   const {
@@ -105,7 +106,9 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         let hoursDifference = moment().diff(edtDate, 'hours', true);
         let finalHrs = hoursDifference ? parseFloat(additionalHours) + parseFloat(hoursDifference) : additionalHours;
         let edt = moment(edtDate).add(finalHrs, 'hours').format('h:mm A');
+        const secToMinutes = durationSecs / 60 + 5;
         console.log(durationHours, date, edt, 'ANIMATION ETA');
+        setEtaMinutes(Math.ceil(secToMinutes));
         processSaveEDT(edt);
         setEstimatedDeliveryTime(edt);
       });
@@ -172,10 +175,22 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     if (!moment(date).isValid() && estimatedDeliveryTime == '') {
       return null;
     }
+
+    const getTimeByStatus = status => {
+      switch (status) {
+        case 'po':
+          return 'Estimated Deliver Time: 45 Minutes';
+        case 'f':
+          return 'Rider is nearby your location. Thank you for patiently waiting.';
+        default:
+          return 'Estimated Deliver Time: 45 Minutes';
+      }
+    };
+
     return (
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />
-        <Text style={styles.time}>{`Estimated Delivery Time: 45 Minutes`}</Text>
+        <Text style={styles.time}>{getTimeByStatus(orderStatus)}</Text>
         {/* <Text style={styles.time}>
           {`Estimated Delivery Time: ${moment(date).format('ll')} - ${estimatedDeliveryTime}`}
         </Text> */}
@@ -308,12 +323,14 @@ const styles = StyleSheet.create({
   time: {
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
+    fontWeight: '600',
     marginLeft: moderateScale(5),
   },
   timeContainer: {
     flexDirection: 'row',
     marginTop: verticalScale(5),
     alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontSize: FONT_SIZE.L,
@@ -339,9 +356,8 @@ const styles = StyleSheet.create({
   timeImg: {
     width: moderateScale(13),
     height: moderateScale(13),
-    tintColor: COLOR.DARK,
+    tintColor: COLOR.YELLOW,
     resizeMode: 'contain',
-    tintColor: '#F6A100',
   },
   dashedLine: {
     paddingLeft: moderateScale(6),
