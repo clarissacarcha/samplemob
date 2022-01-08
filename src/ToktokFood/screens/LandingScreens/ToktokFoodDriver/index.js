@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useIsFocused} from '@react-navigation/native';
 import moment from 'moment';
@@ -132,7 +133,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         });
         getRiderDetailsInterval.current = BackgroundTimer.setInterval(() => setRiderSeconds(riderSeconds - 20), 20000);
       } else {
-        setRiderSeconds(300)
+        setRiderSeconds(300);
       }
     }
     console.log('Rider Details Updated ' + riderSeconds);
@@ -184,7 +185,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
             if (transaction.orderStatus == 'p') {
               setShowDialogMessage({
                 title: 'No Response from Merchant',
-                message: `Merchant hasn't confirmed your order.\nPlease try again.`,
+                message: "Merchant hasn't confirmed your order.\nPlease try again.",
                 show: true,
                 type: 'warning',
               });
@@ -265,7 +266,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
         type={cancelDialogMessage.type}
         onCloseModal={() => {
           if (cancelDialogMessage.type == 'success') {
-            navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
+            navigation.replace('ToktokFoodLanding');
+            // navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
           }
           setCancelDialogMessage({show: false, type: '', title: '', message: ''});
         }}

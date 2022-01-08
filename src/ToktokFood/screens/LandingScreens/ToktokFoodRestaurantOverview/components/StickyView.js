@@ -5,6 +5,7 @@ import React, {useEffect, useState, useContext, useRef, useMemo} from 'react';
 import {Image, Platform, StyleSheet, Text, View, StatusBar} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {FONT_SIZE, FONT, COLOR} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 // import CustomStarRating from 'toktokfood/components/CustomStarRating';
@@ -14,7 +15,7 @@ import ContentLoader from 'react-native-easy-content-loader';
 
 // Components
 // import {RestaurantList} from '../../ToktokFoodHome/components';
-import HeaderTabs from 'toktokfood/components/HeaderTabs';
+// import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import {GET_PRODUCT_CATEGORIES, CHECK_SHOP_VALIDATIONS, GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
 // Utils
@@ -43,7 +44,7 @@ export const StickyView = () => {
   const {setNavBarHeight, temporaryCart, setTemporaryCart} = useContext(VerifyContext);
   const {customerInfo, location} = useSelector(state => state.toktokFood);
 
-  const { id } = routes.params.item;
+  const {id} = routes.params.item;
 
   const headerMaxHeight = verticalScale(450);
   const headerMinHeight = verticalScale(110);
@@ -64,7 +65,7 @@ export const StickyView = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
-      let { latitude, longitude } = getShopDetails;
+      let {latitude, longitude} = getShopDetails;
 
       dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       setShopDetails(getShopDetails);

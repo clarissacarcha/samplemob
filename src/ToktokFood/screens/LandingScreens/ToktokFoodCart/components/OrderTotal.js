@@ -85,9 +85,11 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping).toFixed(
-            2,
-          )}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(
+            temporaryCart.totalAmountWithAddons +
+            deliveryFee -
+            totalShipping
+          ).toFixed(2)}`}</Text>
         ) : (
           <Text style={styles.totalPrice}>{`PHP ${temporaryCart.totalAmount.toFixed(2)}`}</Text>
         )}
