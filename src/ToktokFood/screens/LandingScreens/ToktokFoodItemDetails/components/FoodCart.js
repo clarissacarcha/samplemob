@@ -49,16 +49,16 @@ export const FoodCart = ({loading, action}) => {
     selectedVariants,
     basePrice,
   } = useContext(VerifyContext);
-  const {customerInfo} = useSelector((state) => state.toktokFood);
+  const {customerInfo} = useSelector(state => state.toktokFood);
   const [showDialogMessage, setShowDialogMessage] = useState({show: false, items: []});
   const [tempData, setTempData] = useState({});
-  const required = Object.keys(requiredOptions).filter((val) => {
+  const required = Object.keys(requiredOptions).filter(val => {
     return selected[val] == undefined;
   });
 
   const [postTemporaryCart, {loading: postLoading, error: postError}] = useMutation(POST_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    onError: (error) => {
+    onError: error => {
       setLoader(false);
       setTimeout(() => {
         onErrorAlert({alert, error});
@@ -71,7 +71,7 @@ export const FoodCart = ({loading, action}) => {
 
   const [patchTemporaryCartItem, {loading: patchLoading, error: patchError}] = useMutation(PATCH_TEMPORARY_CART_ITEM, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    onError: (error) => {
+    onError: error => {
       setLoader(false);
       setTimeout(() => {
         onErrorAlert({alert, error});
@@ -86,7 +86,7 @@ export const FoodCart = ({loading, action}) => {
     DELETE_TEMPORARY_CART_ITEM,
     {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      onError: (err) => {
+      onError: err => {
         setLoader(false);
       },
       onCompleted: ({deleteTemporaryCartItem}) => {
@@ -99,7 +99,7 @@ export const FoodCart = ({loading, action}) => {
     DELETE_SHOP_TEMPORARY_CART,
     {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      onError: (err) => {
+      onError: err => {
         setLoader(false);
         setTimeout(() => {
           Alert.alert('', 'Something went wrong.');
@@ -116,7 +116,7 @@ export const FoodCart = ({loading, action}) => {
     {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
-      onError: (err) => {
+      onError: err => {
         setLoader(false);
         setTimeout(() => {
           onErrorAlert({alert, error});
@@ -137,12 +137,12 @@ export const FoodCart = ({loading, action}) => {
       setTempData(data);
       if (data?.maxQtyIsset == 1) {
         if (temporaryCart.items.length > 0) {
-          const hasItem = temporaryCart.items.filter((item) => {
+          const hasItem = temporaryCart.items.filter(item => {
             return item.productid == data.Id;
           });
           if (hasItem.length > 0) {
             let currentQty = 0;
-            hasItem.map((item) => {
+            hasItem.map(item => {
               currentQty += item.quantity;
             });
             let isEditQtty = selectedItemId == undefined ? count.quantity + currentQty : count.quantity;
@@ -185,7 +185,7 @@ export const FoodCart = ({loading, action}) => {
   };
 
   const onRestaurantNavigate = async () => {
-    let required = await Object.keys(requiredOptions).filter((val) => {
+    let required = await Object.keys(requiredOptions).filter(val => {
       return selected[val] == undefined;
     });
     if (required.length > 0) {
@@ -198,8 +198,8 @@ export const FoodCart = ({loading, action}) => {
   const extractAddons = () => {
     let addons = [];
     if (Object.values(selected).length > 0) {
-      Object.values(selected).map((item) => {
-        item.map((val) => {
+      Object.values(selected).map(item => {
+        item.map(val => {
           addons.push(val.addon_id);
         });
       });
@@ -219,17 +219,17 @@ export const FoodCart = ({loading, action}) => {
       notes: notes,
     };
 
-    let filterItemByProductId = await temporaryCart.items.filter((item) => {
+    let filterItemByProductId = await temporaryCart.items.filter(item => {
       // console.log(item.productid)
       return item.productid == items.productid;
     });
     // return null
-    let duplicateItem = await filterItemByProductId.filter((item) => {
+    let duplicateItem = await filterItemByProductId.filter(item => {
       let sortedData = item.addonsDetails.sort((a, b) => a.id - b.id);
       return isEqual(sortedData, items.addons);
     });
 
-    let editedItem = await temporaryCart.items.filter((item) => {
+    let editedItem = await temporaryCart.items.filter(item => {
       return item.id == selectedItemId;
     });
 
@@ -270,7 +270,7 @@ export const FoodCart = ({loading, action}) => {
   };
 
   const onPressProceed = () => {
-    setShowDialogMessage((prev) => ({...prev, show: false}));
+    setShowDialogMessage(prev => ({...prev, show: false}));
     setLoader(true);
     deleteShopTemporaryCart({
       variables: {
@@ -307,7 +307,7 @@ export const FoodCart = ({loading, action}) => {
     });
   };
 
-  const patchCartItem = (items) => {
+  const patchCartItem = items => {
     patchTemporaryCartItem({variables: {input: items}}).then(({data}) => {
       let {status, message} = data.patchTemporaryCartItem;
       if (status == 200) {
@@ -325,7 +325,7 @@ export const FoodCart = ({loading, action}) => {
     });
   };
 
-  const addToCart = (items) => {
+  const addToCart = items => {
     postTemporaryCart({variables: {input: items}}).then(({data}) => {
       let {status, message} = data.postTemporaryCart;
       if (status == 200) {
@@ -389,7 +389,7 @@ export const FoodCart = ({loading, action}) => {
         btn1Title="Cancel"
         btn2Title="Proceed"
         onCloseBtn1={() => {
-          setShowDialogMessage((prev) => ({...prev, show: false}));
+          setShowDialogMessage(prev => ({...prev, show: false}));
         }}
         onCloseBtn2={() => {
           onPressProceed();
@@ -415,10 +415,20 @@ export const FoodCart = ({loading, action}) => {
             </TouchableOpacity>
             <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
-              disabled={disableAdd || count.quantity >= tempData?.stocks}
+              disabled={
+                productDetails?.contSellingIsset === 1 ? false : disableAdd || count.quantity >= tempData?.stocks
+              }
               style={[
                 styles.countButtons,
-                {backgroundColor: COLOR.ORANGE, opacity: disableAdd || count.quantity >= tempData?.stocks ? 0.5 : 1},
+                {
+                  backgroundColor: COLOR.ORANGE,
+                  opacity:
+                    productDetails?.contSellingIsset === 1
+                      ? 1
+                      : disableAdd || count.quantity >= tempData?.stocks
+                      ? 0.5
+                      : 1,
+                },
               ]}
               onPress={_.debounce(() => updateCartTotal(), 100, {leading: true, trailing: false})}>
               <MIcon name="add" color={COLOR.WHITE} size={20} />
@@ -427,11 +437,12 @@ export const FoodCart = ({loading, action}) => {
           <Text style={styles.total}>Total: PHP {totalPrice.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
-          disabled={isEnabled()}
+          disabled={productDetails?.contSellingIsset === 1 ? false : isEnabled()}
           style={[
             styles.cartButton,
             {
-              backgroundColor: isEnabled() ? COLOR.LIGHT : COLOR.YELLOW,
+              backgroundColor:
+                productDetails?.contSellingIsset === 1 ? COLOR.YELLOW : isEnabled() ? COLOR.LIGHT : COLOR.YELLOW,
             },
           ]}
           onPress={() => onRestaurantNavigate()}>
@@ -439,7 +450,7 @@ export const FoodCart = ({loading, action}) => {
             style={[
               styles.buttonText,
               {
-                color: isEnabled() ? COLOR.DARK : COLOR.WHITE,
+                color: productDetails?.contSellingIsset === 1 ? COLOR.WHITE : isEnabled() ? COLOR.DARK : COLOR.WHITE,
               },
             ]}>
             {action === 'edit' ? 'Update' : 'Add to Cart'}

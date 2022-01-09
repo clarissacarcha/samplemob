@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 
 const products = `
   Id
+  contSellingIsset
   itemid
   catId
   itemname
