@@ -1,24 +1,31 @@
+/* eslint-disable radix */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useContext} from 'react';
+import React, {useEffect, useContext, Fragment} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image, Platform, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import ContentLoader from 'react-native-easy-content-loader';
 import {useLazyQuery} from '@apollo/react-hooks';
+
+// Queries
 import {GET_PRODUCTS_BY_SHOP_CATEGORY, GET_SEARCH_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+
+// Components
 import {VerifyContext} from '../components';
+
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
-import ContentLoader from 'react-native-easy-content-loader';
 
+// Utils
 import {verticalScale, getDeviceHeight, moderateScale, getIphoneNotchSize} from 'toktokfood/helper/scale';
 
 export const FoodList = props => {
   const {activeTab, id, tagsLoading} = props;
   const navigation = useNavigation();
   const {searchProduct, setSearchProduct, temporaryCart, foodCartHeight, navBartHeight} = useContext(VerifyContext);
-  const navBar = Platform.OS == 'ios' ? navBartHeight + getIphoneNotchSize * 2 : navBartHeight;
-  // const minHeight = getDeviceHeight - navBar - foodCartHeight;
+  const navBar = Platform.OS === 'ios' ? navBartHeight + getIphoneNotchSize * 2 : navBartHeight;
+  const minHeight = getDeviceHeight - navBar - foodCartHeight;
 
   // data fetching for product under specific category
   const [getProductsByShopCategory, {data: products, error: productsError, loading: productsLoading}] = useLazyQuery(
@@ -79,7 +86,7 @@ export const FoodList = props => {
 
   const ItemList = ({item, index}) => {
     return (
-      <>
+      <Fragment>
         <TouchableOpacity
           onPress={() => onNavigateToFoodItemDetails(item.Id)}
           style={[
@@ -103,12 +110,12 @@ export const FoodList = props => {
           </View>
         </TouchableOpacity>
         <ItemSepartor />
-      </>
+      </Fragment>
     );
   };
 
   if (productsLoading || tagsLoading || productsError || searchProductsLoading) {
-    let listSize = (getDeviceHeight / verticalScale(100)).toFixed(0);
+    const listSize = parseInt((getDeviceHeight / verticalScale(100)).toFixed(0));
 
     return (
       <View style={{paddingHorizontal: moderateScale(10), paddingTop: moderateScale(10)}}>
@@ -121,7 +128,7 @@ export const FoodList = props => {
           secondaryColor="rgba(256,186,28,0.4)"
           aShape="square"
           aSize="large"
-          listSize={parseInt(listSize)}
+          listSize={listSize}
           avatar
           reverse
         />
@@ -140,8 +147,8 @@ export const FoodList = props => {
   // };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      {listData.length > 0 && listData.map(item => <ItemList item={item} />)}
+    <ScrollView contentContainerStyle={{...styles.scrollContainer, minHeight: minHeight}}>
+      {listData?.length > 0 && listData.map(item => <ItemList item={item} />)}
       {/* <FlatList
         data={
           searchProduct ? searchProducts?.getSearchProductsByShop : products ? products.getProductsByShopCategory : []
@@ -201,5 +208,5 @@ const styles = StyleSheet.create({
     borderColor: '#E6E6E6',
     marginHorizontal: verticalScale(20),
   },
-  scrollContainer: {flex: 1, minHeight: 600},
+  scrollContainer: {flex: 1},
 });

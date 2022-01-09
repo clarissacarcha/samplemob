@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -132,7 +133,6 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
     let location = riderDetails != null && orderStatus == 'f' ? riderDetails.location : shopLocation;
     let startTime = moment(date).format('LT');
     estimatedDeliveryTime == '' ? handleProcessGetEDT(date, location) : calculateEstimatedDeliveryTime(date, location);
-    console.log(transaction, estimatedDeliveryTime);
 
     const getTimeByStatus = status => {
       switch (status) {
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   timeImg: {
     width: moderateScale(13),
     height: moderateScale(13),
-    tintColor: COLOR.DARK,
+    // tintColor: COLOR.DARK,
     resizeMode: 'contain',
     tintColor: '#F6A100',
   },

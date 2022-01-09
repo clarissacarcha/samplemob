@@ -3,6 +3,8 @@ import React, {useState} from 'react';
 import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import CustomStarRating from 'toktokfood/components/CustomStarRating';
+
+// Assets & Utils
 import {moderateScale, scale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {time, no_image} from 'toktokfood/assets/images';
 
@@ -13,7 +15,7 @@ const RestaurantItem = ({item}) => {
   const navigation = useNavigation();
   const [validImg, setValidImg] = useState(true);
 
-  const onRestaurantNavigate = item => {
+  const onRestaurantNavigate = () => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
 
@@ -39,8 +41,9 @@ const RestaurantItem = ({item}) => {
           <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
           <Text style={styles.branches}>{item.estimatedDistance} KM</Text>
         </View>
+
         {item.promoName && (
-          <View style={{...styles.promoChip, width: item?.promoName?.length <= 10 ? 100 : 180}}>
+          <View style={{...styles.promoChip}}>
             <Text numberOfLines={1} style={styles.promoText}>
               {item.promoName}
             </Text>
@@ -50,7 +53,7 @@ const RestaurantItem = ({item}) => {
     </TouchableOpacity>
   );
 };
-
+// , width: item?.promoName?.length <= 10 ? 100 : 180
 const styles = StyleSheet.create({
   branchInfo: {
     flexDirection: 'row',
@@ -78,6 +81,7 @@ const styles = StyleSheet.create({
     width: (getDeviceWidth - 20) / 2,
   },
   restaurantName: {
+    flex: 1,
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.BOLD,
   },
@@ -88,7 +92,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   promoChip: {
-    // width: 100,
+    alignSelf: 'flex-start',
     marginTop: 10,
     borderWidth: 1,
     borderRadius: 30,

@@ -22,9 +22,9 @@ const RestaurantList = props => {
     </View>
   );
 
-  if (loading || error || location == undefined) {
-    return <LoadingIndicator style={{marginVertical: 20}} isFlex isLoading={true} />;
-  }
+  // if (loading || error || location == undefined) {
+  //   return <LoadingIndicator style={{marginVertical: 20}} isFlex isLoading={true} />;
+  // }
   return (
     <FlatList
       data={data}
@@ -35,14 +35,7 @@ const RestaurantList = props => {
       showsVerticalScrollIndicator={false}
       keyExtractor={(val, index) => index.toString()}
       ListFooterComponent={renderFooter()}
-      // ListEmptyComponent={listEmpty()}
-      style={{
-        flex: 1,
-        paddingTop: moderateScale(15),
-        paddingHorizontal: 20,
-        backgroundColor: 'white',
-        paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0,
-      }}
+      style={styles.listStyle}
     />
   );
 };
@@ -74,6 +67,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     // marginTop: Platform.OS === 'android' ? 0 : 10,
+  },
+  listStyle: {
+    flex: 1,
+    // minHeight: 800,
+    paddingTop: moderateScale(15),
+    paddingHorizontal: 20,
+    backgroundColor: 'white',
+    paddingBottom: Platform.OS == 'android' ? verticalScale(20) : 0,
   },
   ratings: {
     alignItems: 'flex-start',
