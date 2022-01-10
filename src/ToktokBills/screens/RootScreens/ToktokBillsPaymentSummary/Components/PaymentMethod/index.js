@@ -74,17 +74,21 @@ export const PaymentMethod = ({ paymentData }) => {
     	<View style={styles.container}>
         <View style={[ styles.bodyContainer, { alignItems: "center" } ]}>
           <Text style={styles.title}>Payment Method</Text>
-          <View style={[ styles.tokwaButton, styles.shadow ]}>
-            <Image style={styles.walletIcon} source={wallet_img} />
-            <View style={styles.pmContainer}>
-              <View style={styles.pmWrapper}>
-                <View style={styles.tokwaButtonTextWrapper}>
-                  <Text style={styles.toktokText}>toktok</Text>
-                  <Text style={styles.walletText}>wallet</Text>
+          <View style={styles.shadow}>
+            <View style={user.toktokWalletAccountId ? styles.tokwaButtonWithAccount : styles.tokwaButtonWithoutAccount}>
+              <Image style={styles.walletIcon} source={wallet_img} />
+              <View style={styles.pmContainer}>
+                <View style={styles.pmWrapper}>
+                  <View style={styles.tokwaButtonTextWrapper}>
+                    <Text style={styles.toktokText}>toktok</Text>
+                    <Text style={styles.walletText}>wallet</Text>
+                  </View>
+                  { user.toktokWalletAccountId && (
+                    <Text style={styles.balance}>
+                      Balance: PHP {numberFormat(tokwaBalance)}
+                    </Text>
+                  )}
                 </View>
-                <Text style={styles.balance}>
-                  Balance: PHP {numberFormat(tokwaBalance)}
-                </Text>
               </View>
             </View>
           </View>
@@ -121,13 +125,20 @@ const styles = StyleSheet.create({
     width: moderateScale(35),
     height: moderateScale(35)
   },
-  tokwaButton: {
+  tokwaButtonWithAccount: {
     borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     padding: moderateScale(10),
     backgroundColor: COLOR.WHITE,
+  },
+  tokwaButtonWithoutAccount: {
+    borderRadius: 10,
+    flexDirection: "row",
+    padding: moderateScale(10),
+    backgroundColor: COLOR.WHITE,
+    opacity: 0.5
   },
   tokwaButtonTextWrapper: {
     flexDirection: "row",
@@ -155,12 +166,9 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   pmContainer: {
-    justifyContent: "center",
-    alignItems: "center",
     flexDirection: "row"
   },
   pmWrapper: {
-    alignItems: "center",
     paddingLeft: moderateScale(10)
   },
   balance: {
