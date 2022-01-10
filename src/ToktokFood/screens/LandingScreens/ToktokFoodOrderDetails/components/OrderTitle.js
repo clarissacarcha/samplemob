@@ -65,6 +65,10 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
     }
   }, [transaction]);
 
+  useEffect(() => {
+    return () => setNewETA(false);
+  }, []);
+
   const handleProcessGetEDT = async (date, location) => {
     let result = await processGetEDT(date, referenceNum);
     if (result != null) {
@@ -79,7 +83,6 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
   const calculateEstimatedDeliveryTime = (date, originLocation) => {
     if (newETA) {
       getDuration(originLocation, {latitude, longitude}).then(async durationSecs => {
-        setNewETA(false);
         let durationHours = durationSecs != undefined ? parseFloat(durationSecs / (60 * 60)) : 0.0166667;
         let addMins = additionalMins / minutesInHours;
         let additionalHours = (durationHours + addMins).toFixed(2);
@@ -88,12 +91,13 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
         let finalHrs = hoursDifference ? parseFloat(additionalHours) + parseFloat(hoursDifference) : additionalHours;
         let edt = moment(edtDate).add(finalHrs, 'hours').format('h:mm A');
         let edtAddMinutes = moment(edtDate).add(5, 'minutes').format('h:mm A');
-        const secToMinutes = durationSecs / 60 + 5;
-        console.log(durationHours, date, edt, additionalHours, 'ORDER DETAILS ETA', Math.ceil(secToMinutes));
-
+        const secToMinutes = durationHours / 60 + 5;
+        // console.log(durationHours, date, edt, additionalHours, 'ORDER DETAILS ETA', Math.ceil(secToMinutes));
+        // console.log(durationHours, durationSecs, secToMinutes);
         setEtaMinutes(Math.ceil(secToMinutes));
         processSaveEDT(edtAddMinutes);
         setEstimatedDeliveryTime(edtAddMinutes);
+        setNewETA(false);
       });
     }
   };
