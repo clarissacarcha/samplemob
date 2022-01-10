@@ -9,6 +9,7 @@ import {coppermask, placeholder} from '../../../../assets';
 import {Price} from '../../../../helpers';
 import Toast from 'react-native-simple-toast';
 import { ScrollView } from 'react-native-gesture-handler';
+import { EventRegister } from 'react-native-event-listeners';
 
 const SampleVariations = [{
   image: coppermask,
@@ -171,7 +172,7 @@ export const VariationBottomSheet = forwardRef(({
     );
   }
 
-  useEffect(() => {
+  const init = () => {
     reset()
     if(item?.variations && item?.variations.length !== 0){
       for(var variant of item.variations){
@@ -185,6 +186,11 @@ export const VariationBottomSheet = forwardRef(({
         }
       }
     }
+  }
+
+  useEffect(() => {
+    init()
+    EventRegister.addEventListener("refreshAutoSelectVariation", init)
   }, [item])
 
   return (

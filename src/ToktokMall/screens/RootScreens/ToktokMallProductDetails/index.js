@@ -488,6 +488,7 @@ const Component =  ({
             animatedValue = {AnimatedHeaderValue}
             onOpenVariations={() => {
               setVariationOptionType(0)
+              EventRegister.emit("refreshAutoSelectVariation")
               varBottomSheetRef.current.expand()
             }}
             user = {user}
@@ -525,10 +526,12 @@ const Component =  ({
           }}
           onPressBuyNow={() => {
             setVariationOptionType(2)
+            EventRegister.emit("refreshAutoSelectVariation")
             varBottomSheetRef.current.expand()
           }}
           onPressAddToCart={() => {
             setVariationOptionType(1)
+            EventRegister.emit("refreshAutoSelectVariation")
             varBottomSheetRef.current.expand()
           }}
           onPressAddToFavorites={() => {
