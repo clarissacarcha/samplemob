@@ -366,7 +366,8 @@ const MainComponent = () => {
                 if (SHIPPING_VOUCHERS.length) {
                   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
                 }
-                totalPrice = parseInt(temporaryCart.totalAmountWithAddons) + (deductedFee > 0 ? deductedFee : 0);
+                totalPrice =
+                  parseInt(temporaryCart.totalAmountWithAddons) + (deductedFee > 0 ? deductedFee : delivery.price);
               } else {
                 totalPrice = parseInt(temporaryCart.totalAmountWithAddons);
               }
