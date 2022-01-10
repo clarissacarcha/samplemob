@@ -436,12 +436,11 @@ export const FoodCart = ({loading, action}) => {
           <Text style={styles.total}>Total: PHP {totalPrice.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
-          disabled={productDetails?.contSellingIsset === 1 ? false : isEnabled()}
+          disabled={isEnabled()}
           style={[
             styles.cartButton,
             {
-              backgroundColor:
-                productDetails?.contSellingIsset === 1 ? COLOR.YELLOW : isEnabled() ? COLOR.LIGHT : COLOR.YELLOW,
+              backgroundColor: isEnabled() ? COLOR.LIGHT : COLOR.YELLOW,
             },
           ]}
           onPress={() => onRestaurantNavigate()}>
@@ -449,7 +448,7 @@ export const FoodCart = ({loading, action}) => {
             style={[
               styles.buttonText,
               {
-                color: productDetails?.contSellingIsset === 1 ? COLOR.WHITE : isEnabled() ? COLOR.DARK : COLOR.WHITE,
+                color: isEnabled() ? COLOR.DARK : COLOR.WHITE,
               },
             ]}>
             {action === 'edit' ? 'Update' : 'Add to Cart'}
