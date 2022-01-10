@@ -86,7 +86,7 @@ const History = ({data}) => {
   const statuses = [
     {state: "Preparing Order", value: data.dateOrderProcessed},
     {state: "Order is ready to be picked up", value: data.dateReadyPickup},
-    {state: "Order has been picked up", value: data.dateBookingConfirmed},
+    {state: "Booking order is confirmed", value: data.dateBookingConfirmed},
     {state: "Order is ready to be delivered", value: data.dateFulfilled},
     {state: "Order delivered", value: data.dateShipped}
   ]
