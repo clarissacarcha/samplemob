@@ -135,6 +135,15 @@ const MainComponent = () => {
       const {items} = temporaryCart;
       const {email} = customerInfo;
       setDeliveryInfo(getShippingFee);
+      // console.log({
+      //   input: {
+      //     region: items[0]?.shopRegion,
+      //     email,
+      //     subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+      //     cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
+      //     brandId: items[0].companyId,
+      //   },
+      // });
       getAutoShipping({
         variables: {
           input: {
