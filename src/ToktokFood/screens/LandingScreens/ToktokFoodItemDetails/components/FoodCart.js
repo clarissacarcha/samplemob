@@ -155,15 +155,26 @@ export const FoodCart = ({loading, action}) => {
               selectedItemId == undefined
                 ? exceededQty > data.maxQty - 1
                 : selectedQty + (data.maxQty - currentQty) == count.quantity;
-            setDisableMaxQty(
-              (currentQty == data.maxQty && selectedItemId == undefined) ||
-                (selectedItemId == undefined && disableMaxQtyCondition),
-            );
+
+            if (productDetails?.contSellingIsset === 1) {
+              setDisableMaxQty(false);
+            } else {
+              setDisableMaxQty(
+                (currentQty == data.maxQty && selectedItemId == undefined) ||
+                  (selectedItemId == undefined && disableMaxQtyCondition),
+              );
+            }
+
             setDisableAdd(disableAddCondition);
             return;
           }
         }
-        setDisableMaxQty(count.quantity > data.maxQty);
+        if (productDetails?.contSellingIsset === 1) {
+          setDisableMaxQty(false);
+        } else {
+          setDisableMaxQty(count.quantity > data.maxQty);
+        }
+
         setDisableAdd(count.quantity > data.maxQty - 1);
       } else {
         setDisableAdd(data?.stocks == count.quantity);
