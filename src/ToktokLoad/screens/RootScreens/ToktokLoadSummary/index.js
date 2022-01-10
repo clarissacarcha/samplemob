@@ -30,7 +30,7 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
   const { loads, mobileNumber } = route.params;
 
   const { user } = useSelector((state) => state.session);
-  const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount();
+  const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount({ isOnErrorAlert: false });
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {

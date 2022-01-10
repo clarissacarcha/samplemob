@@ -8,12 +8,11 @@ import { WalletUtility } from 'toktokwallet/util'
 import { useNavigation } from '@react-navigation/native'
 import {useDispatch, useSelector} from 'react-redux'
 
-export const useAccount = ()=> {
+export const useAccount = (options)=> {
     const alert = useAlert()
     const dispatch = useDispatch()
     const navigation = useNavigation();
     const tokwaAccount = useSelector(state=>state.toktokWallet)
-
 
     const refreshWallet = async ()=> {
         const walletData = await WalletUtility.RefreshWallet()
@@ -28,7 +27,7 @@ export const useAccount = ()=> {
         return
     }
 
-    const [getMyAccount , {loading}] = useLazyQuery(GET_MY_ACCOUNT , {
+    const [getMyAccount , {loading, error}] = useLazyQuery(GET_MY_ACCOUNT , {
         fetchPolicy:"network-only",
         client:TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: async ({getMyAccount})=> {
@@ -47,7 +46,9 @@ export const useAccount = ()=> {
             })
         },
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            if(options?.isOnErrorAlert || options?.isOnErrorAlert == undefined){
+                onErrorAlert({alert,error});
+            }
         }
     })
 
@@ -68,6 +69,7 @@ export const useAccount = ()=> {
         tokwaAccount,
         refreshWallet,
         checkIfTpinIsSet,
-        getMyAccountLoading: loading
+        getMyAccountLoading: loading,
+        getMyAccountError: error
     }
 }
