@@ -20,7 +20,7 @@ export const PaymentMethod = ({ loadDetails, onCashIn }) => {
 
   const { user } = useSelector((state) => state.session);
 	const navigation = useNavigation();
-  const { tokwaAccount, getMyAccount,  } = useAccount();
+  const { tokwaAccount } = useAccount({ isOnError: false });
   const { amount } = loadDetails;
   const tokwaBalance = user.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : "0.00";
 
