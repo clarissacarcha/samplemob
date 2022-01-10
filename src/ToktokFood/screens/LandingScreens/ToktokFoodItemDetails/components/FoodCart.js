@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useContext, useState, useCallback} from 'react';
 import Toast from 'react-native-simple-toast';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -86,12 +87,10 @@ export const FoodCart = ({loading, action}) => {
     DELETE_TEMPORARY_CART_ITEM,
     {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      onError: err => {
+      onError: () => {
         setLoader(false);
       },
-      onCompleted: ({deleteTemporaryCartItem}) => {
-        // console.log(patchTemporaryCartItem)
-      },
+      onCompleted: ({deleteTemporaryCartItem}) => console.log(patchTemporaryCartItem),
     },
   );
 
@@ -99,7 +98,7 @@ export const FoodCart = ({loading, action}) => {
     DELETE_SHOP_TEMPORARY_CART,
     {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      onError: err => {
+      onError: () => {
         setLoader(false);
         setTimeout(() => {
           Alert.alert('', 'Something went wrong.');
@@ -119,7 +118,7 @@ export const FoodCart = ({loading, action}) => {
       onError: err => {
         setLoader(false);
         setTimeout(() => {
-          onErrorAlert({alert, error});
+          onErrorAlert({alert, err});
         }, 100);
       },
     },
@@ -236,7 +235,7 @@ export const FoodCart = ({loading, action}) => {
     if (duplicateItem.length == 0) {
       if (selectedItemId) {
         setLoader(true);
-        items['updateid'] = selectedItemId;
+        items.updateid = selectedItemId;
         return patchCartItem(items);
       }
       if (temporaryCart.items.length > 0) {
@@ -255,7 +254,7 @@ export const FoodCart = ({loading, action}) => {
     } else {
       let sameAsDuplicateItem = duplicateItem[0]?.id == selectedItemId;
       let editedId = sameAsDuplicateItem ? selectedItemId : duplicateItem[0].id;
-      items['updateid'] = editedId;
+      items.updateid = editedId;
 
       setLoader(true);
       if ((duplicateItem.length > 0 || items.quantity != duplicateItem[0].quantity) && !selectedItemId) {
