@@ -44,7 +44,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
 
-    const [postRequestCashIn] = useMutation(POST_REQUEST_CASH_IN, {
+    const [postRequestCashIn, {loading: CashInLoading}] = useMutation(POST_REQUEST_CASH_IN, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postRequestCashIn})=>{
             return navigation.navigate("ToktokWalletTPINValidator", {
@@ -165,7 +165,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     return (
         <FlagSecureScreen>
       <CheckIdleState>
-      <AlertOverlay visible={loading}/>
+      <AlertOverlay visible={loading || CashInLoading}/>
       <Separator />
        <View  
             // keyboardVerticalOffset={Platform.OS == "ios" ? 90 : 90} 

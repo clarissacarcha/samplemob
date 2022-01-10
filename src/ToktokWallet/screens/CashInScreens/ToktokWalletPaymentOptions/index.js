@@ -12,17 +12,18 @@ import CONSTANTS from 'common/res/constants'
 import { SomethingWentWrong } from 'src/components';
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
-import {YellowButton,HeaderBack } from 'src/revamp';
+import {YellowButton,HeaderBack,HeaderTitle as ToktokHeaderTitle } from 'src/revamp';
 import { useAccount } from 'toktokwallet/hooks'
 import { AlertOverlay } from 'src/components'
+//SELF IMPORTS
+import {
+    DragonPayCashIn
+} from "./Components"
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS
 
 export const ToktokWalletPaymentOptions = ({navigation,route})=> {
 
-    navigation.setOptions({
-        headerShown: false,
-    })
 
     const amount = route?.params?.amount ? route.params.amount : null
     const onCashIn = route?.params?.onCashIn ? route.params.onCashIn : null
@@ -36,6 +37,20 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
             onErrorAlert({alert,error, navigation})
         }
     })
+
+    if(tokwaAccount.constants.CashInType == "paypanda"){
+        navigation.setOptions({
+            headerShown: false,
+        })
+    }else{
+        navigation.setOptions({
+            headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
+            headerTitle: ()=> <ToktokHeaderTitle label={['Cash In','']}/>,
+        })    
+    }
+
+   
+  
 
     const checkStatus = async ()=> {
         if(!tokwaAccount.mobileNumber){
@@ -118,10 +133,9 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
         )
     }
 
-    return (
-        <CheckIdleState>
-        <AlertOverlay visible={getMyAccountLoading}/>
-        <View style={styles.container}>
+    const PayPandaOption = ()=> {
+        return (
+            <View style={styles.container}>
             <View style={styles.headings}>
                 <HeaderImageBackground>
                     <HeaderTitle label="Cash In"/>
@@ -141,6 +155,21 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
                 renderItem={CashInMethod}
             />
         </View>
+        )
+    }
+
+    return (
+        <CheckIdleState>
+        <AlertOverlay visible={getMyAccountLoading}/>
+           {
+               tokwaAccount.constants.CashInType == "paypanda"
+               ? <PayPandaOption/>
+               : <DragonPayCashIn
+                    route={route}
+                    navigation={navigation}
+                    transactionType={cashinmethods.getCashInProviders[0]}
+               />
+           }
         </CheckIdleState>
     )
 }

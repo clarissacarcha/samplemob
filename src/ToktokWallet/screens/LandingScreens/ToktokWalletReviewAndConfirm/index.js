@@ -7,6 +7,7 @@ import CONSTANTS from 'common/res/constants'
 //SELF IMPORTS
 import {
     CashIn,
+    CashInDragonPay,
     CashOut,
     CashOutOtherBank,
     SendMoney
@@ -38,6 +39,8 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
         switch(event){
             case "Cash In":
                 return <CashIn data={data}/>
+            case "Cash In Dragon Pay":
+                return <CashInDragonPay data={data}/>
             case "Cash Out":
                 return <CashOut data={data}/>
             case "Send Money":

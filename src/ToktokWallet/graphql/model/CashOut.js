@@ -69,9 +69,27 @@ export const POST_CASH_OUT_OTHER_BANKS = gql`
       mutation postCashOutOtherBank($input: PostCashOutInput){
         postCashOutOtherBank(input: $input){
             id
+            referenceNumber
             amount
             status
+            providerServiceFee
+            systemServiceFee
             createdAt
+            cashOutUbApiLog {
+                type
+                traceNumber
+                remittanceId
+            }
         }
       }
+`
+
+export const POST_COMPUTE_CONVENIENCE_FEE = gql`
+    mutation postComputeConvenienceFee($input: PostComputeConvenienceFeeInput){
+        postComputeConvenienceFee(input:$input){
+            providerServiceFee
+            systemServiceFee
+            type
+        }
+    }
 `

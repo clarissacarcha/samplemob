@@ -55,6 +55,7 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
         currency: route.params.currency,
         remarks: "",
         signature: route.params.signature,
+        ...(route.params.paymentChoice ? {payment_choice: route.params.paymentChoice} : {})
     }
 
     const generateInitialPostPaymentDataString = (objectdata)=> {
@@ -117,20 +118,42 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
                     renderLoading={()=> <LoadingIndicator/>}
                     onNavigationStateChange={(event)=> {
 
-                        console.log(JSON.stringify(event))
+                      
+                        const canGoForward = event.canGoForward
+                        const canGoBack = event.canGoBack
+                        setCanGoBack(canGoBack)
+                        setCanGoForward(canGoForward)
+
+                        // console.log("PAYPANDA: ",event.url)
+                        // return;
+
                        const checkreturnurl = event.url.search(route.params.paypandaReturnUrl)
                         if(checkreturnurl != -1){
                             const {url} = event
-      
-                            const paypandaReferenceNumber = /(?:\&paypanda_refno=).*(?=\&status)/.exec(url)
-                            const status = /(?:\&status=).*(?=\&signature)/.exec(url)
+
+                            console.log("PAYPANDA: " , url)
+
+                            let paypandaReferenceNumber = /(?:\&paypanda_refno=).*(?=\&status)/.exec(url)
+                            let status = /(?:\&status=).*(?=\&signature)/.exec(url)
+
+                            if(!paypandaReferenceNumber){
+                                paypandaReferenceNumber = /(?:\?txnid=).*(?=\&refno)/.exec(url)
+                                status = /(?:\&status=).*(?=\&message)/.exec(url)
+
+                                paypandaReferenceNumber = paypandaReferenceNumber[0].slice(7)
+                                status = status[0].slice(8)
+
+                            }else{
+                                paypandaReferenceNumber = paypandaReferenceNumber[0].slice(16)
+                                status = status[0].slice(8)
+                            }
 
                 
                             if(checkurl != url){     
                                 setCashInLogParams({
-                                    status: status[0].slice(8),
+                                    status: status,
                                     referenceNumber: route.params.refNo,
-                                    paypandaReferenceNumber: paypandaReferenceNumber[0].slice(16),
+                                    paypandaReferenceNumber: paypandaReferenceNumber,
                                     amount: +route.params.amount_to_pay,
                                     createdAt: new Date(),
                                     email: route.params.email_address,
@@ -151,6 +174,7 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
                     successModalVisible={true}
                     cashInLogParams={cashInLogParams}
                     onCashIn={onCashIn}
+                    paymentMethod={route.params.paymentMethod ? route.params.paymentMethod : null}
                 />
             }
             </View>

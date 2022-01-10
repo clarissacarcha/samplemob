@@ -3,7 +3,7 @@ import {View , Text , StyleSheet , TextInput,TouchableOpacity} from 'react-nativ
 import { ValidatorScreen } from 'toktokwallet/components'
 import { YellowButton ,VectorIcon ,ICON_SET} from 'src/revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
+import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT, POST_COMPUTE_CONVENIENCE_FEE } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert, usePrompt } from 'src/hooks'
@@ -96,6 +96,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
 
     const { 
         accountName ,
+        setAccountName,
         accountNumber , 
         setAccountNumber, 
         address , 
@@ -123,12 +124,36 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                 {errorListMessage.bank != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.bank}</Text>}
             </View>
 
-            <View style={{marginTop: 16,}}>
+
+            {/* OLD ACCOUNT NAME */}
+            {/* <View style={{marginTop: 16,}}>
             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
             <View style={[styles.input, {justifyContent:"center",backgroundColor:"#F0F0F0"}]}>
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{accountName}</Text>
             </View>
+            </View> */}
+
+            {/* NEW ACCOUNT NAME */}
+            <View style={{marginTop: 16,}}>
+                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
+                <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.accountName == "" ? "transparent" : COLOR.RED}]}>
+                    <TextInput
+                            // editable={activeAccount > 0 ? false : true}
+                            style={styles.input}
+                            value={accountName}
+                            onChangeText={setAccountName}
+                            maxLength={30}
+                            placeholder={`Enter bank account name here`}
+                            keyboardType="default"
+                            returnKeyType="done"
+                        />
+                </View>
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountName.length}/30 
+                    {errorListMessage.accountName != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.accountName}</Text>}
+                </Text>
             </View>
+
+
             <View style={{marginTop: 16,}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
                 <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.accountNumber == "" ? "transparent" : COLOR.RED}]}>
@@ -191,6 +216,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
     const [errorListMessage, setErrorListMessage] = useState({
         bank: "",
+        accountName: "",
         accountNumber: "",
         address: "",
         amount: "",
@@ -216,6 +242,30 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         }
     },[bank,accountNumber,address])
 
+    const [postComputeConvenienceFee , {loading: computeLoading}] = useMutation(POST_COMPUTE_CONVENIENCE_FEE, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error)=> onErrorAlert({alert,error}),
+        onCompleted: ({postComputeConvenienceFee})=> {
+            const { providerServiceFee , systemServiceFee , type } = postComputeConvenienceFee
+            navigation.navigate("ToktokWalletReviewAndConfirm", {
+                label: screenLabel ?? "Fund Transfer" , 
+                event: "Fund Transfer",
+                data: {
+                        method: bank.name,
+                        accountName: accountName,
+                        accountNumber: accountNumber,
+                        amount: amount,
+                        note: note,
+                        providerServiceFee,
+                        systemServiceFee
+                    },
+                isSwipe: true,
+                swipeTitle: `Confirm`,
+                onSwipeFail: onSwipeFail,
+                onSwipeSuccess: onSwipeSuccess,
+            })
+        }
+    })
 
     const [postRequestCashOut , {loading: requestLoading}] = useMutation(POST_REQUEST_CASH_OUT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -301,6 +351,12 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             changeErrorMessagge("bank",`Select Bank first.`)
             noError = false
         }
+
+        if(accountName == ""){
+            changeErrorMessagge("accountName","Account Name is required.")
+            noError = false
+        }
+
         if(accountNumber == ""){
             changeErrorMessagge("accountNumber","Account Number is required.")
             noError = false
@@ -321,27 +377,20 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
         if(!noError) return
 
-        navigation.navigate("ToktokWalletReviewAndConfirm", {
-            label: screenLabel ?? "Fund Transfer" , 
-            event: "Fund Transfer",
-            data: {
-                    method: bank.name,
-                    accountName: accountName,
-                    accountNumber: accountNumber,
-                    amount: amount,
-                    note: note 
-                },
-            isSwipe: true,
-            swipeTitle: `Confirm`,
-            onSwipeFail: onSwipeFail,
-            onSwipeSuccess: onSwipeSuccess,
+        postComputeConvenienceFee({
+            variables: {
+                input: {
+                    amount: +amount,
+                    cashOutBankId: bank.id
+                }
+            }
         })
 
     }
 
     return (
         <>
-            <AlertOverlay visible={requestLoading || loading}/>
+            <AlertOverlay visible={requestLoading || loading || computeLoading}/>
             <SuccessfulCashOutModal 
                 visible={successModalVisible}
                 setVisible={setSuccessModalVisible}
