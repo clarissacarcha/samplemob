@@ -92,6 +92,10 @@ const transaction = `
     status
     validUntil
   }
+  deliveryLogs {
+    status
+    createdAt
+  }
 `;
 export const GET_ORDER_TRANSACTIONS = gql`
   query getTransactions($input: GetTransactionInput){
