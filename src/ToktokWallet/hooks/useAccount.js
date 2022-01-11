@@ -37,7 +37,7 @@ export const useAccount = ()=> {
         return
     }
 
-    const [getGlobalSettings] = useLazyQuery(GET_GLOBAL_SETTINGS, {
+    const [getGlobalSettings , {loading: getGlobalSettingsLoading}] = useLazyQuery(GET_GLOBAL_SETTINGS, {
         fetchPolicy: "network-only",
         client:TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted:({getGlobalSettings})=> {
@@ -91,6 +91,7 @@ export const useAccount = ()=> {
         refreshWallet,
         checkIfTpinIsSet,
         getMyAccountLoading: loading,
-        getGlobalSettings
+        getGlobalSettings,
+        getGlobalSettingsLoading
     }
 }

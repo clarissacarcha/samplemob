@@ -27,7 +27,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
 
     const amount = route?.params?.amount ? route.params.amount : null
     const onCashIn = route?.params?.onCashIn ? route.params.onCashIn : null
-    const { tokwaAccount , getMyAccountLoading , getMyAccount,getGlobalSettings}  = useAccount();
+    const { tokwaAccount , getMyAccountLoading , getMyAccount,getGlobalSettings , getGlobalSettingsLoading }  = useAccount();
     const dispatch = useDispatch();
     const alert = useAlert()
     const { data: cashinmethods, error, loading } = useQuery(GET_CASH_IN_PROVIDERS, {
@@ -163,7 +163,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
 
     return (
         <CheckIdleState>
-        <AlertOverlay visible={getMyAccountLoading}/>
+        <AlertOverlay visible={getMyAccountLoading || getGlobalSettingsLoading}/>
            {
                tokwaAccount.constants.CashInType == "paypanda"
                ? <PayPandaOption/>
