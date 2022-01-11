@@ -1,9 +1,10 @@
 import React , {useState,useRef,useCallback,useEffect} from 'react'
-import { View ,ActivityIndicator,StatusBar,Text} from 'react-native'
+import { View ,ActivityIndicator,StatusBar,Text, BackHandler} from 'react-native'
 import {SomethingWentWrong,AlertOverlay} from 'src/components'
 import { useDispatch } from 'react-redux'
 import { useAccount } from 'toktokwallet/hooks'
 import { CheckIdleState } from 'toktokwallet/components'
+import { useFocusEffect } from '@react-navigation/native'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -37,6 +38,20 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
             }
         })
     },[])
+
+    // useFocusEffect(() => {
+    //     const backAction = () => {
+    //       navigation.pop(2);
+    //       return true;
+    //     };
+    
+    //     const backHandler = BackHandler.addEventListener(
+    //       "hardwareBackPress",
+    //       backAction
+    //     );
+    
+    //     return () => backHandler.remove();
+    //   }, []);
 
     return (
         <>

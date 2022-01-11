@@ -26,7 +26,7 @@ const ForCompliancePrompt = ({visible,setVisible , data})=> {
                     </View>
                     
                     <View style={{justifyContent:"flex-end",width: "50%",marginTop: 20}}>
-                            <YellowButton label="Ok" onPress={closeModal}/>
+                            <YellowButton label="OK" onPress={closeModal}/>
                     </View>
                  </View>
             </View>

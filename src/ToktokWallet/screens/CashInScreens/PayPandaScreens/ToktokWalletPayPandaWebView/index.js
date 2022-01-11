@@ -3,13 +3,16 @@ import {StyleSheet,View,ActivityIndicator , Dimensions} from 'react-native'
 import {useNavigation,useRoute} from '@react-navigation/native'
 import WebView from 'react-native-webview'
 import {useSelector} from 'react-redux'
-import { CheckIdleState, FlagSecureScreen } from 'toktokwallet/components'
+import { CheckIdleState, FlagSecureScreen , Separator } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE , SIZE } = CONSTANTS
 
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
+import {
+    NavigationView,
+} from "./Components"
 
 
 const {width,height} = Dimensions.get('window')
@@ -26,9 +29,21 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
     const [checkurl,setCheckurl] = useState("")
     const [donetransaction,setDoneTransaction] = useState(false)
     const [cashInLogParams,setCashInLogParams] = useState(null)
+    const [canGoBack,setCanGoBack] = useState(false);
+    const [canGoForward,setCanGoForward] = useState(false);
 
     const session = useSelector(state=>state.session)
     const constants = useSelector(state=>state.constants)
+
+    const goBack = () => {
+        if(canGoBack){
+            return webviewRef.current.goBack();
+        }
+        return navigation.pop();
+    }
+    const goForward = () => {
+        if(canGoForward) webviewRef.current.goForward();
+    }
 
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
@@ -79,6 +94,14 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
             <View style={styles.container}> 
             {
                 mounted & !donetransaction ? 
+                <>
+                <NavigationView
+                    canGoBack={canGoBack}
+                    canGoForward={canGoForward}
+                    goBack={goBack}
+                    goForward={goForward}
+                />
+                <Separator/>
                 <WebView
                     style={{flex: 1}}
                     ref={webviewRef}
@@ -121,6 +144,7 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
 
                     }}
                 />  
+                </>
                 : mounted &&
                 <SuccessfulModal
                     amount={route.params.amount_to_pay}

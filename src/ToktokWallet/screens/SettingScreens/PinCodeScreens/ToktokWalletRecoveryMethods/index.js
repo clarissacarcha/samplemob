@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import FIcon from 'react-native-vector-icons/Feather'
 import {useSelector} from 'react-redux'

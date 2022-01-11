@@ -61,6 +61,7 @@ export const Menu = ({setUserLocation, constants}) => {
         onPress={() => {
           navigation.push('ToktokWalletLoginPage');
         }}
+        isNew
       />
 
       {/* TOKTOKFOOD COMING SOON */}

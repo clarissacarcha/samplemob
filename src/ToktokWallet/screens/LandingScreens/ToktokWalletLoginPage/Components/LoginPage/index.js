@@ -1,5 +1,5 @@
 import React , {useEffect,useState,useRef} from 'react'
-import {View,Text,StyleSheet,TextInput,TouchableOpacity,Image} from 'react-native'
+import {View,Text,StyleSheet,TextInput,TouchableOpacity,Image , Keyboard} from 'react-native'
 import tokwaLogo from 'toktokwallet/assets/images/tokwaLogo.png'
 import {useAccount} from 'toktokwallet/hooks'
 import { getStatusbarHeight } from 'toktokwallet/helper'
@@ -53,7 +53,7 @@ export const LoginPage = ()=> {
             const { verifiedToken } = getVerifyMPIN
             await AsyncStorage.setItem('toktokWalletAuthenticationToken', verifiedToken);
             setPinCode("")
-            // navigation.pop();
+            navigation.pop();
             navigation.navigate("ToktokWalletHomePage"); 
         },
         onError: (error)=> {
@@ -88,6 +88,8 @@ export const LoginPage = ()=> {
                 }
             }
         })
+
+        Keyboard.dismiss();
     }
 
     useEffect(()=>{
@@ -138,10 +140,11 @@ export const LoginPage = ()=> {
                         {
                             errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,alignSelf:"center"}}>{errorMessage}</Text>   
                         }
-                        <Biometrics
+                        {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
+                        {/* <Biometrics
                             setErrorMessage={setErrorMessage}
                             setPinCode={setPinCode}
-                        />
+                        /> */}
                         <TouchableOpacity
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
