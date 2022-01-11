@@ -19,7 +19,7 @@ import CONSTANTS from 'common/res/constants'
 import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
-const Amount = ({changeErrorMessagge ,errorListMessage})=> {
+const Amount = ({changeErrorMessagge ,errorListMessage , providerServiceFee , systemServiceFee , computeConvenienceFee })=> {
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const { amount ,setAmount , note , setNote ,bank } = useContext(ContextCashOut)
@@ -67,12 +67,21 @@ const Amount = ({changeErrorMessagge ,errorListMessage})=> {
                                 style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
                                 keyboardType="numeric"
                                 returnKeyType="done"
+                                onBlur={computeConvenienceFee}
                         />
                     <View style={{marginLeft: 5,alignSelf: "center",flex: 1}}>
                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                     </View>
             </View>
             {errorListMessage.amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.amount}</Text>}
+            { providerServiceFee && systemServiceFee &&
+             <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>
+                 { +providerServiceFee + +systemServiceFee == 0 
+                    ? "Convenience fee is waived for this transaction"
+                    : `Additional PHP ${numberFormat(+providerServiceFee + +systemServiceFee)} convenience fee will be charged in this transaction`
+                 }
+             </Text>
+            }
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
@@ -203,6 +212,9 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         status: 0
     })
     const [successModalVisible,setSuccessModalVisible] = useState(false)
+    const [providerServiceFee,setProviderServiceFee] = useState(null)
+    const [systemServiceFee,setSystemServiceFee] = useState(null)
+
     const {
         accountName,
         accountNumber,
@@ -247,23 +259,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         onError: (error)=> onErrorAlert({alert,error}),
         onCompleted: ({postComputeConvenienceFee})=> {
             const { providerServiceFee , systemServiceFee , type } = postComputeConvenienceFee
-            navigation.navigate("ToktokWalletReviewAndConfirm", {
-                label: screenLabel ?? "Fund Transfer" , 
-                event: "Fund Transfer",
-                data: {
-                        method: bank.name,
-                        accountName: accountName,
-                        accountNumber: accountNumber,
-                        amount: amount,
-                        note: note,
-                        providerServiceFee,
-                        systemServiceFee
-                    },
-                isSwipe: true,
-                swipeTitle: `Confirm`,
-                onSwipeFail: onSwipeFail,
-                onSwipeSuccess: onSwipeSuccess,
-            })
+            setSystemServiceFee(systemServiceFee)
+            setProviderServiceFee(providerServiceFee)
         }
     })
 
@@ -377,13 +374,34 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
         if(!noError) return
 
-        postComputeConvenienceFee({
-            variables: {
-                input: {
-                    amount: +amount,
-                    cashOutBankId: bank.id
+        if(!providerServiceFee || !systemServiceFee){
+             postComputeConvenienceFee({
+                variables: {
+                    input: {
+                        amount: +amount,
+                        cashOutBankId: bank.id
+                    }
                 }
-            }
+            })
+            return;
+        }
+
+        navigation.navigate("ToktokWalletReviewAndConfirm", {
+            label: screenLabel ?? "Fund Transfer" , 
+            event: "Fund Transfer",
+            data: {
+                    method: bank.name,
+                    accountName: accountName,
+                    accountNumber: accountNumber,
+                    amount: amount,
+                    note: note,
+                    providerServiceFee,
+                    systemServiceFee
+                },
+            isSwipe: true,
+            swipeTitle: `Confirm`,
+            onSwipeFail: onSwipeFail,
+            onSwipeSuccess: onSwipeSuccess,
         })
 
     }
@@ -408,6 +426,18 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             <Amount
                 changeErrorMessagge={changeErrorMessagge}
                 errorListMessage={errorListMessage}
+                providerServiceFee={providerServiceFee}
+                systemServiceFee={systemServiceFee}
+                computeConvenienceFee={()=> {
+                    postComputeConvenienceFee({
+                        variables: {
+                            input: {
+                                amount: +amount,
+                                cashOutBankId: bank.id
+                            }
+                        }
+                    })
+                }}
             />
             <View style={styles.proceedBtn}>
                 <YellowButton label="Proceed" onPress={onPress}/>
