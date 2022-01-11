@@ -266,8 +266,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
         type={cancelDialogMessage.type}
         onCloseModal={() => {
           if (cancelDialogMessage.type == 'success') {
-            navigation.replace('ToktokFoodLanding');
-            // navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
+            // navigation.replace('ToktokFoodLanding');
+            navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
           }
           setCancelDialogMessage({show: false, type: '', title: '', message: ''});
         }}
