@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
@@ -8,7 +8,7 @@ import {RATE_SHOP, CHECK_IF_SHOP_WAS_RATED} from 'toktokfood/graphql/toktokfood'
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useNavigation} from '@react-navigation/native';
-import { useIsFocused } from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import DashedLine from 'react-native-dashed-line';
 
@@ -23,26 +23,25 @@ import {locationOutline, phoneBlack, store, user} from 'toktokfood/assets/images
 import {moderateScale, verticalScale, isIphoneXorAbove} from 'toktokfood/helper/scale';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 
-const OrderAddress = ({ transaction, riderDetails }) => {
-  
+const OrderAddress = ({transaction, riderDetails}) => {
+  console.log(transaction);
+
   const isFocus = useIsFocused();
   const navigation = useNavigation();
-  const {location} = useSelector((state) => state.toktokFood);
-  const { shopDetails, orderStatus, referenceNum, sysShop, name, email, orderIsfor } = transaction;
-  const { shopname, address, logo } = shopDetails;
-  const {person, username} = useSelector((state) => state.session.user);
-  const fullname = `${person.firstName} ${person.lastName}`;
+  const {location} = useSelector(state => state.toktokFood);
+  const {shopDetails, orderStatus, referenceNum, sysShop, name, email, orderIsfor, conno} = transaction;
+  const {shopname, address, logo} = shopDetails;
   const [ratingModal, setRatingModal] = useState(false);
   const [isRated, setIsRated] = useState(false);
-  const [rating, setRating] = useState("0");
+  const [rating, setRating] = useState('0');
   const [showSuccess, setShowSuccess] = useState(false);
- 
+
   const [rateShop, {loading, error}] = useMutation(RATE_SHOP, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onCompleted: ({rateShop}) => {
       if (rateShop.status == 200) {
-        setRatingModal(false)
-        setShowSuccess(true)
+        setRatingModal(false);
+        setShowSuccess(true);
       }
     },
   });
@@ -50,24 +49,28 @@ const OrderAddress = ({ transaction, riderDetails }) => {
   const [checkIfShopWasRated, {loading: loadingIsRated, error: errorIsRated}] = useLazyQuery(CHECK_IF_SHOP_WAS_RATED, {
     variables: {
       input: {
-        referenceNum: referenceNum
-      }
+        referenceNum: referenceNum,
+      },
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({checkIfShopWasRated}) => {
-      setIsRated(checkIfShopWasRated.status)
+      setIsRated(checkIfShopWasRated.status);
     },
   });
 
   useEffect(() => {
-    checkIfShopWasRated()
-  }, [])
+    checkIfShopWasRated();
+  }, []);
 
-  const onPressRate = () => { setRatingModal(true) }
+  const onPressRate = () => {
+    setRatingModal(true);
+  };
 
   const onPressSumbit = () => {
-    if(rating == 0){ return setRatingModal(false) }
+    if (rating == 0) {
+      return setRatingModal(false);
+    }
     rateShop({
       variables: {
         input: {
@@ -76,11 +79,11 @@ const OrderAddress = ({ transaction, riderDetails }) => {
           name: name,
           email: email,
           rating: parseInt(rating),
-          reference_num: referenceNum
-        }
-      }
-    })
-  }
+          reference_num: referenceNum,
+        },
+      },
+    });
+  };
 
   const renderDash = () => (
     <View style={styles.dashedLine}>
@@ -95,29 +98,27 @@ const OrderAddress = ({ transaction, riderDetails }) => {
         visibility={showSuccess}
         hasChildren
         onCloseModal={() => {
-          setShowSuccess(false)
-          navigation.navigate('ToktokFoodHome')
-        }}
-      >
-        <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD }} >Thank you for ordering</Text>
+          setShowSuccess(false);
+          navigation.navigate('ToktokFoodHome');
+        }}>
+        <Text style={{fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD}}>Thank you for ordering</Text>
         <Text>
-          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, color: COLORS.YELLOW }} >toktok</Text>
-          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, color: '#FFA700' }}>food</Text>
-          <Text style={{ fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD }}>!</Text>
+          <Text style={{fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, color: COLORS.YELLOW}}>toktok</Text>
+          <Text style={{fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, color: '#FFA700'}}>food</Text>
+          <Text style={{fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD}}>!</Text>
         </Text>
       </DialogMessage>
       <RatingModal
         visibility={ratingModal}
         onCloseModal={() => {
-          onPressSumbit()
+          onPressSumbit();
         }}
         btnTitle="Submit"
         imgSrc={logo}
         rating={rating}
-        onFinishRating={(rate) => setRating(rate)}
-        loading={loading}
-      >
-        <Text style={styles.messageTitle}>{"Deliver to:"}</Text>
+        onFinishRating={rate => setRating(rate)}
+        loading={loading}>
+        <Text style={styles.messageTitle}>{'Deliver to:'}</Text>
         <Text style={styles.messageContent}>{location.address}</Text>
         <Text style={styles.rateTitle}>{`How's your experience with ${shopname}?`}</Text>
       </RatingModal>
@@ -125,10 +126,10 @@ const OrderAddress = ({ transaction, riderDetails }) => {
         <View style={styles.dividerContainer}>
           <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
           {renderDash()}
-          {(riderDetails != null && (orderStatus == 'f' || orderStatus == 's')) ? (
-              <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
-            ) : (
-              <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
+          {riderDetails != null && (orderStatus == 'f' || orderStatus == 's') ? (
+            <MaterialIcon name="lens" size={16} color={COLORS.YELLOWTEXT} />
+          ) : (
+            <FIcon5 name="circle" color={COLORS.YELLOWTEXT} size={15} />
           )}
         </View>
       )}
@@ -147,23 +148,23 @@ const OrderAddress = ({ transaction, riderDetails }) => {
           <Image style={styles.icons} source={store} resizeMode="contain" />
           <Text style={styles.addressText}>{shopname}</Text>
         </View>
-        { orderIsfor == 1 && (
+        {orderIsfor == 1 && (
           <>
             <View style={styles.horizontalContainer} />
-              <Text style={styles.restaurant}>Deliver to</Text>
-              <View style={styles.restauranContainer}>
-                <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
-                <Text font style={styles.addressText} numberOfLines={1}>
+            <Text style={styles.restaurant}>Deliver to</Text>
+            <View style={styles.restauranContainer}>
+              <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
+              <Text font style={styles.addressText} numberOfLines={1}>
                 {transaction?.address ? transaction.address : ''}
               </Text>
             </View>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={user} resizeMode="contain" />
-              <Text style={styles.addressText}>{fullname}</Text>
+              <Text style={styles.addressText}>{name}</Text>
             </View>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={phoneBlack} resizeMode="contain" />
-              <Text style={styles.addressText}>{username}</Text>
+              <Text style={styles.addressText}>{conno}</Text>
             </View>
           </>
         )}
@@ -215,23 +216,23 @@ const styles = StyleSheet.create({
   },
   restaurant: {
     fontSize: FONT_SIZE.M,
-    fontFamily: FONT.BOLD
+    fontFamily: FONT.BOLD,
   },
   restauranContainer: {
     flexDirection: 'row',
     marginVertical: moderateScale(3),
   },
   flexDirection: {
-    flexDirection: "row",
-    justifyContent: "space-between"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   rateText: {
     fontSize: FONT_SIZE.M,
-    color: "#FFA700",
+    color: '#FFA700',
   },
   messageTitle: {
-    fontSize: FONT_SIZE.S, 
-    fontFamily: FONT.BOLD
+    fontSize: FONT_SIZE.S,
+    fontFamily: FONT.BOLD,
   },
   messageContent: {
     textAlign: 'center',
@@ -242,11 +243,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.BOLD,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   dashedLine: {
     paddingLeft: moderateScale(6),
-    flex: isIphoneXorAbove() ? .7 : 1,
-    flexDirection: 'row'
+    flex: isIphoneXorAbove() ? 0.7 : 1,
+    flexDirection: 'row',
   },
 });

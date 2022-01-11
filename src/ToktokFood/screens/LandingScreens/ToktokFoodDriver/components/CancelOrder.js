@@ -167,7 +167,7 @@ const CancelOrder = ({
           {!showReason && (
             <View style={[styles.wrapper, styles.cartBorder]}>
               <View style={styles.sheet}>
-                <Text style={styles.cancelTitle}>This order will be canceled. Would you like to proceed?</Text>
+                <Text style={styles.cancelTitle}>This order will be cancelled. Would you like to proceed?</Text>
                 <View style={styles.buttonWrapper}>
                   <TouchableOpacity onPress={() => setShowReason(true)} style={styles.cartButton}>
                     <Text style={styles.buttonText}>Yes, Cancel</Text>
