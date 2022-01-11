@@ -9,7 +9,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const BANNER_WIDTH = SCREEN_WIDTH - SIZE.MARGIN * 3;
 const BANNER_HEIGHT = BANNER_WIDTH / 2;
 
-const GridAd = ({ad}) => {
+const GridAd = ({ad, index}) => {
   const navigation = useNavigation();
 
   const onPress = () => {
@@ -31,8 +31,10 @@ const GridAd = ({ad}) => {
 
   const onPressThrottled = useThrottle(onPress, 1000);
 
+  const marginLeft = index % 2 === 0 ? 8 : 0;
+
   return (
-    <View style={{margin: SIZE.MARGIN / 2, width: BANNER_HEIGHT}}>
+    <View style={{margin: SIZE.MARGIN / 2, width: BANNER_HEIGHT, marginLeft: SIZE.MARGIN / 2 + marginLeft}}>
       <TouchableHighlight style={styles.touchable} onPress={onPressThrottled}>
         <View>
           <View style={styles.imageBox}>
@@ -60,7 +62,7 @@ const GridAds = ({ads, Header, Menu, Banner, setUserLocation, constants}) => {
     <View>
       <FlatList
         data={ads}
-        renderItem={({item, index}) => <GridAd ad={item} />}
+        renderItem={({item, index}) => <GridAd ad={item} index={index} />}
         showsVerticalScrollIndicator={false}
         numColumns={2}
         ListHeaderComponent={

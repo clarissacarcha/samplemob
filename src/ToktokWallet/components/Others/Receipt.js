@@ -2,13 +2,14 @@ import React , {useRef, useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Platform,Dimensions,Alert,StatusBar,Image} from 'react-native'
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions'
 import FIcon from 'react-native-vector-icons/Feather'
-import ViewShot , {captureScreen,releaseCapture} from "react-native-view-shot";
+import ViewShot , {captureScreen,releaseCapture,captureRef} from "react-native-view-shot";
 import RNFS from 'react-native-fs'
 import CameraRoll from "@react-native-community/cameraroll";
 import { BlackButton, YellowButton } from 'src/revamp';
 import Toast from 'react-native-simple-toast';
 import moment from 'moment'
 import {Separator} from './Separator';
+import { BuildingBottom } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -21,7 +22,7 @@ const path = Platform.OS === "ios" ? RNFS.LibraryDirectoryPath : RNFS.DownloadDi
 
 const {width,height} = Dimensions.get("window")
 
-export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
+export const Receipt = ({children, format = "png", refNo ,refDate, onPress})=> {
 
     const viewshotRef = useRef()
 
@@ -137,7 +138,7 @@ export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
             <ViewShot 
                 style={styles.viewShot} 
                 ref={viewshotRef}
-                options={{ format: format ? format : "jpg", quality: 0.9,width: width,height: height * 0.6 ,result: 'tmpfile' }}
+                options={{ format: "png","width/height": 1100/800,result: 'tmpfile' }}
             >
                
                {/* <View style={styles.checkIcon}>
@@ -160,7 +161,7 @@ export const Receipt = ({children, format, refNo ,refDate, onPress})=> {
 
               
                 {children}
-
+               {/* <BuildingBottom/> */}
 
             </ViewShot>
             <Separator />

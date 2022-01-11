@@ -20,7 +20,6 @@ import Nav from './Nav';
 import SplashImage from '../assets/images/Splash.png';
 import Maintenance from '../assets/images/Maintenance.png';
 import NoNetworkConnection from '../assets/images/NoNetworkConnection.png';
-import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
 import ToktokSuperApp from '../assets/images/ToktokSuperApp.png';
 import ServerDown from '../assets/images/ServerDown.png';
 
@@ -36,7 +35,7 @@ const mapKeyValueToObject = keyValueArray => {
 };
 
 const Splash = ({setConstants}) => {
-  const [checkPoint, setcheckPoint] = useState('A'); // A-Allow, S-Suggest, B-Block, M-Maintenance
+  const [checkPoint, setcheckPoint] = useState(''); // A-Allow, S-Suggest, B-Block, M-Maintenance
   const [deepLink, setDeepLink] = useState('');
 
   const oneSignalInit = async oneSignalAppId => {
@@ -110,9 +109,9 @@ const Splash = ({setConstants}) => {
 
       const {isCurrent, enabled} = result.data.getAppVersionStatus;
 
-      // if (isCurrent && enabled) {
-      setcheckPoint('A');
-      // }
+      if (isCurrent && enabled) {
+        setcheckPoint('A');
+      }
 
       if (!isCurrent && enabled) {
         setcheckPoint('S');
@@ -140,7 +139,7 @@ const Splash = ({setConstants}) => {
   };
 
   useEffect(() => {
-    // checkNetworkConnection();
+    checkNetworkConnection();
   }, []);
 
   // Updated Version = ALLOW

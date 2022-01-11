@@ -102,8 +102,6 @@ const TokTokFoodSplashScreen = () => {
         },
       },
     });
-
-    console.log();
   };
 
   const showHomPage = () => {

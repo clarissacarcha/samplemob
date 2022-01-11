@@ -1,14 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useLazyQuery} from '@apollo/react-hooks';
 import React, {useEffect, useRef, useState} from 'react';
-import {Platform, RefreshControl, ScrollView, StyleSheet, View, SectionList, Text} from 'react-native';
+import {Platform, RefreshControl, ScrollView, StyleSheet, View, SectionList, Text, Image} from 'react-native';
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
+
+import {FONT_SIZE} from 'res/variables';
+import {empty_shop_2} from 'toktokfood/assets/images';
+
 // Utils
-import {moderateScale} from 'toktokfood/helper/scale';
+import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 // Components
 import {CategoryList, ModalKycStatus, RestaurantList} from './index';
 // import RestaurantItem from './RestaurantList/RestaurantItem';
@@ -173,29 +177,27 @@ const StickyView = () => {
     });
   };
 
-  const VirtualizedScroll = ({children}) => {
-    return (
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        scrollEnabled={false}
-        listMode="SCROLLVIEW"
-        contentContainerStyle={{width: '100%'}}>
-        {children}
-      </ScrollView>
-    );
-  };
-
   const sample = [
     {type: 'ADDRESS', data: []}, // Static sections.
     {type: 'CATEGORIES', data: []},
-    {type: 'RESTAURANTS', data: data ? data.getShops : []},
+    {type: 'RESTAURANTS', data: data ? data.getShops : [{index: 1}]},
   ];
+
+  const EmptyList = () => {
+    return (
+      <>
+        <View style={styles.emptyContainer}>
+          <Image style={styles.emptyImg} resizeMode="contain" source={empty_shop_2} />
+          <Text style={styles.emptyText}>
+            It seems like there is no open restaurant near you. Refresh or try again later.
+          </Text>
+        </View>
+      </>
+    );
+  };
 
   return (
     <>
-      <ModalKycStatus />
-
       <SectionList
         sections={sample}
         keyExtractor={(item, index) => item + index}
@@ -221,7 +223,7 @@ const StickyView = () => {
                 data={props.section.data}
                 loadMore={loadMore}
               />
-            );
+            ); //empty list design
           }
           return null;
         }}
@@ -240,6 +242,7 @@ const StickyView = () => {
           }
         }}
       />
+      <ModalKycStatus />
 
       {/* <ScrollView
         stickyHeaderIndices={[2]}
@@ -283,6 +286,22 @@ const styles = StyleSheet.create({
   adsContainer: {
     height: 130,
     width: '100%',
+  },
+  emptyContainer: {
+    height: verticalScale(300),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyImg: {
+    height: moderateScale(175),
+    width: moderateScale(250),
+  },
+  emptyText: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.L,
+    textAlign: 'center',
+    marginTop: moderateScale(20),
+    marginHorizontal: moderateScale(20),
   },
 });
 

@@ -4,40 +4,45 @@ import {Image, StyleSheet, View, Text} from 'react-native';
 // Fonts/Colors
 import {COLORS} from 'res/constants';
 import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
-import {timer, pot, toktok_rider, ready_for_pickup } from 'toktokfood/assets/images';
+import {timer, pot, toktok_rider, ready_for_pickup} from 'toktokfood/assets/images';
 
 // Utils
 import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import RatingModal from 'toktokfood/components/RatingModal';
-import { saveRiderDetails, checkRiderDetails, getRiderDetails, clearRiderDetails } from 'toktokfood/helper/ShowRiderDetails';
+import {
+  saveRiderDetails,
+  checkRiderDetails,
+  getRiderDetails,
+  clearRiderDetails,
+} from 'toktokfood/helper/ShowRiderDetails';
 import {orderStatusMessageDelivery, orderStatusMessagePickUp} from 'toktokfood/helper/orderStatusMessage';
 
 const statusImage = (orderIsfor, orderStatus) => {
-  if(orderStatus == 'p'){
-    return timer
-  } else if(orderIsfor == 2 && orderStatus == 'rp'){
-    return ready_for_pickup
+  if (orderStatus == 'p') {
+    return timer;
+  } else if (orderIsfor == 2 && orderStatus == 'rp') {
+    return ready_for_pickup;
   } else {
-    return pot
+    return pot;
   }
-}
+};
 
 const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNum}) => {
   const [showDriverModal, setShowDriverModal] = useState(false);
-  const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus) : orderStatusMessagePickUp(orderStatus)
+  const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus) : orderStatusMessagePickUp(orderStatus);
 
   useEffect(() => {
-    if(riderDetails != null && orderStatus != 's'){
+    if (riderDetails != null && orderStatus != 's') {
       handleCheckRiderDetails();
     }
   }, [riderDetails, orderStatus]);
 
-  const handleCheckRiderDetails = async() => {
-    let res = await checkRiderDetails(referenceNum)
-    setShowDriverModal(res?.status == 200)
-  }
+  const handleCheckRiderDetails = async () => {
+    let res = await checkRiderDetails(referenceNum);
+    setShowDriverModal(res?.status == 200);
+  };
 
   return (
     <View style={styles.container}>
@@ -66,17 +71,11 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
       </RatingModal> */}
       {/* Contact Support */}
       <View style={styles.imgContainer}>
-        {(orderStatus != 's' && orderStatus != 'c' &&  orderStatus != 'f' && orderIsfor == 1) && (
+        {orderStatus != 's' && orderStatus != 'c' && orderStatus != 'f' && orderIsfor == 1 && (
           <Text style={styles.title}>{status.title}</Text>
         )}
-        {(orderIsfor == 2) && (
-          <Text style={styles.title}>{status.title}</Text>
-        )}
-        <Image
-          style={styles.img}
-          source={statusImage(orderIsfor, orderStatus)}
-          resizeMode="contain"
-        />
+        {orderIsfor == 2 && <Text style={styles.title}>{status.title}</Text>}
+        <Image style={styles.img} source={statusImage(orderIsfor, orderStatus)} resizeMode="contain" />
       </View>
     </View>
   );
@@ -87,7 +86,7 @@ export default DriverAnimationView;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9'
+    backgroundColor: '#F9F9F9',
   },
   contactSupportText: {
     fontSize: 15,
@@ -109,6 +108,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
-    paddingBottom: verticalScale(30)
+    paddingBottom: verticalScale(30),
   },
 });

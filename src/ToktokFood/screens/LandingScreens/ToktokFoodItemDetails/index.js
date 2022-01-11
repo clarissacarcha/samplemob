@@ -24,17 +24,9 @@ import {useAlert} from 'src/hooks';
 const MainComponent = () => {
   const routes = useRoute();
   const alert = useAlert();
-  const {
-    Id,
-    parentProductId,
-    selectedItemId,
-    selectedAddons,
-    selectedPrice,
-    selectedQty,
-    selectedNotes,
-    action,
-  } = routes.params;
-  const {customerInfo} = useSelector((state) => state.toktokFood);
+  const {Id, parentProductId, selectedItemId, selectedAddons, selectedPrice, selectedQty, selectedNotes, action} =
+    routes.params;
+  const {customerInfo} = useSelector(state => state.toktokFood);
   const {
     totalPrice,
     setTotalPrice,
@@ -59,7 +51,7 @@ const MainComponent = () => {
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert, error});
     },
     onCompleted: ({getProductDetails}) => {
@@ -78,7 +70,7 @@ const MainComponent = () => {
   const [getTemporaryCart, {loading: getLoading, error: getError}] = useLazyQuery(GET_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert, error});
     },
     onCompleted: ({getTemporaryCart}) => {
@@ -178,22 +170,24 @@ const MainComponent = () => {
         <>
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
             <ScrollView stickyHeaderIndices={stickyHeaderIndices}>
-              {/* <ChangeAddress /> */}
-              {/* {!bannerLoaded && <BannerPlaceHolder />}
+              <View style={{flex: 1}}>
+                {/* <ChangeAddress /> */}
+                {/* {!bannerLoaded && <BannerPlaceHolder />}
               <Image
                 onLoadEnd={() => setBannerLoaded(true)}
                 source={{uri: productDetails.filename}}
                 style={[styles.banner]}
               /> */}
-              <View style={{flex: 1}}>
-                <FoodImageSlider images={productDetails.productImages} />
+                <View style={{flex: 1}}>
+                  <FoodImageSlider images={productDetails.productImages} />
+                </View>
+                <ItemDetails />
+                <Variations
+                  productId={selectedItemId ? Id : ''}
+                  data={productDetails}
+                  basePrice={productDetails?.price}
+                />
               </View>
-              <ItemDetails />
-              <Variations
-                productId={selectedItemId ? Id : ''}
-                data={productDetails}
-                basePrice={productDetails?.price}
-              />
             </ScrollView>
           </KeyboardAvoidingView>
           <FoodCart loading={loading} basePrice={0} action={action} />

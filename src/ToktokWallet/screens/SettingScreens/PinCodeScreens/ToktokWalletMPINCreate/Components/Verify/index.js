@@ -47,8 +47,10 @@ export const Verify = ({pageIndex,setPageIndex,setOldMPIN})=> {
             const {graphQLErrors, networkError} = error;
             if(graphQLErrors[0]?.message == "Account Blocked"){
                 onErrorAlert({alert,error})
-                navigation.navigate("ToktokWalletLoginPage")
-                navigation.replace("ToktokWalletLoginPage")
+                // navigation.navigate("ToktokWalletLoginPage")
+                // navigation.replace("ToktokWalletLoginPage")
+                navigation.navigate("ToktokLandingHome")
+                navigation.push("ToktokWalletLoginPage")  
                 return
             }
             if(graphQLErrors[0]?.message == "Invalid MPincode"){

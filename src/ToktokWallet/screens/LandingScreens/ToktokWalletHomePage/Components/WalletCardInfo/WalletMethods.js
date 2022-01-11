@@ -58,7 +58,7 @@ const WalletMethods = ()=> {
                 <Method label="Send Money" icon={require('toktokwallet/assets/images/transfer.png')} iconstyle={{height: 30,width: 30,}} onPress={()=>onPressThrottled("ToktokWalletSendMoney")}/>
                 <Method label="Scan QR" icon={require('toktokwallet/assets/images/qr-code-scan.png')} iconstyle={{height: 25,width: 25}} onPress={()=>onPressThrottled("ToktokWalletScanQR")}/>
                 <Method label="Cash In" icon={require('toktokwallet/assets/images/cash-in.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletPaymentOptions")}/>
-                <Method label="Fund Transfer" icon={require('toktokwallet/assets/images/send-money.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletCashOutHomePage")}/>
+                { tokwaAccount.constants.isFundTransferEnabled == "1" && <Method label="Fund Transfer" icon={require('toktokwallet/assets/images/send-money.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletCashOutHomePage")}/> }
             </View>
         </View>
     )

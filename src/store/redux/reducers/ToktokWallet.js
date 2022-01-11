@@ -67,7 +67,7 @@ export default (state = INITIAL_STATE, action) => {
           [action.payload.event]: action.payload.value
         }
       }
-    case 'SET_CONSTANTS':
+    case 'SET_TOKWA_CONSTANTS':
       return {
         ...state,
         constants: {

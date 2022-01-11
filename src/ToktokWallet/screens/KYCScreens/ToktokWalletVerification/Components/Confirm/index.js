@@ -249,7 +249,8 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                             }}
                         />
                         <TouchableOpacity 
-                            onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
                             style={{paddingHorizontal: 10,marginRight: 20,alignSelf:"center"}}
                         >
                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby certify that I accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions.</Text></Text>
