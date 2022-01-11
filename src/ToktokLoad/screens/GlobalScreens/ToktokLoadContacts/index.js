@@ -55,13 +55,22 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     setFilteredData(filteredContacts);
   };
 
-  const onSelectContact = (item) => {
-    let mobileNumber = item.number.replace(/\s/g, '').replace(/[()]/g, '');
-    return mobileNumber.replace("+63", "0");
+  const onSelectedContact = (item) => {
+    let mobileNumber = item.number.replace(/\s/g, '').replace(/[()]/g, '').replace(/[$-/:-?{-~!"#^_`\[\]]/g, '');
+
+    if(mobileNumber.substring(0, 2) == "+63"){
+      return mobileNumber.replace("+63", "0");
+    } else if(mobileNumber.substring(0, 2) == "63"){
+      return mobileNumber.replace("63", "0");
+    } else if(mobileNumber.substring(0, 2) == "09"){
+      return mobileNumber
+    } else {
+      return `09${mobileNumber}`;
+    }
   };
 
   const setRecipient = () => {
-    route.params.setMobileNumber(onSelectContact(selectedContact.item))
+    route.params.onSelectContact(onSelectedContact(selectedContact.item))
     return navigation.pop()
   }
 

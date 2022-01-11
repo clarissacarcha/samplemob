@@ -18,34 +18,34 @@ export const BuyLoad = ({ navigation, setMobileNumber, mobileNumber }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const onChangeText = (value) => {
-    let mobile = value.replace(/[^0-9]/g, "");
-   
-    let isNotValidMobileNo = value.length != 11 || value.substring(0, 2) != "09";
-    console.log(isNotValidMobileNo)
-    if(isNotValidMobileNo){
-      setErrorMessage("Mobile number must be 11 in length.");
+    let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
+  
+    if(mobile.length == 0){
+      setErrorMessage("Mobile Number is required.");
+    } else if(mobile.substring(0, 2) != "09" || mobile.length != 11){
+      setErrorMessage("Mobile Number must be valid");
     } else {
       setErrorMessage("");
     }
-
-    if(value[0] != "0" || value[1] != "9" ){
-      setMobileNumber("09");
-    }else{
-      setMobileNumber(mobile);
+  
+    if((mobile.length == 1 || mobile.length == 2) && (mobileNumber.length == "" || mobileNumber.length == 1)){
+      setMobileNumber("09")
+    } else {
+      setMobileNumber(mobile)
     }
   }
 
   const onPressNext = () => {
-    // let isNotValidMobileNo = mobileNumber.length != 11 || mobileNumber.substring(0, 2) != "09";
-    // if(isNotValidMobileNo){
-    //   return setErrorMessage(isNotValidMobileNo ? "Mobile number must be valid." : "");
-    // }
     navigation.navigate("ToktokLoadNetworks", { mobileNumber });
+  }
+
+  const onSelectContact = (number) => {
+    onChangeText(number)
   }
 
   const onPressContacts = () => {
     setErrorMessage("");
-    navigation.navigate("ToktokLoadContacts",  { setMobileNumber });
+    navigation.navigate("ToktokLoadContacts",  { onSelectContact });
   }
 
   return (

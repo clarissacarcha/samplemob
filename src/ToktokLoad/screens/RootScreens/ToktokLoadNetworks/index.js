@@ -64,7 +64,7 @@ const MainComponent = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Buy Load For</Text>
+        <Text style={styles.headerText}>Buy Load for</Text>
         <Text style={styles.mobileNo}>{route.params?.mobileNumber}</Text>
       </View>
       { networks.length > 0 && <HeaderTabs tabs={networks} scrollEnabled={true} onTabPress={() => {}} /> }
