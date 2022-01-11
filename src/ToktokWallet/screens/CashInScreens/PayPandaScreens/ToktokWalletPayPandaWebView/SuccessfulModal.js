@@ -90,8 +90,8 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
             >
                 <View style={styles.transactionInfo}>
                      <TransactionInfo label="Cash in Method" value={paymentMethod ? paymentMethod : "PayPanda"}/>
-                     <TransactionInfo label="PayPanda Ref. No." value={cashInLogParams.paypandaReferenceNumber}/>
-                     <TransactionInfo label="PayPanda Status" value={status}/>
+                     <TransactionInfo label={paymentMethod ? "Transaction No." : "PayPanda Ref. No."} value={cashInLogParams.paypandaReferenceNumber}/>
+                     <TransactionInfo label={paymentMethod ? "Status" : "PayPanda Status"} value={status}/>
                      <TransactionInfo label="Amount" value={`PHP ${numberFormat(cashInLogParams.amount)}`}/>
                 </View>
             </Receipt>
