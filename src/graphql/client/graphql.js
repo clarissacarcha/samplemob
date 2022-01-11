@@ -185,12 +185,14 @@ const toktokWalletEnterpriseGraphqlLink = ApolloLink.from([
 ]);
 const toktokMallGraphqlLink = ApolloLink.from([
   errorLinkLogger,
-  setToktokMallGraphqlTokenLink,
+  setTokenLink,
+  // setToktokMallGraphqlTokenLink,
   toktokMallGraphqlUploadLink,
 ]);
 const toktokMallAuthGraphqlLink = ApolloLink.from([
   errorLinkLogger,
-  setToktokMallAuthGraphqlTokenLink,
+  setTokenLink,
+  // setToktokMallAuthGraphqlTokenLink,
   toktokMallAuthGraphqlUploadLink,
 ]);
 
