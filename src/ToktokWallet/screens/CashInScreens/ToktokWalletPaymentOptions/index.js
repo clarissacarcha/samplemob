@@ -27,7 +27,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
 
     const amount = route?.params?.amount ? route.params.amount : null
     const onCashIn = route?.params?.onCashIn ? route.params.onCashIn : null
-    const { tokwaAccount , getMyAccountLoading , getMyAccount}  = useAccount();
+    const { tokwaAccount , getMyAccountLoading , getMyAccount,getGlobalSettings}  = useAccount();
     const dispatch = useDispatch();
     const alert = useAlert()
     const { data: cashinmethods, error, loading } = useQuery(GET_CASH_IN_PROVIDERS, {
@@ -48,8 +48,6 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
             headerTitle: ()=> <ToktokHeaderTitle label={['Cash In','']}/>,
         })    
     }
-
-   
   
 
     const checkStatus = async ()=> {
@@ -57,6 +55,11 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
             await getMyAccount()
             return
         } 
+
+        if(!tokwaAccount?.constants?.CashInType){
+            await getGlobalSettings();
+            return
+        }   
         
         if(!tokwaAccount.pinCode){
             return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
