@@ -2,6 +2,7 @@ export * from './Advertisement';
 export * from './Announcement';
 export * from './AppVersion';
 export * from './CargoType';
+export * from './Consumer';
 export * from './Delivery';
 export * from './DeliveryCancellation';
 export * from './DeliveryCancellationCategory';

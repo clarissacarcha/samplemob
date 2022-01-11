@@ -37,10 +37,10 @@ const Login = ({navigation, session}) => {
         appFlavor: APP_FLAVOR,
       },
     },
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert, error});
     },
-    onCompleted: (data) => {
+    onCompleted: data => {
       if (data.loginRegister === 'REGISTER') {
         navigation.push('SmsVerification', {mobile});
       }
@@ -63,7 +63,7 @@ const Login = ({navigation, session}) => {
   //   alert(e.data);
   // };
 
-  const onMobileChange = (value) => {
+  const onMobileChange = value => {
     if (value.length == 1 && value == '0') {
       setMobile('');
       return;
@@ -100,7 +100,7 @@ const Login = ({navigation, session}) => {
       const registered = await SmsRetriever.startSmsRetriever();
       if (registered) {
         alert('Started Listener');
-        SmsRetriever.addSmsListener((event) => {
+        SmsRetriever.addSmsListener(event => {
           alert('EVENT: ' + JSON.stringify(event, null, 4));
           SmsRetriever.removeSmsListener();
         });
@@ -112,7 +112,7 @@ const Login = ({navigation, session}) => {
     }
   };
 
-  const onSubmit = (phoneNumber) => {
+  const onSubmit = phoneNumber => {
     if (phoneNumber.length !== 10) {
       Alert.alert('', 'Please enter a valid mobile number.');
       return;
@@ -205,7 +205,7 @@ const Login = ({navigation, session}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 
