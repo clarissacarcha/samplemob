@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
-import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy} from "../../../helpers"
+import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy, getRefComAccountType} from "../../../helpers"
 
 import {CheckoutContext} from './ContextProvider';
 import { EventRegister } from 'react-native-event-listeners';
@@ -63,6 +63,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [walletmodal, setwalletmodal] = useState(false)
   const [customerData, setCustomerData] = useState({})
   const [shippingDiscounts, setShippingDiscounts] = useState([])
+  const [franchisee, setFranchisee] = useState({})
 
   const dispatch = useDispatch()
 
@@ -76,7 +77,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
     onCompleted: async (response) => {
       if(response.getCheckoutData){
         let data = response.getCheckoutData
-        setAddressData(data.address);
+        setAddressData(data.address)
+        setFranchisee(data.consumer)        
         await setPaymentList(data.paymentMethods)
         let shippingrates = await getShippingRates(data.shippingRatePayload, data.cartrawdata)
         if(shippingrates.length > 0){
@@ -231,7 +233,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
           shippingRates: CheckoutContextData.shippingFeeRates,
           paymentMethod: "TOKTOKWALLET",
           hashAmount: req.responseData.hash_amount,
-          referenceNum: req.responseData.orderRefNum
+          referenceNum: req.responseData.orderRefNum,
+          referral: franchisee
         })
 
         navigation.navigate("ToktokMallOTP", {
@@ -363,7 +366,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           input: {
             userId: userData.userId,
             shops: shops,
-            refCom: ""         
+            refCom: getRefComAccountType({session: toktokSession})        
           }
         }
       })
@@ -372,54 +375,55 @@ const Component = ({route, navigation, createMyCartSession}) => {
   }
 
   const calculateGrandTotal = () => {
-    let a = 0;
+
+    let orderTotal = 0    
+    let originalShippingFeeTotal = 0
+    let shippingFeeSrp = 0
+
     if(!addressData) return
     for (var x = 0; x < route.params.data.length; x++) {
+
       for (var y = 0; y < route.params.data[x].data[0].length; y++) {
+        
         let item = route.params.data[x].data[0][y];
-        // console.log("Hahay", route.params.data[x].data[0][y], y)
-        a += parseFloat(item.amount)
+        orderTotal += parseFloat(item.amount)
+        
       }
-      // let shipping = 0
-      // for(var z=0;z<shippingRates.length;z++){
-      //   shipping += parseFloat(shippingRates[z].price)
-      // }
-      // a += shipping
-      // console.log(shippingRates, shipping)
-      // a += parseFloat(userDefaultAddress?.shippingSummary?.rateAmount)
-    }
-    // console.log("subtotal", a)
-    setSubTotal(a)
-    let shipping = 0
-    let originalShippingFee = 0
 
-    for(var z=0;z<CheckoutContextData.shippingFeeRates.length;z++){
+      let order = route.params.data[x]
+      let shippingfeeIndex = CheckoutContextData.shippingFeeRates.findIndex(a => a.shopid == order.shop.id)
+      let voucherAmountIndex = CheckoutContextData.shippingVouchers.findIndex(a => a.shopid == order.shop.id)
 
-      if(CheckoutContextData.shippingVouchers[z]){
+      if(shippingfeeIndex > -1){
 
-        let shippingfee = CheckoutContextData.shippingFeeRates[z]?.shippingfee
-        let voucheramount = CheckoutContextData.shippingVouchers[z]?.amount
+        let shippingfee = CheckoutContextData.shippingFeeRates[shippingfeeIndex]?.shippingfee
+          
+        if(voucherAmountIndex > -1){
+            
+          let voucheramount = CheckoutContextData.shippingVouchers[voucherAmountIndex]?.discountedAmount            
+          //deduct voucher discount to shipping fee
+          if(shippingfee - voucheramount < 0){
+            shippingFeeSrp += 0     
+          }else{
+            shippingFeeSrp += parseFloat(voucheramount)            
+          }
 
-        if(shippingfee && voucheramount && shippingfee - voucheramount < 0){
-          shipping += 0
         }else{
-          shipping += parseFloat(CheckoutContextData.shippingVouchers[z].discount) 
+          //no discount
+          shippingFeeSrp += parseFloat(shippingfee)
         }
-      }else{
-        shipping += parseFloat(CheckoutContextData.shippingFeeRates[z].shippingfee)
+
+        originalShippingFeeTotal += parseFloat(shippingfee)
       }
 
-      originalShippingFee += parseFloat(CheckoutContextData.shippingFeeRates[z].original_shipping)
-
     }
-    // console.log("Grand total...")
-    // console.log(a, shipping)
 
-    let b = a
-    a += shipping
-    b += originalShippingFee
-    setSrpTotal(b)
-    setGrandTotal(a)
+    let _subTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp)
+    let srpGrandTotal = parseFloat(orderTotal) + parseFloat(originalShippingFeeTotal)
+
+    setSubTotal(_subTotal)
+    setSrpTotal(srpGrandTotal)
+    setGrandTotal(_subTotal)
   }
 
   const getShopItemPayload = () => {

@@ -6,12 +6,13 @@ import { COLOR, FONT } from '../../../../../../res/variables';
 import {LandingHeader, AdsCarousel, Loading} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
 import {coppermask, chair, bottle, flashsalebg, flashsale, placeholder} from '../../../../../assets';
-import {Price} from '../../../../../helpers';
+import {getRefComAccountType, Price} from '../../../../../helpers';
 import ContentLoader from 'react-native-easy-content-loader'
 
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
 import { GET_FEATURED_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
+import { useSelector } from 'react-redux';
 
 const testdata = [{
   // image: require("../../../../../assets/images/coppermask.png"),
@@ -92,6 +93,7 @@ const Empty = ({data}) => {
 
 export const FlashSale = () => {
 
+  const session = useSelector(state=>state.session)
   const navigation = useNavigation()
   const [featured, setFeatured] = useState([])
 
@@ -102,7 +104,7 @@ export const FlashSale = () => {
       input: {
         offset: 90,
         limit: 3,
-        refCom: "jc"
+        refCom: getRefComAccountType({session})
       }
     },
     onCompleted: (response) => {

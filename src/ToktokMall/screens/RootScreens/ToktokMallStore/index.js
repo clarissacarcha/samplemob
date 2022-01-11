@@ -7,12 +7,13 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_SHOP_DETAILS, SEARCH_SHOP_PRODUCT } from '../../../../graphql/toktokmall/model';
 import { useLazyQuery } from '@apollo/react-hooks';
 import Spinner from 'react-native-spinkit';
-import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
+import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, getRefComAccountType} from "../../../helpers";
 import {useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export const ToktokMallStore = ({navigation, route}) => {
 
+  const session = useSelector(state=>state.session)
   const [searchedProducts, setSearchedProducts] = useState([])
   const [storeData, setStoreData] = useState({})
   const [activeTab, setActiveTab] = useState(0)
@@ -21,7 +22,6 @@ export const ToktokMallStore = ({navigation, route}) => {
   const [messageModalContent, setMessageModalContent] = useState("")
   const [searchValue, setSearchValue] = useState("")
   const [emptySearch, setEmptySearch] = useState(false)
-  const session = useSelector(state=> state.session)
   const [user, setUser] = useState({})
 
   const [getShopDetails, {error, loading}] = useLazyQuery(GET_SHOP_DETAILS, {
@@ -30,7 +30,7 @@ export const ToktokMallStore = ({navigation, route}) => {
     variables: {
       input: {
         id: route.params.id,
-        refCom: ""
+        refCom: getRefComAccountType({session})
       }
     },
     onCompleted: (response) => {

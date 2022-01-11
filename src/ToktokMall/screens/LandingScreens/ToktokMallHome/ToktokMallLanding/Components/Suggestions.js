@@ -11,11 +11,12 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../../graphql';
 import { GET_TOP_PRODUCTS } from '../../../../../../graphql/toktokmall/model';
 
 import {clothfacemask, medicalfacemask, placeholder} from '../../../../../assets'; 
-import { ArrayCopy, Price } from '../../../../../helpers';
+import { ArrayCopy, getRefComAccountType, Price } from '../../../../../helpers';
 import { SwipeReloader, Loading, PromotionBanner, RefComDiscountRate } from '../../../../../Components';
 import Spinner from 'react-native-spinkit';
 
 import ContentLoader from 'react-native-easy-content-loader'
+import { useSelector } from 'react-redux';
 
 const testdata = [{
   image: clothfacemask,
@@ -144,7 +145,7 @@ const RenderItem = ({item, loading}) => {
 export const Suggestions = ({lazyload}) => {
 
   const navigation = useNavigation()
-
+  const session = useSelector(state=>state.session)
   const [products, setProducts] = useState([])
   const [offset, setOffset] = useState(0)
   const [isFetching, setIsFetching] = useState(true)
@@ -156,7 +157,7 @@ export const Suggestions = ({lazyload}) => {
       input: {
         offset: offset,
         limit: 10,
-        refCom: "jc"
+        refCom: getRefComAccountType({session})
       }
     },
     onCompleted: (response) => {

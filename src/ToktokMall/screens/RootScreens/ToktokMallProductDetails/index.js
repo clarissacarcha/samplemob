@@ -10,7 +10,7 @@ import Toast from 'react-native-simple-toast';
 import { FONT } from '../../../../res/variables';
 import { Header, AdsCarousel, MessageModal, DynamicOptionModal, DynamicMessageModal, CustomModal } from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
-import {ASAddToCart, ASClearCart} from '../../../helpers';
+import {ASAddToCart, ASClearCart, getRefComAccountType} from '../../../helpers';
 import ContentLoader, {InstagramLoader, FacebookLoader} from 'react-native-easy-content-loader'
 import { MergeStoreProducts } from '../../../helpers';
 import {useSelector} from 'react-redux';
@@ -169,7 +169,7 @@ const Component =  ({
     variables: {
       input: {
         id: Id,
-        refCom: "jc"
+        refCom: getRefComAccountType({session})
       }
     },
     onCompleted: (response) => {

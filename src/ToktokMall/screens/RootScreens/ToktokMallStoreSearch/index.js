@@ -9,10 +9,12 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import Spinner from 'react-native-spinkit';
 import { FONT, COLOR } from '../../../../res/variables';
 import {emptysearch, placeholder} from "../../../assets";
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
+import { getRefComAccountType } from '../../../helpers';
 
 const Component = ({navigation, route, searchHistory, createSearchHistorySession}) => {
 
+  const session = useSelector(state=>state.session)
   const [searchedProducts, setSearchedProducts] = useState([])
   const [suggestions, setSuggestions] = useState([])
   const [searchValue, setSearchValue] = useState("")
@@ -157,7 +159,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                     search: searchValue,
                     offset: 0,
                     limit: 10,
-                    refCom: ""
+                    refCom: getRefComAccountType({session})
                   }
                 }
               })
@@ -220,7 +222,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                           search: item.tags,
                           offset: searchedProducts.length,
                           limit: 10,
-                          refCom: ""
+                          refCom: getRefComAccountType({session})
                         }
                       }
                     })
@@ -265,7 +267,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                     search: item,
                     offset: searchedProducts.length,
                     limit: 10,
-                    refCom: ""
+                    refCom: getRefComAccountType({session})
                   }
                 }
               })
@@ -292,7 +294,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                     search: searchValue,
                     offset: searchedProducts.length,
                     limit: 10,
-                    refCom: ""
+                    refCom: getRefComAccountType({session})
                   }
                 }
               })

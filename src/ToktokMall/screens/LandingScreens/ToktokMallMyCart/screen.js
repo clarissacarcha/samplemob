@@ -9,7 +9,7 @@ import Toast from 'react-native-simple-toast';
 
 import {MessageModal, LoadingOverlay} from '../../../Components';
 import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails, RenderEmpty} from './components';
-import {MergeStoreProducts, ArrayCopy} from '../../../helpers';
+import {MergeStoreProducts, ArrayCopy, getRefComAccountType} from '../../../helpers';
 import { create } from 'lodash';
 import {useSelector} from 'react-redux';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
@@ -34,6 +34,7 @@ const Component = ({
     headerRight: () => <HeaderRight hidden={true} />,
   });
 
+  const session = useSelector(state=>state.session)
   const CartContextData = useContext(CartContext)
   const {customModal, customConfirmModal} = useSelector(state=> state.toktokMall)
 
@@ -128,7 +129,7 @@ const Component = ({
           variables: {
             input: {
               userId: data.userId,
-              refCom: ""
+              refCom: getRefComAccountType({session})
             }
           }
         })     

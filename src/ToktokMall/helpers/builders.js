@@ -13,7 +13,8 @@ export const BuildPostCheckoutBody = async ({
 	vouchers,
 	shippingVouchers,
 	hashAmount,
-	referenceNum
+	referenceNum,
+	referral
 }) => {
 	console.log(parseFloat(subTotal))
 
@@ -47,12 +48,13 @@ export const BuildPostCheckoutBody = async ({
 			disrate: [],
 			vouchers: vouchers,
 			shippingvouchers: shippingVouchers,
-			referral_code: "",
-			referral_account_type: "",
+			referral_code: referral?.referralCode && referral?.referralCode != null ? referral?.referralCode : "",
+			referral_account_type: referral?.franchiseeAccountType && referral?.franchiseeAccountType != null ? referral?.franchiseeAccountType : "",
 			payment_method: paymentMethod,
 			hash_amount: hashAmount,
 			reference_num: referenceNum,
-			orderRefNum: referenceNum
+			orderRefNum: referenceNum,
+			
 		}
 			
 	}else{

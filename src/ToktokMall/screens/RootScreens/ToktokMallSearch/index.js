@@ -10,17 +10,18 @@ import {LandingSubHeader} from '../../../Components';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import {GET_TOP_PRODUCTS, SEARCH_PRODUCT, SEARCH_PRODUCT_SUGGESTIONS} from '../../../../graphql/toktokmall/model';
 
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 import {Product} from './components'
 import {emptysearch} from '../../../assets'
 import { FONT } from '../../../../res/variables';
-import { ArrayCopy } from '../../../helpers';
+import { ArrayCopy, getRefComAccountType } from '../../../helpers';
 
 const testdata = ["Gaming Chair", "Mousepad", "Face mask", "Pillow", "Ballpen"]
 
 const Component = ({navigation, route, searchHistory, createSearchHistorySession}) => {
 
+  const session = useSelector(state=>state.session)
   const [searchPath, setSearchPath] = useState("all")
   const [emptySearch, setEmptySearch] = useState(false)
   const [suggest, setSuggest] = useState(false)
@@ -187,7 +188,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
             category: route.params?.categoryId ? route.params?.categoryId : null,
             offset: offset,
             limit: 10,
-            refCom: ""
+            refCom: getRefComAccountType({session})
           }
         }
       })
@@ -241,7 +242,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   origin: "all",
                   offset: 0,
                   limit: 10,
-                  refCom: ""
+                  refCom: getRefComAccountType({session})
                 }
               }
             })
@@ -265,7 +266,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   origin: "all",
                   offset: 0,
                   limit: 10,
-                  refCom: ""
+                  refCom: getRefComAccountType({session})
                 }
               }
             })
@@ -281,7 +282,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   category: route.params?.categoryId ? route.params?.categoryId : null,
                   offset: offset,
                   limit: 10,
-                  refCom: ""
+                  refCom: getRefComAccountType({session})
                 }
               }
             })
@@ -335,7 +336,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                     category: route.params?.categoryId ? route.params?.categoryId : null,
                     offset: 0,
                     limit: 10,
-                    refCom: ""
+                    refCom: getRefComAccountType({session})
                   }
                 }
               })
@@ -381,7 +382,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   category: route.params?.categoryId ? route.params?.categoryId : null,
                   offset: searchedProducts.length,
                   limit: 10,
-                  refCom: ""
+                  refCom: getRefComAccountType({session})
                 }
               }
             })
@@ -473,7 +474,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                           category: route.params?.categoryId ? route.params?.categoryId : null,
                           offset: 0,
                           limit: 10,
-                          refCom: ""
+                          refCom: getRefComAccountType({session})
                         }
                       }
                     })
