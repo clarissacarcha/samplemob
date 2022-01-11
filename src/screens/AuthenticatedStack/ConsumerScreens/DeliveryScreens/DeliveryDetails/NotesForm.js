@@ -20,7 +20,7 @@ const NotesForm = ({value, onChange}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 

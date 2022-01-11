@@ -12,6 +12,7 @@ export * from "./CashOutBankAccount";
 export * from "./CashOutEnrollmentBdo";
 export * from "./CashOutEnrollmentGcash";
 export * from "./CashOutProvider";
+export * from "./ContactUs";
 export * from "./EnterpriseUpgradeRequest";
 export * from "./FullyVerifiedUpgradeRequest";
 export * from "./GlobalSetting";

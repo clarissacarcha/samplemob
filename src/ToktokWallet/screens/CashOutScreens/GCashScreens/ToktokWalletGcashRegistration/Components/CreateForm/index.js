@@ -67,7 +67,7 @@ const PromptMessage = ({
                         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK,textAlign:"center"}}>Your application has been submitted. Please wait for your GCash disbursement account to be verified.</Text>
                     </View>
                     <View style={{width: "50%",alignSelf:"center"}}>
-                        <YellowButton label="Ok" onPress={redirect}/>
+                        <YellowButton label="OK" onPress={redirect}/>
                     </View>
                 </View>
             </View>
