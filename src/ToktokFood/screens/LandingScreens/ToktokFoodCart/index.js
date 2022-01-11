@@ -363,7 +363,7 @@ const MainComponent = () => {
               let totalPrice = 0;
               let deductedFee = 0;
               if (orderType === 'Delivery') {
-                if (SHIPPING_VOUCHERS.length) {
+                if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
                   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
                 }
                 totalPrice =
@@ -372,6 +372,7 @@ const MainComponent = () => {
                 totalPrice = parseInt(temporaryCart.totalAmountWithAddons);
               }
               // setShowLoader(false);
+              // console.log(totalPrice, deductedFee, SHIPPING_VOUCHERS);
               postResquestTakeMoney({
                 variables: {
                   input: {
@@ -513,6 +514,7 @@ const MainComponent = () => {
       order_logs: CUSTOMER_CART,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
+    console.log(data);
     postCustomerOrder({
       variables: {
         input: data,

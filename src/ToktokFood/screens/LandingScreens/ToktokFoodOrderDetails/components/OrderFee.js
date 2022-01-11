@@ -13,7 +13,7 @@ const getShippingDiscount = (promoDetails, deliveryFee) => {
   if (amount > 0) {
     let pAmount = isPercentage !== 0 ? (amount / 100) * deliveryFee : amount;
 
-    let totalSF = deliveryFee - pAmount;
+    let totalSF = deliveryFee + pAmount;
     return totalSF > 0 ? totalSF : 0;
   } else {
     return 0;
@@ -35,7 +35,7 @@ const OrderFee = ({data, forDelivery}) => {
         <View style={styles.header}>
           <Text>Delivery Fee</Text>
           <View style={styles.deliveryFee}>
-            {/* {promoDetails && <Text style={styles.deliveryFeeText}>{`\u20B1${withShippingVoucher.toFixed(2)}`}</Text>} */}
+            {promoDetails && <Text style={styles.deliveryFeeText}>{`\u20B1${withShippingVoucher.toFixed(2)}`}</Text>}
             <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
           </View>
         </View>
