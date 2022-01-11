@@ -366,8 +366,7 @@ const MainComponent = () => {
                 if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
                   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
                 }
-                totalPrice =
-                  parseInt(temporaryCart.totalAmountWithAddons) + (deductedFee > 0 ? deductedFee : delivery.price);
+                totalPrice = parseInt(temporaryCart.totalAmountWithAddons) + (delivery.price - deductedFee);
               } else {
                 totalPrice = parseInt(temporaryCart.totalAmountWithAddons);
               }
@@ -472,7 +471,10 @@ const MainComponent = () => {
     if (shippingVoucher.length > 0 || autoShipping?.success) {
       const deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
 
-      const DEDUCTVOUCHER = {...ORDER, order_logs: [{...ORDER.order_logs[0], delivery_amount: deductedFee}]};
+      const DEDUCTVOUCHER = {
+        ...ORDER,
+        order_logs: [{...ORDER.order_logs[0], delivery_amount: delivery?.price - deductedFee}],
+      };
 
       return WALLET
         ? {...WALLET, ...CUSTOMER, ...DEDUCTVOUCHER, ...SHIPPING_VOUCHERS}
@@ -514,7 +516,6 @@ const MainComponent = () => {
       order_logs: CUSTOMER_CART,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
-    console.log(data);
     postCustomerOrder({
       variables: {
         input: data,

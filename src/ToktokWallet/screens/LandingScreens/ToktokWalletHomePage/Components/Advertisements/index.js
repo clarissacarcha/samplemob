@@ -43,7 +43,7 @@ export const Advertisements = () => {
         {/* <Banner ads={banner} />
         <Grid ads={grid} /> */}
         {
-          grid && <>
+          grid && grid.length > 0 && <>
           <View style={{paddingHorizontal: 16,marginBottom: 16}}>
           <Text style={{
             fontSize: FONT_SIZE.M,

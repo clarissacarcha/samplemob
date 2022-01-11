@@ -122,7 +122,7 @@ export const TransactionDetails = ({
                             </View>
                        </View>
                        <View style={{justifyContent:"flex-end", width: "50%",alignSelf:"center",marginTop: 16}}>
-                            <YellowButton label="Ok" onPress={()=>setVisible(false)}/>
+                            <YellowButton label="OK" onPress={()=>setVisible(false)}/>
                         </View>
                     </View>
                 </View>

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>toktok 1.20.0.30 Test</string>
+	<string>toktok Test</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -43,6 +43,8 @@
 	<string>Used to take images for profile and deliveries.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Used to auto fill contact numbers.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Used to access face id.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Used to auto fill location in sender details.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

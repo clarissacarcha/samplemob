@@ -1,33 +1,41 @@
-import React from 'react'
-import { View , Text, StyleSheet , Image , Linking , TouchableOpacity } from 'react-native'
-import {HeaderBack, HeaderTitle} from 'src/revamp'
-import { BuildingBottom , Separator, CheckIdleState } from 'toktokwallet/components'
+import React , {useEffect,useState} from 'react'
+import { View , Text, StyleSheet , Image , Linking , TouchableOpacity, TextInput } from 'react-native'
+import {HeaderBack, HeaderTitle , YellowButton} from 'src/revamp'
+import { BuildingBottom , Separator, CheckIdleState , DisabledButton } from 'toktokwallet/components'
 import EmailLogo from 'toktokwallet/assets/images/contact-us/email.png'
 import PhoneLogo from 'toktokwallet/assets/images/contact-us/phone.png'
 import MessengerLogo from 'toktokwallet/assets/images/contact-us/messenger.png'
+import {moderateScale } from 'toktokwallet/helper'
+import {useThrottle} from 'src/hooks'
+import { TOKTOK_WALLET_GRAPHQL_CLIENT  } from 'src/graphql'
+import {POST_SEND_MESSAGE  } from 'toktokwallet/graphql'
+import { onErrorAlert } from 'src/util/ErrorUtility'
+import { useAlert , usePrompt } from 'src/hooks'
+import { useMutation } from '@apollo/react-hooks'
+import { AlertOverlay } from 'src/components'
 import CONSTANTS from 'common/res/constants'
 
-const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW } = CONSTANTS
+const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW , SIZE } = CONSTANTS
 
-const ItemList = ({logo,label , url})=> {
+const ItemList = ({logo,label , url , style})=> {
 
     const openUrl = ()=>{
         Linking.openURL(url);
     }
 
     return (
-        <TouchableOpacity onPress={openUrl} style={styles.itemList}>
+        <TouchableOpacity onPress={openUrl} style={[styles.itemList , style]}>
              <Image 
                 style={{
-                    height: 25,
-                    width: 25,
+                    height: moderateScale(20),
+                    width: moderateScale(20),
                 }} 
                 resizeMode="contain"
                 source={logo}
              />
              <Text style={{
                  fontFamily: FONT.REGULAR,
-                 fontSize: FONT_SIZE.M,
+                 fontSize: moderateScale(FONT_SIZE.S + 1),
                  marginLeft: 10,
              }}>
                  {label}
@@ -43,25 +51,81 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
         headerTitle: () => <HeaderTitle label={['', '']} />,
     });
 
+    const [message,setMessage] = useState("")
+    const alert = useAlert();
+    const prompt = usePrompt();
+
+    const [postSendMessage , {loading}] = useMutation(POST_SEND_MESSAGE, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onError: (error)=> onErrorAlert({alert ,error}),
+        onCompleted: ({postSendMessage})=>{
+            setMessage("")
+            prompt({
+                type: "success",
+                title: "Successful!",
+                message: "Message successfully sent.",
+                event: "TOKTOKWALLET"
+            })
+        }
+    })
+
+    const sendEmail = ()=> {
+        if(message.length == 0) return;
+        postSendMessage({
+            variables: {
+                input: {
+                    message
+                }
+            }
+        })
+    }
+
+    const onThrottledPress = useThrottle(sendEmail, 2000)
+
     return (
         <CheckIdleState>
+        <AlertOverlay visible={loading}/>
         <Separator/>
         <View style={styles.container}>
+            <View style={styles.body}>
                 <View style={styles.content}>
                     <Text style={styles.title}>Contact Us</Text>
                     <Text style={{
                         paddingHorizontal:15,
                         fontSize: FONT_SIZE.M,
                         fontFamily: FONT.REGULAR,
+                        textAlign:"center"
                     }}>
-                        Email or contact us with any of your inquiries. We will gladly discuss with you the best possible solution to your needs.
+                        Email us with any of your inquiries or contact us with the contact information provided below. We will gladly discuss with you the best possible solution to your needs.
                     </Text>
                 </View>
-                <View style={{marginTop:30}}>
-                    <ItemList url="mailto:support@toktokwallet.ph?subject=Talk%20To%20Us&body=How%20can%20we%20help%20you%20ka-toktok?" logo={EmailLogo} label="support@toktokwallet.ph"/>
-                    <ItemList url="tel:(623) 8424 8617" logo={PhoneLogo} label="(632) 84248617"/>
-                    <ItemList url="https://www.facebook.com/toktokcsr.ph" logo={MessengerLogo} label="https://www.facebook.com/toktokcsr.ph"/>
+                <View style={styles.contact}>
+                    <ItemList url="tel:(623) 8424 8617" logo={PhoneLogo} label="(632) 8424 8617"/>
+                    <ItemList style={{flex: 1,justifyContent:"flex-end"}} url="mailto:support@toktokwallet.ph?subject=Talk%20To%20Us&body=How%20can%20we%20help%20you%20ka-toktok?" logo={EmailLogo} label="support@toktokwallet.ph"/>
                 </View>
+                <View style={styles.messageBox}>
+                    <TextInput 
+                        style={styles.messageInput}
+                        value={message}
+                        onChangeText={(value)=> {
+                            setMessage(value)
+                        }}
+                        keyboardType="default"
+                        returnKeyType="done"
+                        multiline={true}
+                        textAlignVertical='top'
+                        placeholder="Message"
+                        blurOnSubmit={true}
+                    />
+                </View>
+                <View style={styles.submitBtn}>
+                       {
+                           message.length > 0 
+                           ? <YellowButton onPress={onThrottledPress} label="Submit"/>
+                           : <DisabledButton label="Submit"/>
+                       }
+                </View>
+            </View>
         <BuildingBottom/>
         </View>
         </CheckIdleState>
@@ -72,10 +136,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor:"white",
-        padding: 16
+        padding: 16,
     },
+    body: {
+        flex: 1,
+        backgroundColor:"white",
+        padding: 16,
+        ...SHADOW,
+    },  
     content: {
-        marginTop: 50,
+        marginTop: 10,
         alignItems:"center"
     },
     title: {
@@ -86,12 +156,26 @@ const styles = StyleSheet.create({
     },
     itemList: {
         flexDirection:"row",
-        justifyContent:"center",
         marginVertical: 5,
         backgroundColor:"white",
-        padding: 10,
+        paddingVertical: 10,
         borderRadius: 5,
-       ...SHADOW
-        
+    },
+    contact: {
+        flexDirection:"row",
+        marginVertical: 15,
+    },
+    messageInput: {
+        paddingHorizontal: 10,
+        height: 200,
+        borderRadius: 5,
+        backgroundColor:"#F7F7FA",
+        marginTop: 5,
+        fontSize: FONT_SIZE.M,
+        fontFamily: FONT.REGULAR
+    },
+    submitBtn: {
+        flex: 1,
+        justifyContent:'flex-end'
     }
 })

@@ -67,7 +67,7 @@ export const Biometrics = ()=> {
           setSensorType("FaceID")
           setIsSensorAvailable(true)
         } else if (available && biometryType === ReactNativeBiometrics.Biometrics) {
-        setSensorType("Biometrics")
+          setSensorType("Biometrics")
           setIsSensorAvailable(true)
         } else {
           console.log('Biometrics not supported')

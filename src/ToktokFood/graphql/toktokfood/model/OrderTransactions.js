@@ -18,6 +18,7 @@ const transaction = `
   dateOrdered
   totalAmount
   deliveryAmount
+  originalShippingFee
   paymentMethod
   dateAssigned
   dateOrdered

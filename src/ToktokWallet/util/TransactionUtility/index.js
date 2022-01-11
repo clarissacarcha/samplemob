@@ -24,10 +24,16 @@ export class TransactionUtility {
     
     const {graphQLErrors, networkError} = error;
 
+    if(networkError){
+      return alert({message: 'Network error occurred. Please check your internet connection.'});
+    }
+
     if(graphQLErrors[0]?.code === "FORBIDDEN" && graphQLErrors[0]?.message === "toktokwallet account not active"){
       //alert({message: 'toktokwallet account has been deactivated.'});
-      navigation.navigate("ToktokWalletLoginPage");
-      navigation.replace("ToktokWalletLoginPage");
+      // navigation.navigate("ToktokWalletLoginPage")
+      // navigation.replace("ToktokWalletLoginPage")
+      navigation.navigate("ToktokLandingHome")
+      navigation.push("ToktokWalletLoginPage")  
       return;
     }
 

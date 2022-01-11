@@ -51,8 +51,10 @@ export const CheckIdleState = ({children})=> {
             return;
         }
         setTimeout(()=>{
-            navigation.navigate("ToktokWalletLoginPage")
-            navigation.replace("ToktokWalletLoginPage")
+            // navigation.navigate("ToktokWalletLoginPage")
+            // navigation.replace("ToktokWalletLoginPage")
+            navigation.navigate("ToktokLandingHome")
+            navigation.push("ToktokWalletLoginPage")  
             setShowPrompt(false);
             return;
         },1000)
