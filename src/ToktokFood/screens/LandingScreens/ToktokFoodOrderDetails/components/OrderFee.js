@@ -16,14 +16,14 @@ const getShippingDiscount = (promoDetails, deliveryFee) => {
     let totalSF = deliveryFee + pAmount;
     return totalSF > 0 ? totalSF : 0;
   } else {
-    return 0;
+    return deliveryFee;
   }
 };
 
 const OrderFee = ({data, forDelivery}) => {
-  let {totalAmount, deliveryAmount, promoDetails} = data;
+  let {originalShippingFee, totalAmount, deliveryAmount, promoDetails} = data;
   let deliveryFee = deliveryAmount ? deliveryAmount : 0;
-  let withShippingVoucher = promoDetails ? getShippingDiscount(promoDetails, deliveryFee) : deliveryFee;
+  let withShippingVoucher = promoDetails ? getShippingDiscount(promoDetails, originalShippingFee) : deliveryFee;
 
   return (
     <View style={styles.container}>
