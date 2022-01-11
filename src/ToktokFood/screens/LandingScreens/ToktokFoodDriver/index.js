@@ -349,6 +349,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
             riderDetails={riderDetails}
             orderIsfor={transaction.orderIsfor}
             referenceNum={referenceNum}
+            dateOrdered={transaction.dateOrdered}
           />
           <View style={styles.driverWrapper}>
             {transaction.orderIsfor == 1 ? (

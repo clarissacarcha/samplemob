@@ -13,19 +13,20 @@ import { time } from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
-import {orderStatusMessagePickUp} from 'toktokfood/helper/orderStatusMessage';
+import {orderStatusMessagePickUp, isPastOrder} from 'toktokfood/helper/orderStatusMessage';
 
 import moment from 'moment';
 
 const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
   const {location} = useSelector((state) => state.toktokFood);
-  const {shopDetails, orderStatus, isconfirmed, address, dateOrderProcessed, dateReadyPickup, isdeclined} = transaction;
+  const {shopDetails, orderStatus, isconfirmed, address, dateOrderProcessed, dateReadyPickup, isdeclined, dateOrdered} = transaction;
   const status = orderStatusMessagePickUp(
     orderStatus,
-    riderDetails,
-    `${shopDetails.shopname} (${shopDetails.address})`,
-    isdeclined
+    dateOrdered,
+    // riderDetails,
+    // `${shopDetails.shopname} (${shopDetails.address})`,
+    // isdeclined
   );
   const date = orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup;
 
@@ -63,7 +64,7 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     return (
       <View style={styles.detailsContainer}>
         {/* <Text style={styles.title}>{status.title}</Text> */}
-        <Text style={styles.status}>{status.message}</Text>
+        <Text style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>{status.message}</Text>
       </View>
     );
   };
