@@ -69,7 +69,19 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 		let items = []
 		if(val.data.length == 0 || val.data == undefined) return
 		val.data[0].map((item, i) => {
-			// let total = parseFloat(item.amount) * item.qty
+			let total = parseFloat(item.amount) * item.qty
+
+			//PROMOTIONS
+			let promo = {}
+
+			if(item.product?.promotions && item.product?.promotions != null){
+				promo.handle_product_promo = item.product?.promotions.lossPromo
+				promo.promo_type = item.product?.promotions.promoType
+				promo.promo_rate = item.product?.promotions.promoRate
+				promo.promo_price = item.product?.promotions.promoPrice
+				promo.promo_name = item.product?.promotions.name
+			}
+
 			items.push({
 				sys_shop: val.shop.id,
 				product_id: item.product.Id,
@@ -77,9 +89,10 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 				quantity: item.qty,
 				amount: parseFloat(item.amount),
 				srp_amount: parseFloat(item.amount),
-				srp_totalamount: parseFloat(item.amount),
-				total_amount: parseFloat(item.amount),
-				order_type: 2
+				srp_totalamount: total,
+				total_amount: total,
+				order_type: 2,
+				...promo
 			})
 		})
 

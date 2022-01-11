@@ -74,6 +74,8 @@ const Component =  ({
   const [qtyOnCart, setQtyOnCart] = useState(0)
   const [variantImages, setVariantImages] = useState([])
 
+  const [promotions, setPromotions] = useState(null)
+
   const [headerValue, setHeaderValue] = useState(0)
   const [scrollendreached, setscrollendreached] = useState(false)
   const [showTransparent, setshowtransparent] = useState(true)
@@ -166,7 +168,8 @@ const Component =  ({
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        id: Id
+        id: Id,
+        refCom: "jc"
       }
     },
     onCompleted: (response) => {
@@ -175,6 +178,7 @@ const Component =  ({
         setImages(response.getProductDetails.images)
         setStore(response.getProductDetails.shop)
         setRelevantProducts(response.getProductDetails.relevantProducts)
+        setPromotions(response.getProductDetails.promotions)
         setIsFetching(false)
         if(response.getProductDetails.noOfStocks <= 0) {
           setisOutOfStock(true)
@@ -478,6 +482,7 @@ const Component =  ({
             isLoading={isLoading} 
             setIsLoading={setIsLoading} 
             loading = {loading}
+            promotion={promotions}
           />
         }
 

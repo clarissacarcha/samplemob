@@ -127,7 +127,8 @@ const Component = ({
         getMyCartData({
           variables: {
             input: {
-              userId: data.userId
+              userId: data.userId,
+              refCom: ""
             }
           }
         })     

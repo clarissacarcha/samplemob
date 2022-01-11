@@ -101,7 +101,8 @@ export const FlashSale = () => {
     variables: {
       input: {
         offset: 90,
-        limit: 3
+        limit: 3,
+        refCom: "jc"
       }
     },
     onCompleted: (response) => {

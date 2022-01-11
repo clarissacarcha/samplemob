@@ -6,19 +6,24 @@ import {placeholder} from '../../../../assets';
 import { FONT, COLOR } from '../../../../../res/variables';
 import FastImage from 'react-native-fast-image'
 
+import { PromotionBanner } from '../../../../Components';
+
 import {coppermask} from '../../../../assets';
 import {Image as RNEImage} from 'react-native-elements'; 
 import Spinner from 'react-native-spinkit';
 
 const HEIGHT = 250
 
-export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, loading}) => {
+export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, loading, promotion}) => {
 
   const [activeSlide, setActiveSlide] = useState(0)
   const [entries, setEntries] = useState([1, 2, 3, 4, 5])
   const [imageLink, setImageLink] =useState('')
   const [hasSwiped, sethasSwiped] = useState(false)
   
+  useEffect(() => {
+    console.log("dito", promotion)
+  }, [])
 
   const renderItem = ({item, index}, parallaxProps) => {
 
@@ -35,6 +40,17 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
             <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
           </View>
         </View>}
+
+        {
+          promotion && promotion != null && 
+          <View style={{top: 120, width: '60%', left: 15, paddingHorizontal: 15}}>
+            <PromotionBanner 
+              label={promotion.name}
+              content={promotion.duration}
+            />
+          </View>
+        }
+
           <ParallaxImage
            // source={{uri: "https://cdn.searchenginejournal.com/wp-content/uploads/2019/04/shutterstock_456779230.png"}}
             source={getImage()}
@@ -46,15 +62,7 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
             }}
             parallaxFactor={0.05}
             {...parallaxProps}
-          />
-          {/* {
-            isOutOfStock &&
-            <View style={{position: "absolute", zIndex: 1, top: 60, left: HEIGHT / 2.5, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}}>
-            <View style={{width: 150, height: 150, borderRadius: 150/2, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
-              <Image source = {placeholder} style = {{opacity: 0.2, tintColor: 'gray'}} />
-            </View>
-          </View>
-          } */}
+          />          
       </View>
     )
   }

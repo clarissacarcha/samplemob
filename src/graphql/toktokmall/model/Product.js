@@ -27,6 +27,8 @@ export const GET_PRODUCTS = gql`
 				soldCount
 			    noOfStocks
 				discountRate
+				refComDiscountRate
+				refCom
 				images {
 					arrangement
 					filename
@@ -47,9 +49,20 @@ export const GET_TOP_PRODUCTS = gql`
 			  noOfStocks
 			  discountRate
 				compareAtPrice
+				refComDiscountRate
+				refCom
 				images {
 					arrangement
 					filename
+				}
+				promoIsset
+				promotions {
+					promoType
+	  	    promoPrice
+  	  	  promoRate
+      		name
+      		lossPromo
+      		duration
 				}
 			}
 		}
@@ -64,8 +77,10 @@ export const GET_FEATURED_PRODUCTS = gql`
 				soldCount
 				noOfStocks
 				discountRate
+				refComDiscountRate
 				otherinfo
 				compareAtPrice
+				refCom
 				images {
 					arrangement
 					filename
@@ -122,7 +137,9 @@ export const GET_PRODUCT_BY_CATEGORY = gql`
 			itemname
     	price
     	compareAtPrice
-		discountRate
+			discountRate
+			refComDiscountRate
+			refCom
     	variantSummary {
       	variantType
       	variantList
@@ -131,6 +148,15 @@ export const GET_PRODUCT_BY_CATEGORY = gql`
       	arrangement
      		filename
     	}
+			promoIsset
+				promotions {
+					promoType
+	  	    promoPrice
+  	  	  promoRate
+      		name
+      		lossPromo
+      		duration
+				}
 		}
 	}
 `
@@ -148,6 +174,8 @@ export const GET_PRODUCT_DETAILS = gql`
     	price
     	compareAtPrice
 			discountRate
+			refComDiscountRate
+			refCom
 			soldCount
     	images {
       	arrangement
@@ -164,7 +192,6 @@ export const GET_PRODUCT_DETAILS = gql`
 					logo
 				}
     	}
-    	
 			variations {
 				Id
 				itemname
@@ -175,6 +202,8 @@ export const GET_PRODUCT_DETAILS = gql`
     		price
     		compareAtPrice
 				discountRate
+				refComDiscountRate
+				refCom
 				soldCount
     		images {
       		arrangement
@@ -200,11 +229,22 @@ export const GET_PRODUCT_DETAILS = gql`
 			  noOfStocks
 			  compareAtPrice
 			  discountRate
+				refComDiscountRate
+				refCom
 				images {
 					arrangement
 					filename
 				}
 			}
+			promoIsset
+				promotions {
+					promoType
+	  	    promoPrice
+  	  	  promoRate
+      		name
+      		lossPromo
+      		duration
+				}
 		}
 	}
 `
@@ -215,13 +255,23 @@ export const SEARCH_PRODUCT = gql`
 			Id
     	itemname
     	price
-		discountRate
-		compareAtPrice
-		soldCount
+			discountRate
+			refComDiscountRate
+			compareAtPrice
+			soldCount
     	images {
       	arrangement
       	filename
     	}
+			promoIsset
+				promotions {
+					promoType
+	  	    promoPrice
+  	  	  promoRate
+      		name
+      		lossPromo
+      		duration
+				}
 		}
 	}
 `

@@ -29,7 +29,8 @@ export const ToktokMallStore = ({navigation, route}) => {
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        id: route.params.id
+        id: route.params.id,
+        refCom: ""
       }
     },
     onCompleted: (response) => {

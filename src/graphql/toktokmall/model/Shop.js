@@ -20,6 +20,15 @@ export const GET_SHOP_DETAILS = gql`
 					arrangement
 					filename
 				}
+				promoIsset
+				promotions {
+					promoType
+	  	    promoPrice
+  	  	  promoRate
+      		name
+      		lossPromo
+      		duration
+				}
 			}
     	profileImages {
       	logo
@@ -36,13 +45,22 @@ export const SEARCH_SHOP_PRODUCT = gql`
     	sysShop
     	itemname
     	price
-		discountRate
-		compareAtPrice
-		soldCount
-		noOfStocks
-    	images {
-      	filename
-    	}
+			discountRate
+			compareAtPrice
+			soldCount
+			noOfStocks
+			images {
+				filename
+			}
+			promoIsset
+				promotions {
+					promoType
+	  	    promoPrice
+  	  	  promoRate
+      		name
+      		lossPromo
+      		duration
+				}
 		}
 	}
 `
@@ -60,6 +78,15 @@ export const GET_SHOP_SEARCH_SUGGESTIONS = gql`
 			images {
 				filename
 			}
+			promoIsset
+				promotions {
+					promoType
+	  	    promoPrice
+  	  	  promoRate
+      		name
+      		lossPromo
+      		duration
+				}
 		}
 	}
 `

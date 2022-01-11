@@ -6,7 +6,7 @@ import CustomIcon from '../../../../Components/Icons';
 import {placeholder} from '../../../../assets';
 import { useNavigation } from '@react-navigation/core';
 
-import { SwipeReloader } from '../../../../Components';
+import { SwipeReloader, PromotionBanner } from '../../../../Components';
 import { Price } from '../../../../helpers';
 
 const RenderStars = ({value}) => {
@@ -42,6 +42,13 @@ const RenderItem = ({item, navigation}) => {
           <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
             <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
           </View>}
+          {
+            item.promotions && item.promotions != null &&
+            <PromotionBanner 
+              label={item.promotions.name}
+              content={item.promotions.duration}
+            />
+          }
           <Image 
             source={getImageSource(item?.images || [])} 
             style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
@@ -72,6 +79,9 @@ const RenderItem = ({item, navigation}) => {
               <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>
+          {
+            item.refComDiscountRate && item.refComDiscountRate != null ? <RefComDiscountRate value={item.refComDiscountRate} /> : null
+          }
         </View>
       </View>
     </>

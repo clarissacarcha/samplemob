@@ -156,7 +156,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                     shopId: route.params.id,
                     search: searchValue,
                     offset: 0,
-                    limit: 10
+                    limit: 10,
+                    refCom: ""
                   }
                 }
               })
@@ -218,7 +219,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                           shopId: route.params.id,
                           search: item.tags,
                           offset: searchedProducts.length,
-                          limit: 10
+                          limit: 10,
+                          refCom: ""
                         }
                       }
                     })
@@ -262,7 +264,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                     shopId: route.params.id,
                     search: item,
                     offset: searchedProducts.length,
-                    limit: 10
+                    limit: 10,
+                    refCom: ""
                   }
                 }
               })
@@ -288,7 +291,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                     shopId: route.params.id,
                     search: searchValue,
                     offset: searchedProducts.length,
-                    limit: 10
+                    limit: 10,
+                    refCom: ""
                   }
                 }
               })

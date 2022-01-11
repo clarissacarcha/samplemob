@@ -362,7 +362,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
         variables: {
           input: {
             userId: userData.userId,
-            shops: shops            
+            shops: shops,
+            refCom: ""         
           }
         }
       })

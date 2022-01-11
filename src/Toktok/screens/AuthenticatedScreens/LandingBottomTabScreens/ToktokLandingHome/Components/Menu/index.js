@@ -54,7 +54,6 @@ export const Menu = ({setUserLocation, constants}) => {
         onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
       />
       <MenuIcon label={'pabili'} icon={PabiliIcon} onPress={() => navigation.push('Pabili')} />
-
       <MenuIcon
         label={'toktokwallet'}
         icon={WalletIcon}

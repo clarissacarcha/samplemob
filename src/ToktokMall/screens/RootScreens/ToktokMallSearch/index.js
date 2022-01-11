@@ -186,7 +186,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
             origin: route.params?.origin ? `${route.params.origin}` : "all",
             category: route.params?.categoryId ? route.params?.categoryId : null,
             offset: offset,
-            limit: 10
+            limit: 10,
+            refCom: ""
           }
         }
       })
@@ -239,7 +240,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   search: val,
                   origin: "all",
                   offset: 0,
-                  limit: 10
+                  limit: 10,
+                  refCom: ""
                 }
               }
             })
@@ -262,7 +264,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   search: searchValue,
                   origin: "all",
                   offset: 0,
-                  limit: 10
+                  limit: 10,
+                  refCom: ""
                 }
               }
             })
@@ -277,7 +280,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   origin: route.params?.origin ? `${route.params.origin}` : "all",
                   category: route.params?.categoryId ? route.params?.categoryId : null,
                   offset: offset,
-                  limit: 10
+                  limit: 10,
+                  refCom: ""
                 }
               }
             })
@@ -330,7 +334,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                     origin: "all",
                     category: route.params?.categoryId ? route.params?.categoryId : null,
                     offset: 0,
-                    limit: 10
+                    limit: 10,
+                    refCom: ""
                   }
                 }
               })
@@ -375,7 +380,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   origin: route.params?.origin ? route.params.origin : "all",
                   category: route.params?.categoryId ? route.params?.categoryId : null,
                   offset: searchedProducts.length,
-                  limit: 10
+                  limit: 10,
+                  refCom: ""
                 }
               }
             })
@@ -466,7 +472,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                           origin: route.params?.origin ? route.params.origin : "all",
                           category: route.params?.categoryId ? route.params?.categoryId : null,
                           offset: 0,
-                          limit: 10
+                          limit: 10,
+                          refCom: ""
                         }
                       }
                     })

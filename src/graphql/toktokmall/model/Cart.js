@@ -49,6 +49,14 @@ export const GET_MY_CART =  gql`
 							filename
 						}
 						enabled
+						promotions {
+							promoType
+							promoPrice
+							promoRate
+							name
+							lossPromo
+							duration
+						}
 					}
 				}
 			}
