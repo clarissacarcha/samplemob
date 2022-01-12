@@ -39,7 +39,6 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
 
   useEffect(() => {
     if(isFocused){
-      setSelectedLoad({});
       onRefresh();
     }
   }, [isFocused])

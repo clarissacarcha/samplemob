@@ -142,7 +142,7 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
           { errorMessage != "" && <Text style={styles.errorText}>{errorMessage}</Text> }
           { requestMoneyDetails?.validator === "TPIN" && (
             <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressForgotTPIN}>
-              <Text style={styles.forgotTPIN}>Forgot TPIN</Text>
+              <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
             </TouchableOpacity>
           )}
         </View>
