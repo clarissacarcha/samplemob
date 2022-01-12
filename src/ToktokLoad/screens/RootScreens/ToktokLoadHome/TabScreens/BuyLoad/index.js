@@ -20,10 +20,8 @@ export const BuyLoad = ({ navigation, setMobileNumber, mobileNumber }) => {
   const onChangeText = (value) => {
     let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
   
-    if(mobile.length == 0){
-      setErrorMessage("Mobile Number is required.");
-    } else if(mobile.substring(0, 2) != "09" || mobile.length != 11){
-      setErrorMessage("Mobile Number must be valid");
+    if(mobile.length != 0 && (mobile.substring(0, 2) != "09" || mobile.length != 11)){
+      setErrorMessage("Enter 11-digits valid mobile number");
     } else {
       setErrorMessage("");
     }
@@ -55,7 +53,7 @@ export const BuyLoad = ({ navigation, setMobileNumber, mobileNumber }) => {
           <TextInput
             value={mobileNumber}
             onChangeText={onChangeText}
-            placeholder="Enter Mobile Number"
+            placeholder="Enter 11-digits mobile number"
             keyboardType="number-pad"
             returnKeyType="done"
             maxLength={11}
