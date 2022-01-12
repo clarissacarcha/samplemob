@@ -6,7 +6,7 @@ import { useIsFocused } from '@react-navigation/native';
 //SELF IMPORTS
 import { BillerType } from "./Components";
 import { HeaderBack, HeaderTitle, Separator, LoadingIndicator } from 'toktokbills/components';
-import { SomethingWentWrong } from 'src/components';
+import { SomethingWentWrong } from 'toktokbills/components';
 
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
@@ -33,10 +33,13 @@ export const ToktokBillsHome = ({navigation,route})=> {
   const [getBillTypes, {loading, error, refetch}] = useLazyQuery(GET_BILL_TYPES, {
     fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: () => { setRefreshing(false) },
+    onError: () => {
+      setRefreshing(false);
+      setBillTypes([]);
+    },
     onCompleted: ({ getBillTypes }) => {
       setRefreshing(false);
-      setBillTypes(getBillTypes)
+      setBillTypes(getBillTypes);
     }
   })
 
@@ -59,7 +62,7 @@ export const ToktokBillsHome = ({navigation,route})=> {
   if(error){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} />
+        <SomethingWentWrong onRefetch={onRefresh} error={error} />
       </View>
     )
   }

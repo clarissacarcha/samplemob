@@ -21,7 +21,7 @@ const {width,height} = Dimensions.get("window");
 
 //COMPONENTS
 import { OrangeButton, HeaderBack, HeaderTitle, LoadingIndicator, HeaderDownloadReceipt } from "toktokbills/components";
-import { SomethingWentWrong } from 'src/components'
+import { SomethingWentWrong } from 'toktokbills/components'
 import { Header, ReceiptDetails } from "./components";
 
 //FONTS & COLORS & IMAGES

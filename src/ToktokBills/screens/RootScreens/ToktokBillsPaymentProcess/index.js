@@ -8,7 +8,7 @@ import { moderateScale, numberFormat } from 'toktokbills/helper'
 //COMPONENTS
 import { HeaderBack, HeaderTitle, Separator, LoadingIndicator } from 'toktokbills/components'
 import { ConfirmButton, PaymentForm, VerifyContextProvider, VerifyContext } from './Components';
-import { SomethingWentWrong } from 'src/components'
+import { SomethingWentWrong } from 'toktokbills/components'
 
 // FONTS AND COLORS
 import CONSTANTS from 'common/res/constants'
@@ -34,6 +34,10 @@ const MainComponent = ({navigation, route})=> {
     fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT
   });
+
+  const onRefetch = () => {
+    refetch();
+  }
  
   if(loading){
     return(
@@ -45,7 +49,7 @@ const MainComponent = ({navigation, route})=> {
   if(error){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={refetch} />
+        <SomethingWentWrong onRefetch={onRefetch} error={error} />
       </View>
     )
   }
