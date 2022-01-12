@@ -40,7 +40,7 @@ export const BuildPostCheckoutBody = async ({
 			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates, shippingVouchers}),
 			//Optional values
 			user_id: session.userId,
-			notes: "This is a test order from mobile",
+			notes: addressData.landmark || "",
 			latitude: "",
 			longitude: "",
 			postalcode: "",

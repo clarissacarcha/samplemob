@@ -12,6 +12,7 @@ export const GET_CHECKOUT_DATA = gql`
 				provinceId
 				municipalityId     
 				fullAddress 
+				landmark
 				shippingSummary {
 					id
 					rateName
