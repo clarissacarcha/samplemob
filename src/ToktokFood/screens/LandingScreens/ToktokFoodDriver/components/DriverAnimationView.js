@@ -18,7 +18,7 @@ import {
   // getRiderDetails,
   // clearRiderDetails,
 } from 'toktokfood/helper/showRiderDetails';
-import {orderStatusMessageDelivery, orderStatusMessagePickUp} from 'toktokfood/helper/orderStatusMessage';
+import {orderStatusMessageDelivery, orderStatusMessagePickUp, isPastOrder} from 'toktokfood/helper/orderStatusMessage';
 
 const statusImage = (riderDetails, orderIsfor, orderStatus) => {
   if (orderStatus == 'p') {
@@ -32,9 +32,9 @@ const statusImage = (riderDetails, orderIsfor, orderStatus) => {
   }
 };
 
-const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNum}) => {
+const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNum, dateOrdered}) => {
   const [showDriverModal, setShowDriverModal] = useState(false);
-  const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus) : orderStatusMessagePickUp(orderStatus);
+  const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus, dateOrdered) : orderStatusMessagePickUp(orderStatus);
 
   useEffect(() => {
     if (riderDetails != null && orderStatus != 's') {
@@ -75,7 +75,7 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
       {/* Contact Support */}
       <View style={styles.imgContainer}>
         {orderStatus != 's' && orderStatus != 'c' && orderStatus != 'f' && orderIsfor == 1 && (
-          <Text style={styles.title}>{status.title}</Text>
+          <Text style={{...styles.title, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>{status.title}</Text>
         )}
         {orderIsfor == 2 && <Text style={styles.title}>{status.title}</Text>}
         <Image style={styles.img} source={statusImage(riderDetails, orderIsfor, orderStatus)} resizeMode="contain" />

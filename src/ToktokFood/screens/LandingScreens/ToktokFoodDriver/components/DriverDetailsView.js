@@ -18,7 +18,7 @@ import {time} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
-import {orderStatusMessageDelivery} from 'toktokfood/helper/orderStatusMessage';
+import {orderStatusMessageDelivery, isPastOrder} from 'toktokfood/helper/orderStatusMessage';
 import {getDuration} from 'toktokfood/helper/index';
 
 import moment from 'moment';
@@ -52,12 +52,14 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     dateFulfilled,
     latitude,
     longitude,
+    dateOrdered,
   } = transaction;
   const status = orderStatusMessageDelivery(
     orderStatus,
-    riderDetails,
-    `${shopDetails.shopname} (${shopDetails.address})`,
-    isdeclined,
+    dateOrdered,
+    // riderDetails,
+    // `${shopDetails.shopname} (${shopDetails.address})`,
+    // isdeclined,
   );
   const minutesInHours = 60;
   const isFocus = useIsFocused();
@@ -202,7 +204,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     return (
       <View style={styles.detailsContainer}>
         {(status.id == 'f' || status.id == 's' || status.id == 'c') && <Text style={styles.title}>{status.title}</Text>}
-        {status.message != '' && <Text style={styles.status}>{status.message}</Text>}
+        {status.message != '' && <Text style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>{status.message}</Text>}
         {orderStatus != 'p' && orderStatus != 'c' && orderStatus != 's' && displayEstimatedDeliveryTime()}
       </View>
     );
@@ -316,6 +318,7 @@ const styles = StyleSheet.create({
   status: {
     fontSize: FONT_SIZE.M,
     marginVertical: verticalScale(5),
+    textAlign: 'center',
   },
   seeOrderDetails: {
     padding: moderateScale(20),
