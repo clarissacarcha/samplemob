@@ -10,7 +10,7 @@ import { moderateScale, numberFormat } from 'toktokbills/helper'
 //COMPONENTS
 import { HeaderBack, HeaderTitle, Separator, LoadingIndicator } from 'toktokbills/components'
 import { ConfirmButton, PaymentDetails, VerifyContextProvider, VerifyContext, PaymentMethod } from './Components';
-import { SomethingWentWrong } from 'src/components'
+import { SomethingWentWrong } from 'toktokbills/components'
 
 // FONTS AND COLORS
 import CONSTANTS from 'common/res/constants'
@@ -56,7 +56,7 @@ export const ToktokBillsPaymentSummary = ({ navigation, route }) => {
   if(getMyAccountError){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} />
+        <SomethingWentWrong onRefetch={onRefresh} error={getMyAccountError} />
       </View>
     )
   }
