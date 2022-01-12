@@ -31,7 +31,7 @@ const mapDispatchtoProps = (dispatch) => ({
     })
 })
 
-export const Receipt = connect(null,mapDispatchtoProps)(({children, setVisible,format, refNo ,refDate, onPress,savedAccounts,activeAccount,cashoutLogParams,refreshTokwaState})=> {
+export const Receipt = connect(null,mapDispatchtoProps)(({children, setVisible,format = "png", refNo ,refDate, onPress,savedAccounts,activeAccount,accountName,cashoutLogParams,refreshTokwaState})=> {
 
     const viewshotRef = useRef()
     const [isSaveAccount,setIsSaveAccount] = useState(true)
@@ -177,7 +177,8 @@ export const Receipt = connect(null,mapDispatchtoProps)(({children, setVisible,f
                 navigation.pop()
                 navigation.navigate("ToktokWalletCashOutSaveAccount", {
                     bank: cashoutLogParams.bank,
-                    cashoutLogParams: cashoutLogParams
+                    cashoutLogParams: cashoutLogParams,
+                    accountName: accountName,
                 })
                return setVisible(false)
             }
@@ -193,7 +194,7 @@ export const Receipt = connect(null,mapDispatchtoProps)(({children, setVisible,f
             <ViewShot 
                 style={styles.viewShot} 
                 ref={viewshotRef}
-                options={{ format: format ? format : "jpg", quality: 0.9,width: width,height: height * 0.6 ,result: 'tmpfile' }}
+                options={{ format: "png","width/height": 1100/800,result: 'tmpfile' }}
             >
 
                <Image source={require('toktokwallet/assets/images/success.png')}/>

@@ -426,6 +426,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 tokwaAccount={tokwaAccount}
                 savedAccounts={savedAccounts}
                 activeAccount={activeAccount}
+                accountName={accountName}
                 note={note}
                 screenLabel={screenLabel}
             />

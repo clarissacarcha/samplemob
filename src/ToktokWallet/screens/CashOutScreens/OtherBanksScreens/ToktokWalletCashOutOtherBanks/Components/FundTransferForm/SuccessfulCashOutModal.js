@@ -20,7 +20,7 @@ const TransactionInfo = ({label,value})=> (
     </View>
 )
 
-const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAccount, savedAccounts, note, activeAccount, screenLabel})=> {
+const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAccount, savedAccounts, note, activeAccount, screenLabel , accountName})=> {
     const navigation = useNavigation()
 
     let status
@@ -67,6 +67,7 @@ const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAcc
                 onPress={Proceed}
                 savedAccounts={savedAccounts}
                 activeAccount={activeAccount}
+                accountName={accountName}
                 cashoutLogParams={cashoutLogParams}
                 setVisible={setVisible}
             >
