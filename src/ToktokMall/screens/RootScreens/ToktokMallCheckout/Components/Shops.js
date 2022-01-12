@@ -26,10 +26,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getHashDeliveryAmount){
-        console.log(response.getHashDeliveryAmount)
-        let items = ArrayCopy(CheckoutContextData.shippingVouchers)
-        items[response.getHashDeliveryAmount.index].hash_delivery_amount = response.getHashDeliveryAmount.hash
-        CheckoutContextData.setShippingVouchers(items)
+        CheckoutContextData.setShippingVouchers(response.getHashDeliveryAmount.data)
       }
     },
     onError: (err) => {
@@ -42,9 +39,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getHashDeliveryAmount){
-        let items = ArrayCopy(CheckoutContextData.defaultVouchers)
-        items[response.getHashDeliveryAmount.index].hash_delivery_amount = response.getHashDeliveryAmount.hash
-        CheckoutContextData.setDefaultVouchers(items)
+        CheckoutContextData.setDefaultVouchers(response.getHashDeliveryAmount.data)
       }
     },
     onError: (err) => {
@@ -112,7 +107,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       })
   }  
 
-  const renderVoucherForm = (index, item, subTotal) => {
+  const renderVoucherForm = (i, item, subTotal) => {
 
     const [voucherIsValid, setVoucherIsValid] = useState(0)
     const [vcode, setvcode] = useState("")
@@ -130,6 +125,8 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         promo_count: 1,
         is_mystery: 0
       }
+
+      let index = CheckoutContextData.shippingVouchers.findIndex(a => a.shopid == item.shop.id)
 
       setloading(true)
       const req = await ApiCall("validate_voucher", payload, false)
@@ -149,11 +146,10 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             items[index] = req.responseData.voucher
             items[index].discountedAmount = 0
             items[index].discount = 0
-            CheckoutContextData.setShippingVouchers(items)
+
             getShippingHashDeliveryAmount({variables: {
               input: {
-                value: 0,
-                index: index
+                items: items
               }
             }})
 
@@ -167,11 +163,10 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             items[index] = req.responseData.voucher
             items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
             items[index].discount = calculatedDiscount < 0 ? 0 : calculatedDiscount
-            CheckoutContextData.setShippingVouchers(items)
+
             getShippingHashDeliveryAmount({variables: {
               input: {
-                value: calculatedDiscount < 0 ? 0 : calculatedDiscount,
-                index: index
+                items: items
               }
             }})
 
@@ -183,18 +178,12 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             items[index] = req.responseData.voucher
             items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
             items[index].discount = calculatedDiscount < 0 ? 0 : calculatedDiscount
-            CheckoutContextData.setShippingVouchers(items)
+
             getShippingHashDeliveryAmount({variables: {
               input: {
-                value: calculatedDiscount < 0 ? 0 : calculatedDiscount,
-                index: index
+                items: items
               }
             }})
-
-            // items[index].discount = calculatedDiscount
-            // console.log("Shipping Item", items[index])
-            
-            // CheckoutContextData.setShippingVouchers(items)
           
           }
 
@@ -203,11 +192,12 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           //DEFAULT
           let items = ArrayCopy(CheckoutContextData.defaultVouchers)
           items[index] = req.responseData.voucher
-          CheckoutContextData.setDefaultVouchers(items)
+          items[index].discountedAmount = req.responseData.voucher.amount
+          items[index].discount = req.responseData.voucher.amount
+
           getDefaultHashDeliveryAmount({variables: {
             input: {
-              value: req.responseData.voucher.amount,
-              index: index
+              items: items
             }
           }})
         }
@@ -428,15 +418,19 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             let rates = CheckoutContextData.shippingFeeRates[index]
             // console.log("Rates shopid: " + shop.id, rates)
             return rates.original_shipping
-          }         
+          }else{
+            return 0
+          }    
         }else{
           return 0
         }
       }
 
-      const getIsShippingServiceAreaInvalid = (index) => {
+      const getIsShippingServiceAreaInvalid = (shopid) => {
         if(CheckoutContextData.unserviceableShipping.length > 0){
-          return CheckoutContextData.unserviceableShipping[index] != null
+          let index = CheckoutContextData.unserviceableShipping.findIndex(a => a.shopid == shopid)
+          // return CheckoutContextData.unserviceableShipping[index] != null
+          return index > -1
         }else{
           return false
         }
@@ -483,7 +477,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           </View>
           <TouchableOpacity style={styles.deliveryfeeContainer} >
 
-            {getIsShippingServiceAreaInvalid(i) ? renderInvalidShipping() : renderValidShipping(i, shipping, item, shop.id)}
+            {getIsShippingServiceAreaInvalid(shop.id) ? renderInvalidShipping() : renderValidShipping(i, shipping, item, shop.id)}
 
           </TouchableOpacity>
 

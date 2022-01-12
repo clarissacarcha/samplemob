@@ -47,7 +47,7 @@ export const BuildPostCheckoutBody = async ({
 			account_type: 0,
 			disrate: [],
 			vouchers: vouchers,
-			shippingvouchers: shippingVouchers,
+			shippingvouchers: CheckShippingVouchers(shippingVouchers),
 			referral_code: referral?.referralCode && referral?.referralCode != null ? referral?.referralCode : "",
 			referral_account_type: referral?.franchiseeAccountType && referral?.franchiseeAccountType != null ? referral?.franchiseeAccountType : "",
 			payment_method: paymentMethod,
@@ -99,16 +99,17 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 		})
 
 		let shippingfeeindex = shippingRates.findIndex((e) => e.shopid == val.shop.id)
+		let vdiscountindex = shippingVouchers.findIndex((e) => e.shopid == val.shop.id)
 
 		logs.push({
 			sys_shop: val.shop.id,
 			branchid: shippingRates[shippingfeeindex].branchid,
 			// delivery_amount: shipping.rateAmount,
-			delivery_amount: shippingVouchers[index] ? shippingVouchers[index].discount : parseFloat(shippingRates[shippingfeeindex].shippingfee),
+			delivery_amount: shippingVouchers[vdiscountindex] && shippingVouchers[vdiscountindex]?.discountedAmount != undefined ? shippingVouchers[vdiscountindex].discountedAmount : parseFloat(shippingRates[shippingfeeindex].shippingfee),
 			original_shipping_fee: parseFloat(shippingRates[shippingfeeindex].original_shipping),
 			handle_shipping_promo: 1,
 			hash: shippingRates[shippingfeeindex].hash,
-			hash_delivery_amount:  shippingVouchers[index] ? shippingVouchers[index].hash_delivery_amount : shippingRates[shippingfeeindex].hash_price,
+			hash_delivery_amount:  shippingVouchers[vdiscountindex] && shippingVouchers[vdiscountindex]?.hash_delivery_amount != undefined ? shippingVouchers[vdiscountindex].hash_delivery_amount : shippingRates[shippingfeeindex].hash_price,
 			daystoship: shipping.fromDay,
 			daystoship_to: shipping.toDay,
 			items: items
@@ -138,5 +139,17 @@ export const BuildTransactionPayload = async ({method, notes, total, toktokid}) 
 				notes: notes
 			}
 		}
+	}
+}
+
+export const CheckShippingVouchers = (data) => {
+	if(data.length > 0){
+		if(data[0].amount){
+			return data
+		}else{
+			return []
+		}
+	}else{
+		return []
 	}
 }

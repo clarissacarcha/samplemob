@@ -82,7 +82,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         await setPaymentList(data.paymentMethods)
         let shippingrates = await getShippingRates(data.shippingRatePayload, data.cartrawdata)
         if(shippingrates.length > 0){
-          data.autoShippingPayload.cartitems = shippingrates
+          data.autoShippingPayload.cartitems = shippingrates          
           await getAutoShipping(data.autoShippingPayload)
         }
         
@@ -103,9 +103,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getHashDeliveryAmount){
-        let items = ArrayCopy(CheckoutContextData.shippingVouchers)
-        items[response.getHashDeliveryAmount.index].hash_delivery_amount = response.getHashDeliveryAmount.hash
-        CheckoutContextData.setShippingVouchers(items)
+        CheckoutContextData.setShippingVouchers(response.getHashDeliveryAmount.data)
       }
     },
     onError: (err) => {
@@ -137,37 +135,50 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   const getAutoShipping = async (payload) => {
 
+    //setup empty vouchers list
+    let initialShippingVouchers = []
+    payload?.cartitems.map((item) => {
+      initialShippingVouchers.push({
+        shopid: item.shopid
+      })
+    })
+    CheckoutContextData.setShippingVouchers(initialShippingVouchers)
+
     setInitialLoading(true)
     console.log("Auto Shipping Payload", JSON.stringify(payload))
     const res = await ApiCall("get_autoshipping_discount", payload, true)
 
     if(res.responseData && res.responseData.success){
 
-      let items = ArrayCopy(CheckoutContextData.shippingVouchers)
+      let items = ArrayCopy(initialShippingVouchers)
 
       if(res.responseData.type == "shipping"){
+
         res.responseData.voucher.map((item, indexx) => {
+
+          let shopvoucherIndex = items.findIndex(a => a.shopid == item.shopid)
+         
           if(item.type == "shipping"){
             item.vouchers.map(async (voucher, index) => {
 
-              if(voucher.amount == 0){
+              if(shopvoucherIndex > -1 && voucher.amount == 0){
 
-                items[index] = voucher
-                items[index].discountedAmount = 0
-                items[index].discount = 0
-                CheckoutContextData.setShippingVouchers(items)
-                getShippingHashDeliveryAmount({variables: {
-                  input: {
-                    value: 0,
-                    index: index
-                  }
-                }})
-
+                items[shopvoucherIndex] = voucher
+                items[shopvoucherIndex].discountedAmount = 0
+                items[shopvoucherIndex].discount = 0
+                
               }
               
-            })         
+            })  
           }
         })
+
+        getShippingHashDeliveryAmount({variables: {
+          input: {
+            items: items
+          }
+        }})
+
       }
 
     }else if(res.responseError){
@@ -419,11 +430,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
     }
 
     let _subTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp)
-    let srpGrandTotal = parseFloat(orderTotal) + parseFloat(originalShippingFeeTotal)
+    let srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp)
 
-    setSubTotal(_subTotal)
-    setSrpTotal(srpGrandTotal)
-    setGrandTotal(_subTotal)
+    setSubTotal(orderTotal)
+    setSrpTotal(orderTotal)
+    setGrandTotal(srpGrandTotal)
   }
 
   const getShopItemPayload = () => {
