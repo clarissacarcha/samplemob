@@ -11,7 +11,13 @@ import {CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT, TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIE
 import {splash} from 'toktokfood/assets/images';
 import AlertModal from 'toktokfood/components/AlertModal';
 
-import {CREATE_ACCOUNT, GET_ACCOUNT, GET_KYC_STATUS, PATCH_PERSON_HAS_TOKTOKFOOD} from 'toktokfood/graphql/toktokfood';
+import {
+  CREATE_ACCOUNT,
+  GET_ACCOUNT,
+  GET_CONSUMER_TYPE,
+  GET_KYC_STATUS,
+  PATCH_PERSON_HAS_TOKTOKFOOD,
+} from 'toktokfood/graphql/toktokfood';
 import {useUserLocation} from 'toktokfood/hooks';
 
 const TokTokFoodSplashScreen = () => {
@@ -53,6 +59,26 @@ const TokTokFoodSplashScreen = () => {
     },
   });
 
+  const [getConsumerStatus] = useLazyQuery(GET_CONSUMER_TYPE, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    context: {
+      headers: {
+        'x-api-key': 'ABCD1234',
+      },
+    },
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        referenceNumber: String(user.id),
+      },
+    },
+    onCompleted: ({getConsumer}) => {
+      console.log('getConsumer', getConsumer);
+      dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_FRANCHISEE', payload: {...getConsumer}});
+    },
+    onError: error => console.log(error),
+  });
+
   const [getKycStatus] = useLazyQuery(GET_KYC_STATUS, {
     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
     context: {
@@ -77,24 +103,22 @@ const TokTokFoodSplashScreen = () => {
     onError: error => console.log(error),
   });
 
-  const [getToktokUserInfo, {data: foodPerson, error: foodPersonError, loading: foodPersonLoading}] = useLazyQuery(
-    GET_ACCOUNT,
-    {
-      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      fetchPolicy: 'network-only',
-      onError: error => {
-        setErrorModal({error, visible: true});
-      },
-      onCompleted: async ({getAccount}) => {
-        await getKycStatus();
-        if (user.toktokfoodUserId != null) {
-          dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
-        } else {
-          addToktokFoodId(getAccount);
-        }
-      },
+  const [getToktokUserInfo] = useLazyQuery(GET_ACCOUNT, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: error => {
+      setErrorModal({error, visible: true});
     },
-  );
+    onCompleted: async ({getAccount}) => {
+      await getConsumerStatus();
+      await getKycStatus();
+      if (user.toktokfoodUserId != null) {
+        dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
+      } else {
+        addToktokFoodId(getAccount);
+      }
+    },
+  });
 
   const addToktokFoodId = account => {
     updateToktokUser({

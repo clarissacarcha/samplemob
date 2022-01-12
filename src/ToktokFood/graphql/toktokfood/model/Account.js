@@ -58,3 +58,13 @@ export const GET_KYC_STATUS = gql`
     }
   }
 `;
+
+export const GET_CONSUMER_TYPE = gql`
+  query getConsumer {
+    getConsumer {
+      referralCode
+      franchiseeCode
+      franchiseeAccountType
+    }
+  }
+`;
