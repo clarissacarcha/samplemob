@@ -37,10 +37,12 @@ export const ReceiptDetails = ({ route }) => {
           <Text style={styles.title}>Load Amount </Text>
           <Text style={styles.description}>PHP {numberFormat(amount)}</Text>
         </View>
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Discount </Text>
-          <Text style={styles.description}>PHP {numberFormat(discount)}</Text>
-        </View> 
+        { discount > 0 && (
+          <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
+            <Text style={styles.title}>Discount </Text>
+            <Text style={styles.description}>PHP {numberFormat(discount)}</Text>
+          </View> 
+        )}
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Status </Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
