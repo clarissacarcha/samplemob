@@ -17,7 +17,7 @@ const mapKeyValueToObject = keyValueArray => {
     return result;
 };
 
-export const useAccount = ()=> {
+export const useAccount = (options)=> {
     const alert = useAlert()
     const dispatch = useDispatch()
     const navigation = useNavigation();
@@ -49,7 +49,7 @@ export const useAccount = ()=> {
         onError: (error)=> onErrorAlert({alert,error})
     })
 
-    const [getMyAccount , {loading}] = useLazyQuery(GET_MY_ACCOUNT , {
+    const [getMyAccount , {loading, error}] = useLazyQuery(GET_MY_ACCOUNT , {
         fetchPolicy:"network-only",
         client:TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: async ({getMyAccount})=> {
@@ -93,6 +93,7 @@ export const useAccount = ()=> {
         checkIfTpinIsSet,
         getMyAccountLoading: loading,
         getGlobalSettings,
-        getGlobalSettingsLoading
+        getGlobalSettingsLoading,
+        getMyAccountError: error,
     }
 }

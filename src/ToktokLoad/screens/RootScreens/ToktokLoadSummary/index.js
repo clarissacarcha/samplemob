@@ -9,7 +9,7 @@ import { moderateScale, numberFormat } from "toktokload/helper";
 //COMPONENTS
 import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, Separator } from "src/ToktokLoad/components";
 import { PaymentMethod, PayNowButton, SummaryDetails } from "./components";
-import { SomethingWentWrong } from 'src/components'
+import { SomethingWentWrong } from 'toktokload/components'
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
@@ -62,7 +62,7 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
   if(getMyAccountError){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} />
+        <SomethingWentWrong onRefetch={onRefresh} error={getMyAccountError} />
       </View>
     )
   }
