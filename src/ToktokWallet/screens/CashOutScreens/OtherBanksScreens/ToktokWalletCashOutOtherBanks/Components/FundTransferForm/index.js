@@ -19,11 +19,29 @@ import CONSTANTS from 'common/res/constants'
 import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
-const Amount = ({changeErrorMessagge ,errorListMessage , providerServiceFee , systemServiceFee , computeConvenienceFee })=> {
+const Amount = ({
+    changeErrorMessagge ,
+    errorListMessage , 
+    providerServiceFee , 
+    systemServiceFee , 
+    computeConvenienceFee ,
+    computeLoading
+})=> {
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const { amount ,setAmount , note , setNote ,bank } = useContext(ContextCashOut)
     const [maxAmount , setMaxAmount] = useState(null)
+    const isCFComputed = providerServiceFee != ""
+    let cfMessage = null;
+
+    if(isCFComputed){
+        cfMessage =   +providerServiceFee + +systemServiceFee == 0 
+                      ? `Convenience fee is waived for this transaction.`
+                      : `Additional PHP ${numberFormat(+providerServiceFee + +systemServiceFee)} convenience fee will be charged in this transaction.`
+    }
+
+    console.log(isCFComputed , providerServiceFee)
+    console.log(cfMessage , systemServiceFee)
 
 
     const changeAmount = (value)=> {
@@ -74,14 +92,7 @@ const Amount = ({changeErrorMessagge ,errorListMessage , providerServiceFee , sy
                     </View>
             </View>
             {errorListMessage.amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.amount}</Text>}
-            { providerServiceFee && systemServiceFee &&
-             <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>
-                 { +providerServiceFee + +systemServiceFee == 0 
-                    ? "Convenience fee is waived for this transaction"
-                    : `Additional PHP ${numberFormat(+providerServiceFee + +systemServiceFee)} convenience fee will be charged in this transaction`
-                 }
-             </Text>
-            }
+            {isCFComputed && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
@@ -212,8 +223,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         status: 0
     })
     const [successModalVisible,setSuccessModalVisible] = useState(false)
-    const [providerServiceFee,setProviderServiceFee] = useState(null)
-    const [systemServiceFee,setSystemServiceFee] = useState(null)
+    const [providerServiceFee,setProviderServiceFee] = useState("")
+    const [systemServiceFee,setSystemServiceFee] = useState("")
 
     const {
         accountName,
@@ -256,7 +267,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
     const [postComputeConvenienceFee , {loading: computeLoading}] = useMutation(POST_COMPUTE_CONVENIENCE_FEE, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onError: (error)=> onErrorAlert({alert,error}),
+        // onError: (error)=> onErrorAlert({alert,error}),
         onCompleted: ({postComputeConvenienceFee})=> {
             const { providerServiceFee , systemServiceFee , type } = postComputeConvenienceFee
             setSystemServiceFee(systemServiceFee)
@@ -374,7 +385,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
         if(!noError) return
 
-        if(!providerServiceFee || !systemServiceFee){
+        if(providerServiceFee == "" || systemServiceFee == ""){
              postComputeConvenienceFee({
                 variables: {
                     input: {
@@ -383,7 +394,6 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                     }
                 }
             })
-            return;
         }
 
         navigation.navigate("ToktokWalletReviewAndConfirm", {
@@ -408,7 +418,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
     return (
         <>
-            <AlertOverlay visible={requestLoading || loading || computeLoading}/>
+            <AlertOverlay visible={requestLoading || loading}/>
             <SuccessfulCashOutModal 
                 visible={successModalVisible}
                 setVisible={setSuccessModalVisible}
@@ -428,6 +438,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 errorListMessage={errorListMessage}
                 providerServiceFee={providerServiceFee}
                 systemServiceFee={systemServiceFee}
+                computeLoading={computeLoading}
                 computeConvenienceFee={()=> {
                     postComputeConvenienceFee({
                         variables: {

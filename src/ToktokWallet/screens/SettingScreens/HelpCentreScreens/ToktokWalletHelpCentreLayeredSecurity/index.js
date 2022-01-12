@@ -49,7 +49,9 @@ export const ToktokWalletHelpCentreLayeredSecurity = ({navigation}) => {
                         <View style={{flex: 1, paddingHorizontal: 16, marginTop: 8}}>
                             
                             {/* <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Layered Security</Text> */}
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Multi-layered protection prevents intrusions, keeping your money and data safe.</Text>
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>
+                            Toktokwallet Inc has its multi-layered security features that prevent threats intrusions, keeping your personal information and transaction details safe and protected. 
+                            </Text>
                             
                             <View style={{flex: 1, marginTop: 12, marginBottom: 10}}>
 
