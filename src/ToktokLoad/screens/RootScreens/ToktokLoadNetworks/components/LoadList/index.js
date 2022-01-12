@@ -8,7 +8,7 @@ import { moderateScale, globeLoads, tmLoads, smartLoads } from "toktokload/helpe
 import { LoadDetails } from "../LoadDetails";
 import { VerifyContext } from "../VerifyContextProvider";
 import { OrangeButton, LoadingIndicator } from "src/ToktokLoad/components";
-import { SomethingWentWrong } from "src/components";
+import { SomethingWentWrong } from "toktokload/components";
 
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
@@ -108,7 +108,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
   if(getLoadItemsError){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={processGetLoadItems} />
+        <SomethingWentWrong onRefetch={processGetLoadItems} error={getLoadItemsError} />
       </View>
     )
   }

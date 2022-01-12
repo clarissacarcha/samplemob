@@ -8,7 +8,7 @@ import { moderateScale } from "toktokload/helper";
 //COMPONENTS
 import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, EmptyList } from "src/ToktokLoad/components";
 import { FavoriteDetails } from "./components";
-import { SomethingWentWrong } from "src/components";
+import { SomethingWentWrong } from "toktokload/components";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
@@ -29,6 +29,9 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
   const {loading, error, refetch} = useQuery(GET_FAVORITE_LOADS, {
     fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: () => {
+      setFavorites([]);
+    },
     onCompleted:({ getFavoriteLoads })=> {
       setFavorites(getFavoriteLoads)
     }
@@ -64,7 +67,7 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
   if(error){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} />
+        <SomethingWentWrong onRefetch={onRefresh} error={error} />
       </View>
     )
   }

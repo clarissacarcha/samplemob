@@ -7,7 +7,7 @@ import { moderateScale } from "toktokload/helper";
 //COMPONENTS
 import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator} from "src/ToktokLoad/components";
 import { LoadList, VerifyContextProvider, VerifyContext } from "./components";
-import { SomethingWentWrong } from "src/components";
+import { SomethingWentWrong } from "toktokload/components";
 
 //FONTS & COLORS
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
@@ -57,7 +57,7 @@ const MainComponent = ({ navigation, route }) => {
   if(error){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={() => { getNetworks() }} />
+        <SomethingWentWrong onRefetch={() => { getNetworks() }} error={error} />
       </View>
     )
   }
