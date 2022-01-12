@@ -111,9 +111,9 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
             return <PinNotSet/>
         }
 
-        if(!minApiLevel || !minAndroidOS){
-            return <NotMinApiLevel/>
-        }
+        // if(!minAndroidOS){
+        //     return <NotMinApiLevel/>
+        // }
 
         return null
     }
@@ -123,8 +123,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
         <FlagSecureScreen>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             {
-                //isRooted || isDebugMode ||
-                !pinSet || (!minApiLevel && Platform.OS == "android") || (!minAndroidOS && Platform.OS == "android")
+                isRooted || !pinSet
                 ? <RenderRestricted />
                 : 
                 <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>

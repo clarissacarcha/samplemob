@@ -27,7 +27,7 @@ const DateBirthModal = ({modalVisible, setModalVisible , birthInfo ,changeBirthI
                 <View style={{padding: 10,backgroundColor: "white",width: "90%",justifyContent:"center",alignItems:"center",borderRadius: 5}}>
                      <DatePicker date={bday} onDateChange={(date)=>setBday(date)} mode="date" maximumDate={maxDate} minimumDate={minDate} />
                    <View style={{width: "100%", marginTop: 20}}>
-                        <YellowButton label="Ok" onPress={()=>{
+                        <YellowButton label="OK" onPress={()=>{
                                 changeBirthInfo("birthdate",bday)
                                 setModalVisible(false)
                         }}/>

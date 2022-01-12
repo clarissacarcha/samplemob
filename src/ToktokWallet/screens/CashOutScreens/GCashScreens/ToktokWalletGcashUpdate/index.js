@@ -50,7 +50,7 @@ const PromptMessage = ({
                             return navigation.replace("ToktokWalletGcashRegistration")
                         }}
                     >
-                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Ok</Text>
+                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>OK</Text>
                     </TouchableOpacity>
                   
                 </View>

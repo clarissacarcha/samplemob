@@ -43,7 +43,7 @@ export const FilterDateModal = ({showFilterDate,setShowFilterDate, filterDate , 
                         <DatePicker date={filterDate.to} onDateChange={(date)=>changeFilterDate("to",date)} mode="date" maximumDate={todayDate} minimumDate={minDate} />
                         
                         <View style={{marginTop: 20,width:"100%"}}>
-                            <YellowButton label="Ok" onPress={()=>setShowFilterDate(false)}/>
+                            <YellowButton label="OK" onPress={()=>setShowFilterDate(false)}/>
                         </View>
                        
                         

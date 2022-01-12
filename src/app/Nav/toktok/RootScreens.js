@@ -1,5 +1,5 @@
 import React from 'react';
-import {ToktokProfile, ToktokSearch} from 'toktok/screens';
+import {ToktokProfile, ToktokSearch, OnlineFranchiseeLogin} from 'toktok/screens';
 import ToktokfoodMerchantComingSoon from '../../../screens/AuthenticatedStack/ConsumerScreens/ToktokfoodMerchantComingSoon';
 
 const fadeCardStyle = ({current}) => ({
@@ -14,6 +14,7 @@ export default ({Navigator}) => (
   <>
     <Navigator.Screen name="ToktokSearch" component={ToktokSearch} options={fadeOptions} />
     <Navigator.Screen name="ToktokProfile" component={ToktokProfile} />
+    <Navigator.Screen name="OnlineFranchiseeLogin" component={OnlineFranchiseeLogin} />
     <Navigator.Screen
       name="ToktokfoodMerchantComingSoon"
       component={ToktokfoodMerchantComingSoon}

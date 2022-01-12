@@ -49,7 +49,7 @@ export const ToktokWalletHelpCentreMoneyProtected = ({navigation}) => {
                         <View style={{flex: 1, paddingHorizontal: 16, marginTop: 8}}>
                             
                             <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Your money is protected</Text>
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Your wallet balance is stored and protected with a trusted partner bank.</Text>
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Your wallet balance is stored and protected.</Text>
                             
                             <View style={{flex: 1, marginTop: 12, marginBottom: 10}}>
                                 

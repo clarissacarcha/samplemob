@@ -39,6 +39,10 @@ user {
     rating
     referralCode
     referralName
+    franchiseeCode
+    franchiseeFirstName
+    franchiseeLastName
+    franchiseeAccountType
     status
   }
   driver {

@@ -34,12 +34,12 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         deviceType: Platform.select({ios: 'I', android: 'A'}),
       },
     },
-    onError: (error) => {
+    onError: error => {
       console.log(error);
       onErrorAlert({alert, error});
     },
 
-    onCompleted: (data) => {
+    onCompleted: data => {
       const {user, accessToken} = data.verifyLogin;
 
       AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
@@ -109,7 +109,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         <TextInput
           ref={inputRef}
           value={password}
-          onChangeText={(value) => setPassword(value)}
+          onChangeText={value => setPassword(value)}
           style={styles.input}
           placeholder="Password"
           secureTextEntry
@@ -129,8 +129,8 @@ const PasswordVerification = ({navigation, route, createSession}) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
 export default connect(null, mapDispatchToProps)(PasswordVerification);
