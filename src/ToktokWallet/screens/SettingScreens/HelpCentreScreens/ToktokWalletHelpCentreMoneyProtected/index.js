@@ -49,7 +49,7 @@ export const ToktokWalletHelpCentreMoneyProtected = ({navigation}) => {
                         <View style={{flex: 1, paddingHorizontal: 16, marginTop: 8}}>
                             
                             {/* <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Your money is protected</Text> */}
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>All transactions via Tokokwallet Inc. are successfully completed
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginVertical: 10}}>All transactions via Tokokwallet Inc. are successfully completed
                             through One-Time Password and Transaction PIN. These are added
                             extra layer of security that prevents others from compromising your
                             Toktokwallet Inc. Account and your money that is stored to it.
