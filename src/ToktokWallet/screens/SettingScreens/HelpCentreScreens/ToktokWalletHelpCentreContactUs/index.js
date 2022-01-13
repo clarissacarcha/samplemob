@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
         backgroundColor:"white",
         padding: 16,
         ...SHADOW,
+        borderRadius: 10,
     },  
     content: {
         marginTop: 10,

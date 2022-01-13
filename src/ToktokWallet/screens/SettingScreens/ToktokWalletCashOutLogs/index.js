@@ -63,9 +63,9 @@ const CashOutLog = ({
     }
 
     const transaction = item.transaction
-    const requestNo = MaskLeftZero(item.id)
-    const refNo = transaction.refNo
-    const refDate = moment(transaction.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+    const requestNo = item.referenceNumber ? item.referenceNumber : MaskLeftZero(item.id)
+    const refNo = transaction?.refNo ? transaction.refNo : null
+    const refDate = transaction ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a') : moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
     const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
     const provider = item.provider.name
     const cashOutDisplayInformations = item.cashOutDisplayInformations
