@@ -9,7 +9,7 @@ const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 // SELF IMPORTS
 import Details from "./Details";
 
-export const FoodLog = ({
+export const LogItem = ({
   item,
   tokwaAccount,
   index

@@ -7,6 +7,7 @@ import {
     ToktokWalletCashInLogs,
     ToktokWalletCashOutLogs,
     ToktokWalletFoodLogs,
+    ToktokWalletMartLogs,
     ToktokWalletPaymentChart,
     ToktokWalletRequestMoneyLogs,
     ToktokWalletSettings,
@@ -23,6 +24,7 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokWalletCashInLogs" component={ToktokWalletCashInLogs}/>
     <Navigator.Screen name="ToktokWalletCashOutLogs" component={ToktokWalletCashOutLogs}/>
     <Navigator.Screen name="ToktokWalletFoodLogs" component={ToktokWalletFoodLogs}/>
+    <Navigator.Screen name="ToktokWalletMartLogs" component={ToktokWalletMartLogs}/>
     <Navigator.Screen name="ToktokWalletPaymentChart" component={ToktokWalletPaymentChart}/>
     <Navigator.Screen name="ToktokWalletRequestMoneyLogs" component={ToktokWalletRequestMoneyLogs}/>
     <Navigator.Screen name="ToktokWalletSettings" component={ToktokWalletSettings}/>
