@@ -4,6 +4,7 @@ export * from "./PinCodeScreens";
 export * from "./ToktokWalletCashInLogs";
 export * from "./ToktokWalletCashOutLogs";
 export * from "./ToktokWalletFoodLogs";
+export * from "./ToktokWalletMallLogs";
 export * from "./ToktokWalletMartLogs";
 export * from "./ToktokWalletPaymentChart";
 export * from "./ToktokWalletRequestMoneyLogs";
