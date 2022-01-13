@@ -195,10 +195,14 @@ const Component = ({route, navigation, createMyCartSession}) => {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: ({ getMyAccount })=> {
       if(getMyAccount){
-        // console.log(getMyAccount)
+        console.log(getMyAccount)
         setwalletmodal(false)
         setWalletAccount(getMyAccount)
-        setCurrentBalance(getMyAccount?.wallet?.balance)
+        if(getMyAccount?.wallet?.balance){
+          setCurrentBalance(getMyAccount?.wallet?.balance)
+        }else{
+          setCurrentBalance(0)
+        }
       }else{
         setwalletmodal(true)
       }

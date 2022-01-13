@@ -92,6 +92,7 @@ export const ToktokMallStore = ({navigation, route}) => {
         setUser(data)
       }
     })
+    console.log(route.params.id)
     getShopDetails()
   }, [])
 

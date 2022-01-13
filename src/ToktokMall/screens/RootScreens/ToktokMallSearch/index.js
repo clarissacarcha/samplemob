@@ -100,7 +100,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
     variables: {
       input: {
         offset: offset,
-        limit: 10
+        limit: 10,
+        refCom: getRefComAccountType({session})
       }
     },
     onCompleted: (response) => {      

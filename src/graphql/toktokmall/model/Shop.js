@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 export const GET_SHOP_DETAILS = gql`
   query getShopDetails($input: GetShopDetailsInput){
     getShopDetails(input: $input){
-	  id
+	  	id
       shopcode
     	shopname
     	address
@@ -14,6 +14,7 @@ export const GET_SHOP_DETAILS = gql`
 				price
 				discountRate
 				soldCount
+				refComDiscountRate
 				compareAtPrice
 				noOfStocks
 				images {
@@ -49,6 +50,7 @@ export const SEARCH_SHOP_PRODUCT = gql`
 			compareAtPrice
 			soldCount
 			noOfStocks
+			refComDiscountRate
 			images {
 				filename
 			}

@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
-import {Price} from '../../../../helpers';
+import {getRefComAccountType, Price} from '../../../../helpers';
 import { COLOR, FONT } from '../../../../../res/variables';
 import {LandingHeader, AdsCarousel, PromotionBanner, RefComDiscountRate} from '../../../../Components';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -12,6 +12,7 @@ import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 
 import {clothfacemask, medicalfacemask, placeholder} from '../../../../assets'; 
 import { useNavigation } from '@react-navigation/core';
+import { useSelector } from 'react-redux';
 
 const testdata = [{
   image: clothfacemask,
@@ -123,9 +124,10 @@ const RenderItem = ({item}) => {
 
 export const RenderSuggestions = ({data, lazyload, category}) => {
 
+  const session = useSelector(state => state.session)
   const {navigate} = useNavigation()
   const [products, setProducts] = useState(data)
-  const [offset, setOffset] =useState(0)
+  const [offset, setOffset] =useState(0) 
 
   const [lazyLoading, {errorlazyload, loading3}] = useLazyQuery(SEARCH_PRODUCT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -167,7 +169,8 @@ export const RenderSuggestions = ({data, lazyload, category}) => {
             origin: "category",
             category:  category,
             offset: products.length,
-            limit: 10
+            limit: 10,
+            refCom: getRefComAccountType({session})
           }
         }
       })
