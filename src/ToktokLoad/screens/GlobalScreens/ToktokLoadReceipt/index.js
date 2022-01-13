@@ -34,7 +34,7 @@ const MainComponent = ({ navigation, route, onCapturingScreen }) => {
       <ReceiptDetails route={route} />
       { !onCapturingScreen && (
         <View style={styles.buttonContainer}>
-          <OrangeButton label="Ok" onPress={() => navigation.navigate("ToktokLoadHome")} />
+          <OrangeButton label="OK" onPress={() => navigation.navigate("ToktokLoadHome", { screen: "Buy Load" })} />
         </View>
       )}
     </View>
