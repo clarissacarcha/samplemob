@@ -48,13 +48,13 @@ const Details = ({
       setVisible={setVisible}
     >
       <View>
-        <Text style={styles.labelText}>Status of toktokmart: Success</Text>
+        <Text style={styles.labelText}>Status of toktokbills: Success</Text>
         {/* {renderDetails({details})} */}
         <Text style={styles.labelText}>Amount: {amount}</Text>
         <Text style={styles.labelText}>Amount Paid: {amount}</Text>
         { refNo && <Text style={styles.labelText}>Ref No: {refNo}</Text>}
-        { refDate && <Text style={styles.labelText}>toktokmart Date: {refDate}</Text>}
-        { refDate && <Text style={styles.labelText}>toktokmart Time: {refTime}</Text>}
+        { refDate && <Text style={styles.labelText}>toktokbills Date: {refDate}</Text>}
+        { refDate && <Text style={styles.labelText}>toktokbills Time: {refTime}</Text>}
       </View>
     </TransactionModal>
   )

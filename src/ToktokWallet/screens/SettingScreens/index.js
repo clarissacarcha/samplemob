@@ -1,6 +1,7 @@
 export * from "./AccountRecoveryScreens";
 export * from "./HelpCentreScreens";
 export * from "./PinCodeScreens";
+export * from "./ToktokWalletBillsLogs";
 export * from "./ToktokWalletCashInLogs";
 export * from "./ToktokWalletCashOutLogs";
 export * from "./ToktokWalletFoodLogs";

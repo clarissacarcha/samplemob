@@ -4,6 +4,7 @@ import HelpCentreScreens from './HelpCentreScreens';
 import PinCodeScreens from './PinCodeScreens';
 import UpgradeAccountScreens from './UpgradeAccountScreens';
 import {
+    ToktokWalletBillsLogs,
     ToktokWalletCashInLogs,
     ToktokWalletCashOutLogs,
     ToktokWalletFoodLogs,
@@ -23,6 +24,7 @@ export default ({Navigator}) => (
     {HelpCentreScreens({Navigator})}
     {PinCodeScreens({Navigator})}
     {UpgradeAccountScreens({Navigator})}
+    <Navigator.Screen name="ToktokWalletBillsLogs" component={ToktokWalletBillsLogs}/>
     <Navigator.Screen name="ToktokWalletCashInLogs" component={ToktokWalletCashInLogs}/>
     <Navigator.Screen name="ToktokWalletCashOutLogs" component={ToktokWalletCashOutLogs}/>
     <Navigator.Screen name="ToktokWalletFoodLogs" component={ToktokWalletFoodLogs}/>

@@ -39,7 +39,6 @@ const Details = ({
     refNo,
     refDate,
     refTime,
-    status,
     requestNo
   } = transaction
 
@@ -49,7 +48,7 @@ const Details = ({
       setVisible={setVisible}
     >
       <View>
-        <Text style={styles.labelText}>Status of toktokfood: {status}</Text>
+        <Text style={styles.labelText}>Status of toktokfood: Success</Text>
         {/* {renderDetails({details})} */}
         <Text style={styles.labelText}>Amount: {amount}</Text>
         <Text style={styles.labelText}>Amount Paid: {amount}</Text>
