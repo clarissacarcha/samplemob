@@ -23,6 +23,8 @@ export const BuildPostCheckoutBody = async ({
 
 	if(session.userId){
 
+		let orderType = GetOrderType(referral)
+
 		return {
 			name: addressData.receiverName,
 			request_id: walletRequest.requestTakeMoneyId,
@@ -36,8 +38,8 @@ export const BuildPostCheckoutBody = async ({
 			citymunCode: addressData.municipalityId,
 			total_amount: parseFloat(subTotal),
 			srp_totalamount: parseFloat(srpTotal),
-			order_type: 2,
-			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates, shippingVouchers}),
+			order_type: orderType,
+			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates, shippingVouchers, orderType}),
 			//Optional values
 			user_id: session.userId,
 			notes: addressData.landmark || "",
@@ -48,13 +50,13 @@ export const BuildPostCheckoutBody = async ({
 			disrate: [],
 			vouchers: vouchers,
 			shippingvouchers: CheckShippingVouchers(shippingVouchers),
-			referral_code: referral?.referralCode && referral?.referralCode != null ? referral?.referralCode : "",
-			referral_account_type: referral?.franchiseeAccountType && referral?.franchiseeAccountType != null ? referral?.franchiseeAccountType : "",
+			reseller_code: referral?.referralCode && referral?.referralCode != null ? referral?.referralCode : "",
+			reseller_account_type: referral?.franchiseeAccountType && referral?.franchiseeAccountType != null ? referral?.franchiseeAccountType : "",
 			payment_method: paymentMethod,
 			hash_amount: hashAmount,
 			reference_num: referenceNum,
 			orderRefNum: referenceNum,
-			
+			discounted_totalamount: orderType == 4 ? parseFloat(subTotal) : null			
 		}
 			
 	}else{
@@ -63,7 +65,7 @@ export const BuildPostCheckoutBody = async ({
 	
 }
 
-export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouchers}) => {
+export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouchers, orderType}) => {
 
 	let logs = []
 	data.map((val, index) => {
@@ -93,7 +95,7 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 				srp_amount: parseFloat(item.amount),
 				srp_totalamount: total,
 				total_amount: total,
-				order_type: 2,
+				order_type: orderType,
 				...promo
 			})
 		})
@@ -151,5 +153,15 @@ export const CheckShippingVouchers = (data) => {
 		}
 	}else{
 		return []
+	}
+}
+
+export const GetOrderType = (reseller) => {
+	if(reseller && reseller?.referralCode != null){
+		//reseller
+		return 4
+	}else{
+		//regular
+		return 2
 	}
 }

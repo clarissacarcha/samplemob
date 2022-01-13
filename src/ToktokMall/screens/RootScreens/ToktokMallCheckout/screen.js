@@ -284,16 +284,28 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
         let json = JSON.parse(req.responseError.message)
         let errors = json.errors
-        
+        console.log(errors[0])
         if(errors.length > 0){
-          // Toast.show(errors[0].message, Toast.LONG)
-          navigation.navigate("ToktokMallOTP", {
-            transaction: "payment",
-            data: {},
-            error: true,
-            errorCode: "VALIDATORMAXREQUEST",
-            lockMessage: errors[0].message
-          })
+
+          if(errors[0]){
+            if(errors[0]?.code == "BAD_USER_INPUT"){
+
+              if(errors[0]?.message){
+                alert(errors[0]?.message)
+              }
+
+            }else{
+              // Toast.show(errors[0].message, Toast.LONG)
+              navigation.navigate("ToktokMallOTP", {
+                transaction: "payment",
+                data: {},
+                error: true,
+                errorCode: "VALIDATORMAXREQUEST",
+                lockMessage: errors[0].message
+              })
+            }
+          }
+
         }
         
       }else{
