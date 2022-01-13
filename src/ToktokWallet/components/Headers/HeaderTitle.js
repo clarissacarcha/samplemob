@@ -1,21 +1,21 @@
 import React from 'react'
 import {View,Text,StyleSheet,Image,Platform ,StatusBar,TouchableOpacity} from 'react-native'
 import CONSTANTS from 'common/res/constants'
-import { HeaderBack } from './HeaderBack'
-import { moderateScale , scale } from 'toktokwallet/helper'
-import { useNavigation } from '@react-navigation/native';
+import { HeaderBack , ICON_SET, VectorIcon } from 'src/revamp'
+import { useNavigation } from '@react-navigation/native'
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
+import { moderateScale } from 'toktokwallet/helper'
 
 export const HeaderTitle = ({isRightIcon, rightIcon = null, rightIconOnPress, isLogo, label ,labelColor = "black" , backButtonColor = "black" , headerBackLabel = "", headerStyle = {}})=> {
-
     const navigation = useNavigation();
     const leaveTokwa = ()=> navigation.pop(2);
-
+    
     return (
         <View style={[styles.header, headerStyle ]}>
             <View style={{flex: 1,flexDirection:"row"}}>
-                <HeaderBack onBack={leaveTokwa} color={backButtonColor} label={headerBackLabel}/>
+                {/* <HeaderBack onBack={leaveTokwa} color={backButtonColor} label={headerBackLabel}/> */}
+                <HeaderBack color={backButtonColor} label={headerBackLabel}/>
             </View>
             <View style={{width: 150,justifyContent:"center",alignItems:"center"}}>
             {

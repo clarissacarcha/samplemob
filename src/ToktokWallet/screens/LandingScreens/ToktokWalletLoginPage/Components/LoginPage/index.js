@@ -1,5 +1,5 @@
 import React , {useEffect,useState,useRef} from 'react'
-import {View,Text,StyleSheet,TextInput,TouchableOpacity,Image} from 'react-native'
+import {View,Text,StyleSheet,TextInput,TouchableOpacity,Image , Keyboard} from 'react-native'
 import tokwaLogo from 'toktokwallet/assets/images/tokwaLogo.png'
 import {useAccount} from 'toktokwallet/hooks'
 import { getStatusbarHeight } from 'toktokwallet/helper'
@@ -53,7 +53,7 @@ export const LoginPage = ()=> {
             const { verifiedToken } = getVerifyMPIN
             await AsyncStorage.setItem('toktokWalletAuthenticationToken', verifiedToken);
             setPinCode("")
-            // navigation.pop();
+            navigation.pop();
             navigation.navigate("ToktokWalletHomePage"); 
         },
         onError: (error)=> {
@@ -88,6 +88,8 @@ export const LoginPage = ()=> {
                 }
             }
         })
+
+        Keyboard.dismiss();
     }
 
     useEffect(()=>{
