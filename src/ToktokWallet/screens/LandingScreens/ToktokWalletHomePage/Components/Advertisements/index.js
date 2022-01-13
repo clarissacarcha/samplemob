@@ -49,7 +49,7 @@ export const Advertisements = () => {
             fontSize: FONT_SIZE.M,
             color: '#212529',
             fontFamily: FONT.BOLD,
-          }}>Upcoming Features</Text>
+          }}>Watch out for the best services you deserve</Text>
           </View>
           <Slider ads={grid}/>
           </>

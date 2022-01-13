@@ -86,7 +86,7 @@ const RenderDots = ({scrollX , data, sliderRef , dotPosition , setCurrentIndex,c
                         return navigation.push("ToktokWalletRestricted" , {component: "noMpin"})
                    }
                 }} 
-                disabled={currentIndex === data.length - 1}
+                // disabled={currentIndex === data.length - 1}
                 style={[ styles.nextPage, { opacity: currentIndex < data.length - 1 ? 1 : .3 }]}>
                     <Text style={styles.dotsText}>{currentIndex < data.length - 1 ? "NEXT" : "DONE"}</Text>
                     {/* <Text style={styles.dotsText}> {"NEXT"}</Text> */}

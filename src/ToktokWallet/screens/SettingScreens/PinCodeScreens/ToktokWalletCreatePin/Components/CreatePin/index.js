@@ -44,7 +44,7 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
             <ScrollView style={styles.content}>
                 { !tokwaAccount.pinCode && (
                     <Text style={{ textAlign: "center", fontSize: FONT_SIZE.S, marginVertical: 40, marginHorizontal: 20 }}>
-                        You will use your TPIN in every transaction you make with Toktokwallet. Please keep it to yourself and do not share with anyone.
+                        You will use your TPIN in every transaction you make with toktokwallet. Please keep it to yourself and do not share with anyone.
                     </Text>
                 )}
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter {tokwaAccount.pinCode ? "New ": ""}TPIN</Text>

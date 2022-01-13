@@ -199,8 +199,9 @@ export const ToktokWalletContacts = ({navigation,route})=> {
             <View style={[styles.input,{flexDirection: "row"}]}>
                 {/* <Image style={{height: 25,width: 40,alignSelf: "center"}} resizeMode="center" source={require('../../../../../../assets/icons/ph.png')}/> */}
                 <TextInput 
-                    style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
+                    style={{color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
                     placeholder="Enter a Name or mobile number"
+                    placeholderTextColor={COLOR.DARK}
                     onChangeText={filterSearch}
                     value={searchString}
                 />
