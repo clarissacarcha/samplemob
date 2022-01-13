@@ -288,7 +288,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         onCloseBtn2={() => {
           onCloseModal();
         }}
-        btn1Title={`Browse${'\n'}Restaurant`}
+        btn1Title="Browse Menu"
         btn2Title="OK"
         hasTwoButtons={
           showDialogMessage.title !== 'Order Complete' && showDialogMessage.title !== 'No Response from Merchant'
