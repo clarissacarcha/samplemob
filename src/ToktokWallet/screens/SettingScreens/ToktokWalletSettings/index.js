@@ -70,6 +70,7 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingOption route="ToktokWalletFoodLogs" title="Food"/>
             <SettingOption route="ToktokWalletMartLogs" title="Mart"/>
             <SettingOption route="ToktokWalletMallLogs" title="Mall"/>
+            <SettingOption route="ToktokWalletPabiliDeliveryLogs" title="Delivery"/>
             <Separator/>
             <SettingHeaderTitle title="Account Recovery"/>
             <SettingOption route="ToktokWalletAccountRecoverySetup" title="Account Recovery Setup"/>
