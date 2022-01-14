@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     //     width: 0, height: 2
     // }
   },
-  title: { color: COLOR.ORANGE, fontFamily: FONT.BOLD, fontSize: 24, flex: 0, marginTop: 0, textAlign: 'center'},
+  title: { color: '#000', fontSize: 24, flex: 0, marginTop: 0, textAlign: 'center'},
   text: {color: '#9E9E9E', fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M, flex: 0, paddingVertical: 10, paddingHorizontal: 10, textAlign: 'center'},
   row: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 },
   button: { padding: 10, backgroundColor: COLOR.ORANGE, alignItems: 'center', justifyContent: 'center', borderRadius: 5 , width: '45%' },

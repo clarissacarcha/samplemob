@@ -21,6 +21,8 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import {useNavigation} from '@react-navigation/core';
 import {FONT} from '../../../../../res/variables';
 
+const walletIcon = require('../../../../assets/icons/wallet.png')
+
 const testData = [
   {
     id: 1,
@@ -38,39 +40,103 @@ const testData = [
   },
 ];
 
-export const Payment = ({list, payment, total, setPaymentMethod, currentBalance, setCurrenctBalance}) => {
+const RenderToktokWalletStatus = ({status}) => {
+
+
+    return (
+      <>
+        <View style={styles.container}>
+          <Text style={{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Payment Method</Text>
+          <View style={{paddingTop: 15}} />
+          <View style={{backgroundColor: '#FFFCF4', padding: 8}}>
+            {status == 'none' && 
+            <Text style={{color: '#FFA700', fontSize: 12, textAlign: 'center', paddingHorizontal: 5}}>
+              Sorry! It seems that you don`t have a toktokwallet account yet. Please submit verification requirements to
+              proceed placing an order. Once you get approved, you will be able to enjoy full benefits of shopping from
+              your favorite shops online using toktokmall.
+            </Text>}
+            {status == 'declined' && 
+            <Text style={{color: '#FFA700', fontSize: 12, textAlign: 'center', paddingHorizontal: 5}}>
+              Sorry! It seems that you don’t have a toktokwallet account yet. Please submit verification requirements to proceed placing an order. 
+              Once you get approved, you will be able to enjoy full benefits of shopping  from your favorite shops online using toktokmall.
+            </Text>}
+            {status == 'pending' && 
+            <Text style={{color: '#FFA700', fontSize: 12, textAlign: 'center', paddingHorizontal: 5}}>
+              Sorry! It seems that you have a pending toktokwallet account. Please patiently wait to be verified to proceed placing an order. 
+              Once you get approved, you will be able to enjoy full benefits of shopping  from your favorite shops online using toktokmall.
+            </Text>}
+          </View>
+          <View style={{height: 8}} />
+          <View style={{alignItems: 'center', justifyContent: 'center', paddingVertical: 8}}>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('ToktokWalletPaymentOptions');
+            }}>
+              <Text style={{color: "#FFA700", fontSize: 14, fontFamily: FONT.BOLD, textDecorationLine: 'underline'}}>{status == "pending" ? "Go to toktokwallet" : "Create my toktokwallet account"}</Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              ...styles.item,
+              backgroundColor: 'white',
+            }}
+          >
+            <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
+              <Image
+                source={walletIcon}
+                style={{width: 25, height: 25, resizeMode: 'stretch'}}
+              />
+              <View>
+                <Text style={{marginLeft: 8, fontSize: 15, color: '#FFA700'}}>totok
+                <Text style={{fontSize: 15, color: "#F6841F"}}>wallet</Text></Text>                                           
+                {status == "declined" && <Text style={{fontSize: 12, marginLeft: 8, color: "#ED3A19"}}>Declined</Text>}
+                {status == "pending" && <Text style={{fontSize: 12, marginLeft: 8, color: "#F6841F"}}>Pending</Text>}
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignContent: 'flex-start',
+                flex: 2,
+                marginTop: status == "none" ? 0 : -15
+              }}>
+              <Text style={{marginLeft: 5, fontWeight: 'bold', color: '#929191', fontSize: 10}}>
+              (Balance {FormatToText.currency(0)})
+              </Text>          
+            </View>
+          </View>
+          
+        </View>
+      </>
+    )
+
+}
+
+export const Payment = ({list, payment, total, setPaymentMethod, currentBalance, setCurrenctBalance, status}) => {
   const navigation = useNavigation();
   // const [currentBalance, setCurrenctBalance] = useState(0)
 
-  const status = 2;
+  if(status != ""){
+    return <RenderToktokWalletStatus status={status} />
+  }
 
   return (
     <>
       <View style={styles.container}>
         <Text style={{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Payment Method</Text>
         <View style={{paddingTop: 15}} />
-
-        {status !== 3 ? (
-          <View style={{backgroundColor: '#FFFCF4', padding: 8}}>
-            <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>
-              Sorry! It seems that you don’t have a toktokwallet account yet. Please submit verification requirements to
-              proceed placing an order. Once you get approved, you will be able to enjoy full benefits of shopping from
-              your favorite shops online using toktokmall.
-            </Text>
-          </View>
-        ) : (
-          <View>
-            {parseFloat(currentBalance) < parseFloat(total) ? (
-              <View style={{backgroundColor: '#FFFCF4', padding: 10}}>
-                <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>
-                  *insufficient funds! Kindly top up to add funds in your toktokwallet.
-                </Text>
-              </View>
-            ) : (
-              <View style={{height: 8}} />
-            )}
-          </View>
-        )}
+        <View>
+          {parseFloat(currentBalance) < parseFloat(total) ? (
+            <View style={{backgroundColor: '#FFFCF4', padding: 10}}>
+              <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>
+                *insufficient funds! Kindly top up to add funds in your toktokwallet.
+              </Text>
+            </View>
+          ) : (
+            <View style={{height: 8}} />
+          )}
+        </View>
+        
         <View style={{height: 8}} />
         <TouchableOpacity
           // style ={{...styles.item, backgroundColor: payment == 'toktokwallet' ? '#FFEBBC' : 'white' }}
@@ -84,17 +150,11 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
           <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
             {/* <View style ={{height: 18, width: 18, backgroundColor: '#F6841F', }} /> */}
             <Image
-              source={require('../../../../assets/icons/wallet.png')}
+              source={walletIcon}
               style={{width: 18, height: 18, resizeMode: 'stretch'}}
             />
             <View>
-              <Text style={{marginLeft: 10, fontWeight: 'bold', color: '#F6841F'}}>totokwallet</Text>
-              {
-                status === 1 && <Text style={{marginLeft: 10, color: '#F6841F'}}>Pending</Text>
-              }
-              {
-                status === 2 && <Text style={{marginLeft: 10, color: '#ED3A19'}}>Declined</Text>
-              }
+              <Text style={{marginLeft: 10, fontWeight: 'bold', color: '#F6841F'}}>totokwallet</Text>              
             </View>
           </View>
           <View

@@ -60,6 +60,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [shippingRates, setShippingRates] = useState([])
   const [initialLoading, setInitialLoading] = useState(true)
   const [walletAccount, setWalletAccount] = useState(false)
+  const [walletAccountStatus, setWalletAccountStatus] = useState(false)
   const [walletmodal, setwalletmodal] = useState(false)
   const [customerData, setCustomerData] = useState({})
   const [shippingDiscounts, setShippingDiscounts] = useState([])
@@ -205,11 +206,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
         }
       }else{
         setwalletmodal(true)
+        setWalletAccountStatus("none")
       }
     },
     onError: (error) => {
       console.log(error)
       setwalletmodal(true)
+      setWalletAccountStatus("none")
     }
   })  
 
@@ -542,25 +545,25 @@ const Component = ({route, navigation, createMyCartSession}) => {
   }, [grandTotal])
 
   useEffect(() => {
-    dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL', payload: {
-      title: ["Unable to Checkout"],
-      message: "Sorry, you don’t have a toktokwallet yet. Please create an account and top up to proceed in checkout.",
-      action: {
-        onPress:() => {
-          navigation.navigate("ToktokMallHome")
-          dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
-        },
-        title: "Ok",
-        type: "fill"
-      },
-      link: {
-        onPress:() => {
-          navigation.navigate("ToktokMallHome")
-          dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
-        },
-        text: "Create toktokwallet account",
-      }
-    }})
+    // dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL', payload: {
+    //   title: ["Unable to Checkout"],
+    //   message: "Sorry, you don’t have a toktokwallet yet. Please create an account and top up to proceed in checkout.",
+    //   action: {
+    //     onPress:() => {
+    //       navigation.navigate("ToktokMallHome")
+    //       dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
+    //     },
+    //     title: "Ok",
+    //     type: "fill"
+    //   },
+    //   link: {
+    //     onPress:() => {
+    //       navigation.navigate("ToktokMallHome")
+    //       dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
+    //     },
+    //     text: "Create toktokwallet account",
+    //   }
+    // }})
   }, [])
 
   if(loading || initialLoading) {
@@ -630,6 +633,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
             currentBalance={currentBalance}
             setCurrenctBalance={setCurrentBalance}
             setPaymentMethod={setPaymentMethod} 
+            // status={walletAccountStatus}
+            status={walletAccountStatus}
           />
           <Totals 
             raw={paramsData}
