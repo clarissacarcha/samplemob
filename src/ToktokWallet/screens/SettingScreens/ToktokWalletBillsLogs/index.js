@@ -17,11 +17,11 @@ import { LogItem } from "./Components"
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 const imageWidth = Dimensions.get('window').width - 200;
 
-export const ToktokWalletFoodLogs = ({navigation})=> {
+export const ToktokWalletBillsLogs = ({navigation})=> {
 
   navigation.setOptions({
     headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-    headerTitle: ()=> <HeaderTitle label={['Food','']}/>,
+    headerTitle: ()=> <HeaderTitle label={['Bills','']}/>,
   })
 
   const tokwaAccount = useSelector(state=>state.toktokWallet)
@@ -35,7 +35,7 @@ export const ToktokWalletFoodLogs = ({navigation})=> {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     variables: {
       input: {
-        fatherName: "toktokfood"
+        fatherName: "toktokbills"
       }
     },
     onError: (error) => {

@@ -64,10 +64,13 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingHeaderTitle title="Logs"/>
             <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
             <SettingOption route="ToktokWalletCashOutLogs" title="Fund Transfer"/>
-            <SettingOption route="ToktokWalletCashInLogs" title="Bills"/>
-            <SettingOption route="ToktokWalletCashOutLogs" title="Load"/>
+            <SettingOption route="ToktokWalletBillsLogs" title="Bills"/>
+            <SettingOption route="ToktokWalletLoadLogs" title="Load"/>
             <SettingOption route="ToktokWalletRequestMoneyLogs" title="Request Money"/>
             <SettingOption route="ToktokWalletFoodLogs" title="Food"/>
+            <SettingOption route="ToktokWalletMartLogs" title="Mart"/>
+            <SettingOption route="ToktokWalletMallLogs" title="Mall"/>
+            <SettingOption route="ToktokWalletPabiliDeliveryLogs" title="Delivery"/>
             <Separator/>
             <SettingHeaderTitle title="Account Recovery"/>
             <SettingOption route="ToktokWalletAccountRecoverySetup" title="Account Recovery Setup"/>
