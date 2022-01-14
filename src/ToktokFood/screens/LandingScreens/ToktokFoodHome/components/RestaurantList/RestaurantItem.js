@@ -39,7 +39,9 @@ const RestaurantItem = ({item}) => {
           <Image resizeMode="contain" source={time} style={styles.timeImg} />
           <Text style={styles.branches}>{`${item.estimatedDeliveryTime} mins`}</Text>
           <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
-          <Text style={styles.branches}>{item.estimatedDistance} KM</Text>
+          <Text style={styles.branches}>
+            {item.estimatedDistance.indexOf('KM') === -1 ? `${item.estimatedDistance} KM` : item.estimatedDistance}
+          </Text>
         </View>
 
         {item.promoName && (

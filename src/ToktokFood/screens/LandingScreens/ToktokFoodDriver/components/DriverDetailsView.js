@@ -181,11 +181,11 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     const getTimeByStatus = status => {
       switch (status) {
         case 'po':
-          return 'Estimated Deliver Time: 45 Minutes';
+          return 'Estimated Deliver Time: 15-45 Minutes';
         case 'f':
           return 'Rider is nearby your location. Thank you for patiently waiting.';
         default:
-          return 'Estimated Deliver Time: 45 Minutes';
+          return 'Estimated Deliver Time: 15-45 Minutes';
       }
     };
 
