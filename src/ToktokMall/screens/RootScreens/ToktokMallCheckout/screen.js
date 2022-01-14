@@ -60,7 +60,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [shippingRates, setShippingRates] = useState([])
   const [initialLoading, setInitialLoading] = useState(true)
   const [walletAccount, setWalletAccount] = useState(false)
-  const [walletAccountStatus, setWalletAccountStatus] = useState(null)
+  const [walletAccountStatus, setWalletAccountStatus] = useState(-1)
   const [walletmodal, setwalletmodal] = useState(false)
   const [customerData, setCustomerData] = useState({})
   const [shippingDiscounts, setShippingDiscounts] = useState([])
@@ -200,7 +200,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     onCompleted: async ({getUserToktokWalletData})=> {
       console.log(getUserToktokWalletData)
       const {kycStatus} = getUserToktokWalletData
-      setWalletAccountStatus(kycStatus != null ? kycStatus : -1)
+      setWalletAccountStatus(kycStatus)
       setwalletmodal(true)
     },
     onError: (error)=> console.log(error) 
@@ -215,6 +215,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         console.log(getMyAccount)
         setwalletmodal(false)
         setWalletAccount(getMyAccount)
+        setWalletAccountStatus(1)
         if(getMyAccount?.wallet?.balance){
           setCurrentBalance(getMyAccount?.wallet?.balance)
         }else{

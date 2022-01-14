@@ -117,7 +117,7 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
   const navigation = useNavigation();
   // const [currentBalance, setCurrenctBalance] = useState(0)
 
-  if(status != null){
+  if(status != 1){
     return <RenderToktokWalletStatus status={status} />
   }
 
@@ -152,10 +152,11 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
             {/* <View style ={{height: 18, width: 18, backgroundColor: '#F6841F', }} /> */}
             <Image
               source={walletIcon}
-              style={{width: 18, height: 18, resizeMode: 'stretch'}}
+              style={{width: 25, height: 25, resizeMode: 'stretch'}}
             />
             <View>
-              <Text style={{marginLeft: 10, fontWeight: 'bold', color: '#F6841F'}}>totokwallet</Text>              
+              <Text style={{marginLeft: 8, fontSize: 14, color: '#FFA700'}}>totok
+              <Text style={{fontSize: 14, color: "#F6841F"}}>wallet</Text></Text>              
             </View>
           </View>
           <View
@@ -164,9 +165,8 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
               justifyContent: 'space-between',
               alignContent: 'flex-start',
               flex: 2.5,
-              marginTop: -15,
             }}>
-            <Text style={{marginLeft: 5, fontWeight: 'bold', color: '#929191'}}>
+            <Text style={{marginLeft: 15, fontWeight: 'normal', color: '#929191', fontSize: 13}}>
               (Balance {FormatToText.currency(currentBalance || 0)})
             </Text>
             <TouchableOpacity
