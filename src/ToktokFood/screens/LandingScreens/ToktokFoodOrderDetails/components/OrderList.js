@@ -38,7 +38,7 @@ const OrderList = ({orderDetails}) => {
         )}
         <View style={styles.list}>
           <View style={styles.listInfo}>
-            <Text style={styles.listName}>{productName}</Text>
+            <Text numberOfLines={1} style={styles.listName}>{productName}</Text>
             <Text style={styles.seeAll}>{`PHP ${item.totalAmountWithAddons.toFixed(2)}`}</Text>
           </View>
           <View>

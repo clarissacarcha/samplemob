@@ -136,17 +136,15 @@ const CancelOrder = ({
               })}
             </View>
             <View style={styles.reasonButtonWrapper}>
-              <TouchableOpacity
-                onPress={() => closeCancel()}
-                style={[styles.reasonButtons, {backgroundColor: '#868686'}]}>
-                <Text style={styles.reasonButtonText}>Cancel</Text>
+              <TouchableOpacity onPress={() => closeCancel()} style={[styles.reasonButtons, styles.cancelButton]}>
+                <Text style={[styles.reasonButtonText, {color: '#FFA700'}]}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 disabled={selectedReason ? false : true}
                 onPress={() => proccessCancelOrder()}
-                style={[styles.reasonButtons, {backgroundColor: selectedReason ? '#FFA700' : COLOR.DARK}]}>
+                style={[styles.reasonButtons, {opacity: selectedReason ? 1 : 0.3}, {backgroundColor: '#FFA700'}]}>
                 <Text style={styles.reasonButtonText}>Proceed</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> 
             </View>
           </View>
         </View>
@@ -305,6 +303,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FONT.BOLD,
     color: COLOR.WHITE,
+  },
+  cancelButton: {
+    borderWidth: 1,
+    borderColor: '#FFA700',
+    backgroundColor: COLOR.WHITE,
   },
 });
 

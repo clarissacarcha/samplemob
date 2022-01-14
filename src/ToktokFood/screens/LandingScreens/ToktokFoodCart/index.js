@@ -338,7 +338,7 @@ const MainComponent = () => {
         let remainingAttempts = parseError.errors[0].payload?.remainingAttempts;
         if (remainingAttempts > 0) {
           setErrorMessage(
-            `Incorrent ${toktokWalletCredit.validator}. Please try again. You have ${remainingAttempts} attempt/s left.`,
+            `Incorrect ${toktokWalletCredit.validator}. Please try again. You have ${remainingAttempts} attempt/s left.`,
           );
         } else {
           setPinAttempt({show: true, message: parseError.errors[0].message});

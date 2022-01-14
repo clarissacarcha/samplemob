@@ -141,11 +141,11 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
     const getTimeByStatus = status => {
       switch (status) {
         case 'po':
-          return '45 Minutes';
+          return '15-45 Minutes';
         case 'f':
           return `${etaMinutes} Minutes`;
         default:
-          return '45 Minutes';
+          return '15-45 Minutes';
       }
     };
 
