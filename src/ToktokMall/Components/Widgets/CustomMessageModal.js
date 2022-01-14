@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Dimensions} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -34,9 +34,9 @@ export const CustomMessageModal = () => {
             <Text
               style={{
                 fontSize: 22,
-                textAlign: "center",
+                textAlign: 'center',
                 marginVertical: 10,
-                width: 250
+                width: 250,
               }}>
               {customMessageModal.title[0]}
               <Text
@@ -58,20 +58,55 @@ export const CustomMessageModal = () => {
               }}>
               {customMessageModal.message}
             </Text>
+            {customMessageModal.link?.text && (
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch({type: 'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'});
+                  customMessageModal.link?.onPress?.();
+                }}>
+                <Text
+                  style={{
+                    color: '#F6841F',
+                    fontSize: 17,
+                    textAlign: 'center',
+                    marginVertical: 15,
+                    textDecorationLine: 'underline'
+                  }}>
+                  {customMessageModal.link?.text}
+                </Text>
+              </TouchableOpacity>
+            )}
 
             <TouchableOpacity
-              onPress={customMessageModal.action?.onPress}
-              style={{
-                borderColor: '#F6841F',
-                borderWidth: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: 15,
-                paddingVertical: 15,
-                paddingHorizontal: 30,
-                borderRadius: 5,
-              }}>
-              <Text style={{fontSize: 16, color: '#F6841F'}}>{customMessageModal.action?.title}</Text>
+              onPress={() => {
+                dispatch({type: 'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'});
+                customMessageModal.action?.onPress();
+              }}
+              style={
+                customMessageModal.action?.type === 'fill'
+                  ? {
+                      backgroundColor: '#F6841F',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginTop: 15,
+                      paddingVertical: 15,
+                      paddingHorizontal: 30,
+                      borderRadius: 5,
+                    }
+                  : {
+                      borderColor: '#F6841F',
+                      borderWidth: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginTop: 15,
+                      paddingVertical: 15,
+                      paddingHorizontal: 30,
+                      borderRadius: 5,
+                    }
+              }>
+              <Text style={{fontSize: 16, color: customMessageModal.action?.type === 'fill' ? '#fff' : '#F6841F'}}>
+                {customMessageModal.action?.title}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

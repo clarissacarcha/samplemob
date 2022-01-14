@@ -541,6 +541,28 @@ const Component = ({route, navigation, createMyCartSession}) => {
     // console.log(grandTotal)
   }, [grandTotal])
 
+  useEffect(() => {
+    dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL', payload: {
+      title: ["Unable to Checkout"],
+      message: "Sorry, you don’t have a toktokwallet yet. Please create an account and top up to proceed in checkout.",
+      action: {
+        onPress:() => {
+          navigation.navigate("ToktokMallHome")
+          dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
+        },
+        title: "Ok",
+        type: "fill"
+      },
+      link: {
+        onPress:() => {
+          navigation.navigate("ToktokMallHome")
+          dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
+        },
+        text: "Create toktokwallet account",
+      }
+    }})
+  }, [])
+
   if(loading || initialLoading) {
     return <Loading state={loading || initialLoading} />
   }
