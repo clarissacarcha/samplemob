@@ -73,7 +73,7 @@ export class ErrorUtility {
    
     prompt({
       type: "error",
-      title,
+      title: graphQLErrors[0]?.message.includes("TPIN/OTP attempts") ? "Transaction Void" : title,
       message: graphQLErrors[0]?.message,
       event: "TOKTOKBILLSLOAD"
     });
