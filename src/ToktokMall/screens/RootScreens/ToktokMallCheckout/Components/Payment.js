@@ -42,6 +42,7 @@ const testData = [
 
 const RenderToktokWalletStatus = ({status}) => {
 
+  const navigation = useNavigation()
 
     return (
       <>
@@ -49,18 +50,18 @@ const RenderToktokWalletStatus = ({status}) => {
           <Text style={{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Payment Method</Text>
           <View style={{paddingTop: 15}} />
           <View style={{backgroundColor: '#FFFCF4', padding: 8}}>
-            {status == 'none' && 
+            {status == -1 && 
             <Text style={{color: '#FFA700', fontSize: 12, textAlign: 'center', paddingHorizontal: 5}}>
               Sorry! It seems that you don`t have a toktokwallet account yet. Please submit verification requirements to
               proceed placing an order. Once you get approved, you will be able to enjoy full benefits of shopping from
               your favorite shops online using toktokmall.
             </Text>}
-            {status == 'declined' && 
+            {status == 0 && 
             <Text style={{color: '#FFA700', fontSize: 12, textAlign: 'center', paddingHorizontal: 5}}>
               Sorry! It seems that you don’t have a toktokwallet account yet. Please submit verification requirements to proceed placing an order. 
               Once you get approved, you will be able to enjoy full benefits of shopping  from your favorite shops online using toktokmall.
             </Text>}
-            {status == 'pending' && 
+            {status == 2 && 
             <Text style={{color: '#FFA700', fontSize: 12, textAlign: 'center', paddingHorizontal: 5}}>
               Sorry! It seems that you have a pending toktokwallet account. Please patiently wait to be verified to proceed placing an order. 
               Once you get approved, you will be able to enjoy full benefits of shopping  from your favorite shops online using toktokmall.
@@ -69,9 +70,9 @@ const RenderToktokWalletStatus = ({status}) => {
           <View style={{height: 8}} />
           <View style={{alignItems: 'center', justifyContent: 'center', paddingVertical: 8}}>
             <TouchableOpacity onPress={() => {
-              navigation.navigate('ToktokWalletPaymentOptions');
+              navigation.navigate('ToktokWalletLoginPage');
             }}>
-              <Text style={{color: "#FFA700", fontSize: 14, fontFamily: FONT.BOLD, textDecorationLine: 'underline'}}>{status == "pending" ? "Go to toktokwallet" : "Create my toktokwallet account"}</Text>
+              <Text style={{color: "#FFA700", fontSize: 14, fontFamily: FONT.BOLD, textDecorationLine: 'underline'}}>{status == 2 ? "Go to toktokwallet" : "Create my toktokwallet account"}</Text>
             </TouchableOpacity>
           </View>
           <View
@@ -88,8 +89,8 @@ const RenderToktokWalletStatus = ({status}) => {
               <View>
                 <Text style={{marginLeft: 8, fontSize: 15, color: '#FFA700'}}>totok
                 <Text style={{fontSize: 15, color: "#F6841F"}}>wallet</Text></Text>                                           
-                {status == "declined" && <Text style={{fontSize: 12, marginLeft: 8, color: "#ED3A19"}}>Declined</Text>}
-                {status == "pending" && <Text style={{fontSize: 12, marginLeft: 8, color: "#F6841F"}}>Pending</Text>}
+                {status == 0 && <Text style={{fontSize: 12, marginLeft: 8, color: "#ED3A19"}}>Declined</Text>}
+                {status == 2 && <Text style={{fontSize: 12, marginLeft: 8, color: "#F6841F"}}>Pending</Text>}
               </View>
             </View>
             <View
@@ -98,7 +99,7 @@ const RenderToktokWalletStatus = ({status}) => {
                 justifyContent: 'space-between',
                 alignContent: 'flex-start',
                 flex: 2,
-                marginTop: status == "none" ? 0 : -15
+                marginTop: status == -1 ? 0 : -15
               }}>
               <Text style={{marginLeft: 5, fontWeight: 'bold', color: '#929191', fontSize: 10}}>
               (Balance {FormatToText.currency(0)})
@@ -116,7 +117,7 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
   const navigation = useNavigation();
   // const [currentBalance, setCurrenctBalance] = useState(0)
 
-  if(status != ""){
+  if(status != null){
     return <RenderToktokWalletStatus status={status} />
   }
 

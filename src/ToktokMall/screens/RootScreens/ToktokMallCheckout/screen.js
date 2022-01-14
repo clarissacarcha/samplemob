@@ -12,7 +12,7 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_CHECKOUT_DATA, POST_CHECKOUT, GET_HASH_AMOUNT } from '../../../../graphql/toktokmall/model';
 
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
-import { GET_WALLET, GET_MY_ACCOUNT } from 'toktokwallet/graphql'
+import { GET_WALLET, GET_MY_ACCOUNT, GET_USER_TOKTOK_WALLET_DATA } from 'toktokwallet/graphql'
 
 import {Loading} from '../../../Components/Widgets';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -60,7 +60,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [shippingRates, setShippingRates] = useState([])
   const [initialLoading, setInitialLoading] = useState(true)
   const [walletAccount, setWalletAccount] = useState(false)
-  const [walletAccountStatus, setWalletAccountStatus] = useState(false)
+  const [walletAccountStatus, setWalletAccountStatus] = useState(null)
   const [walletmodal, setwalletmodal] = useState(false)
   const [customerData, setCustomerData] = useState({})
   const [shippingDiscounts, setShippingDiscounts] = useState([])
@@ -190,6 +190,22 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   }
 
+  const  [getToktokWalletData] = useLazyQuery(GET_USER_TOKTOK_WALLET_DATA , {
+    fetchPolicy:"network-only",
+    variables: {
+      input: {
+        userId: toktokSession.user.id,
+      }
+    },
+    onCompleted: async ({getUserToktokWalletData})=> {
+      console.log(getUserToktokWalletData)
+      const {kycStatus} = getUserToktokWalletData
+      setWalletAccountStatus(kycStatus != null ? kycStatus : -1)
+      setwalletmodal(true)
+    },
+    onError: (error)=> console.log(error) 
+  })
+
   //TOKTOK WALLET
   const [ getMyAccount ] = useLazyQuery(GET_MY_ACCOUNT , {
     fetchPolicy: "network-only",
@@ -206,13 +222,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
         }
       }else{
         setwalletmodal(true)
-        setWalletAccountStatus("none")
       }
     },
     onError: (error) => {
       console.log(error)
-      setwalletmodal(true)
-      setWalletAccountStatus("none")
+      getToktokWalletData()
     }
   })  
 
