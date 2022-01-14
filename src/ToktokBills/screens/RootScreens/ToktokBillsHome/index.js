@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor:"white",
   },
   flatlistContainer: {
-    paddingHorizontal: moderateScale(10),
-    paddingVertical: moderateScale(20)
+    paddingHorizontal: width * .03,
+    paddingVertical: width * .035
   }
 })

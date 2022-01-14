@@ -118,14 +118,15 @@ export const PaymentForm = ({ billItemSettings })=> {
 
   const changeAmount = (value) => {
     let pattern = /^\d+(\.\d{2})?$/;
-    if(value[0] == "0"){
-      value.replace(0, "");
-      return setAmount(value.replace(0, ""));
-    }
-   
-    value ? setAmountError(!pattern.test(value) ? "Amount format is invalid." : "")
-      : setAmountError(`Payment amount is required.`)
-    formatAmount(value, setAmount)
+    let num = value.replace(/[^0-9.]/g, '')
+
+    if(num[0] == "0") return 
+    if(num[0] == ".") return
+
+    num ? setAmountError(!pattern.test(num) ? "Payment Amount format is invalid." : "")
+      : setAmountError(`Payment Amount is required.`)
+      
+    setAmount(num)
   }
 
   return (

@@ -20,6 +20,7 @@ export const BillerType = ({ item, index })=> {
     <TouchableOpacity
       onPress={onThrottledPress}
       style={styles.container}
+      activeOpacity={.8}
     >
       <View style={styles.item}>
         <Image
@@ -34,8 +35,8 @@ export const BillerType = ({ item, index })=> {
 
 const styles = StyleSheet.create({
   container: {
-    height: moderateScale(118.5),
-    width: moderateScale(118.5),
+    height: width * .315,
+    width: width * .315,
     justifyContent:"center",
   },
   item: {

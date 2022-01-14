@@ -86,6 +86,7 @@ export const ToktokBiller = ({navigation, route})=> {
       });
     } else {
       setFilteredData([]);
+      getBillItems();
     }
   }, [search]);
 

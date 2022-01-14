@@ -71,16 +71,16 @@ export class ErrorUtility {
       })
       return;
     }
-   
+    const isMaxTpinOrOtp = graphQLErrors[0]?.message.includes("TPIN/OTP attempts");
     prompt({
       type: "error",
-      title,
+      title: isMaxTpinOrOtp ? "Transaction Void" : title,
       message: graphQLErrors[0]?.message,
       event: "TOKTOKBILLSLOAD"
     });
 
     if(isPop){
-      return navigation.pop();
+      return navigation.pop(isMaxTpinOrOtp ? 1 : 2);
     }
   }
 }
