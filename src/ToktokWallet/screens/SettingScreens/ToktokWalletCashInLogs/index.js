@@ -146,7 +146,7 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
             cashInMobileNumber={tokwaAccount.mobileNumber}
         />
         <Separator />
-        <SwipeDownToRefresh/>
+        {/* <SwipeDownToRefresh/> */}
         <ModalPaginationLoading visible={pageLoading}/>
         {
             // loading && pageIndex == 0

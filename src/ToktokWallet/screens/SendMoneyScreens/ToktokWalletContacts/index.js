@@ -18,7 +18,7 @@ export const ToktokWalletContacts = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack />,
-        headerTitle: ()=> <HeaderTitle label={['Your Contacts']} />,
+        headerTitle: ()=> <HeaderTitle label={['All Contacts']} />,
     })
 
     const session = useSelector(state=>state.session)

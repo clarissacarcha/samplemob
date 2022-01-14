@@ -37,7 +37,8 @@ const Amount = ({
     if(isCFComputed){
         cfMessage =   +providerServiceFee + +systemServiceFee == 0 
                       ? `Convenience fee is waived for this transaction.`
-                      : `Additional PHP ${numberFormat(+providerServiceFee + +systemServiceFee)} convenience fee will be charged in this transaction.`
+                      : `Additional convenience fee will be charged in this transaction.`
+                    //   : `Additional PHP ${numberFormat(+providerServiceFee + +systemServiceFee)} convenience fee will be charged in this transaction.`
     }
 
     console.log(isCFComputed , providerServiceFee)
@@ -92,7 +93,7 @@ const Amount = ({
                     </View>
             </View>
             {errorListMessage.amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.amount}</Text>}
-            {isCFComputed && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
+            {isCFComputed && amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>

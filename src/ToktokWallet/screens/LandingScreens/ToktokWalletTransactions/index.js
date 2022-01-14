@@ -57,7 +57,7 @@ export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navig
     return (
         <CheckIdleState>
         <Separator />
-        <SwipeDownToRefresh/>
+        {/* <SwipeDownToRefresh/> */}
         <View style={styles.container}>        
                 <View style={styles.logs}>
                         <FlatList 

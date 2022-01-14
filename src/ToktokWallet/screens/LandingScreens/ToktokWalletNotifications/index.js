@@ -98,7 +98,7 @@ export const ToktokWalletNotifications = ({navigation,route})=> {
         return (
             <CheckIdleState>
             <Separator/>
-            <SwipeDownToRefresh/>
+            {/* <SwipeDownToRefresh/> */}
             <View style={styles.container}>
             <FlatList
                     showsVerticalScrollIndicator={false}
@@ -122,11 +122,15 @@ export const ToktokWalletNotifications = ({navigation,route})=> {
     return (
         <CheckIdleState>
             <Separator/>
-            <SwipeDownToRefresh/>
+            {/* <SwipeDownToRefresh/> */}
             <View style={styles.container}>
                     <FlatList
                         ListHeaderComponent={() => (
-                           <NoData/>
+                           <NoData
+                              title="No Notifications"
+                              label="We’ll notify you when something arrives."
+                              type="notification"
+                           />
                         )}
                         showsVerticalScrollIndicator={false}
                         data={data.getNotificationsByClassification}
