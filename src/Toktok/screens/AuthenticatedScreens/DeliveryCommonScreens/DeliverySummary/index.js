@@ -36,6 +36,10 @@ const StopDetails = ({navigation, route}) => {
 
   const [orderData, setOrderData] = useState(route.params.orderData);
 
+  const {walletBalance} = route.params;
+
+  const [requestTakeMoneyData, setRequestTakeMoneyData] = useState(null);
+
   const [booked, setBooked] = useState(false);
 
   const [postDelivery, {loading: postDeliveryLoading}] = useMutation(POST_DELIVERY, {
@@ -76,9 +80,28 @@ const StopDetails = ({navigation, route}) => {
       3000,
     );
   };
+  const onCashInClick = () => {
+    // alert('Cash In');
+    navigation.push('ToktokWalletPaymentOptions', {
+      amount: 1000,
+
+      onCashIn: onCashIn,
+    });
+  };
+
+  const onCashIn = () => {
+    console.log('CASH IN SUCCESS');
+  };
 
   const onBookNow = () => {
     try {
+      // if (orderData.paymentMethod === 'TOKTOKWALLET' && !requestTakeMoneyData) {
+      //   // navigate and request take money. Upon submit, verify request take money.
+      //   // pass validator value and requestTakeMoneyID
+      //   navigation.push('DeliveryPaymentPin', {amount: orderData.price, setRequestTakeMoneyData});
+      //   return;
+      // }
+
       const input = {...orderData};
 
       delete input.directions;
@@ -87,7 +110,6 @@ const StopDetails = ({navigation, route}) => {
       delete input.itemDescription; // Item Description is cargo in postDeliveryInput
       delete input.isCashOnDelivery;
       delete input.pricing;
-      delete input.price;
       delete input.distance;
       delete input.discount;
       delete input.duration;
@@ -98,6 +120,18 @@ const StopDetails = ({navigation, route}) => {
 
       input.cashOnDelivery = parseFloat(input.cashOnDelivery);
       input.referralCode = '';
+
+      if (orderData.paymentMethod === 'TOKTOKWALLET') {
+        // input.requestTakeMoneyId = requestTakeMoneyData.requestTakeMoneyId;
+        // input.validator = requestTakeMoneyData.validator;
+        // input.tpin = requestTakeMoneyData.validator === 'TPIN' ? requestTakeMoneyData.verificationCode : '';
+        // input.otp = requestTakeMoneyData.validator === 'OTP' ? requestTakeMoneyData.verificationCode : '';
+
+        navigation.push('DeliveryPaymentPin', {input: input, setRequestTakeMoneyData});
+        return;
+      } else {
+        delete input.price;
+      }
 
       postDelivery({
         variables: {
@@ -111,7 +145,6 @@ const StopDetails = ({navigation, route}) => {
 
   const onSuccessOkay = () => {
     setBooked(false);
-    // navigation.pop(3);
     navigation.replace('RootDrawer', {
       screen: 'AuthenticatedStack',
       params: {
@@ -274,9 +307,23 @@ const StopDetails = ({navigation, route}) => {
               PHP {orderData.price}.00
             </Text>
           </View>
-          <View style={{margin: 16}}>
-            <YellowButton label="Book Now" onPress={onBookNow} />
-          </View>
+          {orderData.paymentMethod === 'CASH' && (
+            <View style={{margin: 16}}>
+              <YellowButton label="Book Now" onPress={onBookNow} />
+            </View>
+          )}
+
+          {orderData.paymentMethod === 'TOKTOKWALLET' && parseFloat(orderData.price) <= parseFloat(walletBalance) && (
+            <View style={{margin: 16}}>
+              <YellowButton label="Book Now" onPress={onBookNow} />
+            </View>
+          )}
+
+          {orderData.paymentMethod === 'TOKTOKWALLET' && parseFloat(orderData.price) > parseFloat(walletBalance) && (
+            <View style={{margin: 16}}>
+              <YellowButton label="Insuficient Balance - Cash In" onPress={onCashInClick} />
+            </View>
+          )}
         </View>
       </BottomSheet>
     </View>

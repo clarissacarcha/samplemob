@@ -9,6 +9,12 @@ import {WhiteButton, VectorIcon, ICON_SET} from '../../../../../revamp';
 export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet}, ref) => {
   const snapPoints = useMemo(() => [0, 141], []);
 
+  console.log({hasWallet, balanceText});
+
+  const hasEnoughBalance = hasWallet && parseFloat(balanceText) >= 1;
+  const notEnoughBalance = hasWallet && parseFloat(balanceText) < 1;
+  const hasNoWallet = !hasWallet;
+
   return (
     <BottomSheet
       ref={ref}
@@ -29,7 +35,7 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet}
           }}
         />
         <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />
-        {hasWallet ? (
+        {hasEnoughBalance && (
           <WhiteButton
             label="toktokwallet"
             borderless
@@ -38,13 +44,29 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet}
               onChange('TOKTOKWALLET');
               ref.current.collapse();
             }}
-            suffixText={balanceText}
+            suffixText={`PHP ${balanceText}`}
           />
-        ) : (
+        )}
+
+        {notEnoughBalance && (
+          <WhiteButton
+            label="toktokwallet"
+            borderless
+            labelStyle={{fontFamily: FONT.REGULAR}}
+            onPress={() => {
+              onChange('TOKTOKWALLET');
+              ref.current.collapse();
+            }}
+            suffixText={`Insufficient Balance - Cash In`}
+          />
+        )}
+
+        {hasNoWallet && (
           <View style={{height: 50, justifyContent: 'center', marginLeft: 10}}>
             <Text style={{color: COLOR.MEDIUM}}>toktokwallet</Text>
           </View>
         )}
+
         {/* <WhiteButton label="toktok Wallet" borderless onPress={() => {}} /> */}
       </View>
     </BottomSheet>

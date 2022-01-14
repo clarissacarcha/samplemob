@@ -71,6 +71,8 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
   const [stringDescription, setStringDescription] = useState(null);
   const maxValue = constants.maxCashOnDelivery;
   const [partnerBranch, setPartnerBranch] = useState(null);
+  const [walletBalance, setWalletBalance] = useState(0);
+
   const {
     data: balanceData,
     loading: balanceLoading,
@@ -109,6 +111,12 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
       setPartnerBranch(cleanPartner);
     }
   }, []);
+
+  useEffect(() => {
+    if (balanceData) {
+      setWalletBalance(balanceData.getToktokWalletBalance.balance);
+    }
+  }, [balanceData]);
 
   const paymentMethodSheetRef = useRef();
   const paymentSheetRef = useRef();
@@ -162,6 +170,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
           duration,
           directions,
         },
+        walletBalance: walletBalance,
       });
     },
   });
@@ -349,10 +358,10 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
             <AlertOverlay visible={loading} />
             <View style={{height: 20}} />
             {/* <PromoForm /> */}
-            {/* <PaymentMethodForm
+            <PaymentMethodForm
               value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
               bottomSheetRef={paymentMethodSheetRef}
-            /> */}
+            />
             {/* <PaymentForm value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'} bottomSheetRef={paymentSheetRef} /> */}
             {!partnerBranch && (
               <ItemDescriptionForm
