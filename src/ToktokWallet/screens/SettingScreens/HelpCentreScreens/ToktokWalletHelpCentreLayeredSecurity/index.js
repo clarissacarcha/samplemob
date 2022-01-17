@@ -12,7 +12,7 @@ const ListItem = (props) => {
             <View style={{flex: 1, flexDirection: 'row', paddingVertical: 10}}>
                 <View style={{flex: 0.5, justifyContent: 'center', alignItems: "flex-start"}}>
                     <Image 
-                        style={{resizeMode: props.resizeMode || 'contain', width: '100%', height: 35}}
+                        style={{right: props.title == "Data encryption" ? -2 : 0, resizeMode: props.resizeMode || 'contain', width: '100%', height: 35}}
                         source={props.imageSource ? props.imageSource : require('toktokwallet/assets/icons/magnifying.png')}
                     />
                 </View>
@@ -49,16 +49,20 @@ export const ToktokWalletHelpCentreLayeredSecurity = ({navigation}) => {
                         <View style={{flex: 1, paddingHorizontal: 16, marginTop: 8}}>
                             
                             {/* <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Layered Security</Text> */}
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Multi-layered protection prevents intrusions, keeping your money and data safe.</Text>
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginVertical: 10}}>toktokwallet Inc has its multi-layered security features that
+prevent threats intrusions, keeping your personal information
+and transaction details safe and protected.</Text>
                             
                             <View style={{flex: 1, marginTop: 12, marginBottom: 10}}>
 
-                                {[{
-                                    title: "toktokwallet MPIN & TPIN authentication",
-                                    content: "We protect your wallet by offering toktokwallet MPIN & TPIN authentication. They help prevent unauthorized access to your account.",
-                                    imageSource: require('toktokwallet/assets/images/SecurityAndPrivacy/fingerprint.png'),
-                                    resizeMode: "stretch"
-                                },{
+                                {[
+                                // {
+                                //     title: "toktokwallet MPIN & TPIN authentication",
+                                //     content: "We protect your wallet by offering toktokwallet MPIN & TPIN authentication. They help prevent unauthorized access to your account.",
+                                //     imageSource: require('toktokwallet/assets/images/SecurityAndPrivacy/fingerprint.png'),
+                                //     resizeMode: "stretch"
+                                // },
+                                {
                                     title: "Fraud prevention",
                                     content: "Your account and transaction are protected 24/7 by a fraud detection engine.",
                                     imageSource: require('toktokwallet/assets/images/SecurityAndPrivacy/fraud.png'),
