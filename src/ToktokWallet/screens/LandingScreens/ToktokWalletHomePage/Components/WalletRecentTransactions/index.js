@@ -4,8 +4,10 @@ import CONSTANTS from 'common/res/constants';
 import {useNavigation} from '@react-navigation/native';
 import {Separator, WalletLog} from 'toktokwallet/components';
 import { YellowButton } from 'src/revamp';
-import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants';
 import { useAccount } from 'toktokwallet/hooks';
+
+//SELF IMPORTS
+import Log from './Log';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS
 const {height,width} = Dimensions.get("window")
@@ -15,9 +17,6 @@ const WalletRecentTransactions = () => {
   const {checkIfTpinIsSet,tokwaAccount} = useAccount();
 
   const TopUpNow = ()=> {
-      if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
-          return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
-      }
 
       const tpinIsSet = checkIfTpinIsSet();
       if(!tpinIsSet) return
@@ -47,25 +46,17 @@ const RecentRecords = ()=> (
         <View style={{flex: 1, alignItems: 'flex-start'}}>
           <Text style={styles.title}>Recent Transactions</Text>
         </View>
-        <TouchableOpacity onPress={ViewTransactions} style={{flex: 1, alignItems: 'flex-end'}}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, color: '#FF8A48'}}>See More</Text>
-        </TouchableOpacity>
+        {
+          tokwaAccount?.wallet?.allTransactions?.length > 5 &&
+          <TouchableOpacity onPress={ViewTransactions} style={{flex: 1, alignItems: 'flex-end'}}>
+            <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, color: '#FF8A48'}}>See All</Text>
+          </TouchableOpacity>
+        }
+       
       </View>
 
       <View style={styles.transactions}>
-        {
-          tokwaAccount?.wallet?.recentTransactions?.map((item,index)=>{
-            return (
-              <WalletLog
-                key={`recentLog${index}`}
-                item={item}
-                itemsLength={tokwaAccount.wallet.recentTransactions}
-                index={index}
-              />
-            )
-          })
-        }
-        {/* <FlatList
+        <FlatList
           style={{flex: 1, backgroundColor: 'white'}}
           showsVerticalScrollIndicator={false}
           scrollEnabled={true}
@@ -73,15 +64,15 @@ const RecentRecords = ()=> (
           keyExtractor={(item) => item.id}
           renderItem={({item, index}) => {
             return (
-              <WalletLog
+              <Log
                 key={`recentLog${index}`}
-                item={item}
+                transaction={item}
                 itemsLength={tokwaAccount.wallet.recentTransactions}
                 index={index}
               />
             );
           }}
-        /> */}
+        />
       </View>
   </>
 )

@@ -28,7 +28,8 @@ const INITIAL_STATE = {
     upgradeAccount: false,
     cashInTopUp: false,
   },
-  constants: {}
+  constants: {},
+  contacts: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -73,6 +74,11 @@ export default (state = INITIAL_STATE, action) => {
           ...state.constants,
           ...action.payload
         }
+      }
+    case 'SET_CONTACTS':
+      return {
+        ...state,
+        contacts: [...action.payload]
       }
     default:
       return state;

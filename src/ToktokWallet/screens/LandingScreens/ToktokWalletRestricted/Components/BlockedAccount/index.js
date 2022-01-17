@@ -41,6 +41,8 @@ export const BlockedAccount = ({data,showPrompt})=> {
             <View style={styles.content}>
                 <View style={{marginTop: 10, paddingHorizontal: moderateScale(30)}}>
                     <Text style={[styles.verifyWalletText]}>Your account is deactivated</Text>
+                <View style={{alignItems:"center",marginTop: 10}}>
+                    <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>Your account is deactivated</Text>
                     <Text style={styles.clickVerifyText}>Please contact our Customer Service Representative for support</Text>
                 </View>
                 <TouchableOpacity onPress={HelpCenter} style={styles.helpCenter}>
@@ -53,6 +55,7 @@ export const BlockedAccount = ({data,showPrompt})=> {
                 }}/>
             </View>
             <BuildingBottom/>
+        </View>
         </View>
         </>
     )

@@ -45,21 +45,13 @@ export const EnterAmount = ({amount , setAmount , setSwipeEnabled  , tokwaAccoun
              <View style={{flexDirection:'row',alignItems:"center"}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Enter Amount</Text>
             </View>
-            <View style={[styles.amount, {borderWidth: 1, borderColor: errorMessage == "" ? "transparent" : COLOR.RED}]}>
-                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
-                        <TextInput
-                                caretHidden
-                                value={amount}
-                                onChangeText={changeAmount}
-                                style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1,fontSize: FONT_SIZE.M}}
-                                keyboardType="numeric"
-                                returnKeyType="done"
-                        />
-                        <View style={{marginLeft: 5,alignSelf: "center",flex: 1}}>
-                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
-                        </View>
-                </View>
-                <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED}}>{errorMessage}</Text>
+            <InputAmount
+                errorMessage={errorMessage}
+                amount={amount}
+                changeAmount={changeAmount}
+                currency={tokwaAccount.wallet.currency.code}
+            />
+            <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED}}>{errorMessage}</Text>
         </View>
     )
 }

@@ -22,7 +22,7 @@ const path = Platform.OS === "ios" ? RNFS.LibraryDirectoryPath : RNFS.DownloadDi
 
 const {width,height} = Dimensions.get("window")
 
-export const Receipt = ({children, format = "png", refNo ,refDate, onPress})=> {
+export const Receipt = ({children, format = "png", refNo ,refDate, onPress, btnLabel})=> {
 
     const viewshotRef = useRef()
 
@@ -174,7 +174,7 @@ export const Receipt = ({children, format = "png", refNo ,refDate, onPress})=> {
                 </View>
             </View>
             <View style={styles.actionBtn}>
-                    <YellowButton label="Back to Home" onPress={onPress} />
+                    <YellowButton label={btnLabel ? btnLabel : "Back to Home"} onPress={onPress} />
             </View>
         </View>
         </>

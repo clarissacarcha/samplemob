@@ -1,6 +1,6 @@
-import React , {useEffect,useState, useContext} from 'react'
-import {View , Text , StyleSheet , TextInput,TouchableOpacity} from 'react-native'
-import { ValidatorScreen } from 'toktokwallet/components'
+import React , {useEffect,useState, useContext, useCallback} from 'react'
+import {View , Text , StyleSheet , TextInput,TouchableOpacity, Alert} from 'react-native'
+import { ValidatorScreen , InputAmount } from 'toktokwallet/components'
 import { YellowButton ,VectorIcon ,ICON_SET} from 'src/revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT, POST_COMPUTE_CONVENIENCE_FEE } from 'toktokwallet/graphql'
@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 import { AlertOverlay } from 'src/components'
 import { ContextCashOut } from '../ContextProvider'
 import { TransactionUtility } from 'toktokwallet/util'
+import _ from 'lodash'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -31,18 +32,10 @@ const Amount = ({
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const { amount ,setAmount , note , setNote ,bank } = useContext(ContextCashOut)
     const [maxAmount , setMaxAmount] = useState(null)
-    const isCFComputed = providerServiceFee != ""
-    let cfMessage = null;
-
-    if(isCFComputed){
-        cfMessage =   +providerServiceFee + +systemServiceFee == 0 
+    const cfMessage =   +providerServiceFee + +systemServiceFee == 0 
                       ? `Convenience fee is waived for this transaction.`
                       : `Additional convenience fee will be charged in this transaction.`
                     //   : `Additional PHP ${numberFormat(+providerServiceFee + +systemServiceFee)} convenience fee will be charged in this transaction.`
-    }
-
-    console.log(isCFComputed , providerServiceFee)
-    console.log(cfMessage , systemServiceFee)
 
 
     const changeAmount = (value)=> {
@@ -77,7 +70,13 @@ const Amount = ({
         <View style={styles.container}>
         <View style={{marginTop: 16,}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Enter Amount</Text>
-            <View style={[styles.input, {borderWidth: 1, borderColor: errorListMessage.amount == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
+           <InputAmount
+                errorMessage={errorListMessage.amount}
+                amount={amount}
+                changeAmount={changeAmount}
+                currency={tokwaAccount.wallet.currency.code}
+            />
+            {/* <View style={[styles.input, {borderWidth: 1, borderColor: errorListMessage.amount == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
                         <TextInput
                                 caretHidden
@@ -91,9 +90,9 @@ const Amount = ({
                     <View style={{marginLeft: 5,alignSelf: "center",flex: 1}}>
                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                     </View>
-            </View>
+            </View> */}
             {errorListMessage.amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.amount}</Text>}
-            {isCFComputed && amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
+            {amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
@@ -417,6 +416,26 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
     }
 
+    const debounceHandler = useCallback(_.debounce(()=>{
+        postComputeConvenienceFee({
+            variables: {
+                input: {
+                    amount: +amount,
+                    cashOutBankId: bank.id
+                }
+            }
+        })
+    },1000, {
+        leading: false,
+        trailing: true,
+    }), [])
+
+    useEffect(()=>{
+        if(amount != "" && bank.id > 0){
+            debounceHandler()
+        }
+    },[amount, bank.id])
+
     return (
         <>
             <AlertOverlay visible={requestLoading || loading}/>
@@ -442,14 +461,14 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 systemServiceFee={systemServiceFee}
                 computeLoading={computeLoading}
                 computeConvenienceFee={()=> {
-                    postComputeConvenienceFee({
-                        variables: {
-                            input: {
-                                amount: +amount,
-                                cashOutBankId: bank.id
-                            }
-                        }
-                    })
+                    // postComputeConvenienceFee({
+                    //     variables: {
+                    //         input: {
+                    //             amount: +amount,
+                    //             cashOutBankId: bank.id
+                    //         }
+                    //     }
+                    // })
                 }}
             />
             <View style={styles.proceedBtn}>
