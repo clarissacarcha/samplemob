@@ -92,7 +92,7 @@ const Amount = ({
                     </View>
             </View> */}
             {errorListMessage.amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.amount}</Text>}
-            {amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
+            {amount != "" && tokwaAccount.constants.UbFundTransferType == "api" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
