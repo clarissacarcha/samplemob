@@ -32,6 +32,7 @@ export const InputAmount = ({
                             keyboardType="numeric"
                             returnKeyType="done"
                             placeholder="0.00"
+                            placeholderTextColor={COLOR.DARK}
                     />
                     
                     {

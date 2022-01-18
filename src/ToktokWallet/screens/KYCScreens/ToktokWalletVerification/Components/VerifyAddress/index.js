@@ -125,6 +125,7 @@ export const VerifyAddress = ()=> {
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="House/Unit #, Floor"
+                                placeholderTextColor={COLOR.DARK}
                                 value={address.line1}
                                 onChangeText={text=>changeAddress("line1", text)}
                                 returnKeyType="done"
@@ -137,6 +138,7 @@ export const VerifyAddress = ()=> {
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="Bldg, Barangay, Subdivision/Village"
+                                placeholderTextColor={COLOR.DARK}
                                 value={address.line2}
                                 onChangeText={text=>changeAddress("line2", text)}
                                 returnKeyType="done"
@@ -177,6 +179,7 @@ export const VerifyAddress = ()=> {
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="Enter postal code here"
+                                placeholderTextColor={COLOR.DARK}
                                 value={address.postalCode}
                                 onChangeText={text=>changeAddress("postalCode",text)}
                                 keyboardType="number-pad"

@@ -97,7 +97,7 @@ const Amount = ({
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
-        <View style={[styles.input, {justifyContent:"center"}]}>
+   
              <TextInput
                     style={styles.input}
                     value={note}
@@ -105,9 +105,10 @@ const Amount = ({
                     onChangeText={(value)=> setNote(value)}
                     placeholder="Enter note here"
                     returnKeyType="done"
+                    placeholderTextColor={COLOR.DARK}
                 />
                 <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{note.length}/60</Text>
-        </View>
+    
         </View>
     </View>
     )
@@ -165,6 +166,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                             onChangeText={setAccountName}
                             maxLength={30}
                             placeholder={`Enter bank account name here`}
+                            placeholderTextColor={COLOR.DARK}
                             keyboardType="default"
                             returnKeyType="done"
                         />
@@ -185,6 +187,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                             onChangeText={changeAccountNumber}
                             maxLength={19}
                             placeholder={`Enter bank account number here`}
+                            placeholderTextColor={COLOR.DARK}
                             keyboardType="number-pad"
                             returnKeyType="done"
                         />
@@ -203,6 +206,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                             onChangeText={(value)=>setAddress(value)}
                             maxLength={20}
                             placeholder={`Enter your address here`}
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                 </View>
