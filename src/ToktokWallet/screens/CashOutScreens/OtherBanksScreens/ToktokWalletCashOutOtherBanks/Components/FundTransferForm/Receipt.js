@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     viewShot: {
-        paddingBottom: 20,
+        paddingVertical: 20,
         paddingHorizontal: 16,
         marginTop: 50,
         backgroundColor:"white",
