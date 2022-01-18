@@ -1,5 +1,5 @@
 import React , {useContext} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Animated,Alert,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Animated,Alert,Image , Platform} from 'react-native'
 import CONSTANTS from 'common/res/constants';
 import { useNavigation } from '@react-navigation/native'
 import {Separator , HeaderImageBackground, HeaderTitle} from 'toktokwallet/components';
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: 40,
         marginLeft: 5,
-        marginTop: 10,
+        marginTop: Platform.OS == "android" ? 10 : 5,
     },
     topUpbtn: {
         height: 34,
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     walletSettings: {
         flex: 1,
         alignItems:'flex-end',
-        marginTop: 10,
+        marginTop: Platform.OS == "android" ? 10 : 5,
     }
 })
 
