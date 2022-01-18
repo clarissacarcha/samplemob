@@ -32,12 +32,12 @@ const MainComponent = ({ navigation, route, viewRef, onCapturingScreen }) => {
     <View style={{ paddingTop: onCapturingScreen ? moderateScale(50) : moderateScale(20) }}>
       <Header />
       <ReceiptDetails route={route} />
-      <View style={styles.buttonContainer}>
-        <Text style={styles.emailText}>A copy of this receipt will be delivered on the email provided.</Text>
-        { !onCapturingScreen && (
+      { !onCapturingScreen && (
+        <View style={styles.buttonContainer}>
+          <Text style={styles.emailText}>A copy of this receipt will be delivered on the email provided.</Text>
           <OrangeButton label="Ok" onPress={() => navigation.navigate("ToktokBillsHome")} />
-        )}
-      </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -51,7 +51,7 @@ export const ToktokBillsReceipt = ({ navigation, route }) => {
   
   navigation.setOptions({
     headerLeft: () => null,
-    headerTitle: () => <HeaderTitle label={"toktokload Receipt"} />,
+    headerTitle: () => <HeaderTitle label={"toktokbills Receipt"} />,
     headerRight: () =>
       <HeaderDownloadReceipt
         viewshotRef={viewshotRef}
