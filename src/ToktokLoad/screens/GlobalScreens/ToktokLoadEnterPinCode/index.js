@@ -111,14 +111,13 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
   }
 
   return (
-    <>
-    <AlertOverlay visible={loading}/>
-    <KeyboardAvoidingView 
-      style={styles.container}
-      keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
-      behavior={Platform.OS === "ios" ? "padding" : "height"} 
-    >
-      <View style={styles.subContainer}>
+    <View style={styles.subContainer}>
+      <AlertOverlay visible={loading}/>
+      <KeyboardAvoidingView 
+        style={styles.container}
+        keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
+        behavior={Platform.OS === "ios" ? "padding" : "height"} 
+      >
         <View style={styles.inputContainer}>
           <Text style={styles.otpText}>Enter {requestMoneyDetails?.validator} </Text>
           <View style={{flexDirection:"row"}}>
@@ -146,25 +145,24 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
             </TouchableOpacity>
           )}
         </View>
-        <OrangeButton
-          disabled={pinCode.length < 6}
-          label="Confirm"
-          onPress={onPressConfirm}
-        />
-      </View>
-    </KeyboardAvoidingView>
-    </>
+      </KeyboardAvoidingView>
+      <OrangeButton
+        disabled={pinCode.length < 6}
+        label="Confirm"
+        onPress={onPressConfirm}
+      />
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
   },
   subContainer: {
     flex: 1,
-    padding: moderateScale(16)
+    padding: moderateScale(16),
+    backgroundColor: "white",
   },
   inputContainer: {
     flex: 1,
