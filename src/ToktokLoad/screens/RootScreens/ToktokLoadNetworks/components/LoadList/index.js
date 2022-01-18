@@ -22,16 +22,16 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
   const alert = useAlert();
   const { selectedLoad, setSelectedLoad, favorites, setFavorites, loads, setLoads } = useContext(VerifyContext);
   const [loadFavorite, setLoadFavorite] = useState(null);
+  const [isMounted, setIsMounted] = useState(true);
   
-  const {loading: getLoadItemsLoading, error: getLoadItemsError, refetch} = useQuery(GET_LOAD_ITEMS, {
+  const [getLoadItems, {loading: getLoadItemsLoading, error: getLoadItemsError}]  = useLazyQuery(GET_LOAD_ITEMS, {
     fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    variables: {
-      input: {
-        networkId
-      }
+    onError: () => {
+      setIsMounted(false);
     },
     onCompleted: ({ getLoadItems }) => {
+      setIsMounted(false);
       setLoads(prev => ({ ...prev, [networkId]: getLoadItems }));
     }
   });
@@ -56,8 +56,18 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
     }
   });
 
+  useEffect(() => {
+    processGetLoadItems()
+  }, [])
+
   const processGetLoadItems = () => {
-    refetch();
+    getLoadItems({
+      variables: {
+        input: {
+          networkId
+        }
+      },
+    });
   }
 
   const onPressFavorite = (item, index) => {
@@ -96,6 +106,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
   }
 
   const ListEmptyComponent = () => {
+    if(isMounted) return null
     return (
       <View style={styles.emptyContainer}>
         {!getLoadItemsLoading && (
@@ -104,7 +115,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
       </View>
     )
   }
- 
+
   if(getLoadItemsError){
     return (
       <View style={styles.container}>
@@ -132,7 +143,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
         ListEmptyComponent={ListEmptyComponent}
         refreshControl={
           <RefreshControl
-            refreshing={getLoadItemsLoading}
+            refreshing={getLoadItemsLoading || isMounted}
             onRefresh={processGetLoadItems}
           />
         }

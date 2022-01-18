@@ -82,6 +82,9 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
       _.remove(favorites, {
         loadItemId: selectedLoad.loadItemId 
       });
+      if(favorites.length === 0){
+        onRefresh();
+      }
       console.log(patchRemoveFavoriteLoad, "REMOVE")
     }
   });
