@@ -63,9 +63,9 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
 
     return(
         <CheckIdleState>
-            <KeyboardAvoidingView
-                behavior={Platform.OS == "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
+            <View
+                // behavior={Platform.OS == "ios" ? "padding" : "height"}
+                // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
                 style={styles.container}
             >
                  <View style={styles.content}>
@@ -121,7 +121,7 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
                     </View>
                 </View>
                 <BuildingBottom/>
-            </KeyboardAvoidingView>
+            </View>
         </CheckIdleState>
     )
 }

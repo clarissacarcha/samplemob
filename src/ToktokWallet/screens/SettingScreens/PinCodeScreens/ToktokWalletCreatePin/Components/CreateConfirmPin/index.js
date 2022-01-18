@@ -39,7 +39,7 @@ export const CreateConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeTo
 
     return (
        <View style={styles.container}>
-            <ScrollView style={styles.content}>
+            <View style={styles.content}>
                 { !tokwaAccount.pinCode && (
                     <Text style={{ textAlign: "center", fontSize: FONT_SIZE.S, marginVertical: 40, marginHorizontal: 20 }}>
                         You will use your TPIN in every transaction you make with toktokwallet. Please keep it to yourself and do not share with anyone.
@@ -74,7 +74,7 @@ export const CreateConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeTo
                         <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
+            </View>
            <BuildingBottom/>
        </View>
     )
