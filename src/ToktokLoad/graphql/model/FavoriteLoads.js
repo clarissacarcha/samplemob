@@ -42,3 +42,11 @@ export const PATCH_REMOVE_FAVORITE_LOAD = gql`
     }
   }
 `
+export const GET_CHECK_FAVORITE_LOAD = gql`
+  query getCheckFavoriteLoad($input: GetCheckFavoriteLoadInput!) {
+    getCheckFavoriteLoad(input: $input) {
+      title
+      message
+    }
+  }
+`
