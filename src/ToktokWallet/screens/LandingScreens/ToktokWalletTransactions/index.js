@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {View,StyleSheet,FlatList,RefreshControl} from 'react-native'
 import { onErrorAlert} from 'src/util/ErrorUtility'
-import {Separator,WalletLog,CheckIdleState, SwipeDownToRefresh , NoData} from 'toktokwallet/components'
+import {Separator,WalletLog,CheckIdleState , SwipeDownToRefresh , NoData } from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
 import { useAlert } from 'src/hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -21,7 +21,7 @@ const mapDispatchtoProps = (dispatch) => ({
 export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navigation,route,getTokwaTransactions})=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Transactions']} />,
+        headerTitle: ()=> <HeaderTitle label={['Recent Transactions']} />,
     })
 
     const [allTransactions, setAllTransactions] = useState(route.params.allTransactions)
@@ -57,11 +57,11 @@ export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navig
     return (
         <CheckIdleState>
         <Separator />
-        <SwipeDownToRefresh/>
+        {/* <SwipeDownToRefresh/> */}
         <View style={styles.container}>        
                 <View style={styles.logs}>
                         <FlatList 
-                            ListHeaderComponent={() => {
+                          ListHeaderComponent={() => {
                                 if(allTransactions.length > 0) return null
                                 if(loading) return null
                                 return <NoData/>

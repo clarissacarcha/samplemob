@@ -1,4 +1,4 @@
-import React, {useState, useContext , useEffect} from 'react'
+import React, {useState, useContext , useEffect,useCallback} from 'react'
 import {StyleSheet,View,BackHandler,TouchableHighlight,Text,KeyboardAvoidingView,Platform,Alert} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
@@ -36,7 +36,7 @@ const HeaderBackClose = ({currentIndex,setCurrentIndex, setPromptVisible})=> {
         setPromptVisible(true)
       }
 
-      useFocusEffect(() => {
+      useFocusEffect(useCallback(() => {
         const backAction = () => {
             closeScreen() 
           return true;
@@ -48,7 +48,7 @@ const HeaderBackClose = ({currentIndex,setCurrentIndex, setPromptVisible})=> {
         );
     
         return () => backHandler.remove();
-      }, []);
+      }, []));
 
       return (
         <TouchableHighlight onPress={closeScreen} underlayColor={'white'} style={styles.button}>

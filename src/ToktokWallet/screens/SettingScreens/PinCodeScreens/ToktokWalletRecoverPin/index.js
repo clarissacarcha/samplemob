@@ -142,11 +142,11 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
         <CheckIdleState>
         <Separator />
         <AlertOverlay visible={loading}/>
-        <KeyboardAvoidingView 
+        <View 
             style={styles.container}
             // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
-            keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
-            behavior={Platform.OS === "ios" ? "padding" : "height"} 
+            // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
+            // behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
                 <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP code sent to</Text>
@@ -178,13 +178,13 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={getForgotAndRecoverOTPCode}
                         >
-                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Didn't get code? Tap here to resend.</Text>
                                 { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
                         </TouchableOpacity>
 
                 </View>
                        
-                 <View style={{height: SIZE.FORM_HEIGHT + 20,justifyContent:"flex-end",paddingVertical:16}}> 
+                 <View style={{height: SIZE.FORM_HEIGHT + 20,justifyContent:"flex-end"}}> 
                     {
                         pinCode.length < 6
                         ? <DisabledButton label="Confirm"/>
@@ -192,7 +192,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
                     }   
             </View>
             <BuildingBottom/>
-        </KeyboardAvoidingView>
+        </View>
         </CheckIdleState>
     )
 }

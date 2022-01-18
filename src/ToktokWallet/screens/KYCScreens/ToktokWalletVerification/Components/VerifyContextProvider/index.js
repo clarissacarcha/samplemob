@@ -182,6 +182,8 @@ export const VerifyContextProvider = ({children})=> {
                 changeIncomeInfo,
                 cacheImagesList,
                 setCacheImagesList,
+                pepInfo,
+                setPepInfo,
             }}
         >
             {children}

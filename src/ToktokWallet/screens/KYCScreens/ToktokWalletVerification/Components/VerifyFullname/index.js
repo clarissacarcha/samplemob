@@ -216,6 +216,7 @@ export const VerifyFullname = ()=> {
                             value={person.firstName}
                             onChangeText={(value)=>changePersonInfo("firstName",value)}
                             placeholder="Enter first name here"
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                     </View>
@@ -228,6 +229,7 @@ export const VerifyFullname = ()=> {
                             value={person.middleName}
                             onChangeText={(value)=>changePersonInfo("middleName",value)}
                             placeholder="Enter middle name here"
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                         <View style={{flexDirection:"row",marginTop: 5}}>
@@ -256,6 +258,7 @@ export const VerifyFullname = ()=> {
                             value={person.lastName}
                             onChangeText={(value)=>changePersonInfo("lastName",value)}
                             placeholder="Enter last name here"
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                     </View>
@@ -284,6 +287,7 @@ export const VerifyFullname = ()=> {
                             value={contactInfo.email}
                             onChangeText={(value)=>changeContactInfo("email",value)}
                             placeholder="Enter email here"
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                     </View>
@@ -307,6 +311,7 @@ export const VerifyFullname = ()=> {
                             value={birthInfo.birthPlace}
                             onChangeText={(value)=>changeBirthInfo("birthPlace",value)}
                             placeholder={"Enter place of birth here"}
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                     </View>
@@ -342,6 +347,7 @@ export const VerifyFullname = ()=> {
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Occupation</Text>
                             <TextInput 
                                 placeholder="Enter Occupation here"
+                                placeholderTextColor={COLOR.DARK}
                                 style={styles.input}
                                 value={incomeInfo.occupation}
                                 onChangeText={(value)=>changeIncomeInfo("occupation",value)}
@@ -365,6 +371,7 @@ export const VerifyFullname = ()=> {
                             <View style={{marginTop: 10,}}>
                                 <TextInput 
                                     placeholder="Enter Source of Income here"
+                                    placeholderTextColor={COLOR.DARK}
                                     style={styles.input}
                                     value={incomeInfo.otherSource}
                                     onChangeText={(value)=>changeIncomeInfo("otherSource",value)}

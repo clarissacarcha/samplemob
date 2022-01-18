@@ -11,13 +11,13 @@ const Card = (props) => {
         <>
             <Separator />    
                 <TouchableOpacity onPress={props.onPress || null} style={{flexDirection: 'row', paddingVertical: 8, paddingHorizontal: 18}}>
-                    <View style={{flex: 3, justifyContent: 'center'}}>
-                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L}}>{props.title}</Text>
-                        <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>{props.content}</Text>
+                    <View style={{flex: 3, justifyContent: 'center',paddingVertical: 20,}}>
+                        <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.L}}>{props.title}</Text>
+                        {/* <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>{props.content}</Text> */}
                     </View>
-                    <View style={{flex: 1.5, flexDirection: 'row-reverse'}}>
+                    {/* <View style={{flex: 1.5, flexDirection: 'row-reverse'}}>
                         <Image style={{margin: 8, resizeMode: 'contain', width: 80, height: 90}} source={props.imageSource}/>
-                    </View>
+                    </View> */}
                 </TouchableOpacity>
         </>
     )
@@ -27,7 +27,7 @@ export const ToktokWalletHelpCentreSecurityPrivacy = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: () => <HeaderTitle label={['Security and privacy centre', '']} />,
+        headerTitle: () => <HeaderTitle label={['Security and Privacy', '']} />,
     });
 
     return (
@@ -41,17 +41,17 @@ export const ToktokWalletHelpCentreSecurityPrivacy = ({navigation})=> {
                     onPress={() => navigation.navigate("ToktokWalletHelpCentreLayeredSecurity")}
                 />
                 <Card
-                    title="Your money is protected"
+                    title="Money Protection"
                     content="Your wallet balance is stored and protected."
                     imageSource={require('toktokwallet/assets/images/SecurityAndPrivacy/money.png')}
                     onPress={() => navigation.navigate("ToktokWalletHelpCentreMoneyProtected")}
                 />
-                <Card
+                {/* <Card
                     title="Help within reach"
                     content="Having issues? Contact us here."
                     imageSource={require('toktokwallet/assets/images/SecurityAndPrivacy/HelpReach.png')}
                     onPress={() => navigation.navigate("ToktokWalletHelpCentreContactUs")}
-                />
+                /> */}
                 <Separator />
             </View>
         </View>
