@@ -11,12 +11,14 @@ export const EnterNote = ({note,setNote})=> {
             <View style={styles.input}>
                         <TextInput
                                 value={note}
-                                multiline={false}
+                                multiline={true}
+                                numberOfLines={4}
                                 height={50}
                                 onChangeText={value=>setNote(value)}
                                 placeholder="Enter note here..." 
                                 returnKeyType="done"
                                 maxLength={60}
+                                textAlignVertical='top'
                                 style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
                         />
                 </View>

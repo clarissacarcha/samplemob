@@ -34,7 +34,7 @@ const NotificationCard = ({message, lastItem}) => {
             paddingHorizontal: SIZE.MARGIN,
             paddingVertical: SIZE.MARGIN,
           }}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row',marginVertical:10}}>
             <View style={{height: 70, justifyContent: 'center'}}>
               <View
                 style={{
@@ -98,7 +98,7 @@ export const ToktokWalletNotifications = ({navigation,route})=> {
         return (
             <CheckIdleState>
             <Separator/>
-            <SwipeDownToRefresh/>
+            {/* <SwipeDownToRefresh/> */}
             <View style={styles.container}>
             <FlatList
                     showsVerticalScrollIndicator={false}
@@ -122,11 +122,15 @@ export const ToktokWalletNotifications = ({navigation,route})=> {
     return (
         <CheckIdleState>
             <Separator/>
-            <SwipeDownToRefresh/>
+            {/* <SwipeDownToRefresh/> */}
             <View style={styles.container}>
                     <FlatList
                         ListHeaderComponent={() => (
-                           <NoData/>
+                           <NoData
+                              title="No Notifications"
+                              label="We’ll notify you when something arrives."
+                              type="notification"
+                           />
                         )}
                         showsVerticalScrollIndicator={false}
                         data={data.getNotificationsByClassification}

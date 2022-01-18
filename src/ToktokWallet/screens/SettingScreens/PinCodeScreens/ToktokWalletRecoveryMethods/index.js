@@ -10,6 +10,7 @@ import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} f
 import { onError, onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert, usePrompt} from 'src/hooks'
 import { useAccount } from 'toktokwallet/hooks'
+import { AlertOverlay } from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import { TransactionUtility } from 'toktokwallet/util'
 

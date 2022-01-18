@@ -8,7 +8,7 @@ export const EnterNote = ({note,setNote})=> {
 
     return (
        <View style={styles.container}>
-            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note <Text style={{fontFamily: FONT.BOLD,fontSize: 11}}>(Optional)</Text></Text>
+            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note <Text style={{fontFamily: FONT.BOLD,fontSize: 11}}>(optional)</Text></Text>
             <View style={styles.input}>
                         <TextInput
                                 value={note}
@@ -18,6 +18,7 @@ export const EnterNote = ({note,setNote})=> {
                                 placeholder="Enter note here..." 
                                 returnKeyType="done"
                                 maxLength={60}
+                                textAlignVertical='top'
                                 style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1,color: COLOR.DARK}}
                         />
                 </View>

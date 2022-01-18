@@ -47,25 +47,17 @@ const RecentRecords = ()=> (
         <View style={{flex: 1, alignItems: 'flex-start'}}>
           <Text style={styles.title}>Recent Transactions</Text>
         </View>
-        <TouchableOpacity onPress={ViewTransactions} style={{flex: 1, alignItems: 'flex-end'}}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, color: '#FF8A48'}}>See More</Text>
-        </TouchableOpacity>
+        {
+          tokwaAccount?.wallet?.allTransactions?.length > 5 &&
+          <TouchableOpacity onPress={ViewTransactions} style={{flex: 1, alignItems: 'flex-end'}}>
+            <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, color: '#FF8A48'}}>See All</Text>
+          </TouchableOpacity>
+        }
+       
       </View>
 
       <View style={styles.transactions}>
-        {
-          tokwaAccount?.wallet?.recentTransactions?.map((item,index)=>{
-            return (
-              <WalletLog
-                key={`recentLog${index}`}
-                item={item}
-                itemsLength={tokwaAccount.wallet.recentTransactions}
-                index={index}
-              />
-            )
-          })
-        }
-        {/* <FlatList
+        <FlatList
           style={{flex: 1, backgroundColor: 'white'}}
           showsVerticalScrollIndicator={false}
           scrollEnabled={true}
@@ -81,7 +73,7 @@ const RecentRecords = ()=> (
               />
             );
           }}
-        /> */}
+        />
       </View>
   </>
 )

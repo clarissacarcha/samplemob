@@ -18,6 +18,7 @@ export const Confirm = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWa
     };
 
     const onSubmit = () => {
+        if(confirmpinCode.length < 6) return
         setPageIndex(oldstate=>oldstate+1)
      };
 
@@ -34,7 +35,7 @@ export const Confirm = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWa
 
     return (
         <View style={styles.container}>
-        <ScrollView style={styles.content}>
+        <View style={styles.content}>
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm your MPIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin} numberOfBox={4}/>
@@ -60,14 +61,14 @@ export const Confirm = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWa
                         }
 
                         <TouchableOpacity
-                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
+                                style={{marginTop: 18,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE MPIN" : "SHOW MPIN"}</Text>
+                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "HIDE MPIN" : "SHOW MPIN"}</Text>
                         </TouchableOpacity>
 
                 </View>
-            </ScrollView>
+            </View>
             <BuildingBottom/>
             {/* <TouchableOpacity
                 disabled={pinCode.length < 6}
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     },
     content: {
         // alignItems: "center",
-        padding: 10,
+        padding: 16,
         flex: 1,
     },
     input: {

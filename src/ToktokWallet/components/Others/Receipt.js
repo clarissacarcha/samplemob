@@ -22,7 +22,7 @@ const path = Platform.OS === "ios" ? RNFS.LibraryDirectoryPath : RNFS.DownloadDi
 
 const {width,height} = Dimensions.get("window")
 
-export const Receipt = ({children, format = "png", refNo ,refDate, onPress})=> {
+export const Receipt = ({children, format = "png", refNo ,refDate, onPress, btnLabel})=> {
 
     const viewshotRef = useRef()
 

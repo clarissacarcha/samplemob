@@ -36,7 +36,8 @@ const MainComponent = ()=> {
     const [idIndex,setIDIndex] = useState(1)
     const alert = useAlert();
     const [data,setData] = useState(null)
-    const navigation = useNavigation();
+    const [showPepQuestionnaire,setShowPepQuestionnaire] = useState(true)
+
     const onPress = (index)=> {
         setIDIndex(index)
         IDTypeRef.current.expand()
@@ -94,6 +95,16 @@ const MainComponent = ()=> {
 
     return (
         <>
+        {/* <PepQuestionnaireModal 
+            visible={showPepQuestionnaire} 
+            setVisible={setShowPepQuestionnaire}
+            pepInfo={pepInfo}
+            setPepInfo={setPepInfo}
+            onRequestClose={()=>navigation.pop()}
+            callback={()=>{
+                setShowPepQuestionnaire(false)
+            }}
+        /> */}
         <Separator/>
         <ScrollView style={styles.container}>
             <HeaderReminders/>

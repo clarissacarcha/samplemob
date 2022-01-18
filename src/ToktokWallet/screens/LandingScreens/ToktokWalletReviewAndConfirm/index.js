@@ -60,6 +60,12 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                 <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Review and Confirm</Text>
                 {RenderDisplay()}
             </View>
+            <View style={{flex:1 ,justifyContent:"center",alignItems:"center"}}>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"center"}}>
+Please make sure all information provided is correct
+before clicking the confirmation button.
+                </Text>
+            </View>
             <View style={styles.proceedBtn}>
                 {
                     isSwipe

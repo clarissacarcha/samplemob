@@ -126,12 +126,12 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
                 category={category}
             />
             <Separator />
-            <KeyboardAvoidingView style={{flex: 1,}}
-             keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
-             behavior={Platform.OS == "ios" ? "padding" : "height"}
+            <View style={{flex: 1,}}
+            //  keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
+            //  behavior={Platform.OS == "ios" ? "padding" : "height"}
              >
             {DisplayComponent()}
-            </KeyboardAvoidingView>
+            </View>
         </CheckIdleState>
     )
 }

@@ -188,6 +188,7 @@ export const VerifyID = ()=> {
                                     value={verifyID.idNumber}
                                     onChangeText={text=>changeVerifyID("idNumber",text)}
                                     placeholder="Enter valid id number here"
+                                    placeholderTextColor={COLOR.DARK}
                                     // onSubmitEditing={Proceed}
                                     style={[styles.input,{padding: 5,paddingLeft: 10,fontSize: 12,fontFamily: FONT.REGULAR}]} 
                                     returnKeyType="done"

@@ -5,8 +5,7 @@ import {useLazyQuery , useQuery} from '@apollo/react-hooks'
 import {GET_CASH_IN_LOGS ,TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_CASH_INS} from 'toktokwallet/graphql'
 import {useSelector} from 'react-redux'
-import { numberFormat } from 'toktokwallet/helper'
-import {Separator,TransactionDetails, ModalPaginationLoading , CheckIdleState, SwipeDownToRefresh ,NoData} from 'toktokwallet/components'
+import {Separator, ModalPaginationLoading , CheckIdleState, SwipeDownToRefresh ,NoData} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle} from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -146,7 +145,7 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
             cashInMobileNumber={tokwaAccount.mobileNumber}
         />
         <Separator />
-        <SwipeDownToRefresh/>
+        {/* <SwipeDownToRefresh/> */}
         <ModalPaginationLoading visible={pageLoading}/>
         {
             // loading && pageIndex == 0

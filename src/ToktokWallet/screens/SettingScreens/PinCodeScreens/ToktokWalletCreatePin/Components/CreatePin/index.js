@@ -44,7 +44,7 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
             <ScrollView style={styles.content}>
                 { !tokwaAccount.pinCode && (
                     <Text style={{ textAlign: "center", fontSize: FONT_SIZE.S, marginVertical: 40, marginHorizontal: 20 }}>
-                        You will use your TPIN in every transaction you make with Toktokwallet. Please keep it to yourself and do not share with anyone.
+                        You will use your TPIN in every transaction you make with toktokwallet. Please keep it to yourself and do not share with anyone.
                     </Text>
                 )}
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter {tokwaAccount.pinCode ? "New ": ""}TPIN</Text>
@@ -75,7 +75,7 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
                             style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                             onPress={()=>setShowPin(!showPin)}
                     >
-                            <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
+                            <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

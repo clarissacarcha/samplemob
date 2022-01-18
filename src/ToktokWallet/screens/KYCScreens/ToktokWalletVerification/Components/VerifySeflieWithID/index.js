@@ -6,6 +6,8 @@ import {useNavigation} from '@react-navigation/native'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import { BuildingBottom } from 'toktokwallet/components'
 import { moderateScale } from 'toktokwallet/helper'
+import { useMutation } from '@apollo/react-hooks'
+import { AlertOverlay } from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import ImageCropper from 'react-native-simple-image-cropper'
 
@@ -89,8 +91,21 @@ taking a selfie </Text>
 
 export const VerifySelfieWithID = ()=> {
 
+    const [showPepQuestionnaire,setShowPepQuestionnaire] = useState(false)
     const VerifyUserData = useContext(VerifyContext)
-    const {setCacheImagesList, setCurrentIndex , selfieImageWithID, setSelfieImageWithID , setTempSelfieImageWithID, tempSelfieImageWithID} = VerifyUserData
+    const {
+        setCacheImagesList,
+        setCurrentIndex , 
+        selfieImageWithID, 
+        setSelfieImageWithID ,
+        setTempSelfieImageWithID,
+        tempSelfieImageWithID,
+        person,
+        birthInfo,
+        nationalityId,
+        pepInfo,
+        setPepInfo
+    } = VerifyUserData
     const [cropperParams, setCropperParams] = useState({});
     const navigation = useNavigation()
     const cropSize = {
@@ -132,14 +147,34 @@ export const VerifySelfieWithID = ()=> {
                 ...state,
                 uri: croppedResult
             }))
+
+            return setCurrentIndex(oldval => oldval + 1)
+
         }catch(error){  
             throw error;
         }
-        return setCurrentIndex(oldval => oldval + 1)
+       
     }
 
     if(tempSelfieImageWithID){
         return(
+            <>
+             {/* <AlertOverlay visible={loading}/>
+             <PepQuestionnaireModal 
+                visible={showPepQuestionnaire} 
+                setVisible={setShowPepQuestionnaire}
+                onRequestClose={()=>setShowPepQuestionnaire(false)}
+                pepInfo={pepInfo}
+                setPepInfo={setPepInfo}
+                callback={()=>{
+                    setShowPepQuestionnaire(false)
+                    navigation.navigate("ToktokWalletPepVideoCallSchedule" , {
+                        setCurrentIndex,
+                        pepInfo,
+                        setPepInfo
+                    })
+                }}
+            /> */}
             <MainComponent onPress={Proceed}>
                 <View style={styles.PreviewImage}>
                     {/* <Image style={{height:290,width: 280,flex: 1}} resizeMode="stretch" source={{uri: selfieImageWithID.uri}}/> */}
@@ -159,6 +194,7 @@ export const VerifySelfieWithID = ()=> {
                 </TouchableOpacity>
                 </View>
             </MainComponent>
+            </>
         )
     }
     
