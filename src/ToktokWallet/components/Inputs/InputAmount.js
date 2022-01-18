@@ -9,7 +9,9 @@ export const InputAmount = ({
     errorMessage="",
     amount,
     changeAmount,
-    currency
+    currency,
+    onBlur,
+    disabled = false,
 })=> {
 
     const [isFocus,setIsFocus] = useState(false)
@@ -19,7 +21,10 @@ export const InputAmount = ({
                     { currency && <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{currency} </Text>}
                     <TextInput
                             onFocus={()=>setIsFocus(true)}
-                            onBlur={()=>setIsFocus(false)}
+                            onBlur={()=>{
+                                setIsFocus(false)
+                                if(onBlur) onBlur()
+                            }}
                             value={amount}
                             caretHidden={!isFocus}
                             onChangeText={changeAmount}

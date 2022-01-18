@@ -26,7 +26,7 @@ const Amount = ({
     providerServiceFee , 
     systemServiceFee , 
     computeConvenienceFee ,
-    computeLoading
+    computeLoading,
 })=> {
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
@@ -75,6 +75,7 @@ const Amount = ({
                 amount={amount}
                 changeAmount={changeAmount}
                 currency={tokwaAccount.wallet.currency.code}
+                onBlur={computeConvenienceFee}
             />
             {/* <View style={[styles.input, {borderWidth: 1, borderColor: errorListMessage.amount == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
@@ -92,7 +93,7 @@ const Amount = ({
                     </View>
             </View> */}
             {errorListMessage.amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.amount}</Text>}
-            {amount != "" && tokwaAccount.constants.UbFundTransferType == "api" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
+            {amount != "" && bank.id > 0 && !computeLoading && tokwaAccount.constants.UbFundTransferType == "api" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
@@ -432,9 +433,16 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
     useEffect(()=>{
         if(amount != "" && bank.id > 0){
-            debounceHandler()
+            postComputeConvenienceFee({
+                variables: {
+                    input: {
+                        amount: +amount,
+                        cashOutBankId: bank.id
+                    }
+                }
+            })
         }
-    },[amount, bank.id])
+    },[bank,amount])
 
     return (
         <>
@@ -461,14 +469,14 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 systemServiceFee={systemServiceFee}
                 computeLoading={computeLoading}
                 computeConvenienceFee={()=> {
-                    // postComputeConvenienceFee({
-                    //     variables: {
-                    //         input: {
-                    //             amount: +amount,
-                    //             cashOutBankId: bank.id
-                    //         }
-                    //     }
-                    // })
+                    postComputeConvenienceFee({
+                        variables: {
+                            input: {
+                                amount: +amount,
+                                cashOutBankId: bank.id
+                            }
+                        }
+                    })
                 }}
             />
             <View style={styles.proceedBtn}>

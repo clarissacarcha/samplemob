@@ -51,6 +51,9 @@ export const GET_CASH_OUTS = gql`
                 }
                 details
                 refNo
+                referenceNumber
+                systemServiceFee
+                providerServiceFee
                 transaction {
                     id
                     refNo

@@ -34,7 +34,7 @@ const NotificationCard = ({message, lastItem}) => {
             paddingHorizontal: SIZE.MARGIN,
             paddingVertical: SIZE.MARGIN,
           }}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row',marginVertical:10}}>
             <View style={{height: 70, justifyContent: 'center'}}>
               <View
                 style={{

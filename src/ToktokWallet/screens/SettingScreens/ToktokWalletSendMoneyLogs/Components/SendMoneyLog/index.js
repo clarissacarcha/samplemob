@@ -9,7 +9,7 @@ const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 // SELF IMPORTS
 import Details from "./Details";
 
-export const CashOutLog = ({
+export const SendMoneyLog = ({
     item,
     tokwaAccount,
     index
@@ -37,29 +37,21 @@ export const CashOutLog = ({
     }
 
     // const refNo = MaskLeftZero(item.id)
-    const transaction = item.transaction
-    const requestNo = item.referenceNumber ? item.referenceNumber : item.refNo
-    const refNo = transaction?.refNo ? transaction.refNo : MaskLeftZero(item.id)
-    const refDate = transaction ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM DD, YYYY hh:mm a') : moment(item.createdAt).tz('Asia/Manila').format('MMM DD, YYYY hh:mm a')
-    const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
-    const convenienceFee =  `${numberFormat(+item.providerServiceFee + +item.systemServiceFee)}`
-    const provider = item.provider.name
-    let phrase = provider
-    if(provider == "InstaPay" || provider == "PesoNet"){
-        phrase = "Other Banks"
-    }
+    const transaction = item
+    const refNo = transaction.refNo
+    const refDate = moment(transaction.createdAt).tz('Asia/Manila').format('MMM DD, YYYY hh:mm a')
+    const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(transaction.amount)}`
+
 
     const showDetails = ()=>{
         setInfo({
             refNo,
             refDate,
-            name: "Fund Transfer",
-            phrase,
+            name: item.name,
+            phrase: item.phrase,
             amount: transactionAmount,
-            convenienceFee,
             status,
             details: item.details,
-            requestNo
         })
         setOpenModal(true);
     }
@@ -79,8 +71,8 @@ export const CashOutLog = ({
             onPress={onthrottledPress}
         >
             <View style={styles.transactionDetails}>
-                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Request # {requestNo}</Text>
-                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Ref # {refNo}</Text>
+                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{item.phrase}</Text>
             </View>
             <View style={styles.transactionAmount}>
                 <Text style={{color: "#FCB91A",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
