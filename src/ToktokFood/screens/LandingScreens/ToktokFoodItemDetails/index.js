@@ -58,7 +58,7 @@ const MainComponent = () => {
     },
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails);
-      console.log('getProductDetails', getProductDetails);
+      // console.log('getProductDetails', getProductDetails);
       getTemporaryCart({
         variables: {
           input: {
@@ -91,10 +91,10 @@ const MainComponent = () => {
       let basePrice = 0;
       if (productDetails?.variants.length > 0) {
         if (selectedVariants && Object.keys(selectedVariants).length > 0) {
-          basePrice = parseInt(selectedVariants?.price);
+          basePrice = parseInt(selectedVariants?.basePrice);
         }
       } else {
-        basePrice = productDetails.price;
+        basePrice = productDetails.basePrice;
       }
       setBasePrice(basePrice);
     }
@@ -138,7 +138,7 @@ const MainComponent = () => {
   };
 
   const ItemDetails = () => {
-    const {itemname, price, resellerDiscount, summary} = productDetails;
+    const {itemname, basePrice, price, resellerDiscount, summary} = productDetails;
     return (
       <View style={styles.foodContainer}>
         {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge />}
@@ -150,7 +150,7 @@ const MainComponent = () => {
           {resellerDiscount?.referralShopRate > 0 ? (
             <ResellerPrice />
           ) : (
-            <Text style={styles.foodPrice}>PHP {price?.toFixed(2)}</Text>
+            <Text style={styles.foodPrice}>PHP {basePrice?.toFixed(2)}</Text>
           )}
         </View>
         <View style={styles.ratingsWrapper}>
@@ -214,7 +214,7 @@ const MainComponent = () => {
                 <Variations
                   productId={selectedItemId ? Id : ''}
                   data={productDetails}
-                  basePrice={productDetails?.price}
+                  basePrice={productDetails?.basePrice}
                 />
               </View>
             </ScrollView>

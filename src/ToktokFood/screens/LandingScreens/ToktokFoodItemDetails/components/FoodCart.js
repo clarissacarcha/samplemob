@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useContext, useState, useCallback} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import Toast from 'react-native-simple-toast';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {Image, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 // Fonts/Colors
@@ -18,7 +19,7 @@ const OrderRider = ({riderDetails, transaction, referenceNum}) => {
       handleCheckRiderDetails();
     }
   }, [riderDetails, transaction]);
- 
+
   const handleCheckRiderDetails = async () => {
     let res = await checkRiderDetails(referenceNum);
     setShowDriverModal(res?.status == 200);
@@ -39,7 +40,7 @@ const OrderRider = ({riderDetails, transaction, referenceNum}) => {
       <Image resizeMode="cover" style={styles.avatar} source={{uri: user.person.avatar}} />
       <View style={styles.leftContainer}>
         <Text style={styles.riderName}>{`${user.person.firstName} ${user.person.lastName}`}</Text>
-        <Text style={styles.orderNumber}>{user.person.mobileNumber}</Text>
+        <Text style={styles.orderNumber}>{user.username}</Text>
         <Text style={styles.notes}>{vehicle.plateNumber}</Text>
         <Text style={styles.notes}>{`${vehicle.brand.brand} ${vehicle.model.model}`}</Text>
         {/* <Text style={styles.notes}>{parseFloat(rating).toFixed(1)}</Text>
