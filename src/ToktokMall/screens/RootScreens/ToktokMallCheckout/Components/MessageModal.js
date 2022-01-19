@@ -53,12 +53,15 @@ export const MessageModal = ({navigation, isVisible, setIsVisible}) => {
                     <Text style = {styles.buttonText}>Go to My Orders</Text>
                   </TouchableOpacity>    
                 </View> */}                
-                <Text style ={styles.title}>Unable to Checkout</Text>
+                <Text style ={styles.title}>Unable to Place Order</Text>
                 <Text style ={styles.text}>
-									Sorry, you don't have a toktokwallet account yet. Please create an account and top up to proceed in checkout.
+									Sorry, you don't have a toktokwallet account yet. Please create an account and top up to proceed in placing an order.
 								</Text>
 								<View>
-									<TouchableOpacity>
+									<TouchableOpacity onPress={() => {
+                    setIsVisible(false)
+                    navigation.navigate("ToktokWalletLoginPage")
+                  }}>
 										<Text style={{color: COLOR.ORANGE, textDecorationLine: 'underline'}}>Create toktokwallet account</Text>
 									</TouchableOpacity>
 								</View>

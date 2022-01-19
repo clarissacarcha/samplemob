@@ -17,7 +17,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { GET_DEFAULT_ADDRESS } from '../../../../../../graphql/toktokmall/model';
 
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
-import { GET_MY_ACCOUNT, GET_WALLET } from 'toktokwallet/graphql'
+import { GET_MY_ACCOUNT, GET_WALLET, GET_USER_TOKTOK_WALLET_DATA } from 'toktokwallet/graphql'
 
 import {useFocusEffect} from '@react-navigation/native'
 import { EventRegister } from 'react-native-event-listeners';
@@ -40,6 +40,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
   const [conNo, setConNo] = useState("")
   const [address, setAddress] = useState("")
   const [accountBalance, setAccountBalance] = useState(0)
+  const [walletAccountStatus, setWalletAccountStatus] = useState(null)
 
   const [getDefaultAddress, {error, loading}] = useLazyQuery(GET_DEFAULT_ADDRESS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -65,16 +66,33 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
   }
   })
 
+  const  [getToktokWalletData] = useLazyQuery(GET_USER_TOKTOK_WALLET_DATA , {
+    fetchPolicy:"network-only",
+    variables: {
+      input: {
+        userId: session.user.id,
+      }
+    },
+    onCompleted: async ({getUserToktokWalletData})=> {
+      console.log(getUserToktokWalletData)
+      const {kycStatus} = getUserToktokWalletData
+      setWalletAccountStatus(kycStatus)
+    },
+    onError: (error)=> console.log(error) 
+  })
+
   const [ getWallet ] = useLazyQuery(GET_WALLET , {
     fetchPolicy: "network-only",
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: ({ getWallet })=> {
       // do something with result
+      console.log(getWallet)
       console.log(getWallet.balance)
       setAccountBalance(getWallet.balance)
   },
   onError: (error) => {
     console.log(error)
+    getToktokWalletData()
   }
   })
   
@@ -144,7 +162,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
             <View style={{flex: 4, alignItems: 'flex-start', justifyContent: 'center'}}>
               <Text style={{fontSize: 11, marginLeft: 8, color: COLOR.DARK}}>(Balance {FormatToText.currency(accountBalance)})</Text>
             </View>
-            <TouchableOpacity style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}
+            <TouchableOpacity style={{display: walletAccountStatus == 1 ? 'flex' : 'none', flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}
               onPress = {() => {
 
                 navigation.navigate("ToktokWalletPaymentOptions" , {
