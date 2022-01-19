@@ -62,8 +62,12 @@ export const GET_OUTGOING_TRANSFER = gql`
     }
 `
 
-export const WalletTransactions = `
+const WalletTransactions = `
 id
+refNo
+name
+phrase
+details
 amount
 note
 status
@@ -77,38 +81,8 @@ externalPhrase
 externalReferenceNumber
 externalPayload
 externalDetails
-sourcePerson {
-    firstName
-    middleName
-    lastName
-}
-destinationPerson {
-    firstName
-    middleName
-    lastName
-}
-sourceAccount {
-    mobileNumber
-}
-destinationAccount {
-    mobileNumber
-}
-transactionType {
-    name
-    type
-    sourcePhrase
-    destinationPhrase
-}
-cashOutDisplayInformations {
-    accountInfo {
-        accountNumber
-        accountName
-        bank {
-            name 
-        }
-    }
-}
 `
+
 export const GET_TRANSACTIONS = gql`
     query {
        getTransactions {
