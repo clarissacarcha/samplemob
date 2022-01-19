@@ -84,7 +84,7 @@ export const New = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
 
                 </View>
             </View>
-            <View style={{justifyContent:"flex-end", height: 70}}>
+            <View style={{justifyContent:"flex-end", height: 70,padding: 16}}>
                     {
                         pinCode.length < 4
                         ? <DisabledButton label="Next"/>
