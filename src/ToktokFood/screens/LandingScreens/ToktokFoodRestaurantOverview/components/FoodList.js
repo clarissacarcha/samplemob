@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useContext, Fragment} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, Image, Platform, ScrollView} from 'react-native';
+import {View, ImageBackground, StyleSheet, Text, TouchableOpacity, Image, Platform, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import ContentLoader from 'react-native-easy-content-loader';
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -19,6 +19,8 @@ import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 // Utils
 import {verticalScale, getDeviceHeight, moderateScale, getIphoneNotchSize} from 'toktokfood/helper/scale';
+import {reseller_badge} from 'toktokfood/assets/images';
+import {TOKFOODCOLOR} from 'res/variables';
 
 export const FoodList = props => {
   const {activeTab, id, tagsLoading} = props;
@@ -84,7 +86,29 @@ export const FoodList = props => {
 
   const ItemSepartor = () => <View style={styles.separtor} />;
 
+  const ResellerPrice = ({item}) => {
+    const {price, resellerDiscount} = item;
+
+    return (
+      <View style={styles.resellerPrice}>
+        <Text style={styles.listPrice}>PHP {resellerDiscount?.referralShopRate.toFixed(2)}</Text>
+        <Text style={styles.resellerDiscountText}>PHP {price?.toFixed(2)}</Text>
+      </View>
+    );
+  };
+
+  const ResellerDiscountBadge = ({item}) => {
+    const {discRatetype, referralDiscount} = item?.resellerDiscount;
+    const discountText = discRatetype === 'p' ? `${referralDiscount}%` : referralDiscount;
+    return (
+      <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
+        <Text style={styles.resellerText}>Reseller -{discountText}</Text>
+      </ImageBackground>
+    );
+  };
+
   const ItemList = ({item, index}) => {
+    const {resellerDiscount} = item;
     return (
       <Fragment>
         <TouchableOpacity
@@ -98,7 +122,13 @@ export const FoodList = props => {
           ]}>
           <View style={{flex: 1}}>
             <Text style={styles.listText}>{item.itemname}</Text>
-            <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
+            {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge item={item} />}
+            {resellerDiscount?.referralShopRate > 0 ? (
+              <ResellerPrice item={item} />
+            ) : (
+              <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
+            )}
+
             {!!item.summary && (
               <Text numberOfLines={1} style={styles.summary}>
                 {item.summary}
@@ -209,4 +239,27 @@ const styles = StyleSheet.create({
     marginHorizontal: verticalScale(20),
   },
   scrollContainer: {flex: 1},
+  resellerBadge: {
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    height: 25,
+  },
+  resellerPrice: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  resellerText: {
+    color: COLOR.WHITE,
+    fontSize: FONT_SIZE.XS,
+    fontWeight: '700',
+  },
+  resellerDiscountText: {
+    color: TOKFOODCOLOR.GRAY,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
+    marginLeft: 10,
+    textDecorationLine: 'line-through',
+  },
 });

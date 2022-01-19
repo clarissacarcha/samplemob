@@ -6,6 +6,7 @@ const products = `
   itemid
   catId
   itemname
+  basePrice
   price
   stocks
   maxQty
@@ -18,6 +19,11 @@ const products = `
   maxQtyIsset
   productImages  {
     filename
+  }
+  resellerDiscount {
+    discRatetype
+    referralDiscount
+    referralShopRate
   }
   options {
     id
