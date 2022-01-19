@@ -62,7 +62,7 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
           message: message,
           event: "TOKTOKBILLSLOAD",
           onPress: () => onPressOkPrompt()
-        })
+        });
       } else {
         navigation.navigate("ToktokLoadSummary", { loads: selectedLoad, mobileNumber });
       }
@@ -79,12 +79,10 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
       });
     },
     onCompleted:({ patchRemoveFavoriteLoad })=> {
-      _.remove(favorites, {
-        loadItemId: selectedLoad.loadItemId 
+      const data = _.remove(favorites, function(item) {
+        return item.loadItemId == selectedLoad.loadItemId 
       });
-      if(favorites.length === 0){
-        onRefresh();
-      }
+      setSelectedLoad({});
       console.log(patchRemoveFavoriteLoad, "REMOVE")
     }
   });
@@ -131,7 +129,7 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
     <View style={styles.container}>
       <AlertOverlay visible={checkLoading || patchFavoriteLoading}/>
       <FlatList
-        extraData={selectedLoad}
+        extraData={{favorites, selectedLoad}}
         data={favorites}
         renderItem={({ item, index }) => (
           <FavoriteDetails

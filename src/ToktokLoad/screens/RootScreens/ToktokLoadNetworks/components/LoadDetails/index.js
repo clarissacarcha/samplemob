@@ -21,7 +21,8 @@ export const LoadDetails = ({
   onPressFavorite,
   patchFavoriteLoading,
   postFavoriteLoading,
-  loadFavorite
+  loadFavorite,
+  getLoadItemsLoading
 }) => {
   
   const { selectedLoad, setSelectedLoad, loads, setLoads } = useContext(VerifyContext);
@@ -69,7 +70,7 @@ export const LoadDetails = ({
         )}
       </View> 
       <View style={styles.heartIconContainer}>
-        { (patchFavoriteLoading || postFavoriteLoading) && loadFavorite == item.id ? (
+        {((getLoadItemsLoading && loadFavorite) || patchFavoriteLoading || postFavoriteLoading) && loadFavorite == item.id ? (
           <LoadingIndicator isLoading={true} size="small" />
         ) : (
           <TouchableOpacity

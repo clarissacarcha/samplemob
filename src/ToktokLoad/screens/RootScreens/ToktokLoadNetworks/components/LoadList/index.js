@@ -31,6 +31,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
       setIsMounted(false);
     },
     onCompleted: ({ getLoadItems }) => {
+      setLoadFavorite(null);
       setIsMounted(false);
       setLoads(prev => ({ ...prev, [networkId]: getLoadItems }));
     }
@@ -42,6 +43,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
       onErrorAlert({alert,error});
     },
     onCompleted:({ postFavoriteLoad })=> {
+      processGetLoadItems();
       console.log(postFavoriteLoad, "ADD")
     }
   });
@@ -52,6 +54,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
       onErrorAlert({alert,error});
     },
     onCompleted:({ patchRemoveFavoriteLoad })=> {
+      processGetLoadItems();
       console.log(patchRemoveFavoriteLoad, "REMOVE")
     }
   });
@@ -83,19 +86,9 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
 
     // ADD OR REMOVE FAVORITE
     if(item.favorite){
-      patchRemoveFavoriteLoad(favData).then((res) => {
-        if(res !== undefined){
-          data[index].favorite = null
-          setLoads(prev => ({ ...prev, [networkId]: data  }));
-        }
-      });
+      patchRemoveFavoriteLoad(favData)
     } else {
-      postFavoriteLoad(favData).then((res) => {
-        if(res !== undefined){
-          data[index].favorite = favData
-          setLoads(prev => ({ ...prev, [networkId]: data  }));
-        }
-      });
+      postFavoriteLoad(favData)
     }
   }
 
@@ -136,6 +129,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
             patchFavoriteLoading={patchFavoriteLoading}
             postFavoriteLoading={postFavoriteLoading}
             loadFavorite={loadFavorite}
+            getLoadItemsLoading={getLoadItemsLoading}
           />
         )}
         contentContainerStyle={{ flexGrow: 1 }}
@@ -143,7 +137,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
         ListEmptyComponent={ListEmptyComponent}
         refreshControl={
           <RefreshControl
-            refreshing={getLoadItemsLoading || isMounted}
+            refreshing={(getLoadItemsLoading && !loadFavorite) || isMounted}
             onRefresh={processGetLoadItems}
           />
         }
