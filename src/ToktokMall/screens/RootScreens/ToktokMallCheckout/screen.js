@@ -649,7 +649,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             setCurrenctBalance={setCurrentBalance}
             setPaymentMethod={setPaymentMethod} 
             // status={walletAccountStatus}
-            status={walletAccountStatus}
+            status={walletAccountStatus || -1}
           />
           <Totals 
             raw={paramsData}
