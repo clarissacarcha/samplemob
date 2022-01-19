@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
-import React, {useEffect, useState, useContext, useRef, useMemo} from 'react';
-import {Image, Platform, StyleSheet, Text, View, StatusBar} from 'react-native';
+import React, {useEffect, useState, useContext, useMemo} from 'react';
+import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -31,7 +31,7 @@ import {FoodList, HeaderTitleSearchBox} from '../components';
 import {VerifyContext, CategoryTabs} from '../components';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import LoadingIndicator from '../../../../components/LoadingIndicator';
+// import LoadingIndicator from '../../../../components/LoadingIndicator';
 
 export const StickyView = () => {
   const routes = useRoute();
@@ -40,8 +40,7 @@ export const StickyView = () => {
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
   const [shopDetails, setShopDetails] = useState({});
-  const searchProduct = useRef('');
-  const {setNavBarHeight, temporaryCart, setTemporaryCart} = useContext(VerifyContext);
+  const {setNavBarHeight} = useContext(VerifyContext);
   const {customerInfo, location} = useSelector(state => state.toktokFood);
 
   const {id} = routes.params.item;

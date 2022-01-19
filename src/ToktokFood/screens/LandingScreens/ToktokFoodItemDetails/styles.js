@@ -1,5 +1,5 @@
 import {StyleSheet, Platform} from 'react-native';
-import {FONT, FONT_SIZE, COLOR} from 'res/variables';
+import {FONT, FONT_SIZE, COLOR, TOKFOODCOLOR} from 'res/variables';
 // Utils
 import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
@@ -64,6 +64,33 @@ const styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
+  },
+  resellerBadge: {
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    height: 25,
+    // width: 90,
+    // borderWidth: 1,
+    // backgroundColor: TOKFOODCOLOR.YELLOWBG,
+    // borderRadius: 5,
+    // padding: 3,
+  },
+  resellerPrice: {
+    flexDirection: 'row',
+  },
+  resellerText: {
+    color: COLOR.WHITE,
+    fontSize: FONT_SIZE.S,
+    fontWeight: '700',
+  },
+  resellerDiscountText: {
+    color: TOKFOODCOLOR.GRAY,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.XL,
+    marginLeft: 10,
+    textDecorationLine: 'line-through',
   },
 });
 export default styles;

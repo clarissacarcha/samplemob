@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useContext, useEffect} from 'react';
 import {useRoute} from '@react-navigation/native';
-import {View, Text, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
+import {View, ImageBackground, Text, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
 
 import {FoodCart, VerifyContextProvider, VerifyContext, FoodImageSlider} from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -18,6 +18,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_PRODUCT_DETAILS, GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import {reseller_badge} from 'toktokfood/assets/images';
 // import ChangeAddress from 'toktokfood/components/ChangeAddress';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
@@ -57,7 +58,7 @@ const MainComponent = () => {
     },
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails);
-      // console.log('getProductDetails', getProductDetails);
+      console.log('getProductDetails', getProductDetails);
       getTemporaryCart({
         variables: {
           input: {
@@ -115,16 +116,42 @@ const MainComponent = () => {
     getProductDetails();
   }, [routes.params]);
 
+  const ResellerDiscountBadge = () => {
+    const {discRatetype, referralDiscount} = productDetails?.resellerDiscount;
+    const discountText = discRatetype === 'p' ? `${referralDiscount}%` : referralDiscount;
+    return (
+      <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
+        <Text style={styles.resellerText}>Reseller -{discountText}</Text>
+      </ImageBackground>
+    );
+  };
+
+  const ResellerPrice = () => {
+    const {price, basePrice} = productDetails;
+
+    return (
+      <View style={styles.resellerPrice}>
+        <Text style={styles.foodPrice}>PHP {price.toFixed(2)}</Text>
+        <Text style={styles.resellerDiscountText}>PHP {basePrice?.toFixed(2)}</Text>
+      </View>
+    );
+  };
+
   const ItemDetails = () => {
-    const {itemname, price, summary} = productDetails;
+    const {itemname, price, resellerDiscount, summary} = productDetails;
     return (
       <View style={styles.foodContainer}>
+        {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge />}
         <View style={styles.foodDetails}>
           <View style={styles.foodNameWrapper}>
             <Text style={styles.foodName}>{itemname}</Text>
             {/* <MIcon name="favorite-border" size={22} color="#808080" style={styles.heart} /> */}
           </View>
-          <Text style={styles.foodPrice}>PHP {price?.toFixed(2)}</Text>
+          {resellerDiscount?.referralShopRate > 0 ? (
+            <ResellerPrice />
+          ) : (
+            <Text style={styles.foodPrice}>PHP {price?.toFixed(2)}</Text>
+          )}
         </View>
         <View style={styles.ratingsWrapper}>
           {/* <Rating startingValue={ratings} imageSize={16} readonly style={styles.ratings} /> */}

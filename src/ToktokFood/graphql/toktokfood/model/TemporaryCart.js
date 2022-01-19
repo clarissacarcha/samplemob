@@ -23,6 +23,7 @@ const tempCart = `
     shopRegion
     parentProductId
     parentProductName
+    resellerDiscount
     shopName
     addonsDetails {
       id
