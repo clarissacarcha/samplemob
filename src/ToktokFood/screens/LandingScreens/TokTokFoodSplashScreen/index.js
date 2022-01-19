@@ -124,8 +124,8 @@ const TokTokFoodSplashScreen = () => {
     updateToktokUser({
       variables: {
         input: {
-          toktokUserId: `"${user.id}"`,
-          toktokfoodUserId: `"${account.userId}"`,
+          toktokUserId: +user.id,
+          toktokfoodUserId: +account.userId,
         },
       },
     });
