@@ -164,7 +164,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
     return (
         <CheckIdleState>
         <AlertOverlay visible={getMyAccountLoading || getGlobalSettingsLoading}/>
-           {
+           {/* {
                tokwaAccount.constants.CashInType == "paypanda"
                ? <PayPandaOption/>
                : <DragonPayCashIn
@@ -172,7 +172,12 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
                     navigation={navigation}
                     transactionType={cashinmethods.getCashInProviders[0]}
                />
-           }
+           } */}
+              <DragonPayCashIn
+                    route={route}
+                    navigation={navigation}
+                    transactionType={cashinmethods.getCashInProviders[0]}
+               />
         </CheckIdleState>
     )
 }

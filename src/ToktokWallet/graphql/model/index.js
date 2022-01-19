@@ -6,6 +6,7 @@ export * from "./AccountType";
 export * from "./Advertisement";
 export * from "./CallChannel";
 export * from "./CashIn";
+export * from "./CashInPartnerType";
 export * from "./CashInProvider";
 export * from "./CashOut";
 export * from "./CashOutBank";

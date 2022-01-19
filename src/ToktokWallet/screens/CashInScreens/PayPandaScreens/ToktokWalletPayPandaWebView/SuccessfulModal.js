@@ -87,7 +87,10 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
             <Receipt
                 refNo={cashInLogParams.referenceNumber}
                 onPress={Proceed}
-            >
+                bottomText={"Please make sure that you have carefully reviewed the amount " +
+                "to pay. A copy of the complete cash in details and instruction will " +
+                "be sent to your email for fast and secured transaction."}
+             >
                 <View style={styles.transactionInfo}>
                      <TransactionInfo label="Cash in Method" value={paymentMethod ? paymentMethod : "PayPanda"}/>
                      <TransactionInfo label={paymentMethod ? "Transaction No." : "PayPanda Ref. No."} value={cashInLogParams.paypandaReferenceNumber}/>

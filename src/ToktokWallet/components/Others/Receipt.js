@@ -22,7 +22,7 @@ const path = Platform.OS === "ios" ? RNFS.LibraryDirectoryPath : RNFS.DownloadDi
 
 const {width,height} = Dimensions.get("window")
 
-export const Receipt = ({children, format = "png", refNo ,refDate, onPress, btnLabel})=> {
+export const Receipt = ({children, format = "png", refNo ,refDate, onPress, btnLabel , bottomText = null })=> {
 
     const viewshotRef = useRef()
 
@@ -171,6 +171,9 @@ export const Receipt = ({children, format = "png", refNo ,refDate, onPress, btnL
                         <FIcon name="download" size={20} color={"#FF8A48"}/>
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginLeft: 5,color:"#FF8A48"}}>Download</Text>
                     </TouchableOpacity>
+                </View>
+                <View style={{flex:1,justifyContent:"center",alignItems:"center",paddingHorizontal: 16}}>
+                {   bottomText && <Text style={{fontFamily: FONT.REGULAR , fontSize: FONT_SIZE.S}}>{bottomText}</Text> }
                 </View>
             </View>
             <View style={styles.actionBtn}>
