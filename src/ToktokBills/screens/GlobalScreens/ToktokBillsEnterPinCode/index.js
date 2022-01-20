@@ -124,58 +124,49 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
   return (
     <>
     <AlertOverlay visible={loading}/>
-    <KeyboardAvoidingView 
-      style={styles.container}
-      keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
-      behavior={Platform.OS === "ios" ? "padding" : "height"} 
-    >
-      <View style={styles.subContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.otpText}>Enter {requestMoneyDetails?.validator} </Text>
-          <View style={{flexDirection:"row"}}>
-            <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} isError={errorMessage != ""} />
-            <TextInput
-              caretHidden
-              value={pinCode}
-              ref={inputRef}
-              style={styles.input}
-              keyboardType="number-pad"
-              returnKeyType="done"
-              onChangeText={(value) => {
-                if (value.length <= 6) {
-                  const code = value.replace(/[^0-9]/,"")
-                  setPinCode(code);
-                  setErrorMessage("")
-                }
-              }}
-            />
-          </View>
-          { errorMessage != "" && <Text style={styles.errorText}>{errorMessage}</Text> }
-          { requestMoneyDetails?.validator === "TPIN" && (
-            <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressForgotTPIN}>
-              <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
-            </TouchableOpacity>
-          )}
+    <View style={styles.subContainer}>
+      <View style={styles.inputContainer}>
+        <Text style={styles.otpText}>Enter {requestMoneyDetails?.validator} </Text>
+        <View style={{flexDirection:"row"}}>
+          <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} isError={errorMessage != ""} />
+          <TextInput
+            caretHidden
+            value={pinCode}
+            ref={inputRef}
+            style={styles.input}
+            keyboardType="number-pad"
+            returnKeyType="done"
+            onChangeText={(value) => {
+              if (value.length <= 6) {
+                const code = value.replace(/[^0-9]/,"")
+                setPinCode(code);
+                setErrorMessage("")
+              }
+            }}
+          />
         </View>
-        <OrangeButton
-          disabled={pinCode.length < 6}
-          label="Confirm"
-          onPress={onPressConfirm}
-        />
+        { errorMessage != "" && <Text style={styles.errorText}>{errorMessage}</Text> }
+        { requestMoneyDetails?.validator === "TPIN" && (
+          <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressForgotTPIN}>
+            <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
+          </TouchableOpacity>
+        )}
       </View>
-    </KeyboardAvoidingView>
+      <OrangeButton
+        disabled={pinCode.length < 6}
+        label="Confirm"
+        onPress={onPressConfirm}
+      />
+    </View>
     </>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
   subContainer: {
     flex: 1,
-    padding: moderateScale(16)
+    padding: moderateScale(16),
+    backgroundColor: "white",
   },
   inputContainer: {
     flex: 1,
