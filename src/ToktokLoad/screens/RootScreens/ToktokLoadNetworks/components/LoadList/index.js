@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl} from
 
 //UTILS
 import { moderateScale, globeLoads, tmLoads, smartLoads } from "toktokload/helper";
+import { ErrorUtility } from 'toktokload/util';
 
 //COMPONENTS
 import { LoadDetails } from "../LoadDetails";
@@ -14,12 +15,11 @@ import { SomethingWentWrong } from "toktokload/components";
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_LOAD_ITEMS, POST_FAVORITE_LOAD, PATCH_REMOVE_FAVORITE_LOAD } from 'toktokload/graphql/model';
-import { useAlert } from 'src/hooks';
-import { onErrorAlert } from 'src/util/ErrorUtility';
+import { usePrompt } from 'src/hooks';
 
 export const LoadList = ({ networkId, navigation, mobileNumber }) => {
 
-  const alert = useAlert();
+  const prompt = usePrompt();
   const { selectedLoad, setSelectedLoad, favorites, setFavorites, loads, setLoads } = useContext(VerifyContext);
   const [loadFavorite, setLoadFavorite] = useState(null);
   const [isMounted, setIsMounted] = useState(true);
@@ -40,7 +40,12 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
   const [postFavoriteLoad, {loading: postFavoriteLoading, error: postFavoriteError}] = useMutation(POST_FAVORITE_LOAD, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: (error) => {
-      onErrorAlert({alert,error});
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        title: ""
+      });
     },
     onCompleted:({ postFavoriteLoad })=> {
       processGetLoadItems();
@@ -51,7 +56,12 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
   const [patchRemoveFavoriteLoad, {loading: patchFavoriteLoading, error: patchFavoriteError}] = useMutation(PATCH_REMOVE_FAVORITE_LOAD, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: (error) => {
-      onErrorAlert({alert,error});
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        title: ""
+      });
     },
     onCompleted:({ patchRemoveFavoriteLoad })=> {
       processGetLoadItems();
