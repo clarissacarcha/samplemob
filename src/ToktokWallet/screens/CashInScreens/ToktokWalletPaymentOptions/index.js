@@ -38,16 +38,21 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
         }
     })
 
-    if(tokwaAccount.constants.CashInType == "paypanda"){
-        navigation.setOptions({
-            headerShown: false,
-        })
-    }else{
-        navigation.setOptions({
-            headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-            headerTitle: ()=> <ToktokHeaderTitle label={['Cash In','']}/>,
-        })    
-    }
+    // if(tokwaAccount.constants.CashInType == "paypanda"){
+    //     navigation.setOptions({
+    //         headerShown: false,
+    //     })
+    // }else{
+    //     navigation.setOptions({
+    //         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
+    //         headerTitle: ()=> <ToktokHeaderTitle label={['Cash In','']}/>,
+    //     })    
+    // }
+
+    navigation.setOptions({
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
+        headerTitle: ()=> <ToktokHeaderTitle label={['Cash In','']}/>,
+    })    
   
 
     const checkStatus = async ()=> {
@@ -56,10 +61,10 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
             return
         } 
 
-        if(!tokwaAccount?.constants?.CashInType){
-            await getGlobalSettings();
-            return
-        }   
+        // if(!tokwaAccount?.constants?.CashInType){
+        //     await getGlobalSettings();
+        //     return
+        // }   
         
         if(!tokwaAccount.pinCode){
             return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
