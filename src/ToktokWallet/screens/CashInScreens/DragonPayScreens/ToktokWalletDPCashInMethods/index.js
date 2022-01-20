@@ -2,7 +2,7 @@ import React , {useEffect,useState} from 'react'
 import {View,Text,StyleSheet,ActivityIndicator} from 'react-native'
 import {useMutation,useLazyQuery,useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import {POST_CASH_IN_PAYPANDA_REQUEST,POST_REQUEST_CASH_IN,GET_DRAGON_PAY_CASH_IN_METHODS,POST_COMPUTE_PROCESSING_FEE} from 'toktokwallet/graphql'
+import {POST_CASH_IN_PAYPANDA_REQUEST,POST_REQUEST_CASH_IN,GET_CASH_IN_PARTNER_TYPES,POST_COMPUTE_PROCESSING_FEE} from 'toktokwallet/graphql'
 import { Separator , CheckIdleState , DisabledButton } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 import {YellowButton,HeaderBack,HeaderTitle } from 'src/revamp';
@@ -29,6 +29,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
     const [paymentMethod , setPaymentMethod] = useState("");
     const [cashInMethods , setCashInMethods] = useState(null);
     const [paymentChoice,setPaymentChoice] = useState(null);
+    const [cashInPartnerTypeId,setCashInPartnerTypeId] = useState(null);
     const alert = useAlert();
     const prompt = usePrompt();
 
@@ -37,7 +38,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
         headerTitle: ()=> <HeaderTitle label={['Cash In','']}/>,
     })
 
-    const [getDragonPayCashInMethods,{data: getMethodsData , error: getMethodsError , loading: getMethodsLoading }] = useLazyQuery(GET_DRAGON_PAY_CASH_IN_METHODS, {
+    const [getCashInPartnerTypes,{data: getMethodsData , error: getMethodsError , loading: getMethodsLoading }] = useLazyQuery(GET_CASH_IN_PARTNER_TYPES, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
         onError: (error)=> {
@@ -47,13 +48,13 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                 prompt
             })
         },
-        onCompleted: ({getDragonPayCashInMethods})=>{
-            setCashInMethods(getDragonPayCashInMethods)
+        onCompleted: ({getCashInPartnerTypes})=>{
+            setCashInMethods(getCashInPartnerTypes)
         }
     })
 
     useEffect(()=>{
-        getDragonPayCashInMethods()
+        getCashInPartnerTypes()
     },[])
 
     const [postComputeProcessingFee, {loading: postComputePFLoading}] = useMutation(POST_COMPUTE_PROCESSING_FEE,{
@@ -67,21 +68,6 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
         },
         onCompleted: ({postComputeProcessingFee})=>{
             setProcessingFee(postComputeProcessingFee.processingFee)
-            navigation.navigate("ToktokWalletReviewAndConfirm", {
-                label:"Cash In" , 
-                event: "Cash In Dragon Pay",
-                data: {
-                        method: paymentMethod, 
-                        amount: amount,
-                        accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
-                        accountNumber: tokwaAccount.mobileNumber,
-                        processingFee: postComputeProcessingFee.processingFee,
-                    },
-                isSwipe: true,
-                swipeTitle: `Confirm`,
-                onSwipeFail: onSwipeFail,
-                onSwipeSuccess: onSwipeSuccess,
-            })
         }
     })
 
@@ -146,6 +132,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                     walletId: tokwaAccount.wallet.id,
                     pinCode: pinCode,
                     paymentMethod: paymentMethod,
+                    cashInPartnerTypeId: cashInPartnerTypeId,
                 }
             }
         })
@@ -160,12 +147,13 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
       }
 
 
-      const ProcessPayment = (method , paymentChoice)=> {
+      const ProcessPayment = (method , paymentChoice , cashInPartnerTypeId )=> {
 
         // CALL PROCESSING FEE PAYPANDA API HERE
 
         setPaymentMethod(method);
         setPaymentChoice(paymentChoice)
+        setCashInPartnerTypeId(cashInPartnerTypeId)
         postComputeProcessingFee({
             variables: {
                 input: {
@@ -173,7 +161,23 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                     paymentChoice
                 }
             }
-        })
+        }).then(({data : {postComputeProcessingFee}})=> {
+            navigation.navigate("ToktokWalletReviewAndConfirm", {
+                label:"Cash In" , 
+                event: "Cash In Dragon Pay",
+                data: {
+                        method: method, 
+                        amount: amount,
+                        accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
+                        accountNumber: tokwaAccount.mobileNumber,
+                        processingFee: postComputeProcessingFee.processingFee,
+                    },
+                isSwipe: true,
+                swipeTitle: `Confirm`,
+                onSwipeFail: onSwipeFail,
+                onSwipeSuccess: onSwipeSuccess,
+            })
+        }).catch(error=>console.log(error))
      
       }
       
@@ -197,9 +201,11 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                         </View>
                         : 
                         <>
-                            <PaymentMethod onPress={()=>ProcessPayment("Online Banking", cashInMethods.onlineBank)} label="Online Banking"/>
-                            <PaymentMethod onPress={()=>ProcessPayment("Over the Counter Bank", cashInMethods.otcBank)} label="Over the Counter Bank"/>
-                            <PaymentMethod onPress={()=>ProcessPayment("Over the Counter Non-Bank", cashInMethods.otcNonBank)} label="Over the Counter Non-Bank"/>
+                        {
+                            cashInMethods.map((method,index)=>{
+                                return  <PaymentMethod onPress={()=>ProcessPayment(method.name, method.transactionTypeId , method.id)} label={method.name}/>
+                            })
+                        }
                         </>
                     }
                 </View>

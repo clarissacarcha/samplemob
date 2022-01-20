@@ -48,7 +48,7 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                             </View>
                             <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions")} style={styles.topUp}>
                                 <View style={styles.topUpbtn}>
-                                        <FIcon5 name={'plus'} size={12}/> 
+                                        <FIcon5 name={'plus'} color={"black"} size={12}/> 
                                 </View>
                             </TouchableOpacity>
                     </View>

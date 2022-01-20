@@ -83,16 +83,14 @@ export const New = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                         </TouchableOpacity>
 
                 </View>
-                <View style={{justifyContent:"flex-end", height: 70}}>
+            </View>
+            <View style={{justifyContent:"flex-end", height: 70,padding: 16}}>
                     {
                         pinCode.length < 4
                         ? <DisabledButton label="Next"/>
                         : <YellowButton label="Next" onPress={onSubmit}/>
                     }
-                </View>
             </View>
-
-        
             <BuildingBottom/>
           
         </View>

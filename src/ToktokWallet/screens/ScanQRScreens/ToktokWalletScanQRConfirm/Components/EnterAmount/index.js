@@ -1,6 +1,7 @@
 import React , {useState} from 'react'
 import {View,Text,StyleSheet,TextInput} from 'react-native'
 import { numberFormat } from 'toktokwallet/helper'
+import { InputAmount } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 const { COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE } = CONSTANTS
 

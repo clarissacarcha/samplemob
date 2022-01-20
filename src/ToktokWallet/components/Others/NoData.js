@@ -51,12 +51,12 @@ const styles = StyleSheet.create({
     text: {
         fontFamily: FONT.REGULAR,
         fontSize: moderateScale(FONT_SIZE.L),
-        color: COLOR.DARK,
+        color: "black",
     },
     title: {
         fontFamily: FONT.BOLD,
         fontSize: moderateScale(FONT_SIZE.XL),
         color: COLOR.YELLOW,
-        marginVertical: 20,
+        marginVertical: 8,
     }
 })

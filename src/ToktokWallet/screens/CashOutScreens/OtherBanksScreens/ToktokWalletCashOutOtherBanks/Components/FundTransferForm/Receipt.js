@@ -1,5 +1,5 @@
 import React , {useRef, useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Platform,Dimensions,Alert,StatusBar,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Platform,Dimensions,Alert,StatusBar,Image , ScrollView} from 'react-native'
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions'
 import FIcon from 'react-native-vector-icons/Feather'
 import ViewShot , {captureScreen,releaseCapture} from "react-native-view-shot";
@@ -190,7 +190,7 @@ export const Receipt = connect(null,mapDispatchtoProps)(({children, setVisible,f
     return (
         <>
         <StatusBar barStyle="dark-content" backgroundColor="white" />
-        <View style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{flexGrow:1}}>
             <ViewShot 
                 style={styles.viewShot} 
                 ref={viewshotRef}
@@ -225,9 +225,12 @@ export const Receipt = connect(null,mapDispatchtoProps)(({children, setVisible,f
                     </TouchableOpacity>
                 </View>
             </View>
+            <View style={{height: 80,justifyContent:"center",alignItems:"center"}}>
+            <Text style={{fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR,marginHorizontal: 12, color:"black",textAlign:"center"}}>A copy of this receipt will be delivered on the email provided.</Text>
+            </View>
             {
                 activeAccount == null && savedAccounts.length < 5 &&
-                <View style={{marginBottom: 10, paddingHorizontal: 16,flexDirection:"row",alignItems:'center'}}>
+                <View style={{paddingHorizontal: 16,flexDirection:"row",alignItems:'flex-end'}}>
                             <CheckBox
                                 isChecked={isSaveAccount}
                                 onClick={()=>{
@@ -246,7 +249,7 @@ export const Receipt = connect(null,mapDispatchtoProps)(({children, setVisible,f
             <View style={styles.actionBtn}>
                     <YellowButton label={activeAccount == null && savedAccounts.length < 5 ? "OK" : "Back to Home"} onPress={Proceed} />
             </View>
-        </View>
+        </ScrollView>
         </>
     )
 })
@@ -293,7 +296,8 @@ const styles = StyleSheet.create({
         height: 70,
         padding: 16,
         justifyContent:"flex-end",
-        marginBottom: Platform.OS == "ios" ? 25 : 0
+        marginBottom: Platform.OS == "ios" ? 25 : 0,
+        marginTop: 10,
     }
 })
 
