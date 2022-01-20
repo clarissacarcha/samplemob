@@ -64,6 +64,7 @@ export const POST_CONTACT_SUPPORT = gql`
 		postContactSupport(input: $input){
 			success
 			message
+			signature
 		}
 	}
 `
