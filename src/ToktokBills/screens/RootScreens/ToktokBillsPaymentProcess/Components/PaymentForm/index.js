@@ -181,10 +181,10 @@ export const PaymentForm = ({ billItemSettings })=> {
           </Text>
       </View>
       <View>
-        <Text style={styles.label}>Email Address</Text>
+        <Text style={styles.label}>Email Address (optional)</Text>
         <TextInput 
           style={styles.input}
-          placeholder="Enter email address (optional)"
+          placeholder="Enter email address"
           onChangeText={changeEmail}
           value={email}
           ref={(input) => { emailRef.current = input; }}
