@@ -62,8 +62,6 @@ export const GET_CUSTOMER_ADDRESSES = gql`
 export const POST_CONTACT_SUPPORT = gql`
 	mutation postContactSupport($input: PostContactSupportInput){
 		postContactSupport(input: $input){
-			success
-			message
 			signature
 		}
 	}

@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSelector } from 'react-redux';
+import { ApiCall } from '../../../../../helpers';
 
 export const ToktokMallContactUs = ({navigation}) => {
   
@@ -34,15 +35,34 @@ export const ToktokMallContactUs = ({navigation}) => {
   const [postInquiry, {loading}] = useMutation(POST_CONTACT_SUPPORT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     onCompleted: ({postContactSupport}) => {
-      if(postContactSupport.success == 1){
-        setMessage('')
-        setMessageModalShown(true)
+      if(postContactSupport.signature){
+        console.log("")
+        sendMessage(postContactSupport.signature)
       }else{
         Toast.show("Something went wrong.")
       }
     },
     onError: (error) => console.log(`LOCATION LOG ERROR: ${error}`),
   });
+
+  const sendMessage = async (signature) => {
+    try {
+      const user = session.user.person
+      const body = {
+        signature: signature,
+        name: `${user.firstName} ${user.lastName}`,
+        customer_email: user.emailAddress,
+        contact_number: session.user.username,
+        message: message
+      }
+      const response = await ApiCall("send_contact_message", body, true, "")
+      setMessage('')
+      setMessageModalShown(true)
+      console.log("postContactSupport", response, signature)
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   const sendEmail = async ( subject, body, options= {}) => {
     const {cc, bcc} = options

@@ -50,7 +50,7 @@ const RenderToktokWalletStatus = ({status}) => {
           <Text style={{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Payment Method</Text>
           <View style={{paddingTop: 15}} />
           <View style={{backgroundColor: '#FFFCF4', padding: 8}}>
-            {status == -1 && 
+            {status == null && 
             <Text style={{color: '#FFA700', fontSize: 12, textAlign: 'center', paddingHorizontal: 5}}>
               Sorry! It seems that you don`t have a toktokwallet account yet. Please submit verification requirements to
               proceed placing an order. Once you get approved, you will be able to enjoy full benefits of shopping from
@@ -99,7 +99,7 @@ const RenderToktokWalletStatus = ({status}) => {
                 justifyContent: 'space-between',
                 alignContent: 'flex-start',
                 flex: 2,
-                marginTop: status == -1 ? 0 : -15
+                marginTop: status == null ? 0 : -15
               }}>
               <Text style={{marginLeft: 5, fontWeight: 'bold', color: '#929191', fontSize: 10}}>
               (Balance {FormatToText.currency(0)})
@@ -116,6 +116,7 @@ const RenderToktokWalletStatus = ({status}) => {
 export const Payment = ({list, payment, total, setPaymentMethod, currentBalance, setCurrenctBalance, status}) => {
   const navigation = useNavigation();
   // const [currentBalance, setCurrenctBalance] = useState(0)
+  console.log("status ssss", status)
 
   if(status != 1){
     return <RenderToktokWalletStatus status={status} />
