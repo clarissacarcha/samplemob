@@ -81,7 +81,6 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
     useEffect(()=>{
         if(onCashIn){
            checkStatus();
-           cashInTopUp = false;
         }
     },[onCashIn, tokwaAccount])
 
