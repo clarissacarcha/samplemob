@@ -39,17 +39,16 @@ export const BlockedAccount = ({data,showPrompt})=> {
             </View>
             <Separator/>
             <View style={styles.content}>
-                <View style={{marginTop: 10, paddingHorizontal: moderateScale(30)}}>
+                <View style={{marginTop: 10, flex: 1,paddingHorizontal: moderateScale(30)}}>
                     <Text style={[styles.verifyWalletText]}>Your account is deactivated</Text>
-                <View style={{alignItems:"center",marginTop: 10}}>
-                    <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>Your account is deactivated</Text>
+                <View style={{alignItems:"center"}}>
                     <Text style={styles.clickVerifyText}>Please contact our Customer Service Representative for support</Text>
                 </View>
                 <TouchableOpacity onPress={HelpCenter} style={styles.helpCenter}>
                     <Text style={styles.labelHC}>Help Center</Text>
                  </TouchableOpacity>
             </View>
-            <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
+            <View style={{height: 70,paddingHorizontal: 16,justifyContent:'flex-end'}}>
                 <YellowButton label="OK" onPress={()=> {
                     navigation.navigate("ToktokLandingHome")
                 }}/>
@@ -98,7 +97,7 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     labelHC: {
-        fontFamily: FONT.BOLD,
+        fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.L,
         color: COLOR.ORANGE,
         textDecorationLine:"underline"
