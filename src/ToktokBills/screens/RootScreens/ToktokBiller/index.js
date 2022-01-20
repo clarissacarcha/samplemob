@@ -129,7 +129,7 @@ export const ToktokBiller = ({navigation, route})=> {
     <>
     <View  style={styles.container}>
       <View style={styles.searchContainer}>
-        <SearchInput search={search} setSearch={setSearch} placeholder="Search Biller" />
+        <SearchInput search={search} setSearch={setSearch} placeholder="Look for your biller here" />
       </View>
       {( searchLoading && filteredData.length === 0) ? (
         <LoadingIndicator isLoading={true} isFlex />
