@@ -19,7 +19,6 @@ export const EnterNote = ({note,setNote})=> {
                                 placeholder="Enter note here..." 
                                 returnKeyType="done"
                                 maxLength={60}
-                                textAlignVertical='top'
                                 style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1,color: COLOR.DARK}}
                         />
                 </View>

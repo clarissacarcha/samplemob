@@ -35,7 +35,7 @@ const Log = ({
     const amountcolor = sourceWalletId == tokwaAccount.wallet.id ? COLOR.RED : "green"
     const amountprefix = sourceWalletId == tokwaAccount.wallet.id ? "-" : "+"
     const transactionAmount = `${amountprefix} ${tokwaAccount.wallet.currency.code} ${numberFormat(amount)}`
-    const referenceDate = moment(createdAt).tz('Asia/Manila').format('MMM DD, YYYY hh:mm a')
+    const referenceDate = moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
 
     const showDetails = ()=> {
         setTransactionInfo({

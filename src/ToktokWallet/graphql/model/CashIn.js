@@ -44,6 +44,14 @@ export const GET_CASH_INS = gql`
                     refNo
                     createdAt
                 }
+                paymentMethod
+                cashInPartnerTypeId
+                cashInPartnerType {
+                    id
+                    name
+                    transactionTypeId
+                    status
+                }
         }
     }
 `

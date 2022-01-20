@@ -202,7 +202,7 @@ export const ToktokWalletContacts = ({navigation,route})=> {
                </View>
                 <TextInput 
                     style={{color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
-                    placeholder="Enter a Name or mobile number"
+                    placeholder="Enter a name or mobile number"
                     placeholderTextColor={COLOR.DARK}
                     onChangeText={filterSearch}
                     value={searchString}

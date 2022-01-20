@@ -39,7 +39,7 @@ export const SendMoneyLog = ({
     // const refNo = MaskLeftZero(item.id)
     const transaction = item
     const refNo = transaction.refNo
-    const refDate = moment(transaction.createdAt).tz('Asia/Manila').format('MMM DD, YYYY hh:mm a')
+    const refDate = moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
     const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(transaction.amount)}`
 
 

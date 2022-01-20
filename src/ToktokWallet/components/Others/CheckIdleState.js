@@ -1,4 +1,4 @@
-import React , {useState , useRef , useEffect , useCallback , forwardRef , createContext , useImperativeHandle} from 'react'
+import React , {useState , useRef , useEffect , useCallback , forwardRef , createContext , useImperativeHandle, useMemo} from 'react'
 import { View , PanResponder , Alert } from 'react-native'
 import { useNavigation , useFocusEffect  , useRoute} from '@react-navigation/native';
 import { PromptModal } from '../Modals'
@@ -13,7 +13,8 @@ export const CheckIdleState = forwardRef(({children} , ref)=> {
 
     const { tokwaAccount } = useAccount();
     const timerId = useRef(false);
-    const durationInSeconds = (60 * 5);
+    const durationSettings = useMemo(()=>tokwaAccount?.constants?.logoutSessionMinutes ? tokwaAccount.constants.logoutSessionMinutes : 5,[tokwaAccount.constants])
+    const durationInSeconds = (60 * +durationSettings);
     const idleDurationInSeconds = 10;
     const activeTime = useRef(new Date())
     const [showPrompt,setShowPrompt] = useState(false)

@@ -29,6 +29,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
     const [paymentMethod , setPaymentMethod] = useState("");
     const [cashInMethods , setCashInMethods] = useState(null);
     const [paymentChoice,setPaymentChoice] = useState(null);
+    const [cashInPartnerTypeId,setCashInPartnerTypeId] = useState(null);
     const alert = useAlert();
     const prompt = usePrompt();
 
@@ -67,21 +68,6 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
         },
         onCompleted: ({postComputeProcessingFee})=>{
             setProcessingFee(postComputeProcessingFee.processingFee)
-            navigation.navigate("ToktokWalletReviewAndConfirm", {
-                label:"Cash In" , 
-                event: "Cash In Dragon Pay",
-                data: {
-                        method: paymentMethod, 
-                        amount: amount,
-                        accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
-                        accountNumber: tokwaAccount.mobileNumber,
-                        processingFee: postComputeProcessingFee.processingFee,
-                    },
-                isSwipe: true,
-                swipeTitle: `Confirm`,
-                onSwipeFail: onSwipeFail,
-                onSwipeSuccess: onSwipeSuccess,
-            })
         }
     })
 
@@ -146,6 +132,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                     walletId: tokwaAccount.wallet.id,
                     pinCode: pinCode,
                     paymentMethod: paymentMethod,
+                    cashInPartnerTypeId: cashInPartnerTypeId,
                 }
             }
         })
@@ -160,12 +147,13 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
       }
 
 
-      const ProcessPayment = (method , paymentChoice)=> {
+      const ProcessPayment = (method , paymentChoice , cashInPartnerTypeId )=> {
 
         // CALL PROCESSING FEE PAYPANDA API HERE
 
         setPaymentMethod(method);
         setPaymentChoice(paymentChoice)
+        setCashInPartnerTypeId(cashInPartnerTypeId)
         postComputeProcessingFee({
             variables: {
                 input: {
@@ -173,7 +161,23 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                     paymentChoice
                 }
             }
-        })
+        }).then(({data : {postComputeProcessingFee}})=> {
+            navigation.navigate("ToktokWalletReviewAndConfirm", {
+                label:"Cash In" , 
+                event: "Cash In Dragon Pay",
+                data: {
+                        method: method, 
+                        amount: amount,
+                        accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
+                        accountNumber: tokwaAccount.mobileNumber,
+                        processingFee: postComputeProcessingFee.processingFee,
+                    },
+                isSwipe: true,
+                swipeTitle: `Confirm`,
+                onSwipeFail: onSwipeFail,
+                onSwipeSuccess: onSwipeSuccess,
+            })
+        }).catch(error=>console.log(error))
      
       }
       
@@ -199,7 +203,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                         <>
                         {
                             cashInMethods.map((method,index)=>{
-                                return  <PaymentMethod onPress={()=>ProcessPayment(method.name, method.transactionTypeId)} label={method.name}/>
+                                return  <PaymentMethod onPress={()=>ProcessPayment(method.name, method.transactionTypeId , method.id)} label={method.name}/>
                             })
                         }
                         </>

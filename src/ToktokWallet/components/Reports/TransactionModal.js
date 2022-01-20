@@ -30,7 +30,7 @@ export const TransactionModal = ({
                     }}>
                         {children}
                         <View style={{justifyContent:"flex-end", width: "50%",alignSelf:"center",marginTop: 16}}>
-                            <YellowButton label="Ok" onPress={closeModal}/>
+                            <YellowButton label="OK" onPress={closeModal}/>
                         </View>
                     </View>
             </View>
