@@ -35,7 +35,7 @@ const MainComponent = ({ navigation, route, viewRef, onCapturingScreen }) => {
       { !onCapturingScreen && (
         <View style={styles.buttonContainer}>
           <Text style={styles.emailText}>A copy of this receipt will be delivered on the email provided.</Text>
-          <OrangeButton label="Ok" onPress={() => navigation.navigate("ToktokBillsHome")} />
+          <OrangeButton label="OK" onPress={() => navigation.navigate("ToktokBillsHome")} />
         </View>
       )}
     </View>
