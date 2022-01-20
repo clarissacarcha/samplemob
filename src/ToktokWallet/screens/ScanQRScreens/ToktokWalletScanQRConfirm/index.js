@@ -51,7 +51,7 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                                 style={styles.topUp}
                             >
                                 <View style={styles.topUpbtn}>
-                                        <FIcon5 name={'plus'} size={12}/> 
+                                        <FIcon5 name={'plus'} color={"black"} size={12}/> 
                                 </View>
                             </TouchableOpacity>
                     </View>

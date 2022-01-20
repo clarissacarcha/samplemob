@@ -16,8 +16,10 @@ export const EnterNote = ({note,setNote})=> {
                                 height={50}
                                 onChangeText={value=>setNote(value)}
                                 placeholder="Enter note here..." 
+                                placeholderTextColor={COLOR.DARK}
                                 returnKeyType="done"
                                 maxLength={60}
+                                blurOnSubmit={true}
                                 style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
                         />
                 </View>

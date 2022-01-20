@@ -191,6 +191,7 @@ export const EnterMobileNo = ({
                             }}
                             // placeholder="Enter recipient name or number"
                             placeholder="Enter recipient number"
+                            placeholderTextColor={COLOR.DARK}
                         />
                           
                        {errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:COLOR.RED,marginTop: -5}}>{errorMessage}</Text>}
