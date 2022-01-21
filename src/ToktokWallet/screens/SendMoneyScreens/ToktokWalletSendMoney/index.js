@@ -100,7 +100,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                                             style={styles.topUp}
                                         >
                                             <View style={styles.topUpbtn}>
-                                                    <FIcon5 name={'plus'} size={12}/> 
+                                                    <FIcon5 name={'plus'} size={12} color="black"/> 
                                             </View>
                                         </TouchableOpacity>
                                 </View>
