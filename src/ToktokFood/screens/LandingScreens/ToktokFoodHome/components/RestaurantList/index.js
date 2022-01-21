@@ -15,7 +15,7 @@ const RestaurantList = props => {
     if (loadMore) {
       return <LoadingIndicator isLoading={loadMore} />;
     } else {
-      return <Text style={styles.footerText}>No more restaurants and food available.</Text>;
+      return <Text style={styles.footerText}>No more restaurants available to display.</Text>;
     }
   };
 
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     height: verticalScale(40),
   },
   footerText: {
-    fontSize: 15,
-    color: '#FFA701',
+    fontSize: 13,
+    color: '#9E9E9E',
   },
 });
