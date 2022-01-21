@@ -98,7 +98,7 @@ const MainComponent = () => {
           }
         }
       } else {
-        basePrice = productDetails.basePrice;
+        basePrice = productDetails?.price || productDetails?.basePrice;
       }
       setBasePrice(basePrice);
     }

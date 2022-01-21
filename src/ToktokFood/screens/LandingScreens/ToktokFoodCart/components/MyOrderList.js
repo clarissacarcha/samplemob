@@ -71,6 +71,7 @@ const MyOrderList = () => {
     const {
       productid,
       id,
+      basePrice,
       parentProductId,
       quantity,
       totalAmount,
@@ -82,7 +83,7 @@ const MyOrderList = () => {
       parentProductName,
     } = item;
     const addons = arrangeAddons(addonsDetails);
-    const totalAmountWithAddons = parseFloat(addonsTotalAmount) + parseFloat(totalAmount);
+    const totalAmountWithAddons = parseFloat(addonsTotalAmount) + parseFloat(basePrice);
 
     return (
       <SwipeRow
@@ -177,7 +178,7 @@ const MyOrderList = () => {
     },
     [temporaryCart],
   );
-
+  console.log(temporaryCart);
   return (
     <>
       <Loader visibility={deleteLoading} message="Removing from Cart" hasImage={false} loadingIndicator />
