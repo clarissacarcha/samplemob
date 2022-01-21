@@ -51,14 +51,17 @@ export const ToktokMallContactUs = ({navigation}) => {
       const body = {
         signature: signature,
         name: `${user.firstName} ${user.lastName}`,
-        customer_email: user.emailAddress,
+        email: user.emailAddress,
         contact_number: session.user.username,
         message: message
       }
-      const response = await ApiCall("send_contact_message", body, true, "")
-      setMessage('')
-      setMessageModalShown(true)
-      console.log("postContactSupport", response, signature)
+      const {responseData: {success}} = await ApiCall("send_contact_message", body, true, "")
+      if(success == 1){
+        setMessage('')
+        setMessageModalShown(true)
+      }else{
+        Toast.show("Something went wrong.")
+      }
     } catch (err) {
       console.error(err)
     }

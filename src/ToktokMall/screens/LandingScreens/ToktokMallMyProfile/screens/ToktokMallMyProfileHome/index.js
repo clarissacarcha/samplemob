@@ -76,6 +76,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
     onCompleted: async ({getUserToktokWalletData})=> {
       console.log(getUserToktokWalletData)
       const {kycStatus} = getUserToktokWalletData
+      console.log("kycStatus", kycStatus)
       setWalletAccountStatus(kycStatus)
     },
     onError: (error)=> console.log(error) 
@@ -103,6 +104,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
     setProfileImage(user.avatarThumbnail)
     setConNo(session?.user.username)
 
+    getToktokWalletData()
     getWallet()
     EventRegister.addEventListener("ToktokWalletRefreshAccountBalance", getWallet)
 
@@ -146,7 +148,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
           <View style={{flex: 8}}>
             <Text style={{fontSize: 15, fontFamily: FONT.BOLD}}>{userName}</Text>
             <Text style={{fontSize: 11, fontWeight: '800'}}>{conNo}</Text>
-            <Text style={{fontSize: 11, fontWeight: '800', textTransform: 'capitalize'}}>{userDefaultAddress.fullAddress || "---"}</Text>
+            {userDefaultAddress.fullAddress && <Text style={{fontSize: 11, fontWeight: '800', textTransform: 'capitalize'}}>{userDefaultAddress.fullAddress}</Text>}
           </View>
           <View style={{flex: 0.5}} />
         </View>            
