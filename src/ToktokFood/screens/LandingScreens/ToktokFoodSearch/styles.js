@@ -46,7 +46,7 @@ export default styles = StyleSheet.create({
   restaurantName: {
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
-    marginBottom: 2
+    marginBottom: 2,
   },
   restaurantTitle: {
     color: COLOR.BLACK,
@@ -178,5 +178,16 @@ export default styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.REGULAR,
     color: COLOR.BLACK,
+  },
+  footerText: {
+    fontSize: 13,
+    color: '#9E9E9E',
+  },
+  footerContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 7,
+    height: verticalScale(40),
   },
 });

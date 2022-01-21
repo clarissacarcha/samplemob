@@ -11,7 +11,13 @@ import RestaurantItem from './RestaurantItem';
 const RestaurantList = props => {
   const {loading, error, data, loadMore, location} = props;
 
-  const renderFooter = () => <LoadingIndicator isLoading={loadMore} />;
+  const renderFooter = () => {
+    if (loadMore) {
+      return <LoadingIndicator isLoading={loadMore} />;
+    } else {
+      return <Text style={styles.footerText}>No more restaurants available to display.</Text>;
+    }
+  };
 
   const listEmpty = () => (
     <View style={styles.emptyContainer}>
@@ -35,6 +41,7 @@ const RestaurantList = props => {
       showsVerticalScrollIndicator={false}
       keyExtractor={(val, index) => index.toString()}
       ListFooterComponent={renderFooter()}
+      ListFooterComponentStyle={[styles.footerContainer, {borderTopWidth: loadMore ? 0 : 1}]}
       style={styles.listStyle}
     />
   );
@@ -107,5 +114,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: moderateScale(20),
     marginHorizontal: moderateScale(20),
+  },
+  footerContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopWidth: 1,
+    marginTop: 7,
+    borderColor: '#E6E6E6',
+    height: verticalScale(40),
+  },
+  footerText: {
+    fontSize: 13,
+    color: '#9E9E9E',
   },
 });
