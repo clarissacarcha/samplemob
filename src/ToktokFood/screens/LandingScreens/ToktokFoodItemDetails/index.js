@@ -94,7 +94,7 @@ const MainComponent = () => {
           if (selectedVariants?.basePrice) {
             basePrice = parseInt(selectedVariants?.basePrice);
           } else {
-            basePrice = parseInt(selectedVariants.price);
+            basePrice = parseInt(selectedVariants?.price);
           }
         }
       } else {
