@@ -38,8 +38,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   backContainer: {
-    paddingHorizontal: 15,
-    flex: 1,
+    paddingLeft: 15,
     justifyContent: "flex-start",
     alignItems: "center",
     flexDirection: "row"
