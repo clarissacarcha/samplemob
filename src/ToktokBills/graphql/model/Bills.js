@@ -41,10 +41,12 @@ export const GET_BILL_ITEM_SETTINGS = gql`
       firstFieldFormat
       firstFieldWidth
       firstFieldWidthType
+      firstFieldMinWidth
       secondFieldName
       secondFieldFormat
       secondFieldWidth
       secondFieldWidthType
+      secondFieldMinWidth
       commissionRateStatus
       providerId
       billTypeId

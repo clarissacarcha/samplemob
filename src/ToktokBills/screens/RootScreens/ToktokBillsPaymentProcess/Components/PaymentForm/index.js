@@ -24,15 +24,19 @@ import CONSTANTS from 'common/res/constants';
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW, SIZE} = CONSTANTS
 const {width,height} = Dimensions.get("window")
 
-const processErrorMessage = (fieldValue, fieldName, fieldWidth, fieldType) => {
+const processErrorMessage = (fieldValue, fieldName, fieldWidth, fieldType, minWidth) => {
   // 0 = min | 1 = exact | 2 = max 
+  console.log(fieldValue.length, minWidth)
+  if(fieldValue.length < minWidth){ 
+    return `${fieldName} must be minimum of ${minWidth} characters.`;
+  }
   switch(fieldType){
     case 0:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be at least ${fieldWidth} characters in length` : "";
+      return fieldValue.length < fieldWidth ? `${fieldName} must be minimum of ${fieldWidth} characters.` : "";
     case 1:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be ${fieldWidth} characters in length` : "";
+      return fieldValue.length < fieldWidth ? `${fieldName} must be ${fieldWidth} characters in length.` : "";
     case 2:
-      return fieldValue.length > fieldWidth ? `${fieldName} length must be ${fieldWidth} characters or less` : "";
+      return fieldValue.length > fieldWidth ? `${fieldName} length must be ${fieldWidth} characters or less.` : "";
   
     default:
       return "";
@@ -51,10 +55,12 @@ export const PaymentForm = ({ billItemSettings })=> {
     firstFieldFormat,
     firstFieldWidth,
     firstFieldWidthType,
+    firstFieldMinWidth,
     secondFieldName,
     secondFieldFormat,
     secondFieldWidth,
     secondFieldWidthType,
+    secondFieldMinWidth,
     commissionRateDetails
   } = billItemSettings;
   
@@ -93,7 +99,7 @@ export const PaymentForm = ({ billItemSettings })=> {
     setFirstField(fieldValue);
     
     //error
-    const errorMessage = processErrorMessage(fieldValue, firstFieldName, firstFieldWidth, firstFieldWidthType);
+    const errorMessage = processErrorMessage(fieldValue, firstFieldName, firstFieldWidth, firstFieldWidthType, firstFieldMinWidth);
     fieldValue ? setFirstFieldError(errorMessage) : setFirstFieldError(`${firstFieldName} is required.`)
   }
 
@@ -103,7 +109,7 @@ export const PaymentForm = ({ billItemSettings })=> {
     setSecondField(fieldValue);
 
     //error
-    const errorMessage = processErrorMessage(fieldValue, secondFieldName, secondFieldWidth, secondFieldWidthType);
+    const errorMessage = processErrorMessage(fieldValue, secondFieldName, secondFieldWidth, secondFieldWidthType, secondFieldMinWidth);
     fieldValue ? setSecondFieldError(errorMessage) : setSecondFieldError(`${secondFieldName} is required.`)
   }
 
