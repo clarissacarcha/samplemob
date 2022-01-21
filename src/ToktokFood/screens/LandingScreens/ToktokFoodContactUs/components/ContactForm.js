@@ -40,7 +40,7 @@ export const ContactForm = ({}) => {
     onCompleted: ({postContactUs}) => {
       let {success, message} = postContactUs;
       if (success) {
-        setResponse({message, show: true, type: 'success'});
+        setResponse({message: "Thank you for reaching out to us. We will check your concern and get back to you in 24 hrs.", show: true, type: 'success'});
       } else {
         setResponse({message, show: true, type: 'error'});
       }

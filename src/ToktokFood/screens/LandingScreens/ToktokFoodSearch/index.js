@@ -220,6 +220,12 @@ const ToktokFoodSearch = ({route}) => {
     searchFood(search);
   };
 
+  const BottomLabel = (
+    <>
+      <Text style={styles.footerText}>No more restaurants available to display.</Text>
+    </>
+  );
+
   return (
     <View style={styles.container}>
       <DialogMessage
@@ -261,6 +267,8 @@ const ToktokFoodSearch = ({route}) => {
             data={shopList}
             renderItem={renderItem}
             ListEmptyComponent={renderEmpty}
+            ListFooterComponent={BottomLabel}
+            ListFooterComponentStyle={styles.footerContainer}
             refreshControl={
               <RefreshControl refreshing={loading} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
             }

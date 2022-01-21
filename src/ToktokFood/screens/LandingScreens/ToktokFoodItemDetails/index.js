@@ -29,6 +29,7 @@ const MainComponent = () => {
   const {Id, parentProductId, selectedItemId, selectedAddons, selectedPrice, selectedQty, selectedNotes, action} =
     routes.params;
   const {customerInfo} = useSelector(state => state.toktokFood);
+
   const {
     // temporaryCart,
     // totalPrice,
@@ -58,7 +59,6 @@ const MainComponent = () => {
     },
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails);
-      // console.log('getProductDetails', getProductDetails);
       getTemporaryCart({
         variables: {
           input: {
@@ -91,7 +91,11 @@ const MainComponent = () => {
       let basePrice = 0;
       if (productDetails?.variants.length > 0) {
         if (selectedVariants && Object.keys(selectedVariants).length > 0) {
-          basePrice = parseInt(selectedVariants?.basePrice);
+          if (selectedVariants?.basePrice) {
+            basePrice = parseInt(selectedVariants?.basePrice);
+          } else {
+            basePrice = parseInt(selectedVariants?.price);
+          }
         }
       } else {
         basePrice = productDetails.basePrice;
