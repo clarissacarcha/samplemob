@@ -550,7 +550,13 @@ const MainComponent = () => {
       <DialogMessage
         visibility={closeInfo.visible}
         title="Restaurant Closed"
-        messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
+        // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
+        restaurantClosedMessage={() => (
+          <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
+            <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName} </Text>
+            is currently not accepting orders right now. Please try again another time. Thank you!
+          </Text>
+        )}
         type="warning"
         btn1Title="OK"
         onCloseModal={() => {

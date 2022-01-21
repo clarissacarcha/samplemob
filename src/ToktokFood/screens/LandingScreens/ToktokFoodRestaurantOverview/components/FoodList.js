@@ -1,7 +1,7 @@
 /* eslint-disable radix */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useContext, Fragment} from 'react';
+import React, {useEffect, useContext, Fragment, useState} from 'react';
 import {View, ImageBackground, StyleSheet, Text, TouchableOpacity, Image, Platform, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import ContentLoader from 'react-native-easy-content-loader';
@@ -21,16 +21,18 @@ import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import {verticalScale, getDeviceHeight, moderateScale, getIphoneNotchSize} from 'toktokfood/helper/scale';
 import {reseller_badge} from 'toktokfood/assets/images';
 import {TOKFOODCOLOR} from 'res/variables';
+import {filter} from 'lodash';
 
 export const FoodList = props => {
   const {activeTab, id, tagsLoading} = props;
   const navigation = useNavigation();
+  const [listData, setListData] = useState([]);
   const {searchProduct, setSearchProduct, temporaryCart, foodCartHeight, navBartHeight} = useContext(VerifyContext);
   const navBar = Platform.OS === 'ios' ? navBartHeight + getIphoneNotchSize * 2 : navBartHeight;
   const minHeight = getDeviceHeight - navBar - foodCartHeight;
 
   // data fetching for product under specific category
-  const [getProductsByShopCategory, {data: products, error: productsError, loading: productsLoading}] = useLazyQuery(
+  const [getProductsByShopCategory, {error: productsError, loading: productsLoading}] = useLazyQuery(
     GET_PRODUCTS_BY_SHOP_CATEGORY,
     {
       variables: {
@@ -42,23 +44,52 @@ export const FoodList = props => {
       },
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
+      onCompleted: ({getProductsByShopCategory}) => {
+        const products = getProductsByShopCategory;
+        filterProducts(products);
+      },
     },
   );
 
   // data fetching for product
-  const [getSearchProductsByShop, {data: searchProducts, loading: searchProductsLoading}] = useLazyQuery(
-    GET_SEARCH_PRODUCTS_BY_SHOP,
-    {
-      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      fetchPolicy: 'network-only',
+  const [getSearchProductsByShop, {loading: searchProductsLoading}] = useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getSearchProductsByShop}) => {
+      const products = getSearchProductsByShop;
+      filterProducts(products);
     },
-  );
+  });
 
-  const listData = searchProduct
-    ? searchProducts?.getSearchProductsByShop
-    : products
-    ? products.getProductsByShopCategory
-    : [];
+  const filterProducts = products => {
+    if (products.length) {
+      let productHolder = [];
+      products.map(product => {
+        let variantHolder = [];
+        const variants = product.variants;
+        if (variants.length) {
+          variants.map(variant => {
+            if (variant.enabled === 1) {
+              variantHolder.push(variant);
+            }
+          });
+          if (variantHolder.length) {
+            product.variants = variantHolder;
+            productHolder.push(product);
+          }
+        } else {
+          productHolder.push(product);
+        }
+      });
+      setListData(productHolder);
+    }
+  };
+
+  // const listData = searchProduct
+  //   ? searchProducts?.getSearchProductsByShop
+  //   : products
+  //   ? products.getProductsByShopCategory
+  //   : [];
 
   useEffect(() => {
     if (activeTab?.id) {
@@ -178,7 +209,7 @@ export const FoodList = props => {
 
   return (
     <ScrollView contentContainerStyle={{...styles.scrollContainer, minHeight: minHeight}}>
-      {listData?.length > 0 && listData.map(item => <ItemList item={item} />)}
+      {listData?.length > 0 ? listData.map(item => <ItemList item={item} />) : null}
       {/* <FlatList
         data={
           searchProduct ? searchProducts?.getSearchProductsByShop : products ? products.getProductsByShopCategory : []

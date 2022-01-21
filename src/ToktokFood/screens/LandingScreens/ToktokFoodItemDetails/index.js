@@ -234,4 +234,4 @@ const ToktokFoodItemDetails = () => {
   );
 };
 
-export default React.memo(ToktokFoodItemDetails);
+export default ToktokFoodItemDetails;
