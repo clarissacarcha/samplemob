@@ -16,7 +16,7 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Assets
 import {FONT_SIZE} from 'res/variables';
-import {empty_shop_2} from 'toktokfood/assets/images';
+import {empty_shop_2, empty_promos} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
@@ -186,15 +186,24 @@ const StickyView = () => {
   };
 
   const EmptyList = () => {
-    return (
-      <>
+    if (activeTab.id === 1) {
+      return (
         <View style={styles.emptyContainer}>
           <Image style={styles.emptyImg} resizeMode="contain" source={empty_shop_2} />
           <Text style={styles.emptyText}>
             It seems like there is no open restaurant near you. Refresh or try again later.
           </Text>
         </View>
-      </>
+      );
+    }
+    return (
+      <View style={{...styles.emptyContainer, paddingTop: moderateScale(50)}}>
+        <Image style={{width: moderateScale(193), height: moderateScale(146), right: moderateScale(5)}} resizeMode="contain" source={empty_promos} />
+        <Text style={{color: '#F6841F', fontSize: 17, marginTop: moderateScale(20), fontWeight: '700'}}>No Promos Available</Text>
+        <Text style={{...styles.emptyText, color: '#000', fontSize: FONT_SIZE.M, marginTop: moderateScale(5)}}>
+          There are no restaurants with promos{'\n'}available as of the moment.
+        </Text>
+      </View>
     );
   };
 
