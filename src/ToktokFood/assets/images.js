@@ -86,6 +86,7 @@ export const empty_shop_2 = require('./images/empty_icons/empty-shop-2.png');
 export const empty_search = require('./images/empty_icons/empty-search.png');
 export const empty_cart = require('./images/empty_icons/empty-cart.png');
 export const no_image = require('./images/empty_icons/no-image.png');
+export const empty_promos = require('./images/empty_icons/empty-promos.png');
 
 // Rider Map Icons
 export const rider_ic = require('./images/rider_map_ic.png');

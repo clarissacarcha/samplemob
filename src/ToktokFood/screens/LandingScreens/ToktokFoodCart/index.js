@@ -221,7 +221,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
     onError: error => {
-      console.log(error);
+      console.log('tpin-error', error);
       setShowLoader(false);
       if (toktokWallet.paymentMethod == 'COD') {
         setTimeout(() => {
@@ -550,7 +550,13 @@ const MainComponent = () => {
       <DialogMessage
         visibility={closeInfo.visible}
         title="Restaurant Closed"
-        messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
+        // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
+        restaurantClosedMessage={() => (
+          <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
+            <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName} </Text>
+            is currently not accepting orders right now. Please try again another time. Thank you!
+          </Text>
+        )}
         type="warning"
         btn1Title="OK"
         onCloseModal={() => {
@@ -577,11 +583,21 @@ const MainComponent = () => {
       <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="Loading" />
       {paymentMethod == 'COD' && (
         <>
-          <AlertModal
+          {/* <AlertModal
             message={tokWaPlaceOrderErr.message}
             visible={tokWaPlaceOrderErr.visible}
             error={tokWaPlaceOrderErr.error}
             close={() => setTokWaPlaceOrderErr({error: {}, visible: false})}
+          /> */}
+          <DialogMessage
+            visibility={tokWaPlaceOrderErr.visible}
+            title="Unavailable Products"
+            messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
+            type="warning"
+            onCloseModal={() => {
+              setTokWaPlaceOrderErr({error: {}, visible: false});
+            }}
+            btnTitle="OK"
           />
           <Loader visibility={showLoader} hasImage={false} loadingIndicator message="Processing Order" />
         </>
@@ -615,12 +631,22 @@ const MainComponent = () => {
             }}
             btnTitle={tokwaErrorBtnTitle(pinAttempt)}
           />
-          <AlertModal
+          <DialogMessage
+            visibility={tokWaPlaceOrderErr.visible}
+            title="Unavailable Products"
+            messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
+            type="warning"
+            onCloseModal={() => {
+              setTokWaPlaceOrderErr({error: {}, visible: false});
+            }}
+            btnTitle="OK"
+          />
+          {/* <AlertModal
             message={tokWaPlaceOrderErr.message}
             visible={tokWaPlaceOrderErr.visible}
             error={tokWaPlaceOrderErr.error}
             close={() => setTokWaPlaceOrderErr({error: {}, visible: false})}
-          />
+          /> */}
         </EnterPinCode>
       ) : (
         <DialogMessage

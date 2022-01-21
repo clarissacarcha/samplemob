@@ -28,6 +28,7 @@ const DialogMessage = (props) => {
     onCloseBtn2,
     reasons,
     btnTitle = 'OK',
+    restaurantClosedMessage = null,
   } = props;
 
   const getDialogIcon = () => {
@@ -57,6 +58,7 @@ const DialogMessage = (props) => {
               {!hasChildren && (
                 <>
                   {title !== undefined && <Text style={styles.messageTitle}>{title}</Text>}
+                  {restaurantClosedMessage && restaurantClosedMessage()}
                   {messages !== undefined && <Text style={styles.messageContent}>{messages}</Text>}
                   {reasons !== undefined && <Text style={styles.reasonsContent}>{capitalizeFirstLetter(reasons)}</Text>}
                 </>

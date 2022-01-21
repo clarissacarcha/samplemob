@@ -122,7 +122,7 @@ const PickUpDetails = (props) => {
       />
       <View style={[styles.proto, styles.cartBorder, {bottom: keyboardHeight - 35}]}>
         <View style={styles.sheet}>
-          <Text style={styles.pickUpAddressTitle}>Pickup Address Details</Text>
+          <Text style={styles.pickUpAddressTitle}>Drop-off Address Details</Text>
           <TextTicker loop duration={10000} repeatSpacer={25} marqueeDelay={1000} style={styles.pickUpAddress}>
             {pinAddress + '.'}
           </TextTicker>
@@ -185,8 +185,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   pickUpAddressTitle: {
-    fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.XL,
+    fontSize: FONT_SIZE.L,
     marginBottom: verticalScale(17),
   },
   pickUpAddress: {

@@ -72,8 +72,8 @@ export const ContactForm = ({}) => {
       <Loader visibility={loading} message="Sending..." hasImage={false} loadingIndicator />
       <DialogMessage
         visibility={response.show}
-        title={response.type.charAt(0).toUpperCase() + response.type.slice(1)}
-        messages={response.message}
+        title="Email Sent"
+        messages="Thank you for reaching out to us. We will check your concern and get back to you in 24 hrs."
         type={response.type}
         onCloseModal={() => {
           setMessage('');

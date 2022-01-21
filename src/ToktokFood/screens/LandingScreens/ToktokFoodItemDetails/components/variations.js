@@ -405,7 +405,7 @@ export const Variations = ({data, productId}) => {
     <>
       <Variants />
       <Options />
-
+      
       <View style={[styles.variations]}>
         <View style={styles.instructionContainer}>
           <Text style={styles.variationTitle}>Special Instructions</Text>
