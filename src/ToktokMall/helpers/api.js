@@ -86,6 +86,74 @@ export const ApiCall = async (endpoint, body, debug = false, datatype = "json") 
 	}
 }
 
+export const DynamicApiCall = async (endpoint, signature, body, _options) => {	
+
+	let responseData = null
+	let responseError = null
+	let options = {
+		debug: _options?.debug ? _options.debug : false,
+		datatype: _options?.datatype ? _options.datatype : "json"
+	}
+
+  try{
+
+		let formData = new FormData()
+		let rawSession = await AsyncStorage.getItem("ToktokMallUser")
+		let session = JSON.parse(rawSession)
+
+		//CHECK IF SESSION IS VALID
+		if(signature){
+
+			if(options.datatype == "json"){
+				formData.append("signature", signature)
+				formData.append("data", JSON.stringify(body))
+			}else{
+				formData.append("signature", signature)
+				for(var x=0;x<Object.keys(body).length;x++){
+					formData.append(Object.keys(body)[x], Object.values(body)[x])					
+				}
+			}
+
+			if(options.debug){
+				console.log("Session", session)
+				// console.log("Endpoint: ", `${api_url[env]}${endpoint}`)
+				console.log("Data", formData)
+			}
+
+			await axios.post(`${api_url[env]}${endpoint}`, formData).then((response) => {
+				if(options.debug){
+					console.log("Response data", body, response.data)
+				}
+				if(response.data.success == 1){
+					responseData = response.data
+				}else{
+					responseError = response.data
+				}
+			}).catch((error) => {
+				if(options.debug){
+					console.log(error)
+				}
+			})
+
+			return {
+				responseData,
+				responseError
+			}
+
+		}else{
+
+			return {
+				responseData,
+				responseError
+			}
+
+		}
+
+	}catch(error){
+		console.log(error)
+	}
+}
+
 export const ShippingApiCall = async (endpoint, body, debug = false) => {	
 
 	let responseData = null

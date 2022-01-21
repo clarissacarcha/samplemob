@@ -21,6 +21,7 @@ import axios from 'axios';
 import moment from 'moment';
 import AsyncStorage from '@react-native-community/async-storage';
 import { EventRegister } from 'react-native-event-listeners';
+import { DynamicApiCall } from '../helpers';
 
 
 const imageWidth = Dimensions.get('screen').width;
@@ -121,33 +122,30 @@ const Splash = ({
       gender: session?.user.person.gender || "NA"
     }
 
-    console.log(body)
+    try{
 
-    let formData = new FormData()
-    formData.append("signature", signature)
-    formData.append("data", JSON.stringify(body))
-    await axios
-      .post("http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/create_user", formData)
-      .then((response) => {
-        
-        if(response.data && response.data.success == 1){
-          console.log("Response", response.data) 
-          setRegisterRetries(1)
-          authUser({variables: {
+      const {responseData, responseError} = await DynamicApiCall("create_user", signature, body)      
+      
+      if(responseData && responseData.success == 1){
+        // console.log("Response", responseData) 
+        setRegisterRetries(1)
+        authUser({
+          variables: {
             input: {
-              toktokId: parseInt(response.data.user_id)
+              toktokId: parseInt(responseData.user_id)
             }
-          }})
-        }else{
-          setFailed(true)
-         console.log("Response", response.data) 
-        }
-        
-      })
-      .catch((error) => {
-        console.log(error)
+          }
+        })
+      }else{
         setFailed(true)
-    })
+       console.log("Response", responseData) 
+       console.log("Response Error", responseError)
+      }
+    }catch(err){
+      console.log(err)
+    }
+
+    return
 
   }
 
