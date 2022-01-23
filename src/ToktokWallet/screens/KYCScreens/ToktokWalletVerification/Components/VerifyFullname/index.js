@@ -346,7 +346,7 @@ export const VerifyFullname = ()=> {
                     <View style={{marginTop: 20,}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Occupation</Text>
                             <TextInput 
-                                placeholder="Enter Occupation here"
+                                placeholder="Enter occupation here"
                                 placeholderTextColor={COLOR.DARK}
                                 style={styles.input}
                                 value={incomeInfo.occupation}
@@ -360,7 +360,7 @@ export const VerifyFullname = ()=> {
                             <TouchableOpacity onPress={()=>SourceOfIncomeRef.current.expand()} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
                              {
                                 incomeInfo.source == ""
-                                ? <Text style={{flex: 1,color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select -</Text>
+                                ? <Text style={{flex: 1,color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select source of income -</Text>
                                 : <Text style={{flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{incomeInfo.source.description}</Text>
                              }
                                 <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right"/>
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
     },
     policyView: {
         flexDirection: "row",
-        backgroundColor: "white",
+        backgroundColor: "#F7F7FA",
         marginBottom: 20,
         // paddingHorizontal: 16,
         // paddingVertical: 18,

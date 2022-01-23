@@ -48,7 +48,7 @@ const MainComponent = ({children , onPress })=> {
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>One last step before you get a verified toktokwallet.</Text>  
                 
                 <View style={{marginTop: 20,flex: 1}}>
-                {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a selfie with your Valid ID</Text> */}
+                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, alignSelf:"center"}}>Take a Selfie with ID</Text>
                         {children}
                 </View>
                 <View style={{flex: 1,alignItems:"center",justifyContent:"center"}}>

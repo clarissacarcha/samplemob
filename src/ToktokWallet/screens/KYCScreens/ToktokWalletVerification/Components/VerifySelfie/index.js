@@ -39,7 +39,7 @@ const MainComponent = ({children , onPress })=> {
                 
                
                 <View style={{marginTop: 20,flex: 1}}>
-                {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a selfie</Text> */}
+                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, alignSelf:"center"}}>Take a Selfie</Text>
                         {children}
                 </View>
                 <View style={{flex: 1,alignItems:"center",justifyContent:"center"}}>
