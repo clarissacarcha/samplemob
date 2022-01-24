@@ -231,6 +231,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const onCloseModal = () => {
     let {reasons, title} = showDialogMessage;
     if (reasons && title === 'Order Cancelled') {
+      setShowDialogMessage(prev => ({...prev, show: false}));
       navigation.replace('ToktokFoodLanding');
       return setSeconds(300);
     }
