@@ -59,7 +59,7 @@ export const PromptModal = ({
             <Text
               style={[
                 styles.successText,
-                { color: event === "TOKTOKWALLET" ? "black" : "#F73C21" }
+                { color: event === "TOKTOKWALLET" ? "black" : type == "warning" ? "#FFBF00" : "#F73C21" }
               ]}
             >
               {title}

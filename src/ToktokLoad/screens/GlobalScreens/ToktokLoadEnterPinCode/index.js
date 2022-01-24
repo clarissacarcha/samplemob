@@ -2,7 +2,7 @@ import React , {useState , useEffect , useRef } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native';
 
 //COMPONENTS
-import { HeaderBack, HeaderTitle, Separator, OrangeButton, NumberBoxes } from 'toktokload/components';
+import { HeaderBack, HeaderTitle, Separator, OrangeButton, NumberBoxes, BuildingBottom } from 'toktokload/components';
 import { AlertOverlay } from 'src/components';
 
 //HELPER & UTIL
@@ -21,6 +21,7 @@ import { useSelector } from 'react-redux';
 // FONTS AND COLORS
 import CONSTANTS from 'common/res/constants'
 import moment from 'moment';
+
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE, SIZE} = CONSTANTS
 
 export const ToktokLoadEnterPinCode = ({navigation, route})=> {
@@ -41,7 +42,7 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
   const [errorMessage, setErrorMessage] = useState("");
   const {tokwaAccount, getMyAccount} = useAccount();
   const [otpTimer, setOtpTimer] = useState(120);
-  const [showPin,setShowPin] = useState(false);
+  const [showPin, setShowPin] = useState(false);
 
   const [postLoadTransaction, {loading, error}] = useMutation(POST_LOAD_TRANSACTION, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
@@ -110,6 +111,10 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
     navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})
   }
 
+  const onPressShowTPIN = () => {
+    setShowPin(prev => (!prev))
+  }
+
   return (
     <View style={styles.subContainer}>
       <AlertOverlay visible={loading}/>
@@ -135,9 +140,14 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
         </View>
         { errorMessage != "" && <Text style={styles.errorText}>{errorMessage}</Text> }
         { requestMoneyDetails?.validator === "TPIN" && (
-          <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressForgotTPIN}>
-            <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressShowTPIN}>
+              <Text style={styles.forgotTPIN}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onPressForgotTPIN}>
+              <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
+            </TouchableOpacity>
+          </>
         )}
       </View>
       <OrangeButton
