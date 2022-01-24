@@ -42,7 +42,7 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
   const [errorMessage, setErrorMessage] = useState("");
   const {tokwaAccount, getMyAccount} = useAccount();
   const [otpTimer, setOtpTimer] = useState(120);
-  const [showPin,setShowPin] = useState(false);
+  const [showPin, setShowPin] = useState(false);
 
   const [postBillsTransaction, {loading, error}] = useMutation(POST_BILLS_TRANSACTION, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
@@ -121,6 +121,10 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
     navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})
   }
 
+  const onPressShowTPIN = () => {
+    setShowPin(prev => (!prev))
+  }
+
   return (
     <>
     <AlertOverlay visible={loading}/>
@@ -147,9 +151,14 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
         </View>
         { errorMessage != "" && <Text style={styles.errorText}>{errorMessage}</Text> }
         { requestMoneyDetails?.validator === "TPIN" && (
-          <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressForgotTPIN}>
-            <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressShowTPIN}>
+              <Text style={styles.forgotTPIN}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onPressForgotTPIN}>
+              <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
+            </TouchableOpacity>
+          </>
         )}
       </View>
       <OrangeButton
