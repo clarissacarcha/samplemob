@@ -27,6 +27,10 @@ const DeliveryDetails = ({navigation, route, session}) => {
     headerTitle: () => <HeaderTitle label={['Delivery', 'Information']} />,
   });
 
+  const quotation = route.params.quotation;
+
+  console.log({quotation});
+
   const AlertHook = useAlert();
 
   const [collectPaymentFrom, setCollectPaymentFrom] = useState(route.params.orderData.collectPaymentFrom);
@@ -273,6 +277,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
         ref={paymentMethodSheetRef}
         balanceText={numberFormat(balanceText)}
         hasWallet={hasWallet}
+        price={quotation.pricing.price}
       />
       <ItemSheet onChange={setItemDescription} ref={itemSheetRef} />
     </>

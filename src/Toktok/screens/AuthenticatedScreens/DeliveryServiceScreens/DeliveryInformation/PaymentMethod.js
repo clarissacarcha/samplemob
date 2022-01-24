@@ -1,19 +1,36 @@
 import React, {useCallback, useMemo, forwardRef, useState} from 'react';
 import {connect} from 'react-redux';
-import {View, StyleSheet, Text, TextInput, TouchableHighlight} from 'react-native';
+import {View, StyleSheet, Text, Image, TouchableHighlight, TouchableOpacity} from 'react-native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
+import {useNavigation} from '@react-navigation/native';
 import {LIGHT, MEDIUM, ORANGE, FONT_REGULAR, FONT_MEDIUM} from '../../../../../res/constants';
 import {COLOR, FONT} from '../../../../../res/variables';
-import {WhiteButton, VectorIcon, ICON_SET} from '../../../../../revamp';
+import {WhiteButton, VectorIcon, ICON_SET, Shadow} from '../../../../../revamp';
 
-export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet}, ref) => {
-  const snapPoints = useMemo(() => [0, 141], []);
+import ToktokWalletIcon from '../../../../../assets/images/toktokwalletlanding.png';
+
+export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet, price}, ref) => {
+  const navigation = useNavigation();
+
+  const snapPoints = useMemo(() => [0, 151], []);
 
   console.log({hasWallet, balanceText});
 
-  const hasEnoughBalance = hasWallet && parseFloat(balanceText) >= 1;
-  const notEnoughBalance = hasWallet && parseFloat(balanceText) < 1;
+  const hasEnoughBalance = hasWallet && parseFloat(balanceText) >= parseFloat(price);
+  const notEnoughBalance = hasWallet && parseFloat(balanceText) < parseFloat(price);
   const hasNoWallet = !hasWallet;
+
+  const onCashInClick = () => {
+    console.log('CASH IN');
+    navigation.push('ToktokWalletPaymentOptions', {
+      amount: parseFloat(price) - parseFloat(balanceText),
+      onCashIn: onCashIn,
+    });
+  };
+
+  const onCashIn = () => {
+    console.log('CASH IN SUCCESS');
+  };
 
   return (
     <BottomSheet
@@ -36,29 +53,87 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet}
         />
         <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />
         {hasEnoughBalance && (
-          <WhiteButton
-            label="toktokwallet"
-            borderless
-            labelStyle={{fontFamily: FONT.REGULAR}}
-            onPress={() => {
-              onChange('TOKTOKWALLET');
-              ref.current.collapse();
-            }}
-            suffixText={`PHP ${balanceText}`}
-          />
+          <View style={{flexDirection: 'row', alignItems: 'center', height: 70}}>
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <Shadow style={{borderRadius: 5}}>
+                <TouchableHighlight
+                  onPress={() => {
+                    onChange('TOKTOKWALLET');
+                    ref.current.collapse();
+                  }}
+                  style={{borderRadius: 5}}
+                  underlayColor={COLOR.YELLOW_UNDERLAY}>
+                  <View style={{backgroundColor: 'white', flexDirection: 'row', borderRadius: 5, padding: 8}}>
+                    <View style={{padding: 2, backgroundColor: COLOR.YELLOW, borderRadius: 5, marginRight: 8}}>
+                      <Image source={ToktokWalletIcon} style={{height: 30, width: 30}} resizeMode="contain" />
+                    </View>
+                    <View style={{}}>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={{color: COLOR.YELLOW}}>toktok</Text>
+                        <Text style={{color: COLOR.ORANGE}}>wallet</Text>
+                      </View>
+
+                      <Text style={{fontSize: 9}}>{`Balance: PHP ${balanceText}`}</Text>
+                    </View>
+                  </View>
+                </TouchableHighlight>
+              </Shadow>
+            </View>
+          </View>
+          // <WhiteButton
+          //   label="toktokwallet"
+          //   borderless
+          //   labelStyle={{fontFamily: FONT.REGULAR}}
+          //   onPress={() => {
+          //     onChange('TOKTOKWALLET');
+          //     ref.current.collapse();
+          //   }}
+          //   suffixText={`PHP ${balanceText}`}
+          // />
         )}
 
         {notEnoughBalance && (
-          <WhiteButton
-            label="toktokwallet"
-            borderless
-            labelStyle={{fontFamily: FONT.REGULAR}}
-            onPress={() => {
-              onChange('TOKTOKWALLET');
-              ref.current.collapse();
-            }}
-            suffixText={`Insufficient Balance - Cash In`}
-          />
+          <View style={{flexDirection: 'row', alignItems: 'center', height: 70}}>
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <Shadow style={{borderRadius: 5}}>
+                <TouchableHighlight
+                  disabled
+                  onPress={() => {}}
+                  style={{borderRadius: 5}}
+                  underlayColor={COLOR.YELLOW_UNDERLAY}>
+                  <View style={{backgroundColor: '#EEEEEE', flexDirection: 'row', borderRadius: 5, padding: 8}}>
+                    <View style={{padding: 2, backgroundColor: COLOR.YELLOW, borderRadius: 5, marginRight: 8}}>
+                      <Image source={ToktokWalletIcon} style={{height: 30, width: 30}} resizeMode="contain" />
+                    </View>
+                    <View style={{}}>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={{color: COLOR.YELLOW}}>toktok</Text>
+                        <Text style={{color: COLOR.ORANGE}}>wallet</Text>
+                      </View>
+
+                      <Text style={{fontSize: 9}}>{`Balance: PHP ${balanceText}`}</Text>
+                    </View>
+                  </View>
+                </TouchableHighlight>
+              </Shadow>
+            </View>
+            <TouchableOpacity
+              onPress={onCashInClick}
+              style={{flex: 1, justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+              <Text style={{color: COLOR.ORANGE}}>Insufficient balance.</Text>
+              <Text style={{color: COLOR.ORANGE}}>Please click here to cash in.</Text>
+            </TouchableOpacity>
+          </View>
+          // <WhiteButton
+          //   label="toktokwallet"
+          //   borderless
+          //   labelStyle={{fontFamily: FONT.REGULAR}}
+          //   onPress={() => {
+          //     onChange('TOKTOKWALLET');
+          //     ref.current.collapse();
+          //   }}
+          //   suffixText={`Insufficient Balance - Cash In`}
+          // />
         )}
 
         {hasNoWallet && (
