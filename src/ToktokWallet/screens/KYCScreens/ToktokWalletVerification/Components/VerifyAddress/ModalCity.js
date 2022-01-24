@@ -61,6 +61,7 @@ const ModalCity = ({type, data})=> {
                 <View style={styles.search}>
                     <TextInput 
                         placeholder="Search city"
+                        placeholderTextColor={COLOR.DARK}
                         style={styles.input}
                         onChangeText={filterSearch}
                     />

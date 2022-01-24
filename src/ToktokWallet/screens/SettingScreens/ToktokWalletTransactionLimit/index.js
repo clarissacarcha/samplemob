@@ -110,7 +110,7 @@ export const ToktokWalletTransactionLimit = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Transaction Limit','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['User Level and','Transaction Limit']}/>,
     })
 
     const alert = useAlert()

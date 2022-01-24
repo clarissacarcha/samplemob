@@ -1,7 +1,7 @@
 import React from 'react'
 import {View,Text,StyleSheet} from 'react-native'
 import { HeaderBack, YellowButton, HeaderTitle } from 'src/revamp'
-import { Separator, SwipeProceedButton, CheckIdleState , FlagSecureScreen } from 'toktokwallet/components'
+import { Separator, SwipeProceedButton, CheckIdleState , FlagSecureScreen , BuildingBottom } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -56,11 +56,14 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
         <CheckIdleState>
         <Separator/>
         <View style={styles.container}>
+            <View style={styles.header}>
+              <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: "black"}}>Review and Confirm</Text>
+            </View>
             <View style={styles.content}>
-                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Review and Confirm</Text>
+               
                 {RenderDisplay()}
             </View>
-            <View style={{flex:1 ,justifyContent:"center",alignItems:"center"}}>
+            <View style={{flex:1 ,justifyContent:"center",alignItems:"center",padding: 16,}}>
                 <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"center"}}>
 Please make sure all information provided is correct
 before clicking the confirmation button.
@@ -78,6 +81,7 @@ before clicking the confirmation button.
                     : <YellowButton onPress={confirm} label="Confirm" />
                 }
             </View>
+            <BuildingBottom/>
         </View>
         </CheckIdleState>
         </FlagSecureScreen>
@@ -87,14 +91,22 @@ before clicking the confirmation button.
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
         backgroundColor:"white"
     },
     content: {
         flex: 1,
+        paddingHorizontal: 16,
+    },
+    header: {
+        backgroundColor: "#FFF2D5",
+        paddingHorizontal: 16,
+        height: 50,
+        justifyContent:"center"
     },
     proceedBtn: {
         height: 70,
         justifyContent:"flex-end",
+        marginBottom: 16,
+        paddingHorizontal: 16,
     }
 })

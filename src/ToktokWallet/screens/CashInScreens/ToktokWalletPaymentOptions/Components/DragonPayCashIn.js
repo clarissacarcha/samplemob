@@ -1,7 +1,7 @@
 import React , {useEffect,useState} from 'react'
 import { View , Text , StyleSheet, TextInput } from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
-import { Separator , DisabledButton } from 'toktokwallet/components'
+import { Separator , DisabledButton , BuildingBottom } from 'toktokwallet/components'
 import { useAccount } from 'toktokwallet/hooks'
 import { AlertOverlay } from 'src/components'
 import { numberFormat } from 'toktokwallet/helper'
@@ -130,6 +130,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                     }
                         </View>
                 </View>
+                <BuildingBottom/>
             </View>
         </>
     )
