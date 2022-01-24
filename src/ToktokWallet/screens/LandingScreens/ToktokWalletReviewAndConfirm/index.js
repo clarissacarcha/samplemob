@@ -60,7 +60,7 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
         <Separator/>
         <View style={styles.container}>
             <View style={styles.header}>
-              <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Review and Confirm</Text>
+              <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: "black"}}>Review and Confirm</Text>
             </View>
             <View style={styles.content}>
                

@@ -56,10 +56,11 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
   
 
     const checkStatus = async ()=> {
-        if(!tokwaAccount.mobileNumber){
-            await getMyAccount()
-            return
-        } 
+        await getMyAccount()
+        // if(!tokwaAccount.mobileNumber){
+        //     await getMyAccount()
+        //     return
+        // } 
 
         // if(!tokwaAccount?.constants?.CashInType){
         //     await getGlobalSettings();
@@ -80,14 +81,9 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
                     value: true,
                 }
             })
+            checkStatus();
         }
     },[])
-
-    useEffect(()=>{
-        if(onCashIn){
-           checkStatus();
-        }
-    },[onCashIn, tokwaAccount])
 
     if (loading) {
         return (
