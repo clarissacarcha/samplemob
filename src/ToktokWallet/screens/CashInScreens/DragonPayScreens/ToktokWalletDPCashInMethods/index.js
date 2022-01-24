@@ -1,9 +1,9 @@
 import React , {useEffect,useState} from 'react'
-import {View,Text,StyleSheet,ActivityIndicator} from 'react-native'
+import {View,Text,StyleSheet,ActivityIndicator, FlatList, RefreshControl} from 'react-native'
 import {useMutation,useLazyQuery,useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_IN_PAYPANDA_REQUEST,POST_REQUEST_CASH_IN,GET_CASH_IN_PARTNER_TYPES,POST_COMPUTE_PROCESSING_FEE} from 'toktokwallet/graphql'
-import { Separator , CheckIdleState , DisabledButton } from 'toktokwallet/components'
+import { Separator , CheckIdleState , DisabledButton , NoData , BuildingBottom } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 import {YellowButton,HeaderBack,HeaderTitle } from 'src/revamp';
 import { SomethingWentWrong } from 'src/components'
@@ -189,26 +189,32 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
             <Separator/>
             <View style={styles.container}>
                 <View style={styles.paymentoptions}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Select payment method</Text>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Cash in Method</Text>
                 </View>
                 <View style={styles.content}>
-                    {/* <PaymentMethod onPress={()=>ProcessPayment("Online")} label="Online Banking"/>
-                    <PaymentMethod onPress={()=>ProcessPayment("OTC")} label="Over the Counter"/> */}
                     {
                         !cashInMethods
                         ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                            <ActivityIndicator size={24} color={COLOR.YELLOW} />
+                            <ActivityIndicator size={36} color={COLOR.YELLOW} />
                         </View>
-                        : 
-                        <>
-                        {
-                            cashInMethods.map((method,index)=>{
-                                return  <PaymentMethod onPress={()=>ProcessPayment(method.name, method.transactionTypeId , method.id)} label={method.name}/>
-                            })
-                        }
-                        </>
+                        :  <FlatList 
+                                ListHeaderComponent={() => {
+                                    if(cashInMethods.length > 0) return null
+                                    if(loading) return null
+                                    return <NoData/>
+                                }}
+                                refreshControl={<RefreshControl refreshing={loading} onRefresh={getCashInPartnerTypes} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
+                                showsVerticalScrollIndicator={false}
+                                data={cashInMethods}
+                                // ItemSeparatorComponent={()=><View style={styles.divider}/>}
+                                keyExtractor={item=>item.id}
+                                renderItem={({item,index})=>(
+                                    <PaymentMethod onPress={()=>ProcessPayment(item.name, item.transactionTypeId , item.id)} label={item.name}/>
+                                )}
+                            />
                     }
                 </View>
+                <BuildingBottom/>
             </View>
         </CheckIdleState>
     )
@@ -218,9 +224,21 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor:"white",
-        padding: 16,
+        // padding: 16,
+    },
+    paymentoptions: {
+        backgroundColor: "#FFF2D5",
+        paddingHorizontal: 16,
+        height: 50,
+        justifyContent:"center"
     },
     content: {
         flex: 1,
-    }
+        paddingHorizontal: 16,
+    },
+    divider: {
+        height: 1,
+        width: "100%",
+        backgroundColor: COLOR.LIGHT,
+    },
 })

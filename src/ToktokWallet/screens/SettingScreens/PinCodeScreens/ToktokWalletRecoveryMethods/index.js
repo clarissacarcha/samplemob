@@ -2,7 +2,7 @@ import React , {useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import FIcon from 'react-native-vector-icons/Feather'
 import {useSelector} from 'react-redux'
-import {Separator,CheckIdleState} from 'toktokwallet/components'
+import {Separator,CheckIdleState,BuildingBottom} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle} from 'src/revamp'
 import {useQuery,useLazyQuery} from '@apollo/react-hooks'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
@@ -97,6 +97,7 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
         <View style={styles.container}>
             <RecoveryMethod title={"Registered Mobile No."} message={`Use your verified mobile no. ${session.user.username}`} onPress={recoverWallet}/>
         </View>
+        <BuildingBottom/>
         </CheckIdleState>
     )
 }

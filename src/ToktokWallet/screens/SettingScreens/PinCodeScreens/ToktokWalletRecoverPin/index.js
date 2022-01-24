@@ -56,7 +56,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
-        headerRight: ()=> <HeaderCancel navigation={navigation} screenPopNo={3} />
+        headerRight: ()=> <HeaderCancel navigation={navigation} screenPopNo={2} />
     })
 
     const prompt = usePrompt()

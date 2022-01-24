@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     divider: {
         height: 1,
         width: "100%",
-        backgroundColor: COLOR.LIGHT,
+        backgroundColor: "#FFF2D5",
     },
     label: {
         fontSize: FONT_SIZE.M,

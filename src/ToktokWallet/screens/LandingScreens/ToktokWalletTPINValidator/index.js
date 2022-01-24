@@ -74,7 +74,14 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                                     style={{paddingVertical: 10, alignItems: "center"}}
                                     onPress={()=>setShowPin(!showPin)}
                             >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
+                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+                        </TouchableOpacity> 
+
+                        <TouchableOpacity
+                                    style={{paddingVertical: 10, alignItems: "center"}}
+                                    onPress={()=>navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})}
+                            >
+                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
                         </TouchableOpacity> 
                        
                     </View>
