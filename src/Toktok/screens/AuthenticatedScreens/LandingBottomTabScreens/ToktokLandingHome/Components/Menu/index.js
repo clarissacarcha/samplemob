@@ -46,12 +46,6 @@ const MenuIcon = ({label, icon, onPress, isNew = false}) => {
 export const Menu = ({setUserLocation, constants}) => {
   const navigation = useNavigation();
 
-  const onCashIn = ({ balance })=> {
-    // do something here
-    console.log(balance)
-  }
-  
-
   return (
     <View style={styles.menuBox}>
       <MenuIcon
@@ -86,12 +80,7 @@ export const Menu = ({setUserLocation, constants}) => {
         label={'profile'}
         icon={ProfileIcon}
         onPress={() => {
-          // navigation.push('ToktokProfile');
-          navigation.navigate("ToktokWalletPaymentOptions" , {
-            amount: 0,
-            onCashIn: onCashIn,
-          })
-          
+          navigation.push('ToktokProfile');
         }}
       />
 
