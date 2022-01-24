@@ -149,22 +149,26 @@ export const VerifyFullname = ()=> {
                 visible={modalNationalityVisible}
                 setVisible={setModalNationalityVisible}
          />
-     
+      
+      
         <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "height" : null}
                 keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.25 : screen.height * 0.5}
                 style={{ flex: 1 }}
         >
-                   <ScrollView style={{padding: 16}} showsVerticalScrollIndicator={false}>
 
-        <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
-                <View>
-                <Image style={styles.policyIcon} source={require('toktokwallet/assets/icons/walletVerify.png')} resizeMode="contain" />
-                </View>
-                <View style={{justifyContent: "center", alignItems: "center",marginRight: 20,}}>
-                    <Text style={{marginHorizontal: 10,fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR}}>All your details are protected in accordance with our <Text style={{color: COLOR.YELLOW}}>privacy policy.</Text></Text>
-                </View>
-        </TouchableOpacity>
+            
+            
+                <ScrollView style={{flex:1}} contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
+              
+                <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
+                            <View>
+                            <Image style={styles.policyIcon} source={require('toktokwallet/assets/icons/walletVerify.png')} resizeMode="contain" />
+                            </View>
+                            <View style={{justifyContent: "center", alignItems: "center",marginRight: 20,}}>
+                                <Text style={{marginHorizontal: 10,fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR}}>All your details are protected in accordance with our <Text style={{color: COLOR.YELLOW}}>privacy policy.</Text></Text>
+                            </View>
+                    </TouchableOpacity>
 
                 <View style={styles.mainInput}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Fill up the information</Text>
@@ -379,11 +383,12 @@ export const VerifyFullname = ()=> {
                             </View>
                         }
 
-                    <View style={{marginBottom: 16,marginTop: 20,height: 70}}>
-                    <YellowButton label="Next" onPress={NextPage}/>
-                    </View>
+                
                     
             </View>
+                    <View style={{padding: 16,justifyContent:"flex-end",marginTop: 20,height: 70}}>
+                         <YellowButton label="Next" onPress={NextPage}/>
+                    </View>
                  </ScrollView>
             </KeyboardAvoidingView>
 
@@ -402,7 +407,7 @@ const styles = StyleSheet.create({
     policyView: {
         flexDirection: "row",
         backgroundColor: "#F7F7FA",
-        marginBottom: 20,
+        padding: 16,
         // paddingHorizontal: 16,
         // paddingVertical: 18,
     },  
@@ -425,6 +430,7 @@ const styles = StyleSheet.create({
     },
     mainInput: {
         flex: 1,
+        padding: 16,
     },
     proceedBtn: {
         height: 40,

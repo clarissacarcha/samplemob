@@ -131,14 +131,14 @@ export const VerifyID = ()=> {
         }else if(!isBackRequired){
             return <>
                 <View style={{flex: 1, paddingVertical: 10, marginTop: 0}}>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Front of ID</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M, alignSelf:"center"}}>Front of ID</Text>
                     {frontImage ? <ImageIDSet placement="front" /> : <ChooseImage placement="front" />}
                 </View>
 
                 {
                     backImage &&
                     <View style={{flex: 1, paddingVertical: 5, marginTop: 0}}>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Back of ID</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M, alignSelf:'center'}}>Back of ID</Text>
                         {backImage ? <ImageIDSet placement="back" /> : <ChooseImage placement="back" />}
                     </View>
 

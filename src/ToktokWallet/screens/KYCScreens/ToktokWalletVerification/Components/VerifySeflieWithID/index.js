@@ -48,11 +48,11 @@ const MainComponent = ({children , onPress })=> {
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>One last step before you get a verified toktokwallet.</Text>  
                 
                 <View style={{marginTop: 20,flex: 1}}>
-                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, alignSelf:"center"}}>Take a Selfie with ID</Text>
+                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, alignSelf:"center"}}>Take a Selfie with ID</Text>
                         {children}
                 </View>
                 <View style={{flex: 1,alignItems:"center",justifyContent:"center"}}>
-                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
+                        <Text style={{color: COLOR.YELLOW, marginTop: 20,textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
                         <View>
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: moderateScale(FONT_SIZE.M)}}><Text style={{color: COLOR.YELLOW}}>Position</Text> your face within the frame</Text>

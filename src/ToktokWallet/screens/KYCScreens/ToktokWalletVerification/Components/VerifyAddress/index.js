@@ -86,7 +86,8 @@ export const VerifyAddress = ()=> {
                 keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.25 : screen.height * 0.5}
                 style={{ flex: 1 }}
         >
-                   <ScrollView style={{padding: 16}} showsVerticalScrollIndicator={false}>
+                   <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
+                      <View style={styles.mainInput}>
                         <Text style={styles.labelText}>Address</Text>
                         <Text style={[styles.labelSmall]}>Please enter your current address.</Text>  
                
@@ -188,12 +189,10 @@ export const VerifyAddress = ()=> {
                             />
                         </View>
                         
-                        <View style={styles.proceedBtn}>
+                    </View>
+                        <View style={{justifyContent:"flex-end",height: 70,padding: 16,marginTop: 20}}>
                             <YellowButton label="Next" onPress={Proceed} />
                         </View>
-
-                        <Text></Text>
-          
 
                     </ScrollView>
                 </KeyboardAvoidingView>
@@ -206,9 +205,11 @@ const styles = StyleSheet.create({
     content: {
         padding: 16,
         flex: 1,
+        marginBottom: 16,
     },
     mainInput: {
         flex: 1,
+        padding: 16,
     },
     proceedBtn: {
         flex: 1,
