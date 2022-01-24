@@ -14,7 +14,7 @@ const PageThree = ({scale,tokwaAccount})=> {
         <>
         <Animated.View style={{...styles.container,transform: [{scale: scale}]}}>
                 <Text style={styles.headerText}>
-                You can now start enjoying your e-wallet through 5 easy steps:
+                You can now start enjoying your toktokwallet through 5 easy steps:
                 </Text>
 
                 <View style={{marginTop: 20, alignItems:"center"}}>

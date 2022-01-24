@@ -52,3 +52,28 @@ export const POST_REQUEST_CASH_IN = gql`
         postRequestCashIn
     }
 `
+
+export const GET_DRAGON_PAY_CASH_IN_METHODS =gql`
+    query {
+        getDragonPayCashInMethods {
+            onlineBank
+            otcBank
+            otcNonBank
+        }
+    }
+`
+
+
+export const POST_COMPUTE_PROCESSING_FEE = gql`
+    mutation postComputeProcessingFee($input: PostComputeProcessingFeeInput){
+        postComputeProcessingFee(input: $input){
+            partner
+            processingFee
+            currency
+            newAmount
+            newAmountString
+            rf
+            rp
+        }
+    }
+`

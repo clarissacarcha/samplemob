@@ -7,6 +7,7 @@ import CONSTANTS from 'common/res/constants'
 //SELF IMPORTS
 import {
     CashIn,
+    CashInDragonPay,
     CashOut,
     CashOutOtherBank,
     SendMoney
@@ -38,6 +39,8 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
         switch(event){
             case "Cash In":
                 return <CashIn data={data}/>
+            case "Cash In Dragon Pay":
+                return <CashInDragonPay data={data}/>
             case "Cash Out":
                 return <CashOut data={data}/>
             case "Send Money":
@@ -56,6 +59,12 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
             <View style={styles.content}>
                 <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Review and Confirm</Text>
                 {RenderDisplay()}
+            </View>
+            <View style={{flex:1 ,justifyContent:"center",alignItems:"center"}}>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"center"}}>
+Please make sure all information provided is correct
+before clicking the confirmation button.
+                </Text>
             </View>
             <View style={styles.proceedBtn}>
                 {
