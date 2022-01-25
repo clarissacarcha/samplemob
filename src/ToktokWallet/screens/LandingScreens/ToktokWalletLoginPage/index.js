@@ -101,7 +101,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
             // if( getUserToktokWalletData.accountToken ) {
             //     await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
             // }
-
+  
             if(getUserToktokWalletData.toktokWalletAccountId && !session.user.toktokWalletAccountId){
                 // UPDATE SESSION HERE
                 dispatch({
