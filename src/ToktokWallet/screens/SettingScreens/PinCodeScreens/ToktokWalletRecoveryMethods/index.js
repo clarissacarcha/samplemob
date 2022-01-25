@@ -100,7 +100,8 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         }
     })
@@ -121,6 +122,7 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
                 error,
                 navigation,
                 prompt,
+                alert
             })
         }
     })

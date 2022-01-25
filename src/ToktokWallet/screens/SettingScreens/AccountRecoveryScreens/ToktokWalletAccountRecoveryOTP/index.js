@@ -117,6 +117,7 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
                 error,
                 navigation,
                 prompt,
+                alert,
                 setErrorMessage
             })
         }

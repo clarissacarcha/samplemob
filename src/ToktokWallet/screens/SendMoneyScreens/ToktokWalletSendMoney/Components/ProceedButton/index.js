@@ -42,7 +42,8 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         }
     })
@@ -58,7 +59,8 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt 
+                prompt,
+                alert 
             })
         }
     })

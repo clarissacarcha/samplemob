@@ -299,7 +299,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         }
     })
@@ -322,7 +323,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         }
     })
