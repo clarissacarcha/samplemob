@@ -77,6 +77,7 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
                             pinCode={otpCode} 
                             onNumPress={onNumPress} 
                             showPin={true}
+                            error={errorMessage}
                         />
                          <TextInput
                                 caretHidden

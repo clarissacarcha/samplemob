@@ -48,6 +48,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                             pinCode={pinCode} 
                             onNumPress={onNumPress} 
                             showPin={showPin}
+                            error={errorMessage}
                         />
                          <TextInput
                                 caretHidden

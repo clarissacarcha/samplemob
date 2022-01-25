@@ -295,7 +295,12 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
            
         },
         onError: (error)=>{
-            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            // onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt
+            })
         }
     })
 
