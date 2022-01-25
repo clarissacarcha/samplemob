@@ -36,7 +36,7 @@ const HeaderBackClose = ({currentIndex,setCurrentIndex, setPromptVisible})=> {
         setPromptVisible(true)
       }
 
-      useFocusEffect(useCallback(() => {
+      useFocusEffect(() => {
         const backAction = () => {
             closeScreen() 
           return true;
