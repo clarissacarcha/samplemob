@@ -35,9 +35,9 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
 
     return(
         <CheckIdleState>
-            <KeyboardAvoidingView
-                behavior={Platform.OS == "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
+            <View
+                // behavior={Platform.OS == "ios" ? "padding" : "height"}
+                // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
                 style={styles.container}
             >
                  <View style={styles.content}>
@@ -74,7 +74,14 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                                     style={{paddingVertical: 10, alignItems: "center"}}
                                     onPress={()=>setShowPin(!showPin)}
                             >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
+                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+                        </TouchableOpacity> 
+
+                        <TouchableOpacity
+                                    style={{paddingVertical: 10, alignItems: "center"}}
+                                    onPress={()=>navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})}
+                            >
+                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
                         </TouchableOpacity> 
                        
                     </View>
@@ -90,7 +97,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                     </View>
                 </View>
                 <BuildingBottom/>
-            </KeyboardAvoidingView>
+            </View>
         </CheckIdleState>
     )
 }

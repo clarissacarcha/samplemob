@@ -31,7 +31,7 @@ const TransactionInfo = ({label,value})=> (
     </>
 )
 
-const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCashIn})=> {
+const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCashIn , paymentMethod })=> {
     const navigation = useNavigation()
     const {tokwaAccount,refreshWallet} = useAccount();
     const alert = useAlert();
@@ -89,7 +89,7 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
                 onPress={Proceed}
             >
                 <View style={styles.transactionInfo}>
-                     <TransactionInfo label="Cash in Method" value="PayPanda"/>
+                     <TransactionInfo label="Cash in Method" value={paymentMethod ? paymentMethod : "PayPanda"}/>
                      <TransactionInfo label="PayPanda Ref. No." value={cashInLogParams.paypandaReferenceNumber}/>
                      <TransactionInfo label="PayPanda Status" value={status}/>
                      <TransactionInfo label="Amount" value={`PHP ${numberFormat(cashInLogParams.amount)}`}/>

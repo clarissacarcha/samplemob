@@ -1,12 +1,21 @@
 import React from 'react'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import {GET_MY_ACCOUNT} from 'toktokwallet/graphql'
+import {GET_MY_ACCOUNT, GET_GLOBAL_SETTINGS} from 'toktokwallet/graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { WalletUtility } from 'toktokwallet/util'
 import { useNavigation } from '@react-navigation/native'
 import {useDispatch, useSelector} from 'react-redux'
+
+const mapKeyValueToObject = keyValueArray => {
+    const result = {};
+    keyValueArray.map(kv => {
+      result[kv.settingKey] = kv.keyValue;
+    });
+  
+    return result;
+};
 
 export const useAccount = ()=> {
     const alert = useAlert()
@@ -27,6 +36,19 @@ export const useAccount = ()=> {
         })
         return
     }
+
+    const [getGlobalSettings , {loading: getGlobalSettingsLoading}] = useLazyQuery(GET_GLOBAL_SETTINGS, {
+        fetchPolicy: "network-only",
+        client:TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted:({getGlobalSettings})=> {
+            const constantObject = mapKeyValueToObject(getGlobalSettings)
+            dispatch({
+                type: "SET_TOKWA_CONSTANTS",
+                payload: constantObject
+            })
+        },
+        onError: (error)=> onErrorAlert({alert,error})
+    })
 
     const [getMyAccount , {loading}] = useLazyQuery(GET_MY_ACCOUNT , {
         fetchPolicy:"network-only",
@@ -53,7 +75,6 @@ export const useAccount = ()=> {
 
     const checkIfTpinIsSet = ()=> {
         const status = tokwaAccount.pinCode
-        console.log(status , "PINCODE IS ")
         if(!status){
             navigation.navigate("ToktokWalletRestricted" , {component: "noPin"})
             return false
@@ -68,6 +89,8 @@ export const useAccount = ()=> {
         tokwaAccount,
         refreshWallet,
         checkIfTpinIsSet,
-        getMyAccountLoading: loading
+        getMyAccountLoading: loading,
+        getGlobalSettings,
+        getGlobalSettingsLoading
     }
 }

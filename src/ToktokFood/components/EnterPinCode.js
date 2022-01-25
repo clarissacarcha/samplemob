@@ -142,7 +142,7 @@ const EnterPinCode = ({
                 style={styles.showPin}
                 onPress={()=>setShowPin(!showPin)}
               >
-                <Text style={styles.txtShowPin}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                <Text style={styles.txtShowPin}>{showPin ? "Hide PIN" : "Show PIN"}</Text>
               </TouchableOpacity>
             </View>
           </View>

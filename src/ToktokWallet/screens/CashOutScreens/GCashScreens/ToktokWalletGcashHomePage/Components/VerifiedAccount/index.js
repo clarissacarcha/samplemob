@@ -139,7 +139,7 @@ export const VerifiedAccount = ({record,provider})=> {
 
     return (
         <>
-        <AlertOverlay visible={requestLoading}/>
+        <AlertOverlay visible={requestLoading || loading}/>
         <Separator/>
         <SuccessfulCashOutModal 
              visible={successModalVisible}

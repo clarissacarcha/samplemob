@@ -1,5 +1,5 @@
 import React , {useRef, useState , useEffect} from 'react'
-import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet,ScrollView,TextInput,TouchableOpacity,Alert} from 'react-native'
 import {NumberBoxes,BuildingBottom} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
@@ -18,6 +18,7 @@ export const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeTokto
     };
 
     const onSubmit = () => {
+        if(confirmpinCode.length < 6) return
         setPageIndex(oldstate=>oldstate+1)
      };
 
@@ -34,7 +35,7 @@ export const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeTokto
 
     return (
         <View style={styles.container}>
-        <ScrollView style={styles.content}>
+        <View style={styles.content}>
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm TPIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin}/>
@@ -60,14 +61,14 @@ export const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeTokto
                         }
 
                         <TouchableOpacity
-                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
+                                style={{marginTop: 18,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
+                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
                         </TouchableOpacity>
 
                 </View>
-            </ScrollView>
+            </View>
             <BuildingBottom/>
             {/* <TouchableOpacity
                 disabled={pinCode.length < 6}
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     },
     content: {
         // alignItems: "center",
-        padding: 10,
+        padding: 16,
         flex: 1,
     },
     input: {

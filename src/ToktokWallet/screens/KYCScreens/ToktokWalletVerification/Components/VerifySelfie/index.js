@@ -39,11 +39,11 @@ const MainComponent = ({children , onPress })=> {
                 
                
                 <View style={{marginTop: 20,flex: 1}}>
-                {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a selfie</Text> */}
+                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, alignSelf:"center"}}>Take a Selfie</Text>
                         {children}
                 </View>
                 <View style={{flex: 1,alignItems:"center",justifyContent:"center"}}>
-                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
+                        <Text style={{color: COLOR.YELLOW, marginTop: 20,textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
                         <View>
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Position</Text> your face within the frame</Text>
