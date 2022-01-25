@@ -83,6 +83,7 @@ const ModalCountry = ({type})=> {
                 <View style={styles.search}>
                     <TextInput 
                         placeholder="Search country"
+                        placeholderTextColor={COLOR.DARK}
                         style={styles.input}
                         onChangeText={filterSearch}
                     />

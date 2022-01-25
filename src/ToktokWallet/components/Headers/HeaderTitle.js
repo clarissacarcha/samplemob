@@ -3,6 +3,7 @@ import {View,Text,StyleSheet,Image,Platform ,StatusBar,TouchableOpacity} from 'r
 import CONSTANTS from 'common/res/constants'
 import { HeaderBack , ICON_SET, VectorIcon } from 'src/revamp'
 import { useNavigation } from '@react-navigation/native'
+import { moderateScale } from 'toktokwallet/helper'
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
@@ -19,14 +20,14 @@ export const HeaderTitle = ({isRightIcon, rightIcon = null, rightIconOnPress, is
             <View style={{width: 150,justifyContent:"center",alignItems:"center"}}>
             {
                 isLogo
-                ? <Image resizeMode="contain" style={{height: 23,width: 130}} source={require('toktokwallet/assets/images/toktokwallet.png')} />
-                : <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD,color: labelColor}}>{label}</Text>
+                ? <Image resizeMode="contain" style={{height: moderateScale(23),width: moderateScale(130)}} source={require('toktokwallet/assets/images/toktokwallet.png')} />
+                : <Text style={{fontSize: moderateScale(FONT_SIZE.L),fontFamily: FONT.BOLD,color: labelColor}}>{label}</Text>
             }
             </View>
             {
                 isRightIcon
                 ? <TouchableOpacity onPress={rightIconOnPress} style={{flex: 1,justifyContent:"center",alignItems:"flex-end"}}>
-                        <MIcon style={{marginRight: 16}} name="notifications" color={"black"} size={25} />
+                        <MIcon style={{marginRight: 16}} name="notifications" color={"black"} size={moderateScale(25)} />
                     </TouchableOpacity>
                 : <View style={{flex: 1}}/>
             }

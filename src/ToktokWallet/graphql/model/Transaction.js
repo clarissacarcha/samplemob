@@ -64,6 +64,10 @@ export const GET_OUTGOING_TRANSFER = gql`
 
 const WalletTransactions = `
 id
+refNo
+name
+phrase
+details
 amount
 note
 status
@@ -77,37 +81,6 @@ externalPhrase
 externalReferenceNumber
 externalPayload
 externalDetails
-sourcePerson {
-    firstName
-    middleName
-    lastName
-}
-destinationPerson {
-    firstName
-    middleName
-    lastName
-}
-sourceAccount {
-    mobileNumber
-}
-destinationAccount {
-    mobileNumber
-}
-transactionType {
-    name
-    type
-    sourcePhrase
-    destinationPhrase
-}
-cashOutDisplayInformations {
-    accountInfo {
-        accountNumber
-        accountName
-        bank {
-            name 
-        }
-    }
-}
 `
 
 export const GET_TRANSACTIONS = gql`
@@ -139,6 +112,13 @@ export const POST_VERIFY_TRANSACTION_QR_CODE = gql`
                 }
             }
             QRInfo
+        }
+    }
+`
+export const GET_SEND_MONEY_TRANSACTIONS = gql`
+    query {
+        getSendMoneyTransactions {
+            ${WalletTransactions}
         }
     }
 `
