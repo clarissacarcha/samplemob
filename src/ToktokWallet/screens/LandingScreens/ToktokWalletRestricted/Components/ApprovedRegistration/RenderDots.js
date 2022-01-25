@@ -87,7 +87,7 @@ const RenderDots = ({scrollX , data, sliderRef , dotPosition , setCurrentIndex,c
                    }
                 }} 
                 // disabled={currentIndex === data.length - 1}
-                style={[ styles.nextPage, { opacity: currentIndex < data.length - 1 ? 1 : .3 }]}>
+                style={[ styles.nextPage ]}>
                     <Text style={styles.dotsText}>{currentIndex < data.length - 1 ? "NEXT" : "DONE"}</Text>
                     {/* <Text style={styles.dotsText}> {"NEXT"}</Text> */}
                     <VectorIcon iconSet={ICON_SET.Feather} color={COLOR.ORANGE} name="arrow-right"/>

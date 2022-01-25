@@ -58,13 +58,13 @@ const Column = ({data, rowindex})=> {
                                let cellwidth
                                let cellAlign = "left"
                                if(index == 0){
-                                 cellwidth = "22%"
+                                 cellwidth = "33%"
                                }
                                if(index == 1){
-                                  cellwidth = "24%"
+                                  cellwidth = "33%"
                                }
                                if(index == 2){
-                                 cellwidth = "32%"
+                                 cellwidth = "33%"
                                }
                                if(index == 3){
                                   cellwidth = "24%"
@@ -74,7 +74,7 @@ const Column = ({data, rowindex})=> {
                                                 width:cellwidth,
                                                 justifyContent:"center",
                                                 backgroundColor: rowIndex == 0 ? COLOR.YELLOW : rowIndex%2 == 0 ? "#FEF7E6" : "white",
-                                                paddingVertical: 5
+                                                paddingVertical: 10
                                             }}>
                                         {
                                             row.map((displayText)=>(
@@ -82,8 +82,8 @@ const Column = ({data, rowindex})=> {
                                                     styles.headerTitle , 
                                                     {
                                                         fontFamily: rowIndex == 0 ? FONT.BOLD : FONT.REGULAR,
-                                                        fontSize: rowIndex == 0 ? moderateScale(FONT_SIZE.S) : moderateScale(FONT_SIZE.S),
-                                                        textAlign: cellAlign 
+                                                        fontSize: rowIndex == 0 ? moderateScale(FONT_SIZE.M) : moderateScale(FONT_SIZE.S),
+                                                        textAlign: "center" 
                                                     }
                                                 ]}>
                                                     {displayText

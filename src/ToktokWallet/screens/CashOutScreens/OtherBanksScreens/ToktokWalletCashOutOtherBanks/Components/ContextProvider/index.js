@@ -18,9 +18,9 @@ export const ContextProvider = ({children})=> {
         name: "",
     })
     const navigation = useNavigation();
+    const tokwaName = `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`
 
-
-    const [accountName,setAccountName] = useState(`${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`)
+    const [accountName,setAccountName] = useState("")
     const [accountNumber,setAccountNumber] = useState("")
     const [address,setAddress] = useState("")
     const [amount,setAmount] = useState("")

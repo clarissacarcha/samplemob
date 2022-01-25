@@ -37,6 +37,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
 
     const [errorListMessage, setErrorListMessage] = useState({
         alias: "",
+        accountName: "",
         accountNumber: "",
         address: "",
     })
@@ -64,6 +65,10 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
         let noError = true
         if(nickName == ""){
             changeErrorMessagge("alias","Alias is required.")
+            noError = false
+        }
+        if(accountName == ""){
+            changeErrorMessagge("accountName","Account Name is required.")
             noError = false
         }
         if(accountNumber == ""){
@@ -134,6 +139,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     value={nickName}
                                     onChangeText={(value)=>setNickName(value)}
                                     placeholder="Enter alias here"
+                                    placeholderTextColor={COLOR.DARK}
                                     returnKeyType="done"
                                     maxLength={50}
                             />
@@ -142,8 +148,9 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                             {errorListMessage.alias != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.alias}</Text>}
                         </Text>
                     </View>
-
-                    <View style={{marginVertical: 10,}}>
+                    
+                    {/* OLD ACCOUNT NAME */}
+                    {/* <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
                         <View style={[{justifyContent:"center"}]}>
                                <View
@@ -152,6 +159,26 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{accountName}</Text>
                                 </View>
                         </View>
+                    </View> */}
+
+                    {/* NEW ACCOUNT NAME */}
+                    <View style={{marginVertical: 10,}}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
+                        <View style={[{borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.accountName == "" ? "transparent" : COLOR.RED}]}>
+                            <TextInput
+                                    style={styles.input}
+                                    value={accountName}
+                                    onChangeText={setAccountName}
+                                    maxLength={30}
+                                    placeholder={`Enter bank account name here`}
+                                    placeholderTextColor={COLOR.DARK}
+                                    returnKeyType="done"
+                                    keyboardType="default"
+                                />
+                        </View>
+                        <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountName.length}/30 
+                            {errorListMessage.accountName != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.accountName}</Text>}
+                        </Text>
                     </View>
                     
                     <View style={{marginVertical: 10,}}>
@@ -163,6 +190,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     onChangeText={changeAccountNumber}
                                     maxLength={19}
                                     placeholder={`Enter bank account number here`}
+                                    placeholderTextColor={COLOR.DARK}
                                     returnKeyType="done"
                                     keyboardType="number-pad"
                                 />
@@ -180,6 +208,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     value={address}
                                     onChangeText={(value)=>setAddress(value)}
                                     placeholder={`Enter address here`}
+                                    placeholderTextColor={COLOR.DARK}
                                     returnKeyType="done"
                                     maxLength={20}
                                 />

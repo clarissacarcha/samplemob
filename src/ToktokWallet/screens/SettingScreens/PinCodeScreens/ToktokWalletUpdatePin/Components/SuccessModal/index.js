@@ -18,11 +18,15 @@ const Reminder = ({children})=> {
     )
 }
 
-export const SuccessModal = ({modalVisible,setModalVisible})=> {
+export const SuccessModal = ({modalVisible,setModalVisible,event})=> {
     const navigation = useNavigation()
 
     const closeModal = ()=> {
         setModalVisible(false)
+        if(event){
+            navigation.pop(2)
+            return;
+        }
         navigation.navigate("ToktokWalletHomePage");
         navigation.replace("ToktokWalletHomePage")
     }
@@ -51,7 +55,7 @@ export const SuccessModal = ({modalVisible,setModalVisible})=> {
                  </View>
 
                  <View style={{flex: 1,alignItems:"center", justifyContent:"center"}}>
-                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
+                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,color: COLOR.YELLOW}}>Reminders</Text>
                         <View>
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Use a <Text style={{color: COLOR.YELLOW}}>secure</Text> TPIN combination</Text>

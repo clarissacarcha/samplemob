@@ -29,7 +29,7 @@ export const ToktokWalletHelpCentreMoneyProtected = ({navigation}) => {
 
     navigation.setOptions({
         headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: () => <HeaderTitle label={['Your Money is Protected', '']} />,
+        headerTitle: () => <HeaderTitle label={['Money Protection', '']} />,
     });
 
     return (
@@ -49,10 +49,10 @@ export const ToktokWalletHelpCentreMoneyProtected = ({navigation}) => {
                         <View style={{flex: 1, paddingHorizontal: 16, marginTop: 8}}>
                             
                             {/* <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Your money is protected</Text> */}
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginVertical: 10}}>All transactions via Tokokwallet Inc. are successfully completed
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginVertical: 10}}>All transactions via toktokwallet are successfully completed
                             through One-Time Password and Transaction PIN. These are added
                             extra layer of security that prevents others from compromising your
-                            Toktokwallet Inc. Account and your money that is stored to it.
+                            toktokwallet account and your money that is stored to it.
                             </Text>
                             
                             <View style={{flex: 1, marginTop: 12, marginBottom: 10}}>

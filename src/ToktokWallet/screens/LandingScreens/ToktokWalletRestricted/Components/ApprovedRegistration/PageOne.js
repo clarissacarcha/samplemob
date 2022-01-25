@@ -15,7 +15,7 @@ const PageOne = ({scale,tokwaAccount})=> {
                 </Text>
                 <Image resizeMode="contain" style={styles.welcomeImage} source={require("toktokwallet/assets/images/welcome/welcome.jpg")}/>
                 <Text style={styles.message}>
-                    Welcome Ka-toktok, {tokwaAccount.person.firstName}! Thank you for
+                    Welcome ka-toktok, {tokwaAccount.person.firstName}! Thank you for
                     choosing toktokwallet, your daily partner
                     on all cashless transactions such as fund
                     transfers to any participating bank and
