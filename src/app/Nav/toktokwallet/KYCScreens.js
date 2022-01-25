@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+    ToktokWalletPepVideoCallSchedule,
     ToktokWalletSelfieImageCamera,
     ToktokWalletSelfieImageWithIDCamera,
     ToktokWalletValidIDCamera,
@@ -10,6 +11,7 @@ import {
 
 export default ({Navigator}) => (
     <>
+    <Navigator.Screen name="ToktokWalletPepVideoCallSchedule" component={ToktokWalletPepVideoCallSchedule}/>
     <Navigator.Screen name="ToktokWalletSelfieImageCamera" component={ToktokWalletSelfieImageCamera}/>
     <Navigator.Screen name="ToktokWalletSelfieImageWithIDCamera" component={ToktokWalletSelfieImageWithIDCamera}/>
     <Navigator.Screen name="ToktokWalletValidIDCamera" component={ToktokWalletValidIDCamera}/>

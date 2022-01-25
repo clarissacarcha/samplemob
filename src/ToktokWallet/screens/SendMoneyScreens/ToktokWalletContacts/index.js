@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux'
 import Contacts from 'react-native-contacts'
 import {sortBy} from 'lodash'
 import {Separator} from 'toktokwallet/components'
-import { HeaderBack , HeaderTitle } from 'src/revamp'
+import { HeaderBack , HeaderTitle , ICON_SET, VectorIcon } from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE , MARGIN } = CONSTANTS
@@ -18,7 +18,7 @@ export const ToktokWalletContacts = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack />,
-        headerTitle: ()=> <HeaderTitle label={['Your Contacts']} />,
+        headerTitle: ()=> <HeaderTitle label={['All Contacts']} />,
     })
 
     const session = useSelector(state=>state.session)
@@ -164,7 +164,7 @@ export const ToktokWalletContacts = ({navigation,route})=> {
 
     const setRecipient = (recipient) => {
       route.params.setRecipientInfo(recipient)
-      return navigation.navigate("ToktokWalletSendMoney")
+      return navigation.pop()
     }
 
 
@@ -197,10 +197,12 @@ export const ToktokWalletContacts = ({navigation,route})=> {
       <View style={styles.container}>
         <View style={styles.searchField}>
             <View style={[styles.input,{flexDirection: "row"}]}>
-                {/* <Image style={{height: 25,width: 40,alignSelf: "center"}} resizeMode="center" source={require('../../../../../../assets/icons/ph.png')}/> */}
+               <View style={{justifyContent:"center"}}> 
+                <VectorIcon size={28} iconSet={ICON_SET.Feather} name="search"/>
+               </View>
                 <TextInput 
                     style={{color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,padding: 0,marginLeft: 5,alignSelf: "center",flex: 1}}
-                    placeholder="Enter a Name or mobile number"
+                    placeholder="Enter a name or mobile number"
                     placeholderTextColor={COLOR.DARK}
                     onChangeText={filterSearch}
                     value={searchString}

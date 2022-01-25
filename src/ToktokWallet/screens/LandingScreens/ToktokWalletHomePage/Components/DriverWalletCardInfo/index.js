@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native'
 import {Separator , HeaderImageBackground, HeaderTitle} from 'toktokwallet/components';
 import { numberFormat } from 'toktokwallet/helper';
 import {useSelector} from 'react-redux'
-import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -34,9 +33,6 @@ const DriverWalletCardInfo = ({loading})=> {
     })
 
     const cashIn = ()=> {
-        if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
-            return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
-        }
       
         return navigation.navigate("ToktokWalletPaymentOptions")
         

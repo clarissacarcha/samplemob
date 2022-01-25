@@ -136,7 +136,7 @@ const NumberBoxes = ({pinCode, onNumPress , showPin}) => {
                                     style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                     onPress={resendRequest}
                             >
-                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Didn't get code? Tap here to resend.</Text>
                                 { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
                         </TouchableOpacity>
                              </View>

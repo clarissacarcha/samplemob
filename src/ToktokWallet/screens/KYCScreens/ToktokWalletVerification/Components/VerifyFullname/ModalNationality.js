@@ -83,6 +83,7 @@ const ModalNationality = ({visible,setVisible})=> {
                 <View style={styles.search}>
                     <TextInput 
                         placeholder="Search your nationality"
+                        placeholderTextColor={COLOR.DARK}
                         style={styles.input}
                         onChangeText={filterSearch}
                     />

@@ -67,7 +67,7 @@ export const ToktokLandingMenu = ({navigation}) => {
   const onSignOut = () => {
     // End User Session
 
-    if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath)
+    if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
     OneSignal.deleteTag('userId');
     dispatch({type: 'DESTROY_SESSION'});
     navigation.replace('UnauthenticatedStack', {
