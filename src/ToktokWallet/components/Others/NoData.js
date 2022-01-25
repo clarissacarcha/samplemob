@@ -1,20 +1,38 @@
 import React  from "react";
 import { View , Text , StyleSheet , Image , Dimensions } from 'react-native'
 import NoDataImage from 'toktokwallet/assets/images/no-record.png'
+import NoNotifImage from 'toktokwallet/assets/images/no-notif.png'
 import { moderateScale } from 'toktokwallet/helper'
 import CONSTANTS from 'common/res/constants';
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
 const imageWidth = 200;
 
-export const NoData = ()=>{
+export const NoData = ({
+    title = "No Record Found",
+    label = "You have no transactions at the moment.",
+    type = "data"
+})=>{
+
+    let img = null
+
+    switch(type){
+        case "data":
+            img = NoDataImage
+            break
+        case "notification":
+            img = NoNotifImage
+            break
+        default:
+            break
+    }
 
     return(
         <View style={{paddingTop: 100}}>
             <View style={styles.center}>
-                <Image source={NoDataImage} style={styles.image} resizeMode={'contain'} />
-                <Text style={styles.title}>No Record Found</Text>
-                <Text style={styles.text}>You have no transactions at the moment.</Text>
+                <Image source={img} style={styles.image} resizeMode={'contain'} />
+                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.text}>{label}</Text>
             </View>
         </View>
     )
@@ -33,12 +51,12 @@ const styles = StyleSheet.create({
     text: {
         fontFamily: FONT.REGULAR,
         fontSize: moderateScale(FONT_SIZE.L),
-        color: COLOR.DARK,
+        color: "black",
     },
     title: {
         fontFamily: FONT.BOLD,
         fontSize: moderateScale(FONT_SIZE.XL),
         color: COLOR.YELLOW,
-        marginVertical: 20,
+        marginVertical: 8,
     }
 })

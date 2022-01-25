@@ -31,7 +31,7 @@ const TransactionInfo = ({label,value})=> (
     </>
 )
 
-const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCashIn})=> {
+const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCashIn , paymentMethod })=> {
     const navigation = useNavigation()
     const {tokwaAccount,refreshWallet} = useAccount();
     const alert = useAlert();
@@ -78,6 +78,20 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
     }
 
 
+    const BottomComponent = ()=> {
+
+        const bottomText = "Please make sure that you have carefully reviewed the amount " +
+        "to pay. A copy of the complete cash in details and instruction will " +
+        "be sent to your email for fast and secured transaction.";
+        
+        return (
+            <View style={{flex:1,justifyContent:"center",alignItems:"center",paddingHorizontal: 16}}>
+                <Text style={{fontFamily: FONT.REGULAR , fontSize: FONT_SIZE.S}}>{bottomText}</Text>
+            </View>
+        )
+    }
+
+
     return (
         <Modal
             animationType="fade"
@@ -87,11 +101,12 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
             <Receipt
                 refNo={cashInLogParams.referenceNumber}
                 onPress={Proceed}
-            >
+                BottomComponent={BottomComponent}
+             >
                 <View style={styles.transactionInfo}>
-                     <TransactionInfo label="Cash in Method" value="PayPanda"/>
-                     <TransactionInfo label="PayPanda Ref. No." value={cashInLogParams.paypandaReferenceNumber}/>
-                     <TransactionInfo label="PayPanda Status" value={status}/>
+                     <TransactionInfo label="Cash in Method" value={paymentMethod ? paymentMethod : "PayPanda"}/>
+                     <TransactionInfo label={paymentMethod ? "Transaction No." : "PayPanda Ref. No."} value={cashInLogParams.paypandaReferenceNumber}/>
+                     <TransactionInfo label={paymentMethod ? "Status" : "PayPanda Status"} value={status}/>
                      <TransactionInfo label="Amount" value={`PHP ${numberFormat(cashInLogParams.amount)}`}/>
                 </View>
             </Receipt>

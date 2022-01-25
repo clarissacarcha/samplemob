@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     labelHC: {
-        fontFamily: FONT.BOLD,
+        fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.L,
         color: COLOR.ORANGE,
         textDecorationLine:"underline"

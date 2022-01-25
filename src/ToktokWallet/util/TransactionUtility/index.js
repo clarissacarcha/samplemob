@@ -48,8 +48,8 @@ export class TransactionUtility {
 
     if(graphQLErrors[0]?.payload?.code == "INVALIDTPIN"){
       const remainingAttempt = graphQLErrors[0].payload.remainingAttempts
-      const times = remainingAttempt == "1" ? "time" : "times"
-      const message = `Incorrect TPIN. You can try ${numWordArray[remainingAttempt]} (${remainingAttempt}) more ${times} before your account will be temporarily blocked.`
+      const times = remainingAttempt == "1" ? "attempt" : "attempts"
+      const message = `Incorrect TPIN. You have ${numWordArray[remainingAttempt]} (${remainingAttempt}) ${times} left.`
       if(setErrorMessage){
         setErrorMessage(message)
         return;
@@ -62,8 +62,8 @@ export class TransactionUtility {
 
     if(graphQLErrors[0]?.payload?.code == "INVALIDOTP"){
       const remainingAttempt = graphQLErrors[0].payload.remainingAttempts
-      const times = remainingAttempt == "1" ? "time" : "times"
-      const message = `Incorrect OTP. You can try ${numWordArray[remainingAttempt]} (${remainingAttempt}) more ${times} before your account will be temporarily blocked.`
+      const times = remainingAttempt == "1" ? "attempt" : "attempts"
+      const message = `Incorrect OTP. You have ${numWordArray[remainingAttempt]} (${remainingAttempt}) ${times} left.`
       if(setErrorMessage){
         setErrorMessage(message)
         return;
@@ -85,13 +85,28 @@ export class TransactionUtility {
       })
       return;
     }
-    console.log(graphQLErrors[0]?.message)
+
+
+    // PROMPT EVENTS
     if(prompt){
+      let promptTitle = null;
+      switch(graphQLErrors[0]?.payload?.code){
+        case "VALIDATORMAXREQUEST":
+          promptTitle = "Max Attempt Reached";
+          break;
+        case "OTPMAXREQUEST":
+          promptTitle = "Max Attempt Reached";
+          break;
+        default:
+          promptTitle = title;
+          break;
+      }
+
       prompt({
         type: "error",
         message: graphQLErrors[0]?.message,
         event: "TOKTOKWALLET",
-        title
+        title: promptTitle
       })
     }
     return navigation.pop()

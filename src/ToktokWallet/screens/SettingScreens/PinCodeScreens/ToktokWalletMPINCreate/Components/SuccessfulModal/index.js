@@ -81,7 +81,7 @@ export const SuccessfulModal = ({modalVisible,tokwaAccount})=> {
              <View style={styles.container}>
                 { tokwaAccount.mpinCode ? <UpdatePIN/> : <NewPIN/>}
                 <View style={{flex: 1,alignItems:"center", justifyContent:"center"}}>
-                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
+                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,color: COLOR.YELLOW}}>Reminders</Text>
                         <View>
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Use a <Text style={{color: COLOR.YELLOW}}>secure</Text> MPIN combination</Text>

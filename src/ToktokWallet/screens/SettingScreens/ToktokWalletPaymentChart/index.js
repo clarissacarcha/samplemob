@@ -28,7 +28,29 @@ export const ToktokWalletPaymentChart = ({navigation})=> {
             >
                 <CustomTable
                     headerData={["Partner","Method","Transaction Range","Transaction Fee"]}
-                    rowsData={
+                    rowsData={[
+                        {
+                            firstCol: ["Partner"],
+                            secondCol: ["Method"],
+                            thirdCol: ["Transaction","Fee"],
+                        },
+                        {
+                            firstCol: ["DRAGONPAY"],
+                            secondCol: ["Online Bank"],
+                            thirdCol: ["25"],
+                        },
+                        {
+                            firstCol: ["DRAGONPAY"],
+                            secondCol: ["Over the", "counter Bank"],
+                            thirdCol: ["30"],
+                        },
+                        {
+                            firstCol: ["DRAGONPAY"],
+                            secondCol: ["Over the", "counter Non-Bank"],
+                            thirdCol: ["35"],
+                        },
+                    ]}
+                    rowsDataOld={
                         [
                             {
                                 firstCol: ["Partner"],

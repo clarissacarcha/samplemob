@@ -38,10 +38,19 @@ export const GET_CASH_INS = gql`
                     id
                     name
                 }
+                details
                 transaction {
                     id
                     refNo
                     createdAt
+                }
+                paymentMethod
+                cashInPartnerTypeId
+                cashInPartnerType {
+                    id
+                    name
+                    transactionTypeId
+                    status
                 }
         }
     }
@@ -50,5 +59,30 @@ export const GET_CASH_INS = gql`
 export const POST_REQUEST_CASH_IN = gql`
     mutation {
         postRequestCashIn
+    }
+`
+
+export const GET_DRAGON_PAY_CASH_IN_METHODS =gql`
+    query {
+        getDragonPayCashInMethods {
+            onlineBank
+            otcBank
+            otcNonBank
+        }
+    }
+`
+
+
+export const POST_COMPUTE_PROCESSING_FEE = gql`
+    mutation postComputeProcessingFee($input: PostComputeProcessingFeeInput){
+        postComputeProcessingFee(input: $input){
+            partner
+            processingFee
+            currency
+            newAmount
+            newAmountString
+            rf
+            rp
+        }
     }
 `

@@ -1,10 +1,10 @@
 import React , {useState,useRef,useCallback,useEffect} from 'react'
-import { View ,ActivityIndicator,StatusBar,Text, BackHandler} from 'react-native'
+import { View ,ActivityIndicator,StatusBar,Text,BackHandler} from 'react-native'
 import {SomethingWentWrong,AlertOverlay} from 'src/components'
 import { useDispatch } from 'react-redux'
 import { useAccount } from 'toktokwallet/hooks'
 import { CheckIdleState } from 'toktokwallet/components'
-import { useFocusEffect } from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS

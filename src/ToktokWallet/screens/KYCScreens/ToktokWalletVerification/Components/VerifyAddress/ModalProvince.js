@@ -92,6 +92,7 @@ const ModalProvince = ({type, onSelect})=> {
                 <View style={styles.search}>
                     <TextInput 
                         placeholder="Search province"
+                        placeholderTextColor={COLOR.DARK}
                         style={styles.input}
                         onChangeText={filterSearch}
                     />
