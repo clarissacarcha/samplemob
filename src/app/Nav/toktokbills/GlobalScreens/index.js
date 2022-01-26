@@ -6,7 +6,7 @@ import {
   ToktokBillsTransactionLogs
 } from 'toktokbills/screens';
 import { Platform } from 'react-native';
-import { moderateScale } from "toktokload/helper";
+import { moderateScale } from "toktokbills/helper";
 
 export default ({Navigator}) => {
   return (
@@ -76,7 +76,7 @@ export default ({Navigator}) => {
               width: 0,
               height: 2,
             },
-            shadowOpacity: 0.2,
+            shadowOpacity: 0.1,
             shadowRadius: 3.84,
             elevation: 5,
             height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform, FlatList, Dimensions, Image, RefreshControl } from 'react-native';
-import { moderateScale } from 'toktokbills/helper';
+import { moderateScale, getStatusbarHeight } from 'toktokbills/helper';
 import { useIsFocused } from '@react-navigation/native';
 
 //SELF IMPORTS
 import { BillerType } from "./Components";
-import { HeaderBack, HeaderTitle, Separator, LoadingIndicator } from 'toktokbills/components';
+import { Separator, LoadingIndicator, Header } from 'toktokbills/components';
 import { SomethingWentWrong } from 'toktokbills/components';
+// import { HeaderBack, HeaderTitle } from 'src/components';
 
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
@@ -21,11 +22,6 @@ const { width, height } = Dimensions.get("window");
 
 export const ToktokBillsHome = ({navigation,route})=> {
  
-  navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={"toktokbills"} isRightIcon/>,
-  });
-
   const isFocused = useIsFocused();
   const [billTypes, setBillTypes] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -52,37 +48,44 @@ export const ToktokBillsHome = ({navigation,route})=> {
     refetch();
   }
 
-  if(loading && billTypes.length === 0){
-    return(
-      <View style={styles.container}>
-        <LoadingIndicator isLoading={true} isFlex />
-      </View>
-    )
-  }
-  if(error){
+  const display = () => {
+    if(loading && billTypes.length === 0){
+      return(
+        <View style={styles.container}>
+          <LoadingIndicator isLoading={true} isFlex />
+        </View>
+      )
+    }
+    if(error){
+      return (
+        <View style={styles.container}>
+          <SomethingWentWrong onRefetch={onRefresh} error={error} />
+        </View>
+      )
+    }
     return (
-      <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} error={error} />
-      </View>
+      <FlatList
+      style={{flex: 1}}
+      contentContainerStyle={styles.flatlistContainer}
+      showsVerticalScrollIndicator={false}
+      numColumns={3}
+      data={billTypes}
+      keyExtractor={(item)=>item.name}
+      renderItem={({item,index})=><BillerType item={item} index={index}/>}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+    />
     )
   }
+  
   return (
     <View style={styles.container}>
-      <FlatList
-        style={{flex: 1}}
-        contentContainerStyle={styles.flatlistContainer}
-        showsVerticalScrollIndicator={false}
-        numColumns={3}
-        data={billTypes}
-        keyExtractor={(item)=>item.name}
-        renderItem={({item,index})=><BillerType item={item} index={index}/>}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
-      />
+      <Header label="toktokbills" />
+      { display() }
     </View>
   )
 }
