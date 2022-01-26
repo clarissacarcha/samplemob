@@ -178,7 +178,7 @@ const MyOrderList = () => {
     },
     [temporaryCart],
   );
-  console.log(temporaryCart);
+
   return (
     <>
       <Loader visibility={deleteLoading} message="Removing from Cart" hasImage={false} loadingIndicator />

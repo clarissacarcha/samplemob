@@ -33,7 +33,7 @@ const OrderShippingVoucher = ({data, forDelivery}) => {
       <View style={styles.divider} />
       <View style={styles.header}>
         <Text style={styles.voucherTitle}>{promoDetails.shippingDiscountName}</Text>
-        {validDate && <Text style={styles.validDate}>Valid Until: {validDate}</Text>}
+        {/* {validDate && <Text style={styles.validDate}>Valid Until: {validDate}</Text>} */}
       </View>
     </View>
   );
