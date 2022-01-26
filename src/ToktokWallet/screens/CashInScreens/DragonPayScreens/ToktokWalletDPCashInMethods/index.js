@@ -45,7 +45,8 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         },
         onCompleted: ({getCashInPartnerTypes})=>{
@@ -63,7 +64,8 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert,
             })
         },
         onCompleted: ({postComputeProcessingFee})=>{
@@ -83,7 +85,8 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         }
     })
@@ -94,7 +97,8 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         },
         onCompleted: ({postCashInPayPandaRequest})=>{
