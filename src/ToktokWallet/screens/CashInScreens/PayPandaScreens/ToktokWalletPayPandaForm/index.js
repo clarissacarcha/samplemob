@@ -55,7 +55,8 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         }
     })
@@ -66,7 +67,8 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         },
         onCompleted: ({postCashInPayPandaRequest})=>{

@@ -60,7 +60,8 @@ export const ProceedButton = ({
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt      
+                prompt,
+                alert      
             })
         }
     })
