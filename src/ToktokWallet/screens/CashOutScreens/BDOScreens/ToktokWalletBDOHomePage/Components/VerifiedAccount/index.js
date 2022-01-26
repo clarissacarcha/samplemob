@@ -66,7 +66,8 @@ export const VerifiedAccount = ({record,provider})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt 
+                prompt,
+                alert 
             })
         }
     })

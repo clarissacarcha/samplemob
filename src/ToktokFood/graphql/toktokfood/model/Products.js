@@ -2,9 +2,11 @@ import gql from 'graphql-tag';
 
 const products = `
   Id
+  contSellingIsset
   itemid
   catId
   itemname
+  basePrice
   price
   stocks
   maxQty
@@ -17,6 +19,11 @@ const products = `
   maxQtyIsset
   productImages  {
     filename
+  }
+  resellerDiscount {
+    discRatetype
+    referralDiscount
+    referralShopRate
   }
   options {
     id

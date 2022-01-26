@@ -21,9 +21,9 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         let pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
         let totalSF = deliveryFee - pAmount;
         totalSF = totalSF > 0 ? totalSF : 0;
-        setTotalShipping(totalSF);
+        setTotalShipping(pAmount);
       } else {
-        setTotalShipping(0);
+        setTotalShipping(deliveryFee);
       }
     }
 
@@ -34,21 +34,25 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         let pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
         // let totalSF = pAmount > deliveryFee ? pAmount - deliveryFee : deliveryFee - pAmount;
         pAmount = pAmount > 0 ? pAmount : 0;
-        // console.log(pAmount);
-        setTotalShipping(pAmount);
+        const deliveryAmount = pAmount > deliveryFee ? deliveryFee : pAmount;
+        setTotalShipping(deliveryAmount);
       }
       if (type === 'shipping' && amount === 0) {
-        setTotalShipping(0);
+        setTotalShipping(deliveryFee);
       }
       if (type !== 'shipping') {
         const totalBasketDiscount = amount > totalBasket ? amount - totalBasket : totalBasket - amount;
         setTotalBasket(totalBasketDiscount);
       }
+    } else {
+      if (!autoShipping?.success) {
+        setTotalShipping(0);
+      }
     }
   }, [autoShipping, shippingVoucher]);
 
   useEffect(() => {
-    setTotalBasket(temporaryCart.totalAmount);
+    setTotalBasket(temporaryCart.totalAmountWithAddons);
   }, [temporaryCart]);
 
   return (
@@ -57,7 +61,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         <>
           <View style={styles.header}>
             <Text>Subtotal</Text>
-            <Text style={styles.subtotal}>{`PHP ${totalBasket.toFixed(2)}`}</Text>
+            <Text style={styles.subtotal}>{`PHP ${totalBasket?.toFixed(2)}`}</Text>
           </View>
           <View style={styles.header}>
             <Text>Delivery Fee</Text>
@@ -69,7 +73,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
             </View>
           </View>
 
-          {(autoShipping?.success || shippingVoucher.length > 0) && (
+          {(autoShipping?.success || shippingVoucher.length > 0) && forDelivery && (
             <View style={styles.header}>
               <Text>Shipping Voucher Applied</Text>
               <Text style={styles.subtotal}>{`-PHP ${totalShipping.toFixed(2)}`}</Text>
@@ -82,9 +86,11 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${(temporaryCart.totalAmount + deliveryFee - totalShipping).toFixed(
-            2,
-          )}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(
+            temporaryCart.totalAmountWithAddons +
+            deliveryFee -
+            totalShipping
+          ).toFixed(2)}`}</Text>
         ) : (
           <Text style={styles.totalPrice}>{`PHP ${temporaryCart.totalAmount.toFixed(2)}`}</Text>
         )}

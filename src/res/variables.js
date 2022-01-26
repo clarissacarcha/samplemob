@@ -17,6 +17,22 @@ export const COLOR = {
   RED: '#F93154',
 };
 
+export const TOKFOODCOLOR = {
+  WHITE: '#FFFFFF', // View backgroundColor
+  LIGHT: '#F7F7FA', // Form backgroundColor and item separator
+  MEDIUM: '#D3D3D3', // Placeholder Color
+  DARK: '#808080', // Text and Icons
+  BLACK: '#222222', // Text and Icons
+  GRAY: '#9E9E9E',
+  YELLOW: '#FDBA1C',
+  YELLOWBG: '#FCC442',
+  ORANGE: '#F5841F',
+  YELLOW_UNDERLAY: '#96641e', //TouchableHightlight underlayColor for YELLOW background
+  WHITE_UNDERLAY: '#FDBA1C', //TouchableHightlight underlayColor for WHITE background
+  TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.15)',
+  RED: '#F93154',
+};
+
 export const FONT = {
   REGULAR: 'FiraSans-Regular',
   BOLD: 'FiraSans-Bold',

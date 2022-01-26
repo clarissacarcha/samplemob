@@ -47,13 +47,11 @@ export const notifications = require('./images/bottom_nav_icons/notif-outline.pn
 export const favorites = require('./images/bottom_nav_icons/favorites-outline.png');
 export const me = require('./images/bottom_nav_icons/me-outline.png');
 
-
 export const home_fill = require('./images/bottom_nav_icons/menu-fill.png');
 export const history_fill = require('./images/bottom_nav_icons/history-fill.png');
 export const notifications_fill = require('./images/bottom_nav_icons/notif-fill.png');
 export const favorites_fill = require('./images/bottom_nav_icons/favorites-fill.png');
 export const me_fill = require('./images/bottom_nav_icons/me-fill.png');
-
 
 // Temp Animations
 export const merchant_wait = require('./images/animations/merchant_wait.gif');
@@ -66,7 +64,6 @@ export const pot = require('./images/animations/pot.gif');
 export const toktok_rider = require('./images/animations/toktok_rider.gif');
 export const ordering = require('./images/animations/ordering_loader.gif');
 export const ready_for_pickup = require('./images/animations/ready_for_pickup.gif');
-
 
 // Test Banners
 export const starbucks = require('./images/sample_banners/starbucks.png');
@@ -89,12 +86,11 @@ export const empty_shop_2 = require('./images/empty_icons/empty-shop-2.png');
 export const empty_search = require('./images/empty_icons/empty-search.png');
 export const empty_cart = require('./images/empty_icons/empty-cart.png');
 export const no_image = require('./images/empty_icons/no-image.png');
-
+export const empty_promos = require('./images/empty_icons/empty-promos.png');
 
 // Rider Map Icons
 export const rider_ic = require('./images/rider_map_ic.png');
 export const customer_map_ic = require('./images/customer_map_ic.png');
-
 
 // Me Icons
 export const help_centre_ic = require('./images/me_icons/help-centre.png');
@@ -105,3 +101,5 @@ export const email_ic = require('./images/me_icons/email.png');
 export const call_ic = require('./images/me_icons/call.png');
 export const wallet_ic = require('./images/me_icons/wallet.png');
 
+// Reseller
+export const reseller_badge = require('./images/reseller-badge.png');

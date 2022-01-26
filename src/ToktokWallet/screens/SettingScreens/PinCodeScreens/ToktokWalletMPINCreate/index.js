@@ -131,14 +131,14 @@ export const ToktokWalletMPINCreate = ({navigation,route})=> {
                 }}
             />
             <Separator/>
-            <KeyboardAvoidingView
+            <View
                 // keyboardVerticalOffset={Platform.OS == "ios" ? 50 : 90} 
-                keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
-                behavior={Platform.OS == "ios" ? "padding" : "height"}
+                // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
+                // behavior={Platform.OS == "ios" ? "padding" : "height"}
                 style={styles.container} 
             >   
                 {DisplayComponent()}
-            </KeyboardAvoidingView>
+            </View>
         </CheckIdleState>
     )
 }

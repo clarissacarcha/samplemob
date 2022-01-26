@@ -36,7 +36,7 @@ const HeaderBackClose = ({currentIndex,setCurrentIndex, setPromptVisible})=> {
         setPromptVisible(true)
       }
 
-      useFocusEffect(useCallback(() => {
+      useFocusEffect(() => {
         const backAction = () => {
             closeScreen() 
           return true;
@@ -48,7 +48,7 @@ const HeaderBackClose = ({currentIndex,setCurrentIndex, setPromptVisible})=> {
         );
     
         return () => backHandler.remove();
-      }, []));
+      });
 
       return (
         <TouchableHighlight onPress={closeScreen} underlayColor={'white'} style={styles.button}>
@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
         height: 2,
         width: "100%",
         flexDirection: "row",
+        backgroundColor:"#F7F7FA"
     }, 
     progressBarItem: {
         flex: 1,

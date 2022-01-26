@@ -157,11 +157,12 @@ const PaymentDetails = ({refreshing, orderType}) => {
                       <Text style={styles.toktokText}>toktok</Text>
                       <Text style={styles.walletText}>wallet</Text>
                     </View>
-                    {customerWallet && !customerWallet?.account ? (
+                    {customerWallet && !customerWallet?.account && (
                       <Text style={{color: '#707070', fontSize: FONT_SIZE.S}}>
                         Status: {getKycStatus(customerWallet?.status)}
                       </Text>
-                    ) : (
+                    )}
+                    {customerWallet && customerWallet?.account && (
                       <Text style={{color: '#707070', fontSize: FONT_SIZE.S}}>
                         Balance: PHP {toktokWallet?.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.00
                       </Text>

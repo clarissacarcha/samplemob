@@ -14,7 +14,7 @@ import {delivered, pickedUp} from 'toktokfood/assets/images';
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 import moment from 'moment';
 
-const OrderFee = ({ status = 2, transaction }) => {
+const OrderFee = ({ status = 2, transaction, riderDetails }) => {
 
   let {
     dateOrdered,
@@ -30,8 +30,9 @@ const OrderFee = ({ status = 2, transaction }) => {
     dateCancelled,
     dateDeclined
   } = transaction
-  const otwRestaurantDate = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
- 
+  const otwRestaurantDate = riderDetails ? riderDetails.deliveryLogs.find((item) => (item.status == 3)) : null
+  const pickedupOrderDate = riderDetails ? riderDetails.deliveryLogs.find((item) => (item.status == 4)) : null
+  
   const renderLogInfo = (title, date) => (
     <View style={styles.logContainer}>
       <View style={styles.logsTitle}>
@@ -68,13 +69,11 @@ const OrderFee = ({ status = 2, transaction }) => {
         <>
           {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
           {renderDash()}
-          {renderLogInfo('On the way to restaurant', moment(otwRestaurantDate).format('lll'))}
+          {renderLogInfo('On the way to restaurant', moment(otwRestaurantDate?.createdAt ?? 'Invalid Date').format('lll'))}
           {renderDash()}
-          {renderLogInfo('Picked up order', moment(dateFulfilled).format('lll'))}
-          {(moment(dateFulfilled).format('lll') == 'Invalid date' || deliveryImgurl == null )&& 
-            renderDash()
-          }
-          {(moment(dateFulfilled).format('lll') != 'Invalid date' && deliveryImgurl != null )
+          {renderLogInfo('Picked up order', moment(pickedupOrderDate?.createdAt ?? 'Invalid Date').format('lll'))}
+          {(deliveryImgurl == null ) && renderDash() }
+          {( deliveryImgurl != null )
             && renderDashImage(true, deliveryImgurl)}
           {renderLogInfo('On the Way to Recipient', moment(dateFulfilled).format('lll'))}
           {renderDash()}

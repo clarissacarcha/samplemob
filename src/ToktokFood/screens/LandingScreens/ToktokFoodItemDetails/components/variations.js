@@ -1,16 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import _ from 'lodash';
 import React, {useEffect, useState, useContext, useCallback} from 'react';
-import {StyleSheet, Text, TextInput, View, FlatList} from 'react-native';
+import {StyleSheet, Platform, Text, TextInput, View, TouchableOpacity} from 'react-native';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
-import {VerifyContext} from '.';
-import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import {VerifyContext} from './VerifyContextProvider';
+// import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import Separator from 'toktokfood/components/Separator';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 export const Variations = ({data, productId}) => {
   const {
-    totalPrice,
+    // totalPrice,
+    // productDetails,
     setTotalPrice,
     optionsAmount,
     setOptionsAmount,
@@ -23,12 +26,14 @@ export const Variations = ({data, productId}) => {
     setNotes,
     selectedVariants,
     setSelectedVariants,
-    productDetails,
     basePrice,
   } = useContext(VerifyContext);
 
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [dataOptions, setDataOptions] = useState([]);
+
   useEffect(() => {
-    if (data.variants.length > 0) {
+    if (Object.keys(data).length > 0 && data?.variants.length > 0) {
       let selectedVar = productId
         ? data.variants.find(val => {
             return productId == val.Id;
@@ -37,6 +42,20 @@ export const Variations = ({data, productId}) => {
       setSelectedVariants(selectedVar);
     }
   }, [data.variants]);
+
+  useEffect(() => {
+    if (Object.keys(data).length && data?.options.length) {
+      let temp = [];
+      data.options.map(opt => {
+        const d = {
+          ...opt,
+          isCollapsed: false,
+        };
+        temp.push(d);
+      });
+      setDataOptions(temp);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (optionsAmount) {
@@ -106,89 +125,178 @@ export const Variations = ({data, productId}) => {
     [selected],
   );
 
-  const renderOptions = ({item}) => {
-    let temp = [];
-    if (!requiredOptions[item.optionName] && item.isRequired) {
-      setRequiredOptions(prev => {
-        return {...prev, [item.optionName]: item.isRequired};
+  const onToggleItems = useCallback(
+    index => {
+      const updatedData = dataOptions.map((dataOpt, i) => {
+        if (index === i) {
+          return {...dataOpt, isCollapsed: !dataOpt.isCollapsed};
+        }
+        return dataOpt;
       });
-    }
+      setDataOptions(updatedData);
+    },
+    [dataOptions],
+  );
 
-    const variantNote = i => {
-      const {isRequired, noOfSelection, optionName} = i;
-      // Required ; 1 option - select 1
-      if (isRequired && noOfSelection === 1) {
-        return (
-          <Text style={styles.variationTitle}>
-            {optionName.toLowerCase()} (Select {item.noOfSelection})
-          </Text>
-        );
-      }
-      // Required ; multiple - select up to (n)
-      if (isRequired && noOfSelection > 1) {
-        return (
-          <Text style={styles.variationTitle}>
-            {optionName.toLowerCase()} (Select up to {item.noOfSelection})
-          </Text>
-        );
-      }
-      // Optional  ; 1 option -  select 1
-      if (!isRequired && noOfSelection === 1) {
-        return (
-          <Text style={styles.variationTitle}>
-            {optionName.toLowerCase()} (Select {item.noOfSelection})
-          </Text>
-        );
-      }
-      // Optional ; multiple - select up to (n)
-      if (!isRequired && noOfSelection > 1) {
-        return (
-          <Text style={styles.variationTitle}>
-            {optionName.toLowerCase()} (Select up to {item.noOfSelection})
-          </Text>
-        );
-      }
-    };
-
+  const Options = () => {
     return (
-      <View style={styles.variations}>
-        <View style={styles.flexCenter}>
-          {variantNote(item)}
-          {/* <Text style={styles.variationTitle}>
-            {console.log(item)}
-            {item.optionName.toLowerCase()} (Select up to {item.noOfSelection})
-          </Text> */}
-          <View style={styles.requiredContainer}>
-            <Text style={styles.requiredText}>{item.isRequired ? 'Required' : 'Optional'}</Text>
-          </View>
-        </View>
+      <React.Fragment>
+        {data.options?.length > 0 &&
+          data.options.map((item, index) => {
+            let temp = [];
+            let dataSource = [];
+            let remaining = [];
 
-        {item.optionLogs.map((optionLogs, i) => {
-          let index = -1;
-          if (selected[item.optionName]) {
-            index = selected[item.optionName].findIndex(v => {
-              return v.addon_id == optionLogs.id;
-            });
+            if (item.optionLogs.length > 5) {
+              dataSource = item.optionLogs.slice(0, 5);
+              remaining = item.optionLogs.slice(4, -1);
+            } else {
+              dataSource = item.optionLogs;
+            }
+
+            if (!requiredOptions[item.optionName] && item.isRequired) {
+              setRequiredOptions(prev => {
+                return {...prev, [item.optionName]: item.isRequired};
+              });
+            }
+
+            const listData =
+              dataOptions.length > 0 ? (dataOptions[index]?.isCollapsed ? item.optionLogs : dataSource) : [];
+
+            const variantNote = i => {
+              const {isRequired, noOfSelection, optionName} = i;
+              // Required ; 1 option - select 1
+              if (isRequired && noOfSelection === 1) {
+                return (
+                  <Text style={styles.variationTitle}>
+                    {optionName.toLowerCase()} (Select {item.noOfSelection})
+                  </Text>
+                );
+              }
+              // Required ; multiple - select up to (n)
+              if (isRequired && noOfSelection > 1) {
+                return (
+                  <Text style={styles.variationTitle}>
+                    {optionName.toLowerCase()} (Select up to {item.noOfSelection})
+                  </Text>
+                );
+              }
+              // Optional  ; 1 option -  select 1
+              if (!isRequired && noOfSelection === 1) {
+                return (
+                  <Text style={styles.variationTitle}>
+                    {optionName.toLowerCase()} (Select {item.noOfSelection})
+                  </Text>
+                );
+              }
+              // Optional ; multiple - select up to (n)
+              if (!isRequired && noOfSelection > 1) {
+                return (
+                  <Text style={styles.variationTitle}>
+                    {optionName.toLowerCase()} (Select up to {item.noOfSelection})
+                  </Text>
+                );
+              }
+            };
+            return (
+              <View style={styles.variations}>
+                <View style={styles.flexCenter}>
+                  {variantNote(item)}
+                  <View style={styles.requiredContainer}>
+                    <Text style={styles.requiredText}>{item.isRequired ? 'Required' : 'Optional'}</Text>
+                  </View>
+                </View>
+                {listData.map(optionLogs => {
+                  let index = -1;
+                  if (selected[item.optionName]) {
+                    index = selected[item.optionName].findIndex(v => {
+                      return v.addon_id == optionLogs.id;
+                    });
+                  }
+                  return (
+                    <View style={styles.variationsWrapper}>
+                      <RadioButton
+                        isMultiple={item.noOfSelection > 1}
+                        onValueChange={c => {
+                          onValueChange({item, optionLogs, index, temp});
+                        }}
+                        name={optionLogs.optionName}
+                        selected={index > -1}
+                      />
+                      <Text style={styles.variationPrice}>+ {optionLogs.optionPrice.toFixed(2)}</Text>
+                    </View>
+                  );
+                })}
+
+                {item.optionLogs?.length > 5 && (
+                  <TouchableOpacity onPress={() => onToggleItems(index)} activeOpacity={0.9} style={styles.showMore}>
+                    <Text style={styles.showMoreText}>
+                      {dataOptions.length > 0 && dataOptions[index].isCollapsed
+                        ? `Hide ${remaining.length > 1 ? 'Items' : 'Item'}`
+                        : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
+                          'Show More'}
+                    </Text>
+                    <FA5Icon
+                      name={
+                        dataOptions?.length > 0 ? (dataOptions[index].isCollapsed ? 'chevron-up' : 'chevron-down') : ''
+                      }
+                      size={12}
+                      color={'#FFA700'}
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+            );
+          })}
+
+        {/* <FlatList
+          data={listData}
+          renderItem={({item: optionLogs}) => {
+            let index = -1;
+            if (selected[item.optionName]) {
+              index = selected[item.optionName].findIndex(v => {
+                return v.addon_id == optionLogs.id;
+              });
+            }
+            return (
+              <View style={styles.variationsWrapper}>
+                <RadioButton
+                  isMultiple={item.noOfSelection > 1}
+                  onValueChange={c => {
+                    onValueChange({item, optionLogs, index, temp});
+                  }}
+                  name={optionLogs.optionName}
+                  selected={index > -1}
+                />
+                <Text style={styles.variationPrice}>+ {optionLogs.optionPrice.toFixed(2)}</Text>
+              </View>
+            );
+          }}
+          scrollEnabled={false}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={
+            item.optionLogs.length > 5 && (
+              <TouchableOpacity onPress={() => onToggleItems(index)} activeOpacity={0.9} style={styles.showMore}>
+                <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>
+                  {dataOptions.length > 0 && dataOptions[index].isCollapsed
+                    ? `Hide ${remaining.length > 1 ? 'Items' : 'Item'}`
+                    : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
+                      'Show More'}
+                </Text>
+                <FA5Icon
+                  name={dataOptions.length > 0 ? (dataOptions[index].isCollapsed ? 'chevron-up' : 'chevron-down') : ''}
+                  size={12}
+                  color={'#FFA700'}
+                />
+              </TouchableOpacity>
+            )
           }
-          return (
-            <View style={styles.variationsWrapper}>
-              <RadioButton
-                isMultiple={item.noOfSelection > 1}
-                onValueChange={c => {
-                  onValueChange({item, optionLogs, index, temp});
-                }}
-                name={optionLogs.optionName}
-                selected={index > -1}
-              />
-              <Text style={styles.variationPrice}>+ {optionLogs.optionPrice.toFixed(2)}</Text>
-            </View>
-          );
-        })}
-      </View>
+        /> */}
+      </React.Fragment>
     );
   };
 
-  const renderVariants = ({item}) => {
+  const Variant = ({item}) => {
     return (
       <View style={styles.variantWrapper}>
         <View style={styles.variantSubWrapper}>
@@ -205,41 +313,132 @@ export const Variations = ({data, productId}) => {
     );
   };
 
-  return (
-    <>
-      {data.variants && data.variants.length > 0 && (
-        <>
+  const VariantShowMore = ({remaining}) => (
+    <TouchableOpacity onPress={() => setIsCollapsed(!isCollapsed)} activeOpacity={0.9} style={styles.showMore}>
+      <Text style={styles.showMoreText}>
+        {isCollapsed
+          ? `Hide ${remaining.length > 1 ? 'Items' : 'Item'}`
+          : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
+            'Show More'}
+      </Text>
+      <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={12} color={'#FFA700'} />
+    </TouchableOpacity>
+  );
+
+  const filterVariants = () => {
+    let variantHolder = [];
+    const variants = data.variants;
+    if (variants.length) {
+      variants.map(variant => {
+        if (variant.enabled === 1) {
+          variantHolder.push(variant);
+        }
+      });
+    }
+    return variantHolder;
+  };
+
+  const Variants = () => {
+    const variants = filterVariants();
+    let dataSource = [];
+    let remaining = [];
+
+    if (variants.length > 5) {
+      dataSource = variants.slice(0, 5);
+      remaining = variants.slice(4, -1);
+    } else {
+      dataSource = variants;
+    }
+
+    if (data?.variants.length) {
+      const listData = isCollapsed ? variants : dataSource;
+      return (
+        <React.Fragment>
           <View style={styles.variantContainer}>
             <Text style={styles.variantTitle}>Variations</Text>
-            <FlatList data={data.variants} renderItem={renderVariants} style={{flex: 1}} />
+            {listData.map(item => (
+              <Variant item={item} />
+            ))}
+            {variants.length > 5 && <VariantShowMore remaining={remaining} />}
+            {/* <FlatList
+              data={isCollapsed ? data.variants : dataSource}
+              renderItem={renderVariants}
+              style={{flex: 1}}
+              scrollEnabled={false}
+              showsVerticalScrollIndicator={false}
+              ListFooterComponent={
+                data.variants.length > 5 && (
+                  <TouchableOpacity
+                    onPress={() => setIsCollapsed(!isCollapsed)}
+                    activeOpacity={0.9}
+                    style={styles.showMore}>
+                    <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>
+                      {isCollapsed
+                        ? `Hide ${remaining.length > 1 ? 'Items' : 'Item'}`
+                        : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
+                          'Show More'}
+                    </Text>
+                    <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={12} color={'#FFA700'} />
+                  </TouchableOpacity>
+                )
+              }
+            /> */}
           </View>
           <Separator />
-        </>
-      )}
-      <FlatList
-        ListFooterComponent={() => (
-          <View style={[styles.variations]}>
-            <View style={styles.instructionContainer}>
-              <Text style={styles.variationTitle}>Special Instructions</Text>
-              <View style={styles.requiredContainer}>
-                <Text style={styles.requiredText}>Optional</Text>
-              </View>
-            </View>
-            <TextInput
-              value={notes}
-              multiline={true}
-              numberOfLines={4}
-              style={styles.input}
-              placeholder="e.g. no cutlery."
-              placeholderTextColor={COLOR.MEDIUM}
-              onChangeText={notes => setNotes(notes)}
-            />
+        </React.Fragment>
+      );
+    }
+    return null;
+  };
+
+  // const Notes = () =>
+  //   useMemo(() => {
+  //     return (
+  //       <View style={[styles.variations]}>
+  //         <View style={styles.instructionContainer}>
+  //           <Text style={styles.variationTitle}>Special Instructions</Text>
+  //           <View style={styles.requiredContainer}>
+  //             <Text style={styles.requiredText}>Optional</Text>
+  //           </View>
+  //         </View>
+  //         <TextInput
+  //           value={notes}
+  //           multiline={true}
+  //           numberOfLines={4}
+  //           style={styles.input}
+  //           maxLength={60}
+  //           placeholder="e.g. no cutlery."
+  //           placeholderTextColor={COLOR.MEDIUM}
+  //           onChangeText={notes => setNotes(notes)}
+  //         />
+  //       </View>
+  //     );
+  //   });
+
+  return (
+    <>
+      <Variants />
+      <Options />
+      
+      <View style={[styles.variations]}>
+        <View style={styles.instructionContainer}>
+          <Text style={styles.variationTitle}>Special Instructions</Text>
+          <View style={styles.requiredContainer}>
+            <Text style={styles.requiredText}>Optional</Text>
           </View>
-        )}
-        data={data.options}
-        renderItem={renderOptions}
-        style={{flex: 1}}
-      />
+        </View>
+        <TextInput
+          value={notes}
+          multiline={true}
+          numberOfLines={4}
+          style={styles.input}
+          maxLength={60}
+          placeholder="e.g. no cutlery."
+          placeholderTextColor={COLOR.MEDIUM}
+          onChangeText={notes => setNotes(notes)}
+        />
+      </View>
+      {/* <FlatList ListFooterComponent={Notes} data={data.options} renderItem={renderOptions} style={{flex: 1}} /> */}
     </>
   );
 };
@@ -338,4 +537,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexShrink: 1,
   },
+  showMore: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: moderateScale(20),
+    paddingBottom: moderateScale(10),
+    // paddingBottom: moderateScale(20),
+    // marginBottom: moderateScale(10),
+    borderBottomWidth: 1,
+    borderBottomColor: '#F7F7FA',
+  },
+  showMoreText: {marginHorizontal: moderateScale(10), color: '#FFA700'},
 });

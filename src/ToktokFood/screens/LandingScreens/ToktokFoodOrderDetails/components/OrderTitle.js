@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -64,6 +65,10 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
     }
   }, [transaction]);
 
+  useEffect(() => {
+    return () => setNewETA(false);
+  }, []);
+
   const handleProcessGetEDT = async (date, location) => {
     let result = await processGetEDT(date, referenceNum);
     if (result != null) {
@@ -78,7 +83,6 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
   const calculateEstimatedDeliveryTime = (date, originLocation) => {
     if (newETA) {
       getDuration(originLocation, {latitude, longitude}).then(async durationSecs => {
-        setNewETA(false);
         let durationHours = durationSecs != undefined ? parseFloat(durationSecs / (60 * 60)) : 0.0166667;
         let addMins = additionalMins / minutesInHours;
         let additionalHours = (durationHours + addMins).toFixed(2);
@@ -87,12 +91,13 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
         let finalHrs = hoursDifference ? parseFloat(additionalHours) + parseFloat(hoursDifference) : additionalHours;
         let edt = moment(edtDate).add(finalHrs, 'hours').format('h:mm A');
         let edtAddMinutes = moment(edtDate).add(5, 'minutes').format('h:mm A');
-        const secToMinutes = durationSecs / 60 + 5;
-        console.log(durationHours, date, edt, additionalHours, 'ORDER DETAILS ETA', Math.ceil(secToMinutes));
-
+        const secToMinutes = durationHours / 60 + 5;
+        // console.log(durationHours, date, edt, additionalHours, 'ORDER DETAILS ETA', Math.ceil(secToMinutes));
+        // console.log(durationHours, durationSecs, secToMinutes);
         setEtaMinutes(Math.ceil(secToMinutes));
         processSaveEDT(edtAddMinutes);
         setEstimatedDeliveryTime(edtAddMinutes);
+        setNewETA(false);
       });
     }
   };
@@ -132,16 +137,15 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
     let location = riderDetails != null && orderStatus == 'f' ? riderDetails.location : shopLocation;
     let startTime = moment(date).format('LT');
     estimatedDeliveryTime == '' ? handleProcessGetEDT(date, location) : calculateEstimatedDeliveryTime(date, location);
-    console.log(transaction, estimatedDeliveryTime);
 
     const getTimeByStatus = status => {
       switch (status) {
         case 'po':
-          return '45 Minutes';
+          return '15-45 Minutes';
         case 'f':
           return `${etaMinutes} Minutes`;
         default:
-          return '45 Minutes';
+          return '15-45 Minutes';
       }
     };
 
@@ -228,7 +232,7 @@ const styles = StyleSheet.create({
   timeImg: {
     width: moderateScale(13),
     height: moderateScale(13),
-    tintColor: COLOR.DARK,
+    // tintColor: COLOR.DARK,
     resizeMode: 'contain',
     tintColor: '#F6A100',
   },

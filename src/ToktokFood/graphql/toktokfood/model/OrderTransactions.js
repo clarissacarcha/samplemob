@@ -18,6 +18,7 @@ const transaction = `
   dateOrdered
   totalAmount
   deliveryAmount
+  originalShippingFee
   paymentMethod
   dateAssigned
   dateOrdered
@@ -68,6 +69,7 @@ const transaction = `
     currency
     curcode
     notes
+    totalAmountWithAddons
     productDetails {
       Id
       itemname
@@ -90,6 +92,10 @@ const transaction = `
     paymentDate
     status
     validUntil
+  }
+  deliveryLogs {
+    status
+    createdAt
   }
 `;
 export const GET_ORDER_TRANSACTIONS = gql`

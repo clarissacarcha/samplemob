@@ -11,19 +11,21 @@ import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 const getShippingDiscount = (promoDetails, deliveryFee) => {
   const {amount, isPercentage} = promoDetails;
   if (amount > 0) {
-    let pAmount = isPercentage != 0 ? (amount / 100) * deliveryFee : amount
-    let totalSF = deliveryFee - pAmount;
-    return totalSF > 0 ? totalSF : 0;
+    let pAmount = isPercentage !== 0 ? (amount / 100) * deliveryFee : amount;
+    // let totalSF = deliveryFee + pAmount;
+    pAmount = pAmount > 0 ? pAmount : 0;
+    const deliveryAmount = pAmount > deliveryFee ? deliveryFee : pAmount;
+    return deliveryAmount > 0 ? deliveryAmount.toFixed(2) : 0;
   } else {
-    return 0
+    return deliveryFee.toFixed(2);
   }
-}
+};
 
 const OrderFee = ({data, forDelivery}) => {
-  let {totalAmount, deliveryAmount, promoDetails} = data;
+  let {originalShippingFee, totalAmount, deliveryAmount, promoDetails} = data;
   let deliveryFee = deliveryAmount ? deliveryAmount : 0;
-  let withShippingVoucher = promoDetails ? getShippingDiscount(promoDetails, deliveryFee) : deliveryFee
-
+  // let withShippingVoucher = promoDetails ? getShippingDiscount(promoDetails, originalShippingFee) : deliveryFee;
+  // console.log(promoDetails, deliveryAmount, originalShippingFee);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -34,16 +36,24 @@ const OrderFee = ({data, forDelivery}) => {
         <View style={styles.header}>
           <Text>Delivery Fee</Text>
           <View style={styles.deliveryFee}>
-            {promoDetails && <Text style={styles.deliveryFeeText}>{`\u20B1${deliveryFee.toFixed(2)}`}</Text>}
-            <Text style={styles.subtotal}>{`PHP ${withShippingVoucher.toFixed(2)}`}</Text>
+            {/* {promoDetails && <Text style={styles.deliveryFeeText}>{`\u20B1${originalShippingFee.toFixed(2)}`}</Text>} */}
+            <Text style={styles.subtotal}>{`PHP ${originalShippingFee.toFixed(2)}`}</Text>
           </View>
         </View>
       )}
+
+      {promoDetails && forDelivery && (
+        <View style={styles.header}>
+          <Text>Shipping Voucher Applied</Text>
+          <Text style={styles.subtotal}>{`-PHP ${getShippingDiscount(promoDetails, originalShippingFee)}`}</Text>
+        </View>
+      )}
+
       <View style={styles.divider} />
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${(withShippingVoucher + totalAmount).toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(deliveryFee + totalAmount).toFixed(2)}`}</Text>
         ) : (
           <Text style={styles.totalPrice}>{`PHP ${totalAmount.toFixed(2)}`}</Text>
         )}

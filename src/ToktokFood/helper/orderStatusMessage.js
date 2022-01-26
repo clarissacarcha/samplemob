@@ -13,7 +13,8 @@
 //     return { id: 'p',  title: 'Waiting for restaurant confirmation...', message: 'Give restaurant some time to accept your order' }
 //   }
 // }
-export const orderStatusMessageDelivery = (orderStatus, riderDetails, shopname) => {
+import moment from 'moment';
+export const orderStatusMessageDelivery = (orderStatus, dateOrdered, riderDetails, shopname) => {
   if (orderStatus == 'po' || orderStatus == 'rp') {
     return {id: orderStatus, title: 'Preparing Order', message: 'Give restaurant some time to prepare your order'};
   } else if (orderStatus == 'f') {
@@ -25,12 +26,14 @@ export const orderStatusMessageDelivery = (orderStatus, riderDetails, shopname) 
   } else {
     return {
       id: 'p',
-      title: 'Waiting for restaurant confirmation...',
-      message: 'Give restaurant some time to accept your order',
+      title: isPastOrder(dateOrdered) ? 'Pending Order' : 'Waiting for restaurant confirmation...',
+      message: isPastOrder(dateOrdered)
+        ? `Sorry for the inconvenience!${'\n'}Restaurant took too long to respond to this order.${'\n'}You may cancel and reorder again.`
+        : 'Give restaurant some time to accept your order',
     };
   }
 };
-export const orderStatusMessagePickUp = (orderStatus, riderDetails, shopname) => {
+export const orderStatusMessagePickUp = (orderStatus, dateOrdered, riderDetails, shopname) => {
   if (orderStatus == 'po') {
     return {id: orderStatus, title: 'Preparing Order', message: 'Give restaurant some time to prepare your order'};
   } else if (orderStatus == 'rp') {
@@ -46,8 +49,16 @@ export const orderStatusMessagePickUp = (orderStatus, riderDetails, shopname) =>
   } else {
     return {
       id: orderStatus,
-      title: 'Waiting for restaurant confirmation...',
-      message: 'Give restaurant some time to accept your order',
+      title: isPastOrder(dateOrdered) ? 'Pending Order' : 'Waiting for restaurant confirmation...',
+      message: isPastOrder(dateOrdered)
+        ? `Sorry for the inconvenience!${'\n'}Restaurant took too long to respond to this order.${'\n'}You may cancel and reorder again.`
+        : 'Give restaurant some time to accept your order',
     };
   }
+};
+
+export const isPastOrder = dateOrdered => {
+  const today = moment().format('YYYY-MM-DD');
+  const orderedDate = moment(dateOrdered).format('YYYY-MM-DD');
+  return moment(today).isAfter(orderedDate);
 };

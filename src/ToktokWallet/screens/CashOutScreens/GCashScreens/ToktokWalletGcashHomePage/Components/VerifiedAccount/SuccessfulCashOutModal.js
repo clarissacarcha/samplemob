@@ -44,6 +44,7 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams,tokwaAccount})=> {
         navigation.replace("ToktokWalletHomePage")
     }
 
+    const cashOutRefNo = cashoutLogParams.referenceNumber ? cashoutLogParams.referenceNumber : MaskLeftZero(cashoutLogParams.id)
 
     return (
         <Modal
@@ -52,7 +53,7 @@ const SuccessfulCashOutModal = ({visible , cashoutLogParams,tokwaAccount})=> {
             onRequestClose={Proceed}
         >
             <Receipt
-                refNo={MaskLeftZero(cashoutLogParams.id)}
+                refNo={cashOutRefNo}
                 refDate={cashoutLogParams.createdAt}
                 onPress={Proceed}
             >

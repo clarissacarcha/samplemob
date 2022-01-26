@@ -2,7 +2,7 @@ import React , {useEffect} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import FIcon from 'react-native-vector-icons/Feather'
 import {useSelector} from 'react-redux'
-import {Separator,CheckIdleState} from 'toktokwallet/components'
+import {Separator,CheckIdleState,BuildingBottom} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle} from 'src/revamp'
 import {useQuery,useLazyQuery} from '@apollo/react-hooks'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
@@ -10,6 +10,7 @@ import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} f
 import { onError, onErrorAlert } from 'src/util/ErrorUtility'
 import {useAlert, usePrompt} from 'src/hooks'
 import { useAccount } from 'toktokwallet/hooks'
+import { AlertOverlay } from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import { TransactionUtility } from 'toktokwallet/util'
 
@@ -83,7 +84,8 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         }
     })
@@ -91,10 +93,12 @@ export const ToktokWalletRecoveryMethods = ({navigation , route})=> {
 
     return (
         <CheckIdleState>
+        <AlertOverlay visible={getMyAccountLoading}/>
         <Separator />
         <View style={styles.container}>
             <RecoveryMethod title={"Registered Mobile No."} message={`Use your verified mobile no. ${session.user.username}`} onPress={recoverWallet}/>
         </View>
+        <BuildingBottom/>
         </CheckIdleState>
     )
 }

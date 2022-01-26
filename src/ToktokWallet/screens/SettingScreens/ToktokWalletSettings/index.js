@@ -44,7 +44,7 @@ export const ToktokWalletSettings = ({navigation , route })=> {
         <Separator />
         <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
             <SettingHeaderTitle title="Security"/>
-            <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? "Change" : "Create"} TPIN`}/>
+            <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? "Change" : "Setup"} TPIN`}/>
             <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN"/>
             {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
             {/* <Biometrics/> */}
@@ -65,6 +65,10 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingHeaderTitle title="Logs"/>
             <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
             <SettingOption route="ToktokWalletCashOutLogs" title="Fund Transfer"/>
+            <SettingOption route="ToktokWalletSendMoneyLogs" title="Send Money"/>
+            {/* <SettingOption route="ToktokWalletRequestMoneyLogs" title="Request Money"/> */}
+            {/* <SettingOption route="ToktokWalletCashInLogs" title="Bills"/>
+            <SettingOption route="ToktokWalletCashOutLogs" title="Load"/> */}
             <Separator/>
             <SettingHeaderTitle title="Account Recovery"/>
             <SettingOption route="ToktokWalletAccountRecoverySetup" title="Account Recovery Setup"/>

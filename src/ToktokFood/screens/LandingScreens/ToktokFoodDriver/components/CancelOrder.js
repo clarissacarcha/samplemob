@@ -41,7 +41,7 @@ const CancelOrder = ({
 
   const navigation = useNavigation();
   const [showReason, setShowReason] = useState(false);
-  const [selectedReason, setSelectedReason] = useState('I changed my mind');
+  const [selectedReason, setSelectedReason] = useState('');
 
   const [postCancelOrder] = useMutation(PATCH_CANCEL_CUSTOMER_ORDER, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -72,6 +72,7 @@ const CancelOrder = ({
 
   const closeCancel = () => {
     onCloseSheet();
+    setSelectedReason('');
     setShowReason(false);
   };
 
@@ -135,16 +136,15 @@ const CancelOrder = ({
               })}
             </View>
             <View style={styles.reasonButtonWrapper}>
-              <TouchableOpacity
-                onPress={() => closeCancel()}
-                style={[styles.reasonButtons, {backgroundColor: '#868686'}]}>
-                <Text style={styles.reasonButtonText}>Cancel</Text>
+              <TouchableOpacity onPress={() => closeCancel()} style={[styles.reasonButtons, styles.cancelButton]}>
+                <Text style={[styles.reasonButtonText, {color: '#FFA700'}]}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
+                disabled={selectedReason ? false : true}
                 onPress={() => proccessCancelOrder()}
-                style={[styles.reasonButtons, {backgroundColor: '#FFA700'}]}>
+                style={[styles.reasonButtons, {opacity: selectedReason ? 1 : 0.3}, {backgroundColor: '#FFA700'}]}>
                 <Text style={styles.reasonButtonText}>Proceed</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> 
             </View>
           </View>
         </View>
@@ -165,7 +165,7 @@ const CancelOrder = ({
           {!showReason && (
             <View style={[styles.wrapper, styles.cartBorder]}>
               <View style={styles.sheet}>
-                <Text style={styles.cancelTitle}>This order will be canceled. Would you like to proceed?</Text>
+                <Text style={styles.cancelTitle}>This order will be cancelled. Would you like to proceed?</Text>
                 <View style={styles.buttonWrapper}>
                   <TouchableOpacity onPress={() => setShowReason(true)} style={styles.cartButton}>
                     <Text style={styles.buttonText}>Yes, Cancel</Text>
@@ -303,6 +303,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FONT.BOLD,
     color: COLOR.WHITE,
+  },
+  cancelButton: {
+    borderWidth: 1,
+    borderColor: '#FFA700',
+    backgroundColor: COLOR.WHITE,
   },
 });
 

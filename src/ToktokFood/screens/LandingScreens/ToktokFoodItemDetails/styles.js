@@ -1,12 +1,15 @@
 import {StyleSheet, Platform} from 'react-native';
-import {FONT, FONT_SIZE, COLOR} from 'res/variables';
+import {FONT, FONT_SIZE, COLOR, TOKFOODCOLOR} from 'res/variables';
 // Utils
 import {scale, moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
-export default styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.WHITE,
+  },
+  flex: {
+    flex: 1,
   },
   foodDetails: {
     flexDirection: 'row',
@@ -51,7 +54,7 @@ export default styles = StyleSheet.create({
     borderBottomWidth: 8,
     borderBottomColor: COLOR.LIGHT,
     paddingHorizontal: Platform.OS === 'android' ? 12 : 14,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   ratingsWrapper: {
     paddingLeft: Platform.OS === 'android' ? 4 : 3,
@@ -62,4 +65,32 @@ export default styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
   },
+  resellerBadge: {
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    height: 25,
+    // width: 90,
+    // borderWidth: 1,
+    // backgroundColor: TOKFOODCOLOR.YELLOWBG,
+    // borderRadius: 5,
+    // padding: 3,
+  },
+  resellerPrice: {
+    flexDirection: 'row',
+  },
+  resellerText: {
+    color: COLOR.WHITE,
+    fontSize: FONT_SIZE.S,
+    fontWeight: '700',
+  },
+  resellerDiscountText: {
+    color: TOKFOODCOLOR.GRAY,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.XL,
+    marginLeft: 10,
+    textDecorationLine: 'line-through',
+  },
 });
+export default styles;

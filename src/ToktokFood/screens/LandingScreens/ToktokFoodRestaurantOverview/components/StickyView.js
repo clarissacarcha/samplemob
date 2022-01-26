@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
-import React, {useEffect, useState, useContext, useRef, useMemo} from 'react';
-import {Image, Platform, StyleSheet, Text, View, StatusBar} from 'react-native';
+import React, {useEffect, useState, useContext, useMemo} from 'react';
+import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {FONT_SIZE, FONT, COLOR} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 // import CustomStarRating from 'toktokfood/components/CustomStarRating';
@@ -14,7 +15,7 @@ import ContentLoader from 'react-native-easy-content-loader';
 
 // Components
 // import {RestaurantList} from '../../ToktokFoodHome/components';
-import HeaderTabs from 'toktokfood/components/HeaderTabs';
+// import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import {GET_PRODUCT_CATEGORIES, CHECK_SHOP_VALIDATIONS, GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
 // Utils
@@ -30,7 +31,7 @@ import {FoodList, HeaderTitleSearchBox} from '../components';
 import {VerifyContext, CategoryTabs} from '../components';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import LoadingIndicator from '../../../../components/LoadingIndicator';
+// import LoadingIndicator from '../../../../components/LoadingIndicator';
 
 export const StickyView = () => {
   const routes = useRoute();
@@ -39,12 +40,10 @@ export const StickyView = () => {
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
   const [shopDetails, setShopDetails] = useState({});
-  const searchProduct = useRef('');
-  const {setNavBarHeight, temporaryCart, setTemporaryCart} = useContext(VerifyContext);
+  const {setNavBarHeight} = useContext(VerifyContext);
   const {customerInfo, location} = useSelector(state => state.toktokFood);
 
-  const {id, address, shopname, ratings, banner, estimatedDeliveryTime, estimatedDistance, logo, latitude, longitude} =
-    routes.params.item;
+  const {id} = routes.params.item;
 
   const headerMaxHeight = verticalScale(450);
   const headerMinHeight = verticalScale(110);
@@ -63,8 +62,11 @@ export const StickyView = () => {
 
   const [getShopDetails, {error: shopDetailsError, loading: shopDetailsLoading}] = useLazyQuery(GET_SHOP_DETAILS, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
+      let {latitude, longitude} = getShopDetails;
+
+      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       setShopDetails(getShopDetails);
     },
   });
@@ -78,7 +80,6 @@ export const StickyView = () => {
   useEffect(() => {
     // checkShopValidations({ variables: { input: { shopId: id } }})
     if (isFocus && location) {
-      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       getProductCategories();
       // console.log(
       //   JSON.stringify({
@@ -99,7 +100,7 @@ export const StickyView = () => {
         },
       });
     }
-  }, [isFocus, location]);
+  }, [isFocus, location, shopDetails]);
 
   useEffect(() => {
     if (data) {
@@ -155,9 +156,7 @@ export const StickyView = () => {
             <View style={styles.content}>
               <Image source={{uri: shopDetails.logo}} style={styles.logo} resizeMode="cover" />
               <View style={{flexShrink: 1, marginHorizontal: 10}}>
-                <Text style={styles.titleText}>
-                  {`${shopDetails.shopname} (${shopDetails.address})`}
-                </Text>
+                <Text style={styles.titleText}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
                 {/* <CustomStarRating
                   rating={shopDetails.ratings ?? '0'}
                   starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}

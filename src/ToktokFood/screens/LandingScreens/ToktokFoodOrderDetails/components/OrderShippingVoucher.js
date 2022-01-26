@@ -23,7 +23,7 @@ const validDateFormat = validUntil => {
 
 const OrderShippingVoucher = ({data, forDelivery}) => {
   let {promoDetails} = data;
-  let validDate = validDateFormat(promoDetails.validUntil);
+  // let validDate = validDateFormat(promoDetails.validUntil);
 
   return (
     <View style={styles.container}>
@@ -33,7 +33,7 @@ const OrderShippingVoucher = ({data, forDelivery}) => {
       <View style={styles.divider} />
       <View style={styles.header}>
         <Text style={styles.voucherTitle}>{promoDetails.shippingDiscountName}</Text>
-        {validDate && <Text style={styles.validDate}>Valid Until: {validDate}</Text>}
+        {/* {validDate && <Text style={styles.validDate}>Valid Until: {validDate}</Text>} */}
       </View>
     </View>
   );
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
     color: '#FFA700',
+    marginTop: 10,
   },
   validDate: {
     color: '#9E9E9E',

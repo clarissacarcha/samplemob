@@ -112,7 +112,7 @@ export const EnterPinCode = ({
                                     style={{marginTop: 18,paddingVertical: 10, alignItems: "center"}}
                                     onPress={()=>setShowPin(!showPin)}
                             >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE PIN" : "SHOW PIN"}</Text>
+                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "Hide PIN" : "Show PIN"}</Text>
                             </TouchableOpacity>
                         </View>
                    
