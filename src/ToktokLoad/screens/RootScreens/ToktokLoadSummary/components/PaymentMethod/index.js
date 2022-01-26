@@ -58,7 +58,7 @@ export const PaymentMethod = ({ loadDetails, onCashIn }) => {
         </Text>
       </View>
       <Text style={styles.createAccount} onPress={onPressCreateAccount}>
-        Create my toktokwallet account
+        Create toktokwallet account
       </Text>
     </>
   )
