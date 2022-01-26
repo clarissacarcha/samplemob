@@ -71,7 +71,8 @@ const Confirm = ({
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt 
+                prompt,
+                alert 
             })
         }
     })

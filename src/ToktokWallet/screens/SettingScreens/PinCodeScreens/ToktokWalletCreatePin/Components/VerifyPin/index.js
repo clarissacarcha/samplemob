@@ -53,6 +53,7 @@ export const VerifyPin = ({pageIndex,setPageIndex,setOldTPIN})=> {
                 error,
                 navigation,
                 prompt,
+                alert,
                 setErrorMessage
             });
         }

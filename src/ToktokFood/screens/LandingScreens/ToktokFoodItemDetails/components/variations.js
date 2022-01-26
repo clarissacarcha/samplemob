@@ -325,19 +325,33 @@ export const Variations = ({data, productId}) => {
     </TouchableOpacity>
   );
 
+  const filterVariants = () => {
+    let variantHolder = [];
+    const variants = data.variants;
+    if (variants.length) {
+      variants.map(variant => {
+        if (variant.enabled === 1) {
+          variantHolder.push(variant);
+        }
+      });
+    }
+    return variantHolder;
+  };
+
   const Variants = () => {
+    const variants = filterVariants();
     let dataSource = [];
     let remaining = [];
 
-    if (data.variants.length > 5) {
-      dataSource = data.variants.slice(0, 5);
-      remaining = data.variants.slice(4, -1);
+    if (variants.length > 5) {
+      dataSource = variants.slice(0, 5);
+      remaining = variants.slice(4, -1);
     } else {
-      dataSource = data.variants;
+      dataSource = variants;
     }
 
     if (data?.variants.length) {
-      const listData = isCollapsed ? data.variants : dataSource;
+      const listData = isCollapsed ? variants : dataSource;
       return (
         <React.Fragment>
           <View style={styles.variantContainer}>
@@ -345,7 +359,7 @@ export const Variations = ({data, productId}) => {
             {listData.map(item => (
               <Variant item={item} />
             ))}
-            {data.variants.length > 5 && <VariantShowMore remaining={remaining} />}
+            {variants.length > 5 && <VariantShowMore remaining={remaining} />}
             {/* <FlatList
               data={isCollapsed ? data.variants : dataSource}
               renderItem={renderVariants}

@@ -38,7 +38,9 @@ const OrderList = ({orderDetails}) => {
         )}
         <View style={styles.list}>
           <View style={styles.listInfo}>
-            <Text numberOfLines={1} style={styles.listName}>{productName}</Text>
+            <Text numberOfLines={1} style={styles.listName}>
+              {productName}
+            </Text>
             <Text style={styles.seeAll}>{`PHP ${item.totalAmountWithAddons.toFixed(2)}`}</Text>
           </View>
           <View>
@@ -90,12 +92,12 @@ const styles = StyleSheet.create({
   listInfo: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: verticalScale(3),
   },
   listName: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
     flexShrink: 1,
+    marginEnd: 5,
   },
   note: {
     fontFamily: FONT.BOLD,
