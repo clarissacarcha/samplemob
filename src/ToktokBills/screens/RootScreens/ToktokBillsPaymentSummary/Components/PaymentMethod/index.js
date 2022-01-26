@@ -38,7 +38,7 @@ export const PaymentMethod = ({ paymentData }) => {
   };
 
   const onPressCreateAccount = () => {
-    navigation.navigate('ToktokWalletVerification');
+    navigation.navigate('ToktokWalletLoginPage');
   }
 
   const displayInsufficientBalance = () => {
@@ -64,7 +64,7 @@ export const PaymentMethod = ({ paymentData }) => {
         </Text>
       </View>
       <Text style={styles.createAccount} onPress={onPressCreateAccount}>
-        Create my toktokwallet account
+        Create toktokwallet account
       </Text>
     </>
   )

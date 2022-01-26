@@ -4,18 +4,20 @@ import { moderateScale, getStatusbarHeight } from 'toktokbills/helper';
 import { useIsFocused } from '@react-navigation/native';
 
 //SELF IMPORTS
-import { BillerType } from "./Components";
-import { HeaderBack, HeaderTitle, Separator, LoadingIndicator, Header } from 'toktokbills/components';
+import { ActivityItem } from "./Components";
+import { HeaderBack, HeaderTitle, Separator, LoadingIndicator, Header, EmptyList } from 'toktokbills/components';
 import { SomethingWentWrong } from 'toktokbills/components';
 
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
-import { GET_BILLS_TRANSACTIONS } from 'toktokbills/graphql/model';
+import { GET_TRANSACTIONS_BY_STATUS } from 'toktokbills/graphql/model';
 import { useAccount } from 'toktokwallet/hooks';
 
 //IMAGE, FONT & COLOR
 import CONSTANTS from 'common/res/constants';
+import { empty_activities } from 'toktokbills/assets/images';
+
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE}  = CONSTANTS;
 const { width, height } = Dimensions.get("window");
 
@@ -25,29 +27,44 @@ export const FailedActivities = ({navigation,route})=> {
   const [records, setRecords] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const [getBillsTransactions, {data, error, loading, refetch}] = useLazyQuery(GET_BILLS_TRANSACTIONS, {
-    fetchPolicy: "network-only",
+  const [getTransactionsByStatus, {data, error, loading}] = useLazyQuery(GET_TRANSACTIONS_BY_STATUS, {
+    fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     variables: {
       input: {
-        type: 1
+        type: 1,
+        status: 3
       }
     },
     onError: (error) => {
-      onErrorAlert({ alert, error })
+      // onErrorAlert({ alert, error })
     },
-    onCompleted: ({ getTransactions })=> {
-      setRecords(getTransactions)
+    onCompleted: ({ getTransactionsByStatus })=> {
+      setRecords(getTransactionsByStatus)
     }
   })
 
   useEffect(() => {
-    getBillsTransactions();
+    onRefresh();
   }, []);
 
   const onRefresh = () => {
     setRefreshing(true);
-    refetch();
+    getTransactionsByStatus();
+  }
+
+  const ListEmptyComponent = () => {
+    if(refreshing) return null
+    return(
+      <View style={styles.container}>
+        <EmptyList
+          imageSrc={empty_activities}
+          label={"No Activities"}
+          message={"You have no activities as of the moment."}
+          containerStyle={{ marginBottom: moderateScale(50) }}
+        />
+      </View>
+    )
   }
  
   const display = () => {
@@ -67,18 +84,19 @@ export const FailedActivities = ({navigation,route})=> {
     }
     return (
       <FlatList
-      style={{flex: 1}}
-      showsVerticalScrollIndicator={false}
-      data={records}
-      keyExtractor={(item)=>item.name}
-      renderItem={({item,index})=><BillerType item={item} index={index}/>}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
-    />
+        contentContainerStyle={{flexGrow: 1}}
+        showsVerticalScrollIndicator={false}
+        data={records}
+        keyExtractor={(item)=>item.name}
+        renderItem={({item,index})=><ActivityItem item={item} index={index}/>}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={onRefresh}
+          />
+        }
+        ListEmptyComponent={ListEmptyComponent}
+      />
     )
   }
 
