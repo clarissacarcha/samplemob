@@ -7,5 +7,6 @@ export const bayan_img = require("./bayan.png");
 export const pldt_img = require("./pldt.png");
 
 //empty images
-export const empty_search = require("./empty-search.png");
 export const empty_activities = require("./empty-activities.png");
+export const empty_notifications = require("./empty-notifications.png");
+export const empty_search = require("./empty-search.png");

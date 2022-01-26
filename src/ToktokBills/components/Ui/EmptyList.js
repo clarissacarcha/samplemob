@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   label: {
     color: "#707070",
     fontSize: FONT_SIZE.XL,
-    marginTop: moderateScale(20),
+    marginTop: moderateScale(10),
     textAlign: "center"
   },
   message: {

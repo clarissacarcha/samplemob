@@ -37,10 +37,12 @@ export const FailedActivities = ({navigation,route})=> {
       }
     },
     onError: (error) => {
-      // onErrorAlert({ alert, error })
+      setRefreshing(false);
+      setRecords([]);
     },
     onCompleted: ({ getTransactionsByStatus })=> {
-      setRecords(getTransactionsByStatus)
+      setRecords(getTransactionsByStatus);
+      setRefreshing(false);
     }
   })
 
