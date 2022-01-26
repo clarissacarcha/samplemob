@@ -19,7 +19,7 @@ export const getOrderStatus = (focusTab) => {
 export const getSubMessageStatus = (item) => {
   const type = item.orderIsfor == 1 ? "Delivered" : "Picked up";
   const isItemPickedUp =
-    item?.deliveryLogs.length > 3 && item.deliveryLogs[3].createdAt ? 'Food picked up' : 'Ready for Pickup';
+    item?.deliveryLogs.length > 3 && item.deliveryLogs[3].createdAt ? 'Food picked up' : 'Your order is ready for pick up';
   switch(item.orderStatus){
     case 's':
       return `${type} on ${moment(item.dateShipped).format('LL')} at ${moment(item.dateShipped).format('LT')}`;
