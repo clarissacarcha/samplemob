@@ -25,6 +25,7 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
     const errorMessage = route?.params?.errorMessage ? route.params.errorMessage : null
     const resendRequest = route?.params?.resendRequest ? route.params.resendRequest : null
     const data = route?.params?.data ? route.params.data : null
+    const btnLabel = route?.params?.btnLabel ? route.params.btnLabel : "Proceed"
 
     const [otpCode,setOtpCode] = useState("")
     const inputRef = useRef();
@@ -114,8 +115,8 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
                     <View style={styles.proceedBtn}>
                             {
                                 otpCode.length < 6
-                                ? <DisabledButton label="Proceed" />
-                                : <YellowButton label="Proceed" onPress={()=>{
+                                ? <DisabledButton label={btnLabel} />
+                                : <YellowButton label={btnLabel} onPress={()=>{
                                     callBackFunc({Otp: otpCode , data: data})
                                 }} />
                             }
