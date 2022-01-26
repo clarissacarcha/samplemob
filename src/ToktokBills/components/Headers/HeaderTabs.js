@@ -17,10 +17,10 @@ export const HeaderTabs = ({ tabs, scrollEnabled = false }) => {
         allowFontScaling: false,
         style: [ styles.bottomLine ],
         indicatorStyle: [ styles.indicator ],
-        activeTintColor: "#000",
-        inactiveTintColor: "#CCCCCC",
+        activeTintColor: "#F6841F",
+        inactiveTintColor: "#707070",
         scrollEnabled: scrollEnabled,
-        tabStyle: { width: scrollEnabled ? moderateScale(125) : width / tabs.length},
+        tabStyle: { width: scrollEnabled ? moderateScale(125) : width / tabs.length },
       }}
     >
       { tabs.map((tab) => {
@@ -31,7 +31,7 @@ export const HeaderTabs = ({ tabs, scrollEnabled = false }) => {
               options={{
                 tabBarLabel: ({ color }) => {
                   return (
-                    <View style={{ flexDirection: "row"}}>
+                    <View style={{ flexDirection: "row" }}>
                       <Text style={[ styles.tabText, { color } ]}>
                         {tab.name}
                       </Text>
@@ -59,12 +59,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
-    color: "#F7F7FA",
   },
   indicator: {
     backgroundColor: "#F6841F",
-    height: 4,
-    zIndex: 1
+    height: 3
   },
   tabText: {
     fontFamily: FONT.BOLD,

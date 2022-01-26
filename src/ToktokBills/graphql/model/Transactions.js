@@ -46,9 +46,9 @@ const transaction = `
   createdAt
 `
 
-export const GET_BILLS_TRANSACTIONS = gql`
-  query getTransactions($input: GetTransactionsInput!) {
-    getTransactions(input: $input) {
+export const GET_TRANSACTIONS_BY_STATUS = gql`
+  query getTransactionsByStatus($input: GetTransactionsByStatusInput!) {
+    getTransactionsByStatus(input: $input) {
       ${transaction}
     }
   }

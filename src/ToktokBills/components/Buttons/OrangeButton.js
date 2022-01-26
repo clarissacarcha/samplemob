@@ -7,7 +7,7 @@ import { moderateScale } from "toktokbills/helper";
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
 
-export const OrangeButton = ({label, disabled, onPress})=> {
+export const OrangeButton = ({label, disabled, onPress, btnStyle})=> {
 
   const onThrottledPress = useThrottle(onPress , 200)
 
@@ -17,7 +17,8 @@ export const OrangeButton = ({label, disabled, onPress})=> {
       disabled={disabled}
       style={[
         styles.container,
-        {  backgroundColor: disabled ? "#DADADA" : "#F6841F" }
+        {  backgroundColor: disabled ? "#DADADA" : "#F6841F" },
+        btnStyle
       ]}
     >
       <Text style={styles.label}>{label}</Text>

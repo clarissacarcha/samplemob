@@ -21,7 +21,7 @@ export const ToktokBillsActivities= ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header label="Activities" />
+      <Header label="Activities" elevation={1.5} />
       <HeaderTabs tabs={TABS} />
     </View>
   );

@@ -1,1 +1,1 @@
-export * from "./BillerType";
+export * from "./ActivityItem";
