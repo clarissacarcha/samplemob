@@ -53,10 +53,12 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     setSearchString(value);
     const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(value.toLowerCase()));
     setFilteredData(filteredContacts);
+    setSelectedContact("")
   };
 
   const onSelectedContact = (item) => {
     let mobileNumber = item.number.replace(/\s/g, '').replace(/[()]/g, '').replace(/[$-/:-?{-~!"#^_`\[\]]/g, '');
+    let numLength = mobileNumber.length;
 
     if(mobileNumber.substring(0, 2) == "+63"){
       return mobileNumber.replace("+63", "0");
@@ -64,6 +66,9 @@ export const ToktokLoadContacts = ({navigation, route}) => {
       return mobileNumber.replace("63", "0");
     } else if(mobileNumber.substring(0, 2) == "09"){
       return mobileNumber
+    } else if(numLength > 9) {
+      let number = mobileNumber.slice(0, -(numLength - 9))
+      return `09${number}`
     } else {
       return `09${mobileNumber}`;
     }

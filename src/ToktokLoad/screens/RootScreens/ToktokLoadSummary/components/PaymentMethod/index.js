@@ -12,11 +12,11 @@ import { LoadingIndicator } from "src/ToktokLoad/components";
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 import { wallet_icon } from "src/ToktokLoad/assets/icons";
 
-//HOOKS
+//GRAPHQL & HOOKS
 import { useAccount } from 'toktokwallet/hooks';
 import { useSelector } from 'react-redux';
 
-export const PaymentMethod = ({ loadDetails, onCashIn }) => {
+export const PaymentMethod = ({ loadDetails, onCashIn, kycStatus }) => {
 
   const { user } = useSelector((state) => state.session);
 	const navigation = useNavigation();
@@ -32,7 +32,7 @@ export const PaymentMethod = ({ loadDetails, onCashIn }) => {
   };
 
   const onPressCreateAccount = () => {
-    navigation.navigate('ToktokWalletLoginPage');
+    navigation.navigate('ToktokWalletLoginPage'); //ToktokWalletVerification
   }
  
   const displayInsufficientBalance = () => {
@@ -50,18 +50,33 @@ export const PaymentMethod = ({ loadDetails, onCashIn }) => {
     return
   }
 
-  const displayNoToktokWalletAccount = () => (
-    <>
-      <View style={{ paddingHorizontal: moderateScale(30) }}>
-        <Text style={styles.noTokWaMessage}>
-          Sorry, you don’t have a toktokwallet yet. Please create an account to proceed with payment.
-        </Text>
-      </View>
-      <Text style={styles.createAccount} onPress={onPressCreateAccount}>
-        Create toktokwallet account
-      </Text>
-    </>
-  )
+  const displayNoToktokWalletAccount = () => {
+    if(kycStatus == 2){
+      return (
+        <>
+          <View style={{ paddingHorizontal: moderateScale(30) }}>
+            <Text style={styles.pendingMessage}>
+              We are currently assessing your application for toktokwallet. Kindly wait for confirmation.
+            </Text>
+          </View>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <View style={{ paddingHorizontal: moderateScale(30) }}>
+            <Text style={styles.noTokWaMessage}>
+              Sorry, you don’t have a toktokwallet yet. Please create an account to proceed with payment.
+            </Text>
+          </View>
+          <Text style={styles.createAccount} onPress={onPressCreateAccount}>
+            Create toktokwallet account
+          </Text>
+        </>
+      )
+    }
+  }
+
 
   return (
     <>
@@ -189,10 +204,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: FONT_SIZE.M,
     textDecorationLine: "underline",
-    marginVertical: moderateScale(15),
+    marginBottom: moderateScale(25),
   },
   noTokWaMessage: {
     textAlign: "center",
-    fontSize: FONT_SIZE.M
+    fontSize: FONT_SIZE.M,
+    marginBottom: moderateScale(15),
+  },
+  pendingMessage: {
+    textAlign: "center",
+    fontSize: FONT_SIZE.M,
+    marginBottom: moderateScale(25),
   }
 })

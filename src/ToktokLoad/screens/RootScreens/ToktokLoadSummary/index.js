@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, RefreshControl} from "react-native";
-import {useLazyQuery} from '@apollo/react-hooks';
 import {useSelector} from 'react-redux';
+import { useIsFocused } from '@react-navigation/native';
 
 //UTIL
 import { moderateScale, numberFormat } from "toktokload/helper";
@@ -16,9 +16,10 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 import { wallet_icon } from "src/ToktokLoad/assets/icons";
 
 //GRAPHQL & HOOKS
-import {GET_MY_ACCOUNT} from 'toktokwallet/graphql';
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+import { GET_MY_ACCOUNT, GET_USER_TOKTOK_WALLET_DATA } from 'toktokwallet/graphql';
+import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql';
 import { useAccount } from 'toktokwallet/hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 
 export const ToktokLoadSummary = ({ navigation, route }) => {
 
@@ -28,10 +29,31 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
   });
 
   const { loads, mobileNumber } = route.params;
-
+  const isFocus = useIsFocused();
   const { user } = useSelector((state) => state.session);
   const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount({ isOnErrorAlert: false });
   const [refreshing, setRefreshing] = useState(false);
+  const [kycStatus, setKycStatus] = useState(null);
+
+  const [getUserToktokWalletData, { error, loading }] = useLazyQuery(GET_USER_TOKTOK_WALLET_DATA , {
+    fetchPolicy:"network-only",
+    variables: {
+      input: {
+        userId: user.id,
+      }
+    },
+    onCompleted: async ({getUserToktokWalletData})=> {
+      //0 - Rejected 1 - Approved 2 - Pending 3 - Linked 4 -For Further Verification
+      console.log(getUserToktokWalletData, "sd")
+      setKycStatus(getUserToktokWalletData.kycStatus)
+    }
+  })
+
+  useEffect(() => {
+    if(isFocus){
+      getUserToktokWalletData();
+    }
+  }, [isFocus])
 
   useEffect(() => {
     if(user.toktokWalletAccountId){
@@ -40,8 +62,8 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
   },[user]);
 
   useEffect(() => {
-    setRefreshing(getMyAccountLoading);
-  },[getMyAccountLoading]);
+    setRefreshing(getMyAccountLoading || loading);
+  },[getMyAccountLoading, loading]);
 
   const onRefresh = () => {
     getMyAccount();
@@ -52,17 +74,17 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
     getMyAccount();
   };
 
-  if(getMyAccountLoading){
+  if(getMyAccountLoading || loading){
     return(
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
       </View>
     )
   }
-  if(getMyAccountError){
+  if(getMyAccountError || error){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} error={getMyAccountError} />
+        <SomethingWentWrong onRefetch={onRefresh} error={getMyAccountError ?? error} />
       </View>
     )
   }
@@ -89,6 +111,7 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
           loadDetails={loads?.loadDetails ? loads.loadDetails : loads}
           getMyAccount={getMyAccount}
           onCashIn={onCashIn}
+          kycStatus={kycStatus}
         />
         <Separator />
       </ScrollView>
