@@ -1,5 +1,5 @@
-import React , {useEffect,useState} from 'react'
-import { View , Text , StyleSheet, TextInput } from 'react-native'
+import React , {useEffect,useState , useRef} from 'react'
+import { View , Text , StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { Separator , DisabledButton , BuildingBottom } from 'toktokwallet/components'
 import { useAccount } from 'toktokwallet/hooks'
@@ -22,6 +22,8 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
     const [message,setMessage] = useState("")
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
+    const [isFocus,setIsFocus] = useState(false)
+    const inputRef = useRef(null);
 
     const dispatch = useDispatch();
     const alert = useAlert()
@@ -90,6 +92,16 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
          setMessage("")
          
      }
+
+    const showInput = ()=>{
+        setTimeout(() => {
+            inputRef.current.focus();
+        }, 0);
+    }
+
+    useEffect(()=>{
+        showInput()
+    },[])
     
     return (
         <>
@@ -101,22 +113,35 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                 <View style={styles.content}>
                         <View style={styles.amountcontent}>
                                     <View style={{flexDirection: "row"}}>
-                                        <TextInput
-                                                caretHidden
-                                                value={amount}
-                                                style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
-                                                keyboardType="numeric"
-                                                returnKeyType="done"
-                                                onChangeText={changeAmountText}
-                                        />
+                                       
                                         <View style={styles.input}>
-                                            <Text style={{fontFamily: FONT.BOLD,fontSize: 32,marginRight: 10,color:COLOR.YELLOW}}>{tokwaAccount.wallet.currency.code}</Text>
-                                            <Text style={{fontFamily: FONT.BOLD,fontSize: 32}}>{amount ? numberFormat(amount) : "0.00"}</Text>
-                                            <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/>
+                                            <Text style={{fontFamily: FONT.BOLD,fontSize: 30,color:COLOR.YELLOW}}>{tokwaAccount.wallet.currency.code}</Text>
+                                           
+                                            {
+                                                !isFocus && amount != "" &&
+                                                <Text style={{fontFamily: FONT.BOLD,fontSize: 30,marginLeft: 10}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                                            }
+                                               <TextInput
+                                                        onFocus={()=>setIsFocus(true)}
+                                                        onBlur={()=>setIsFocus(false)}
+                                                        caretHidden={!isFocus}
+                                                        value={amount}
+                                                        ref={inputRef}
+                                                        // style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
+                                                        style={{textAlign:"center", marginTop: 12,fontSize: 32, fontFamily: FONT.BOLD, height: '100%', width: 160, ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
+                                                        keyboardType="numeric"
+                                                        returnKeyType="done"
+                                                        placeholder="0.00"
+                                                        placeholderTextColor="black"
+                                                        onChangeText={changeAmountText}
+                                                        textAlign="center"
+                                                        textAlignVertical="center"
+                                                    />
+                                            {/* <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/> */}
                                         </View>
                                         
                                     </View>
-                                    { message != "" && <Text style={{fontFamily: FONT.REGULAR, color: "red", marginTop: -10,marginBottom: 10, fontSize: FONT_SIZE.S}}>{message}</Text>}
+                                    { message != "" && <Text style={{fontFamily: FONT.REGULAR, color: "red", marginTop: 10,marginBottom: 10, fontSize: FONT_SIZE.S}}>{message}</Text>}
                                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 10}}>Current Balance {tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
                                 
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>

@@ -99,6 +99,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
                 error,
                 navigation,
                 prompt,
+                alert,
                 setErrorMessage
             })
         }

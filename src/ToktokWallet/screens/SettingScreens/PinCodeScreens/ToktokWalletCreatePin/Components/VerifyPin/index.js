@@ -53,6 +53,7 @@ export const VerifyPin = ({pageIndex,setPageIndex,setOldTPIN})=> {
                 error,
                 navigation,
                 prompt,
+                alert,
                 setErrorMessage
             });
         }
@@ -118,7 +119,7 @@ export const VerifyPin = ({pageIndex,setPageIndex,setOldTPIN})=> {
                                 style={{paddingVertical: 10,alignItems: "center"}}
                                 onPress={forgotPIN}
                         >
-                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>FORGOT TPIN?</Text>
+                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
                         </TouchableOpacity>
                     </View>
             </ScrollView>

@@ -1,4 +1,4 @@
-import React , {useRef,useState} from 'react'
+import React , {useRef,useState, useEffect} from 'react'
 import { View, Text, StyleSheet , Image ,TextInput} from 'react-native'
 import { ICON_SET, YellowButton , VectorIcon } from 'src/revamp'
 import {useSelector} from 'react-redux'
@@ -24,6 +24,7 @@ export const VerifiedAccount = ({record,provider})=> {
     const prompt = usePrompt()
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const inputRef = useRef()
+    const [isFocus,setIsFocus] = useState(false)
     const navigation = useNavigation()
     const [amount,setAmount] = useState(0)
     const [errorMessage,setErrorMessage] = useState("")
@@ -66,7 +67,8 @@ export const VerifiedAccount = ({record,provider})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt 
+                prompt,
+                alert 
             })
         }
     })
@@ -136,6 +138,16 @@ export const VerifiedAccount = ({record,provider})=> {
         })
     }
 
+    const showInput = ()=>{
+        setTimeout(() => {
+            inputRef.current.focus();
+        }, 0);
+    }
+
+    useEffect(()=>{
+        showInput()
+    },[])
+
     return (
         <>
         <AlertOverlay visible={requestLoading || loading}/>
@@ -155,23 +167,36 @@ export const VerifiedAccount = ({record,provider})=> {
                 </View>
                 <View style={styles.content}>
                         <View style={styles.amountcontent}>
-                            <View style={{flexDirection: "row"}}>
-                                <TextInput
-                                        caretHidden
-                                        value={amount}
-                                        ref={inputRef}
-                                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
-                                        keyboardType="numeric"
-                                        returnKeyType="done"
-                                        onChangeText={changeAmount}
-                                    />
-                                <View style={styles.input}>
-                                        <Text style={{fontFamily: FONT.BOLD,fontSize: 32,marginRight: 10,color:COLOR.YELLOW}}>{tokwaAccount.wallet.currency.code}</Text>
-                                        <Text style={{fontFamily: FONT.BOLD,fontSize: 32}}>{amount ? numberFormat(amount) : "0.00"}</Text>
-                                        <VectorIcon iconSet={ICON_SET.FontAwesome5} name="pen" style={{alignSelf:"center",marginLeft: 15}} size={20} color="black"/>
-                                </View>
-                            </View>
-                            { errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR, color: COLOR.RED,marginTop: -5,fontSize: FONT_SIZE.S}}>{errorMessage}</Text>}
+                                <View style={{flexDirection: "row"}}>
+                                       
+                                       <View style={styles.input}>
+                                           <Text style={{fontFamily: FONT.BOLD,fontSize: 30,color:COLOR.YELLOW}}>{tokwaAccount.wallet.currency.code}</Text>
+                                          
+                                           {
+                                               !isFocus && amount != "" &&
+                                               <Text style={{fontFamily: FONT.BOLD,fontSize: 30,marginLeft: 10}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                                           }
+                                              <TextInput
+                                                       onFocus={()=>setIsFocus(true)}
+                                                       onBlur={()=>setIsFocus(false)}
+                                                       caretHidden={!isFocus}
+                                                       value={amount}
+                                                       ref={inputRef}
+                                                       // style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
+                                                       style={{fontSize: 32, fontFamily: FONT.BOLD, height: '100%', width: 160, ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
+                                                       keyboardType="numeric"
+                                                       returnKeyType="done"
+                                                       placeholder="0.00"
+                                                       placeholderTextColor="black"
+                                                       onChangeText={changeAmount}
+                                                       textAlignVertical="bottom"
+                                                       textAlign="center"
+                                                   />
+                                           {/* <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/> */}
+                                       </View>
+                                       
+                                   </View>
+                            { errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR, color: COLOR.RED,fontSize: FONT_SIZE.S}}>{errorMessage}</Text>}
                             <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 5,}}>Available Balance PHP {numberFormat(tokwaAccount.wallet.balance)}</Text>
                     
                         </View>
@@ -213,12 +238,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "flex-start",
         alignItems: "center",
-        paddingTop: 30,
+        marginTop: 30,
     },
     input: {
         marginHorizontal: 20,
         borderRadius: 5,
-        height: SIZE.FORM_HEIGHT,
+        height: SIZE.FORM_HEIGHT + 20,
         // flexShrink: 1,
         flex: 1,
         flexDirection:"row",
