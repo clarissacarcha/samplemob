@@ -18,6 +18,7 @@ export const Variations = ({data, productId}) => {
     optionsAmount,
     setOptionsAmount,
     count,
+    setCount,
     selected,
     setSelected,
     requiredOptions,
@@ -303,6 +304,7 @@ export const Variations = ({data, productId}) => {
           <RadioButton
             onValueChange={c => {
               setSelectedVariants(item);
+              setCount({type: 'ADD', quantity: 1});
             }}
             name={item.itemname}
             selected={item.Id == selectedVariants?.Id}
@@ -419,7 +421,7 @@ export const Variations = ({data, productId}) => {
     <>
       <Variants />
       <Options />
-      
+
       <View style={[styles.variations]}>
         <View style={styles.instructionContainer}>
           <Text style={styles.variationTitle}>Special Instructions</Text>
