@@ -26,7 +26,6 @@ const {width,height} = Dimensions.get("window")
 
 const processErrorMessage = (fieldValue, fieldName, fieldWidth, fieldType, minWidth) => {
   // 0 = min | 1 = exact | 2 = max 
-  console.log(fieldValue.length, minWidth)
   if(fieldValue.length < minWidth){ 
     return `${fieldName} must be minimum of ${minWidth} characters.`;
   }

@@ -51,7 +51,7 @@ export const ReceiptDetails = ({ route }) => {
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Transaction Date and Time: </Text>
-          <Text style={styles.description}>{moment(createdAt).format('lll')}</Text>
+          <Text style={styles.description}>{moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>{firstFieldName}: </Text>

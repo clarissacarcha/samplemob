@@ -38,7 +38,7 @@ export const ActivityItem = ({ item, index })=> {
           </View>
           <View style={styles.contentContainer}>
             <Text style={styles.amount}>PHP {numberFormat(item.amount)}</Text>
-            <Text style={styles.dateTime}>{moment(item.createdAt).format("lll")}</Text>
+            <Text style={styles.dateTime}>{moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   dateTime: {
-    fontSize: moderateScale(FONT_SIZE.M),
+    fontSize: moderateScale(FONT_SIZE.S),
     color: "#929191"
   },
   amount: {

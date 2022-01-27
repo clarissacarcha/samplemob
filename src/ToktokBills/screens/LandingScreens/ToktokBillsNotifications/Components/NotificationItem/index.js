@@ -28,7 +28,7 @@ export const NotificationItem = ({ item, index })=> {
         <View style={styles.item}>
           <View style={styles.contentContainer}>
             <Text style={styles.itemName}>Bills Payment</Text>
-            <Text style={styles.dateTime}>{moment(item.createdAt).format("lll")}</Text>
+            <Text style={styles.dateTime}>{moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}</Text>
           </View>
           <View style={styles.contentContainer}>
             <Text style={styles.name}>{item.body}</Text>

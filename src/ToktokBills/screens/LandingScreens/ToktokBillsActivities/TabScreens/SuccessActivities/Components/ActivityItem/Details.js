@@ -27,8 +27,8 @@ export const Details = ({ item, visible, setVisible })=> {
         <Text style={styles.labelText}>Amount: PHP {numberFormat(item.amount)}</Text>
         <Text style={styles.labelText}>Amount Paid: PHP {numberFormat(item.amount)}</Text>
         <Text style={styles.labelText}>Reference No.: {item.referenceNumber}</Text>
-        <Text style={styles.labelText}>toktokbills Date: {moment(item.createdAt).format("ll")}</Text>
-        <Text style={styles.labelText}>toktokbills Time: {moment(item.createdAt).format("LT")}</Text>
+        <Text style={styles.labelText}>toktokbills Date: {moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY')}</Text>
+        <Text style={styles.labelText}>toktokbills Time: {moment(item.createdAt).tz('Asia/Manila').format("hh:mm A")}</Text>
       </View>
     </TransactionModal>
   )

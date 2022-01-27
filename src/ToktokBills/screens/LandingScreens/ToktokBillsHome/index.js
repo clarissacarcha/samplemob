@@ -64,21 +64,24 @@ export const ToktokBillsHome = ({navigation,route})=> {
       )
     }
     return (
-      <FlatList
-      style={{flex: 1}}
-      contentContainerStyle={styles.flatlistContainer}
-      showsVerticalScrollIndicator={false}
-      numColumns={3}
-      data={billTypes}
-      keyExtractor={(item)=>item.name}
-      renderItem={({item,index})=><BillerType item={item} index={index}/>}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
+      <>
+        <Text style={styles.title}>Select Biller Type</Text>
+        <FlatList
+          contentContainerStyle={styles.flatlistContainer}
+          showsVerticalScrollIndicator={false}
+          numColumns={3}
+          data={billTypes}
+          keyExtractor={(item)=>item.name}
+          renderItem={({item,index})=><BillerType item={item} index={index}/>}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
         />
-      }
-    />
+      </>
+      
     )
   }
   
@@ -97,6 +100,13 @@ const styles = StyleSheet.create({
   },
   flatlistContainer: {
     paddingHorizontal: width * .03,
-    paddingVertical: width * .035
+    paddingBottom: width * .035,
+    flexGrow: 1
+  },
+  title: {
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.L,
+    paddingHorizontal: width * .05,
+    paddingVertical: width * .05,
   }
 })
