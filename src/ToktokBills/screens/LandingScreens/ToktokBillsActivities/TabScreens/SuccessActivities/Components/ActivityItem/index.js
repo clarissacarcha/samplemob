@@ -34,11 +34,10 @@ export const ActivityItem = ({ item, index })=> {
       >
         <View style={styles.item}>
           <View style={styles.contentContainer}>
-            <Text style={styles.itemName}>{item.billerDetails.descriptions}</Text>
-            <Text style={styles.amount}>PHP {numberFormat(item.amount)}</Text>
+            <Text style={styles.itemName}>Reference No. {item.referenceNumber}</Text>
           </View>
           <View style={styles.contentContainer}>
-            <Text style={styles.name}>{item.senderName}</Text>
+            <Text style={styles.amount}>PHP {numberFormat(item.amount)}</Text>
             <Text style={styles.dateTime}>{moment(item.createdAt).format("lll")}</Text>
           </View>
         </View>

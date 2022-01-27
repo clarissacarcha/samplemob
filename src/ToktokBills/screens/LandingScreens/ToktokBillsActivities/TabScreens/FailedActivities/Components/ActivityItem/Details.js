@@ -16,12 +16,14 @@ const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW} = CONSTANTS;
 const {width,height} = Dimensions.get("window");
 
 export const Details = ({ item, visible, setVisible })=> {
-  
   return (
     <TransactionModal visible={visible} setVisible={setVisible}>
       <View>
-        <Text style={styles.labelText}>Status of toktokbils: Failed</Text>
+        <Text style={styles.labelText}>Status of toktokbills: Failed</Text>
         {/* {renderDetails({details})} */}
+        <Text style={styles.labelText}>Biller: {item.billerDetails.descriptions}</Text>
+        {/* <Text style={styles.labelText}>{item.billerDetails.firstFieldName}: {item.destinationNumber}</Text> */}
+        <Text style={styles.labelText}>{item.billerDetails.secondFieldName}: {item.destinationIdentifier}</Text>
         <Text style={styles.labelText}>Amount: PHP {numberFormat(item.amount)}</Text>
         <Text style={styles.labelText}>Amount Paid: PHP {numberFormat(item.amount)}</Text>
         <Text style={styles.labelText}>Reference No.: {item.referenceNumber}</Text>

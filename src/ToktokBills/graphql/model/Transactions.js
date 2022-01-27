@@ -12,6 +12,8 @@ const transaction = `
     name
     logo
     descriptions
+    firstFieldName
+    secondFieldName
   }
   loadDetails {
     id
