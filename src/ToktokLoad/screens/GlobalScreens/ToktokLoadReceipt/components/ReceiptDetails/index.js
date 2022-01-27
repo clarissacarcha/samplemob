@@ -15,7 +15,7 @@ export const ReceiptDetails = ({ route }) => {
 
   const { receipt } = route.params;
   const { amount, referenceNumber, destinationNumber, createdAt, discount } = receipt;
-  const transactionDateTime = `${moment(createdAt).format("lll")}`;
+  const transactionDateTime = `${moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}`;
 
   return (
     <>

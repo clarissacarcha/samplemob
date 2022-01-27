@@ -29,7 +29,7 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
   });
 
   const { loads, mobileNumber } = route.params;
-  const isFocus = useIsFocused();
+  const isFocused = useIsFocused();
   const { user } = useSelector((state) => state.session);
   const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount({ isOnErrorAlert: false });
   const [refreshing, setRefreshing] = useState(false);
@@ -44,16 +44,15 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
     },
     onCompleted: async ({getUserToktokWalletData})=> {
       //0 - Rejected 1 - Approved 2 - Pending 3 - Linked 4 -For Further Verification
-      console.log(getUserToktokWalletData, "sd")
       setKycStatus(getUserToktokWalletData.kycStatus)
     }
   })
 
   useEffect(() => {
-    if(isFocus){
+    if(isFocused){
       getUserToktokWalletData();
     }
-  }, [isFocus])
+  }, [isFocused])
 
   useEffect(() => {
     if(user.toktokWalletAccountId){
