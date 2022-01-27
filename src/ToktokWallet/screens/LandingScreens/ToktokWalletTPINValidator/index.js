@@ -21,6 +21,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
     const callBackFunc = route?.params?.callBackFunc ? route.params.callBackFunc : null
     const errorMessage = route?.params?.errorMessage ? route.params.errorMessage : null
     const data = route?.params?.data ? route.params.data : null
+    const btnLabel = route?.params?.btnLabel ? route.params.btnLabel : "Proceed"
 
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
@@ -48,6 +49,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                             pinCode={pinCode} 
                             onNumPress={onNumPress} 
                             showPin={showPin}
+                            error={errorMessage}
                         />
                          <TextInput
                                 caretHidden
@@ -88,8 +90,8 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                     <View style={styles.proceedBtn}>
                             {
                                 pinCode.length < 6
-                                ? <DisabledButton label="Proceed" />
-                                : <YellowButton label="Proceed" onPress={()=>{
+                                ? <DisabledButton label={btnLabel} />
+                                : <YellowButton label={btnLabel} onPress={()=>{
                                     // setPinCode("")
                                     callBackFunc({pinCode , data})
                                 }} />

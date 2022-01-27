@@ -98,6 +98,12 @@ export const LoginPage = ()=> {
         }
     },[pinCode])
 
+    useEffect(()=>{
+        setTimeout(()=>{
+            inputRef.current.focus();
+        },0)
+    },[])
+
     const forgotPIN = ()=> {
         navigation.navigate("ToktokWalletRecoveryMethods" , {type: "MPIN",event: "ACCOUNT RECOVERY", category: "FORGOT MPIN" })
     }
