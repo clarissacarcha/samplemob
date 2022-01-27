@@ -69,7 +69,7 @@ export const FoodList = props => {
         const variants = product.variants;
         if (variants.length) {
           variants.map(variant => {
-            if (variant.enabled === 1) {
+            if (variant.enabled === 1 && variant.stocks > 0) {
               variantHolder.push(variant);
             }
           });

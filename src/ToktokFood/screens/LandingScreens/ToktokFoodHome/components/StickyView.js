@@ -65,7 +65,7 @@ const StickyView = () => {
   const [pendingProcess, setPendingProcess] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const variableInput = {
-    limit: 20,
+    limit: 11,
     radius: 3,
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
@@ -198,8 +198,14 @@ const StickyView = () => {
     }
     return (
       <View style={{...styles.emptyContainer, paddingTop: moderateScale(50)}}>
-        <Image style={{width: moderateScale(193), height: moderateScale(146), right: moderateScale(5)}} resizeMode="contain" source={empty_promos} />
-        <Text style={{color: '#F6841F', fontSize: 17, marginTop: moderateScale(20), fontWeight: '700'}}>No Promos Available</Text>
+        <Image
+          style={{width: moderateScale(193), height: moderateScale(146), right: moderateScale(5)}}
+          resizeMode="contain"
+          source={empty_promos}
+        />
+        <Text style={{color: '#F6841F', fontSize: 17, marginTop: moderateScale(20), fontWeight: '700'}}>
+          No Promos Available
+        </Text>
         <Text style={{...styles.emptyText, color: '#000', fontSize: FONT_SIZE.M, marginTop: moderateScale(5)}}>
           There are no restaurants with promos{'\n'}available as of the moment.
         </Text>
