@@ -73,9 +73,13 @@ const PaymentDetails = ({refreshing, orderType}) => {
   };
 
   const onToktokWalletCashInNavigate = () => {
-    navigation.navigate('ToktokWalletHomePage', {
-      screen: 'ToktokWalletPaymentOptions',
+    navigation.navigate('ToktokWalletPaymentOptions', {
+      amount: 0,
+      onCashIn: onCashIn,
     });
+    // navigation.navigate('ToktokWalletHomePage', {
+    //   screen: 'ToktokWalletPaymentOptions',
+    // });
   };
 
   const DisplayComponent = () => {
@@ -168,7 +172,9 @@ const PaymentDetails = ({refreshing, orderType}) => {
                       </Text>
                     )}
                   </View>
-                  <TouchableOpacity disabled={!customerWallet || customerWallet?.status !== 1} onPress={onPressTopUp}>
+                  <TouchableOpacity
+                    disabled={!customerWallet || customerWallet?.status !== 1}
+                    onPress={onToktokWalletCashInNavigate}>
                     <Text style={{color: '#FCB81A', fontSize: FONT_SIZE.M, paddingLeft: 15}}>Top up</Text>
                   </TouchableOpacity>
                 </View>
