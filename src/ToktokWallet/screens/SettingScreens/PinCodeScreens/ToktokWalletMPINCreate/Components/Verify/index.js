@@ -46,7 +46,7 @@ export const Verify = ({pageIndex,setPageIndex,setOldMPIN})=> {
         onError: (error)=> {
             const {graphQLErrors, networkError} = error;
             if(graphQLErrors[0]?.message == "Account Blocked"){
-                onErrorAlert({alert,error})
+                // onErrorAlert({alert,error})
                 // navigation.navigate("ToktokWalletLoginPage")
                 // navigation.replace("ToktokWalletLoginPage")
                 navigation.navigate("ToktokLandingHome")
