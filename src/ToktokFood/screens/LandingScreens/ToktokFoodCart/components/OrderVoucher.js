@@ -148,6 +148,7 @@ const OrderVoucher = ({autoShipping}) => {
           onRemoveVoucher={onRemoveVoucher}
           label="Voucher"
           value={voucher}
+          placeholder="Input Voucher(optional)"
         />
 
         <TouchableOpacity onPress={onApplyVoucher} style={styles.apply}>
