@@ -25,6 +25,7 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
     const errorMessage = route?.params?.errorMessage ? route.params.errorMessage : null
     const resendRequest = route?.params?.resendRequest ? route.params.resendRequest : null
     const data = route?.params?.data ? route.params.data : null
+    const btnLabel = route?.params?.btnLabel ? route.params.btnLabel : "Proceed"
 
     const [otpCode,setOtpCode] = useState("")
     const inputRef = useRef();
@@ -63,9 +64,9 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
 
     return(
         <CheckIdleState>
-            <KeyboardAvoidingView
-                behavior={Platform.OS == "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
+            <View
+                // behavior={Platform.OS == "ios" ? "padding" : "height"}
+                // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
                 style={styles.container}
             >
                  <View style={styles.content}>
@@ -77,6 +78,7 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
                             pinCode={otpCode} 
                             onNumPress={onNumPress} 
                             showPin={true}
+                            error={errorMessage}
                         />
                          <TextInput
                                 caretHidden
@@ -104,7 +106,7 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
                                     style={{paddingVertical: 10,alignItems: "center"}}
                                     onPress={resendRequest}
                             >
-                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Didn't get code? Tap here to resend.</Text>
                                 { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
                         </TouchableOpacity>
 
@@ -113,15 +115,15 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
                     <View style={styles.proceedBtn}>
                             {
                                 otpCode.length < 6
-                                ? <DisabledButton label="Proceed" />
-                                : <YellowButton label="Proceed" onPress={()=>{
+                                ? <DisabledButton label={btnLabel} />
+                                : <YellowButton label={btnLabel} onPress={()=>{
                                     callBackFunc({Otp: otpCode , data: data})
                                 }} />
                             }
                     </View>
                 </View>
                 <BuildingBottom/>
-            </KeyboardAvoidingView>
+            </View>
         </CheckIdleState>
     )
 }

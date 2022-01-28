@@ -37,7 +37,11 @@ const DeliveryDetails = ({navigation, route, session}) => {
   const [isExpress, setIsExpress] = useState(route.params.orderData.isExpress);
   const [isCashOnDelivery, setIsCashOnDelivery] = useState(route.params.orderData.isCashOnDelivery);
   const [cashOnDelivery, setCashOnDelivery] = useState(route.params.orderData.cashOnDelivery);
-  const {data: balanceData, loading: balanceLoading, error: balanceError} = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+  const {
+    data: balanceData,
+    loading: balanceLoading,
+    error: balanceError,
+  } = useQuery(GET_TOKTOK_WALLET_BALANCE, {
     fetchPolicy: 'network-only',
   });
 
@@ -66,10 +70,10 @@ const DeliveryDetails = ({navigation, route, session}) => {
 
   const [getDeliveryPriceAndDirections, {loading}] = useLazyQuery(GET_DELIVERY_PRICE_AND_DIRECTIONS, {
     fetchPolicy: 'no-cache',
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert: AlertHook, error});
     },
-    onCompleted: (data) => {
+    onCompleted: data => {
       const {hash, pricing, directions} = data.getDeliveryPriceAndDirections;
       const {price, distance, duration, discount, expressFee} = pricing;
 
@@ -100,7 +104,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
     },
   });
 
-  const onIsCashOnDeliveryChange = (isCashOnDeliveryValue) => {
+  const onIsCashOnDeliveryChange = isCashOnDeliveryValue => {
     setIsCashOnDelivery(isCashOnDeliveryValue);
 
     if (isCashOnDeliveryValue) {
@@ -110,7 +114,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
     // console.log({collectPaymentFrom});
   };
 
-  const onCollectPaymentFromChange = (collectPaymentFromValue) => {
+  const onCollectPaymentFromChange = collectPaymentFromValue => {
     if (isCashOnDelivery && collectPaymentFromValue === 'SENDER') {
       AlertHook({message: 'Cannot collect payment from sender on cash on deliveries.'});
       return;
@@ -118,7 +122,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
     setCollectPaymentFrom(collectPaymentFromValue);
   };
 
-  const onPaymentMethodChange = (paymentMethodValue) => {
+  const onPaymentMethodChange = paymentMethodValue => {
     // if (isCashOnDelivery && collectPaymentFromValue === 'SENDER') {
     //   AlertHook({message: 'Cannot collect payment from sender on cash on deliveries.'});
     //   return;
@@ -258,7 +262,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 

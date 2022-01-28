@@ -20,7 +20,7 @@ const TransactionInfo = ({label,value})=> (
     </View>
 )
 
-const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAccount, savedAccounts, note, activeAccount, screenLabel})=> {
+const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAccount, savedAccounts, note, activeAccount, screenLabel , accountName})=> {
     const navigation = useNavigation()
 
     let status
@@ -49,6 +49,11 @@ const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAcc
             navigation.replace("ToktokWalletHomePage")
         }
     }
+
+    const traceNumber = cashoutLogParams?.cashOutUbApiLog?.traceNumber ? cashoutLogParams?.cashOutUbApiLog?.traceNumber : null
+    const remittanceId = cashoutLogParams?.cashOutUbApiLog?.remittanceId ?  cashoutLogParams?.cashOutUbApiLog?.remittanceId : null
+    const type = cashoutLogParams?.cashOutUbApiLog?.type 
+    const cashOutRefNo = cashoutLogParams.referenceNumber ? cashoutLogParams.referenceNumber : MaskLeftZero(cashoutLogParams.id)
     
     return (
         <Modal
@@ -57,11 +62,12 @@ const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAcc
             onRequestClose={Proceed}
         >
             <Receipt
-                refNo={MaskLeftZero(cashoutLogParams.id)}
+                refNo={cashOutRefNo}
                 refDate={cashoutLogParams.createdAt}
                 onPress={Proceed}
                 savedAccounts={savedAccounts}
                 activeAccount={activeAccount}
+                accountName={accountName}
                 cashoutLogParams={cashoutLogParams}
                 setVisible={setVisible}
             >
@@ -70,8 +76,31 @@ const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAcc
                      <TransactionInfo label="Bank" value={cashoutLogParams.bank?.name}/>
                      <TransactionInfo label="Account Name" value={cashoutLogParams.accountName}/>
                      <TransactionInfo label="Account Number" value={cashoutLogParams.accountNumber}/>
+                    {
+                        traceNumber && tokwaAccount.constants.UbFundTransferType == "api" &&
+                        <TransactionInfo 
+                            label="Trace Number"
+                            value={traceNumber}
+                        />
+                    }
+
+                    {
+                        remittanceId && tokwaAccount.constants.UbFundTransferType == "api" &&
+                        <TransactionInfo 
+                            label="Remittance ID"
+                            value={remittanceId}
+                        />
+                    }
+                    
                      <TransactionInfo label="Status" value={status}/>
                      <TransactionInfo label="Amount" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(cashoutLogParams.amount)}`}/>
+                     {
+                        tokwaAccount.constants.UbFundTransferType == "api" &&
+                        <>
+                        <TransactionInfo label="Convenience Fee" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(+cashoutLogParams.providerServiceFee + +cashoutLogParams.systemServiceFee)}`}/>
+                        <TransactionInfo label="Total Amount" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(+cashoutLogParams.providerServiceFee + +cashoutLogParams.systemServiceFee + +cashoutLogParams.amount)}`}/>
+                        </>
+                     }
                      { note != "" && <TransactionInfo label="Note" value={cashoutLogParams.note}/>}
                     
                 </View>            

@@ -1,5 +1,9 @@
 <resources>
-  <string name="app_name">toktok 1.29.1 early access</string>
+<<<<<<< HEAD
+  <string name="app_name">toktok tokwa payment TEST B08</string>
+=======
+  <string name="app_name">toktok 1.29.12 test</string>
+>>>>>>> 4e1db8f610f5f493248c88b71c31b0fababa5d91
 </resources>
 
 

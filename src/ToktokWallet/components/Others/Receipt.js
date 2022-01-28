@@ -1,5 +1,5 @@
 import React , {useRef, useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Platform,Dimensions,Alert,StatusBar,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Platform,Dimensions,Alert,StatusBar,Image,ScrollView} from 'react-native'
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions'
 import FIcon from 'react-native-vector-icons/Feather'
 import ViewShot , {captureScreen,releaseCapture,captureRef} from "react-native-view-shot";
@@ -22,7 +22,7 @@ const path = Platform.OS === "ios" ? RNFS.LibraryDirectoryPath : RNFS.DownloadDi
 
 const {width,height} = Dimensions.get("window")
 
-export const Receipt = ({children, format = "png", refNo ,refDate, onPress})=> {
+export const Receipt = ({children, format = "png", refNo ,refDate, onPress, btnLabel , bottomText = null, BottomComponent = null })=> {
 
     const viewshotRef = useRef()
 
@@ -134,7 +134,7 @@ export const Receipt = ({children, format = "png", refNo ,refDate, onPress})=> {
     return (
         <>
         <StatusBar barStyle="dark-content" backgroundColor="white" />
-        <View style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{flexGrow:1}}>
             <ViewShot 
                 style={styles.viewShot} 
                 ref={viewshotRef}
@@ -172,11 +172,21 @@ export const Receipt = ({children, format = "png", refNo ,refDate, onPress})=> {
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginLeft: 5,color:"#FF8A48"}}>Download</Text>
                     </TouchableOpacity>
                 </View>
+                {/* <View style={{flex:1,justifyContent:"center",alignItems:"center",paddingHorizontal: 16}}>
+                {   bottomText && <Text style={{fontFamily: FONT.REGULAR , fontSize: FONT_SIZE.S}}>{bottomText}</Text> }
+                </View> */}
+                {
+                    BottomComponent &&
+                    <View style={{flex: 1, marginTop: 20,justifyContent:"center",alignItems:"center"}}>
+                        <BottomComponent/>
+                    </View>
+                }
+               
             </View>
             <View style={styles.actionBtn}>
-                    <YellowButton label="Back to Home" onPress={onPress} />
+                    <YellowButton label={btnLabel ? btnLabel : "OK"} onPress={onPress} />
             </View>
-        </View>
+        </ScrollView>
         </>
     )
 }
@@ -186,7 +196,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     viewShot: {
-        paddingBottom: 20,
+        paddingVertical: 20,
         paddingHorizontal: 16,
         marginTop: 50,
         backgroundColor:"white",
@@ -223,6 +233,7 @@ const styles = StyleSheet.create({
         height: 70,
         padding: 16,
         justifyContent:"flex-end",
-        marginBottom: Platform.OS == "ios" ? 25 : 0
+        marginBottom: Platform.OS == "ios" ? 25 : 0,
+        marginTop: 10,
     }
 })

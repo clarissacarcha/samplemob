@@ -5,7 +5,11 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>toktok 1.29.1 early access</string>
+<<<<<<< HEAD
+	<string>toktok payment TEST B08</string>
+=======
+	<string>toktok 1.29.12 test</string>
+>>>>>>> 4e1db8f610f5f493248c88b71c31b0fababa5d91
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -39,6 +43,13 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to take images for profile and deliveries.</string>
 	<key>NSContactsUsageDescription</key>

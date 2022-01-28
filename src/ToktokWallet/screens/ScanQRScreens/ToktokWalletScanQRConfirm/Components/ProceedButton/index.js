@@ -46,7 +46,13 @@ export const ProceedButton = ({
             })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            // onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert
+            })
         }
     })
 
@@ -60,7 +66,8 @@ export const ProceedButton = ({
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt      
+                prompt,
+                alert      
             })
         }
     })

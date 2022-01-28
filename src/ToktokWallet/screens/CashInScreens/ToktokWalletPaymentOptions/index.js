@@ -5,28 +5,29 @@ import FIcon from 'react-native-vector-icons/Feather'
 import {useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_CASH_IN_PROVIDERS } from 'toktokwallet/graphql'
-import { Separator, HeaderImageBackground, HeaderTitle , CheckIdleState } from 'toktokwallet/components'
+import { Separator, HeaderImageBackground, HeaderTitle , CheckIdleState , BuildingBottom } from 'toktokwallet/components'
 import { numberFormat } from 'toktokwallet/helper'
 import { useSelector , useDispatch } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 import { SomethingWentWrong } from 'src/components';
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
-import {YellowButton,HeaderBack } from 'src/revamp';
+import {YellowButton,HeaderBack,HeaderTitle as ToktokHeaderTitle } from 'src/revamp';
 import { useAccount } from 'toktokwallet/hooks'
 import { AlertOverlay } from 'src/components'
+//SELF IMPORTS
+import {
+    DragonPayCashIn
+} from "./Components"
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS
 
 export const ToktokWalletPaymentOptions = ({navigation,route})=> {
 
-    navigation.setOptions({
-        headerShown: false,
-    })
 
     const amount = route?.params?.amount ? route.params.amount : null
     const onCashIn = route?.params?.onCashIn ? route.params.onCashIn : null
-    const { tokwaAccount , getMyAccountLoading , getMyAccount}  = useAccount();
+    const { tokwaAccount , getMyAccountLoading , getMyAccount,getGlobalSettings , getGlobalSettingsLoading }  = useAccount();
     const dispatch = useDispatch();
     const alert = useAlert()
     const { data: cashinmethods, error, loading } = useQuery(GET_CASH_IN_PROVIDERS, {
@@ -37,16 +38,44 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
         }
     })
 
+    // if(tokwaAccount.constants.CashInType == "paypanda"){
+    //     navigation.setOptions({
+    //         headerShown: false,
+    //     })
+    // }else{
+    //     navigation.setOptions({
+    //         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
+    //         headerTitle: ()=> <ToktokHeaderTitle label={['Cash In','']}/>,
+    //     })    
+    // }
+
+    navigation.setOptions({
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
+        headerTitle: ()=> <ToktokHeaderTitle label={['Cash In','']}/>,
+    })    
+  
+
     const checkStatus = async ()=> {
-        if(!tokwaAccount.mobileNumber){
-            await getMyAccount()
-            return
-        } 
+        await getMyAccount()
+        // if(!tokwaAccount.mobileNumber){
+        //     await getMyAccount()
+        //     return
+        // } 
+
+        // if(!tokwaAccount?.constants?.CashInType){
+        //     await getGlobalSettings();
+        //     return
+        // }   
         
-        if(!tokwaAccount.pinCode){
-            return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
-        }
+        // if(!tokwaAccount.pinCode){
+        //     return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
+        // }
     }
+
+    useEffect(()=>{
+        console.log("PINCODE IS",tokwaAccount.pinCode)
+        if(!tokwaAccount.pinCode) return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
+    },[tokwaAccount.pinCode , onCashIn])
 
     useEffect(()=>{
         if(onCashIn){
@@ -57,15 +86,9 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
                     value: true,
                 }
             })
+            checkStatus()
         }
     },[])
-
-    useEffect(()=>{
-        if(onCashIn){
-           checkStatus();
-           cashInTopUp = false;
-        }
-    },[onCashIn, tokwaAccount])
 
     if (loading) {
         return (
@@ -118,10 +141,9 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
         )
     }
 
-    return (
-        <CheckIdleState>
-        <AlertOverlay visible={getMyAccountLoading}/>
-        <View style={styles.container}>
+    const PayPandaOption = ()=> {
+        return (
+            <View style={styles.container}>
             <View style={styles.headings}>
                 <HeaderImageBackground>
                     <HeaderTitle label="Cash In"/>
@@ -141,6 +163,26 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
                 renderItem={CashInMethod}
             />
         </View>
+        )
+    }
+
+    return (
+        <CheckIdleState>
+        <AlertOverlay visible={getMyAccountLoading || getGlobalSettingsLoading}/>
+           {/* {
+               tokwaAccount.constants.CashInType == "paypanda"
+               ? <PayPandaOption/>
+               : <DragonPayCashIn
+                    route={route}
+                    navigation={navigation}
+                    transactionType={cashinmethods.getCashInProviders[0]}
+               />
+           } */}
+              <DragonPayCashIn
+                    route={route}
+                    navigation={navigation}
+                    transactionType={cashinmethods.getCashInProviders[0]}
+               />
         </CheckIdleState>
     )
 }

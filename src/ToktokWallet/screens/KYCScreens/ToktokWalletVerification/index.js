@@ -48,7 +48,11 @@ const HeaderBackClose = ({currentIndex,setCurrentIndex, setPromptVisible})=> {
         );
     
         return () => backHandler.remove();
+<<<<<<< HEAD
       }, []));
+=======
+      });
+>>>>>>> a839e1a73cf80cfa3f10283db920bff1ee072dba
 
       return (
         <TouchableHighlight onPress={closeScreen} underlayColor={'white'} style={styles.button}>
@@ -163,6 +167,7 @@ const styles = StyleSheet.create({
         height: 2,
         width: "100%",
         flexDirection: "row",
+        backgroundColor:"#F7F7FA"
     }, 
     progressBarItem: {
         flex: 1,
