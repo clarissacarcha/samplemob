@@ -43,6 +43,7 @@ const QuestionOne = ({
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="Enter your answer here."
+                                placeholderTextColor={COLOR.DARK}
                                 value={answers[0]}
                                 onChangeText={onChangeText}
                                 returnKeyType="done"

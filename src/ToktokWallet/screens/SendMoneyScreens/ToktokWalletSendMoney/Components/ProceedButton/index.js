@@ -38,7 +38,13 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
             })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            // onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert
+            })
         }
     })
 
