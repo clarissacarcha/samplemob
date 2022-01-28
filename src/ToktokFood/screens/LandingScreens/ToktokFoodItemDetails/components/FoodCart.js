@@ -155,7 +155,7 @@ export const FoodCart = ({loading, action}) => {
                 ? exceededQty > data.maxQty - 1
                 : selectedQty + (data.maxQty - currentQty) == count.quantity;
 
-            if (productDetails?.contSellingIsset === 1) {
+            if (productDetails?.contSellingIsset > 0 || selectedVariants?.contSellingIsset > 0) {
               setDisableMaxQty(false);
             } else {
               setDisableMaxQty(
@@ -168,7 +168,7 @@ export const FoodCart = ({loading, action}) => {
             return;
           }
         }
-        if (productDetails?.contSellingIsset === 1) {
+        if (productDetails?.contSellingIsset > 0 || selectedVariants?.contSellingIsset > 0) {
           setDisableMaxQty(false);
         } else {
           setDisableMaxQty(count.quantity > data.maxQty);
@@ -230,7 +230,6 @@ export const FoodCart = ({loading, action}) => {
     };
 
     let filterItemByProductId = await temporaryCart.items.filter(item => {
-      // console.log(item.productid)
       return item.productid == items.productid;
     });
     // return null
@@ -381,6 +380,11 @@ export const FoodCart = ({loading, action}) => {
   const isEnabled = () =>
     required.length > 0 || disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading;
 
+  const isAddEnabled = () =>
+    tempData?.contSellingIsset > 0 && count.quantity < tempData?.maxQty
+      ? false
+      : disableAdd || count.quantity >= tempData?.maxQty;
+
   return (
     <>
       <Loader
@@ -425,15 +429,13 @@ export const FoodCart = ({loading, action}) => {
             </TouchableOpacity>
             <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
-              disabled={
-                productDetails?.contSellingIsset === 1 ? false : disableAdd || count.quantity >= tempData?.stocks
-              }
+              disabled={isAddEnabled()}
               style={[
                 styles.countButtons,
                 {
                   backgroundColor: COLOR.ORANGE,
                   opacity:
-                    productDetails?.contSellingIsset === 1
+                    tempData?.contSellingIsset > 0 && count.quantity < tempData?.maxQty
                       ? 1
                       : disableAdd || count.quantity >= tempData?.stocks
                       ? 0.5
