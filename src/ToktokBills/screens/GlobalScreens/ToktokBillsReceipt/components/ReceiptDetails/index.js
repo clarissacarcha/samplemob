@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
+import { LoadingIndicator } from 'toktokbills/components';
 
 //UTIL
 import { moderateScale, numberFormat } from "toktokload/helper";
@@ -24,7 +25,8 @@ export const ReceiptDetails = ({ route }) => {
   } = receipt;
   const { firstFieldName, secondFieldName } = paymentData.billItemSettings;
   const totalAmount = parseInt(amount) + convenienceFee;
-  const [ logo, setLogo ] = useState({ height: 0, width: 0 });
+  const [logo, setLogo] = useState({ height: 0, width: 0 });
+  const [imageLoading, setImageLoading] = useState(true);
 
   useEffect(() => {
     Image.getSize(billerDetails.logo, (width, height) => {
@@ -68,9 +70,16 @@ export const ReceiptDetails = ({ route }) => {
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Biller: </Text>
           <View style={{ justifyContent: "flex-end" }}>
+            { imageLoading && (
+              <View style={{ position: "absolute", right: 0, bottom: 0, top: 0 }}>
+                <LoadingIndicator isLoading={true} size="small" />
+              </View>
+            )}
             <Image
               source={{ uri: billerDetails.logo }}
               style={{ width: moderateScale(logo.width), height: moderateScale(logo.height), resizeMode: "contain" }}
+              onLoadStart={() => setImageLoading(true)}
+              onLoadEnd={() => setImageLoading(false)}
             />
           </View>
         </View>

@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, Dimensions, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { moderateScale } from 'toktokbills/helper'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { useThrottle } from 'src/hooks'
+
+import { LoadingIndicator } from 'toktokbills/components';
+
 import CONSTANTS from 'common/res/constants'
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW} = CONSTANTS
 const {width,height} = Dimensions.get("window")
@@ -13,6 +16,7 @@ export const Biller = ({
 })=> {
   const navigation = useNavigation();
   const route = useRoute();
+  const [imageLoading, setImageLoading] = useState(true);
 
   const onPress = ()=> {
     navigation.navigate("ToktokBillsPaymentProcess" , {
@@ -29,7 +33,19 @@ export const Biller = ({
       style={styles.container}
     >
       <View style={styles.item}>
-        <Image source={{ uri: item.logo }} style={styles.itemLogo} />
+        <View style={{ justifyContent: "center" }}> 
+          { imageLoading && (
+            <View style={{ position: "absolute", right: 0, left: 0 }}>
+              <LoadingIndicator isLoading={true} size="small" />
+            </View>
+          )}
+          <Image
+            source={{ uri: item.logo }}
+            style={styles.itemLogo}
+            onLoadStart={() => setImageLoading(true)}
+            onLoadEnd={() => setImageLoading(false)}
+          />
+        </View>
         <Text style={styles.itemName}>{item.descriptions}</Text>
       </View>
     </TouchableOpacity>

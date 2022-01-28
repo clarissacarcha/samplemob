@@ -24,6 +24,7 @@ const MainComponent = ({navigation, route})=> {
 
   const { billItemId, billType } = route.params;
   const [refreshing, setRefreshing] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
   const {data: billItemSettings, loading, error, refetch} = useQuery(GET_BILL_ITEM_SETTINGS, {
     variables: {
@@ -62,7 +63,19 @@ const MainComponent = ({navigation, route})=> {
       >
         <ScrollView keyboardShouldPersistTaps="handled">
           <View style={styles.headerContainer}>
-            <Image source={{ uri: billItemSettings?.getBillItemSettings.logo }} style={styles.logo} />
+            <View style={{ justifyContent: "center" }}>
+              { imageLoading && (
+                <View style={{ position: "absolute", right: 0, left: 0 }}>
+                  <LoadingIndicator isLoading={true} size="small" />
+                </View>
+              )}
+              <Image
+                source={{ uri: billItemSettings?.getBillItemSettings.logo }}
+                style={styles.logo}
+                onLoadStart={() => setImageLoading(true)}
+                onLoadEnd={() => setImageLoading(false)}
+              />
+            </View>
             <Text style={styles.billerName}>{billItemSettings?.getBillItemSettings?.descriptions}</Text>
           </View>
           <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
