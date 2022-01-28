@@ -13,6 +13,20 @@ import { YellowButton } from 'src/revamp'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS
 
+
+const inputAmountLength = {
+    "0": 80,
+    "1": 80,
+    "2": 80,
+    "3": 80,
+    "4": 80,
+    "5": 100,
+    "6": 120,
+    "7": 130,
+    "8": 150,
+    "9": 160,
+}
+
 export const DragonPayCashIn = ({navigation,route, transactionType}) => {
 
     const cashInAmount = route?.params?.amount ? route.params.amount : null
@@ -23,6 +37,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
     const [isFocus,setIsFocus] = useState(false)
+    const [inputWidth,setInputWidth] = useState(inputAmountLength["0"])
     const inputRef = useRef(null);
 
     const dispatch = useDispatch();
@@ -102,6 +117,10 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
     useEffect(()=>{
         showInput()
     },[])
+
+    useEffect(()=>{
+        setInputWidth(inputAmountLength[amount.length])
+    },[amount])
     
     return (
         <>
@@ -128,14 +147,17 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                                         value={amount}
                                                         ref={inputRef}
                                                         // style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
-                                                        style={{textAlign:"center", marginTop: 12,fontSize: 32, fontFamily: FONT.BOLD, height: '100%', width: 160, ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
+                                                        style={{textAlign:"center", marginTop: 12,fontSize: 32, fontFamily: FONT.BOLD, height: '100%', width: inputWidth, ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
                                                         keyboardType="numeric"
                                                         returnKeyType="done"
                                                         placeholder="0.00"
                                                         placeholderTextColor="black"
                                                         onChangeText={changeAmountText}
-                                                        textAlign="center"
+                                                        textAlign="right"
                                                         textAlignVertical="center"
+                                                        // onContentSizeChange={(e)=> {
+                                                        //     setInputWidth(e.nativeEvent.contentSize.width)
+                                                        // }}
                                                     />
                                             {/* <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/> */}
                                         </View>

@@ -60,7 +60,7 @@ export const LoginPage = ()=> {
             setPinCode("")
             const {graphQLErrors, networkError} = error;
             if(graphQLErrors[0]?.message == "Account Blocked"){
-                onErrorAlert({alert,error})
+                // onErrorAlert({alert,error})
                 return navigation.replace("ToktokWalletLoginPage")
             }
             if(graphQLErrors[0]?.message == "Invalid MPincode"){
@@ -144,7 +144,7 @@ export const LoginPage = ()=> {
                             onSubmitEditing={pinCode.length == 4 ? onPress: null}
                         />
                         {
-                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,alignSelf:"center"}}>{errorMessage}</Text>   
+                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,textAlign:"center"}}>{errorMessage}</Text>   
                         }
                         {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
                         {/* <Biometrics
