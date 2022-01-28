@@ -84,7 +84,7 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
             top: height/2,
             left: width/2,
         }}>
-            <ActivityIndicator/>
+            <ActivityIndicator color={COLOR.YELLOW} size={24}/>
         </View>
     )
 

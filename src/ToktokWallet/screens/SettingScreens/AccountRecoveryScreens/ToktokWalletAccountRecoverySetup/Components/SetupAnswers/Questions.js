@@ -59,6 +59,7 @@ export const DisplayQuestion = ({question ,answers , setAnswers , index })=> {
             <TextInput 
               style={styles.input} 
               placeholder="Enter your answer.."
+              placeholderTextColor={COLOR.DARK}
               value={answers[index]?.answer ? answers[index].answer : ""}
               onChangeText={onChangeText}
               returnKeyType="done"

@@ -21,6 +21,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
     const callBackFunc = route?.params?.callBackFunc ? route.params.callBackFunc : null
     const errorMessage = route?.params?.errorMessage ? route.params.errorMessage : null
     const data = route?.params?.data ? route.params.data : null
+    const btnLabel = route?.params?.btnLabel ? route.params.btnLabel : "Proceed"
 
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
@@ -48,6 +49,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                             pinCode={pinCode} 
                             onNumPress={onNumPress} 
                             showPin={showPin}
+                            error={errorMessage}
                         />
                          <TextInput
                                 caretHidden
@@ -74,15 +76,22 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                                     style={{paddingVertical: 10, alignItems: "center"}}
                                     onPress={()=>setShowPin(!showPin)}
                             >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
+                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+                        </TouchableOpacity> 
+
+                        <TouchableOpacity
+                                    style={{paddingVertical: 10, alignItems: "center"}}
+                                    onPress={()=>navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})}
+                            >
+                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
                         </TouchableOpacity> 
                        
                     </View>
                     <View style={styles.proceedBtn}>
                             {
                                 pinCode.length < 6
-                                ? <DisabledButton label="Proceed" />
-                                : <YellowButton label="Proceed" onPress={()=>{
+                                ? <DisabledButton label={btnLabel} />
+                                : <YellowButton label={btnLabel} onPress={()=>{
                                     // setPinCode("")
                                     callBackFunc({pinCode , data})
                                 }} />

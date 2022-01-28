@@ -64,7 +64,7 @@ export const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeTokto
                                 style={{marginTop: 18,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
+                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
                         </TouchableOpacity>
 
                 </View>

@@ -5,7 +5,7 @@ import FIcon from 'react-native-vector-icons/Feather'
 import {useQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_CASH_IN_PROVIDERS } from 'toktokwallet/graphql'
-import { Separator, HeaderImageBackground, HeaderTitle , CheckIdleState } from 'toktokwallet/components'
+import { Separator, HeaderImageBackground, HeaderTitle , CheckIdleState , BuildingBottom } from 'toktokwallet/components'
 import { numberFormat } from 'toktokwallet/helper'
 import { useSelector , useDispatch } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
@@ -56,20 +56,26 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
   
 
     const checkStatus = async ()=> {
-        if(!tokwaAccount.mobileNumber){
-            await getMyAccount()
-            return
-        } 
+        await getMyAccount()
+        // if(!tokwaAccount.mobileNumber){
+        //     await getMyAccount()
+        //     return
+        // } 
 
         // if(!tokwaAccount?.constants?.CashInType){
         //     await getGlobalSettings();
         //     return
         // }   
         
-        if(!tokwaAccount.pinCode){
-            return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
-        }
+        // if(!tokwaAccount.pinCode){
+        //     return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
+        // }
     }
+
+    useEffect(()=>{
+        console.log("PINCODE IS",tokwaAccount.pinCode)
+        if(!tokwaAccount.pinCode) return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
+    },[tokwaAccount.pinCode , onCashIn])
 
     useEffect(()=>{
         if(onCashIn){
@@ -80,14 +86,9 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
                     value: true,
                 }
             })
+            checkStatus()
         }
     },[])
-
-    useEffect(()=>{
-        if(onCashIn){
-           checkStatus();
-        }
-    },[onCashIn, tokwaAccount])
 
     if (loading) {
         return (

@@ -101,7 +101,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
             // if( getUserToktokWalletData.accountToken ) {
             //     await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
             // }
-
+  
             if(getUserToktokWalletData.toktokWalletAccountId && !session.user.toktokWalletAccountId){
                 // UPDATE SESSION HERE
                 dispatch({
@@ -150,9 +150,9 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
         <FlagSecureScreen>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             {
-                // isRooted || !pinSet
-                // ? <RenderRestricted />
-                // : 
+                isRooted || !pinSet
+                ? <RenderRestricted />
+                : 
                 <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
     
                         <CheckWalletAccountRestriction>

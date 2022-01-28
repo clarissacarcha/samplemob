@@ -247,7 +247,8 @@ export const Receipt = connect(null,mapDispatchtoProps)(({children, setVisible,f
             }
           
             <View style={styles.actionBtn}>
-                    <YellowButton label={activeAccount == null && savedAccounts.length < 5 ? "OK" : "Back to Home"} onPress={Proceed} />
+                    {/* <YellowButton label={activeAccount == null && savedAccounts.length < 5 ? "OK" : "Back to Home"} onPress={Proceed} /> */}
+                    <YellowButton label="OK" onPress={Proceed} />
             </View>
         </ScrollView>
         </>
