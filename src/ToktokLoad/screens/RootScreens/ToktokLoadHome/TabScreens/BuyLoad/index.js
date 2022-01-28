@@ -42,7 +42,6 @@ export const BuyLoad = ({ navigation, setMobileNumber, mobileNumber }) => {
   }
 
   const onPressContacts = () => {
-    setErrorMessage("");
     navigation.navigate("ToktokLoadContacts",  { onSelectContact });
   }
 

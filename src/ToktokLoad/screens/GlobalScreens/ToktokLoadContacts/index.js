@@ -18,7 +18,7 @@ import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import { useContacts } from 'toktokload/hooks'
 
 //COMPONENTS
-import { HeaderBack, HeaderTitle, OrangeButton, SearchInput } from 'src/ToktokLoad/components';
+import { HeaderBack, HeaderTitle, OrangeButton, SearchInput, LoadingIndicator } from 'src/ToktokLoad/components';
 import { ContactInformation } from "./components";
 import { empty_search } from 'toktokload/assets/images';
 import { search_icon } from 'toktokload/assets/icons';
@@ -40,12 +40,14 @@ export const ToktokLoadContacts = ({navigation, route}) => {
   const [filteredData, setFilteredData] = useState(null);
   const [searchString, setSearchString] = useState('');
   const [selectedContact, setSelectedContact] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const { contacts } = useContacts();
 
   useEffect(() => {
     if(contacts){
       setData(contacts);
-      setFilteredData(contacts)
+      setFilteredData(contacts);
+      setTimeout(() => { setIsLoading(false) }, 500)
     }
   }, [contacts])
 
@@ -88,6 +90,14 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     )
   }
 
+  if(isLoading){
+    return(
+      <View style={styles.center}>
+        <LoadingIndicator isLoading={true} isFlex />
+      </View>
+    )
+  }
+
   if (!filteredData) {
     return (
       <View style={styles.center}>
@@ -121,7 +131,6 @@ export const ToktokLoadContacts = ({navigation, route}) => {
         />
       </View>
       <FlatList
-        showsVerticalScrollIndicator={false}
         data={filteredData}
         extraData={{selectedContact, filteredData}}
         keyExtractor={(item, index) => index}
