@@ -18,7 +18,7 @@ export const tokwaErrorTitle = pinAttempt => {
   if (pinAttempt.message == 'Please set up your TPIN first in toktokwallet settings.') {
     return 'Set up your TPIN';
   } else {
-    return 'OTP/TPIN Max Attempts Reached';
+    return 'TPIN Max Attempts Reached';
   }
 };
 export const tokwaErrorMessage = pinAttempt => {
