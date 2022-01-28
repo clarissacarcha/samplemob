@@ -36,7 +36,7 @@ const TokTokFoodSplashScreen = () => {
       if (status == 200) {
         getToktokUserInfo({
           variables: {
-            input: {
+            input: {  
               toktokUserId: user.id,
             },
           },
@@ -107,11 +107,13 @@ const TokTokFoodSplashScreen = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: error => {
+      // console.log(JSON.stringify(error));
       setErrorModal({error, visible: true});
     },
     onCompleted: async ({getAccount}) => {
       await getConsumerStatus();
       await getKycStatus();
+      console.log('GET ACCOUNT:' + JSON.stringify(getAccount));
       if (user.toktokfoodUserId != null) {
         dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
       } else {
@@ -124,8 +126,8 @@ const TokTokFoodSplashScreen = () => {
     updateToktokUser({
       variables: {
         input: {
-          toktokUserId: +user.id,
-          toktokfoodUserId: +account.userId,
+          toktokUserId: Number(user.id),
+          toktokfoodUserId: Number(account.userId),
         },
       },
     });
@@ -146,6 +148,7 @@ const TokTokFoodSplashScreen = () => {
 
     if (location != undefined) {
       if (user.toktokfoodUserId != null) {
+
         getToktokUserInfo({
           variables: {
             input: {
