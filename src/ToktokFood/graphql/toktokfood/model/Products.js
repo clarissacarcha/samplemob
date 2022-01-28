@@ -43,6 +43,7 @@ const products = `
     Id
     itemid
     catId
+    contSellingIsset
     itemname
     price
     stocks
