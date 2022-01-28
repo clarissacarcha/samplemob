@@ -146,6 +146,7 @@ export const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     value={nickName}
                                     onChangeText={(value)=>setNickName(value)}
                                     placeholder="Enter alias here"
+                                    placeholderTextColor={COLOR.DARK}
                                     returnKeyType="done"
                                     maxLength={50}
                             />
@@ -178,6 +179,7 @@ export const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     onChangeText={setAccountName}
                                     maxLength={30}
                                     placeholder={`Enter bank account name here`}
+                                    placeholderTextColor={COLOR.DARK}
                                     keyboardType="default"
                                     returnKeyType="done"
                                 />
@@ -196,6 +198,7 @@ export const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     onChangeText={changeAccountNumber}
                                     maxLength={19}
                                     placeholder={`Enter bank account number here`}
+                                    placeholderTextColor={COLOR.DARK}
                                     keyboardType="number-pad"
                                     returnKeyType="done"
                                 />
@@ -215,6 +218,7 @@ export const ToktokWalletCashOutSaveAccount = ({navigation,route})=> {
                                     maxLength={20}
                                     onChangeText={(value)=>setAddress(value)}
                                     placeholder={`Enter address here`}
+                                    placeholderTextColor={COLOR.DARK}
                                     returnKeyType="done"
                             />
                         </View>

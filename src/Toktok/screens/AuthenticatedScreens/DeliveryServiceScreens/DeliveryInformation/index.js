@@ -29,8 +29,6 @@ const DeliveryDetails = ({navigation, route, session}) => {
 
   const quotation = route.params.quotation;
 
-  console.log({quotation});
-
   const AlertHook = useAlert();
 
   const [collectPaymentFrom, setCollectPaymentFrom] = useState(route.params.orderData.collectPaymentFrom);
@@ -41,47 +39,62 @@ const DeliveryDetails = ({navigation, route, session}) => {
   const [isExpress, setIsExpress] = useState(route.params.orderData.isExpress);
   const [isCashOnDelivery, setIsCashOnDelivery] = useState(route.params.orderData.isCashOnDelivery);
   const [cashOnDelivery, setCashOnDelivery] = useState(route.params.orderData.cashOnDelivery);
-  // const [balanceText, setBalanceText] = useState('');
-  // const [hasWallet, setHasWallet] = useState(false);
+
   const [walletBalance, setWalletBalance] = useState(0);
-  const {
-    data: balanceData,
-    loading: balanceLoading,
-    error: balanceError,
-  } = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+  const [balanceText, setBalanceText] = useState('');
+  const [hasWallet, setHasWallet] = useState(null);
+
+  const [getToktokWalletBalance] = useLazyQuery(GET_TOKTOK_WALLET_BALANCE, {
     fetchPolicy: 'network-only',
-    onError: error => {
-      console.log({retrieveBalanceError: error});
+    onCompleted: res => {
+      console.log({res: res.getToktokWalletBalance.balance});
+
+      setHasWallet(res.getToktokWalletBalance.hasWallet);
+      setBalanceText(numberFormat(res.getToktokWalletBalance.balance));
+      setWalletBalance(res.getToktokWalletBalance.balance);
     },
   });
 
-  let balanceText = '';
-  let hasWallet = false;
-
-  if (balanceError) {
-    balanceText = 'Failed to retrieve balance.';
-    // setBalanceText('Failed to retrieve balance.');
-  }
-
-  if (balanceLoading) {
-    balanceText = 'Retrieving balance...';
-    // setBalanceText('Retrieving balance...');
-  }
-
-  if (balanceData) {
-    balanceText = balanceData.getToktokWalletBalance.balance;
-    hasWallet = balanceData.getToktokWalletBalance.hasWallet;
-    // setBalanceText(`${numberFormat(balanceData.getToktokWalletBalance.balance)}`);
-    // setHasWallet(balanceData.getToktokWalletBalance.hasWallet);
-  }
-
   useEffect(() => {
-    if (balanceData) {
-      setWalletBalance(balanceData.getToktokWalletBalance.balance);
-    }
-  }, [balanceData]);
+    getToktokWalletBalance();
+  }, []);
 
-  console.log({balanceText, hasWallet});
+  // const {
+  //   data: balanceData,
+  //   loading: balanceLoading,
+  //   error: balanceError,
+  // } = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+  //   fetchPolicy: 'network-only',
+  //   onError: error => {
+  //     console.log({retrieveBalanceError: error});
+  //   },
+  // });
+
+  // let balanceText = '';
+  // let hasWallet = false;
+
+  // if (balanceError) {
+  //   balanceText = 'Failed to retrieve balance.';
+  //   // setBalanceText('Failed to retrieve balance.');
+  // }
+
+  // if (balanceLoading) {
+  //   balanceText = 'Retrieving balance...';
+  //   // setBalanceText('Retrieving balance...');
+  // }
+
+  // if (balanceData) {
+  //   balanceText = balanceData.getToktokWalletBalance.balance;
+  //   hasWallet = balanceData.getToktokWalletBalance.hasWallet;
+  //   // setBalanceText(`${numberFormat(balanceData.getToktokWalletBalance.balance)}`);
+  //   // setHasWallet(balanceData.getToktokWalletBalance.hasWallet);
+  // }
+
+  // useEffect(() => {
+  //   if (balanceData) {
+  //     setWalletBalance(balanceData.getToktokWalletBalance.balance);
+  //   }
+  // }, [balanceData]);
 
   const paymentMethodSheetRef = useRef();
   const paymentSheetRef = useRef();
@@ -275,9 +288,10 @@ const DeliveryDetails = ({navigation, route, session}) => {
       <PaymentMethodSheet
         onChange={onPaymentMethodChange}
         ref={paymentMethodSheetRef}
-        balanceText={numberFormat(balanceText)}
+        balanceText={balanceText}
         hasWallet={hasWallet}
         price={quotation.pricing.price}
+        getWalletBalance={getToktokWalletBalance}
       />
       <ItemSheet onChange={setItemDescription} ref={itemSheetRef} />
     </>

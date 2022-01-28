@@ -83,7 +83,7 @@ const StopDetails = ({navigation, route}) => {
   const onCashInClick = () => {
     // alert('Cash In');
     navigation.push('ToktokWalletPaymentOptions', {
-      amount: 1000,
+      amount: parseFloat(orderData.price) - parseFloat(walletBalance),
 
       onCashIn: onCashIn,
     });

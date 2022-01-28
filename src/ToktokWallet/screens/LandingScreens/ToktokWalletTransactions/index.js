@@ -1,13 +1,14 @@
 import React, {useState} from 'react'
 import {View,StyleSheet,FlatList,RefreshControl} from 'react-native'
 import { onErrorAlert} from 'src/util/ErrorUtility'
-import {Separator,WalletLog,CheckIdleState, SwipeDownToRefresh , NoData} from 'toktokwallet/components'
+import {Separator,WalletLog,CheckIdleState , SwipeDownToRefresh , NoData } from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
 import { useAlert } from 'src/hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { GET_TRANSACTIONS } from 'toktokwallet/graphql'
 import {useLazyQuery} from '@apollo/react-hooks'
 import { connect } from 'react-redux'
+import Log from 'toktokwallet/screens/LandingScreens/ToktokWalletHomePage/Components/WalletRecentTransactions/Log'
 import CONSTANTS from 'common/res/constants'
 const { COLOR } = CONSTANTS
 
@@ -21,7 +22,7 @@ const mapDispatchtoProps = (dispatch) => ({
 export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navigation,route,getTokwaTransactions})=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Transactions']} />,
+        headerTitle: ()=> <HeaderTitle label={['Recent Transactions']} />,
     })
 
     const [allTransactions, setAllTransactions] = useState(route.params.allTransactions)
@@ -57,11 +58,11 @@ export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navig
     return (
         <CheckIdleState>
         <Separator />
-        <SwipeDownToRefresh/>
+        {/* <SwipeDownToRefresh/> */}
         <View style={styles.container}>        
                 <View style={styles.logs}>
                         <FlatList 
-                            ListHeaderComponent={() => {
+                          ListHeaderComponent={() => {
                                 if(allTransactions.length > 0) return null
                                 if(loading) return null
                                 return <NoData/>
@@ -71,7 +72,11 @@ export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navig
                             data={allTransactions}
                             keyExtractor={(item)=>item.id}
                             renderItem={({item,index})=>(
-                                <WalletLog key={`recentLog${index}`} item={item} itemsLength={allTransactions} index={index}/>
+                                <Log
+                                    key={`walletLogs${index}`}
+                                    transaction={item}
+                                    index={index}
+                                />
                             )}
                             // onEndReached={()=>{
                             //     setPageLoading(true)

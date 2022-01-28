@@ -72,6 +72,31 @@ export const VerifyContextProvider = ({children})=> {
     const [cities, setCities] = useState(citiesList)
     const [provinceCities, setProvinceCities] = useState([])
 
+    const [pepInfo,setPepInfo] = useState({
+        isPep: false,
+        questionnaire: {
+            isPep: "",
+            pepPosition: "",
+            isFamilyPep: "",
+            familyPepPosition: "",
+            sourceOfIncomeId: "",
+            sourceOfIncomeDes: "",
+            sourceOfIncome: "",
+            sourceOfWealthId: "",
+            sourceOfWealthDes: "",
+            sourceOfWealth: ""
+        },
+        videocall: {
+            videoCallContactDetails: "",
+            callChannelId: "",
+            callChannel: "",
+            preferredVcsDayMin: "",
+            preferredVcsDayMax: "",
+            preferredVcsTimeMin: "",
+            preferredVcsTimeMax: ""
+        }
+    })
+
     const changePersonInfo = (key,value)=> {
         setPerson(oldstate=>({
             ...oldstate,
@@ -182,6 +207,8 @@ export const VerifyContextProvider = ({children})=> {
                 changeIncomeInfo,
                 cacheImagesList,
                 setCacheImagesList,
+                pepInfo,
+                setPepInfo,
             }}
         >
             {children}

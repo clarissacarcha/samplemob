@@ -1,6 +1,6 @@
-import React, {useCallback, useMemo, forwardRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, forwardRef, useState} from 'react';
 import {connect} from 'react-redux';
-import {View, StyleSheet, Text, Image, TouchableHighlight, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, Image, TouchableHighlight, TouchableOpacity, ActivityIndicator} from 'react-native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
 import {LIGHT, MEDIUM, ORANGE, FONT_REGULAR, FONT_MEDIUM} from '../../../../../res/constants';
@@ -9,27 +9,28 @@ import {WhiteButton, VectorIcon, ICON_SET, Shadow} from '../../../../../revamp';
 
 import ToktokWalletIcon from '../../../../../assets/images/toktokwalletlanding.png';
 
-export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet, price}, ref) => {
+export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet, price, getWalletBalance}, ref) => {
   const navigation = useNavigation();
 
   const snapPoints = useMemo(() => [0, 151], []);
 
-  console.log({hasWallet, balanceText});
+  const [hasEnoughBalance, setHasEnoughBalance] = useState(
+    parseFloat(balanceText.replace(/,/g, '')) >= parseFloat(price),
+  );
 
-  const hasEnoughBalance = hasWallet && parseFloat(balanceText) >= parseFloat(price);
-  const notEnoughBalance = hasWallet && parseFloat(balanceText) < parseFloat(price);
-  const hasNoWallet = !hasWallet;
-
-  const onCashInClick = () => {
-    console.log('CASH IN');
-    navigation.push('ToktokWalletPaymentOptions', {
-      amount: parseFloat(price) - parseFloat(balanceText),
-      onCashIn: onCashIn,
-    });
-  };
+  useEffect(() => {
+    setHasEnoughBalance(parseFloat(balanceText.replace(/,/g, '')) >= parseFloat(price));
+  }, [price, balanceText]);
 
   const onCashIn = () => {
-    console.log('CASH IN SUCCESS');
+    getWalletBalance();
+  };
+
+  const onCashInClick = () => {
+    navigation.push('ToktokWalletPaymentOptions', {
+      amount: parseFloat(price) - parseFloat(balanceText.replace(/,/g, '')),
+      onCashIn: onCashIn,
+    });
   };
 
   return (
@@ -52,7 +53,7 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet,
           }}
         />
         <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />
-        {hasEnoughBalance && (
+        {hasWallet && hasEnoughBalance && (
           <View style={{flexDirection: 'row', alignItems: 'center', height: 70}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <Shadow style={{borderRadius: 5}}>
@@ -80,19 +81,9 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet,
               </Shadow>
             </View>
           </View>
-          // <WhiteButton
-          //   label="toktokwallet"
-          //   borderless
-          //   labelStyle={{fontFamily: FONT.REGULAR}}
-          //   onPress={() => {
-          //     onChange('TOKTOKWALLET');
-          //     ref.current.collapse();
-          //   }}
-          //   suffixText={`PHP ${balanceText}`}
-          // />
         )}
 
-        {notEnoughBalance && (
+        {hasWallet && !hasEnoughBalance && (
           <View style={{flexDirection: 'row', alignItems: 'center', height: 70}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <Shadow style={{borderRadius: 5}}>
@@ -124,21 +115,42 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet,
               <Text style={{color: COLOR.ORANGE}}>Please click here to cash in.</Text>
             </TouchableOpacity>
           </View>
-          // <WhiteButton
-          //   label="toktokwallet"
-          //   borderless
-          //   labelStyle={{fontFamily: FONT.REGULAR}}
-          //   onPress={() => {
-          //     onChange('TOKTOKWALLET');
-          //     ref.current.collapse();
-          //   }}
-          //   suffixText={`Insufficient Balance - Cash In`}
-          // />
         )}
 
-        {hasNoWallet && (
-          <View style={{height: 50, justifyContent: 'center', marginLeft: 10}}>
-            <Text style={{color: COLOR.MEDIUM}}>toktokwallet</Text>
+        {hasWallet === null && (
+          <View style={{height: 50, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size={24} color={COLOR.YELLOW} />
+          </View>
+        )}
+
+        {hasWallet === false && (
+          <View style={{flexDirection: 'row', alignItems: 'center', height: 70}}>
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <Shadow style={{borderRadius: 5}}>
+                <TouchableHighlight
+                  disabled
+                  onPress={() => {}}
+                  style={{borderRadius: 5}}
+                  underlayColor={COLOR.YELLOW_UNDERLAY}>
+                  <View style={{backgroundColor: '#EEEEEE', flexDirection: 'row', borderRadius: 5, padding: 8}}>
+                    <View style={{padding: 2, backgroundColor: COLOR.YELLOW, borderRadius: 5, marginRight: 8}}>
+                      <Image source={ToktokWalletIcon} style={{height: 30, width: 30}} resizeMode="contain" />
+                    </View>
+                    <View style={{justifyContent: 'center'}}>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={{color: COLOR.YELLOW}}>toktok</Text>
+                        <Text style={{color: COLOR.ORANGE}}>wallet</Text>
+                      </View>
+                    </View>
+                  </View>
+                </TouchableHighlight>
+              </Shadow>
+            </View>
+            <TouchableOpacity
+              onPress={() => navigation.push('ToktokWalletLoginPage')}
+              style={{flex: 1, justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+              <Text style={{color: COLOR.ORANGE, textAlign: 'center'}}>Create your toktokwallet account now!</Text>
+            </TouchableOpacity>
           </View>
         )}
 
