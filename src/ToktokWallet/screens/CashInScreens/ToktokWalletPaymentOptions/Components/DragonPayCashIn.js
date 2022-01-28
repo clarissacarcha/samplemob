@@ -109,9 +109,9 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
      }
 
     const showInput = ()=>{
-        setTimeout(() => {
-            inputRef.current.focus();
-        }, 0);
+        // setTimeout(() => {
+        //     inputRef.current.focus();
+        // }, 0);
     }
 
     useEffect(()=>{
