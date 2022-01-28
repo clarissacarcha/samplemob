@@ -209,12 +209,12 @@ const styles = StyleSheet.create({
   },
   sheet: {
     flex: 1,
-    padding: 15,
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   cancelTitle: {
-    fontSize: 19,
+    fontSize: 20,
     marginTop: 6,
     textAlign: 'center',
     fontFamily: FONT.BOLD,
