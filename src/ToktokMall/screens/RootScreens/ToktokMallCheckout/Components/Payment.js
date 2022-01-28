@@ -173,6 +173,7 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('ToktokWalletPaymentOptions', {
+                  amount: 0,
                   onCashIn: ({balance}) => {
                     setCurrenctBalance(balance);
                   },
