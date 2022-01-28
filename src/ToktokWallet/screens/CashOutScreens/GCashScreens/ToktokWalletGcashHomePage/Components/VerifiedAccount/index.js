@@ -226,7 +226,7 @@ export const VerifiedAccount = ({record,provider})=> {
                                                        placeholderTextColor="black"
                                                        onChangeText={changeAmount}
                                                        textAlignVertical="bottom"
-                                                       textAlign="center"
+                                                       textAlign="right"
                                                    />
                                            {/* <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/> */}
                                        </View>
