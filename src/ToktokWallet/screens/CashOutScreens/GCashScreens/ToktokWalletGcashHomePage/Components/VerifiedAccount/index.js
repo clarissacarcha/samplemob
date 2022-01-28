@@ -28,8 +28,8 @@ const inputAmountLength = {
     "5": 100,
     "6": 120,
     "7": 130,
-    "8": 150,
-    "9": 160,
+    "8": 155,
+    "9": 165,
 }
 
 export const VerifiedAccount = ({record,provider})=> {
