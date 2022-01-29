@@ -1,6 +1,11 @@
 import React from 'react'
 import {useNavigation} from '@react-navigation/native'
 
+//SELF IMPORT
+import NoAccount from "./NoAccount"
+import PendingKYC from "./PendingKYC"
+import RejectedKYC from "./RejectedKYC"
+
 
 export const CheckTokwaKYCRegistration = ({children, kycStatus})=>{
 
@@ -10,20 +15,17 @@ export const CheckTokwaKYCRegistration = ({children, kycStatus})=>{
 
      // If KYC status is Rejected
      if(kycStatus == 0){
-        navigation.replace("ToktokWalletRestricted" , {component: "rejectedKYC"})
-        return true
+        return <RejectedKYC/>
     }
 
      // If have pending KYC record and status is Pending
      if(kycStatus == 2){
-        navigation.replace("ToktokWalletRestricted" , {component: "pendingKYC"})
-        return true
-    }
+         return <PendingKYC/>
+     }
 
      // If KYC record does not exist, proceed to KYC Registration or Linking
     if(!kycStatus || kycStatus == null){
-       navigation.replace("ToktokWalletRestricted" , {component: "noAccount"})
-       return true
+         return <NoAccount/>
     }
 
     return (
