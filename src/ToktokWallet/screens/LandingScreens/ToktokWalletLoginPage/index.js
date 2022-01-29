@@ -1,4 +1,4 @@
-import React , {useState,useRef,useCallback,useEffect} from 'react'
+import React , {useState,useRef,useCallback,useEffect,useMemo} from 'react'
 import { View ,ActivityIndicator,StatusBar,Text,TouchableOpacity, Alert} from 'react-native'
 import {SomethingWentWrong} from 'src/components'
 import CONSTANTS from 'common/res/constants'
@@ -116,6 +116,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
         }
     })
 
+    const kycStatus = useMemo(()=> data?.getUserToktokWalletData?.kycStatus, [data])
 
     if (loading) {
         return (
@@ -153,7 +154,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
                 isRooted || !pinSet
                 ? <RenderRestricted />
                 : 
-                <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
+                <CheckTokwaKYCRegistration kycStatus={kycStatus}>
     
                         <CheckWalletAccountRestriction>
                         <LoginPage/>
