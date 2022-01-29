@@ -74,8 +74,8 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
 
     useEffect(()=>{
         console.log("PINCODE IS",tokwaAccount.pinCode)
-        if(!tokwaAccount.pinCode) return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
-    },[tokwaAccount.pinCode , onCashIn])
+        if(!tokwaAccount.pinCode && tokwaAccount.mobileNumber) return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
+    },[tokwaAccount , onCashIn])
 
     useEffect(()=>{
         if(onCashIn){

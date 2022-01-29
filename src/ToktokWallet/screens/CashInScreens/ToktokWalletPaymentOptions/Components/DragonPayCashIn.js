@@ -109,9 +109,9 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
      }
 
     const showInput = ()=>{
-        // setTimeout(() => {
-        //     inputRef.current.focus();
-        // }, 0);
+        setTimeout(() => {
+            if(amount == "") inputRef.current.focus();
+        }, 10);
     }
 
     useEffect(()=>{
@@ -150,7 +150,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                                         style={{textAlign:"center", marginTop: 12,fontSize: 32, fontFamily: FONT.BOLD, height: '100%', width: inputWidth, ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
                                                         keyboardType="numeric"
                                                         returnKeyType="done"
-                                                        placeholder="0.00"
+                                                        placeholder={amount == "" ? "0.00" : ""}
                                                         placeholderTextColor="black"
                                                         onChangeText={changeAmountText}
                                                         textAlign="right"
