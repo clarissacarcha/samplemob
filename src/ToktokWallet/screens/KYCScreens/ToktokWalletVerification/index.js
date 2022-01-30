@@ -45,7 +45,7 @@ const HeaderBackClose = ({currentIndex, setCurrentIndex, setPromptVisible}) => {
   };
 
   useFocusEffect(
-    useCallback(() => {
+    () => {
       const backAction = () => {
         closeScreen();
         return true;
@@ -54,7 +54,7 @@ const HeaderBackClose = ({currentIndex, setCurrentIndex, setPromptVisible}) => {
       const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
 
       return () => backHandler.remove();
-    }, []),
+    },
   );
 
   return (

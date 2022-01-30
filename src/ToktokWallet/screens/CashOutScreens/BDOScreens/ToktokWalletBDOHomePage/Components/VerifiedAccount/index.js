@@ -3,7 +3,7 @@ import { View, Text, StyleSheet , Image ,TextInput} from 'react-native'
 import { ICON_SET, YellowButton , VectorIcon } from 'src/revamp'
 import {useSelector} from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
-import { numberFormat } from 'toktokwallet/helper'
+import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { POST_CASH_OUT_BDO , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
@@ -196,7 +196,15 @@ export const VerifiedAccount = ({record,provider})=> {
                                            }
                                               <TextInput
                                                        onFocus={()=>setIsFocus(true)}
-                                                       onBlur={()=>setIsFocus(false)}
+                                                       onBlur={()=>{
+                                                           setIsFocus(false)
+                                                           AmountLimitHelper.postCheckOutgoingLimit({
+                                                                amount,
+                                                                setErrorMessage: (value)=> {
+                                                                    if(errorMessage == "")  setErrorMessage(value)
+                                                                }
+                                                            })
+                                                        }}
                                                        caretHidden={!isFocus}
                                                        value={amount}
                                                        ref={inputRef}
@@ -224,7 +232,7 @@ export const VerifiedAccount = ({record,provider})=> {
             
             <View style={styles.cashoutbutton}>
                     {
-                        (amount != "" && amount <= tokwaAccount.wallet.balance && amount >= 1 )
+                        (amount != "" && amount <= tokwaAccount.wallet.balance && amount >= 1 && errorMessage == "")
                         ? <YellowButton label="Transfer Fund" onPress={confirmAmount}/>
                         : <DisabledButton label="Transfer Fund" />
                     }
