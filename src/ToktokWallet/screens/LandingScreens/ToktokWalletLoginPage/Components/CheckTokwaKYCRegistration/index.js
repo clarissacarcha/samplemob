@@ -2,10 +2,11 @@ import React from 'react'
 import {useNavigation} from '@react-navigation/native'
 
 //SELF IMPORT
-import NoAccount from "./NoAccount"
-import PendingKYC from "./PendingKYC"
-import RejectedKYC from "./RejectedKYC"
-
+import { 
+    NoAccount , 
+    PendingKyc , 
+    RejectedKyc
+} from "toktokwallet/screens/LandingScreens/ToktokWalletRestricted/Components"
 
 export const CheckTokwaKYCRegistration = ({children, kycStatus})=>{
 
@@ -15,12 +16,12 @@ export const CheckTokwaKYCRegistration = ({children, kycStatus})=>{
 
      // If KYC status is Rejected
      if(kycStatus == 0){
-        return <RejectedKYC/>
+        return <RejectedKyc/>
     }
 
      // If have pending KYC record and status is Pending
      if(kycStatus == 2){
-         return <PendingKYC/>
+         return <PendingKyc/>
      }
 
      // If KYC record does not exist, proceed to KYC Registration or Linking
