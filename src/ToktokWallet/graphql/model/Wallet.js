@@ -19,3 +19,19 @@ export const GET_WALLET = gql`
         }
     }
 `
+
+export const POST_CHECK_INCOMING_WALLET_LIMIT = gql`
+    mutation postCheckIncomingWalletLimit($input: CheckLimitInput){
+        postCheckIncomingWalletLimit(input: $input){
+            message
+        }
+    }
+`
+
+export const POST_CHECK_OUTGOING_WALLET_LIMIT = gql`
+    mutation postCheckOutgoingWalletLimit($input: CheckLimitInput){
+        postCheckOutgoingWalletLimit(input: $input){
+            message
+        }
+    }
+`

@@ -23,13 +23,13 @@ export class AxiosUtility {
     }
   };
 
-  static post = async ({url, param}) => {
+  static post = async ({url, param , options = {}}) => {
     try {
       let responseData = null;
       let responseError = null;
 
       await axios
-        .post(url, param)
+        .post(url, param, options)
         .then((response) => {
           responseData = response.data;
         })
