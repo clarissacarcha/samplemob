@@ -92,7 +92,7 @@ const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAcc
                         />
                     }
                     
-                     <TransactionInfo label="Status" value={status}/>
+                     {/* <TransactionInfo label="Status" value={status}/> */}
                      <TransactionInfo label="Amount" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(cashoutLogParams.amount)}`}/>
                      {
                         tokwaAccount.constants.UbFundTransferType == "api" &&
