@@ -332,7 +332,7 @@ export const Variations = ({data, productId}) => {
     const variants = data.variants;
     if (variants.length) {
       variants.map(variant => {
-        if (variant.enabled === 1) {
+        if ((variant.enabled === 1 && variant.stocks > 0) || variant.contSellingIsset > 0) {
           variantHolder.push(variant);
         }
       });
