@@ -216,3 +216,21 @@ export const ON_DELIVERY_ACCEPTED = gql`
     }
   }
 `;
+
+export const POST_DELIVERY_REQUEST_TAKE_MONEY = gql`
+  mutation postDeliveryRequestTakeMoney($input: PostDeliveryRequestTakeMoneyInput!) {
+    postDeliveryRequestTakeMoney(input: $input) {
+      message
+      requestTakeMoneyId
+      validator
+    }
+  }
+`;
+
+export const POST_DELIVERY_VERIFY_REQUEST_TAKE_MONEY = gql`
+  mutation postDeliveryVerifyRequestTakeMoney($input: PostDeliveryVerifyRequestTakeMoneyInput!) {
+    postDeliveryVerifyRequestTakeMoney(input: $input) {
+      message
+    }
+  }
+`;

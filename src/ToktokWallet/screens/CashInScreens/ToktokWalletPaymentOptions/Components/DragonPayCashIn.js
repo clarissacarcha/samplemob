@@ -4,7 +4,7 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { Separator , DisabledButton , BuildingBottom } from 'toktokwallet/components'
 import { useAccount } from 'toktokwallet/hooks'
 import { AlertOverlay } from 'src/components'
-import { numberFormat } from 'toktokwallet/helper'
+import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import { useSelector , useDispatch } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -12,6 +12,20 @@ import { useAlert , usePrompt } from 'src/hooks'
 import { YellowButton } from 'src/revamp'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS
+
+
+const inputAmountLength = {
+    "0": 80,
+    "1": 80,
+    "2": 80,
+    "3": 80,
+    "4": 80,
+    "5": 100,
+    "6": 120,
+    "7": 130,
+    "8": 155,
+    "9": 165,
+}
 
 export const DragonPayCashIn = ({navigation,route, transactionType}) => {
 
@@ -23,6 +37,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
     const [isFocus,setIsFocus] = useState(false)
+    const [inputWidth,setInputWidth] = useState(inputAmountLength["0"])
     const inputRef = useRef(null);
 
     const dispatch = useDispatch();
@@ -70,6 +85,17 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
         })
         return;
      }
+
+     const checkRecipientWalletLimitation = (amount)=> {
+
+        const errorMessage = AmountLimitHelper.checkAccountIncomingWalletLimit({
+            tokwaAccount,
+            amount
+        })
+
+        return errorMessage
+
+     }
  
      const changeAmountText = (value)=> {
          setMaxLimitMessage("")
@@ -83,11 +109,10 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
          // setAmount(num * 0.01)
          if(num[0] == ".") return setAmount("0.")
          setAmount(num)
-         if(num == "") return setMessage("")
-         if(num < 1){
-            return setMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
-         }
-         // checkRecipientWalletLimitation(num * 0.01)
+        //  const limitMessage = checkRecipientWalletLimitation(num)
+        //  if(limitMessage) return setMessage(limitMessage)
+         if(num == "")return setMessage("")
+         if(num < 1) return setMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
          setDisablebtn(false)
          setMessage("")
          
@@ -95,20 +120,24 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
 
     const showInput = ()=>{
         setTimeout(() => {
-            inputRef.current.focus();
-        }, 0);
+            if(amount == "") inputRef.current.focus();
+        }, 10);
     }
 
     useEffect(()=>{
         showInput()
     },[])
+
+    useEffect(()=>{
+        setInputWidth(inputAmountLength[amount.length])
+    },[amount])
     
     return (
         <>
             <Separator/>
             <View style={styles.container}>
                 <View style={styles.paypandaLogo}>
-                        <Text style={{fontSize: FONT_SIZE.L ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
+                        <Text style={{fontSize: FONT_SIZE.L ,fontFamily: FONT.BOLD}}>Please enter amount to Cash In</Text>
                 </View>
                 <View style={styles.content}>
                         <View style={styles.amountcontent}>
@@ -123,33 +152,45 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                             }
                                                <TextInput
                                                         onFocus={()=>setIsFocus(true)}
-                                                        onBlur={()=>setIsFocus(false)}
+                                                        onBlur={()=>{
+                                                            setIsFocus(false)
+                                                            AmountLimitHelper.postCheckIncomingLimit({
+                                                                amount,
+                                                                setErrorMessage: setMessage
+                                                            })
+                                                        }}
                                                         caretHidden={!isFocus}
                                                         value={amount}
                                                         ref={inputRef}
                                                         // style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
-                                                        style={{textAlign:"center", marginTop: 12,fontSize: 32, fontFamily: FONT.BOLD, height: '100%', width: 160, ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
+                                                        style={{textAlign:"center", marginTop: 12,fontSize: 32, fontFamily: FONT.BOLD, height: '100%', width: inputWidth, ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
                                                         keyboardType="numeric"
                                                         returnKeyType="done"
-                                                        placeholder="0.00"
+                                                        placeholder={amount == "" ? "0.00" : ""}
                                                         placeholderTextColor="black"
                                                         onChangeText={changeAmountText}
-                                                        textAlign="center"
+                                                        textAlign="right"
                                                         textAlignVertical="center"
+                                                        // onContentSizeChange={(e)=> {
+                                                        //     setInputWidth(e.nativeEvent.contentSize.width)
+                                                        // }}
                                                     />
                                             {/* <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/> */}
                                         </View>
                                         
                                     </View>
-                                    { message != "" && <Text style={{fontFamily: FONT.REGULAR, color: "red", marginTop: 10,marginBottom: 10, fontSize: FONT_SIZE.S}}>{message}</Text>}
-                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 10}}>Current Balance {tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
+                                    { message != "" && <Text style={{textAlign:"center", fontFamily: FONT.REGULAR, color: "red", marginTop: 10,marginBottom: 10, fontSize: FONT_SIZE.S}}>{message}</Text>}
+                                    <Text>
+                                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: 10}}>Current Balance: </Text>
+                                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, marginTop: 10}}>{numberFormat(tokwaAccount.wallet.balance)}</Text>
+                                    </Text>
                                 
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
                         
                          </View>
                          <View style={styles.cashinbutton}>
                                     {
-                                        (amount < 1 || amount > transactionType.cashInLimit || disablebtn)
+                                        (amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "")
                                         ? <DisabledButton label="Cash In"/>
                                         : <YellowButton label="Cash In" onPress={confirmAmount}/>
                                     }

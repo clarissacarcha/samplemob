@@ -6,6 +6,7 @@ import Error from 'src/common/assets/globalert/Error.png'
 import Question from 'src/common/assets/globalert/Question.png'
 import Success from 'src/common/assets/globalert/Success.png'
 import Warning from 'src/common/assets/globalert/Warning.png'
+import TOKWA_WARNING_ICON from 'toktokwallet/assets/images/warning.png'
 import CONSTANTS from 'common/res/constants';
 
 const { width } = Dimensions.get("window")
@@ -13,6 +14,7 @@ const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE  , SHADOW } = CONSTANTS
 
 const TOKWA_ERROR_ICON = require('../../../assets/toktokwallet-assets/error.png');
 const TOKWA_SUCCESS_ICON = require('../../../assets/toktokwallet-assets/success.png');
+
 
 export const PromptModal = ({
   type,
@@ -36,7 +38,7 @@ export const PromptModal = ({
       icon = event === "TOKTOKWALLET" ? TOKWA_ERROR_ICON : Error;
       break;
     case "warning":
-      icon = Warning;
+      icon = event === "TOKTOKWALLET" ? TOKWA_WARNING_ICON : Warning;
       break;
     case "question":
       icon = Question;

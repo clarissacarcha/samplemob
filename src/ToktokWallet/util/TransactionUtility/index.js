@@ -90,12 +90,15 @@ export class TransactionUtility {
     // PROMPT EVENTS
     if(prompt){
       let promptTitle = null;
+      let promptType = "error";
       switch(graphQLErrors[0]?.payload?.code){
         case "VALIDATORMAXREQUEST":
           promptTitle = "Max Attempt Reached";
+          promptType = "warning";
           break;
         case "OTPMAXREQUEST":
           promptTitle = "Max Attempt Reached";
+          promptType = "warning";
           break;
         default:
           promptTitle = title;
@@ -103,7 +106,7 @@ export class TransactionUtility {
       }
 
       prompt({
-        type: "error",
+        type: promptType,
         message: graphQLErrors[0]?.message,
         event: "TOKTOKWALLET",
         title: promptTitle

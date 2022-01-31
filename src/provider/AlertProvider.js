@@ -15,13 +15,13 @@ const {Provider} = AlertContext;
 const AlertProvider = ({children}) => {
   const [alertState, setAlertState] = useState(initialState);
 
-  const alert = ({message, buttonLabel, actionButtons , title}) => {
+  const alert = ({message, buttonLabel, actionButtons, title}) => {
     setAlertState({
       visible: true,
       message,
       buttonLabel,
       actionButtons,
-      title
+      title,
     });
   };
 

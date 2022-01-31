@@ -67,10 +67,15 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
         //     return
         // }   
         
-        if(!tokwaAccount.pinCode){
-            return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
-        }
+        // if(!tokwaAccount.pinCode){
+        //     return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
+        // }
     }
+
+    useEffect(()=>{
+        console.log("PINCODE IS",tokwaAccount.pinCode)
+        if(!tokwaAccount.pinCode && tokwaAccount.mobileNumber) return navigation.replace("ToktokWalletRestricted", {component: "noPin" , amount: amount , onCashIn: onCashIn})
+    },[tokwaAccount , onCashIn])
 
     useEffect(()=>{
         if(onCashIn){
@@ -81,7 +86,7 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
                     value: true,
                 }
             })
-            checkStatus();
+            checkStatus()
         }
     },[])
 

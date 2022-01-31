@@ -9,6 +9,7 @@ import {GET_ACCOUNT,POST_VERIFY_TRANSACTION_QR_CODE} from 'toktokwallet/graphql'
 import {onError} from 'src/util/ErrorUtility'
 import {useSelector} from 'react-redux'
 import {useAlert} from 'src/hooks/useAlert';
+import { CheckIdleState } from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
 
 //SELF IMPORTS
@@ -95,7 +96,7 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
     } 
 
     return (
-        <>
+        <CheckIdleState>
         <View style={{flex: 1}}>
             <RNCamera
                 style={{
@@ -169,7 +170,7 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
 
             </RNCamera>
         </View>
-        </>
+        </CheckIdleState>
     )
 }
 

@@ -53,7 +53,7 @@ const Details = ({
                  <Text style={styles.labelText}>{phrase}</Text>
                  {renderDetails({details})}
                  <View style={{marginTop: 15}}>
-                    <Text style={styles.labelText}>Status: Success</Text>
+                    {/* <Text style={styles.labelText}>Status: Success</Text> */}
                     <Text style={styles.labelText}>Amount: {amount}</Text>
                     <Text style={styles.labelText}>Ref No: {refNo}</Text>
                     <Text style={styles.labelText}>Date & Time: {refDate}</Text>

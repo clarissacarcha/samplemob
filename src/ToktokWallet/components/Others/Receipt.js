@@ -184,7 +184,7 @@ export const Receipt = ({children, format = "png", refNo ,refDate, onPress, btnL
                
             </View>
             <View style={styles.actionBtn}>
-                    <YellowButton label="Back to Home" onPress={onPress} />
+                    <YellowButton label={btnLabel ? btnLabel : "OK"} onPress={onPress} />
             </View>
         </ScrollView>
         </>

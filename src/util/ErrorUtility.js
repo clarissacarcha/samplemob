@@ -1,7 +1,7 @@
 // import React, {useEffect, useState} from 'react';
 import {Alert} from 'react-native';
 import {ApolloError} from 'apollo-client';
-import { navigate,replace } from 'src/app/Nav/RootNavigation';
+import {navigate, replace} from 'src/app/Nav/RootNavigation';
 
 export const onError = (error) => {
   const {graphQLErrors, networkError} = error;
@@ -26,9 +26,8 @@ export const onError = (error) => {
   }
 };
 
-export const onErrorAlert = ({alert, error , navigation = null , title = null}) => {
+export const onErrorAlert = ({alert, error, navigation = null, title = null}) => {
   try {
-
     const {graphQLErrors, networkError} = error;
 
     if (networkError) {
@@ -36,12 +35,12 @@ export const onErrorAlert = ({alert, error , navigation = null , title = null}) 
     } else if (graphQLErrors.length > 0) {
       graphQLErrors.map(({message, locations, path, code}) => {
         // temporary added for toktokwallet deactivated account
-        if(code === "FORBIDDEN" && message === "toktokwallet account not active"){
+        if (code === 'FORBIDDEN' && message === 'toktokwallet account not active') {
           //alert({message: 'toktokwallet account has been deactivated.'});
           // navigation.navigate("ToktokWalletLoginPage")
           // navigation.replace("ToktokWalletLoginPage")
-          navigation.navigate("ToktokLandingHome")
-          navigation.push("ToktokWalletLoginPage")  
+          navigation.navigate('ToktokLandingHome');
+          navigation.push('ToktokWalletLoginPage');
           return;
         }
         if (code === 'INTERNAL_SERVER_ERROR') {
@@ -49,7 +48,7 @@ export const onErrorAlert = ({alert, error , navigation = null , title = null}) 
         } else if (code === 'USER_INPUT_ERROR') {
           alert({message});
         } else if (code === 'BAD_USER_INPUT') {
-          alert({message , title});
+          alert({message, title});
         } else if (code === 'AUTHENTICATION_ERROR') {
           // Do Nothing. Error handling should be done on the scren
         } else {

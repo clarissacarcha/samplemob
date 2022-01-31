@@ -54,6 +54,13 @@ export const GET_MY_ACCOUNT = gql`
                     title
                     level
                     key
+                    walletSize
+                    incomingValueDailyLimit
+                    incomingValueMonthlyLimit
+                    incomingValueAnnualLimit
+                    outgoingValueDailyLimit
+                    outgoingValueMonthlyLimit
+                    outgoingValueAnnualLimit
                 }
             }
             wallet {
