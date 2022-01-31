@@ -28,8 +28,8 @@ const inputAmountLength = {
     "5": 100,
     "6": 120,
     "7": 130,
-    "8": 150,
-    "9": 160,
+    "8": 155,
+    "9": 165,
 }
 
 export const VerifiedAccount = ({record,provider})=> {
@@ -208,7 +208,7 @@ export const VerifiedAccount = ({record,provider})=> {
                                                        placeholderTextColor="black"
                                                        onChangeText={changeAmount}
                                                        textAlignVertical="bottom"
-                                                       textAlign="center"
+                                                       textAlign="right"
                                                    />
                                            {/* <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/> */}
                                        </View>
