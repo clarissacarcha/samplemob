@@ -260,6 +260,9 @@ const MainComponent = () => {
   });
 
   const fixOrderLogs = async () => {
+    const VOUCHER_FlAG =
+      shippingVoucher.length > 0 ? shippingVoucher[0]?.voucher?.handle_shipping_promo : autoShipping?.success ? 1 : 0;
+
     let orderLogs = {
       sys_shop: temporaryCart.items[0]?.shopid,
       branchid: temporaryCart.items[0]?.branchid,
@@ -267,7 +270,7 @@ const MainComponent = () => {
       hash: delivery?.hash ? delivery.hash : '',
       hash_delivery_amount: delivery?.hash_price ? delivery.hash_price : '',
       original_shipping_fee: delivery?.price ? delivery.price : 0,
-      handle_shipping_promo: shippingVoucher.length > 0 || autoShipping?.success ? 1 : 0,
+      handle_shipping_promo: Number(VOUCHER_FlAG),
       daystoship: 0,
       daystoship_to: 0,
       items: await fixItems(),

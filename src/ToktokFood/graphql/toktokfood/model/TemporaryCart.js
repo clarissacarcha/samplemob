@@ -120,6 +120,7 @@ export const GET_VOUCHER_CODE = gql`
       message
       type
       voucher {
+        handle_shipping_promo
         id
         shopid
         amount

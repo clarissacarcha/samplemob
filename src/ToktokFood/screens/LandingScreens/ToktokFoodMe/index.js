@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useEffect, useContext} from 'react';
 import {Platform, StyleSheet, View, Image, Text, FlatList, TouchableOpacity} from 'react-native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
 // Components
-import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
@@ -13,14 +11,13 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {useUserLocation} from 'toktokfood/hooks';
 import {useSelector} from 'react-redux';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
-import {arrow_right, help_centre_ic} from 'toktokfood/assets/images';
 import {GET_MY_ACCOUNT} from 'toktokwallet/graphql';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 // Fonts & Colors
-import {COLOR, FONT, FONT_SIZE} from 'res/variables';
-import {HelpCentre, Me, VerifyContext, VerifyContextProvider} from './components';
+import {FONT, FONT_SIZE} from 'res/variables';
+import {HelpCentre, VerifyContext, VerifyContextProvider} from './components';
 
 const CUSTOM_HEADER = {
   container: Platform.OS === 'android' ? moderateScale(70) + getStatusbarHeight : moderateScale(70),
@@ -37,7 +34,9 @@ const MainComponent = () => {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: ({getMyAccount}) => {
-      setWalletBalance(getMyAccount.wallet.balance);
+      try {
+        setWalletBalance(getMyAccount.wallet.balance);
+      } catch {}
     },
     onError: error => {
       // console.log(error)
