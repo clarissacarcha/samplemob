@@ -7,7 +7,7 @@ import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT, POST_COMPUTE_CONVENIE
 import { useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert, usePrompt } from 'src/hooks'
-import { numberFormat } from 'toktokwallet/helper'
+import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { AlertOverlay } from 'src/components'
@@ -75,7 +75,15 @@ const Amount = ({
                 amount={amount}
                 changeAmount={changeAmount}
                 currency={tokwaAccount.wallet.currency.code}
-                onBlur={computeConvenienceFee}
+                onBlur={()=>{
+                    AmountLimitHelper.postCheckOutgoingLimit({
+                        amount,
+                        setErrorMessage: (value)=> {
+                            if(errorListMessage.amount == "")  changeErrorMessagge("amount",value)
+                        }
+                    })
+                    computeConvenienceFee()
+                }}
             />
             {/* <View style={[styles.input, {borderWidth: 1, borderColor: errorListMessage.amount == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
@@ -393,6 +401,10 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         if(amount > 50000 && accountNumber.length > 16){
             changeErrorMessagge("accountNumber","Account Number maximum length must be 16")
             noError = false
+        }
+
+        if(errorListMessage.amount != ""){
+            noError = false;
         }
 
         if(!noError) return

@@ -4,7 +4,7 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { Separator , DisabledButton , BuildingBottom } from 'toktokwallet/components'
 import { useAccount } from 'toktokwallet/hooks'
 import { AlertOverlay } from 'src/components'
-import { numberFormat } from 'toktokwallet/helper'
+import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import { useSelector , useDispatch } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -85,6 +85,17 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
         })
         return;
      }
+
+     const checkRecipientWalletLimitation = (amount)=> {
+
+        const errorMessage = AmountLimitHelper.checkAccountIncomingWalletLimit({
+            tokwaAccount,
+            amount
+        })
+
+        return errorMessage
+
+     }
  
      const changeAmountText = (value)=> {
          setMaxLimitMessage("")
@@ -98,20 +109,19 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
          // setAmount(num * 0.01)
          if(num[0] == ".") return setAmount("0.")
          setAmount(num)
-         if(num == "") return setMessage("")
-         if(num < 1){
-            return setMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
-         }
-         // checkRecipientWalletLimitation(num * 0.01)
+        //  const limitMessage = checkRecipientWalletLimitation(num)
+        //  if(limitMessage) return setMessage(limitMessage)
+         if(num == "")return setMessage("")
+         if(num < 1) return setMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
          setDisablebtn(false)
          setMessage("")
          
      }
 
     const showInput = ()=>{
-        // setTimeout(() => {
-        //     inputRef.current.focus();
-        // }, 0);
+        setTimeout(() => {
+            if(amount == "") inputRef.current.focus();
+        }, 10);
     }
 
     useEffect(()=>{
@@ -142,7 +152,13 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                             }
                                                <TextInput
                                                         onFocus={()=>setIsFocus(true)}
-                                                        onBlur={()=>setIsFocus(false)}
+                                                        onBlur={()=>{
+                                                            setIsFocus(false)
+                                                            AmountLimitHelper.postCheckIncomingLimit({
+                                                                amount,
+                                                                setErrorMessage: setMessage
+                                                            })
+                                                        }}
                                                         caretHidden={!isFocus}
                                                         value={amount}
                                                         ref={inputRef}
@@ -150,7 +166,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                                         style={{textAlign:"center", marginTop: 12,fontSize: 32, fontFamily: FONT.BOLD, height: '100%', width: inputWidth, ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
                                                         keyboardType="numeric"
                                                         returnKeyType="done"
-                                                        placeholder="0.00"
+                                                        placeholder={amount == "" ? "0.00" : ""}
                                                         placeholderTextColor="black"
                                                         onChangeText={changeAmountText}
                                                         textAlign="right"
@@ -163,7 +179,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                         </View>
                                         
                                     </View>
-                                    { message != "" && <Text style={{fontFamily: FONT.REGULAR, color: "red", marginTop: 10,marginBottom: 10, fontSize: FONT_SIZE.S}}>{message}</Text>}
+                                    { message != "" && <Text style={{textAlign:"center", fontFamily: FONT.REGULAR, color: "red", marginTop: 10,marginBottom: 10, fontSize: FONT_SIZE.S}}>{message}</Text>}
                                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 10}}>Current Balance {tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
                                 
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
@@ -171,7 +187,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                          </View>
                          <View style={styles.cashinbutton}>
                                     {
-                                        (amount < 1 || amount > transactionType.cashInLimit || disablebtn)
+                                        (amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "")
                                         ? <DisabledButton label="Cash In"/>
                                         : <YellowButton label="Cash In" onPress={confirmAmount}/>
                                     }

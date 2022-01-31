@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useEffect, useRef, useState} from 'react';
 import {View, StyleSheet, Text, TextInput, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
@@ -27,6 +27,8 @@ const DeliveryDetails = ({navigation, route, session}) => {
     headerTitle: () => <HeaderTitle label={['Delivery', 'Information']} />,
   });
 
+  const quotation = route.params.quotation;
+
   const AlertHook = useAlert();
 
   const [collectPaymentFrom, setCollectPaymentFrom] = useState(route.params.orderData.collectPaymentFrom);
@@ -37,32 +39,62 @@ const DeliveryDetails = ({navigation, route, session}) => {
   const [isExpress, setIsExpress] = useState(route.params.orderData.isExpress);
   const [isCashOnDelivery, setIsCashOnDelivery] = useState(route.params.orderData.isCashOnDelivery);
   const [cashOnDelivery, setCashOnDelivery] = useState(route.params.orderData.cashOnDelivery);
-  const {
-    data: balanceData,
-    loading: balanceLoading,
-    error: balanceError,
-  } = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [balanceText, setBalanceText] = useState('');
+  const [hasWallet, setHasWallet] = useState(null);
+
+  const [getToktokWalletBalance] = useLazyQuery(GET_TOKTOK_WALLET_BALANCE, {
     fetchPolicy: 'network-only',
+    onCompleted: res => {
+      console.log({res: res.getToktokWalletBalance.balance});
+
+      setHasWallet(res.getToktokWalletBalance.hasWallet);
+      setBalanceText(numberFormat(res.getToktokWalletBalance.balance));
+      setWalletBalance(res.getToktokWalletBalance.balance);
+    },
   });
 
-  let balanceText = '';
-  let hasWallet = false;
+  useEffect(() => {
+    getToktokWalletBalance();
+  }, []);
 
-  if (balanceError) {
-    balanceText = 'Failed to retrieve balance.';
-  }
+  // const {
+  //   data: balanceData,
+  //   loading: balanceLoading,
+  //   error: balanceError,
+  // } = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+  //   fetchPolicy: 'network-only',
+  //   onError: error => {
+  //     console.log({retrieveBalanceError: error});
+  //   },
+  // });
 
-  if (balanceLoading) {
-    balanceText = 'Retrieving balance...';
-  }
+  // let balanceText = '';
+  // let hasWallet = false;
 
-  if (balanceData) {
-    balanceText = `PHP ${numberFormat(balanceData.getToktokWalletBalance.balance)}`;
+  // if (balanceError) {
+  //   balanceText = 'Failed to retrieve balance.';
+  //   // setBalanceText('Failed to retrieve balance.');
+  // }
 
-    hasWallet = balanceData.getToktokWalletBalance.hasWallet;
-  }
+  // if (balanceLoading) {
+  //   balanceText = 'Retrieving balance...';
+  //   // setBalanceText('Retrieving balance...');
+  // }
 
-  console.log({balanceText, hasWallet});
+  // if (balanceData) {
+  //   balanceText = balanceData.getToktokWalletBalance.balance;
+  //   hasWallet = balanceData.getToktokWalletBalance.hasWallet;
+  //   // setBalanceText(`${numberFormat(balanceData.getToktokWalletBalance.balance)}`);
+  //   // setHasWallet(balanceData.getToktokWalletBalance.hasWallet);
+  // }
+
+  // useEffect(() => {
+  //   if (balanceData) {
+  //     setWalletBalance(balanceData.getToktokWalletBalance.balance);
+  //   }
+  // }, [balanceData]);
 
   const paymentMethodSheetRef = useRef();
   const paymentSheetRef = useRef();
@@ -100,6 +132,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
           duration,
           directions,
         },
+        walletBalance: walletBalance,
       });
     },
   });
@@ -257,6 +290,8 @@ const DeliveryDetails = ({navigation, route, session}) => {
         ref={paymentMethodSheetRef}
         balanceText={balanceText}
         hasWallet={hasWallet}
+        price={quotation.pricing.price}
+        getWalletBalance={getToktokWalletBalance}
       />
       <ItemSheet onChange={setItemDescription} ref={itemSheetRef} />
     </>

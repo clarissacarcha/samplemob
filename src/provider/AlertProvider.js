@@ -18,13 +18,13 @@ const AlertProvider = ({children}) => {
   const [alertState, setAlertState] = useState(initialState);
   const {customModal, customConfirmModal, customMessageModal, customPlaceOrderModal} = useSelector((state) => state.toktokMall);
 
-  const alert = ({message, buttonLabel, actionButtons , title}) => {
+  const alert = ({message, buttonLabel, actionButtons, title}) => {
     setAlertState({
       visible: true,
       message,
       buttonLabel,
       actionButtons,
-      title
+      title,
     });
   };
 

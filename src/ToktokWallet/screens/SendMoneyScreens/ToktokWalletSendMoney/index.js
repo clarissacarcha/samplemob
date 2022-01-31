@@ -96,7 +96,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                                             <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                                         </View>
                                         <TouchableOpacity
-                                            onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" ,{onCashIn: null,amount: 0})} 
+                                            onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" ,{onCashIn: ()=> null ,amount: 0})} 
                                             style={styles.topUp}
                                         >
                                             <View style={styles.topUpbtn}>
