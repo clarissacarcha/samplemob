@@ -79,6 +79,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
         onCompleted: ({postRequestCashIn})=>{
             return navigation.navigate("ToktokWalletTPINValidator", {
                 callBackFunc: proceedToPaypandaPortal,
+                btnLabel: "Cash In"
             })
         },
         onError: (error) => {
