@@ -10,6 +10,8 @@ import { moderateScale, numberFormat } from 'toktokbills/helper';
 //COMPONENTS
 import { TransactionModal } from 'toktokbills/components';
 
+// FONTS & IMAGE
+import { failed_ic } from 'toktokbills/assets/icons';
 import CONSTANTS from 'common/res/constants';
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW} = CONSTANTS;
 
@@ -19,8 +21,11 @@ export const Details = ({ item, visible, setVisible })=> {
   return (
     <TransactionModal visible={visible} setVisible={setVisible}>
       <View>
-        <Text style={styles.labelText}>Status of toktokbills: Failed</Text>
-        {/* {renderDetails({details})} */}
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text style={styles.labelText}>Status: </Text>
+          <Image source={failed_ic} style={styles.icon} />
+          <Text style={styles.failedText}> Failed</Text>
+        </View>
         <Text style={styles.labelText}>Biller: {item.billerDetails.descriptions}</Text>
         {/* <Text style={styles.labelText}>{item.billerDetails.firstFieldName}: {item.destinationNumber}</Text> */}
         <Text style={styles.labelText}>{item.billerDetails.secondFieldName}: {item.destinationIdentifier}</Text>
@@ -71,4 +76,16 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(FONT_SIZE.M),
     marginTop: moderateScale(5),
   },
+  icon: {
+    width: moderateScale(15),
+    height: moderateScale(15),
+    resizeMode: "contain"
+  },
+  failedText: {
+    color: "#ED3A19",
+    fontSize: FONT_SIZE.M
+  },
+  labelText :{
+    fontSize: FONT_SIZE.M
+  }
 })
