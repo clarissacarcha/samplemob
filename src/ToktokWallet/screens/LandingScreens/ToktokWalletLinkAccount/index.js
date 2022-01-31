@@ -175,8 +175,8 @@ export const ToktokWalletLinkAccount = ({navigation, route})=> {
             <View style={{height: SIZE.FORM_HEIGHT + 16}}> 
             {
                 pinCode.length < 6
-                ? <DisabledButton label="Proceed"/>
-                : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
+                ? <DisabledButton label="Confirm"/>
+                : <YellowButton onPress={ConfirmVerificationCode} label="Confirm"/>
             }   
             </View>
             <BuildingBottom/>
