@@ -66,10 +66,16 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                
                 {RenderDisplay()}
             </View>
-            <View style={{flex:1 ,justifyContent:"center",alignItems:"center",padding: 20}}>
-                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,}}>
+            <View style={{flex:1 ,justifyContent:"center",alignItems:"center",padding: 20,marginTop: 10}}>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"center"}}>
                     Please review the accuracy and completeness of the details provided before you confirm
                 </Text>
+                {
+                    data.fundTransferType &&
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop: 15,textAlign:'center'}}>
+                        Fund Transfer via {data.fundTransferType}
+                    </Text>
+                }
             </View>
             <View style={styles.proceedBtn}>
                 {
