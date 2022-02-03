@@ -104,7 +104,7 @@ const Amount = ({
             {amount != "" && bank.id > 0 && !computeLoading && tokwaAccount.constants.UbFundTransferType == "api" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
-        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
+        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (optional)</Text>
    
              <TextInput
                     style={styles.input}
@@ -115,7 +115,7 @@ const Amount = ({
                     returnKeyType="done"
                     placeholderTextColor={COLOR.DARK}
                 />
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{note.length}/60</Text>
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS, color: "#929191"}}>{note.length}/60</Text>
     
         </View>
     </View>
