@@ -30,6 +30,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   const CheckoutContextData = useContext(CheckoutContext)
   const toktokSession = useSelector(state => state.session)
+  const toktokMall = useSelector(state => state.toktokMall)
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack = {setAlertTrue}/>,
@@ -217,6 +218,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         setWalletAccount(getMyAccount)
         setWalletAccountStatus(1)
         if(getMyAccount?.wallet?.balance){
+          dispatch({ type: "TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE", payload: getMyAccount?.wallet?.balance})
           setCurrentBalance(getMyAccount?.wallet?.balance)
         }else{
           setCurrentBalance(0)
@@ -645,9 +647,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
             payment={payment} 
             total={grandTotal}
             list={paymentList}
-            currentBalance={currentBalance}
+            currentBalance={toktokMall.toktokWalletBalance}
             setCurrenctBalance={setCurrentBalance}
-            setPaymentMethod={setPaymentMethod} 
+            setPaymentMethod={setPaymentMethod}
+            getMyAccount={getMyAccount}
             // status={walletAccountStatus}
             status={walletAccountStatus}
           />

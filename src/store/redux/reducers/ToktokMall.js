@@ -33,11 +33,14 @@ const INITIAL_STATE = {
       onPress: () => {},
       title: "Back to Home."
     }
-  }
+  },
+  toktokWalletBalance: 0
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE': 
+    return {...state, toktokWalletBalance: action.payload};
     case 'TOKTOK_MALL_OPEN_MODAL':
     return {...state, customModal: {visible: true, ...action.payload}};
     case 'TOKTOK_MALL_CLOSE_MODAL':

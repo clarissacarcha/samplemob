@@ -20,6 +20,7 @@ import {Price, FormatToText} from '../../../../helpers/formats';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import {useNavigation} from '@react-navigation/core';
 import {FONT} from '../../../../../res/variables';
+import { useDispatch, useSelector } from 'react-redux';
 
 const walletIcon = require('../../../../assets/icons/wallet.png')
 
@@ -115,6 +116,8 @@ const RenderToktokWalletStatus = ({status}) => {
 
 export const Payment = ({list, payment, total, setPaymentMethod, currentBalance, setCurrenctBalance, status}) => {
   const navigation = useNavigation();
+  const toktokMall = useSelector(state=> state.toktokMall)
+  const dispatch = useDispatch()
   // const [currentBalance, setCurrenctBalance] = useState(0)
   console.log("status ssss", status)
 
@@ -168,14 +171,15 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
               flex: 2.5,
             }}>
             <Text style={{marginLeft: 15, fontWeight: 'normal', color: '#929191', fontSize: 13}}>
-              (Balance {FormatToText.currency(currentBalance || 0)})
+              (Balance {FormatToText.currency(toktokMall.toktokWalletBalance || 0)})
             </Text>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('ToktokWalletPaymentOptions', {
                   amount: 0,
                   onCashIn: ({balance}) => {
-                    setCurrenctBalance(balance);
+
+          dispatch({ type: "TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE", payload: balance})
                   },
                 });
               }}>

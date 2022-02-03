@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, ImageBackground, TouchableOpacity, Image, Platform, BackHandler} from 'react-native';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AIcons from 'react-native-vector-icons/dist/AntDesign';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
 import {Card} from '../../../../../Components'
 import CustomIcon from './.../../../../../../../Components/Icons';
@@ -34,6 +34,8 @@ const testData = [
 export const ToktokMallMyProfileHome = ({navigation}) => {
 
   const session = useSelector(state=> state.session)
+  const toktokMall = useSelector(state=> state.toktokMall)
+  const dispatch = useDispatch()
   const userDefaultAddress = useSelector(state => state.toktokMall.defaultAddress)
   const [profileImage, setProfileImage] = useState("")
   const [userName, setUserName] = useState("")
@@ -89,6 +91,8 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
       // do something with result
       console.log(getWallet)
       console.log(getWallet.balance)
+
+      dispatch({ type: "TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE", payload: getWallet.balance})
       setAccountBalance(getWallet.balance)
   },
   onError: (error) => {
@@ -162,7 +166,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
               <Image source={require("../../../../../../assets/toktokwallet-assets/toktokwallet.png")} style={{width:'100%', height: 20, resizeMode: 'stretch'}} />
             </View>
             <View style={{flex: 4, alignItems: 'flex-start', justifyContent: 'center'}}>
-              <Text style={{fontSize: 11, marginLeft: 8, color: COLOR.DARK}}>(Balance {FormatToText.currency(accountBalance)})</Text>
+              <Text style={{fontSize: 11, marginLeft: 8, color: COLOR.DARK}}>(Balance {FormatToText.currency(toktokMall.toktokWalletBalance)})</Text>
             </View>
             <TouchableOpacity style={{display: walletAccountStatus == 1 ? 'flex' : 'none', flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}
               onPress = {() => {
@@ -171,6 +175,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                   amount: 1000,
                    onCashIn: ({balance}) => {
                      setAccountBalance(balance)
+                     dispatch({ type: "TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE", payload: balance})
                    },
                 })                
 
