@@ -9,6 +9,7 @@ const {width,height} = Dimensions.get("window")
 
 export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccount})=> {
 
+    const [newPinCode,setNewPinCode] = useState("")
     const [showPin,setShowPin] = useState(false)
     const inputRef = useRef();
     const [errorMessage,setErrorMessage] = useState("")
@@ -21,8 +22,8 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
     
     const onSubmit = () => {
        let isWeakPin = true
-       for(let x = 0 ; x < pinCode.length ; x++){
-           if(pinCode[0] != pinCode[x]){
+       for(let x = 0 ; x < newPinCode.length ; x++){
+           if(newPinCode[0] != newPinCode[x]){
             isWeakPin = false
             break
            }
@@ -31,12 +32,13 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
         setShowPin(true)
         return setErrorMessage(`Your TPIN must not contain repeating digits ex. 000000`)
        }
-       setPageIndex(oldstate=>oldstate+1)
+       setPageIndex(oldstate=>oldstate+1);
+       setPinCode(newPinCode);
     };
 
     useEffect(()=>{
         setErrorMessage("")
-    },[pinCode])
+    },[newPinCode])
 
 
     return (
@@ -49,10 +51,10 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
                 )}
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Setup {tokwaAccount.pinCode ? "New ": ""}TPIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
-                    <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
+                    <NumberBoxes pinCode={newPinCode} onNumPress={onNumPress} showPin={showPin}/>
                     <TextInput
                         caretHidden
-                        value={pinCode}
+                        value={newPinCode}
                         ref={inputRef}
                         style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
                         keyboardType="number-pad"
@@ -60,10 +62,10 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
                         onChangeText={(value) => {
                         if (value.length <= 6) {
                             const num = value.replace(/[^0-9]/g, '')
-                            setPinCode(num);
+                            setNewPinCode(num);
                         }
                         }}
-                        onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
+                        onSubmitEditing={newPinCode.length == 6 ? onSubmit: null}
                     />
 
                     {
@@ -81,7 +83,7 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
             </ScrollView>
              <View style={{padding: 16}}>
                 {
-                    pinCode.length < 6
+                    newPinCode.length < 6
                     ? <DisabledButton label="Next"/>
                     : <YellowButton label="Next" onPress={onSubmit}/>
                 }
