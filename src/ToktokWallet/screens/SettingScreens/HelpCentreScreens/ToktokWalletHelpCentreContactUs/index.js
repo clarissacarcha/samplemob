@@ -35,9 +35,10 @@ const ItemList = ({logo,label , url , style})=> {
                 source={logo}
              />
              <Text style={{
-                 fontFamily: FONT.REGULAR,
-                 fontSize: moderateScale(FONT_SIZE.S),
-                 marginLeft: 10,
+                fontFamily: FONT.REGULAR,
+                fontSize: moderateScale(FONT_SIZE.S),
+                marginLeft: 10,
+                color: "#525252"
              }}>
                  {label}
             </Text>
@@ -85,9 +86,8 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
 
     return (
         <CheckIdleState>
-        <AlertOverlay visible={loading}/>
-        <Separator/>
-        <View style={styles.container}>
+            <AlertOverlay visible={loading}/>
+            <Separator/>
             <View style={styles.body}>
                 <View style={styles.content}>
                     {/* <Text style={styles.title}>Contact Us</Text> */}
@@ -101,8 +101,8 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
                     </Text>
                 </View>
                 <View style={styles.contact}>
-                    <ItemList url="tel:(623) 8424 8617" logo={PhoneLogo} label="(632) 8424 8617"/>
-                    <ItemList style={{flex: 1,justifyContent:"flex-end"}} url="mailto:support@toktokwallet.ph?subject=Talk%20To%20Us&body=How%20can%20we%20help%20you%20ka-toktok?" logo={EmailLogo} label="support@toktokwallet.ph"/>
+                    <ItemList style={{ paddingHorizontal: 10 }} url="tel:(623) 8424 8617" logo={PhoneLogo} label="(632) 8424 8617"/>
+                    <ItemList style={{ paddingHorizontal: 10 }} url="mailto:support@toktokwallet.ph?subject=Talk%20To%20Us&body=How%20can%20we%20help%20you%20ka-toktok?" logo={EmailLogo} label="support@toktokwallet.ph"/>
                 </View>
                 <View style={styles.messageBox}>
                     <Text style={{ color: "#9E9E9E", fontFamily: FONT.BOLD }}>Message</Text>
@@ -120,15 +120,13 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
                     />
                 </View>
                 <View style={styles.submitBtn}>
-                       {
-                           message.length > 0 
-                           ? <YellowButton onPress={onThrottledPress} label="Submit"/>
-                           : <DisabledButton label="Submit"/>
-                       }
+                        {
+                            message.length > 0 
+                            ? <YellowButton onPress={onThrottledPress} label="Submit"/>
+                            : <DisabledButton label="Submit"/>
+                        }
                 </View>
             </View>
-        <BuildingBottom/>
-        </View>
         </CheckIdleState>
     )
 }
@@ -142,9 +140,7 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         backgroundColor:"white",
-        padding: 16,
-        ...SHADOW,
-        borderRadius: 10,
+        padding: 20,
     },  
     content: {
         marginTop: 10,
@@ -167,13 +163,13 @@ const styles = StyleSheet.create({
     contact: {
         flexDirection:"row",
         marginVertical: 15,
-        alignItems: "center"
+        justifyContent: "center"
     },
     messageInput: {
         paddingHorizontal: 10,
-        height: 200,
+        height: 120,
         borderRadius: 5,
-        backgroundColor:"#F7F7FA",
+        backgroundColor:"#F8F8F8",
         marginTop: 5,
         fontSize: FONT_SIZE.M,
         fontFamily: FONT.REGULAR
