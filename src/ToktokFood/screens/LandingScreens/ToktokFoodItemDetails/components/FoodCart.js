@@ -380,10 +380,14 @@ export const FoodCart = ({loading, action}) => {
   const isEnabled = () =>
     required.length > 0 || disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading;
 
-  const isAddEnabled = () =>
-    tempData?.contSellingIsset > 0 && count.quantity < tempData?.maxQty
-      ? false
-      : disableAdd || count.quantity >= tempData?.maxQty;
+  const isAddEnabled = () => {
+    const checkIsMaxQtySet = tempData?.maxQtyIsset > 0 ? tempData?.maxQty : tempData?.stocks;
+    const disabled =
+      tempData?.contSellingIsset > 0 && count.quantity < checkIsMaxQtySet
+        ? false
+        : disableAdd || count.quantity >= checkIsMaxQtySet;
+    return disabled;
+  };
 
   return (
     <>
