@@ -76,12 +76,6 @@ const Amount = ({
                 changeAmount={changeAmount}
                 currency={tokwaAccount.wallet.currency.code}
                 onBlur={()=>{
-                    AmountLimitHelper.postCheckOutgoingLimit({
-                        amount,
-                        setErrorMessage: (value)=> {
-                            if(errorListMessage.amount == "")  changeErrorMessagge("amount",value)
-                        }
-                    })
                     computeConvenienceFee()
                 }}
             />
@@ -375,7 +369,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     }
 
 
-    const onPress = ()=> {
+    const onPress = async ()=> {
         let noError = true
         if(!bank.id || bank.id == ""){
             changeErrorMessagge("bank",`Select Bank first.`)
@@ -410,6 +404,15 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         }
 
         if(!noError) return
+
+        const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+            amount,
+            setErrorMessage: (value)=> {
+                if(errorListMessage.amount == "")  changeErrorMessagge("amount",value)
+            }
+        })
+
+        if(!checkLimit) return;
 
         if(providerServiceFee == "" || systemServiceFee == ""){
              postComputeConvenienceFee({
