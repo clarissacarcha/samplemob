@@ -109,7 +109,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
     const DisplayComponent = ()=> {
         switch(pageIndex){
             case 0:
-                return <VerifyPin pageIndex={pageIndex} setPageIndex={setPageIndex} setOldTPIN={setOldTPIN}/>
+                return <VerifyPin pageIndex={pageIndex} setPageIndex={setPageIndex} oldTPIN={oldTPIN} setOldTPIN={setOldTPIN}/>
             case 1:
                 return <CreatePin pinCode={pinCode} tokwaAccount={tokwaAccount} setPinCode={setPinCode} pageIndex={pageIndex} setPageIndex={setPageIndex}/>
             case 2:
