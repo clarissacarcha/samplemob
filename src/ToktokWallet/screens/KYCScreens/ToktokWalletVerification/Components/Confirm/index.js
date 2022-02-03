@@ -65,9 +65,9 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             // })
             if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath)
             if(result.status == 2){
-                navigation.pop(2)
-                navigation.navigate("ToktokWalletVerifyResult")
-                // navigation.replace("ToktokWalletVerifyResult")
+                // navigation.pop(2)
+                // navigation.navigate("ToktokWalletVerifyResult")
+                navigation.replace("ToktokWalletVerifyResult")
             }
         }
     })

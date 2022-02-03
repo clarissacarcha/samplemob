@@ -238,6 +238,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     const [successModalVisible,setSuccessModalVisible] = useState(false)
     const [providerServiceFee,setProviderServiceFee] = useState("")
     const [systemServiceFee,setSystemServiceFee] = useState("")
+    const [type,setType] = useState("")
 
     const {
         accountName,
@@ -285,6 +286,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             const { providerServiceFee , systemServiceFee , type } = postComputeConvenienceFee
             setSystemServiceFee(systemServiceFee)
             setProviderServiceFee(providerServiceFee)
+            setType(type == "pesonet" ? "Pesonet" : "Instapay")
         }
     })
 
@@ -430,7 +432,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                     amount: amount,
                     note: note,
                     providerServiceFee,
-                    systemServiceFee
+                    systemServiceFee,
+                    fundTransferType: type
                 },
             isSwipe: true,
             swipeTitle: `Confirm`,

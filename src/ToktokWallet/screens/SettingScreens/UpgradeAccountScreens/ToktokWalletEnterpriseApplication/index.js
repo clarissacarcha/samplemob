@@ -48,6 +48,7 @@ const MainComponent = ()=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({getEnterpriseUpgradeRequest})=> {
             console.log(JSON.stringify(getEnterpriseUpgradeRequest))
+            setData(getEnterpriseUpgradeRequest)
         },
         onError: (error)=> onErrorAlert({alert,error,navigation})
     })

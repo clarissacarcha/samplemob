@@ -42,7 +42,9 @@ export class TransactionUtility {
       navigation.replace("ToktokWalletHomePage")
       return prompt({
         type: "error",
-        message: graphQLErrors[0]?.message
+        message: "You do not have sufficient balance to continue.",
+        event: "TOKTOKWALLET",
+        title: "Insufficient Balance"
       })
     }
 

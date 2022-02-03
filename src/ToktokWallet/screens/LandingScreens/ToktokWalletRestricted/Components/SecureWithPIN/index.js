@@ -10,8 +10,8 @@ const {width,height} = Dimensions.get("window")
 const Reminder = ({children})=> {
     return (
         <View style={{flexDirection: "row",marginVertical: 5}}>
-            <View style={{padding: 2, borderRadius: 100, borderColor: COLOR.YELLOW, borderWidth: 1,marginRight: 10}}>
-                <VectorIcon size={12} iconSet={ICON_SET.Feather} name="check"/>
+            <View style={{padding: 2, borderRadius: 100, borderColor: COLOR.ORANGE, borderWidth: 1,marginRight: 10}}>
+                <VectorIcon size={12} iconSet={ICON_SET.Feather} name="check" color={COLOR.ORANGE}  />
             </View>
            {children}
     </View>
@@ -27,11 +27,14 @@ export const SecurewithPIN = ({navigation,walletinfo,amount = null,onCashIn = nu
                 <View style={styles.lockIcon}>
                         <Image style={{height: 89,width: 89}} source={require('toktokwallet/assets/icons/walletVerify.png')}/>
                 </View>
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.XL,marginTop: 20, textAlign:'center'}}>Setup your toktokwallet TPIN</Text>
-                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,marginTop: 5, textAlign:'center'}}>Click the "Setup TPIN" button to create your toktokwallet TPIN.</Text>
+                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.XL,marginTop: 20, textAlign:'center'}}>Set your TPIN</Text>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,marginTop: 5, textAlign:'center'}}>
+                    You’re about to initiate your first transaction. Establish
+                    your Transaction PIN first before you proceed, ka-toktok!
+                </Text>
             </View>
             <View style={{flex: 1,alignItems:"center",justifyContent:"flex-start"}}>
-                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
+                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10, color: COLOR.ORANGE }}>Reminders</Text>
                         <View>
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.ORANGE}}>Cashless transactions</Text> will be enabled after</Text>
@@ -50,7 +53,7 @@ export const SecurewithPIN = ({navigation,walletinfo,amount = null,onCashIn = nu
                    
                 </View>
             <View style={styles.btns}>
-                <YellowButton label="Setup TPIN" onPress={()=>navigation.replace("ToktokWalletCreatePin", {
+                <YellowButton label="Setup your TPIN" onPress={()=>navigation.replace("ToktokWalletCreatePin", {
                     walletinfo,
                     amount,
                     onCashIn,
