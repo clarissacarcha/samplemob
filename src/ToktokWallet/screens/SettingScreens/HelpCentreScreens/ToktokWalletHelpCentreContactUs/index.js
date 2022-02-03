@@ -29,13 +29,14 @@ const ItemList = ({logo,label , url , style})=> {
                 style={{
                     height: moderateScale(20),
                     width: moderateScale(20),
+                    tintColor: "#F6841F"
                 }} 
                 resizeMode="contain"
                 source={logo}
              />
              <Text style={{
                  fontFamily: FONT.REGULAR,
-                 fontSize: moderateScale(FONT_SIZE.S + 1),
+                 fontSize: moderateScale(FONT_SIZE.S),
                  marginLeft: 10,
              }}>
                  {label}
@@ -48,7 +49,7 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: () => <HeaderTitle label={['', '']} />,
+        headerTitle: () => <HeaderTitle label={['Contact', 'Us']} />,
     });
 
     const [message,setMessage] = useState("")
@@ -89,14 +90,14 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
         <View style={styles.container}>
             <View style={styles.body}>
                 <View style={styles.content}>
-                    <Text style={styles.title}>Contact Us</Text>
+                    {/* <Text style={styles.title}>Contact Us</Text> */}
                     <Text style={{
                         paddingHorizontal:15,
                         fontSize: FONT_SIZE.M,
                         fontFamily: FONT.REGULAR,
                         textAlign:"center"
                     }}>
-                        Email us with any of your inquiries or contact us with the contact information provided below. We will gladly discuss with you the best possible solution to your needs.
+                        toktokwallet team provides only the best service experience to our customers. Should you have  any questions and concerns, you may reach us through the following details:
                     </Text>
                 </View>
                 <View style={styles.contact}>
@@ -104,6 +105,7 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
                     <ItemList style={{flex: 1,justifyContent:"flex-end"}} url="mailto:support@toktokwallet.ph?subject=Talk%20To%20Us&body=How%20can%20we%20help%20you%20ka-toktok?" logo={EmailLogo} label="support@toktokwallet.ph"/>
                 </View>
                 <View style={styles.messageBox}>
+                    <Text style={{ color: "#9E9E9E", fontFamily: FONT.BOLD }}>Message</Text>
                     <TextInput 
                         style={styles.messageInput}
                         value={message}
@@ -114,7 +116,6 @@ export const ToktokWalletHelpCentreContactUs = ({navigation,route})=> {
                         returnKeyType="done"
                         multiline={true}
                         textAlignVertical='top'
-                        placeholder="Message"
                         blurOnSubmit={true}
                     />
                 </View>
@@ -161,10 +162,12 @@ const styles = StyleSheet.create({
         backgroundColor:"white",
         paddingVertical: 10,
         borderRadius: 5,
+        alignItems: "center"
     },
     contact: {
         flexDirection:"row",
         marginVertical: 15,
+        alignItems: "center"
     },
     messageInput: {
         paddingHorizontal: 10,
@@ -176,7 +179,6 @@ const styles = StyleSheet.create({
         fontFamily: FONT.REGULAR
     },
     submitBtn: {
-        flex: 1,
-        justifyContent:'flex-end'
+        paddingVertical: moderateScale(20)
     }
 })
