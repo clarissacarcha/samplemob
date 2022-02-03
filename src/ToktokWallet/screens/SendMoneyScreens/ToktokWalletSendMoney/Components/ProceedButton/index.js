@@ -34,7 +34,8 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
                 resendRequest: onSwipeSuccess ,
                 data: {
                     requestSendMoneyId: requestSendMoneyId
-                }
+                },
+                btnLabel: "Confirm"
             })
         },
         onError: (error)=>{

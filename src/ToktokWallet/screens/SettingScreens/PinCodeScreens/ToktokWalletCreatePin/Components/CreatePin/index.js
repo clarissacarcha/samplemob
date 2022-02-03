@@ -43,14 +43,14 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
 
     return (
         <View style={styles.container}>
-            <ScrollView style={styles.content}>
+            <ScrollView contentContainerStyle={styles.content}>
                 { !tokwaAccount.pinCode && (
                     <Text style={{ textAlign: "center", fontSize: FONT_SIZE.S, marginVertical: 40, marginHorizontal: 20 }}>
                         You will use your TPIN in every transaction you make with toktokwallet. Please keep it to yourself and do not share with anyone.
                     </Text>
                 )}
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Setup {tokwaAccount.pinCode ? "New ": ""}TPIN</Text>
-                <View style={{position: 'relative',marginTop: 50,}}>
+                <View style={{position: 'relative',marginTop: 20,}}>
                     <NumberBoxes pinCode={newPinCode} onNumPress={onNumPress} showPin={showPin}/>
                     <TextInput
                         caretHidden
@@ -74,10 +74,10 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
 
 
                     <TouchableOpacity
-                            style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
-                            onPress={()=>setShowPin(!showPin)}
+                        style={{marginTop: height * .07,paddingVertical: 10,alignItems: "center"}}
+                        onPress={()=>setShowPin(!showPin)}
                     >
-                            <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+                        <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
     },
     content: {
-        // alignItems: "center",
+        justifyContent: "center",
         padding: 16,
         flex: 1,
     },
