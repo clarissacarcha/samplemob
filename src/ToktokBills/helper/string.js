@@ -1,1 +1,1 @@
-export const pesoSign = "₱";
+export const currencyCode = "PHP";

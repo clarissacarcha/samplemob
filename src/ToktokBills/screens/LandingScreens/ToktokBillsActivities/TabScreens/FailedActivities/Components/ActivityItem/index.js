@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 
 // HELPER & UTIL
-import { moderateScale, numberFormat, pesoSign } from 'toktokbills/helper';
+import { moderateScale, numberFormat, currencyCode } from 'toktokbills/helper';
 import { useThrottle } from 'src/hooks';
 
 //COMPONENTS
@@ -19,7 +19,7 @@ export const ActivityItem = ({ item, index })=> {
 
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
-  const totalAmount = `${pesoSign} ${numberFormat(parseFloat(item.amount) + parseFloat(item.convenienceFee))}`;
+  const totalAmount = `${currencyCode} ${numberFormat(parseFloat(item.amount) + parseFloat(item.convenienceFee))}`;
 
   return (
     <>

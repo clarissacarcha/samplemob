@@ -5,7 +5,7 @@ import moment from 'moment';
 
 //HOOKS & HELPER
 import { useThrottle } from 'src/hooks';
-import { moderateScale, numberFormat, pesoSign } from 'toktokbills/helper';
+import { moderateScale, numberFormat, currencyCode } from 'toktokbills/helper';
 
 //COMPONENTS
 import { TransactionModal } from 'toktokbills/components';
@@ -19,7 +19,7 @@ const {width,height} = Dimensions.get("window");
 
 export const Details = ({ item, visible, setVisible })=> {
 
-  const totalAmount = `${pesoSign} ${numberFormat(parseFloat(item.amount) + parseFloat(item.convenienceFee))}`;
+  const totalAmount = `${currencyCode} ${numberFormat(parseFloat(item.amount) + parseFloat(item.convenienceFee))}`;
 
   return (
     <TransactionModal visible={visible} setVisible={setVisible}>

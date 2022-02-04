@@ -6,7 +6,7 @@ import validator from 'validator'
 import { LoadingIndicator } from 'toktokbills/components';
 
 //HELPER
-import { moderateScale, formatAmount, numberFormat, pesoSign } from 'toktokbills/helper'
+import { moderateScale, formatAmount, numberFormat, currencyCode } from 'toktokbills/helper'
 
 // COLORS AND FONTS
 import CONSTANTS from 'common/res/constants';
@@ -64,15 +64,15 @@ export const PaymentDetails = ({ paymentData })=> {
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Payment amount: </Text>
-        <Text style={styles.description}>{pesoSign} {numberFormat(amount)}</Text>
+        <Text style={styles.description}>{currencyCode} {numberFormat(amount)}</Text>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Convenience Fee: </Text>
-        <Text style={styles.description}>{pesoSign} {numberFormat(convenienceFee)}</Text>
+        <Text style={styles.description}>{currencyCode} {numberFormat(convenienceFee)}</Text>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Total Amount: </Text>
-        <Text style={styles.description}>{pesoSign} {numberFormat(totalAmount)}</Text>
+        <Text style={styles.description}>{currencyCode} {numberFormat(totalAmount)}</Text>
       </View>
     </>
   )

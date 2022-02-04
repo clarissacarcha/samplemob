@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from "rea
 import { LoadingIndicator } from 'toktokbills/components';
 
 //UTIL
-import { moderateScale, numberFormat, pesoSign } from "toktokbills/helper";
+import { moderateScale, numberFormat, currencyCode } from "toktokbills/helper";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
@@ -88,15 +88,15 @@ export const ReceiptDetails = ({ route }) => {
       <View style={{ paddingHorizontal: moderateScale(30), marginTop: moderateScale(15) }}>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Payment amount: </Text>
-          <Text style={styles.description}>{pesoSign} {numberFormat(amount)}</Text>
+          <Text style={styles.description}>{currencyCode} {numberFormat(amount)}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Convenience Fee: </Text>
-          <Text style={styles.description}>{pesoSign} {numberFormat(convenienceFee)}</Text>
+          <Text style={styles.description}>{currencyCode} {numberFormat(convenienceFee)}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Total Amount: </Text>
-          <Text style={styles.description}>{pesoSign} {numberFormat(totalAmount)}</Text>
+          <Text style={styles.description}>{currencyCode} {numberFormat(totalAmount)}</Text>
         </View>
       </View>
     </>
