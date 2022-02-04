@@ -37,8 +37,8 @@ export const ToktokWalletCashOutHomePage = ({navigation,route})=> {
             </View>
             <Separator/>
             <View style={styles.transferOptions}>
-                <CashOutOption label="Enrolled Accounts" route="ToktokWalletCashOut" screenLabel={screenLabel} />
-                <CashOutOption label="Other Banks" route="ToktokWalletCashOutOtherBanks" screenLabel={screenLabel} />
+                { tokwaAccount.constants.isFundTransferEnrolledAccountEnabled == "1" && <CashOutOption label="Enrolled Accounts" route="ToktokWalletCashOut" screenLabel={screenLabel} /> }
+                <CashOutOption label="Bank Transfer" route="ToktokWalletCashOutOtherBanks" screenLabel={screenLabel} />
             </View>
       </View>
         </CheckIdleState>

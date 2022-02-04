@@ -34,6 +34,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
     const [note,setNote] = useState("")
     const [proceed,setProceed] = useState(false)
     const [swipeEnabled,setSwipeEnabled] = useState(false)
+    const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [recipientDetails,setRecipientDetails] = useState({
         id: null,
         person: {
@@ -140,6 +141,8 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                                 setAmount={setAmount}
                                 recipientDetails={recipientDetails}
                                 senderDetails={senderDetails}
+                                errorAmountMessage={errorAmountMessage}
+                                setErrorAmountMessage={setErrorAmountMessage}
                             />
 
                             <EnterNote
@@ -175,6 +178,8 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                             tokwaAccount={tokwaAccount}
                             note={note}
                             recipientDetails={recipientDetails}
+                            errorAmountMessage={errorAmountMessage}
+                            setErrorAmountMessage={setErrorAmountMessage}
                         />
                     </View>
                 </ScrollView>

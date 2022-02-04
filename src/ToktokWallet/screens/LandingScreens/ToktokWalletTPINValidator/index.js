@@ -2,7 +2,7 @@ import React, { useState , useRef } from 'react';
 import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput,Dimensions,StatusBar} from 'react-native';
 import { ICON_SET, VectorIcon, YellowButton , HeaderBack , HeaderTitle } from 'src/revamp'
 import { AlertOverlay } from 'src/components';
-import { CheckIdleState  , DisabledButton , NumberBoxes} from 'toktokwallet/components'
+import { CheckIdleState  , DisabledButton , NumberBoxes, HeaderCancel} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 import { BuildingBottom } from '../../../components';
 
@@ -12,16 +12,16 @@ const { width , height } = Dimensions.get("window")
 
 export const ToktokWalletTPINValidator = ({navigation,route})=> {
 
-
-    navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={[""]}/>
-    })
-
     const callBackFunc = route?.params?.callBackFunc ? route.params.callBackFunc : null
     const errorMessage = route?.params?.errorMessage ? route.params.errorMessage : null
     const data = route?.params?.data ? route.params.data : null
     const btnLabel = route?.params?.btnLabel ? route.params.btnLabel : "Proceed"
+
+    navigation.setOptions({
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
+        headerTitle: ()=> <HeaderTitle label={[""]}/>,
+        headerRight: ()=> btnLabel == "Cash In" && <HeaderCancel navigation={navigation} screenPopNo={4} />
+    })
 
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
@@ -73,17 +73,17 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                         }
 
                         <TouchableOpacity
-                                    style={{paddingVertical: 10, alignItems: "center"}}
-                                    onPress={()=>setShowPin(!showPin)}
-                            >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+                            style={{paddingTop: height * .07, paddingVertical: 10, alignItems: "center"}}
+                            onPress={()=>setShowPin(!showPin)}
+                        >
+                            <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
                         </TouchableOpacity> 
 
                         <TouchableOpacity
-                                    style={{paddingVertical: 10, alignItems: "center"}}
-                                    onPress={()=>navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})}
-                            >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
+                            style={{paddingVertical: height * .03, alignItems: "center"}}
+                            onPress={()=>navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})}
+                        >
+                            <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
                         </TouchableOpacity> 
                        
                     </View>
@@ -112,10 +112,12 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         padding: 16,
+        justifyContent: "center",
     },
     tpinBody: {
         flex: 1,
-        alignItems:"center"
+        alignItems:"center",
+        justifyContent: "center",
     },
     backBtn: {
         backgroundColor:"#F7F7FA",

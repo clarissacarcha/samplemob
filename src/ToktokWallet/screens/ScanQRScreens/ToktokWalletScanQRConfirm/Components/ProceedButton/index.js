@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {View,StyleSheet} from 'react-native'
-import { numberFormat } from 'toktokwallet/helper'
+import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import {useMutation} from '@apollo/react-hooks'
 import { TransactionUtility } from 'toktokwallet/util'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -90,7 +90,22 @@ export const ProceedButton = ({
         })
     }
 
-    const reviewAndConfirm = ()=> {
+    const reviewAndConfirm = async ()=> {
+
+
+        const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+            amount,
+            mobileNumber: recipientInfo.mobileNumber,
+            setErrorMessage: (value)=> {
+                if(errorMessage == ""){
+                    setErrorMessage(value)
+                    if(value != "") setSwipeEnabled(false)
+                }
+            }
+        })
+
+        if(!checkLimit) return;
+        
         return navigation.navigate("ToktokWalletReviewAndConfirm", {
             label: "Send Money",
             event: "Send Money",

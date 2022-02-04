@@ -75,7 +75,14 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
     },[onCashIn, tokwaAccount])
 
 
-    const confirmAmount = ()=> {
+    const confirmAmount = async ()=> {
+
+        const checkLimit = await AmountLimitHelper.postCheckIncomingLimit({
+            amount,
+            setErrorMessage: setMessage
+        })
+
+        if(!checkLimit) return;
 
         navigation.navigate("ToktokWalletDPCashInMethods", {
             transactionType,
@@ -137,7 +144,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
             <Separator/>
             <View style={styles.container}>
                 <View style={styles.paypandaLogo}>
-                        <Text style={{fontSize: FONT_SIZE.L ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
+                        <Text style={{fontSize: FONT_SIZE.L ,fontFamily: FONT.BOLD}}>Please enter amount to Cash In</Text>
                 </View>
                 <View style={styles.content}>
                         <View style={styles.amountcontent}>
@@ -154,10 +161,6 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                                         onFocus={()=>setIsFocus(true)}
                                                         onBlur={()=>{
                                                             setIsFocus(false)
-                                                            AmountLimitHelper.postCheckIncomingLimit({
-                                                                amount,
-                                                                setErrorMessage: setMessage
-                                                            })
                                                         }}
                                                         caretHidden={!isFocus}
                                                         value={amount}
@@ -180,7 +183,10 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                         
                                     </View>
                                     { message != "" && <Text style={{textAlign:"center", fontFamily: FONT.REGULAR, color: "red", marginTop: 10,marginBottom: 10, fontSize: FONT_SIZE.S}}>{message}</Text>}
-                                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 10}}>Current Balance {tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
+                                    <Text>
+                                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: 10}}>Current Balance: </Text>
+                                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, marginTop: 10}}>{numberFormat(tokwaAccount.wallet.balance)}</Text>
+                                    </Text>
                                 
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
                         

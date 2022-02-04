@@ -80,8 +80,8 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
 
     const BottomComponent = ()=> {
 
-        const bottomText = "Please make sure that you have carefully reviewed the amount " +
-        "to pay. A copy of the complete cash in details and instruction will " +
+        const bottomText = "Please make sure that you have carefully reviewed the amount to " +
+        "cash in. A copy of the complete cash in details and instruction will " +
         "be sent to your email for fast and secured transaction.";
         
         return (

@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     },
     viewAnswer: {
         justifyContent:"center",
-        // alignItems:"center",
+        alignItems:"center",
         height: SIZE.FORM_HEIGHT,
     },
     viewAnswerText: {

@@ -146,8 +146,8 @@ const NumberBoxes = ({pinCode, onNumPress , showPin}) => {
                          <View style={styles.proceedBtn}>
                                 {
                                     otpCode.length < 6
-                                    ? <DisabledButton label="Proceed" />
-                                    : <YellowButton label="Proceed" onPress={()=>{
+                                    ? <DisabledButton label="Confirm" />
+                                    : <YellowButton label="Confirm" onPress={()=>{
                                         setOtpCode("")
                                         callBackFunc({Otp: otpCode})
                                     }} />

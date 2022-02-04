@@ -76,12 +76,6 @@ const Amount = ({
                 changeAmount={changeAmount}
                 currency={tokwaAccount.wallet.currency.code}
                 onBlur={()=>{
-                    AmountLimitHelper.postCheckOutgoingLimit({
-                        amount,
-                        setErrorMessage: (value)=> {
-                            if(errorListMessage.amount == "")  changeErrorMessagge("amount",value)
-                        }
-                    })
                     computeConvenienceFee()
                 }}
             />
@@ -104,7 +98,7 @@ const Amount = ({
             {amount != "" && bank.id > 0 && !computeLoading && tokwaAccount.constants.UbFundTransferType == "api" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
-        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
+        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (optional)</Text>
    
              <TextInput
                     style={styles.input}
@@ -115,7 +109,7 @@ const Amount = ({
                     returnKeyType="done"
                     placeholderTextColor={COLOR.DARK}
                 />
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{note.length}/60</Text>
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS, color: "#929191"}}>{note.length}/60</Text>
     
         </View>
     </View>
@@ -238,6 +232,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     const [successModalVisible,setSuccessModalVisible] = useState(false)
     const [providerServiceFee,setProviderServiceFee] = useState("")
     const [systemServiceFee,setSystemServiceFee] = useState("")
+    const [type,setType] = useState("")
 
     const {
         accountName,
@@ -285,6 +280,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             const { providerServiceFee , systemServiceFee , type } = postComputeConvenienceFee
             setSystemServiceFee(systemServiceFee)
             setProviderServiceFee(providerServiceFee)
+            setType(type == "pesonet" ? "Pesonet" : "Instapay")
         }
     })
 
@@ -373,7 +369,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     }
 
 
-    const onPress = ()=> {
+    const onPress = async ()=> {
         let noError = true
         if(!bank.id || bank.id == ""){
             changeErrorMessagge("bank",`Select Bank first.`)
@@ -409,6 +405,15 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
         if(!noError) return
 
+        const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+            amount,
+            setErrorMessage: (value)=> {
+                if(errorListMessage.amount == "")  changeErrorMessagge("amount",value)
+            }
+        })
+
+        if(!checkLimit) return;
+
         if(providerServiceFee == "" || systemServiceFee == ""){
              postComputeConvenienceFee({
                 variables: {
@@ -430,7 +435,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                     amount: amount,
                     note: note,
                     providerServiceFee,
-                    systemServiceFee
+                    systemServiceFee,
+                    fundTransferType: type
                 },
             isSwipe: true,
             swipeTitle: `Confirm`,
