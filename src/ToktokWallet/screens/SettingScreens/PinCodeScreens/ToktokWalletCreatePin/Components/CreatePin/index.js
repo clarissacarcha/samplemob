@@ -49,7 +49,9 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
                         You will use your TPIN in every transaction you make with toktokwallet. Please keep it to yourself and do not share with anyone.
                     </Text>
                 )}
-                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Setup {tokwaAccount.pinCode ? "New ": ""}TPIN</Text>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>
+                    {tokwaAccount.pinCode ? "Enter" : "Setup"} {tokwaAccount.pinCode ? "New ": ""}TPIN
+                </Text>
                 <View style={{position: 'relative',marginTop: 20,}}>
                     <NumberBoxes pinCode={newPinCode} onNumPress={onNumPress} showPin={showPin}/>
                     <TextInput
