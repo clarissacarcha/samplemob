@@ -77,6 +77,7 @@ export const Confirm = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWalle
                     </TouchableOpacity>
                 </View>
             </View>
+            <View style={{marginBottom: 76}}/>
            <BuildingBottom/>
        </View>
     )
