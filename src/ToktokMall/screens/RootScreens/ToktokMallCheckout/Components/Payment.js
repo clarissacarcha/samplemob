@@ -21,6 +21,7 @@ import Entypo from 'react-native-vector-icons/dist/Entypo';
 import {useNavigation} from '@react-navigation/core';
 import {FONT} from '../../../../../res/variables';
 import { useDispatch, useSelector } from 'react-redux';
+import { EventRegister } from 'react-native-event-listeners';
 
 const walletIcon = require('../../../../assets/icons/wallet.png')
 
@@ -178,8 +179,8 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
                 navigation.navigate('ToktokWalletPaymentOptions', {
                   amount: 0,
                   onCashIn: ({balance}) => {
-
-          dispatch({ type: "TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE", payload: balance})
+                      EventRegister.emit("ToktokWalletRefreshAccountBalance")
+          // dispatch({ type: "TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE", payload: balance})
                   },
                 });
               }}>

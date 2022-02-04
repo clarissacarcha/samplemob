@@ -174,8 +174,9 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 navigation.navigate("ToktokWalletPaymentOptions" , {
                   amount: 1000,
                    onCashIn: ({balance}) => {
-                     setAccountBalance(balance)
-                     dispatch({ type: "TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE", payload: balance})
+                      getWallet()
+                    //  setAccountBalance(balance)
+                    //  dispatch({ type: "TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE", payload: balance})
                    },
                 })                
 
