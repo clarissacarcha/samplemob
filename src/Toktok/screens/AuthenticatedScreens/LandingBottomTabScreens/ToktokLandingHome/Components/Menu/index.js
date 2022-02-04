@@ -1,4 +1,5 @@
-import React, {useRef, useEffect, useCallback} from 'react';
+import React, {useRef, useEffect, useCallback, useState} from 'react';
+import {useSelector} from 'react-redux';
 import {View, Text, StyleSheet, TouchableOpacity, Image, Share} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
@@ -45,6 +46,19 @@ const MenuIcon = ({label, icon, onPress, isNew = false}) => {
 
 export const Menu = ({setUserLocation, constants}) => {
   const navigation = useNavigation();
+  const state = useSelector(state => state);
+
+  const [showToktokWallet, setShowToktokWallet] = useState(true);
+
+  useEffect(() => {
+    if (constants != null && state != null) {
+      if (constants.isToktokwalletAvailable == 0) {
+        if (!state.session.user.hasEarlyAccess && !state.session.user.hasDriverAccount) {
+          setShowToktokWallet(false);
+        }
+      }
+    }
+  }, [constants, state]);
 
   return (
     <View style={styles.menuBox}>
@@ -55,14 +69,16 @@ export const Menu = ({setUserLocation, constants}) => {
       />
       <MenuIcon label={'pabili'} icon={PabiliIcon} onPress={() => navigation.push('Pabili')} />
 
-      <MenuIcon
-        label={'toktokwallet'}
-        icon={WalletIcon}
-        onPress={() => {
-          navigation.push('ToktokWalletLoginPage');
-        }}
-        isNew
-      />
+      {showToktokWallet && (
+        <MenuIcon
+          label={'toktokwallet'}
+          icon={WalletIcon}
+          onPress={() => {
+            navigation.push('ToktokWalletLoginPage');
+          }}
+          isNew
+        />
+      )}
 
       {/* TOKTOKFOOD COMING SOON */}
       {constants.isToktokfoodComingSoonDisplayed == 1 && (

@@ -4,12 +4,13 @@ import {View, StyleSheet, Text, TextInput, Switch} from 'react-native';
 import {LIGHT, FONT_MEDIUM, FONT_REGULAR} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables';
 
-const ExpressForm = ({value, onChange}) => {
+const ExpressForm = ({value, onChange, recomputeQuotation}) => {
   const [switchState, setSwitchState] = useState(value);
 
-  const onValueChange = (boolValue) => {
+  const onValueChange = boolValue => {
     setSwitchState(boolValue);
     onChange(boolValue);
+    recomputeQuotation({isExpress: boolValue});
   };
 
   return (
@@ -32,7 +33,7 @@ const ExpressForm = ({value, onChange}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 
