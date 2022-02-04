@@ -73,17 +73,17 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                         }
 
                         <TouchableOpacity
-                                    style={{paddingVertical: 10, alignItems: "center"}}
-                                    onPress={()=>setShowPin(!showPin)}
-                            >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+                            style={{paddingTop: height * .07, paddingVertical: 10, alignItems: "center"}}
+                            onPress={()=>setShowPin(!showPin)}
+                        >
+                            <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
                         </TouchableOpacity> 
 
                         <TouchableOpacity
-                                    style={{paddingVertical: 10, alignItems: "center"}}
-                                    onPress={()=>navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})}
-                            >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
+                            style={{paddingVertical: height * .03, alignItems: "center"}}
+                            onPress={()=>navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})}
+                        >
+                            <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
                         </TouchableOpacity> 
                        
                     </View>
@@ -112,10 +112,12 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         padding: 16,
+        justifyContent: "center",
     },
     tpinBody: {
         flex: 1,
-        alignItems:"center"
+        alignItems:"center",
+        justifyContent: "center",
     },
     backBtn: {
         backgroundColor:"#F7F7FA",

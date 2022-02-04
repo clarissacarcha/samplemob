@@ -6,9 +6,8 @@ import CONSTANTS from 'common/res/constants'
 
 const { FONT_SIZE , COLOR , SIZE , FONT_FAMILY: FONT} = CONSTANTS
 
-export const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , recipientDetails}) => {
+export const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , recipientDetails , errorAmountMessage , setErrorAmountMessage}) => {
 
-    const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [tempAmount,setTempAmount] = useState("")
     const [isFocus,setIsFocus] = useState(false)
 
@@ -47,18 +46,6 @@ export const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount
                 amount={amount}
                 changeAmount={changeAmount}
                 currency={tokwaAccount.wallet.currency.code}
-                onBlur={()=>{
-                    AmountLimitHelper.postCheckOutgoingLimit({
-                        amount,
-                        mobileNumber: recipientDetails.mobileNumber,
-                        setErrorMessage: (value)=> {
-                            if(errorAmountMessage == ""){
-                                setErrorAmountMessage(value)
-                                if(value != "") setSwipeEnabled(false)
-                            }
-                        }
-                    })
-                }}
             />
             <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#F93154"}}>{errorAmountMessage}</Text>
     </View>
