@@ -86,36 +86,6 @@ export const FoodList = props => {
     }
   }, []);
 
-  // const filterProducts = products => {
-  //   if (products.length) {
-  //     let productHolder = [];
-  //     products.map(product => {
-  //       let variantHolder = [];
-  //       const variants = product.variants;
-  //       if (variants.length) {
-  //         variants.map(variant => {
-  //           if (variant.enabled === 1 && (variant.stocks > 0 || variant.contSellingIsset > 0)) {
-  //             variantHolder.push(variant);
-  //           }
-  //         });
-  //         if (variantHolder.length) {
-  //           product.variants = variantHolder;
-  //           productHolder.push(product);
-  //         }
-  //       } else {
-  //         productHolder.push(product);
-  //       }
-  //     });
-  //     setListData(productHolder);
-  //   }
-  // };
-
-  // const listData = searchProduct
-  //   ? searchProducts?.getSearchProductsByShop
-  //   : products
-  //   ? products.getProductsByShopCategory
-  //   : [];
-
   useEffect(() => {
     if (activeTab?.id) {
       setSearchProduct('');
