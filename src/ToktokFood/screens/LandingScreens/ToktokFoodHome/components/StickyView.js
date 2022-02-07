@@ -16,7 +16,7 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Assets
 import {FONT_SIZE} from 'res/variables';
-import {empty_shop_2, empty_promos} from 'toktokfood/assets/images';
+import {empty_promos, new_empty_shop_icon} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
@@ -189,26 +189,19 @@ const StickyView = () => {
     if (activeTab.id === 1) {
       return (
         <View style={styles.emptyContainer}>
-          <Image style={styles.emptyImg} resizeMode="contain" source={empty_shop_2} />
+          <Image style={styles.emptyImg} resizeMode="contain" source={new_empty_shop_icon} />
+          <Text style={styles.emptyTextTitle}>No Restaurant Available</Text>
           <Text style={styles.emptyText}>
-            It seems like there is no open restaurant near you. Refresh or try again later.
+            It seems like there is no open restaurant{'\n'}near you. Refresh or try again later.
           </Text>
         </View>
       );
     }
     return (
-      <View style={{...styles.emptyContainer, paddingTop: moderateScale(50)}}>
-        <Image
-          style={{width: moderateScale(193), height: moderateScale(146), right: moderateScale(5)}}
-          resizeMode="contain"
-          source={empty_promos}
-        />
-        <Text style={{color: '#F6841F', fontSize: 17, marginTop: moderateScale(20), fontWeight: '700'}}>
-          No Promos Available
-        </Text>
-        <Text style={{...styles.emptyText, color: '#000', fontSize: FONT_SIZE.M, marginTop: moderateScale(5)}}>
-          There are no restaurants with promos{'\n'}available as of the moment.
-        </Text>
+      <View style={styles.emptyContainer}>
+        <Image style={styles.emptyImg} resizeMode="contain" source={empty_promos} />
+        <Text style={styles.emptyTextTitle}>No Promos Available</Text>
+        <Text style={styles.emptyText}>There are no restaurants with promos{'\n'}available as of the moment.</Text>
       </View>
     );
   };
@@ -319,19 +312,26 @@ const styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     height: verticalScale(500),
-    paddingTop: moderateScale(60),
+    paddingTop: moderateScale(50),
     // justifyContent: 'center',
   },
   emptyImg: {
-    height: moderateScale(175),
-    width: moderateScale(250),
+    width: moderateScale(193),
+    height: moderateScale(146),
+    right: moderateScale(5),
+  },
+  emptyTextTitle: {
+    color: '#F6841F',
+    fontSize: 17,
+    marginTop: moderateScale(20),
+    fontWeight: '700',
   },
   emptyText: {
-    color: '#9E9E9E',
-    fontSize: FONT_SIZE.L,
+    fontSize: FONT_SIZE.M,
     textAlign: 'center',
-    marginTop: moderateScale(20),
+    marginTop: moderateScale(5),
     marginHorizontal: moderateScale(20),
+    color: '#000',
   },
   loaderStyle: {
     // marginVertical: 30,

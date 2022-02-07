@@ -14,7 +14,6 @@ import DialogMessage from 'toktokfood/components/DialogMessage';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
-import {searchIcon} from 'toktokfood/assets/images';
 
 // Strings
 import {tabs} from 'toktokfood/helper/strings';
@@ -23,7 +22,7 @@ import {moderateScale, getStatusbarHeight, getIphoneNotchSize} from 'toktokfood/
 
 import {useSelector} from 'react-redux';
 import ENVIRONMENTS from 'src/common/res/environments';
-import {empty_shop_2, empty_search, time} from 'toktokfood/assets/images';
+import {searchIcon, empty_search, time, new_empty_shop_icon} from 'toktokfood/assets/images';
 
 import styles from './styles';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -175,8 +174,8 @@ const ToktokFoodSearch = ({route}) => {
   );
 
   const renderEmpty = () => {
-    let withSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 5 : getIphoneNotchSize * 5);
-    let withoutSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 6 : getIphoneNotchSize * 6);
+    let withSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 4 : getIphoneNotchSize * 5);
+    let withoutSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 4 : getIphoneNotchSize * 6);
     let paddingTop = search != '' ? withSearch : withoutSearch;
 
     if (history.length > 0 && search === '') {
@@ -184,11 +183,18 @@ const ToktokFoodSearch = ({route}) => {
     } else {
       return (
         <View style={[styles.emptyContainer, {paddingTop}]}>
-          <Image style={styles.emptyImg} resizeMode="contain" source={search != '' ? empty_shop_2 : empty_search} />
+          <Image
+            style={styles.emptyImg}
+            resizeMode="contain"
+            source={search != '' ? new_empty_shop_icon : empty_search}
+          />
           {search != '' && (
-            <Text style={styles.emptyText}>
-              It seems like there is no open restaurant near you. Refresh or try again later.
-            </Text>
+            <>
+              <Text style={styles.emptyTextTitle}>No Restaurant Available</Text>
+              <Text style={styles.emptyText}>
+                It seems like there is no open restaurant{'\n'}near you. Refresh or try again later.
+              </Text>
+            </>
           )}
         </View>
       );
@@ -222,7 +228,9 @@ const ToktokFoodSearch = ({route}) => {
 
   const BottomLabel = (
     <>
-      <Text style={styles.footerText}>No more restaurants available to display.</Text>
+      {shopList.length === 0 && search === '' && (
+        <Text style={styles.footerText}>No more restaurants available to display.</Text>
+      )}
     </>
   );
 
