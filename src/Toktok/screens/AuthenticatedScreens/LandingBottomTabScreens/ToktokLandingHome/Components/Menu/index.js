@@ -86,7 +86,7 @@ export const Menu = ({setUserLocation, constants}) => {
           label={'toktokfood'}
           icon={ToktokfoodIcon}
           onPress={() => {
-            navigation.push('TokTokFoodSplashScreen');
+            navigation.push('ToktokfoodMerchantComingSoon');
           }}
           isNew
         />
