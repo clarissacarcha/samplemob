@@ -65,7 +65,7 @@ export const TransactionItems = (props) => {
               {`${shopDetails.shopname} • ${shopDetails.address}`}
             </Text>
             <Text numberOfLines={1} style={styles.destinationDetails}>
-              {orderDetails.length + ' items • ' + address}
+              {orderDetails.length + `${orderDetails.length > 1 ? ' items' : ' item'} • ` + address}
             </Text>
             <View style={styles.activityWrapper}>
               <Image resizeMode="contain" source={time} style={{...styles.timeImg, tintColor: isPastOrder(item.dateOrdered, focusTab) ? '#F80000' : COLOR.DARK}} />

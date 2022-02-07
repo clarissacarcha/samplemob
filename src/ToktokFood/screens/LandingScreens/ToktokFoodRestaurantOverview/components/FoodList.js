@@ -1,7 +1,7 @@
 /* eslint-disable radix */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useContext, Fragment, useState} from 'react';
+import React, {useEffect, useContext, Fragment, useState, useCallback} from 'react';
 import {View, ImageBackground, StyleSheet, Text, TouchableOpacity, Image, Platform, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import ContentLoader from 'react-native-easy-content-loader';
@@ -61,7 +61,8 @@ export const FoodList = props => {
     },
   });
 
-  const filterProducts = products => {
+  const filterProducts = useCallback(products => {
+    setListData([]);
     if (products.length) {
       let productHolder = [];
       products.map(product => {
@@ -83,13 +84,7 @@ export const FoodList = props => {
       });
       setListData(productHolder);
     }
-  };
-
-  // const listData = searchProduct
-  //   ? searchProducts?.getSearchProductsByShop
-  //   : products
-  //   ? products.getProductsByShopCategory
-  //   : [];
+  }, []);
 
   useEffect(() => {
     if (activeTab?.id) {
@@ -108,6 +103,8 @@ export const FoodList = props => {
           },
         },
       });
+    } else {
+      getProductsByShopCategory();
     }
   }, [searchProduct]);
 
