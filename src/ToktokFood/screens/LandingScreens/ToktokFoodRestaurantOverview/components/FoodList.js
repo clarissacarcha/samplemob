@@ -1,7 +1,7 @@
 /* eslint-disable radix */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useContext, Fragment, useState} from 'react';
+import React, {useEffect, useContext, Fragment, useState, useCallback} from 'react';
 import {View, ImageBackground, StyleSheet, Text, TouchableOpacity, Image, Platform, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import ContentLoader from 'react-native-easy-content-loader';
@@ -61,7 +61,8 @@ export const FoodList = props => {
     },
   });
 
-  const filterProducts = products => {
+  const filterProducts = useCallback(products => {
+    setListData([]);
     if (products.length) {
       let productHolder = [];
       products.map(product => {
@@ -83,7 +84,31 @@ export const FoodList = props => {
       });
       setListData(productHolder);
     }
-  };
+  }, []);
+
+  // const filterProducts = products => {
+  //   if (products.length) {
+  //     let productHolder = [];
+  //     products.map(product => {
+  //       let variantHolder = [];
+  //       const variants = product.variants;
+  //       if (variants.length) {
+  //         variants.map(variant => {
+  //           if (variant.enabled === 1 && (variant.stocks > 0 || variant.contSellingIsset > 0)) {
+  //             variantHolder.push(variant);
+  //           }
+  //         });
+  //         if (variantHolder.length) {
+  //           product.variants = variantHolder;
+  //           productHolder.push(product);
+  //         }
+  //       } else {
+  //         productHolder.push(product);
+  //       }
+  //     });
+  //     setListData(productHolder);
+  //   }
+  // };
 
   // const listData = searchProduct
   //   ? searchProducts?.getSearchProductsByShop
@@ -108,6 +133,8 @@ export const FoodList = props => {
           },
         },
       });
+    } else {
+      getProductsByShopCategory();
     }
   }, [searchProduct]);
 

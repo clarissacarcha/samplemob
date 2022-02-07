@@ -46,11 +46,11 @@ export const sameDay = (d1, d2) => {
 }
 export const dayTitle = (dateOrdered) => {
   let date = moment(dateOrdered);
-  if (moment().diff(date, 'days') >= 1) {
-      return date.format('LL')
+  if (!moment().isSame(date, 'date')) {
+    return date.format('LL');
   }
-  return date.calendar().split(' ')[0]; 
-}
+  return date.calendar().split(' ')[0];
+};
 
 export const isPastOrder = (dateOrdered, focusTab) => {
   const today = moment().format('YYYY-MM-DD');
