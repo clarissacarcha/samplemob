@@ -25,7 +25,7 @@ export default ({Navigator}) => {
             shadowOpacity: 0.1,
             shadowRadius: 3,
             elevation: 5,
-            height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+            // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
           },
         }}
       />
@@ -43,7 +43,7 @@ export default ({Navigator}) => {
             shadowOpacity: 0.1,
             shadowRadius: 3,
             elevation: 5,
-            height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+            // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
           },
         }}
       />
@@ -61,7 +61,7 @@ export default ({Navigator}) => {
             shadowOpacity: 0.1,
             shadowRadius: 3,
             elevation: 5,
-            height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+            // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
           },
         }}
       />
@@ -79,7 +79,7 @@ export default ({Navigator}) => {
             shadowOpacity: 0.1,
             shadowRadius: 3,
             elevation: 5,
-            height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+            // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
           },
         }}
       />
