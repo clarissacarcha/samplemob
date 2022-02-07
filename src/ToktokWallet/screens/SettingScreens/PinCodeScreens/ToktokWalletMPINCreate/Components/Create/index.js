@@ -74,7 +74,8 @@ export const Create = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccount})
                         ka-toktok, do not forget your MPIN, keep it to yourself and do not share this with anyone.
                     </Text>
                 )}
-                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Setup {tokwaAccount.mpinCode ? "New ": ""}MPIN</Text>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>
+                    {tokwaAccount.mpinCode ? "Enter" : "Setup"} {tokwaAccount.mpinCode ? "New ": ""}MPIN</Text>
                 <View style={{position: 'relative', marginTop: 20}}>
                     <NumberBoxes pinCode={newPinCode} onNumPress={onNumPress} showPin={showPin} numberOfBox={4}/>
                     <TextInput

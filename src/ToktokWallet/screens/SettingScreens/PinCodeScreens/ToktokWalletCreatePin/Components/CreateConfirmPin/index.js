@@ -75,6 +75,7 @@ export const CreateConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeTo
                     </TouchableOpacity>
                 </View>
             </ScrollView>
+            <View style={{marginBottom: 76}}/>
            <BuildingBottom/>
        </View>
     )

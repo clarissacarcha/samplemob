@@ -27,7 +27,7 @@ export const Confirm = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWa
      useEffect(()=>{
         if(confirmpinCode.length == 4){
             if(pinCode != confirmpinCode){
-                return setMessage("MPIN code does not match! Please try again")
+                return setMessage("MPIN does not match! Please try again.")
             }
             return patchPincodeToktokWallet()
         }else{
@@ -71,6 +71,7 @@ export const Confirm = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWa
                 </View>
             </View>
             <BuildingBottom/>
+            <View style={{marginBottom: 76}}/>
             {/* <TouchableOpacity
                 disabled={pinCode.length < 6}
                 onPress={onSubmit}
