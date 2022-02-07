@@ -6,7 +6,7 @@ const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 const { height, width } = Dimensions.get('window');
 
 const NumberBox = ({onPress, value , showPin , error }) => (
-    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5, ...(!error ? {} : {borderWidth: 1, paddingHorizontal: 2, borderColor:COLOR.RED}) }}>
+    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5, ...(!error ? {} : {borderWidth: 1,borderRadius: 0, borderColor:COLOR.RED}) }}>
       <View style={styles.inputView}>
         <Text style={{fontSize: 25, fontFamily: FONT.BOLD}}>{value ? showPin ? value : "•" : ''}</Text>
       </View>

@@ -51,7 +51,7 @@ const Amount = ({
     }
 
     useEffect(()=>{
-            if(amount >= 1 && amount <= tokwaAccount.wallet.balance){
+            if(amount >= 1 && ( +amount + (+providerServiceFee + +systemServiceFee)) <= tokwaAccount.wallet.balance){
                 changeErrorMessagge("amount","")
             }else if(amount < 1 && amount != ""){
                 changeErrorMessagge("amount",`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00.`)
