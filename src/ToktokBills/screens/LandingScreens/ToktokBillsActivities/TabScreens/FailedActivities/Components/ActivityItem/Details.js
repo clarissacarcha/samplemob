@@ -30,7 +30,7 @@ export const Details = ({ item, visible, setVisible })=> {
           <Text style={styles.failedText}> Failed</Text>
         </View>
         <Text style={styles.labelText}>Biller: {item.billerDetails.descriptions}</Text>
-        {/* <Text style={styles.labelText}>{item.billerDetails.firstFieldName}: {item.destinationNumber}</Text> */}
+        <Text style={styles.labelText}>{item.billerDetails.firstFieldName}: {item.destinationNumber}</Text>
         <Text style={styles.labelText}>{item.billerDetails.secondFieldName}: {item.destinationIdentifier}</Text>
         <Text style={styles.labelText}>Amount: {totalAmount}</Text>
         <Text style={styles.labelText}>Amount Paid: {totalAmount}</Text>
