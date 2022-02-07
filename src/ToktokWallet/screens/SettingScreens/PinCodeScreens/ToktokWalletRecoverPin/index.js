@@ -1,18 +1,20 @@
 import React , {useEffect,useState,useRef} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput, TouchableHighlight} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput, TouchableHighlight, Dimensions} from 'react-native'
 import {useSelector} from 'react-redux'
 import { HeaderBackClose , HeaderTitle , AlertOverlay} from 'src/components'
 import {useQuery,useLazyQuery} from '@apollo/react-hooks'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} from 'toktokwallet/graphql'
 import { onError, onErrorAlert } from 'src/util/ErrorUtility'
-import {useAlert} from 'src/hooks'
-import {DisabledButton, Separator, BuildingBottom} from 'toktokwallet/components'
+import {useAlert, usePrompt} from 'src/hooks'
+import {DisabledButton, Separator, BuildingBottom , CheckIdleState, HeaderCancel} from 'toktokwallet/components'
 import { HeaderBack, YellowButton } from 'src/revamp'
 import { TransactionUtility } from 'toktokwallet/util'
+import BackgroundTimer from 'react-native-background-timer';
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , COLOR , FONT_SIZE , SIZE } = CONSTANTS
+const {width,height} = Dimensions.get("window")
 
 const numWordArray = {
     "1": "one",
@@ -50,21 +52,29 @@ const NumberBoxes = ({pinCode, onNumPress, showPin}) => {
 };
 
 
-export const ToktokWalletRecoverPin = ({navigation})=> {
+export const ToktokWalletRecoverPin = ({navigation , route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
+        headerRight: ()=> <HeaderCancel navigation={navigation} screenPopNo={2} />,
+        headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0
+        }
     })
 
+    const prompt = usePrompt()
     const session = useSelector(state=>state.session)
+    const type = route.params.type
+    const event = route?.params?.event ? route.params.event : null
+    const category = route?.params?.category ? route.params.category : null
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
     const alert = useAlert();
     const [otpTimer,setOtpTimer] = useState(120)
     const [errorMessage,setErrorMessage] = useState("")
-    const [otpCodeAttempt , setOtpCodeAttempt] = useState(null)
 
     const [getForgotAndRecoverOTPCode] = useLazyQuery(GET_FORGOT_AND_RECOVER_OTP_CODE , {
         fetchPolicy: "network-only",
@@ -74,7 +84,7 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
             setOtpTimer(120)
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -82,17 +92,20 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({verifyForgotAndRecoverOTP})=>{
-            console.log(verifyForgotAndRecoverOTP)
-            return navigation.replace("ToktokWalletUpdatePin")
+            if(type == "TPIN"){
+                return navigation.replace("ToktokWalletUpdatePin" , {otp: pinCode , event})
+            }
+            // type is MPIN
+            return navigation.replace("ToktokWalletMPINUpdate" , {event, category, otp: pinCode})
         },
         onError: (error)=>{
             // onErrorAlert({alert, error})
             TransactionUtility.StandardErrorHandling({
-                alert,
                 error,
                 navigation,
-                onErrorAlert,
-                setOtpCodeAttempt
+                prompt,
+                alert,
+                setErrorMessage
             })
         }
     })
@@ -124,7 +137,7 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
 
     useEffect(()=>{
         if(otpTimer >= 0){
-            setTimeout(()=>{
+            BackgroundTimer.setTimeout(()=>{
                 setOtpTimer(state=>state - 1)
             },1000)
         }
@@ -132,63 +145,60 @@ export const ToktokWalletRecoverPin = ({navigation})=> {
     },[otpTimer])
 
     return (
-        <>
-        <Separator />
+        <CheckIdleState>
+        {/* <Separator /> */}
         <AlertOverlay visible={loading}/>
-        <KeyboardAvoidingView 
+        <View 
             style={styles.container}
             // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
-            keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
-            behavior={Platform.OS === "ios" ? "padding" : "height"} 
+            // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
+            // behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
-                <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP code sent to</Text>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: 16}}>{tokwaAccount.mobileNumber}</Text>
+                <View style={{flex: 1,alignItems:"center",justifyContent: "center", marginTop: 40}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP</Text>
+                    {/* <Text style={{fontFamily: FONT.REGULAR,fontSize: 16}}>{tokwaAccount.mobileNumber}</Text> */}
 
-                        <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
-                        <TextInput
-                            caretHidden
-                            value={pinCode}
-                            ref={inputRef}
-                            style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
-                            keyboardType="number-pad"
-                            returnKeyType="done"
-                            onChangeText={(value) => {
+                    <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
+                    <TextInput
+                        caretHidden
+                        value={pinCode}
+                        ref={inputRef}
+                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
+                        keyboardType="number-pad"
+                        returnKeyType="done"
+                        onChangeText={(value) => {
                             if (value.length <= 6) {
                                 const code = value.replace(/[^0-9]/,"")
                                 setPinCode(code);
                             }
-                            }}
-                            // onSubmitEditing={onSubmit}
-                        />
+                        }}
+                        // onSubmitEditing={onSubmit}
+                    />
 
-                        {
-                            otpCodeAttempt && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>
-                                Incorrect OTP. You can try {numWordArray[otpCodeAttempt]} ({otpCodeAttempt}) more {otpCodeAttempt == 1 ? "time" : "times"} before your account will be temporarily blocked.
-                            </Text>
-                        }
+                    {
+                        errorMessage != "" && <Text style={styles.errorMessage}>{errorMessage}</Text>
+                    }
 
-                        <TouchableOpacity
-                                disabled={otpTimer > 0 ? true : false}
-                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
-                                onPress={getForgotAndRecoverOTPCode}
-                        >
-                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
-                                { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
-                        </TouchableOpacity>
-
+                    <TouchableOpacity
+                        disabled={otpTimer > 0 ? true : false}
+                        style={{marginTop: height * .07,paddingBottom: 10,alignItems: "center"}}
+                        onPress={getForgotAndRecoverOTPCode}
+                    >
+                        <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Resend OTP</Text>
+                        { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
+                    </TouchableOpacity>
                 </View>
                        
-                 <View style={{height: SIZE.FORM_HEIGHT + 16,justifyContent:"flex-end"}}> 
+                 <View style={{height: SIZE.FORM_HEIGHT + 20,justifyContent:"flex-end"}}> 
                     {
                         pinCode.length < 6
-                        ? <DisabledButton label="Proceed"/>
-                        : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
+                        ? <DisabledButton label="Confirm"/>
+                        : <YellowButton onPress={ConfirmVerificationCode} label="Confirm"/>
                     }   
             </View>
             <BuildingBottom/>
-        </KeyboardAvoidingView>
-        </>
+        </View>
+        </CheckIdleState>
     )
 }
 
@@ -196,7 +206,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor:"white"
+        backgroundColor:"white",
+        justifyContent: "center",
     },
     input: {
         backgroundColor:"white",
@@ -222,4 +233,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    errorMessage: {
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.M,
+        color: COLOR.RED,
+        marginHorizontal: 16,
+        textAlign: "center"
+    }
 })

@@ -1,16 +1,16 @@
 import React, {useState} from 'react'
 import {View,StyleSheet} from 'react-native'
-import { numberFormat } from 'toktokwallet/helper'
+import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import {useMutation} from '@apollo/react-hooks'
 import { TransactionUtility } from 'toktokwallet/util'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { POST_REQUEST_SEND_MONEY , POST_SEND_MONEY } from 'toktokwallet/graphql'
 import {useNavigation} from '@react-navigation/native'
-import {useAlert} from 'src/hooks/useAlert'
+import {useAlert, usePrompt} from 'src/hooks'
 import {onErrorAlert} from 'src/util/ErrorUtility'
 import { YellowButton } from 'src/revamp'
 import { AlertOverlay } from 'src/components'
-import {DisabledButton , EnterPinCode , EnterOtpCode } from 'toktokwallet/components'
+import {DisabledButton , ValidatorScreen } from 'toktokwallet/components'
 
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
@@ -22,6 +22,7 @@ export const ProceedButton = ({
     recipientInfo
 })=> {
 
+    const prompt = usePrompt()
     const navigation = useNavigation()
     const alert = useAlert()
     const [successModalVisible, setSuccessModalVisible] = useState(false)
@@ -30,35 +31,34 @@ export const ProceedButton = ({
         referenceNumber: "",
         createdAt: ""
     })
-    const [pinCodeAttempt,setPinCodeAttempt] = useState(6)
-    const [openPinCode,setOpenPinCode] = useState(false)
-    const [otpCodeAttempt,setOtpCodeAttempt] = useState(6)
-    const [openOtpCode,setOpenOtpCode] = useState(false)
-    const [requestSendMoneyId,setRequestSendMoneyId] = useState(null)
 
     const [postRequestSendMoney , {loading: requestLoading}] = useMutation(POST_REQUEST_SEND_MONEY, {
         client:TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postRequestSendMoney})=>{
             const { validator , requestSendMoneyId } = postRequestSendMoney
-            setRequestSendMoneyId(requestSendMoneyId)
-            if(validator == "TPIN"){
-                setPinCodeAttempt(6)
-                return setOpenPinCode(true)
-            }else{
-                setOtpCodeAttempt(6)
-                return setOpenOtpCode(true)
-            }
+            const screen = validator == "TPIN" ? "ToktokWalletTPINValidator" : "ToktokWalletOTPValidator"
+            return navigation.navigate(screen, {
+                callBackFunc: Proceed,
+                resendRequest: onSwipeSuccess ,
+                data: {
+                    requestSendMoneyId: requestSendMoneyId
+                }
+            })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            // onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert
+            })
         }
     })
 
     const [postSendMoney , {data ,error, loading }] = useMutation(POST_SEND_MONEY , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postSendMoney})=> {
-            setOpenPinCode(false)
-            setOpenOtpCode(false)
             setWalletinfoParams(postSendMoney)
             setSuccessModalVisible(true)
         },
@@ -66,12 +66,8 @@ export const ProceedButton = ({
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                alert,
-                onErrorAlert,
-                setOpenPinCode,
-                setOpenOtpCode,  
-                setPinCodeAttempt,
-                setOtpCodeAttempt       
+                prompt,
+                alert      
             })
         }
     })
@@ -88,12 +84,28 @@ export const ProceedButton = ({
                     amount: +amount,
                     note: note,
                     destinationMobileNo: recipientInfo.mobileNumber,
+                    isScanQr: true
                 }
             }
         })
     }
 
-    const reviewAndConfirm = ()=> {
+    const reviewAndConfirm = async ()=> {
+
+
+        const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+            amount,
+            mobileNumber: recipientInfo.mobileNumber,
+            setErrorMessage: (value)=> {
+                if(errorMessage == ""){
+                    setErrorMessage(value)
+                    if(value != "") setSwipeEnabled(false)
+                }
+            }
+        })
+
+        if(!checkLimit) return;
+        
         return navigation.navigate("ToktokWalletReviewAndConfirm", {
             label: "Send Money",
             event: "Send Money",
@@ -112,7 +124,8 @@ export const ProceedButton = ({
         })
     }
 
-    const Proceed = ({pinCode = null , Otp = null})=> {
+    const Proceed = ({pinCode = null , Otp = null , data = null})=> {
+        const { requestSendMoneyId } = data
         postSendMoney({
             variables: {
                 input: {
@@ -126,25 +139,7 @@ export const ProceedButton = ({
 
     return (
         <>
-         <AlertOverlay visible={requestLoading}/>
-           <EnterPinCode 
-                visible={openPinCode} 
-                setVisible={setOpenPinCode} 
-                loading={loading}
-                pinCodeAttempt={pinCodeAttempt}
-                callBackFunc={Proceed}
-            >
-                 <AlertOverlay visible={loading} />
-            </EnterPinCode>
-            <EnterOtpCode
-                visible={openOtpCode}
-                setVisible={setOpenOtpCode}
-                callBackFunc={Proceed}
-                otpCodeAttempt={otpCodeAttempt}
-                resend={onSwipeSuccess}
-            >
-                <AlertOverlay visible={loading} />
-            </EnterOtpCode>
+         <AlertOverlay visible={requestLoading || loading}/>
             <SuccessfulModal 
                 successModalVisible={successModalVisible}
                 amount={amount} 
@@ -158,8 +153,8 @@ export const ProceedButton = ({
             <View style={styles.container}>
                     {
                         swipeEnabled
-                        ? <YellowButton label="Proceed" onPress={reviewAndConfirm}/>
-                        : <DisabledButton label="Proceed"/>
+                        ? <YellowButton label="Confirm" onPress={reviewAndConfirm}/>
+                        : <DisabledButton label="Confirm"/>
                     }
             </View>
         </>

@@ -1,17 +1,15 @@
 import React , {useContext} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Animated,Alert,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Animated,Alert,Image , Platform} from 'react-native'
 import CONSTANTS from 'common/res/constants';
 import { useNavigation } from '@react-navigation/native'
 import {Separator , HeaderImageBackground, HeaderTitle} from 'toktokwallet/components';
 import { numberFormat , getDeviceWidth as width  } from 'toktokwallet/helper';
-import {useSelector} from 'react-redux'
-import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
+import {useAccount} from 'toktokwallet/hooks'
 
 
 //SELF IMPORTS
 import WalletMethods from './WalletMethods'
 import { ICON_SET, VectorIcon } from 'src/revamp';
-import { CheckWalletAccountRestrictionContext } from '../CheckWalletAccountRestriction';
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 const titleAccountTypeColor = ['','#929191','#00C851','#2699FB']
@@ -19,8 +17,7 @@ const titleAccountTypeColor = ['','#929191','#00C851','#2699FB']
 const WalletCardInfo = ({loading})=> {
     const navigation = useNavigation()
     const rotateY = new Animated.Value(0)
-    const tokwaAccount = useSelector(state=>state.toktokWallet)
-    const checkWallet = useContext(CheckWalletAccountRestrictionContext)
+    const {checkIfTpinIsSet,tokwaAccount} = useAccount();
 
     const animation = Animated.timing(rotateY,{
         toValue: 200,
@@ -34,22 +31,27 @@ const WalletCardInfo = ({loading})=> {
     })
 
     const cashIn = ()=> {
-        if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
-            return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
-        }
-        if(checkWallet.checkIfAllowed()){
-            return navigation.navigate("ToktokWalletPaymentOptions")
-        }
+        const tpinIsSet = checkIfTpinIsSet();
+        if(!tpinIsSet) return
+        return navigation.navigate("ToktokWalletPaymentOptions")
+        
     }
 
     const redirectLinking = () => {
         return navigation.navigate("ToktokWalletTransactionLimit");
     }
 
+    const tokwaNotifications = ()=> navigation.navigate("ToktokWalletNotifications")
+
     return (
        <View style={styles.container}>
            <HeaderImageBackground>
-               <HeaderTitle isLogo={true} headerBackLabel="Home"/>
+               <HeaderTitle 
+                    isRightIcon
+                    isLogo={true} 
+                    rightIconOnPress={()=>navigation.navigate("ToktokWalletNotifications")}
+                    headerBackLabel="Home"
+                />
                <View style={{flex: 1,justifyContent:"flex-end",paddingBottom: 45}}>
                     <View>
                         <View style={{ flexDirection: "row" }}>
@@ -73,14 +75,15 @@ const WalletCardInfo = ({loading})=> {
                                     <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="black" size={20}/>
                                     </View>
                                 </TouchableOpacity>
+                                
 
                                 <TouchableOpacity style={styles.walletSettings} onPress={()=>{
-                                        if(checkWallet.checkIfAllowed()){
+                              
                                             animation.start(()=> {
                                                 animation.reset()
                                                 navigation.navigate("ToktokWalletSettings")
                                             })
-                                        }
+                                        
                                     }}>
                                             <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
                                                 <VectorIcon iconSet={ICON_SET.FontAwesome5} name="cog" color="black" size={30}/>
@@ -137,6 +140,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: 40,
         marginLeft: 5,
+        marginTop: Platform.OS == "android" ? 10 : 5,
     },
     topUpbtn: {
         height: 34,
@@ -150,7 +154,7 @@ const styles = StyleSheet.create({
     walletSettings: {
         flex: 1,
         alignItems:'flex-end',
-        marginRight: 10,
+        marginTop: Platform.OS == "android" ? 10 : 5,
     }
 })
 

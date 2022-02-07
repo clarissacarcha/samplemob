@@ -12,7 +12,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
-
+import { navigationRef } from './RootNavigation';
 /*-------------------- IMPORT SCREENS START--------------------*/
 
 import DrawerContent from '../Drawer';
@@ -353,7 +353,7 @@ const SwitchStack = () => {
 
 const Nav = ({initialRoute}) => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <SwitchStack initialRoute={initialRoute} />
     </NavigationContainer>
   );

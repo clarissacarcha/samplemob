@@ -7,6 +7,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import { POST_CASH_OUT_ENROLLMENG_GCASH , GET_MY_ACCOUNT_GCASH_FILL } from 'toktokwallet/graphql';
 import {useMutation, useQuery,useLazyQuery} from '@apollo/react-hooks';
 import {onError, onErrorAlert} from 'src/util/ErrorUtility';
+import { FormatTextUtility } from 'toktokwallet/util'
 import { useAlert } from 'src/hooks';
 import moment from 'moment'
 import {useSelector,useDispatch} from 'react-redux'
@@ -66,7 +67,7 @@ const PromptMessage = ({
                         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK,textAlign:"center"}}>Your application has been submitted. Please wait for your GCash disbursement account to be verified.</Text>
                     </View>
                     <View style={{width: "50%",alignSelf:"center"}}>
-                        <YellowButton label="Ok" onPress={redirect}/>
+                        <YellowButton label="OK" onPress={redirect}/>
                     </View>
                 </View>
             </View>
@@ -116,7 +117,7 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
         fetchPolicy: 'network-only',
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({getMyAccount})=> {
             setfirstName(getMyAccount.person.firstName)
@@ -137,7 +138,7 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
     const [postCashOutEnrollmentGcash, {data, error ,loading}] = useMutation(POST_CASH_OUT_ENROLLMENG_GCASH, {
             client: TOKTOK_WALLET_GRAPHQL_CLIENT,
             onError: (error)=> {
-                onErrorAlert({alert,error})
+                onErrorAlert({alert,error,navigation})
             },
             onCompleted: (res) => {
             setPromptVisible(true)
@@ -292,7 +293,10 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
                     <TextInput 
                         style={styles.input}
                         placeholder="Enter first name here"
-                        onChangeText={(value)=>setfirstName(value)}
+                        onChangeText={(value)=>{
+                            const finalString = FormatTextUtility.removeSpecialCharacters(value)
+                            setfirstName(finalString)
+                        }}
                         value={firstName}
                         returnKeyType="done"
                     />
@@ -303,7 +307,10 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
                     <TextInput 
                         style={styles.input}
                         placeholder="Enter middle name here"
-                        onChangeText={(value)=>setMiddleName(value)}
+                        onChangeText={(value)=>{
+                            const finalString = FormatTextUtility.removeSpecialCharacters(value)
+                            setMiddleName(finalString)
+                        }}
                         value={middleName}
                         returnKeyType="done"
                     />
@@ -314,7 +321,10 @@ export const CreateForm = ({navigation,session,mobile,provider})=> {
                     <TextInput 
                         style={styles.input}
                         placeholder="Enter last name here"
-                        onChangeText={(value)=>setlastName(value)}
+                        onChangeText={(value)=>{
+                            const finalString = FormatTextUtility.removeSpecialCharacters(value)
+                            setlastName(finalString)
+                        }}
                         value={lastName}
                         returnKeyType="done"
                     />

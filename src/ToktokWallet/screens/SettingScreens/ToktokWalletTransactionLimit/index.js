@@ -1,7 +1,7 @@
 import React from 'react'
 import {View,Text,StyleSheet,ActivityIndicator,FlatList} from 'react-native'
 import { HeaderBack, HeaderTitle } from 'src/revamp'
-import { Separator } from 'toktokwallet/components'
+import { Separator , CheckIdleState } from 'toktokwallet/components'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_ACCOUNT_TYPES } from 'toktokwallet/graphql'
 import {useQuery} from '@apollo/react-hooks'
@@ -12,9 +12,25 @@ import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
-const TransactionLimit = ({type, incoming, outgoing})=> {
+const TransactionLimit = ({type, incoming, outgoing,index})=> {
+    let backgroundColor = "#FFEEC6"
+
+    switch(index){
+        case 0:
+            backgroundColor = "#F2F2F2"
+            break
+        case 1:
+            backgroundColor = "#FDE0C7"
+            break
+        case 2:
+            backgroundColor = "#FFEEC6"
+            break
+        default:
+            break
+    }
+
     return (
-        <View style={{flexDirection:"row",height: 40,justifyContent:"center",alignItems:'center',padding: 10,backgroundColor:"#FEF7E6"}}>
+        <View style={{flexDirection:"row",height: 40,justifyContent:"center",alignItems:'center',padding: 10,backgroundColor}}>
                 <View style={{flex: 1}}>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{type}</Text>
                 </View>
@@ -31,12 +47,32 @@ const TransactionLimit = ({type, incoming, outgoing})=> {
 
 const AccountTypeLimit = ({item,index})=> {
 
+    let backgroundColor = "#FFEEC6"
+    let headerBackgroundColor = COLOR.YELLOW
+
+    switch(index){
+        case 0:
+            backgroundColor = "#F2F2F2"
+            headerBackgroundColor = "#CCCCCC"
+            break
+        case 1:
+            backgroundColor = "#FDE0C7"
+            headerBackgroundColor = "#F6841F"
+            break
+        case 2:
+            backgroundColor = "#FFEEC6"
+            headerBackgroundColor = COLOR.YELLOW
+            break
+        default:
+            break
+    }
+
     return (
         <View style={{marginBottom: 20,}}>
-            <View style={{backgroundColor: COLOR.YELLOW,height: 40,justifyContent:"center",padding: 10,borderRadius: 2}}>
+            <View style={{backgroundColor: headerBackgroundColor,height: 40,justifyContent:"center",padding: 10,borderRadius: 2}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{item.title}</Text>
             </View>
-            <View style={{flexDirection:"row",height: 40,justifyContent:"center",alignItems:'center',padding: 10,backgroundColor:"#FEF7E6"}}>
+            <View style={{flexDirection:"row",height: 40,justifyContent:"center",alignItems:'center',padding: 10,backgroundColor}}>
                     <View style={{flex: 1}}>
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Wallet Size</Text>
                     </View>
@@ -59,9 +95,9 @@ const AccountTypeLimit = ({item,index})=> {
                     </View>
             </View>
 
-           <TransactionLimit type="Daily" incoming={item.incomingValueDailyLimit} outgoing={item.outgoingValueDailyLimit}/>
-           <TransactionLimit type="Monthly" incoming={item.incomingValueMonthlyLimit} outgoing={item.outgoingValueMonthlyLimit}/>
-           <TransactionLimit type="Annual" incoming={item.incomingValueAnnualLimit} outgoing={item.outgoingValueAnnualLimit}/>
+           <TransactionLimit index={index} type="Daily" incoming={item.incomingValueDailyLimit} outgoing={item.outgoingValueDailyLimit}/>
+           <TransactionLimit index={index} type="Monthly" incoming={item.incomingValueMonthlyLimit} outgoing={item.outgoingValueMonthlyLimit}/>
+           <TransactionLimit index={index} type="Annual" incoming={item.incomingValueAnnualLimit} outgoing={item.outgoingValueAnnualLimit}/>
 
         </View>
    
@@ -74,7 +110,7 @@ export const ToktokWalletTransactionLimit = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Transaction Limit','']}/>,
+        headerTitle: ()=> <HeaderTitle label={['User Level and','Transaction Limit']}/>,
     })
 
     const alert = useAlert()
@@ -83,7 +119,7 @@ export const ToktokWalletTransactionLimit = ({navigation})=> {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -101,7 +137,7 @@ export const ToktokWalletTransactionLimit = ({navigation})=> {
 
 
     return (
-        <>
+        <CheckIdleState>
         <Separator/>
         <View style={styles.container}>
                 <FlatList 
@@ -111,7 +147,7 @@ export const ToktokWalletTransactionLimit = ({navigation})=> {
                         renderItem={AccountTypeLimit}
                 />
         </View>
-        </>
+        </CheckIdleState>
     )
 }
 

@@ -1,10 +1,14 @@
 import React from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,ScrollView} from 'react-native'
 import FIcon from 'react-native-vector-icons/Feather';
-import {Separator} from 'toktokwallet/components';
+import {Separator,CheckIdleState} from 'toktokwallet/components';
 import { HeaderBack , HeaderTitle} from 'src/revamp';
 import {useSelector} from 'react-redux'
 import CONSTANTS from 'common/res/constants'
+//SELF IMPORTS
+import {
+    Biometrics
+} from "./Components";
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
 const SettingHeaderTitle = ({title})=> {
@@ -36,13 +40,16 @@ export const ToktokWalletSettings = ({navigation , route })=> {
     )
 
     return (    
-        <>
+        <CheckIdleState>
         <Separator />
         <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-            <SettingHeaderTitle title="Manage Pin"/>
-            <SettingOption route="ToktokWalletCreatePin" title="Change Pin"/>
-            <Separator/>
-            <SettingHeaderTitle title="Help Centre"/>
+            <SettingHeaderTitle title="Security"/>
+            <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? "Change" : "Setup"} TPIN`}/>
+            <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN"/>
+            {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
+            {/* <Biometrics/> */}
+            <Separator/>   
+            <SettingHeaderTitle title="Account"/>
             <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>
             <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>
             {
@@ -50,15 +57,23 @@ export const ToktokWalletSettings = ({navigation , route })=> {
                 <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
             }
             <Separator/>
-            <SettingHeaderTitle title="Security and Privacy"/>
+            <SettingHeaderTitle title="Help Centre"/>
             <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy"/>
             <SettingOption route="ToktokWalletTermsConditions" title="Terms and Conditions"/>
+            <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us"/>
             <Separator/>
             <SettingHeaderTitle title="Logs"/>
             <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
-            <SettingOption route="ToktokWalletCashOutLogs" title="Cash Out"/>
+            <SettingOption route="ToktokWalletCashOutLogs" title="Fund Transfer"/>
+            <SettingOption route="ToktokWalletSendMoneyLogs" title="Send Money"/>
+            {/* <SettingOption route="ToktokWalletRequestMoneyLogs" title="Request Money"/> */}
+            {/* <SettingOption route="ToktokWalletCashInLogs" title="Bills"/>
+            <SettingOption route="ToktokWalletCashOutLogs" title="Load"/> */}
+            <Separator/>
+            <SettingHeaderTitle title="Account Recovery"/>
+            <SettingOption route="ToktokWalletAccountRecoverySetup" title="Account Recovery Setup"/>
         </ScrollView>
-        </>
+        </CheckIdleState>
     )
 }
 

@@ -1,33 +1,34 @@
 import React from 'react';
-import {TextInput, View, StyleSheet, Text, TouchableOpacity, Platform} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
-import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import ContentLoader from 'react-native-easy-content-loader';
+import {Text, TextInput, TouchableOpacity, View, StyleSheet} from 'react-native';
+// import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
-import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
-import {markerIcon} from 'toktokfood/assets/images';
+import {FONT_SIZE} from 'res/variables';
 
-import {getStatusbarHeight, verticalScale, moderateScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {moderateScale} from 'toktokfood/helper/scale';
 
-const StyledTextInput = ({onChangeText, label, value, error = true}) => {
+const StyledTextInput = ({onChangeText, onRemoveVoucher, label, value, error = null, hasIcon = false}) => {
   const renderIcon = () => {
-    const iconColor = error ? '#F6841F' : '#06A44E';
-    const iconName = error ? 'times-circle' : 'check-circle';
-
-    return <FIcon5 name={iconName} size={17} color={iconColor} />;
+    // const iconColor = error ? '#F6841F' : '#06A44E';
+    // const iconName = error ? 'times-circle' : 'check-circle';
+    return (
+      <TouchableOpacity onPress={onRemoveVoucher}>
+        <Text style={styles.removeText}>Remove</Text>
+      </TouchableOpacity>
+    );
   };
 
   return (
     <View style={styles.container}>
       <TextInput value={value} onChangeText={onChangeText} style={styles.input} placeholder={label} />
 
-      {renderIcon()}
+      {hasIcon && renderIcon()}
     </View>
   );
 };
 
 export default StyledTextInput;
+
+/* <FIcon5 name={iconName} size={17} color={iconColor} /> */
 
 const styles = StyleSheet.create({
   container: {
@@ -50,5 +51,9 @@ const styles = StyleSheet.create({
     height: moderateScale(40),
     // color: DARK,
     fontSize: FONT_SIZE.M,
+  },
+  removeText: {
+    color: '#868686',
+    marginHorizontal: 10,
   },
 });

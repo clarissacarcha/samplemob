@@ -28,7 +28,7 @@ const ModalLinkAccount = ({visible,setVisible,provider,accountNumber})=> {
         },
         onError: (error)=>{
             setVisible(false)
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 

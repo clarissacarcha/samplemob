@@ -43,6 +43,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
 
   useEffect(() => {
     if(isFocus && customerInfo){
+      console.log('FF: ' + JSON.stringify(customerInfo));
       getAllTemporaryCart({
         variables: {
           input: {
@@ -96,7 +97,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
   if(backOnly){
     return (
       <View style={[styles.backContainer, { marginTop: getStatusbarHeight } ]}>
-        <TouchableOpacity onPress={onBack} style={styles.headerBack}>
+        <TouchableOpacity hitSlop={styles.hitSlop} onPress={onBack} style={styles.headerBack}>
           <FIcon5 name="chevron-left" size={15} />
         </TouchableOpacity>
       </View>
@@ -111,7 +112,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
           paddingVertical: Platform.OS == 'android' ? moderateScale(20) : moderateScale(searchBox ? 20 : 10)
         }
       ]}>
-        <TouchableOpacity onPress={onBack} style={styles.headerBack}>
+        <TouchableOpacity hitSlop={styles.hitSlop} onPress={onBack} style={styles.headerBack}>
           <FIcon5 name="chevron-left" size={15} />
         </TouchableOpacity>
         { (loading || error) ? (
@@ -184,4 +185,10 @@ const styles = StyleSheet.create({
     height: 18,
     marginRight: 4,
   },
+  hitSlop: {
+    top: moderateScale(40),
+    bottom: moderateScale(40),
+    left: moderateScale(40),
+    right: moderateScale(40)
+  }
 });

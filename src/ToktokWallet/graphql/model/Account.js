@@ -1,19 +1,29 @@
 import gql from 'graphql-tag'
 
 
+// export const GET_ACCOUNT = gql`
+//     query getAccount($input: GetAccountInput){
+//         getAccount(input: $input){
+//             id
+//             mobileNumber
+//             status
+//             motherId
+//             person {
+//                 id
+//                 firstName
+//                 middleName
+//                 lastName
+//             }
+//         }
+//     }
+// `
+
 export const GET_ACCOUNT = gql`
     query getAccount($input: GetAccountInput){
         getAccount(input: $input){
             id
             mobileNumber
-            status
-            motherId
-            person {
-                id
-                firstName
-                middleName
-                lastName
-            }
+            person
         }
     }
 `
@@ -24,9 +34,13 @@ export const GET_MY_ACCOUNT = gql`
             id
             mobileNumber
             status
+            disabledType
+            isDormant
             motherId
             pinCode
             pinCodeAttempts
+            mpinCode
+            mpindCodeAttempts
             isLinked
             person {
                 id
@@ -40,6 +54,13 @@ export const GET_MY_ACCOUNT = gql`
                     title
                     level
                     key
+                    walletSize
+                    incomingValueDailyLimit
+                    incomingValueMonthlyLimit
+                    incomingValueAnnualLimit
+                    outgoingValueDailyLimit
+                    outgoingValueMonthlyLimit
+                    outgoingValueAnnualLimit
                 }
             }
             wallet {
@@ -66,9 +87,23 @@ export const PATCH_PIN_CODE = gql`
     }
 `
 
+export const PATCH_MPIN_CODE = gql`
+    mutation patchMPinCode($input: PatchMPinCodeInput){
+        patchMPinCode(input: $input)
+    }
+`
+
 export const VERIFY_PIN_CODE = gql`
     query verifyPinCode($input: GetVerifyPinInput){
         verifyPinCode(input: $input)
+    }
+`
+
+export const GET_VERIFY_MPIN = gql`
+    query getVerifyMPIN($input: GetVerifyMPINInput){
+        getVerifyMPIN(input: $input){
+            verifiedToken
+        }
     }
 `
 
@@ -95,3 +130,12 @@ export const GET_CHECK_PENDING_DISBURSEMENT_ACCOUNT = gql`
         }
     }
 `
+
+export const POST_GENERATE_ACCOUNT_QR_CODE = gql`
+    mutation {
+        postGenerateAccountQrCode {
+            encryptedQRToken
+        }
+    }
+`
+

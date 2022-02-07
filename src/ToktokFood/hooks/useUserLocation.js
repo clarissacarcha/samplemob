@@ -23,7 +23,7 @@ export const useUserLocation = () => {
     } else {
       // Get user initial location
       getLocation()
-        .then(async (res) => {
+        .then(async res => {
           if (res) {
             // Do not spread address object from getFormattedAddress function and pass to payload
             // if the initial state structure of reducer is not equal to getFormattedAddress result.

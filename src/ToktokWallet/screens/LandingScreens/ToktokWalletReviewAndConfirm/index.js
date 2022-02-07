@@ -1,14 +1,16 @@
 import React from 'react'
 import {View,Text,StyleSheet} from 'react-native'
 import { HeaderBack, YellowButton, HeaderTitle } from 'src/revamp'
-import { Separator, SwipeProceedButton } from 'toktokwallet/components'
+import { Separator, SwipeProceedButton, CheckIdleState , FlagSecureScreen , BuildingBottom } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
 import {
     CashIn,
+    CashInDragonPay,
     CashOut,
     CashOutOtherBank,
+    RequestMoney,
     SendMoney
 } from "./Components"
 
@@ -38,23 +40,42 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
         switch(event){
             case "Cash In":
                 return <CashIn data={data}/>
+            case "Cash In Dragon Pay":
+                return <CashInDragonPay data={data}/>
             case "Cash Out":
                 return <CashOut data={data}/>
             case "Send Money":
                 return <SendMoney data={data}/>
             case "Fund Transfer":
                 return <CashOutOtherBank data={data}/>
+            case "Request Money":
+                return <RequestMoney data={data}/>
             default:
                 return
         }
     }
     return (
-        <>
+        <FlagSecureScreen>
+        <CheckIdleState>
         <Separator/>
         <View style={styles.container}>
+            <View style={styles.header}>
+              <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: "black"}}>Review and Confirm</Text>
+            </View>
             <View style={styles.content}>
-                <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.DARK}}>Review and Confirm</Text>
+               
                 {RenderDisplay()}
+            </View>
+            <View style={{flex:1 ,justifyContent:"center",alignItems:"center",padding: 20,marginTop: 10}}>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"center"}}>
+                    Please review the accuracy and completeness of the details provided before you confirm
+                </Text>
+                {
+                    data.fundTransferType &&
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop: 15,textAlign:'center'}}>
+                        Fund Transfer via {data.fundTransferType}
+                    </Text>
+                }
             </View>
             <View style={styles.proceedBtn}>
                 {
@@ -68,22 +89,32 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                     : <YellowButton onPress={confirm} label="Confirm" />
                 }
             </View>
+            <BuildingBottom/>
         </View>
-        </>
+        </CheckIdleState>
+        </FlagSecureScreen>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
         backgroundColor:"white"
     },
     content: {
         flex: 1,
+        paddingHorizontal: 16,
+    },
+    header: {
+        backgroundColor: "#FFF2D5",
+        paddingHorizontal: 16,
+        height: 50,
+        justifyContent:"center"
     },
     proceedBtn: {
         height: 70,
         justifyContent:"flex-end",
+        marginBottom: 16,
+        paddingHorizontal: 16,
     }
 })

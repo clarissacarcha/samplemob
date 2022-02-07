@@ -6,7 +6,8 @@ import {useAlert} from 'src/hooks/useAlert'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {
     HeaderImageBackground,
-    HeaderTitle
+    HeaderTitle,
+    CheckIdleState
 } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
@@ -32,9 +33,10 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
     const [amount,setAmount] = useState("")
     const [note,setNote] = useState("")
     const [swipeEnabled,setSwipeEnabled] = useState(false)
+    const [errorMessage,setErrorMessage] = useState("")
  
     return (
-        <>
+        <CheckIdleState>
         <View style={styles.container}>
             <View style={styles.headings}>
                 <HeaderImageBackground>
@@ -45,9 +47,12 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                                 <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>PHP {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
                                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                             </View>
-                            <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions")} style={styles.topUp}>
+                            <TouchableOpacity 
+                                onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" ,{onCashIn: ()=> null,amount: 0})} 
+                                style={styles.topUp}
+                            >
                                 <View style={styles.topUpbtn}>
-                                        <FIcon5 name={'plus'} size={12}/> 
+                                        <FIcon5 name={'plus'} color={"black"} size={12}/> 
                                 </View>
                             </TouchableOpacity>
                     </View>
@@ -61,6 +66,9 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                 setAmount={setAmount} 
                 setSwipeEnabled={setSwipeEnabled}
                 tokwaAccount={tokwaAccount}
+                recipientInfo={recipientInfo}
+                errorMessage={errorMessage}
+                setErrorMessage={setErrorMessage}
             />
 
             <EnterNote
@@ -69,11 +77,19 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
             />
 
             <View style={{paddingHorizontal: 10}}> 
-                <ProceedButton amount={amount} swipeEnabled={swipeEnabled} note={note} session={session} recipientInfo={recipientInfo}/>
+                <ProceedButton 
+                    amount={amount} 
+                    swipeEnabled={swipeEnabled} 
+                    note={note} 
+                    session={session} 
+                    recipientInfo={recipientInfo}
+                    errorMessage={errorMessage}
+                    setErrorMessage={setErrorMessage}
+                />
             </View>   
 
         </View>
-      </>
+      </CheckIdleState>
     )
 }
 

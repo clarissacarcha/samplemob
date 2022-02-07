@@ -87,6 +87,7 @@ export const Submit = ()=> {
         setFileError,
         setValidID1,
         setValidID2,
+        pepInfo,
     } = useContext(ContextEnterpriseApplication)
     const [visible,setVisible] = useState(false);
     const alert = useAlert();
@@ -95,7 +96,7 @@ export const Submit = ()=> {
     const [postEnterpriseUpgradeRequest, {data , error ,loading }] = useMutation(POST_ENTERPRISE_UPGRADE_REQUEST, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({postEnterpriseUpgradeRequest})=> {
             // console.log(JSON.stringify(postEnterpriseUpgradeRequest))
@@ -123,7 +124,18 @@ export const Submit = ()=> {
             secondIdentificationCardId: +validID2.IDType,
             secondGovtIdFront: validID2.frontFile,
             secondGovtIdBack: validID2.backFile,
+            pepQuestionnaire:{
+                isPep: pepInfo.questionnaire.isPep,
+                pepPosition: pepInfo.questionnaire.pepPosition,
+                isFamilyPep: pepInfo.questionnaire.isFamilyPep,
+                familyPepPosition: pepInfo.questionnaire.familyPepPosition,
+                sourceOfIncomeId: pepInfo.questionnaire.sourceOfIncomeId,
+                sourceOfIncome: pepInfo.questionnaire.sourceOfIncome,
+                sourceOfWealthId: pepInfo.questionnaire.sourceOfWealthId,
+                sourceOfWealth: pepInfo.questionnaire.sourceOfWealth
+            }
         }
+
         if(noError){
             postEnterpriseUpgradeRequest({
                 variables: {

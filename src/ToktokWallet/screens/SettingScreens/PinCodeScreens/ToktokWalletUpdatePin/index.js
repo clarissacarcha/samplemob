@@ -5,7 +5,9 @@ import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { PATCH_PIN_CODE } from 'toktokwallet/graphql'
 import {useMutation} from '@apollo/react-hooks'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import { Separator , LeavePromptModal} from 'toktokwallet/components';
+import { Separator , LeavePromptModal , CheckIdleState } from 'toktokwallet/components';
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import {useAlert  } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -14,6 +16,7 @@ import {
     NewPin,
     SuccessModal,
 } from "./Components"
+
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
@@ -46,7 +49,7 @@ const HeaderBack = ({pageIndex,setPageIndex,navigation})=> {
     )
 }
 
-export const ToktokWalletUpdatePin =  ({navigation})=> {
+export const ToktokWalletUpdatePin =  ({navigation,route})=> {
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack pageIndex={pageIndex} setPageIndex={setPageIndex} navigation={navigation}/>,
@@ -56,20 +59,25 @@ export const ToktokWalletUpdatePin =  ({navigation})=> {
                                  <View style={{justifyContent:"center",alignItems:"center"}}>
                                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR ,color:'#929191'}}>Cancel</Text>
                                 </View>
-                            </TouchableHighlight>
+                            </TouchableHighlight>,
+        headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0
+        }
     })
+
+    const {otp, event} = route.params
 
     const cancelSetup = ()=> {
         console.log("Cancelling")
         setLeaveModalVisible(true)
     }
 
-
     const [pageIndex,setPageIndex] = useState(0)
     const [pinCode,setPinCode] = useState("")
     const [successModalVisible,setSuccessModalVisible] = useState(false)
     const [LeaveModalvisible,setLeaveModalVisible] = useState(false)
-
+    const alert = useAlert();
 
     const [patchPinCode, {data, error, loading}] = useMutation(PATCH_PIN_CODE, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -77,7 +85,7 @@ export const ToktokWalletUpdatePin =  ({navigation})=> {
         setSuccessModalVisible(true)
         },
         onError: (error)=> {
-        onErrorAlert({alert,error})
+        onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -86,7 +94,8 @@ export const ToktokWalletUpdatePin =  ({navigation})=> {
         patchPinCode({
             variables: {
             input: {
-                pinCode: pinCode
+                pinCode: pinCode,
+                otp: otp
             }
             }
         })
@@ -105,22 +114,22 @@ export const ToktokWalletUpdatePin =  ({navigation})=> {
     }
 
     return (
-        <>
+        <CheckIdleState>
             <AlertOverlay visible={loading} />
             <LeavePromptModal
                 visible={LeaveModalvisible}
                 setVisible={setLeaveModalVisible}
                 onConfirm={()=>navigation.pop(2)}
             />
-            <SuccessModal modalVisible={successModalVisible} />
-            <Separator />
-            <KeyboardAvoidingView style={{flex: 1,}}
-             keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
-             behavior={Platform.OS == "ios" ? "padding" : "height"}
+            <SuccessModal modalVisible={successModalVisible} setModalVisible={setSuccessModalVisible} event={event}/>
+            {/* <Separator /> */}
+            <View style={{flex: 1,}}
+            //  keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
+            //  behavior={Platform.OS == "ios" ? "padding" : "height"}
              >
             {DisplayComponent()}
-            </KeyboardAvoidingView>
-        </>
+            </View>
+        </CheckIdleState>
     )
 }
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
-import { Separator } from 'toktokwallet/components'
+import { Separator , CheckIdleState} from 'toktokwallet/components'
 import { HeaderBack, HeaderTitle , VectorIcon , ICON_SET , YellowButton} from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 import {useSelector} from 'react-redux'
@@ -11,7 +11,7 @@ import { useQuery, useLazyQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import {SomethingWentWrong} from 'src/components'
-import { SuccessfulModal } from "../../../../components";
+import { SuccessfulModal } from "toktokwallet/components";
 import { useDispatch } from 'react-redux'
 
 const { COLOR , FONT_SIZE , FONT_FAMILY: FONT, SHADOW  } = CONSTANTS
@@ -108,7 +108,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
     }
 
     return (
-        <>
+        <CheckIdleState>
         <SuccessfulModal
             visible={showSuccessModal}
             title="Success!"
@@ -147,7 +147,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
                 }
             />
         </View>
-        </>
+        </CheckIdleState>
     )
 }
 

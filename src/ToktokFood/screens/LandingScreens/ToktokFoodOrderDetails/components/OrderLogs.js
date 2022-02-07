@@ -25,6 +25,10 @@ const OrderFee = ({ status = 2, transaction }) => {
     deliveryImgurl2,
     orderIsfor,
     dateBookingConfirmed,
+    orderStatus,
+    isdeclined,
+    dateCancelled,
+    dateDeclined
   } = transaction
   const otwRestaurantDate = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
  
@@ -36,7 +40,7 @@ const OrderFee = ({ status = 2, transaction }) => {
         ) : (
           <FIcon5 name="circle" color={"#CECECE"} size={moderateScale(15)} />
         )}
-        <Text style={styles.logText}>{title}</Text>
+        <Text style={[styles.logText, { color: orderStatus == 'c' ? '#FFA700' : 'black' }]}>{title}</Text>
       </View>
       {date != 'Invalid date' && <Text style={styles.dateText}>{date}</Text>}
     </View>
@@ -56,14 +60,17 @@ const OrderFee = ({ status = 2, transaction }) => {
   );
 
   const displayComponent = () => {
-    if(orderIsfor == 1){
+    if(orderStatus == 'c'){
+      let date = isdeclined == 1 ? dateDeclined : dateCancelled;
+      return renderLogInfo('Cancelled', moment(date).format('lll'))
+    } else if(orderIsfor == 1){
       return (
         <>
           {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
           {renderDash()}
           {renderLogInfo('On the way to restaurant', moment(otwRestaurantDate).format('lll'))}
           {renderDash()}
-          {renderLogInfo('Food Picked Up', moment(dateFulfilled).format('lll'))}
+          {renderLogInfo('Picked up order', moment(dateFulfilled).format('lll'))}
           {(moment(dateFulfilled).format('lll') == 'Invalid date' || deliveryImgurl == null )&& 
             renderDash()
           }
@@ -81,9 +88,9 @@ const OrderFee = ({ status = 2, transaction }) => {
         <>
           {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
           {renderDash()}
-          {renderLogInfo('Ready for Pick-Up', moment(dateReadyPickup).format('lll'))}
+          {renderLogInfo('Ready for Pickup', moment(dateReadyPickup).format('lll'))}
           {renderDash()}
-          {renderLogInfo('Food Picked Up', moment(dateFulfilled).format('lll'))}
+          {renderLogInfo('Picked up order', moment(dateShipped).format('lll'))}
         </>
       )
     }

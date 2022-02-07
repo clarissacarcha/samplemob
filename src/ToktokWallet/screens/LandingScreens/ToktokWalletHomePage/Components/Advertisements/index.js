@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
-import {GET_ADVERTISEMENTS} from 'src/graphql/';
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+import {GET_ADVERTISEMENTS} from 'toktokwallet/graphql';
 import Banner from './Banner';
 import Grid from './Grid';
-import CONSTANTS from 'common/res/constants'
+import Slider from './Slider';
+import CONSTANTS from 'common/res/constants';
 
-const { MARGIN , COLOR } = CONSTANTS
+const { MARGIN , COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 
 export const Advertisements = () => {
   const [banner, setBanner] = useState(null);
@@ -14,17 +16,19 @@ export const Advertisements = () => {
 
   const {data, loading, error} = useQuery(GET_ADVERTISEMENTS, {
     fetchPolicy: 'network-only',
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: ({getAdvertisements}) => {
-      const bannerAd = getAdvertisements.filter((ad) => {
+      const bannerAd = getAdvertisements.filter(ad => {
         return ad.isHighlighted;
       });
 
-      const gridAds = getAdvertisements.filter((ad) => {
+      const gridAds = getAdvertisements.filter(ad => {
         return !ad.isHighlighted;
       });
 
       setBanner(bannerAd);
-      setGrid(gridAds);
+      // setGrid(gridAds);
+      setGrid(getAdvertisements);
     },
   });
 
@@ -35,8 +39,22 @@ export const Advertisements = () => {
   return (
     <View>
       <View style={styles.separator} />
-      <Banner ads={banner} />
-      <Grid ads={grid} />
+      <View style={{marginVertical: 16}}>
+        {/* <Banner ads={banner} />
+        <Grid ads={grid} /> */}
+        {
+          grid && grid.length > 0 && <>
+          <View style={{paddingHorizontal: 16,marginBottom: 16}}>
+          <Text style={{
+            fontSize: FONT_SIZE.M,
+            color: '#212529',
+            fontFamily: FONT.BOLD,
+          }}>Watch out for the best services you deserve</Text>
+          </View>
+          <Slider ads={grid}/>
+          </>
+        }
+      </View>
     </View>
   );
 };
@@ -45,5 +63,6 @@ const styles = StyleSheet.create({
   separator: {
     height: MARGIN.M / 2,
     backgroundColor: COLOR.LIGHT,
+    marginTop: 16,
   },
 });

@@ -26,7 +26,10 @@ const INITIAL_STATE = {
   loading: false,
   events: {
     upgradeAccount: false,
-  }
+    cashInTopUp: false,
+  },
+  constants: {},
+  contacts: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -63,6 +66,19 @@ export default (state = INITIAL_STATE, action) => {
           ...state.events,
           [action.payload.event]: action.payload.value
         }
+      }
+    case 'SET_TOKWA_CONSTANTS':
+      return {
+        ...state,
+        constants: {
+          ...state.constants,
+          ...action.payload
+        }
+      }
+    case 'SET_CONTACTS':
+      return {
+        ...state,
+        contacts: [...action.payload]
       }
     default:
       return state;

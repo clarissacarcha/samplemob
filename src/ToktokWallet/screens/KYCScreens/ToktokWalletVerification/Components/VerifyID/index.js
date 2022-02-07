@@ -29,7 +29,8 @@ export const VerifyID = ()=> {
         backImage, 
         setBackImage,
         isBackRequired, 
-        setIsbackRequired
+        setIsbackRequired,
+        setCacheImagesList
     } = useContext(VerifyContext)
 
     const navigation = useNavigation()
@@ -37,6 +38,9 @@ export const VerifyID = ()=> {
 
     const setImage = (data, placement)=> {
         console.log(data, placement)
+        setCacheImagesList(state=> {
+            return [...state, data.uri]
+        })
         if(placement == "front") setFrontImage(data)
         else if(placement == "back") setBackImage(data)
     }
@@ -115,11 +119,11 @@ export const VerifyID = ()=> {
             return (
                 <>
                 <View style={{flex: 1, paddingVertical: 10, marginTop: 0}}>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Front of ID</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,alignSelf:"center"}}>Front of ID</Text>
                     {frontImage ? <ImageIDSet placement="front" /> : <ChooseImage placement="front" />}
                 </View>
                 <View style={{flex: 1, paddingVertical: 5}}>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Back of ID</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,alignSelf:"center"}}>Back of ID</Text>
                     {backImage ? <ImageIDSet placement="back" /> : <ChooseImage placement="back" />}
                 </View>
                 </>
@@ -127,14 +131,14 @@ export const VerifyID = ()=> {
         }else if(!isBackRequired){
             return <>
                 <View style={{flex: 1, paddingVertical: 10, marginTop: 0}}>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Front of ID</Text>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M, alignSelf:"center"}}>Front of ID</Text>
                     {frontImage ? <ImageIDSet placement="front" /> : <ChooseImage placement="front" />}
                 </View>
 
                 {
                     backImage &&
                     <View style={{flex: 1, paddingVertical: 5, marginTop: 0}}>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Back of ID</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M, alignSelf:'center'}}>Back of ID</Text>
                         {backImage ? <ImageIDSet placement="back" /> : <ChooseImage placement="back" />}
                     </View>
 
@@ -144,6 +148,7 @@ export const VerifyID = ()=> {
     }
 
     const onSelectIdType = (card) => {
+        changeVerifyID("idNumber","")
         setFrontImage(null)
         setBackImage(null)
         setIsbackRequired(card.isBackRequired == 1)
@@ -182,7 +187,8 @@ export const VerifyID = ()=> {
                             <TextInput 
                                     value={verifyID.idNumber}
                                     onChangeText={text=>changeVerifyID("idNumber",text)}
-                                    placeholder="Enter valid id number here"
+                                    placeholder="Enter valid ID number here"
+                                    placeholderTextColor={COLOR.DARK}
                                     // onSubmitEditing={Proceed}
                                     style={[styles.input,{padding: 5,paddingLeft: 10,fontSize: 12,fontFamily: FONT.REGULAR}]} 
                                     returnKeyType="done"

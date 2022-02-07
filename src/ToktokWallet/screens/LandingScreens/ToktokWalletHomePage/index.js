@@ -1,20 +1,15 @@
 import React , {useState,useRef,useCallback,useEffect} from 'react'
-import { View ,ActivityIndicator,StatusBar,Text} from 'react-native'
-import {SomethingWentWrong} from 'src/components'
-import CONSTANTS from 'common/res/constants'
-import {GET_USER_TOKTOK_WALLET_DATA} from 'toktokwallet/graphql'
-import {useLazyQuery, useQuery} from '@apollo/react-hooks'
-import {useSelector , useDispatch} from 'react-redux'
+import { View ,ActivityIndicator,StatusBar,Text,BackHandler} from 'react-native'
+import {SomethingWentWrong,AlertOverlay} from 'src/components'
+import { useDispatch } from 'react-redux'
 import { useAccount } from 'toktokwallet/hooks'
-import { useAlert } from 'src/hooks'
-import { onErrorAlert } from 'src/util/ErrorUtility'
-import AsyncStorage from '@react-native-community/async-storage'
+import { CheckIdleState } from 'toktokwallet/components'
+import {useFocusEffect} from '@react-navigation/native'
+import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
 import {
     WalletLandingPage,
-    CheckTokwaKYCRegistration,
-    CheckWalletAccountRestriction
 } from "./Components";
 
 const {COLOR} = CONSTANTS
@@ -25,67 +20,46 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
         headerShown: false,
     })
 
-    const session = useSelector(state=> state.session)
-    const [mounted, setMounted] = useState(true)
     const [refreshing,setRefreshing] = useState(false)
-    const { refreshWallet } = useAccount();
-    const alert = useAlert();
+    const { refreshWallet , getMyAccountLoading} = useAccount();
     const dispatch = useDispatch();
 
-    const  {data,error,loading} = useQuery(GET_USER_TOKTOK_WALLET_DATA , {
-        fetchPolicy:"network-only",
-        variables: {
-            input: {
-                userId: session.user.id,
-            }
-        },
-        onCompleted: async ({getUserToktokWalletData})=> {
-            // if( getUserToktokWalletData.accountToken ) {
-            //     await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
-            // }
-
-            if(getUserToktokWalletData.toktokWalletAccountId && !session.user.toktokWalletAccountId){
-                // UPDATE SESSION HERE
-                dispatch({
-                    type: "UPDATE_TOKWA_ACCOUNT_ID_SESSION",
-                    payload: getUserToktokWalletData.toktokWalletAccountId
-                })
-            }
-
-            if( getUserToktokWalletData.enterpriseToken ){
-                await AsyncStorage.setItem('toktokWalletEnterpriseToken', getUserToktokWalletData.enterpriseToken);
-            }
-        }
-    })
-
-
     const onRefresh = useCallback(()=>{
-        refreshWallet();
+       refreshWallet();
     },[])
 
-    if (loading) {
-        return (
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size={24} color={COLOR.YELLOW} />
-          </View>
-        );
-    }
+    useEffect(()=>{
+        refreshWallet();
+        dispatch({
+            type: "SET_TOKWA_EVENTS_REDIRECT",
+            payload: {
+                event: "cashInTopUp",
+                value: false,
+            }
+        })
+    },[])
 
-    if (error) {
-        return <SomethingWentWrong />;
-    }
-
+    // useFocusEffect(() => {
+    //     const backAction = () => {
+    //       navigation.pop(2);
+    //       return true;
+    //     };
+    
+    //     const backHandler = BackHandler.addEventListener(
+    //       "hardwareBackPress",
+    //       backAction
+    //     );
+    
+    //     return () => backHandler.remove();
+    //   }, []);
 
     return (
         <>
+        <AlertOverlay visible={getMyAccountLoading}/>
+        <CheckIdleState>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-            <CheckTokwaKYCRegistration kycStatus={data.getUserToktokWalletData.kycStatus}>
-                    
-                    <CheckWalletAccountRestriction>
-                        <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
-                    </CheckWalletAccountRestriction>
-                
-            </CheckTokwaKYCRegistration>
+            <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
+        </CheckIdleState>
         </>
     )
 }

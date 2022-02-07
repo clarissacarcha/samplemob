@@ -1,20 +1,22 @@
-import React, { useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,ActivityIndicator,KeyboardAvoidingView} from 'react-native'
+import React, { useState , useEffect , useRef , createRef} from 'react'
+import {View,Text,StyleSheet,TouchableOpacity,ActivityIndicator,KeyboardAvoidingView,ScrollView} from 'react-native'
 import { numberFormat } from 'toktokwallet/helper'
 import {useSelector} from 'react-redux'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import {HeaderImageBackground,HeaderTitle} from 'toktokwallet/components'
+import {HeaderImageBackground,HeaderTitle,CheckIdleState} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
 import {
+    ContextProvider,
     EnterAmount,
     EnterMobileNo,
     EnterNote,
+    Favorites,
     ProceedButton
 } from "./Components";
 
-const { COLOR, FONT_FAMILY: FONT, FONT_SIZE , MARGIN } = CONSTANTS
+const { COLOR, FONT_FAMILY: FONT, FONT_SIZE , MARGIN , SIZE } = CONSTANTS
 
 
 export const ToktokWalletSendMoney = ({navigation,route})=> {
@@ -25,12 +27,14 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
     
     const session = useSelector(state => state.session)
     const tokwaAccount = useSelector(state => state.toktokWallet)
+    const favoritesRef = createRef()
 
     const [mobileNo,setMobileNo] = useState("")
     const [amount,setAmount] = useState("")
     const [note,setNote] = useState("")
     const [proceed,setProceed] = useState(false)
     const [swipeEnabled,setSwipeEnabled] = useState(false)
+    const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [recipientDetails,setRecipientDetails] = useState({
         id: null,
         person: {
@@ -73,7 +77,14 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
         }
     },[])
 
+    // check if fetch user is on the favorites list
+    useEffect(()=>{
+        console.log(recipientDetails)
+    },[recipientDetails])
+
     return (
+        <CheckIdleState>
+        <ContextProvider>
         <View style={{flex:1,backgroundColor:"white"}}>
                 <View style={styles.headings}>
                     <HeaderImageBackground>
@@ -85,9 +96,12 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                                             <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
                                             <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                                         </View>
-                                        <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions")} style={styles.topUp}>
+                                        <TouchableOpacity
+                                            onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" ,{onCashIn: ()=> null ,amount: 0})} 
+                                            style={styles.topUp}
+                                        >
                                             <View style={styles.topUpbtn}>
-                                                    <FIcon5 name={'plus'} size={12}/> 
+                                                    <FIcon5 name={'plus'} size={12} color="black"/> 
                                             </View>
                                         </TouchableOpacity>
                                 </View>
@@ -109,10 +123,14 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                         recipientDetails={recipientDetails}
                         tokwaAccount={tokwaAccount}
                         setGetAccountLoading={setGetAccountLoading}
+                        // favoritesRef={favoritesRef}
                 />
 
               
-                <KeyboardAvoidingView style={{paddingHorizontal: MARGIN.M,flex:1 }}>
+                <ScrollView
+                contentContainerStyle={{ flexGrow: 1, paddingBottom: 16}}
+                style={{paddingHorizontal: MARGIN.M,flex:1 }}
+                >
                 { 
                         proceed
                         ? <> 
@@ -123,6 +141,8 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                                 setAmount={setAmount}
                                 recipientDetails={recipientDetails}
                                 senderDetails={senderDetails}
+                                errorAmountMessage={errorAmountMessage}
+                                setErrorAmountMessage={setErrorAmountMessage}
                             />
 
                             <EnterNote
@@ -142,20 +162,31 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                         </View>
                         : null
                     }
-                </KeyboardAvoidingView>
+
+                    {/* <Favorites 
+                        ref={favoritesRef}
+                        setMobileNo={setMobileNo}
+                    />   */}
+
+                    <View style={{flex: 1, height: SIZE.FORM_HEIGHT,marginTop: 50,justifyContent:"flex-end"}}>
                 
-     
-                <View style={{height: 70,padding: MARGIN.M, justifyContent:"flex-end"}}>
-                    <ProceedButton
-                        swipeEnabled={swipeEnabled}
-                        amount={amount}
-                        navigation={navigation}
-                        tokwaAccount={tokwaAccount}
-                        note={note}
-                        recipientDetails={recipientDetails}
-                    />
-                </View>
+                        <ProceedButton
+                            swipeEnabled={swipeEnabled}
+                            proceed={proceed}
+                            amount={amount}
+                            navigation={navigation}
+                            tokwaAccount={tokwaAccount}
+                            note={note}
+                            recipientDetails={recipientDetails}
+                            errorAmountMessage={errorAmountMessage}
+                            setErrorAmountMessage={setErrorAmountMessage}
+                        />
+                    </View>
+                </ScrollView>
+                
         </View>
+        </ContextProvider>
+        </CheckIdleState>
     )
 }
 

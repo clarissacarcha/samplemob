@@ -36,7 +36,7 @@ const Loader = () => (
 const BookingSuccess = ({onPress}) => (
   <View
     style={{
-      height: cardSize - 70,
+      height: cardSize - 30,
       padding: 10,
       width: cardSize,
       backgroundColor: 'white',
@@ -52,8 +52,19 @@ const BookingSuccess = ({onPress}) => (
       />
     </View>
     <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L, height: 25}}>Booked Successfully</Text>
-    <TouchableOpacity onPress={onPress} style={{height: 40, justifyContent: 'center', alignItems: 'center'}}>
-      <Text style={{color: COLOR.ORANGE, fontFamily: FONT.BOLD}}>Continue</Text>
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        height: 50,
+        width: 100,
+        backgroundColor: COLOR.YELLOW,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        marginTop: 20,
+        marginBottom: 10,
+      }}>
+      <Text style={{color: 'black', fontFamily: FONT.BOLD}}>OK</Text>
     </TouchableOpacity>
   </View>
 );

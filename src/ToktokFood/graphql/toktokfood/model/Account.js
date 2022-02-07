@@ -8,6 +8,7 @@ export const CREATE_ACCOUNT = gql`
     }
   }
 `;
+
 export const GET_ACCOUNT = gql`
   query getAccount($input: GetAccountInput!) {
     getAccount(input: $input) {
@@ -28,18 +29,32 @@ export const GET_ACCOUNT = gql`
 `;
 
 export const PATCH_PERSON_HAS_TOKTOKFOOD = gql`
-  mutation patchPersonHasToktokFood($input: patchPersonHasToktokFoodInput) {
-    patchPersonHasToktokFood(input: $input) {
+  mutation patchToktokFoodUserId($input: PatchToktokFoodUserIdInput!) {
+    patchToktokFoodUserId(input: $input) {
       status
       message
     }
   }
 `;
+
 export const POST_CONTACT_US = gql`
   query postContactUs($input: ContactUsInput!) {
     postContactUs(input: $input) {
       success
       message
+    }
+  }
+`;
+
+export const GET_KYC_STATUS = gql`
+  query getKycStatus($input: GetKycStatusInput!) {
+    getKycStatus(input: $input) {
+      referenceNumber
+      status
+      account {
+        id
+        motherReferenceNumber
+      }
     }
   }
 `;

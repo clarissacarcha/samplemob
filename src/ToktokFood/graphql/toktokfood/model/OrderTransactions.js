@@ -46,6 +46,8 @@ const transaction = `
     shopname
     address
     logo
+    latitude
+    longitude
   }
   orderDetails {
     id
@@ -73,6 +75,21 @@ const transaction = `
       parentProductId
       parentProductName
     }
+  }
+  promoDetails {
+    id
+    shopId
+    shippingDiscountName
+    shippingDiscountCode
+    email
+    orderRefnum
+    paypandaRef
+    isPercentage
+    amount
+    orderDate
+    paymentDate
+    status
+    validUntil
   }
 `;
 export const GET_ORDER_TRANSACTIONS = gql`

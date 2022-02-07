@@ -3,12 +3,16 @@ import {StyleSheet,View,ActivityIndicator , Dimensions} from 'react-native'
 import {useNavigation,useRoute} from '@react-navigation/native'
 import WebView from 'react-native-webview'
 import {useSelector} from 'react-redux'
+import { CheckIdleState, FlagSecureScreen , Separator } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE , SIZE } = CONSTANTS
 
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
+import {
+    NavigationView,
+} from "./Components"
 
 
 const {width,height} = Dimensions.get('window')
@@ -25,9 +29,21 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
     const [checkurl,setCheckurl] = useState("")
     const [donetransaction,setDoneTransaction] = useState(false)
     const [cashInLogParams,setCashInLogParams] = useState(null)
+    const [canGoBack,setCanGoBack] = useState(false);
+    const [canGoForward,setCanGoForward] = useState(false);
 
     const session = useSelector(state=>state.session)
     const constants = useSelector(state=>state.constants)
+
+    const goBack = () => {
+        if(canGoBack){
+            return webviewRef.current.goBack();
+        }
+        return navigation.pop();
+    }
+    const goForward = () => {
+        if(canGoForward) webviewRef.current.goForward();
+    }
 
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
@@ -39,6 +55,7 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
         currency: route.params.currency,
         remarks: "",
         signature: route.params.signature,
+        ...(route.params.paymentChoice ? {payment_choice: route.params.paymentChoice} : {})
     }
 
     const generateInitialPostPaymentDataString = (objectdata)=> {
@@ -67,16 +84,25 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
             top: height/2,
             left: width/2,
         }}>
-            <ActivityIndicator/>
+            <ActivityIndicator color={COLOR.YELLOW} size={24}/>
         </View>
     )
 
 
     return (
-        <>
+        <FlagSecureScreen>
+        <CheckIdleState>
             <View style={styles.container}> 
             {
                 mounted & !donetransaction ? 
+                <>
+                <NavigationView
+                    canGoBack={canGoBack}
+                    canGoForward={canGoForward}
+                    goBack={goBack}
+                    goForward={goForward}
+                />
+                <Separator/>
                 <WebView
                     style={{flex: 1}}
                     ref={webviewRef}
@@ -92,20 +118,42 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
                     renderLoading={()=> <LoadingIndicator/>}
                     onNavigationStateChange={(event)=> {
 
-                        console.log(JSON.stringify(event))
+                      
+                        const canGoForward = event.canGoForward
+                        const canGoBack = event.canGoBack
+                        setCanGoBack(canGoBack)
+                        setCanGoForward(canGoForward)
+
+                        // console.log("PAYPANDA: ",event.url)
+                        // return;
+
                        const checkreturnurl = event.url.search(route.params.paypandaReturnUrl)
                         if(checkreturnurl != -1){
                             const {url} = event
-      
-                            const paypandaReferenceNumber = /(?:\&paypanda_refno=).*(?=\&status)/.exec(url)
-                            const status = /(?:\&status=).*(?=\&signature)/.exec(url)
+
+                            console.log("PAYPANDA: " , url)
+
+                            let paypandaReferenceNumber = /(?:\&paypanda_refno=).*(?=\&status)/.exec(url)
+                            let status = /(?:\&status=).*(?=\&signature)/.exec(url)
+
+                            if(!paypandaReferenceNumber){
+                                paypandaReferenceNumber = /(?:\?txnid=).*(?=\&refno)/.exec(url)
+                                status = /(?:\&status=).*(?=\&message)/.exec(url)
+
+                                paypandaReferenceNumber = paypandaReferenceNumber[0].slice(7)
+                                status = status[0].slice(8)
+
+                            }else{
+                                paypandaReferenceNumber = paypandaReferenceNumber[0].slice(16)
+                                status = status[0].slice(8)
+                            }
 
                 
                             if(checkurl != url){     
                                 setCashInLogParams({
-                                    status: status[0].slice(8),
+                                    status: status,
                                     referenceNumber: route.params.refNo,
-                                    paypandaReferenceNumber: paypandaReferenceNumber[0].slice(16),
+                                    paypandaReferenceNumber: paypandaReferenceNumber,
                                     amount: +route.params.amount_to_pay,
                                     createdAt: new Date(),
                                     email: route.params.email_address,
@@ -119,16 +167,19 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
 
                     }}
                 />  
+                </>
                 : mounted &&
                 <SuccessfulModal
                     amount={route.params.amount_to_pay}
                     successModalVisible={true}
                     cashInLogParams={cashInLogParams}
                     onCashIn={onCashIn}
+                    paymentMethod={route.params.paymentMethod ? route.params.paymentMethod : null}
                 />
             }
             </View>
-        </>
+        </CheckIdleState>
+        </FlagSecureScreen>
     )
 }
 

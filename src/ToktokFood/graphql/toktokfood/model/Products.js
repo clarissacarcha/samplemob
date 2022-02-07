@@ -15,6 +15,9 @@ const products = `
   filename
   sysShop
   maxQtyIsset
+  productImages  {
+    filename
+  }
   options {
     id
     optionName
@@ -45,7 +48,7 @@ const products = `
     sysShop
     maxQtyIsset
   }
-`
+`;
 
 export const GET_PRODUCT_CATEGORIES = gql`
   query getProductCategories($input: GetProductCategoriesInput) {

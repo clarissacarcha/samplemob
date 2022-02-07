@@ -21,6 +21,7 @@ export const VerifyContextProvider = ({children})=> {
         middleName: session.user.person.middleName ? session.user.person.middleName : "",
         lastName: session.user.person.lastName,
         gender: "",
+        hasMiddleName: true
     })
     const [contactInfo, setContactInfo] = useState({
         mobile_number: session.user.username,
@@ -41,11 +42,16 @@ export const VerifyContextProvider = ({children})=> {
         countryId: 175
     })
 
+    const [incomeInfo, setIncomeInfo] = useState({
+        source: "",
+        otherSource: "",
+        occupation: "",
+    })
+
     const [province,setProvince] = useState("")
     const [provinceId,setProvinceId] = useState("")
     const [city,setCity] = useState("")
     const [cityId,setCityId] = useState("")
-
 
     const [verifyID, setVerifyID] = useState({
         idType: "",
@@ -57,51 +63,88 @@ export const VerifyContextProvider = ({children})=> {
     const [identificationId, setIdentificationId] = useState(null)
 
     const [selfieImage,setSelfieImage] = useState(null)
+    const [tempSelfieImage,setTempSelfieImage] = useState(null)
+    const [selfieImageWithID,setSelfieImageWithID] = useState(null)
+    const [tempSelfieImageWithID,setTempSelfieImageWithID] = useState(null)
     const [frontImage, setFrontImage] = useState(null)
     const [backImage, setBackImage] = useState(null)
     const [isBackRequired, setIsbackRequired] = useState(false)
+    const [cities, setCities] = useState(citiesList)
+    const [provinceCities, setProvinceCities] = useState([])
+
+    const [pepInfo,setPepInfo] = useState({
+        isPep: false,
+        questionnaire: {
+            isPep: "",
+            pepPosition: "",
+            isFamilyPep: "",
+            familyPepPosition: "",
+            sourceOfIncomeId: "",
+            sourceOfIncomeDes: "",
+            sourceOfIncome: "",
+            sourceOfWealthId: "",
+            sourceOfWealthDes: "",
+            sourceOfWealth: ""
+        },
+        videocall: {
+            videoCallContactDetails: "",
+            callChannelId: "",
+            callChannel: "",
+            preferredVcsDayMin: "",
+            preferredVcsDayMax: "",
+            preferredVcsTimeMin: "",
+            preferredVcsTimeMax: ""
+        }
+    })
 
     const changePersonInfo = (key,value)=> {
-        person[key] = value
         setPerson(oldstate=>({
             ...oldstate,
+            [key]: value
         }))
     }
 
     const changeContactInfo = (key,value)=> {
-        contactInfo[key] = value
         setContactInfo(oldstate=>({
             ...oldstate,
+            [key]: value
         }))
     }
 
     const changeBirthInfo = (key,value)=> {
-        birthInfo[key] = value
         setBirthInfo(oldstate=>({
             ...oldstate,
+            [key]: value
         }))
     }
 
     const changeAddress = (key,value)=> {
-        address[key] = value
         setAddress(oldstate=>({
             ...oldstate,
+            [key]: value
         }))
     }
 
     const changeVerifyID = (key,value) => {
-        verifyID[key] = value
         setVerifyID(oldstate=>({
-            ...oldstate
+            ...oldstate,
+            [key]: value
         }))
     }
-
-    const [cities, setCities] = useState(citiesList)
-    const [provinceCities, setProvinceCities] = useState([])
 
     const changeProvinceCities = (data) => {
         setProvinceCities([...data])
     }
+
+    const changeIncomeInfo = (key,value)=> {
+        setIncomeInfo(oldstate=>({
+            ...oldstate,
+            [key]: value
+        }))
+    }
+
+    const [cacheImagesList, setCacheImagesList] = useState([])
+
 
     // console.log("Context Provider", session.user.username)
 
@@ -134,6 +177,12 @@ export const VerifyContextProvider = ({children})=> {
                 changeVerifyID,
                 selfieImage,
                 setSelfieImage,
+                tempSelfieImage,
+                setTempSelfieImage,
+                selfieImageWithID,
+                setSelfieImageWithID,
+                tempSelfieImageWithID,
+                setTempSelfieImageWithID,
                 person,
                 changePersonInfo,
                 modalCountryVisible,
@@ -153,8 +202,13 @@ export const VerifyContextProvider = ({children})=> {
                 isBackRequired,
                 setIsbackRequired,
                 identificationId,
-                setIdentificationId
- 
+                setIdentificationId,
+                incomeInfo,
+                changeIncomeInfo,
+                cacheImagesList,
+                setCacheImagesList,
+                pepInfo,
+                setPepInfo,
             }}
         >
             {children}

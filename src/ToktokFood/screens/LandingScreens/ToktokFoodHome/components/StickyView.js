@@ -1,27 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useLazyQuery} from '@apollo/react-hooks';
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
-import {Platform, RefreshControl, ScrollView, StatusBar, StyleSheet, View} from 'react-native';
+import {Platform, RefreshControl, ScrollView, StyleSheet, View, SectionList, Text, Image} from 'react-native';
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
+import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
+
+import {FONT_SIZE} from 'res/variables';
+import {empty_shop_2} from 'toktokfood/assets/images';
+
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 // Components
-import {AdvertisementSection, CategoryList, RestaurantList} from './index';
-
+import {CategoryList, ModalKycStatus, RestaurantList} from './index';
+// import RestaurantItem from './RestaurantList/RestaurantItem';
 
 const tabs = [
   {
     id: 1,
     name: 'Near You',
   },
-  // {
-  //   id: 2,
-  //   name: 'Promos',
-  // },
+  {
+    id: 2,
+    name: 'Promos',
+  },
   // {
   //   id: 3,
   //   name: 'All',
@@ -29,11 +33,8 @@ const tabs = [
 ];
 
 const StickyView = () => {
-  const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  const headerMaxHeight = Platform.OS === 'ios' ? moderateScale(295) : moderateScale(325);
-  const headerMinHeight = Platform.OS === 'ios' ? verticalScale(50) : moderateScale(65);
-  const {location} = useSelector((state) => state.toktokFood);
+  const {location} = useSelector(state => state.toktokFood);
 
   const RenderNavBar = () => {
     return (
@@ -43,17 +44,17 @@ const StickyView = () => {
     );
   };
 
-  const RenderTitle = () => (
-    <>
-      <View style={styles.adsContainer}>
-        <AdvertisementSection />
-      </View>
-      <CategoryList horizontal={true} rightText="See all" />
-      <RenderNavBar />
-    </>
-  );
+  // const RenderTitle = () => (
+  //   <>
+  //     <View style={styles.adsContainer}>
+  //       <AdvertisementSection />
+  //     </View>
+  //     <CategoryList horizontal={true} rightText="See all" />
+  //     <RenderNavBar />
+  //   </>
+  // );
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const [tempCategories, setTempCategories] = useState([]);
   const [page, setPage] = useState(0);
   const [loadMore, setLoadMore] = useState(false);
@@ -61,22 +62,17 @@ const StickyView = () => {
   const [refreshing, setRefreshing] = useState(false);
   let variableInput = {
     limit: 10,
-    radius: 5,
+    radius: 3,
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
+    tabId: activeTab.id,
   };
 
   // console.log(variableInput);
-  const scrollRef = useRef();
+  // const scrollRef = useRef();
 
   // data fetching for shops
   const [getShops, {data, error, loading, fetchMore, refetch}] = useLazyQuery(GET_SHOPS, {
-    variables: {
-      input: {
-        page: 0,
-        ...variableInput,
-      },
-    },
     onError: () => {
       setRefreshing(false);
     },
@@ -85,10 +81,34 @@ const StickyView = () => {
   });
 
   useEffect(() => {
-    if(location) {
-      getShops();
+    if (location) {
+      getShops({
+        variables: {
+          input: {
+            page: 0,
+            limit: 10,
+            radius: 3,
+            userLongitude: location?.longitude,
+            userLatitude: location?.latitude,
+            tabId: activeTab.id,
+          },
+        },
+      });
     }
-  }, [location]);
+  }, [location, activeTab]);
+
+  useEffect(() => {
+    if (location) {
+      getShops({
+        variables: {
+          input: {
+            page: 0,
+            ...variableInput,
+          },
+        },
+      });
+    }
+  }, [location, activeTab]);
 
   useEffect(() => {
     if (page != 0 && data && data.getShops.length > 0) {
@@ -125,13 +145,13 @@ const StickyView = () => {
     }
   }, [data, page]);
 
-  const onNavigateCategories = () => {
-    navigation.navigate('ToktokFoodCategories');
-  };
+  // const onNavigateCategories = () => {
+  //   navigation.navigate('ToktokFoodCategories');
+  // };
 
-  const handleLoadMore = (nativeEvent) => {
+  const handleLoadMore = nativeEvent => {
     if (!loadMore && pendingProcess) {
-      setPage((prev) => prev + 1);
+      setPage(prev => prev + 1);
       setLoadMore(isCloseToBottom(nativeEvent));
     }
   };
@@ -145,15 +165,45 @@ const StickyView = () => {
     setRefreshing(true);
     setPage(0);
     setTempCategories([]);
-    refetch().then(() => {
+    refetch({
+      variables: {
+        input: {
+          page: 0,
+          ...variableInput,
+        },
+      },
+    }).then(() => {
       setRefreshing(false);
     });
   };
 
+  const sample = [
+    {type: 'ADDRESS', data: []}, // Static sections.
+    {type: 'CATEGORIES', data: []},
+    {type: 'RESTAURANTS', data: data ? data.getShops : [{index: 1}]},
+  ];
+
+  const EmptyList = () => {
+    return (
+      <>
+        <View style={styles.emptyContainer}>
+          <Image style={styles.emptyImg} resizeMode="contain" source={empty_shop_2} />
+          <Text style={styles.emptyText}>
+            It seems like there is no open restaurant near you. Refresh or try again later.
+          </Text>
+        </View>
+      </>
+    );
+  };
+
   return (
     <>
-      <ScrollView
+      <SectionList
+        sections={sample}
+        keyExtractor={(item, index) => item + index}
         stickyHeaderIndices={[2]}
+        stickySectionHeadersEnabled
+        contentContainerStyle={{justifyContent: 'center'}}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
         }
@@ -163,15 +213,57 @@ const StickyView = () => {
           }
         }}
         scrollEventThrottle={15}
-      >
-        {/* <View style={styles.adsContainer}>
+        renderItem={props => {
+          if (props.index < 1) {
+            return (
+              <RestaurantList
+                location={location}
+                loading={loading}
+                error={error}
+                data={props.section.data}
+                loadMore={loadMore}
+              />
+            ); //empty list design
+          }
+          return null;
+        }}
+        renderSectionHeader={({section: {type}}) => {
+          if (type === 'ADDRESS') {
+            return (
+              <>
+                <ChangeAddress />
+                <CategoryList horizontal homeRefreshing={refreshing} rightText="See all" />
+              </>
+            );
+          } else if (type === 'RESTAURANTS') {
+            return <RenderNavBar />;
+          } else {
+            return null;
+          }
+        }}
+      />
+      <ModalKycStatus />
+
+      {/* <ScrollView
+        stickyHeaderIndices={[2]}
+        nestedScrollEnabled
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
+        }
+        onScroll={({nativeEvent}) => {
+          if (isCloseToBottom(nativeEvent)) {
+            handleLoadMore(nativeEvent);
+          }
+        }}
+        scrollEventThrottle={15}> */}
+      {/* <View style={styles.adsContainer}>
           <AdvertisementSection />
         </View> */}
-        <ChangeAddress />
+      {/* <ChangeAddress />
         <CategoryList horizontal homeRefreshing={refreshing} rightText="See all" />
-        <RenderNavBar />
-        <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} />
-      </ScrollView>
+        <RenderNavBar /> */}
+      {/* <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} /> */}
+      {/* </ScrollView> */}
     </>
   );
 };
@@ -185,13 +277,31 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === 'android' ? 10 : 30,
     marginTop: Platform.OS === 'ios' ? moderateScale(20) : moderateScale(14),
   },
-  headerWrapper: {paddingHorizontal: moderateScale(8), width: '100%', paddingTop: moderateScale(8), backgroundColor: 'white'},
-  navbarWrapper: {
-    // marginBottom: Platform.OS === 'ios' ? verticalScale(12) : verticalScale(8),
+  headerWrapper: {
+    paddingHorizontal: moderateScale(8),
+    width: '100%',
+    paddingTop: moderateScale(8),
+    backgroundColor: 'white',
   },
   adsContainer: {
     height: 130,
     width: '100%',
+  },
+  emptyContainer: {
+    height: verticalScale(300),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyImg: {
+    height: moderateScale(175),
+    width: moderateScale(250),
+  },
+  emptyText: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.L,
+    textAlign: 'center',
+    marginTop: moderateScale(20),
+    marginHorizontal: moderateScale(20),
   },
 });
 

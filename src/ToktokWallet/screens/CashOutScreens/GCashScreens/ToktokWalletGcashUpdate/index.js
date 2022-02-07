@@ -2,7 +2,7 @@ import React, {useEffect,useState} from 'react'
 import {View,Text,StyleSheet,ScrollView,TextInput,Alert,TouchableOpacity,Modal,StatusBar,TouchableOpacityBase,Image} from 'react-native'
 import { HeaderBack, YellowButton } from 'src/revamp';
 import {HeaderTitle} from 'src/components'
-import { Separator } from 'toktokwallet/components';
+import { Separator , CheckIdleState , FlagSecureScreen } from 'toktokwallet/components';
 import validator from 'validator';
 import {UPDATE_GCASH_ACCOUNT} from 'src/graphql';
 import {useMutation} from '@apollo/react-hooks';
@@ -50,7 +50,7 @@ const PromptMessage = ({
                             return navigation.replace("ToktokWalletGcashRegistration")
                         }}
                     >
-                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Ok</Text>
+                        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>OK</Text>
                     </TouchableOpacity>
                   
                 </View>
@@ -142,7 +142,8 @@ export const ToktokWalletGcashUpdate = ({navigation,route})=> {
     }
 
     return (
-       <>
+        <FlagSecureScreen>
+       <CheckIdleState>
         <PromptMessage visible={promptVisible} setVisible={setPromptVisible} navigation={navigation}/>
         <DatePickerModal
             visible={pickerVisible}
@@ -235,7 +236,8 @@ export const ToktokWalletGcashUpdate = ({navigation,route})=> {
 
             
        </View>
-       </>
+       </CheckIdleState>
+       </FlagSecureScreen>
     )
 }
 

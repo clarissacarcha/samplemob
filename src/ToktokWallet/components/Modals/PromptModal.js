@@ -3,19 +3,27 @@ import { View , Text , StyleSheet , Modal , Dimensions , Image } from 'react-nat
 import {useThrottle} from 'src/hooks'
 import { YellowButton } from 'src/revamp';
 import SuccessIcon from 'toktokwallet/assets/images/success.png';
+import ErrorIcon from 'toktokwallet/assets/images/error.png';
+import WarningIcon from 'toktokwallet/assets/images/warning.png';
 import CONSTANTS from 'common/res/constants';
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS;
 const { width , height } = Dimensions.get("window");
 
-export const PromptModal = ({visible , title , message , onPress , event})=> {
+export const PromptModal = ({visible , title , message , onPress , event , children , closeModal = null})=> {
 
     const onPressThrottled = useThrottle(onPress , 2000);
-    let imageIcon = null
+    let imageIcon = SuccessIcon;
     switch(event){
         case "success":
             imageIcon = SuccessIcon;
             break
+        case "error":
+            imageIcon = ErrorIcon;
+            break;
+        case "warning":
+            imageIcon = WarningIcon;
+            break;
         default: 
             break;
     }
@@ -25,7 +33,7 @@ export const PromptModal = ({visible , title , message , onPress , event})=> {
         <Modal 
             visible={visible}
             transparent={true}
-            onRequestClose={onPressThrottled}
+            onRequestClose={closeModal ? closeModal : onPressThrottled}
             style={styles.container}
         >
             <View style={styles.modalBody}>
@@ -33,8 +41,9 @@ export const PromptModal = ({visible , title , message , onPress , event})=> {
                     <Image source={imageIcon}/>
                     <Text style={styles.successText}>{title}</Text>
                     <Text style={styles.messageText}>{message}</Text>
+                    {children}
                     <View style={{justifyContent:"flex-end",width: "50%",marginTop: 20}}>
-                            <YellowButton label="Ok" onPress={onPressThrottled}/>
+                            <YellowButton label="OK" onPress={onPressThrottled}/>
                     </View>
                 </View>
             </View>

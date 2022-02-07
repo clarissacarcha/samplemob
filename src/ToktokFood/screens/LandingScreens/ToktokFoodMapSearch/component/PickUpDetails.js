@@ -20,12 +20,16 @@ import Loader from 'toktokfood/components/Loader';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 
+import {clearShopHistory} from 'toktokfood/helper/persistentHistory';
+import AddressBookModal from './AddressBookModal';
+
 const PickUpDetails = (props) => {
   const {pinAddress, onConfirm, isCart} = props;
   const navigation = useNavigation();
   const keyboardHeight = useKeyboard();
   const dispatchToStore = useDispatch();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showContacts, setShowContacts] = useState(false);
 
   const {customerInfo} = useSelector((state) => state.toktokFood);
   const alert = useAlert();
@@ -72,7 +76,6 @@ const PickUpDetails = (props) => {
       onErrorAlert({alert, error});
     },
     onCompleted: ({deleteShopTemporaryCart}) => {
-      console.log(deleteShopTemporaryCart, 'DELETE');
       onConfirm(state);
       setShowSuccess(true);
     },
@@ -86,6 +89,12 @@ const PickUpDetails = (props) => {
       setShowSuccess(true);
       onConfirm(state);
     }
+    clearShopHistory();
+  };
+
+  const onContactSelected = (contact = {name: '', number: ''}) => {
+    dispatch({type: 'SET_CONTACT_NAME', value: contact.name});
+    dispatch({type: 'SET_CONTACT_NUMBER', value: contact.number});
   };
 
   useEffect(() => {
@@ -94,7 +103,12 @@ const PickUpDetails = (props) => {
 
   return (
     <>
-      <Loader visibility={loading} message="Saving..." hasImage={false} loadingIndicator />
+      <AddressBookModal
+        visibility={showContacts}
+        onSelected={(v) => onContactSelected(v)}
+        onClose={() => setShowContacts(false)}
+      />
+      <Loader visibility={loading} message="Saving" hasImage={false} loadingIndicator />
       <DialogMessage
         visibility={showSuccess}
         title="Change Location"
@@ -120,15 +134,18 @@ const PickUpDetails = (props) => {
               onChangeText={(value) => dispatch({type: 'SET_COMPLETE_ADDRESS', value})}
             />
           </View>
-          <View style={styles.inputWrapper}>
+          <View style={[styles.inputWrapper, styles.customInputWrapper]}>
             <TextInput
-              style={styles.input}
+              style={[styles.input, {width: '72%'}]}
               placeholder="Contact Person"
               value={state.contactPerson}
               onChangeText={(value) => dispatch({type: 'SET_CONTACT_NAME', value})}
             />
+            <TouchableOpacity style={styles.addressBookButton} onPress={() => setShowContacts(true)}>
+              <Text style={styles.addressBookText}>Address Book</Text>
+            </TouchableOpacity>
           </View>
-          <View style={[styles.inputWrapper, {marginBottom: 8}]}>
+          <View style={[styles.inputWrapper]}>
             <TextInput
               maxLength={11}
               style={styles.input}
@@ -185,10 +202,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: SIZE.BUTTON_HEIGHT,
     backgroundColor: COLOR.YELLOW,
-    marginTop: verticalScale(10),
+    marginTop: verticalScale(18),
   },
   buttonText: {
-    color: COLOR.BLACK,
+    color: COLOR.WHITE,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
   },
@@ -201,6 +218,26 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    color: COLOR.BLACK,
+  },
+  addressBookButton: {
+    height: 29,
+    borderWidth: 1,
+    borderRadius: 6,
+    alignSelf: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    justifyContent: 'center',
+    borderColor: COLOR.YELLOW,
+  },
+  addressBookText: {
+    fontSize: 12,
+    color: COLOR.YELLOW,
+    fontFamily: FONT.REGULAR,
+  },
+  customInputWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 export default PickUpDetails;

@@ -1,7 +1,7 @@
 import React from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,ScrollView} from 'react-native'
 import {HeaderBack, HeaderTitle,YellowButton } from 'src/revamp';
-import {Separator} from 'toktokwallet/components'
+import {Separator,CheckIdleState} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -20,109 +20,137 @@ export const ToktokWalletPaymentChart = ({navigation})=> {
     });
 
     return (
-        <>
+        <CheckIdleState>
             <Separator/>
             <ScrollView
                 style={styles.container}
                 showsVerticalScrollIndicator={false}
             >
                 <CustomTable
-                    headerData={["Method","Partner","Transaction Range","Transaction Fee"]}
-                    rowsData={
+                    headerData={["Partner","Method","Transaction Range","Transaction Fee"]}
+                    rowsData={[
+                        {
+                            firstCol: ["Partner"],
+                            secondCol: ["Method"],
+                            thirdCol: ["Transaction","Fee"],
+                        },
+                        {
+                            firstCol: ["DRAGONPAY"],
+                            secondCol: ["Online Bank"],
+                            thirdCol: ["25"],
+                        },
+                        {
+                            firstCol: ["DRAGONPAY"],
+                            secondCol: ["Over the", "counter Bank"],
+                            thirdCol: ["30"],
+                        },
+                        {
+                            firstCol: ["DRAGONPAY"],
+                            secondCol: ["Over the", "counter Non-Bank"],
+                            thirdCol: ["35"],
+                        },
+                    ]}
+                    rowsDataOld={
                         [
                             {
-                                firstCol: ["Over the Counter","Online Bank"],
-                                secondCol: ["UNIONBANK"],
+                                firstCol: ["Partner"],
+                                secondCol: ["Method"],
+                                thirdCol: ["Transaction","Range"],
+                                fourthCol: ["Transaction","Fee"],
+                            },
+                            {
+                                firstCol: ["UNIONBANK"],
+                                secondCol: ["Over the Counter","Online Bank"],
                                 thirdCol: ["--","--"],
                                 fourthCol: ["30","25"],
                             },
                             {
-                                firstCol: ["Over the Counter","Online Bank"],
-                                secondCol: ["BDO"],
+                                firstCol:  ["BDO"],
+                                secondCol: ["Over the Counter","Online Bank"],
                                 thirdCol: ["--","--"],
                                 fourthCol: ["30","25"],
                             },
                             {
-                                firstCol: ["Online Bank","ATM"],
-                                secondCol: ["CHINABANK"],
+                                firstCol: ["CHINABANK"],
+                                secondCol: ["Online Bank","ATM"],
                                 thirdCol: ["--","--"],
                                 fourthCol: ["25","25"],
                             },
                             {
-                                firstCol: ["Over the Counter","Online Bank"],
-                                secondCol: ["RCBC"],
+                                firstCol: ["RCBC"],
+                                secondCol: ["Over the Counter","Online Bank"],
                                 thirdCol: ["--","--"],
                                 fourthCol: ["30","25"],
                             },
                             {
-                                firstCol: ["Over the Counter","Online Bank"],
-                                secondCol: ["PNB"],
+                                firstCol: ["PNB"],
+                                secondCol: ["Over the Counter","Online Bank"],
                                 thirdCol: ["--","--"],
                                 fourthCol: ["30","25"],
                             },
                             {
-                                firstCol: ["Over the Counter","Online Bank"],
-                                secondCol: ["UCPB"],
+                                firstCol: ["UCPB"],
+                                secondCol: ["Over the Counter","Online Bank"],
                                 thirdCol: ["--","--"],
                                 fourthCol: ["30","25"],
                             },
                             {
-                                firstCol: ["Online Bank"],
-                                secondCol: ["METROBANK"],
+                                firstCol: ["METROBANK"],
+                                secondCol: ["Online Bank"],
                                 thirdCol: ["--"],
                                 fourthCol: ["25"],
                             },
                             {
-                                firstCol: ["Online Bank"],
-                                secondCol: ["PBCOM"],
+                                firstCol: ["PBCOM"],
+                                secondCol: ["Online Bank"],
                                 thirdCol: ["--"],
                                 fourthCol: ["25"],
                             },
                             {
-                                firstCol: ["Over the Counter"],
-                                secondCol: ["ROBINSONS"],
+                                firstCol: ["ROBINSONS"],
+                                secondCol:["Over the Counter"],
                                 thirdCol: ["--"],
                                 fourthCol: ["30"],
                             },
                             {
-                                firstCol: ["Over the Counter","","","","","",""],
-                                secondCol: ["M LHUILLER","","","","","",""],
+                                firstCol:  ["M LHUILLER","","","","","",""],
+                                secondCol: ["Over the Counter","","","","","",""],
                                 thirdCol: ["PHP .01 - 2,500","PHP 2,500 - 5,000","PHP 5,000.01 - 10K","PHP 10,000.01 - 20k","PHP 20,000.01 - 30K","PHP 30,000.01 - 40k","PHP 40,000.01 - 50k"],
                                 fourthCol: ["35","35","35","35","40","50","60"],
                             },
                             {
-                                firstCol: ["Over the Counter"],
-                                secondCol: ["LBC"],
+                                firstCol: ["LBC"],
+                                secondCol: ["Over the Counter"],
                                 thirdCol: ["PHP .01 - 25k"],
                                 fourthCol: ["35"],
                             },
                             {
-                                firstCol: ["Over the Counter"],
-                                secondCol: ["ECPAY"],
+                                firstCol: ["ECPAY"],
+                                secondCol: ["Over the Counter"],
                                 thirdCol: ["--"],
                                 fourthCol: ["35"],
                             },
                             {
-                                firstCol: ["E-Wallets / Mobile Payments"],
-                                secondCol: ["ALIPAY"],
+                                firstCol: ["ALIPAY"],
+                                secondCol: ["E-Wallets / Mobile Payments"],
                                 thirdCol: ["--"],
                                 fourthCol: ["2% + 25"],
                             },
                             {
-                                firstCol: ["E-Wallets / Mobile Payments"],
-                                secondCol: ["WECHAT"],
+                                firstCol: ["WECHAT"],
+                                secondCol: ["E-Wallets / Mobile Payments"],
                                 thirdCol: ["--"],
                                 fourthCol: ["2% + 25"],
                             },
                             {
-                                firstCol: ["E-Wallets / Mobile Payments"],
-                                secondCol: ["GCASH"],
+                                firstCol: ["GCASH"],
+                                secondCol: ["E-Wallets / Mobile Payments"],
                                 thirdCol: ["--"],
                                 fourthCol: ["2% + 25"],
                             },
                             {
-                                firstCol: ["Credit/Debit Card"],
-                                secondCol: ["IPAY88"],
+                                firstCol:  ["IPAY88"],
+                                secondCol:["Credit/Debit Card"],
                                 thirdCol: ["--"],
                                 fourthCol: ["4.4% + 35"],
                             },
@@ -131,7 +159,7 @@ export const ToktokWalletPaymentChart = ({navigation})=> {
                 />
                 <View style={{height: 50}}/>
             </ScrollView>
-        </>
+        </CheckIdleState>
     )
 }
 

@@ -3,6 +3,7 @@ import {View,Text,StyleSheet} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator } from 'toktokwallet/components'
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
+import { useAccount } from 'toktokwallet/hooks'
 import CONSTANTS from 'common/res/constants'
 
 const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
@@ -10,6 +11,10 @@ const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 
 export const DeletedAccount = ()=> {
     const navigation = useNavigation()
+
+    const { tokwaAccount } = useAccount();
+
+    const supportEmail = tokwaAccount?.constants?.toktokwalletSupportEmail ? tokwaAccount.constants.toktokwalletSupportEmail : "support@toktokwallet.ph"
 
     navigation.setOptions({
         headerShown:false,
@@ -26,12 +31,12 @@ export const DeletedAccount = ()=> {
             <View style={styles.content}>
                 <View style={{alignItems:"center",marginTop: 10}}>
                     <Text style={[styles.verifyWalletText , {color: COLOR.ORANGE}]}>STOP !</Text>
-                    <Text style={styles.clickVerifyText}>Your toktokwallet account has been deleted. To know more details, contact hello@toktok.ph and (02) 84-248-617.</Text>
+                    <Text style={styles.clickVerifyText}>Your toktokwallet account has been deleted. To know more details, contact {supportEmail} and (02) 84-248-617.</Text>
                 </View>
             </View>
 
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
-                <YellowButton label="Ok" onPress={()=> {
+                <YellowButton label="OK" onPress={()=> {
                     navigation.pop()
                 }}/>
             </View>
@@ -63,7 +68,7 @@ const styles = StyleSheet.create({
     clickVerifyText: {
         marginTop: 5,
         fontFamily: FONT.REGULAR,
-        fontSize: FONT_SIZE.S,
+        fontSize: FONT_SIZE.M,
         textAlign:'center'
     },
     listItem: {

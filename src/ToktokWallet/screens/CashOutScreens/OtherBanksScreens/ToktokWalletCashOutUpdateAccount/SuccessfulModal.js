@@ -31,7 +31,7 @@ const SuccessfulModal = ({visible,setVisible})=> {
                         <Image source={require('toktokwallet/assets/images/success.png')}/>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L, textAlign:"center",marginVertical: 20,marginHorizontal: 20}}>Changes has been saved</Text>
                         <View style={{flex: 1,justifyContent:"flex-end",width: "50%"}}>
-                                <YellowButton label="Ok" onPress={Redirect}/>
+                                <YellowButton label="OK" onPress={Redirect}/>
                         </View>
                     </View>
                 </View>

@@ -29,7 +29,7 @@ export const Resubmit = ({id})=> {
     const [patchEnterpriseUpgradeRequest, {data , error ,loading }] = useMutation(PATCH_ENTERPRISE_UPGRADE_REQUEST, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({patchEnterpriseUpgradeRequest})=> {
             // console.log(JSON.stringify(postEnterpriseUpgradeRequest))

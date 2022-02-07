@@ -6,6 +6,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_BANK_ACCOUNTS} from 'toktokwallet/graphql'
 import { useQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
+import { useNavigation } from '@react-navigation/native'
 import {useAlert} from 'src/hooks'
 import { ContextCashOut } from '../ContextProvider'
 import {moderateScale,scale} from 'toktokwallet/helper'
@@ -56,6 +57,7 @@ const BankAccount = ({index,onPress, ...account})=> {
 export const MySavedAccounts = ({selectBanks , edit})=> {
     const alert = useAlert()
     const {
+        setAccountName,
         savedAccounts,
         setSaveAccounts,
         activeAccount,
@@ -64,12 +66,13 @@ export const MySavedAccounts = ({selectBanks , edit})=> {
         setAccountNumber,
         setAddress
     } = useContext(ContextCashOut)
+    const navigation = useNavigation();
 
     const {data,error,loading} = useQuery(GET_BANK_ACCOUNTS, {
         fetchPolicy:"network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({getBankAccounts})=> {
             setSaveAccounts(getBankAccounts)
@@ -87,6 +90,7 @@ export const MySavedAccounts = ({selectBanks , edit})=> {
     const onPress = (account , index)=> {
        if(!activeAccount){
            setBank(account.bank)
+           setAccountName(account.accountName)
            setAccountNumber(account.accountNumber)
            setAddress(account.address)
            setActiveAccount(index)
@@ -95,9 +99,11 @@ export const MySavedAccounts = ({selectBanks , edit})=> {
        if(activeAccount == index){
             setActiveAccount(null)
             setAccountNumber("")
+            setAccountName("")
             setAddress("")
        }else{
             setBank(account.bank)
+            setAccountName(account.accountName)
             setAccountNumber(account.accountNumber)
             setAddress(account.address)
             setActiveAccount(index)

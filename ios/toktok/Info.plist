@@ -5,7 +5,11 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>toktok</string>
+<<<<<<< HEAD
+	<string>toktok 1.30.0 TEST B02</string>
+=======
+	<string>toktok early access 1.29.2</string>
+>>>>>>> 9b8bc3780bd7cf601b4fdf7aca986038eceb2c33
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -43,23 +47,21 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to take images for profile and deliveries.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Used to auto fill contact numbers.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Used to access face id.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Used to auto fill location in sender details.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Used to auto fill location in sender details.</string>
+	<key>NSMainNibFile</key>
+	<string>LaunchScreen</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to select avatar for your profile.</string>
 	<key>UIAppFonts</key>
@@ -126,6 +128,10 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

@@ -48,11 +48,11 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   const renderAddress = () => {
     return (
       <View style={styles.addressContainer}>
-        <View style={[styles.addressInfo ]}>
+        <View style={[styles.addressInfo, {flexShrink: 1} ]}>
           <Text numberOfLines={1} style={styles.bodyText}>
             Restaurant
           </Text>
-          <Text numberOfLines={1}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
+          <Text numberOfLines={1} style={{flexShrink: 1}}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
         </View>
         {orderStatus != 'p' && orderStatus !== 'c' && orderStatus !== 's' && renderEstimatedTime()}
       </View>
@@ -111,13 +111,12 @@ const styles = StyleSheet.create({
     borderTopWidth: 10,
     borderBottomWidth: 10,
     borderColor: 'white',
-    // flexDirection: 'row',
     paddingHorizontal: moderateScale(16),
   },
   addressInfo: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: moderateScale(20)
+    marginHorizontal: moderateScale(20),
   },
   shadow: {
     backgroundColor: 'white',
@@ -161,6 +160,8 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     marginVertical: verticalScale(5),
+    marginHorizontal: moderateScale(30),
+    textAlign: 'center'
   },
   seeOrderDetails: {
     padding: moderateScale(20),
@@ -188,7 +189,8 @@ const styles = StyleSheet.create({
   },
   bodyText: {
     fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.M
+    fontSize: FONT_SIZE.M,
+    paddingRight: moderateScale(10)
   },
   time: {
     fontSize: FONT_SIZE.M,

@@ -2,13 +2,11 @@ import React , {useState} from 'react'
 import {View,Text,StyleSheet, TouchableOpacity, StatusBar} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import { HeaderImageBackground , HeaderTitle , Separator  } from 'toktokwallet/components'
-import { APP_FLAVOR, ACCOUNT_TYPE } from 'src/res/constants'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS 
 import ModalLinkTokwaAccount from "./ModalLinkTokwaAccount";
 import CustomerNoAccount from "./CustomerNoAccount";
-import RiderNoLinkAccount from "./RiderNoLinkAccount";
 
 const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT , SIZE } = CONSTANTS
 
@@ -36,12 +34,7 @@ export const NoAccount = ()=> {
             </View>
             <Separator/>
 
-            {
-                APP_FLAVOR == "C"
-                ? <CustomerNoAccount/>
-                : <RiderNoLinkAccount/>
-            }
-        
+            <CustomerNoAccount/>
         </View>
         </>
     )
