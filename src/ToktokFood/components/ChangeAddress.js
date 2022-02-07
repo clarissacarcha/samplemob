@@ -16,7 +16,7 @@ import {CHECK_HAS_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 
 const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleContainer}) => {
   const navigation = useNavigation();
-  const {location, customerInfo} = useSelector((state) => state.toktokFood);
+  const {location, customerInfo} = useSelector(state => state.toktokFood);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const onSetLocationDetails = () => {
@@ -38,7 +38,7 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
   const [checkHasTemporaryCart, {data: temporaryCart}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: (cart) => {
+    onCompleted: cart => {
       if (cart?.checkHasTemporaryCart?.shopid !== 0) {
         console.log(cart?.checkHasTemporaryCart?.shopid);
         setShowConfirmation(true);
@@ -46,7 +46,7 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
         onSetLocationDetails();
       }
     },
-    onError: (err) => {
+    onError: err => {
       Alert.alert('', 'Something went wrong.');
     },
   });
@@ -79,10 +79,12 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
           renderLoader()
         ) : (
           <View style={styles.textAddressContainer}>
-            <Image style={styles.addressMarkerIcon} source={markerIcon} />
-            <Text style={styles.textAddress} numberOfLines={1}>
-              {location.address}
-            </Text>
+            <View style={{flexDirection: 'row'}}>
+              <Image style={styles.addressMarkerIcon} source={markerIcon} />
+              <Text style={styles.textAddress} numberOfLines={1}>
+                {location.address}
+              </Text>
+            </View>
             <Image style={styles.downArrowIc} source={down_arrow_ic} />
           </View>
         )}
@@ -104,13 +106,13 @@ const styles = StyleSheet.create({
   textAddressContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    flexShrink: 1,
+    flex: 1,
+    justifyContent: 'space-between',
   },
   textAddress: {
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.S,
     fontFamily: FONT.REGULAR,
-    flexShrink: 1,
   },
   addressMarkerIcon: {
     width: moderateScale(18),
@@ -127,7 +129,6 @@ const styles = StyleSheet.create({
   downArrowIc: {
     width: moderateScale(12),
     height: moderateScale(12),
-    marginLeft: 4,
     resizeMode: 'contain',
   },
 });

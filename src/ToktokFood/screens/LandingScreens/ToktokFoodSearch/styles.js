@@ -81,12 +81,18 @@ export default styles = StyleSheet.create({
     height: moderateScale(175),
     width: moderateScale(250),
   },
-  emptyText: {
-    color: '#9E9E9E',
-    fontSize: FONT_SIZE.L,
+  emptyTextTitle: {
+    color: '#F6841F',
+    fontSize: 17,
     marginTop: moderateScale(20),
-    marginHorizontal: moderateScale(50),
+    fontWeight: '700',
+  },
+  emptyText: {
+    fontSize: FONT_SIZE.M,
     textAlign: 'center',
+    marginTop: moderateScale(5),
+    marginHorizontal: moderateScale(20),
+    color: '#000',
   },
   ratingImg: {
     width: moderateScale(15),

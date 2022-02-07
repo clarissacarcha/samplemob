@@ -103,3 +103,6 @@ export const wallet_ic = require('./images/me_icons/wallet.png');
 
 // Reseller
 export const reseller_badge = require('./images/reseller-badge.png');
+
+// New empty shop result icon
+export const new_empty_shop_icon = require('./images/empty_icons/empty_result.png');
