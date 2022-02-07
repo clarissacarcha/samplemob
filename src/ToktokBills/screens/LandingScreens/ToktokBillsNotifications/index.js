@@ -106,7 +106,7 @@ export const ToktokBillsNotifications = ({navigation,route})=> {
 
   return (
     <View style={styles.container}>
-      <Header label="Notifications" />
+      <Header label="Notifications" onBack={() => { navigation.navigate("ToktokBillsHome") }} />
       { display() }
     </View>
   )

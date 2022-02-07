@@ -33,7 +33,7 @@ export const ToktokBillsPaymentSummary = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const { paymentData } = route.params;
   const { user } = useSelector((state) => state.session);
-  const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount();
+  const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount({ isOnErrorAlert: false });
   const [refreshing, setRefreshing] = useState(false);
   const [kycStatus, setKycStatus] = useState(null);
 
