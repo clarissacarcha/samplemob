@@ -72,7 +72,7 @@ const RenderToktokWalletStatus = ({status}) => {
           <View style={{height: 8}} />
           <View style={{alignItems: 'center', justifyContent: 'center', paddingVertical: 8}}>
             <TouchableOpacity onPress={() => {
-              navigation.navigate('ToktokWalletLoginPage');
+              navigation.push('ToktokWalletLoginPage');
             }}>
               <Text style={{color: "#FFA700", fontSize: 14, fontFamily: FONT.BOLD, textDecorationLine: 'underline'}}>{status == 2 ? "Go to toktokwallet" : "Create my toktokwallet account"}</Text>
             </TouchableOpacity>
