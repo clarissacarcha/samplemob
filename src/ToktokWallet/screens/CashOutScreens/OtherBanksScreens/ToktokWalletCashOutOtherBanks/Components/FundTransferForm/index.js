@@ -76,12 +76,6 @@ const Amount = ({
                 changeAmount={changeAmount}
                 currency={tokwaAccount.wallet.currency.code}
                 onBlur={()=>{
-                    AmountLimitHelper.postCheckOutgoingLimit({
-                        amount,
-                        setErrorMessage: (value)=> {
-                            if(errorListMessage.amount == "")  changeErrorMessagge("amount",value)
-                        }
-                    })
                     computeConvenienceFee()
                 }}
             />
@@ -104,19 +98,20 @@ const Amount = ({
             {amount != "" && bank.id > 0 && !computeLoading && tokwaAccount.constants.UbFundTransferType == "api" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
-        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
-   
+        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (optional)</Text>
              <TextInput
-                    style={styles.input}
-                    value={note}
-                    maxLength={60}
-                    onChangeText={(value)=> setNote(value)}
-                    placeholder="Enter note here"
-                    returnKeyType="done"
-                    placeholderTextColor={COLOR.DARK}
-                />
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{note.length}/60</Text>
-    
+                style={[styles.input, { height: 90 }]}
+                value={note}
+                maxLength={60}
+                onChangeText={(value)=> setNote(value)}
+                placeholder="Enter note here..."
+                returnKeyType="done"
+                placeholderTextColor={COLOR.DARK}
+                textAlignVertical="top"
+                numberOfLines={4}
+                multiline
+            />
+            <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS, color: "#929191"}}>{note.length}/60</Text>
         </View>
     </View>
     )
@@ -209,14 +204,14 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
                 <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS,borderWidth: 1, borderColor: errorListMessage.address == "" ? "transparent" : COLOR.RED}]}>
                     <TextInput
-                            style={styles.input}
-                            value={address}
-                            onChangeText={(value)=>setAddress(value)}
-                            maxLength={20}
-                            placeholder={`Enter your address here`}
-                            placeholderTextColor={COLOR.DARK}
-                            returnKeyType="done"
-                        />
+                        style={styles.input}
+                        value={address}
+                        onChangeText={(value)=>setAddress(value)}
+                        maxLength={20}
+                        placeholder={`Enter your address here`}
+                        placeholderTextColor={COLOR.DARK}
+                        returnKeyType="done"
+                    />
                 </View>
                 <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/20 
                     {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
@@ -375,7 +370,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     }
 
 
-    const onPress = ()=> {
+    const onPress = async ()=> {
         let noError = true
         if(!bank.id || bank.id == ""){
             changeErrorMessagge("bank",`Select Bank first.`)
@@ -410,6 +405,15 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         }
 
         if(!noError) return
+
+        const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+            amount,
+            setErrorMessage: (value)=> {
+                if(errorListMessage.amount == "")  changeErrorMessagge("amount",value)
+            }
+        })
+
+        if(!checkLimit) return;
 
         if(providerServiceFee == "" || systemServiceFee == ""){
              postComputeConvenienceFee({

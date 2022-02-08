@@ -167,7 +167,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
           onChangeText={value => setFirstName(value)}
           style={styles.input}
           placeholder="First Name"
-          placeholderTextColor={LIGHT}
+          editable={session.user.toktokWalletAccountId == null}
         />
 
         {/*-------------------- LAST NAME --------------------*/}
@@ -177,7 +177,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
           onChangeText={value => setLastName(value)}
           style={styles.input}
           placeholder="Last Name"
-          placeholderTextColor={LIGHT}
+          editable={session.user.toktokWalletAccountId == null}
         />
 
         {/*-------------------- EMAIL --------------------*/}

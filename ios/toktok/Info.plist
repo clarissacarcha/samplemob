@@ -5,7 +5,11 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
+<<<<<<< HEAD
+	<string>toktok 1.30.0 TEST B02</string>
+=======
 	<string>toktok early access 1.29.2</string>
+>>>>>>> 9b8bc3780bd7cf601b4fdf7aca986038eceb2c33
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

@@ -1,5 +1,5 @@
 import React , {useEffect,useState,useRef} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput, TouchableHighlight} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput, TouchableHighlight, Dimensions} from 'react-native'
 import {useSelector} from 'react-redux'
 import { HeaderBackClose , HeaderTitle , AlertOverlay} from 'src/components'
 import {useQuery,useLazyQuery} from '@apollo/react-hooks'
@@ -14,6 +14,7 @@ import BackgroundTimer from 'react-native-background-timer';
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_FAMILY: FONT , COLOR , FONT_SIZE , SIZE } = CONSTANTS
+const {width,height} = Dimensions.get("window")
 
 const numWordArray = {
     "1": "one",
@@ -56,7 +57,11 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
-        headerRight: ()=> <HeaderCancel navigation={navigation} screenPopNo={2} />
+        headerRight: ()=> <HeaderCancel navigation={navigation} screenPopNo={2} />,
+        headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0
+        }
     })
 
     const prompt = usePrompt()
@@ -141,7 +146,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
 
     return (
         <CheckIdleState>
-        <Separator />
+        {/* <Separator /> */}
         <AlertOverlay visible={loading}/>
         <View 
             style={styles.container}
@@ -149,40 +154,39 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
             // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
             // behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
-                <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP code sent to</Text>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize: 16}}>{tokwaAccount.mobileNumber}</Text>
+                <View style={{flex: 1,alignItems:"center",justifyContent: "center", marginTop: 40}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP</Text>
+                    {/* <Text style={{fontFamily: FONT.REGULAR,fontSize: 16}}>{tokwaAccount.mobileNumber}</Text> */}
 
-                        <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
-                        <TextInput
-                            caretHidden
-                            value={pinCode}
-                            ref={inputRef}
-                            style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
-                            keyboardType="number-pad"
-                            returnKeyType="done"
-                            onChangeText={(value) => {
+                    <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
+                    <TextInput
+                        caretHidden
+                        value={pinCode}
+                        ref={inputRef}
+                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
+                        keyboardType="number-pad"
+                        returnKeyType="done"
+                        onChangeText={(value) => {
                             if (value.length <= 6) {
                                 const code = value.replace(/[^0-9]/,"")
                                 setPinCode(code);
                             }
-                            }}
-                            // onSubmitEditing={onSubmit}
-                        />
+                        }}
+                        // onSubmitEditing={onSubmit}
+                    />
 
-                        {
-                            errorMessage != "" && <Text style={styles.errorMessage}>{errorMessage}</Text>
-                        }
+                    {
+                        errorMessage != "" && <Text style={styles.errorMessage}>{errorMessage}</Text>
+                    }
 
-                        <TouchableOpacity
-                                disabled={otpTimer > 0 ? true : false}
-                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
-                                onPress={getForgotAndRecoverOTPCode}
-                        >
-                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Didn't get code? Tap here to resend.</Text>
-                                { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
-                        </TouchableOpacity>
-
+                    <TouchableOpacity
+                        disabled={otpTimer > 0 ? true : false}
+                        style={{marginTop: height * .07,paddingBottom: 10,alignItems: "center"}}
+                        onPress={getForgotAndRecoverOTPCode}
+                    >
+                        <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Resend OTP</Text>
+                        { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
+                    </TouchableOpacity>
                 </View>
                        
                  <View style={{height: SIZE.FORM_HEIGHT + 20,justifyContent:"flex-end"}}> 
@@ -202,7 +206,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor:"white"
+        backgroundColor:"white",
+        justifyContent: "center",
     },
     input: {
         backgroundColor:"white",
