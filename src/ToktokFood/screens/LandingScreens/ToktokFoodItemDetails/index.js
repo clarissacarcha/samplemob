@@ -122,10 +122,10 @@ const MainComponent = () => {
 
   const ResellerDiscountBadge = () => {
     const {discRatetype, referralDiscount} = productDetails?.resellerDiscount;
-    const discountText = discRatetype === 'p' ? `${referralDiscount}%` : referralDiscount;
+    const discountText = discRatetype === 'p' ? `${referralDiscount * 100}%` : referralDiscount;
     return (
       <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
-        <Text style={styles.resellerText}>Reseller -{discountText}</Text>
+        <Text style={styles.resellerText}>Reseller {discountText}</Text>
       </ImageBackground>
     );
   };
