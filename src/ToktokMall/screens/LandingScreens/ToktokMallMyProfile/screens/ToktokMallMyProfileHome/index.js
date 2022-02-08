@@ -110,7 +110,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
 
     getToktokWalletData()
     getWallet()
-    EventRegister.addEventListener("ToktokWalletRefreshAccountBalance", getWallet)
+    EventRegister.addEventListener("ToktokMallWalletRefreshAccountBalance", getWallet)
 
     // AsyncStorage.getItem("ToktokMallUser").then((raw) => {
     //   let data = JSON.parse(raw)
