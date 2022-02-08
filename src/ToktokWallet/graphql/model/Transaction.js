@@ -115,9 +115,18 @@ export const POST_VERIFY_TRANSACTION_QR_CODE = gql`
         }
     }
 `
+
 export const GET_ENTERPRISE_TRANSACTIONS = gql`
     query getEnterpriseTransactions($input: GetEnterpriseTransactionsInput) {
         getEnterpriseTransactions(input: $input) {
+            ${WalletTransactions}
+        }
+    }
+`
+
+export const GET_SEND_MONEY_TRANSACTIONS = gql`
+    query {
+        getSendMoneyTransactions {
             ${WalletTransactions}
         }
     }

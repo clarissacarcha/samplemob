@@ -6,6 +6,12 @@ import {useNavigation} from '@react-navigation/native'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import { BuildingBottom } from 'toktokwallet/components'
 import { moderateScale } from 'toktokwallet/helper'
+import { useMutation } from '@apollo/react-hooks'
+import { useAlert } from 'src/hooks'
+import { onErrorAlert } from 'src/util/ErrorUtility'
+import { AlertOverlay } from 'src/components'
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from 'src/graphql'
+import { POST_VERIFY_IF_PEP } from 'toktokwallet/graphql'
 import CONSTANTS from 'common/res/constants'
 import ImageCropper from 'react-native-simple-image-cropper'
 
@@ -46,11 +52,11 @@ const MainComponent = ({children , onPress })=> {
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>One last step before you get a verified toktokwallet.</Text>  
                 
                 <View style={{marginTop: 20,flex: 1}}>
-                {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a selfie with your Valid ID</Text> */}
+                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, alignSelf:"center"}}>Take a Selfie with ID</Text>
                         {children}
                 </View>
                 <View style={{flex: 1,alignItems:"center",justifyContent:"center"}}>
-                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
+                        <Text style={{color: COLOR.YELLOW, marginTop: 20,textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
                         <View>
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: moderateScale(FONT_SIZE.M)}}><Text style={{color: COLOR.YELLOW}}>Position</Text> your face within the frame</Text>
@@ -106,6 +112,7 @@ export const VerifySelfieWithID = ()=> {
     } = VerifyUserData
     const [cropperParams, setCropperParams] = useState({});
     const navigation = useNavigation()
+    const alert = useAlert()
     const cropSize = {
         // width: width,
         // height: height,
@@ -177,6 +184,7 @@ export const VerifySelfieWithID = ()=> {
                     }
                 }
             })
+
         }catch(error){  
             throw error;
         }

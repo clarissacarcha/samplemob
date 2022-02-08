@@ -34,6 +34,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
     const [note,setNote] = useState("")
     const [proceed,setProceed] = useState(false)
     const [swipeEnabled,setSwipeEnabled] = useState(false)
+    const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [recipientDetails,setRecipientDetails] = useState({
         id: null,
         person: {
@@ -96,11 +97,11 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                                             <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                                         </View>
                                         <TouchableOpacity
-                                            onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" ,{onCashIn: null,amount: 0})} 
+                                            onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" ,{onCashIn: ()=> null ,amount: 0})} 
                                             style={styles.topUp}
                                         >
                                             <View style={styles.topUpbtn}>
-                                                    <FIcon5 name={'plus'} size={12}/> 
+                                                    <FIcon5 name={'plus'} size={12} color="black"/> 
                                             </View>
                                         </TouchableOpacity>
                                 </View>
@@ -140,6 +141,8 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                                 setAmount={setAmount}
                                 recipientDetails={recipientDetails}
                                 senderDetails={senderDetails}
+                                errorAmountMessage={errorAmountMessage}
+                                setErrorAmountMessage={setErrorAmountMessage}
                             />
 
                             <EnterNote
@@ -165,7 +168,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                         setMobileNo={setMobileNo}
                     />  
 
-                    <View style={{height: SIZE.FORM_HEIGHT,marginTop: 50,justifyContent:"flex-end"}}>
+                    <View style={{flex: 1, height: SIZE.FORM_HEIGHT,marginTop: 50,justifyContent:"flex-end"}}>
                 
                         <ProceedButton
                             swipeEnabled={swipeEnabled}
@@ -175,6 +178,8 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                             tokwaAccount={tokwaAccount}
                             note={note}
                             recipientDetails={recipientDetails}
+                            errorAmountMessage={errorAmountMessage}
+                            setErrorAmountMessage={setErrorAmountMessage}
                         />
                     </View>
                 </ScrollView>

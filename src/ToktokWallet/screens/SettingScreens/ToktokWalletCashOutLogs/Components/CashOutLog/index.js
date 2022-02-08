@@ -38,10 +38,11 @@ export const CashOutLog = ({
 
     // const refNo = MaskLeftZero(item.id)
     const transaction = item.transaction
-    const requestNo = item.refNo
-    const refNo = transaction.refNo
-    const refDate = moment(transaction.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+    const requestNo = item.referenceNumber ? item.referenceNumber : item.refNo
+    const refNo = transaction?.refNo ? transaction.refNo : MaskLeftZero(item.id)
+    const refDate = transaction ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A') : moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
     const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
+    const convenienceFee =  `${numberFormat(+item.providerServiceFee + +item.systemServiceFee)}`
     const provider = item.provider.name
     let phrase = provider
     if(provider == "InstaPay" || provider == "PesoNet"){
@@ -55,6 +56,7 @@ export const CashOutLog = ({
             name: "Fund Transfer",
             phrase,
             amount: transactionAmount,
+            convenienceFee,
             status,
             details: item.details,
             requestNo

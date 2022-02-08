@@ -8,9 +8,10 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { GET_FORGOT_AND_RECOVER_OTP_CODE , POST_VERIFY_ANSWERS } from 'toktokwallet/graphql'
 import { useLazyQuery , useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
-import { useAlert } from 'src/hooks'
+import { useAlert , usePrompt } from 'src/hooks'
 import { useNavigation } from '@react-navigation/native'
 import { AlertOverlay } from 'src/components'
+import { TransactionUtility } from 'toktokwallet/util'
 
 //SELF IMPORTS
 import DateBirthModal from '../../../ToktokWalletAccountRecoverySetup/Components/SetupAnswers/DateBirthModal'
@@ -23,6 +24,7 @@ export const QuestionsAnswers = ({
     data,
 })=> {
     const alert = useAlert();
+    const prompt = usePrompt();
     const navigation = useNavigation();
     const [showPrompt,setShowPrompt] = useState(false)
 
@@ -42,7 +44,13 @@ export const QuestionsAnswers = ({
             return navigation.navigate("ToktokWalletRecoverPin" , {type: "MPIN" , event: "ACCOUNT RECOVERY"})
         },
         onError: (error)=>{
-            onErrorAlert({alert,error,navigation})
+            // onErrorAlert({alert,error,navigation})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert 
+            })
         }
     })
 

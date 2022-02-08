@@ -59,10 +59,14 @@ export const ToktokWalletUpdatePin =  ({navigation,route})=> {
                                  <View style={{justifyContent:"center",alignItems:"center"}}>
                                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR ,color:'#929191'}}>Cancel</Text>
                                 </View>
-                            </TouchableHighlight>
+                            </TouchableHighlight>,
+        headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0
+        }
     })
 
-    const {otp , event} = route.params
+    const {otp, event} = route.params
 
     const cancelSetup = ()=> {
         console.log("Cancelling")
@@ -118,13 +122,13 @@ export const ToktokWalletUpdatePin =  ({navigation,route})=> {
                 onConfirm={()=>navigation.pop(2)}
             />
             <SuccessModal modalVisible={successModalVisible} setModalVisible={setSuccessModalVisible} event={event}/>
-            <Separator />
-            <KeyboardAvoidingView style={{flex: 1,}}
-             keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
-             behavior={Platform.OS == "ios" ? "padding" : "height"}
+            {/* <Separator /> */}
+            <View style={{flex: 1,}}
+            //  keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
+            //  behavior={Platform.OS == "ios" ? "padding" : "height"}
              >
             {DisplayComponent()}
-            </KeyboardAvoidingView>
+            </View>
         </CheckIdleState>
     )
 }

@@ -56,7 +56,13 @@ const Confirm = ({
             })
         },
         onError: (error)=> {
-            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            // onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert 
+            })
         }
 
     })
@@ -71,7 +77,8 @@ const Confirm = ({
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt 
+                prompt,
+                alert 
             })
         }
     })
@@ -181,7 +188,7 @@ const styles = StyleSheet.create({
     },
     viewAnswer: {
         justifyContent:"center",
-        // alignItems:"center",
+        alignItems:"center",
         height: SIZE.FORM_HEIGHT,
     },
     viewAnswerText: {

@@ -72,7 +72,7 @@ const AccountRecovery = ({visible,setVisible,account})=> {
       <View style={styles.container}>
         <View style={styles.content}>
           <Text style={styles.headerText}>
-            Recover your toktokwallet account via:
+            {`Recover your toktokwallet\nAccount via:`}
           </Text>
           <TouchableOpacity onPress={EmailCustomerService} style={styles.option}>
             <Image 
@@ -84,7 +84,7 @@ const AccountRecovery = ({visible,setVisible,account})=> {
           </TouchableOpacity>
           {children}
           <Text style={styles.reminder}>
-            You can have your account back Katoktok! Our Customer
+            You can have your account back ka-toktok! Our Customer
             Service Representative will assess your request
             via Email. Please wait for the activation of your account
             within 24hrs.
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.S,
     textAlign:"center",
-    color:COLOR.DARK,
+    color: COLOR.DARK,
     marginTop: 20,
     marginBottom: 10
   },
@@ -163,9 +163,9 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   headerText: {
-    fontFamily: FONT.BOLD,
+    fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.L,
-    marginBottom: 10,
+    marginBottom: 17,
     textAlign: "center"
   }
 })

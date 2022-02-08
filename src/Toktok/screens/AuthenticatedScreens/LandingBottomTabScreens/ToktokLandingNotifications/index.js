@@ -35,7 +35,7 @@ const NotificationCard = ({message, lastItem}) => {
 
   const onNotificationSelect = () => {
     if (classification == 'toktokwallet') {
-      navigation.push('ToktokWalletHomePage');
+      navigation.push('ToktokWalletLoginPage');
     }
     if (delivery) {
       navigation.push('SelectedDelivery', {delivery});

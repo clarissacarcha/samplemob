@@ -1,29 +1,41 @@
-import React , {useEffect,useState, useContext} from 'react'
-import {View , Text , StyleSheet , TextInput,TouchableOpacity} from 'react-native'
-import { ValidatorScreen } from 'toktokwallet/components'
+import React , {useEffect,useState, useContext, useCallback} from 'react'
+import {View , Text , StyleSheet , TextInput,TouchableOpacity, Alert} from 'react-native'
+import { ValidatorScreen , InputAmount } from 'toktokwallet/components'
 import { YellowButton ,VectorIcon ,ICON_SET} from 'src/revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT, POST_COMPUTE_CONVENIENCE_FEE } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert, usePrompt } from 'src/hooks'
-import { numberFormat } from 'toktokwallet/helper'
+import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { AlertOverlay } from 'src/components'
 import { ContextCashOut } from '../ContextProvider'
 import { TransactionUtility } from 'toktokwallet/util'
+import _ from 'lodash'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
 import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
-const Amount = ({changeErrorMessagge ,errorListMessage})=> {
+const Amount = ({
+    changeErrorMessagge ,
+    errorListMessage , 
+    providerServiceFee , 
+    systemServiceFee , 
+    computeConvenienceFee ,
+    computeLoading,
+})=> {
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const { amount ,setAmount , note , setNote ,bank } = useContext(ContextCashOut)
     const [maxAmount , setMaxAmount] = useState(null)
+    const cfMessage =   +providerServiceFee + +systemServiceFee == 0 
+                      ? `Convenience fee is waived for this transaction.`
+                      : `Additional convenience fee will be charged in this transaction.`
+                    //   : `Additional PHP ${numberFormat(+providerServiceFee + +systemServiceFee)} convenience fee will be charged in this transaction.`
 
 
     const changeAmount = (value)=> {
@@ -39,7 +51,7 @@ const Amount = ({changeErrorMessagge ,errorListMessage})=> {
     }
 
     useEffect(()=>{
-            if(amount >= 1 && amount <= tokwaAccount.wallet.balance){
+            if(amount >= 1 && ( +amount + (+providerServiceFee + +systemServiceFee)) <= tokwaAccount.wallet.balance){
                 changeErrorMessagge("amount","")
             }else if(amount < 1 && amount != ""){
                 changeErrorMessagge("amount",`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00.`)
@@ -58,7 +70,16 @@ const Amount = ({changeErrorMessagge ,errorListMessage})=> {
         <View style={styles.container}>
         <View style={{marginTop: 16,}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Enter Amount</Text>
-            <View style={[styles.input, {borderWidth: 1, borderColor: errorListMessage.amount == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
+           <InputAmount
+                errorMessage={errorListMessage.amount}
+                amount={amount}
+                changeAmount={changeAmount}
+                currency={tokwaAccount.wallet.currency.code}
+                onBlur={()=>{
+                    computeConvenienceFee()
+                }}
+            />
+            {/* <View style={[styles.input, {borderWidth: 1, borderColor: errorListMessage.amount == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
                         <TextInput
                                 caretHidden
@@ -67,26 +88,30 @@ const Amount = ({changeErrorMessagge ,errorListMessage})=> {
                                 style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
                                 keyboardType="numeric"
                                 returnKeyType="done"
+                                onBlur={computeConvenienceFee}
                         />
                     <View style={{marginLeft: 5,alignSelf: "center",flex: 1}}>
                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                     </View>
-            </View>
+            </View> */}
             {errorListMessage.amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.amount}</Text>}
+            {amount != "" && bank.id > 0 && !computeLoading && tokwaAccount.constants.UbFundTransferType == "api" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
-        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
-        <View style={[styles.input, {justifyContent:"center"}]}>
+        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (optional)</Text>
              <TextInput
-                    style={styles.input}
-                    value={note}
-                    maxLength={60}
-                    onChangeText={(value)=> setNote(value)}
-                    placeholder="Enter note here"
-                    returnKeyType="done"
-                />
-                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{note.length}/60</Text>
-        </View>
+                style={[styles.input, { height: 90 }]}
+                value={note}
+                maxLength={60}
+                onChangeText={(value)=> setNote(value)}
+                placeholder="Enter note here..."
+                returnKeyType="done"
+                placeholderTextColor={COLOR.DARK}
+                textAlignVertical="top"
+                numberOfLines={4}
+                multiline
+            />
+            <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS, color: "#929191"}}>{note.length}/60</Text>
         </View>
     </View>
     )
@@ -144,6 +169,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                             onChangeText={setAccountName}
                             maxLength={30}
                             placeholder={`Enter bank account name here`}
+                            placeholderTextColor={COLOR.DARK}
                             keyboardType="default"
                             returnKeyType="done"
                         />
@@ -164,6 +190,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                             onChangeText={changeAccountNumber}
                             maxLength={19}
                             placeholder={`Enter bank account number here`}
+                            placeholderTextColor={COLOR.DARK}
                             keyboardType="number-pad"
                             returnKeyType="done"
                         />
@@ -177,13 +204,14 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
                 <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS,borderWidth: 1, borderColor: errorListMessage.address == "" ? "transparent" : COLOR.RED}]}>
                     <TextInput
-                            style={styles.input}
-                            value={address}
-                            onChangeText={(value)=>setAddress(value)}
-                            maxLength={20}
-                            placeholder={`Enter your address here`}
-                            returnKeyType="done"
-                        />
+                        style={styles.input}
+                        value={address}
+                        onChangeText={(value)=>setAddress(value)}
+                        maxLength={20}
+                        placeholder={`Enter your address here`}
+                        placeholderTextColor={COLOR.DARK}
+                        returnKeyType="done"
+                    />
                 </View>
                 <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/20 
                     {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
@@ -203,6 +231,10 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         status: 0
     })
     const [successModalVisible,setSuccessModalVisible] = useState(false)
+    const [providerServiceFee,setProviderServiceFee] = useState("")
+    const [systemServiceFee,setSystemServiceFee] = useState("")
+    const [type,setType] = useState("")
+
     const {
         accountName,
         accountNumber,
@@ -242,28 +274,14 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         }
     },[bank,accountNumber,address])
 
-    const [postComputeConvenienceFee] = useMutation(POST_COMPUTE_CONVENIENCE_FEE, {
+    const [postComputeConvenienceFee , {loading: computeLoading}] = useMutation(POST_COMPUTE_CONVENIENCE_FEE, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onError: (error)=> onErrorAlert({alert,error}),
+        // onError: (error)=> onErrorAlert({alert,error}),
         onCompleted: ({postComputeConvenienceFee})=> {
             const { providerServiceFee , systemServiceFee , type } = postComputeConvenienceFee
-            navigation.navigate("ToktokWalletReviewAndConfirm", {
-                label: screenLabel ?? "Fund Transfer" , 
-                event: "Fund Transfer",
-                data: {
-                        method: bank.name,
-                        accountName: accountName,
-                        accountNumber: accountNumber,
-                        amount: amount,
-                        note: note,
-                        providerServiceFee,
-                        systemServiceFee
-                    },
-                isSwipe: true,
-                swipeTitle: `Confirm`,
-                onSwipeFail: onSwipeFail,
-                onSwipeSuccess: onSwipeSuccess,
-            })
+            setSystemServiceFee(systemServiceFee)
+            setProviderServiceFee(providerServiceFee)
+            setType(type == "pesonet" ? "Pesonet" : "Instapay")
         }
     })
 
@@ -282,7 +300,13 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
            
         },
         onError: (error)=>{
-            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            // onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert
+            })
         }
     })
 
@@ -304,7 +328,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         }
     })
@@ -345,7 +370,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     }
 
 
-    const onPress = ()=> {
+    const onPress = async ()=> {
         let noError = true
         if(!bank.id || bank.id == ""){
             changeErrorMessagge("bank",`Select Bank first.`)
@@ -375,8 +400,54 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             noError = false
         }
 
+        if(errorListMessage.amount != ""){
+            noError = false;
+        }
+
         if(!noError) return
 
+        const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+            amount,
+            setErrorMessage: (value)=> {
+                if(errorListMessage.amount == "")  changeErrorMessagge("amount",value)
+            }
+        })
+
+        if(!checkLimit) return;
+
+        if(providerServiceFee == "" || systemServiceFee == ""){
+             postComputeConvenienceFee({
+                variables: {
+                    input: {
+                        amount: +amount,
+                        cashOutBankId: bank.id
+                    }
+                }
+            })
+        }
+
+        navigation.navigate("ToktokWalletReviewAndConfirm", {
+            label: screenLabel ?? "Fund Transfer" , 
+            event: "Fund Transfer",
+            data: {
+                    method: bank.name,
+                    accountName: accountName,
+                    accountNumber: accountNumber,
+                    amount: amount,
+                    note: note,
+                    providerServiceFee,
+                    systemServiceFee,
+                    fundTransferType: type
+                },
+            isSwipe: true,
+            swipeTitle: `Confirm`,
+            onSwipeFail: onSwipeFail,
+            onSwipeSuccess: onSwipeSuccess,
+        })
+
+    }
+
+    const debounceHandler = useCallback(_.debounce(()=>{
         postComputeConvenienceFee({
             variables: {
                 input: {
@@ -385,8 +456,23 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 }
             }
         })
+    },1000, {
+        leading: false,
+        trailing: true,
+    }), [])
 
-    }
+    useEffect(()=>{
+        if(amount != "" && bank.id > 0){
+            postComputeConvenienceFee({
+                variables: {
+                    input: {
+                        amount: +amount,
+                        cashOutBankId: bank.id
+                    }
+                }
+            })
+        }
+    },[bank,amount])
 
     return (
         <>
@@ -398,6 +484,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 tokwaAccount={tokwaAccount}
                 savedAccounts={savedAccounts}
                 activeAccount={activeAccount}
+                accountName={accountName}
                 note={note}
                 screenLabel={screenLabel}
             />
@@ -408,6 +495,19 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             <Amount
                 changeErrorMessagge={changeErrorMessagge}
                 errorListMessage={errorListMessage}
+                providerServiceFee={providerServiceFee}
+                systemServiceFee={systemServiceFee}
+                computeLoading={computeLoading}
+                computeConvenienceFee={()=> {
+                    postComputeConvenienceFee({
+                        variables: {
+                            input: {
+                                amount: +amount,
+                                cashOutBankId: bank.id
+                            }
+                        }
+                    })
+                }}
             />
             <View style={styles.proceedBtn}>
                 <YellowButton label="Proceed" onPress={onPress}/>

@@ -117,6 +117,7 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
                 error,
                 navigation,
                 prompt,
+                alert,
                 setErrorMessage
             })
         }
@@ -167,8 +168,8 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
             keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
-                <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP code sent to</Text>
+                <View style={{flex: 1,alignItems:"center", marginTop: 40}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP</Text>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: 16}}>{tokwaAccount.mobileNumber}</Text>
 
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>
@@ -202,7 +203,7 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={getForgotAndRecoverOTPCode}
                         >
-                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Didn't get code? Tap here to resend.</Text>
                                 { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
                         </TouchableOpacity>
 

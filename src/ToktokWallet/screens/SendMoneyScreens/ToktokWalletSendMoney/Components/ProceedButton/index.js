@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import { numberFormat } from 'toktokwallet/helper'
+import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import { TransactionUtility } from 'toktokwallet/util'
 import { YellowButton } from 'src/revamp'
 import {useAlert, usePrompt} from 'src/hooks'
@@ -13,7 +13,7 @@ import { AlertOverlay } from 'src/components'
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
 
-export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwaAccount , recipientDetails , proceed })=> {
+export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwaAccount , recipientDetails , proceed , errorAmountMessage , setErrorAmountMessage })=> {
 
     const prompt = usePrompt()
     const alert = useAlert()
@@ -34,11 +34,18 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
                 resendRequest: onSwipeSuccess ,
                 data: {
                     requestSendMoneyId: requestSendMoneyId
-                }
+                },
+                btnLabel: "Confirm"
             })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            // onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert
+            })
         }
     })
 
@@ -53,13 +60,27 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt 
+                prompt,
+                alert 
             })
         }
     })
 
 
-    const reviewAndConfirm = ()=> {
+    const reviewAndConfirm = async ()=> {
+        const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+            amount,
+            mobileNumber: recipientDetails.mobileNumber,
+            setErrorMessage: (value)=> {
+                if(errorAmountMessage == ""){
+                    setErrorAmountMessage(value)
+                    if(value != "") setSwipeEnabled(false)
+                }
+            }
+        })
+
+        if(!checkLimit) return;
+
         return navigation.navigate("ToktokWalletReviewAndConfirm", {
             label: "Send Money",
             event: "Send Money",

@@ -149,22 +149,27 @@ export const VerifyFullname = ()=> {
                 visible={modalNationalityVisible}
                 setVisible={setModalNationalityVisible}
          />
-     
+      
+      
         <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "height" : null}
                 keyboardVerticalOffset={Platform.OS === 'ios' ? screen.height * 0.25 : screen.height * 0.5}
                 style={{ flex: 1 }}
         >
-                   <ScrollView style={{padding: 16}} showsVerticalScrollIndicator={false}>
 
-        <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
-                <View>
-                <Image style={styles.policyIcon} source={require('toktokwallet/assets/icons/walletVerify.png')} resizeMode="contain" />
-                </View>
-                <View style={{justifyContent: "center", alignItems: "center",marginRight: 20,}}>
-                    <Text style={{marginHorizontal: 10,fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR}}>All your details are protected in accordance with our <Text style={{color: COLOR.YELLOW}}>privacy policy.</Text></Text>
-                </View>
-        </TouchableOpacity>
+            
+            
+                <ScrollView style={{flex:1}} contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
+              
+                <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
+                            <View>
+                            <Image style={styles.policyIcon} source={require('toktokwallet/assets/icons/walletVerify.png')} resizeMode="contain" />
+                            </View>
+                            <View style={{justifyContent: "center", alignItems: "center",marginRight: 20,}}>
+                                <Text style={{marginHorizontal: 10,fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR}}>
+                                    All your details are protected in accordance with our <Text style={{color: COLOR.YELLOW, fontSize: FONT_SIZE.S}}>privacy policy.</Text></Text>
+                            </View>
+                    </TouchableOpacity>
 
                 <View style={styles.mainInput}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Fill up the information</Text>
@@ -216,6 +221,7 @@ export const VerifyFullname = ()=> {
                             value={person.firstName}
                             onChangeText={(value)=>changePersonInfo("firstName",value)}
                             placeholder="Enter first name here"
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                     </View>
@@ -228,6 +234,7 @@ export const VerifyFullname = ()=> {
                             value={person.middleName}
                             onChangeText={(value)=>changePersonInfo("middleName",value)}
                             placeholder="Enter middle name here"
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                         <View style={{flexDirection:"row",marginTop: 5}}>
@@ -256,6 +263,7 @@ export const VerifyFullname = ()=> {
                             value={person.lastName}
                             onChangeText={(value)=>changePersonInfo("lastName",value)}
                             placeholder="Enter last name here"
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                     </View>
@@ -284,6 +292,7 @@ export const VerifyFullname = ()=> {
                             value={contactInfo.email}
                             onChangeText={(value)=>changeContactInfo("email",value)}
                             placeholder="Enter email here"
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                     </View>
@@ -307,6 +316,7 @@ export const VerifyFullname = ()=> {
                             value={birthInfo.birthPlace}
                             onChangeText={(value)=>changeBirthInfo("birthPlace",value)}
                             placeholder={"Enter place of birth here"}
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                     </View>
@@ -341,7 +351,8 @@ export const VerifyFullname = ()=> {
                     <View style={{marginTop: 20,}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Occupation</Text>
                             <TextInput 
-                                placeholder="Enter Occupation here"
+                                placeholder="Enter occupation here"
+                                placeholderTextColor={COLOR.DARK}
                                 style={styles.input}
                                 value={incomeInfo.occupation}
                                 onChangeText={(value)=>changeIncomeInfo("occupation",value)}
@@ -354,7 +365,7 @@ export const VerifyFullname = ()=> {
                             <TouchableOpacity onPress={()=>SourceOfIncomeRef.current.expand()} style={[styles.input,{flexDirection: "row",justifyContent: "center",alignItems: "center"}]}>
                              {
                                 incomeInfo.source == ""
-                                ? <Text style={{flex: 1,color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select -</Text>
+                                ? <Text style={{flex: 1,color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>- Select source of income -</Text>
                                 : <Text style={{flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{incomeInfo.source.description}</Text>
                              }
                                 <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right"/>
@@ -365,6 +376,7 @@ export const VerifyFullname = ()=> {
                             <View style={{marginTop: 10,}}>
                                 <TextInput 
                                     placeholder="Enter Source of Income here"
+                                    placeholderTextColor={COLOR.DARK}
                                     style={styles.input}
                                     value={incomeInfo.otherSource}
                                     onChangeText={(value)=>changeIncomeInfo("otherSource",value)}
@@ -372,11 +384,12 @@ export const VerifyFullname = ()=> {
                             </View>
                         }
 
-                    <View style={{marginBottom: 16,marginTop: 20,height: 70}}>
-                    <YellowButton label="Next" onPress={NextPage}/>
-                    </View>
+                
                     
             </View>
+                    <View style={{padding: 16,justifyContent:"flex-end",marginTop: 20,height: 70}}>
+                         <YellowButton label="Next" onPress={NextPage}/>
+                    </View>
                  </ScrollView>
             </KeyboardAvoidingView>
 
@@ -394,8 +407,8 @@ const styles = StyleSheet.create({
     },
     policyView: {
         flexDirection: "row",
-        backgroundColor: "white",
-        marginBottom: 20,
+        backgroundColor: "#F7F7FA",
+        padding: 16,
         // paddingHorizontal: 16,
         // paddingVertical: 18,
     },  
@@ -418,6 +431,7 @@ const styles = StyleSheet.create({
     },
     mainInput: {
         flex: 1,
+        padding: 16,
     },
     proceedBtn: {
         height: 40,

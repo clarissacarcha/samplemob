@@ -10,6 +10,8 @@ import {useAlert} from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 import { SomethingWentWrong } from 'src/components';
 import WebView from 'react-native-webview'
+import { ListContent, SectionContent } from './Components';
+import { termsAndConditionsDetails } from 'toktokwallet/helper';
 
 const { FONT_FAMILY: FONT , FONT_SIZE , MARGIN , COLOR } = CONSTANTS
 
@@ -17,78 +19,113 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: () => <HeaderTitle label={['Terms and Conditions', '']} />,
+        headerTitle: () => <HeaderTitle label={['']} />,
     });
 
-    const webviewRef = useRef()
-    const alert = useAlert()
-    const {data,error,loading} = useQuery(GET_GLOBAL_SETTING, {
-        fetchPolicy: "network-only",
-        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        variables: {
-            input: {
-                settingKey: "tokwaTermsAndCondition"
-            }
-        },
-        onError: (error)=> {
-            onErrorAlert({alert,error,navigation})
-        }
-    })
-
-    if(loading){
-        return (
-            <View style={{flex: 1,justifyContent:"center",alignItems:"center"}}>
-                <ActivityIndicator color={COLOR.YELLOW} size={24}/>
-            </View>
-        )
-    }
-
-    if(error){
-        return <SomethingWentWrong/>
-    }
-
     return (
-        <CheckIdleState>
-        <Separator/>
-        <View style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
-                <Text style={styles.textValue}>{data.getGlobalSetting.keyValue}</Text>
-            </ScrollView>
+      <CheckIdleState>
+      <Separator/>
+      <View style={styles.container}>
+        <View style={[styles.shadow]}>
+          <Text style={styles.title}>Terms and Conditions</Text>
+          <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
+            <View style={styles.contentWrapper}>
+              {/* <Text>{data.getGlobalSetting.keyValue}</Text> */}
+              <SectionContent contents={termsAndConditionsDetails.WM_PARAGRAPH_1} />
+              <SectionContent contents={termsAndConditionsDetails.WM_PARAGRAPH_2} />
+              <SectionContent contents={termsAndConditionsDetails.WM_PARAGRAPH_3} />
+              <SectionContent contents={termsAndConditionsDetails.WM_PARAGRAPH_4} />
+              <SectionContent contents={termsAndConditionsDetails.WM_PARAGRAPH_5} />
+              <ListContent contents={termsAndConditionsDetails.DEFINITION_OF_TERMS} />
+              <ListContent contents={termsAndConditionsDetails.ACCESS_TO_TOKTOKWALLET} />
+              <ListContent contents={termsAndConditionsDetails.OTHER_TERMS} />
+              <ListContent contents={termsAndConditionsDetails.OBLIGATIONS_OF_THE_USER}/>
+              <ListContent contents={termsAndConditionsDetails.FEES_AND_OTHER_CHARGES}/>
+              <SectionContent contents={termsAndConditionsDetails.TRANSACTION_HISTORY} />
+              <ListContent contents={termsAndConditionsDetails.DISPUTE_AND_UNAUTHORIZED_TRANSACTIONS}/>
+              <ListContent contents={termsAndConditionsDetails.ACCOUNT_DORMANCY}/>
+              <ListContent contents={termsAndConditionsDetails.USERS_ACCOUNTABILITY}/>
+              <SectionContent contents={termsAndConditionsDetails.PIN} />
+              <ListContent contents={termsAndConditionsDetails.TERMINATION_AND_SUSPENSION_OF_ACCOUNT}/>
+              <ListContent contents={termsAndConditionsDetails.LIMITATION_OF_LIABILITY}/>
+              <ListContent contents={termsAndConditionsDetails.DATA_PRIVACY_POLICY_AND_INFORMATION_COLLECTION}/>
+              <ListContent contents={termsAndConditionsDetails.DATA_SHARING}/>
+              <SectionContent contents={termsAndConditionsDetails.SECURITY} />
+              <SectionContent contents={termsAndConditionsDetails.PUBLICITY} />
+              <SectionContent contents={termsAndConditionsDetails.GOVERNING_LAW} />
+              <SectionContent contents={termsAndConditionsDetails.VENUE} />
+              <SectionContent contents={termsAndConditionsDetails.NON_WAIVER_OF_RIGHTS} />
+              <SectionContent contents={termsAndConditionsDetails.SEVERABILITY} />
+              <SectionContent contents={termsAndConditionsDetails.AMENDMENT} />
+              <ListContent contents={termsAndConditionsDetails.AGREEMENT}/>
+              <ListContent contents={termsAndConditionsDetails.CUSTOMER_CARE}/>
+            </View>
+          </ScrollView>
         </View>
-        </CheckIdleState>
+      </View>
+      </CheckIdleState>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: COLOR.WHITE,
+  container: {
+    flex: 1,
+    backgroundColor: COLOR.WHITE,
+  },
+  checkIcon: {
+    height: 98,
+    width: 98,
+    backgroundColor: COLOR.YELLOW,
+    borderRadius: 100,
+    justifyContent:"center",
+    alignItems:"center"
+  },  
+  titleText: {
+    marginTop: 17,
+    fontSize: FONT_SIZE.XL,
+    fontFamily: FONT.BOLD,
+  },
+  actionBtn: {
+    height: 70,
+    padding: 16,
+    justifyContent:"flex-end",
+    marginBottom: Platform.OS == "ios" ? 25 : 0
+  },
+  body: {
+    margin: 6,
+    textAlign: 'justify',
+  },
+  contentWrapper: {
+    flex: 1,
+    paddingBottom: 10,
+  },
+  shadow: {
+    margin: 16,
+    padding: 10,
+    backgroundColor: "white",
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
-    checkIcon: {
-        height: 98,
-        width: 98,
-        backgroundColor: COLOR.YELLOW,
-        borderRadius: 100,
-        justifyContent:"center",
-        alignItems:"center"
-    },  
-    titleText: {
-        marginTop: 17,
-        fontSize: FONT_SIZE.XL,
-        fontFamily: FONT.BOLD,
-    },
-    actionBtn: {
-        height: 70,
-        padding: 16,
-        justifyContent:"flex-end",
-        marginBottom: Platform.OS == "ios" ? 25 : 0
-    },
-    body: {
-        margin: MARGIN.M,
-        textAlign: 'justify',
-    },
-    textValue:{
-        fontFamily: FONT.REGULAR,
-        fontSize: FONT_SIZE.M,
-    }
+    shadowOpacity: 0.2,
+    shadowRadius: 3.84,
+    elevation: 5,
+    flex: 1
+  },
+  boxContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  title: {
+    textAlign: "center",
+    color: "#F6841F",
+    fontFamily: FONT.BOLD,
+    fontSize: 20,
+    paddingVertical: 10,
+  },
 })

@@ -146,15 +146,15 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={CreateVerificationCode}
                         >
-                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1,color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1,color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Didn't get code? Tap here to resend.</Text>
                                 { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
                         </TouchableOpacity>
             </View>
             <View style={{height: SIZE.FORM_HEIGHT + 16}}> 
             {
                 pinCode.length < 6 || getOtpLoading
-                ? <DisabledButton label="Proceed"/>
-                : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
+                ? <DisabledButton label="Confirm"/>
+                : <YellowButton onPress={ConfirmVerificationCode} label="Confirm"/>
             }   
             </View>
             <BuildingBottom/>

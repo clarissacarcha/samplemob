@@ -53,6 +53,7 @@ export const VerifyPin = ({pageIndex,setPageIndex,setOldTPIN})=> {
                 error,
                 navigation,
                 prompt,
+                alert,
                 setErrorMessage
             });
         }
@@ -82,45 +83,45 @@ export const VerifyPin = ({pageIndex,setPageIndex,setOldTPIN})=> {
         <>
          <AlertOverlay visible={loading} />
         <View style={styles.container}>
-            <ScrollView style={styles.content}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter Old TPIN</Text>
-                    <View style={{position: 'relative',marginTop: 40,padding: 16,}}>
-                        <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
-                        <TextInput
-                            caretHidden
-                            value={pinCode}
-                            ref={inputRef}
-                            style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
-                            keyboardType="number-pad"
-                            returnKeyType="done"
-                            onChangeText={(value) => {
-                            if (value.length <= 6) {
-                                const num = value.replace(/[^0-9]/g, '')
-                                setPinCode(num);
-                            }
-                            }}
-                            onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
-                        />
-                        {
-                            !!errorMessage && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>
-                                    {errorMessage}
-                                </Text>
+            <ScrollView contentContainerStyle={styles.content}>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter Old TPIN</Text>
+                <View style={{position: 'relative',marginTop: 20, }}>
+                    <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
+                    <TextInput
+                        caretHidden
+                        value={pinCode}
+                        ref={inputRef}
+                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
+                        keyboardType="number-pad"
+                        returnKeyType="done"
+                        onChangeText={(value) => {
+                        if (value.length <= 6) {
+                            const num = value.replace(/[^0-9]/g, '')
+                            setPinCode(num);
                         }
+                        }}
+                        onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
+                    />
+                    {
+                        !!errorMessage && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>
+                                {errorMessage}
+                            </Text>
+                    }
 
-                        <TouchableOpacity
-                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
-                                onPress={()=>setShowPin(!showPin)}
-                        >
-                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
-                        </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{marginTop: height * .07, paddingVertical: 10, alignItems: "center"}}
+                        onPress={()=>setShowPin(!showPin)}
+                    >
+                        <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+                    </TouchableOpacity>
 
-                        <TouchableOpacity
-                                style={{paddingVertical: 10,alignItems: "center"}}
-                                onPress={forgotPIN}
-                        >
-                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>FORGOT TPIN?</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity
+                        style={{paddingVertical: height * .03,alignItems: "center"}}
+                        onPress={forgotPIN}
+                    >
+                        <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
+                    </TouchableOpacity>
+                </View>
             </ScrollView>
             <View style={{padding: 16}}>
                 {
@@ -142,8 +143,8 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
     },
     content: {
-        // alignItems: "center",
-        padding: 10,
+        justifyContent: "center",
+        padding: 16,
         flex: 1,
     },
     inputView: {

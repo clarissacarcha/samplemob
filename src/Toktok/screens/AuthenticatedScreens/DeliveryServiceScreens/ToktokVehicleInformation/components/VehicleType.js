@@ -36,7 +36,6 @@ export const VehicleType = ({item, index, data, selectedVehicleType, setSelected
     <View style={[styles.vehicleCard, vehicleCardVerticalMargin]}>
       <ThrottledWithoutFeedback
         onPress={() => {
-          console.log({item});
           setSelectedVehicleType(item);
         }}
         delay={100}>

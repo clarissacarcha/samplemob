@@ -57,6 +57,7 @@ const BankAccount = ({index,onPress, ...account})=> {
 export const MySavedAccounts = ({selectBanks , edit})=> {
     const alert = useAlert()
     const {
+        setAccountName,
         savedAccounts,
         setSaveAccounts,
         activeAccount,
@@ -89,6 +90,7 @@ export const MySavedAccounts = ({selectBanks , edit})=> {
     const onPress = (account , index)=> {
        if(!activeAccount){
            setBank(account.bank)
+           setAccountName(account.accountName)
            setAccountNumber(account.accountNumber)
            setAddress(account.address)
            setActiveAccount(index)
@@ -97,9 +99,11 @@ export const MySavedAccounts = ({selectBanks , edit})=> {
        if(activeAccount == index){
             setActiveAccount(null)
             setAccountNumber("")
+            setAccountName("")
             setAddress("")
        }else{
             setBank(account.bank)
+            setAccountName(account.accountName)
             setAccountNumber(account.accountNumber)
             setAddress(account.address)
             setActiveAccount(index)

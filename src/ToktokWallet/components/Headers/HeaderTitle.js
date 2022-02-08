@@ -3,9 +3,9 @@ import {View,Text,StyleSheet,Image,Platform ,StatusBar,TouchableOpacity} from 'r
 import CONSTANTS from 'common/res/constants'
 import { HeaderBack , ICON_SET, VectorIcon } from 'src/revamp'
 import { useNavigation } from '@react-navigation/native'
+import { moderateScale } from 'toktokwallet/helper'
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
-import { moderateScale } from 'toktokwallet/helper'
 
 export const HeaderTitle = ({isRightIcon, rightIcon = null, rightIconOnPress, isLogo, label ,labelColor = "black" , backButtonColor = "black" , headerBackLabel = "", headerStyle = {}})=> {
     const navigation = useNavigation();

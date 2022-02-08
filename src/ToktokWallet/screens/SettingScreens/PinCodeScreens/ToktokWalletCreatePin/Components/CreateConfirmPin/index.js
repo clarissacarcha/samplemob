@@ -39,14 +39,14 @@ export const CreateConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeTo
 
     return (
        <View style={styles.container}>
-            <ScrollView style={styles.content}>
+            <ScrollView contentContainerStyle={styles.content}>
                 { !tokwaAccount.pinCode && (
                     <Text style={{ textAlign: "center", fontSize: FONT_SIZE.S, marginVertical: 40, marginHorizontal: 20 }}>
-                        You will use your TPIN in every transaction you make with Toktokwallet. Please keep it to yourself and do not share with anyone.
+                        You will use your TPIN in every transaction you make with toktokwallet. Please keep it to yourself and do not share with anyone.
                     </Text>
                 )}
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm {tokwaAccount.pinCode ? "New ": ""}TPIN</Text>
-                <View style={{position: 'relative',marginTop: 50,}}>
+                <View style={{position: 'relative',marginTop: 20,}}>
                     <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin}/>
                     <TextInput
                         autoFocus={true}
@@ -68,13 +68,16 @@ export const CreateConfirmPin = ({pinCode,setPageIndex,walletinfo,patchPincodeTo
                         message != "" &&  <Text style={{fontFamily: FONT.REGULAR,fontSize: 12,color:"red",alignSelf:"center"}}>{message}</Text>   
                     }
                     <TouchableOpacity
-                        style={{marginTop: 18,paddingVertical: 10, alignItems: "center"}}
+                        style={{marginTop: height * .07,paddingVertical: 10, alignItems: "center"}}
                         onPress={()=>setShowPin(!showPin)}
                     >
-                        <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
+                        <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
+            <View style={{padding: 16}}>
+                <View style={{height: 50}}/>
+            </View>
            <BuildingBottom/>
        </View>
     )
@@ -86,8 +89,8 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
     },
     content: {
-        // alignItems: "center",
-        padding: 10,
+        justifyContent: "center",
+        padding: 16,
         flex: 1,
     },
     inputView: {

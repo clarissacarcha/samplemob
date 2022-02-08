@@ -1,15 +1,22 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {View, StyleSheet, Text, TextInput, Alert} from 'react-native';
+import React, {useCallback, useMemo, useEffect, useRef, useState} from 'react';
+import {View, StyleSheet, Text, TextInput, Modal, Image, TouchableOpacity, Dimensions} from 'react-native';
 import {connect} from 'react-redux';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
-import {COLOR, LIGHT, ORANGE} from '../../../../../res/constants';
+import {FONT_FAMILY} from '../../../../../res/constants';
+import {COLOR, FONT} from '../../../../../res/variables';
 import {GET_DELIVERY_PRICE_AND_DIRECTIONS, GET_TOKTOK_WALLET_BALANCE} from '../../../../../graphql';
 import {WhiteButton, BlackButton, YellowButton} from '../../../../../revamp';
 import {onErrorAlert} from '../../../../../util/ErrorUtility';
 import {useAlert} from '../../../../../hooks';
 import {numberFormat} from '../../../../../helper/numberFormat';
+
+import ModalImage from '../../../../../assets/toktokwallet-assets/error.png';
+
+const {width, height} = Dimensions.get('window');
+
+const modalWidth = width - 120;
 
 //SELF IMPORTS
 import {PaymentForm, PaymentSheet} from './PaymentForm';
@@ -37,32 +44,75 @@ const DeliveryDetails = ({navigation, route, session}) => {
   const [isExpress, setIsExpress] = useState(route.params.orderData.isExpress);
   const [isCashOnDelivery, setIsCashOnDelivery] = useState(route.params.orderData.isCashOnDelivery);
   const [cashOnDelivery, setCashOnDelivery] = useState(route.params.orderData.cashOnDelivery);
-  const {
-    data: balanceData,
-    loading: balanceLoading,
-    error: balanceError,
-  } = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [balanceText, setBalanceText] = useState('');
+  const [hasWallet, setHasWallet] = useState(null);
+
+  const [initialPrice, setInitialPrice] = useState(route.params.quotation.pricing.price);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [getToktokWalletBalance] = useLazyQuery(GET_TOKTOK_WALLET_BALANCE, {
     fetchPolicy: 'network-only',
+    onCompleted: res => {
+      console.log({res: res.getToktokWalletBalance.balance});
+
+      setHasWallet(res.getToktokWalletBalance.hasWallet);
+      setBalanceText(numberFormat(res.getToktokWalletBalance.balance));
+      setWalletBalance(res.getToktokWalletBalance.balance);
+    },
   });
 
-  let balanceText = '';
-  let hasWallet = false;
+  useEffect(() => {
+    if (parseFloat(balanceText.replace(/,/g, '')) < parseFloat(initialPrice)) {
+      if (paymentMethod === 'TOKTOKWALLET') {
+        setPaymentMethod('CASH');
+        setIsModalVisible(true);
+      }
+    }
+  }, [initialPrice, balanceText]);
 
-  if (balanceError) {
-    balanceText = 'Failed to retrieve balance.';
-  }
+  useEffect(() => {
+    getToktokWalletBalance();
+  }, []);
 
-  if (balanceLoading) {
-    balanceText = 'Retrieving balance...';
-  }
+  // const {
+  //   data: balanceData,
+  //   loading: balanceLoading,
+  //   error: balanceError,
+  // } = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+  //   fetchPolicy: 'network-only',
+  //   onError: error => {
+  //     console.log({retrieveBalanceError: error});
+  //   },
+  // });
 
-  if (balanceData) {
-    balanceText = `PHP ${numberFormat(balanceData.getToktokWalletBalance.balance)}`;
+  // let balanceText = '';
+  // let hasWallet = false;
 
-    hasWallet = balanceData.getToktokWalletBalance.hasWallet;
-  }
+  // if (balanceError) {
+  //   balanceText = 'Failed to retrieve balance.';
+  //   // setBalanceText('Failed to retrieve balance.');
+  // }
 
-  console.log({balanceText, hasWallet});
+  // if (balanceLoading) {
+  //   balanceText = 'Retrieving balance...';
+  //   // setBalanceText('Retrieving balance...');
+  // }
+
+  // if (balanceData) {
+  //   balanceText = balanceData.getToktokWalletBalance.balance;
+  //   hasWallet = balanceData.getToktokWalletBalance.hasWallet;
+  //   // setBalanceText(`${numberFormat(balanceData.getToktokWalletBalance.balance)}`);
+  //   // setHasWallet(balanceData.getToktokWalletBalance.hasWallet);
+  // }
+
+  // useEffect(() => {
+  //   if (balanceData) {
+  //     setWalletBalance(balanceData.getToktokWalletBalance.balance);
+  //   }
+  // }, [balanceData]);
 
   const paymentMethodSheetRef = useRef();
   const paymentSheetRef = useRef();
@@ -100,7 +150,18 @@ const DeliveryDetails = ({navigation, route, session}) => {
           duration,
           directions,
         },
+        walletBalance: walletBalance,
       });
+    },
+  });
+
+  const [recomputeQuotation, {loading: recomputeLoading}] = useLazyQuery(GET_DELIVERY_PRICE_AND_DIRECTIONS, {
+    fetchPolicy: 'no-cache',
+    onError: error => {
+      onErrorAlert({alert: AlertHook, error});
+    },
+    onCompleted: data => {
+      setInitialPrice(data.getDeliveryPriceAndDirections.pricing.price);
     },
   });
 
@@ -111,7 +172,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
       setCollectPaymentFrom('RECIPIENT');
     }
 
-    // console.log({collectPaymentFrom});
+    recomputeCashOnDelivery({isCashOnDelivery: isCashOnDeliveryValue});
   };
 
   const onCollectPaymentFromChange = collectPaymentFromValue => {
@@ -205,12 +266,104 @@ const DeliveryDetails = ({navigation, route, session}) => {
     });
   };
 
+  const recomputeExpressDelivery = args => {
+    const orderData = route.params.orderData;
+
+    recomputeQuotation({
+      variables: {
+        input: {
+          consumerId: session.user.consumer.id,
+          vehicleTypeId: orderData.vehicleTypeId,
+          promoCode: '',
+          // promoCode: bookingData.promoCode,
+          isExpress: args.isExpress,
+          isCashOnDelivery: isCashOnDelivery,
+          paymentMethod,
+          origin: {
+            latitude: orderData.senderStop.latitude,
+            longitude: orderData.senderStop.longitude,
+          },
+          destinations: [
+            {
+              latitude: orderData.recipientStop[0].latitude,
+              longitude: orderData.recipientStop[0].longitude,
+            },
+          ],
+        },
+      },
+    });
+  };
+
+  const recomputeCashOnDelivery = args => {
+    const orderData = route.params.orderData;
+
+    recomputeQuotation({
+      variables: {
+        input: {
+          consumerId: session.user.consumer.id,
+          vehicleTypeId: orderData.vehicleTypeId,
+          promoCode: '',
+          // promoCode: bookingData.promoCode,
+          isExpress: isExpress,
+          isCashOnDelivery: args.isCashOnDelivery,
+          paymentMethod,
+          origin: {
+            latitude: orderData.senderStop.latitude,
+            longitude: orderData.senderStop.longitude,
+          },
+          destinations: [
+            {
+              latitude: orderData.recipientStop[0].latitude,
+              longitude: orderData.recipientStop[0].longitude,
+            },
+          ],
+        },
+      },
+    });
+  };
+
+  const onIsExpressChange = value => {
+    setIsExpress(value);
+    recomputeExpressDelivery({isExpress: value});
+  };
+
   return (
     <>
       <View style={styles.screenBox}>
+        <Modal visible={isModalVisible} transparent={true}>
+          <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: 'rgba(0,0,0,0.75)'}}>
+            <View
+              style={{
+                width: modalWidth,
+                borderRadius: 5,
+                backgroundColor: 'white',
+                padding: 20,
+                alignItems: 'center',
+              }}>
+              <Image style={{height: 80, width: 80, marginBottom: 10}} source={ModalImage} />
+              <Text style={{marginVertical: 10, fontFamily: FONT.BOLD, fontSize: 17}}>Insufficient Funds</Text>
+              <Text style={{textAlign: 'center'}}>
+                Please cash in to continue using toktokwallet. Payment method will be changed into cash.
+              </Text>
+              <TouchableOpacity
+                onPress={() => setIsModalVisible(false)}
+                style={{
+                  height: 40,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 20,
+                  width: 100,
+                  backgroundColor: COLOR.YELLOW,
+                  borderRadius: 5,
+                }}>
+                <Text style={{fontFamily: FONT_FAMILY.BOLD}}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         <View style={{flex: 1}}>
           <InputScrollView showsVerticalScrollIndicator={false}>
-            <AlertOverlay visible={loading} />
+            <AlertOverlay visible={loading || recomputeLoading} />
             <View style={{height: 10}} />
             <PaymentMethodForm
               value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
@@ -234,7 +387,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
 
             <PromoForm />
 
-            <ExpressForm value={isExpress} onChange={setIsExpress} />
+            <ExpressForm value={isExpress} onChange={onIsExpressChange} />
             <PabiliForm
               value={isCashOnDelivery}
               amount={cashOnDelivery}
@@ -243,7 +396,19 @@ const DeliveryDetails = ({navigation, route, session}) => {
             />
           </InputScrollView>
         </View>
-        <View style={{backgroundColor: '#F7F7FA', marginHorizontal: -16}}>
+        <View style={{backgroundColor: 'white', marginHorizontal: -16}}>
+          <View style={{height: 5, backgroundColor: '#F7F7FA'}} />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 20, marginTop: 15}}>
+            <Text style={{color: COLOR.YELLOW, fontFamily: FONT.BOLD}}>Total</Text>
+            {/* {!loading && !loadingInitial && (
+              <Text style={{color: COLOR.YELLOW, fontFamily: FONT.BOLD}}>
+                {initialPrice ? `PHP ${numberFormat(initialPrice - (selectedOrder === null ? 40 : 0))}` : ''}
+              </Text>
+            )} */}
+            <Text style={{color: COLOR.YELLOW, fontFamily: FONT.BOLD}}>
+              {initialPrice ? `PHP ${numberFormat(initialPrice)}` : ''}
+            </Text>
+          </View>
           <YellowButton
             label="Confirm Delivery Information"
             onPress={onConfirmDeliveryInformation}
@@ -257,6 +422,9 @@ const DeliveryDetails = ({navigation, route, session}) => {
         ref={paymentMethodSheetRef}
         balanceText={balanceText}
         hasWallet={hasWallet}
+        // price={quotation.pricing.price}
+        price={initialPrice}
+        getWalletBalance={getToktokWalletBalance}
       />
       <ItemSheet onChange={setItemDescription} ref={itemSheetRef} />
     </>

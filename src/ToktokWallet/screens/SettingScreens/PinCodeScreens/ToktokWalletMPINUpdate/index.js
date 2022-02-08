@@ -62,7 +62,11 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
                                  <View style={{justifyContent:"center",alignItems:"center"}}>
                                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR ,color:'#929191'}}>Cancel</Text>
                                 </View>
-                            </TouchableHighlight>
+                            </TouchableHighlight>,
+        headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0
+        }
     })
 
     const cancelSetup = ()=> {
@@ -125,13 +129,13 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
                 event={event}
                 category={category}
             />
-            <Separator />
-            <KeyboardAvoidingView style={{flex: 1,}}
-             keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
-             behavior={Platform.OS == "ios" ? "padding" : "height"}
+            {/* <Separator /> */}
+            <View style={{flex: 1,}}
+            //  keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
+            //  behavior={Platform.OS == "ios" ? "padding" : "height"}
              >
             {DisplayComponent()}
-            </KeyboardAvoidingView>
+            </View>
         </CheckIdleState>
     )
 }

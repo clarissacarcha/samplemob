@@ -14,6 +14,7 @@ import {
     ToktokWalletPabiliDeliveryLogs,
     ToktokWalletPaymentChart,
     ToktokWalletRequestMoneyLogs,
+    ToktokWalletSendMoneyLogs,
     ToktokWalletSettings,
     ToktokWalletTermsConditions,
     ToktokWalletTransactionLimit
@@ -35,6 +36,7 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokWalletPabiliDeliveryLogs" component={ToktokWalletPabiliDeliveryLogs}/>
     <Navigator.Screen name="ToktokWalletPaymentChart" component={ToktokWalletPaymentChart}/>
     <Navigator.Screen name="ToktokWalletRequestMoneyLogs" component={ToktokWalletRequestMoneyLogs}/>
+    <Navigator.Screen name="ToktokWalletSendMoneyLogs" component={ToktokWalletSendMoneyLogs}/>
     <Navigator.Screen name="ToktokWalletSettings" component={ToktokWalletSettings}/>
     <Navigator.Screen name="ToktokWalletTermsConditions" component={ToktokWalletTermsConditions}/>
     <Navigator.Screen name="ToktokWalletTransactionLimit" component={ToktokWalletTransactionLimit}/>

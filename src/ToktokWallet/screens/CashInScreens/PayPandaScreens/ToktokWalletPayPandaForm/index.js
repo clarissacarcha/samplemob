@@ -44,18 +44,20 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     const [disablebtn,setDisablebtn] = useState(false)
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
 
-    const [postRequestCashIn] = useMutation(POST_REQUEST_CASH_IN, {
+    const [postRequestCashIn, {loading: CashInLoading}] = useMutation(POST_REQUEST_CASH_IN, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postRequestCashIn})=>{
             return navigation.navigate("ToktokWalletTPINValidator", {
                 callBackFunc: proceedToPaypandaPortal,
+                btnLabel: "Cash In"
             })
         },
         onError: (error) => {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         }
     })
@@ -66,7 +68,8 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                prompt
+                prompt,
+                alert
             })
         },
         onCompleted: ({postCashInPayPandaRequest})=>{
@@ -165,7 +168,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
     return (
         <FlagSecureScreen>
       <CheckIdleState>
-      <AlertOverlay visible={loading}/>
+      <AlertOverlay visible={loading || CashInLoading}/>
       <Separator />
        <View  
             // keyboardVerticalOffset={Platform.OS == "ios" ? 90 : 90} 
@@ -178,12 +181,12 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
                 ?    <View style={styles.paypandaLogo}>
                                 <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('toktokwallet/assets/images/cash-in-providers/paypanda.png')}/>
                                 <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD}}>PayPanda</Text>
-                                <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
+                                <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash In</Text>
                     </View>
                 :    <View style={styles.paypandaLogo}>
                                 <Image style={{height: 90,width: 90,alignSelf: "center",marginBottom: 10}} source={require('toktokwallet/assets/images/cash-in-providers/jcwallet.png')}/>
                                 <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD}}>JC Wallet</Text>
-                                <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash in</Text>
+                                <Text style={{fontSize: FONT_SIZE.M ,fontFamily: FONT.BOLD}}>Please enter amount to Cash In</Text>
                     </View>
             }
         
@@ -210,7 +213,10 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
                             
                         </View>
                         { message != "" && <Text style={{fontFamily: FONT.REGULAR, color: "red", marginTop: -10,marginBottom: 10, fontSize: FONT_SIZE.S}}>{message}</Text>}
-                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Current Balance {tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance)}</Text>
+                        <Text>
+                            <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: 10}}>Current Balance: </Text>
+                            <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, marginTop: 10}}>{numberFormat(tokwaAccount.wallet.balance)}</Text>
+                        </Text>
                       
                         <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
               

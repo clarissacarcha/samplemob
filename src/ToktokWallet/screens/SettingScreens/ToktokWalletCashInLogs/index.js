@@ -63,7 +63,7 @@ export const ToktokWalletCashInLogs = ({navigation})=> {
     return (
         <CheckIdleState>
         <Separator />
-        <SwipeDownToRefresh/>
+        {/* <SwipeDownToRefresh/> */}
         <ModalPaginationLoading visible={pageLoading}/>
         {
             // loading && pageIndex == 0

@@ -139,6 +139,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     value={nickName}
                                     onChangeText={(value)=>setNickName(value)}
                                     placeholder="Enter alias here"
+                                    placeholderTextColor={COLOR.DARK}
                                     returnKeyType="done"
                                     maxLength={50}
                             />
@@ -170,6 +171,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     onChangeText={setAccountName}
                                     maxLength={30}
                                     placeholder={`Enter bank account name here`}
+                                    placeholderTextColor={COLOR.DARK}
                                     returnKeyType="done"
                                     keyboardType="default"
                                 />
@@ -188,6 +190,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     onChangeText={changeAccountNumber}
                                     maxLength={19}
                                     placeholder={`Enter bank account number here`}
+                                    placeholderTextColor={COLOR.DARK}
                                     returnKeyType="done"
                                     keyboardType="number-pad"
                                 />
@@ -205,6 +208,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                                     value={address}
                                     onChangeText={(value)=>setAddress(value)}
                                     placeholder={`Enter address here`}
+                                    placeholderTextColor={COLOR.DARK}
                                     returnKeyType="done"
                                     maxLength={20}
                                 />

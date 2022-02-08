@@ -11,6 +11,7 @@ export * from "./ToktokWalletMartLogs";
 export * from "./ToktokWalletPabiliDeliveryLogs";
 export * from "./ToktokWalletPaymentChart";
 export * from "./ToktokWalletRequestMoneyLogs";
+export * from "./ToktokWalletSendMoneyLogs";
 export * from "./ToktokWalletSettings";
 export * from "./ToktokWalletTermsConditions";
 export * from "./ToktokWalletTransactionLimit";

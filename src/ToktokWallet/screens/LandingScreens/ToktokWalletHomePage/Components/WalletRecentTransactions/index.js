@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Flat
 import CONSTANTS from 'common/res/constants';
 import {useNavigation} from '@react-navigation/native';
 import {Separator, WalletLog} from 'toktokwallet/components';
-import { YellowButton } from 'src/revamp';
+import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp';
 import { useAccount } from 'toktokwallet/hooks';
 
 //SELF IMPORTS
@@ -46,9 +46,23 @@ const RecentRecords = ()=> (
         <View style={{flex: 1, alignItems: 'flex-start'}}>
           <Text style={styles.title}>Recent Transactions</Text>
         </View>
-        <TouchableOpacity onPress={ViewTransactions} style={{flex: 1, alignItems: 'flex-end'}}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, color: '#FF8A48'}}>See More</Text>
-        </TouchableOpacity>
+        {
+          tokwaAccount?.wallet?.allTransactions?.length > 5 &&
+          <TouchableOpacity onPress={ViewTransactions} style={{flex: 1, justifyContent: 'flex-end' , flexDirection:"row"}}>
+            <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, color: '#FF8A48'}}>See All</Text>
+            <VectorIcon 
+              iconSet={ICON_SET.Entypo}
+              name="chevron-thin-right"
+              size={FONT_SIZE.M-3}
+              color={COLOR.ORANGE}
+              style={{
+                alignSelf:"center",
+                marginLeft: 5
+              }}
+            />
+          </TouchableOpacity>
+        }
+       
       </View>
 
       <View style={styles.transactions}>

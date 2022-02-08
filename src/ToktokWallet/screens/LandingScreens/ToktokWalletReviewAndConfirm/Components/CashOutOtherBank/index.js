@@ -29,7 +29,13 @@ export const CashOutOtherBank = ({data})=>{
                 <TransactionInfo label="Account Name" value={data.accountName}/>
                 <TransactionInfo label="Account Number" value={data.accountNumber}/>
                 <TransactionInfo label="Amount" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(data.amount)}`}/>
-                <TransactionInfo label="Convenience Fee" value={`PHP ${numberFormat(+data.providerServiceFee + +data.systemServiceFee)}`}/>
+                {
+                    tokwaAccount.constants.UbFundTransferType == "api" &&
+                    <>
+                    <TransactionInfo label="Convenience Fee" value={`PHP ${numberFormat(+data.providerServiceFee + +data.systemServiceFee)}`}/>  
+                    <TransactionInfo label="Total Amount" value={`PHP ${numberFormat(+data.providerServiceFee + +data.systemServiceFee + +data.amount)}`}/>       
+                    </>     
+                }
                 {data.note != "" && <TransactionInfo label="Note" value={data.note}/>}
        </View>
     )

@@ -65,9 +65,9 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
             // })
             if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath)
             if(result.status == 2){
-                navigation.pop(2)
-                navigation.navigate("ToktokWalletVerifyResult")
-                // navigation.replace("ToktokWalletVerifyResult")
+                // navigation.pop(2)
+                // navigation.navigate("ToktokWalletVerifyResult")
+                navigation.replace("ToktokWalletVerifyResult")
             }
         }
     })
@@ -142,31 +142,6 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         })
         : null
 
-        // if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath).then(()=>{
-        //     console.log("Deleted")
-        // }).catch(err=>console.log(err))
-        // RNFS.unlink(RNFS.TemporaryDirectoryPath)
-
-        // RNFS.readDir(RNFS.CachesDirectoryPath)
-        // .then(arr => RNFS.readDir(arr[0].path)) // The Camera directory
-        //     .then(arr => arr.forEach(item => {
-        //        console.log(item.path)
-        //         // Linking.canOpenURL(contentURI)
-        //         // .then(able => able ? Linking.openURL(contentURI) : console.log('No application available'))
-        //         // .catch(console.log)
-        //     }))
-        // return;
-   
-    //    setCacheImages({
-    //     rnSelfieFile,
-    //     rnSelfieFileWithID,
-    //     rnFrontIDFile,
-    //     rnBackIDFile,
-    //    })
-
-        // removing / delete cache files
-       //removeCacheImages({VerifyUserData})
-
         const input = {
             // userId: session.user.id,
             userId: await AsyncStorage.getItem('accessToken'),
@@ -200,8 +175,8 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                 videocall: {
                     videoCallContactDetails: VerifyUserData.pepInfo.videocall.videoCallContactDetails,
                     callChannelId: VerifyUserData.pepInfo.videocall.callChannelId,
-                    preferredVcsDayMin: VerifyUserData.pepInfo.videocall.preferredVcsDayMin,
-                    preferredVcsDayMax: VerifyUserData.pepInfo.videocall.preferredVcsDayMax,
+                    preferredVcsDayMin: +VerifyUserData.pepInfo.videocall.preferredVcsDayMin,
+                    preferredVcsDayMax: +VerifyUserData.pepInfo.videocall.preferredVcsDayMax,
                     preferredVcsTimeMin: VerifyUserData.pepInfo.videocall.preferredVcsTimeMin,
                     preferredVcsTimeMax: VerifyUserData.pepInfo.videocall.preferredVcsTimeMax,
                 },
@@ -272,7 +247,8 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                             }}
                         />
                         <TouchableOpacity 
-                            onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
                             style={{paddingHorizontal: 10,marginRight: 20,alignSelf:"center"}}
                         >
                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby certify that I accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions.</Text></Text>

@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from 'react'
 import {View,Text,StyleSheet,TextInput} from 'react-native'
-import { numberFormat , formatAmount } from 'toktokwallet/helper'
+import { numberFormat , formatAmount , AmountLimitHelper } from 'toktokwallet/helper'
 import { InputAmount } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_SIZE , COLOR , SIZE , FONT_FAMILY: FONT} = CONSTANTS
 
-export const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , recipientDetails}) => {
+export const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , recipientDetails , errorAmountMessage , setErrorAmountMessage}) => {
 
-    const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [tempAmount,setTempAmount] = useState("")
     const [isFocus,setIsFocus] = useState(false)
 

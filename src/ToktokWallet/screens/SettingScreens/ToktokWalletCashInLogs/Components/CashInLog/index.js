@@ -37,7 +37,7 @@ export const CashInLog = ({
     const transaction = item.transaction
     const requestNo = item.referenceNumber
     const refNo = transaction?.refNo ? transaction.refNo : null
-    const refDate = transaction ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a') : moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
+    const refDate = transaction ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A') : moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
     const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
     const provider = item.provider.name
 
@@ -45,8 +45,8 @@ export const CashInLog = ({
         setInfo({
             refNo,
             refDate,
-            name: "Cash In",
-            phrase: `Cash in through ${provider}`,
+            name:  item.cashInPartnerTypeId ? item.cashInPartnerType.name : provider,
+            phrase: "Cash In",
             amount: transactionAmount,
             status,
             details: item.details,

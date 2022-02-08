@@ -72,13 +72,17 @@ export const ToktokWalletMPINCreate = ({navigation,route})=> {
 
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack pageIndex={pageIndex} setPageIndex={setPageIndex} navigation={navigation} tokwaAccount={tokwaAccount}/>,
-        headerTitle: ()=> <HeaderTitle label={['','']}/>,
-        headerRight: ()=> <TouchableHighlight style={{paddingRight: 16}} underlayColor={'white'} onPress={cancelSetup}>
-                              <View style={{justifyContent:"center",alignItems:"center"}}>
-                                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR ,color:'#929191'}}>Cancel</Text>
-                              </View>
-                          </TouchableHighlight>
+      headerLeft: ()=> <HeaderBack pageIndex={pageIndex} setPageIndex={setPageIndex} navigation={navigation} tokwaAccount={tokwaAccount}/>,
+      headerTitle: ()=> <HeaderTitle label={['','']}/>,
+      headerRight: ()=> <TouchableHighlight style={{paddingRight: 16}} underlayColor={'white'} onPress={cancelSetup}>
+                            <View style={{justifyContent:"center",alignItems:"center"}}>
+                              <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR ,color:'#929191'}}>Cancel</Text>
+                            </View>
+                        </TouchableHighlight>,
+      headerStyle: {
+        elevation: 0,
+        shadowOpacity: 0
+      }
     })
 
     const [patchMPinCode, {data, error, loading}] = useMutation(PATCH_MPIN_CODE, {
@@ -130,15 +134,15 @@ export const ToktokWalletMPINCreate = ({navigation,route})=> {
                   navigation.goBack()
                 }}
             />
-            <Separator/>
-            <KeyboardAvoidingView
+            {/* <Separator/> */}
+            <View
                 // keyboardVerticalOffset={Platform.OS == "ios" ? 50 : 90} 
-                keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
-                behavior={Platform.OS == "ios" ? "padding" : "height"}
+                // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
+                // behavior={Platform.OS == "ios" ? "padding" : "height"}
                 style={styles.container} 
             >   
                 {DisplayComponent()}
-            </KeyboardAvoidingView>
+            </View>
         </CheckIdleState>
     )
 }
