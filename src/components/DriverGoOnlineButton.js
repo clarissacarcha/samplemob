@@ -124,7 +124,7 @@ const Component = ({
   };
 
   useEffect(() => {
-    OneSignal.setNotificationOpenedHandler();
+    OneSignal.setNotificationOpenedHandler(onNotificationOpened);
   }, []);
 
   return (
