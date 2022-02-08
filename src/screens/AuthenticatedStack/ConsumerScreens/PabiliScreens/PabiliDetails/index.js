@@ -1,9 +1,9 @@
 import React, {useRef, useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TextInput} from 'react-native';
+import {View, StyleSheet, Text, TextInput, Modal, TouchableOpacity, Dimensions, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
-import {LIGHT} from '../../../../../res/constants';
+import {FONT_FAMILY, LIGHT} from '../../../../../res/constants';
 import {COLOR, FONT} from '../../../../../res/variables';
 import {GET_DELIVERY_PRICE_AND_DIRECTIONS, GET_TOKTOK_WALLET_BALANCE} from '../../../../../graphql';
 import {YellowButton} from '../../../../../revamp';
@@ -11,6 +11,9 @@ import InputScrollView from 'react-native-input-scroll-view';
 import {onErrorAlert} from '../../../../../util/ErrorUtility';
 import {numberFormat} from '../../../../../helper/numberFormat';
 import {useAlert} from '../../../../../hooks';
+
+import ModalImage from '../../../../../assets/toktokwallet-assets/error.png';
+
 //SELF IMPORTS
 import {PaymentForm, PaymentSheet} from './PaymentForm';
 import ExpressForm from './ExpressForm';
@@ -25,6 +28,10 @@ import ItemsToPurchaseForm from './ItemsToPurchaseForm';
 import {PaymentMethodForm, PaymentMethodSheet} from './PaymentMethod';
 
 const FORM_DATA = {description: '', quantity: ''};
+
+const {width} = Dimensions.get('window');
+
+const modalWidth = width - 120;
 
 const PabiliDetails = ({navigation, route, session, constants}) => {
   navigation.setOptions({
@@ -77,6 +84,8 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
 
   const [balanceText, setBalanceText] = useState('');
   const [hasWallet, setHasWallet] = useState(null);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [getToktokWalletBalance] = useLazyQuery(GET_TOKTOK_WALLET_BALANCE, {
     fetchPolicy: 'network-only',
@@ -134,6 +143,77 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     });
   }, []);
 
+  useEffect(() => {
+    if (parseFloat(balanceText.replace(/,/g, '')) < parseFloat(initialPrice)) {
+      if (paymentMethod === 'TOKTOKWALLET') {
+        setPaymentMethod('CASH');
+        setIsModalVisible(true);
+      }
+    }
+  }, [initialPrice, balanceText]);
+
+  const recomputeQuotation = (args = {isExpress: false}) => {
+    setTimeout(() => {
+      const orderData = route.params.orderData;
+
+      getDeliveryPriceAndDirectionsInitial({
+        variables: {
+          input: {
+            consumerId: session.user.consumer.id,
+            promoCode: '',
+            // promoCode: bookingData.promoCode,
+            isExpress: args.isExpress,
+            isCashOnDelivery: true,
+            paymentMethod,
+            partnerBranchOrderId: selectedOrder ? selectedOrder.id : null,
+            partnerBranchTenantId: selectedTenant ? selectedTenant.id : null,
+            origin: {
+              latitude: orderData.senderStop.latitude,
+              longitude: orderData.senderStop.longitude,
+            },
+            destinations: [
+              {
+                latitude: orderData.recipientStop[0].latitude,
+                longitude: orderData.recipientStop[0].longitude,
+              },
+            ],
+          },
+        },
+      });
+    }, 50);
+  };
+
+  const recomputeQuotationStore = args => {
+    setTimeout(() => {
+      const orderData = route.params.orderData;
+
+      getDeliveryPriceAndDirectionsInitial({
+        variables: {
+          input: {
+            consumerId: session.user.consumer.id,
+            promoCode: '',
+            // promoCode: bookingData.promoCode,
+            isExpress: isExpress ? isExpress : false,
+            isCashOnDelivery: true,
+            paymentMethod,
+            partnerBranchOrderId: args.order.id,
+            partnerBranchTenantId: selectedTenant ? selectedTenant.id : null,
+            origin: {
+              latitude: orderData.senderStop.latitude,
+              longitude: orderData.senderStop.longitude,
+            },
+            destinations: [
+              {
+                latitude: orderData.recipientStop[0].latitude,
+                longitude: orderData.recipientStop[0].longitude,
+              },
+            ],
+          },
+        },
+      });
+    }, 50);
+  };
+
   const paymentMethodSheetRef = useRef();
   const paymentSheetRef = useRef();
   const partnerItemSheefRef = useRef();
@@ -148,7 +228,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
         onErrorAlert({alert: AlertHook, error});
       },
       onCompleted: data => {
-        console.log(JSON.stringify({onCompleted: data.getDeliveryPriceAndDirections.pricing}));
+        console.log(JSON.stringify({onCompleted: data.getDeliveryPriceAndDirections.pricing}, null, 4));
         setInitialPrice(data.getDeliveryPriceAndDirections.pricing.price);
       },
     },
@@ -352,6 +432,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
         setSelectedTenant({name: ''});
       }
     }
+    recomputeQuotationStore({order});
   };
 
   const onCashOnDeliveryValueChange = value => {
@@ -383,6 +464,37 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
   return (
     <>
       <View style={{flex: 1, backgroundColor: 'white'}}>
+        <Modal visible={isModalVisible} transparent={true}>
+          <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: 'rgba(0,0,0,0.75)'}}>
+            <View
+              style={{
+                width: modalWidth,
+                borderRadius: 5,
+                backgroundColor: 'white',
+                padding: 20,
+                alignItems: 'center',
+              }}>
+              <Image style={{height: 80, width: 80, marginBottom: 10}} source={ModalImage} />
+              <Text style={{marginVertical: 10, fontFamily: FONT.BOLD, fontSize: 17}}>Insufficient Funds</Text>
+              <Text style={{textAlign: 'center'}}>
+                Please cash in to continue using toktokwallet. Payment method will be changed into cash.
+              </Text>
+              <TouchableOpacity
+                onPress={() => setIsModalVisible(false)}
+                style={{
+                  height: 40,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 20,
+                  width: 100,
+                  backgroundColor: COLOR.YELLOW,
+                  borderRadius: 5,
+                }}>
+                <Text style={{fontFamily: FONT_FAMILY.BOLD}}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         <View style={{flex: 1}}>
           <InputScrollView contentContainerStyle={styles.screenBox} showsVerticalScrollIndicator={false}>
             <AlertOverlay visible={loading || loadingInitial} />
@@ -422,10 +534,21 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
               />
             </View>
             <NotesForm value={notes} onChange={setNotes} />
-            <ExpressForm value={isExpress} onChange={setIsExpress} />
+            <ExpressForm value={isExpress} onChange={setIsExpress} recomputeQuotation={recomputeQuotation} />
           </InputScrollView>
         </View>
-        <View style={{backgroundColor: COLOR.LIGHT}}>
+        <View style={{backgroundColor: COLOR.WHITE}}>
+          <View style={{height: 5, backgroundColor: COLOR.LIGHT}} />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 20, marginTop: 15}}>
+            <Text style={{color: COLOR.YELLOW, fontFamily: FONT.BOLD}}>Total</Text>
+            {!loading && !loadingInitial && (
+              <Text style={{color: COLOR.YELLOW, fontFamily: FONT.BOLD}}>
+                {initialPrice
+                  ? `PHP ${numberFormat(initialPrice - (selectedOrder === null && partnerBranch !== null ? 40 : 0))}`
+                  : ''}
+              </Text>
+            )}
+          </View>
           <YellowButton label="Confirm Pabili Information" onPress={onConfirmPabiliInformation} style={{margin: 16}} />
         </View>
       </View>

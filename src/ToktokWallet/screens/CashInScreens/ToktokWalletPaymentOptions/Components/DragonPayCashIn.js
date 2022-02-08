@@ -75,7 +75,14 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
     },[onCashIn, tokwaAccount])
 
 
-    const confirmAmount = ()=> {
+    const confirmAmount = async ()=> {
+
+        const checkLimit = await AmountLimitHelper.postCheckIncomingLimit({
+            amount,
+            setErrorMessage: setMessage
+        })
+
+        if(!checkLimit) return;
 
         navigation.navigate("ToktokWalletDPCashInMethods", {
             transactionType,
@@ -154,10 +161,6 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                                         onFocus={()=>setIsFocus(true)}
                                                         onBlur={()=>{
                                                             setIsFocus(false)
-                                                            AmountLimitHelper.postCheckIncomingLimit({
-                                                                amount,
-                                                                setErrorMessage: setMessage
-                                                            })
                                                         }}
                                                         caretHidden={!isFocus}
                                                         value={amount}

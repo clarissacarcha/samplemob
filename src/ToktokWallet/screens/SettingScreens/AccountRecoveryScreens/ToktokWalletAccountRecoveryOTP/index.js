@@ -168,8 +168,8 @@ export const ToktokWalletAccountRecoveryOTP = ({navigation , route})=> {
             keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
-                <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP code sent to</Text>
+                <View style={{flex: 1,alignItems:"center", marginTop: 40}}>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP</Text>
                     <Text style={{fontFamily: FONT.REGULAR,fontSize: 16}}>{tokwaAccount.mobileNumber}</Text>
 
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true}/>

@@ -40,20 +40,12 @@ export const PartnerBranchTenantBottomSheet = forwardRef(({onChange, tenants}, r
 
         <FlatList
           data={tenants}
-          keyExtractor={(i) => i}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />}
+          keyExtractor={({index}) => index}
           renderItem={({item, index}) => (
-            // <WhiteButton
-            //   label={item.name}
-            //   borderless
-            //   labelColor={COLOR.DARK}
-            //   onPress={() => {
-            // onChange(item);
-            // ref.current.collapse();
-            //   }}
-            // />
             <TouchableHighlight
+              key={index}
               underlayColor={COLOR.WHITE_UNDERLAY}
               onPress={() => {
                 onChange(item);

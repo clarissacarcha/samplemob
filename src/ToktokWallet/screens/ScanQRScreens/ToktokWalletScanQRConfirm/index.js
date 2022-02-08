@@ -33,6 +33,7 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
     const [amount,setAmount] = useState("")
     const [note,setNote] = useState("")
     const [swipeEnabled,setSwipeEnabled] = useState(false)
+    const [errorMessage,setErrorMessage] = useState("")
  
     return (
         <CheckIdleState>
@@ -66,6 +67,8 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                 setSwipeEnabled={setSwipeEnabled}
                 tokwaAccount={tokwaAccount}
                 recipientInfo={recipientInfo}
+                errorMessage={errorMessage}
+                setErrorMessage={setErrorMessage}
             />
 
             <EnterNote
@@ -74,7 +77,15 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
             />
 
             <View style={{paddingHorizontal: 10}}> 
-                <ProceedButton amount={amount} swipeEnabled={swipeEnabled} note={note} session={session} recipientInfo={recipientInfo}/>
+                <ProceedButton 
+                    amount={amount} 
+                    swipeEnabled={swipeEnabled} 
+                    note={note} 
+                    session={session} 
+                    recipientInfo={recipientInfo}
+                    errorMessage={errorMessage}
+                    setErrorMessage={setErrorMessage}
+                />
             </View>   
 
         </View>
