@@ -27,7 +27,7 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
         {forDelivery && (
           <>
             <View style={[styles.deliverWrapper, {paddingVertical: verticalScale(10)}]}>
-              <Text style={styles.sectionTitle}>Note to Rider</Text>
+              <Text style={styles.sectionTitle}>Note to Driver</Text>
             </View>
             <View>
               <TextInput
@@ -38,6 +38,7 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
                 value={notes}
                 placeholderTextColor={COLOR.MEDIUM}
                 onChangeText={v => onNotesChange(v)}
+                maxLength={320}
               />
             </View>
           </>

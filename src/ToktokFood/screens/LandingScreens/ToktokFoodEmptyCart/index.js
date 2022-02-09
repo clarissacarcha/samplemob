@@ -35,8 +35,11 @@ const ToktokFoodEmptyCart = () => {
       </View>
       <View style={[styles.emptyContainer, { height: getDeviceHeight - (headerHeight * 1.5) }]}>
         <Image style={styles.emptyImg} resizeMode="contain" source={empty_cart} />
+        <Text style={styles.emptyTextTitle}>
+          Empty Cart
+        </Text>
         <Text style={styles.emptyText}>
-          Your cart is empty.
+          Browse our products and add to your cart now!
         </Text>
     </View>
     </View>
@@ -59,10 +62,16 @@ const styles = StyleSheet.create({
     width: moderateScale(220),
   },
   emptyText: {
-    color: '#9E9E9E',
-    fontSize: FONT_SIZE.L,
+    // color: '#9E9E9E',
+    fontSize: 13,
     textAlign: 'center',
-    marginTop: moderateScale(20),
-    paddingHorizontal: moderateScale(30)
-  }
+    marginTop: moderateScale(10),
+    // paddingHorizontal: moderateScale(30),
+  },
+  emptyTextTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#F6841F',
+    marginTop: moderateScale(-30),
+  },
 });

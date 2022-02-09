@@ -192,7 +192,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     return (
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />
-        <Text style={styles.time}>{getTimeByStatus(orderStatus)}</Text>
+        <Text style={styles.time} numberOfLines={2}>{getTimeByStatus(orderStatus)}</Text>
         {/* <Text style={styles.time}>
           {`Estimated Delivery Time: ${moment(date).format('ll')} - ${estimatedDeliveryTime}`}
         </Text> */}
@@ -205,7 +205,7 @@ const DriverDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
       <View style={styles.detailsContainer}>
         {(status.id == 'f' || status.id == 's' || status.id == 'c') && <Text style={styles.title}>{status.title}</Text>}
         {status.message != '' && <Text style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>{status.message}</Text>}
-        {orderStatus != 'p' && orderStatus != 'c' && orderStatus != 's' && displayEstimatedDeliveryTime()}
+        {orderStatus != 'c' && orderStatus != 's' && displayEstimatedDeliveryTime()}
       </View>
     );
   };
@@ -328,12 +328,14 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
     fontWeight: '600',
     marginLeft: moderateScale(5),
+    textAlign: 'center',
   },
   timeContainer: {
     flexDirection: 'row',
     marginTop: verticalScale(5),
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: moderateScale(10),
   },
   title: {
     fontSize: FONT_SIZE.L,
