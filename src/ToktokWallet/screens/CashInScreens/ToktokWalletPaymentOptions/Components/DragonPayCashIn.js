@@ -1,5 +1,5 @@
 import React , {useEffect,useState , useRef} from 'react'
-import { View , Text , StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View , Text , StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { Separator , DisabledButton , BuildingBottom } from 'toktokwallet/components'
 import { useAccount } from 'toktokwallet/hooks'
@@ -9,6 +9,7 @@ import { useSelector , useDispatch } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert , usePrompt } from 'src/hooks'
+import { useDebounce } from 'toktokwallet/hooks'
 import { YellowButton } from 'src/revamp'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS
@@ -120,7 +121,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
         //  if(limitMessage) return setMessage(limitMessage)
          if(num == "")return setMessage("")
          if(num < 1) return setMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
-         setDisablebtn(false)
+        //  setDisablebtn(false)
          setMessage("")
          
      }
@@ -135,8 +136,21 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
         showInput()
     },[])
 
+    const checkLimit = useDebounce(async (amount)=> {
+        console.log("Typing ")
+        const checkLimit = await AmountLimitHelper.postCheckIncomingLimit({
+            amount,
+            setErrorMessage: setMessage
+        })
+
+        if(!checkLimit) return;
+        setDisablebtn(false)
+    },1000)
+
     useEffect(()=>{
+        setDisablebtn(true)
         setInputWidth(inputAmountLength[amount.length])
+        checkLimit(amount)
     },[amount])
     
     return (
@@ -189,8 +203,8 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                     </Text>
                                 
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
-                        
                          </View>
+
                          <View style={styles.cashinbutton}>
                                     {
                                         (amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "")
@@ -198,6 +212,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                         : <YellowButton label="Cash In" onPress={confirmAmount}/>
                                     }
                         </View>
+                      
                 </View>
                 <BuildingBottom/>
             </View>
