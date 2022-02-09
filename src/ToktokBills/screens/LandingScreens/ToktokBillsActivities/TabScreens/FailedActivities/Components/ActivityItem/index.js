@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 
 // HELPER & UTIL
-import { moderateScale, numberFormat } from 'toktokbills/helper';
+import { moderateScale, numberFormat, currencyCode } from 'toktokbills/helper';
 import { useThrottle } from 'src/hooks';
 
 //COMPONENTS
@@ -19,6 +19,7 @@ export const ActivityItem = ({ item, index })=> {
 
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
+  const totalAmount = `${currencyCode} ${numberFormat(parseFloat(item.amount) + parseFloat(item.convenienceFee))}`;
 
   return (
     <>
@@ -37,7 +38,7 @@ export const ActivityItem = ({ item, index })=> {
             <Text style={styles.itemName}>Reference No. {item.referenceNumber}</Text>
           </View>
           <View style={styles.contentContainer}>
-            <Text style={styles.amount}>PHP {numberFormat(item.amount)}</Text>
+            <Text style={styles.amount}>{totalAmount}</Text>
             <Text style={styles.dateTime}>{moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}</Text>
           </View>
         </View>

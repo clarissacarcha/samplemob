@@ -56,9 +56,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginVertical: 5,
-    ...SHADOW,
     backgroundColor: "white",
     borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2,
+    elevation: 3,
   },
   item: {
     flexDirection: "row",

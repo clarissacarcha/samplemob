@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     padding: MARGIN.M,
   },
   inputContainer: {
-    paddingHorizontal: 5,
+    paddingHorizontal: moderateScale(15),
     height: SIZE.FORM_HEIGHT,
     fontSize: FONT_SIZE.M,
     borderRadius: 5,
@@ -58,13 +58,13 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     padding: 0,
-    marginLeft: 5,
+    marginLeft: moderateScale(10),
     alignSelf: "center",
     flex: 1
   },
   icon: {
-    height: moderateScale(25),
-    width: moderateScale(40),
+    height: moderateScale(20),
+    width: moderateScale(20),
     alignSelf: "center",
     tintColor: "#F6841F"
   }

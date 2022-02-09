@@ -5,7 +5,7 @@ import moment from 'moment';
 
 //HOOKS & HELPER
 import { useThrottle } from 'src/hooks';
-import { moderateScale, numberFormat } from 'toktokbills/helper';
+import { moderateScale, numberFormat, currencyCode } from 'toktokbills/helper';
 
 //COMPONENTS
 import { TransactionModal } from 'toktokbills/components';
@@ -18,6 +18,9 @@ const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW} = CONSTANTS;
 const {width,height} = Dimensions.get("window");
 
 export const Details = ({ item, visible, setVisible })=> {
+
+  const totalAmount = `${currencyCode} ${numberFormat(parseFloat(item.amount) + parseFloat(item.convenienceFee))}`;
+
   return (
     <TransactionModal visible={visible} setVisible={setVisible}>
       <View>
@@ -27,13 +30,12 @@ export const Details = ({ item, visible, setVisible })=> {
           <Text style={styles.failedText}> Failed</Text>
         </View>
         <Text style={styles.labelText}>Biller: {item.billerDetails.descriptions}</Text>
-        {/* <Text style={styles.labelText}>{item.billerDetails.firstFieldName}: {item.destinationNumber}</Text> */}
+        <Text style={styles.labelText}>{item.billerDetails.firstFieldName}: {item.destinationNumber}</Text>
         <Text style={styles.labelText}>{item.billerDetails.secondFieldName}: {item.destinationIdentifier}</Text>
-        <Text style={styles.labelText}>Amount: PHP {numberFormat(item.amount)}</Text>
-        <Text style={styles.labelText}>Amount Paid: PHP {numberFormat(item.amount)}</Text>
+        <Text style={styles.labelText}>Amount: {totalAmount}</Text>
+        <Text style={styles.labelText}>Amount Paid: {totalAmount}</Text>
         <Text style={styles.labelText}>Reference No.: {item.referenceNumber}</Text>
-        <Text style={styles.labelText}>toktokbills Date: {moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY')}</Text>
-        <Text style={styles.labelText}>toktokbills Time: {moment(item.createdAt).tz('Asia/Manila').format("hh:mm A")}</Text>
+        <Text style={styles.labelText}>Date and Time: {moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}</Text>
       </View>
     </TransactionModal>
   )

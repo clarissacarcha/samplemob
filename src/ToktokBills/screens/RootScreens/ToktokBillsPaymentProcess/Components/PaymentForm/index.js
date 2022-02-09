@@ -12,7 +12,8 @@ import {
   numericRegex,
   alphanumericRegex,
   maxLengthRegex,
-  minLengthRegex
+  minLengthRegex,
+  currencyCode
 } from 'toktokbills/helper'
 
 //COMPONENTS
@@ -66,7 +67,7 @@ export const PaymentForm = ({ billItemSettings })=> {
   //CONVENIENCE FEE
   const convenienceFee = parseFloat(commissionRateDetails?.providerServiceFee) + parseFloat(commissionRateDetails?.systemServiceFee); 
   const convenienceFeeText = convenienceFee > 0 ? (
-    `Additional ₱ ${numberFormat(convenienceFee)} convenience fee will be charged in this transaction`
+    `Additional ${currencyCode} ${numberFormat(convenienceFee)} convenience fee will be charged in this transaction`
   ) : ("Convenience fee is waived for this transaction");
 
   const navigation = useNavigation();

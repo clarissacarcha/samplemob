@@ -6,11 +6,11 @@ import { moderateScale, getStatusbarHeight } from 'toktokbills/helper'
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
-export const Header = ({ label, elevation = 5 })=> {
+export const Header = ({ label, elevation = 5, zIndex = 1, onBack })=> {
 
   return (
-    <View style={[ styles.header, { elevation }]} >
-      <HeaderBack />
+    <View style={[ styles.header, { elevation, zIndex }]} >
+      <HeaderBack onBack={onBack} />
       <Text style={styles.headerLabel}>{label}</Text>
     </View>
   )
@@ -32,10 +32,10 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.10,
-    shadowRadius: 3.84,
+    shadowRadius: 3,
     paddingTop: Platform.OS == "ios" ? 0 : getStatusbarHeight,
-    height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80),
-    marginBottom: 1
+    height: Platform.OS == "ios" ? moderateScale(40) : moderateScale(80),
+    marginBottom: 1,
   },
   headerLabel: {
     flex: 1,
