@@ -109,6 +109,7 @@ const Amount = ({
                 placeholderTextColor={COLOR.DARK}
                 textAlignVertical="top"
                 numberOfLines={4}
+                blurOnSubmit={true}
                 multiline
             />
             <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS, color: "#929191"}}>{note.length}/60</Text>
