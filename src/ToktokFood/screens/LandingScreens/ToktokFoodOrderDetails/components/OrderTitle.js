@@ -113,7 +113,7 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />
         {/* <Text style={styles.time}>{`Estimated Pickup Time: ${startTime} - ${endTime}`}</Text> */}
-        <Text style={styles.time}>{`Estimated Pickup Time: ${moment(dateOrderProcessed).format('ll')} - ASAP`}</Text>
+        <Text style={styles.time}>Estimated Pickup Time: ASAP</Text>
       </View>
     );
   };
@@ -187,12 +187,10 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
       <Text style={styles.title}>{status.title}</Text>
       {!!status.message && <Text style={styles.status}>{status.message}</Text>}
       {transaction.orderIsfor == 2 &&
-        orderStatus != 'p' &&
         orderStatus != 'c' &&
         orderStatus != 's' &&
         renderEstimatedPickUpTime()}
       {transaction.orderIsfor == 1 &&
-        orderStatus != 'p' &&
         orderStatus != 'c' &&
         orderStatus != 's' &&
         renderEstimatedDeliveryTime()}
@@ -219,6 +217,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     marginLeft: moderateScale(5),
+    marginTop: moderateScale(5),
   },
   timeContainer: {
     flexDirection: 'row',
