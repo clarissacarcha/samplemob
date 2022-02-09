@@ -34,7 +34,17 @@ import {
   VerifyContextProvider,
   VerifyContext,
 } from './components';
-import {getDeductedVoucher, tokwaErrorBtnTitle, tokwaErrorMessage, tokwaErrorTitle} from './functions';
+import {
+  getDeductedVoucher,
+  getItemOrderType,
+  getMobileNumberFormat,
+  getOrderType,
+  handleAutoShippingVouchers,
+  handleShippingVouchers,
+  tokwaErrorBtnTitle,
+  tokwaErrorMessage,
+  tokwaErrorTitle,
+} from './functions';
 
 import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -65,7 +75,7 @@ const MainComponent = () => {
   const nowDate = moment().format('YYYY-DD-YYYY');
 
   const {shopname} = route.params;
-  const {location, customerInfo, shopLocation, receiver} = useSelector(state => state.toktokFood);
+  const {location, customerInfo, customerFranchisee, receiver} = useSelector(state => state.toktokFood);
   const {user} = useSelector(state => state.session);
   const {
     totalAmount,
@@ -73,6 +83,7 @@ const MainComponent = () => {
     toktokWallet,
     paymentMethod,
     pmLoading,
+    autoShippingVoucher,
     setAutoShippingVoucher,
     setPaymentMethod,
     shippingVoucher,
@@ -270,6 +281,7 @@ const MainComponent = () => {
       hash: delivery?.hash ? delivery.hash : '',
       hash_delivery_amount: delivery?.hash_price ? delivery.hash_price : '',
       original_shipping_fee: delivery?.price ? delivery.price : 0,
+      order_type: await getItemOrderType(customerFranchisee),
       handle_shipping_promo: Number(VOUCHER_FlAG),
       daystoship: 0,
       daystoship_to: 0,
@@ -314,6 +326,58 @@ const MainComponent = () => {
     });
   };
 
+  const onToktokWalletOrder = async () => {
+    let totalPrice = 0;
+    let deductedFee = 0;
+    const CUSTOMER_CART = await fixOrderLogs();
+    const SHIPPING_VOUCHERS = autoShipping?.success
+      ? await handleAutoShippingVouchers(autoShippingVoucher)
+      : await handleShippingVouchers(shippingVoucher);
+
+    if (orderType === 'Delivery') {
+      if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
+        deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
+      }
+      totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
+    } else {
+      totalPrice = temporaryCart.totalAmountWithAddons;
+    }
+
+    postResquestTakeMoney({
+      variables: {
+        input: {
+          currency: toktokWallet.currency,
+          amount: totalPrice,
+          toktokuser_id: toktokWallet.toktokuser_id,
+          payment_method: paymentMethod,
+          name: toktokWallet.name,
+          notes: toktokWallet.notes,
+        },
+      },
+    }).then(({data}) => {
+      let {success, message} = data.postRequestTakeMoney;
+      if (success == 1) {
+        let {requestTakeMoneyId, validator} = data.postRequestTakeMoney.data;
+        setShowEnterPinCode(true);
+        setLoadingWallet(false);
+        setToktokWalletCredit({
+          requestTakeMoneyId,
+          validator,
+          cart: CUSTOMER_CART,
+          orderRefNum: data.postRequestTakeMoney.orderRefNum,
+          hashAmount: data.postRequestTakeMoney.hash_amount,
+        });
+      } else {
+        setLoadingWallet(false);
+        let parseError = JSON.parse(message);
+        let messageErr = parseError.errors[0].message;
+        setTimeout(() => {
+          setPinAttempt({show: true, message: messageErr});
+        }, 100);
+      }
+    });
+  };
+
   const toktokWalletPaymentMethod = pinCode => {
     verifyPin({
       variables: {
@@ -354,60 +418,16 @@ const MainComponent = () => {
     if (delivery !== null && !pmLoading) {
       paymentMethod == 'COD' ? setShowLoader(true) : setLoadingWallet(true);
       const CUSTOMER_CART = await fixOrderLogs();
-      const SHIPPING_VOUCHERS = autoShipping?.success
-        ? await handleAutoShippingVouchers()
-        : await handleShippingVouchers();
+      // const SHIPPING_VOUCHERS = autoShipping?.success
+      //   ? await handleAutoShippingVouchers(autoShippingVoucher)
+      //   : await handleShippingVouchers(shippingVoucher);
 
       await refetch({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}})
-        .then(({data}) => {
+        .then(async ({data}) => {
           let {isOpen} = data.checkShopValidations;
-          if (isOpen == 1) {
-            if (paymentMethod == 'TOKTOKWALLET') {
-              let totalPrice = 0;
-              let deductedFee = 0;
-              if (orderType === 'Delivery') {
-                if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
-                  deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
-                }
-                totalPrice = parseInt(temporaryCart.totalAmountWithAddons) + (delivery.price - deductedFee);
-              } else {
-                totalPrice = parseInt(temporaryCart.totalAmountWithAddons);
-              }
-              // setShowLoader(false);
-              // console.log(totalPrice, deductedFee, SHIPPING_VOUCHERS);
-              postResquestTakeMoney({
-                variables: {
-                  input: {
-                    currency: toktokWallet.currency,
-                    amount: totalPrice,
-                    toktokuser_id: toktokWallet.toktokuser_id,
-                    payment_method: paymentMethod,
-                    name: toktokWallet.name,
-                    notes: toktokWallet.notes,
-                  },
-                },
-              }).then(({data}) => {
-                let {success, message} = data.postRequestTakeMoney;
-                if (success == 1) {
-                  let {requestTakeMoneyId, validator} = data.postRequestTakeMoney.data;
-                  setShowEnterPinCode(true);
-                  setLoadingWallet(false);
-                  setToktokWalletCredit({
-                    requestTakeMoneyId,
-                    validator,
-                    cart: CUSTOMER_CART,
-                    orderRefNum: data.postRequestTakeMoney.orderRefNum,
-                    hashAmount: data.postRequestTakeMoney.hash_amount,
-                  });
-                } else {
-                  setLoadingWallet(false);
-                  let parseError = JSON.parse(message);
-                  let messageErr = parseError.errors[0].message;
-                  setTimeout(() => {
-                    setPinAttempt({show: true, message: messageErr});
-                  }, 100);
-                }
-              });
+          if (isOpen === 1) {
+            if (paymentMethod === 'TOKTOKWALLET') {
+              await onToktokWalletOrder();
             } else {
               placeCustomerOrderProcess(CUSTOMER_CART);
             }
@@ -428,46 +448,6 @@ const MainComponent = () => {
           }, 500);
         });
     }
-  };
-
-  const mobileNumberFormat = () => {
-    let {conno} = customerInfo;
-    if (conno.charAt(0) == '6') {
-      return `+${conno}`;
-    }
-    return conno;
-  };
-
-  const handleShippingVouchers = async () => {
-    let sVoucher = [];
-    return Promise.all(
-      shippingVoucher.map(item => {
-        const {is_percentage, id, shopid, vname, vcode, amount} = item.voucher;
-        sVoucher.push({
-          is_percentage: parseInt(is_percentage),
-          id: null,
-          shopid,
-          vname,
-          vcode,
-          amount,
-        });
-      }),
-    ).then(() => {
-      return {shippingvouchers: sVoucher};
-    });
-  };
-
-  const handleAutoShippingVouchers = async () => {
-    const {is_percentage, id, shopid, vname, vcode, amount} = autoShipping.voucher;
-    let sVoucher = {
-      is_percentage: parseInt(is_percentage),
-      id: parseInt(id),
-      shopid,
-      vname,
-      vcode,
-      amount,
-    };
-    return {shippingvouchers: [sVoucher]};
   };
 
   const processData = (WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS) => {
@@ -496,7 +476,7 @@ const MainComponent = () => {
       contactnumber:
         receiver.contactPersonNumber && receiver.contactPersonNumber !== ''
           ? receiver.contactPersonNumber
-          : mobileNumberFormat(),
+          : getMobileNumberFormat(customerInfo),
       email: customerInfo.email,
       address: location.address,
       user_id: customerInfo.userId,
@@ -507,18 +487,19 @@ const MainComponent = () => {
       citymunCode: '0',
     };
     const SHIPPING_VOUCHERS = autoShipping?.success
-      ? await handleAutoShippingVouchers()
-      : await handleShippingVouchers();
+      ? await handleAutoShippingVouchers(autoShippingVoucher)
+      : await handleShippingVouchers(shippingVoucher);
     const ORDER = {
-      total_amount: temporaryCart.totalAmount,
+      total_amount: temporaryCart.totalAmountWithAddons,
       srp_totalamount: temporaryCart.totalAmount,
       notes: riderNotes,
       order_isfor: orderType == 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
-      order_type: 2,
+      order_type: await getOrderType(customerFranchisee),
       payment_method: paymentMethod,
       order_logs: CUSTOMER_CART,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
+    console.log(data);
     postCustomerOrder({
       variables: {
         input: data,

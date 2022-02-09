@@ -237,6 +237,7 @@ const StickyView = () => {
           if (props.index < 1) {
             return (
               <RestaurantList
+                activeTab={activeTab}
                 location={location}
                 loading={loading}
                 error={error}

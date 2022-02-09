@@ -36,7 +36,7 @@ const TokTokFoodSplashScreen = () => {
       if (status == 200) {
         getToktokUserInfo({
           variables: {
-            input: {  
+            input: {
               toktokUserId: user.id,
             },
           },
@@ -73,7 +73,6 @@ const TokTokFoodSplashScreen = () => {
       },
     },
     onCompleted: ({getConsumer}) => {
-      console.log('getConsumer', getConsumer);
       dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_FRANCHISEE', payload: {...getConsumer}});
     },
     onError: error => console.log(error),
@@ -148,7 +147,6 @@ const TokTokFoodSplashScreen = () => {
 
     if (location != undefined) {
       if (user.toktokfoodUserId != null) {
-
         getToktokUserInfo({
           variables: {
             input: {
