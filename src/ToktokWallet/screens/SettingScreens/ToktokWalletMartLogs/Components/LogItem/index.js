@@ -21,7 +21,7 @@ export const LogItem = ({
   const requestNo = item.refNo
   const refNo = item.refNo
   const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD, YYYY');
-  const refTime = moment(item.createdAt).tz('Asia/Manila').format('h:mm A');
+  const refTime = moment(item.createdAt).tz('Asia/Manila').format('hh:mm A');
   const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
 
   const showDetails = ()=>{
