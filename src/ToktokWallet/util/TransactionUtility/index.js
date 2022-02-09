@@ -19,7 +19,7 @@ export class TransactionUtility {
     prompt,
     onErrorAlert,
     alert,
-    title = "Transaction Void"
+    title = "Transaction Failed"
   })=> {
     
     const {graphQLErrors, networkError} = error;
@@ -103,15 +103,17 @@ export class TransactionUtility {
           promptType = "warning";
           break;
         default:
-          promptTitle = title;
+          promptTitle = graphQLErrors[0]?.payload?.errorTitle ?  graphQLErrors[0]?.payload?.errorTitle : title;
           break;
       }
+
+      const finalPrompType = graphQLErrors[0]?.payload?.errorType ? graphQLErrors[0]?.payload?.errorType : promptTitle
 
       prompt({
         type: promptType,
         message: graphQLErrors[0]?.message,
         event: "TOKTOKWALLET",
-        title: promptTitle
+        title: finalPrompType
       })
     }
     return navigation.pop()
