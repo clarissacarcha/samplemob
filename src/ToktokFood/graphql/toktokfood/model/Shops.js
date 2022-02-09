@@ -14,6 +14,13 @@ export const GET_SHOPS = gql`
       estimatedDistance
       estimatedDeliveryTime
       promoName
+      promos {
+        id
+        shippingDiscountName
+        shippingDiscountCode
+        shopId
+        noOfStocks
+      }
     }
   }
 `;
