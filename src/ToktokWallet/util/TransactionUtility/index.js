@@ -107,13 +107,13 @@ export class TransactionUtility {
           break;
       }
 
-      const finalPrompType = graphQLErrors[0]?.payload?.errorType ? graphQLErrors[0]?.payload?.errorType : promptTitle
+      const finalPrompType = graphQLErrors[0]?.payload?.errorType ? graphQLErrors[0]?.payload?.errorType : promptType
 
       prompt({
-        type: promptType,
+        type: finalPrompType,
         message: graphQLErrors[0]?.message,
         event: "TOKTOKWALLET",
-        title: finalPrompType
+        title: promptTitle
       })
     }
     return navigation.pop()
