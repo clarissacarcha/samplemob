@@ -8,7 +8,7 @@ import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 import RestaurantItem from './RestaurantItem';
 
 const RestaurantList = props => {
-  const {data, loadMore} = props;
+  const {activeTab, data, loadMore} = props;
 
   const renderFooter = () => {
     if (loadMore) {
@@ -23,7 +23,7 @@ const RestaurantList = props => {
       data={data}
       extraData={loadMore}
       numColumns={2}
-      renderItem={({item}) => <RestaurantItem item={item} />}
+      renderItem={({item}) => <RestaurantItem activeTab={activeTab} item={item} />}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       keyExtractor={(val, index) => index.toString()}

@@ -11,9 +11,11 @@ import {time, no_image} from 'toktokfood/assets/images';
 // Fonts, Colors & Images
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
-const RestaurantItem = ({item}) => {
+const RestaurantItem = ({activeTab, item}) => {
   const navigation = useNavigation();
   const [validImg, setValidImg] = useState(true);
+
+  const {id} = activeTab;
 
   const onRestaurantNavigate = () => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
@@ -36,9 +38,11 @@ const RestaurantItem = ({item}) => {
           resizeMode="cover"
           onError={() => setValidImg(false)}
         />
-        <View style={styles.banner}>
-          <Text>FREE DELIVERY</Text>
-        </View>
+        {id === 2 && (
+          <View style={styles.banner}>
+            <Text>FREE DELIVERY</Text>
+          </View>
+        )}
       </TouchableOpacity>
 
       <View style={styles.restaurantInfo}>
@@ -58,7 +62,9 @@ const RestaurantItem = ({item}) => {
           </Text>
         </View>
 
-        <FlatList data={item.promos} renderItem={renderPromos} horizontal showsHorizontalScrollIndicator={false} />
+        {id === 2 && (
+          <FlatList data={item.promos} renderItem={renderPromos} horizontal showsHorizontalScrollIndicator={false} />
+        )}
       </View>
     </View>
   );

@@ -49,3 +49,59 @@ export const getDeductedVoucher = (shipping, deliveryFee) => {
   }
   return totalDelivery;
 };
+
+export const getMobileNumberFormat = customerInfo => {
+  let {conno} = customerInfo;
+  if (conno.charAt(0) == '6') {
+    return `+${conno}`;
+  }
+  return conno;
+};
+
+export const getOrderType = consumer => {
+  let orderType = 2;
+  if (consumer) {
+    orderType = 4;
+  }
+  return orderType;
+};
+
+export const getItemOrderType = consumer => {
+  let orderType = 1;
+  if (consumer) {
+    orderType = 3;
+  }
+  return orderType;
+};
+
+export const handleShippingVouchers = async shippingVoucher => {
+  let sVoucher = [];
+  return Promise.all(
+    shippingVoucher.map(item => {
+      const {is_percentage, id, shopid, vname, vcode, amount} = item.voucher;
+      sVoucher.push({
+        is_percentage: parseInt(is_percentage),
+        id: null,
+        shopid,
+        vname,
+        vcode,
+        amount,
+      });
+    }),
+  ).then(() => {
+    return {shippingvouchers: sVoucher};
+  });
+};
+
+export const handleAutoShippingVouchers = async autoShipping => {
+  const {is_percentage, id, shopid, vname, vcode, amount} = autoShipping.voucher;
+  let sVoucher = {
+    is_percentage: parseInt(is_percentage),
+    id: parseInt(id),
+    shopid,
+    vname,
+    vcode,
+    amount,
+  };
+  return {shippingvouchers: [sVoucher]};
+};
