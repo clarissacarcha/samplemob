@@ -441,7 +441,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                     fundTransferType: type
                 },
             isSwipe: true,
-            swipeTitle: `Confirm`,
+            swipeTitle: `Swipe to Confirm`,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
         })

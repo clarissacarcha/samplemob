@@ -87,7 +87,7 @@ export const ToktokWalletRequestMoney = ({navigation,route})=> {
             isSwipe: true,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            swipeTitle: `Request ${tokwaAccount.wallet.currency.code} ${amount != "" ? numberFormat(amount) : "0"}`,
+            swipeTitle: `Swipe to Request ${tokwaAccount.wallet.currency.code} ${amount != "" ? numberFormat(amount) : "0"}`,
             data: {
                 amount: amount,
                 note: note,
