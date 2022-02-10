@@ -48,7 +48,7 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
     const initialpaymentData = {
         merchant_id: route.params.merchantId,
         reference_number: route.params.refNo,
-        email_address: route.params.email_address.toString().trim(),
+        email_address: route.params.email_address,
         payer_name: route.params.payer_name,
         mobile_number: route.params.mobile_number.replace('+63','0'),
         amount_to_pay: route.params.amount_to_pay,
