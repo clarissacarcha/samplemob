@@ -112,7 +112,7 @@ export const ProceedButton = ({
             isSwipe: true,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            swipeTitle: `Send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
+            swipeTitle: `Swipe to Send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
             data: {
                 amount: amount,
                 note: note,

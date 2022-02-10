@@ -87,7 +87,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
             isSwipe: true,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            swipeTitle: `Send ${tokwaAccount.wallet.currency.code} ${amount != "" ? numberFormat(amount) : "0"}`,
+            swipeTitle: `Swipe to Send ${tokwaAccount.wallet.currency.code} ${amount != "" ? numberFormat(amount) : "0"}`,
             data: {
                 amount: amount,
                 note: note,
