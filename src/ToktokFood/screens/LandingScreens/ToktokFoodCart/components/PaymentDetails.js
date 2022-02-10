@@ -17,7 +17,7 @@ import {GET_MY_ACCOUNT} from 'toktokwallet/graphql';
 
 // enum implementation on JavaScript
 
-const PaymentDetails = ({refreshing, orderType}) => {
+const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
   const navigation = useNavigation();
   const {toktokWallet, setToktokWallet, paymentMethod, setPaymentMethod, setPMLoading, pmLoading, temporaryCart} =
     useContext(VerifyContext);
@@ -145,7 +145,7 @@ const PaymentDetails = ({refreshing, orderType}) => {
           <React.Fragment>
             <View style={styles.paymentContainer}>
               <TouchableOpacity
-                disabled={!customerWallet || customerWallet?.status !== 1}
+                disabled={!customerWallet || customerWallet?.status !== 1 || loadingShipping}
                 onPress={() => setPaymentMethod('TOKTOKWALLET')}
                 style={[
                   styles.tokwaButton,
@@ -184,7 +184,8 @@ const PaymentDetails = ({refreshing, orderType}) => {
                   disabled={
                     !customerWallet ||
                     customerWallet?.status < 1 ||
-                    (temporaryCart.totalAmount > 2000 && customerWallet?.status === 2)
+                    (temporaryCart.totalAmount > 2000 && customerWallet?.status === 2) ||
+                    loadingShipping
                   }
                   onPress={() => setPaymentMethod('COD')}
                   style={[

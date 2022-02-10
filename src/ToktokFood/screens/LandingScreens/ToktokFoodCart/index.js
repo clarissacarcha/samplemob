@@ -109,6 +109,18 @@ const MainComponent = () => {
 
   const [closeInfo, setCloseInfo] = useState({visible: false, shopName: ''});
 
+  const [getAutoShipping, {loading: loadingShipping}] = useLazyQuery(GET_AUTO_SHIPPING, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: error => console.log('getAutoShipping', error.response),
+    onCompleted: ({getAutoShipping}) => {
+      if (getAutoShipping.success) {
+        setAutoShippingVoucher([getAutoShipping]);
+      }
+      setAutoShipping(getAutoShipping);
+    },
+  });
+
   useEffect(() => {
     if (temporaryCart && temporaryCart.items.length > 0) {
       checkShopValidations({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}});
@@ -127,17 +139,25 @@ const MainComponent = () => {
     }
   }, [temporaryCart, location, isFocus]);
 
-  const [getAutoShipping] = useLazyQuery(GET_AUTO_SHIPPING, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onError: error => console.log('getAutoShipping', error.response),
-    onCompleted: ({getAutoShipping}) => {
-      if (getAutoShipping.success) {
-        setAutoShippingVoucher([getAutoShipping]);
-      }
-      setAutoShipping(getAutoShipping);
-    },
-  });
+  useEffect(() => {
+    if (delivery) {
+      const {items} = temporaryCart;
+      const {email} = customerInfo;
+
+      getAutoShipping({
+        variables: {
+          input: {
+            region: items[0]?.shopRegion,
+            email,
+            subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+            cartItems: [{shopid: items[0]?.shopid, shippingfee: delivery?.price}],
+            brandId: items[0].companyId,
+            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+          },
+        },
+      });
+    }
+  }, [paymentMethod]);
 
   const [getDeliverFee] = useLazyQuery(GET_SHIPPING_FEE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -153,6 +173,7 @@ const MainComponent = () => {
       //     subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
       //     cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
       //     brandId: items[0].companyId,
+      //     paymentMethod: 'CASH',
       //   },
       // });
       getAutoShipping({
@@ -163,6 +184,7 @@ const MainComponent = () => {
             subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
             cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
             brandId: items[0].companyId,
+            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
           },
         },
       });
@@ -243,6 +265,7 @@ const MainComponent = () => {
       }
     },
     onCompleted: async ({checkoutOrder}) => {
+      console.log(checkoutOrder);
       if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
@@ -281,7 +304,8 @@ const MainComponent = () => {
       hash: delivery?.hash ? delivery.hash : '',
       hash_delivery_amount: delivery?.hash_price ? delivery.hash_price : '',
       original_shipping_fee: delivery?.price ? delivery.price : 0,
-      order_type: await getItemOrderType(customerFranchisee),
+      // order_type: 1,
+      // order_type: await getItemOrderType(customerFranchisee),
       handle_shipping_promo: Number(VOUCHER_FlAG),
       daystoship: 0,
       daystoship_to: 0,
@@ -494,6 +518,7 @@ const MainComponent = () => {
       srp_totalamount: temporaryCart.totalAmount,
       notes: riderNotes,
       order_isfor: orderType == 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
+      // order_type: 2,
       order_type: await getOrderType(customerFranchisee),
       payment_method: paymentMethod,
       order_logs: CUSTOMER_CART,
@@ -682,7 +707,7 @@ const MainComponent = () => {
         <MyOrderList />
         <Separator />
 
-        {orderType === 'Delivery' && (
+        {orderType === 'Delivery' && !autoShipping?.success && (
           <>
             <OrderVoucher autoShipping={autoShipping} />
             <Separator />
@@ -703,7 +728,7 @@ const MainComponent = () => {
           />
         )}
         <Separator />
-        <PaymentDetails orderType={orderType} refreshing={refreshing} />
+        <PaymentDetails orderType={orderType} loadingShipping={loadingShipping} refreshing={refreshing} />
         <Separator />
         <RiderNotes
           forDelivery={orderType === 'Delivery'}
