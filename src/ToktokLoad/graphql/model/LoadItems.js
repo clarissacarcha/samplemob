@@ -23,6 +23,22 @@ export const GET_LOAD_ITEMS = gql`
         id
         loadItemId
       }
+      commissionRateDetails {
+        id
+        ofps
+        startup
+        mcjr
+        mcsuper
+        jc
+        mc
+        mcmeg
+        others
+        providerComValue
+        systemServiceFee
+        providerServiceFee
+        providerComRate
+        comType
+      }
     }
   }
 `

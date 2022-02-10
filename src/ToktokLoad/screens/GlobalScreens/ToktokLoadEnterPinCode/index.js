@@ -31,12 +31,14 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
     headerTitle: () => <HeaderTitle label={"toktokload"} isRightIcon/>,
   });
   
-  const { user } = useSelector((state) => state.session);
-  const { paymentSummary } = route.params;
-  const { requestMoneyDetails, loadDetails, mobileNumber, tokwaBalance } = paymentSummary;
+
   const prompt = usePrompt();
   const inputRef = useRef();
   const alert = useAlert();
+  const { user } = useSelector((state) => state.session);
+  const { paymentSummary } = route.params;
+  const { requestMoneyDetails, loadDetails, mobileNumber, tokwaBalance } = paymentSummary;
+  const totalAmount = parseFloat(loadDetails.amount) + parseFloat(loadDetails.commissionRateDetails.systemServiceFee);
 
   const [pinCode, setPinCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -96,8 +98,11 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
       loadItemId: loadDetails.id,
       senderWalletBalance: parseFloat(tokwaBalance),
       amount: parseFloat(loadDetails.amount),
-      senderWalletEndingBalance: parseFloat(tokwaBalance) - parseFloat(loadDetails.amount),
+      convenienceFee: parseFloat(loadDetails.commissionRateDetails.systemServiceFee),
+      senderWalletEndingBalance: parseFloat(tokwaBalance) - totalAmount,
       comRateId: loadDetails.comRateId,
+      referralCode: user.consumer.referralCode,
+      email: user.person.emailAddress
     }
 
     postLoadTransaction({

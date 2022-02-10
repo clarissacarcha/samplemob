@@ -21,7 +21,8 @@ export const PaymentMethod = ({ loadDetails, onCashIn, kycStatus }) => {
   const { user } = useSelector((state) => state.session);
 	const navigation = useNavigation();
   const { tokwaAccount } = useAccount({ isOnError: false });
-  const { amount } = loadDetails;
+  const { amount, commissionRateDetails }  = loadDetails;
+  const totalAmount = parseFloat(amount) + parseFloat(commissionRateDetails.systemServiceFee);
   const tokwaBalance = user.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : "0.00";
 
   const onPressTopUp = () => {
@@ -36,7 +37,7 @@ export const PaymentMethod = ({ loadDetails, onCashIn, kycStatus }) => {
   }
  
   const displayInsufficientBalance = () => {
-    if(parseFloat(amount) > parseFloat(tokwaBalance)) {
+    if(parseFloat(totalAmount) > parseFloat(tokwaBalance)) {
       return (
         <View style={styles.errorContainer}>
           <TouchableOpacity activeOpacity={1} onPress={onPressTopUp}>

@@ -14,8 +14,9 @@ import moment from "moment";
 export const ReceiptDetails = ({ route }) => {
 
   const { receipt } = route.params;
-  const { amount, referenceNumber, destinationNumber, createdAt, discount } = receipt;
+  const { amount, referenceNumber, destinationNumber, createdAt, discount, convenienceFee } = receipt;
   const transactionDateTime = `${moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}`;
+  const totalAmount = parseFloat(amount) + parseFloat(convenienceFee);
 
   return (
     <>
@@ -34,8 +35,8 @@ export const ReceiptDetails = ({ route }) => {
           <Text style={styles.description}>{destinationNumber}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Load Amount </Text>
-          <Text style={styles.description}>PHP {numberFormat(amount)}</Text>
+          <Text style={styles.title}>Total Amount </Text>
+          <Text style={styles.description}>PHP {numberFormat(totalAmount)}</Text>
         </View>
         { discount > 0 && (
           <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
@@ -60,7 +61,8 @@ const styles = StyleSheet.create({
   title: {
     color: "#F6841F",
     fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.M
+    fontSize: FONT_SIZE.M,
+    width: "50%"
   },
   description: {
     fontSize: FONT_SIZE.M,
@@ -70,7 +72,8 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center",
+    justifyContent: "space-between"
   },
   marginBottom15: {
     marginBottom: moderateScale(15)

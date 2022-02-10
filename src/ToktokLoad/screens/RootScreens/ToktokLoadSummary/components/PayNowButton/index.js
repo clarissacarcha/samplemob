@@ -28,7 +28,8 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
   const prompt = usePrompt();
   const navigation = useNavigation();
   const { tokwaAccount, getMyAccount } = useAccount();
-  const { amount }  = loadDetails;
+  const { amount, commissionRateDetails }  = loadDetails;
+  const totalAmount = parseFloat(amount) + parseFloat(commissionRateDetails.systemServiceFee);
   const tokwaBalance = user.toktokWalletAccountId ? parseFloat(tokwaAccount?.wallet?.balance) : 0;
 
   const [postToktokWalletRequestMoney, {loading, error}] = useMutation(POST_TOKTOKWALLET_REQUEST_MONEY, {
@@ -56,7 +57,7 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
     postToktokWalletRequestMoney({
       variables: {
         input: {
-          amount: parseFloat(amount),
+          amount: parseFloat(totalAmount),
           note: "Load Payment",
           transactionType: "load",
           details: {
@@ -90,7 +91,7 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
         </Text>
         <OrangeButton
           onPress={onPressThrottled}
-          disabled={parseFloat(amount) > tokwaBalance}
+          disabled={parseFloat(totalAmount) > tokwaBalance}
           label="Pay Now"
         />
       </View>

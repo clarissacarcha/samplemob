@@ -22,6 +22,22 @@ export const GET_FAVORITE_LOADS = gql`
           name
           comRateId
         }
+        commissionRateDetails {
+          id
+          ofps
+          startup
+          mcjr
+          mcsuper
+          jc
+          mc
+          mcmeg
+          others
+          providerComValue
+          systemServiceFee
+          providerServiceFee
+          providerComRate
+          comType
+        }
       }
     }
   } 
