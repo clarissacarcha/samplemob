@@ -96,12 +96,14 @@ export const handleShippingVouchers = async shippingVoucher => {
 export const handleAutoShippingVouchers = async autoShipping => {
   const {is_percentage, id, shopid, vname, vcode, amount} = autoShipping.voucher;
   let sVoucher = {
+    ...autoShipping.voucher,
     is_percentage: parseInt(is_percentage),
-    id: parseInt(id),
-    shopid,
-    vname,
-    vcode,
-    amount,
+    // id: parseInt(id),
+    // shopid,
+    // vname,
+    // vcode,
+    // amount,
   };
+  delete sVoucher.__typename;
   return {shippingvouchers: [sVoucher]};
 };

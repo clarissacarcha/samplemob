@@ -36,6 +36,34 @@ const tempCart = `
   }
 `;
 
+const voucherType = `
+  id
+  key
+  shopid
+  amount
+  minimum
+  minimum_price
+  sf_discount
+  valid
+  valid_until
+  vcode
+  vname
+  is_percentage
+  is_subsidize
+  sf_discount
+  on_top
+  handle_shipping_promo
+  code_required
+  limit_perCustomer
+  payment_method
+  percentage_subsidize
+  company_id
+  region
+  requirement
+  set_end_date
+  no_of_stocks
+`;
+
 export const GET_TEMPORARY_CART = gql`
   query getTemporaryCart($input: GetTemporaryCartInput) {
     getTemporaryCart(input: $input) {
@@ -97,17 +125,7 @@ export const GET_AUTO_SHIPPING = gql`
       message
       type
       voucher {
-        id
-        shopid
-        amount
-        minimum
-        minimum_price
-        sf_discount
-        valid
-        valid_until
-        vcode
-        vname
-        is_percentage
+        ${voucherType}
       }
     }
   }
@@ -120,18 +138,7 @@ export const GET_VOUCHER_CODE = gql`
       message
       type
       voucher {
-        handle_shipping_promo
-        id
-        shopid
-        amount
-        minimum
-        minimum_price
-        sf_discount
-        valid
-        valid_until
-        vcode
-        vname
-        is_percentage
+        ${voucherType}
       }
     }
   }

@@ -115,7 +115,7 @@ const MainComponent = () => {
     onError: error => console.log('getAutoShipping', error.response),
     onCompleted: ({getAutoShipping}) => {
       if (getAutoShipping.success) {
-        setAutoShippingVoucher([getAutoShipping]);
+        setAutoShippingVoucher(getAutoShipping);
       }
       setAutoShipping(getAutoShipping);
     },
@@ -254,7 +254,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
     onError: error => {
-      console.log('tpin-error', error);
+      // console.log('tpin-error', error);
       setShowLoader(false);
       if (toktokWallet.paymentMethod == 'COD') {
         setTimeout(() => {
@@ -265,7 +265,6 @@ const MainComponent = () => {
       }
     },
     onCompleted: async ({checkoutOrder}) => {
-      console.log(checkoutOrder);
       if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
@@ -442,9 +441,6 @@ const MainComponent = () => {
     if (delivery !== null && !pmLoading) {
       paymentMethod == 'COD' ? setShowLoader(true) : setLoadingWallet(true);
       const CUSTOMER_CART = await fixOrderLogs();
-      // const SHIPPING_VOUCHERS = autoShipping?.success
-      //   ? await handleAutoShippingVouchers(autoShippingVoucher)
-      //   : await handleShippingVouchers(shippingVoucher);
 
       await refetch({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}})
         .then(async ({data}) => {
@@ -524,7 +520,6 @@ const MainComponent = () => {
       order_logs: CUSTOMER_CART,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
-    console.log(data);
     postCustomerOrder({
       variables: {
         input: data,
