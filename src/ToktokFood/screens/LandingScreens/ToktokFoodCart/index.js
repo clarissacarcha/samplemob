@@ -114,6 +114,7 @@ const MainComponent = () => {
     fetchPolicy: 'network-only',
     onError: error => console.log('getAutoShipping', error.response),
     onCompleted: ({getAutoShipping}) => {
+      console.log(getAutoShipping);
       if (getAutoShipping.success) {
         setAutoShippingVoucher(getAutoShipping);
       }
@@ -254,7 +255,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
     onError: error => {
-      // console.log('tpin-error', error);
+      console.log('tpin-error', error);
       setShowLoader(false);
       if (toktokWallet.paymentMethod == 'COD') {
         setTimeout(() => {
@@ -265,6 +266,7 @@ const MainComponent = () => {
       }
     },
     onCompleted: async ({checkoutOrder}) => {
+      console.log(checkoutOrder);
       if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
@@ -350,7 +352,7 @@ const MainComponent = () => {
   };
 
   const onToktokWalletOrder = async () => {
-    let totalPrice = 0;
+    let totalPrice = temporaryCart?.totalAmountWithAddons;
     let deductedFee = 0;
     const CUSTOMER_CART = await fixOrderLogs();
     const SHIPPING_VOUCHERS = autoShipping?.success
@@ -362,10 +364,8 @@ const MainComponent = () => {
         deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
       }
       totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
-    } else {
-      totalPrice = temporaryCart.totalAmountWithAddons;
     }
-
+    // console.log(totalPrice, temporaryCart);
     postResquestTakeMoney({
       variables: {
         input: {
@@ -510,7 +510,7 @@ const MainComponent = () => {
       ? await handleAutoShippingVouchers(autoShippingVoucher)
       : await handleShippingVouchers(shippingVoucher);
     const ORDER = {
-      total_amount: temporaryCart.totalAmountWithAddons,
+      total_amount: temporaryCart.totalAmount,
       srp_totalamount: temporaryCart.totalAmount,
       notes: riderNotes,
       order_isfor: orderType == 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
@@ -520,6 +520,7 @@ const MainComponent = () => {
       order_logs: CUSTOMER_CART,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
+    // console.log(data);
     postCustomerOrder({
       variables: {
         input: data,

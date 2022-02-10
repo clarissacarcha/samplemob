@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {Image, StyleSheet, Text, View, Alert} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
 import ContentLoader from 'react-native-easy-content-loader';
 import {useSelector} from 'react-redux';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
@@ -46,9 +46,9 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
         onSetLocationDetails();
       }
     },
-    onError: err => {
-      Alert.alert('', 'Something went wrong.');
-    },
+    // onError: err => {
+    //   Alert.alert('', 'Something went wrong.');
+    // },
   });
 
   const showConfirmationDialog = () => {
@@ -72,7 +72,7 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
         }}
         hasTwoButtons
       />
-      <View onTouchEndCapture={() => showConfirmationDialog()} style={[styles.container, styleContainer]}>
+      <TouchableOpacity onPress={() => showConfirmationDialog()} style={[styles.container, styleContainer]}>
         <Text style={{color: '#FFA700', fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S}}>Deliver to</Text>
         <View style={styles.divider} />
         {location.address == undefined ? (
@@ -88,7 +88,7 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
             <Image style={styles.downArrowIc} source={down_arrow_ic} />
           </View>
         )}
-      </View>
+      </TouchableOpacity>
     </>
   );
 };
