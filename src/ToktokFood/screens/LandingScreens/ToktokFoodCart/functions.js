@@ -60,7 +60,10 @@ export const getMobileNumberFormat = customerInfo => {
 
 export const getOrderType = consumer => {
   let orderType = 2;
-  if (consumer) {
+  if (consumer?.referralCode) {
+    orderType = 3;
+  }
+  if (consumer?.franchiseeCode) {
     orderType = 4;
   }
   return orderType;
@@ -79,9 +82,11 @@ export const handleShippingVouchers = async shippingVoucher => {
   return Promise.all(
     shippingVoucher.map(item => {
       const {is_percentage, id, shopid, vname, vcode, amount} = item.voucher;
+      delete item.voucher.__typename;
       sVoucher.push({
+        ...item.voucher,
         is_percentage: parseInt(is_percentage),
-        id: null,
+        // id: null,
         shopid,
         vname,
         vcode,

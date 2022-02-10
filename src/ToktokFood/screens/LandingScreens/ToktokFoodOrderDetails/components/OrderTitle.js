@@ -50,7 +50,6 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState('');
   const [etaMinutes, setEtaMinutes] = useState(0);
   const minutesInHours = 60;
-
   // const isFocus = useIsFocused();
 
   useEffect(() => {
@@ -186,14 +185,8 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
       <Text style={styles.orderDetailsText}>Order Details</Text>
       <Text style={styles.title}>{status.title}</Text>
       {!!status.message && <Text style={styles.status}>{status.message}</Text>}
-      {transaction.orderIsfor == 2 &&
-        orderStatus != 'c' &&
-        orderStatus != 's' &&
-        renderEstimatedPickUpTime()}
-      {transaction.orderIsfor == 1 &&
-        orderStatus != 'c' &&
-        orderStatus != 's' &&
-        renderEstimatedDeliveryTime()}
+      {transaction.orderIsfor == 2 && orderStatus != 'c' && orderStatus != 's' && renderEstimatedPickUpTime()}
+      {transaction.orderIsfor == 1 && orderStatus != 'c' && orderStatus != 's' && renderEstimatedDeliveryTime()}
     </View>
   );
 };

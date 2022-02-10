@@ -114,7 +114,7 @@ const MainComponent = () => {
     fetchPolicy: 'network-only',
     onError: error => console.log('getAutoShipping', error.response),
     onCompleted: ({getAutoShipping}) => {
-      console.log(getAutoShipping);
+      // console.log(getAutoShipping);
       if (getAutoShipping.success) {
         setAutoShippingVoucher(getAutoShipping);
       }

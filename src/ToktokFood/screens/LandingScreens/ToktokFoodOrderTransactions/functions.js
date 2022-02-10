@@ -1,30 +1,36 @@
 import moment from 'moment';
 
-export const getOrderStatus = (focusTab) => {
-  switch(focusTab){
+export const getOrderStatus = focusTab => {
+  switch (focusTab) {
     case 1:
-      return 'p, po, rp, f'
+      return 'p, po, rp, f';
     case 2:
-      return 's'
+      return 's';
     case 3:
-      return 'c'
+      return 'c';
     case 4:
-      return 'decline'
-    
-    default:
-      return ''
-  }
-}
+      return 'decline';
 
-export const getSubMessageStatus = (item) => {
-  const type = item.orderIsfor == 1 ? "Delivered" : "Picked up";
+    default:
+      return '';
+  }
+};
+
+export const getSubMessageStatus = item => {
+  const type = item.orderIsfor == 1 ? 'Delivered' : 'Picked up';
   const isItemPickedUp =
-    item?.deliveryLogs.length > 3 && item.deliveryLogs[3].createdAt ? 'Food picked up' : 'Your order is ready for pick up';
-  switch(item.orderStatus){
+    item?.deliveryLogs.length > 3 && item.deliveryLogs[3].createdAt
+      ? 'Food picked up'
+      : 'Your order is on the way to you';
+  // : 'Your order is ready for pick up';
+  // console.log(item.orderStatus)
+  switch (item.orderStatus) {
     case 's':
       return `${type} on ${moment(item.dateShipped).format('LL')} at ${moment(item.dateShipped).format('LT')}`;
     case 'c':
-      return `Cancelled on ${moment(item.dateCancelledDeclined).format('LL')} at ${moment(item.dateCancelledDeclined).format('LT')}`;
+      return `Cancelled on ${moment(item.dateCancelledDeclined).format('LL')} at ${moment(
+        item.dateCancelledDeclined,
+      ).format('LT')}`;
     case 'rp':
       return isItemPickedUp;
     case 'po':
@@ -34,17 +40,14 @@ export const getSubMessageStatus = (item) => {
     default:
       return 'Pending';
   }
-}
+};
 export const sameDay = (d1, d2) => {
+  d1 = new Date(moment(d1).format());
+  d2 = new Date(moment(d2).format());
 
-  d1 = new Date(moment(d1).format())
-  d2 = new Date(moment(d2).format())
-
-  return d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate();
-}
-export const dayTitle = (dateOrdered) => {
+  return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+};
+export const dayTitle = dateOrdered => {
   let date = moment(dateOrdered);
   if (!moment().isSame(date, 'date')) {
     return date.format('LL');
