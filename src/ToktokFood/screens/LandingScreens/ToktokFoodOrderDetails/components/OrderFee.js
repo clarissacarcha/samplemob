@@ -22,7 +22,7 @@ const getShippingDiscount = (promoDetails, deliveryFee) => {
 };
 
 const OrderFee = ({data, forDelivery}) => {
-  let {originalShippingFee, totalAmount, deliveryAmount, promoDetails} = data;
+  let {originalShippingFee, actualTotalamount: totalAmount, deliveryAmount, promoDetails} = data;
   let deliveryFee = deliveryAmount ? deliveryAmount : 0;
   // let withShippingVoucher = promoDetails ? getShippingDiscount(promoDetails, originalShippingFee) : deliveryFee;
   // console.log(promoDetails, deliveryAmount, originalShippingFee);

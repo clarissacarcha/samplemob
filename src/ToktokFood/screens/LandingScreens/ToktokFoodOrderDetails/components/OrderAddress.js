@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -24,8 +25,6 @@ import {moderateScale, verticalScale, isIphoneXorAbove} from 'toktokfood/helper/
 import DialogMessage from 'toktokfood/components/DialogMessage';
 
 const OrderAddress = ({transaction, riderDetails}) => {
-  console.log(transaction);
-
   const isFocus = useIsFocused();
   const navigation = useNavigation();
   const {location} = useSelector(state => state.toktokFood);

@@ -16,6 +16,8 @@ const transaction = `
   dateDeclined
   dateFulfilled
   dateOrdered
+  actualAmount
+  actualTotalamount
   totalAmount
   deliveryAmount
   originalShippingFee
