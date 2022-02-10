@@ -60,6 +60,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
       },
       onCompleted: ({getTransactionByRefNum}) => {
+        // console.log(getTransactionByRefNum);
         if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
           setTransaction(getTransactionByRefNum);
         }
