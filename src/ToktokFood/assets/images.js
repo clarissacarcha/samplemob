@@ -84,7 +84,7 @@ export const empty_following = require('./images/empty_icons/empty-following.png
 export const empty_shop = require('./images/empty_icons/empty-shop.png');
 export const empty_shop_2 = require('./images/empty_icons/empty-shop-2.png');
 export const empty_search = require('./images/empty_icons/empty-search.png');
-export const empty_cart = require('./images/empty_icons/empty-cart.png');
+export const empty_cart = require('./images/empty_icons/empty-cart-2.png');
 export const no_image = require('./images/empty_icons/no-image.png');
 export const empty_promos = require('./images/empty_icons/empty-promos.png');
 

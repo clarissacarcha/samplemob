@@ -75,11 +75,12 @@ export default styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     flex: 1,
-    paddingTop: verticalScale(80),
+    justifyContent: 'center',
+    marginTop: moderateScale(-100),
   },
   emptyImg: {
     height: moderateScale(175),
-    width: moderateScale(250),
+    width: moderateScale(220),
   },
   emptyTextTitle: {
     color: '#F6841F',
@@ -187,7 +188,7 @@ export default styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 13,
-    color: '#9E9E9E',
+    marginTop: moderateScale(20),
   },
   footerContainer: {
     display: 'flex',

@@ -174,27 +174,25 @@ const ToktokFoodSearch = ({route}) => {
   );
 
   const renderEmpty = () => {
-    let withSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 4 : getIphoneNotchSize * 5);
-    let withoutSearch = moderateScale(Platform.OS == 'android' ? getStatusbarHeight * 4 : getIphoneNotchSize * 6);
-    let paddingTop = search != '' ? withSearch : withoutSearch;
-
     if (history.length > 0 && search === '') {
       return <RenderHistory />;
     } else {
       return (
-        <View style={[styles.emptyContainer, {paddingTop}]}>
+        <View style={[styles.emptyContainer]}>
           <Image
             style={styles.emptyImg}
             resizeMode="contain"
             source={search != '' ? new_empty_shop_icon : empty_search}
           />
-          {search != '' && (
+          {search != '' ? (
             <>
               <Text style={styles.emptyTextTitle}>No Restaurant Available</Text>
               <Text style={styles.emptyText}>
                 It seems like there is no open restaurant{'\n'}near you. Refresh or try again later.
               </Text>
             </>
+          ) : (
+            BottomLabel()
           )}
         </View>
       );
@@ -226,10 +224,10 @@ const ToktokFoodSearch = ({route}) => {
     searchFood(search);
   };
 
-  const BottomLabel = (
+  const BottomLabel = () => (
     <>
       {shopList.length === 0 && search === '' && (
-        <Text style={styles.footerText}>No more restaurants available to display.</Text>
+        <Text style={styles.footerText}>Find your favorite food from nearby restaurants.</Text>
       )}
     </>
   );
@@ -275,11 +273,12 @@ const ToktokFoodSearch = ({route}) => {
             data={shopList}
             renderItem={renderItem}
             ListEmptyComponent={renderEmpty}
-            ListFooterComponent={BottomLabel}
+            // ListFooterComponent={BottomLabel}
             ListFooterComponentStyle={styles.footerContainer}
             refreshControl={
               <RefreshControl refreshing={loading} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
             }
+            contentContainerStyle={{flexGrow: 1}}
           />
         </>
       )}

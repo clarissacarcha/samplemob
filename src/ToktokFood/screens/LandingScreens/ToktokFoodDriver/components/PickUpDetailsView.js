@@ -41,7 +41,7 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />
         {/* <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text> */}
-        <Text style={styles.time}>{`Estimated Pickup Time: ${moment(dateOrderProcessed).format('ll')} - ASAP`}</Text>
+        <Text style={styles.time}>Estimated Pickup Time: ASAP</Text>
       </View>
     );
   };
@@ -55,7 +55,7 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
           </Text>
           <Text numberOfLines={1} style={{flexShrink: 1}}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
         </View>
-        {orderStatus != 'p' && orderStatus !== 'c' && orderStatus !== 's' && renderEstimatedTime()}
+        {orderStatus !== 'c' && orderStatus !== 's' && renderEstimatedTime()}
       </View>
     );
   };
