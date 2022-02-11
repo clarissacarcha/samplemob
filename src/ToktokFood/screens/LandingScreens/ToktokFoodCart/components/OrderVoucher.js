@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useSelector} from 'react-redux';
@@ -40,6 +40,7 @@ const OrderVoucher = ({autoShipping}) => {
     //   },
     // },
     onCompleted: ({getVoucherCode}) => {
+      // console.log(getVoucherCode);
       const {success, message, type} = getVoucherCode;
       if (!success) {
         setShowError(!showError);
@@ -63,13 +64,13 @@ const OrderVoucher = ({autoShipping}) => {
     },
   });
 
-  const onApplyVoucher = () => {
+  const onApplyVoucher = useCallback(() => {
     const {cartItemsLength, items} = temporaryCart;
     const {email} = customerInfo;
     const promoCount = 0;
     const isMystery = 0;
 
-    if (cartItemsLength) {
+    if (cartItemsLength && !autoShipping?.success && voucher) {
       // console.log({
       //   input: {
       //     brandId: items[0].companyId,
@@ -99,13 +100,13 @@ const OrderVoucher = ({autoShipping}) => {
         },
       });
     }
-  };
+  }, [paymentMethod]);
 
   useEffect(() => {
-    if (!autoShipping?.success && voucher) {
-      onApplyVoucher();
-    }
-  }, [paymentMethod]);
+    // if (!autoShipping?.success && voucher) {
+    onApplyVoucher();
+    // }
+  }, [onApplyVoucher]);
 
   const onChangeText = value => {
     setVoucherError(null);
@@ -163,21 +164,23 @@ const OrderVoucher = ({autoShipping}) => {
 
       {shippingVoucher.length > 0 && renderVoucher()}
 
-      <View style={styles.formContainer}>
-        <StyledTextInput
-          hasIcon={shippingVoucher.length > 0}
-          error={voucherError}
-          onChangeText={onChangeText}
-          onRemoveVoucher={onRemoveVoucher}
-          label="Voucher"
-          value={voucher}
-          placeholder="Input Voucher(optional)"
-        />
+      {!autoShipping?.success && (
+        <View style={styles.formContainer}>
+          <StyledTextInput
+            hasIcon={shippingVoucher.length > 0}
+            error={voucherError}
+            onChangeText={onChangeText}
+            onRemoveVoucher={onRemoveVoucher}
+            label="Voucher"
+            value={voucher}
+            placeholder="Input Voucher(optional)"
+          />
 
-        <TouchableOpacity onPress={onApplyVoucher} style={styles.apply}>
-          <Text style={styles.subText}>Apply</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity onPress={onApplyVoucher} style={styles.apply}>
+            <Text style={styles.subText}>Apply</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };

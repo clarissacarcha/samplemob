@@ -144,7 +144,6 @@ const MainComponent = () => {
     if (delivery) {
       const {items} = temporaryCart;
       const {email} = customerInfo;
-
       getAutoShipping({
         variables: {
           input: {
@@ -704,7 +703,7 @@ const MainComponent = () => {
         <MyOrderList />
         <Separator />
 
-        {orderType === 'Delivery' && !autoShipping?.success && (
+        {orderType === 'Delivery' && (
           <>
             <OrderVoucher autoShipping={autoShipping} />
             <Separator />
