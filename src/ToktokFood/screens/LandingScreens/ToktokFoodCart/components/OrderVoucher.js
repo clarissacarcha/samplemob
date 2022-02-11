@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useSelector} from 'react-redux';
@@ -40,7 +40,6 @@ const OrderVoucher = ({autoShipping}) => {
     //   },
     // },
     onCompleted: ({getVoucherCode}) => {
-      // console.log(getVoucherCode);
       const {success, message, type} = getVoucherCode;
       if (!success) {
         setShowError(!showError);
@@ -64,13 +63,13 @@ const OrderVoucher = ({autoShipping}) => {
     },
   });
 
-  const onApplyVoucher = useCallback(() => {
+  const onApplyVoucher = () => {
     const {cartItemsLength, items} = temporaryCart;
     const {email} = customerInfo;
     const promoCount = 0;
     const isMystery = 0;
 
-    if (cartItemsLength && !autoShipping?.success && voucher) {
+    if (cartItemsLength) {
       // console.log({
       //   input: {
       //     brandId: items[0].companyId,
@@ -100,13 +99,13 @@ const OrderVoucher = ({autoShipping}) => {
         },
       });
     }
-  }, [paymentMethod]);
+  };
 
   useEffect(() => {
-    // if (!autoShipping?.success && voucher) {
-    onApplyVoucher();
-    // }
-  }, [onApplyVoucher]);
+    if (!autoShipping?.success && voucher) {
+      onApplyVoucher();
+    }
+  }, [paymentMethod]);
 
   const onChangeText = value => {
     setVoucherError(null);
