@@ -8,7 +8,8 @@ import { moderateScale, numberFormat } from "toktokload/helper";
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
 export const SummaryDetails = ({ loadDetails, mobileNumber, discount = 0 }) => {
-  const { amount }  = loadDetails;
+  const { amount, commissionRateDetails }  = loadDetails;
+  const totalAmount = parseFloat(amount) + parseFloat(commissionRateDetails.systemServiceFee);
 
   return (
     <>
@@ -17,6 +18,12 @@ export const SummaryDetails = ({ loadDetails, mobileNumber, discount = 0 }) => {
           <Text style={styles.title}>Load Amount</Text>
           <Text style={styles.description}>PHP {numberFormat(amount)}</Text>
         </View>
+        { commissionRateDetails.systemServiceFee > 0 && (
+          <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
+            <Text style={styles.title}>Service Fee</Text>
+            <Text style={styles.description}>PHP {numberFormat(commissionRateDetails.systemServiceFee)}</Text>
+          </View>
+        )}
         { discount > 0 && (
           <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
             <Text style={styles.title}>Discount</Text>
@@ -29,7 +36,7 @@ export const SummaryDetails = ({ loadDetails, mobileNumber, discount = 0 }) => {
       <View style={styles.totalAmountContainer}>
         <View style={styles.bodyContainer}>
           <Text style={styles.title}>Total Amount</Text>
-          <Text style={styles.description}>PHP {amount.toFixed(2)}</Text>
+          <Text style={styles.description}>PHP {numberFormat(totalAmount)}</Text>
         </View>
       </View>
     </>
