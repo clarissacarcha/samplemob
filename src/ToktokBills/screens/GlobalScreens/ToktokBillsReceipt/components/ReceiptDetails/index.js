@@ -107,7 +107,8 @@ const styles = StyleSheet.create({
   title: {
     color: "#F6841F",
     fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.M
+    fontSize: FONT_SIZE.M,
+    width: "50%"
   },
   description: {
     color: "black",
