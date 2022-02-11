@@ -45,6 +45,7 @@ const voucherType = `
   minimum_price
   sf_discount
   valid
+  valid_from
   valid_until
   vcode
   vname

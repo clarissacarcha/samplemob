@@ -488,7 +488,21 @@ const MainComponent = () => {
   };
 
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
+    const SHIPPING_VOUCHERS = autoShipping?.success
+      ? await handleAutoShippingVouchers(autoShippingVoucher)
+      : await handleShippingVouchers(shippingVoucher);
+    const ORDER = {
+      total_amount: temporaryCart.totalAmount,
+      srp_totalamount: temporaryCart.totalAmount,
+      notes: riderNotes,
+      order_isfor: orderType == 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
+      // order_type: 2,
+      order_type: await getOrderType(customerFranchisee),
+      payment_method: paymentMethod,
+      order_logs: CUSTOMER_CART,
+    };
     const CUSTOMER = {
+      company_id: String(temporaryCart?.items[0]?.companyId),
       name:
         receiver.contactPerson && receiver.contactPerson !== ''
           ? receiver.contactPerson
@@ -506,21 +520,8 @@ const MainComponent = () => {
       provCode: '0',
       citymunCode: '0',
     };
-    const SHIPPING_VOUCHERS = autoShipping?.success
-      ? await handleAutoShippingVouchers(autoShippingVoucher)
-      : await handleShippingVouchers(shippingVoucher);
-    const ORDER = {
-      total_amount: temporaryCart.totalAmount,
-      srp_totalamount: temporaryCart.totalAmount,
-      notes: riderNotes,
-      order_isfor: orderType == 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
-      // order_type: 2,
-      order_type: await getOrderType(customerFranchisee),
-      payment_method: paymentMethod,
-      order_logs: CUSTOMER_CART,
-    };
     const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
-    // console.log(data);
+    // console.log(data, SHIPPING_VOUCHERS);
     postCustomerOrder({
       variables: {
         input: data,
