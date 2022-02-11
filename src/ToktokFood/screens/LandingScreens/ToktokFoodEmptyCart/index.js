@@ -3,7 +3,6 @@ import {StyleSheet, View, Image, Text} from 'react-native';
 
 // Components
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 
 // Hooks
