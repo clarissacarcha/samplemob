@@ -68,11 +68,11 @@ const FavoritesProvider = ({children}) => {
         })
       }
   
-      const removeFromList = (account)=>{
+      const removeFromList = (favorite)=>{
         patchRemoveFavorite({
           variables: {
             input: {
-              id: account.id
+              id: favorite.id
             }
           }
         })

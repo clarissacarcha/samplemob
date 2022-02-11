@@ -45,7 +45,6 @@ const transaction = `
   comType
   createdAt
 `
-
 export const GET_LOAD_TRANSACTIONS = gql`
   query getTransactions($input: GetTransactionsInput!) {
     getTransactions(input: $input) {
@@ -66,9 +65,9 @@ export const POST_TOKTOKWALLET_REQUEST_MONEY = gql`
     }
   }
 `
-export const POST_TRANSACTION = gql`
-  mutation postTransaction($input: PostTransactionInput!) {
-    postTransaction(input: $input) {
+export const POST_LOAD_TRANSACTION = gql`
+  mutation postLoadTransaction($input: PostTransactionInput!) {
+    postLoadTransaction(input: $input) {
       status
       data {
         ${transaction}

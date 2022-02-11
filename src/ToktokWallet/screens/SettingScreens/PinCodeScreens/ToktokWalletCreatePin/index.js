@@ -61,6 +61,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
     // const walletinfo = route.params.walletinfo
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [pinCode,setPinCode] = useState("")
+    const [oldTPIN,setOldTPIN] = useState("")
     const [pageIndex,setPageIndex] = useState(tokwaAccount.pinCode ? 0 : 1)
     const [successModalVisible,setSuccessModalVisible] = useState(false)
     const [LeaveModalvisible,setLeaveModalVisible] = useState(false)
@@ -89,7 +90,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
         setSuccessModalVisible(true)
       },
       onError: (error)=> {
-        onErrorAlert({alert,error})
+        onErrorAlert({alert,error,navigation})
       }
     })
 
@@ -97,7 +98,8 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
       patchPinCode({
         variables: {
           input: {
-            pinCode: pinCode
+            pinCode: pinCode,
+            oldTPIN: oldTPIN
           }
         }
       })
@@ -107,7 +109,7 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
     const DisplayComponent = ()=> {
         switch(pageIndex){
             case 0:
-                return <VerifyPin pageIndex={pageIndex} setPageIndex={setPageIndex}/>
+                return <VerifyPin pageIndex={pageIndex} setPageIndex={setPageIndex} oldTPIN={oldTPIN} setOldTPIN={setOldTPIN}/>
             case 1:
                 return <CreatePin pinCode={pinCode} tokwaAccount={tokwaAccount} setPinCode={setPinCode} pageIndex={pageIndex} setPageIndex={setPageIndex}/>
             case 2:
@@ -126,27 +128,23 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
             setVisible={setLeaveModalVisible}
             onConfirm={()=>navigation.goBack()}
         />
-        {
-          successModalVisible &&
-          <SuccessfulModal 
-            amount={amount} 
-            onCashIn={onCashIn} 
-            setUpTpinCallBack={setUpTpinCallBack}
-            modalVisible={successModalVisible} 
-            tokwaAccount={tokwaAccount}
-            setSuccessModalVisible={setSuccessModalVisible}
-          />
-        }
-        
+        <SuccessfulModal 
+          amount={amount} 
+          setUpTpinCallBack={setUpTpinCallBack}
+          onCashIn={onCashIn} 
+          modalVisible={successModalVisible} 
+          tokwaAccount={tokwaAccount}
+          setSuccessModalVisible={setSuccessModalVisible}
+        />
         <Separator />
-        <KeyboardAvoidingView
+        <View
             // keyboardVerticalOffset={Platform.OS == "ios" ? 50 : 90} 
-            keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
-            behavior={Platform.OS == "ios" ? "padding" : "height"}
+            // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
+            // behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={styles.container} 
         >
                 {DisplayComponent()}
-        </KeyboardAvoidingView> 
+        </View> 
       </CheckIdleState>
     )
 }

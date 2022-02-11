@@ -6,6 +6,8 @@ import { PATCH_PIN_CODE } from 'toktokwallet/graphql'
 import {useMutation} from '@apollo/react-hooks'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { Separator , LeavePromptModal , CheckIdleState } from 'toktokwallet/components';
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import {useAlert  } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -14,6 +16,7 @@ import {
     NewPin,
     SuccessModal,
 } from "./Components"
+
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
@@ -59,19 +62,18 @@ export const ToktokWalletUpdatePin =  ({navigation,route})=> {
                             </TouchableHighlight>
     })
 
-    const event = route.params.event
+    const {otp, event} = route.params
 
     const cancelSetup = ()=> {
         console.log("Cancelling")
         setLeaveModalVisible(true)
     }
 
-
     const [pageIndex,setPageIndex] = useState(0)
     const [pinCode,setPinCode] = useState("")
     const [successModalVisible,setSuccessModalVisible] = useState(false)
     const [LeaveModalvisible,setLeaveModalVisible] = useState(false)
-
+    const alert = useAlert();
 
     const [patchPinCode, {data, error, loading}] = useMutation(PATCH_PIN_CODE, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -79,7 +81,7 @@ export const ToktokWalletUpdatePin =  ({navigation,route})=> {
         setSuccessModalVisible(true)
         },
         onError: (error)=> {
-        onErrorAlert({alert,error})
+        onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -88,7 +90,8 @@ export const ToktokWalletUpdatePin =  ({navigation,route})=> {
         patchPinCode({
             variables: {
             input: {
-                pinCode: pinCode
+                pinCode: pinCode,
+                otp: otp
             }
             }
         })
@@ -116,12 +119,12 @@ export const ToktokWalletUpdatePin =  ({navigation,route})=> {
             />
             <SuccessModal modalVisible={successModalVisible} setModalVisible={setSuccessModalVisible} event={event}/>
             <Separator />
-            <KeyboardAvoidingView style={{flex: 1,}}
-             keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
-             behavior={Platform.OS == "ios" ? "padding" : "height"}
+            <View style={{flex: 1,}}
+            //  keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
+            //  behavior={Platform.OS == "ios" ? "padding" : "height"}
              >
             {DisplayComponent()}
-            </KeyboardAvoidingView>
+            </View>
         </CheckIdleState>
     )
 }

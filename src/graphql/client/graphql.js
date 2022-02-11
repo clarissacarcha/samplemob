@@ -1,5 +1,5 @@
-import {ApolloLink, split, fromPromise} from 'apollo-link';
-import {HOST_PORT, PROTOCOL, TOKTOK_WALLET_PROTOCOL, TOKTOK_WALLET_PROTOCOL_HOST_PORT} from '../../res/constants';
+import {ApolloLink, split} from 'apollo-link';
+import {HOST_PORT} from 'res/constants';
 import {onError} from 'apollo-link-error';
 import {ApolloClient} from 'apollo-client';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -16,6 +16,7 @@ const wsUrl = `ws://${HOST_PORT}/graphql`;
 
 const toktokWalletBaseUrl = `${ENVIRONMENTS.TOKTOKWALLET_SERVER}/`;
 const toktokBillsLoadBaseUrl = `${ENVIRONMENTS.TOKTOKBILLSLOAD_SERVER}/`;
+const toktokFoodBaseUrl = `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/`;
 
 // const errorLink = onError(({graphQLErrors, networkError}) => {
 //   if (graphQLErrors) {
@@ -32,7 +33,7 @@ const toktokBillsLoadBaseUrl = `${ENVIRONMENTS.TOKTOKBILLSLOAD_SERVER}/`;
 // });
 
 const errorLinkLogger = onError((err) => {
- // console.log({ERROR_LINK: JSON.stringify(err, 0, 4)});
+ console.log({ERROR_LINK: JSON.stringify(err, 0, 4)});
 });
 
 const setTokenLink = setContext(async (_, {headers}) => {
@@ -49,14 +50,30 @@ const setTokenLink = setContext(async (_, {headers}) => {
   }
 });
 
-const setToktokWalletGraphqlTokenLink = setContext(async (_, {headers}) => {
+const setToktokFoodGraphqlTokenLink = setContext(async (_, {headers}) => {
   try {
-    // const accountToken = await AsyncStorage.getItem('toktokWalletAccountToken');
-    const accountToken = await AsyncStorage.getItem('accessToken');
+    const accountToken = await AsyncStorage.getItem('toktokFoodAccountToken');
     return {
       headers: {
         ...headers,
         authorization: accountToken ? `Bearer ${accountToken}` : '',
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+const setToktokWalletGraphqlTokenLink = setContext(async (_, {headers}) => {
+  try {
+    // const accountToken = await AsyncStorage.getItem('toktokWalletAccountToken');
+    const accountToken = await AsyncStorage.getItem('accessToken');
+    const verifiedToken = await AsyncStorage.getItem('toktokWalletAuthenticationToken');
+    return {
+      headers: {
+        ...headers,
+        authorization: accountToken ? `Bearer ${accountToken}` : '',
+        verifiedlogintoken: verifiedToken ? verifiedToken : '',
       },
     };
   } catch (error) {
@@ -115,6 +132,10 @@ const authUploadLink = createUploadLink({
   uri: `${baseUrl}auth/graphql/`,
 });
 
+const toktokFoodGraphqlUploadLink = createUploadLink({
+  uri: `${toktokFoodBaseUrl}graphql/`,
+});
+
 const toktokWalletGraphqlUploadLink = createUploadLink({
   uri: `${toktokWalletBaseUrl}graphql/`,
 });
@@ -134,7 +155,7 @@ const splitLink = split(({query}) => {
 
 // const link = ApolloLink.from([errorLink, setTokenLink, splitLink, uploadLink]);
 const link = ApolloLink.from([errorLinkLogger, setTokenLink, splitLink, uploadLink]);
-const authClientlink = ApolloLink.from([setTokenLink, authUploadLink]);
+const authClientlink = ApolloLink.from([errorLinkLogger, setTokenLink, authUploadLink]);
 const toktokWalletGraphqlLink = ApolloLink.from([
   errorLinkLogger,
   setToktokWalletGraphqlTokenLink,
@@ -144,10 +165,16 @@ const toktokWalletEnterpriseGraphqlLink = ApolloLink.from([
   setToktokWalletEnterpriseGraphqlTokenLink,
   toktokWalletEnterpriseGraphqlUploadLink,
 ]);
-const toktokFoodGraphqlLink = ApolloLink.from([
+const toktokBillsLoadGraphqlLink = ApolloLink.from([
   errorLinkLogger,
   setToktokBillsLoadGraphqlTokenLink,
   toktokBillsLoadGraphqlUploadLink,
+]);
+
+const toktokFoodGraphqlLink = ApolloLink.from([
+  errorLinkLogger,
+  setToktokFoodGraphqlTokenLink,
+  toktokFoodGraphqlUploadLink,
 ]);
 
 export const CLIENT = new ApolloClient({
@@ -172,5 +199,9 @@ export const TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT = new ApolloClient({
 
 export const TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
-  link: toktokFoodGraphqlLink,
+  link: toktokBillsLoadGraphqlLink,
+});
+export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: toktokBillsLoadGraphqlLink,
 });

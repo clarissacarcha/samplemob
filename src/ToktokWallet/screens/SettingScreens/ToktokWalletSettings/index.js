@@ -43,30 +43,32 @@ export const ToktokWalletSettings = ({navigation , route })=> {
         <CheckIdleState>
         <Separator />
         <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-            <SettingHeaderTitle title="Manage PIN"/>
+            <SettingHeaderTitle title="Security"/>
+            <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? "Change" : "Setup"} TPIN`}/>
             <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN"/>
-            <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? "Change" : "Create"} TPIN`}/>
+            {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
+            {/* <Biometrics/> */}
             <Separator/>   
-            <SettingHeaderTitle title="Help Centre"/>
+            <SettingHeaderTitle title="Account"/>
             <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>
             <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>
             {
                 +tokwaAccount.person.accountType.level < 3 &&
                 <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
             }
-            <Biometrics/>
-            <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us"/>
             <Separator/>
-            <SettingHeaderTitle title="Security and Privacy"/>
+            <SettingHeaderTitle title="Help Centre"/>
             <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy"/>
             <SettingOption route="ToktokWalletTermsConditions" title="Terms and Conditions"/>
+            <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us"/>
             <Separator/>
             <SettingHeaderTitle title="Logs"/>
             <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
             <SettingOption route="ToktokWalletCashOutLogs" title="Fund Transfer"/>
-            <SettingOption route="ToktokWalletRequestMoneyLogs" title="Request Money"/>
-            <SettingOption route="ToktokBillsTransactionLogs" title="Bills"/>
-            <SettingOption route="ToktokLoadTransactionLogs" title="Load"/>
+            <SettingOption route="ToktokWalletSendMoneyLogs" title="Send Money"/>
+            {/* <SettingOption route="ToktokWalletRequestMoneyLogs" title="Request Money"/> */}
+            {/* <SettingOption route="ToktokWalletCashInLogs" title="Bills"/>
+            <SettingOption route="ToktokWalletCashOutLogs" title="Load"/> */}
             <Separator/>
             <SettingHeaderTitle title="Account Recovery"/>
             <SettingOption route="ToktokWalletAccountRecoverySetup" title="Account Recovery Setup"/>

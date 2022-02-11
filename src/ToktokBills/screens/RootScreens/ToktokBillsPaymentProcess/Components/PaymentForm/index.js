@@ -12,7 +12,8 @@ import {
   numericRegex,
   alphanumericRegex,
   maxLengthRegex,
-  minLengthRegex
+  minLengthRegex,
+  currencyCode
 } from 'toktokbills/helper'
 
 //COMPONENTS
@@ -24,15 +25,18 @@ import CONSTANTS from 'common/res/constants';
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW, SIZE} = CONSTANTS
 const {width,height} = Dimensions.get("window")
 
-const processErrorMessage = (fieldValue, fieldName, fieldWidth, fieldType) => {
+const processErrorMessage = (fieldValue, fieldName, fieldWidth, fieldType, minWidth) => {
   // 0 = min | 1 = exact | 2 = max 
+  if(fieldValue.length < minWidth){ 
+    return `${fieldName} must be minimum of ${minWidth} characters.`;
+  }
   switch(fieldType){
     case 0:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be at least ${fieldWidth} characters in length` : "";
+      return fieldValue.length < fieldWidth ? `${fieldName} must be minimum of ${fieldWidth} characters.` : "";
     case 1:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be ${fieldWidth} characters in length` : "";
+      return fieldValue.length < fieldWidth ? `${fieldName} must be ${fieldWidth} characters in length.` : "";
     case 2:
-      return fieldValue.length > fieldWidth ? `${fieldName} length must be ${fieldWidth} characters or less` : "";
+      return fieldValue.length > fieldWidth ? `${fieldName} length must be ${fieldWidth} characters or less.` : "";
   
     default:
       return "";
@@ -51,17 +55,19 @@ export const PaymentForm = ({ billItemSettings })=> {
     firstFieldFormat,
     firstFieldWidth,
     firstFieldWidthType,
+    firstFieldMinWidth,
     secondFieldName,
     secondFieldFormat,
     secondFieldWidth,
     secondFieldWidthType,
+    secondFieldMinWidth,
     commissionRateDetails
   } = billItemSettings;
   
   //CONVENIENCE FEE
   const convenienceFee = parseFloat(commissionRateDetails?.providerServiceFee) + parseFloat(commissionRateDetails?.systemServiceFee); 
   const convenienceFeeText = convenienceFee > 0 ? (
-    `Additional ₱ ${numberFormat(convenienceFee)} convenience fee will be charged in this transaction`
+    `Additional ${currencyCode} ${numberFormat(convenienceFee)} convenience fee will be charged in this transaction`
   ) : ("Convenience fee is waived for this transaction");
 
   const navigation = useNavigation();
@@ -93,7 +99,7 @@ export const PaymentForm = ({ billItemSettings })=> {
     setFirstField(fieldValue);
     
     //error
-    const errorMessage = processErrorMessage(fieldValue, firstFieldName, firstFieldWidth, firstFieldWidthType);
+    const errorMessage = processErrorMessage(fieldValue, firstFieldName, firstFieldWidth, firstFieldWidthType, firstFieldMinWidth);
     fieldValue ? setFirstFieldError(errorMessage) : setFirstFieldError(`${firstFieldName} is required.`)
   }
 
@@ -103,7 +109,7 @@ export const PaymentForm = ({ billItemSettings })=> {
     setSecondField(fieldValue);
 
     //error
-    const errorMessage = processErrorMessage(fieldValue, secondFieldName, secondFieldWidth, secondFieldWidthType);
+    const errorMessage = processErrorMessage(fieldValue, secondFieldName, secondFieldWidth, secondFieldWidthType, secondFieldMinWidth);
     fieldValue ? setSecondFieldError(errorMessage) : setSecondFieldError(`${secondFieldName} is required.`)
   }
 
@@ -118,14 +124,15 @@ export const PaymentForm = ({ billItemSettings })=> {
 
   const changeAmount = (value) => {
     let pattern = /^\d+(\.\d{2})?$/;
-    if(value[0] == "0"){
-      value.replace(0, "");
-      return setAmount(value.replace(0, ""));
-    }
-   
-    value ? setAmountError(!pattern.test(value) ? "Amount format is invalid." : "")
-      : setAmountError(`Payment amount is required.`)
-    formatAmount(value, setAmount)
+    let num = value.replace(/[^0-9.]/g, '')
+
+    if(num[0] == "0") return 
+    if(num[0] == ".") return
+
+    num ? setAmountError(!pattern.test(num) ? "Payment Amount format is invalid." : "")
+      : setAmountError(`Payment Amount is required.`)
+      
+    setAmount(num)
   }
 
   return (
@@ -180,10 +187,10 @@ export const PaymentForm = ({ billItemSettings })=> {
           </Text>
       </View>
       <View>
-        <Text style={styles.label}>Email Address</Text>
+        <Text style={styles.label}>Email Address (optional)</Text>
         <TextInput 
           style={styles.input}
-          placeholder="Enter email address (optional)"
+          placeholder="Enter email address"
           onChangeText={changeEmail}
           value={email}
           ref={(input) => { emailRef.current = input; }}

@@ -11,7 +11,7 @@ import { useAlert } from 'src/hooks';
 //COMPONENTS
 import { Separator, ModalPaginationLoading, CheckIdleState, SwipeDownToRefresh, NoData} from 'toktokwallet/components'
 import { HeaderBack, HeaderTitle} from 'src/revamp'
-import { SomethingWentWrong } from 'src/components'
+import { SomethingWentWrong } from 'toktokload/components'
 
 //UTIL
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -66,7 +66,7 @@ export const ToktokLoadTransactionLogs = ({navigation})=> {
   if(error){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={Refetch} />
+        <SomethingWentWrong onRefetch={Refetch} error={error} />
       </View>
     )
   }

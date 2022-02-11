@@ -1,6 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet , Image} from 'react-native';
-// import {BlackButton} from './forms/BlackButton';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import {COLOR, FONT_SIZE, FONT, SIZE} from '../res/variables';
 
 const aButtons = [
@@ -11,7 +10,7 @@ const aButtons = [
   },
 ];
 
-const SingleButton = ({close, buttonLabel, actionButtons = []}) => {
+const SingleButton = ({close, buttonLabel, actionButtons = []}, pop, navigation) => {
   let label = 'OK';
 
   if (buttonLabel) {
@@ -32,15 +31,15 @@ const SingleButton = ({close, buttonLabel, actionButtons = []}) => {
         marginTop: 40,
         width: 100,
         backgroundColor: COLOR.YELLOW,
-        borderRadius: SIZE.BORDER_RADIUS
+        borderRadius: SIZE.BORDER_RADIUS,
       }}>
       <Text style={{fontFamily: FONT.BOLD}}>{label}</Text>
     </TouchableOpacity>
   );
 };
 
-export const AlertModal = (props) => {
-  const {visible, close, buttonLabel, message, actionButtons = []} = props;
+export const AlertModal = props => {
+  const {visible, close, buttonLabel, message, actionButtons = [], title, pop = 0, navigation} = props;
 
   const RenderButton = () => {
     return <SingleButton {...props} />;
@@ -53,8 +52,16 @@ export const AlertModal = (props) => {
   return (
     <View style={styles.transparent}>
       <View style={styles.labelBox}>
-        <Image style={{height: 80,width: 80,marginBottom: 10,}} source={require('../assets/toktokwallet-assets/error.png')}/>
-        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L,textAlign:"center"}}>{message}</Text>
+        <Image
+          style={{height: 80, width: 80, marginBottom: 10}}
+          source={require('../assets/toktokwallet-assets/error.png')}
+        />
+        {title && (
+          <Text style={{marginVertical: 10, fontFamily: FONT.BOLD, fontSize: FONT_SIZE.XL, textAlign: 'center'}}>
+            {title}
+          </Text>
+        )}
+        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L, textAlign: 'center'}}>{message}</Text>
         {RenderButton()}
       </View>
     </View>
@@ -78,7 +85,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     borderRadius: 5,
-    padding:20,
+    padding: 20,
   },
   divider: {
     height: 20,

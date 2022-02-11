@@ -49,7 +49,7 @@ export const WalletLog = ({item ,index , itemsLength }) => {
     const amountprefix = item.sourceWalletId == tokwaAccount.wallet.id ? "-" : "+"
     // const referenceDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
     const referenceDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a')
-    const transactionAmount = `${amountprefix} ${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
+    const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
     const externalReferenceNumber = item.externalReferenceNumber
     const cashOutDisplayInformations = item.cashOutDisplayInformations
     let cashInMobileNumber = null

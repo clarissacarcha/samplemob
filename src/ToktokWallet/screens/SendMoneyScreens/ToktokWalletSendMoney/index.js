@@ -96,11 +96,11 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                                             <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                                         </View>
                                         <TouchableOpacity
-                                            onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" ,{onCashIn: null,amount: 0})} 
+                                            onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" ,{onCashIn: ()=> null ,amount: 0})} 
                                             style={styles.topUp}
                                         >
                                             <View style={styles.topUpbtn}>
-                                                    <FIcon5 name={'plus'} size={12}/> 
+                                                    <FIcon5 name={'plus'} size={12} color="black"/> 
                                             </View>
                                         </TouchableOpacity>
                                 </View>
@@ -122,7 +122,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                         recipientDetails={recipientDetails}
                         tokwaAccount={tokwaAccount}
                         setGetAccountLoading={setGetAccountLoading}
-                        favoritesRef={favoritesRef}
+                        // favoritesRef={favoritesRef}
                 />
 
               
@@ -160,12 +160,12 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                         : null
                     }
 
-                    <Favorites 
+                    {/* <Favorites 
                         ref={favoritesRef}
                         setMobileNo={setMobileNo}
-                    />  
+                    />   */}
 
-                    <View style={{height: SIZE.FORM_HEIGHT,marginTop: 50,justifyContent:"flex-end"}}>
+                    <View style={{flex: 1, height: SIZE.FORM_HEIGHT,marginTop: 50,justifyContent:"flex-end"}}>
                 
                         <ProceedButton
                             swipeEnabled={swipeEnabled}

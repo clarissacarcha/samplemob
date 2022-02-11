@@ -51,7 +51,7 @@ export const New = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
     return (
         <View style={styles.container}>
         <View style={styles.content}>
-                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your new MPIN</Text>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter New MPIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} numberOfBox={4}/>
                     <TextInput
@@ -79,18 +79,17 @@ export const New = ({pinCode,setPinCode , pageIndex, setPageIndex})=> {
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE MPIN" : "SHOW MPIN"}</Text>
+                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide MPIN" : "Show MPIN"}</Text>
                         </TouchableOpacity>
 
                 </View>
             </View>
-
-            <View style={{padding: 16}}>
-                {
-                    pinCode.length < 4
-                    ? <DisabledButton label="Next"/>
-                    : <YellowButton label="Next" onPress={onSubmit}/>
-                }
+            <View style={{justifyContent:"flex-end", height: 70,padding: 16}}>
+                    {
+                        pinCode.length < 4
+                        ? <DisabledButton label="Next"/>
+                        : <YellowButton label="Next" onPress={onSubmit}/>
+                    }
             </View>
             <BuildingBottom/>
           

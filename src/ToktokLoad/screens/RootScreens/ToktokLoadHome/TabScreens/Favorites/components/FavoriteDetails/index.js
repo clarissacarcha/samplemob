@@ -1,17 +1,16 @@
 import React, {useState, useContext} from "react";
-import {View, Text, StyleSheet, FlatList, Platform, TouchableOpacity, Image} from "react-native";
+import {View, Text, StyleSheet, FlatList, Platform, TouchableOpacity, Image, Dimensions} from "react-native";
 
 //UTIL
 import { moderateScale } from "toktokload/helper";
-import { useContacts } from 'toktokload/hooks';
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 import { heart_fill_icon, heart_no_fill_icon, heart_selected_fill_icon } from "src/ToktokLoad/assets/icons";
 
+const { width, height } = Dimensions.get("screen");
 export const FavoriteDetails = ({ item, index, setSelectedLoad, selectedLoad }) => {
 
-  const { contacts } = useContacts();
   const { loadDetails, mobileNumber } = item;
   const { amount } = loadDetails;
   const isSelected = selectedLoad.id == item.id;
@@ -33,16 +32,15 @@ export const FavoriteDetails = ({ item, index, setSelectedLoad, selectedLoad }) 
         <Text style={[ styles.amount, { color: colorAmount }]}>₱{amount}</Text>
       </View>
       <View style={{ paddingLeft: moderateScale(20), flex: 1 }}>
-        <Text style={[ styles.amount, { color: colorDesc }]}>PHP {amount}</Text>
-        <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>
-          {item.loadDetails.networkDetails.name}
+        <Text style={[ styles.loadName, { color: colorDesc }]}>{loadDetails.name}</Text>
+        <Text style={[ styles.descriptions, { color: colorDesc }]}>
+          {loadDetails.networkDetails.name}
         </Text>
-        <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc}} numberOfLines={numberOfLines}>
-          {item.loadDetails.descriptions}
-        </Text>
-        {/* <Text style={{ fontSize: FONT_SIZE.M, color: colorDesc }}>
-          {mobileNumber}
-        </Text> */}
+        { !!loadDetails.descriptions && (
+          <Text style={[ styles.descriptions, { color: colorDesc }]} numberOfLines={numberOfLines}>
+            {loadDetails.descriptions}
+          </Text>
+        )}
       </View> 
     </TouchableOpacity>
   );
@@ -58,15 +56,16 @@ const styles = StyleSheet.create({
   amountContainer: {
     borderWidth: 1,
     borderRadius: moderateScale(100),
-    paddingHorizontal: Platform.OS == "ios" ? moderateScale(10) : moderateScale(8),
-    paddingVertical: Platform.OS == "ios" ? moderateScale(15) : moderateScale(10),
+    height: (height * .06) + FONT_SIZE.L,
+    width: (height * .06) + FONT_SIZE.L,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   amount: {
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
-    marginTop: Platform.OS == "ios" ? 0 : -2
+    marginTop: Platform.OS == "ios" ? 0 : -2,
+    textAlign: "center",
   },
   heartIcon: {
     width: moderateScale(20),
@@ -76,7 +75,13 @@ const styles = StyleSheet.create({
   heartIconContainer: {
     flex: 1,
     alignItems: "flex-end"
+  },
+  loadName: {
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD,
+  },
+  descriptions: {
+    fontSize: FONT_SIZE.M,
+    marginTop: 5
   }
-})
-
-
+});

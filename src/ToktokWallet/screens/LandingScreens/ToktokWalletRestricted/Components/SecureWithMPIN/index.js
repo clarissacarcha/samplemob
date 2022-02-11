@@ -20,7 +20,7 @@ const Reminder = ({children})=> {
 
 
 export const SecureWithMPIN = ({navigation,walletinfo})=> {
-
+  
     return (
         <View style={styles.container}>
             <View style={{alignItems:"center",marginTop: 10,flex:1 ,}}>
@@ -31,7 +31,7 @@ export const SecureWithMPIN = ({navigation,walletinfo})=> {
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,marginTop: 5, textAlign:'center'}}>Click the "Set Up MPIN" button to create your toktokwallet MPIN.</Text>
             </View>
             <View style={{flex: 1,alignItems:"center",justifyContent:"flex-start"}}>
-                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
+                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,color: COLOR.YELLOW}}>Reminders</Text>
                         <View>
                             {/* <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.ORANGE}}>Cashless transactions</Text> will be enabled after</Text>

@@ -3,12 +3,14 @@ import React , {createContext , useState , useEffect} from 'react'
 export const ContextChannelForm = createContext(null)
 const { Provider } = ContextChannelForm
 import {useLazyQuery,useMutation} from '@apollo/react-hooks'
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import { GET_CALL_CHANNELS } from 'toktokwallet/graphql/model'
-import { onErrorAlert } from 'src/util/ErrorUtility'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../../graphql'
+import { GET_CALL_CHANNELS } from '../../../../../../graphql/model'
+import { onErrorAlert } from '../../../../../../../util/ErrorUtility'
 import { useAlert } from 'src/hooks'
+import { useNavigation } from '@react-navigation/native'
 export const ContextProvider = ({ children })=> {
 
+    const navigation = useNavigation();
     const [selectedCallChannel, setSelectedCallChannel] = useState({});
     const [callChannels, setCallChannels] = useState("");
     const [numberOrLink, setNumberOrLink] = useState("");
@@ -29,7 +31,7 @@ export const ContextProvider = ({ children })=> {
         fetchPolicy:"network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted:({getCallChannels})=> {
             setCallChannels(getCallChannels)

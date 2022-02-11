@@ -1,7 +1,7 @@
 import React , {useState,useRef,useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,KeyboardAvoidingView,Platform} from 'react-native'
 import { HeaderBack, HeaderTitle, ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
-import { DisabledButton, NumberBoxes, Separator, BuildingBottom , CheckIdleState } from 'toktokwallet/components'
+import { DisabledButton, NumberBoxes, Separator, BuildingBottom , CheckIdleState, FlagSecureScreen } from 'toktokwallet/components'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { PATCH_LINK_BDO_ACCOUNT , GET_BDO_LINK_OTP } from 'toktokwallet/graphql'
 import { useLazyQuery , useMutation } from '@apollo/react-hooks'
@@ -40,7 +40,7 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
             if(graphQLErrors[0].message == "Verification code already expired."){
                 return setErrorMessage("Verification code already expired.")
             }
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -58,7 +58,7 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
                 setPinCode("")
                 return setErrorMessage(graphQLErrors[0].message)
             }
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -108,6 +108,7 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
     },[otpTimer])
 
     return (
+        <FlagSecureScreen>
         <CheckIdleState>
          <AlertOverlay visible={loading} />
         <Separator/>
@@ -145,20 +146,21 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={CreateVerificationCode}
                         >
-                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1,color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1,color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Didn't get code? Tap here to resend.</Text>
                                 { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
                         </TouchableOpacity>
             </View>
             <View style={{height: SIZE.FORM_HEIGHT + 16}}> 
             {
                 pinCode.length < 6 || getOtpLoading
-                ? <DisabledButton label="Proceed"/>
-                : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
+                ? <DisabledButton label="Confirm"/>
+                : <YellowButton onPress={ConfirmVerificationCode} label="Confirm"/>
             }   
             </View>
             <BuildingBottom/>
         </KeyboardAvoidingView>
         </CheckIdleState>
+        </FlagSecureScreen>
     )
 }
 

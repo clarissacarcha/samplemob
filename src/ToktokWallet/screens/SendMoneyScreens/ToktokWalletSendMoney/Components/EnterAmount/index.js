@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {View,Text,StyleSheet,TextInput} from 'react-native'
-import { numberFormat , formatAmount } from 'toktokwallet/helper'
+import { numberFormat , formatAmount , AmountLimitHelper } from 'toktokwallet/helper'
 import { InputAmount } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
@@ -10,11 +10,16 @@ export const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount
 
     const [errorAmountMessage,setErrorAmountMessage] = useState("")
     const [tempAmount,setTempAmount] = useState("")
-    const [isFocus,setIsFocus] = useState(false)
 
 
     const changeAmount = (value)=>{
-        formatAmount(value , setAmount)
+        const num = value.replace(/[^0-9.]/g, '')
+        const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
+        if(!checkFormat) return       
+        let decimalValueArray = num.split(".")
+        if(decimalValueArray[0].length > 6) return
+        if(num[0] == ".") return setAmount("0.")
+        setAmount(num)
     }
 
     useEffect(()=>{
@@ -47,6 +52,18 @@ export const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount
                 amount={amount}
                 changeAmount={changeAmount}
                 currency={tokwaAccount.wallet.currency.code}
+                onBlur={()=>{
+                    AmountLimitHelper.postCheckOutgoingLimit({
+                        amount,
+                        mobileNumber: recipientDetails.mobileNumber,
+                        setErrorMessage: (value)=> {
+                            if(errorAmountMessage == ""){
+                                setErrorAmountMessage(value)
+                                if(value != "") setSwipeEnabled(false)
+                            }
+                        }
+                    })
+                }}
             />
             <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#F93154"}}>{errorAmountMessage}</Text>
     </View>

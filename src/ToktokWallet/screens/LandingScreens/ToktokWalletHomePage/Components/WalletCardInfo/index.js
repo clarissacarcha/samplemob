@@ -1,10 +1,12 @@
 import React , {useContext} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Animated,Alert,Image} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Animated,Alert,Image , Platform} from 'react-native'
 import CONSTANTS from 'common/res/constants';
 import { useNavigation } from '@react-navigation/native'
 import {Separator , HeaderImageBackground, HeaderTitle} from 'toktokwallet/components';
 import { numberFormat , getDeviceWidth as width  } from 'toktokwallet/helper';
 import {useAccount} from 'toktokwallet/hooks'
+import {APP_FLAVOR , ACCOUNT_TYPE} from 'src/res/constants'
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 
 //SELF IMPORTS
@@ -31,6 +33,9 @@ const WalletCardInfo = ({loading})=> {
     })
 
     const cashIn = ()=> {
+        if(APP_FLAVOR == "D" && ACCOUNT_TYPE == 2){
+            return Alert.alert("","Use the toktok customer app for toktokwallet full features.")
+        }
         const tpinIsSet = checkIfTpinIsSet();
         if(!tpinIsSet) return
         return navigation.navigate("ToktokWalletPaymentOptions")
@@ -50,7 +55,7 @@ const WalletCardInfo = ({loading})=> {
                     isRightIcon
                     isLogo={true} 
                     rightIconOnPress={()=>navigation.navigate("ToktokWalletNotifications")}
-                    headerBackLabel="Back"
+                    headerBackLabel="Home"
                 />
                <View style={{flex: 1,justifyContent:"flex-end",paddingBottom: 45}}>
                     <View>
@@ -75,7 +80,6 @@ const WalletCardInfo = ({loading})=> {
                                     <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="black" size={20}/>
                                     </View>
                                 </TouchableOpacity>
-                                
 
                                 <TouchableOpacity style={styles.walletSettings} onPress={()=>{
                               
@@ -140,6 +144,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: 40,
         marginLeft: 5,
+        marginTop: Platform.OS == "android" ? 10 : 5,
     },
     topUpbtn: {
         height: 34,
@@ -153,6 +158,7 @@ const styles = StyleSheet.create({
     walletSettings: {
         flex: 1,
         alignItems:'flex-end',
+        marginTop: Platform.OS == "android" ? 10 : 5,
     }
 })
 

@@ -21,19 +21,25 @@ const RenderItem = ({item,index})=> {
 
     const [openModal,setOpenModal] = useState(false)
     const [info,SetInfo] = useState({})
+    const navigation = useNavigation();
 
     const openRMDetails = ()=> {
-        SetInfo({
-            ...item,
-            amount: `PHP ${numberFormat(+item.amount)}`,
-            refDate: moment(item.createdAt).format("MMM D, YYYY hh:mm a"),
-            name: "Request Money",
-            phrase: `Sent request money to ${person}`,
+        // SetInfo({
+        //     ...item,
+        //     amount: `PHP ${numberFormat(+item.amount)}`,
+        //     refDate: moment(item.createdAt).format("MMM D, YYYY hh:mm a"),
+        //     name: "Request Money",
+        //     phrase: `Sent request money to ${person}`,
+        // })
+        // setOpenModal(true)
+
+        return navigation.navigate("ToktokWalletRequestMoneyViewDetails" , {
+            requestMoney: item,
+            enableCancel: true,
         })
-        setOpenModal(true)
     }
 
-    const person = `${item.destinationPerson.firstName} ${item.destinationPerson.lastName}`
+    const person = `${item.sourcePerson.firstName} ${item.sourcePerson.lastName}`
     
     return (
         <>
@@ -48,7 +54,7 @@ const RenderItem = ({item,index})=> {
             </View>
             <View style={styles.cardContent}>
                  <View style={{flex: 1,height:"100%",justifyContent:"flex-start"}}>
-                    <Text style={{fontFamily:FONT.REGULAR,fontSize:FONT_SIZE.M}}>Request No: {item.refNo}</Text>
+                    <Text style={{fontFamily:FONT.REGULAR,fontSize:FONT_SIZE.M}}>Request No: {item.referenceNumber}</Text>
                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Sent request money to</Text>
                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{person}</Text>
                 </View>

@@ -1,5 +1,5 @@
 import React , {useEffect,useState,useRef} from 'react'
-import {View,Text,StyleSheet,TextInput,TouchableOpacity,Image} from 'react-native'
+import {View,Text,StyleSheet,TextInput,TouchableOpacity,Image , Keyboard} from 'react-native'
 import tokwaLogo from 'toktokwallet/assets/images/tokwaLogo.png'
 import {useAccount} from 'toktokwallet/hooks'
 import { getStatusbarHeight } from 'toktokwallet/helper'
@@ -12,6 +12,7 @@ import { GET_VERIFY_MPIN } from 'toktokwallet/graphql'
 import { useLazyQuery } from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
+import AsyncStorage from '@react-native-community/async-storage'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -48,18 +49,18 @@ export const LoginPage = ()=> {
     const [getVerifyMPIN , {data,error,loading}] = useLazyQuery(GET_VERIFY_MPIN, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
-        onCompleted: ({getVerifyMPIN})=>{
-            if(getVerifyMPIN){
-                setPinCode("")
-                // navigation.pop();
-                navigation.navigate("ToktokWalletHomePage");
-            }
+        onCompleted: async ({getVerifyMPIN})=>{
+            const { verifiedToken } = getVerifyMPIN
+            await AsyncStorage.setItem('toktokWalletAuthenticationToken', verifiedToken);
+            setPinCode("")
+            navigation.pop();
+            navigation.navigate("ToktokWalletHomePage"); 
         },
         onError: (error)=> {
             setPinCode("")
             const {graphQLErrors, networkError} = error;
             if(graphQLErrors[0]?.message == "Account Blocked"){
-                onErrorAlert({alert,error})
+                // onErrorAlert({alert,error})
                 return navigation.replace("ToktokWalletLoginPage")
             }
             if(graphQLErrors[0]?.message == "Invalid MPincode"){
@@ -87,6 +88,8 @@ export const LoginPage = ()=> {
                 }
             }
         })
+
+        Keyboard.dismiss();
     }
 
     useEffect(()=>{
@@ -95,8 +98,14 @@ export const LoginPage = ()=> {
         }
     },[pinCode])
 
+    useEffect(()=>{
+        setTimeout(()=>{
+            inputRef.current.focus();
+        },0)
+    },[])
+
     const forgotPIN = ()=> {
-        navigation.navigate("ToktokWalletRecoveryMethods" , {type: "MPIN",event: "ACCOUNT RECOVERY"})
+        navigation.navigate("ToktokWalletRecoveryMethods" , {type: "MPIN",event: "ACCOUNT RECOVERY", category: "FORGOT MPIN" })
     }
 
     return (
@@ -116,7 +125,7 @@ export const LoginPage = ()=> {
                         source={tokwaLogo}
                         resizeMode="contain"
                     />
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>Enter your MPIN</Text>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>Enter MPIN</Text>
                     <View style={{position: 'relative',marginTop: 30,}}>
                         <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} numberOfBox={4}/>
                         <TextInput
@@ -135,23 +144,24 @@ export const LoginPage = ()=> {
                             onSubmitEditing={pinCode.length == 4 ? onPress: null}
                         />
                         {
-                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,alignSelf:"center"}}>{errorMessage}</Text>   
+                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,textAlign:"center"}}>{errorMessage}</Text>   
                         }
-                        <Biometrics
+                        {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
+                        {/* <Biometrics
                             setErrorMessage={setErrorMessage}
                             setPinCode={setPinCode}
-                        />
+                        /> */}
                         <TouchableOpacity
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE MPIN" : "SHOW MPIN"}</Text>
+                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide MPIN" : "Show MPIN"}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                                 style={{paddingVertical: 10,alignItems: "center"}}
                                 onPress={forgotPIN}
                         >
-                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>FORGOT MPIN?</Text>
+                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot MPIN?</Text>
                         </TouchableOpacity>
                        
                     </View>

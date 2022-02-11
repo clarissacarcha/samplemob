@@ -12,8 +12,10 @@ import {useNavigation} from '@react-navigation/native'
 import moment from 'moment'
 import {connect} from 'react-redux'
 import { YellowButton } from 'src/revamp'
-import { DisabledButton, Separator } from 'toktokwallet/components'
+import { DisabledButton } from 'toktokwallet/components'
 import CheckBox from 'react-native-check-box'
+import AsyncStorage from '@react-native-community/async-storage';
+import RNFS from 'react-native-fs'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
@@ -47,6 +49,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
     const VerifyUserData = useContext(VerifyContext)
     const navigation = useNavigation()
     const alert = useAlert()
+    const [cacheImages,setCacheImages] = useState(null)
 
     const [isCertify, setCertify] = useState(false)
 
@@ -57,15 +60,54 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         },
         onCompleted: (response)=> {
             let result = response.postKycRegister
+            // removeCacheImages({
+            //     VerifyUserData
+            // })
+            if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath)
             if(result.status == 2){
-                navigation.pop(2)
-                navigation.navigate("ToktokWalletVerifyResult")
-                // navigation.replace("ToktokWalletVerifyResult")
+                // navigation.pop(2)
+                // navigation.navigate("ToktokWalletVerifyResult")
+                navigation.replace("ToktokWalletVerifyResult")
             }
         }
     })
 
-    const confirm = ()=> {
+    const deleteFile = (path)=> {
+        RNFS.exists(path)
+            .then(()=>RNFS.unlink(path))
+            .then(()=>RNFS.scanFile(path))
+            .catch(err=>console.log(err))
+            .finally(()=>console.log(path , " is deleted"))
+        return
+    }
+
+    const removeCacheImages = async ({VerifyUserData})=> {
+        const { cacheImagesList, selfieImage , selfieImageWithID , frontImage ,  backImage , tempSelfieImage , tempSelfieImageWithID } = VerifyUserData
+        const { rnSelfieFile, rnSelfieFileWithID, rnFrontIDFile, rnBackIDFile } = cacheImages
+
+        try {
+            if(rnSelfieFile)  await deleteFile(rnSelfieFile.uri)
+            if(rnSelfieFileWithID)  await deleteFile(rnSelfieFileWithID.uri)
+            if(rnFrontIDFile)  await deleteFile(rnFrontIDFile.uri)
+            if(rnBackIDFile)  await deleteFile(rnBackIDFile.uri)
+            if(tempSelfieImage)  await deleteFile(tempSelfieImage.uri)
+            if(tempSelfieImageWithID) await deleteFile(tempSelfieImageWithID.uri)
+            if(frontImage) await deleteFile(frontImage.uri)
+            if(backImage) await deleteFile(backImage.uri)
+            if(selfieImage) await deleteFile(selfieImage.uri)
+            if(selfieImageWithID) await deleteFile(selfieImageWithID.uri)
+            if(cacheImagesList.length > 0){
+                cacheImagesList.map(async (image)=>{
+                    await deleteFile(image)
+                })
+            }
+            return;
+        }catch (error){
+            throw error;
+        }
+    }
+
+    const confirm = async ()=> {
         const rnValidIDFile = new ReactNativeFile({
             ...VerifyUserData.verifyID.idImage,
             name: 'documentValidID.jpg',
@@ -100,10 +142,34 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         })
         : null
 
-        console.log(rnBackIDFile)
+        // if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath).then(()=>{
+        //     console.log("Deleted")
+        // }).catch(err=>console.log(err))
+        // RNFS.unlink(RNFS.TemporaryDirectoryPath)
+
+        // RNFS.readDir(RNFS.CachesDirectoryPath)
+        // .then(arr => RNFS.readDir(arr[0].path)) // The Camera directory
+        //     .then(arr => arr.forEach(item => {
+        //        console.log(item.path)
+        //         // Linking.canOpenURL(contentURI)
+        //         // .then(able => able ? Linking.openURL(contentURI) : console.log('No application available'))
+        //         // .catch(console.log)
+        //     }))
+        // return;
+   
+    //    setCacheImages({
+    //     rnSelfieFile,
+    //     rnSelfieFileWithID,
+    //     rnFrontIDFile,
+    //     rnBackIDFile,
+    //    })
+
+        // removing / delete cache files
+       //removeCacheImages({VerifyUserData})
 
         const input = {
-            userId: session.user.id,
+            // userId: session.user.id,
+            userId: await AsyncStorage.getItem('accessToken'),
             mobileNumber: VerifyUserData.contactInfo.mobile_number,
             emailAddress: VerifyUserData.contactInfo.email,
             firstName: VerifyUserData.person.firstName,
@@ -134,8 +200,8 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                 videocall: {
                     videoCallContactDetails: VerifyUserData.pepInfo.videocall.videoCallContactDetails,
                     callChannelId: VerifyUserData.pepInfo.videocall.callChannelId,
-                    preferredVcsDayMin: VerifyUserData.pepInfo.videocall.preferredVcsDayMin,
-                    preferredVcsDayMax: VerifyUserData.pepInfo.videocall.preferredVcsDayMax,
+                    preferredVcsDayMin: +VerifyUserData.pepInfo.videocall.preferredVcsDayMin,
+                    preferredVcsDayMax: +VerifyUserData.pepInfo.videocall.preferredVcsDayMax,
                     preferredVcsTimeMin: VerifyUserData.pepInfo.videocall.preferredVcsTimeMin,
                     preferredVcsTimeMax: VerifyUserData.pepInfo.videocall.preferredVcsTimeMax,
                 },
@@ -151,7 +217,7 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                 }
             }
         }
-        
+
         postKYCRegister({
             variables: {
                 input: input
@@ -167,7 +233,6 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                 <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
                         <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Review Information</Text>
                         <Text style={{fontFamily: FONT.REGULAR,marginBottom: 10,fontSize: FONT_SIZE.M,color:"#929191"}}>Make sure your details are all correct.</Text>  
-                        <Separator/>
                         <UserInfo label="Mobile Number" value={VerifyUserData.contactInfo.mobile_number}/>
                         <UserInfo label="Email Address" value={VerifyUserData.contactInfo.email}/>
                         <UserInfo label="First Name" value={VerifyUserData.person.firstName}/>
@@ -186,7 +251,6 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                         <UserInfo label="Occupation" value={VerifyUserData.incomeInfo.occupation}/>
                         <UserInfo label="ID Type" value={VerifyUserData.verifyID.idType}/>
                         <UserInfo label="ID number" value={VerifyUserData.verifyID.idNumber}/>
-                <Separator/>
                 </ScrollView>
 
                 <View style={styles.proceedBtn}>
@@ -206,7 +270,8 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                             }}
                         />
                         <TouchableOpacity 
-                            onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
                             style={{paddingHorizontal: 10,marginRight: 20,alignSelf:"center"}}
                         >
                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby certify that I accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions.</Text></Text>

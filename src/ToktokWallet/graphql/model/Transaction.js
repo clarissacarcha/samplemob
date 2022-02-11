@@ -96,7 +96,6 @@ export const GET_TRANSACTIONS = gql`
     }
 `
 
-
 export const POST_VERIFY_TRANSACTION_QR_CODE = gql`
     mutation postVerifyTransactionQrCode($input: PostVerifyTransactionQrCodeInput){
         postVerifyTransactionQrCode(input: $input){
@@ -113,6 +112,13 @@ export const POST_VERIFY_TRANSACTION_QR_CODE = gql`
                 }
             }
             QRInfo
+        }
+    }
+`
+export const GET_SEND_MONEY_TRANSACTIONS = gql`
+    query {
+        getSendMoneyTransactions {
+            ${WalletTransactions}
         }
     }
 `

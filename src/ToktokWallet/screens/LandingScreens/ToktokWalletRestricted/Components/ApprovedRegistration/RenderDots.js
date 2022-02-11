@@ -77,17 +77,19 @@ const RenderDots = ({scrollX , data, sliderRef , dotPosition , setCurrentIndex,c
 
                 <TouchableOpacity onPress={()=>{
                    if(currentIndex + 1 < data.length){
-                    sliderRef.current.scrollToIndex({
-                        index: currentIndex + 1,
-                        animated: true,
-                    })
-                    // setCurrentIndex(oldstate=>oldstate+1)
+                        sliderRef.current.scrollToIndex({
+                            index: currentIndex + 1,
+                            animated: true,
+                        })
+                        setCurrentIndex(oldstate=>oldstate+1)
                    }else{
                         return navigation.push("ToktokWalletRestricted" , {component: "noMpin"})
                    }
                 }} 
-                style={styles.nextPage}>
+                // disabled={currentIndex === data.length - 1}
+                style={[ styles.nextPage ]}>
                     <Text style={styles.dotsText}>{currentIndex < data.length - 1 ? "NEXT" : "DONE"}</Text>
+                    {/* <Text style={styles.dotsText}> {"NEXT"}</Text> */}
                     <VectorIcon iconSet={ICON_SET.Feather} color={COLOR.ORANGE} name="arrow-right"/>
                 </TouchableOpacity>
             </View>
@@ -108,11 +110,13 @@ const styles = StyleSheet.create({
     },
     nextPage: {
         flexDirection:"row",
-        marginHorizontal: 10
+        marginHorizontal: 10,
+        alignItems: "center"
     },
     prevPage: {
         flexDirection: "row",
-        marginHorizontal: 10
+        marginHorizontal: 10,
+        alignItems: "center"
     },
     dotsText: {
         fontFamily: FONT_SIZE.REGULAR,

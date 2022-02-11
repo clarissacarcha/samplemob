@@ -18,13 +18,14 @@ export const Confirm = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWa
     };
 
     const onSubmit = () => {
+        if(confirmpinCode.length < 6) return
         setPageIndex(oldstate=>oldstate+1)
      };
 
      useEffect(()=>{
         if(confirmpinCode.length == 4){
             if(pinCode != confirmpinCode){
-                return setMessage("TPIN code does not match! Please try again")
+                return setMessage("MPIN code does not match! Please try again")
             }
             return patchPincodeToktokWallet()
         }else{
@@ -34,8 +35,8 @@ export const Confirm = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWa
 
     return (
         <View style={styles.container}>
-        <ScrollView style={styles.content}>
-                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm TPIN</Text>
+        <View style={styles.content}>
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm New MPIN</Text>
                 <View style={{position: 'relative',marginTop: 50,}}>
                     <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin} numberOfBox={4}/>
                     <TextInput
@@ -60,14 +61,14 @@ export const Confirm = ({pinCode ,pageIndex, setPageIndex , patchPincodeToktokWa
                         }
 
                         <TouchableOpacity
-                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
+                                style={{marginTop: 18,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
+                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide MPIN" : "Show MPIN"}</Text>
                         </TouchableOpacity>
 
                 </View>
-            </ScrollView>
+            </View>
             <BuildingBottom/>
             {/* <TouchableOpacity
                 disabled={pinCode.length < 6}
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     },
     content: {
         // alignItems: "center",
-        padding: 10,
+        padding: 16,
         flex: 1,
     },
     input: {

@@ -63,13 +63,10 @@ export const ToktokWalletRequestMoney = ({navigation,route})=> {
     }
 
     const onSwipeSuccess = ()=> {
-        console.log(JSON.stringify(recipientDetails))
         postRequestMoney({
             variables: {
                 input: {
                     sourceAccountId: recipientDetails.id,
-                    sourcePersonId: recipientDetails.person.id,
-                    sourceWalletId: recipientDetails.wallet.id,
                     amount: +amount,
                     note: note,
                 }
@@ -95,7 +92,7 @@ export const ToktokWalletRequestMoney = ({navigation,route})=> {
                 amount: amount,
                 note: note,
                 recipient: {
-                    name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
+                    name: `${recipientDetails.person}`,
                     mobileNo: recipientDetails.mobileNumber,
                 },
             }

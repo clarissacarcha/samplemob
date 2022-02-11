@@ -2,7 +2,7 @@ import React, { useState , useRef } from 'react';
 import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput,Dimensions,StatusBar} from 'react-native';
 import { ICON_SET, VectorIcon, YellowButton , HeaderBack , HeaderTitle } from 'src/revamp'
 import { AlertOverlay } from 'src/components';
-import { CheckIdleState  , DisabledButton , NumberBoxes} from 'toktokwallet/components'
+import { CheckIdleState  , DisabledButton , NumberBoxes, HeaderCancel} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 import { BuildingBottom } from '../../../components';
 
@@ -12,15 +12,16 @@ const { width , height } = Dimensions.get("window")
 
 export const ToktokWalletTPINValidator = ({navigation,route})=> {
 
-
-    navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={[""]}/>
-    })
-
     const callBackFunc = route?.params?.callBackFunc ? route.params.callBackFunc : null
     const errorMessage = route?.params?.errorMessage ? route.params.errorMessage : null
     const data = route?.params?.data ? route.params.data : null
+    const btnLabel = route?.params?.btnLabel ? route.params.btnLabel : "Proceed"
+
+    navigation.setOptions({
+        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
+        headerTitle: ()=> <HeaderTitle label={[""]}/>,
+        headerRight: ()=> btnLabel == "Cash In" && <HeaderCancel navigation={navigation} screenPopNo={4} />
+    })
 
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
@@ -35,19 +36,20 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
 
     return(
         <CheckIdleState>
-            <KeyboardAvoidingView
-                behavior={Platform.OS == "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
+            <View
+                // behavior={Platform.OS == "ios" ? "padding" : "height"}
+                // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
                 style={styles.container}
             >
                  <View style={styles.content}>
                     <View style={styles.tpinBody}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginVertical: 30}}>Enter your TPIN</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginVertical: 30}}>Enter TPIN</Text>
                         <View style={{flexDirection:"row"}}>
                         <NumberBoxes 
                             pinCode={pinCode} 
                             onNumPress={onNumPress} 
                             showPin={showPin}
+                            error={errorMessage}
                         />
                          <TextInput
                                 caretHidden
@@ -58,7 +60,8 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                                 returnKeyType="done"
                                 onChangeText={(value) => {
                                 if (value.length <= 6) {
-                                    setPinCode(value);
+                                    const replaceValue = value.replace(/[^0-9]/g,"")
+                                    setPinCode(replaceValue);
                                 }
                                 }}
                                
@@ -73,15 +76,22 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                                     style={{paddingVertical: 10, alignItems: "center"}}
                                     onPress={()=>setShowPin(!showPin)}
                             >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
+                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+                        </TouchableOpacity> 
+
+                        <TouchableOpacity
+                                    style={{paddingVertical: 10, alignItems: "center"}}
+                                    onPress={()=>navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})}
+                            >
+                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
                         </TouchableOpacity> 
                        
                     </View>
                     <View style={styles.proceedBtn}>
                             {
                                 pinCode.length < 6
-                                ? <DisabledButton label="Proceed" />
-                                : <YellowButton label="Proceed" onPress={()=>{
+                                ? <DisabledButton label={btnLabel} />
+                                : <YellowButton label={btnLabel} onPress={()=>{
                                     // setPinCode("")
                                     callBackFunc({pinCode , data})
                                 }} />
@@ -89,7 +99,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                     </View>
                 </View>
                 <BuildingBottom/>
-            </KeyboardAvoidingView>
+            </View>
         </CheckIdleState>
     )
 }

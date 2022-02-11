@@ -12,6 +12,8 @@ const transaction = `
     name
     logo
     descriptions
+    firstFieldName
+    secondFieldName
   }
   loadDetails {
     id
@@ -46,9 +48,9 @@ const transaction = `
   createdAt
 `
 
-export const GET_BILLS_TRANSACTIONS = gql`
-  query getTransactions($input: GetTransactionsInput!) {
-    getTransactions(input: $input) {
+export const GET_TRANSACTIONS_BY_STATUS = gql`
+  query getTransactionsByStatus($input: GetTransactionsByStatusInput!) {
+    getTransactionsByStatus(input: $input) {
       ${transaction}
     }
   }
@@ -66,9 +68,9 @@ export const POST_TOKTOKWALLET_REQUEST_MONEY = gql`
     }
   }
 `
-export const POST_TRANSACTION = gql`
-  mutation postTransaction($input: PostTransactionInput!) {
-    postTransaction(input: $input) {
+export const POST_BILLS_TRANSACTION = gql`
+  mutation postBillsTransaction($input: PostTransactionInput!) {
+    postBillsTransaction(input: $input) {
       status
       data {
         ${transaction}

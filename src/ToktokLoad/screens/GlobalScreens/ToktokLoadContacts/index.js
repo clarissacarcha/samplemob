@@ -18,7 +18,7 @@ import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import { useContacts } from 'toktokload/hooks'
 
 //COMPONENTS
-import { HeaderBack, HeaderTitle, OrangeButton, SearchInput } from 'src/ToktokLoad/components';
+import { HeaderBack, HeaderTitle, OrangeButton, SearchInput, LoadingIndicator } from 'src/ToktokLoad/components';
 import { ContactInformation } from "./components";
 import { empty_search } from 'toktokload/assets/images';
 import { search_icon } from 'toktokload/assets/icons';
@@ -40,12 +40,14 @@ export const ToktokLoadContacts = ({navigation, route}) => {
   const [filteredData, setFilteredData] = useState(null);
   const [searchString, setSearchString] = useState('');
   const [selectedContact, setSelectedContact] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const { contacts } = useContacts();
 
   useEffect(() => {
     if(contacts){
       setData(contacts);
-      setFilteredData(contacts)
+      setFilteredData(contacts);
+      setTimeout(() => { setIsLoading(false) }, 500)
     }
   }, [contacts])
 
@@ -53,15 +55,29 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     setSearchString(value);
     const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(value.toLowerCase()));
     setFilteredData(filteredContacts);
+    setSelectedContact("")
   };
 
-  const onSelectContact = (item) => {
-    let mobileNumber = item.number.replace(/\s/g, '').replace(/[()]/g, '');
-    return mobileNumber.replace("+63", "0");
+  const onSelectedContact = (item) => {
+    let mobileNumber = item.number.replace(/\s/g, '').replace(/[()]/g, '').replace(/[$-/:-?{-~!"#^_`\[\]]/g, '');
+    let numLength = mobileNumber.length;
+
+    if(mobileNumber.substring(0, 2) == "+63"){
+      return mobileNumber.replace("+63", "0");
+    } else if(mobileNumber.substring(0, 2) == "63"){
+      return mobileNumber.replace("63", "0");
+    } else if(mobileNumber.substring(0, 2) == "09"){
+      return mobileNumber
+    } else if(numLength > 9) {
+      let number = mobileNumber.slice(0, -(numLength - 9))
+      return `09${number}`
+    } else {
+      return `09${mobileNumber}`;
+    }
   };
 
   const setRecipient = () => {
-    route.params.setMobileNumber(onSelectContact(selectedContact.item))
+    route.params.onSelectContact(onSelectedContact(selectedContact.item))
     return navigation.pop()
   }
 
@@ -70,6 +86,14 @@ export const ToktokLoadContacts = ({navigation, route}) => {
       <View style={styles.center}>
         <Image source={empty_search} style={styles.emptySearchIcon} />
         <Text style={styles.emptyText}>We can't find any contact matching your search</Text>
+      </View>
+    )
+  }
+
+  if(isLoading){
+    return(
+      <View style={styles.center}>
+        <LoadingIndicator isLoading={true} isFlex />
       </View>
     )
   }
@@ -107,7 +131,6 @@ export const ToktokLoadContacts = ({navigation, route}) => {
         />
       </View>
       <FlatList
-        showsVerticalScrollIndicator={false}
         data={filteredData}
         extraData={{selectedContact, filteredData}}
         keyExtractor={(item, index) => index}

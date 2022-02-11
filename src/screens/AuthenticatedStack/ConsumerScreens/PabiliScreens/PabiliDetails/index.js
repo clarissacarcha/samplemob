@@ -71,30 +71,29 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
   const [stringDescription, setStringDescription] = useState(null);
   const maxValue = constants.maxCashOnDelivery;
   const [partnerBranch, setPartnerBranch] = useState(null);
-  const {data: balanceData, loading: balanceLoading, error: balanceError} = useQuery(GET_TOKTOK_WALLET_BALANCE, {
+  const [walletBalance, setWalletBalance] = useState(0);
+
+  const [initialPrice, setInitialPrice] = useState(null);
+
+  const [balanceText, setBalanceText] = useState('');
+  const [hasWallet, setHasWallet] = useState(null);
+
+  const [getToktokWalletBalance] = useLazyQuery(GET_TOKTOK_WALLET_BALANCE, {
     fetchPolicy: 'network-only',
+    onCompleted: res => {
+      console.log({res});
+
+      setHasWallet(res.getToktokWalletBalance.hasWallet);
+      setBalanceText(numberFormat(res.getToktokWalletBalance.balance));
+      setWalletBalance(res.getToktokWalletBalance.balance);
+    },
   });
 
-  let balanceText = '';
-  let hasWallet = false;
-
-  if (balanceError) {
-    balanceText = 'Failed to retrieve balance.';
-  }
-
-  if (balanceLoading) {
-    balanceText = 'Retrieving balance...';
-  }
-
-  if (balanceData) {
-    balanceText = `PHP ${numberFormat(balanceData.getToktokWalletBalance.balance)}`;
-
-    hasWallet = balanceData.getToktokWalletBalance.hasWallet;
-  }
-
   useEffect(() => {
+    getToktokWalletBalance();
+
     if (route.params.partnerBranch) {
-      const filteredOrders = route.params.partnerBranch.orders.filter((order) => {
+      const filteredOrders = route.params.partnerBranch.orders.filter(order => {
         return order.cargo.tenants.length > 0;
       });
 
@@ -106,18 +105,61 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     }
   }, []);
 
+  useEffect(() => {
+    const orderData = route.params.orderData;
+
+    getDeliveryPriceAndDirectionsInitial({
+      variables: {
+        input: {
+          consumerId: session.user.consumer.id,
+          promoCode: '',
+          // promoCode: bookingData.promoCode,
+          isExpress: isExpress,
+          isCashOnDelivery: true,
+          paymentMethod,
+          partnerBranchOrderId: selectedOrder ? selectedOrder.id : null,
+          partnerBranchTenantId: selectedTenant ? selectedTenant.id : null,
+          origin: {
+            latitude: orderData.senderStop.latitude,
+            longitude: orderData.senderStop.longitude,
+          },
+          destinations: [
+            {
+              latitude: orderData.recipientStop[0].latitude,
+              longitude: orderData.recipientStop[0].longitude,
+            },
+          ],
+        },
+      },
+    });
+  }, []);
+
   const paymentMethodSheetRef = useRef();
   const paymentSheetRef = useRef();
   const partnerItemSheefRef = useRef();
   const itemSheetRef = useRef();
   const tenantSheetRef = useRef();
 
+  const [getDeliveryPriceAndDirectionsInitial, {loading: loadingInitial}] = useLazyQuery(
+    GET_DELIVERY_PRICE_AND_DIRECTIONS,
+    {
+      fetchPolicy: 'no-cache',
+      onError: error => {
+        onErrorAlert({alert: AlertHook, error});
+      },
+      onCompleted: data => {
+        console.log(JSON.stringify({onCompleted: data.getDeliveryPriceAndDirections.pricing}));
+        setInitialPrice(data.getDeliveryPriceAndDirections.pricing.price);
+      },
+    },
+  );
+
   const [getDeliveryPriceAndDirections, {loading}] = useLazyQuery(GET_DELIVERY_PRICE_AND_DIRECTIONS, {
     fetchPolicy: 'no-cache',
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert: AlertHook, error});
     },
-    onCompleted: (data) => {
+    onCompleted: data => {
       // console.log(JSON.stringify(data.getDeliveryPriceAndDirections, null, 4));
       const {hash, pricing, directions} = data.getDeliveryPriceAndDirections;
       const {price, distance, duration, discount, expressFee} = pricing;
@@ -138,6 +180,8 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
         finalItemDescription = otherItem;
       }
 
+      console.log(JSON.stringify({hash, pricing, directions}, null, 4));
+
       navigation.push('DeliverySummary', {
         orderData: {
           ...route.params.orderData,
@@ -156,18 +200,19 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
           duration,
           directions,
         },
+        walletBalance: walletBalance,
       });
     },
   });
 
-  const cleanEmptyItemsToPurchase = (value) => {
-    return value.filter((item) => item.description || item.quantity);
+  const cleanEmptyItemsToPurchase = value => {
+    return value.filter(item => item.description || item.quantity);
   };
 
-  const verifyItemsToPurchase = (value) => {
+  const verifyItemsToPurchase = value => {
     let verified = true;
 
-    value.map((item) => {
+    value.map(item => {
       if (!item.description) {
         verified = false;
       }
@@ -179,8 +224,8 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     return verified;
   };
 
-  const formatItemsToPurchase = (value) => {
-    return value.map((item) => `${item.quantity} - ${item.description}`);
+  const formatItemsToPurchase = value => {
+    return value.map(item => `${item.quantity} - ${item.description}`);
   };
 
   const onConfirmPabiliInformation = () => {
@@ -285,7 +330,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     });
   };
 
-  const onPaymentMethodChange = (paymentMethodValue) => {
+  const onPaymentMethodChange = paymentMethodValue => {
     // if (isCashOnDelivery && collectPaymentFromValue === 'SENDER') {
     //   AlertHook({message: 'Cannot collect payment from sender on cash on deliveries.'});
     //   return;
@@ -293,7 +338,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     setPaymentMethod(paymentMethodValue);
   };
 
-  const onPartnerBranchOrderSelect = (order) => {
+  const onPartnerBranchOrderSelect = order => {
     if (!selectedOrder) {
       setItemDescription(order.cargo.type);
       setTenants(order.cargo.tenants);
@@ -309,7 +354,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     }
   };
 
-  const onCashOnDeliveryValueChange = (value) => {
+  const onCashOnDeliveryValueChange = value => {
     const decimal = value.split('.')[1];
 
     if (isNaN(value)) {
@@ -340,13 +385,13 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <View style={{flex: 1}}>
           <InputScrollView contentContainerStyle={styles.screenBox} showsVerticalScrollIndicator={false}>
-            <AlertOverlay visible={loading} />
+            <AlertOverlay visible={loading || loadingInitial} />
             <View style={{height: 20}} />
             {/* <PromoForm /> */}
-            {/* <PaymentMethodForm
+            <PaymentMethodForm
               value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
               bottomSheetRef={paymentMethodSheetRef}
-            /> */}
+            />
             {/* <PaymentForm value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'} bottomSheetRef={paymentSheetRef} /> */}
             {!partnerBranch && (
               <ItemDescriptionForm
@@ -389,6 +434,8 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
         ref={paymentMethodSheetRef}
         balanceText={balanceText}
         hasWallet={hasWallet}
+        price={initialPrice}
+        getWalletBalance={getToktokWalletBalance}
       />
       <PaymentSheet onChange={setCollectPaymentFrom} ref={paymentSheetRef} />
       <ItemSheet onChange={setItemDescription} ref={itemSheetRef} />
@@ -407,7 +454,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
   constants: state.constants,
 });

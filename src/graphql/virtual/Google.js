@@ -27,15 +27,15 @@ export const GET_GOOGLE_GEOCODE_REVERSE = gql`
 `;
 
 export const GET_GOOGLE_PLACE_SEARCH_NEARBY = gql`
-  query {
-    getGooglePlaceSearchNearby(input: {coordinates: {latitude: 14.5601447, longitude: 120.9931885}}) {
+  query getGooglePlaceSearchNearby($input: GetGooglePlaceSearchNearbyInput!) {
+    getGooglePlaceSearchNearby(input: $input) {
       name
       formattedAddress
+      placeId
       location {
         lat
         lng
       }
-      placeId
       types
     }
   }

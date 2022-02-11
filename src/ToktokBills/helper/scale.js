@@ -1,9 +1,10 @@
 import {Dimensions, Platform, StatusBar} from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 const {width, height} = Dimensions.get('window');
 
 const getDeviceWidth = width;
 const getDeviceHeight = height;
-const getStatusbarHeight = StatusBar.currentHeight;
+const getStatusbarHeight = getStatusBarHeight();
 
 //Guideline sizes are based on standard ~5" screen mobile device
 const guidelineBaseWidth = 375;

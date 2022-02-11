@@ -22,7 +22,7 @@ const mapDispatchtoProps = (dispatch) => ({
 export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navigation,route,getTokwaTransactions})=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Transactions']} />,
+        headerTitle: ()=> <HeaderTitle label={['Recent Transactions']} />,
     })
 
     const [allTransactions, setAllTransactions] = useState(route.params.allTransactions)
@@ -40,7 +40,7 @@ export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navig
             setPageLoading(false)
         },
         onError: (error)=> {
-            onErrorAlert({alert ,error})
+            onErrorAlert({alert ,error , navigation})
         }
     })
 
@@ -58,7 +58,7 @@ export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navig
     return (
         <CheckIdleState>
         <Separator />
-        <SwipeDownToRefresh/>
+        {/* <SwipeDownToRefresh/> */}
         <View style={styles.container}>        
                 <View style={styles.logs}>
                         <FlatList 

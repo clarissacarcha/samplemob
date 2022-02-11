@@ -5,20 +5,20 @@ import CONSTANTS from 'common/res/constants'
 const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 
-const NumberBox = ({onPress, value , showPin}) => (
-    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
+const NumberBox = ({onPress, value , showPin , error }) => (
+    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5, ...(!error ? {} : {borderWidth: 1, paddingHorizontal: 2, borderColor:COLOR.RED}) }}>
       <View style={styles.inputView}>
         <Text style={{fontSize: 25, fontFamily: FONT.BOLD}}>{value ? showPin ? value : "•" : ''}</Text>
       </View>
     </TouchableHighlight>
 );
 
-export const NumberBoxes = ({pinCode, onNumPress, showPin , numberOfBox = 6}) => {
+export const NumberBoxes = ({pinCode, onNumPress, showPin , numberOfBox = 6 , error = false}) => {
 
     const numberBoxes = [];
     var i;
     for (i = 0; i <= (numberOfBox - 1); i++) {
-      numberBoxes.push(<NumberBox onPress={onNumPress} value={pinCode[i]} showPin={showPin}/>);
+      numberBoxes.push(<NumberBox onPress={onNumPress} value={pinCode[i]} showPin={showPin} error={error}/>);
     }
     return (
         <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginBottom: 20,alignSelf:"center"}}>

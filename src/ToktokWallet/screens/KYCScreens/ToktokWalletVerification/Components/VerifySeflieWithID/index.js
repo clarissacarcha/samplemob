@@ -6,6 +6,8 @@ import {useNavigation} from '@react-navigation/native'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import { BuildingBottom } from 'toktokwallet/components'
 import { moderateScale } from 'toktokwallet/helper'
+import { useMutation } from '@apollo/react-hooks'
+import { AlertOverlay } from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import ImageCropper from 'react-native-simple-image-cropper'
 
@@ -46,11 +48,11 @@ const MainComponent = ({children , onPress })=> {
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>One last step before you get a verified toktokwallet.</Text>  
                 
                 <View style={{marginTop: 20,flex: 1}}>
-                {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a selfie with your Valid ID</Text> */}
+                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, alignSelf:"center"}}>Take a Selfie with ID</Text>
                         {children}
                 </View>
                 <View style={{flex: 1,alignItems:"center",justifyContent:"center"}}>
-                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
+                        <Text style={{color: COLOR.YELLOW, marginTop: 20,textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
                         <View>
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: moderateScale(FONT_SIZE.M)}}><Text style={{color: COLOR.YELLOW}}>Position</Text> your face within the frame</Text>
@@ -92,6 +94,7 @@ export const VerifySelfieWithID = ()=> {
     const [showPepQuestionnaire,setShowPepQuestionnaire] = useState(false)
     const VerifyUserData = useContext(VerifyContext)
     const {
+        setCacheImagesList,
         setCurrentIndex , 
         selfieImageWithID, 
         setSelfieImageWithID ,
@@ -120,27 +123,12 @@ export const VerifySelfieWithID = ()=> {
 
     const setImage = (data)=> {
        // setSelfieImageWithID(data);
+        setCacheImagesList(state=> {
+            return [...state, data.uri]
+        })
         setTempSelfieImageWithID(data);
         // setCurrentIndex(oldval => oldval + 1)
     }
-
-    const [postVerifyIfPep, {loading}] = useMutation(POST_VERIFY_IF_PEP, {
-        client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
-        onError: (error)=> onErrorAlert({alert,error}),
-        onCompleted: ({postVerifyIfPep})=>{
-            if(postVerifyIfPep){
-                setPepInfo(state=> {
-                    return {
-                        ...state,
-                        isPep: true,
-                    }
-                })
-                return setShowPepQuestionnaire(true);
-            }
-
-            return setCurrentIndex(oldval => oldval + 1)
-        }
-    })
 
     const Proceed = async ()=> {
         if(tempSelfieImageWithID == null){
@@ -160,19 +148,8 @@ export const VerifySelfieWithID = ()=> {
                 uri: croppedResult
             }))
 
-            postVerifyIfPep({
-                variables: {
-                    input: {
-                        firstName: person.firstName,
-                        middleName: person.middleName,
-                        lastName: person.lastName,
-                        birthDate: birthInfo.birthdate,
-                        placeOfBirth: birthInfo.birthPlace,
-                        gender: person.gender,
-                        nationality: nationalityId
-                    }
-                }
-            })
+            return setCurrentIndex(oldval => oldval + 1)
+
         }catch(error){  
             throw error;
         }
@@ -182,7 +159,7 @@ export const VerifySelfieWithID = ()=> {
     if(tempSelfieImageWithID){
         return(
             <>
-             <AlertOverlay visible={loading}/>
+             {/* <AlertOverlay visible={loading}/>
              <PepQuestionnaireModal 
                 visible={showPepQuestionnaire} 
                 setVisible={setShowPepQuestionnaire}
@@ -197,7 +174,7 @@ export const VerifySelfieWithID = ()=> {
                         setPepInfo
                     })
                 }}
-            />
+            /> */}
             <MainComponent onPress={Proceed}>
                 <View style={styles.PreviewImage}>
                     {/* <Image style={{height:290,width: 280,flex: 1}} resizeMode="stretch" source={{uri: selfieImageWithID.uri}}/> */}
@@ -247,7 +224,7 @@ const styles = StyleSheet.create({
     proceedBtn: {
         height: 70,
         width: "100%",
-        marginBottom: 16,
+        marginBottom: 32,
         marginTop: 40,
         justifyContent:"flex-end"
     },
@@ -304,6 +281,7 @@ const styles = StyleSheet.create({
         height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 10, 
         width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 10, 
         alignSelf:"center",
+        justifyContent:"center",
         marginTop: 7,
         padding: 2,
         borderStyle: "dashed",

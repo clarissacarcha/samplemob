@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux'
 import { HeaderBack, YellowButton,HeaderTitle } from 'src/revamp';
 import {AlertOverlay, SomethingWentWrong} from 'src/components'
 import { Separator , CheckIdleState } from 'toktokwallet/components';
+import { FormatTextUtility } from 'toktokwallet/util'
 import {useAlert} from 'src/hooks/useAlert'
 import {onErrorAlert,onError} from 'src/util/ErrorUtility'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -51,7 +52,7 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
         fetchPolicy: 'network-only',
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({getMyAccount})=> {
             setfirstName(getMyAccount.person.firstName)
@@ -71,7 +72,7 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
     const [postCashOutEnrollmentBdo, {data, error ,loading}] = useMutation(POST_CASH_OUT_ENROLLMENT_BDO, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: (res) => {
             setShowModal(true)
@@ -184,7 +185,10 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
                         <TextInput 
                             style={styles.input}
                             placeholder="Enter first name here"
-                            onChangeText={(value)=>setfirstName(value)}
+                            onChangeText={(value)=>{
+                                const finalString = FormatTextUtility.removeSpecialCharacters(value)
+                                setfirstName(finalString)
+                            }}
                             value={firstName}
                             returnKeyType="done"
                         />
@@ -195,7 +199,10 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
                         <TextInput 
                             style={styles.input}
                             placeholder="Enter middle name here"
-                            onChangeText={(value)=>setMiddleName(value)}
+                            onChangeText={(value)=>{
+                                const finalString = FormatTextUtility.removeSpecialCharacters(value)
+                                setMiddleName(finalString)
+                            }}
                             value={middleName}
                             returnKeyType="done"
                         />
@@ -206,7 +213,10 @@ export const ToktokWalletBDORegistration = ({navigation,route})=> {
                         <TextInput 
                             style={styles.input}
                             placeholder="Enter last name here"
-                            onChangeText={(value)=>setlastName(value)}
+                            onChangeText={(value)=>{
+                                const finalString = FormatTextUtility.removeSpecialCharacters(value)
+                                setlastName(finalString)
+                            }}
                             value={lastName}
                             returnKeyType="done"
                         />

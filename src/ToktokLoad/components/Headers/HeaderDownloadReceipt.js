@@ -22,7 +22,8 @@ export const HeaderDownloadReceipt = ({
   color = "#F6841F" ,
   viewshotRef = null,
   refNo,
-  format
+  format,
+  onPressDownloadReceipt
 }) => {
 
   const navigation = useNavigation();
@@ -105,17 +106,20 @@ export const HeaderDownloadReceipt = ({
     
     const pathCache = RNFS.CachesDirectoryPath
     console.log(pathCache)
+    onPressDownloadReceipt(true);
     
     viewshotRef.current.capture().then(async (uri ) => {
-      const timestamp = +moment()
-      const filename = `${timestamp.toString()}_${refNo}.${format ? format : "jpg"}`
+      const timestamp = +moment();
+      const filename = `${timestamp.toString()}_${refNo}.${format ? format : "jpg"}`;
 
-      RNFS.moveFile(uri, pathCache + `/${filename}`)
-      const newFileUri = `${pathCache}/${filename}`
+      RNFS.moveFile(uri, pathCache + `/${filename}`);
+      const newFileUri = `${pathCache}/${filename}`;
 
-      await CameraRoll.save(newFileUri, { type: "photo", album: "toktok" })
+      await CameraRoll.save(newFileUri, { type: "photo", album: "toktok" });
    
-      Toast.show(`Receipt ${filename} has been downloaded.` , Toast.LONG)
+      Toast.show(`Receipt ${filename} has been downloaded.` , Toast.LONG);
+      onPressDownloadReceipt(false);
+
     });
   }
 

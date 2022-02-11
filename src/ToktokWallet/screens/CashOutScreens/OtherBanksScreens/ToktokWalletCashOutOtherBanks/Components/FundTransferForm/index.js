@@ -1,30 +1,41 @@
-import React , {useEffect,useState, useContext} from 'react'
-import {View , Text , StyleSheet , TextInput,TouchableOpacity} from 'react-native'
-import { ValidatorScreen, InputAmount } from 'toktokwallet/components'
+import React , {useEffect,useState, useContext, useCallback} from 'react'
+import {View , Text , StyleSheet , TextInput,TouchableOpacity, Alert} from 'react-native'
+import { ValidatorScreen , InputAmount } from 'toktokwallet/components'
 import { YellowButton ,VectorIcon ,ICON_SET} from 'src/revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
+import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT, POST_COMPUTE_CONVENIENCE_FEE } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
-import { useAlert } from 'src/hooks'
-import { numberFormat } from 'toktokwallet/helper'
+import { useAlert, usePrompt } from 'src/hooks'
+import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { AlertOverlay } from 'src/components'
 import { ContextCashOut } from '../ContextProvider'
 import { TransactionUtility } from 'toktokwallet/util'
+import _ from 'lodash'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
 import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
-const Amount = ({changeErrorMessagge ,errorListMessage})=> {
+const Amount = ({
+    changeErrorMessagge ,
+    errorListMessage , 
+    providerServiceFee , 
+    systemServiceFee , 
+    computeConvenienceFee ,
+    computeLoading,
+})=> {
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const { amount ,setAmount , note , setNote ,bank } = useContext(ContextCashOut)
     const [maxAmount , setMaxAmount] = useState(null)
-    const [isFocus,setIsFocus] = useState(false)
+    const cfMessage =   +providerServiceFee + +systemServiceFee == 0 
+                      ? `Convenience fee is waived for this transaction.`
+                      : `Additional convenience fee will be charged in this transaction.`
+                    //   : `Additional PHP ${numberFormat(+providerServiceFee + +systemServiceFee)} convenience fee will be charged in this transaction.`
 
 
     const changeAmount = (value)=> {
@@ -59,32 +70,42 @@ const Amount = ({changeErrorMessagge ,errorListMessage})=> {
         <View style={styles.container}>
         <View style={{marginTop: 16,}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Enter Amount</Text>
-            <View style={[styles.input, {borderWidth: 1, borderColor: errorListMessage.amount == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
+           <InputAmount
+                errorMessage={errorListMessage.amount}
+                amount={amount}
+                changeAmount={changeAmount}
+                currency={tokwaAccount.wallet.currency.code}
+                onBlur={()=>{
+                    AmountLimitHelper.postCheckOutgoingLimit({
+                        amount,
+                        setErrorMessage: (value)=> {
+                            if(errorListMessage.amount == "")  changeErrorMessagge("amount",value)
+                        }
+                    })
+                    computeConvenienceFee()
+                }}
+            />
+            {/* <View style={[styles.input, {borderWidth: 1, borderColor: errorListMessage.amount == "" ? "transparent" : COLOR.RED,flexDirection:"row"}]}>
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>{tokwaAccount.wallet.currency.code} </Text>
                         <TextInput
-                                onFocus={()=>setIsFocus(true)}
-                                onBlur={()=>setIsFocus(false)}
-                                caretHidden={!isFocus}
+                                caretHidden
                                 value={amount}
                                 onChangeText={changeAmount}
-                                // style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
-                                style={{height: '100%', width: '100%', ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
+                                style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
                                 keyboardType="numeric"
                                 returnKeyType="done"
-                                placeholder="0.00"
+                                onBlur={computeConvenienceFee}
                         />
-                         {
-                             !isFocus && amount != "" &&
-                            <View style={{marginLeft: 5,alignSelf: "center",flex: 1}}>
-                                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
-                            </View>
-                        }
-            </View>
+                    <View style={{marginLeft: 5,alignSelf: "center",flex: 1}}>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                    </View>
+            </View> */}
             {errorListMessage.amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.amount}</Text>}
+            {amount != "" && bank.id > 0 && !computeLoading && tokwaAccount.constants.UbFundTransferType == "api" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
         </View>
         <View style={{marginVertical: 16,marginBottom: 20}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (Optional)</Text>
-        <View style={[styles.input, {justifyContent:"center"}]}>
+   
              <TextInput
                     style={styles.input}
                     value={note}
@@ -92,9 +113,10 @@ const Amount = ({changeErrorMessagge ,errorListMessage})=> {
                     onChangeText={(value)=> setNote(value)}
                     placeholder="Enter note here"
                     returnKeyType="done"
+                    placeholderTextColor={COLOR.DARK}
                 />
                 <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{note.length}/60</Text>
-        </View>
+    
         </View>
     </View>
     )
@@ -104,6 +126,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
 
     const { 
         accountName ,
+        setAccountName,
         accountNumber , 
         setAccountNumber, 
         address , 
@@ -131,12 +154,37 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                 {errorListMessage.bank != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.bank}</Text>}
             </View>
 
-            <View style={{marginTop: 16,}}>
+
+            {/* OLD ACCOUNT NAME */}
+            {/* <View style={{marginTop: 16,}}>
             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
             <View style={[styles.input, {justifyContent:"center",backgroundColor:"#F0F0F0"}]}>
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{accountName}</Text>
             </View>
+            </View> */}
+
+            {/* NEW ACCOUNT NAME */}
+            <View style={{marginTop: 16,}}>
+                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Name</Text>
+                <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.accountName == "" ? "transparent" : COLOR.RED}]}>
+                    <TextInput
+                            // editable={activeAccount > 0 ? false : true}
+                            style={styles.input}
+                            value={accountName}
+                            onChangeText={setAccountName}
+                            maxLength={30}
+                            placeholder={`Enter bank account name here`}
+                            placeholderTextColor={COLOR.DARK}
+                            keyboardType="default"
+                            returnKeyType="done"
+                        />
+                </View>
+                <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{accountName.length}/30 
+                    {errorListMessage.accountName != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.accountName}</Text>}
+                </Text>
             </View>
+
+
             <View style={{marginTop: 16,}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Number</Text>
                 <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.accountNumber == "" ? "transparent" : COLOR.RED}]}>
@@ -147,6 +195,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                             onChangeText={changeAccountNumber}
                             maxLength={19}
                             placeholder={`Enter bank account number here`}
+                            placeholderTextColor={COLOR.DARK}
                             keyboardType="number-pad"
                             returnKeyType="done"
                         />
@@ -165,6 +214,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                             onChangeText={(value)=>setAddress(value)}
                             maxLength={20}
                             placeholder={`Enter your address here`}
+                            placeholderTextColor={COLOR.DARK}
                             returnKeyType="done"
                         />
                 </View>
@@ -178,6 +228,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
 
 export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
+    const prompt = usePrompt()
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const alert = useAlert()
     const navigation = useNavigation()
@@ -185,6 +236,10 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         status: 0
     })
     const [successModalVisible,setSuccessModalVisible] = useState(false)
+    const [providerServiceFee,setProviderServiceFee] = useState("")
+    const [systemServiceFee,setSystemServiceFee] = useState("")
+    const [type,setType] = useState("")
+
     const {
         accountName,
         accountNumber,
@@ -198,6 +253,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
     const [errorListMessage, setErrorListMessage] = useState({
         bank: "",
+        accountName: "",
         accountNumber: "",
         address: "",
         amount: "",
@@ -223,6 +279,16 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         }
     },[bank,accountNumber,address])
 
+    const [postComputeConvenienceFee , {loading: computeLoading}] = useMutation(POST_COMPUTE_CONVENIENCE_FEE, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        // onError: (error)=> onErrorAlert({alert,error}),
+        onCompleted: ({postComputeConvenienceFee})=> {
+            const { providerServiceFee , systemServiceFee , type } = postComputeConvenienceFee
+            setSystemServiceFee(systemServiceFee)
+            setProviderServiceFee(providerServiceFee)
+            setType(type == "pesonet" ? "Pesonet" : "Instapay")
+        }
+    })
 
     const [postRequestCashOut , {loading: requestLoading}] = useMutation(POST_REQUEST_CASH_OUT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -239,7 +305,13 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
            
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            // onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert
+            })
         }
     })
 
@@ -261,8 +333,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                alert,
-                onErrorAlert,
+                prompt,
+                alert
             })
         }
     })
@@ -309,6 +381,12 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             changeErrorMessagge("bank",`Select Bank first.`)
             noError = false
         }
+
+        if(accountName == ""){
+            changeErrorMessagge("accountName","Account Name is required.")
+            noError = false
+        }
+
         if(accountNumber == ""){
             changeErrorMessagge("accountNumber","Account Number is required.")
             noError = false
@@ -327,7 +405,22 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             noError = false
         }
 
+        if(errorListMessage.amount != ""){
+            noError = false;
+        }
+
         if(!noError) return
+
+        if(providerServiceFee == "" || systemServiceFee == ""){
+             postComputeConvenienceFee({
+                variables: {
+                    input: {
+                        amount: +amount,
+                        cashOutBankId: bank.id
+                    }
+                }
+            })
+        }
 
         navigation.navigate("ToktokWalletReviewAndConfirm", {
             label: screenLabel ?? "Fund Transfer" , 
@@ -337,7 +430,10 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                     accountName: accountName,
                     accountNumber: accountNumber,
                     amount: amount,
-                    note: note 
+                    note: note,
+                    providerServiceFee,
+                    systemServiceFee,
+                    fundTransferType: type
                 },
             isSwipe: true,
             swipeTitle: `Confirm`,
@@ -346,6 +442,33 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         })
 
     }
+
+    const debounceHandler = useCallback(_.debounce(()=>{
+        postComputeConvenienceFee({
+            variables: {
+                input: {
+                    amount: +amount,
+                    cashOutBankId: bank.id
+                }
+            }
+        })
+    },1000, {
+        leading: false,
+        trailing: true,
+    }), [])
+
+    useEffect(()=>{
+        if(amount != "" && bank.id > 0){
+            postComputeConvenienceFee({
+                variables: {
+                    input: {
+                        amount: +amount,
+                        cashOutBankId: bank.id
+                    }
+                }
+            })
+        }
+    },[bank,amount])
 
     return (
         <>
@@ -357,6 +480,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 tokwaAccount={tokwaAccount}
                 savedAccounts={savedAccounts}
                 activeAccount={activeAccount}
+                accountName={accountName}
                 note={note}
                 screenLabel={screenLabel}
             />
@@ -367,6 +491,19 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             <Amount
                 changeErrorMessagge={changeErrorMessagge}
                 errorListMessage={errorListMessage}
+                providerServiceFee={providerServiceFee}
+                systemServiceFee={systemServiceFee}
+                computeLoading={computeLoading}
+                computeConvenienceFee={()=> {
+                    postComputeConvenienceFee({
+                        variables: {
+                            input: {
+                                amount: +amount,
+                                cashOutBankId: bank.id
+                            }
+                        }
+                    })
+                }}
             />
             <View style={styles.proceedBtn}>
                 <YellowButton label="Proceed" onPress={onPress}/>

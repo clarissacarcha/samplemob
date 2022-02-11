@@ -16,6 +16,7 @@ import CONSTANTS from 'common/res/constants'
 
 // SELF IMPORTS
 import {
+    CancelButton,
     DeclineModal,
     EnterAmount,
     RequestInfo,
@@ -34,6 +35,7 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
     const alert = useAlert();
     const { refreshWallet , tokwaAccount } = useAccount();
     const requestMoney = route?.params?.requestMoney;
+    const enableCancel = route?.params?.enableCancel;
     const [amount,setAmount] = useState(requestMoney.amount.toString())
     const [note,setNote] = useState("")
     const [successModalVisible, setSuccessModalVisible] = useState(false)
@@ -130,55 +132,97 @@ export const ToktokWalletRequestMoneyViewDetails = ({navigation,route})=> {
             <View style={styles.container}>
                 <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
 
-                    <RequestInfo
-                        label="Requester Name"
-                        value={`${requestMoney.destinationPerson.firstName} ${requestMoney.destinationPerson.lastName}`}
-                    />
-
-                    <RequestInfo
-                        label="Mobile Number"
-                        value={requestMoney.destinationAccount.mobileNumber}
-                    />
-
-                    <RequestInfo
-                        label="Amount Requested"
-                        value={`${tokwaAccount.wallet.currency.code} ${numberFormat(requestMoney.amount)}`}
-                    />
-
                     {
-                        requestMoney.destinationRemarks != "" &&
-                        <RequestInfo
-                            label="Note"
-                            value={requestMoney.destinationRemarks}
-                        />
+
+                        enableCancel 
+                        ? 
+                        <>
+                            <RequestInfo
+                                 label="Request No"
+                                value={`${requestMoney.referenceNumber}`}
+                            />
+                            <RequestInfo
+                                 label="Request to"
+                                value={`${requestMoney.sourcePerson.firstName} ${requestMoney.sourcePerson.lastName}`}
+                            />
+                            <RequestInfo
+                                label="Mobile Number"
+                                value={requestMoney.sourceAccount.mobileNumber}
+                            />
+                             <RequestInfo
+                                label="Amount Requested"
+                                value={`${tokwaAccount.wallet.currency.code} ${numberFormat(requestMoney.amount)}`}
+                            />
+
+                            {
+                                 requestMoney.destinationRemarks != "" &&
+                                 <RequestInfo
+                                     label="Note"
+                                     value={requestMoney.destinationRemarks}
+                                 />
+                            }
+
+                        </>
+                        :
+                        <>
+                           <RequestInfo
+                                 label="Requester Name"
+                                value={`${requestMoney.destinationPerson.firstName} ${requestMoney.destinationPerson.lastName}`}
+                            />
+
+                            <RequestInfo
+                                label="Mobile Number"
+                                value={requestMoney.destinationAccount.mobileNumber}
+                            />
+
+                            <RequestInfo
+                                label="Amount Requested"
+                                value={`${tokwaAccount.wallet.currency.code} ${numberFormat(requestMoney.amount)}`}
+                            />
+
+                            {
+                                 requestMoney.destinationRemarks != "" &&
+                                 <RequestInfo
+                                     label="Note"
+                                     value={requestMoney.destinationRemarks}
+                                 />
+                            }
+
+                            <EnterAmount
+                                amount={amount}
+                                setAmount={setAmount}
+                                setEnabled={setEnabled}
+                                tokwaAccount={tokwaAccount}
+                             />
+
+                            <WalletBalance 
+                                tokwaAccount={tokwaAccount}
+                                navigation={navigation}
+                                amount={amount}
+                            />
+                        </>
                     }
-
-                    <EnterAmount
-                            amount={amount}
-                            setAmount={setAmount}
-                            setEnabled={setEnabled}
-                            tokwaAccount={tokwaAccount}
-                    />
-
-                    <WalletBalance 
-                        tokwaAccount={tokwaAccount}
-                        navigation={navigation}
-                        amount={amount}
-                    />
+                  
                 </ScrollView>
                 <View style={styles.actionBtns}>
-                    <TouchableOpacity onPress={throttledDeclined} style={[styles.btn, {backgroundColor:"#CBCBCB",marginRight: 10}]}>
-                        <Text style={[ styles.label ]}>Decline</Text>
-                    </TouchableOpacity>
-                    {
-                        enabled 
-                        ? <TouchableOpacity onPress={throttledSend} style={[styles.btn, {backgroundColor:COLOR.YELLOW,marginLeft: 10}]}>
-                            <Text style={[ styles.label ]}>Send</Text>
-                        </TouchableOpacity>
-                    :    <View style={{justifyContent:"center",alignItems:"center",height: 50,backgroundColor: "#FDBA1C",opacity: 0.5, borderRadius: 5,flex: 1}}>
-                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,color:"gray"}}>Send</Text>
-                        </View>
-                    }
+                   {
+                       enableCancel 
+                       ? <CancelButton requestMoneyId={requestMoney.id}/>
+                       : <>
+                            <TouchableOpacity onPress={throttledDeclined} style={[styles.btn, {backgroundColor:"#CBCBCB",marginRight: 10}]}>
+                                <Text style={[ styles.label ]}>Decline</Text>
+                            </TouchableOpacity>
+                                {
+                                    enabled 
+                                    ? <TouchableOpacity onPress={throttledSend} style={[styles.btn, {backgroundColor:COLOR.YELLOW,marginLeft: 10}]}>
+                                        <Text style={[ styles.label ]}>Send</Text>
+                                    </TouchableOpacity>
+                                :    <View style={{justifyContent:"center",alignItems:"center",height: 50,backgroundColor: "#FDBA1C",opacity: 0.5, borderRadius: 5,flex: 1}}>
+                                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,color:"gray"}}>Send</Text>
+                                    </View>
+                                }
+                       </>
+                   }
                 </View>
             </View>
         </CheckIdleState>

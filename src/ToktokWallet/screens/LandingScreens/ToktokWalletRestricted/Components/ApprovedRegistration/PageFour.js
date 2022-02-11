@@ -14,7 +14,7 @@ const PageFour = ({scale,tokwaAccount})=> {
         <>
         <Animated.View style={{...styles.container,transform: [{scale: scale}]}}>
                 <Text style={styles.headerText}>
-                You can now start enjoying your e-wallet through 5 easy steps:
+                You can now start enjoying your toktokwallet through 5 easy steps:
                 </Text>
 
                 <View style={{marginTop: 20, alignItems:"center"}}>
@@ -46,13 +46,13 @@ const styles = StyleSheet.create({
         textAlign:"center"
     },
     proceedImage: {
-        height: 100,
+        height: height * 0.15,
         width: width * 0.6,
         marginTop: 5,
-        marginBottom: 30,
+        marginBottom: 5,
     },
     tpinImage: {
-        height: 80,
+        height: height * 0.15,
         width: width * 0.8,
         marginTop: 5,
     },

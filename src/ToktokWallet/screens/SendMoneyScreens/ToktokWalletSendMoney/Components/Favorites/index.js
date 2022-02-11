@@ -1,4 +1,4 @@
-import React, { useState , useEffect , forwardRef , useImperativeHandle , useContext } from 'react'
+import React, { useState , useEffect , forwardRef , useImperativeHandle , useContext, useRef } from 'react'
 import {View,Text,StyleSheet,Animated,Dimensions} from 'react-native'
 import {Swipeable, TouchableOpacity} from 'react-native-gesture-handler';
 import {useThrottle} from 'src/hooks';
@@ -7,7 +7,12 @@ import { moderateScale } from 'toktokwallet/helper'
 import { Separator } from 'toktokwallet/components'
 import {useAlert} from 'src/hooks/useAlert'
 import {FavoritesContext } from "../ContextProvider"
+import { SwipeListView } from 'react-native-swipe-list-view';
 import CONSTANTS from 'common/res/constants'
+
+//SELF IMPORTS
+import RenderShowItem from './RenderShowItem';
+import RenderHiddenItem from './RenderHiddenItem';
 
 const {FONT_SIZE , SIZE , FONT_FAMILY: FONT , COLOR} = CONSTANTS
 const {width} = Dimensions.get("window")
@@ -70,6 +75,7 @@ const RenderItem = ({item, index , removeFromList , selectFromList})=> {
 export const Favorites = forwardRef(({setMobileNo},ref)=> {
     const { favorites , addAccountFavorites,removeFromList, getFavorites} = useContext(FavoritesContext)
     const alert = useAlert();
+    const swipeListViewRef = useRef(null);
 
     useImperativeHandle(ref, ()=> ({
         checkIfFavorites: (id)=>{
@@ -97,6 +103,7 @@ export const Favorites = forwardRef(({setMobileNo},ref)=> {
 
     const selectFromList = (item)=>{
       setRecipientMobileNo(item.favoriteAccount.mobileNumber)
+      swipeListViewRef.current.closeAllOpenRows()
     }
 
     useEffect(()=>{
@@ -113,9 +120,38 @@ export const Favorites = forwardRef(({setMobileNo},ref)=> {
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Favorites</Text>
             </View>
             <Separator/>
-             {
+            <SwipeListView
+                style={{display:"flex" , flexGrow:0 }}
+                data={favorites}
+                renderItem={ (data, rowMap) => (
+                    <RenderShowItem
+                        selectFromList={selectFromList}
+                        removeFromList={removeFromList} 
+                        item={data} 
+                        index={rowMap}
+                    />
+                )}
+                renderHiddenItem={ (data, rowMap) => (
+                    <RenderHiddenItem
+                        selectFromList={selectFromList}
+                        removeFromList={removeFromList} 
+                        item={data} 
+                        index={rowMap}
+                    />
+                )}
+                ref={swipeListViewRef}
+                // closeOnRowOpen={true}
+                disableRightSwipe
+                // leftOpenValue={75}
+                rightOpenValue={-75}
+                previewOpenValue={-40}
+                previewOpenDelay={1000}
+                keyExtractor={(item, index) => index.toString()}
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
+            />
+             {/* {
                  favorites.map((item,index)=>(<RenderItem selectFromList={selectFromList} removeFromList={removeFromList} item={item} index={index}/>))
-             }
+             } */}
         </View>
     )
 })

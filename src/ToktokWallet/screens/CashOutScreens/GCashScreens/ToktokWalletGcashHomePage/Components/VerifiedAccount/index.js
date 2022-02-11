@@ -1,14 +1,14 @@
-import React , {useRef, useState} from 'react'
+import React , {useRef, useState , useEffect} from 'react'
 import {View,Text,StyleSheet,Image,TextInput} from 'react-native'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
 import {useSelector} from 'react-redux'
-import { numberFormat } from 'toktokwallet/helper'
+import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import { TransactionUtility } from 'toktokwallet/util'
 import { useNavigation } from '@react-navigation/native'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { POST_CASH_OUT , POST_REQUEST_CASH_OUT } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
-import { useAlert } from 'src/hooks/useAlert'
+import { useAlert, usePrompt } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { DisabledButton, Separator, ValidatorScreen } from 'toktokwallet/components'
 import { AlertOverlay } from 'src/components'
@@ -19,10 +19,26 @@ import SuccessfulCashOutModal from "./SuccessfulCashOutModal";
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR , SIZE } = CONSTANTS
 
+const inputAmountLength = {
+    "0": 80,
+    "1": 80,
+    "2": 80,
+    "3": 80,
+    "4": 80,
+    "5": 100,
+    "6": 120,
+    "7": 130,
+    "8": 155,
+    "9": 165,
+}
+
 export const VerifiedAccount = ({record,provider})=> {
 
+    const prompt = usePrompt()
     const [amount,setAmount] = useState(0)
     const [errorMessage,setErrorMessage] = useState("")
+    const [isFocus,setIsFocus] = useState(false)
+    const [inputWidth,setInputWidth] = useState(inputAmountLength["0"])
     const [successModalVisible,setSuccessModalVisible] = useState(false)
     const [cashoutLogParams,setCashoutLogParams] = useState({
         status: 0
@@ -47,7 +63,7 @@ export const VerifiedAccount = ({record,provider})=> {
             })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation,title: "Transaction Void"})
         }
     })
 
@@ -65,8 +81,8 @@ export const VerifiedAccount = ({record,provider})=> {
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                alert,
-                onErrorAlert,    
+                prompt,
+                alert 
             })
         }
     })
@@ -137,9 +153,23 @@ export const VerifiedAccount = ({record,provider})=> {
         })
     }
 
+    const showInput = ()=>{
+        setTimeout(() => {
+            inputRef.current.focus();
+        }, 0);
+    }
+
+    useEffect(()=>{
+        showInput()
+    },[])
+
+    useEffect(()=>{
+        setInputWidth(inputAmountLength[amount.length])
+    },[amount])
+
     return (
         <>
-        <AlertOverlay visible={requestLoading}/>
+        <AlertOverlay visible={requestLoading || loading}/>
         <Separator/>
         <SuccessfulCashOutModal 
              visible={successModalVisible}
@@ -157,7 +187,7 @@ export const VerifiedAccount = ({record,provider})=> {
 
             <View style={styles.content}>
                 <View style={styles.amountcontent}>
-                    <View style={{flexDirection: "row"}}>
+                    {/* <View style={{flexDirection: "row"}}>
                         <TextInput
                                 caretHidden
                                 value={amount}
@@ -172,7 +202,44 @@ export const VerifiedAccount = ({record,provider})=> {
                                 <Text style={{fontFamily: FONT.BOLD,fontSize: 32}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                                 <VectorIcon iconSet={ICON_SET.FontAwesome5} name="pen" style={{alignSelf:"center",marginLeft: 15}} size={20} color="black"/>
                          </View>
-                    </View>
+                    </View> */}
+                     <View style={{flexDirection: "row"}}>
+                                       
+                                       <View style={styles.input}>
+                                           <Text style={{fontFamily: FONT.BOLD,fontSize: 30,color:COLOR.YELLOW,marginRight:10}}>{tokwaAccount.wallet.currency.code}</Text>
+                                          
+                                           {
+                                               !isFocus && amount != "" &&
+                                               <Text style={{fontFamily: FONT.BOLD,fontSize: 30,marginLeft: 5}}>{amount ? numberFormat(amount) : "0.00"}</Text>
+                                           }
+                                              <TextInput
+                                                       onFocus={()=>setIsFocus(true)}
+                                                       onBlur={()=>{
+                                                            setIsFocus(false)
+                                                            AmountLimitHelper.postCheckOutgoingLimit({
+                                                                amount,
+                                                                setErrorMessage: (value)=> {
+                                                                    if(errorMessage == "")  setErrorMessage(value)
+                                                                }
+                                                            })
+                                                        }}
+                                                       caretHidden={!isFocus}
+                                                       value={amount}
+                                                       ref={inputRef}
+                                                       // style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
+                                                       style={{fontSize: 32, fontFamily: FONT.BOLD, height: '100%', width: inputWidth, ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
+                                                       keyboardType="numeric"
+                                                       returnKeyType="done"
+                                                       placeholder="0.00"
+                                                       placeholderTextColor="black"
+                                                       onChangeText={changeAmount}
+                                                       textAlignVertical="bottom"
+                                                       textAlign="right"
+                                                   />
+                                           {/* <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/> */}
+                                       </View>
+                                       
+                                   </View>
                     { errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR, color: COLOR.RED,marginTop: -5,fontSize: FONT_SIZE.S}}>{errorMessage}</Text>}
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 5,}}>Available Balance PHP {numberFormat(tokwaAccount.wallet.balance)}</Text>
             
@@ -181,7 +248,7 @@ export const VerifiedAccount = ({record,provider})=> {
 
             <View style={styles.cashoutbutton}>
                     {
-                        (amount != "" && amount <= tokwaAccount.wallet.balance && amount >= 1 )
+                        (amount != "" && amount <= tokwaAccount.wallet.balance && amount >= 1 && errorMessage == "" )
                         ? <YellowButton label="Transfer Fund" onPress={confirmAmount}/>
                         : <DisabledButton label="Transfer Fund" />
                     }
@@ -219,7 +286,7 @@ const styles = StyleSheet.create({
     input: {
         marginHorizontal: 20,
         borderRadius: 5,
-        height: SIZE.FORM_HEIGHT,
+        height: SIZE.FORM_HEIGHT + 20,
         // flexShrink: 1,
         flex: 1,
         flexDirection:"row",

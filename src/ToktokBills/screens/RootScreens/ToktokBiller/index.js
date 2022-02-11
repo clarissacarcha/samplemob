@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Platform, FlatList, Dimensions, Image, Touchabl
 
 //COMPONENTS
 import { HeaderBack, HeaderTitle, Separator, SearchInput, LoadingIndicator } from "toktokbills/components";
-import { SomethingWentWrong } from "src/components";
+import { SomethingWentWrong } from "toktokbills/components";
 import { Biller } from "./Components";
 
 //IMAGES
@@ -48,6 +48,7 @@ export const ToktokBiller = ({navigation, route})=> {
       client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
       onError: () => {
         setRefreshing(false);
+        setBillItems([]);
       },
       onCompleted: ({ getBillItems }) => {
         setBillItems(getBillItems);
@@ -64,7 +65,7 @@ export const ToktokBiller = ({navigation, route})=> {
         setRefreshing(false);
       },
       onCompleted: ({ getSearchBillItems }) => {
-        setFilteredData(getSearchBillItems);
+        setTimeout(() => setFilteredData(getSearchBillItems), 0);
       }
     }
   )
@@ -85,6 +86,7 @@ export const ToktokBiller = ({navigation, route})=> {
       });
     } else {
       setFilteredData([]);
+      getBillItems();
     }
   }, [search]);
 
@@ -118,16 +120,16 @@ export const ToktokBiller = ({navigation, route})=> {
   if(billItemsError || searchError){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} />
+        <SomethingWentWrong onRefetch={onRefresh} error={billItemsError ?? searchError} />
       </View>
     )
   }
 
   return (
     <>
-    <View style={styles.container}>
+    <View  style={styles.container}>
       <View style={styles.searchContainer}>
-        <SearchInput search={search} setSearch={setSearch} placeholder="Search Biller" />
+        <SearchInput search={search} setSearch={setSearch} placeholder="Look for your biller here" />
       </View>
       {( searchLoading && filteredData.length === 0) ? (
         <LoadingIndicator isLoading={true} isFlex />

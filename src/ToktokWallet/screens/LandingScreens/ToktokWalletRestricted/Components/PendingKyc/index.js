@@ -68,7 +68,7 @@ export const PendingKyc = ()=> {
             </View>
 
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
-                <YellowButton label="Ok" onPress={()=> {
+                <YellowButton label="OK" onPress={()=> {
                     navigation.pop()
                 }}/>
             </View>

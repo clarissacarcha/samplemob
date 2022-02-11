@@ -55,7 +55,7 @@ export const SuccessModal = ({modalVisible,setModalVisible,event})=> {
                  </View>
 
                  <View style={{flex: 1,alignItems:"center", justifyContent:"center"}}>
-                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,}}>Reminders</Text>
+                        <Text style={{textAlign:"left",fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginBottom: 10,color: COLOR.YELLOW}}>Reminders</Text>
                         <View>
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Use a <Text style={{color: COLOR.YELLOW}}>secure</Text> TPIN combination</Text>
@@ -66,10 +66,6 @@ export const SuccessModal = ({modalVisible,setModalVisible,event})=> {
                             <Reminder>
                                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}><Text style={{color: COLOR.YELLOW}}>Never share</Text> your TPIN with anyone</Text>
                             </Reminder>
-                            <Reminder>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>If you think your TPIN is no longer a secret, </Text>      
-                            </Reminder>
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M,marginLeft: 28}}><Text style={{color: COLOR.YELLOW}}>change your</Text> TPIN immediately</Text>
                         </View>
                    
                 </View>

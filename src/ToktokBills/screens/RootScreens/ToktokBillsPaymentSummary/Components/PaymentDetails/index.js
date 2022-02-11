@@ -3,9 +3,10 @@ import { View, Text, Dimensions, StyleSheet, TextInput, Image } from 'react-nati
 import { useNavigation } from '@react-navigation/native'
 import { useThrottle } from 'src/hooks'
 import validator from 'validator'
+import { LoadingIndicator } from 'toktokbills/components';
 
 //HELPER
-import { moderateScale, formatAmount, numberFormat } from 'toktokbills/helper'
+import { moderateScale, formatAmount, numberFormat, currencyCode } from 'toktokbills/helper'
 
 // COLORS AND FONTS
 import CONSTANTS from 'common/res/constants';
@@ -17,7 +18,8 @@ export const PaymentDetails = ({ paymentData })=> {
   const navigation = useNavigation();
   const { firstField, secondField, amount, email, billType, convenienceFee, billItemSettings } = paymentData;
   const totalAmount = parseInt(amount) + convenienceFee;
-  const [ logo, setLogo ] = useState({ height: 0, width: 0 });
+  const [logo, setLogo] = useState({ height: 0, width: 0 });
+  const [imageLoading, setImageLoading] = useState(true);
 
   useEffect(() => {
     Image.getSize(billItemSettings.logo, (width, height) => {
@@ -47,23 +49,30 @@ export const PaymentDetails = ({ paymentData })=> {
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Biller: </Text>
         <View style={{ justifyContent: "flex-end" }}>
+          { imageLoading && (
+            <View style={{ position: "absolute", right: 0, bottom: 0, top: 0 }}>
+              <LoadingIndicator isLoading={true} size="small" />
+            </View>
+          )}
           <Image
             source={{ uri: billItemSettings.logo }}
             style={{ width: moderateScale(logo.width), height: moderateScale(logo.height), resizeMode: "contain" }}
+            onLoadStart={() => setImageLoading(true)}
+            onLoadEnd={() => setImageLoading(false)}
           />
         </View>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Payment amount: </Text>
-        <Text style={styles.description}>₱ {numberFormat(amount)}</Text>
+        <Text style={styles.description}>{currencyCode} {numberFormat(amount)}</Text>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Convenience Fee: </Text>
-        <Text style={styles.description}>₱ {numberFormat(convenienceFee)}</Text>
+        <Text style={styles.description}>{currencyCode} {numberFormat(convenienceFee)}</Text>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Total Amount: </Text>
-        <Text style={styles.description}>₱ {numberFormat(totalAmount)}</Text>
+        <Text style={styles.description}>{currencyCode} {numberFormat(totalAmount)}</Text>
       </View>
     </>
   )

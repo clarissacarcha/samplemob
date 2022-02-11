@@ -6,8 +6,8 @@ import {useQuery,useLazyQuery} from '@apollo/react-hooks'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_FORGOT_AND_RECOVER_OTP_CODE , VERIFY_FORGOT_AND_RECOVER_OTP_CODE} from 'toktokwallet/graphql'
 import { onError, onErrorAlert } from 'src/util/ErrorUtility'
-import {useAlert} from 'src/hooks'
-import {DisabledButton, Separator, BuildingBottom , CheckIdleState} from 'toktokwallet/components'
+import {useAlert, usePrompt} from 'src/hooks'
+import {DisabledButton, Separator, BuildingBottom , CheckIdleState, HeaderCancel} from 'toktokwallet/components'
 import { HeaderBack, YellowButton } from 'src/revamp'
 import { TransactionUtility } from 'toktokwallet/util'
 import BackgroundTimer from 'react-native-background-timer';
@@ -56,18 +56,20 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
         headerTitle: ()=> <HeaderTitle label={['','']}/>,
+        headerRight: ()=> <HeaderCancel navigation={navigation} screenPopNo={2} />
     })
 
+    const prompt = usePrompt()
     const session = useSelector(state=>state.session)
     const type = route.params.type
     const event = route?.params?.event ? route.params.event : null
+    const category = route?.params?.category ? route.params.category : null
     const tokwaAccount = useSelector(state=>state.toktokWallet)
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
     const alert = useAlert();
     const [otpTimer,setOtpTimer] = useState(120)
     const [errorMessage,setErrorMessage] = useState("")
-
 
     const [getForgotAndRecoverOTPCode] = useLazyQuery(GET_FORGOT_AND_RECOVER_OTP_CODE , {
         fetchPolicy: "network-only",
@@ -77,7 +79,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
             setOtpTimer(120)
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -86,18 +88,18 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({verifyForgotAndRecoverOTP})=>{
             if(type == "TPIN"){
-                return navigation.replace("ToktokWalletUpdatePin", {event})
+                return navigation.replace("ToktokWalletUpdatePin" , {otp: pinCode , event})
             }
             // type is MPIN
-            return navigation.replace("ToktokWalletMPINUpdate" , {event})
+            return navigation.replace("ToktokWalletMPINUpdate" , {event, category, otp: pinCode})
         },
         onError: (error)=>{
             // onErrorAlert({alert, error})
             TransactionUtility.StandardErrorHandling({
-                alert,
                 error,
                 navigation,
-                onErrorAlert,
+                prompt,
+                alert,
                 setErrorMessage
             })
         }
@@ -141,11 +143,11 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
         <CheckIdleState>
         <Separator />
         <AlertOverlay visible={loading}/>
-        <KeyboardAvoidingView 
+        <View 
             style={styles.container}
             // keyboardVerticalOffset={Platform.OS == "ios" ? 100 : 90} 
-            keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
-            behavior={Platform.OS === "ios" ? "padding" : "height"} 
+            // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
+            // behavior={Platform.OS === "ios" ? "padding" : "height"} 
         >
                 <View style={{flex: 1,alignItems:"center",marginTop: 40}}>
                     <Text style={{fontFamily: FONT.BOLD,fontSize: 16}}>Enter OTP code sent to</Text>
@@ -169,7 +171,7 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
                         />
 
                         {
-                            errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,color: COLOR.RED,marginHorizontal: 16}}>{errorMessage}</Text>
+                            errorMessage != "" && <Text style={styles.errorMessage}>{errorMessage}</Text>
                         }
 
                         <TouchableOpacity
@@ -177,21 +179,21 @@ export const ToktokWalletRecoverPin = ({navigation , route})=> {
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={getForgotAndRecoverOTPCode}
                         >
-                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Didn't get code? Tap here to resend.</Text>
+                                <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Didn't get code? Tap here to resend.</Text>
                                 { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
                         </TouchableOpacity>
 
                 </View>
                        
-                 <View style={{height: SIZE.FORM_HEIGHT + 20,justifyContent:"flex-end",paddingVertical:16}}> 
+                 <View style={{height: SIZE.FORM_HEIGHT + 20,justifyContent:"flex-end"}}> 
                     {
                         pinCode.length < 6
-                        ? <DisabledButton label="Proceed"/>
-                        : <YellowButton onPress={ConfirmVerificationCode} label="Proceed"/>
+                        ? <DisabledButton label="Confirm"/>
+                        : <YellowButton onPress={ConfirmVerificationCode} label="Confirm"/>
                     }   
             </View>
             <BuildingBottom/>
-        </KeyboardAvoidingView>
+        </View>
         </CheckIdleState>
     )
 }
@@ -226,4 +228,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    errorMessage: {
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.M,
+        color: COLOR.RED,
+        marginHorizontal: 16,
+        textAlign: "center"
+    }
 })

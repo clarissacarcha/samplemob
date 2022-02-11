@@ -7,6 +7,8 @@ import { onErrorAlert } from 'src/util/ErrorUtility'
 import { connect } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { SomethingWentWrong } from 'src/components'
+import { useDispatch } from 'react-redux'
+import moment from 'moment'
 
 
 const mapDispatchtoProps = (dispatch) => ({
@@ -21,10 +23,14 @@ const mapDispatchtoProps = (dispatch) => ({
     setLoading: (payload) => dispatch({
         type: "SET_LOADING",
         payload: payload
+    }),
+    updateToktokPersonSession: (payload) => dispatch({
+        type: "UPDATE_TOKTOK_PERSON_VIA_TOKTOKWALLET_INFO",
+        payload: payload
     })
 })
 
-export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({children ,saveTokwaAccount , getTokwaTransactions,setLoading})=> {
+export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({children ,saveTokwaAccount , getTokwaTransactions,setLoading,updateToktokPersonSession})=> {
     const navigation = useNavigation()
     const alert = useAlert()
 
@@ -51,7 +57,17 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
         onError: (error)=>{
             onErrorAlert({alert,error})
         },
-        onCompleted: ({getMyAccount})=>{
+        onCompleted: ({getMyAccount})=>{ 
+            // Update toktok person session
+            const person = {
+                firstName: getMyAccount.person.firstName,
+                middleName: getMyAccount.person.middleName,
+                lastName: getMyAccount.person.lastName,
+                emailAddress: getMyAccount.person.emailAddress,
+                birthdate: moment(getMyAccount.person.birthdate).tz("Asia/Manila").format("YYYY-MM-DD"),
+            }
+
+            updateToktokPersonSession(person)
             setLoading(true)
             saveTokwaAccount(getMyAccount)
             getTransactions()
@@ -59,7 +75,7 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
     })
 
     if(error){
-        return <SomethingWentWrong/>
+        return null
     }
 
     if(loading){
@@ -68,8 +84,8 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
 
     // if Account is Dormant
     if(data.getMyAccount.isDormant){
-      //  navigation.replace("ToktokWalletRestricted" , {component: "dormantAccount"})
         navigation.replace("ToktokWalletRestricted" , {component: "blockedAccount", data: { account: data.getMyAccount}})
+        // navigation.replace("ToktokWalletRestricted" , {component: "dormantAccount"})
         return null
     }
 

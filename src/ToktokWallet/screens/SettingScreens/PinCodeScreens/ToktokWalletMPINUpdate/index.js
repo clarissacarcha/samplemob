@@ -6,6 +6,8 @@ import { PATCH_MPIN_CODE } from 'toktokwallet/graphql'
 import {useMutation} from '@apollo/react-hooks'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { Separator , LeavePromptModal , CheckIdleState} from 'toktokwallet/components';
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import {useAlert  } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -48,7 +50,9 @@ const HeaderBack = ({pageIndex,setPageIndex,navigation})=> {
 
 export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
 
+    const otp = route.params.otp
     const event = route.params.event
+    const category = route.params?.category ? route.params?.category : null
 
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack pageIndex={pageIndex} setPageIndex={setPageIndex} navigation={navigation}/>,
@@ -66,11 +70,11 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
         setLeaveModalVisible(true)
     }
 
-
     const [pageIndex,setPageIndex] = useState(0)
     const [pinCode,setPinCode] = useState("")
     const [successModalVisible,setSuccessModalVisible] = useState(false)
     const [LeaveModalvisible,setLeaveModalVisible] = useState(false)
+    const alert = useAlert();
 
     const [patchMPinCode, {data, error, loading}] = useMutation(PATCH_MPIN_CODE, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -78,7 +82,7 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
           setSuccessModalVisible(true)
         },
         onError: (error)=> {
-          onErrorAlert({alert,error})
+          onErrorAlert({alert,error,navigation})
         }
       })
   
@@ -88,7 +92,8 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
         patchMPinCode({
             variables: {
             input: {
-                pinCode: pinCode
+                pinCode: pinCode,
+                otp: otp
             }
             }
         })
@@ -114,14 +119,19 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
                 setVisible={setLeaveModalVisible}
                 onConfirm={()=>navigation.pop(2)}
             />
-            <SuccessModal modalVisible={successModalVisible} setModalVisible={setSuccessModalVisible} event={event}/>
+            <SuccessModal
+                modalVisible={successModalVisible}
+                setModalVisible={setSuccessModalVisible}
+                event={event}
+                category={category}
+            />
             <Separator />
-            <KeyboardAvoidingView style={{flex: 1,}}
-             keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
-             behavior={Platform.OS == "ios" ? "padding" : "height"}
+            <View style={{flex: 1,}}
+            //  keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}  
+            //  behavior={Platform.OS == "ios" ? "padding" : "height"}
              >
             {DisplayComponent()}
-            </KeyboardAvoidingView>
+            </View>
         </CheckIdleState>
     )
 }

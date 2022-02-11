@@ -28,7 +28,7 @@ const SuccessfulModal = ({visible, setVisible})=> {
                 <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>You have successfully linked your toktokwallet account.</Text>
                 </View>
                 <View style={{height: SIZE.BUTTON_HEIGHT}}>
-                        <YellowButton label="Ok" onPress={redirect}/>
+                        <YellowButton label="OK" onPress={redirect}/>
                 </View>
             </View>
 

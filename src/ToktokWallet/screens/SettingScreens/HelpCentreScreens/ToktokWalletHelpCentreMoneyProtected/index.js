@@ -29,7 +29,7 @@ export const ToktokWalletHelpCentreMoneyProtected = ({navigation}) => {
 
     navigation.setOptions({
         headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: () => <HeaderTitle label={['Your Money is Protected', '']} />,
+        headerTitle: () => <HeaderTitle label={['Money Protection', '']} />,
     });
 
     return (
@@ -39,17 +39,21 @@ export const ToktokWalletHelpCentreMoneyProtected = ({navigation}) => {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{flex: 1, backgroundColor: COLOR.WHITE}}>
                         
-                        <View style={{flex: 1, width: '100%', paddingVertical: 30, marginBottom: 8}}>
+                        {/* <View style={{flex: 1, width: '100%', paddingVertical: 30, marginBottom: 8}}>
                             <Image 
                                 style={{resizeMode: 'contain', width: '100%', height: 80}}
                                 source={require('toktokwallet/assets/images/SecurityAndPrivacy/money.png')}
                             />
-                        </View>
+                        </View> */}
 
                         <View style={{flex: 1, paddingHorizontal: 16, marginTop: 8}}>
                             
-                            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Your money is protected</Text>
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Your wallet balance is stored and protected with a trusted partner bank.</Text>
+                            {/* <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Your money is protected</Text> */}
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginVertical: 10}}>All transactions via toktokwallet are successfully completed
+                            through One-Time Password and Transaction PIN. These are added
+                            extra layer of security that prevents others from compromising your
+                            toktokwallet account and your money that is stored to it.
+                            </Text>
                             
                             <View style={{flex: 1, marginTop: 12, marginBottom: 10}}>
                                 

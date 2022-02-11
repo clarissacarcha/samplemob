@@ -37,6 +37,7 @@ const Details = ({
         phrase,
         details,
         amount,
+        convenienceFee,
         refNo,
         refDate,
         status,
@@ -55,6 +56,7 @@ const Details = ({
                  {renderDetails({details})}
                  <View style={{marginTop: 15}}>
                     <Text style={styles.labelText}>Amount: {amount}</Text>
+                    {/* { convenienceFee >= 0 && <Text style={styles.labelText}>Convenience Fee: PHP {convenienceFee}</Text> } */}
                     { requestNo && <Text style={styles.labelText}>Request No: {requestNo}</Text>}
                     { refNo && <Text style={styles.labelText}>Ref No: {refNo}</Text>}
                     { refDate && <Text style={styles.labelText}>Date & Time: {refDate}</Text>}

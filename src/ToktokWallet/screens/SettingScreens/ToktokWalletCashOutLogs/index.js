@@ -38,7 +38,7 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error) => {
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         },
         onCompleted: ({getCashOuts})=> {
             // setRecords(state=> [...state , ...getCashOuts])
@@ -62,7 +62,7 @@ export const ToktokWalletCashOutLogs = ({navigation})=> {
     return (
         <CheckIdleState>
         <Separator />
-        <SwipeDownToRefresh/>
+        {/* <SwipeDownToRefresh/> */}
         {
             // loading
             // ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

@@ -26,7 +26,7 @@ const numWordArray = {
     "9": "nine",
     "10": "ten"
 }
-export const Verify = ({pageIndex,setPageIndex})=> {
+export const Verify = ({pageIndex,setPageIndex,setOldMPIN})=> {
 
     const navigation = useNavigation();
     const [showPin,setShowPin] = useState(false)
@@ -41,12 +41,17 @@ export const Verify = ({pageIndex,setPageIndex})=> {
         onCompleted: ({getVerifyMPIN})=>{
             setErrorMessage("")
             setPageIndex(state=>state+1)
+            setOldMPIN(pinCode)
         },
         onError: (error)=> {
             const {graphQLErrors, networkError} = error;
             if(graphQLErrors[0]?.message == "Account Blocked"){
-                onErrorAlert({alert,error})
-                return navigation.replace("ToktokWalletLoginPage")
+                // onErrorAlert({alert,error})
+                // navigation.navigate("ToktokWalletLoginPage")
+                // navigation.replace("ToktokWalletLoginPage")
+                navigation.navigate("ToktokLandingHome")
+                navigation.push("ToktokWalletLoginPage")  
+                return
             }
             if(graphQLErrors[0]?.message == "Invalid MPincode"){
                 const attempt = graphQLErrors[0].payload.remainingAttempts
@@ -85,9 +90,9 @@ export const Verify = ({pageIndex,setPageIndex})=> {
         <AlertOverlay visible={loading} />
         <View style={styles.container}>
             <ScrollView style={styles.content}>
-            <Text style={{marginVertical: 20, marginHorizontal: 10 ,textAlign:"center",fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Ka-toktok, do not forget your MPIN, keep it to yourself and do not
-share this with anyone</Text>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter old MPIN</Text>
+            {/* <Text style={{marginVertical: 20, marginHorizontal: 10 ,textAlign:"center",fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Ka-toktok, do not forget your MPIN, keep it to yourself and do not
+share this with anyone</Text> */}
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter Old MPIN</Text>
                     <View style={{position: 'relative',marginTop: 40,padding: 16,}}>
                     <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} numberOfBox={4}/>
                         <TextInput
@@ -106,20 +111,20 @@ share this with anyone</Text>
                             onSubmitEditing={pinCode.length == 4 ? onPress: null}
                         />
                         {
-                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,alignSelf:"center"}}>{errorMessage}</Text>   
+                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,textAlign:"center"}}>{errorMessage}</Text>   
                         }
 
                         <TouchableOpacity
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
-                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE MPIN" : "SHOW MPIN"}</Text>
+                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide MPIN" : "Show MPIN"}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                                 style={{paddingVertical: 10,alignItems: "center"}}
                                 onPress={forgotPIN}
                         >
-                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>FORGOT MPIN?</Text>
+                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot MPIN?</Text>
                         </TouchableOpacity>
                     </View>
             </ScrollView>

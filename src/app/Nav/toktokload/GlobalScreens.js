@@ -17,8 +17,15 @@ export default ({Navigator}) => (
       options={{
         headerTitleAlign: "center",
         headerStyle: {
-          elevation: 1,
-          height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+          elevation: 5,
+          // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
         },
       }}
     />
@@ -28,8 +35,15 @@ export default ({Navigator}) => (
       options={{
         headerTitleAlign: "center",
         headerStyle: {
-          elevation: 1,
-          height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+          elevation: 5,
+          // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
         },
       }}
     />
@@ -39,8 +53,15 @@ export default ({Navigator}) => (
       options={{
         headerTitleAlign: "center",
         headerStyle: {
-          elevation: 1,
-          height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+          elevation: 5,
+          // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
         },
       }}
     />
@@ -50,8 +71,15 @@ export default ({Navigator}) => (
       options={{
         headerTitleAlign: "center",
         headerStyle: {
-          elevation: 1,
-          height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+          elevation: 5,
+          // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
         },
       }}
     />
@@ -61,8 +89,15 @@ export default ({Navigator}) => (
       options={{
         headerTitleAlign: "center",
         headerStyle: {
-          elevation: 1,
-          height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+          elevation: 5,
+          // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
         },
       }}
     />

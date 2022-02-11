@@ -143,6 +143,8 @@ export const VerifyContextProvider = ({children})=> {
         }))
     }
 
+    const [cacheImagesList, setCacheImagesList] = useState([])
+
 
     // console.log("Context Provider", session.user.username)
 
@@ -203,6 +205,8 @@ export const VerifyContextProvider = ({children})=> {
                 setIdentificationId,
                 incomeInfo,
                 changeIncomeInfo,
+                cacheImagesList,
+                setCacheImagesList,
                 pepInfo,
                 setPepInfo,
             }}

@@ -2,7 +2,10 @@ import React, {useContext, useEffect, useState} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
 
 //UTIL
-import { moderateScale } from "toktokload/helper";
+import { moderateScale, numberFormat } from "toktokload/helper";
+
+//IMAGES
+import { check_fill_icon } from "toktokload/assets/icons";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
@@ -11,8 +14,9 @@ import moment from "moment";
 export const ReceiptDetails = ({ route }) => {
 
   const { receipt } = route.params;
-  const { amount, referenceNumber, destinationNumber, createdAt } = receipt;
-  const transactionDateTime = moment(createdAt).format("lll");
+  const { amount, referenceNumber, destinationNumber, createdAt, discount, convenienceFee } = receipt;
+  const transactionDateTime = `${moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}`;
+  const totalAmount = parseFloat(amount) + parseFloat(convenienceFee);
 
   return (
     <>
@@ -31,18 +35,24 @@ export const ReceiptDetails = ({ route }) => {
           <Text style={styles.description}>{destinationNumber}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Load Amount </Text>
-          <Text style={styles.description}>{amount.toFixed(2)}</Text>
+          <Text style={styles.title}>Total Amount </Text>
+          <Text style={styles.description}>PHP {numberFormat(totalAmount)}</Text>
         </View>
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Discount </Text>
-          <Text style={styles.description}>0.00</Text>
-        </View>
+        { discount > 0 && (
+          <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
+            <Text style={styles.title}>Discount </Text>
+            <Text style={styles.description}>PHP {numberFormat(discount)}</Text>
+          </View> 
+        )}
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Status </Text>
-          <Text style={styles.description}>Success</Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Image source={check_fill_icon} style={{ width: moderateScale(15), height: moderateScale(15) }} />
+            <Text style={[styles.description, styles.colorGreen]}>Success</Text>
+          </View>
         </View>
       </View>
+      <View style={styles.line} />
     </>
   );
 };
@@ -51,17 +61,19 @@ const styles = StyleSheet.create({
   title: {
     color: "#F6841F",
     fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.M
+    fontSize: FONT_SIZE.M,
+    width: "50%"
   },
   description: {
-    color: "black",
     fontSize: FONT_SIZE.M,
     flexShrink: 1,
-    textAlign: "right"
+    textAlign: "right",
+    marginLeft: moderateScale(7)
   },
   bodyContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center",
+    justifyContent: "space-between"
   },
   marginBottom15: {
     marginBottom: moderateScale(15)
@@ -71,4 +83,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6841F",
     marginVertical: moderateScale(20)
   },
+  colorGreen: {
+    color: "#1AD74F",
+  }
 })

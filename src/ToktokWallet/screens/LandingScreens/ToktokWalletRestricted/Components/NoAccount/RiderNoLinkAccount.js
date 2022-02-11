@@ -68,7 +68,7 @@ const NoTokwaAccount = ({navigation})=> (
     </View>
 
     <View style={{height: 120,padding: 16,justifyContent:'flex-end'}}>
-        <YellowButton label="Ok" onPress={()=>navigation.pop()}/>
+        <YellowButton label="OK" onPress={()=>navigation.pop()}/>
     </View>
     </>
 )

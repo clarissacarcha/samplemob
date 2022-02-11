@@ -21,20 +21,22 @@ const {width,height} = Dimensions.get("window");
 
 //COMPONENTS
 import { OrangeButton, HeaderBack, HeaderTitle, LoadingIndicator, HeaderDownloadReceipt } from "src/ToktokLoad/components";
-import { SomethingWentWrong } from 'src/components'
+import { SomethingWentWrong } from 'toktokload/components'
 import { Header, ReceiptDetails } from "./components";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
-const MainComponent = ({ navigation, route }) => {
+const MainComponent = ({ navigation, route, onCapturingScreen }) => {
   return (
     <View style={styles.container}>
       <Header />
       <ReceiptDetails route={route} />
-      <View style={styles.buttonContainer}>
-        <OrangeButton label="Ok" onPress={() => navigation.navigate("ToktokLoadHome")} />
-      </View>
+      { !onCapturingScreen && (
+        <View style={styles.buttonContainer}>
+          <OrangeButton label="OK" onPress={() => navigation.navigate("ToktokLoadHome", { screen: "Buy Load" })} />
+        </View>
+      )}
     </View>
   );
 };
@@ -44,11 +46,17 @@ export const ToktokLoadReceipt = ({ navigation, route }) => {
   const { receipt } = route.params;
   const viewshotRef = useRef();
   const headerHeight = useHeaderHeight();
+  const [onCapturingScreen, setOnCapturingScreen] = useState(false);
 
   navigation.setOptions({
     headerLeft: () => null,
     headerTitle: () => <HeaderTitle label={"toktokload Receipt"} />,
-    headerRight: () => <HeaderDownloadReceipt viewshotRef={viewshotRef} refNo={receipt.referenceNumber} />,
+    headerRight: () =>
+      <HeaderDownloadReceipt
+        viewshotRef={viewshotRef}
+        refNo={receipt.referenceNumber}
+        onPressDownloadReceipt={(val) => { setOnCapturingScreen(val) }}
+      />,
   });
 
   useEffect(() => {
@@ -72,7 +80,7 @@ export const ToktokLoadReceipt = ({ navigation, route }) => {
         ref={viewshotRef}
         options={{ format: "jpg", quality: 0.9, result: 'tmpfile' }}
       >
-        <MainComponent navigation={navigation} route={route} />
+        <MainComponent navigation={navigation} route={route} onCapturingScreen={onCapturingScreen} />
       </ViewShot>
     </>
   );

@@ -35,7 +35,7 @@ const QuestionThree = ({
             return navigation.navigate("ToktokWalletRecoverPin" , {type: "MPIN" , event: "ACCOUNT RECOVERY"})
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            onErrorAlert({alert,error,navigation})
         }
     })
 
@@ -65,6 +65,7 @@ const QuestionThree = ({
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="Enter your answer here."
+                                placeholderTextColor={COLOR.DARK}
                                 value={myAnswer}
                                 onChangeText={onChangeText}
                                 returnKeyType="done"

@@ -26,7 +26,7 @@ const RenderItem = ({item,index , onPress})=> {
         <TouchableOpacity onPress={openRMDetails} style={[styles.card]}>
             <View style={styles.cardContent}>
                  <View style={{flex: 1,height:"100%"}}>
-                    <Text style={{fontFamily:FONT.REGULAR,fontSize:FONT_SIZE.M}}>Request No: {item.refNo}</Text>
+                    <Text style={{fontFamily:FONT.REGULAR,fontSize:FONT_SIZE.M}}>Request No: {item.referenceNumber}</Text>
                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>Receive request money from</Text>
                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{person}</Text>
                 </View>

@@ -10,6 +10,7 @@ import {useAlert} from 'src/hooks'
 import ReactNativeBiometrics from 'react-native-biometrics'
 import { getUniqueId , getBrand, getModel } from 'react-native-device-info';
 import { useNavigation , useFocusEffect } from '@react-navigation/native'
+import AsyncStorage from '@react-native-community/async-storage'
 import { PromptModal } from 'toktokwallet/components'
 import moment from 'moment';
 import CONSTANTS from 'common/res/constants'
@@ -32,7 +33,6 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
 
     const checkSensor = async ()=> {
         const { available, biometryType } = await ReactNativeBiometrics.isSensorAvailable()
-        console.log(available)
         if (available && biometryType === ReactNativeBiometrics.TouchID) {
             setIsSensorAvailable(true)
         } else if (available && biometryType === ReactNativeBiometrics.FaceID) {
@@ -84,11 +84,11 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
     const [getVerifySignature , {loading: verifyLoading}] = useLazyQuery(GET_VERIFY_SIGNATURE,{
         fetchPolicy:"network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onCompleted: ({getVerifySignature})=>{
-            if(getVerifySignature.result){
-                // navigation.pop();
-                navigation.navigate("ToktokWalletHomePage");
-            }
+        onCompleted: async ({getVerifySignature})=>{
+            const { verifiedToken } = getVerifySignature
+            await AsyncStorage.setItem('toktokWalletAuthenticationToken', verifiedToken);
+            // navigation.pop();
+            navigation.navigate("ToktokWalletHomePage");
         },
         onError: (error) => {
             const {graphQLErrors, networkError} = error;
@@ -136,7 +136,7 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
        try{
             setErrorMessage("")
             const { success, signature  } = await ReactNativeBiometrics.createSignature({
-                promptMessage: 'Sign in',
+                promptMessage: 'Verify Biometric',
                 payload: payload
             })
         

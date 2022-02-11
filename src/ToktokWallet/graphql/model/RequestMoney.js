@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 
 const RequestMoney = `
 id
+referenceNumber
 refNo
 destinationAccountId
 destinationPersonId
@@ -109,5 +110,13 @@ export const POST_APPROVED_REQUEST_MONEY = gql`
 export const POST_DENIED_REQUEST_MONEY = gql`
     mutation postDeniedRequestMoney($input: PostDeniedRequestMoneyInput){
         postDeniedRequestMoney(input: $input)
+    }
+`
+
+export const PATCH_DELETE_REQUEST_MONEY = gql`
+    mutation patchDeleteRequestMoney($input: PatchDeleteRequestMoneyInput){
+        patchDeleteRequestMoney(input: $input){
+            message
+        }
     }
 `

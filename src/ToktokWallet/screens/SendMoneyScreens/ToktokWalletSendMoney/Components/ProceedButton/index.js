@@ -2,7 +2,7 @@ import React , {useState} from 'react'
 import { numberFormat } from 'toktokwallet/helper'
 import { TransactionUtility } from 'toktokwallet/util'
 import { YellowButton } from 'src/revamp'
-import {useAlert} from 'src/hooks/useAlert'
+import {useAlert, usePrompt} from 'src/hooks'
 import {onErrorAlert} from 'src/util/ErrorUtility'
 import {useMutation} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -13,8 +13,9 @@ import { AlertOverlay } from 'src/components'
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
 
-export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwaAccount , recipientDetails , proceed })=> {
+export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwaAccount , recipientDetails })=> {
 
+    const prompt = usePrompt()
     const alert = useAlert()
     const [successModalVisible, setSuccessModalVisible] = useState(false)
     const [walletinfoParams,setWalletinfoParams] = useState({
@@ -37,7 +38,13 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
             })
         },
         onError: (error)=>{
-            onErrorAlert({alert,error})
+            // onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert
+            })
         }
     })
 
@@ -52,8 +59,8 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
             TransactionUtility.StandardErrorHandling({
                 error,
                 navigation,
-                alert,
-                onErrorAlert,  
+                prompt,
+                alert 
             })
         }
     })
@@ -71,7 +78,7 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
                 amount: amount,
                 note: note,
                 recipient: {
-                    name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
+                    name: `${recipientDetails.person}`,
                     mobileNo: recipientDetails.mobileNumber,
                 },
             }
@@ -116,12 +123,12 @@ export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwa
                 amount={amount}
                 note={note} 
                 recipient={{
-                    name: `${recipientDetails.person.firstName} ${recipientDetails.person.middleName ? recipientDetails.person.middleName + " " : ""}${recipientDetails.person.lastName}`,
+                    name: `${recipientDetails.person}`,
                     mobileNo: recipientDetails.mobileNumber
                 }}
                 walletinfoParams={walletinfoParams}
             />
-                 {   swipeEnabled && proceed
+                 {   swipeEnabled 
                      ? <YellowButton label="Proceed" onPress={reviewAndConfirm}/>
                      : <DisabledButton label="Proceed" />
                  }

@@ -1,13 +1,14 @@
 import React from 'react'
-import {TouchableHighlight,View,Text,StyleSheet} from 'react-native'
+import {TouchableHighlight, View, Text, StyleSheet, Dimensions} from 'react-native'
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
+const { height, width } = Dimensions.get('window');
 
 const NumberBox = ({onPress, value, showPin, isError}) => (
   <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5,}}>
     <View style={isError ? styles.error : styles.inputView}>
-      <Text style={{fontSize: 25, fontFamily: FONT.BOLD}}>{value ? showPin ? value : "•" : ''}</Text>
+      <Text style={showPin ? styles.showPin : styles.hidePin}>{value ? showPin ? value : "•" : ''}</Text>
     </View>
   </TouchableHighlight>
 );
@@ -38,22 +39,28 @@ const styles = StyleSheet.create({
   inputView: {
     backgroundColor: '#F7F7FA',
     borderRadius: 5,
-    height: 48,
-    width: 40,
+    height: 50,
+    width: 42,
     justifyContent: 'center',
     alignItems: 'center',
   },
   error: {
     backgroundColor: '#F7F7FA',
     borderRadius: 5,
-    height: 48,
-    width: 40,
+    height: 50,
+    width: 42,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: COLOR.RED,
     borderWidth: 1
+  },
+  showPin: {
+    fontSize: 20,
+    color: "black"
+  },
+  hidePin: {
+    fontSize: 25,
+    fontFamily: FONT.BOLD,
+    color: "black"
   }
 })
-
-
-

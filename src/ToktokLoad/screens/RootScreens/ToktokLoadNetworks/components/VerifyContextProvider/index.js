@@ -8,7 +8,7 @@ export const VerifyContextProvider = ({children})=> {
 
   const [selectedLoad, setSelectedLoad] = useState({});
   const [favorites, setFavorites] = useState([]);
-  const [loads, setLoads] = useState([]);
+  const [loads, setLoads] = useState({});
   
   return (
     <Provider

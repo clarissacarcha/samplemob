@@ -20,7 +20,8 @@ const ConsumerLanding = ({navigation}) => {
     try {
       if (notification.additionalData.classification === 'toktokwallet') {
         setTimeout(() => {
-          navigation.navigate('ToktokWalletHomePage');
+          // navigation.navigate('ToktokWalletHomePage');
+          // navigation.replace('ToktokWalletHomePage');
         }, 10);
         return;
       }

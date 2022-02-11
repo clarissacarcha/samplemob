@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: FONT.BOLD,
         fontSize: moderateScale(FONT_SIZE.XL),
-        color: COLOR.ORANGE,
+        color: "#F73C21",
         marginVertical: 5,
     },
     message: {

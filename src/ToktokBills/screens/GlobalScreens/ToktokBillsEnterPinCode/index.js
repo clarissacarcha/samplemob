@@ -12,7 +12,7 @@ import { ErrorUtility } from 'toktokbills/util';
 //GRAPHQL & HOOKS
 import { useMutation } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
-import { POST_TRANSACTION } from 'toktokbills/graphql/model';
+import { POST_BILLS_TRANSACTION } from 'toktokbills/graphql/model';
 import { useAccount } from 'toktokwallet/hooks';
 import { usePrompt } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
@@ -42,9 +42,9 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
   const [errorMessage, setErrorMessage] = useState("");
   const {tokwaAccount, getMyAccount} = useAccount();
   const [otpTimer, setOtpTimer] = useState(120);
-  const [showPin,setShowPin] = useState(false);
+  const [showPin, setShowPin] = useState(false);
 
-  const [postTransaction, {loading, error}] = useMutation(POST_TRANSACTION, {
+  const [postBillsTransaction, {loading, error}] = useMutation(POST_BILLS_TRANSACTION, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: (error) => {
       ErrorUtility.StandardErrorHandling({
@@ -55,17 +55,18 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
         isPop: true
       });
     },
-    onCompleted: ({ postTransaction }) => {
+    onCompleted: ({ postBillsTransaction }) => {
       let { referenceNumber } = requestMoneyDetails;
-      let { billerDetails, createAt } = postTransaction.data;
+      let { billerDetails, createAt } = postBillsTransaction.data;
       let paymentDate = moment(createAt).tz('Asia/Manila').format('MMM DD YYYY h:mm a');
 
-      prompt({
-        type: "success",
-        title: "Payment Successful",
-        message: `Your payment to ${billerDetails.descriptions} amounting to ₱${numberFormat(totalAmount)} has been successfully processed with ref no. ${referenceNumber} on ${paymentDate}.`,
-        onPress: () => { navigation.navigate("ToktokBillsReceipt", { receipt: postTransaction.data, paymentData }) }
-      });
+      // prompt({
+      //   type: "success",
+      //   title: "Payment Successful",
+      //   message: `Your payment to ${billerDetails.descriptions} amounting to ₱${numberFormat(totalAmount)} has been successfully processed with ref no. ${referenceNumber} on ${paymentDate}.`,
+      //   onPress: () => { navigation.navigate("ToktokBillsReceipt", { receipt: postBillsTransaction.data, paymentData }) }
+      // });
+      navigation.navigate("ToktokBillsReceipt", { receipt: postBillsTransaction.data, paymentData });
     }
   })
 
@@ -104,12 +105,12 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
       senderWalletEndingBalance: parseFloat(paymentSummary.tokwaBalance) - parseFloat(totalAmount),
       convenienceFee: parseFloat(paymentData.convenienceFee),
       discount: 0,
-      type: 1,
       comRateId: paymentData.billItemSettings.commissionRateDetails.id,
       email: paymentData.email.toLowerCase(),
+      referralCode: user.consumer.referralCode
     }
   
-    postTransaction({
+    postBillsTransaction({
       variables: {
         input
       }
@@ -120,61 +121,61 @@ export const ToktokBillsEnterPinCode = ({navigation, route})=> {
     navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})
   }
 
+  const onPressShowTPIN = () => {
+    setShowPin(prev => (!prev))
+  }
+
   return (
     <>
     <AlertOverlay visible={loading}/>
-    <KeyboardAvoidingView 
-      style={styles.container}
-      keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
-      behavior={Platform.OS === "ios" ? "padding" : "height"} 
-    >
-      <View style={styles.subContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.otpText}>Enter {requestMoneyDetails?.validator} </Text>
-          <View style={{flexDirection:"row"}}>
-            <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} isError={errorMessage != ""} />
-            <TextInput
-              caretHidden
-              value={pinCode}
-              ref={inputRef}
-              style={styles.input}
-              keyboardType="number-pad"
-              returnKeyType="done"
-              onChangeText={(value) => {
-                if (value.length <= 6) {
-                  const code = value.replace(/[^0-9]/,"")
-                  setPinCode(code);
-                  setErrorMessage("")
-                }
-              }}
-            />
-          </View>
-          { errorMessage != "" && <Text style={styles.errorText}>{errorMessage}</Text> }
-          { requestMoneyDetails?.validator === "TPIN" && (
-            <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressForgotTPIN}>
-              <Text style={styles.forgotTPIN}>Forgot TPIN</Text>
-            </TouchableOpacity>
-          )}
+    <View style={styles.subContainer}>
+      <View style={styles.inputContainer}>
+        <Text style={styles.otpText}>Enter {requestMoneyDetails?.validator} </Text>
+        <View style={{flexDirection:"row"}}>
+          <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} isError={errorMessage != ""} />
+          <TextInput
+            caretHidden
+            value={pinCode}
+            ref={inputRef}
+            style={styles.input}
+            keyboardType="number-pad"
+            returnKeyType="done"
+            onChangeText={(value) => {
+              if (value.length <= 6) {
+                const code = value.replace(/[^0-9]/,"")
+                setPinCode(code);
+                setErrorMessage("")
+              }
+            }}
+          />
         </View>
-        <OrangeButton
-          disabled={pinCode.length < 6}
-          label="Confirm"
-          onPress={onPressConfirm}
-        />
+        { errorMessage != "" && <Text style={styles.errorText}>{errorMessage}</Text> }
+        { requestMoneyDetails?.validator === "TPIN" && (
+          <>
+            <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressShowTPIN}>
+              <Text style={styles.forgotTPIN}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onPressForgotTPIN}>
+              <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
-    </KeyboardAvoidingView>
+      <OrangeButton
+        disabled={pinCode.length < 6}
+        label="Confirm"
+        onPress={onPressConfirm}
+      />
+    </View>
     </>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
   subContainer: {
     flex: 1,
-    padding: moderateScale(16)
+    padding: moderateScale(16),
+    backgroundColor: "white",
   },
   inputContainer: {
     flex: 1,

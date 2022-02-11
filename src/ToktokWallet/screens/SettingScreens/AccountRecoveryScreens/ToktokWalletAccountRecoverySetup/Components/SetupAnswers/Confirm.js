@@ -4,12 +4,13 @@ import {  YellowButton } from 'src/revamp'
 import { BuildingBottom , PromptModal } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import { POST_ACCOUNT_RECOVERY } from 'toktokwallet/graphql'
+import { POST_ACCOUNT_RECOVERY , POST_REQUEST_ACCOUNT_RECOVERY_OTP } from 'toktokwallet/graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
-import { useAlert } from 'src/hooks'
+import { useAlert , usePrompt } from 'src/hooks'
 import { useNavigation } from '@react-navigation/native'
 import { AlertOverlay } from 'src/components'
+import { TransactionUtility } from 'toktokwallet/util'
 import moment from 'moment'
 
 
@@ -42,8 +43,29 @@ const Confirm = ({
 })=> {
 
     const alert = useAlert();
+    const prompt = usePrompt();
     const navigation = useNavigation();
     const [visible,setVisible] = useState(false)
+
+    const [postRequestAccountRecoveryOTP , {loading: requestLoading}] = useMutation(POST_REQUEST_ACCOUNT_RECOVERY_OTP,{
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postRequestAccountRecoveryOTP})=> {
+            return navigation.navigate("ToktokWalletOTPValidator", {
+                callBackFunc: Proceed,
+                resendRequest: requestOTP ,
+            })
+        },
+        onError: (error)=> {
+            // onErrorAlert({alert,error,navigation,title: "Transaction Void"})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert 
+            })
+        }
+
+    })
 
     const [postAccountRecovery , {loading}] = useMutation(POST_ACCOUNT_RECOVERY, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -51,15 +73,26 @@ const Confirm = ({
           setVisible(true)
         },
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            // onErrorAlert({alert,error,navigation})
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert 
+            })
         }
     })
 
-    const onPress = ()=>{
+    const requestOTP = ()=> {
+        postRequestAccountRecoveryOTP()
+    }
+
+    const Proceed = ({pinCode = null , Otp = null , data = null})=> {
         postAccountRecovery({
             variables: {
                 input: {
-                    answers: answers
+                    answers: answers,
+                    OTPCode: Otp,
                 }
             }
         })
@@ -67,7 +100,7 @@ const Confirm = ({
    
     return (
         <>
-            <AlertOverlay visible={loading}/>
+            <AlertOverlay visible={loading || requestLoading}/>
             <PromptModal 
                     visible={visible}
                     title="Security Questions Set Up!"
@@ -75,7 +108,8 @@ const Confirm = ({
                     event="success"
                     onPress={()=>{
                         setVisible(false)
-                        navigation.replace("ToktokWalletAccountRecoverySetup")
+                        navigation.pop();
+                        navigation.replace("ToktokWalletAccountRecoverySetup");
                     }}
             />
 
@@ -98,7 +132,7 @@ const Confirm = ({
                     <Text style={[styles.headerText,{fontSize: FONT_SIZE.S}]}>Answers cannot be changed once saved.</Text>
                 </ScrollView>
                 <View style={styles.btn}>
-                        <YellowButton label="Save" onPress={onPress}/>
+                        <YellowButton label="Save" onPress={requestOTP}/>
                 </View>
                 <BuildingBottom/>
             </View>
@@ -154,7 +188,7 @@ const styles = StyleSheet.create({
     },
     viewAnswer: {
         justifyContent:"center",
-        // alignItems:"center",
+        alignItems:"center",
         height: SIZE.FORM_HEIGHT,
     },
     viewAnswerText: {

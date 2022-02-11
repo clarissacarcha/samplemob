@@ -18,27 +18,31 @@ export const BuyLoad = ({ navigation, setMobileNumber, mobileNumber }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const onChangeText = (value) => {
-    setErrorMessage("");
-    let mobile = value.replace(/[^0-9]/g, "");
-    if(mobile.length > 11) return
-    if(value[0] != "0" || value[1] != "9" ){
+    let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
+  
+    if(mobile.length != 0 && (mobile.substring(0, 2) != "09" || mobile.length != 11)){
+      setErrorMessage("Enter 11-digits valid mobile number");
+    } else {
+      setErrorMessage("");
+    }
+  
+    if((mobile.length == 1 || mobile.length == 2) && (mobileNumber.length == "" || mobileNumber.length == 1)){
       setMobileNumber("09")
-    }else{
+    } else {
       setMobileNumber(mobile)
     }
   }
 
   const onPressNext = () => {
-    let isNotValidMobileNo = mobileNumber.length != 11 || mobileNumber.substring(0, 2) != "09";
-    if(isNotValidMobileNo){
-      return setErrorMessage(isNotValidMobileNo ? "Mobile number must be valid." : "");
-    }
     navigation.navigate("ToktokLoadNetworks", { mobileNumber });
   }
 
+  const onSelectContact = (number) => {
+    onChangeText(number)
+  }
+
   const onPressContacts = () => {
-    setErrorMessage("");
-    navigation.navigate("ToktokLoadContacts",  { setMobileNumber });
+    navigation.navigate("ToktokLoadContacts",  { onSelectContact });
   }
 
   return (
@@ -48,9 +52,10 @@ export const BuyLoad = ({ navigation, setMobileNumber, mobileNumber }) => {
           <TextInput
             value={mobileNumber}
             onChangeText={onChangeText}
-            placeholder="Enter Mobile Number"
+            placeholder="Enter 11-digits mobile number"
             keyboardType="number-pad"
             returnKeyType="done"
+            maxLength={11}
           />
         </View>
         <TouchableOpacity
@@ -64,7 +69,7 @@ export const BuyLoad = ({ navigation, setMobileNumber, mobileNumber }) => {
       <View style={{ flex: 1, justifyContent: "flex-end" }}>
         <OrangeButton
           label="Next"
-          disabled={!mobileNumber}
+          disabled={!mobileNumber || errorMessage}
           onPress={onPressNext}
         />
       </View>

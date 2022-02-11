@@ -9,6 +9,7 @@ const {width,height} = Dimensions.get("window")
 
 export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccount})=> {
 
+    const [newPinCode,setNewPinCode] = useState("")
     const [showPin,setShowPin] = useState(false)
     const inputRef = useRef();
     const [errorMessage,setErrorMessage] = useState("")
@@ -21,8 +22,8 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
     
     const onSubmit = () => {
        let isWeakPin = true
-       for(let x = 0 ; x < pinCode.length ; x++){
-           if(pinCode[0] != pinCode[x]){
+       for(let x = 0 ; x < newPinCode.length ; x++){
+           if(newPinCode[0] != newPinCode[x]){
             isWeakPin = false
             break
            }
@@ -31,52 +32,58 @@ export const CreatePin = ({pinCode,setPinCode,pageIndex,setPageIndex,tokwaAccoun
         setShowPin(true)
         return setErrorMessage(`Your TPIN must not contain repeating digits ex. 000000`)
        }
-       setPageIndex(oldstate=>oldstate+1)
+       setPageIndex(oldstate=>oldstate+1);
+       setPinCode(newPinCode);
     };
 
     useEffect(()=>{
         setErrorMessage("")
-    },[pinCode])
+    },[newPinCode])
 
 
     return (
         <View style={styles.container}>
             <ScrollView style={styles.content}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Enter your {tokwaAccount.pinCode ? "new ": ""}TPIN</Text>
-                    <View style={{position: 'relative',marginTop: 50,}}>
-                        <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin}/>
-                        <TextInput
-                            caretHidden
-                            value={pinCode}
-                            ref={inputRef}
-                            style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
-                            keyboardType="number-pad"
-                            returnKeyType="done"
-                            onChangeText={(value) => {
-                            if (value.length <= 6) {
-                                const num = value.replace(/[^0-9]/g, '')
-                                setPinCode(num);
-                            }
-                            }}
-                            onSubmitEditing={pinCode.length == 6 ? onSubmit: null}
-                        />
-
-                        {
-                            errorMessage != "" &&  <Text style={{fontFamily: FONT.REGULAR,fontSize: 12,color:COLOR.RED,alignSelf:"center"}}>{errorMessage}</Text>   
+                { !tokwaAccount.pinCode && (
+                    <Text style={{ textAlign: "center", fontSize: FONT_SIZE.S, marginVertical: 40, marginHorizontal: 20 }}>
+                        You will use your TPIN in every transaction you make with toktokwallet. Please keep it to yourself and do not share with anyone.
+                    </Text>
+                )}
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Setup {tokwaAccount.pinCode ? "New ": ""}TPIN</Text>
+                <View style={{position: 'relative',marginTop: 50,}}>
+                    <NumberBoxes pinCode={newPinCode} onNumPress={onNumPress} showPin={showPin}/>
+                    <TextInput
+                        caretHidden
+                        value={newPinCode}
+                        ref={inputRef}
+                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
+                        keyboardType="number-pad"
+                        returnKeyType="done"
+                        onChangeText={(value) => {
+                        if (value.length <= 6) {
+                            const num = value.replace(/[^0-9]/g, '')
+                            setNewPinCode(num);
                         }
+                        }}
+                        onSubmitEditing={newPinCode.length == 6 ? onSubmit: null}
+                    />
+
+                    {
+                        errorMessage != "" &&  <Text style={{fontFamily: FONT.REGULAR,fontSize: 12,color:COLOR.RED,alignSelf:"center"}}>{errorMessage}</Text>   
+                    }
 
 
-                        <TouchableOpacity
-                                style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
-                                onPress={()=>setShowPin(!showPin)}
-                        >
-                                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>{showPin ? "HIDE TPIN" : "SHOW TPIN"}</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity
+                            style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
+                            onPress={()=>setShowPin(!showPin)}
+                    >
+                            <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
+                    </TouchableOpacity>
+                </View>
             </ScrollView>
              <View style={{padding: 16}}>
                 {
-                    pinCode.length < 6
+                    newPinCode.length < 6
                     ? <DisabledButton label="Next"/>
                     : <YellowButton label="Next" onPress={onSubmit}/>
                 }
