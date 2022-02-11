@@ -104,7 +104,7 @@ const MyOrderList = () => {
               {parentProductId ? parentProductName : productName}
             </Text>
             <Text style={[styles.orderText]}>{`x${quantity}`}</Text>
-            {parentProductId && <Text style={styles.orderText}>{`Variant: ${productName}`}</Text>}
+            {parentProductId && <Text style={styles.orderText}>{`Variantion: ${productName}`}</Text>}
             {addonsDetails.length > 0 && displayAddOns(addons)}
             {!!notes && <Text style={styles.orderText}>{`Note: ${notes}`}</Text>}
           </View>
