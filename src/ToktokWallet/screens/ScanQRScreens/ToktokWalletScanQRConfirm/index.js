@@ -80,6 +80,7 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                 <ProceedButton 
                     amount={amount} 
                     swipeEnabled={swipeEnabled} 
+                    setSwipeEnabled={setSwipeEnabled}
                     note={note} 
                     session={session} 
                     recipientInfo={recipientInfo}

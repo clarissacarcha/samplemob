@@ -171,6 +171,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                     <View style={{flex: 1, height: SIZE.FORM_HEIGHT,marginTop: 50,justifyContent:"flex-end"}}>
                 
                         <ProceedButton
+                            setSwipeEnabled={setSwipeEnabled}
                             swipeEnabled={swipeEnabled}
                             proceed={proceed}
                             amount={amount}
