@@ -13,7 +13,7 @@ import { AlertOverlay } from 'src/components'
 //SELF IMPORTS
 import SuccessfulModal from './SuccessfulModal'
 
-export const ProceedButton = ({swipeEnabled , navigation , amount , note , tokwaAccount , recipientDetails , proceed , errorAmountMessage , setErrorAmountMessage })=> {
+export const ProceedButton = ({ setSwipeEnabled ,swipeEnabled , navigation , amount , note , tokwaAccount , recipientDetails , proceed , errorAmountMessage , setErrorAmountMessage })=> {
 
     const prompt = usePrompt()
     const alert = useAlert()

@@ -18,6 +18,7 @@ import SuccessfulModal from './SuccessfulModal'
 export const ProceedButton = ({
     amount,
     swipeEnabled,
+    setSwipeEnabled,
     note,
     recipientInfo
 })=> {
