@@ -239,7 +239,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
 
                          <View style={styles.cashinbutton}>
                                     {
-                                        (!isCertify && ( amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "") )
+                                        (!isCertify || amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "" )
                                         ? <DisabledButton label="Cash In"/>
                                         : <YellowButton label="Cash In" onPress={confirmAmount}/>
                                     }
