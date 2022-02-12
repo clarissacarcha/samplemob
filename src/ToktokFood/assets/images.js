@@ -24,6 +24,7 @@ export const star = require('./images/star-orange.png');
 export const delivered = require('./images/delivered.png');
 export const pickedUp = require('./images/picked-up.png');
 export const wallet = require('./images/tokwallet.png');
+export const walletLabel = require('./images/toktokwallet-label.png');
 export const success_ic = require('./images/prompts_icons/success2.png');
 export const error_ic = require('./images/prompts_icons/error.png');
 export const warning_ic = require('./images/prompts_icons/warning_ic.png');
