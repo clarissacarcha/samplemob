@@ -284,6 +284,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         reasons={showDialogMessage.reasons}
         visibility={showDialogMessage.show}
         onCloseModal={() => {
+          setSeconds(300);
           onCloseModal();
         }}
         onCloseBtn1={() => {

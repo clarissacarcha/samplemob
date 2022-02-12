@@ -184,7 +184,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
             if (riderDetails == null) {
               BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
               BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
-              if (transaction.orderStatus == 'p') {
+              if (transaction.orderStatus === 'p' && !showDialogMessage.show) {
                 setShowDialogMessage({
                   title: 'No Response from Merchant',
                   message: "Merchant hasn't confirmed your order.\nPlease try again.",
