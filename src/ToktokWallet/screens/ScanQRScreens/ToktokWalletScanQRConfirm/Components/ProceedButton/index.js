@@ -166,7 +166,7 @@ export const ProceedButton = ({
 const styles = StyleSheet.create({
     container: {
         height: 60,
-        paddingHorizontal: 10 
+        paddingHorizontal: 6
     },
 })
 
