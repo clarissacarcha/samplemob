@@ -19,7 +19,7 @@ import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 // Utils
 import {verticalScale, getDeviceHeight, moderateScale, getIphoneNotchSize} from 'toktokfood/helper/scale';
-import {reseller_badge} from 'toktokfood/assets/images';
+import {reseller_badge, empty_search_2} from 'toktokfood/assets/images';
 import {TOKFOODCOLOR} from 'res/variables';
 import {filter} from 'lodash';
 
@@ -172,6 +172,25 @@ export const FoodList = props => {
     );
   };
 
+  const emptyScreenComponent = () => (
+    <View
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+      }}>
+      <Image
+        style={{
+          height: moderateScale(175),
+          width: moderateScale(220),
+        }}
+        resizeMode="contain"
+        source={empty_search_2}
+      />
+      <Text style={{marginTop: moderateScale(20)}}>Sorry, product is not available in this restaurant yet.</Text>
+    </View>
+  );
+
   if (productsLoading || tagsLoading || productsError || searchProductsLoading) {
     const listSize = parseInt((getDeviceHeight / verticalScale(100)).toFixed(0));
 
@@ -206,7 +225,7 @@ export const FoodList = props => {
 
   return (
     <ScrollView contentContainerStyle={{...styles.scrollContainer, minHeight: minHeight}}>
-      {listData?.length > 0 ? listData.map(item => <ItemList item={item} />) : null}
+      {listData?.length > 0 ? listData.map(item => <ItemList item={item} />) : emptyScreenComponent()}
       {/* <FlatList
         data={
           searchProduct ? searchProducts?.getSearchProductsByShop : products ? products.getProductsByShopCategory : []

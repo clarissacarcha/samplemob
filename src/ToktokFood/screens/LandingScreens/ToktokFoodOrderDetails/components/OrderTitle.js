@@ -224,6 +224,7 @@ const styles = StyleSheet.create({
   timeImg: {
     width: moderateScale(13),
     height: moderateScale(13),
+    top: moderateScale(4),
     // tintColor: COLOR.DARK,
     resizeMode: 'contain',
     tintColor: '#F6A100',

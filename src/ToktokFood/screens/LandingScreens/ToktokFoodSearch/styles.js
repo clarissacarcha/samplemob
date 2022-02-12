@@ -76,7 +76,7 @@ export default styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    marginTop: moderateScale(-100),
+    marginTop: moderateScale(-110),
   },
   emptyImg: {
     height: moderateScale(175),

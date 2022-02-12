@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
   timeContainer: {
     flexDirection: 'row',
     marginTop: verticalScale(5),
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     paddingHorizontal: moderateScale(10),
   },
@@ -361,6 +361,7 @@ const styles = StyleSheet.create({
   timeImg: {
     width: moderateScale(13),
     height: moderateScale(13),
+    top: moderateScale(4),
     tintColor: COLOR.YELLOW,
     resizeMode: 'contain',
   },

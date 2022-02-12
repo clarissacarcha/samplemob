@@ -22,7 +22,7 @@ import {moderateScale, getStatusbarHeight, getIphoneNotchSize} from 'toktokfood/
 
 import {useSelector} from 'react-redux';
 import ENVIRONMENTS from 'src/common/res/environments';
-import {searchIcon, empty_search, time, new_empty_shop_icon} from 'toktokfood/assets/images';
+import {searchIcon, empty_search_2, time, new_empty_shop_icon} from 'toktokfood/assets/images';
 
 import styles from './styles';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -182,7 +182,7 @@ const ToktokFoodSearch = ({route}) => {
           <Image
             style={styles.emptyImg}
             resizeMode="contain"
-            source={search != '' ? new_empty_shop_icon : empty_search}
+            source={search != '' ? new_empty_shop_icon : empty_search_2}
           />
           {search != '' ? (
             <>
