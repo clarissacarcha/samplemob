@@ -10,6 +10,7 @@ import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert , usePrompt } from 'src/hooks'
 import { useDebounce } from 'toktokwallet/hooks'
+import CheckBox from 'react-native-check-box'
 import { YellowButton } from 'src/revamp'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS
@@ -39,6 +40,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
     const [isFocus,setIsFocus] = useState(false)
     const [inputWidth,setInputWidth] = useState(inputAmountLength["0"])
+    const [isCertify, setCertify] = useState(true)
     const inputRef = useRef(null);
 
     const dispatch = useDispatch();
@@ -206,17 +208,39 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                          </View>
 
                          <View style={{flex:1 ,justifyContent:"flex-end",alignItems:"center",paddingBottom: 25}}>
-                         
-                         <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"justify"}}>
-                         <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>
-                             Disclaimer:
-                         </Text> toktokwallet will not hold liable for erroneous cash in transactions due to the incorrect account number of the recipient. Incoming and outgoing request for cash in transactions is delimited on the allowed wallet-size monthly based on the approved account level of the user. Any amount outside the limit will be put on hold and subject to the refund process.
-                        </Text>
+                         <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginBottom: 10}}>
+                         Please read our Terms and Conditions before you proceed with your transaction.
+                         </Text>
+                    <View style={{
+                        flexDirection:"row",    
+                        marginLeft: 7,        
+                    }}>
+
+                    <CheckBox
+                            isChecked={isCertify}
+                            onClick={()=>{
+                                return setCertify(!isCertify)
+                            }}
+                            style={{
+                                alignSelf: "center",
+                                marginRight: 2,
+                            }}
+                        />
+
+                        <TouchableOpacity 
+                            // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
+                            style={{paddingHorizontal: 10,marginRight: 20,alignSelf:"center"}}
+                        >
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby certify that I accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions.</Text></Text>
+                        </TouchableOpacity>
+                    </View>
+                        
                          </View>
 
                          <View style={styles.cashinbutton}>
                                     {
-                                        (amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "")
+                                        (!isCertify && ( amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "") )
                                         ? <DisabledButton label="Cash In"/>
                                         : <YellowButton label="Cash In" onPress={confirmAmount}/>
                                     }
