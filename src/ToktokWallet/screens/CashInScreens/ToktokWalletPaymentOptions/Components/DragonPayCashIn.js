@@ -206,14 +206,13 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                 
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
                          </View>
-
+                      
                          <View style={{flex:1 ,justifyContent:"flex-end",alignItems:"center",paddingBottom: 25}}>
-                         <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginBottom: 10}}>
+                         <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginBottom: 10 ,textAlign:"center"}}>
                          Please read our Terms and Conditions before you proceed with your transaction.
                          </Text>
                     <View style={{
-                        flexDirection:"row",    
-                        marginLeft: 7,        
+                        flexDirection:"row",     
                     }}>
 
                     <CheckBox
