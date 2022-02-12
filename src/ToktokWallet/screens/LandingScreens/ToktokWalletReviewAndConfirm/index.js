@@ -71,6 +71,12 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                     Please review the accuracy and completeness of the details provided before you confirm
                 </Text>
                 {
+                    event == "Send Money" &&
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop: 15,textAlign:'center'}}>
+                        Transaction cannot be reversed once confirmed and submitted
+                    </Text>
+                }
+                {
                     data.fundTransferType &&
                     <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop: 15,textAlign:'center'}}>
                         Fund Transfer via {data.fundTransferType}
