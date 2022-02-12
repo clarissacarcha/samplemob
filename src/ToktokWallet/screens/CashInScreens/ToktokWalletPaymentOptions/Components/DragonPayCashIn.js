@@ -205,6 +205,15 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
                          </View>
 
+                         <View style={{flex:1 ,justifyContent:"flex-end",alignItems:"center",paddingBottom: 25}}>
+                         
+                         <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"justify"}}>
+                         <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>
+                             Disclaimer:
+                         </Text> toktokwallet will not hold liable for erroneous cash in transactions due to the incorrect account number of the recipient. Incoming and outgoing request for cash in transactions is delimited on the allowed wallet-size monthly based on the approved account level of the user. Any amount outside the limit will be put on hold and subject to the refund process.
+                        </Text>
+                         </View>
+
                          <View style={styles.cashinbutton}>
                                     {
                                         (amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "")
