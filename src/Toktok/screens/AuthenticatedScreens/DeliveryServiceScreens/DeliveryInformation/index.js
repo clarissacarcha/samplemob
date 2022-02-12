@@ -53,10 +53,13 @@ const DeliveryDetails = ({navigation, route, session}) => {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const quotationHash = route.params.quotation.hash;
+  const quotationDirections = route.params.quotation.directions;
+
   const [getToktokWalletBalance] = useLazyQuery(GET_TOKTOK_WALLET_BALANCE, {
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      console.log({res: res.getToktokWalletBalance.balance});
+      console.log({walletBalance: res.getToktokWalletBalance.balance});
 
       setHasWallet(res.getToktokWalletBalance.hasWallet);
       setBalanceText(numberFormat(res.getToktokWalletBalance.balance));
@@ -75,6 +78,8 @@ const DeliveryDetails = ({navigation, route, session}) => {
 
   useEffect(() => {
     getToktokWalletBalance();
+
+    console.log(JSON.stringify({params: route.params.quotation.hash}, null, 4));
   }, []);
 
   // const {
@@ -133,7 +138,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
         finalItemDescription = otherItem;
       }
 
-      navigation.push('DeliverySummary', {
+      const routeParams = {
         orderData: {
           ...route.params.orderData,
           collectPaymentFrom,
@@ -151,7 +156,11 @@ const DeliveryDetails = ({navigation, route, session}) => {
           directions,
         },
         walletBalance: walletBalance,
-      });
+      };
+
+      routeParams.orderData.directions = quotationDirections;
+
+      navigation.push('DeliverySummary', routeParams);
     },
   });
 
@@ -244,6 +253,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
     getDeliveryPriceAndDirections({
       variables: {
         input: {
+          quotationHash,
           consumerId: session.user.consumer.id,
           vehicleTypeId: orderData.vehicleTypeId,
           promoCode: '',
@@ -272,6 +282,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
     recomputeQuotation({
       variables: {
         input: {
+          quotationHash,
           consumerId: session.user.consumer.id,
           vehicleTypeId: orderData.vehicleTypeId,
           promoCode: '',
@@ -300,6 +311,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
     recomputeQuotation({
       variables: {
         input: {
+          quotationHash,
           consumerId: session.user.consumer.id,
           vehicleTypeId: orderData.vehicleTypeId,
           promoCode: '',
