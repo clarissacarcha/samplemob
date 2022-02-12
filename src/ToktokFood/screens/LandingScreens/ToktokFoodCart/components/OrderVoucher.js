@@ -163,21 +163,23 @@ const OrderVoucher = ({autoShipping}) => {
 
       {shippingVoucher.length > 0 && renderVoucher()}
 
-      <View style={styles.formContainer}>
-        <StyledTextInput
-          hasIcon={shippingVoucher.length > 0}
-          error={voucherError}
-          onChangeText={onChangeText}
-          onRemoveVoucher={onRemoveVoucher}
-          label="Voucher"
-          value={voucher}
-          placeholder="Input Voucher(optional)"
-        />
+      {!autoShipping?.success && (
+        <View style={styles.formContainer}>
+          <StyledTextInput
+            hasIcon={shippingVoucher.length > 0}
+            error={voucherError}
+            onChangeText={onChangeText}
+            onRemoveVoucher={onRemoveVoucher}
+            label="Voucher"
+            value={voucher}
+            placeholder="Input Voucher(optional)"
+          />
 
-        <TouchableOpacity onPress={onApplyVoucher} style={styles.apply}>
-          <Text style={styles.subText}>Apply</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity onPress={onApplyVoucher} style={styles.apply}>
+            <Text style={styles.subText}>Apply</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };

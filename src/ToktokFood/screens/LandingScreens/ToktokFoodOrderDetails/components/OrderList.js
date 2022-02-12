@@ -44,7 +44,7 @@ const OrderList = ({orderDetails}) => {
           </View>
           <View>
             <Text style={styles.notes}>x{item.quantity}</Text>
-            {parentProductId && <Text style={styles.notes}>{`Variant: ${itemname}`}</Text>}
+            {parentProductId && <Text style={styles.notes}>{`Variation: ${itemname}`}</Text>}
             {!!parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} />}
             {!!item.notes && <Text style={styles.notes}>{`Note: ${JSON.parse(item.notes)}`}</Text>}
           </View>
