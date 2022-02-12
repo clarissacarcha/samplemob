@@ -150,7 +150,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
     useEffect(()=>{
         setDisablebtn(true)
         setInputWidth(inputAmountLength[amount.length])
-        checkLimit(amount)
+        if(amount != "")  checkLimit(amount)
     },[amount])
     
     return (
