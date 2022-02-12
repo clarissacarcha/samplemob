@@ -20,7 +20,8 @@ export const ProceedButton = ({
     swipeEnabled,
     setSwipeEnabled,
     note,
-    recipientInfo
+    recipientInfo,
+    isCertify
 })=> {
 
     const prompt = usePrompt()
@@ -153,7 +154,7 @@ export const ProceedButton = ({
             />
             <View style={styles.container}>
                     {
-                        swipeEnabled
+                        swipeEnabled && isCertify
                         ? <YellowButton label="Confirm" onPress={reviewAndConfirm}/>
                         : <DisabledButton label="Confirm"/>
                     }
