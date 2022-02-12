@@ -357,7 +357,12 @@ export const Variations = ({data, productId}) => {
       return (
         <React.Fragment>
           <View style={styles.variantContainer}>
-            <Text style={styles.variantTitle}>Variations</Text>
+            <View style={styles.flexCenter}>
+              <Text style={styles.variantTitle}>Variations (Select 1)</Text>
+              <View style={styles.requiredContainer}>
+                <Text style={styles.requiredText}>Required</Text>
+              </View>
+            </View>
             {listData.map(item => (
               <Variant item={item} />
             ))}

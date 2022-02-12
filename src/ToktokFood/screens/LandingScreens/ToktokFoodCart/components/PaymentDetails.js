@@ -192,8 +192,8 @@ const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
                     styles.cashButton,
                     styles.shadow,
                     {backgroundColor: COLORS.WHITE},
-                    {opacity: loading || customerWallet ? 1 : 0.4},
-                    {borderColor: customerWallet && paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.WHITE},
+                    {opacity: loading || customerWallet?.status === 1 ? 1 : 0.4},
+                    {borderColor: customerWallet?.status === 1 && paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.WHITE},
                   ]}>
                   <Text style={[styles.cashText, {color: '#000000'}]}>Cash</Text>
                 </TouchableOpacity>

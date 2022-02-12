@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.WHITE,
   },
-  createText: {textDecorationLine: 'underline', color: COLOR.YELLOW, fontWeight: '600', paddingBottom: 10},
+  createText: {textDecorationLine: 'underline', color: COLOR.YELLOW, fontWeight: '700', paddingBottom: 10},
   deliveryFee: {
     flexDirection: 'row',
   },

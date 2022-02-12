@@ -12,7 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useIsFocused} from '@react-navigation/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import DashedLine from 'react-native-dashed-line';
-
+import Separator from 'toktokfood/components/Separator';
 // Fonts/Colors
 import {COLORS} from 'res/constants';
 import {FONT_SIZE, FONT, COLOR} from 'res/variables';
@@ -147,7 +147,7 @@ const OrderAddress = ({transaction, riderDetails}) => {
           <Image style={styles.icons} source={store} resizeMode="contain" />
           <Text style={styles.addressText}>{shopname}</Text>
         </View>
-        {orderIsfor == 1 && (
+        {orderIsfor === 1 ? (
           <>
             <View style={styles.horizontalContainer} />
             <Text style={styles.restaurant}>Deliver to</Text>
@@ -165,6 +165,12 @@ const OrderAddress = ({transaction, riderDetails}) => {
               <Image style={styles.icons} source={phoneBlack} resizeMode="contain" />
               <Text style={styles.addressText}>{conno}</Text>
             </View>
+          </>
+        ) : (
+          <>
+            <Separator style={{height: 1, marginVertical: moderateScale(10)}} />
+            <Text style={styles.restaurant}>Estimated Pickup Time:</Text>
+            <Text>ASAP</Text>
           </>
         )}
       </View>
@@ -216,6 +222,7 @@ const styles = StyleSheet.create({
   restaurant: {
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.BOLD,
+    marginBottom: moderateScale(5),
   },
   restauranContainer: {
     flexDirection: 'row',
