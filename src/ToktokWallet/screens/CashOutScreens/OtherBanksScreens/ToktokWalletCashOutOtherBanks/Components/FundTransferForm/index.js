@@ -102,7 +102,7 @@ const Amount = ({
         </View>
              <View style={{marginTop: 16,}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Email Address (optional)</Text>
-                <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS,borderWidth: 1, borderColor: errorListMessage.address == "" ? "transparent" : COLOR.RED}]}>
+                <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS,borderWidth: 1, borderColor: errorListMessage.emailAddress == "" ? "transparent" : COLOR.RED}]}>
                     <TextInput
                         style={styles.input}
                         value={emailAddress}
