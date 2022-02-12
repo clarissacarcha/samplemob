@@ -122,7 +122,7 @@ export const LoginPage = ()=> {
                         source={tokwaLogo}
                         resizeMode="contain"
                     />
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>Enter MPIN</Text>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center",marginTop: 20}}>Enter MPIN</Text>
                     <View style={{position: 'relative',flex: 1,justifyContent:"center",alignItems:"center"}}>
                         <CircleIndicator pinCode={pinCode} showPin={showPin} numberOfBox={4}/>
                         <TextInput
