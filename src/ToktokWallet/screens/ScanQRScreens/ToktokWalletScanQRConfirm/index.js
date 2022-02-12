@@ -78,7 +78,7 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                 setNote={setNote}
             />
 
-            <View style={{paddingHorizontal: 10}}> 
+            <View style={{paddingHorizontal: 16}}> 
             <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginBottom: 10 ,textAlign:"center"}}>
                              Please read our Terms and Conditions before you proceed with your transaction.
                          </Text>  
