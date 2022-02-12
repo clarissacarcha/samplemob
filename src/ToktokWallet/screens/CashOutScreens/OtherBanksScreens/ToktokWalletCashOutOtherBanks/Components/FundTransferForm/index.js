@@ -1,6 +1,6 @@
 import React , {useEffect,useState, useContext, useCallback} from 'react'
 import {View , Text , StyleSheet , TextInput,TouchableOpacity, Alert} from 'react-native'
-import { ValidatorScreen , InputAmount , Separator } from 'toktokwallet/components'
+import { ValidatorScreen , InputAmount , Separator , DisabledButton } from 'toktokwallet/components'
 import { YellowButton ,VectorIcon ,ICON_SET} from 'src/revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT, POST_COMPUTE_CONVENIENCE_FEE } from 'toktokwallet/graphql'
@@ -14,6 +14,7 @@ import { AlertOverlay } from 'src/components'
 import { ContextCashOut } from '../ContextProvider'
 import { TransactionUtility } from 'toktokwallet/util'
 import _ from 'lodash'
+import CheckBox from 'react-native-check-box'
 import validator from 'validator'
 import CONSTANTS from 'common/res/constants'
 
@@ -253,6 +254,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     const [providerServiceFee,setProviderServiceFee] = useState("")
     const [systemServiceFee,setSystemServiceFee] = useState("")
     const [type,setType] = useState("")
+    const [isCertify, setCertify] = useState(true)
 
     const {
         accountName,
@@ -548,7 +550,39 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 }}
             />
             <View style={styles.proceedBtn}>
-                <YellowButton label="Proceed" onPress={onPress}/>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginBottom: 10 ,textAlign:"center"}}>
+                         Please read our Terms and Conditions before you proceed with your transaction.
+                    </Text>
+                    <View style={{
+                        flexDirection:"row",   
+                        marginBottom: 16,  
+                    }}>
+
+                    <CheckBox
+                            isChecked={isCertify}
+                            onClick={()=>{
+                                return setCertify(!isCertify)
+                            }}
+                            style={{
+                                alignSelf: "center",
+                                marginRight: 2,
+                            }}
+                        />
+
+                        <TouchableOpacity 
+                            // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
+                            style={{paddingHorizontal: 10,marginRight: 20,alignSelf:"center"}}
+                        >
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby certify that I accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions.</Text></Text>
+                        </TouchableOpacity>
+                    </View>
+                    {
+                        isCertify 
+                        ? <YellowButton label="Proceed" onPress={onPress}/>
+                        : <DisabledButton label="Proceed"/>
+                    }
+               
             </View>
 
         </>
@@ -570,7 +604,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     proceedBtn: {
-        height: 70,
+        // height: 70,
         justifyContent: 'flex-end',
         padding: 16,
         marginTop: 20,
