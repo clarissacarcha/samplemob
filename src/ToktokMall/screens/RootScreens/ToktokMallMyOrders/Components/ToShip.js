@@ -74,7 +74,7 @@ const Item = ({data, fulldata}) => {
             </View>
             <View style={{flexDirection: 'row'}}>
               <View style={{flex: 0}}>
-                <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={data?.totalAmount} /></Text>
+                <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={product?.price} /></Text>
               </View>
               <View style={{flex: 0, paddingHorizontal: 10}}>
                 <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11}}>{parseFloat(product?.compareAtPrice) > 0 ? <Price amount={product?.compareAtPrice} /> : null}</Text>
