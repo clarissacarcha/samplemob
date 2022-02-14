@@ -69,7 +69,9 @@ const ToktokFoodDriver = ({route, navigation}) => {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onCompleted: ({getDeliveryDetails}) => {
-        setRiderDetails(getDeliveryDetails.driver);
+        // console.log(getDeliveryDetails);
+        const {deliveryLogs, duration} = getDeliveryDetails;
+        setRiderDetails({...getDeliveryDetails.driver, deliveryLogs, duration});
       },
     },
   );
@@ -136,7 +138,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         setRiderSeconds(300);
       }
     }
-    console.log('Rider Details Updated ' + riderSeconds);
+    // console.log('Rider Details Updated ' + riderSeconds, getRiderDetailsInterval);
   };
 
   const handleOrderProcess = async () => {
