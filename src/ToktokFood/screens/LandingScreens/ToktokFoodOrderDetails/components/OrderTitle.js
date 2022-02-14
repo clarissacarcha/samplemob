@@ -158,13 +158,27 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
   // };
 
   const renderEstimatedPickUpTime = () => {
-    let startTime = moment(dateOrderProcessed).format('LT');
-    let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A');
+    const date = orderStatus === 'po' ? dateOrderProcessed : dateReadyPickup;
+    const edt = moment(date, 'YYYY-MM-DD HH:mm:ss').add(45, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+    const timeNow = moment().format('YYYY-MM-DD HH:mm:ss');
+
+    const getTimeByStatus = () => {
+      switch (orderStatus) {
+        case 'po':
+          if (edt <= timeNow) {
+            return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
+          }
+          return 'Estimated Pickup Time: 15-45 Minutes';
+        case 'rp':
+          return 'Estimated Pickup Time: ASAP';
+        default:
+          return 'Estimated Pickup Time: 15-45 Minutes';
+      }
+    };
     return (
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />
-        {/* <Text style={styles.time}>{`Estimated Pickup Time: ${startTime} - ${endTime}`}</Text> */}
-        <Text style={styles.time}>Estimated Pickup Time: ASAP</Text>
+        <Text style={styles.time}>{getTimeByStatus()}</Text>
       </View>
     );
   };
@@ -265,12 +279,13 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     marginLeft: moderateScale(5),
-    marginTop: moderateScale(7),
+    textAlign: 'center',
   },
   timeContainer: {
     flexDirection: 'row',
-    // marginTop: verticalScale(5),
-    alignItems: 'center',
+    marginTop: moderateScale(5),
+    // alignItems: 'center',
+    paddingHorizontal: moderateScale(15),
   },
   title: {
     fontSize: FONT_SIZE.L,
@@ -279,8 +294,8 @@ const styles = StyleSheet.create({
   timeImg: {
     width: moderateScale(13),
     height: moderateScale(13),
-    top: moderateScale(4),
-    // tintColor: COLOR.DARK,
+    // top: moderateScale(4),
+    marginTop: moderateScale(2),
     resizeMode: 'contain',
     tintColor: '#F6A100',
   },
