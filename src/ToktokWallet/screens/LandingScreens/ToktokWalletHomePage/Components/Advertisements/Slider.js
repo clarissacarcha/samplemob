@@ -65,7 +65,7 @@ const Slider = ({ads,bannerType})=>{
     return(
         <FlatList
           horizontal
-          style={styles.container}
+          style={[styles.container, { height: bannerType == "2" ?BANNER_HEIGHT + 40 : BANNER_HEIGHT }]}
           showsHorizontalScrollIndicator={false}
           data={ads}
           keyExtractor={(item)=>item.id}
@@ -76,13 +76,12 @@ const Slider = ({ads,bannerType})=>{
 
 const styles = StyleSheet.create({
     container: {
-      height: BANNER_HEIGHT + 60,
-      flex: 1,
       flexDirection:"row",
       marginHorizontal: 16,
     },  
     adv: {
         height: BANNER_HEIGHT,
+        alignItems:"center"
     },
     box: {
         paddingHorizontal: MARGIN.M / 2,
