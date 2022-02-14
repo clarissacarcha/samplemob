@@ -8,7 +8,7 @@ import CONSTANTS from 'common/res/constants'
 import AdModal from './AdModal';
 
 const { FONT_SIZE, COLOR , SIZE , FONT_FAMILY: FONT , MARGIN} = CONSTANTS
-const { width } = Dimensions.get("window");
+const { width , height } = Dimensions.get("window");
 const SCREEN_WIDTH = width;
 const BANNER_WIDTH = SCREEN_WIDTH - MARGIN.M * 2;
 // const BANNER_HEIGHT = BANNER_WIDTH / 2;
