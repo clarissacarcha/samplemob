@@ -21,8 +21,7 @@ export const getSubMessageStatus = item => {
   const isItemPickedUp =
     item?.deliveryLogs.length > 3 && item.deliveryLogs[3].createdAt
       ? 'Food picked up'
-      : 'Your order is on the way to you';
-  // : 'Your order is ready for pick up';
+      : 'Your order is ready for pick up';
   // console.log(item.orderStatus)
   switch (item.orderStatus) {
     case 's':
@@ -32,6 +31,7 @@ export const getSubMessageStatus = item => {
         item.dateCancelledDeclined,
       ).format('LT')}`;
     case 'rp':
+      // return 'Processing Order';
       return isItemPickedUp;
     case 'po':
       return 'Processing Order';

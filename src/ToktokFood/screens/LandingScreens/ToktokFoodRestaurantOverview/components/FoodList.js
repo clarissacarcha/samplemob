@@ -187,7 +187,9 @@ export const FoodList = props => {
         resizeMode="contain"
         source={empty_search_2}
       />
-      <Text style={{marginTop: moderateScale(20)}}>Sorry, product is not available in this restaurant yet.</Text>
+      <Text style={{marginTop: moderateScale(20)}}>
+        Sorry, products in this category seems to be out of stock already. Please come back again some other time.
+      </Text>
     </View>
   );
 
