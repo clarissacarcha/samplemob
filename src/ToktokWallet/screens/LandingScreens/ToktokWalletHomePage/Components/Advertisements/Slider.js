@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import { View , Text , StyleSheet , Dimensions , Image ,TouchableHighlight } from 'react-native'
+import { View , Text , StyleSheet , Dimensions , Image ,TouchableHighlight, FlatList } from 'react-native'
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { useThrottle } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
@@ -11,38 +11,10 @@ const { FONT_SIZE, COLOR , SIZE , FONT_FAMILY: FONT , MARGIN} = CONSTANTS
 const { width } = Dimensions.get("window");
 const SCREEN_WIDTH = width;
 const BANNER_WIDTH = SCREEN_WIDTH - MARGIN.M * 2;
-const BANNER_HEIGHT = BANNER_WIDTH / 2;
+// const BANNER_HEIGHT = BANNER_WIDTH / 2;
+const BANNER_HEIGHT = 150;
 
-const RenderDots = ({entries, activeSlide})=> {
-    
-    return (
-        <Pagination
-        dotsLength={entries.length}
-        activeDotIndex={activeSlide}
-        containerStyle={{ }}
-        dotStyle={{
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            marginHorizontal: 0,
-            backgroundColor: COLOR.ORANGE
-        }}
-        inactiveDotStyle={{
-            // Define styles for inactive dots here
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            marginHorizontal: 0,
-            backgroundColor: COLOR.DARK
-        }}
-        inactiveDotOpacity={0.4}
-        inactiveDotScale={0.6}
-      />
-    )
-}
-
-
-const RenderItem = ({ad,index})=> {
+const RenderItem = ({ad,index,bannerType})=> {
 
     const [visible,setVisible] = useState(false);
 
@@ -57,60 +29,60 @@ const RenderItem = ({ad,index})=> {
             setVisible={setVisible}
             ad={ad}
         />
-        <View style={styles.adv}>
+        <View style={[styles.adv,{  ...(bannerType == "2" ? {width: width * 0.4,marginRight:16,} : {width: width * 0.7,marginRight: 16})}]}>
         <TouchableHighlight style={styles.touchable} underlayColor="transparent" onPress={onPressThrottled}>
           <View>
             <View style={styles.imageBox}>
               <Image
-                style={styles.image}
+                style={[styles.image, { width: bannerType == "2" ? width * 0.4 : width * 0.7,}]}
                 source={{
                 //   uri: ad.squareImage,
-                uri: ad.rectangleImage,
+                uri:  bannerType == "2" ? ad.squareImage : ad.rectangleImage,
                 }}
-                resizeMode="contain"
+                resizeMode="cover"
               />
             </View>
+             
           </View>
         </TouchableHighlight>
-        {/* <View style={styles.textBox}>
-          <Text style={{fontFamily: FONT.BOLD}} numberOfLines={2}>
-            {ad.title}
-          </Text>
-        </View> */}
+            {
+              bannerType == "2" &&
+              <View style={styles.textBox}>
+                <Text style={{fontFamily: FONT.REGULAR}} numberOfLines={2}>
+                      {ad.title}
+                </Text>
+               </View>
+            }
       </View>
       </>
     )
 }
 
-const Slider = ({ads})=>{
+const Slider = ({ads,bannerType})=>{
 
     const [activeIndex,setActiveIndex] = useState(0);
   
     return(
-        <>
-            <Carousel
-                layout="default"
-                data={ads}
-                renderItem={({item,index})=><RenderItem ad={item} index={index}/>}
-                onSnapToItem={(index) => setActiveIndex(index) }
-                sliderWidth={width}
-                sliderHeight={BANNER_HEIGHT}
-                itemWidth={width * 0.9}
-                // autoplay={true}
-                // loop={true}
-            />
-          <RenderDots
-                entries={ads}
-                activeSlide={activeIndex}
-          />
-        </>
+        <FlatList
+          horizontal
+          style={styles.container}
+          showsHorizontalScrollIndicator={false}
+          data={ads}
+          keyExtractor={(item)=>item.id}
+          renderItem={({item,index})=><RenderItem bannerType={bannerType} ad={item} index={index}/>}
+        />
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+      height: BANNER_HEIGHT + 60,
+      flex: 1,
+      flexDirection:"row",
+      marginHorizontal: 16,
+    },  
     adv: {
         height: BANNER_HEIGHT,
-        width: width * 0.9,
     },
     box: {
         paddingHorizontal: MARGIN.M / 2,
@@ -124,7 +96,6 @@ const styles = StyleSheet.create({
       },
       image: {
         height: BANNER_HEIGHT,
-        width: BANNER_HEIGHT * 2,
         borderRadius: SIZE.BORDER_RADIUS,
         overflow: 'hidden',
       },
