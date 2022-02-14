@@ -39,7 +39,7 @@ const RenderItem = ({ad,index,bannerType})=> {
                 //   uri: ad.squareImage,
                 uri:  bannerType == "2" ? ad.squareImage : ad.rectangleImage,
                 }}
-                resizeMode="cover"
+                resizeMode="contain"
               />
             </View>
              
