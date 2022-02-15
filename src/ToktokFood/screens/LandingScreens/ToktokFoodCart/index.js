@@ -323,8 +323,8 @@ const MainComponent = () => {
           product_id: item.productid,
           amount: item.basePrice,
           srp_amount: item.basePrice,
-          srp_totalamount: item.totalAmount,
-          total_amount: item.totalAmount,
+          srp_totalamount: Number(item.basePrice.toFixed(2)),
+          total_amount: Number(item.basePrice.toFixed(2)),
           quantity: item.quantity,
           order_type: 1,
           notes: item.notes,
@@ -520,7 +520,7 @@ const MainComponent = () => {
       citymunCode: '0',
     };
     const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
-    // console.log(data, SHIPPING_VOUCHERS);
+    // console.log(data, 'DATA');
     postCustomerOrder({
       variables: {
         input: data,
