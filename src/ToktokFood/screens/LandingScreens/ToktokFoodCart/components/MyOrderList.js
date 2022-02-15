@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useRef, useContext, useCallback} from 'react';
+import React, {useRef, useContext, useCallback, useState} from 'react';
 import {Image, View, Text, TouchableOpacity, Alert} from 'react-native';
 // import _ from 'lodash';
 import styles from '../styles';
@@ -17,6 +17,8 @@ import Loader from 'toktokfood/components/Loader';
 import {DELETE_TEMPORARY_CART_ITEM} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {FONT, FONT_SIZE} from 'res/variables';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import {moderateScale} from 'toktokfood/helper/scale';
 
 const MyOrderList = () => {
   // const route = useRoute();
@@ -24,7 +26,7 @@ const MyOrderList = () => {
   const navigation = useNavigation();
   // const {location, customerInfo, shopLocation} = useSelector(state => state.toktokFood, _.isEqual);
   const {temporaryCart, setTemporaryCart} = useContext(VerifyContext);
-
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const swipeListViewRef = useRef(null);
 
   const [deleteTemporaryCartItem, {loading: deleteLoading}] = useMutation(DELETE_TEMPORARY_CART_ITEM, {
@@ -179,6 +181,16 @@ const MyOrderList = () => {
     [temporaryCart],
   );
 
+  const data = temporaryCart.items;
+  let dataSource = [];
+  let remaining = [];
+  if (data.length > 5) {
+    dataSource = data.slice(0, 5);
+    remaining = data.slice(4, -1);
+  } else {
+    dataSource = data;
+  }
+
   return (
     <>
       <Loader visibility={deleteLoading} message="Removing from Cart" hasImage={false} loadingIndicator />
@@ -197,8 +209,30 @@ const MyOrderList = () => {
         <View>
           {temporaryCart?.items.length === 0 ? (
             <LoadingIndicator isLoading={true} size="small" style={{paddingVertical: 20}} />
+          ) : isCollapsed ? (
+            data.map(item => <FoodItem item={item} />)
           ) : (
-            temporaryCart.items.map(item => <FoodItem item={item} />)
+            dataSource.map(item => <FoodItem item={item} />)
+          )}
+          {data.length > 5 && (
+            <TouchableOpacity
+              onPress={() => setIsCollapsed(!isCollapsed)}
+              activeOpacity={0.9}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingTop: moderateScale(10),
+                paddingBottom: moderateScale(20),
+                marginBottom: moderateScale(10),
+              }}>
+              <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>
+                {isCollapsed
+                  ? 'Hide'
+                  : 'See More'}
+              </Text>
+              <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={12} color={'#FFA700'} />
+            </TouchableOpacity>
           )}
           {/* {temporaryCart.items.length == 0 ? (
             <LoadingIndicator isLoading={true} size="small" style={{paddingVertical: 20}} />
