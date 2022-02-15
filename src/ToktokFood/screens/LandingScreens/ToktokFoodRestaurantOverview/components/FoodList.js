@@ -127,7 +127,7 @@ export const FoodList = props => {
 
   const ResellerDiscountBadge = ({item}) => {
     const {discRatetype, referralDiscount} = item?.resellerDiscount;
-    const discountText = discRatetype === 'p' ? `${referralDiscount}%` : referralDiscount;
+    const discountText = discRatetype === 'p' ? `${referralDiscount * 100}%` : referralDiscount;
     return (
       <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
         <Text style={styles.resellerText}>Reseller -{discountText}</Text>
