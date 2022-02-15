@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   },
   reasonWrapper: {
     width: '90%',
-    height: verticalScale(500),
+    height: verticalScale(520),
     borderRadius: 5,
     display: 'flex',
     alignItems: 'center',
