@@ -122,7 +122,8 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                 onCashIn: onCashIn,
                 processingFee: processingFee,
                 paymentMethod: paymentMethod,
-                paymentChoice: paymentChoice
+                paymentChoice: paymentChoice,
+                providerServiceFee: postCashInPayPandaRequest.providerServiceFee
             })
         }
     })
