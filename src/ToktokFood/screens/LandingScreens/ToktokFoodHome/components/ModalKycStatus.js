@@ -124,18 +124,18 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 20,
-    fontWeight: '500',
+    fontWeight: '700',
     marginBottom: moderateScale(20),
     textAlign: 'center',
   },
   paragraph1: {
-    fontSize: FONT_SIZE.L,
+    fontSize: FONT_SIZE.M,
     marginBottom: moderateScale(15),
     // textAlign: 'center',
   },
   paragraph2: {
     color: COLORS.YELLOWTEXT,
-    fontSize: FONT_SIZE.L,
+    fontSize: FONT_SIZE.M,
     // textAlign: 'center',
   },
   walletIcon: {
