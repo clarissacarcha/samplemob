@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, memo} from "react";
 import {View, Text, StyleSheet, FlatList, Platform, TouchableOpacity, Image, Dimensions} from "react-native";
 
 //UTIL
@@ -24,11 +24,11 @@ export const LoadDetails = ({
   loadFavorite,
   getLoadItemsLoading
 }) => {
-  
+
   const { selectedLoad, setSelectedLoad, loads, setLoads } = useContext(VerifyContext);
   const { amount, name, favorite, descriptions } = item;
 
-  const isSelected = selectedLoad[networkId]?.id == item.id;
+  const isSelected = selectedLoad.id == item.id;
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
   const numberOfLines = isSelected ? null : 1;
@@ -46,12 +46,7 @@ export const LoadDetails = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        if(isSelected){
-          const {[networkId]: item, ...data} = selectedLoad;
-          setSelectedLoad(data);
-        } else {
-          setSelectedLoad(prev => ({ ...prev, [networkId]: item }));
-        }
+        setSelectedLoad(isSelected ? {} : item);
       }}
       style={[
         styles.container,
@@ -61,7 +56,7 @@ export const LoadDetails = ({
       <View style={[styles.amountContainer, { borderColor: colorAmount }]}>
         <Text style={[ styles.amount, { color: colorAmount }]}>₱{amount}</Text>
       </View>
-      <View style={{ paddingHorizontal: moderateScale(20), flex: 1}}>
+      <View style={styles.detailsContainer}>
         <Text style={[ styles.loadName, { color: colorDesc }]}>{name}</Text>
         { !!descriptions && (
           <Text style={[ styles.descriptions, { color: colorDesc }]} numberOfLines={numberOfLines}>
@@ -122,6 +117,10 @@ const styles = StyleSheet.create({
   descriptions: {
     fontSize: FONT_SIZE.M,
     marginTop: 5
+  },
+  detailsContainer: {
+    paddingHorizontal: moderateScale(20),
+    flex: 1
   }
 })
 

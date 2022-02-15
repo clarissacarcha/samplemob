@@ -1,71 +1,125 @@
-import React from "react";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { StyleSheet, Platform, Image, View, Text, Dimensions } from "react-native";
+import React, {useState, useRef, useEffect} from 'react';
+import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity, Dimensions, TouchableHighlight} from 'react-native';
+import { LoadingIndicator } from 'src/ToktokLoad/components';
+import { COLOR, FONT, FONT_SIZE } from "src/res/variables"; 
+
+//HELPER
 import { moderateScale } from "toktokload/helper";
 
-//FONTS & COLORS
-import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
+const {width, height} = Dimensions.get('window');
+let scrollPosition = 0;
 
-const Tab = createMaterialTopTabNavigator();
-const width = Dimensions.get('window').width ;
+export const HeaderTabs = (props) => {
 
-export const HeaderTabs = ({ tabs, scrollEnabled = false }) => {
+  const {activeTab, setActiveTab, tabs, loading, fitToScreen = true, selectedLoad, subContainerStyle} = props;
+  const flatListRef = useRef();
 
+  const handleScroll = (event) => {
+    scrollPosition = event.nativeEvent.contentOffset.x;
+  };
+
+  useEffect(() => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({offset: scrollPosition, animated: false});
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (loading) {
+      scrollPosition = 0;
+    }
+  }, [loading]);
+
+  const renderItem = ({item}) => {
+    const itemTabWidth = fitToScreen ? width / tabs.length : moderateScale(127);
+    return (
+      <TouchableOpacity
+        onPress={() => setActiveTab(item.id)}
+        hitSlop={styles.hitSlop}
+      >
+        <View style={[{ width: itemTabWidth }]}>
+          <Text style={[styles.tabText, { color: activeTab == item.id ? "#FFA700" : "#707070"} ]}>
+            {item.name ?? item.categoryName}
+          </Text>
+          <View style={activeTab == item.id && styles.activeTabContainer} />
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+   if(loading){
+    return(
+      <View style={styles.container}>
+        <LoadingIndicator isLoading={true} isFlex />
+      </View>
+    )
+  }
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        allowFontScaling: false,
-        style: [ styles.bottomLine ],
-        indicatorStyle: [ styles.indicator ],
-        activeTintColor: "#F6841F",
-        inactiveTintColor: "#707070",
-        scrollEnabled: scrollEnabled,
-        tabStyle: { width: scrollEnabled ? moderateScale(125) : width / tabs.length },
-      }}
-    >
-      { tabs.map((tab) => {
-          return(
-            <Tab.Screen
-              key={tab}
-              name={tab.name}
-              options={{
-                tabBarLabel: ({ color }) => {
-                  return (
-                    <View style={{ flexDirection: "row" }}>
-                      <Text style={[ styles.tabText, { color } ]}>
-                        {tab.name}
-                      </Text>
-                    </View>
-                  )
-                },
-              }}
-            >
-              {() => tab.screen }
-            </Tab.Screen>
-          )
-        })
-      }
-    </Tab.Navigator>
-  )
-}
+    <View style={[{ overflow: "hidden", paddingBottom: 5 }]}>
+      <View style={[styles.shadow]}>
+        <FlatList
+          extraData={props}
+          horizontal
+          data={tabs}
+          renderItem={renderItem}
+          showsHorizontalScrollIndicator={false}
+          onScroll={handleScroll}
+          ref={flatListRef}
+          keyExtractor={(val, index) => index.toString()}
+        />
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-  bottomLine: {
+  container: {
+    flex: 1,
+  },
+  activeTabContainer: {
+    backgroundColor: '#FFA700',
+    paddingVertical: 2,
+  },
+  inactiveTabContainer: {
+    backgroundColor: '#F7F7FA',
+    paddingVertical: 2,
+  },
+  activeTabText: {
+    color: '#FFA700',
+  },
+  divider: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 1,
+    height: 2
+  },
+  tabText: {
+    textAlign: "center",
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
+    paddingVertical: moderateScale(15)
+  },
+  hitSlop: {
+    top: moderateScale(30),
+    bottom: moderateScale(30),
+    left: moderateScale(30),
+    right: moderateScale(30)
+  },
+  shadow: {
+    backgroundColor: '#fff',
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  indicator: {
-    backgroundColor: "#F6841F",
-    height: 3
-  },
-  tabText: {
-    fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.M,
+    shadowOpacity: 0.10,
+    shadowRadius: 3,
+    elevation: 3
   }
-})
+});
