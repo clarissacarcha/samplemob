@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState, useCallback, useMemo} from "react";
 import {View, Text, StyleSheet} from "react-native";
 
 //UTIL
@@ -21,6 +21,7 @@ const MainComponent = ({ navigation, route }) => {
  
   const { selectedLoad, setSelectedLoad, loads, setLoads } = useContext(VerifyContext);
   const [networks, setNetworks]= useState([]);
+  const [activeTab, setActiveTab] = useState(null);
 
   const [getNetworks, {loading, error}] = useLazyQuery(GET_NETWORKS, {
     fetchPolicy:"network-only",
@@ -34,26 +35,20 @@ const MainComponent = ({ navigation, route }) => {
     getNetworks();
   }, [])
 
-  const processNetworkTabs = (networkTabs) => {
+  const processNetworkTabs = useCallback((networkTabs) => {
     if(networkTabs && networkTabs.length > 0){
       let tabs = []
-      networkTabs.map((item) => {
+      networkTabs.map((item, index) => {
         tabs.push({
+          id: item.id,
           name: item.name,
-          screen: <LoadList navigation={navigation} networkId={item.id} mobileNumber={route.params?.mobileNumber} />
         })
       })
+      setActiveTab(tabs[0].id)
       setNetworks(tabs)
     }
-  }
-  
-  if(loading){
-    return(
-      <View style={styles.container}>
-        <LoadingIndicator isLoading={true} isFlex />
-      </View>
-    )
-  }
+  })
+
   if(error){
     return (
       <View style={styles.container}>
@@ -67,7 +62,21 @@ const MainComponent = ({ navigation, route }) => {
         <Text style={styles.headerText}>Buy Load for</Text>
         <Text style={styles.mobileNo}>{route.params?.mobileNumber}</Text>
       </View>
-      { networks.length > 0 && <HeaderTabs tabs={networks} scrollEnabled={true} onTabPress={() => {}} /> }
+      <HeaderTabs
+        tabs={networks}
+        scrollEnabled={true}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        fitToScreen={false}
+        loading={loading}
+      />
+      { activeTab && (
+        <LoadList
+          navigation={navigation}
+          networkId={activeTab}
+          mobileNumber={route.params?.mobileNumber}
+        />
+      )}
     </View>
   );
 };

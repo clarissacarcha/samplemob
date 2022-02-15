@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from "react";
+import React, {useState, useContext, useEffect, memo, useCallback} from "react";
 import {View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl} from "react-native";
 
 //UTILS
@@ -6,7 +6,7 @@ import { moderateScale, globeLoads, tmLoads, smartLoads } from "toktokload/helpe
 import { ErrorUtility } from 'toktokload/util';
 
 //COMPONENTS
-import { LoadDetails } from "../LoadDetails";
+import { LoadDetails } from "./LoadDetails";
 import { VerifyContext } from "../VerifyContextProvider";
 import { OrangeButton, LoadingIndicator } from "src/ToktokLoad/components";
 import { SomethingWentWrong } from "toktokload/components";
@@ -16,8 +16,9 @@ import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_LOAD_ITEMS, POST_FAVORITE_LOAD, PATCH_REMOVE_FAVORITE_LOAD } from 'toktokload/graphql/model';
 import { usePrompt } from 'src/hooks';
+import { stubTrue } from "lodash";
 
-export const LoadList = ({ networkId, navigation, mobileNumber }) => {
+export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
 
   const prompt = usePrompt();
   const { selectedLoad, setSelectedLoad, favorites, setFavorites, loads, setLoads } = useContext(VerifyContext);
@@ -33,7 +34,7 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
     onCompleted: ({ getLoadItems }) => {
       setLoadFavorite(null);
       setIsMounted(false);
-      setLoads(prev => ({ ...prev, [networkId]: getLoadItems }));
+      setLoads(getLoadItems);
     }
   });
 
@@ -70,8 +71,15 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
   });
 
   useEffect(() => {
-    processGetLoadItems()
-  }, [])
+    clearStates();
+    processGetLoadItems();
+  }, [networkId])
+
+  const clearStates = () => {
+    setIsMounted(true);
+    setLoads([]);
+    setSelectedLoad({});
+  }
 
   const processGetLoadItems = () => {
     getLoadItems({
@@ -81,11 +89,11 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
         }
       },
     });
-  }
+  };
 
   const onPressFavorite = (item, index) => {
     setLoadFavorite(item.id);
-    let data = [...loads[networkId]];
+    let data = [...loads];
     let favData = {
       variables: {
         input: {
@@ -103,36 +111,42 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
   }
 
   const onPressNext = () => {
-    if(selectedLoad[networkId]){
-      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad[networkId], mobileNumber })
+    if(Object.keys(selectedLoad).length > 0){
+      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad, mobileNumber })
     }
   }
-
+ 
   const ListEmptyComponent = () => {
-    if(isMounted) return null
+    if(isMounted || getLoadItemsLoading) return null
     return (
       <View style={styles.emptyContainer}>
-        {!getLoadItemsLoading && (
-          <Text>No load item available</Text>
-        )}
+        <Text>No load item available</Text>
       </View>
     )
   }
 
+  if(getLoadItemsLoading && !loadFavorite){
+    return (
+      <View style={styles.container}>
+        <LoadingIndicator isLoading={true} isFlex />
+      </View>
+    )
+  }
   if(getLoadItemsError){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={processGetLoadItems} error={getLoadItemsError} />
+        <SomethingWentWrong onRefetch={() => processGetLoadItems()} error={getLoadItemsError} />
       </View>
     )
   }
   return (
     <View style={styles.container}>
+      {/* <Text style={{ textAlign: "center" }}>{networkId.toString()}</Text> */}
       <FlatList
-        extraData={{loads, selectedLoad}}
-        data={loads ? loads[networkId] : []}
+        data={loads}
         renderItem={({ item, index }) => (
           <LoadDetails
+            index={index}
             item={item}
             networkId={networkId}
             onPressFavorite={() => onPressFavorite(item, index)}
@@ -145,25 +159,19 @@ export const LoadList = ({ networkId, navigation, mobileNumber }) => {
         contentContainerStyle={{ flexGrow: 1 }}
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={ListEmptyComponent}
-        refreshControl={
-          <RefreshControl
-            refreshing={(getLoadItemsLoading && !loadFavorite) || isMounted}
-            onRefresh={processGetLoadItems}
-          />
-        }
       />
-      {(loads[networkId] && loads[networkId].length > 0) && (
+      {(loads && loads.length > 0) && (
         <View style={{ padding: moderateScale(16) }}>
           <OrangeButton
-            disabled={!selectedLoad[networkId]}
+            disabled={Object.keys(selectedLoad).length === 0}
             label='Next'
-            onPress={onPressNext}
+            onPress={() => onPressNext()}
           />
         </View>
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

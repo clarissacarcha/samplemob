@@ -6,22 +6,22 @@ const {Provider} = VerifyContext
 
 export const VerifyContextProvider = ({children})=> {
 
-  const [selectedLoad, setSelectedLoad] = useState({});
   const [favorites, setFavorites] = useState([]);
   const [loads, setLoads] = useState({});
+  const [selectedLoad, setSelectedLoad] = useState({});
   
   return (
     <Provider
       value={{
-        selectedLoad,
-        setSelectedLoad,
         favorites,
         setFavorites,
         loads,
-        setLoads
+        setLoads,
+        selectedLoad,
+        setSelectedLoad,
       }}
     >
-        {children}
+      {children}
     </Provider>
   )
 }
