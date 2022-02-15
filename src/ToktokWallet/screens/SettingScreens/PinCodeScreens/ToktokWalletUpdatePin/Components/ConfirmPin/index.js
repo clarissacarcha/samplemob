@@ -69,7 +69,9 @@ export const ConfirmPin = ({pinCode ,pageIndex, setPageIndex , patchPincodeTokto
                 </View>
             </View>
             <BuildingBottom/>
-            <View style={{marginBottom: 76}}/>
+            <View style={{padding: 16}}>
+                <View style={{height: 50}}/>
+            </View>
             {/* <TouchableOpacity
                 disabled={pinCode.length < 6}
                 onPress={onSubmit}

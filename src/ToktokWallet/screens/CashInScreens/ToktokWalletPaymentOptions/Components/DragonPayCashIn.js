@@ -1,5 +1,5 @@
 import React , {useEffect,useState , useRef} from 'react'
-import { View , Text , StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View , Text , StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { Separator , DisabledButton , BuildingBottom } from 'toktokwallet/components'
 import { useAccount } from 'toktokwallet/hooks'
@@ -9,6 +9,8 @@ import { useSelector , useDispatch } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert , usePrompt } from 'src/hooks'
+import { useDebounce } from 'toktokwallet/hooks'
+import CheckBox from 'react-native-check-box'
 import { YellowButton } from 'src/revamp'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS
@@ -38,6 +40,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
     const [isFocus,setIsFocus] = useState(false)
     const [inputWidth,setInputWidth] = useState(inputAmountLength["0"])
+    const [isCertify, setCertify] = useState(true)
     const inputRef = useRef(null);
 
     const dispatch = useDispatch();
@@ -120,7 +123,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
         //  if(limitMessage) return setMessage(limitMessage)
          if(num == "")return setMessage("")
          if(num < 1) return setMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
-         setDisablebtn(false)
+        //  setDisablebtn(false)
          setMessage("")
          
      }
@@ -135,8 +138,21 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
         showInput()
     },[])
 
+    const checkLimit = useDebounce(async (amount)=> {
+        console.log("Typing ")
+        const checkLimit = await AmountLimitHelper.postCheckIncomingLimit({
+            amount,
+            setErrorMessage: setMessage
+        })
+
+        if(!checkLimit) return;
+        setDisablebtn(false)
+    },1000)
+
     useEffect(()=>{
+        setDisablebtn(true)
         setInputWidth(inputAmountLength[amount.length])
+        if(amount != "")  checkLimit(amount)
     },[amount])
     
     return (
@@ -189,15 +205,46 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                     </Text>
                                 
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
+                         </View>
+                      
+                         <View style={{flex:1 ,justifyContent:"flex-end",alignItems:"center",paddingBottom: 25}}>
+                         <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginBottom: 10 ,textAlign:"center"}}>
+                         Please read our Terms and Conditions before you proceed with your transaction.
+                         </Text>
+                    <View style={{
+                        flexDirection:"row",     
+                    }}>
+
+                    <CheckBox
+                            isChecked={isCertify}
+                            onClick={()=>{
+                                return setCertify(!isCertify)
+                            }}
+                            style={{
+                                alignSelf: "center",
+                                marginRight: 2,
+                            }}
+                        />
+
+                        <TouchableOpacity 
+                            // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
+                            style={{paddingHorizontal: 10,marginRight: 20,alignSelf:"center"}}
+                        >
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby certify that I accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions.</Text></Text>
+                        </TouchableOpacity>
+                    </View>
                         
                          </View>
+
                          <View style={styles.cashinbutton}>
                                     {
-                                        (amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "")
+                                        (!isCertify || amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "" )
                                         ? <DisabledButton label="Cash In"/>
                                         : <YellowButton label="Cash In" onPress={confirmAmount}/>
                                     }
                         </View>
+                      
                 </View>
                 <BuildingBottom/>
             </View>

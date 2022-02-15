@@ -75,10 +75,10 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
             changeErrorMessagge("accountNumber","Account Number is required.")
             noError = false
         }
-        if(address == ""){
-            changeErrorMessagge("address","Account Address is required.")
-            noError = false
-        }
+        // if(address == ""){
+        //     changeErrorMessagge("address","Account Address is required.")
+        //     noError = false
+        // }
 
         if(!noError) return
 
@@ -200,7 +200,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                         </Text>
                     </View>
 
-                    <View style={{marginVertical: 10,}}>
+                    {/* <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
                         <View style={[{borderRadius: SIZE.BORDER_RADIUS, borderWidth: 1, borderColor: errorListMessage.address == "" ? "transparent" : COLOR.RED}]}>
                             <TextInput
@@ -216,7 +216,7 @@ export const ToktokWalletCashOutUpdateAccount = ({navigation,route})=> {
                         <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/20 
                             {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
                         </Text>
-                    </View>
+                    </View> */}
     
              <View style={{justifyContent:'center',alignItems:"center"}}>
                     <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#CCCCCC",marginBottom: 20,}}>Please verify the accuracy and completeness of the details before you proceed.</Text>

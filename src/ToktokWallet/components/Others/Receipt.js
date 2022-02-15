@@ -156,7 +156,7 @@ export const Receipt = ({children, format = "png", refNo ,refDate, onPress, btnL
                </Text>
 
                <Text style={styles.refDate}>
-                    {moment(refDate).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}
+                    {moment(refDate).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}
                </Text>
 
               

@@ -69,6 +69,7 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
 
     const generatedInitialPaymentData = generateInitialPostPaymentDataString(initialpaymentData)
 
+
     useEffect(()=> {
         setMounted(true)
         return ()=> {
@@ -107,12 +108,26 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
                     style={{flex: 1}}
                     ref={webviewRef}
                     source={{
-                        // uri: "https://sandbox.paypanda.ph/api/payment/toktok_transaction_entry",
-                        // uri: constants.paypandaTransactionEndpoint,
-                        uri: route.params.paypandaTransactionUrl,
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
-                        body: generatedInitialPaymentData
+                        // // uri: "https://sandbox.paypanda.ph/api/payment/toktok_transaction_entry",
+                        // // uri: constants.paypandaTransactionEndpoint,
+                        // uri: route.params.paypandaTransactionUrl,
+                        // method: 'POST',
+                        // headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
+                        // body: generatedInitialPaymentData
+                        html: `<html> <body onload="document.forms[0].submit();">
+                        <form method="post" action=${route.params.paypandaTransactionUrl}>
+                            <input type="hidden" name="merchant_id"  value="${initialpaymentData.merchant_id}">
+                            <input type="hidden" name="reference_number" value="${initialpaymentData.reference_number}">
+                            <input type="hidden" name="email_address" value="${initialpaymentData.email_address}">
+                            <input type="hidden" name="payer_name" value="${initialpaymentData.payer_name}">
+                            <input type="hidden" name="mobile_number" value="${initialpaymentData.mobile_number}">
+                            <input type="hidden" name="amount_to_pay" value="${initialpaymentData.amount_to_pay}">
+                            <input type="hidden" name="currency" value="${initialpaymentData.currency}">
+                            <input type="hidden" name="remarks" value="${initialpaymentData.remarks}">
+                            <input type="hidden" name="signature" value="${initialpaymentData.signature}">
+                            <input type="hidden" name="payment_choice" value="${initialpaymentData.payment_choice}">
+                        </form >
+                        </body> </html>`
                     }}
                     startInLoadingState
                     renderLoading={()=> <LoadingIndicator/>}
