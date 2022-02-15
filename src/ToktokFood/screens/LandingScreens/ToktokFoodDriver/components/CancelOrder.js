@@ -75,31 +75,8 @@ const CancelOrder = ({
     };
     return (
       <>
-        <View
-          onTouchStart={() => componentClick()}
-          key={id}
-          style={[
-            {
-              width: 20,
-              height: 20,
-              borderWidth: 2,
-              borderRadius: 50,
-              marginRight: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderColor: '#FFA700',
-            },
-          ]}>
-          {selected ? (
-            <View
-              style={{
-                height: 11,
-                width: 11,
-                borderRadius: 50,
-                backgroundColor: '#FFA700',
-              }}
-            />
-          ) : null}
+        <View onTouchStart={() => componentClick()} key={id} style={[styles.roundedButtonContainer]}>
+          {selected ? <View style={styles.roundedButtonWrapper} /> : null}
         </View>
       </>
     );
@@ -127,17 +104,17 @@ const CancelOrder = ({
                 );
               })}
             </View>
-              <View style={styles.reasonButtonWrapper}>
-                <TouchableOpacity onPress={() => closeCancel()} style={[styles.reasonButtons, styles.cancelButton]}>
-                  <Text style={[styles.reasonButtonText, {color: '#FFA700'}]}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  disabled={selectedReason ? false : true}
-                  onPress={() => proccessCancelOrder()}
-                  style={[styles.reasonButtons, {opacity: selectedReason ? 1 : 0.3}, {backgroundColor: '#FFA700'}]}>
-                  <Text style={styles.reasonButtonText}>Proceed</Text>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.reasonButtonWrapper}>
+              <TouchableOpacity onPress={() => closeCancel()} style={[styles.reasonButtons, styles.cancelButton]}>
+                <Text style={[styles.reasonButtonText, {color: '#FFA700'}]}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                disabled={selectedReason ? false : true}
+                onPress={() => proccessCancelOrder()}
+                style={[styles.reasonButtons, {opacity: selectedReason ? 1 : 0.3}, {backgroundColor: '#FFA700'}]}>
+                <Text style={styles.reasonButtonText}>Proceed</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </>
@@ -301,6 +278,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#FFA700',
     backgroundColor: COLOR.WHITE,
+  },
+  roundedButtonContainer: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderRadius: 50,
+    marginRight: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#FFA700',
+  },
+  roundedButtonWrapper: {
+    height: 11,
+    width: 11,
+    borderRadius: 50,
+    backgroundColor: '#FFA700',
   },
 });
 
