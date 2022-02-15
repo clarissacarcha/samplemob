@@ -20,7 +20,7 @@ export const getEstimatedDeliveryTime = async (referenceNum) => {
     const data = await AsyncStorage.getItem('ESTIMATED_DELIVERY_TIME');
     if (data && Object.keys(data).length > 0) {
       let parsedData = JSON.parse(data);
-      return parsedData[referenceNum] ? parsedData[referenceNum] : null
+      return parsedData[referenceNum] ? parsedData[referenceNum] : null;
     } else {
       return null;
     }
@@ -61,19 +61,23 @@ export const changeDateToday = (date) => {
     newDate = moment(`${dateToday} ${splitDate[1]}`).format('YYYY-MM-DD HH:mm:ss')
   }
   return date ? newDate : date
-}
-export const processGetEDT = async(date, referenceNum) => { 
-  let edt = await getEstimatedDeliveryTime(referenceNum)
-  if(edt){
+};
+
+export const processGetEDT = async (date, referenceNum) => {
+  let edt = await getEstimatedDeliveryTime(referenceNum);
+  if (edt !== 'Invalid date') {
     let edtDate = convertEDT(date, edt)
     let hoursDifference = moment().diff(edtDate, 'hours', true)
-    let final = moment(edtDate).add(hoursDifference + 0.0166667, 'hours').format('h:mm A')
+    let final = moment(edtDate)
+      .add(hoursDifference + 0.0166667, 'hours')
+      .format('h:mm A');
     let edtHMMA = moment(edt, 'h:mm a');
-    return moment().isAfter(edtHMMA) ? final : edt
+    return moment().isAfter(edtHMMA) ? final : edt;
   } else {
-    return null
+    return null;
   }
-}
+};
+
 export const convertEDT = (date, edt) => {
   let splitDate = date.split(' ')[0]
   let edtToHHMMSS = moment(edt, ["h:mm A"]).format("HH:mm");

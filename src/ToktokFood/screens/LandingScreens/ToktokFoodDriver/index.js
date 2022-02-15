@@ -69,7 +69,9 @@ const ToktokFoodDriver = ({route, navigation}) => {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onCompleted: ({getDeliveryDetails}) => {
-        setRiderDetails(getDeliveryDetails.driver);
+        // console.log(getDeliveryDetails);
+        const {deliveryLogs, duration} = getDeliveryDetails;
+        setRiderDetails({...getDeliveryDetails.driver, deliveryLogs, duration});
       },
     },
   );
@@ -136,7 +138,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         setRiderSeconds(300);
       }
     }
-    console.log('Rider Details Updated ' + riderSeconds);
+    // console.log('Rider Details Updated ' + riderSeconds, getRiderDetailsInterval);
   };
 
   const handleOrderProcess = async () => {
@@ -229,13 +231,13 @@ const ToktokFoodDriver = ({route, navigation}) => {
   };
 
   const onCloseModal = () => {
-    let {reasons, title} = showDialogMessage;
+    const {reasons, title} = showDialogMessage;
+    setShowDialogMessage(prev => ({...prev, show: false}));
+
     if (reasons && title === 'Order Cancelled') {
-      setShowDialogMessage(prev => ({...prev, show: false}));
       navigation.replace('ToktokFoodLanding');
       return setSeconds(300);
     }
-    setShowDialogMessage(prev => ({...prev, show: false}));
     if (title == 'Order Complete' || title == 'OOPS! Order Declined!' || title == 'Order Cancelled') {
       let tab = selectedTab(title);
       navigation.navigate('ToktokFoodOrderTransactions', {tab});
@@ -247,6 +249,20 @@ const ToktokFoodDriver = ({route, navigation}) => {
   const displayDeliveryDetailsView = useMemo(() => {
     return (
       <DriverDetailsView
+        onCancel={() => {
+          setShowCancel(true);
+          BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+        }}
+        riderDetails={riderDetails}
+        transaction={transaction}
+        referenceNum={referenceNum}
+      />
+    );
+  }, [transaction, riderDetails, referenceNum]);
+
+  const displayPickupDetailsView = useMemo(() => {
+    return (
+      <PickUpDetailsView
         onCancel={() => {
           setShowCancel(true);
           BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
@@ -358,19 +374,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
             dateOrdered={transaction.dateOrdered}
           />
           <View style={styles.driverWrapper}>
-            {transaction.orderIsfor == 1 ? (
-              displayDeliveryDetailsView
-            ) : (
-              <PickUpDetailsView
-                onCancel={() => {
-                  setShowCancel(true);
-                  BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
-                }}
-                riderDetails={riderDetails}
-                transaction={transaction}
-                referenceNum={referenceNum}
-              />
-            )}
+            {transaction.orderIsfor == 1 ? displayDeliveryDetailsView : displayPickupDetailsView}
           </View>
         </>
       )}

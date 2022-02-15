@@ -1,15 +1,19 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useCallback, useEffect, useState} from 'react';
 import {Platform, ScrollView, StyleSheet, TouchableOpacity, View, Text, Image} from 'react-native';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+
+// Components
+import DialogMessage from 'toktokfood/components/DialogMessage';
 import Separator from 'toktokfood/components/Separator';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
 import {FONT_SIZE, FONT, SIZE, COLOR} from 'res/variables';
-import { time } from 'toktokfood/assets/images';
+import {time} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
@@ -19,8 +23,14 @@ import moment from 'moment';
 
 const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
-  const {location} = useSelector((state) => state.toktokFood);
-  const {shopDetails, orderStatus, isconfirmed, address, dateOrderProcessed, dateReadyPickup, isdeclined, dateOrdered} = transaction;
+
+  const [etaMinutes, setEtaMinutes] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  // const {location} = useSelector(state => state.toktokFood);
+  const {shopDetails, orderStatus, isconfirmed, address, dateOrderProcessed, dateReadyPickup, isdeclined, dateOrdered} =
+    transaction;
   const status = orderStatusMessagePickUp(
     orderStatus,
     dateOrdered,
@@ -28,20 +38,61 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     // `${shopDetails.shopname} (${shopDetails.address})`,
     // isdeclined
   );
-  const date = orderStatus == 'po' ? dateOrderProcessed : dateReadyPickup;
+  const date = orderStatus === 'po' ? dateOrderProcessed : dateReadyPickup;
+
+  useEffect(() => {
+    // Set Eta Minutes if rider picked up the order and on the way
+    if (orderStatus === 'po' && etaMinutes === 0) {
+      const edt = moment(date, 'YYYY-MM-DD HH:mm:ss').add(45, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+      const timeNow = moment().format('YYYY-MM-DD HH:mm:ss');
+
+      if (edt <= timeNow) {
+        setShowModal(true);
+      }
+      setEtaMinutes(10);
+    }
+
+    console.log(etaMinutes);
+  }, [orderStatus, etaMinutes]);
+
+  useEffect(() => {
+    if (etaMinutes > 0) {
+      setTimeout(() => {
+        setEtaMinutes(etaMinutes - 1);
+      }, 1000);
+    }
+    return () => clearTimeout();
+  });
+
+  // const onSetBackgroundTimer = () => {
+  //   console.log(date);
+  // };
 
   const onSeeDetails = () => {
     navigation.navigate('ToktokFoodOrderDetails', {referenceNum});
   };
 
   const renderEstimatedTime = () => {
-    let startTime = moment(dateOrderProcessed).format('LT');
-    let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A');
+    // let startTime = moment(dateOrderProcessed).format('LT');
+    // let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A');
+    const getTimeByStatus = () => {
+      switch (orderStatus) {
+        case 'po':
+          if (showError) {
+            return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
+          }
+          return 'Estimated Pickup Time: 15-45 Minutes';
+        case 'rp':
+          return 'Estimated Pickup Time: ASAP';
+        default:
+          return 'Estimated Pickup Time: 15-45 Minutes';
+      }
+    };
     return (
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />
         {/* <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text> */}
-        <Text style={styles.time}>Estimated Pickup Time: ASAP</Text>
+        <Text style={styles.time}>{getTimeByStatus()}</Text>
       </View>
     );
   };
@@ -49,13 +100,13 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   const renderAddress = () => {
     return (
       <View style={styles.addressContainer}>
-        <View style={[styles.addressInfo, {flexShrink: 1} ]}>
+        <View style={[styles.addressInfo, {flexShrink: 1}]}>
           <Text numberOfLines={1} style={styles.bodyText}>
             Restaurant
           </Text>
           <Text numberOfLines={1} style={{flexShrink: 1}}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
         </View>
-        {orderStatus !== 'c' && orderStatus !== 's' && renderEstimatedTime()}
+        {/* {orderStatus !== 'c' && orderStatus !== 's' && renderEstimatedTime()} */}
       </View>
     );
   };
@@ -64,7 +115,11 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     return (
       <View style={styles.detailsContainer}>
         {/* <Text style={styles.title}>{status.title}</Text> */}
-        <Text style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>{status.message}</Text>
+        <Text style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>
+          {status.message}
+        </Text>
+
+        {renderEstimatedTime()}
       </View>
     );
   };
@@ -91,6 +146,17 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         <Separator />
         {renderActions()}
       </View>
+
+      <DialogMessage
+        visibility={showModal}
+        title="Still Preparing Order"
+        messages="Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting."
+        type="warning"
+        onCloseModal={() => {
+          setShowError(true);
+          setShowModal(false);
+        }}
+      />
     </View>
   );
 };
@@ -101,7 +167,7 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: verticalScale(10),
     overflow: 'hidden',
-    flex: 1
+    flex: 1,
   },
   actionContainer: {
     alignItems: 'center',
@@ -113,6 +179,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 10,
     borderColor: 'white',
     paddingHorizontal: moderateScale(16),
+    paddingVertical: moderateScale(10),
   },
   addressInfo: {
     flexDirection: 'row',
@@ -160,16 +227,17 @@ const styles = StyleSheet.create({
   status: {
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
+    fontWeight: '300',
     marginVertical: verticalScale(5),
     marginHorizontal: moderateScale(30),
-    textAlign: 'center'
+    textAlign: 'center',
   },
   seeOrderDetails: {
     padding: moderateScale(20),
   },
   title: {
     fontSize: FONT_SIZE.L,
-    fontFamily: FONT.BOLD
+    fontFamily: FONT.BOLD,
   },
   cancelButton: {
     borderRadius: 12,
@@ -178,7 +246,7 @@ const styles = StyleSheet.create({
     height: SIZE.BUTTON_HEIGHT,
     width: '90%',
     backgroundColor: COLOR.YELLOW,
-    marginTop: moderateScale(16)
+    marginTop: moderateScale(16),
   },
   buttonText: {
     color: COLOR.WHITE,
@@ -191,23 +259,25 @@ const styles = StyleSheet.create({
   bodyText: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
-    paddingRight: moderateScale(10)
+    paddingRight: moderateScale(10),
   },
   time: {
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
+    // fontWeight: '500',
     marginLeft: moderateScale(5),
+    textAlign: 'center',
   },
   timeContainer: {
     flexDirection: 'row',
-    marginTop: verticalScale(10),
-    alignItems: 'center',
-    justifyContent: 'center'
+    paddingHorizontal: moderateScale(15),
+    // marginTop: verticalScale(10),
   },
   timeImg: {
     width: moderateScale(13),
     height: moderateScale(13),
-     resizeMode: 'contain',
-    tintColor: '#F6A100'
+    marginTop: 2,
+    resizeMode: 'contain',
+    tintColor: '#F6A100',
   },
 });

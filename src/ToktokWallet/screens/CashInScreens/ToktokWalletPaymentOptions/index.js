@@ -101,7 +101,6 @@ export const ToktokWalletPaymentOptions = ({navigation,route})=> {
     if(error){
         return (
             <>
-            <HeaderTitle backButtonColor={COLOR.YELLOW} label="Cash In" />
             <SomethingWentWrong />
             </>
         )

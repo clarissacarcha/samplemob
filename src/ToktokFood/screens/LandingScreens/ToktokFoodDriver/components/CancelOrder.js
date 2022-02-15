@@ -18,25 +18,17 @@ const CancelOrder = ({
   failedCancel,
   referenceOrderNumber = '',
   setShowLoader,
-  onCallBackResult
+  onCallBackResult,
 }) => {
   const reasonList = [
-    {
-      id: 1,
-      reason: 'I changed my mind',
-    },
-    {
-      id: 2,
-      reason: 'I wanted to change location',
-    },
-    {
-      id: 3,
-      reason: 'Merchant took so long to accept',
-    },
-    {
-      id: 4,
-      reason: 'Change order type (Pick up or Delivery)',
-    },
+    {id: 1, reason: "I'd like to change my order"},
+    {id: 2, reason: "I'll use another food app"},
+    {id: 3, reason: "I'd like to change my delivery address"},
+    {id: 4, reason: 'I found a cheaper option'},
+    {id: 5, reason: "I'd like to add another order"},
+    {id: 6, reason: "I'd like to have my order delivered"},
+    {id: 7, reason: "I'd like to have my order picked up"},
+    {id: 8, reason: 'Merchant took so long to accept my order'},
   ];
 
   const navigation = useNavigation();
@@ -46,12 +38,12 @@ const CancelOrder = ({
   const [postCancelOrder] = useMutation(PATCH_CANCEL_CUSTOMER_ORDER, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
-    onError: (error) => {
-      failedCancel()
+    onError: error => {
+      failedCancel();
     },
     onCompleted: ({cancelOrder}) => {
       setShowReason(false);
-      onCallBackResult(cancelOrder)
+      onCallBackResult(cancelOrder);
     },
   });
 
@@ -76,7 +68,7 @@ const CancelOrder = ({
     setShowReason(false);
   };
 
-  const RoundedButton = (props) => {
+  const RoundedButton = props => {
     const {id, selected, onSelect} = props;
     const componentClick = () => {
       onSelect(selected);
@@ -122,7 +114,7 @@ const CancelOrder = ({
             <View style={styles.reasonListWrapper}>
               {reasonList.map((v, i) => {
                 return (
-                  <View style={styles.itemWrapper}>
+                  <View style={[styles.itemWrapper]}>
                     <RoundedButton
                       id={v.id}
                       onSelect={() => setSelectedReason(v.reason)}
@@ -135,17 +127,17 @@ const CancelOrder = ({
                 );
               })}
             </View>
-            <View style={styles.reasonButtonWrapper}>
-              <TouchableOpacity onPress={() => closeCancel()} style={[styles.reasonButtons, styles.cancelButton]}>
-                <Text style={[styles.reasonButtonText, {color: '#FFA700'}]}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                disabled={selectedReason ? false : true}
-                onPress={() => proccessCancelOrder()}
-                style={[styles.reasonButtons, {opacity: selectedReason ? 1 : 0.3}, {backgroundColor: '#FFA700'}]}>
-                <Text style={styles.reasonButtonText}>Proceed</Text>
-              </TouchableOpacity> 
-            </View>
+              <View style={styles.reasonButtonWrapper}>
+                <TouchableOpacity onPress={() => closeCancel()} style={[styles.reasonButtons, styles.cancelButton]}>
+                  <Text style={[styles.reasonButtonText, {color: '#FFA700'}]}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  disabled={selectedReason ? false : true}
+                  onPress={() => proccessCancelOrder()}
+                  style={[styles.reasonButtons, {opacity: selectedReason ? 1 : 0.3}, {backgroundColor: '#FFA700'}]}>
+                  <Text style={styles.reasonButtonText}>Proceed</Text>
+                </TouchableOpacity>
+              </View>
           </View>
         </View>
       </>
@@ -241,7 +233,7 @@ const styles = StyleSheet.create({
   },
   reasonWrapper: {
     width: '90%',
-    height: verticalScale(400),
+    height: verticalScale(500),
     borderRadius: 5,
     display: 'flex',
     alignItems: 'center',
@@ -263,11 +255,9 @@ const styles = StyleSheet.create({
   },
   reasonContent: {
     flex: 1,
-    paddingVertical: 10,
   },
   reasonListWrapper: {
     marginTop: 18,
-    height: 200,
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
@@ -275,11 +265,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    height: 50,
-    padding: 5,
+    height: 45,
+    padding: 2
   },
   itemText: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: FONT.REGULAR,
   },
   reasonButtonWrapper: {

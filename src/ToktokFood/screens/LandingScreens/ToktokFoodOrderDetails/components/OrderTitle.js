@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+// import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import TimerModal from 'toktokfood/components/TimerModal';
-import {useIsFocused} from '@react-navigation/native';
+// import {useIsFocused} from '@react-navigation/native';
 
 // Fonts/Colors
 import {COLORS} from 'res/constants';
@@ -15,26 +15,26 @@ import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 import {orderStatusMessagePickUp, orderStatusMessageDelivery} from 'toktokfood/helper/orderStatusMessage';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
-import {getDuration} from 'toktokfood/helper/index';
+// import {getDuration} from 'toktokfood/helper/index';
 import {
-  saveEstimatedDeliveryTime,
-  getEstimatedDeliveryTime,
-  removeEstimatedDeliveryTime,
+  // saveEstimatedDeliveryTime,
+  // getEstimatedDeliveryTime,
+  // removeEstimatedDeliveryTime,
   changeDateToday,
-  processGetEDT,
-  convertEDT,
+  // processGetEDT,
+  // convertEDT,
 } from 'toktokfood/helper/estimatedDeliveryTime';
 
 const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
   const [additionalMins, setAdditionalMins] = useState(0);
   const [newETA, setNewETA] = useState(false);
   const {
-    latitude,
-    longitude,
+    // latitude,
+    // longitude,
     shopDetails,
     orderStatus,
-    isconfirmed,
-    address,
+    // isconfirmed,
+    // address,
     dateReadyPickup,
     dateOrderProcessed,
     dateBookingConfirmed,
@@ -49,70 +49,136 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
 
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState('');
   const [etaMinutes, setEtaMinutes] = useState(0);
-  const minutesInHours = 60;
+  // const minutesInHours = 60;
   // const isFocus = useIsFocused();
 
   useEffect(() => {
-    if (orderStatus == 'po' || orderStatus == 'rp' || orderStatus == 'f') {
-      if (orderStatus == 'rp') {
-        setAdditionalMins(20);
-      }
-      if (orderStatus == 'f') {
-        setAdditionalMins(0);
-      }
-      setNewETA(true);
+    // Set Eta Minutes if rider picked up the order and on the way
+    if (transaction?.orderStatus === 'rp' && riderDetails && etaMinutes === 0) {
+      onSetEta();
     }
-  }, [transaction]);
+
+    return () => clearInterval();
+  }, [riderDetails, transaction]);
 
   useEffect(() => {
-    return () => setNewETA(false);
-  }, []);
+    if (etaMinutes > 0) {
+      setTimeout(() => {
+        setEtaMinutes(etaMinutes - 1);
+      }, 60000);
+    }
+    return () => clearTimeout();
+  });
 
-  const handleProcessGetEDT = async (date, location) => {
-    let result = await processGetEDT(date, referenceNum);
-    if (result != null) {
-      setEstimatedDeliveryTime(result);
-    } else {
-      setAdditionalMins(20);
-      setNewETA(true);
-      calculateEstimatedDeliveryTime(date, location);
+  const onSetEta = () => {
+    const {deliveryLogs, duration} = riderDetails;
+    const pickupDate = deliveryLogs.filter(log => log.status === 4);
+    const addedMinutes = duration + 5;
+
+    if (pickupDate.length) {
+      const edt = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('YYYY-MM-DD');
+      const minutesDiff = moment().diff(edt, 'minutes', true);
+      setEtaMinutes(parseInt(minutesDiff));
     }
   };
 
-  const calculateEstimatedDeliveryTime = (date, originLocation) => {
-    if (newETA) {
-      getDuration(originLocation, {latitude, longitude}).then(async durationSecs => {
-        let durationHours = durationSecs != undefined ? parseFloat(durationSecs / (60 * 60)) : 0.0166667;
-        let addMins = additionalMins / minutesInHours;
-        let additionalHours = (durationHours + addMins).toFixed(2);
-        let edtDate = estimatedDeliveryTime ? convertEDT(date, estimatedDeliveryTime) : date;
-        let hoursDifference = moment().diff(edtDate, 'hours', true);
-        let finalHrs = hoursDifference ? parseFloat(additionalHours) + parseFloat(hoursDifference) : additionalHours;
-        let edt = moment(edtDate).add(finalHrs, 'hours').format('h:mm A');
-        let edtAddMinutes = moment(edtDate).add(5, 'minutes').format('h:mm A');
-        const secToMinutes = durationHours / 60 + 5;
-        // console.log(durationHours, date, edt, additionalHours, 'ORDER DETAILS ETA', Math.ceil(secToMinutes));
-        // console.log(durationHours, durationSecs, secToMinutes);
-        setEtaMinutes(Math.ceil(secToMinutes));
-        processSaveEDT(edtAddMinutes);
-        setEstimatedDeliveryTime(edtAddMinutes);
-        setNewETA(false);
-      });
-    }
-  };
+  const onGetPickupDate = useCallback(() => {
+    if (riderDetails) {
+      const {deliveryLogs, duration} = riderDetails;
+      const pickupDate = deliveryLogs.filter(log => log.status === 4);
+      const addedMinutes = duration + 5;
 
-  const processSaveEDT = async edt => {
-    await saveEstimatedDeliveryTime(referenceNum, edt);
-  };
+      if (!pickupDate.length) {
+        return 'Estimated Delivery Time: 15-45 Minutes';
+      } else {
+        const dateNow = moment().format('YYYY-MM-DD');
+        const timeNow = moment().format('LT');
+        const edt = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('YYYY-MM-DD');
+        const edtTime = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('LT');
+        // const minutesDiff = moment().diff(edt, 'minutes', true);
+        if (edt !== dateNow && edtTime <= timeNow) {
+          return 'Rider is nearby your location. Thank you for patiently waiting.';
+        }
+      }
+      return `Estimated Delivery Time: ${etaMinutes} Minutes`;
+    }
+  });
+
+  // useEffect(() => {
+  //   if (orderStatus == 'po' || orderStatus == 'rp' || orderStatus == 'f') {
+  //     if (orderStatus == 'rp') {
+  //       setAdditionalMins(20);
+  //     }
+  //     if (orderStatus == 'f') {
+  //       setAdditionalMins(0);
+  //     }
+  //     setNewETA(true);
+  //   }
+  // }, [transaction]);
+
+  // useEffect(() => {
+  //   return () => setNewETA(false);
+  // }, []);
+
+  // const handleProcessGetEDT = async (date, location) => {
+  //   let result = await processGetEDT(date, referenceNum);
+  //   if (result != null) {
+  //     setEstimatedDeliveryTime(result);
+  //   } else {
+  //     setAdditionalMins(20);
+  //     setNewETA(true);
+  //     calculateEstimatedDeliveryTime(date, location);
+  //   }
+  // };
+
+  // const calculateEstimatedDeliveryTime = (date, originLocation) => {
+  //   if (newETA) {
+  //     getDuration(originLocation, {latitude, longitude}).then(async durationSecs => {
+  //       let durationHours = durationSecs != undefined ? parseFloat(durationSecs / (60 * 60)) : 0.0166667;
+  //       let addMins = additionalMins / minutesInHours;
+  //       let additionalHours = (durationHours + addMins).toFixed(2);
+  //       let edtDate = estimatedDeliveryTime ? convertEDT(date, estimatedDeliveryTime) : date;
+  //       let hoursDifference = moment().diff(edtDate, 'hours', true);
+  //       let finalHrs = hoursDifference ? parseFloat(additionalHours) + parseFloat(hoursDifference) : additionalHours;
+  //       let edt = moment(edtDate).add(finalHrs, 'hours').format('h:mm A');
+  //       let edtAddMinutes = moment(edtDate).add(5, 'minutes').format('h:mm A');
+  //       const secToMinutes = durationHours / 60 + 5;
+  //       // console.log(durationHours, date, edt, additionalHours, 'ORDER DETAILS ETA', Math.ceil(secToMinutes));
+  //       // console.log(durationHours, durationSecs, secToMinutes);
+  //       setEtaMinutes(Math.ceil(secToMinutes));
+  //       processSaveEDT(edtAddMinutes);
+  //       setEstimatedDeliveryTime(edtAddMinutes);
+  //       setNewETA(false);
+  //     });
+  //   }
+  // };
+
+  // const processSaveEDT = async edt => {
+  //   await saveEstimatedDeliveryTime(referenceNum, edt);
+  // };
 
   const renderEstimatedPickUpTime = () => {
-    let startTime = moment(dateOrderProcessed).format('LT');
-    let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A');
+    const date = orderStatus === 'po' ? dateOrderProcessed : dateReadyPickup;
+    const edt = moment(date, 'YYYY-MM-DD HH:mm:ss').add(45, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+    const timeNow = moment().format('YYYY-MM-DD HH:mm:ss');
+
+    const getTimeByStatus = () => {
+      switch (orderStatus) {
+        case 'po':
+          if (edt <= timeNow) {
+            return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
+          }
+          return 'Estimated Pickup Time: 15-45 Minutes';
+        case 'rp':
+          return 'Estimated Pickup Time: ASAP';
+        default:
+          return 'Estimated Pickup Time: 15-45 Minutes';
+      }
+    };
     return (
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />
-        {/* <Text style={styles.time}>{`Estimated Pickup Time: ${startTime} - ${endTime}`}</Text> */}
-        <Text style={styles.time}>Estimated Pickup Time: ASAP</Text>
+        <Text style={styles.time}>{getTimeByStatus()}</Text>
       </View>
     );
   };
@@ -132,29 +198,32 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
 
   const renderEstimatedDeliveryTime = () => {
     let date = dateByOrderStatus();
-    let shopLocation = {latitude: shopDetails.latitude, longitude: shopDetails.longitude};
-    let location = riderDetails != null && orderStatus == 'f' ? riderDetails.location : shopLocation;
-    let startTime = moment(date).format('LT');
-    estimatedDeliveryTime == '' ? handleProcessGetEDT(date, location) : calculateEstimatedDeliveryTime(date, location);
+    // let shopLocation = {latitude: shopDetails.latitude, longitude: shopDetails.longitude};
+    // let location = riderDetails != null && orderStatus == 'f' ? riderDetails.location : shopLocation;
+    // let startTime = moment(date).format('LT');
+    // estimatedDeliveryTime == '' ? handleProcessGetEDT(date, location) : calculateEstimatedDeliveryTime(date, location);
 
     const getTimeByStatus = status => {
       switch (status) {
         case 'po':
-          return '15-45 Minutes';
+          return 'Estimated Delivery Time: 15-45 Minutes';
+        case 'rp':
+          return onGetPickupDate();
         case 'f':
-          return `${etaMinutes} Minutes`;
+          return 'Rider is nearby your location. Thank you for patiently waiting.';
+        // return `${etaMinutes} Minutes`;
         default:
-          return '15-45 Minutes';
+          return 'Estimated Delivery Time: 15-45 Minutes';
       }
     };
 
-    if (!moment(date).isValid() && estimatedDeliveryTime == '') {
+    if (!moment(date).isValid()) {
       return null;
     }
     return (
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />
-        <Text style={styles.time}>{`Estimated Delivery Time: ${getTimeByStatus(orderStatus)}`}</Text>
+        <Text style={styles.time}>{getTimeByStatus(orderStatus)}</Text>
         {/* <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text> */}
         {/* <Text style={styles.time}>{`Estimated Delivery Time: ${moment(date).format(
           'll',
@@ -210,12 +279,13 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     marginLeft: moderateScale(5),
-    marginTop: moderateScale(5),
+    textAlign: 'center',
   },
   timeContainer: {
     flexDirection: 'row',
-    marginTop: verticalScale(5),
-    alignItems: 'center',
+    marginTop: moderateScale(5),
+    // alignItems: 'center',
+    paddingHorizontal: moderateScale(15),
   },
   title: {
     fontSize: FONT_SIZE.L,
@@ -224,8 +294,8 @@ const styles = StyleSheet.create({
   timeImg: {
     width: moderateScale(13),
     height: moderateScale(13),
-    top: moderateScale(4),
-    // tintColor: COLOR.DARK,
+    // top: moderateScale(4),
+    marginTop: moderateScale(2),
     resizeMode: 'contain',
     tintColor: '#F6A100',
   },

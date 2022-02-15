@@ -137,7 +137,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         setRiderSeconds(300);
       }
     }
-    console.log('Rider Details Updated ' + riderSeconds);
+    // console.log('Rider Details Updated ' + riderSeconds);
   };
 
   const handleOrderProcess = async () => {
