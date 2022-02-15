@@ -116,7 +116,7 @@ const Component =  ({
     }
   })
 
-  const initCartItem = () => {
+  const initCartItem = (id) => {
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       const data = JSON.parse(raw)
       if(data.userId){
@@ -124,7 +124,7 @@ const Component =  ({
           variables: {
             input: {
               userId: data.userId,
-              productId: product.Id
+              productId: id || product.Id
             }
           }
         })
@@ -560,6 +560,7 @@ const Component =  ({
           onBuyNow(input)
         }}
         onSelectVariation={(value, images) => {
+          initCartItem(value.Id)
           setSelectedVariation(value)
           setVariantImages(images)
         }}
