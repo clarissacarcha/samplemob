@@ -178,7 +178,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                         processingFee: postComputeProcessingFee.processingFee,
                     },
                 isSwipe: true,
-                swipeTitle: `Confirm`,
+                swipeTitle: `Swipe to Confirm`,
                 onSwipeFail: onSwipeFail,
                 onSwipeSuccess: onSwipeSuccess,
             })

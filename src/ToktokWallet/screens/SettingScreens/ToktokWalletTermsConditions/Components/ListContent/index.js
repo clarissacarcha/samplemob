@@ -5,27 +5,28 @@ import CONSTANTS from "common/res/constants";
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR, SHADOW, SIZE } = CONSTANTS;
 
 export const ListContent = (props) => {
-  const {contents, subContent, buttetType} = props;
+  const {contents, subContent } = props;
 
   return (
     <View style={styles.sectionWrapper}>
       <Text style={styles.sectionTitle}>{contents.title}</Text>
-      <Text style={styles.sectionText}>{contents.content}</Text>
+      { !!contents.content && <Text style={styles.sectionText}>{contents.content}</Text> }
       {typeof contents.listContent !== 'undefined' &&
         contents.listContent.map((v) => {
+          console.log(!!v.content)
           return (
             <View style={styles.listTextContent}>
               <Text style={[styles.sectionText]}>
                 { !!v.title && <Text style={styles.sectionTitle}>{v.title}</Text> }
-                <Text>{v.content}</Text>
+                { !!v.content && <Text style={{ fontFamily: v.isContentBold ? FONT.BOLD : FONT.REGULAR }}>{v.content}</Text> }
               </Text>
                 { typeof v.subContent !== 'undefined' && (
-                  <View style={{ paddingTop: moderateScale(20) }}>
+                  <View style={{ paddingTop: v.content ? moderateScale(20) : 0 }}>
                     {
                       v.subContent.map((subVal) => (
                         <View style={[{ flexDirection: 'row' }, styles.sectionText, styles.subContentText]}>
-                          <Text>{subVal.title} </Text>
-                          <Text>{subVal.content}</Text>
+                          <Text style={{ fontFamily: subVal.isSubContentTitleBold ? FONT.BOLD : FONT.REGULAR }}>{subVal.title} </Text>
+                          <Text style={{ flexShrink: 1 }}>{subVal.content}</Text>
                         </View>
                       ))
                     }
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   listTextContent: {
-    marginBottom: moderateScale(15),
+    marginBottom: moderateScale(10),
   },
   subContentText: {
     marginLeft: moderateScale(20),
