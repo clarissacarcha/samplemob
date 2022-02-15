@@ -59,6 +59,7 @@ const MainComponent = () => {
     },
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails);
+      // console.log(getProductDetails);
       getTemporaryCart({
         variables: {
           input: {
@@ -92,9 +93,9 @@ const MainComponent = () => {
       if (productDetails?.variants.length > 0) {
         if (selectedVariants && Object.keys(selectedVariants).length > 0) {
           if (selectedVariants?.basePrice) {
-            basePrice = parseInt(selectedVariants?.basePrice);
+            basePrice = parseFloat(selectedVariants?.basePrice);
           } else {
-            basePrice = parseInt(selectedVariants?.price);
+            basePrice = parseFloat(selectedVariants?.price);
           }
         }
       } else {
