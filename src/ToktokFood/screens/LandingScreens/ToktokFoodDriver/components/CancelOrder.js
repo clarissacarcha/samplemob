@@ -180,9 +180,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     backgroundColor: 'rgba(34, 34, 34, 0.5)',
+    // backgroundColor: '#fff',
   },
   wrapper: {
     height: '40%',
@@ -233,12 +234,13 @@ const styles = StyleSheet.create({
   },
   reasonWrapper: {
     width: '90%',
-    height: verticalScale(500),
+    // flex: 1,
+    // height: verticalScale(500),
     borderRadius: 5,
     display: 'flex',
     alignItems: 'center',
     backgroundColor: '#FFFF',
-    paddingVertical: scale(18),
+    // paddingVertical: scale(18),
   },
   shadow: {
     backgroundColor: 'white',
@@ -254,10 +256,11 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   reasonContent: {
-    flex: 1,
+    flexGrow: 1,
+    paddingVertical: verticalScale(25),
   },
   reasonListWrapper: {
-    marginTop: 18,
+    marginTop: 15,
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
@@ -265,8 +268,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    height: 45,
-    padding: 2
+    height: 35,
+    padding: 2,
   },
   itemText: {
     fontSize: 13,

@@ -119,11 +119,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    // paddingVertical: verticalScale(10),
+    // Vertical: verticalScale(10),
   },
   title: {
     fontSize: FONT_SIZE.L,
-    fontFamily: FONT.BOLD,
+    // fontFamily: FONT.BOLD,
     paddingBottom: verticalScale(30),
   },
 });
