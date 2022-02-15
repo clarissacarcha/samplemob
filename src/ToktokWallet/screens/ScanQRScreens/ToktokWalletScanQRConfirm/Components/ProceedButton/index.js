@@ -18,8 +18,10 @@ import SuccessfulModal from './SuccessfulModal'
 export const ProceedButton = ({
     amount,
     swipeEnabled,
+    setSwipeEnabled,
     note,
-    recipientInfo
+    recipientInfo,
+    isCertify
 })=> {
 
     const prompt = usePrompt()
@@ -112,7 +114,7 @@ export const ProceedButton = ({
             isSwipe: true,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            swipeTitle: `Send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
+            swipeTitle: `Swipe to Send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
             data: {
                 amount: amount,
                 note: note,
@@ -152,7 +154,7 @@ export const ProceedButton = ({
             />
             <View style={styles.container}>
                     {
-                        swipeEnabled
+                        swipeEnabled && isCertify
                         ? <YellowButton label="Confirm" onPress={reviewAndConfirm}/>
                         : <DisabledButton label="Confirm"/>
                     }
@@ -164,7 +166,6 @@ export const ProceedButton = ({
 const styles = StyleSheet.create({
     container: {
         height: 60,
-        paddingHorizontal: 10 
     },
 })
 

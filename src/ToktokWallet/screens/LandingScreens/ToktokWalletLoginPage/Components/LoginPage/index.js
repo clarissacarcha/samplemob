@@ -1,9 +1,9 @@
 import React , {useEffect,useState,useRef} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,Image , Keyboard} from 'react-native'
-import tokwaLogo from 'toktokwallet/assets/images/tokwaLogo.png'
+import tokwaLogo from 'toktokwallet/assets/images/tokwa2.png'
 import {useAccount} from 'toktokwallet/hooks'
 import { getStatusbarHeight } from 'toktokwallet/helper'
-import { BuildingBottom , NumberBoxes ,DisabledButton } from 'toktokwallet/components'
+import { BuildingBottom , NumberBoxes ,DisabledButton , CircleIndicator , NumPad } from 'toktokwallet/components'
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
 import { AlertOverlay } from 'src/components'
 import { useNavigation } from '@react-navigation/native'
@@ -35,10 +35,6 @@ const numWordArray = {
 
 export const LoginPage = ()=> {
     const {checkIfTpinIsSet,tokwaAccount} = useAccount();
-
-    useEffect(()=>{
-     
-    },[])
     const navigation = useNavigation();
     const [showPin,setShowPin] = useState(false)
     const [pinCode,setPinCode] = useState("")
@@ -93,16 +89,17 @@ export const LoginPage = ()=> {
     }
 
     useEffect(()=>{
+        if(pinCode.length > 0) setErrorMessage("")
         if(pinCode.length == 4){
             onPress()
         }
     },[pinCode])
 
-    useEffect(()=>{
-        setTimeout(()=>{
-            inputRef.current.focus();
-        },0)
-    },[])
+    // useEffect(()=>{
+    //     setTimeout(()=>{
+    //         inputRef.current.focus();
+    //     },0)
+    // },[])
 
     const forgotPIN = ()=> {
         navigation.navigate("ToktokWalletRecoveryMethods" , {type: "MPIN",event: "ACCOUNT RECOVERY", category: "FORGOT MPIN" })
@@ -125,9 +122,9 @@ export const LoginPage = ()=> {
                         source={tokwaLogo}
                         resizeMode="contain"
                     />
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center"}}>Enter MPIN</Text>
-                    <View style={{position: 'relative',marginTop: 30,}}>
-                        <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} numberOfBox={4}/>
+                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center",marginTop: 20}}>Enter MPIN</Text>
+                    <View style={{position: 'relative',flex: 1,justifyContent:"center",alignItems:"center"}}>
+                        <CircleIndicator pinCode={pinCode} showPin={showPin} numberOfBox={4}/>
                         <TextInput
                             caretHidden
                             value={pinCode}
@@ -143,28 +140,36 @@ export const LoginPage = ()=> {
                             }}
                             onSubmitEditing={pinCode.length == 4 ? onPress: null}
                         />
-                        {
-                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,textAlign:"center"}}>{errorMessage}</Text>   
-                        }
+                
                         {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
                         {/* <Biometrics
                             setErrorMessage={setErrorMessage}
                             setPinCode={setPinCode}
                         /> */}
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                                 style={{marginTop: 18,paddingVertical: 10,alignItems: "center"}}
                                 onPress={()=>setShowPin(!showPin)}
                         >
                                 <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide MPIN" : "Show MPIN"}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                                style={{paddingVertical: 10,alignItems: "center"}}
+                        </TouchableOpacity> */}
+                    
+                    </View>
+                        {
+                            errorMessage != "" &&  <Text style={{paddingHorizontal: 16,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:COLOR.RED,textAlign:"center"}}>{errorMessage}</Text>   
+                        }
+                    <NumPad
+                        setPinCode={setPinCode}
+                        pinCode={pinCode}
+                    />
+                      <View style={{justifyContent:"center", alignItems: "center",flex: 1}}>
+                       <TouchableOpacity
+                                style={{}}
                                 onPress={forgotPIN}
                         >
                                 <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot MPIN?</Text>
                         </TouchableOpacity>
-                       
-                    </View>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>Do not share your MPIN with anyone.</Text>
+                        </View>
                 </View>
                 {/* <View style={styles.btn}>
                     {
@@ -191,13 +196,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent:"flex-start",
         alignItems:"center",
-        paddingTop: 100,
+        // paddingTop: 20,
         textAlign:"center",
     },
     tokwaLogo: {
-        height: 100,
-        width: 100,
-        marginBottom: 40,
+        height: 80,
+        width: 200,
+        marginTop: 20,
     },
     btn: {
 

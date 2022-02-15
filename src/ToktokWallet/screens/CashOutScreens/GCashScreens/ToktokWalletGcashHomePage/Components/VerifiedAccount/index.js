@@ -147,7 +147,7 @@ export const VerifiedAccount = ({record,provider})=> {
                     accountNumber: record.mobile
                 },
             isSwipe: true,
-            swipeTitle: `Confirm`,
+            swipeTitle: `Swipe to Confirm`,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
         })
