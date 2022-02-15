@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useContext, useState} from 'react';
+import React, {useEffect, useContext, useState, useMemo} from 'react';
 import Toast from 'react-native-simple-toast';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -10,7 +10,7 @@ import _ from 'lodash';
 
 // Utils
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
-import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {scale, moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {
   POST_TEMPORARY_CART,
   PATCH_TEMPORARY_CART_ITEM,
@@ -380,15 +380,16 @@ export const FoodCart = ({loading, action}) => {
   const isEnabled = () =>
     required.length > 0 || disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading;
 
-  const isAddEnabled = () => {
+  const isAddEnabled = useMemo(() => {
+    const checkStocks = tempData?.maxQty > tempData?.stocks ? tempData?.stocks : tempData?.maxQty;
     const checkIsMaxQtySet =
-      tempData?.maxQtyIsset > 0 ? tempData?.maxQty : tempData?.contSellingIsset > 0 ? 1000 : tempData?.stocks;
+      tempData?.maxQtyIsset > 0 ? checkStocks : tempData?.contSellingIsset > 0 ? 1000 : tempData?.stocks;
     const disabled =
       tempData?.contSellingIsset > 0 && count.quantity < checkIsMaxQtySet
         ? false
         : disableAdd || count.quantity >= checkIsMaxQtySet;
     return disabled;
-  };
+  });
 
   return (
     <>
@@ -434,7 +435,7 @@ export const FoodCart = ({loading, action}) => {
             </TouchableOpacity>
             <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
-              disabled={isAddEnabled()}
+              disabled={isAddEnabled}
               style={[
                 styles.countButtons,
                 {
@@ -453,6 +454,13 @@ export const FoodCart = ({loading, action}) => {
           </View>
           <Text style={styles.total}>Total: PHP {totalPrice.toFixed(2)}</Text>
         </View>
+
+        {isAddEnabled && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>You have reached the max quantity available for this product.</Text>
+          </View>
+        )}
+
         <TouchableOpacity
           disabled={isEnabled()}
           style={[
@@ -506,6 +514,15 @@ const styles = StyleSheet.create({
     color: COLOR.WHITE,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
+  },
+  errorText: {
+    fontSize: FONT_SIZE.M,
+    color: '#F12F31',
+    textAlign: 'center',
+  },
+  errorContainer: {
+    paddingHorizontal: moderateScale(20),
+    paddingVertical: moderateScale(10),
   },
   foodItemTotalWrapper: {
     display: 'flex',

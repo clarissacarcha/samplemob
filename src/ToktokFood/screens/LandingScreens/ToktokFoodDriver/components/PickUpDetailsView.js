@@ -43,16 +43,15 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   useEffect(() => {
     // Set Eta Minutes if rider picked up the order and on the way
     if (orderStatus === 'po' && etaMinutes === 0) {
-      const edt = moment(date, 'YYYY-MM-DD HH:mm:ss').add(45, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+      const edt = moment(date, 'YYYY-MM-DD HH:mm:ss').add(1, 'minutes').format('YYYY-MM-DD HH:mm:ss');
       const timeNow = moment().format('YYYY-MM-DD HH:mm:ss');
-
       if (edt <= timeNow) {
         setShowModal(true);
       }
-      setEtaMinutes(10);
+      setEtaMinutes(60);
     }
 
-    console.log(etaMinutes);
+    // console.log(etaMinutes, orderStatus);
   }, [orderStatus, etaMinutes]);
 
   useEffect(() => {

@@ -173,21 +173,9 @@ export const FoodList = props => {
   };
 
   const emptyScreenComponent = () => (
-    <View
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-      }}>
-      <Image
-        style={{
-          height: moderateScale(175),
-          width: moderateScale(220),
-        }}
-        resizeMode="contain"
-        source={empty_search_2}
-      />
-      <Text style={{marginTop: moderateScale(20)}}>
+    <View style={styles.emptyContainer}>
+      <Image style={styles.emptyImg} resizeMode="contain" source={empty_search_2} />
+      <Text style={styles.emptyText}>
         Sorry, products in this category seems to be out of stock already. Please come back again some other time.
       </Text>
     </View>
@@ -250,6 +238,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.WHITE,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    paddingHorizontal: moderateScale(50),
+  },
+  emptyImg: {
+    height: moderateScale(175),
+    width: moderateScale(220),
+  },
+  emptyText: {
+    marginTop: moderateScale(20),
+    textAlign: 'center',
   },
   headerBack: {
     paddingHorizontal: 18,
