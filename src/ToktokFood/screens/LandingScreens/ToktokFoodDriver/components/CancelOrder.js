@@ -75,31 +75,8 @@ const CancelOrder = ({
     };
     return (
       <>
-        <View
-          onTouchStart={() => componentClick()}
-          key={id}
-          style={[
-            {
-              width: 20,
-              height: 20,
-              borderWidth: 2,
-              borderRadius: 50,
-              marginRight: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderColor: '#FFA700',
-            },
-          ]}>
-          {selected ? (
-            <View
-              style={{
-                height: 11,
-                width: 11,
-                borderRadius: 50,
-                backgroundColor: '#FFA700',
-              }}
-            />
-          ) : null}
+        <View onTouchStart={() => componentClick()} key={id} style={[styles.roundedButtonContainer]}>
+          {selected ? <View style={styles.roundedButtonWrapper} /> : null}
         </View>
       </>
     );
@@ -127,17 +104,17 @@ const CancelOrder = ({
                 );
               })}
             </View>
-              <View style={styles.reasonButtonWrapper}>
-                <TouchableOpacity onPress={() => closeCancel()} style={[styles.reasonButtons, styles.cancelButton]}>
-                  <Text style={[styles.reasonButtonText, {color: '#FFA700'}]}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  disabled={selectedReason ? false : true}
-                  onPress={() => proccessCancelOrder()}
-                  style={[styles.reasonButtons, {opacity: selectedReason ? 1 : 0.3}, {backgroundColor: '#FFA700'}]}>
-                  <Text style={styles.reasonButtonText}>Proceed</Text>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.reasonButtonWrapper}>
+              <TouchableOpacity onPress={() => closeCancel()} style={[styles.reasonButtons, styles.cancelButton]}>
+                <Text style={[styles.reasonButtonText, {color: '#FFA700'}]}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                disabled={selectedReason ? false : true}
+                onPress={() => proccessCancelOrder()}
+                style={[styles.reasonButtons, {opacity: selectedReason ? 1 : 0.3}, {backgroundColor: '#FFA700'}]}>
+                <Text style={styles.reasonButtonText}>Proceed</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </>
@@ -180,9 +157,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     backgroundColor: 'rgba(34, 34, 34, 0.5)',
+    // backgroundColor: '#fff',
   },
   wrapper: {
     height: '40%',
@@ -233,12 +211,13 @@ const styles = StyleSheet.create({
   },
   reasonWrapper: {
     width: '90%',
-    height: verticalScale(520),
+    // flex: 1,
+    // height: verticalScale(500),
     borderRadius: 5,
     display: 'flex',
     alignItems: 'center',
     backgroundColor: '#FFFF',
-    paddingVertical: scale(18),
+    // paddingVertical: scale(18),
   },
   shadow: {
     backgroundColor: 'white',
@@ -254,10 +233,11 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   reasonContent: {
-    flex: 1,
+    flexGrow: 1,
+    paddingVertical: verticalScale(25),
   },
   reasonListWrapper: {
-    marginTop: 18,
+    marginTop: 15,
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
@@ -265,8 +245,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    height: 45,
-    padding: 2
+    height: 35,
+    padding: 2,
   },
   itemText: {
     fontSize: 13,
@@ -298,6 +278,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#FFA700',
     backgroundColor: COLOR.WHITE,
+  },
+  roundedButtonContainer: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderRadius: 50,
+    marginRight: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#FFA700',
+  },
+  roundedButtonWrapper: {
+    height: 11,
+    width: 11,
+    borderRadius: 50,
+    backgroundColor: '#FFA700',
   },
 });
 

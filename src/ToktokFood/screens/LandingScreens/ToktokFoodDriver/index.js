@@ -3,7 +3,7 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import {useIsFocused} from '@react-navigation/native';
 import moment from 'moment';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
 import {useDispatch, useSelector} from 'react-redux';
 import {CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -366,16 +366,18 @@ const ToktokFoodDriver = ({route, navigation}) => {
               referenceNum={referenceNum}
             />
           )} */}
-          <DriverAnimationView
-            orderStatus={transaction.orderStatus}
-            riderDetails={riderDetails}
-            orderIsfor={transaction.orderIsfor}
-            referenceNum={referenceNum}
-            dateOrdered={transaction.dateOrdered}
-          />
-          <View style={styles.driverWrapper}>
-            {transaction.orderIsfor == 1 ? displayDeliveryDetailsView : displayPickupDetailsView}
-          </View>
+          <ScrollView contentContainerStyle={{flexGrow: 1, paddingVertical: 25}}>
+            <DriverAnimationView
+              orderStatus={transaction.orderStatus}
+              riderDetails={riderDetails}
+              orderIsfor={transaction.orderIsfor}
+              referenceNum={referenceNum}
+              dateOrdered={transaction.dateOrdered}
+            />
+            <View style={styles.driverWrapper}>
+              {transaction.orderIsfor == 1 ? displayDeliveryDetailsView : displayPickupDetailsView}
+            </View>
+          </ScrollView>
         </>
       )}
     </View>
@@ -386,6 +388,7 @@ const styles = StyleSheet.create({
   driverWrapper: {
     alignItems: 'flex-end',
     flexDirection: 'row',
+    flex: 1.5,
   },
 });
 

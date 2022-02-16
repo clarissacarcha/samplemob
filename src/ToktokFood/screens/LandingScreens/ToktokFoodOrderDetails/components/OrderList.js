@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-
+import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 // Fonts/Colors/Images
 // import {COLORS} from 'res/constants';
 import {FONT_SIZE, FONT} from 'res/variables';
@@ -21,6 +21,17 @@ const DisplayAddons = ({addOns}) => {
 
 const OrderList = ({orderDetails}) => {
   const [validImg, setValidImg] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const data = orderDetails;
+  let dataSource = [];
+  let remaining = [];
+  if (data.length > 5) {
+    dataSource = data.slice(0, 5);
+    remaining = data.slice(4, -1);
+  } else {
+    dataSource = data;
+  }
 
   const Item = ({item}) => {
     let {parentProductId, itemname, parentProductName} = item.productDetails;
@@ -59,8 +70,21 @@ const OrderList = ({orderDetails}) => {
         <Text style={styles.note}>My Order</Text>
         {/* <Text style={styles.seeAll}>See All</Text> */}
       </View>
-
-      {orderDetails.length > 0 && orderDetails.map(item => <Item item={item} />)}
+      {isCollapsed ? data.map(item => <Item item={item} />) : dataSource.map(item => <Item item={item} />)}
+      {data.length > 5 && (
+        <TouchableOpacity
+          onPress={() => setIsCollapsed(!isCollapsed)}
+          activeOpacity={0.9}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingTop: moderateScale(20),
+          }}>
+          <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>{isCollapsed ? 'Hide' : 'See More'}</Text>
+          <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={12} color={'#FFA700'} />
+        </TouchableOpacity>
+      )}
 
       {/* <FlatList data={orderDetails} renderItem={renderItem} scrollEnabled={false} /> */}
     </View>
