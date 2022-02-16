@@ -84,13 +84,12 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         case 'rp':
           return 'Estimated Pickup Time: ASAP';
         default:
-          return 'Estimated Pickup Time: 15-45 Minutes';
+          return '';
       }
     };
     return (
       <View style={styles.timeContainer}>
         <Image resizeMode="contain" source={time} style={styles.timeImg} />
-        {/* <Text style={styles.time}>{`Estimated Delivery Time: ${startTime} - ${endTime}`}</Text> */}
         <Text style={styles.time}>{getTimeByStatus()}</Text>
       </View>
     );
