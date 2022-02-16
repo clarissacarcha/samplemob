@@ -125,7 +125,7 @@ export const LoginPage = ()=> {
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center",marginTop: 20}}>Enter MPIN</Text>
                     <View style={{position: 'relative',flex: 1,justifyContent:"center",alignItems:"center"}}>
                         <CircleIndicator pinCode={pinCode} showPin={showPin} numberOfBox={4}/>
-                        <TextInput
+                        {/* <TextInput
                             caretHidden
                             value={pinCode}
                             ref={inputRef}
@@ -139,7 +139,7 @@ export const LoginPage = ()=> {
                             }
                             }}
                             onSubmitEditing={pinCode.length == 4 ? onPress: null}
-                        />
+                        /> */}
                 
                         {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
                         {/* <Biometrics
