@@ -172,7 +172,7 @@ export const FoodList = props => {
     );
   };
 
-  const emptyScreenComponent = () => (
+  const EmptyScreenComponent = () => (
     <View style={styles.emptyContainer}>
       <Image style={styles.emptyImg} resizeMode="contain" source={empty_search_2} />
       <Text style={styles.emptyText}>
@@ -215,7 +215,7 @@ export const FoodList = props => {
 
   return (
     <ScrollView contentContainerStyle={{...styles.scrollContainer, minHeight: minHeight}}>
-      {listData?.length > 0 ? listData.map(item => <ItemList item={item} />) : emptyScreenComponent()}
+      {listData?.length > 0 ? listData.map(item => <ItemList item={item} />) : <EmptyScreenComponent />}
       {/* <FlatList
         data={
           searchProduct ? searchProducts?.getSearchProductsByShop : products ? products.getProductsByShopCategory : []
@@ -242,12 +242,12 @@ const styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
+    // flex: 1,
     paddingHorizontal: moderateScale(50),
   },
   emptyImg: {
-    height: moderateScale(175),
-    width: moderateScale(220),
+    height: moderateScale(164),
+    width: moderateScale(194),
   },
   emptyText: {
     marginTop: moderateScale(20),
