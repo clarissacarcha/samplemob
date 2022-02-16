@@ -2,7 +2,7 @@
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
 import React, {useEffect, useState, useContext, useMemo} from 'react';
-import {Image, Platform, StyleSheet, Text, View} from 'react-native';
+import {Image, ImageBackground, Platform, StyleSheet, Text, View} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -71,11 +71,11 @@ export const StickyView = () => {
     },
   });
 
-  const [checkShopValidations, {data: checkShop, loading: shopValidationLoading, error: shopValidationError}] =
-    useLazyQuery(CHECK_SHOP_VALIDATIONS, {
-      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      fetchPolicy: 'network-only',
-    });
+  // const [checkShopValidations, {data: checkShop, loading: shopValidationLoading, error: shopValidationError}] =
+  //   useLazyQuery(CHECK_SHOP_VALIDATIONS, {
+  //     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+  //     fetchPolicy: 'network-only',
+  //   });
 
   useEffect(() => {
     // checkShopValidations({ variables: { input: { shopId: id } }})
@@ -134,10 +134,17 @@ export const StickyView = () => {
     );
   }, [activeTab, productCategories, loading]);
 
-  const renderTitle = () => {
+  const renderTitle = useMemo(() => {
     return (
       <View style={styles.title}>
-        <HeaderTitle backOnly searchBox={false} />
+        <ImageBackground
+          source={{uri: shopDetails.banner}}
+          resizeMode="stretch"
+          imageStyle={styles.bannerImg}
+          style={styles.banner}>
+          <HeaderTitle backOnly searchBox={false} />
+        </ImageBackground>
+
         <View style={styles.titleInfo}>
           {/* <ChangeAddress styleContainer={{paddingTop: moderateScale(10)}} /> */}
           {shopDetailsLoading || shopDetailsError || (shopDetails && Object.keys(shopDetails).length == 0) ? (
@@ -157,14 +164,6 @@ export const StickyView = () => {
               <Image source={{uri: shopDetails.logo}} style={styles.logo} resizeMode="cover" />
               <View style={{flexShrink: 1, marginHorizontal: 10}}>
                 <Text style={styles.titleText}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
-                {/* <CustomStarRating
-                  rating={shopDetails.ratings ?? '0'}
-                  starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
-                  ratingStyle={{color: 'black', fontSize: FONT_SIZE.S}}
-                  readOnly
-                  showRating
-                  rightRating
-                /> */}
                 <View style={styles.branchInfo}>
                   <Image source={time} style={styles.timeImg} />
                   <Text style={styles.branches}>{`${shopDetails.estimatedDeliveryTime} mins`}</Text>
@@ -174,14 +173,8 @@ export const StickyView = () => {
                 <Text style={{color: '#FFA700', fontSize: FONT_SIZE.S}}>
                   {shopDetails?.allowPickup ? 'Available for pick-up and delivery' : 'Available for delivery only'}
                 </Text>
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingVertical: 3,
-                    marginTop: 2,
-                  }}>
+
+                <View style={styles.shopDetailsContainer}>
                   <MCIcon name="phone" color="#868686" size={13} />
                   <Text style={{fontSize: FONT_SIZE.S, marginHorizontal: 4}}>
                     {shopDetails?.mobile ? shopDetails?.mobile : ''}
@@ -207,7 +200,7 @@ export const StickyView = () => {
         </View>
       </View>
     );
-  };
+  }, [shopDetails, shopDetailsLoading, productCategories, activeTab, loading]);
 
   const renderContent = useMemo(() => {
     return <FoodList id={id} activeTab={activeTab} tagsLoading={loading} />;
@@ -222,9 +215,9 @@ export const StickyView = () => {
         headerMaxHeight={headerMaxHeight}
         headerTitleStyle={{zIndex: offset <= 132 ? 1 : -1, justifyContent: 'flex-start'}}
         extraScrollHeight={10}
-        backgroundImageScale={1.1}
-        title={renderTitle()}
-        backgroundImage={{uri: shopDetails.banner}}
+        // backgroundImageScale={2}
+        title={renderTitle}
+        // backgroundImage={{uri: shopDetails.banner}}
         statusBarColor="transparent"
         navbarColor="white"
         backgroundColor="transparent"
@@ -242,6 +235,15 @@ export const StickyView = () => {
 };
 
 const styles = StyleSheet.create({
+  banner: {
+    flex: 1,
+    // height: 400,
+    paddingTop: 10,
+  },
+  bannerImg: {
+    // height: 400,
+    // width: 400,
+  },
   branches: {
     fontWeight: '400',
     fontSize: 10,
@@ -280,6 +282,13 @@ const styles = StyleSheet.create({
   ratings: {
     paddingVertical: 4,
     alignItems: 'flex-start',
+  },
+  shopDetailsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 3,
+    marginTop: 2,
   },
   tabContainer: {
     paddingHorizontal: 10,
