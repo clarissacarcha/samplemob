@@ -22,15 +22,15 @@ const getShippingDiscount = (promoDetails, deliveryFee) => {
 };
 
 const OrderFee = ({data, forDelivery}) => {
-  let {originalShippingFee, actualTotalamount: totalAmount, deliveryAmount, promoDetails} = data;
+  let {originalShippingFee, actualTotalamount, deliveryAmount, promoDetails} = data;
   let deliveryFee = deliveryAmount ? deliveryAmount : 0;
   // let withShippingVoucher = promoDetails ? getShippingDiscount(promoDetails, originalShippingFee) : deliveryFee;
-  // console.log(promoDetails, deliveryAmount, originalShippingFee);
+  // console.log(actualTotalamount, deliveryAmount, originalShippingFee);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text>Subtotal</Text>
-        <Text style={styles.subtotal}>{`PHP ${totalAmount.toFixed(2)}`}</Text>
+        <Text style={styles.subtotal}>{`PHP ${actualTotalamount.toFixed(2)}`}</Text>
       </View>
       {forDelivery && (
         <View style={styles.header}>
@@ -53,9 +53,9 @@ const OrderFee = ({data, forDelivery}) => {
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${(deliveryFee + totalAmount).toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(deliveryFee + actualTotalamount).toFixed(2)}`}</Text>
         ) : (
-          <Text style={styles.totalPrice}>{`PHP ${totalAmount.toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${actualTotalamount.toFixed(2)}`}</Text>
         )}
       </View>
     </View>

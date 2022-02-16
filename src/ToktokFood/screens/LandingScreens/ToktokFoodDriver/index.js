@@ -104,7 +104,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
     return () => {
       BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
     };
-  }, [seconds, transaction, isFocus]);
+  }, [seconds, transaction]);
 
   useEffect(() => {
     handleMapRider();
@@ -235,8 +235,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
     setShowDialogMessage(prev => ({...prev, show: false}));
 
     if (reasons && title === 'Order Cancelled') {
-      navigation.replace('ToktokFoodLanding');
-      return setSeconds(300);
+      return navigation.replace('ToktokFoodLanding');
     }
     if (title == 'Order Complete' || title == 'OOPS! Order Declined!' || title == 'Order Cancelled') {
       let tab = selectedTab(title);
