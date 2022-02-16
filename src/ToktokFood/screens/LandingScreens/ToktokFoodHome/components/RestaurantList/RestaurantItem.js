@@ -14,7 +14,6 @@ import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 const RestaurantItem = ({activeTab, item}) => {
   const navigation = useNavigation();
   const [validImg, setValidImg] = useState(true);
-
   const {id} = activeTab;
 
   const onRestaurantNavigate = () => {
@@ -22,7 +21,15 @@ const RestaurantItem = ({activeTab, item}) => {
   };
 
   const renderPromos = ({item}) => (
-    <View style={{...styles.promoChip}}>
+    <View style={styles.promoChip}>
+      <Text numberOfLines={1} style={styles.promoText}>
+        {item.shippingDiscountName}
+      </Text>
+    </View>
+  );
+
+  const renderPromosByAdmin = ({item}) => (
+    <View style={styles.promoChipAdmin}>
       <Text numberOfLines={1} style={styles.promoText}>
         {item.shippingDiscountName}
       </Text>
@@ -38,21 +45,10 @@ const RestaurantItem = ({activeTab, item}) => {
           resizeMode="cover"
           onError={() => setValidImg(false)}
         />
-        {id === 2 && (
-          <View style={styles.banner}>
-            <Text>FREE DELIVERY</Text>
-          </View>
-        )}
       </TouchableOpacity>
 
       <View style={styles.restaurantInfo}>
         <Text numberOfLines={1} style={styles.restaurantName}>{`${item.shopname} (${item.address})`}</Text>
-        {/* <CustomStarRating
-          rating={item.ratings ?? '0'}
-          starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
-          readOnly
-        /> */}
-        <View style={{marginVertical: 5}} />
         <View style={styles.branchInfo}>
           <Image resizeMode="contain" source={time} style={styles.timeImg} />
           <Text style={styles.branches}>{`${item.estimatedDeliveryTime} mins`}</Text>
@@ -63,7 +59,20 @@ const RestaurantItem = ({activeTab, item}) => {
         </View>
 
         {id === 2 && (
-          <FlatList data={item.promos} renderItem={renderPromos} horizontal showsHorizontalScrollIndicator={false} />
+          <React.Fragment>
+            <FlatList
+              data={item?.promoByAdmin}
+              renderItem={renderPromosByAdmin}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+            <FlatList
+              data={item?.promoByMerchant}
+              renderItem={renderPromos}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </React.Fragment>
         )}
       </View>
     </View>
@@ -83,6 +92,7 @@ const styles = StyleSheet.create({
   },
   branchInfo: {
     flexDirection: 'row',
+    marginVertical: moderateScale(5),
   },
   branches: {
     fontWeight: '400',
@@ -118,15 +128,22 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   promoChip: {
-    alignSelf: 'flex-start',
-    marginTop: 10,
-    borderWidth: 1,
+    alignItems: 'center',
+    backgroundColor: '#FFA700',
     borderRadius: 5,
     height: scale(27),
-    borderColor: '#FFA700',
-    backgroundColor: '#FFA700',
-    alignItems: 'center',
     justifyContent: 'center',
+    marginTop: moderateScale(5),
+    marginRight: moderateScale(5),
+    paddingHorizontal: moderateScale(5),
+  },
+  promoChipAdmin: {
+    alignItems: 'center',
+    backgroundColor: '#FFCF2A',
+    borderRadius: 5,
+    height: scale(27),
+    justifyContent: 'center',
+    // marginTop: moderateScale(5),
     marginRight: moderateScale(5),
     paddingHorizontal: moderateScale(5),
   },

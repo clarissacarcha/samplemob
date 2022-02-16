@@ -21,6 +21,20 @@ export const GET_SHOPS = gql`
         shopId
         noOfStocks
       }
+      promoByAdmin {
+        id
+        shippingDiscountName
+        shippingDiscountCode
+        shopId
+        noOfStocks
+      }
+      promoByMerchant {
+        id
+        shippingDiscountName
+        shippingDiscountCode
+        shopId
+        noOfStocks
+      }
     }
   }
 `;

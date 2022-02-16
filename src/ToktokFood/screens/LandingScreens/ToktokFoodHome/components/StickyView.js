@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useLazyQuery} from '@apollo/react-hooks';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Platform, RefreshControl, StyleSheet, View, SectionList, Text, Image} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -30,23 +30,11 @@ const tabs = [
     id: 2,
     name: 'Promos',
   },
-  // {
-  //   id: 3,
-  //   name: 'All',
-  // },
 ];
 
 const StickyView = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const {location} = useSelector(state => state.toktokFood);
-
-  const RenderNavBar = () => {
-    return (
-      <View style={[styles.headerWrapper, styles.navbarWrapper]}>
-        <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
-      </View>
-    );
-  };
 
   // const RenderTitle = () => (
   //   <>
@@ -116,7 +104,7 @@ const StickyView = () => {
         },
       });
     }
-  }, [location, activeTab]);
+  }, [location]);
 
   useEffect(() => {
     if (page != 0 && data && data.getShops.length > 0) {
@@ -157,16 +145,16 @@ const StickyView = () => {
   //   navigation.navigate('ToktokFoodCategories');
   // };
 
-  const handleLoadMore = nativeEvent => {
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 120;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+  };
+
+  const onLoadMore = nativeEvent => {
     if (!loadMore && pendingProcess) {
       setPage(prev => prev + 1);
       setLoadMore(isCloseToBottom(nativeEvent));
     }
-  };
-
-  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingToBottom = 120;
-    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
   };
 
   const onRefresh = () => {
@@ -183,6 +171,19 @@ const StickyView = () => {
     }).then(() => {
       setRefreshing(false);
     });
+  };
+
+  const onSelectActiveTab = async item => {
+    await getShops({
+      variables: {
+        input: {
+          ...variableInput,
+          page: 0,
+          tabId: item.id,
+        },
+      },
+    });
+    setActiveTab(item);
   };
 
   const EmptyList = () => {
@@ -206,6 +207,14 @@ const StickyView = () => {
     );
   };
 
+  const RenderNavBar = () => {
+    return (
+      <View style={[styles.headerWrapper, styles.navbarWrapper]}>
+        <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={onSelectActiveTab} />
+      </View>
+    );
+  };
+
   return (
     <>
       <SectionList
@@ -219,7 +228,7 @@ const StickyView = () => {
         }
         onScroll={({nativeEvent}) => {
           if (isCloseToBottom(nativeEvent)) {
-            handleLoadMore(nativeEvent);
+            onLoadMore(nativeEvent);
           }
         }}
         scrollEventThrottle={15}
@@ -236,14 +245,7 @@ const StickyView = () => {
           }
           if (props.index < 1) {
             return (
-              <RestaurantList
-                activeTab={activeTab}
-                location={location}
-                loading={loading}
-                error={error}
-                data={props.section.data}
-                loadMore={loadMore}
-              />
+              <RestaurantList activeTab={activeTab} loading={loading} data={props?.section?.data} loadMore={loadMore} />
             ); //empty list design
           }
           return null;
