@@ -80,8 +80,8 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
 
     const BottomComponent = ()=> {
 
-        const bottomText = "Please make sure that you have carefully reviewed the amount " +
-        "to pay. A copy of the complete cash in details and instruction will " +
+        const bottomText = "Please make sure that you have carefully reviewed the amount to " +
+        "cash in. A copy of the complete cash in details and instruction will " +
         "be sent to your email for fast and secured transaction.";
         
         return (
@@ -107,7 +107,7 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
                      <TransactionInfo label="Cash in Method" value={paymentMethod ? paymentMethod : "PayPanda"}/>
                      <TransactionInfo label={paymentMethod ? "Transaction No." : "PayPanda Ref. No."} value={cashInLogParams.paypandaReferenceNumber}/>
                      <TransactionInfo label={paymentMethod ? "Status" : "PayPanda Status"} value={status}/>
-                     <TransactionInfo label="Amount" value={`PHP ${numberFormat(cashInLogParams.amount)}`}/>
+                     <TransactionInfo label="Amount to Pay" value={`PHP ${numberFormat(+cashInLogParams.amount + +cashInLogParams.providerServiceFee)}`}/>
                 </View>
             </Receipt>
         </Modal>

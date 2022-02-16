@@ -12,6 +12,8 @@ user {
   status
   toktokfoodUserId
   toktokWalletAccountId
+  hasEarlyAccess
+  hasDriverAccount
   person {
     id
     firstName

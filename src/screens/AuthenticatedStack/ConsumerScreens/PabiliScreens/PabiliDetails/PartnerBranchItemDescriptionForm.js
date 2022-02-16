@@ -10,7 +10,7 @@ import {ItemDescription} from '../../../../../components/ItemDescription';
 export const PartnerBranchItemDescriptionBottomSheet = forwardRef(({onChange, partnerOrders}, ref) => {
   const snapPoints = useMemo(() => [0, 400], []);
 
-  const constants = useSelector((state) => state.constants);
+  const constants = useSelector(state => state.constants);
 
   return (
     <BottomSheet
@@ -39,6 +39,7 @@ export const PartnerBranchItemDescriptionBottomSheet = forwardRef(({onChange, pa
         <View style={{height: 10}} />
         <FlatList
           data={partnerOrders}
+          keyExtractor={({index}) => index}
           ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />}
           renderItem={({item, index}) => (
             // <WhiteButton
@@ -51,6 +52,7 @@ export const PartnerBranchItemDescriptionBottomSheet = forwardRef(({onChange, pa
             //   }}
             // />
             <TouchableHighlight
+              key={index}
               underlayColor={COLOR.WHITE_UNDERLAY}
               onPress={() => {
                 onChange(item);

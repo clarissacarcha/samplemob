@@ -1,15 +1,22 @@
 import React, {useCallback, useMemo, useEffect, useRef, useState} from 'react';
-import {View, StyleSheet, Text, TextInput, Alert} from 'react-native';
+import {View, StyleSheet, Text, TextInput, Modal, Image, TouchableOpacity, Dimensions} from 'react-native';
 import {connect} from 'react-redux';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
-import {COLOR, LIGHT, ORANGE} from '../../../../../res/constants';
+import {FONT_FAMILY} from '../../../../../res/constants';
+import {COLOR, FONT} from '../../../../../res/variables';
 import {GET_DELIVERY_PRICE_AND_DIRECTIONS, GET_TOKTOK_WALLET_BALANCE} from '../../../../../graphql';
 import {WhiteButton, BlackButton, YellowButton} from '../../../../../revamp';
 import {onErrorAlert} from '../../../../../util/ErrorUtility';
 import {useAlert} from '../../../../../hooks';
 import {numberFormat} from '../../../../../helper/numberFormat';
+
+import ModalImage from '../../../../../assets/toktokwallet-assets/error.png';
+
+const {width, height} = Dimensions.get('window');
+
+const modalWidth = width - 120;
 
 //SELF IMPORTS
 import {PaymentForm, PaymentSheet} from './PaymentForm';
@@ -27,8 +34,6 @@ const DeliveryDetails = ({navigation, route, session}) => {
     headerTitle: () => <HeaderTitle label={['Delivery', 'Information']} />,
   });
 
-  const quotation = route.params.quotation;
-
   const AlertHook = useAlert();
 
   const [collectPaymentFrom, setCollectPaymentFrom] = useState(route.params.orderData.collectPaymentFrom);
@@ -44,10 +49,17 @@ const DeliveryDetails = ({navigation, route, session}) => {
   const [balanceText, setBalanceText] = useState('');
   const [hasWallet, setHasWallet] = useState(null);
 
+  const [initialPrice, setInitialPrice] = useState(route.params.quotation.pricing.price);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const quotationHash = route.params.quotation.hash;
+  const quotationDirections = route.params.quotation.directions;
+
   const [getToktokWalletBalance] = useLazyQuery(GET_TOKTOK_WALLET_BALANCE, {
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      console.log({res: res.getToktokWalletBalance.balance});
+      console.log({walletBalance: res.getToktokWalletBalance.balance});
 
       setHasWallet(res.getToktokWalletBalance.hasWallet);
       setBalanceText(numberFormat(res.getToktokWalletBalance.balance));
@@ -56,7 +68,18 @@ const DeliveryDetails = ({navigation, route, session}) => {
   });
 
   useEffect(() => {
+    if (parseFloat(balanceText.replace(/,/g, '')) < parseFloat(initialPrice)) {
+      if (paymentMethod === 'TOKTOKWALLET') {
+        setPaymentMethod('CASH');
+        setIsModalVisible(true);
+      }
+    }
+  }, [initialPrice, balanceText]);
+
+  useEffect(() => {
     getToktokWalletBalance();
+
+    console.log(JSON.stringify({params: route.params.quotation.hash}, null, 4));
   }, []);
 
   // const {
@@ -115,7 +138,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
         finalItemDescription = otherItem;
       }
 
-      navigation.push('DeliverySummary', {
+      const routeParams = {
         orderData: {
           ...route.params.orderData,
           collectPaymentFrom,
@@ -133,7 +156,21 @@ const DeliveryDetails = ({navigation, route, session}) => {
           directions,
         },
         walletBalance: walletBalance,
-      });
+      };
+
+      routeParams.orderData.directions = quotationDirections;
+
+      navigation.push('DeliverySummary', routeParams);
+    },
+  });
+
+  const [recomputeQuotation, {loading: recomputeLoading}] = useLazyQuery(GET_DELIVERY_PRICE_AND_DIRECTIONS, {
+    fetchPolicy: 'no-cache',
+    onError: error => {
+      onErrorAlert({alert: AlertHook, error});
+    },
+    onCompleted: data => {
+      setInitialPrice(data.getDeliveryPriceAndDirections.pricing.price);
     },
   });
 
@@ -144,7 +181,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
       setCollectPaymentFrom('RECIPIENT');
     }
 
-    // console.log({collectPaymentFrom});
+    recomputeCashOnDelivery({isCashOnDelivery: isCashOnDeliveryValue});
   };
 
   const onCollectPaymentFromChange = collectPaymentFromValue => {
@@ -216,6 +253,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
     getDeliveryPriceAndDirections({
       variables: {
         input: {
+          quotationHash,
           consumerId: session.user.consumer.id,
           vehicleTypeId: orderData.vehicleTypeId,
           promoCode: '',
@@ -238,12 +276,106 @@ const DeliveryDetails = ({navigation, route, session}) => {
     });
   };
 
+  const recomputeExpressDelivery = args => {
+    const orderData = route.params.orderData;
+
+    recomputeQuotation({
+      variables: {
+        input: {
+          quotationHash,
+          consumerId: session.user.consumer.id,
+          vehicleTypeId: orderData.vehicleTypeId,
+          promoCode: '',
+          // promoCode: bookingData.promoCode,
+          isExpress: args.isExpress,
+          isCashOnDelivery: isCashOnDelivery,
+          paymentMethod,
+          origin: {
+            latitude: orderData.senderStop.latitude,
+            longitude: orderData.senderStop.longitude,
+          },
+          destinations: [
+            {
+              latitude: orderData.recipientStop[0].latitude,
+              longitude: orderData.recipientStop[0].longitude,
+            },
+          ],
+        },
+      },
+    });
+  };
+
+  const recomputeCashOnDelivery = args => {
+    const orderData = route.params.orderData;
+
+    recomputeQuotation({
+      variables: {
+        input: {
+          quotationHash,
+          consumerId: session.user.consumer.id,
+          vehicleTypeId: orderData.vehicleTypeId,
+          promoCode: '',
+          // promoCode: bookingData.promoCode,
+          isExpress: isExpress,
+          isCashOnDelivery: args.isCashOnDelivery,
+          paymentMethod,
+          origin: {
+            latitude: orderData.senderStop.latitude,
+            longitude: orderData.senderStop.longitude,
+          },
+          destinations: [
+            {
+              latitude: orderData.recipientStop[0].latitude,
+              longitude: orderData.recipientStop[0].longitude,
+            },
+          ],
+        },
+      },
+    });
+  };
+
+  const onIsExpressChange = value => {
+    setIsExpress(value);
+    recomputeExpressDelivery({isExpress: value});
+  };
+
   return (
     <>
       <View style={styles.screenBox}>
+        <Modal visible={isModalVisible} transparent={true}>
+          <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: 'rgba(0,0,0,0.75)'}}>
+            <View
+              style={{
+                width: modalWidth,
+                borderRadius: 5,
+                backgroundColor: 'white',
+                padding: 20,
+                alignItems: 'center',
+              }}>
+              <Image style={{height: 80, width: 80, marginBottom: 10}} source={ModalImage} />
+              <Text style={{marginVertical: 10, fontFamily: FONT.BOLD, fontSize: 17}}>Insufficient Funds</Text>
+              <Text style={{textAlign: 'center'}}>
+                Please cash in to continue using toktokwallet. Payment method will be changed into cash.
+              </Text>
+              <TouchableOpacity
+                onPress={() => setIsModalVisible(false)}
+                style={{
+                  height: 40,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 20,
+                  width: 100,
+                  backgroundColor: COLOR.YELLOW,
+                  borderRadius: 5,
+                }}>
+                <Text style={{fontFamily: FONT_FAMILY.BOLD}}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         <View style={{flex: 1}}>
           <InputScrollView showsVerticalScrollIndicator={false}>
-            <AlertOverlay visible={loading} />
+            <AlertOverlay visible={loading || recomputeLoading} />
             <View style={{height: 10}} />
             <PaymentMethodForm
               value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
@@ -267,7 +399,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
 
             <PromoForm />
 
-            <ExpressForm value={isExpress} onChange={setIsExpress} />
+            <ExpressForm value={isExpress} onChange={onIsExpressChange} />
             <PabiliForm
               value={isCashOnDelivery}
               amount={cashOnDelivery}
@@ -276,7 +408,19 @@ const DeliveryDetails = ({navigation, route, session}) => {
             />
           </InputScrollView>
         </View>
-        <View style={{backgroundColor: '#F7F7FA', marginHorizontal: -16}}>
+        <View style={{backgroundColor: 'white', marginHorizontal: -16}}>
+          <View style={{height: 5, backgroundColor: '#F7F7FA'}} />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 20, marginTop: 15}}>
+            <Text style={{color: COLOR.YELLOW, fontFamily: FONT.BOLD}}>Total</Text>
+            {/* {!loading && !loadingInitial && (
+              <Text style={{color: COLOR.YELLOW, fontFamily: FONT.BOLD}}>
+                {initialPrice ? `PHP ${numberFormat(initialPrice - (selectedOrder === null ? 40 : 0))}` : ''}
+              </Text>
+            )} */}
+            <Text style={{color: COLOR.YELLOW, fontFamily: FONT.BOLD}}>
+              {initialPrice ? `PHP ${numberFormat(initialPrice)}` : ''}
+            </Text>
+          </View>
           <YellowButton
             label="Confirm Delivery Information"
             onPress={onConfirmDeliveryInformation}
@@ -290,7 +434,8 @@ const DeliveryDetails = ({navigation, route, session}) => {
         ref={paymentMethodSheetRef}
         balanceText={balanceText}
         hasWallet={hasWallet}
-        price={quotation.pricing.price}
+        // price={quotation.pricing.price}
+        price={initialPrice}
         getWalletBalance={getToktokWalletBalance}
       />
       <ItemSheet onChange={setItemDescription} ref={itemSheetRef} />

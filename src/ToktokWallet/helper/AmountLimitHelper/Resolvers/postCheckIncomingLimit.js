@@ -1,7 +1,7 @@
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { POST_CHECK_INCOMING_WALLET_LIMIT } from 'toktokwallet/graphql'
 
-const resolver = async ({amount , mobileNumber = null , setErrorMessage })=> {
+const resolver = async ({amount , mobileNumber = null , setErrorMessage  })=> {
     try {
 
         let responseData = null;
@@ -22,7 +22,7 @@ const resolver = async ({amount , mobileNumber = null , setErrorMessage })=> {
             responseError = error?.response?.data ? error.response.data : error;
         })
 
-        if(responseData) return
+        if(responseData) return true
 
         const { code , message } = responseError.graphQLErrors[0].payload
     
@@ -32,6 +32,7 @@ const resolver = async ({amount , mobileNumber = null , setErrorMessage })=> {
         }
 
         setErrorMessage(promptMessage);
+        return promptMessage == "" ? true : false;
 
     }catch(error){
         return { responseData: null , responseError : null }

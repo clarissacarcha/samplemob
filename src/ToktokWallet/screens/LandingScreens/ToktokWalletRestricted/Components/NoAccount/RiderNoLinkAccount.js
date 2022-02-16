@@ -53,7 +53,7 @@ const BannerImages = ()=> (
                 {/* <VectorIcon style={{alignSelf:"center"}} size={12} iconSet={ICON_SET.Feather} name="check"/> */}
             </View>
             <View style={{justifyContent:"center"}}>
-                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Unlock</Text> wallet features</Text>
+                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}><Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>Unlock</Text> toktokwallet features</Text>
             </View>
         </View>
 </View>

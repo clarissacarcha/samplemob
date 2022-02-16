@@ -166,7 +166,8 @@ export const VerifyFullname = ()=> {
                             <Image style={styles.policyIcon} source={require('toktokwallet/assets/icons/walletVerify.png')} resizeMode="contain" />
                             </View>
                             <View style={{justifyContent: "center", alignItems: "center",marginRight: 20,}}>
-                                <Text style={{marginHorizontal: 10,fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR}}>All your details are protected in accordance with our <Text style={{color: COLOR.YELLOW}}>privacy policy.</Text></Text>
+                                <Text style={{marginHorizontal: 10,fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR}}>
+                                    All your details are protected in accordance with our <Text style={{color: COLOR.YELLOW, fontSize: FONT_SIZE.S}}>privacy policy.</Text></Text>
                             </View>
                     </TouchableOpacity>
 
