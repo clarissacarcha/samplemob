@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {View,StyleSheet} from 'react-native'
-import { numberFormat } from 'toktokwallet/helper'
+import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import {useMutation} from '@apollo/react-hooks'
 import { TransactionUtility } from 'toktokwallet/util'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
@@ -18,8 +18,10 @@ import SuccessfulModal from './SuccessfulModal'
 export const ProceedButton = ({
     amount,
     swipeEnabled,
+    setSwipeEnabled,
     note,
-    recipientInfo
+    recipientInfo,
+    isCertify
 })=> {
 
     const prompt = usePrompt()
@@ -90,14 +92,29 @@ export const ProceedButton = ({
         })
     }
 
-    const reviewAndConfirm = ()=> {
+    const reviewAndConfirm = async ()=> {
+
+
+        const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+            amount,
+            mobileNumber: recipientInfo.mobileNumber,
+            setErrorMessage: (value)=> {
+                if(errorMessage == ""){
+                    setErrorMessage(value)
+                    if(value != "") setSwipeEnabled(false)
+                }
+            }
+        })
+
+        if(!checkLimit) return;
+        
         return navigation.navigate("ToktokWalletReviewAndConfirm", {
             label: "Send Money",
             event: "Send Money",
             isSwipe: true,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            swipeTitle: `Send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
+            swipeTitle: `Swipe to Send PHP ${amount != "" ? numberFormat(amount) : "0"}`,
             data: {
                 amount: amount,
                 note: note,
@@ -137,7 +154,7 @@ export const ProceedButton = ({
             />
             <View style={styles.container}>
                     {
-                        swipeEnabled
+                        swipeEnabled && isCertify
                         ? <YellowButton label="Confirm" onPress={reviewAndConfirm}/>
                         : <DisabledButton label="Confirm"/>
                     }
@@ -149,7 +166,6 @@ export const ProceedButton = ({
 const styles = StyleSheet.create({
     container: {
         height: 60,
-        paddingHorizontal: 10 
     },
 })
 

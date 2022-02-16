@@ -29,7 +29,7 @@ export const Confirm = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWalle
     useEffect(()=>{
         if(confirmpinCode.length == 4){
             if(pinCode != confirmpinCode){
-                return setMessage("MPIN code does not match! Please try again")
+                return setMessage("MPIN does not match! Please try again.")
             }
             return patchPincodeToktokWallet()
         }else{
@@ -39,43 +39,47 @@ export const Confirm = ({pinCode,setPageIndex,walletinfo,patchPincodeToktokWalle
 
     return (
        <View style={styles.container}>
-            <ScrollView style={styles.content}>
-            <Text style={{marginVertical: 20, marginHorizontal: 10 ,textAlign:"center",fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Ka-toktok, do not forget your MPIN, keep it to yourself and do not
-share this with anyone</Text>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm {tokwaAccount.mpinCode ? "New ": ""}MPIN</Text>
-                    <View style={{position: 'relative',marginTop: 50,}}>
-                        <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin} numberOfBox={4}/>
-                        <TextInput
-                            autoFocus={true}
-                            caretHidden
-                            value={confirmpinCode}
-                            ref={inputRef}
-                            style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
-                            keyboardType="number-pad"
-                            returnKeyType="done"
-                            onChangeText={(value) => {
-                            if (value.length <= 4) {
-                                const num = value.replace(/[^0-9]/g, '')
-                                setConfirmPinCode(num);
-                            }
-                            }}
-                            onSubmitEditing={onSubmit}
-                        />
-
-                        {
-                            message != "" &&  <Text style={{fontFamily: FONT.REGULAR,fontSize: 12,color:"red",alignSelf:"center"}}>{message}</Text>   
+            <View style={styles.content}>
+                { !tokwaAccount.mpinCode && (
+                    <Text style={{marginVertical: 20, marginHorizontal: 10 ,textAlign:"center",fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>
+                        ka-toktok, do not forget your MPIN, keep it to yourself and do not share this with anyone.
+                    </Text>
+                )}
+                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,marginTop: 20,alignSelf:"center"}}>Confirm {tokwaAccount.mpinCode ? "New ": ""}MPIN</Text>
+                <View style={{position: 'relative',marginTop: 20,}}>
+                    <NumberBoxes pinCode={confirmpinCode} onNumPress={onNumPress} showPin={showPin} numberOfBox={4}/>
+                    <TextInput
+                        autoFocus={true}
+                        caretHidden
+                        value={confirmpinCode}
+                        ref={inputRef}
+                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
+                        keyboardType="number-pad"
+                        returnKeyType="done"
+                        onChangeText={(value) => {
+                        if (value.length <= 4) {
+                            const num = value.replace(/[^0-9]/g, '')
+                            setConfirmPinCode(num);
                         }
+                        }}
+                        onSubmitEditing={onSubmit}
+                    />
 
-                            <TouchableOpacity
-                                    style={{marginTop: 18,paddingVertical: 10, alignItems: "center"}}
-                                    onPress={()=>setShowPin(!showPin)}
-                            >
-                                    <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide MPIN" : "Show MPIN"}</Text>
-                            </TouchableOpacity>
+                    {
+                        message != "" &&  <Text style={{fontFamily: FONT.REGULAR,fontSize: 12,color:"red",alignSelf:"center"}}>{message}</Text>   
+                    }
 
-                      
-                    </View>
-            </ScrollView>
+                    <TouchableOpacity
+                        style={{marginTop: height * .07, paddingVertical: 10, alignItems: "center"}}
+                        onPress={()=>setShowPin(!showPin)}
+                    >
+                        <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{showPin ? "Hide MPIN" : "Show MPIN"}</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View style={{padding: 16}}>
+                <View style={{height: 50}}/>
+            </View>
            <BuildingBottom/>
        </View>
     )
@@ -87,8 +91,8 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
     },
     content: {
-        // alignItems: "center",
-        padding: 10,
+        justifyContent: "center",
+        padding: 16,
         flex: 1,
     },
     inputView: {

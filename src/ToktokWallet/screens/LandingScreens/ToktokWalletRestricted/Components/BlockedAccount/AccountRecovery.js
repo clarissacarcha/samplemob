@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.L,
-    marginBottom: 10,
+    marginBottom: 17,
     textAlign: "center"
   }
 })

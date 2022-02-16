@@ -21,7 +21,7 @@ const resolver = async ({amount, mobileNumber , setErrorMessage })=> {
             responseError = error?.response?.data ? error.response.data : error;
         })
 
-        if(responseData) return
+        if(responseData) return true
 
         const { code , message } = responseError.graphQLErrors[0].payload
     
@@ -31,6 +31,7 @@ const resolver = async ({amount, mobileNumber , setErrorMessage })=> {
         }
 
         setErrorMessage(promptMessage);
+        return promptMessage == "" ? true : false;
 
     }catch(error){
         return { responseData: null , responseError : null }

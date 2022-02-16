@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, forwardRef, useState} from 'react';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {View, StyleSheet, Text, Image, TouchableHighlight, TouchableOpacity, ActivityIndicator} from 'react-native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
@@ -11,8 +11,8 @@ import ToktokWalletIcon from '../../../../../assets/images/toktokwalletlanding.p
 
 export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet, price, getWalletBalance}, ref) => {
   const navigation = useNavigation();
-
-  const snapPoints = useMemo(() => [0, 151], []);
+  const state = useSelector(state => state);
+  const snapPoints = useMemo(() => [0, state.constants.isToktokwalletAvailable == 1 ? 181 : 101], []);
 
   const [hasEnoughBalance, setHasEnoughBalance] = useState(
     parseFloat(balanceText.replace(/,/g, '')) >= parseFloat(price),
@@ -43,7 +43,7 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet,
       <View style={styles.sheet}>
         <Text style={{fontFamily: FONT.BOLD}}>Payment Method</Text>
         <View style={{height: 10}} />
-        <WhiteButton
+        {/* <WhiteButton
           label="Cash"
           borderless
           labelStyle={{fontFamily: FONT.REGULAR}}
@@ -51,9 +51,47 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet,
             onChange('CASH');
             ref.current.collapse();
           }}
-        />
+        /> */}
+
+        <View style={{flexDirection: 'row', alignItems: 'center', height: 70}}>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <Shadow style={{borderRadius: 5}}>
+              <TouchableHighlight
+                onPress={() => {
+                  onChange('CASH');
+                  ref.current.collapse();
+                }}
+                style={{borderRadius: 5}}
+                underlayColor={COLOR.YELLOW_UNDERLAY}>
+                <View
+                  style={{backgroundColor: 'white', flexDirection: 'row', borderRadius: 5, padding: 8, minWidth: 150}}>
+                  <View style={{padding: 2, backgroundColor: COLOR.YELLOW, borderRadius: 5, marginRight: 8}}>
+                    {/* <Image source={ToktokWalletIcon} style={{height: 30, width: 30}} resizeMode="contain" /> */}
+                    <View style={{height: 30, width: 30, justifyContent: 'center', alignItems: 'center'}}>
+                      <View
+                        style={{
+                          height: 25,
+                          width: 25,
+                          borderRadius: 15,
+                          borderWidth: 2,
+                          borderColor: COLOR.WHITE,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Text style={{color: COLOR.WHITE, fontSize: 13}}>₱</Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={{color: COLOR.YELLOW}}>Cash</Text>
+                  </View>
+                </View>
+              </TouchableHighlight>
+            </Shadow>
+          </View>
+        </View>
         <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />
-        {hasWallet && hasEnoughBalance && (
+        {hasWallet && hasEnoughBalance && state.constants.isToktokwalletAvailable == 1 && (
           <View style={{flexDirection: 'row', alignItems: 'center', height: 70}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <Shadow style={{borderRadius: 5}}>
@@ -64,7 +102,14 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet,
                   }}
                   style={{borderRadius: 5}}
                   underlayColor={COLOR.YELLOW_UNDERLAY}>
-                  <View style={{backgroundColor: 'white', flexDirection: 'row', borderRadius: 5, padding: 8}}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      flexDirection: 'row',
+                      borderRadius: 5,
+                      padding: 8,
+                      minWidth: 150,
+                    }}>
                     <View style={{padding: 2, backgroundColor: COLOR.YELLOW, borderRadius: 5, marginRight: 8}}>
                       <Image source={ToktokWalletIcon} style={{height: 30, width: 30}} resizeMode="contain" />
                     </View>
@@ -83,7 +128,7 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet,
           </View>
         )}
 
-        {hasWallet && !hasEnoughBalance && (
+        {hasWallet && !hasEnoughBalance && state.constants.isToktokwalletAvailable == 1 && (
           <View style={{flexDirection: 'row', alignItems: 'center', height: 70}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <Shadow style={{borderRadius: 5}}>
@@ -92,7 +137,14 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet,
                   onPress={() => {}}
                   style={{borderRadius: 5}}
                   underlayColor={COLOR.YELLOW_UNDERLAY}>
-                  <View style={{backgroundColor: '#EEEEEE', flexDirection: 'row', borderRadius: 5, padding: 8}}>
+                  <View
+                    style={{
+                      backgroundColor: '#EEEEEE',
+                      flexDirection: 'row',
+                      borderRadius: 5,
+                      padding: 8,
+                      minWidth: 150,
+                    }}>
                     <View style={{padding: 2, backgroundColor: COLOR.YELLOW, borderRadius: 5, marginRight: 8}}>
                       <Image source={ToktokWalletIcon} style={{height: 30, width: 30}} resizeMode="contain" />
                     </View>
@@ -117,13 +169,13 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet,
           </View>
         )}
 
-        {hasWallet === null && (
+        {hasWallet === null && state.constants.isToktokwalletAvailable == 1 && (
           <View style={{height: 50, justifyContent: 'center', alignItems: 'center'}}>
             <ActivityIndicator size={24} color={COLOR.YELLOW} />
           </View>
         )}
 
-        {hasWallet === false && (
+        {hasWallet === false && state.constants.isToktokwalletAvailable == 1 && (
           <View style={{flexDirection: 'row', alignItems: 'center', height: 70}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <Shadow style={{borderRadius: 5}}>
@@ -132,7 +184,14 @@ export const PaymentMethodSheet = forwardRef(({onChange, balanceText, hasWallet,
                   onPress={() => {}}
                   style={{borderRadius: 5}}
                   underlayColor={COLOR.YELLOW_UNDERLAY}>
-                  <View style={{backgroundColor: '#EEEEEE', flexDirection: 'row', borderRadius: 5, padding: 8}}>
+                  <View
+                    style={{
+                      backgroundColor: '#EEEEEE',
+                      flexDirection: 'row',
+                      borderRadius: 5,
+                      padding: 8,
+                      minWidth: 150,
+                    }}>
                     <View style={{padding: 2, backgroundColor: COLOR.YELLOW, borderRadius: 5, marginRight: 8}}>
                       <Image source={ToktokWalletIcon} style={{height: 30, width: 30}} resizeMode="contain" />
                     </View>

@@ -15,3 +15,26 @@ export const GET_ADVERTISEMENTS = gql`
     }
   }
 `;
+
+export const GET_ADVERTISEMENT_CATEGORIES = gql`
+  query {
+    getAdvertisementCategories {
+      id
+      categoryType
+      description
+      bannerType
+      status
+      advertisement {
+        id
+        title
+        description
+        squareImage
+        rectangleImage
+        startDuration
+        endDuration
+        isHighlighted
+        isPaid
+      }
+    }
+  }
+`

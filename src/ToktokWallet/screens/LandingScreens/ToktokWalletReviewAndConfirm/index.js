@@ -1,5 +1,5 @@
 import React from 'react'
-import {View,Text,StyleSheet} from 'react-native'
+import {View,Text,StyleSheet,ScrollView} from 'react-native'
 import { HeaderBack, YellowButton, HeaderTitle } from 'src/revamp'
 import { Separator, SwipeProceedButton, CheckIdleState , FlagSecureScreen , BuildingBottom } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
@@ -55,7 +55,7 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
         <FlagSecureScreen>
         <CheckIdleState>
         <Separator/>
-        <View style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{flexGrow:1}}>
             <View style={styles.header}>
               <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: "black"}}>Review and Confirm</Text>
             </View>
@@ -67,6 +67,12 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                 <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"center"}}>
                     Please review the accuracy and completeness of the details provided before you confirm
                 </Text>
+                {
+                    event == "Send Money" &&
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop: 15,textAlign:'center'}}>
+                        Transaction cannot be reversed once confirmed and submitted
+                    </Text>
+                }
                 {
                     data.fundTransferType &&
                     <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop: 15,textAlign:'center'}}>
@@ -87,7 +93,7 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                 }
             </View>
             <BuildingBottom/>
-        </View>
+        </ScrollView>
         </CheckIdleState>
         </FlagSecureScreen>
     )
