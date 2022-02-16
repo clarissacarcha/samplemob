@@ -90,10 +90,12 @@ export const ReceiptDetails = ({ route }) => {
           <Text style={styles.title}>Payment amount: </Text>
           <Text style={styles.description}>{currencyCode} {numberFormat(amount)}</Text>
         </View>
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Convenience Fee: </Text>
-          <Text style={styles.description}>{currencyCode} {numberFormat(convenienceFee)}</Text>
-        </View>
+        { convenienceFee > 0 && (
+          <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
+            <Text style={styles.title}>Convenience Fee: </Text>
+            <Text style={styles.description}>{currencyCode} {numberFormat(convenienceFee)}</Text>
+          </View>
+        )}
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Total Amount: </Text>
           <Text style={styles.description}>{currencyCode} {numberFormat(totalAmount)}</Text>
