@@ -29,7 +29,7 @@ export const orderStatusMessageDelivery = (orderStatus, dateOrdered, riderDetail
       title: isPastOrder(dateOrdered) ? 'Pending Order' : 'Waiting for restaurant confirmation...',
       message: isPastOrder(dateOrdered)
         ? `Sorry for the inconvenience!${'\n'}Restaurant took too long to respond to this order.${'\n'}You may cancel and reorder again.`
-        : 'Give restaurant some time to confirm your order',
+        : 'Give restaurant some time to accept your order',
     };
   }
 };
@@ -52,7 +52,7 @@ export const orderStatusMessagePickUp = (orderStatus, dateOrdered, riderDetails,
       title: isPastOrder(dateOrdered) ? 'Pending Order' : 'Waiting for restaurant confirmation...',
       message: isPastOrder(dateOrdered)
         ? `Sorry for the inconvenience!${'\n'}Restaurant took too long to respond to this order.${'\n'}You may cancel and reorder again.`
-        : 'Give restaurant some time to confirm your order',
+        : 'Give restaurant some time to accept your order',
     };
   }
 };

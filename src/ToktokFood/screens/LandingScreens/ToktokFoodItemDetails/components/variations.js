@@ -366,7 +366,7 @@ export const Variations = ({data, productId}) => {
         <React.Fragment>
           <View style={styles.variantContainer}>
             <View style={styles.flexCenter}>
-              <Text style={styles.variantTitle}>Variations (Select 1)</Text>
+              <Text style={styles.variantTitle}>Variation (Select 1)</Text>
               <View style={styles.requiredContainer}>
                 <Text style={styles.requiredText}>Required</Text>
               </View>
