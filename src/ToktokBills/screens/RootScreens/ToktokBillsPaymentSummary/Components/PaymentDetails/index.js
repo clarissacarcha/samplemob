@@ -66,10 +66,12 @@ export const PaymentDetails = ({ paymentData })=> {
         <Text style={styles.label}>Payment amount: </Text>
         <Text style={styles.description}>{currencyCode} {numberFormat(amount)}</Text>
       </View>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Convenience Fee: </Text>
-        <Text style={styles.description}>{currencyCode} {numberFormat(convenienceFee)}</Text>
-      </View>
+      { convenienceFee > 0 && (
+        <View style={styles.detailsContainer}>
+          <Text style={styles.label}>Convenience Fee: </Text>
+          <Text style={styles.description}>{currencyCode} {numberFormat(convenienceFee)}</Text>
+        </View>
+      )}
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Total Amount: </Text>
         <Text style={styles.description}>{currencyCode} {numberFormat(totalAmount)}</Text>
