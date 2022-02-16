@@ -67,7 +67,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
 
   useEffect(() => {
     // Set Eta Minutes if rider picked up the order and on the way
-    if (transaction?.orderStatus === 'rp' && riderDetails && etaMinutes === 0) {
+    if (transaction?.orderStatus === 'f' && riderDetails && etaMinutes === 0) {
       onSetEta();
     }
 
@@ -184,7 +184,9 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
         const edt = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('YYYY-MM-DD');
         const edtTime = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('LT');
         // const minutesDiff = moment().diff(edt, 'minutes', true);
-        if (edt !== dateNow && edtTime <= timeNow) {
+        // console.log(etaMinutes, pickupDate, addedMinutes, edt, edtTime);
+
+        if (edt !== dateNow || edtTime <= timeNow) {
           return 'Rider is nearby your location. Thank you for patiently waiting.';
         }
       }
@@ -240,9 +242,9 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
 
   const displayEstimatedDeliveryTime = () => {
     let date = dateByOrderStatus();
-    let shopLocation = {latitude: shopDetails.latitude, longitude: shopDetails.longitude};
-    let location = riderDetails != null && orderStatus == 'f' ? riderDetails.location : shopLocation;
-    let startTime = moment(date).format('LT');
+    // let shopLocation = {latitude: shopDetails.latitude, longitude: shopDetails.longitude};
+    // let location = riderDetails != null && orderStatus == 'f' ? riderDetails.location : shopLocation;
+    // let startTime = moment(date).format('LT');
     // estimatedDeliveryTime === '' ? handleProcessGetEDT(date, location) : calculateEstimatedDeliveryTime(date, location);
 
     if (!moment(date).isValid() && estimatedDeliveryTime == '') {
@@ -254,9 +256,11 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
         case 'po':
           return 'Estimated Delivery Time: 15-45 Minutes';
         case 'rp':
-          return onGetPickupDate();
+          return 'Estimated Delivery Time: 15-45 Minutes';
+        // return onGetPickupDate();
         case 'f':
-          return 'Rider is nearby your location. Thank you for patiently waiting.';
+          return onGetPickupDate();
+        // return 'Rider is nearby your location. Thank you for patiently waiting.';
         default:
           return 'Estimated Delivery Time: 15-45 Minutes';
       }

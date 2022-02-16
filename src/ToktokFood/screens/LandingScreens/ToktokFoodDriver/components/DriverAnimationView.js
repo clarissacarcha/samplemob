@@ -56,7 +56,7 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
     return orderIsfor == 1
       ? orderStatusMessageDelivery(orderStatus, dateOrdered)
       : orderStatusMessagePickUp(orderStatus);
-  }, [orderIsfor]);
+  }, [orderIsfor, orderStatus, dateOrdered]);
   // console.log(checkStatusMessage);
   return (
     <View style={styles.container}>
