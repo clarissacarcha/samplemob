@@ -27,6 +27,7 @@ export const FoodCart = () => {
     fetchPolicy: 'network-only',
     onCompleted: ({getAllTemporaryCart}) => {
       let {items, totalAmount, totalAmountWithAddons} = getAllTemporaryCart;
+      console.log('getAllTemporaryCart', getAllTemporaryCart);
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
