@@ -47,7 +47,7 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
       ? orderStatusMessageDelivery(
           orderStatus,
           riderDetails,
-          (custAddress = address),
+          address,
           `${shopDetails?.shopname} (${shopDetails.address})`,
         )
       : orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails?.shopname} (${shopDetails.address})`);
