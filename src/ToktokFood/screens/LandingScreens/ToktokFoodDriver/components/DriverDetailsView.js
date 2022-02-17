@@ -58,6 +58,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
   const status = orderStatusMessageDelivery(
     orderStatus,
     dateOrdered,
+    address,
     // riderDetails,
     // `${shopDetails.shopname} (${shopDetails.address})`,
     // isdeclined,
@@ -282,9 +283,9 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
   const renderTitle = () => {
     return (
       <View style={styles.detailsContainer}>
-        {/* {(status.id == 'f' || status.id == 's' || status.id == 'c') && <Text style={styles.title}>{status.title}</Text>} */}
-        {status.message !== '' && (
-          <Text style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>
+        {(status.id == 's' || status.id == 'c') && <Text style={styles.title}>{status.title}</Text>}
+        {status.message != '' && (
+          <Text numberOfLines={2} style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>
             {status.message}
           </Text>
         )}
@@ -376,7 +377,8 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     alignItems: 'center',
-    paddingBottom: moderateScale(15),
+    paddingBottom: moderateScale(20),
+    paddingHorizontal: moderateScale(40),
   },
   divider: {
     flex: 1,
@@ -412,7 +414,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginLeft: moderateScale(5),
     marginTop: verticalScale(2),
-    // textAlign: 'center',
+    textAlign: 'center',
   },
   timeContainer: {
     flexDirection: 'row',

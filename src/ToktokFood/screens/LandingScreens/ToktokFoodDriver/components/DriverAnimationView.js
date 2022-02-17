@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD,
     fontWeight: '600',
     paddingBottom: verticalScale(30),
   },

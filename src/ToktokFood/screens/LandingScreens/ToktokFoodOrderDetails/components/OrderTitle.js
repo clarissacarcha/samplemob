@@ -34,7 +34,7 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
     shopDetails,
     orderStatus,
     // isconfirmed,
-    // address,
+    address,
     dateReadyPickup,
     dateOrderProcessed,
     dateBookingConfirmed,
@@ -44,7 +44,12 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
   const {location} = useSelector(state => state.toktokFood);
   const status =
     orderIsfor == 1
-      ? orderStatusMessageDelivery(orderStatus, riderDetails, `${shopDetails?.shopname} (${shopDetails.address})`)
+      ? orderStatusMessageDelivery(
+          orderStatus,
+          riderDetails,
+          (custAddress = address),
+          `${shopDetails?.shopname} (${shopDetails.address})`,
+        )
       : orderStatusMessagePickUp(orderStatus, riderDetails, `${shopDetails?.shopname} (${shopDetails.address})`);
 
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState('');
@@ -267,7 +272,8 @@ const styles = StyleSheet.create({
   detailsContainer: {
     alignItems: 'center',
     backgroundColor: 'white',
-    paddingVertical: 20,
+    paddingVertical: moderateScale(20),
+    paddingHorizontal: moderateScale(30),
   },
   status: {
     fontSize: FONT_SIZE.M,
@@ -284,7 +290,7 @@ const styles = StyleSheet.create({
   },
   timeContainer: {
     flexDirection: 'row',
-    marginTop: moderateScale(5),
+    marginTop: moderateScale(15),
     // alignItems: 'center',
     paddingHorizontal: moderateScale(15),
   },
