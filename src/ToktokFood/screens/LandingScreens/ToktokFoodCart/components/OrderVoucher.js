@@ -117,16 +117,6 @@ const OrderVoucher = ({autoShipping}) => {
     setShippingVoucher([]);
   };
 
-  // const renderVoucher = () => {
-  //   const {valid_until, vname} = shippingVoucher[0].voucher;
-  //   return (
-  //     <View style={styles.voucherContainer}>
-  //       <Text style={styles.voucherText}>{vname}</Text>
-  //       <Text style={styles.validText}>Valid until: {valid_until}</Text>
-  //     </View>
-  //   );
-  // };
-
   const renderAutoShipping = () => (
     <View style={styles.autoShippingContainer}>
       <FIcon5 name="check-circle" size={17} color="#06A44E" />
@@ -137,7 +127,7 @@ const OrderVoucher = ({autoShipping}) => {
   );
 
   const renderVoucher = () => {
-    const {valid_until, vname} = shippingVoucher[0].voucher;
+    const {vname} = shippingVoucher[0].voucher;
 
     return (
       <View style={styles.autoShippingContainer}>
@@ -234,20 +224,5 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     paddingVertical: moderateScale(10),
-  },
-  voucherContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: moderateScale(10),
-  },
-  voucherText: {
-    fontWeight: '500',
-    fontSize: FONT_SIZE.L,
-    color: '#FFA700',
-  },
-  validText: {
-    fontSize: FONT_SIZE.M,
-    color: '#9E9E9E',
   },
 });

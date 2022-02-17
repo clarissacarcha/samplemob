@@ -57,7 +57,7 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
       ? orderStatusMessageDelivery(orderStatus, dateOrdered)
       : orderStatusMessagePickUp(orderStatus);
   }, [orderIsfor, orderStatus, dateOrdered]);
-  // console.log(checkStatusMessage);
+
   return (
     <View style={styles.container}>
       {/* <DialogMessage
@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
+    fontWeight: '600',
     paddingBottom: verticalScale(30),
   },
 });

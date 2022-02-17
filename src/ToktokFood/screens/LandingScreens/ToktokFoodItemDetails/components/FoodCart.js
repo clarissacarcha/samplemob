@@ -381,7 +381,10 @@ export const FoodCart = ({loading, action}) => {
     required.length > 0 || disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading;
 
   const isAddEnabled = useMemo(() => {
-    const checkStocks = tempData?.maxQty > tempData?.stocks ? tempData?.stocks : tempData?.maxQty;
+    const checkStocks =
+      tempData?.maxQty > tempData?.stocks && tempData?.maxQtyIsset > 0 ? tempData?.maxQty : tempData?.stocks;
+    // const checkContinuous =
+    //   tempData?.contSellingIsset > 0 ? 1000 : tempData?.maxQtyIsset > 0 ? checkStocks : tempData?.stocks;
     const checkIsMaxQtySet =
       tempData?.maxQtyIsset > 0 ? checkStocks : tempData?.contSellingIsset > 0 ? 1000 : tempData?.stocks;
     const disabled =
