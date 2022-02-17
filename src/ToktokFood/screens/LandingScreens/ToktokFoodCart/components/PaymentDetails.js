@@ -192,10 +192,10 @@ const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
                     styles.cashButton,
                     styles.shadow,
                     {backgroundColor: COLORS.WHITE},
-                    {opacity: loading || customerWallet?.status === 1 ? 1 : 0.4},
+                    {opacity: loading || (customerWallet?.status === 1 || (temporaryCart.totalAmount <= 2000 && customerWallet?.status === 2)) ? 1 : 0.4},
                     {
                       borderColor:
-                        customerWallet?.status === 1 && paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.WHITE,
+                        (customerWallet?.status === 1 || (temporaryCart.totalAmount <= 2000 && customerWallet?.status === 2)) && paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.WHITE,
                     },
                   ]}>
                   <Text style={[styles.cashText, {color: '#000000'}]}>Cash</Text>
