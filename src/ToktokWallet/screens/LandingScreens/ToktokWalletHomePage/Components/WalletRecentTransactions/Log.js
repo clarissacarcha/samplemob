@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     },
     transactionDetails: {
         flex: 1,
+        paddingRight: 10,
     },
     transactionAmount: {
         flexBasis: "auto",

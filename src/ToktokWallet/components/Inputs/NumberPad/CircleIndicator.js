@@ -37,8 +37,8 @@ export const CircleIndicator = ({
 
 const styles = StyleSheet.create({
     inputView: {
-        backgroundColor: '#F7F7FA',
-        borderRadius: 5,
+        backgroundColor: '#DADADA',
+        borderRadius: 15,
         // height: width * .15,
         // width: width * .13,
         width: 15,

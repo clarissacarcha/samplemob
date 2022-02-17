@@ -49,7 +49,7 @@ export const GET_CASH_OUTS = gql`
                     id
                     name
                 }
-                details
+                # details
                 refNo
                 referenceNumber
                 systemServiceFee
@@ -58,11 +58,9 @@ export const GET_CASH_OUTS = gql`
                     id
                     refNo
                     createdAt
-                }
-                transaction {
-                    id
-                    refNo
-                    createdAt
+                    name
+                    phrase
+                    details
                 }
         }
     }

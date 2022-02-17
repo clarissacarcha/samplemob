@@ -208,9 +208,9 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                          </View>
                       
                          <View style={{flex:1 ,justifyContent:"flex-end",alignItems:"center",paddingBottom: 25}}>
-                         <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginBottom: 10 ,textAlign:"center"}}>
+                         {/* <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginBottom: 10 ,textAlign:"center"}}>
                          Please read our Terms and Conditions before you proceed with your transaction.
-                         </Text>
+                         </Text> */}
                     <View style={{
                         flexDirection:"row",     
                     }}>
@@ -229,9 +229,9 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                         <TouchableOpacity 
                             // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
                             onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
-                            style={{paddingHorizontal: 10,marginRight: 20,alignSelf:"center"}}
+                            style={{paddingLeft: 5}}
                         >
-                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby certify that I accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions.</Text></Text>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby read and accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before proceeding with my transaction.</Text>
                         </TouchableOpacity>
                     </View>
                         
