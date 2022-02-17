@@ -49,7 +49,7 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
   };
 
   const checkOrderStatus = useMemo(() => {
-    return orderStatus != 's' && orderStatus != 'c' && orderStatus != 'f' && orderIsfor == 1;
+    return orderStatus != 's' && orderStatus != 'c' && orderIsfor == 1;
   }, [orderStatus]);
 
   const checkStatusMessage = useMemo(() => {
@@ -57,7 +57,7 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
       ? orderStatusMessageDelivery(orderStatus, dateOrdered)
       : orderStatusMessagePickUp(orderStatus);
   }, [orderIsfor, orderStatus, dateOrdered]);
-  // console.log(checkStatusMessage);
+
   return (
     <View style={styles.container}>
       {/* <DialogMessage
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: FONT_SIZE.L,
-    // fontFamily: FONT.BOLD,
+    fontWeight: '600',
     paddingBottom: verticalScale(30),
   },
 });

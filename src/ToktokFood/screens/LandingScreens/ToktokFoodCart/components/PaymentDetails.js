@@ -57,7 +57,7 @@ const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
         getMyAccount();
       } else {
         setHasToktokWallet(false);
-        setPaymentMethod('COD');
+        setPaymentMethod('CASH');
       }
     }
   }, [customerInfo, user, refreshing, setPaymentMethod, getMyAccount]);
@@ -187,7 +187,7 @@ const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
                     (temporaryCart.totalAmount > 2000 && customerWallet?.status === 2) ||
                     loadingShipping
                   }
-                  onPress={() => setPaymentMethod('COD')}
+                  onPress={() => setPaymentMethod('CASH')}
                   style={[
                     styles.cashButton,
                     styles.shadow,
@@ -195,7 +195,7 @@ const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
                     {opacity: loading || customerWallet?.status === 1 ? 1 : 0.4},
                     {
                       borderColor:
-                        customerWallet?.status === 1 && paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.WHITE,
+                        customerWallet?.status === 1 && paymentMethod === 'CASH' ? COLORS.YELLOW : COLORS.WHITE,
                     },
                   ]}>
                   <Text style={[styles.cashText, {color: '#000000'}]}>Cash</Text>

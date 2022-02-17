@@ -164,7 +164,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
     const addedMinutes = duration + 5;
 
     if (pickupDate.length) {
-      const edt = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('YYYY-MM-DD');
+      const edt = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('YYYY-MM-DD HH:mm:ss');
       const minutesDiff = moment().diff(edt, 'minutes', true);
       setEtaMinutes(parseInt(minutesDiff));
     }
@@ -184,7 +184,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
         const edt = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('YYYY-MM-DD');
         const edtTime = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('LT');
         // const minutesDiff = moment().diff(edt, 'minutes', true);
-        // console.log(etaMinutes, pickupDate, addedMinutes, edt, edtTime);
+        // console.log('ETA', edt, dateNow, edtTime, timeNow);
 
         if (edt !== dateNow || edtTime <= timeNow) {
           return 'Rider is nearby your location. Thank you for patiently waiting.';
@@ -250,7 +250,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
     if (!moment(date).isValid() && estimatedDeliveryTime == '') {
       return null;
     }
-    // console.log(estimatedDeliveryTime);
+
     const getTimeByStatus = status => {
       switch (status) {
         case 'po':
@@ -282,8 +282,8 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
   const renderTitle = () => {
     return (
       <View style={styles.detailsContainer}>
-        {(status.id == 'f' || status.id == 's' || status.id == 'c') && <Text style={styles.title}>{status.title}</Text>}
-        {status.message != '' && (
+        {/* {(status.id == 'f' || status.id == 's' || status.id == 'c') && <Text style={styles.title}>{status.title}</Text>} */}
+        {status.message !== '' && (
           <Text style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>
             {status.message}
           </Text>

@@ -54,7 +54,7 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
 
   useEffect(() => {
     // Set Eta Minutes if rider picked up the order and on the way
-    if (transaction?.orderStatus === 'rp' && riderDetails && etaMinutes === 0) {
+    if (transaction?.orderStatus === 'f' && riderDetails && etaMinutes === 0) {
       onSetEta();
     }
 
@@ -76,7 +76,7 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
     const addedMinutes = duration + 5;
 
     if (pickupDate.length) {
-      const edt = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('YYYY-MM-DD');
+      const edt = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('YYYY-MM-DD HH:mm:ss');
       const minutesDiff = moment().diff(edt, 'minutes', true);
       setEtaMinutes(parseInt(minutesDiff));
     }
@@ -88,7 +88,7 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
       const pickupDate = deliveryLogs.filter(log => log.status === 4);
       const addedMinutes = duration + 5;
 
-      if (!pickupDate.length) {
+      if (pickupDate.length === 0) {
         return 'Estimated Delivery Time: 15-45 Minutes';
       } else {
         const dateNow = moment().format('YYYY-MM-DD');
@@ -96,7 +96,7 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
         const edt = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('YYYY-MM-DD');
         const edtTime = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('LT');
         // const minutesDiff = moment().diff(edt, 'minutes', true);
-        if (edt !== dateNow && edtTime <= timeNow) {
+        if (edt !== dateNow || edtTime <= timeNow) {
           return 'Rider is nearby your location. Thank you for patiently waiting.';
         }
       }
@@ -172,7 +172,7 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
         case 'rp':
           return 'Estimated Pickup Time: ASAP';
         default:
-          return 'Estimated Pickup Time: 15-45 Minutes';
+          return '';
       }
     };
     return (
@@ -207,10 +207,11 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
       switch (status) {
         case 'po':
           return 'Estimated Delivery Time: 15-45 Minutes';
-        case 'rp':
-          return onGetPickupDate();
+        // case 'rp':
+        //   return onGetPickupDate();
         case 'f':
-          return 'Rider is nearby your location. Thank you for patiently waiting.';
+          return onGetPickupDate();
+        // return 'Rider is nearby your location. Thank you for patiently waiting.';
         // return `${etaMinutes} Minutes`;
         default:
           return 'Estimated Delivery Time: 15-45 Minutes';
