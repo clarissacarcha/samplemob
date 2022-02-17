@@ -44,21 +44,21 @@ export const CashOutLog = ({
     const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(+item.amount + +item.providerServiceFee + +item.systemServiceFee)}`
     const convenienceFee =  `${numberFormat(+item.providerServiceFee + +item.systemServiceFee)}`
     const provider = item.provider.name
-    let phrase = provider
-    if(provider == "InstaPay" || provider == "PesoNet"){
-        phrase = "Other Banks"
-    }
+    let name = transaction?.name ? transaction.name : "Fund Transfer"
+    let phrase = transaction?.phrase ? transaction.phrase : "Other Banks"
+    let details = transaction?.details ? transaction.details : {}
 
     const showDetails = ()=>{
         setInfo({
             refNo,
             refDate,
-            name: "Fund Transfer",
+            name,
             phrase,
             amount: transactionAmount,
             convenienceFee,
             status,
-            details: item.details,
+            // details: item.details,
+            details,
             requestNo
         })
         setOpenModal(true);
