@@ -78,7 +78,6 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
   const clearStates = () => {
     setIsMounted(true);
     setLoads([]);
-    setSelectedLoad({});
   }
 
   const processGetLoadItems = () => {
@@ -112,7 +111,7 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
 
   const onPressNext = () => {
     if(Object.keys(selectedLoad).length > 0){
-      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad, mobileNumber })
+      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad[networkId], mobileNumber })
     }
   }
  
@@ -163,7 +162,7 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
       {(loads && loads.length > 0) && (
         <View style={{ padding: moderateScale(16) }}>
           <OrangeButton
-            disabled={Object.keys(selectedLoad).length === 0}
+            disabled={!selectedLoad[networkId]}
             label='Next'
             onPress={() => onPressNext()}
           />

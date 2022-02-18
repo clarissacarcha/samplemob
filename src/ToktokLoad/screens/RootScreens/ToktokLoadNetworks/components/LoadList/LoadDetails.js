@@ -28,7 +28,7 @@ export const LoadDetails = ({
   const { selectedLoad, setSelectedLoad, loads, setLoads } = useContext(VerifyContext);
   const { amount, name, favorite, descriptions } = item;
 
-  const isSelected = selectedLoad.id == item.id;
+  const isSelected = selectedLoad[networkId]?.id == item.id;
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
   const numberOfLines = isSelected ? null : 1;
@@ -46,7 +46,12 @@ export const LoadDetails = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        setSelectedLoad(isSelected ? {} : item);
+        if(isSelected){
+          const {[networkId]: item, ...data} = selectedLoad;
+          setSelectedLoad(data);
+        } else {
+          setSelectedLoad(prev => ({ ...prev, [networkId]: item }));
+        }
       }}
       style={[
         styles.container,
