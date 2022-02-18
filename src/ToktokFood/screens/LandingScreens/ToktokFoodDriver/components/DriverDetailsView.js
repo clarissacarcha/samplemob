@@ -167,7 +167,8 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
     if (pickupDate.length) {
       const edt = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('YYYY-MM-DD HH:mm:ss');
       const minutesDiff = moment().diff(edt, 'minutes', true);
-      setEtaMinutes(parseInt(minutesDiff));
+      const checkMinutes = parseInt(minutesDiff) < 0 ? parseInt(minutesDiff) * -1 : parseInt(minutesDiff);
+      setEtaMinutes(checkMinutes);
     }
   };
 
