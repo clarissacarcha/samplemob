@@ -1,26 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useMemo, useState} from "react";
 import {View, Text, StyleSheet, Platform} from "react-native";
 import { useSelector } from 'react-redux';
 
 //components
 import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator } from "src/ToktokLoad/components";
-import { BuyLoad, Favorites } from "./TabScreens";
+import { BuyLoad, Favorites, VerifyContextProvider, VerifyContext } from "./components";
 
-export const ToktokLoadHome = ({ navigation, route }) => {
+const MainComponent = ({ navigation, route }) => {
 
-  navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={"toktokload"} isRightIcon/>,
-  });
-
-  const { user } = useSelector((state) => state.session);
-  const formattedMobile = user?.username.replace("+63", "0");
-  const [mobileNumber, setMobileNumber] = useState(formattedMobile);
-  const [activeTab, setActiveTab] = useState(1);
-  const TABS = [
-    { id: 1, name: "Buy Load" },
-    { id: 2, name: "Favorites"}
-  ];
+  const {activeTab, setActiveTab, mobileNumber, subContainerStyle, tabList } = useContext(VerifyContext);
 
   useEffect(() => {
     if(route.params?.tabId){
@@ -29,23 +17,38 @@ export const ToktokLoadHome = ({ navigation, route }) => {
     return () => { setActiveTab(1) }
   }, [route])
 
-  const displayComponent = () => {
+  const DisplayComponent = useMemo(() => {
     if(activeTab == 1){
-      return <BuyLoad navigation={navigation} setMobileNumber={setMobileNumber} mobileNumber={mobileNumber} />
+      return <BuyLoad navigation={navigation} /> 
     } else {
-      return <Favorites navigation={navigation} mobileNumber={mobileNumber} />
+      return <Favorites navigation={navigation} />
     }
-  }
+  })
 
   return (
     <View style={styles.container}>
       <HeaderTabs
-        tabs={TABS}
+        tabs={tabList}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        subContainerStyle={subContainerStyle}
       />
-      {displayComponent()}
+      {DisplayComponent}
     </View>
+  );
+};
+
+export const ToktokLoadHome = ({ navigation, route }) => {
+
+  navigation.setOptions({
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitle label={"toktokload"} />,
+  });
+
+  return (
+    <VerifyContextProvider>
+      <MainComponent navigation={navigation} route={route} />
+    </VerifyContextProvider>
   );
 };
 

@@ -25,10 +25,10 @@ export const LoadDetails = ({
   getLoadItemsLoading
 }) => {
 
-  const { selectedLoad, setSelectedLoad, loads, setLoads } = useContext(VerifyContext);
+  const { selectedLoad, setSelectedLoad, loads, setLoads, setSubContainerStyle } = useContext(VerifyContext);
   const { amount, name, favorite, descriptions } = item;
 
-  const isSelected = selectedLoad.id == item.id;
+  const isSelected = selectedLoad?.id == item.id;
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
   const numberOfLines = isSelected ? null : 1;
@@ -42,16 +42,19 @@ export const LoadDetails = ({
       return isSelected ? heart_no_fill_icon : heart_selected_fill_icon
     }
   }
-
+  
   return (
     <TouchableOpacity
       onPress={() => {
+        let backgroundColor = index == 0 ? isSelected ? "#fff" : "rgba(246,132,31,0.8)" : "#fff";
+        setSubContainerStyle({backgroundColor, index});
         setSelectedLoad(isSelected ? {} : item);
       }}
       style={[
         styles.container,
         { backgroundColor: isSelected ? "rgba(246,132,31,0.8)" : "#fff"}
       ]}
+      activeOpacity={.8}
     >
       <View style={[styles.amountContainer, { borderColor: colorAmount }]}>
         <Text style={[ styles.amount, { color: colorAmount }]}>₱{amount}</Text>
@@ -71,6 +74,7 @@ export const LoadDetails = ({
           <TouchableOpacity
             onPress={onPressThrottled}
             hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+            disabled={loadFavorite != null}
           >
             <Image source={imgSelected()} style={styles.heartIcon} />
           </TouchableOpacity>
