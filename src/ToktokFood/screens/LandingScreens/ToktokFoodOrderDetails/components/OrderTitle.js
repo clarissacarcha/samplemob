@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useMemo, useEffect} from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 // import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import TimerModal from 'toktokfood/components/TimerModal';
@@ -74,6 +74,10 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
     }
     return () => clearTimeout();
   });
+
+  const isShowIcon = useMemo(() => {
+    return orderStatus !== 'p' || false;
+  }, [orderStatus]);
 
   const onSetEta = () => {
     const {deliveryLogs, duration} = riderDetails;
@@ -181,12 +185,15 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
           return '';
       }
     };
-    return (
-      <View style={styles.timeContainer}>
-        <Image resizeMode="contain" source={time} style={styles.timeImg} />
-        <Text style={styles.time}>{getTimeByStatus()}</Text>
-      </View>
-    );
+
+    if (isShowIcon) {
+      return (
+        <View style={styles.timeContainer}>
+          <Image resizeMode="contain" source={time} style={styles.timeImg} />
+          <Text style={styles.time}>{getTimeByStatus()}</Text>
+        </View>
+      );
+    }
   };
 
   const dateByOrderStatus = () => {

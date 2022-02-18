@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useMemo, useEffect, useState} from 'react';
 import {Platform, ScrollView, StyleSheet, TouchableOpacity, View, Text, Image} from 'react-native';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -71,9 +71,11 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     navigation.navigate('ToktokFoodOrderDetails', {referenceNum});
   };
 
+  const isShowIcon = useMemo(() => {
+    return orderStatus !== 'p' || false;
+  }, [orderStatus]);
+
   const renderEstimatedTime = () => {
-    // let startTime = moment(dateOrderProcessed).format('LT');
-    // let endTime = moment(dateOrderProcessed).add(20, 'minutes').format('hh:mm A');
     const getTimeByStatus = () => {
       switch (orderStatus) {
         case 'po':
@@ -87,12 +89,15 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
           return '';
       }
     };
-    return (
-      <View style={styles.timeContainer}>
-        <Image resizeMode="contain" source={time} style={styles.timeImg} />
-        <Text style={styles.time}>{getTimeByStatus()}</Text>
-      </View>
-    );
+
+    if (isShowIcon) {
+      return (
+        <View style={styles.timeContainer}>
+          <Image resizeMode="contain" source={time} style={styles.timeImg} />
+          <Text style={styles.time}>{getTimeByStatus()}</Text>
+        </View>
+      );
+    }
   };
 
   const renderAddress = () => {
