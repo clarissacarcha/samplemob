@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useMemo, useEffect} from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 // import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import TimerModal from 'toktokfood/components/TimerModal';
@@ -75,6 +75,10 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
     return () => clearTimeout();
   });
 
+  const isShowIcon = useMemo(() => {
+    return orderStatus !== 'p' || false;
+  }, [orderStatus]);
+
   const onSetEta = () => {
     const {deliveryLogs, duration} = riderDetails;
     const pickupDate = deliveryLogs.filter(log => log.status === 4);
@@ -83,7 +87,8 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
     if (pickupDate.length) {
       const edt = moment(pickupDate[0].createdAt).add(addedMinutes, 'minutes').format('YYYY-MM-DD HH:mm:ss');
       const minutesDiff = moment().diff(edt, 'minutes', true);
-      setEtaMinutes(parseInt(minutesDiff));
+      const checkMinutes = parseInt(minutesDiff) < 0 ? parseInt(minutesDiff) * -1 : parseInt(minutesDiff);
+      setEtaMinutes(checkMinutes);
     }
   };
 
@@ -180,12 +185,15 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
           return '';
       }
     };
-    return (
-      <View style={styles.timeContainer}>
-        <Image resizeMode="contain" source={time} style={styles.timeImg} />
-        <Text style={styles.time}>{getTimeByStatus()}</Text>
-      </View>
-    );
+
+    if (isShowIcon) {
+      return (
+        <View style={styles.timeContainer}>
+          <Image resizeMode="contain" source={time} style={styles.timeImg} />
+          <Text style={styles.time}>{getTimeByStatus()}</Text>
+        </View>
+      );
+    }
   };
 
   const dateByOrderStatus = () => {
