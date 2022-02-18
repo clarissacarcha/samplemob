@@ -477,7 +477,6 @@ const MainComponent = () => {
         ...ORDER,
         order_logs: [{...ORDER.order_logs[0], delivery_amount: delivery?.price - deductedFee}],
       };
-
       return WALLET
         ? {...WALLET, ...CUSTOMER, ...DEDUCTVOUCHER, ...SHIPPING_VOUCHERS}
         : {...CUSTOMER, ...DEDUCTVOUCHER, ...SHIPPING_VOUCHERS};
@@ -520,7 +519,7 @@ const MainComponent = () => {
       citymunCode: '0',
     };
     const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
-    // console.log(data, 'DATA');
+    console.log(data, 'DATA');
     postCustomerOrder({
       variables: {
         input: data,
@@ -586,7 +585,7 @@ const MainComponent = () => {
         hasTwoButtons
       />
       <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="Loading" />
-      {paymentMethod == 'COD' && (
+      {paymentMethod === 'COD' && (
         <>
           {/* <AlertModal
             message={tokWaPlaceOrderErr.message}
@@ -639,7 +638,7 @@ const MainComponent = () => {
           <DialogMessage
             visibility={tokWaPlaceOrderErr.visible}
             title="Unavailable Products"
-            messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
+            messages={tokWaPlaceOrderErr?.message}
             type="warning"
             onCloseModal={() => {
               navigation.pop();

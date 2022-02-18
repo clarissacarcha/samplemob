@@ -9,6 +9,7 @@ import {getDistance, convertDistance} from 'geolib';
 import BackgroundTimer from 'react-native-background-timer';
 
 // Components
+import DialogMessage from 'toktokfood/components/DialogMessage';
 import Separator from 'toktokfood/components/Separator';
 import TimerModal from 'toktokfood/components/TimerModal';
 
@@ -36,11 +37,15 @@ import {
 const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
   const {location} = useSelector(state => state.toktokFood);
-  const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState('');
+
   const [additionalMins, setAdditionalMins] = useState(0);
+  const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState('');
   const [etaMinutes, setEtaMinutes] = useState(0);
   const [newETA, setNewETA] = useState(false);
   const [newStartDateTime, setNewStartDateTime] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showError, setShowError] = useState(false);
+
   const {
     shopDetails,
     orderStatus,
@@ -72,6 +77,10 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
       onSetEta();
     }
 
+    if (transaction?.orderStatus === 'po' && etaMinutes === 0) {
+      setEtaMinutes(45);
+    }
+
     return () => clearInterval();
   }, [riderDetails, transaction]);
 
@@ -80,6 +89,10 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
       setTimeout(() => {
         setEtaMinutes(etaMinutes - 1);
       }, 60000);
+    }
+
+    if (etaMinutes === 0 && orderStatus === 'po') {
+      setShowModal(true);
     }
     return () => clearTimeout();
   });
@@ -256,6 +269,9 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
     const getTimeByStatus = status => {
       switch (status) {
         case 'po':
+          if (showError) {
+            return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
+          }
           return 'Estimated Delivery Time: 15-45 Minutes';
         case 'rp':
           return 'Estimated Delivery Time: 15-45 Minutes';
@@ -336,6 +352,18 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
         <Separator />
         {renderActions()}
       </View>
+
+      <DialogMessage
+        visibility={showModal}
+        title="Still Preparing Order"
+        messages="Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting."
+        type="warning"
+        onCloseModal={() => {
+          setEtaMinutes(45);
+          setShowError(true);
+          setShowModal(false);
+        }}
+      />
     </View>
   );
 };
