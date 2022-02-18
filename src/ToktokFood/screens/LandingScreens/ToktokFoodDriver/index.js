@@ -223,6 +223,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
       case 'Order Complete':
         return 2;
       case 'OOPS! Order Declined!':
+        return 3;
       case 'Order Cancelled':
         return 3;
       default:
@@ -304,7 +305,13 @@ const ToktokFoodDriver = ({route, navigation}) => {
         }}
         onCloseBtn1={() => {
           setShowDialogMessage(prev => ({...prev, show: false}));
-          navigation.navigate('ToktokFoodHome');
+          if (showDialogMessage.title === 'OOPS! Order Declined!' || showDialogMessage.title === 'Order Cancelled') {
+            // navigation.navigate('ToktokFoodHome');
+            // navigation.navigate('ToktokFoodRestaurantOverview', {item});
+            navigation.navigate('ToktokFoodHome');
+          } else {
+            navigation.navigate('ToktokFoodHome');
+          }
         }}
         onCloseBtn2={() => {
           onCloseModal();
