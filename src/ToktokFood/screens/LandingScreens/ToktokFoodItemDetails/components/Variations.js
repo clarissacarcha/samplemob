@@ -218,7 +218,7 @@ export const Variations = ({data, productId}) => {
                     return (
                       <View style={styles.variationsWrapper}>
                         <RadioButton
-                          isMultiple={item.noOfSelection > 1}
+                          isMultiple={item.noOfSelection > 1 || (item.noOfSelection === 1 && !item.isRequired)}
                           onValueChange={c => {
                             onValueChange({item, optionLogs, index, temp});
                           }}
