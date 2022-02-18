@@ -600,7 +600,8 @@ const MainComponent = () => {
             messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
             type="warning"
             onCloseModal={() => {
-              setTokWaPlaceOrderErr({error: {}, visible: false});
+              navigation.goBack();
+              // setTokWaPlaceOrderErr({error: {}, visible: false});
             }}
             btnTitle="OK"
           />
@@ -642,7 +643,7 @@ const MainComponent = () => {
             messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
             type="warning"
             onCloseModal={() => {
-              navigation.pop();
+              navigation.goBack();
             }}
             btnTitle="OK"
           />
