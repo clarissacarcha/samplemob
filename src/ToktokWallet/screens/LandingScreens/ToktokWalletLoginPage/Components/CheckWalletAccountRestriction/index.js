@@ -7,6 +7,7 @@ import { onErrorAlert } from 'src/util/ErrorUtility'
 import { connect } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { SomethingWentWrong } from 'src/components'
+import { SplashHome } from 'toktokwallet/components'
 import { useDispatch } from 'react-redux'
 import moment from 'moment'
 
@@ -42,15 +43,6 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
     },[])
 
 
-    const [getTransactions] = useLazyQuery(GET_TRANSACTIONS, {
-        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        fetchPolicy: 'network-only',
-        onCompleted: ({getTransactions}) => {
-          getTokwaTransactions(getTransactions)
-          setLoading(false)
-        },
-      })
-
     const {data , error ,loading } = useQuery(GET_MY_ACCOUNT, {
         fetchPolicy: "network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -70,7 +62,6 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
             updateToktokPersonSession(person)
             setLoading(true)
             saveTokwaAccount(getMyAccount)
-            getTransactions()
         }
     })
 
@@ -78,8 +69,10 @@ export const CheckWalletAccountRestriction = connect(null,mapDispatchtoProps)(({
         return <SomethingWentWrong/>
     }
 
-    if(loading){
-        return null
+    if (loading) {
+        return (
+         <SplashHome/>
+        );
     }
 
     // if Account is Dormant

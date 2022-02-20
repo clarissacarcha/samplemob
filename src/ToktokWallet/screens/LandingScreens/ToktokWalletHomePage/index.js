@@ -3,7 +3,7 @@ import { View ,ActivityIndicator,StatusBar,Text,BackHandler} from 'react-native'
 import {SomethingWentWrong,AlertOverlay} from 'src/components'
 import { useDispatch } from 'react-redux'
 import { useAccount } from 'toktokwallet/hooks'
-import { CheckIdleState } from 'toktokwallet/components'
+import { CheckIdleState , FlagSecureScreen } from 'toktokwallet/components'
 import {useFocusEffect} from '@react-navigation/native'
 import CONSTANTS from 'common/res/constants'
 
@@ -54,12 +54,12 @@ export const ToktokWalletHomePage = ({navigation,route})=> {
     //   }, []);
 
     return (
-        <>
+        <FlagSecureScreen>
         <AlertOverlay visible={getMyAccountLoading}/>
         <CheckIdleState>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
         </CheckIdleState>
-        </>
+        </FlagSecureScreen>
     )
 }
