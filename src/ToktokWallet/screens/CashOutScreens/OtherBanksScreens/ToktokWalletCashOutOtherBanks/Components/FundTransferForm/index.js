@@ -66,7 +66,7 @@ const Amount = ({
         return ()=> {
             changeErrorMessagge("amount","")
         }
-    },[amount, maxAmount])
+    },[amount, maxAmount , providerServiceFee , systemServiceFee])
 
     return (
         <View style={{flex: 1,marginTop:16}}>
