@@ -38,7 +38,7 @@ export const HeaderTabs = (props) => {
         hitSlop={styles.hitSlop}
       >
         <View style={[{ width: itemTabWidth }]}>
-          <Text style={[styles.tabText, { color: activeTab == item.id ? "#FFA700" : "#707070"} ]}>
+          <Text style={[styles.tabText, { color: activeTab == item.id ? "#F6841F" : "#707070"} ]}>
             {item.name ?? item.categoryName}
           </Text>
           <View style={activeTab == item.id && styles.activeTabContainer} />
@@ -47,7 +47,7 @@ export const HeaderTabs = (props) => {
     );
   };
 
-   if(loading){
+  if(loading){
     return(
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
@@ -55,7 +55,7 @@ export const HeaderTabs = (props) => {
     )
   }
   return (
-    <View style={[{ overflow: "hidden", paddingBottom: 5 }]}>
+    <View style={[styles.mainContainer, subContainerStyle]}>
       <View style={[styles.shadow]}>
         <FlatList
           extraData={props}
@@ -73,16 +73,21 @@ export const HeaderTabs = (props) => {
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    overflow: "hidden",
+    paddingBottom: 5,
+    zIndex: 1
+  },
   container: {
     flex: 1,
   },
   activeTabContainer: {
-    backgroundColor: '#FFA700',
-    paddingVertical: 2,
+    backgroundColor: '#F6841F',
+    height: 3,
   },
   inactiveTabContainer: {
     backgroundColor: '#F7F7FA',
-    paddingVertical: 2,
+    height: 3,
   },
   activeTabText: {
     color: '#FFA700',
@@ -118,8 +123,8 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.1,
     shadowRadius: 3,
-    elevation: 3
+    elevation: 3,
   }
 });

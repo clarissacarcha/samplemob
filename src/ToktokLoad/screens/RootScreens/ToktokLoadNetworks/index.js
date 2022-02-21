@@ -19,7 +19,7 @@ import { GET_NETWORKS } from 'toktokload/graphql/model'
 
 const MainComponent = ({ navigation, route }) => {
  
-  const { selectedLoad, setSelectedLoad, loads, setLoads } = useContext(VerifyContext);
+  const { selectedLoad, setSelectedLoad, loads, setLoads, subContainerStyle } = useContext(VerifyContext);
   const [networks, setNetworks]= useState([]);
   const [activeTab, setActiveTab] = useState(null);
 
@@ -69,6 +69,7 @@ const MainComponent = ({ navigation, route }) => {
         setActiveTab={setActiveTab}
         fitToScreen={false}
         loading={loading}
+        subContainerStyle={subContainerStyle}
       />
       { activeTab && (
         <LoadList

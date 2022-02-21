@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {View, Text, StyleSheet, TextInput, Image, TouchableOpacity} from "react-native";
 
 //COMPONENTS
 import { OrangeButton } from "src/ToktokLoad/components";
+import { VerifyContext } from "../VerifyContextProvider";
 
 //UTIL
 import { moderateScale } from "toktokload/helper";
@@ -13,17 +14,31 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 //IMAGES
 import { contact_icon } from "toktokload/assets/icons";
 
-export const BuyLoad = ({ navigation, setMobileNumber, mobileNumber }) => {
+export const BuyLoad = ({ navigation }) => {
 
-  const [errorMessage, setErrorMessage] = useState("");
+  const {
+    mobileErrorMessage,
+    setMobileErrorMessage,
+    mobileNumber,
+    setMobileNumber,
+    setSubContainerStyle
+  } = useContext(VerifyContext);
+
+  useEffect(() => {
+    clearState();
+  }, [])
+
+  const clearState = () => {
+    setSubContainerStyle({});
+  }
 
   const onChangeText = (value) => {
     let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
   
     if(mobile.length != 0 && (mobile.substring(0, 2) != "09" || mobile.length != 11)){
-      setErrorMessage("Enter 11-digits valid mobile number");
+      setMobileErrorMessage("Enter 11-digits valid mobile number");
     } else {
-      setErrorMessage("");
+      setMobileErrorMessage("");
     }
   
     if((mobile.length == 1 || mobile.length == 2) && (mobileNumber.length == "" || mobileNumber.length == 1)){
@@ -65,11 +80,11 @@ export const BuyLoad = ({ navigation, setMobileNumber, mobileNumber }) => {
           <Image source={contact_icon} style={styles.icon} />
         </TouchableOpacity>
       </View>
-      {errorMessage != "" && <Text style={styles.errorMessage}>{errorMessage}</Text>}
+      {mobileErrorMessage != "" && <Text style={styles.errorMessage}>{mobileErrorMessage}</Text>}
       <View style={{ flex: 1, justifyContent: "flex-end" }}>
         <OrangeButton
           label="Next"
-          disabled={!mobileNumber || errorMessage}
+          disabled={!mobileNumber || mobileErrorMessage}
           onPress={onPressNext}
         />
       </View>

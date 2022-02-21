@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState, memo } from "react";
 import { View, Text, StyleSheet, FlatList, RefreshControl } from "react-native";
 import { useIsFocused } from '@react-navigation/native';
 import _ from 'lodash';
@@ -10,6 +10,7 @@ import { ErrorUtility } from 'toktokload/util';
 //COMPONENTS
 import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, EmptyList } from "src/ToktokLoad/components";
 import { FavoriteDetails } from "./components";
+import { VerifyContext } from "../VerifyContextProvider";
 import { SomethingWentWrong } from "toktokload/components";
 import { AlertOverlay } from 'src/components';
 
@@ -23,23 +24,26 @@ import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_CHECK_FAVORITE_LOAD, GET_FAVORITE_LOADS, PATCH_REMOVE_FAVORITE_LOAD } from 'toktokload/graphql/model';
 import { usePrompt } from 'src/hooks';
 
-export const Favorites = ({ navigation, route, mobileNumber }) => {
+export const Favorites = memo(({ navigation, route }) => {
 
+  const { mobileErrorMessage, mobileNumber, subContainerStyle, setSubContainerStyle } = useContext(VerifyContext);
   const prompt = usePrompt();
   const isFocused = useIsFocused();
+  const [checkFavoriteLoadPrompt, setCheckFavoriteLoadPrompt] = useState({ title: "", message: "", show: false });
   const [favorites, setFavorites] = useState([]);
+  const [isMounted, setIsMounted] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedLoad, setSelectedLoad] = useState({});
-  const [checkFavoriteLoadPrompt, setCheckFavoriteLoadPrompt] = useState({ title: "", message: "", show: false });
   
-  const {loading, error, refetch} = useQuery(GET_FAVORITE_LOADS, {
-    fetchPolicy: "cache-and-network",
+  const [getFavoriteLoads, {loading, error}] = useLazyQuery(GET_FAVORITE_LOADS, {
+    fetchPolicy: "network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: () => {
       setFavorites([]);
     },
     onCompleted:({ getFavoriteLoads })=> {
-      setFavorites(getFavoriteLoads)
+      setIsMounted(false);
+      setFavorites(getFavoriteLoads);
     }
   });
 
@@ -89,7 +93,7 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
 
   useEffect(() => {
     if(isFocused){
-      onRefresh();
+      processGetFavoriteLoads();
     }
   }, [isFocused])
 
@@ -100,6 +104,7 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
   }
 
   const ListEmptyComponent = () => {
+    if(isMounted) return null
     return (
       <EmptyList
         imageSrc={empty_favorite}
@@ -109,9 +114,25 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
     )
   }
 
-  const onRefresh = () => {
-    refetch();
-  }
+  const processGetFavoriteLoads = useCallback((action) => {
+    if(action == 'refresh'){
+      setSelectedLoad({});
+      setSubContainerStyle({});
+    }
+    getFavoriteLoads();
+  })
+
+  const handleScroll = useCallback((event) => {
+    if(event.nativeEvent.contentOffset.y == 0 && subContainerStyle?.index == 0 && Object.keys(selectedLoad).length > 0){
+      let index = subContainerStyle?.index;
+      setSubContainerStyle({ backgroundColor: "rgba(246,132,31,0.8)", index });
+    } else {
+      if(subContainerStyle?.backgroundColor != "#fff"){
+        let index = subContainerStyle?.index;
+        setSubContainerStyle({ backgroundColor: "#fff", index });
+      }
+    }
+  }, [subContainerStyle])
 
   const onPressOkPrompt = () => {
     patchRemoveFavoriteLoad({ variables: { input: { loadItemId: selectedLoad.loadItemId } } });
@@ -124,7 +145,7 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
       </View>
     )
   }
-  
+  console.log(!mobileNumber)
   return (
     <View style={styles.container}>
       <AlertOverlay visible={checkLoading || patchFavoriteLoading}/>
@@ -134,9 +155,10 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
         renderItem={({ item, index }) => (
           <FavoriteDetails
             item={item}
-            onPressFavorite={() => onPressFavorite(item, index)}
+            index={index}
             setSelectedLoad={setSelectedLoad}
             selectedLoad={selectedLoad}
+            setSubContainerStyle={setSubContainerStyle}
           />
         )}
         keyExtractor={(item, index) => index.toString()}
@@ -145,14 +167,15 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
         refreshControl={
           <RefreshControl
             refreshing={loading}
-            onRefresh={onRefresh}
+            onRefresh={() => processGetFavoriteLoads('refresh')}
           />
         }
+        onScroll={handleScroll}
       />
       {/* {(favorites && favorites.length > 0) && ( */}
         <View style={{ padding: moderateScale(16) }}>
           <OrangeButton
-            disabled={!(selectedLoad && Object.keys(selectedLoad).length > 0)}
+            disabled={!(selectedLoad && Object.keys(selectedLoad).length > 0) || !mobileNumber || mobileErrorMessage}
             label='Next'
             onPress={onPressNext}
           />
@@ -160,7 +183,7 @@ export const Favorites = ({ navigation, route, mobileNumber }) => {
       {/* )} */}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

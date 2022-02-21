@@ -1,6 +1,9 @@
 import React, {useState, useContext} from "react";
 import {View, Text, StyleSheet, FlatList, Platform, TouchableOpacity, Image, Dimensions} from "react-native";
 
+//COMPONENTS
+import { VerifyContext } from "../../../VerifyContextProvider";
+
 //UTIL
 import { moderateScale } from "toktokload/helper";
 
@@ -11,6 +14,7 @@ import { heart_fill_icon, heart_no_fill_icon, heart_selected_fill_icon } from "s
 const { width, height } = Dimensions.get("screen");
 export const FavoriteDetails = ({ item, index, setSelectedLoad, selectedLoad }) => {
 
+  const { setSubContainerStyle } = useContext(VerifyContext);
   const { loadDetails, mobileNumber } = item;
   const { amount } = loadDetails;
   const isSelected = selectedLoad.id == item.id;
@@ -21,12 +25,15 @@ export const FavoriteDetails = ({ item, index, setSelectedLoad, selectedLoad }) 
   return (
     <TouchableOpacity
       onPress={() => {
+        let backgroundColor = index == 0 ? isSelected ? "#fff" : "rgba(246,132,31,0.8)" : "#fff";
+        setSubContainerStyle({backgroundColor, index});
         setSelectedLoad(isSelected ? {} : item);
       }}
       style={[
         styles.container,
         { backgroundColor: isSelected ? "rgba(246,132,31,0.8)" : "#fff"}
       ]}
+      activeOpacity={.8}
     >
       <View style={[styles.amountContainer, { borderColor: colorAmount }]}>
         <Text style={[ styles.amount, { color: colorAmount }]}>₱{amount}</Text>

@@ -21,14 +21,23 @@ import { stubTrue } from "lodash";
 export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
 
   const prompt = usePrompt();
-  const { selectedLoad, setSelectedLoad, favorites, setFavorites, loads, setLoads } = useContext(VerifyContext);
+  const {
+    selectedLoad,
+    setSelectedLoad,
+    favorites,
+    setFavorites,
+    loads,
+    setLoads,
+    subContainerStyle,
+    setSubContainerStyle
+  } = useContext(VerifyContext);
   const [loadFavorite, setLoadFavorite] = useState(null);
   const [isMounted, setIsMounted] = useState(true);
   
   const [getLoadItems, {loading: getLoadItemsLoading, error: getLoadItemsError}]  = useLazyQuery(GET_LOAD_ITEMS, {
     fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: () => {
+    onError: (error) => {
       setIsMounted(false);
     },
     onCompleted: ({ getLoadItems }) => {
@@ -71,16 +80,18 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
   });
 
   useEffect(() => {
-    clearStates();
+    setIsMounted(true);
+    setLoads([]);
     processGetLoadItems();
   }, [networkId])
 
   const clearStates = () => {
-    setIsMounted(true);
-    setLoads([]);
+    setSelectedLoad({});
+    setSubContainerStyle({ backgroundColor: "#fff" });
   }
 
   const processGetLoadItems = () => {
+    clearStates();
     getLoadItems({
       variables: {
         input: {
@@ -111,9 +122,21 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
 
   const onPressNext = () => {
     if(Object.keys(selectedLoad).length > 0){
-      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad[networkId], mobileNumber })
+      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad, mobileNumber })
     }
   }
+
+  const handleScroll = useCallback((event) => {
+    if(event.nativeEvent.contentOffset.y == 0 && subContainerStyle?.index == 0 && Object.keys(selectedLoad).length > 0){
+      let index = subContainerStyle?.index;
+      setSubContainerStyle({ backgroundColor: "rgba(246,132,31,0.8)", index });
+    } else {
+      if(subContainerStyle?.backgroundColor != "#fff"){
+        let index = subContainerStyle?.index;
+        setSubContainerStyle({ backgroundColor: "#fff", index });
+      }
+    }
+}, [subContainerStyle])
  
   const ListEmptyComponent = () => {
     if(isMounted || getLoadItemsLoading) return null
@@ -124,7 +147,7 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
     )
   }
 
-  if(getLoadItemsLoading && !loadFavorite){
+  if(getLoadItemsLoading && !loadFavorite && loads.length == 0){
     return (
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
@@ -158,11 +181,18 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
         contentContainerStyle={{ flexGrow: 1 }}
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={ListEmptyComponent}
+        onScroll={handleScroll}
+        refreshControl={
+          <RefreshControl
+            refreshing={getLoadItemsLoading && !loadFavorite}
+            onRefresh={() => processGetLoadItems()}
+          />
+        }
       />
       {(loads && loads.length > 0) && (
         <View style={{ padding: moderateScale(16) }}>
           <OrangeButton
-            disabled={!selectedLoad[networkId]}
+            disabled={Object.keys(selectedLoad).length == 0}
             label='Next'
             onPress={() => onPressNext()}
           />
