@@ -364,7 +364,7 @@ const MainComponent = () => {
       }
       totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
     }
-    // console.log(totalPrice, temporaryCart);
+
     postResquestTakeMoney({
       variables: {
         input: {
