@@ -172,7 +172,8 @@ export const ToktokWalletPayPandaWebView = ({navigation,route})=> {
                                     amount: +route.params.amount_to_pay,
                                     createdAt: new Date(),
                                     email: route.params.email_address,
-                                    payer: route.params.payer_name
+                                    payer: route.params.payer_name,
+                                    providerServiceFee: route.params.providerServiceFee
                                 })
                                 setDoneTransaction(true)
                               

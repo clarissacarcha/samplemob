@@ -2,6 +2,7 @@ import React from 'react'
 import {View,Text,StyleSheet,ScrollView} from 'react-native'
 import { HeaderBack, YellowButton, HeaderTitle } from 'src/revamp'
 import { Separator, SwipeProceedButton, CheckIdleState , FlagSecureScreen , BuildingBottom } from 'toktokwallet/components'
+import { VectorIcon , ICON_SET } from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -66,21 +67,66 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                
                 {RenderDisplay()}
             </View>
-            <View style={{flex:1 ,justifyContent:"center",alignItems:"center",padding: 20,marginTop: 10}}>
-                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"center"}}>
-                    Please review the accuracy and completeness of the details provided before you confirm
-                </Text>
+            <View style={{flex:1 ,justifyContent:"center",alignItems:"flex-start",padding: 16}}>
                 {
                     event == "Send Money" &&
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop: 15,textAlign:'center'}}>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop: 15,textAlign:'left'}}>
                         Transaction cannot be reversed once confirmed and submitted
                     </Text>
                 }
                 {
-                    data.fundTransferType &&
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop: 15,textAlign:'center'}}>
-                        Fund Transfer via {data.fundTransferType}
+                    !data.fundTransferType &&
+                    <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,textAlign:"left",marginTop: 10}}>
+                    <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.M} /> Please review the accuracy and completeness of the details provided before you confirm.
                     </Text>
+                }
+                {
+                    data.fundTransferType && data.fundTransferType == "Instapay" &&
+                    <>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginBottom: 10,}}>
+                        Based on the bank and amount provided, this transaction will be processed realtime via
+                        <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,}}> InstaPay</Text>.
+                    </Text>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,textAlign:"left"}}>
+                    <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.M} /> Please ensure that all information is correct and validated before proceeding with this transaction.
+                    </Text>
+                    </>
+                }
+                {
+                    data.fundTransferType && data.fundTransferType == "Pesonet" &&
+                    <>
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginBottom: 10}}>
+                         Based on the bank and amount provided, this transaction will be processed via 
+                         <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,}}> PESONet</Text>.
+                    </Text>
+                    <View style={{flexDirection:"row"}}>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginRight: 5}}>
+                            -  
+                        </Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",}}>
+                        Same banking day transfer if made between 8:00AM - 3:00 PM (funds to be credited by 11:00 PM)
+                        </Text>
+                    </View>
+                    <View style={{flexDirection:"row",}}>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginRight: 5}}>
+                            -  
+                        </Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",}}>
+                        Next banking day transfer if made 3:01 PM onwards ( funds to be credited by 11:00 PM)
+                        </Text>
+                    </View>
+                    <View style={{flexDirection:"row",marginBottom: 10}}>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginRight: 5}}>
+                            -  
+                        </Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",}}>
+                        Banking days are from Monday to Friday excluding holidays. Please take note that transactions during weekends can be credited by Tuesday due to batch processing.
+                        </Text>
+                    </View>
+                    <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,textAlign:"left"}}>
+                    <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.M} /> Please ensure that all information is correct and validated before proceeding with this transaction.
+                    </Text>
+                    </>
                 }
             </View>
             <View style={styles.proceedBtn}>
@@ -124,3 +170,4 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
     }
 })
+
