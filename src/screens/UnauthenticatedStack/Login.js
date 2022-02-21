@@ -9,27 +9,31 @@ import {
   TextInput,
   TouchableHighlight,
   View,
+  Dimensions
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useAlert} from '../../hooks/useAlert';
-import {APP_FLAVOR, DARK, MEDIUM} from '../../res/constants';
-import {COLOR, FONT, FONT_SIZE, SIZE} from '../../res/variables';
-import {AUTH_CLIENT, LOGIN_REGISTER} from '../../graphql';
-import {AlertOverlay, AlertModal} from '../../components';
-import LoginBanner from '../../assets/images/LoginBanner.png';
+import React, { useEffect, useState } from 'react';
+import { useAlert } from '../../hooks/useAlert';
+import { APP_FLAVOR, DARK, MEDIUM, ORANGE,SIZES } from '../../res/constants';
+import constants from '../../common/res/constants';
+import { COLOR, FONT, FONT_SIZE, SIZE } from '../../res/variables';
+import { AUTH_CLIENT, LOGIN_REGISTER } from '../../graphql';
+import { AlertOverlay, AlertModal } from '../../components';
+import LoginBanner from '../../assets/images/ToktokLogo.png';
 import SmsRetriever from 'react-native-sms-retriever';
-import Splash from '../../assets/images/Splash.png';
-import {connect} from 'react-redux';
-import {onError, onErrorAlert} from '../../util/ErrorUtility';
-import {useMutation} from '@apollo/react-hooks';
+import Splash from '../../assets/images/LinearGradiant.png';
+import { connect } from 'react-redux';
+import { onError, onErrorAlert } from '../../util/ErrorUtility';
+import { useMutation } from '@apollo/react-hooks';
 
-const Login = ({navigation, session}) => {
+const imageWidth = Dimensions.get('window').width - 80;
+
+const Login = ({ navigation, session }) => {
   const [mobile, setMobile] = useState('');
   const [delay, setDelay] = useState(true);
 
   const alert = useAlert();
 
-  const [loginRegister, {loading}] = useMutation(LOGIN_REGISTER, {
+  const [loginRegister, { loading }] = useMutation(LOGIN_REGISTER, {
     client: AUTH_CLIENT,
     variables: {
       input: {
@@ -38,15 +42,15 @@ const Login = ({navigation, session}) => {
       },
     },
     onError: (error) => {
-      onErrorAlert({alert, error});
+      onErrorAlert({ alert, error });
     },
     onCompleted: (data) => {
       if (data.loginRegister === 'REGISTER') {
-        navigation.push('SmsVerification', {mobile});
+        navigation.push('SmsVerification', { mobile });
       }
 
       if (data.loginRegister === 'LOGIN') {
-        navigation.push('PasswordVerification', {mobile});
+        navigation.push('PasswordVerification', { mobile });
       }
 
       setMobile(''); //empty out the mobile number
@@ -127,12 +131,13 @@ const Login = ({navigation, session}) => {
         source={Splash}
         style={{
           flex: 1,
-          justifyContent: 'space-between',
+          justifyContent: 'center',
+          alignItems:'center'
         }}>
         <Image
           source={LoginBanner}
-          style={{height: 84, width: 200, marginLeft: 20, marginTop: 108, marginBottom: 58}}
-          resizeMode="cover"
+          style={{ height: imageWidth - 70, width: imageWidth - 150 , marginBottom: "30%", }}
+          resizeMode="contain"
         />
       </ImageBackground>
     );
@@ -148,44 +153,51 @@ const Login = ({navigation, session}) => {
       }}>
       <AlertOverlay visible={loading} />
       {/* <AlertModal visible={true} /> */}
-      <View>
+      <View style={{flex:1,justifyContent:'center',alignItems:'center',marginBottom:"20%"}}>
         <Image
           source={LoginBanner}
-          style={{height: 84, width: 200, marginLeft: 20, marginTop: 108, marginBottom: 58}}
-          resizeMode="cover"
+          style={{ height: imageWidth - 70, width: imageWidth - 150 }}
+          resizeMode="contain"
         />
-        <View style={{height: 50, paddingHorizontal: 20, justifyContent: 'flex-end', marginBottom: 10}}>
+        {/* <View style={{height: 50, paddingHorizontal: 20, justifyContent: 'flex-end', marginBottom: 10}}>
           <Text style={{fontFamily: FONT.BOLD, color: COLOR.BLACK}}>{`Enter your ${
             APP_FLAVOR == 'C' ? 'mobile' : 'rider'
           } number to continue.`}</Text>
-        </View>
+        </View> */}
 
         {/*-------------------- INPUT ROW --------------------*/}
-        <View style={{flexDirection: 'row', marginHorizontal: 20}}>
+       <View style={{ flexDirection: 'row', marginHorizontal: 35 }}>
           <View style={styles.inputView}>
-            <Text style={{fontSize: 25, color: DARK}}>+63</Text>
+            <Text style={{ fontSize: 13, color: DARK }}>+63</Text>
           </View>
           <TextInput
             value={mobile}
             onChangeText={onMobileChange}
             style={styles.input}
-            placeholder="9876543210"
+            placeholder="Phone Number"
             keyboardType="number-pad"
             returnKeyType="done"
             onSubmitEditing={() => onSubmit(mobile)}
             placeholderTextColor={MEDIUM}
           />
+          
         </View>
 
+        <TouchableHighlight onPress={() => onSubmit(mobile)} underlayColor={COLOR.ORANGE} style={styles.submitBox}>
+        <View style={styles.submit}>
+          <Text style={{ color: COLOR.WHITE, fontSize: FONT_SIZE.M,paddingHorizontal:'37%',fontWeight:"600",lineHeight:SIZES.L,fontFamily: constants.FONT_FAMILY.BOLD }}>Continue</Text>
+        </View>
+      </TouchableHighlight>
+
         {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
-        <TouchableHighlight
+        {/* <TouchableHighlight
           onPress={() => navigation.push('ForgotPasswordRequest')}
           underlayColor={COLOR.YELLOW}
           style={styles.autoFillBox}>
           <View style={styles.autoFill}>
             <Text style={{color: COLOR.YELLOW, fontSize: 12}}>Forgot Password?</Text>
           </View>
-        </TouchableHighlight>
+        </TouchableHighlight> */}
 
         {/*-------------------- AUTO Fill BUTTON --------------------*/}
         {/* <TouchableHighlight onPress={onRequestAutoFill} underlayColor={COLOR} style={styles.autoFillBox}>
@@ -193,14 +205,11 @@ const Login = ({navigation, session}) => {
             <Text style={{color: COLOR, fontSize: 20}}>Auto Fill</Text>
           </View>
         </TouchableHighlight> */}
+          {/*-------------------- SUBMIT BUTTON --------------------*/}
+    
       </View>
 
-      {/*-------------------- SUBMIT BUTTON --------------------*/}
-      <TouchableHighlight onPress={() => onSubmit(mobile)} underlayColor={COLOR.YELLOW} style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={{color: COLOR.YELLOW, fontSize: 20}}>Continue</Text>
-        </View>
-      </TouchableHighlight>
+    
     </ImageBackground>
   );
 };
@@ -215,29 +224,38 @@ const styles = StyleSheet.create({
   inputView: {
     borderWidth: 1,
     borderColor: MEDIUM,
-    borderRadius: SIZE.BORDER_RADIUS,
+    borderTopLeftRadius: SIZE.BORDER_RADIUS,
+    borderBottomLeftRadius: SIZE.BORDER_RADIUS,
     paddingHorizontal: 16,
     justifyContent: 'center',
-    marginRight: 8,
-    height: 56,
+    height: 40,
+    backgroundColor:'#F8F8F8',  
+    borderColor: "#F8F8F8",
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: MEDIUM,
-    borderRadius: SIZE.BORDER_RADIUS,
     paddingHorizontal: 16,
-    fontSize: 25,
-    height: 56,
+    fontSize: FONT_SIZE.M,
+    lineHeight: SIZES.L,
+    height: 40,
     color: DARK,
+    borderTopRightRadius: SIZE.BORDER_RADIUS,
+    borderBottomRightRadius: SIZE.BORDER_RADIUS,
+    backgroundColor:'#F8F8F8',
+    borderTopColor: '#F8F8F8',
+    borderBottomColor: '#F8F8F8',
+    borderRightColor: "#F8F8F8",
+    borderLeftColor:"#CCCCCC",
+    fontWeight:"400"
   },
   submitBox: {
     margin: 16,
     borderRadius: 10,
   },
   submit: {
-    backgroundColor: DARK,
-    height: 50,
+    backgroundColor: ORANGE,
+    height: 40,
     borderRadius: SIZE.BORDER_RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
