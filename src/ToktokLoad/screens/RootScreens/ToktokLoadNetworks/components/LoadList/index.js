@@ -38,12 +38,6 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
     fetchPolicy: "cache-and-network",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: (error) => {
-      ErrorUtility.StandardErrorHandling({
-        error,
-        navigation,
-        prompt,
-        title: ""
-      });
       setIsMounted(false);
     },
     onCompleted: ({ getLoadItems }) => {
