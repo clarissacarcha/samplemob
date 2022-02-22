@@ -33,26 +33,6 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
   const { user } = useSelector((state) => state.session);
   const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount({ isOnErrorAlert: false });
   const [refreshing, setRefreshing] = useState(false);
-  const [kycStatus, setKycStatus] = useState(null);
-
-  const [getUserToktokWalletData, { error, loading }] = useLazyQuery(GET_USER_TOKTOK_WALLET_DATA , {
-    fetchPolicy:"network-only",
-    variables: {
-      input: {
-        userId: user.id,
-      }
-    },
-    onCompleted: async ({getUserToktokWalletData})=> {
-      //0 - Rejected 1 - Approved 2 - Pending 3 - Linked 4 -For Further Verification
-      setKycStatus(getUserToktokWalletData.kycStatus)
-    }
-  })
-
-  useEffect(() => {
-    if(isFocused){
-      getUserToktokWalletData();
-    }
-  }, [isFocused])
 
   useEffect(() => {
     if(user.toktokWalletAccountId){
@@ -61,8 +41,8 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
   },[user]);
 
   useEffect(() => {
-    setRefreshing(getMyAccountLoading || loading);
-  },[getMyAccountLoading, loading]);
+    setRefreshing(getMyAccountLoading);
+  },[getMyAccountLoading]);
 
   const onRefresh = () => {
     getMyAccount();
@@ -73,17 +53,17 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
     getMyAccount();
   };
 
-  if(getMyAccountLoading || loading){
+  if(getMyAccountLoading){
     return(
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
       </View>
     )
   }
-  if(getMyAccountError || error){
+  if(getMyAccountError){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} error={getMyAccountError ?? error} />
+        <SomethingWentWrong onRefetch={onRefresh} error={getMyAccountError} />
       </View>
     )
   }
@@ -110,7 +90,6 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
           loadDetails={loads?.loadDetails ? loads.loadDetails : loads}
           getMyAccount={getMyAccount}
           onCashIn={onCashIn}
-          kycStatus={kycStatus}
         />
         <Separator />
       </ScrollView>

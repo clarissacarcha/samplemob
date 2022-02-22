@@ -82,6 +82,9 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
     <>
       <AlertOverlay visible={loading}/>
       <View style={styles.container}>
+        <Text style={styles.review}>
+          Review the accuracy and completeness of details provided.
+        </Text>
         <Text style={styles.terms}>
           <Text>Please read our </Text>
           <Text style={styles.paymentPolicy} onPress={onPressTermsAndContidions} >
@@ -107,9 +110,11 @@ const styles = StyleSheet.create({
   },
   terms: {
     marginBottom: moderateScale(15),
-    textAlign: "center"
   },
   paymentPolicy: {
     color: "#F6841F"
-  }
+  },
+  review: {
+    marginVertical: moderateScale(15),
+  },
 })
