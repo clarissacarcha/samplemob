@@ -9,11 +9,7 @@ import { moderateScale } from 'toktokbills/helper'
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE , MARGIN } = CONSTANTS
 
-export const SearchInput = ({search = "", setSearch, placeholder, containerStyle }) => {
-
-  const filterSearch = (val) => {
-    setSearch(val);
-  }
+export const SearchInput = ({search = "", onChangeText, placeholder, containerStyle }) => {
 
   return (
     <View style={[ styles.searchField, containerStyle ]}>
@@ -22,7 +18,7 @@ export const SearchInput = ({search = "", setSearch, placeholder, containerStyle
         <TextInput 
           style={styles.input}
           placeholder={placeholder}
-          onChangeText={filterSearch}
+          onChangeText={onChangeText}
           value={search}
         />
       </View>

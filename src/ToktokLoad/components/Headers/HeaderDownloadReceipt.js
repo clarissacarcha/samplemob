@@ -16,6 +16,7 @@ import { download_icon } from "toktokload/assets/icons";
 //HELPER
 import { moderateScale } from "toktokload/helper";
 import moment from "moment";
+import { usePrompt } from 'src/hooks';
 
 export const HeaderDownloadReceipt = ({
   onPress,
@@ -27,6 +28,7 @@ export const HeaderDownloadReceipt = ({
 }) => {
 
   const navigation = useNavigation();
+  const prompt = usePrompt();
  
   const checkAndRequest = Platform.select({
     android: async ()=>{
@@ -117,7 +119,13 @@ export const HeaderDownloadReceipt = ({
 
       await CameraRoll.save(newFileUri, { type: "photo", album: "toktok" });
    
-      Toast.show(`Receipt ${filename} has been downloaded.` , Toast.LONG);
+      // Toast.show(`Receipt ${filename} has been downloaded.` , Toast.LONG);
+      prompt({
+        type: "success",
+        title: "Receipt Downloaded!",
+        message: "Your tansaction receipt has been saved to your gallery.",
+        event: "TOKTOKBILLSLOAD"
+      });
       onPressDownloadReceipt(false);
 
     });
