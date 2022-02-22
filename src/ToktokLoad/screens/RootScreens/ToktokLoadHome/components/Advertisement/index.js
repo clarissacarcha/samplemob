@@ -12,7 +12,7 @@ const colors = ["green","black","yellow"]
 const DisplayImage = ({item,index,autoplay})=> {
 
     return (
-        <View style={{flex:1,backgroundColor:"orange"}}>
+        <View style={{flex:1}}>
             <Image
                 source={item.image}
                 style={[styles.adImage, {...(autoplay ? {width}: {})}]}
