@@ -13,7 +13,7 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
 //IMAGES
 import { contact_icon } from "toktokload/assets/icons";
-import { load_logo } from 'toktokload/assets/images'
+import { blank } from 'toktokload/assets/ads'
 
 //SELF IMPORTS
 import {Advertisement} from "../Advertisement";
@@ -64,12 +64,7 @@ export const BuyLoad = ({ navigation }) => {
     navigation.navigate("ToktokLoadContacts",  { onSelectContact });
   }
 
-  const ads = [
-    {
-        id: 1,
-        image: load_logo
-    }
- ]
+  const ads = [{ id: 1, image: blank }]
 
   return (
     <View style={styles.container}>
