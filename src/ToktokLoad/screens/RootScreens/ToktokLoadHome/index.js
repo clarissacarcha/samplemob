@@ -1,10 +1,11 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
 import {View, Text, StyleSheet, Platform} from "react-native";
 import { useSelector } from 'react-redux';
+import { load_logo  , empty_search , toktok_logo} from 'toktokload/assets/images'
 
 //components
 import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator } from "src/ToktokLoad/components";
-import { BuyLoad, Favorites, VerifyContextProvider, VerifyContext } from "./components";
+import { BuyLoad, Favorites, VerifyContextProvider, VerifyContext, Advertisement } from "./components";
 
 const MainComponent = ({ navigation, route }) => {
 
@@ -25,8 +26,24 @@ const MainComponent = ({ navigation, route }) => {
     }
   })
 
+  const ads = [
+    {
+      id: 1,
+      image: load_logo
+    },
+    {
+      id: 2,
+      image: empty_search
+    },
+    {
+      id: 3,
+      image: toktok_logo
+    }
+ ]
+
   return (
     <View style={styles.container}>
+      <Advertisement autoplay ads={ads}/>
       <HeaderTabs
         tabs={tabList}
         activeTab={activeTab}
