@@ -7,8 +7,6 @@ import CONSTANTS from 'common/res/constants'
 const { FONT_SIZE, COLOR , SIZE , FONT_FAMILY: FONT , MARGIN} = CONSTANTS
 const { width , height } = Dimensions.get("window")
 
-const colors = ["green","black","yellow"]
-
 const DisplayImage = ({item,index,autoplay})=> {
 
     return (
@@ -16,7 +14,7 @@ const DisplayImage = ({item,index,autoplay})=> {
             <Image
                 source={item.image}
                 style={[styles.adImage, {...(autoplay ? {width}: {})}]}
-                resizeMode="contain"
+                resizeMode="cover"
             />
         </View>
     )
