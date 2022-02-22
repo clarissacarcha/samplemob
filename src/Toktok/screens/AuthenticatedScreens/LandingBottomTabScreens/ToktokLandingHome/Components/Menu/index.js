@@ -5,11 +5,13 @@ import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
 
-import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/Toktok.png';
-import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/ToktokfoodMenu.png';
-import WalletIcon from '../../../../../../../assets/toktok/icons/menu/ToktokWallet.png';
-import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/Pabili.png';
-import ProfileIcon from '../../../../../../../assets/icons/ProfileIcon.png';
+import DeliveryIcon from '../../../../../../../assets/images/MenuIcons/Delivery.png';
+import PabiliIcon from '../../../../../../../assets/images/MenuIcons/Pabili.png';
+import MallIcon from '../../../../../../../assets/images/MenuIcons/Mall.png';
+import GoIcon from '../../../../../../../assets/images/MenuIcons/Go.png';
+import ToktokfoodIcon from '../../../../../../../assets/images/MenuIcons/Food.png';
+import WalletIcon from '../../../../../../../assets/images/MenuIcons/Wallet.png';
+
 import ToktokMallIcon from '../../../../../../../assets/toktokmall-assets/icons/toktokmall-logo.png';
 import OthersIcon from '../../../../../../../assets/icons/OthersIcon.png';
 
@@ -62,86 +64,108 @@ export const Menu = ({setUserLocation, constants}) => {
 
   return (
     <View style={styles.menuBox}>
-      <MenuIcon
-        label={'delivery'}
-        icon={DeliveryIcon}
-        onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
-      />
-      <MenuIcon label={'pabili'} icon={PabiliIcon} onPress={() => navigation.push('Pabili')} />
-
-      {showToktokWallet && (
+      
+      <View style={styles.colGroup}> 
         <MenuIcon
-          label={'toktokwallet'}
-          icon={WalletIcon}
+          label={'Delivery'}
+          icon={DeliveryIcon}
+          onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
+        />
+
+        <MenuIcon
+          label={'Go'}
+          icon={GoIcon}
           onPress={() => {
-            navigation.push('ToktokWalletLoginPage');
+            // navigation.push('ToktokProfile');
           }}
           isNew
         />
-      )}
+      </View>
 
-      {/* TOKTOKFOOD COMING SOON */}
-      {constants.isToktokfoodComingSoonDisplayed == 1 && (
-        <MenuIcon
-          label={'toktokfood'}
-          icon={ToktokfoodIcon}
-          onPress={() => {
-            navigation.push('ToktokfoodMerchantComingSoon');
-          }}
-          isNew
+      <View style={styles.colGroup}> 
+        <MenuIcon 
+          label={'Pabili'} 
+          icon={PabiliIcon} 
+          onPress={() => navigation.push('Pabili')} 
         />
-      )}
 
-      <MenuIcon
-        label={'profile'}
-        icon={ProfileIcon}
-        onPress={() => {
-          navigation.push('ToktokProfile');
-        }}
-      />
+        {/* <MenuIcon
+          label={'Mall'}
+          icon={MallIcon}
+          onPress={() => {
+            // navigation.push('ToktokProfile');
+          }}
+        /> */}
+      </View>   
 
-      {/* <MenuIcon
-        label={'toktokfood'}
-        icon={ProfileIcon}
-        onPress={() => {
-          navigation.push('TokTokFoodSplashScreen');
-        }}
-      /> */}
-      {/* <MenuIcon
-        label={'toktokmall'}
-        icon={ToktokMallIcon}
-        onPress={() => {
-          navigation.push('ToktokMallLanding');
-        }}
-      /> */}
+      <View style={styles.colGroup}>     
+        {showToktokWallet && (
+          <MenuIcon
+            label={'Wallet'}
+            icon={WalletIcon}
+            onPress={() => {
+              navigation.push('ToktokWalletLoginPage');
+            }}
+          />
+        )}
+      </View> 
+      
+      <View style={styles.colGroup}>  
+        {/* TOKTOKFOOD COMING SOON */}
+        {constants.isToktokfoodComingSoonDisplayed == 1 && (
+          <MenuIcon
+            label={'Food'}
+            icon={ToktokfoodIcon}
+            onPress={() => {
+              navigation.push('ToktokfoodMerchantComingSoon');
+            }}
+          />
+        )}
+      </View>  
+      
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   menuBox: {
-    paddingVertical: SIZE.MARGIN / 2,
+    // paddingVertical: SIZE.MARGIN / 2,
     flexDirection: 'row',
+    borderRadius: 5,
     justifyContent: 'space-around',
     backgroundColor: 'white',
     flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    shadowColor: '#000',
+
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  colGroup: {
+    flexDirection: 'column', 
+    justifyContent: 'space-around',
   },
   menuButton: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginVertical: 10
   },
   label: {
     fontSize: FONT_SIZE.M,
-    color: COLOR.YELLOW,
+    color: COLOR.BLACK,
+    marginTop: -20
   },
   menuIconBox: {
     height: 50,
     width: 50,
+    marginVertical: 10,
     paddingHorizontal: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
     borderRadius: 5,
-    backgroundColor: COLOR.TRANSPARENT_YELLOW,
     overflow: 'hidden',
   },
   menuIcon: {
@@ -152,10 +176,10 @@ const styles = StyleSheet.create({
   new: {
     height: 12,
     width: 25,
-    backgroundColor: COLOR.ORANGE,
+    backgroundColor: COLOR.RED,
     position: 'absolute',
     top: 0,
-    left: 0,
+    right: 0,
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',

@@ -7,7 +7,7 @@ import { useNavigation , useFocusEffect  , useRoute} from '@react-navigation/nat
 import {COLOR} from '../../../../../res/variables';
 
 //SELF IMPORTS
-import {Header, Menu, Advertisements} from './Components';
+import {Header, HeaderSearchField, Menu, Advertisements} from './Components';
 
 const Screen = ({navigation, constants}) => {
   // const userLocation = {
@@ -80,7 +80,7 @@ const Screen = ({navigation, constants}) => {
         > */}
         {/* <Header /> */}
         {/* <Menu setUserLocation={setUserLocation} constants={constants} /> */}
-        <Advertisements Header={Header} Menu={Menu} setUserLocation={setUserLocation} constants={constants} />
+        <Advertisements Header={Header}  HeaderSearchField={HeaderSearchField} Menu={Menu} setUserLocation={setUserLocation} constants={constants} />
         {/* </ScrollView> */}
       </View>
     </>
