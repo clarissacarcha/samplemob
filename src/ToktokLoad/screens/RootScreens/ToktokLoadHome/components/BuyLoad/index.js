@@ -13,6 +13,10 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
 //IMAGES
 import { contact_icon } from "toktokload/assets/icons";
+import { load_logo } from 'toktokload/assets/images'
+
+//SELF IMPORTS
+import {Advertisement} from "../Advertisement";
 
 export const BuyLoad = ({ navigation }) => {
 
@@ -60,6 +64,13 @@ export const BuyLoad = ({ navigation }) => {
     navigation.navigate("ToktokLoadContacts",  { onSelectContact });
   }
 
+  const ads = [
+    {
+        id: 1,
+        image: load_logo
+    }
+ ]
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -82,6 +93,8 @@ export const BuyLoad = ({ navigation }) => {
       </View>
       {mobileErrorMessage != "" && <Text style={styles.errorMessage}>{mobileErrorMessage}</Text>}
       <View style={{ flex: 1, justifyContent: "flex-end" }}>
+        <Advertisement ads={ads}/>
+        <View style={{marginTop: 20}}/>
         <OrangeButton
           label="Next"
           disabled={!mobileNumber || mobileErrorMessage}
