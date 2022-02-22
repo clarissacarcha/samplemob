@@ -8,7 +8,7 @@ import { BuyLoad, Favorites, VerifyContextProvider, VerifyContext } from "./comp
 
 const MainComponent = ({ navigation, route }) => {
 
-  const {activeTab, setActiveTab, mobileNumber, subContainerStyle, tabList } = useContext(VerifyContext);
+  const {activeTab, setActiveTab, mobileNumber, tabList } = useContext(VerifyContext);
 
   useEffect(() => {
     if(route.params?.tabId){
@@ -31,7 +31,6 @@ const MainComponent = ({ navigation, route }) => {
         tabs={tabList}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        subContainerStyle={subContainerStyle}
       />
       {DisplayComponent}
     </View>

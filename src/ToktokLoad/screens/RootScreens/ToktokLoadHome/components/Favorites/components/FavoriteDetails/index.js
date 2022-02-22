@@ -25,8 +25,6 @@ export const FavoriteDetails = ({ item, index, setSelectedLoad, selectedLoad }) 
   return (
     <TouchableOpacity
       onPress={() => {
-        let backgroundColor = index == 0 ? isSelected ? "#fff" : "rgba(246,132,31,0.8)" : "#fff";
-        setSubContainerStyle({backgroundColor, index});
         setSelectedLoad(isSelected ? {} : item);
       }}
       style={[

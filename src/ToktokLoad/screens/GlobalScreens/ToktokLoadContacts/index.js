@@ -18,7 +18,7 @@ import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import { useContacts } from 'toktokload/hooks'
 
 //COMPONENTS
-import { HeaderBack, HeaderTitle, OrangeButton, SearchInput, LoadingIndicator } from 'src/ToktokLoad/components';
+import { HeaderBack, HeaderTitle, OrangeButton, SearchInput, LoadingIndicator, EmptyList } from 'src/ToktokLoad/components';
 import { ContactInformation } from "./components";
 import { empty_search } from 'toktokload/assets/images';
 import { search_icon } from 'toktokload/assets/icons';
@@ -35,9 +35,9 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     headerTitle: () => <HeaderTitle label={'All Contacts'} />,
   });
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [fetchError, setFetchError] = useState(false);
-  const [filteredData, setFilteredData] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
   const [searchString, setSearchString] = useState('');
   const [selectedContact, setSelectedContact] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -51,9 +51,14 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     }
   }, [contacts])
 
-  const onSearchChange = (value) => {
-    setSearchString(value);
-    const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(value.toLowerCase()));
+  useEffect(() => {
+    if(searchString){
+      onSearchChange();
+    }
+  }, [searchString])
+
+  const onSearchChange = () => {
+    const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(searchString.toLowerCase()));
     setFilteredData(filteredContacts);
     setSelectedContact("")
   };
@@ -83,10 +88,18 @@ export const ToktokLoadContacts = ({navigation, route}) => {
 
   const ListEmptyComponent = () => {
     return (
-      <View style={styles.center}>
-        <Image source={empty_search} style={styles.emptySearchIcon} />
-        <Text style={styles.emptyText}>We can't find any contact matching your search</Text>
+      <View style={styles.screen}>
+        <EmptyList
+          imageSrc={empty_search}
+          label="No Results Found"
+          message="Try to search something similar"
+        />
       </View>
+      
+      // <View style={styles.center}>
+      //   <Image source={empty_search} style={styles.emptySearchIcon} />
+      //   <Text style={styles.emptyText}>We can't find any contact matching your search</Text>
+      // </View>
     )
   }
 
@@ -114,7 +127,7 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     );
   }
 
-  if (filteredData.length === 0 && searchString === '') {
+  if (data.length === 0 && searchString === '') {
     return (
       <View style={styles.center}>
         <Text>No contact information found.</Text>
@@ -126,12 +139,14 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     <View style={styles.screen}>
       <View style={{ padding: 16 }}>
         <SearchInput
-          onChangeText={onSearchChange}
+          search={searchString}
+          setSearch={setSearchString}
           value={searchString}
+          placeholder="Search contacts"
         />
       </View>
       <FlatList
-        data={filteredData}
+        data={searchString ? filteredData : data}
         extraData={{selectedContact, filteredData}}
         keyExtractor={(item, index) => index}
         renderItem={({item, index}) => {

@@ -8,7 +8,7 @@ import { ErrorUtility } from 'toktokload/util';
 //COMPONENTS
 import { LoadDetails } from "./LoadDetails";
 import { VerifyContext } from "../VerifyContextProvider";
-import { OrangeButton, LoadingIndicator } from "src/ToktokLoad/components";
+import { EmptyList, OrangeButton, LoadingIndicator, SearchInput } from "src/ToktokLoad/components";
 import { SomethingWentWrong } from "toktokload/components";
 
 //GRAPHQL & HOOKS
@@ -17,6 +17,10 @@ import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_LOAD_ITEMS, POST_FAVORITE_LOAD, PATCH_REMOVE_FAVORITE_LOAD } from 'toktokload/graphql/model';
 import { usePrompt } from 'src/hooks';
 import { stubTrue } from "lodash";
+
+//IMAGES
+import { empty_load_item, empty_search } from "toktokload/assets/images";
+
 
 export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
 
@@ -33,6 +37,8 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
   } = useContext(VerifyContext);
   const [loadFavorite, setLoadFavorite] = useState(null);
   const [isMounted, setIsMounted] = useState(true);
+  const [search, setSearch] = useState("");
+  const [searchData, setSearchData] = useState("");
   
   const [getLoadItems, {loading: getLoadItemsLoading, error: getLoadItemsError}]  = useLazyQuery(GET_LOAD_ITEMS, {
     fetchPolicy: "cache-and-network",
@@ -80,18 +86,33 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
   });
 
   useEffect(() => {
-    setIsMounted(true);
-    setLoads([]);
+    clearStates();
     processGetLoadItems();
   }, [networkId])
 
+  useEffect(() => {
+    if(search){
+      const filteredContacts = loads.filter((item) => {
+        let searchKey = search.toLowerCase();
+        return item.name.toLowerCase().includes(searchKey) || item.amount.toString().includes(searchKey) || item.descriptions.toLowerCase().includes(searchKey)
+      });
+      setSearchData(filteredContacts)
+    } else {
+      setSearchData([]);
+    }
+
+    return () => setSelectedLoad({});
+  }, [search, loads]);
+
   const clearStates = () => {
-    setSelectedLoad({});
-    setSubContainerStyle({ backgroundColor: "#fff" });
+    setIsMounted(true);
+    setLoads([]);
+    setSearch("");
+    setSearchData([]);
   }
 
   const processGetLoadItems = () => {
-    clearStates();
+    setSelectedLoad({});
     getLoadItems({
       variables: {
         input: {
@@ -126,23 +147,22 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
     }
   }
 
-  const handleScroll = useCallback((event) => {
-    if(event.nativeEvent.contentOffset.y == 0 && subContainerStyle?.index == 0 && Object.keys(selectedLoad).length > 0){
-      let index = subContainerStyle?.index;
-      setSubContainerStyle({ backgroundColor: "rgba(246,132,31,0.8)", index });
-    } else {
-      if(subContainerStyle?.backgroundColor != "#fff"){
-        let index = subContainerStyle?.index;
-        setSubContainerStyle({ backgroundColor: "#fff", index });
-      }
+  const getData = () => {
+    if(search){
+      return searchData.length > 0 ? searchData : []
     }
-}, [subContainerStyle])
- 
+    return loads
+  }
+  
   const ListEmptyComponent = () => {
     if(isMounted || getLoadItemsLoading) return null
+
+    const imageSrc = search ? empty_search : empty_load_item;
+    const label = search ? "No Results Found" : "No Load Item";
+    const message = search ? "Try to search something similar" : "No load item available as of the moment.";
     return (
       <View style={styles.emptyContainer}>
-        <Text>No load item available</Text>
+        <EmptyList imageSrc={imageSrc} label={label} message={message} />
       </View>
     )
   }
@@ -163,9 +183,14 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
   }
   return (
     <View style={styles.container}>
-      {/* <Text style={{ textAlign: "center" }}>{networkId.toString()}</Text> */}
+      <SearchInput
+        search={search}
+        setSearch={setSearch}
+        placeholder="Search Load Products Here"
+        containerStyle={{ padding: moderateScale(16) }}
+      />
       <FlatList
-        data={loads}
+        data={getData()}
         renderItem={({ item, index }) => (
           <LoadDetails
             index={index}
@@ -181,7 +206,6 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
         contentContainerStyle={{ flexGrow: 1 }}
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={ListEmptyComponent}
-        onScroll={handleScroll}
         refreshControl={
           <RefreshControl
             refreshing={getLoadItemsLoading && !loadFavorite}
