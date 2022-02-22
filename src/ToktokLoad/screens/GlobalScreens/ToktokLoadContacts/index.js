@@ -51,16 +51,11 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     }
   }, [contacts])
 
-  useEffect(() => {
-    if(searchString){
-      onSearchChange();
-    }
-  }, [searchString])
-
-  const onSearchChange = () => {
-    const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(searchString.toLowerCase()));
+  const onSearchChange = (value) => {
+    const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(value.toLowerCase()));
     setFilteredData(filteredContacts);
-    setSelectedContact("")
+    setSelectedContact("");
+    setSearchString(value);
   };
 
   const onSelectedContact = (item) => {
@@ -140,7 +135,7 @@ export const ToktokLoadContacts = ({navigation, route}) => {
       <View style={{ padding: 16 }}>
         <SearchInput
           search={searchString}
-          setSearch={setSearchString}
+          onChangeText={onSearchChange}
           value={searchString}
           placeholder="Search contacts"
         />

@@ -99,22 +99,6 @@ export const Favorites = memo(({ navigation, route }) => {
     }
   }, [isFocused])
 
-  useEffect(() => {
-    if(search){
-      const filteredContacts = favorites.filter((item) => {
-        let { loadDetails } = item;
-        let searchKey = search.toLowerCase();
-        
-        return loadDetails.name.toLowerCase().includes(searchKey) || loadDetails.amount.toString().includes(searchKey)
-          || loadDetails.descriptions.toLowerCase().includes(searchKey) || loadDetails.networkDetails.name.toLowerCase().includes(searchKey)
-      });
-      setSearchData(filteredContacts)
-    } else {
-      setSearchData([]);
-    }
-
-    return () => clearStates();
-  }, [search]);
 
   const onPressNext = () => {
     if(selectedLoad && Object.keys(selectedLoad).length > 0){
@@ -144,6 +128,23 @@ export const Favorites = memo(({ navigation, route }) => {
     return favorites
   }
 
+  const onSearch = (value) => {
+    setSelectedLoad({});
+    setSearch(value);
+    if(value){
+      const filteredContacts = favorites.filter((item) => {
+        let { loadDetails } = item;
+        let searchKey = value.toLowerCase();
+        
+        return loadDetails.name.toLowerCase().includes(searchKey) || loadDetails.amount.toString().includes(searchKey)
+          || loadDetails.descriptions.toLowerCase().includes(searchKey) || loadDetails.networkDetails.name.toLowerCase().includes(searchKey)
+      });
+      setSearchData(filteredContacts)
+    } else {
+      setSearchData([]);
+    }
+  }
+
   const ListEmptyComponent = () => {
     if(isMounted) return null
 
@@ -171,7 +172,7 @@ export const Favorites = memo(({ navigation, route }) => {
       <AlertOverlay visible={checkLoading || patchFavoriteLoading}/>
       <SearchInput
         search={search}
-        setSearch={setSearch}
+        onChangeText={onSearch}
         placeholder="Search Favorites"
         containerStyle={{ padding: moderateScale(16) }}
       />

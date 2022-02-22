@@ -92,16 +92,8 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
 
   useEffect(() => {
     if(search){
-      const filteredContacts = loads.filter((item) => {
-        let searchKey = search.toLowerCase();
-        return item.name.toLowerCase().includes(searchKey) || item.amount.toString().includes(searchKey) || item.descriptions.toLowerCase().includes(searchKey)
-      });
-      setSearchData(filteredContacts)
-    } else {
-      setSearchData([]);
+      processSearch(search);
     }
-
-    return () => setSelectedLoad({});
   }, [search, loads]);
 
   const clearStates = () => {
@@ -109,10 +101,10 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
     setLoads([]);
     setSearch("");
     setSearchData([]);
+    setSelectedLoad({});
   }
 
   const processGetLoadItems = () => {
-    setSelectedLoad({});
     getLoadItems({
       variables: {
         input: {
@@ -153,6 +145,24 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
     }
     return loads
   }
+
+  const onSearch = (value) => {
+    setSelectedLoad({});
+    setSearch(value);
+    processSearch(value);
+  }
+
+  const processSearch = (value) => {
+    if(value){
+      const filteredContacts = loads.filter((item) => {
+        let searchKey = value.toLowerCase();
+        return item.name.toLowerCase().includes(searchKey) || item.amount.toString().includes(searchKey) || item.descriptions.toLowerCase().includes(searchKey)
+      });
+      setSearchData(filteredContacts)
+    } else {
+      setSearchData([]);
+    }
+  }
   
   const ListEmptyComponent = () => {
     if(isMounted || getLoadItemsLoading) return null
@@ -185,7 +195,7 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
     <View style={styles.container}>
       <SearchInput
         search={search}
-        setSearch={setSearch}
+        onChangeText={onSearch}
         placeholder="Search Load Products Here"
         containerStyle={{ padding: moderateScale(16) }}
       />
@@ -209,7 +219,10 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
         refreshControl={
           <RefreshControl
             refreshing={getLoadItemsLoading && !loadFavorite}
-            onRefresh={() => processGetLoadItems()}
+            onRefresh={() => {
+              setSelectedLoad({});
+              processGetLoadItems();
+            }}
           />
         }
       />
