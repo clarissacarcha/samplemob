@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   promoChip: {
     alignItems: 'center',
-    backgroundColor: '#FFA700',
+    backgroundColor: '#FFCF2A',
     borderRadius: 5,
     height: scale(27),
     justifyContent: 'center',
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   promoChipAdmin: {
     alignItems: 'center',
-    backgroundColor: '#FFCF2A',
+    backgroundColor: '#FFA700',
     borderRadius: 5,
     height: scale(27),
     justifyContent: 'center',
