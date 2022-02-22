@@ -40,7 +40,7 @@ export const Advertisement = ({
                     itemWidth={width}
                     autoplay={true}
                     loop={true}
-                    autoplayDelay={5000} 
+                    autoplayDelay={0} 
                     autoplayInterval={5000}
                 />
                 :  <FlatList
