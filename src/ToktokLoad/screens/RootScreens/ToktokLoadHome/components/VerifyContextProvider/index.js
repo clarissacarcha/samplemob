@@ -12,7 +12,6 @@ export const VerifyContextProvider = ({children})=> {
   const [activeTab, setActiveTab] = useState(1);
   const [mobileErrorMessage, setMobileErrorMessage] = useState("");
   const [mobileNumber, setMobileNumber] = useState(formattedMobile);
-  const [subContainerStyle, setSubContainerStyle] = useState({});
   const tabList = [
     { id: 1, name: "Buy Load" },
     { id: 2, name: "Favorites"}
@@ -27,8 +26,6 @@ export const VerifyContextProvider = ({children})=> {
         setMobileErrorMessage,
         mobileNumber,
         setMobileNumber,
-        subContainerStyle,
-        setSubContainerStyle,
         tabList
       }}
     >

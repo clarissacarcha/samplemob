@@ -24,14 +24,6 @@ export const BuyLoad = ({ navigation }) => {
     setSubContainerStyle
   } = useContext(VerifyContext);
 
-  useEffect(() => {
-    clearState();
-  }, [])
-
-  const clearState = () => {
-    setSubContainerStyle({});
-  }
-
   const onChangeText = (value) => {
     let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
   

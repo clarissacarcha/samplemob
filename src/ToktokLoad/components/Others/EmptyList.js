@@ -28,13 +28,12 @@ const styles = StyleSheet.create({
     resizeMode: "contain"
   },
   label: {
-    color: "#707070",
+    color: "#F6841F",
     fontSize: FONT_SIZE.XL,
-    marginTop: moderateScale(20),
+    fontFamily: FONT.BOLD,
     textAlign: "center"
   },
   message: {
-    color: "#707070",
     fontSize: FONT_SIZE.M,
     marginTop: moderateScale(8),
     textAlign: "center"

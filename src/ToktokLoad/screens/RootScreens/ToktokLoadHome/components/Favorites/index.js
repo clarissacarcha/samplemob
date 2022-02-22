@@ -8,7 +8,7 @@ import { moderateScale } from "toktokload/helper";
 import { ErrorUtility } from 'toktokload/util';
 
 //COMPONENTS
-import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, EmptyList } from "src/ToktokLoad/components";
+import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, EmptyList, SearchInput } from "src/ToktokLoad/components";
 import { FavoriteDetails } from "./components";
 import { VerifyContext } from "../VerifyContextProvider";
 import { SomethingWentWrong } from "toktokload/components";
@@ -16,7 +16,7 @@ import { AlertOverlay } from 'src/components';
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
-import { empty_favorite } from 'toktokload/assets/images';
+import { empty_favorite, empty_search } from 'toktokload/assets/images';
 
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
@@ -26,7 +26,7 @@ import { usePrompt } from 'src/hooks';
 
 export const Favorites = memo(({ navigation, route }) => {
 
-  const { mobileErrorMessage, mobileNumber, subContainerStyle, setSubContainerStyle } = useContext(VerifyContext);
+  const { mobileErrorMessage, mobileNumber } = useContext(VerifyContext);
   const prompt = usePrompt();
   const isFocused = useIsFocused();
   const [checkFavoriteLoadPrompt, setCheckFavoriteLoadPrompt] = useState({ title: "", message: "", show: false });
@@ -34,7 +34,9 @@ export const Favorites = memo(({ navigation, route }) => {
   const [isMounted, setIsMounted] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedLoad, setSelectedLoad] = useState({});
-  
+  const [search, setSearch] = useState("");
+  const [searchData, setSearchData] = useState("");
+
   const [getFavoriteLoads, {loading, error}] = useLazyQuery(GET_FAVORITE_LOADS, {
     fetchPolicy: "network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
@@ -97,46 +99,64 @@ export const Favorites = memo(({ navigation, route }) => {
     }
   }, [isFocused])
 
+  useEffect(() => {
+    if(search){
+      const filteredContacts = favorites.filter((item) => {
+        let { loadDetails } = item;
+        let searchKey = search.toLowerCase();
+        
+        return loadDetails.name.toLowerCase().includes(searchKey) || loadDetails.amount.toString().includes(searchKey)
+          || loadDetails.descriptions.toLowerCase().includes(searchKey) || loadDetails.networkDetails.name.toLowerCase().includes(searchKey)
+      });
+      setSearchData(filteredContacts)
+    } else {
+      setSearchData([]);
+    }
+
+    return () => clearStates();
+  }, [search]);
+
   const onPressNext = () => {
     if(selectedLoad && Object.keys(selectedLoad).length > 0){
       getCheckFavoriteLoad({ variables: { input: { loadItemId: selectedLoad.loadItemId } } });
     }
   }
 
-  const ListEmptyComponent = () => {
-    if(isMounted) return null
-    return (
-      <EmptyList
-        imageSrc={empty_favorite}
-        label={"You don’t have favorites yet"}
-        message={"Check our products and add them to your favorites!"}
-      />
-    )
+  const clearStates = () => {
+    setSelectedLoad({});
   }
 
   const processGetFavoriteLoads = useCallback((action) => {
     if(action == 'refresh'){
-      setSelectedLoad({});
-      setSubContainerStyle({});
+      clearStates();
     }
     getFavoriteLoads();
   })
 
-  const handleScroll = useCallback((event) => {
-    if(event.nativeEvent.contentOffset.y == 0 && subContainerStyle?.index == 0 && Object.keys(selectedLoad).length > 0){
-      let index = subContainerStyle?.index;
-      setSubContainerStyle({ backgroundColor: "rgba(246,132,31,0.8)", index });
-    } else {
-      if(subContainerStyle?.backgroundColor != "#fff"){
-        let index = subContainerStyle?.index;
-        setSubContainerStyle({ backgroundColor: "#fff", index });
-      }
-    }
-  }, [subContainerStyle])
-
   const onPressOkPrompt = () => {
     patchRemoveFavoriteLoad({ variables: { input: { loadItemId: selectedLoad.loadItemId } } });
   }
+
+  const getData = () => {
+    if(search){
+      return searchData.length > 0 ? searchData : []
+    }
+    return favorites
+  }
+
+  const ListEmptyComponent = () => {
+    if(isMounted) return null
+
+    const imageSrc = search ? empty_search : empty_favorite;
+    const label = search ? "No Results Found" : "You don’t have favorites yet";
+    const message = search ? "Try to search something similar" : "Check our products and add them to your favorites!";
+    return (
+      <View style={styles.container}>
+        <EmptyList imageSrc={imageSrc} label={label} message={message} />
+      </View>
+    )
+  }
+
 
   if(error){
     return (
@@ -145,20 +165,25 @@ export const Favorites = memo(({ navigation, route }) => {
       </View>
     )
   }
-  console.log(!mobileNumber)
+
   return (
     <View style={styles.container}>
       <AlertOverlay visible={checkLoading || patchFavoriteLoading}/>
+      <SearchInput
+        search={search}
+        setSearch={setSearch}
+        placeholder="Search Favorites"
+        containerStyle={{ padding: moderateScale(16) }}
+      />
       <FlatList
         extraData={{favorites, selectedLoad}}
-        data={favorites}
+        data={getData()}
         renderItem={({ item, index }) => (
           <FavoriteDetails
             item={item}
             index={index}
             setSelectedLoad={setSelectedLoad}
             selectedLoad={selectedLoad}
-            setSubContainerStyle={setSubContainerStyle}
           />
         )}
         keyExtractor={(item, index) => index.toString()}
@@ -170,7 +195,6 @@ export const Favorites = memo(({ navigation, route }) => {
             onRefresh={() => processGetFavoriteLoads('refresh')}
           />
         }
-        onScroll={handleScroll}
       />
       {/* {(favorites && favorites.length > 0) && ( */}
         <View style={{ padding: moderateScale(16) }}>
@@ -201,7 +225,7 @@ const styles = StyleSheet.create({
   },
   mobileNo: {
     fontSize: 20
-  }
+  },
 })
 
 
