@@ -68,18 +68,27 @@ export const FoodList = props => {
       products.map(product => {
         let variantHolder = [];
         const variants = product.variants;
-        if (variants.length) {
-          variants.map(variant => {
-            if (variant.enabled === 1 && (variant.stocks > 0 || variant.contSellingIsset > 0)) {
-              variantHolder.push(variant);
-            }
-          });
-          if (variantHolder.length) {
-            product.variants = variantHolder;
+        if (variants.length === 1) {
+          if (variants[0].enabled === 2) {
+            productHolder.push(product);
+          } else if (variants[0].enabled === 1) {
+            product.variants = variants;
             productHolder.push(product);
           }
         } else {
-          productHolder.push(product);
+          if (variants.length) {
+            variants.map(variant => {
+              if (variant.enabled === 1 && (variant.stocks > 0 || variant.contSellingIsset > 0)) {
+                variantHolder.push(variant);
+              }
+            });
+            if (variantHolder.length) {
+              product.variants = variantHolder;
+              productHolder.push(product);
+            }
+          } else {
+            productHolder.push(product);
+          }
         }
       });
       setListData(productHolder);
