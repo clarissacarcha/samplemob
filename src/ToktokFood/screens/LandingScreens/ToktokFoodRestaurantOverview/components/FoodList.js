@@ -154,7 +154,14 @@ export const FoodList = props => {
             {resellerDiscount?.referralShopRate > 0 ? (
               <ResellerPrice item={item} />
             ) : (
-              <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
+              <View style={styles.priceContainer}>
+                {item.variants.length > 0 && (
+                  <Text numberOfLines={1} style={styles.fromText}>
+                    from
+                  </Text>
+                )}
+                <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
+              </View>
             )}
 
             {!!item.summary && (
@@ -276,7 +283,6 @@ const styles = StyleSheet.create({
     color: '#FF6200',
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
-    paddingVertical: 3,
   },
   listContainer: {
     flexDirection: 'row',
@@ -312,5 +318,15 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     marginLeft: 10,
     textDecorationLine: 'line-through',
+  },
+  fromText: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.M,
+    paddingRight: 2,
+    // flexShrink: 1,
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    paddingVertical: 3,
   },
 });

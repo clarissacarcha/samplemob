@@ -6,8 +6,9 @@ import {useSelector} from 'react-redux';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
 // Components
-// import Loader from 'toktokfood/components/Loader';
+import InlineError from 'toktokfood/components/InlineError';
 import StyledTextInput from 'toktokfood/components/StyledTextInput';
+import VoucherList from 'toktokfood/components/VoucherList';
 import {VerifyContext} from './VerifyContextProvider';
 
 // Fonts/Colors
@@ -29,6 +30,7 @@ const OrderVoucher = ({autoShipping}) => {
   const [voucher, setVoucher] = useState('');
   const [voucherError, setVoucherError] = useState(null);
   const [showError, setShowError] = useState(false);
+  const applyTextStyle = voucher ? styles.subText : {...styles.subText, color: '#C4C4C4'};
 
   const [getVoucherCode] = useLazyQuery(GET_VOUCHER_CODE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -149,27 +151,37 @@ const OrderVoucher = ({autoShipping}) => {
         </View>
       )}
 
+      <InlineError />
+
+      <View style={styles.voucherContainer}>
+        <VoucherList hasClose />
+      </View>
+
       {autoShipping?.success && renderAutoShipping()}
 
       {shippingVoucher.length > 0 && renderVoucher()}
 
-      {!autoShipping?.success && (
-        <View style={styles.formContainer}>
-          <StyledTextInput
-            hasIcon={shippingVoucher.length > 0}
-            error={voucherError}
-            onChangeText={onChangeText}
-            onRemoveVoucher={onRemoveVoucher}
-            label="Voucher"
-            value={voucher}
-            placeholder="Input Voucher(optional)"
-          />
+      {/* {!autoShipping?.success && ( */}
+      {/* )} */}
+      <View style={styles.formContainer}>
+        <StyledTextInput
+          hasIcon={shippingVoucher.length > 0}
+          error={voucherError}
+          onChangeText={onChangeText}
+          onRemoveVoucher={onRemoveVoucher}
+          label="Voucher"
+          value={voucher}
+          placeholder="Input Voucher(optional)"
+        />
 
-          <TouchableOpacity onPress={onApplyVoucher} style={styles.apply}>
-            <Text style={styles.subText}>Apply</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+        <TouchableOpacity disabled={voucher === ''} onPress={onApplyVoucher} style={styles.apply}>
+          <Text style={applyTextStyle}>Apply</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.voucherContainer}>
+        <Text style={styles.autoShippingText}>Voucher successfully applied!</Text>
+      </View>
     </View>
   );
 };
@@ -198,7 +210,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: moderateScale(10),
-    paddingHorizontal: moderateScale(20),
+    paddingHorizontal: moderateScale(15),
   },
   header: {
     borderBottomWidth: 1,
@@ -224,5 +236,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     paddingVertical: moderateScale(10),
+  },
+  voucherContainer: {
+    paddingHorizontal: moderateScale(15),
+    paddingTop: moderateScale(10),
   },
 });
