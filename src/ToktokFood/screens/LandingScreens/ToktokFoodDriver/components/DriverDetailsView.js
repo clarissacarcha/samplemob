@@ -302,7 +302,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
       <View style={styles.detailsContainer}>
         {(status.id == 's' || status.id == 'c') && <Text style={styles.title}>{status.title}</Text>}
         {status.message != '' && (
-          <Text numberOfLines={2} style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>
+          <Text numberOfLines={4} style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>
             {status.message}
           </Text>
         )}
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
   time: {
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
-    fontWeight: '600',
+    fontWeight: 'bold',
     marginLeft: moderateScale(5),
     marginTop: verticalScale(2),
     textAlign: 'center',

@@ -118,7 +118,7 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
     return (
       <View style={styles.detailsContainer}>
         {/* <Text style={styles.title}>{status.title}</Text> */}
-        <Text style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>
+        <Text numberOfLines={4} style={{...styles.status, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>
           {status.message}
         </Text>
 

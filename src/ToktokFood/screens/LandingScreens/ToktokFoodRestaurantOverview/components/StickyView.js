@@ -142,7 +142,7 @@ export const StickyView = () => {
           resizeMode="stretch"
           imageStyle={styles.bannerImg}
           style={styles.banner}>
-          <HeaderTitle backOnly searchBox={false} />
+          <HeaderTitle backOnly searchBox={false} isFoodHome />
         </ImageBackground>
 
         <View style={styles.titleInfo}>
