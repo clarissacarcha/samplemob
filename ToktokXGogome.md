@@ -1,21 +1,72 @@
-# Toktok x Gogome
+NODE_ENV="production"
+TZ="Asia/Manila"
 
-1. Confirming Orders. Able to bypass confirmation or have number of stocks to consume.
-2. Payment, credit card, visa master, JC wallet.
-3. Create toktok wallet. Reloading. (toktok wallet)
-4. Limited top up amounts. 1000, 2000, 5000. Note cannot be encashed.
-5. Order hold payment until item delivered.
-6. Fixed Delivery Fee?
-7. Use toktok price calculation.
-8. Location permission allow disable. Allow searching for location first.
+# Node Server
 
-# Toktok X Gogome Tasks
+PROTOCOL="https"
+HOST="localhost"
+PORT=2083
 
-1. -Return delivery link
-2. -Calculate and return price, distance, duration
-3. -Address breakdown
-4. Upon rider accept, send rider details in API, Upoin pickup/delivered, with picture. Ratings.
-5. Gogome cancel delivery API, Auto Enterprise rebook on rider cancel
-6. Logs of request and response from booking and postbacks
-7. X - Catch if island to island location. Issue with directions API.
-8. X - Order Type asap or scheduled? Turuan si tris
+# Database
+
+DB_HOST="eaccess-tokfood-rds.cx1ibvaiyfnt.ap-northeast-1.rds.amazonaws.com"
+DB_PORT=3306
+DB_USER="DC1crj3lSoQCHJw"
+DB_PASSWORD="pMGGuzORRQBDbBV"
+DB_DATABASE="toktokfood"
+
+# Read Replica Database
+
+DB_HOST="eaccess-tokfood-rds.cx1ibvaiyfnt.ap-northeast-1.rds.amazonaws.com"
+DB_PORT=3306
+DB_USER="DC1crj3lSoQCHJw"
+DB_PASSWORD="pMGGuzORRQBDbBV"
+DB_DATABASE="toktokfood"
+
+# AWS S3 Credentials
+
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
+AWS_BUCKET=""
+AWS_REGION=""
+AWS_S3_BASE_URL="https://tokfood-live.s3-ap-northeast-1.amazonaws.com/"
+
+# TOKTOK AWS S3 CREDENTIALS
+
+TOKTOK_S3_AWS_ACCESS_KEY_ID="AKIARO2UEYLZTEQL5BN3"
+TOKTOK_S3_AWS_SECRET_ACCESS_KEY="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"
+TOKTOK_S3_AWS_BUCKET="margel"
+TOKTOK_S3_AWS_REGION="us-east-1"
+
+# SMTP Credentials
+
+SMTP_HOST="email-smtp.us-east-1.amazonaws.com"
+SMTP_USER="AKIARO2UEYLZ6ZJQDHVQ"
+SMTP_PASSWORD="BCtsJxRjHFZh7h5C4z9Gid32Uvh8xQj64reDxNgXZ3CV"
+
+# JSON Web Token Secret
+
+JWT_PRIVATE_SECRET="3b5641125e38537f765ed65e241e837e"
+
+# AES Encryption Key and IV
+
+AES_KEY="c4159dea5ec941a8bd0fd460f2f3c0db"
+AES_IV="ec9bf54265e64d4b"
+
+# Links
+
+OPENSSL_ENCRYPT_URL="https://toktok.ph/book/auth/authentication/open_en"
+OPENSSL_DECRYPT_URL="https://toktok.ph/book/auth/authentication/open_dec"
+
+# Google Maps API Key
+
+MAPS_API_KEY="AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs"
+
+# Toktokfood API URL
+
+TOKTOKFOOD_API_URL="https://eaccess.toktokfood.ph/"
+
+# Toktok API
+
+TOKTOK_API_ENDPOINT="https://eaccess.toktok.ph:2096/food/graphql"
+TOKTOK_API_KEY="766ffaad-56ae-486f-8952-c2deb675672b"

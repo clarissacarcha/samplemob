@@ -14,6 +14,7 @@ export const Advertisements = ({Header, HeaderSearchField, Menu, setUserLocation
   const {data, loading, error} = useQuery(GET_ADVERTISEMENTS, {
     fetchPolicy: 'network-only',
     onCompleted: ({getAdvertisements}) => {
+      console.log({getAdvertisements});
       const bannerAd = getAdvertisements.filter(ad => {
         return ad.isHighlighted;
       });
