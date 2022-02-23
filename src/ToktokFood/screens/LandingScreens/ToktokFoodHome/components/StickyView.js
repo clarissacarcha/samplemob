@@ -95,6 +95,7 @@ const StickyView = () => {
 
   useEffect(() => {
     if (location) {
+      console.log(location.latitude, location.longitude);
       getShops({
         variables: {
           input: {

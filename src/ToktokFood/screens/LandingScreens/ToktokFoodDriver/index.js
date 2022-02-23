@@ -238,10 +238,9 @@ const ToktokFoodDriver = ({route, navigation}) => {
     if (reasons && title === 'Order Cancelled') {
       return navigation.replace('ToktokFoodLanding');
     }
-    if (title == 'Order Complete' || title == 'OOPS! Order Declined!' || title == 'Order Cancelled') {
-      let tab = selectedTab(title);
-      navigation.navigate('ToktokFoodOrderTransactions', {tab});
-    } else {
+    if (title !== 'Order Complete' || title !== 'OOPS! Order Declined!' || title !== 'Order Cancelled') {
+      // let tab = selectedTab(title);
+      // navigation.navigate('ToktokFoodOrderTransactions', {tab});
       setSeconds(300);
     }
   };
@@ -300,21 +299,24 @@ const ToktokFoodDriver = ({route, navigation}) => {
         reasons={showDialogMessage.reasons}
         visibility={showDialogMessage.show}
         onCloseModal={() => {
-          setSeconds(300);
+          // setSeconds(300);
           onCloseModal();
         }}
         onCloseBtn1={() => {
           setShowDialogMessage(prev => ({...prev, show: false}));
-          if (showDialogMessage.title === 'OOPS! Order Declined!' || showDialogMessage.title === 'Order Cancelled') {
+          // if (showDialogMessage.title === 'OOPS! Order Declined!' || showDialogMessage.title === 'Order Cancelled') {
             // navigation.navigate('ToktokFoodHome');
             // navigation.navigate('ToktokFoodRestaurantOverview', {item});
-            navigation.navigate('ToktokFoodHome');
-          } else {
-            navigation.navigate('ToktokFoodHome');
-          }
+          //   navigation.navigate('ToktokFoodHome');
+          // } else {
+          //   navigation.navigate('ToktokFoodHome');
+          // }
+          navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: transaction.sysShop}});
         }}
         onCloseBtn2={() => {
-          onCloseModal();
+          setShowDialogMessage(prev => ({...prev, show: false}));
+          navigation.navigate('ToktokFoodHome');
+          // onCloseModal();
         }}
         btn1Title="Browse Menu"
         btn2Title="OK"
