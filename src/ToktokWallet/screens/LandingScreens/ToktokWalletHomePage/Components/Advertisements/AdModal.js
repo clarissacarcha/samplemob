@@ -1,12 +1,13 @@
 import React from 'react'
 import { View , Text , StyleSheet , Modal , Dimensions , Image , TouchableOpacity } from 'react-native'
+import { moderateScale } from 'toktokwallet/helper'
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_SIZE, COLOR , SIZE , FONT_FAMILY: FONT , MARGIN} = CONSTANTS
 const { width } = Dimensions.get("window");
 const SCREEN_WIDTH = width;
 const BANNER_WIDTH = SCREEN_WIDTH;
-const BANNER_HEIGHT = BANNER_WIDTH / 1.5;
+const BANNER_HEIGHT = BANNER_WIDTH * 0.8;
 
 const AdModal = ({visible,setVisible,ad})=> {
 
@@ -32,7 +33,7 @@ const AdModal = ({visible,setVisible,ad})=> {
                             style={{
                                 padding: 16,
                             }}>
-                                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M, color:"white"}}>Close this ad</Text>
+                                <Text style={{fontFamily: FONT.REGULAR, fontSize: moderateScale(FONT_SIZE.L), color:"white"}}>Close this ad</Text>
                        </TouchableOpacity>
                 </View>
             </View>

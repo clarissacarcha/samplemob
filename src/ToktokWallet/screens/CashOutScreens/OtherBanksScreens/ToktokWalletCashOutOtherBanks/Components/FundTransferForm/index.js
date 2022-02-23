@@ -1,6 +1,6 @@
 import React , {useEffect,useState, useContext, useCallback} from 'react'
 import {View , Text , StyleSheet , TextInput,TouchableOpacity, Alert} from 'react-native'
-import { ValidatorScreen , InputAmount } from 'toktokwallet/components'
+import { ValidatorScreen , InputAmount , Separator , DisabledButton } from 'toktokwallet/components'
 import { YellowButton ,VectorIcon ,ICON_SET} from 'src/revamp'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_OUT_OTHER_BANKS , POST_REQUEST_CASH_OUT, POST_COMPUTE_CONVENIENCE_FEE } from 'toktokwallet/graphql'
@@ -14,6 +14,8 @@ import { AlertOverlay } from 'src/components'
 import { ContextCashOut } from '../ContextProvider'
 import { TransactionUtility } from 'toktokwallet/util'
 import _ from 'lodash'
+import CheckBox from 'react-native-check-box'
+import validator from 'validator'
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -30,7 +32,7 @@ const Amount = ({
 })=> {
 
     const tokwaAccount = useSelector(state=>state.toktokWallet)
-    const { amount ,setAmount , note , setNote ,bank } = useContext(ContextCashOut)
+    const { amount ,setAmount , note , setNote ,bank ,emailAddress ,setEmailAddress} = useContext(ContextCashOut)
     const [maxAmount , setMaxAmount] = useState(null)
     const cfMessage =   +providerServiceFee + +systemServiceFee == 0 
                       ? `Convenience fee is waived for this transaction.`
@@ -64,11 +66,13 @@ const Amount = ({
         return ()=> {
             changeErrorMessagge("amount","")
         }
-    },[amount, maxAmount])
+    },[amount, maxAmount , providerServiceFee , systemServiceFee])
 
     return (
-        <View style={styles.container}>
-        <View style={{marginTop: 16,}}>
+        <View style={{flex: 1,marginTop:16}}>
+            <Separator/>
+        <View style={{padding: 16}}>
+        <View style={{}}>
         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Enter Amount</Text>
            <InputAmount
                 errorMessage={errorListMessage.amount}
@@ -97,14 +101,28 @@ const Amount = ({
             {errorListMessage.amount != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:"#F93154"}}>{errorListMessage.amount}</Text>}
             {amount != "" && bank.id > 0 && !computeLoading && tokwaAccount.constants.UbFundTransferType == "api" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS}}>{cfMessage}</Text>}
         </View>
+             <View style={{marginTop: 16,}}>
+                <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Email Address (optional)</Text>
+                <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS,borderWidth: 1, borderColor: errorListMessage.emailAddress == "" ? "transparent" : COLOR.RED}]}>
+                    <TextInput
+                        style={styles.input}
+                        value={emailAddress}
+                        onChangeText={(value)=>setEmailAddress(value)}
+                        placeholder={`Enter your email address here`}
+                        placeholderTextColor={COLOR.DARK}
+                        returnKeyType="done"
+                    />
+                </View>
+                {errorListMessage.emailAddress != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.emailAddress}</Text>}
+            </View> 
         <View style={{marginVertical: 16,marginBottom: 20}}>
-        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Note (optional)</Text>
+        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Purpose (optional)</Text>
              <TextInput
                 style={[styles.input, { height: 90 }]}
                 value={note}
                 maxLength={60}
                 onChangeText={(value)=> setNote(value)}
-                placeholder="Enter note here..."
+                placeholder="Enter purpose here..."
                 returnKeyType="done"
                 placeholderTextColor={COLOR.DARK}
                 textAlignVertical="top"
@@ -113,6 +131,7 @@ const Amount = ({
                 multiline
             />
             <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS, color: "#929191"}}>{note.length}/60</Text>
+        </View>
         </View>
     </View>
     )
@@ -200,7 +219,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                     {errorListMessage.accountNumber != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.accountNumber}</Text>}
                 </Text>
             </View>
-
+{/* 
             <View style={{marginTop: 16,}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
                 <View style={[{justifyContent:"center",borderRadius: SIZE.BORDER_RADIUS,borderWidth: 1, borderColor: errorListMessage.address == "" ? "transparent" : COLOR.RED}]}>
@@ -217,7 +236,7 @@ const AccountInfo = ({selectBanks, errorListMessage })=> {
                 <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS}}>{address.length}/20 
                     {errorListMessage.address != "" && <Text style={{fontFamily: FONT.REGULAR,marginTop: 5,fontSize: FONT_SIZE.XS,color: COLOR.RED}}>  {errorListMessage.address}</Text>}
                 </Text>
-            </View>
+            </View> */}
         </View>
     )
 }
@@ -235,6 +254,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
     const [providerServiceFee,setProviderServiceFee] = useState("")
     const [systemServiceFee,setSystemServiceFee] = useState("")
     const [type,setType] = useState("")
+    const [isCertify, setCertify] = useState(true)
 
     const {
         accountName,
@@ -243,6 +263,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         note,
         amount,
         address,
+        emailAddress,
         savedAccounts,
         activeAccount
     } = useContext(ContextCashOut)
@@ -253,6 +274,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         accountNumber: "",
         address: "",
         amount: "",
+        emailAddress: "",
     })
 
     const changeErrorMessagge = (key,value)=> {
@@ -270,9 +292,9 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
         if(accountNumber.length > 0) {
             changeErrorMessagge("accountNumber","")
         }
-        if(address.length > 0){
-            changeErrorMessagge("address","")
-        }
+        // if(address.length > 0){
+        //     changeErrorMessagge("address","")
+        // }
     },[bank,accountNumber,address])
 
     const [postComputeConvenienceFee , {loading: computeLoading}] = useMutation(POST_COMPUTE_CONVENIENCE_FEE, {
@@ -364,6 +386,7 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                     note: note,
                     currencyId: tokwaAccount.wallet.currency.id,
                     address: address,
+                    emailAddress: emailAddress,
                     type: "Other Banks"
                 }
             }
@@ -387,10 +410,16 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
             changeErrorMessagge("accountNumber","Account Number is required.")
             noError = false
         }
-        if(address == ""){
-            changeErrorMessagge("address","Account Address is required.")
+        // if(address == ""){
+        //     changeErrorMessagge("address","Account Address is required.")
+        //     noError = false
+        // }
+
+        if(emailAddress != "" && !validator.isEmail(emailAddress, {ignore_whitespace: true})){
+            changeErrorMessagge("emailAddress","Email format is invalid.")
             noError = false
         }
+
         if(amount == "") {
             changeErrorMessagge("amount",`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00.`)
             noError = false
@@ -416,6 +445,15 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
 
         if(!checkLimit) return;
 
+        setErrorListMessage({
+            bank: "",
+            accountName: "",
+            accountNumber: "",
+            address: "",
+            amount: "",
+            emailAddress: "",
+        })
+
         if(providerServiceFee == "" || systemServiceFee == ""){
              postComputeConvenienceFee({
                 variables: {
@@ -438,10 +476,11 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                     note: note,
                     providerServiceFee,
                     systemServiceFee,
-                    fundTransferType: type
+                    fundTransferType: type,
+                    emailAddress
                 },
             isSwipe: true,
-            swipeTitle: `Confirm`,
+            swipeTitle: `Swipe to Confirm`,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
         })
@@ -511,7 +550,39 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 }}
             />
             <View style={styles.proceedBtn}>
-                <YellowButton label="Proceed" onPress={onPress}/>
+                    {/* <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginBottom: 10 ,textAlign:"center"}}>
+                         Please read our Terms and Conditions before you proceed with your transaction.
+                    </Text> */}
+                    <View style={{
+                        flexDirection:"row",   
+                        paddingBottom: 25,
+                    }}>
+
+                    <CheckBox
+                            isChecked={isCertify}
+                            onClick={()=>{
+                                return setCertify(!isCertify)
+                            }}
+                            style={{
+                                alignSelf: "center",
+                                marginRight: 2,
+                            }}
+                        />
+
+                        <TouchableOpacity 
+                            // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
+                            style={{paddingLeft: 5,marginRight: 16}}
+                        >
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby read and accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before proceeding with my transaction.</Text>
+                        </TouchableOpacity>
+                    </View>
+                    {
+                        isCertify 
+                        ? <YellowButton label="Proceed" onPress={onPress}/>
+                        : <DisabledButton label="Proceed"/>
+                    }
+               
             </View>
 
         </>
@@ -533,7 +604,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     proceedBtn: {
-        height: 70,
+        // height: 70,
         justifyContent: 'flex-end',
         padding: 16,
         marginTop: 20,

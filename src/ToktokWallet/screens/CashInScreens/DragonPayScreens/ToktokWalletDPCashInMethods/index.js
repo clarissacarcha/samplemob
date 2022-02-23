@@ -122,7 +122,8 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                 onCashIn: onCashIn,
                 processingFee: processingFee,
                 paymentMethod: paymentMethod,
-                paymentChoice: paymentChoice
+                paymentChoice: paymentChoice,
+                providerServiceFee: postCashInPayPandaRequest.providerServiceFee
             })
         }
     })
@@ -178,7 +179,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                         processingFee: postComputeProcessingFee.processingFee,
                     },
                 isSwipe: true,
-                swipeTitle: `Confirm`,
+                swipeTitle: `Swipe to Confirm`,
                 onSwipeFail: onSwipeFail,
                 onSwipeSuccess: onSwipeSuccess,
             })
