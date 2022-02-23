@@ -1,15 +1,21 @@
 import React from 'react';
 import {Text, View, Image, StatusBar} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-
 import {ToktokLandingDeliveries} from 'toktok/screens';
+import {ToktokGoActivities} from 'toktokgo/screens';
 
 const ActivitiesTopTab = createMaterialTopTabNavigator();
 
 const Activities = () => (
   <>
-    <View style={{paddingTop: StatusBar.currentHeight, backgroundColor: 'white'}}>
-      <Text>Activities</Text>
+    <View
+      style={{
+        paddingTop: StatusBar.currentHeight,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <Text style={{paddingVertical: 20}}>Activities</Text>
     </View>
     <ActivitiesTopTab.Navigator
       screenOptions={{
@@ -20,8 +26,16 @@ const Activities = () => (
           marginTop: 100,
         },
       }}>
-      <ActivitiesTopTab.Screen name="SuperAppActivitiesDelivery" component={ToktokLandingDeliveries} />
-      <ActivitiesTopTab.Screen name="SuperAppActivitiesGo" component={ToktokLandingDeliveries} />
+      <ActivitiesTopTab.Screen
+        name="ToktokDeliveryActivities"
+        component={ToktokLandingDeliveries}
+        options={{tabBarLabel: 'toktokdelivery'}}
+      />
+      <ActivitiesTopTab.Screen
+        name="ToktokGoActivities"
+        component={ToktokGoActivities}
+        options={{tabBarLabel: 'toktokgo'}}
+      />
     </ActivitiesTopTab.Navigator>
   </>
 );
