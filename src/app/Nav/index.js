@@ -81,6 +81,7 @@ import TalkToUs from '../../screens/AuthenticatedStack/CommonScreens/TalkToUs';
 import OrderCancellation from '../../screens/AuthenticatedStack/CommonScreens/OrderCancellation';
 // import Notifications from '../../screens/AuthenticatedStack/CommonScreens/Notifications';
 import DeliveryRating from '../../screens/AuthenticatedStack/CommonScreens/DeliveryRating';
+import RateDriver from '../../screens/AuthenticatedStack/CommonScreens/RateDriver/RateDriver';
 // import Announcements from '../../screens/AuthenticatedStack/CommonScreens/Announcement/Announcements';
 // import GCashAccount from '../../screens/AuthenticatedStack/CommonScreens/GCashAccount';
 
@@ -271,6 +272,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="DeliveryRating" component={DeliveryRating} />
     <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
     <Authenticated.Screen name="OrderCancellation" component={OrderCancellation} />
+    <Authenticated.Screen name="RateDriver" component={RateDriver} />
 
     {/********** Menu **********/}
     {/* <Authenticated.Screen name="SavedLocations" component={SavedLocations} />
