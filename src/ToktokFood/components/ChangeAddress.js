@@ -99,14 +99,14 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: moderateScale(25),
+    paddingHorizontal: moderateScale(20),
     paddingTop: moderateScale(20),
     paddingBottom: moderateScale(15),
   },
   textAddressContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    flex: 1,
+    // flex: 0.9,
     maxWidth: moderateScale(280),
     justifyContent: 'space-between',
   },
@@ -114,6 +114,9 @@ const styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.S,
     fontFamily: FONT.REGULAR,
+    flex: 1,
+    top: moderateScale(3),
+    paddingRight: moderateScale(3),
   },
   addressMarkerIcon: {
     width: moderateScale(18),
