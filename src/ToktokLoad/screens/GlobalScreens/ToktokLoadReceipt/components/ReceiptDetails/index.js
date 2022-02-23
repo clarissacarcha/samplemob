@@ -14,14 +14,14 @@ import moment from "moment";
 export const ReceiptDetails = ({ route }) => {
 
   const { receipt } = route.params;
-  const { amount, referenceNumber, destinationNumber, createdAt, discount, convenienceFee } = receipt;
+  const { amount, referenceNumber, destinationNumber, createdAt, discount, convenienceFee, loadDetails } = receipt;
   const transactionDateTime = `${moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}`;
   const totalAmount = parseFloat(amount) + parseFloat(convenienceFee);
 
   return (
     <>
       <View style={styles.line} />
-      <View style={{ paddingHorizontal: moderateScale(30), marginTop: moderateScale(15) }}>
+      <View style={{ paddingHorizontal: moderateScale(30) }}>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Service Reference Number </Text>
           <Text style={styles.description}>{referenceNumber}</Text>
@@ -31,8 +31,8 @@ export const ReceiptDetails = ({ route }) => {
           <Text style={styles.description}>{transactionDateTime}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Mobile Number </Text>
-          <Text style={styles.description}>{destinationNumber}</Text>
+          <Text style={styles.title}>Telco Load </Text>
+          <Text style={styles.description}>{loadDetails.networkDetails.name}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Total Amount </Text>
@@ -44,10 +44,10 @@ export const ReceiptDetails = ({ route }) => {
             <Text style={styles.description}>PHP {numberFormat(discount)}</Text>
           </View> 
         )}
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
+        <View style={[ styles.bodyContainer ]}>
           <Text style={styles.title}>Status </Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Image source={check_fill_icon} style={{ width: moderateScale(15), height: moderateScale(15) }} />
+            <Image source={check_fill_icon} style={styles.icon} />
             <Text style={[styles.description, styles.colorGreen]}>Success</Text>
           </View>
         </View>
@@ -81,9 +81,15 @@ const styles = StyleSheet.create({
   line: {
     height: 1,
     backgroundColor: "#F6841F",
-    marginVertical: moderateScale(20)
+    marginVertical: moderateScale(20),
+    marginHorizontal: moderateScale(16)
   },
   colorGreen: {
-    color: "#1AD74F",
+    color: "#198754",
+  },
+  icon: {
+    width: moderateScale(15),
+    height: moderateScale(15),
+    tintColor: "#198754"
   }
 })
