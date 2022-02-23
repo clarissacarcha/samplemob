@@ -360,7 +360,7 @@ export const Variations = ({data, productId}) => {
       dataSource = variants;
     }
 
-    if (data?.variants.length) {
+    if (variants.length) {
       const listData = isCollapsed ? variants : dataSource;
       return (
         <React.Fragment>
