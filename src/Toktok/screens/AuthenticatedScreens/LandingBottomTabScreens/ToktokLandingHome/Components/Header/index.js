@@ -26,6 +26,8 @@ export const Header = () => {
 
 const styles = StyleSheet.create({
   headerBox: {
+    position: 'absolute',
+    width: '100%',
     backgroundColor: 'white',
     paddingVertical: 16,
     shadowColor: "#000",
