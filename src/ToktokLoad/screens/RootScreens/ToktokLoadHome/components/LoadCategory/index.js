@@ -1,6 +1,13 @@
 import React, {useContext, useEffect, useState} from "react";
 import {View, Text, StyleSheet, TextInput, Image, TouchableOpacity} from "react-native";
 import {VectorIcon, ICON_SET} from 'src/revamp';
+import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
+import { GET_LOAD_CATEGORIES , GET_LOAD_CATEGORY_NETWORKS } from 'toktokload/graphql';
+import { useLazyQuery } from '@apollo/react-hooks'
+import { usePrompt } from 'src/hooks'
+import { ErrorUtility } from 'toktokload/util';
+import { useSelector } from 'react-redux'
+
 //COMPONENTS
 import { OrangeButton } from "src/ToktokLoad/components";
 import { VerifyContext } from "../VerifyContextProvider";
@@ -26,29 +33,67 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
     setMobileErrorMessage,
     mobileNumber,
     setMobileNumber,
-    setSubContainerStyle
+    setSubContainerStyle,
+    adHighlight
   } = useContext(VerifyContext);
   const [visible,setVisible] = useState(false);
   const [activeNetwork,setActiveNetwork] = useState(null)
+  const [networks,setNetworks] = useState([])
+  const prompt = usePrompt();
+  const { user } = useSelector((state) => state.session);
+  const formattedMobile = user?.username.replace("+63", "0");
+
+
+  const [getLoadCategoryNetworks, {loading}] = useLazyQuery(GET_LOAD_CATEGORY_NETWORKS, {
+    fetchPolicy:"network-only",
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: (error) => {
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+      });
+    },
+    onCompleted: ({getLoadCategoryNetworks})=> {
+      setNetworks(getLoadCategoryNetworks)
+    }
+  })
 
   useEffect(()=>{
     setActiveNetwork(null)
   },[activeTab])
 
+  useEffect(()=>{
+    setMobileErrorMessage("")
+    if(activeCategory()?.name == "Telco") setMobileNumber(formattedMobile)
+  },[activeNetwork])
+
   const onChangeText = (value) => {
+    
     let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
-  
-    if(mobile.length != 0 && (mobile.substring(0, 2) != "09" || mobile.length != 11)){
-      setMobileErrorMessage("Enter 11-digits valid mobile number");
-    } else {
-      setMobileErrorMessage("");
+    if(activeCategory()?.name == "Telco"){
+        if(mobile.length != 0 && (mobile.substring(0, 2) != "09" || mobile.length != 11)){
+          setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name}`);
+        } else {
+          setMobileErrorMessage("");
+        }
+      
+        if((mobile.length == 1 || mobile.length == 2) && (mobileNumber.length == "" || mobileNumber.length == 1)){
+          setMobileNumber("09")
+        } else {
+          setMobileNumber(mobile)
+        }
+        return
     }
-  
-    if((mobile.length == 1 || mobile.length == 2) && (mobileNumber.length == "" || mobileNumber.length == 1)){
-      setMobileNumber("09")
-    } else {
-      setMobileNumber(mobile)
+
+    if(mobile.length != activeNetwork?.inputLength?.inputLength){
+      setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name}`);
+    }else{
+      setMobileErrorMessage("")
     }
+    setMobileNumber(mobile)
+
+    return
   }
 
   const onPressNext = () => {
@@ -63,6 +108,17 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
     navigation.navigate("ToktokLoadContacts",  { onSelectContact });
   }
 
+  const openNetworks = ()=> {
+    getLoadCategoryNetworks({
+      variables: {
+        input: {
+          loadCategoryId: activeTab
+        }
+      }
+    })
+    setVisible(true)
+  }
+
   const ads = [{ id: 1, image: blank }]
 
   return (
@@ -72,6 +128,9 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
           setVisible={setVisible}
           activeNetwork={activeNetwork}
           setActiveNetwork={setActiveNetwork}
+          loading={loading}
+          data={networks}
+          activeCategory={activeCategory()?.name}
       />
       <View style={[styles.inputContainer , {flexDirection:"column"}]}>
         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Select {activeCategory()?.name ? activeCategory().name : ""}</Text>
@@ -85,7 +144,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
                     paddingHorizontal: moderateScale(10),
                     marginTop: 16
             }}
-            onPress={()=>setVisible(true)}
+            onPress={openNetworks}
         >
             <View style={{flex:1,justifyContent:'center'}}>
               {
@@ -111,10 +170,10 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
                         <TextInput
                           value={mobileNumber}
                           onChangeText={onChangeText}
-                          placeholder="Enter 11-digits mobile number"
+                          placeholder={`Enter ${activeNetwork.inputLength.inputLength}-digits ${activeNetwork.inputLength.name}`}
                           keyboardType="number-pad"
                           returnKeyType="done"
-                          maxLength={11}
+                          maxLength={+activeNetwork?.inputLength?.inputLength}
                         />
                       </View>
                       <TouchableOpacity
@@ -129,7 +188,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
 
             {mobileErrorMessage != "" && <Text style={styles.errorMessage}>{mobileErrorMessage}</Text>}
             <View style={{ flex: 1, justifyContent: "flex-end" }}>
-              <Advertisement ads={ads}/>
+              { adHighlight.length > 0 && <Advertisement ads={adHighlight}/> }
               <View style={{marginTop: 20}}/>
               <OrangeButton
                 label="Next"

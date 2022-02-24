@@ -1,7 +1,10 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
 import {View, Text, StyleSheet, Platform} from "react-native";
-import { useSelector } from 'react-redux';
-import { blank } from 'toktokload/assets/ads'
+import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
+import { GET_LOAD_CATEGORIES , GET_LOAD_CATEGORY_NETWORKS } from 'toktokload/graphql';
+import { useLazyQuery } from '@apollo/react-hooks'
+import { usePrompt } from 'src/hooks'
+import { ErrorUtility } from 'toktokload/util';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -14,38 +17,45 @@ const { COLOR , FONT_FAMILY: FONT , SIZE , FONT_SIZE , MARGIN , SHADOW } = CONST
 
 const MainComponent = ({ navigation, route }) => {
 
-  const { mobileNumber, tabList } = useContext(VerifyContext);
+  const { adsRegular } = useContext(VerifyContext);
   const [categories, setCategories]= useState([]);
   const [activeTab, setActiveTab] = useState(null);
+  const prompt = usePrompt();
 
-  const tabs = [{
-    index: 0,
-    id: 1,
-    name: "Telco"
-  },{
-    index: 1,
-    id: 2,
-    name: "Broadband"
-  },{
-    index: 2,
-    id: 3,
-    name: "Entertainment"
-  }]
+  const [getLoadCategories , {loading}] = useLazyQuery(GET_LOAD_CATEGORIES , {
+    fetchPolicy:"network-only",
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: (error) => {
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+      });
+    },
+    onCompleted: ({getLoadCategories})=> {
+        setActiveTab(getLoadCategories[0]?.id)
+        setCategories(getLoadCategories)
+    }
+  })
+
 
   const getActiveCategoryName = (activeTab)=> {
     return categories.filter(tab=>tab.id===activeTab)[0]
   }
 
   useEffect(()=>{
-    setActiveTab(tabs[0].id)
-    setCategories(tabs)
+    getLoadCategories();
   },[])
 
-  const ads = [{ id: 1, image: blank },{ id: 2, image: blank },{ id: 3, image: blank }]
+  if(loading){
+    return <View style={styles.container}>
+            <LoadingIndicator isLoading={true} isFlex />
+          </View>
+  }
 
   return (
     <View style={styles.container}>
-      <Advertisement autoplay ads={ads}/>
+      { adsRegular.length > 0 && <Advertisement autoplay ads={adsRegular}/>}
       <HeaderTabs
         tabs={categories}
         scrollEnabled={true}

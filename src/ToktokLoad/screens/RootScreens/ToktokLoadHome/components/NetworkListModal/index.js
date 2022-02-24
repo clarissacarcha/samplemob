@@ -1,14 +1,13 @@
-import React from 'react'
-import { View , Text , StyleSheet , Modal, TouchableHighlight , Dimensions, FlatList , Image } from 'react-native'
+import React, {useContext} from 'react'
+import { View , Text , StyleSheet , Modal, TouchableHighlight , Dimensions, FlatList , Image  } from 'react-native'
 import { load_logo } from 'toktokload/assets/images'
 import { useThrottle } from 'src/hooks'
+import { LoadingIndicator } from "src/ToktokLoad/components";
+import { VerifyContext } from '../VerifyContextProvider';
 import CONSTANTS from 'common/res/constants';
 
 const { MARGIN , COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 const { width , height } = Dimensions.get("window")
-
-
-const data = [{id: 1 , name: "Globe Telecom Philippines Load"}, {id: 2, name: "Smart Philippines Load"}, {id: 3, name: "Smart Philippines Load"}]
 
 const RenderItem = ({item,index,onPress}) => {
 
@@ -30,13 +29,18 @@ export const NetworkListModal = ({
     visible,
     setVisible,
     activeNetwork,
-    setActiveNetwork
+    setActiveNetwork,
+    loading,
+    data,
+    activeCategory
 })=> {
 
+    const { setMobileNumber } = useContext(VerifyContext)
 
     const onPress = (index)=> {
         setVisible(false)
         setActiveNetwork(data[index])
+        if(activeCategory != "Telco") setMobileNumber("")
     }
 
     return(
@@ -47,13 +51,20 @@ export const NetworkListModal = ({
             transparent={true}
         >
             <View style={styles.modalContent}>
-                <FlatList 
-                    style={styles.networkList}
-                    data={data}
-                    keyExtractor={item=>item.id}
-                    ItemSeparatorComponent={()=><View style={styles.separator}/>}
-                    renderItem={({item,index})=><RenderItem onPress={onPress} index={index} item={item}/>}
-                />
+              {
+                  loading
+                  ? <View style={styles.container}>
+                        <LoadingIndicator isLoading={true} isFlex />
+                    </View>
+                  :  <FlatList 
+                            style={styles.networkList}
+                            ListHeaderComponent={()=> data.length == 0 && !loading && <View><Text>No Available Network</Text></View>}
+                            data={data}
+                            keyExtractor={item=>item.id}
+                            ItemSeparatorComponent={()=><View style={styles.separator}/>}
+                            renderItem={({item,index})=><RenderItem onPress={onPress} index={index} item={item}/>}
+                        />
+              }
             </View>
         </Modal>
     )
