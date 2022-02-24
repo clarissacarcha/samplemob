@@ -97,7 +97,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
   }
 
   const onPressNext = () => {
-    navigation.navigate("ToktokLoadNetworks", { mobileNumber });
+    navigation.navigate("ToktokLoadNetworks", { mobileNumber , network: activeNetwork });
   }
 
   const onSelectContact = (number) => {
@@ -192,7 +192,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
               <View style={{marginTop: 20}}/>
               <OrangeButton
                 label="Next"
-                disabled={!mobileNumber || mobileErrorMessage}
+                disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
                 onPress={onPressNext}
               />
             </View>
