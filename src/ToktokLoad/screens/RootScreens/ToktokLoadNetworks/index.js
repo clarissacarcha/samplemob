@@ -5,7 +5,7 @@ import {View, Text, StyleSheet} from "react-native";
 import { moderateScale } from "toktokload/helper";
 
 //COMPONENTS
-import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator} from "src/ToktokLoad/components";
+import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, SearchInput } from "src/ToktokLoad/components";
 import { LoadList, VerifyContextProvider, VerifyContext } from "./components";
 import { SomethingWentWrong } from "toktokload/components";
 
@@ -15,44 +15,59 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql'
-import { GET_NETWORKS } from 'toktokload/graphql/model'
+import { GET_LOAD_VARIANTS } from 'toktokload/graphql/model'
 
 const MainComponent = ({ navigation, route }) => {
  
-  const { selectedLoad, setSelectedLoad, loads, setLoads, subContainerStyle } = useContext(VerifyContext);
-  const [networks, setNetworks]= useState([]);
+  const { selectedLoad, setSelectedLoad, loads, setLoads, subContainerStyle, searchData, setSearchData } = useContext(VerifyContext);
+  const [loadVariants, setLoadVariant]= useState([]);
   const [activeTab, setActiveTab] = useState(null);
+  const [search, setSearch] = useState("");
+  
 
-  const [getNetworks, {loading, error}] = useLazyQuery(GET_NETWORKS, {
+  const [getLoadVariants, {loading, error}] = useLazyQuery(GET_LOAD_VARIANTS, {
     fetchPolicy:"network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onCompleted:({ getNetworks })=> {
-      processNetworkTabs(getNetworks);
+    onCompleted:({ getLoadVariants })=> {
+      // processNetworkTabs(getLoadVariants);
+      console.log(getLoadVariants)
+
+      setActiveTab(getLoadVariants[0].id)
+      setLoadVariant(getLoadVariants)
     }
   })
 
   useEffect(() => {
-    getNetworks();
+    getLoadVariants({
+      variables: {
+        input: {
+          networkId: route.params.network.id
+        }
+      }
+    });
   }, [])
 
-  const processNetworkTabs = useCallback((networkTabs) => {
-    if(networkTabs && networkTabs.length > 0){
-      let tabs = []
-      networkTabs.map((item, index) => {
-        tabs.push({
-          id: item.id,
-          name: item.name,
-        })
-      })
-      setActiveTab(tabs[0].id)
-      setNetworks(tabs)
+  const onSearchChange = (value) => {
+    setSearch(value);
+    processSearch(value);
+  }
+
+  const processSearch = (value) => {
+    if(value){
+      const filteredContacts = loads.filter((item) => {
+        let searchKey = value.toLowerCase();
+        return item.name.toLowerCase().includes(searchKey) || item.amount.toString().includes(searchKey) || item.descriptions.toLowerCase().includes(searchKey)
+      });
+      setSearchData(filteredContacts)
+    } else {
+      setSearchData([]);
     }
-  })
+  }
 
   if(error){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={() => { getNetworks() }} error={error} />
+        <SomethingWentWrong onRefetch={() => { getLoadVariants() }} error={error} />
       </View>
     )
   }
@@ -62,19 +77,27 @@ const MainComponent = ({ navigation, route }) => {
         <Text style={styles.headerText}>Buy Load for</Text>
         <Text style={styles.mobileNo}>{route.params?.mobileNumber}</Text>
       </View>
-      <HeaderTabs
-        tabs={networks}
-        scrollEnabled={true}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        fitToScreen={false}
-        loading={loading}
-        subContainerStyle={subContainerStyle}
+      <SearchInput
+        search={search}
+        onChangeText={onSearchChange}
+        placeholder="Search Load Products Here"
+        containerStyle={{ paddingHorizontal: moderateScale(16) }}
       />
+      { !search && (
+        <HeaderTabs
+          tabs={loadVariants}
+          scrollEnabled={true}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          fitToScreen={false}
+          loading={loading}
+          subContainerStyle={subContainerStyle}
+        />
+      )}
       { activeTab && (
         <LoadList
           navigation={navigation}
-          networkId={activeTab}
+          loadVariantId={activeTab}
           mobileNumber={route.params?.mobileNumber}
         />
       )}
@@ -90,7 +113,7 @@ export const ToktokLoadNetworks = ({ navigation, route }) => {
   });
 
   return (
-    <VerifyContextProvider>
+    <VerifyContextProvider navigation={navigation}>
       <MainComponent navigation={navigation} route={route} />
     </VerifyContextProvider>
   );

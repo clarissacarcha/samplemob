@@ -10,7 +10,8 @@ export const VerifyContextProvider = ({children})=> {
   const [loads, setLoads] = useState({});
   const [selectedLoad, setSelectedLoad] = useState({});
   const [subContainerStyle, setSubContainerStyle] = useState({});
-  
+  const [searchData, setSearchData] = useState([]);
+
   return (
     <Provider
       value={{
@@ -21,7 +22,9 @@ export const VerifyContextProvider = ({children})=> {
         selectedLoad,
         setSelectedLoad,
         subContainerStyle,
-        setSubContainerStyle
+        setSubContainerStyle,
+        searchData,
+        setSearchData
       }}
     >
       {children}

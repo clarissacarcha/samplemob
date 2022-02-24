@@ -17,7 +17,6 @@ const { width, height } = Dimensions.get("screen");
 export const LoadDetails = ({
   item,
   index,
-  networkId,
   onPressFavorite,
   patchFavoriteLoading,
   postFavoriteLoading,
@@ -31,7 +30,7 @@ export const LoadDetails = ({
   const isSelected = selectedLoad?.id == item.id;
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
-  const numberOfLines = isSelected ? null : 1;
+  const numberOfLines = isSelected ? null : 2;
 
   const onPressThrottled = useThrottle(onPressFavorite, 500);
 
@@ -120,7 +119,6 @@ const styles = StyleSheet.create({
   },
   descriptions: {
     fontSize: FONT_SIZE.M,
-    marginTop: 5
   },
   detailsContainer: {
     paddingHorizontal: moderateScale(20),

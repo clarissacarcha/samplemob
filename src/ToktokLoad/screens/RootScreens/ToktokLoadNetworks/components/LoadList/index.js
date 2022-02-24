@@ -22,7 +22,7 @@ import { stubTrue } from "lodash";
 import { empty_load_item, empty_search } from "toktokload/assets/images";
 
 
-export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
+export const LoadList = memo(({ loadVariantId, navigation, mobileNumber }) => {
 
   const prompt = usePrompt();
   const {
@@ -88,7 +88,7 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
   useEffect(() => {
     clearStates();
     processGetLoadItems();
-  }, [networkId])
+  }, [loadVariantId])
 
   useEffect(() => {
     if(search){
@@ -108,7 +108,7 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
     getLoadItems({
       variables: {
         input: {
-          networkId
+          loadVariantId
         }
       },
     });
@@ -193,19 +193,18 @@ export const LoadList = memo(({ networkId, navigation, mobileNumber }) => {
   }
   return (
     <View style={styles.container}>
-      <SearchInput
+      {/* <SearchInput
         search={search}
         onChangeText={onSearch}
         placeholder="Search Load Products Here"
         containerStyle={{ padding: moderateScale(16) }}
-      />
+      /> */}
       <FlatList
         data={getData()}
         renderItem={({ item, index }) => (
           <LoadDetails
             index={index}
             item={item}
-            networkId={networkId}
             onPressFavorite={() => onPressFavorite(item, index)}
             patchFavoriteLoading={patchFavoriteLoading}
             postFavoriteLoading={postFavoriteLoading}
