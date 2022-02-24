@@ -30,7 +30,7 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 const MainComponent = ({ navigation, route, onCapturingScreen }) => {
   return (
     <View style={styles.container}>
-      <Header />
+      <Header mobileNumber={route.params.receipt.destinationNumber} />
       <ReceiptDetails route={route} />
       { !onCapturingScreen && (
         <View style={styles.buttonContainer}>

@@ -58,42 +58,40 @@ export const PaymentMethod = ({ loadDetails, onCashIn }) => {
   }
 
   return (
-    <>
-    	<View style={styles.container}>
-        <Text style={styles.title}>Payment Method</Text>
-        <View style={[ styles.bodyContainer, { alignItems: "center" } ]}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Image style={styles.walletIcon} source={wallet_icon} />
-            <View style={styles.pmContainer}>
-              <View style={styles.pmWrapper}>
-                <View style={styles.tokwaButtonTextWrapper}>
-                  <Text style={styles.toktokText}>toktok</Text>
-                  <Text style={styles.walletText}>wallet</Text>
-                </View>
-                { user.toktokWalletAccountId && (
-                  <Text style={styles.balance}>
-                    Balance: ₱{numberFormat(tokwaBalance)}
-                  </Text>
-                )}
+    <View style={styles.container}>
+      <Text style={styles.title}>Payment Method</Text>
+      <View style={[ styles.bodyContainer, { alignItems: "center" } ]}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image style={styles.walletIcon} source={wallet_icon} />
+          <View style={styles.pmContainer}>
+            <View style={styles.pmWrapper}>
+              <View style={styles.tokwaButtonTextWrapper}>
+                <Text style={styles.toktokText}>toktok</Text>
+                <Text style={styles.walletText}>wallet</Text>
               </View>
+              { user.toktokWalletAccountId && (
+                <Text style={styles.balance}>
+                  Balance: ₱{numberFormat(tokwaBalance)}
+                </Text>
+              )}
             </View>
           </View>
-          { user.toktokWalletAccountId ? displayCashIn() : displayNoToktokWalletAccount() }
         </View>
-        { user.toktokWalletAccountId && parseFloat(totalAmount) > parseFloat(tokwaBalance) && (
-          <View style={styles.insufficientContainer}>
-            <Image style={styles.warningIcon} source={warning_icon} />
-            <Text style={styles.insufficientText}>Insufficient balance</Text>
-          </View>
-        )}
-		  </View>
-    </>
+        { user.toktokWalletAccountId ? displayCashIn() : displayNoToktokWalletAccount() }
+      </View>
+      { user.toktokWalletAccountId && parseFloat(totalAmount) > parseFloat(tokwaBalance) && (
+        <View style={styles.insufficientContainer}>
+          <Image style={styles.warningIcon} source={warning_icon} />
+          <Text style={styles.insufficientText}>Insufficient balance</Text>
+        </View>
+      )}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: moderateScale(30),
+    paddingHorizontal: moderateScale(25),
     paddingVertical: moderateScale(20)
   },
   title: {

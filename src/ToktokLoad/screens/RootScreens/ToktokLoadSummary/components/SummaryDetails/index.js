@@ -12,7 +12,7 @@ export const SummaryDetails = ({ loadDetails, mobileNumber, discount = 0 }) => {
   const totalAmount = parseFloat(amount) + parseFloat(commissionRateDetails.systemServiceFee);
 
   return (
-    <>
+    <View style={styles.container}>
       <View style={styles.detailsContainer}>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Load Amount</Text>
@@ -39,7 +39,7 @@ export const SummaryDetails = ({ loadDetails, mobileNumber, discount = 0 }) => {
           <Text style={styles.description}>PHP {numberFormat(totalAmount)}</Text>
         </View>
       </View>
-    </>
+    </View>
   );
 };
 
@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
   },
   description: {
-    color: "#707070",
     fontSize: FONT_SIZE.M,
   },
   bodyContainer: {
@@ -61,15 +60,19 @@ const styles = StyleSheet.create({
     marginBottom: moderateScale(15)
   },
   line: {
-    height: 1,
-    backgroundColor: "#DDDDDD"
+    height: 1.2,
+    backgroundColor: "#F6841F"
   },
   totalAmountContainer: {
-    paddingHorizontal: moderateScale(30),
+    paddingHorizontal: moderateScale(5),
     paddingVertical: moderateScale(30),
   },
-  detailsContainer: {
-    paddingHorizontal: moderateScale(30),
+  container: {
+    paddingHorizontal: moderateScale(20),
     marginTop: moderateScale(15)
+  },
+  detailsContainer: {
+    paddingHorizontal: moderateScale(5),
+    paddingVertical: moderateScale(10)
   }
 })
