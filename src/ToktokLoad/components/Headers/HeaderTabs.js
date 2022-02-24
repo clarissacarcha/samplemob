@@ -11,7 +11,7 @@ let scrollPosition = 0;
 
 export const HeaderTabs = (props) => {
 
-  const {activeTab, setActiveTab, tabs, loading, fitToScreen = true, selectedLoad, subContainerStyle} = props;
+  const {activeTab, setActiveTab, tabs, loading, fitToScreen = true, selectedLoad, subContainerStyle , overLap = true } = props;
   const flatListRef = useRef();
 
   const handleScroll = (event) => {
@@ -55,7 +55,7 @@ export const HeaderTabs = (props) => {
     )
   }
   return (
-    <View style={[styles.mainContainer, subContainerStyle]}>
+    <View style={[styles.mainContainer, subContainerStyle , {...(overLap ? {zIndex: 1} : {})}]}>
       <View style={[styles.shadow]}>
         <FlatList
           extraData={props}
@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     overflow: "hidden",
     paddingBottom: 5,
-    zIndex: 1
   },
   container: {
     flex: 1,
