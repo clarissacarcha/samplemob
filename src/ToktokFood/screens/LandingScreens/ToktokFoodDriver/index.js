@@ -245,7 +245,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
     }
   };
 
-  const displayDeliveryDetailsView = useMemo(() => {
+  const displayDeliveryDetailsView = () => {
     return (
       <DriverDetailsView
         onCancel={() => {
@@ -257,7 +257,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         referenceNum={referenceNum}
       />
     );
-  }, [transaction, riderDetails, referenceNum]);
+  };
 
   const displayPickupDetailsView = useMemo(() => {
     return (
@@ -305,8 +305,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
         onCloseBtn1={() => {
           setShowDialogMessage(prev => ({...prev, show: false}));
           // if (showDialogMessage.title === 'OOPS! Order Declined!' || showDialogMessage.title === 'Order Cancelled') {
-            // navigation.navigate('ToktokFoodHome');
-            // navigation.navigate('ToktokFoodRestaurantOverview', {item});
+          // navigation.navigate('ToktokFoodHome');
+          // navigation.navigate('ToktokFoodRestaurantOverview', {item});
           //   navigation.navigate('ToktokFoodHome');
           // } else {
           //   navigation.navigate('ToktokFoodHome');
@@ -383,7 +383,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
               dateOrdered={transaction.dateOrdered}
             />
             <View style={styles.driverWrapper}>
-              {transaction.orderIsfor == 1 ? displayDeliveryDetailsView : displayPickupDetailsView}
+              {transaction.orderIsfor == 1 ? displayDeliveryDetailsView() : displayPickupDetailsView}
             </View>
           </ScrollView>
         </>
