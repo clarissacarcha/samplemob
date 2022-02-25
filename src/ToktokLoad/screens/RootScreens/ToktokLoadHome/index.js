@@ -1,10 +1,12 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
-import {View, Text, StyleSheet, Platform} from "react-native";
+import {View, Text, StyleSheet, Platform,Image, TouchableOpacity} from "react-native";
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_LOAD_CATEGORIES , GET_LOAD_CATEGORY_NETWORKS } from 'toktokload/graphql';
 import { useLazyQuery } from '@apollo/react-hooks'
 import { usePrompt } from 'src/hooks'
 import { ErrorUtility } from 'toktokload/util';
+import {load} from 'toktokload/assets/images'
+import { heart_selected_fill_icon } from 'toktokload/assets/icons'
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -15,12 +17,26 @@ import { BuyLoad, Favorites, VerifyContextProvider, VerifyContext, Advertisement
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , SIZE , FONT_SIZE , MARGIN , SHADOW } = CONSTANTS
 
+const FavoritesNav = ({onPress})=> {
+  return (
+    <TouchableOpacity onPress={onPress} style={{paddingRight: 16}}>
+          <Image style={{height: 20,width: 20}} resizeMode="contain" source={heart_selected_fill_icon}/>
+    </TouchableOpacity>
+  )
+}
+
 const MainComponent = ({ navigation, route }) => {
 
-  const { adsRegular } = useContext(VerifyContext);
+  navigation.setOptions({
+    headerRight: ()=> <FavoritesNav onPress={goToFavorites}/>
+  })
+
+  const { adsRegular , mobileNumber , mobileErrorMessage  } = useContext(VerifyContext);
   const [categories, setCategories]= useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const prompt = usePrompt();
+
+  const goToFavorites = ()=> navigation.navigate("ToktokLoadFavorites", {mobileErrorMessage,mobileNumber})
 
   const [getLoadCategories , {loading}] = useLazyQuery(GET_LOAD_CATEGORIES , {
     fetchPolicy:"network-only",
@@ -72,18 +88,25 @@ const MainComponent = ({ navigation, route }) => {
         activeCategory={()=>getActiveCategoryName(activeTab)}
       />
   
-        <ActionButton fixNativeFeedbackRadius={true} hideShadow={false} spacing={15} size={50} nativeFeedbackRippleColor="transparent" degrees={0} renderIcon={()=><View><Text>gg</Text></View>} buttonColor="white" titleBgColor="transparent" bgColor="rgba(0,0,0,0.5)" offsetY={75} offsetX={14}>
-              <ActionButton.Item activeOpacity={0} size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="Activities" buttonColor="white" onPress={() => console.log("notes tapped!")}>
+        <ActionButton 
+            fixNativeFeedbackRadius={true} 
+            hideShadow={false} 
+            spacing={15} 
+            size={50} 
+            nativeFeedbackRippleColor="transparent" 
+            degrees={0} 
+            renderIcon={()=><Image style={{height: 30 ,width: 30}} resizeMode="contain" source={load}/>} 
+            buttonColor="white"
+            titleBgColor="transparent"
+            bgColor="rgba(0,0,0,0.5)"
+            offsetY={75}
+            offsetX={14}
+        >
+              {/* <ActionButton.Item activeOpacity={0} size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="Activities" buttonColor="white" onPress={() => console.log("notes tapped!")}>
                 <Icon name="md-create" style={styles.actionButtonIcon} />
               </ActionButton.Item>
-              <ActionButton.Item size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="toktokwallet" buttonColor="white" onPress={() => console.log("notes tapped!")}>
+              <ActionButton.Item size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="toktokwallet" buttonColor="white" onPress={() => navigation.navigate("ToktokLoadFavorites" , {mobileErrorMessage , mobileNumber})}>
                 <Icon name="md-create" style={styles.actionButtonIcon} />
-              </ActionButton.Item>
-              {/* <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => {}}>
-                <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
-              </ActionButton.Item>
-              <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => {}}>
-                <Icon name="md-done-all" style={styles.actionButtonIcon} />
               </ActionButton.Item> */}
         </ActionButton>
      

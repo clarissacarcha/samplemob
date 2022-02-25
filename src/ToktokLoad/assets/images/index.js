@@ -5,4 +5,5 @@ export const load_logo = require("./load-logo.png");
 export const empty_favorite = require("./empty-favorite.png");
 export const empty_load_item = require("./empty-load-item.png");
 export const empty_search = require("./empty-search.png");
+export const load = require("./Load.png")
 
