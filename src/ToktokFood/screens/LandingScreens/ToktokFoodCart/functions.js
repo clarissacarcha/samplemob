@@ -77,6 +77,27 @@ export const getItemOrderType = consumer => {
   return orderType;
 };
 
+export const parseAmountComputation = async cartItem => {
+  let sVoucher = [];
+  return Promise.all(
+    cartItem.map(item => {
+      const {basePrice, quantity, productid} = item;
+      delete item.__typename;
+
+      sVoucher.push({
+        productid,
+        amount: basePrice,
+        srp_amount: basePrice,
+        srp_totalamount: Number(basePrice.toFixed(2)) * quantity,
+        total_amount: Number(basePrice.toFixed(2)) * quantity,
+        quantity: quantity,
+      });
+    }),
+  ).then(() => {
+    return sVoucher;
+  });
+};
+
 export const handleShippingVouchers = async shippingVoucher => {
   let sVoucher = [];
   return Promise.all(

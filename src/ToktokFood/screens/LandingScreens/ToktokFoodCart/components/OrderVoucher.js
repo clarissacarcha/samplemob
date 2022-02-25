@@ -17,6 +17,7 @@ import {FONT_SIZE} from 'res/variables';
 
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
+import {parseAmountComputation} from '../functions';
 
 // Queries
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -30,6 +31,7 @@ const OrderVoucher = ({autoShipping}) => {
   const [voucher, setVoucher] = useState('');
   const [voucherError, setVoucherError] = useState(null);
   const [showError, setShowError] = useState(false);
+  const [showInlineError, setShowInlineError] = useState(false);
   const applyTextStyle = voucher ? styles.subText : {...styles.subText, color: '#C4C4C4'};
 
   const [getVoucherCode] = useLazyQuery(GET_VOUCHER_CODE, {
@@ -42,6 +44,7 @@ const OrderVoucher = ({autoShipping}) => {
     //   },
     // },
     onCompleted: ({getVoucherCode}) => {
+      console.log(getVoucherCode);
       const {success, message, type} = getVoucherCode;
       if (!success) {
         setShowError(!showError);
@@ -65,26 +68,26 @@ const OrderVoucher = ({autoShipping}) => {
     },
   });
 
-  const onApplyVoucher = () => {
+  const onApplyVoucher = async () => {
     const {cartItemsLength, items} = temporaryCart;
     const {email} = customerInfo;
     const promoCount = 0;
     const isMystery = 0;
 
     if (cartItemsLength) {
-      // console.log({
-      //   input: {
-      //     brandId: items[0].companyId,
-      //     shopid: items[0]?.shopid,
-      //     code: voucher,
-      //     region: items[0]?.shopRegion,
-      //     email,
-      //     subtotal: temporaryCart.totalAmount,
-      //     paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
-      //     promoCount,
-      //     isMystery,
-      //   },
-      // });
+      const orders = await parseAmountComputation(temporaryCart?.items);
+      console.log({
+        input: {
+          brandId: items[0].companyId,
+          shopid: items[0]?.shopid,
+          code: voucher,
+          region: items[0]?.shopRegion,
+          subtotal: temporaryCart.totalAmount,
+          paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+          promoCount,
+          orders,
+        },
+      });
       getVoucherCode({
         variables: {
           input: {
@@ -92,11 +95,10 @@ const OrderVoucher = ({autoShipping}) => {
             shopid: items[0]?.shopid,
             code: voucher,
             region: items[0]?.shopRegion,
-            email,
             subtotal: temporaryCart.totalAmount,
             paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
             promoCount,
-            isMystery,
+            orders,
           },
         },
       });
@@ -104,6 +106,8 @@ const OrderVoucher = ({autoShipping}) => {
   };
 
   useEffect(() => {
+    console.log('test');
+    setShowInlineError(true);
     if (!autoShipping?.success && voucher) {
       onApplyVoucher();
     }
@@ -151,7 +155,7 @@ const OrderVoucher = ({autoShipping}) => {
         </View>
       )}
 
-      <InlineError />
+      <InlineError isVisible={showInlineError} setIsVisible={setShowInlineError} />
 
       <View style={styles.voucherContainer}>
         <VoucherList hasClose />
