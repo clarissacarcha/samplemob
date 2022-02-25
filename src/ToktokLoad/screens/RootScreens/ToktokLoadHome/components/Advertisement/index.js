@@ -13,8 +13,9 @@ const DisplayImage = ({item,index,autoplay})=> {
     return (
         <View style={{flex:1}}>
             <Image
-                // source={item.image}
-                source={blank}
+                source={{
+                    uri: item.filename
+                }}
                 style={[styles.adImage, {...(autoplay ? {width}: {})}]}
                 resizeMode="cover"
             />

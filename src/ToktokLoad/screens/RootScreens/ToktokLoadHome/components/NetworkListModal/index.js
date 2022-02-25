@@ -16,7 +16,9 @@ const RenderItem = ({item,index,onPress}) => {
     return (
         <TouchableHighlight onPress={onPressThrottle} underlayColor={COLOR.LIGHT} style={styles.network}>
             <View style={{flexDirection:"row" ,justifyContent:"center" , alignItems:'center'}}>
-                  <Image style={styles.image} source={load_logo} resizeMode="contain"/>
+                  <Image style={styles.image} source={{
+                      uri: item.iconUrl
+                  }} resizeMode="contain"/>
                   <View style={{flex:1}}>
                     <Text numberOfLines={2} style={styles.text}>{item.name}</Text>
                   </View>

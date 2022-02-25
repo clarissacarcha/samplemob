@@ -16,7 +16,7 @@ export const GET_LOAD_CATEGORY_NETWORKS = gql`
             name
             loadCategoryId
             inputLengthId
-            icon_url
+            iconUrl
             inputLength {
                 id
                 name
