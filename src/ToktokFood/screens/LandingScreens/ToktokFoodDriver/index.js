@@ -21,6 +21,7 @@ import {CancelOrder, DriverAnimationView, DriverDetailsView, PickUpDetailsView, 
 const ToktokFoodDriver = ({route, navigation}) => {
   const referenceNum = route.params ? route.params.referenceNum : '';
   const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(0);
   const [riderSeconds, setRiderSeconds] = useState(0);
   const [showCancel, setShowCancel] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
@@ -85,11 +86,37 @@ const ToktokFoodDriver = ({route, navigation}) => {
     return unsubscribe;
   }, [navigation]);
 
+  // useEffect(() => {
+  //   if (isFocus) {
+  //     setSeconds(300);
+  //   }
+  // }, [isFocus]);
+
   useEffect(() => {
-    if (isFocus) {
-      setSeconds(300);
+    if (transaction?.orderStatus === 'p' && minutes === 0) {
+      setMinutes(5);
     }
-  }, [isFocus]);
+
+    return () => clearInterval();
+  }, [transaction]);
+
+  useEffect(() => {
+    if (minutes > 0) {
+      setTimeout(() => {
+        setMinutes(minutes - 1);
+      }, 60000);
+    }
+
+    if (minutes === 0 && transaction?.orderStatus === 'p') {
+      setShowDialogMessage({
+        title: 'No Response from Merchant',
+        message: "Merchant hasn't confirmed your order.\nPlease try again.",
+        show: true,
+        type: 'warning',
+      });
+    }
+    return () => clearTimeout();
+  }, [minutes]);
 
   const clearCart = () => {
     dispatch({type: 'SET_TOKTOKFOOD_CART_ITEMS', payload: []});
@@ -182,18 +209,18 @@ const ToktokFoodDriver = ({route, navigation}) => {
           checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
         } else {
           if (riderDetails == null) {
-            BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
-            BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
-            if (transaction.orderStatus == 'p') {
-              setShowDialogMessage({
-                title: 'No Response from Merchant',
-                message: "Merchant hasn't confirmed your order.\nPlease try again.",
-                show: true,
-                type: 'warning',
-              });
-            } else {
-              setSeconds(300);
-            }
+            // BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+            // BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
+            // if (transaction.orderStatus == 'p') {
+            //   setShowDialogMessage({
+            //     title: 'No Response from Merchant',
+            //     message: "Merchant hasn't confirmed your order.\nPlease try again.",
+            //     show: true,
+            //     type: 'warning',
+            //   });
+            // } else {
+            //   setSeconds(300);
+            // }
           } else {
             setSeconds(300);
           }
@@ -242,6 +269,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
       // let tab = selectedTab(title);
       // navigation.navigate('ToktokFoodOrderTransactions', {tab});
       setSeconds(300);
+      setMinutes(5);
     }
   };
 

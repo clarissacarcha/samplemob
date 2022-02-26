@@ -81,7 +81,7 @@ export const Menu = ({setUserLocation, constants}) => {
       )}
 
       {/* TOKTOKFOOD COMING SOON */}
-      {constants.isToktokfoodComingSoonDisplayed == 1 && (
+      {/* {constants.isToktokfoodComingSoonDisplayed == 1 && ( */}
         <MenuIcon
           label={'toktokfood'}
           icon={ToktokfoodIcon}
@@ -91,7 +91,7 @@ export const Menu = ({setUserLocation, constants}) => {
           }}
           isNew
         />
-      )}
+       {/* )} */}
 
       <MenuIcon
         label={'profile'}
