@@ -115,6 +115,10 @@ export class TransactionUtility {
         event: "TOKTOKWALLET",
         title: promptTitle
       })
+
+      if(graphQLErrors[0]?.payload?.code == "fundTransferPending"){
+        return navigation.navigate("ToktokWalletCashOutOtherBanks")
+      }
     }
     return navigation.pop()
   }
