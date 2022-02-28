@@ -170,8 +170,8 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
                         <TextInput
                           value={mobileNumber}
                           onChangeText={onChangeText}
-                          placeholder={`Enter ${activeNetwork.inputLength.inputLength}-digits ${activeNetwork.inputLength.name}`}
-                          keyboardType="number-pad"
+                          placeholder={`${activeNetwork.inputLength.fieldPlaceholder}`}
+                          keyboardType={activeNetwork.inputLength.fieldFormat == 2 ? "default" : "number-pad"}
                           returnKeyType="done"
                           maxLength={+activeNetwork?.inputLength?.inputLength}
                         />
