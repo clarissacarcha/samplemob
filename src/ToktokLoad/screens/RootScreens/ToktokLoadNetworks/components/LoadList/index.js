@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect, memo, useCallback} from "react";
+import React, {useState, useContext, useEffect, memo, useCallback, useMemo} from "react";
 import {View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl} from "react-native";
 
 //UTILS
@@ -14,31 +14,29 @@ import { SomethingWentWrong } from "toktokload/components";
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
-import { GET_LOAD_ITEMS, POST_FAVORITE_LOAD, PATCH_REMOVE_FAVORITE_LOAD } from 'toktokload/graphql/model';
+import { GET_LOAD_ITEMS, GET_SEARCH_LOAD_ITEMS, POST_FAVORITE_LOAD, PATCH_REMOVE_FAVORITE_LOAD } from 'toktokload/graphql/model';
 import { usePrompt } from 'src/hooks';
 import { stubTrue } from "lodash";
 
 //IMAGES
 import { empty_load_item, empty_search } from "toktokload/assets/images";
 
-
-export const LoadList = memo(({ loadVariantId, navigation, mobileNumber }) => {
+export const LoadList = memo(({ loadVariantId, navigation, mobileNumber, networkId, processSearch, getSearchLoading }) => {
 
   const prompt = usePrompt();
   const {
     selectedLoad,
     setSelectedLoad,
-    favorites,
-    setFavorites,
     loads,
     setLoads,
-    subContainerStyle,
-    setSubContainerStyle
+    loadFavorite,
+    setLoadFavorite,
+    search,
+    setSearch,
+    hasSearch,
+    setHasSearch
   } = useContext(VerifyContext);
-  const [loadFavorite, setLoadFavorite] = useState(null);
   const [isMounted, setIsMounted] = useState(true);
-  const [search, setSearch] = useState("");
-  const [searchData, setSearchData] = useState("");
   
   const [getLoadItems, {loading: getLoadItemsLoading, error: getLoadItemsError}]  = useLazyQuery(GET_LOAD_ITEMS, {
     fetchPolicy: "cache-and-network",
@@ -64,7 +62,11 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber }) => {
       });
     },
     onCompleted:({ postFavoriteLoad })=> {
-      processGetLoadItems();
+      if(search){
+        processSearch();
+      } else {
+        processGetLoadItems();
+      }
       console.log(postFavoriteLoad, "ADD")
     }
   });
@@ -80,27 +82,34 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber }) => {
       });
     },
     onCompleted:({ patchRemoveFavoriteLoad })=> {
-      processGetLoadItems();
+      if(search){
+        processSearch();
+      } else {
+        processGetLoadItems();
+      }
       console.log(patchRemoveFavoriteLoad, "REMOVE")
     }
   });
 
   useEffect(() => {
-    clearStates();
-    processGetLoadItems();
+    if(search == ""){
+      clearStates();
+      processGetLoadItems();
+    }
   }, [loadVariantId])
 
   useEffect(() => {
-    if(search){
-      processSearch(search);
+    if(search == "" && hasSearch){
+      clearStates();
+      processGetLoadItems();
     }
-  }, [search, loads]);
+  }, [search, hasSearch])
 
   const clearStates = () => {
+    setHasSearch(false);
     setIsMounted(true);
     setLoads([]);
     setSearch("");
-    setSearchData([]);
     setSelectedLoad({});
   }
 
@@ -139,32 +148,7 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber }) => {
     }
   }
 
-  const getData = () => {
-    if(search){
-      return searchData.length > 0 ? searchData : []
-    }
-    return loads
-  }
-
-  const onSearch = (value) => {
-    setSelectedLoad({});
-    setSearch(value);
-    processSearch(value);
-  }
-
-  const processSearch = (value) => {
-    if(value){
-      const filteredContacts = loads.filter((item) => {
-        let searchKey = value.toLowerCase();
-        return item.name.toLowerCase().includes(searchKey) || item.amount.toString().includes(searchKey) || item.descriptions.toLowerCase().includes(searchKey)
-      });
-      setSearchData(filteredContacts)
-    } else {
-      setSearchData([]);
-    }
-  }
-  
-  const ListEmptyComponent = () => {
+  const ListEmptyComponent = useMemo(() => {
     if(isMounted || getLoadItemsLoading) return null
 
     const imageSrc = search ? empty_search : empty_load_item;
@@ -175,9 +159,9 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber }) => {
         <EmptyList imageSrc={imageSrc} label={label} message={message} />
       </View>
     )
-  }
+  });
 
-  if(getLoadItemsLoading && !loadFavorite && loads.length == 0){
+  if((getLoadItemsLoading && !loadFavorite && loads.length == 0) || (getSearchLoading && !loadFavorite)){
     return (
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
@@ -193,14 +177,8 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber }) => {
   }
   return (
     <View style={styles.container}>
-      {/* <SearchInput
-        search={search}
-        onChangeText={onSearch}
-        placeholder="Search Load Products Here"
-        containerStyle={{ padding: moderateScale(16) }}
-      /> */}
       <FlatList
-        data={getData()}
+        data={loads}
         renderItem={({ item, index }) => (
           <LoadDetails
             index={index}
@@ -217,10 +195,10 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber }) => {
         ListEmptyComponent={ListEmptyComponent}
         refreshControl={
           <RefreshControl
-            refreshing={getLoadItemsLoading && !loadFavorite}
+            refreshing={(getLoadItemsLoading || getSearchLoading) && !loadFavorite}
             onRefresh={() => {
               setSelectedLoad({});
-              processGetLoadItems();
+              search ? processSearch() : processGetLoadItems();
             }}
           />
         }

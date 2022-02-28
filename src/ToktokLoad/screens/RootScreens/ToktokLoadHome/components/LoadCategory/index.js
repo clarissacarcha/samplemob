@@ -150,7 +150,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
               {
                 activeNetwork 
                 ? <View style={{flexDirection:"row",alignItems:"center"}}>
-                     <Image source={blank} style={styles.networkImage} resizeMode="contain"/>
+                     <Image source={{uri: activeNetwork.iconUrl}} style={styles.networkImage} resizeMode="contain"/>
                      <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginLeft: 5}}>{activeNetwork.name}</Text>
                   </View>
                 : <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Select {activeCategory()?.name ? activeCategory().name : ""}..</Text>
@@ -237,8 +237,8 @@ const styles = StyleSheet.create({
     resizeMode: "contain"
   },
   networkImage: {
-    height:  moderateScale(40),
-    width:  moderateScale(40),
+    height:  moderateScale(20),
+    width:  moderateScale(20),
   }
 })
 

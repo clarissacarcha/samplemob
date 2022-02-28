@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState, useCallback, useMemo} from "react";
-import {View, Text, StyleSheet} from "react-native";
+import {View, Text, StyleSheet, Image} from "react-native";
 
 //UTIL
 import { moderateScale } from "toktokload/helper";
@@ -15,75 +15,128 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql'
-import { GET_LOAD_VARIANTS } from 'toktokload/graphql/model'
+import { GET_LOAD_VARIANTS, GET_SEARCH_LOAD_ITEMS } from 'toktokload/graphql/model'
+
+const ErrorComponent = ({ error, onRefetch }) => {
+  return (
+    <View style={styles.container}>
+      <SomethingWentWrong onRefetch={onRefetch} error={error} />
+    </View>
+  )
+}
 
 const MainComponent = ({ navigation, route }) => {
  
-  const { selectedLoad, setSelectedLoad, loads, setLoads, subContainerStyle, searchData, setSearchData } = useContext(VerifyContext);
+  const networkId = route.params?.network.id;
+  const {
+    setSelectedLoad,
+    loads,
+    setLoads,
+    setLoadFavorite,
+    search,
+    setSearch,
+    hasSearch,
+    setHasSearch
+  } = useContext(VerifyContext);
   const [loadVariants, setLoadVariant]= useState([]);
   const [activeTab, setActiveTab] = useState(null);
-  const [search, setSearch] = useState("");
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   
-
   const [getLoadVariants, {loading, error}] = useLazyQuery(GET_LOAD_VARIANTS, {
     fetchPolicy:"network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onCompleted:({ getLoadVariants })=> {
-      // processNetworkTabs(getLoadVariants);
-      console.log(getLoadVariants)
-
-      setActiveTab(getLoadVariants[0].id)
-      setLoadVariant(getLoadVariants)
+      setActiveTab(getLoadVariants[0].id);
+      setLoadVariant(getLoadVariants);
     }
-  })
+  });
+
+  const [getSearchLoadItems, {loading: getSearchLoading, error: getSearchError}]  = useLazyQuery(GET_SEARCH_LOAD_ITEMS, {
+    fetchPolicy: "cache-and-network",
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: (error) => {
+    },
+    onCompleted: ({ getSearchLoadItems }) => {
+      setLoadFavorite(null);
+      setLoads(getSearchLoadItems);
+      setHasSearch(true);
+    }
+  });
 
   useEffect(() => {
+    procesGetLoadVariants();
+  }, [])
+
+  const procesGetLoadVariants = () => {
     getLoadVariants({
       variables: {
         input: {
-          networkId: route.params.network.id
+          networkId
         }
       }
     });
-  }, [])
+  }
 
   const onSearchChange = (value) => {
     setSearch(value);
-    processSearch(value);
   }
 
-  const processSearch = (value) => {
-    if(value){
-      const filteredContacts = loads.filter((item) => {
-        let searchKey = value.toLowerCase();
-        return item.name.toLowerCase().includes(searchKey) || item.amount.toString().includes(searchKey) || item.descriptions.toLowerCase().includes(searchKey)
-      });
-      setSearchData(filteredContacts)
-    } else {
-      setSearchData([]);
+  const processSearch = useCallback(() => {
+    if(search){
+      setSelectedLoad({});
+      getSearchLoadItems({
+        variables: {
+          input: {
+            networkId,
+            searchKey: search
+          }
+        }
+      })
     }
+  })
+
+  const displayLoadList = () => {
+    if(getSearchError) return <ErrorComponent error={getSearchError} onRefetch={() => processSearch()} />
+    if(activeTab){
+      return (
+        <LoadList
+          navigation={navigation}
+          loadVariantId={activeTab}
+          mobileNumber={route.params?.mobileNumber}
+          networkId={networkId}
+          processSearch={processSearch}
+          getSearchLoading={getSearchLoading}
+        />
+      )
+    }
+    return null
   }
 
   if(error){
-    return (
-      <View style={styles.container}>
-        <SomethingWentWrong onRefetch={() => { getLoadVariants() }} error={error} />
-      </View>
-    )
+    return <ErrorComponent error={error} onRefetch={() => procesGetLoadVariants()} />
   }
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Buy Load for</Text>
-        <Text style={styles.mobileNo}>{route.params?.mobileNumber}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={{ uri: route.params.network.iconUrl }} resizeMode="contain" style={{ height: 15, width: 40 }} />
+          <Text style={styles.mobileNo}>{route.params?.mobileNumber}</Text>
+        </View>
       </View>
       <SearchInput
         search={search}
         onChangeText={onSearchChange}
         placeholder="Search Load Products Here"
-        containerStyle={{ paddingHorizontal: moderateScale(16) }}
+        containerStyle={{ paddingHorizontal: moderateScale(16), paddingBottom: moderateScale(hasSearch ? 16 : 0) }}
+        onSubmitEditing={processSearch}
+        onKeyboardVisible={(val) => {
+          // console.log(val)
+          // setKeyboardVisible(val)
+          // if(val && !search){ setLoads([]) }
+        }}
       />
-      { !search && (
+      { (!hasSearch && !getSearchLoading) && (
         <HeaderTabs
           tabs={loadVariants}
           scrollEnabled={true}
@@ -91,16 +144,9 @@ const MainComponent = ({ navigation, route }) => {
           setActiveTab={setActiveTab}
           fitToScreen={false}
           loading={loading}
-          subContainerStyle={subContainerStyle}
         />
       )}
-      { activeTab && (
-        <LoadList
-          navigation={navigation}
-          loadVariantId={activeTab}
-          mobileNumber={route.params?.mobileNumber}
-        />
-      )}
+      { displayLoadList() }
     </View>
   );
 };
