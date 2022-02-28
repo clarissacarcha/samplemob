@@ -11,6 +11,7 @@ const COLOR = {
   TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.15)',
   TRANSPARENT_ORANGE: 'rgba(245,132,31, 0.15)',
   RED: '#F93154',
+  GREEN: '#198754',
 };
 
 const FONT_FAMILY = {
