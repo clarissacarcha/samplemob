@@ -5,10 +5,10 @@ import CONSTANTS from '../../../common/res/constants'
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import { COLOR, FONT_SIZE } from '../../../res/variables'
 
-import AllActivities from './Components/AllActivities';
-import Completed from './Components/Completed'
-import OnGoing from './Components/OnGoing';
-import Cancelled from './Components/Cancelled';
+import AllActivities from './AllActivities';
+import Completed from './Completed'
+import OnGoing from './OnGoing';
+import Cancelled from './Cancelled';
 
 const ToktokGoActivitiesTopTab = createMaterialTopTabNavigator();
 
