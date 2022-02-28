@@ -73,7 +73,8 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 		let items = []
 		if(val.data.length == 0 || val.data == undefined) return
 		val.data[0].map((item, i) => {
-			let total = parseFloat(item.amount) * item.qty
+			
+			let total = parseFloat(item.product.price) * item.qty
 
 			//PROMOTIONS
 			let promo = {}
@@ -91,8 +92,10 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 				product_id: item.product.Id,
 				itemname: item.product.itemname,
 				quantity: item.qty,
-				amount: parseFloat(item.amount),
-				srp_amount: parseFloat(item.amount),
+				// amount: parseFloat(item.amount),
+				// srp_amount: parseFloat(item.amount),
+				amount: item.product.price,
+				srp_amount: item.product.price,
 				srp_totalamount: total,
 				total_amount: total,
 				order_type: orderType,
