@@ -129,7 +129,7 @@ export const ToktokWalletPayPandaForm = ({navigation,route})=> {
                     accountNumber: tokwaAccount.mobileNumber
                 },
             isSwipe: true,
-            swipeTitle: `Confirm`,
+            swipeTitle: `Swipe to Confirm`,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
             // onConfirm: ()=> {

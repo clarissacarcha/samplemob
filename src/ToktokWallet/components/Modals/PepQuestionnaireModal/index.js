@@ -6,6 +6,10 @@ import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp';
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
+import {
+    SourceOfIncome,
+    SourceOfWealth
+} from "./Components"
 import BottomSheetSourceOfIncome from 'toktokwallet/screens/KYCScreens/ToktokWalletVerification/Components/VerifyFullname/BottomSheetSourceOfIncome'
 import BottomSheetSourceOfWealth from 'toktokwallet/screens/KYCScreens/ToktokWalletVerification/Components/VerifyFullname/BottomSheetSourceOfWealth'
 const {COLOR, FONT_FAMILY: FONT ,SIZE,FONT_SIZE} = CONSTANTS
@@ -278,7 +282,25 @@ export const PepQuestionnaireModal = ({
                             index={1}
                         />
 
-                        <DropDownQuestion
+                        <SourceOfIncome
+                            pepInfoAnswer={{
+                                value: pepInfo.questionnaire.sourceOfIncomeId,
+                                des: pepInfo.questionnaire.sourceOfIncomeDes,
+                                others: pepInfo.questionnaire.sourceOfIncome
+                            }}
+                            setPepInfo={setPepInfo}
+                        />
+
+                        <SourceOfWealth
+                            pepInfoAnswer={{
+                                value: pepInfo.questionnaire.sourceOfWealthId,
+                                des: pepInfo.questionnaire.sourceOfWealthDes,
+                                others: pepInfo.questionnaire.sourceOfWealth
+                            }}
+                            setPepInfo={setPepInfo}
+                        />
+
+                        {/* <DropDownQuestion
                             question="3) Source of Income"
                             index={0}
                             sourceRef={SourceOfIncomeRef}
@@ -300,7 +322,7 @@ export const PepQuestionnaireModal = ({
                                 others: pepInfo.questionnaire.sourceOfWealth
                             }}
                             setPepInfo={setPepInfo}
-                        />
+                        /> */}
                     </View>
 
                     <View style={{flexDirection:"row",marginTop :50,alignItems:"center"}}>
@@ -342,8 +364,8 @@ export const PepQuestionnaireModal = ({
                     </View>
                 </ScrollView>
              
-                    <BottomSheetSourceOfIncome ref={SourceOfIncomeRef} changeIncomeInfo={changeIncomeInfo}/>
-                    <BottomSheetSourceOfWealth ref={SourceOfWealthRef} changeWealthInfo={changeWealthInfo}/>
+                    {/* <BottomSheetSourceOfIncome ref={SourceOfIncomeRef} changeIncomeInfo={changeIncomeInfo}/>
+                    <BottomSheetSourceOfWealth ref={SourceOfWealthRef} changeWealthInfo={changeWealthInfo}/> */}
                
                 <BuildingBottom/>
                 

@@ -84,6 +84,7 @@
     "react-native-render-html": "^4.2.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.5.0",
+    "react-native-select-multiple": "^2.1.0",
     "react-native-simple-image-cropper": "^3.1.0",
     "react-native-simple-radio-button": "^2.7.4",
     "react-native-simple-toast": "^1.1.2",

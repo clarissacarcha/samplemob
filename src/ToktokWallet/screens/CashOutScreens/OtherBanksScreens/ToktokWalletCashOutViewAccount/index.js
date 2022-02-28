@@ -103,7 +103,7 @@ export const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
                         </View>
                     </View>
 
-                    <View style={{marginVertical: 10,}}>
+                    {/* <View style={{marginVertical: 10,}}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>Account Address</Text>
                         <View style={[{justifyContent:"center"}]}>
                                <View
@@ -112,7 +112,7 @@ export const ToktokWalletCashOutViewAccount = ({navigation,route})=> {
                                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{bankAccount.address}</Text>
                                 </View>
                         </View>
-                    </View>
+                    </View> */}
 
                     
                    
