@@ -56,6 +56,9 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                                 style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
                                 keyboardType="numeric"
                                 returnKeyType="done"
+                                onSubmitEditing={()=> {
+                                    if(pinCode.length == 6) callBackFunc({pinCode , data})
+                                }}
                                 onChangeText={(value) => {
                                 if (value.length <= 6) {
                                     const replaceValue = value.replace(/[^0-9]/g,"")

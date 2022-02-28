@@ -1,12 +1,10 @@
-import React, { useState , useRef ,useEffect } from 'react';
-import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput,Dimensions,StatusBar,Image} from 'react-native';
+import React, { useState , useRef } from 'react';
+import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput,Dimensions,StatusBar} from 'react-native';
 import { ICON_SET, VectorIcon, YellowButton , HeaderBack , HeaderTitle } from 'src/revamp'
 import { AlertOverlay } from 'src/components';
-import { CheckIdleState  , DisabledButton , NumberBoxes, HeaderCancel, CircleIndicator , NumPad } from 'toktokwallet/components'
+import { CheckIdleState  , DisabledButton , NumberBoxes, HeaderCancel} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 import { BuildingBottom } from '../../../components';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import tokwaLogo from 'toktokwallet/assets/images/tokwa2.png';
 
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS
@@ -35,18 +33,6 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
         }, 10);
     };
 
-    useEffect(()=>{
-        if(pinCode.length == 6){
-            callBackFunc({pinCode , data})
-        }
-    },[pinCode])
-
-    useEffect(()=>{
-        if(errorMessage != ""){
-            setPinCode("")
-        }
-    },[errorMessage])
-
 
     return(
         <CheckIdleState>
@@ -54,41 +40,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                 style={styles.container}
             >
                  <View style={styles.content}>
-
-                    <Image
-                        style={styles.tokwaLogo}
-                        source={tokwaLogo}
-                        resizeMode="contain"
-                    />
-
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center",marginTop: 20}}>Enter TPIN</Text>
-                    <View style={{flexDirection:"row", justifyContent:"center",alignItems:"center"}}>
-                            <View style={{backgroundColor:COLOR.YELLOW, marginRight: 5, justifyContent:"center",alignItems:"center", height: FONT_SIZE.M,width: FONT_SIZE.M,borderRadius:  FONT_SIZE.M}}>
-                                <AntDesign name="exclamation" size={FONT_SIZE.XS} color="white"/>
-                            </View>
-                            <Text style={{ fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Do not share your TPIN with anyone.</Text>
-                    </View>
-                    <View style={{position: 'relative',flex: 1,justifyContent:"center",alignItems:"center"}}>
-                        <CircleIndicator pinCode={pinCode} showPin={showPin} numberOfBox={6}/>
-                    </View>
-                    {
-                         errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>{errorMessage}</Text>
-                    }
-                    <NumPad
-                        setPinCode={setPinCode}
-                        pinCode={pinCode}
-                    />
-
-                    <View style={{justifyContent:"center", alignItems: "center",flex: 1}}>
-                        <TouchableOpacity
-                                style={{}}
-                                onPress={()=>navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})}
-                        >
-                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
-                        </TouchableOpacity>
-                    </View>
-                  
-                    {/* <View style={styles.tpinBody}>
+                    <View style={styles.tpinBody}>
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginVertical: 30}}>Enter TPIN</Text>
                         <View style={{flexDirection:"row"}}>
                         <NumberBoxes 
@@ -104,6 +56,9 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                                 style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
                                 keyboardType="numeric"
                                 returnKeyType="done"
+                                onSubmitEditing={()=> {
+                                    if(pinCode.length == 6) callBackFunc({pinCode , data})
+                                }}
                                 onChangeText={(value) => {
                                 if (value.length <= 6) {
                                     const replaceValue = value.replace(/[^0-9]/g,"")
@@ -132,8 +87,8 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                             <Text style={{color: COLOR.ORANGE,fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
                         </TouchableOpacity> 
                        
-                    </View> */}
-                    {/* <View style={styles.proceedBtn}>
+                    </View>
+                    <View style={styles.proceedBtn}>
                             {
                                 pinCode.length < 6
                                 ? <DisabledButton label={btnLabel} />
@@ -142,7 +97,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
                                     callBackFunc({pinCode , data})
                                 }} />
                             }
-                    </View> */}
+                    </View>
                 </View>
                 <BuildingBottom/>
             </View>
@@ -157,9 +112,8 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        justifyContent:"flex-start",
-        alignItems:"center",
-        textAlign:"center",
+        padding: 16,
+        justifyContent: "center",
     },
     tpinBody: {
         flex: 1,
@@ -182,10 +136,5 @@ const styles = StyleSheet.create({
         height: 70,
         width: "100%",
         justifyContent:"flex-end"
-    },
-    tokwaLogo: {
-        height: 80,
-        width: 200,
-        marginTop: 20,
     },
 })
