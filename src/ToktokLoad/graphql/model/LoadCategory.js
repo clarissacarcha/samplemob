@@ -21,6 +21,8 @@ export const GET_LOAD_CATEGORY_NETWORKS = gql`
                 id
                 name
                 inputLength
+                fieldPlaceholder
+                fieldFormat
             }
         }
     }
