@@ -85,7 +85,7 @@ export const parseAmountComputation = async cartItem => {
       delete item.__typename;
 
       sVoucher.push({
-        productid,
+        product_id: productid,
         amount: basePrice,
         srp_amount: basePrice,
         srp_totalamount: Number(basePrice.toFixed(2)) * quantity,

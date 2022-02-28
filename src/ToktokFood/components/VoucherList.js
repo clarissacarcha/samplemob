@@ -12,37 +12,27 @@ import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {reseller_badge} from 'toktokfood/assets/images';
 // import {getStatusbarHeight, verticalScale, moderateScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
-const VoucherList = ({isDisabled = false, isReseller = false, hasClose = false}) => {
+const VoucherList = ({
+  data = [],
+  isDisabled = false,
+  isReseller = false,
+  hasClose = false,
+  onCloseItem = () => null,
+}) => {
   const voucherStyle = isDisabled ? {...styles.voucherContainer, opacity: 0.4} : styles.voucherContainer;
-  const [voucherData, setVoucherData] = useState([
-    {
-      id: 1,
-      name: 'Voucher',
-    },
-    {
-      id: 2,
-      name: 'Free Delivery',
-    },
-    {
-      id: 3,
-      name: 'Free 100',
-    },
-    {
-      id: 4,
-      name: 'P1 Chibog',
-    },
-  ]);
+  const [voucherData, setVoucherData] = useState(data);
 
   useEffect(() => {
     if (isReseller) {
-      setVoucherData([{id: 0, name: 'Reseller -1.75%'}, ...voucherData]);
+      setVoucherData([{id: 0, name: 'Reseller -1.75%'}, ...data]);
       //   voucherData.unshift();
     }
-  }, [isReseller]);
+  }, [isReseller, data]);
 
-  const onCloseItem = id => {
-    const filterData = voucherData.filter(item => item.id !== id);
-  };
+  // const onCloseItem = id => {
+  //   const filterData = voucherData.filter(item => item.id !== id);
+  //   setVoucherData(filterData);
+  // };
 
   const voucherList = ({item}) => {
     if (item.id === 0) {
@@ -55,8 +45,8 @@ const VoucherList = ({isDisabled = false, isReseller = false, hasClose = false})
 
     return (
       <View style={voucherStyle}>
-        <Text style={styles.voucherText}>{item.name}</Text>
-        {hasClose && (
+        <Text style={styles.voucherText}>{item.vname}</Text>
+        {(hasClose || (item.type !== 'deal' && item.type !== 'auto')) && (
           <MIcon style={styles.closeIcon} name="close" size={14} color="white" onPress={() => onCloseItem(item.id)} />
         )}
       </View>

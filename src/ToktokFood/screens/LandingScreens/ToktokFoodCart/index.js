@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {useRoute, useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -12,6 +12,8 @@ import {
   RefreshControl,
   Text,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -46,9 +48,7 @@ import {
   tokwaErrorTitle,
 } from './functions';
 
-import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {
   GET_AUTO_SHIPPING,
   GET_SHIPPING_FEE,
@@ -68,6 +68,7 @@ import EnterPinCode from 'toktokfood/components/EnterPinCode';
 import {FONT, FONT_SIZE} from '../../../../res/variables';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
+import {parseAmountComputation} from './functions';
 
 const MainComponent = () => {
   const route = useRoute();
@@ -75,7 +76,10 @@ const MainComponent = () => {
   const nowDate = moment().format('YYYY-DD-YYYY');
 
   const {shopname} = route.params;
-  const {location, customerInfo, customerFranchisee, receiver} = useSelector(state => state.toktokFood);
+  const dispatch = useDispatch();
+  const {location, customerInfo, customerFranchisee, promotionVoucher, receiver} = useSelector(
+    state => state.toktokFood,
+  );
   const {user} = useSelector(state => state.session);
   const {
     totalAmount,
@@ -114,9 +118,24 @@ const MainComponent = () => {
     fetchPolicy: 'network-only',
     onError: error => console.log('getAutoShipping', error.response),
     onCompleted: ({getAutoShipping}) => {
-      // console.log(getAutoShipping);
+      console.log(getAutoShipping);
+      const {promotion, voucher} = getAutoShipping;
+      const filterPromo = promotionVoucher.filter(promo => promo.type !== 'auto' && promo.type !== 'deal');
       if (getAutoShipping.success) {
         setAutoShippingVoucher(getAutoShipping);
+        if (voucher && !promotion) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: [...filterPromo, voucher]});
+        }
+        if (promotion && !voucher) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: [...filterPromo, promotion]});
+        }
+        if (voucher && promotion) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: [...filterPromo, voucher, promotion]});
+        }
+      } else {
+        if (!voucher || !promotion) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: filterPromo});
+        }
       }
       setAutoShipping(getAutoShipping);
     },
@@ -141,30 +160,16 @@ const MainComponent = () => {
   }, [temporaryCart, location, isFocus]);
 
   useEffect(() => {
-    if (delivery) {
-      const {items} = temporaryCart;
-      const {email} = customerInfo;
-      getAutoShipping({
-        variables: {
-          input: {
-            region: items[0]?.shopRegion,
-            email,
-            subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
-            cartItems: [{shopid: items[0]?.shopid, shippingfee: delivery?.price}],
-            brandId: items[0].companyId,
-            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
-          },
-        },
-      });
-    }
+    onGetAutoApply();
   }, [paymentMethod]);
 
   const [getDeliverFee] = useLazyQuery(GET_SHIPPING_FEE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: ({getShippingFee}) => {
+    onCompleted: async ({getShippingFee}) => {
       const {items} = temporaryCart;
       const {email} = customerInfo;
+      const orders = await parseAmountComputation(temporaryCart?.items);
       setDeliveryInfo(getShippingFee);
       // console.log({
       //   input: {
@@ -185,6 +190,7 @@ const MainComponent = () => {
             cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
             brandId: items[0].companyId,
             paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+            orders,
           },
         },
       });
@@ -292,6 +298,38 @@ const MainComponent = () => {
       }
     },
   });
+
+  const onGetAutoApply = useCallback(async () => {
+    if (delivery) {
+      const {items} = temporaryCart;
+      const {email} = customerInfo;
+      const orders = await parseAmountComputation(temporaryCart?.items);
+      // console.log({
+      //   input: {
+      //     region: items[0]?.shopRegion,
+      //     email,
+      //     subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+      //     cartItems: [{shopid: items[0]?.shopid, shippingfee: delivery?.price}],
+      //     brandId: items[0].companyId,
+      //     paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+      //     orders,
+      //   },
+      // });
+      getAutoShipping({
+        variables: {
+          input: {
+            region: items[0]?.shopRegion,
+            email,
+            subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+            cartItems: [{shopid: items[0]?.shopid, shippingfee: delivery?.price}],
+            brandId: items[0].companyId,
+            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+            orders,
+          },
+        },
+      });
+    }
+  }, [paymentMethod]);
 
   const fixOrderLogs = async () => {
     const VOUCHER_FlAG =
@@ -705,7 +743,7 @@ const MainComponent = () => {
 
         {orderType === 'Delivery' && (
           <>
-            <OrderVoucher autoShipping={autoShipping} />
+            <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} />
             <Separator />
           </>
         )}
