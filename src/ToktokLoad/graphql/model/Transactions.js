@@ -45,6 +45,13 @@ const transaction = `
   comType
   createdAt
 `
+export const GET_TRANSACTIONS_BY_STATUS = gql`
+  query getTransactionsByStatus($input: GetTransactionsByStatusInput!) {
+    getTransactionsByStatus(input: $input) {
+      ${transaction}
+    }
+  }
+`
 export const GET_LOAD_TRANSACTIONS = gql`
   query getTransactions($input: GetTransactionsInput!) {
     getTransactions(input: $input) {

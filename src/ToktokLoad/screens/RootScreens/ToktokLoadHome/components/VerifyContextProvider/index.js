@@ -9,7 +9,7 @@ import { ErrorUtility } from 'toktokload/util';
 export const VerifyContext = createContext()
 const {Provider} = VerifyContext
 
-export const VerifyContextProvider = ({children})=> {
+export const VerifyContextProvider = ({children, navigation})=> {
 
   const { user } = useSelector((state) => state.session);
   const formattedMobile = user?.username.replace("+63", "0");

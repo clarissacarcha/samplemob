@@ -7,21 +7,33 @@ const {Provider} = VerifyContext
 export const VerifyContextProvider = ({children})=> {
 
   const [favorites, setFavorites] = useState([]);
-  const [loads, setLoads] = useState({});
+  const [hasSearch, setHasSearch] = useState(false);
+  const [loads, setLoads] = useState([]);
+  const [loadFavorite, setLoadFavorite] = useState(null);
   const [selectedLoad, setSelectedLoad] = useState({});
   const [subContainerStyle, setSubContainerStyle] = useState({});
-  
+  const [searchData, setSearchData] = useState([]);
+  const [search, setSearch] = useState("");
+
   return (
     <Provider
       value={{
         favorites,
         setFavorites,
+        hasSearch,
+        setHasSearch,
         loads,
         setLoads,
+        loadFavorite,
+        setLoadFavorite,
         selectedLoad,
         setSelectedLoad,
         subContainerStyle,
-        setSubContainerStyle
+        setSubContainerStyle,
+        searchData,
+        setSearchData,
+        search,
+        setSearch
       }}
     >
       {children}

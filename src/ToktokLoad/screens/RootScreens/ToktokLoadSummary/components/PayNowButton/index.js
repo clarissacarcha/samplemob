@@ -82,11 +82,8 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
     <>
       <AlertOverlay visible={loading}/>
       <View style={styles.container}>
-        <Text style={styles.review}>
-          Review the accuracy and completeness of details provided.
-        </Text>
         <Text style={styles.terms}>
-          <Text>Please read our </Text>
+          <Text>Please review the accuracy of the details provided and read our </Text>
           <Text style={styles.paymentPolicy} onPress={onPressTermsAndContidions} >
             Terms and Conditions
           </Text>
