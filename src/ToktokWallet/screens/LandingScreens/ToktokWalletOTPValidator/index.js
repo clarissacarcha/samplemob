@@ -87,6 +87,9 @@ export const ToktokWalletOTPValidator = ({navigation,route})=> {
                             style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
                             keyboardType="numeric"
                             returnKeyType="done"
+                            onSubmitEditing={()=> {
+                                if(otpCode.length == 6) callBackFunc({Otp: otpCode , data: data})
+                            }}
                             onChangeText={(value) => {
                                 if (value.length <= 6) {
                                     const replaceValue = value.replace(/[^0-9]/g,"")
