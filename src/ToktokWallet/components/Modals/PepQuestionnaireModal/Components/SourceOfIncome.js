@@ -21,7 +21,7 @@ export const SourceOfIncome = ({
 
     const [data,setData] = useState([]);
     const [visible,setVisible] = useState(false);
-    const [sourceOfIncomes,setSourceOfIncomes] = useState([])
+    const [selectedData,setSelectedData] = useState([])
 
     const [getSourceOfIncome , {loading}] = useLazyQuery(GET_SOURCE_OF_INCOME , {
         client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
@@ -47,6 +47,14 @@ export const SourceOfIncome = ({
     }
 
     useEffect(()=>getSourceOfIncome(),[])
+    useEffect(()=> {
+        const selected = data.filter((item,index)=> {
+            if(item.selected){
+                return item
+            }
+        })
+        setSelectedData(selected)
+    },[data])
 
     return (
         <>
@@ -55,7 +63,6 @@ export const SourceOfIncome = ({
             setVisible={setVisible}
             data={data}
             setData={setData}
-            setSourceOfIncomes={setSourceOfIncomes}
             loading={loading}
         />
         <View style={{marginTop: 10}}>
@@ -72,12 +79,7 @@ export const SourceOfIncome = ({
                     <VectorIcon iconSet={ICON_SET.Feather} name="chevron-down"/>
                 </TouchableOpacity>
         </View>
-        {
-            data[0]?.selected &&
-            <View>
-                <Text>Others here</Text>
-            </View>
-        }
+        <Text>{JSON.stringify(selectedData)}</Text>
         </>
     )
 }

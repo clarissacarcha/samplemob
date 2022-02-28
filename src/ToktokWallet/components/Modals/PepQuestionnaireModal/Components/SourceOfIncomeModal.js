@@ -28,7 +28,6 @@ export const SourceOfIncomeModal = ({
     setVisible,
     loading,
     data,
-    setSourceOfIncomes,
     setData,
 })=> {
 
