@@ -45,6 +45,7 @@ import SelectedDelivery from '../../screens/AuthenticatedStack/ConsumerScreens/D
 // import SenderDetails from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SenderDetails';
 // import AddLocation from '../../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/AddLocation';
 import ConsumerChangePassword from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerChangePassword';
+import EnterPassword from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/EnterPassword';
 
 // import ConsumerProfile from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerProfile';
 import DeliveryTracking from '../../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
@@ -316,6 +317,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="Order" component={Order} />
     <Authenticated.Screen name="SearchLocationFilter" component={SearchLocationFilter} />
     <Authenticated.Screen name="DriverDeliveriesTab" component={DriverDeliveriesTab} />
+    <Authenticated.Screen name="EnterPassword" component={EnterPassword} />
   </Authenticated.Navigator>
 );
 

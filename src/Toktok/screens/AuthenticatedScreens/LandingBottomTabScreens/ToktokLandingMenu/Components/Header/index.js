@@ -1,14 +1,20 @@
 import React from 'react';
-import {View, StyleSheet, StatusBar, ImageBackground} from 'react-native';
+import { View, StyleSheet, StatusBar, ImageBackground, Text } from 'react-native';
 
-import {FONT, FONT_SIZE, SIZE} from '../../../../../../../res/variables';
+import { FONT, FONT_SIZE, SIZE } from '../../../../../../../res/variables';
 
-import HeaderImage from '../../../../../../../assets/toktok/images/HeaderBackground.png';
+import HeaderImage from '../../../../../../../assets/toktok/images/ProfileBackground.png';
 
-export const Header = ({children}) => {
+export const Header = ({ children }) => {
   return (
-    <View style={{height: 130, backgroundColor: 'white'}}>
-      <ImageBackground style={{height: 130}} source={HeaderImage} resizeMode="cover">
+    <View>
+      <View style={styles.headerBox}>
+        <View style={styles.greetingBox}>
+          <Text style={{fontFamily:FONT.REGULAR,fontSize:FONT_SIZE.XL +1}}>Menu</Text>
+        </View>
+      </View>
+      <View></View>
+      <ImageBackground style={{ height: 192 }} source={HeaderImage} resizeMode="cover">
         {children}
       </ImageBackground>
     </View>
@@ -16,6 +22,20 @@ export const Header = ({children}) => {
 };
 
 const styles = StyleSheet.create({
+  headerBox: {
+    backgroundColor: 'white',
+    shadowColor: "#000",
+    paddingVertical: 16,
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  
   inputBox: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -26,9 +46,10 @@ const styles = StyleSheet.create({
     marginHorizontal: SIZE.MARGIN,
   },
   greetingBox: {
-    height: 50,
     marginTop: StatusBar.currentHeight,
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
     paddingHorizontal: SIZE.MARGIN,
   },
   greetingText: {
