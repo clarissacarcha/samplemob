@@ -5,6 +5,7 @@ import CONSTANTS from '../../../common/res/constants'
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import { COLOR, FONT_SIZE } from '../../../res/variables'
 
+import AllActivities from './Components/AllActivities';
 import Completed from './Components/Completed'
 import OnGoing from './Components/OnGoing';
 import Cancelled from './Components/Cancelled';
@@ -14,22 +15,27 @@ const ToktokGoActivitiesTopTab = createMaterialTopTabNavigator();
 export const ToktokGoActivities = () => {
   return (
     <ToktokGoActivitiesTopTab.Navigator
-    // style={{ width: '80%'}}
-      tabBarOptions={{
-        indicatorStyle: {
-          width: 0, height: 0, elevation: 0,      
-      }
-      
-    }}
-      screenOptions={{
-        tabBarLabelStyle: {fontSize: 12},
-        tabBarItemStyle: {width: 100},
-        tabBarStyle: {marginTop: 100},
-        tabBarContentContainerStyle: {
-          marginTop: 100,
-        },
-      }}
-    >
+    tabBarOptions={{
+      tabStyle: { width: 90 },
+      pressColor:'transparent',
+      indicatorStyle: {
+        width: 0, height: 0, elevation: 0,      
+      },
+    }
+    
+    }>
+      <ToktokGoActivitiesTopTab.Screen
+        name="AllActivities"
+        component={AllActivities}
+        options={{
+          tabStyle: {width: 10},
+          tabBarLabel: ({focused}) => (
+            <View style={focused ? styles.viewFocused : styles.viewNotFocused}>
+              <Text style={focused ? styles.textFocused : styles.textNotFocused}>All</Text>
+            </View>
+          )
+        }}
+      />
       <ToktokGoActivitiesTopTab.Screen
         name="OnGoing"
         component={OnGoing}
@@ -38,7 +44,7 @@ export const ToktokGoActivities = () => {
             <View style={focused ? styles.viewFocused : styles.viewNotFocused}>
               <Text style={focused ? styles.textFocused : styles.textNotFocused}>OnGoing</Text>
             </View>
-          ),
+          )
         }}
       />
       <ToktokGoActivitiesTopTab.Screen
@@ -47,9 +53,9 @@ export const ToktokGoActivities = () => {
         options={{
           tabBarLabel: ({focused}) => (
             <View style={focused ? styles.viewFocused : styles.viewNotFocused}>
-              <Text style={focused ? styles.textFocused : styles.textNotFocused}>Completed</Text>
-            </View>
-          ),
+             <Text style={focused ? styles.textFocused : styles.textNotFocused}>Completed</Text>
+           </View>
+         )
         }}
       />
       <ToktokGoActivitiesTopTab.Screen
@@ -58,9 +64,9 @@ export const ToktokGoActivities = () => {
         options={{
           tabBarLabel: ({focused}) => (
             <View style={focused ? styles.viewFocused : styles.viewNotFocused}>
-              <Text style={focused ? styles.textFocused : styles.textNotFocused}>Cancelled</Text>
-            </View>
-          ),
+             <Text style={focused ? styles.textFocused : styles.textNotFocused}>Cancelled</Text>
+           </View>
+         )
         }}
       />
     </ToktokGoActivitiesTopTab.Navigator>
@@ -97,21 +103,23 @@ const styles = StyleSheet.create({
     borderColor: COLOR.ORANGE, 
     backgroundColor: COLOR.ORANGE, 
     borderRadius: 10, 
-    paddingHorizontal: 19
+    width: 80
   }, 
   viewNotFocused: {
     borderWidth: 1, 
     borderColor: COLOR.ORANGE,
     backgroundColor: COLOR.WHITE, 
     borderRadius: 10, 
-    paddingHorizontal: 19
+    width: 80
   },
   textFocused: { 
-    fontSize: FONT_SIZE.M, 
+    textAlign:'center',
+    fontSize: FONT_SIZE.S, 
     color: COLOR.WHITE,
   },
   textNotFocused: { 
-    fontSize: FONT_SIZE.M, 
+    textAlign:'center',
+    fontSize: FONT_SIZE.S, 
     color: COLOR.ORANGE,
   }
 });

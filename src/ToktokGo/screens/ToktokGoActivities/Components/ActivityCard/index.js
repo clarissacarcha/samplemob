@@ -44,7 +44,7 @@
      };
      const headerDesign = () => {
          let design = styles.headerYellow;
-         if (delivery.status == 6) {
+         if ([1, 6].includes(delivery.status)) {
              design = styles.headerWhite;
          }
          if (delivery.status == 7) {
@@ -55,8 +55,8 @@
 
      const getVerdict = () => {
         if (delivery.status == 1) return "Passenger picked up"
-        else if (delivery.status == 6) return "Arrived at Destination"
-        else if (delivery.status == 10) return "Cancelled"
+        else if (delivery.status == 6) return "Completed"
+        else if (delivery.status == 7) return "Cancelled"
     }
  
      // const blackFont = status === 7 ? constants.COLOR.DARK : constants.COLOR.BLACK;
@@ -78,12 +78,12 @@
                                 </View>
                                 
                                 <View style={{ marginLeft: 10, justifyContent: 'flex-end', flex: 1, flexDirection: 'row',alignItems:'center' }}>
-                                    <Image source={Vector} style={{ height: 14, width: 16}} />
+                                   {delivery.status == 1 && <Image source={Vector} style={{ height: 14, width: 16}} />} 
                                     <Text
                                         style={{
                                             fontFamily: constants.FONT_FAMILY.REGULAR,
                                             fontSize: constants.FONT_SIZE.M,
-                                            color: delivery.status != 10 ? '#000000' : constants.COLOR.RED,
+                                            color: delivery.status != 7 ? '#000000' : constants.COLOR.RED,
                                             paddingLeft:10,
                                             fontWeight:"400"
 
@@ -147,35 +147,19 @@
                              </View>
  
                          </View>
- 
-                     </View>
+                    </View>
                      <View style={{ paddingHorizontal: 20 }}>
                          <View style={{ borderBottomWidth: 2, borderBottomColor: '#F7F7FA', width: "100%" }} />
                          <View style={{ paddingVertical: 20}}>
-                             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                                 <Image source={Wallet} style={{ width: 22, height: 18, marginRight:10  }} />
-                                 {/* <Text
-                                     style={{
-                                         color: constants.COLOR.YELLOW,
-                                         fontFamily: constants.FONT_FAMILY.REGULAR,
-                                         fontWeight: 'bold',
-                                         fontSize: constants.FONT_SIZE.M + 1,
-                                         paddingLeft: 5,
-                                     }}>
-                                     toktokwallet
-                                 </Text> */}
-                                 <Image source={ToktokWalletText} resizeMode={'contain'} style={{ width: '25%', height: 16}} />
-                                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center',justifyContent:"flex-end" }}>
-                                 <Text style={{paddingLeft:10,color:'#F6841F',fontWeight:"600",fontSize:constants.FONT_SIZE.M, lineHeight:16,fontStyle:'normal'}}>Total</Text>
-                                 {delivery.status == 7 ?
-                                 <Text style={{paddingLeft:10,color:'#9E9E9E',fontWeight:"600",fontSize:constants.FONT_SIZE.M,lineHeight:16,fontStyle:'normal'}}>{getTotalAmount()}</Text> 
-                                 :
-                                 <Text style={{paddingLeft:10,color:'#F6841F',fontWeight:"600",fontSize:constants.FONT_SIZE.M,lineHeight:16,fontStyle:'normal'}}>{getTotalAmount()}</Text>   
-                                     }
-                             </View>
-                             </View>
-  
-                         </View>
+                            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                                <Image source={Wallet} style={{ width: 22, height: 18, marginRight:10  }} />
+                                <Image source={ToktokWalletText} resizeMode={'contain'} style={{ width: '25%', height: 16}} />
+                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center',justifyContent:"flex-end" }}>
+                                <Text style={{paddingLeft:10,color:'#F6841F',fontWeight:"600",fontSize:constants.FONT_SIZE.M, lineHeight:16,fontStyle:'normal'}}>Total</Text>
+                                <Text style={{paddingLeft:10,color:'#F6841F',fontWeight:"600",fontSize:constants.FONT_SIZE.M,lineHeight:16,fontStyle:'normal'}}>{getTotalAmount()}</Text>   
+                            </View>
+                            </View>
+                        </View>
                      </View>
                  </View>
              </TouchableHighlight>
