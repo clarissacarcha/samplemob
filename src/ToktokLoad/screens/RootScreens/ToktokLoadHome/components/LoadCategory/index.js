@@ -68,9 +68,10 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
     if(activeCategory()?.name == "Telco") setMobileNumber(formattedMobile)
   },[activeNetwork])
 
-  const onChangeText = (value) => {
+  const onChangeText = (value,fieldFormat) => {
     
-    let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
+    // let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
+    let mobile = fieldFormat == 2 ? value.replace(/[^A-Za-z0-9 -.]/g, '') : value.replace(/[^0-9.]/g, '')
     if(activeCategory()?.name == "Telco"){
         if(mobile.length != 0 && (mobile.substring(0, 2) != "09" || mobile.length != 11)){
           setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name}`);
@@ -169,7 +170,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
                       <View style={styles.input} >
                         <TextInput
                           value={mobileNumber}
-                          onChangeText={onChangeText}
+                          onChangeText={(value)=>onChangeText(value , activeNetwork.inputLength.fieldFormat )}
                           placeholder={`${activeNetwork.inputLength.fieldPlaceholder}`}
                           keyboardType={activeNetwork.inputLength.fieldFormat == 2 ? "default" : "number-pad"}
                           returnKeyType="done"
