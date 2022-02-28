@@ -321,15 +321,18 @@ const MainComponent = () => {
         let data = {
           sys_shop: item.shopid,
           product_id: item.productid,
-          amount: item.basePrice,
+          amount: item.resellerDiscount ?? item.basePrice,
           srp_amount: item.basePrice,
           srp_totalamount: Number(item.basePrice.toFixed(2)) * item.quantity,
-          total_amount: Number(item.basePrice.toFixed(2)) * item.quantity,
+          total_amount:
+            Number(item.resellerDiscount ? item.resellerDiscount.toFixed(2) : item.basePrice.toFixed(2)) *
+            item.quantity,
           quantity: item.quantity,
           order_type: 1,
           notes: item.notes,
           addons: await fixAddOns(item.addonsDetails),
         };
+        console.log('temporary cart data', data);
         items.push(data);
       }),
     ).then(() => {
@@ -437,6 +440,8 @@ const MainComponent = () => {
   };
 
   const placeCustomerOrder = async () => {
+    // const CUSTOMER_CART = await fixOrderLogs();
+    // console.log(CUSTOMER_CART);
     if (delivery !== null && !pmLoading) {
       paymentMethod == 'COD' ? setShowLoader(true) : setLoadingWallet(true);
       const CUSTOMER_CART = await fixOrderLogs();
