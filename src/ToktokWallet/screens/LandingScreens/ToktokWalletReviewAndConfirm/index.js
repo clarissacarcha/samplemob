@@ -60,7 +60,7 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
         <FlagSecureScreen>
         <CheckIdleState>
         <Separator/>
-        <ScrollView alwaysBounceVertical={false} style={styles.container} contentContainerStyle={{flexGrow:1}}>
+        <ScrollView bounces={false} alwaysBounceVertical={false} style={styles.container} contentContainerStyle={{flexGrow:1}}>
             <View style={styles.header}>
               <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: "black"}}>Review and Confirm</Text>
             </View>
