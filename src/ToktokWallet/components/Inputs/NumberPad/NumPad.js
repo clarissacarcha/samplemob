@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLOR.YELLOW,
         // backgroundColor: '#F7F7FA',
         borderRadius: 5,
-        height: verticalScale(width * .16),
+        height: moderateScale(width * .16),
         width: moderateScale(width * .16),
         justifyContent: 'center',
         alignItems: 'center',
