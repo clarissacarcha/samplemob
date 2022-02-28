@@ -106,9 +106,11 @@ const styles = StyleSheet.create({
   textAddressContainer: {
     alignItems: 'center',
     flexDirection: 'row',
+    flex: 1,
+    paddingRight: moderateScale(5),
     // flex: 0.9,
-    maxWidth: moderateScale(280),
-    justifyContent: 'space-between',
+    // maxWidth: moderateScale(280),
+    // justifyContent: 'space-between',
   },
   textAddress: {
     color: COLOR.BLACK,
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
     flex: 1,
     top: moderateScale(3),
-    paddingRight: moderateScale(3),
+    paddingRight: moderateScale(5),
   },
   addressMarkerIcon: {
     width: moderateScale(18),
