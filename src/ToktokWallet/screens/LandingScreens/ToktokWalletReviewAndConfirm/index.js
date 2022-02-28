@@ -30,7 +30,8 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
     
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={[label]}/>
+        headerTitle: ()=> <HeaderTitle label={[label]}/>,
+        gestureEnabled: false,
     })
 
     const confirm = ()=> {
@@ -59,7 +60,7 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
         <FlagSecureScreen>
         <CheckIdleState>
         <Separator/>
-        <ScrollView style={styles.container} contentContainerStyle={{flexGrow:1}}>
+        <ScrollView bounces={false} alwaysBounceVertical={false} style={styles.container} contentContainerStyle={{flexGrow:1}}>
             <View style={styles.header}>
               <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: "black"}}>Review and Confirm</Text>
             </View>
@@ -170,4 +171,5 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
     }
 })
+
 
