@@ -47,7 +47,7 @@ export const ReceiptDetails = ({ route }) => {
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Status </Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Image source={check_fill_icon} style={{ width: moderateScale(15), height: moderateScale(15) }} />
+            <Image source={check_fill_icon} style={styles.icon} />
             <Text style={[styles.description, styles.colorGreen]}>Success</Text>
           </View>
         </View>
@@ -84,6 +84,11 @@ const styles = StyleSheet.create({
     marginVertical: moderateScale(20)
   },
   colorGreen: {
-    color: "#1AD74F",
+    color: "#198754",
+  },
+  icon: {
+    width: moderateScale(15),
+    height: moderateScale(15),
+    tintColor: "#198754"
   }
 })
