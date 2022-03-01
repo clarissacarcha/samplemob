@@ -30,8 +30,8 @@ const OrderFee = ({status = 2, transaction, riderDetails}) => {
     dateDeclined,
   } = transaction;
 
-  const [firstImage, setFirstImage] = useState('');
-  const [secondImage, setSecondImage] = useState('');
+  const [firstImage, setFirstImage] = useState(null);
+  const [secondImage, setSecondImage] = useState(null);
 
   useEffect(() => {
     updateImage();
