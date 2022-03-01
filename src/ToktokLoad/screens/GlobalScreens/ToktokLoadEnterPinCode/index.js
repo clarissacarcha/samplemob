@@ -93,6 +93,7 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
       },
       referenceNumber: requestMoneyDetails.referenceNumber,
       senderName: `${firstName} ${lastName}`,
+      senderFirstName: firstName,
       senderMobileNumber: formattedMobile,
       destinationNumber: mobileNumber,
       loadItemId: loadDetails.id,
