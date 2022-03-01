@@ -14,7 +14,7 @@ import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
 const DisplayAddons = ({addOns}) => {
   let addOnsList = addOns.map(item => item.addon_name).join(', ');
-  let label = addOns.length > 1 ? 'Add-ons:' : 'Add-ons:';
+  let label = addOns.length > 1 ? 'Add-ons:' : 'Add-on:';
 
   return <Text style={styles.notes}>{`${label} ${addOnsList}`}</Text>;
 };
