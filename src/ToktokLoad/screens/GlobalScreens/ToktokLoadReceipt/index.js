@@ -50,7 +50,7 @@ export const ToktokLoadReceipt = ({ navigation, route }) => {
 
   navigation.setOptions({
     headerLeft: () => null,
-    headerTitle: () => <HeaderTitle label={"toktokload Receipt"} />,
+    headerTitle: () => <HeaderTitle label={"Transaction Receipt"} />,
     headerRight: () =>
       <HeaderDownloadReceipt
         viewshotRef={viewshotRef}
