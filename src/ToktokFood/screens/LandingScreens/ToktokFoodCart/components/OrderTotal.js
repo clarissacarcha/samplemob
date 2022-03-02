@@ -7,7 +7,7 @@ import {VerifyContext} from '../components';
 
 import styles from '../styles';
 
-const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = true}) => {
+const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = true, oneCartTotal}) => {
   // deliveryFee = deliveryFee ? deliveryFee : 0;
   // subtotal = subtotal ? subtotal : 0;
   const {shippingVoucher, temporaryCart} = useContext(VerifyContext);
@@ -21,6 +21,10 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
 
   const totalSumSF = totalDelivery + totalShipping;
   const totalSF = totalSumSF > deliveryFee ? deliveryFee.toFixed(2) : totalSumSF.toFixed(2);
+
+  useEffect(() => {
+    oneCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
+  }, [shippingVoucher, totalBasket, totalShipping]);
 
   const getVoucherFee = useCallback(() => {
     const groupPromo = _(promotionVoucher)

@@ -74,6 +74,12 @@ import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 import {parseAmountComputation} from './functions';
 
+/*
+  This variable is used for identifier whether the user is able to checkout or not 
+  if the user's toktokwallet is pending
+*/
+const MINIMUM_CHECKOUT = 2000;
+
 const MainComponent = () => {
   const route = useRoute();
   const navigation = useNavigation();
@@ -116,6 +122,8 @@ const MainComponent = () => {
   const isFocus = useIsFocused();
 
   const [closeInfo, setCloseInfo] = useState({visible: false, shopName: ''});
+
+  const [diablePlaceOrder, setDisablePlaceOrder] = useState(true);
 
   const [getAutoShipping, {loading: loadingShipping}] = useLazyQuery(GET_AUTO_SHIPPING, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -365,15 +373,18 @@ const MainComponent = () => {
         let data = {
           sys_shop: item.shopid,
           product_id: item.productid,
-          amount: item.basePrice,
+          amount: item.resellerDiscount ?? item.basePrice,
           srp_amount: item.basePrice,
           srp_totalamount: Number(item.basePrice.toFixed(2)) * item.quantity,
-          total_amount: Number(item.basePrice.toFixed(2)) * item.quantity,
+          total_amount:
+            Number(item.resellerDiscount ? item.resellerDiscount.toFixed(2) : item.basePrice.toFixed(2)) *
+            item.quantity,
           quantity: item.quantity,
           order_type: 1,
           notes: item.notes,
           addons: await fixAddOns(item.addonsDetails),
         };
+        console.log('temporary cart data', data);
         items.push(data);
       }),
     ).then(() => {
@@ -481,6 +492,8 @@ const MainComponent = () => {
   };
 
   const placeCustomerOrder = async () => {
+    // const CUSTOMER_CART = await fixOrderLogs();
+    // console.log(CUSTOMER_CART);
     if (delivery !== null && !pmLoading) {
       paymentMethod == 'COD' ? setShowLoader(true) : setLoadingWallet(true);
       const CUSTOMER_CART = await fixOrderLogs();
@@ -768,6 +781,7 @@ const MainComponent = () => {
             subtotal={totalAmount}
             deliveryFee={delivery.price}
             forDelivery={orderType === 'Delivery'}
+            oneCartTotal={v => setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
           />
         )}
         <Separator />
@@ -779,6 +793,7 @@ const MainComponent = () => {
           notes={riderNotes}
           onNotesChange={n => setRiderNotes(n)}
           onPlaceOrder={() => setShowConfirmation(true)}
+          disableWalletCheckout={diablePlaceOrder}
         />
         {checkShop != null && (
           <OrderTypeSelection

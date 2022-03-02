@@ -38,6 +38,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const orderStatus = route.params ? route.params.orderStatus : '';
 
   const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(0);
   const [riderSeconds, setRiderSeconds] = useState(0);
   const [transaction, setTransaction] = useState({});
   const [riderDetails, setRiderDetails] = useState(null);
@@ -54,6 +55,11 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading, refetch}] = useLazyQuery(
     GET_ORDER_TRANSACTION_BY_REF_NUM,
     {
+      variables: {
+        input: {
+          referenceNum: referenceNum,
+        },
+      },
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onError: () => {
@@ -61,8 +67,21 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
       },
       onCompleted: ({getTransactionByRefNum}) => {
         // console.log(getTransactionByRefNum);
-        if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
-          setTransaction(getTransactionByRefNum);
+        // if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
+        setTransaction(getTransactionByRefNum);
+        const {orderIsfor, tDeliveryId, orderStatus} = getTransactionByRefNum;
+        console.log('fetching orders...', orderStatus);
+        if (orderIsfor === 1 && tDeliveryId) {
+          getToktokFoodRiderDetails({
+            variables: {
+              input: {
+                deliveryId: tDeliveryId,
+              },
+            },
+          });
+        }
+        if (orderStatus !== 's' || orderStatus !== 'c') {
+          handleGetTransactionByRefNum();
         }
       },
     },
@@ -89,14 +108,48 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   }, [navigation]);
 
   useEffect(() => {
-    handleGetTransactionByRefNum();
-  }, []);
-
-  useEffect(() => {
     if (isFocus) {
-      setSeconds(300);
+      getTransactionByRefNum({
+        variables: {
+          input: {
+            referenceNum: referenceNum,
+          },
+        },
+      });
     }
   }, [isFocus]);
+
+  // useEffect(() => {
+  //   if (isFocus) {
+  //     setSeconds(300);
+  //   }
+  // }, [isFocus]);
+
+  useEffect(() => {
+    if (transaction?.orderStatus === 'p' && minutes === 0) {
+      setMinutes(5);
+    }
+
+    return () => clearInterval();
+  }, [transaction]);
+
+  useEffect(() => {
+    if (minutes > 0) {
+      setTimeout(() => {
+        setMinutes(minutes - 1);
+      }, 60000);
+    }
+
+    if (minutes === 0 && transaction?.orderStatus === 'p') {
+      setShowDialogMessage({
+        title: 'No Response from Merchant',
+        message: "Merchant hasn't confirmed your order.\nPlease try again.",
+        show: true,
+        type: 'warning',
+      });
+    }
+    return () => clearTimeout();
+  }, [minutes]);
 
   useEffect(() => {
     handleOrderProcess();
@@ -113,13 +166,15 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   }, [riderSeconds]);
 
   const handleGetTransactionByRefNum = () => {
-    getTransactionByRefNum({
-      variables: {
-        input: {
-          referenceNum: referenceNum,
+    setTimeout(() => {
+      getTransactionByRefNum({
+        variables: {
+          input: {
+            referenceNum: referenceNum,
+          },
         },
-      },
-    });
+      });
+    }, 10000);
   };
 
   const handleMapRider = () => {
@@ -182,18 +237,18 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
             checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
           } else {
             if (riderDetails == null) {
-              BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
-              BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
-              if (transaction.orderStatus === 'p' && !showDialogMessage.show) {
-                setShowDialogMessage({
-                  title: 'No Response from Merchant',
-                  message: "Merchant hasn't confirmed your order.\nPlease try again.",
-                  show: true,
-                  type: 'warning',
-                });
-              } else {
-                setSeconds(300);
-              }
+              // BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+              // BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
+              // if (transaction.orderStatus === 'p' && !showDialogMessage.show) {
+              //   setShowDialogMessage({
+              //     title: 'No Response from Merchant',
+              //     message: "Merchant hasn't confirmed your order.\nPlease try again.",
+              //     show: true,
+              //     type: 'warning',
+              //   });
+              // } else {
+              //   setSeconds(300);
+              // }
             } else {
               setSeconds(300);
             }
@@ -255,9 +310,10 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     let {title} = showDialogMessage;
     setShowDialogMessage(prev => ({...prev, show: false}));
     if (title !== 'Order Complete' || title !== 'OOPS! Order Declined!' || title !== 'Order Cancelled') {
-      // let tab = selectedTab(title);
-      // navigation.navigate('ToktokFoodOrderTransactions', {tab});
+      let tab = selectedTab(title);
+      navigation.navigate('ToktokFoodOrderTransactions', {tab});
       setSeconds(300);
+      setMinutes(5);
     }
   };
 

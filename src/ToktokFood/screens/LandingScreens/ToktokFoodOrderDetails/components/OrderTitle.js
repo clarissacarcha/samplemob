@@ -174,6 +174,8 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
 
     const getTimeByStatus = () => {
       switch (orderStatus) {
+        case 'p':
+          return 'Estimated Pickup Time: ASAP';
         case 'po':
           if (edt <= timeNow) {
             return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
@@ -194,6 +196,8 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
         </View>
       );
     }
+
+    return null;
   };
 
   const dateByOrderStatus = () => {

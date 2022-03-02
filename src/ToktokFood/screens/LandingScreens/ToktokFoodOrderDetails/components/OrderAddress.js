@@ -166,13 +166,13 @@ const OrderAddress = ({transaction, riderDetails}) => {
               <Text style={styles.addressText}>{conno}</Text>
             </View>
           </>
-        ) : (
+        ) : orderStatus !== 's' && orderStatus !== 'c' ? (
           <>
             <Separator style={{height: 1, marginVertical: moderateScale(10)}} />
             <Text style={styles.restaurant}>Estimated Pickup Time:</Text>
             <Text>ASAP</Text>
           </>
-        )}
+        ) : null}
       </View>
     </View>
   );
