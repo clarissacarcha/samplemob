@@ -1,6 +1,7 @@
 import React from 'react'
 import { View , Text , StyleSheet , Modal, TouchableHighlight , Dimensions, FlatList , Image , TouchableOpacity  } from 'react-native'
 import { useThrottle } from 'src/hooks'
+import { YellowButton } from 'src/revamp'
 import { LoadingIndicator } from "toktokwallet/components";
 import CONSTANTS from 'common/res/constants';
 
@@ -9,16 +10,14 @@ const { width , height } = Dimensions.get("window")
 
 const RenderItem = ({item,index,onPress}) => {
 
-    const onPressThrottle = useThrottle(()=>onPress(index), 2000)
-
     return (
         <View underlayColor={COLOR.LIGHT} style={styles.network}>
-            <View style={{flexDirection:"row" ,justifyContent:"center" , alignItems:'center'}}>
-                <TouchableOpacity onPress={onPressThrottle} style={[styles.answerbox, {height: 20, backgroundColor: item.selected ? COLOR.YELLOW : "transparent"}]}/>
+            <TouchableOpacity onPress={()=>onPress(index)} style={{flexDirection:"row" ,justifyContent:"center" , alignItems:'center'}}>
+                <View style={[styles.answerbox, {height: 20, backgroundColor: item.selected ? COLOR.YELLOW : "transparent"}]}/>
                 <View style={{flex:1}}>
                     <Text numberOfLines={2} style={styles.text}>{item.description}</Text>
                 </View> 
-            </View>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -29,8 +28,13 @@ export const SourceOfIncomeModal = ({
     loading,
     data,
     setData,
+    doneProcess
 })=> {
 
+    const onPressThrottle = useThrottle(()=> {
+        doneProcess()
+        setVisible(false)
+    }, 2000)
 
     const onPress = (index)=> {
         // setVisible(false)
@@ -63,9 +67,12 @@ export const SourceOfIncomeModal = ({
                             keyExtractor={item=>item.id}
                             ItemSeparatorComponent={()=><View style={styles.separator}/>}
                             renderItem={({item,index})=><RenderItem onPress={onPress} index={index} item={item}/>}
+                            ListFooterComponent={()=><View style={{marginBottom: 30}}/>}
                         />
                         <View style={styles.doneButton}>
-
+                            <View>
+                                <YellowButton onPress={onPressThrottle} label="Done"/>
+                            </View>
                         </View>
                     </View>
               }
@@ -113,9 +120,7 @@ const styles = StyleSheet.create({
      },
      doneButton: {
          height: 70,
-         backgroundColor:"green",
          padding: 16,
-         marginTop: 10,
      },
      answerbox: {
         borderWidth: 0.5,

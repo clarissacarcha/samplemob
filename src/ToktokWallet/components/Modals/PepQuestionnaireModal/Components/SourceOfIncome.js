@@ -1,5 +1,5 @@
 import React , {useState,useEffect} from "react";
-import { View , Text , StyleSheet, TouchableOpacity } from 'react-native';
+import { View , Text , StyleSheet, TouchableOpacity, TouchableHighlight, TextInput } from 'react-native';
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp';
 import {useLazyQuery} from '@apollo/react-hooks'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from 'src/graphql'
@@ -22,7 +22,7 @@ export const SourceOfIncome = ({
     const [data,setData] = useState([]);
     const [visible,setVisible] = useState(false);
     const [selectedData,setSelectedData] = useState([])
-
+   
     const [getSourceOfIncome , {loading}] = useLazyQuery(GET_SOURCE_OF_INCOME , {
         client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
@@ -46,7 +46,56 @@ export const SourceOfIncome = ({
         setVisible(true)
     }
 
+    const doneProcess = ()=> {
+        const sourceOfIncomeArray = selectedData.map((data)=>data.id)
+        setPepInfo(state=>{
+            return {
+                ...state,
+                questionnaire: {
+                    ...state.questionnaire,
+                    sourceOfIncomeId: sourceOfIncomeArray,
+                }
+            }
+        })
+    }
+
+    const removeSelected = (index)=> {
+        const findIndex = data.findIndex((d)=> d.id === selectedData[index].id )
+        const currentData = [...data]
+        currentData[findIndex] = {
+            ...currentData[findIndex],
+            selected: !currentData[findIndex].selected
+        }
+        if(selectedData[index].id == 0){
+            setPepInfo(state=>{
+                return {
+                    ...state,
+                    questionnaire: {
+                        ...state.questionnaire,
+                        sourceOfIncome: ""
+                    }
+                }
+            })
+        }
+
+        setData(currentData)
+        doneProcess()
+    }
+
+    const onChangeText = (value)=>{
+        setPepInfo(state=>{
+            return {
+                ...state,
+                questionnaire: {
+                    ...state.questionnaire,
+                    sourceOfIncome: value
+                }
+            }
+        })
+    }
+
     useEffect(()=>getSourceOfIncome(),[])
+    useEffect(()=>doneProcess(),[selectedData])
     useEffect(()=> {
         const selected = data.filter((item,index)=> {
             if(item.selected){
@@ -64,6 +113,7 @@ export const SourceOfIncome = ({
             data={data}
             setData={setData}
             loading={loading}
+            doneProcess={doneProcess}
         />
         <View style={{marginTop: 10}}>
                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>3) Source of Income</Text>
@@ -79,7 +129,34 @@ export const SourceOfIncome = ({
                     <VectorIcon iconSet={ICON_SET.Feather} name="chevron-down"/>
                 </TouchableOpacity>
         </View>
-        <Text>{JSON.stringify(selectedData)}</Text>
+        {
+            selectedData.length > 0 &&
+            <View style={{ marginTop: 10, flexDirection: "row",flexWrap:"wrap",alignItems:"center"}}>
+                {
+                    selectedData.map((item,index)=>(
+                        <View style={{...styles.input,padding: 2, height: 30, marginHorizontal: 2, justifyContent:'center',alignItems:"center",flexDirection:"row"}}>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{item.description}</Text>
+                            <TouchableHighlight onPress={()=>removeSelected(index)} underlayColor={"transparent"}>
+                                <View style={{height: 30,width: 20,justifyContent:'center',alignItems:"flex-end"}}>
+                                <VectorIcon color={"black"} size={10} iconSet={ICON_SET.FontAwesome5} name="times"/>
+                                </View>
+                            </TouchableHighlight>
+                        </View>
+                    ))
+                }
+            </View>
+        }
+        {
+            pepInfoAnswer?.value.includes("0") &&
+            <View style={{marginTop: 10,}}>
+                <TextInput 
+                    placeholder="Specify source of income"
+                    style={styles.input}
+                    value={pepInfoAnswer.others}
+                    onChangeText={onChangeText}
+                />
+            </View>
+        }
         </>
     )
 }

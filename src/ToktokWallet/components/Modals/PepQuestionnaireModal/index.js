@@ -335,7 +335,7 @@ export const PepQuestionnaireModal = ({
                             pepInfo.questionnaire.isPep != ""
                             && pepInfo.questionnaire.isFamilyPep != ""
                             && pepInfo.questionnaire.sourceOfIncomeId != ""
-                            && pepInfo.questionnaire.sourceOfWealthId != ""
+                            // && pepInfo.questionnaire.sourceOfWealthId != ""
                             && (
                                 pepInfo.questionnaire.isPep == "1"
                                 ? pepInfo.questionnaire.pepPosition != ""
@@ -347,15 +347,15 @@ export const PepQuestionnaireModal = ({
                                 : pepInfo.questionnaire.familyPepPosition == ""
                             )
                             && (
-                                pepInfo.questionnaire.sourceOfIncomeId == "0"
+                                pepInfo.questionnaire.sourceOfIncomeId.includes("0")
                                 ? pepInfo.questionnaire.sourceOfIncome != ""
                                 : pepInfo.questionnaire.sourceOfIncome == ""
                             )
-                            && (
-                                pepInfo.questionnaire.sourceOfWealthId == "0"
-                                ? pepInfo.questionnaire.sourceOfWealth != ""
-                                : pepInfo.questionnaire.sourceOfWealth == ""
-                            )
+                            // && (
+                            //     pepInfo.questionnaire.sourceOfWealthId.includes("0")
+                            //     ? pepInfo.questionnaire.sourceOfWealth != ""
+                            //     : pepInfo.questionnaire.sourceOfWealth == ""
+                            // )
                             && agree
                             ? <YellowButton label="Proceed" onPress={onPress}/>
                             : <DisabledButton label="Proceed"/>
