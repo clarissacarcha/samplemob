@@ -11,7 +11,7 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 //components
-import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator } from "src/ToktokLoad/components";
+import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, SomethingWentWrong } from "src/ToktokLoad/components";
 import { BuyLoad, Favorites, VerifyContextProvider, VerifyContext, Advertisement , LoadCategory } from "./components";
 
 import CONSTANTS from 'common/res/constants'
@@ -31,22 +31,18 @@ const MainComponent = ({ navigation, route }) => {
     headerRight: ()=> <FavoritesNav onPress={goToFavorites}/>
   })
 
-  const { adsRegular , mobileNumber , mobileErrorMessage  } = useContext(VerifyContext);
+  const { adsActions, adsRegular, getAdvertisements, mobileNumber, mobileErrorMessage } = useContext(VerifyContext);
   const [categories, setCategories]= useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const prompt = usePrompt();
 
   const goToFavorites = ()=> navigation.navigate("ToktokLoadFavorites", {mobileErrorMessage,mobileNumber})
 
-  const [getLoadCategories , {loading}] = useLazyQuery(GET_LOAD_CATEGORIES , {
+  const [getLoadCategories , {loading, error}] = useLazyQuery(GET_LOAD_CATEGORIES , {
     fetchPolicy:"network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: (error) => {
-      ErrorUtility.StandardErrorHandling({
-        error,
-        navigation,
-        prompt,
-      });
+     
     },
     onCompleted: ({getLoadCategories})=> {
         setActiveTab(getLoadCategories[0]?.id)
@@ -56,19 +52,28 @@ const MainComponent = ({ navigation, route }) => {
 
 
   const getActiveCategoryName = (activeTab)=> {
-    return categories.filter(tab=>tab.id===activeTab)[0]
+    return categories.filter(tab=>tab?.id===activeTab)[0]
   }
 
   useEffect(()=>{
-    getLoadCategories();
+    getDataList();
   },[])
 
-  if(loading){
+  const getDataList = () => {
+    getLoadCategories();
+    getAdvertisements();
+  }
+
+  if(loading || adsActions.loading){
     return <View style={styles.container}>
             <LoadingIndicator isLoading={true} isFlex />
           </View>
   }
-
+  if(error || adsActions.error){
+    return <View style={styles.container}>
+            <SomethingWentWrong error={error ?? adsActions.error} onRefetch={getDataList} />
+          </View>
+  }
   return (
     <View style={styles.container}>
       { adsRegular.length > 0 && <Advertisement autoplay ads={adsRegular}/>}

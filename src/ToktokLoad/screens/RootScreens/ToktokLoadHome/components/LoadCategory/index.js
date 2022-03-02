@@ -53,6 +53,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
         navigation,
         prompt,
       });
+      setVisible(false)
     },
     onCompleted: ({getLoadCategoryNetworks})=> {
       setNetworks(getLoadCategoryNetworks)
@@ -125,78 +126,77 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
   return (
     <View style={styles.container}>
       <NetworkListModal 
-          visible={visible}
-          setVisible={setVisible}
-          activeNetwork={activeNetwork}
-          setActiveNetwork={setActiveNetwork}
-          loading={loading}
-          data={networks}
-          activeCategory={activeCategory()?.name}
+        visible={visible}
+        setVisible={setVisible}
+        activeNetwork={activeNetwork}
+        setActiveNetwork={setActiveNetwork}
+        loading={loading}
+        data={networks}
+        activeCategory={activeCategory()?.name}
       />
       <View style={[styles.inputContainer , {flexDirection:"column"}]}>
         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>Select {activeCategory()?.name ? activeCategory().name : ""}</Text>
         <TouchableOpacity 
-            style={{
-                    backgroundColor: "#F8F8F8",
-                    height: moderateScale(40),
-                    borderRadius: moderateScale(5),
-                    justifyContent: "center",
-                    flexDirection:"row",
-                    paddingHorizontal: moderateScale(10),
-                    marginTop: 16
-            }}
-            onPress={openNetworks}
+          style={{
+            backgroundColor: "#F8F8F8",
+            height: moderateScale(40),
+            borderRadius: moderateScale(5),
+            justifyContent: "center",
+            flexDirection:"row",
+            paddingHorizontal: moderateScale(10),
+            marginTop: 16
+          }}
+          onPress={openNetworks}
         >
-            <View style={{flex:1,justifyContent:'center'}}>
-              {
-                activeNetwork 
-                ? <View style={{flexDirection:"row",alignItems:"center"}}>
-                     <Image source={{uri: activeNetwork.iconUrl}} style={styles.networkImage} resizeMode="contain"/>
-                     <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginLeft: 5}}>{activeNetwork.name}</Text>
-                  </View>
-                : <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Select {activeCategory()?.name ? activeCategory().name : ""}..</Text>
-              }   
-            </View>
-            <View style={{justifyContent:"center",alignItems:"flex-end"}}>
-                <VectorIcon size={15} iconSet={ICON_SET.Entypo} name="chevron-thin-down"/>
-            </View>
+          <View style={{flex:1,justifyContent:'center'}}>
+            {
+              activeNetwork 
+              ? <View style={{flexDirection:"row",alignItems:"center"}}>
+                  <Image source={{uri: activeNetwork.iconUrl}} style={styles.networkImage} resizeMode="contain"/>
+                  <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginLeft: 5}}>{activeNetwork.name}</Text>
+                </View>
+              : <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Select {activeCategory()?.name ? activeCategory().name : ""}..</Text>
+            }   
+          </View>
+          <View style={{justifyContent:"center",alignItems:"flex-end"}}>
+            <VectorIcon size={15} iconSet={ICON_SET.Entypo} name="chevron-thin-down"/>
+          </View>
         </TouchableOpacity>
       </View>
-              {
-                activeNetwork &&
-                <>
-                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,marginTop: 16}}>Buy Load For</Text>
-                    <View style={styles.inputContainer}>
-                      <View style={styles.input} >
-                        <TextInput
-                          value={mobileNumber}
-                          onChangeText={onChangeText}
-                          placeholder={`${activeNetwork.inputLength.fieldPlaceholder}`}
-                          keyboardType={activeNetwork.inputLength.fieldFormat == 2 ? "default" : "number-pad"}
-                          returnKeyType="done"
-                          maxLength={+activeNetwork?.inputLength?.inputLength ?? 11}
-                        />
-                      </View>
-                      <TouchableOpacity
-                        onPress={onPressContacts}
-                        style={styles.contactsContainer}
-                      >
-                        <Image source={contact_icon} style={styles.icon} />
-                      </TouchableOpacity>
-                    </View>
-                </>
-              }
-
-            {mobileErrorMessage != "" && <Text style={styles.errorMessage}>{mobileErrorMessage}</Text>}
-            <View style={{ flex: 1, justifyContent: "flex-end" }}>
-              { adHighlight.length > 0 && <Advertisement ads={adHighlight}/> }
-              <View style={{marginTop: 20}}/>
-              <OrangeButton
-                label="Next"
-                disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
-                onPress={onPressNext}
+      {
+        activeNetwork &&
+        <>
+          <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,marginTop: 16}}>Buy Load For</Text>
+          <View style={styles.inputContainer}>
+            <View style={styles.input} >
+              <TextInput
+                value={mobileNumber}
+                onChangeText={onChangeText}
+                placeholder={`${activeNetwork.inputLength.fieldPlaceholder}`}
+                keyboardType={activeNetwork.inputLength.fieldFormat == 2 ? "default" : "number-pad"}
+                returnKeyType="done"
+                maxLength={+activeNetwork?.inputLength?.inputLength ?? 11}
               />
             </View>
+            <TouchableOpacity
+              onPress={onPressContacts}
+              style={styles.contactsContainer}
+            >
+              <Image source={contact_icon} style={styles.icon} />
+            </TouchableOpacity>
+          </View>
+        </>
+      }
+      { mobileErrorMessage != "" && <Text style={styles.errorMessage}>{mobileErrorMessage}</Text> }
+      <View style={{ flex: 1, justifyContent: "flex-end" }}>
+        { adHighlight.length > 0 && <Advertisement ads={adHighlight}/> }
+        <View style={{marginTop: 20}}/>
+        <OrangeButton
+          label="Next"
+          disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
+          onPress={onPressNext}
+        />
+      </View>
     </View>
   );
 };
