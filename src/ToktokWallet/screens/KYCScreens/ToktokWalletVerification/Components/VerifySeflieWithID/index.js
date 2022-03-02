@@ -1,4 +1,4 @@
-import React, { useState ,useRef , useContext } from 'react'
+import React, { useState ,useRef , useContext, useEffect ,useCallback} from 'react'
 import {View,Text,StyleSheet,TouchableOpacity,Alert,Dimensions,Modal,Image,Platform,ScrollView} from 'react-native'
 import EIcon from 'react-native-vector-icons/EvilIcons'
 import {VerifyContext} from '../VerifyContextProvider'
@@ -12,6 +12,7 @@ import { onErrorAlert } from 'src/util/ErrorUtility'
 import { AlertOverlay } from 'src/components'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from 'src/graphql'
 import { POST_VERIFY_IF_PEP } from 'toktokwallet/graphql'
+import { useFocusEffect } from '@react-navigation/native'
 import CONSTANTS from 'common/res/constants'
 import ImageCropper from 'react-native-simple-image-cropper'
 
@@ -152,6 +153,11 @@ export const VerifySelfieWithID = ()=> {
             return setCurrentIndex(oldval => oldval + 1)
         }
     })
+
+    useFocusEffect(useCallback(()=>{
+        if(pepInfo?.questionnaire?.sourceOfIncomeId.length > 0)  setShowPepQuestionnaire(true)
+    },[pepInfo]))
+
 
     const Proceed = async ()=> {
         if(tempSelfieImageWithID == null){
