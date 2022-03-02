@@ -46,8 +46,10 @@ const MainComponent = ({ navigation, route }) => {
     fetchPolicy:"network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onCompleted:({ getLoadVariants })=> {
-      setActiveTab(getLoadVariants[0].id);
-      setLoadVariant(getLoadVariants);
+        if(getLoadVariants.length > 0){
+          setActiveTab(getLoadVariants[0].id);
+          setLoadVariant(getLoadVariants);
+        }
     }
   });
 
