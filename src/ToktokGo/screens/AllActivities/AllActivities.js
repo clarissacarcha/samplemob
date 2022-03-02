@@ -64,7 +64,7 @@ const AllActivities = ({navigation, session}) => {
             <ActivitiesCard
               delivery={item}
               onPress={() =>
-                navigation.push('SelectedBookingDetails', {delivery: item, label: ['Booking', 'Details']})
+                navigation.push('SelectedBookingDetails', {delivery: item})
               }
             // lastItem={data.getDeliveries.length == index + 1 ? true : false}
           />
