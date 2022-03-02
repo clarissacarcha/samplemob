@@ -83,11 +83,11 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
       <AlertOverlay visible={loading}/>
       <View style={styles.container}>
         <Text style={styles.terms}>
-          <Text>Please review the accuracy of the details provided and read our </Text>
-          <Text style={styles.paymentPolicy} onPress={onPressTermsAndContidions} >
-            Terms and Conditions
+          <Text>
+            Please review the accuracy of the details provided and read our
           </Text>
-          <Text> before you proceed with your transaction</Text>
+          <Text style={styles.paymentPolicy} onPress={onPressTermsAndContidions}> Terms and Conditions </Text>
+          <Text>before you proceed with your transaction</Text>
         </Text>
         <OrangeButton
           onPress={onPressThrottled}
@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(16)
   },
   terms: {
+    fontSize: FONT_SIZE.M,
     marginBottom: moderateScale(15),
   },
   paymentPolicy: {

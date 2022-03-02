@@ -65,6 +65,7 @@ export const NetworkListModal = ({
                             keyExtractor={item=>item.id}
                             ItemSeparatorComponent={()=><View style={styles.separator}/>}
                             renderItem={({item,index})=><RenderItem onPress={onPress} index={index} item={item}/>}
+                            ListFooterComponent={()=><View style={{height: 30}}/>}
                         />
               }
             </View>

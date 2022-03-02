@@ -18,19 +18,16 @@ export const SummaryDetails = ({ loadDetails, mobileNumber, discount = 0 }) => {
           <Text style={styles.title}>Load Amount</Text>
           <Text style={styles.description}>PHP {numberFormat(amount)}</Text>
         </View>
-        { commissionRateDetails.systemServiceFee > 0 && (
-          <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-            <Text style={styles.title}>Service Fee</Text>
-            <Text style={styles.description}>PHP {numberFormat(commissionRateDetails.systemServiceFee)}</Text>
-          </View>
-        )}
+        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
+          <Text style={styles.title}>Service Fee</Text>
+          <Text style={styles.description}>PHP {numberFormat(commissionRateDetails.systemServiceFee)}</Text>
+        </View>
         { discount > 0 && (
           <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
             <Text style={styles.title}>Discount</Text>
             <Text style={styles.description}>PHP {numberFormat(discount)}</Text>
           </View>
         )}
-       
       </View>
       <View style={styles.line} />
       <View style={styles.totalAmountContainer}>
