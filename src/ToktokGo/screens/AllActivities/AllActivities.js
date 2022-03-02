@@ -4,14 +4,14 @@ import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {COLOR, MEDIUM} from '../../../res/constants'
-import {ActivitiesCard} from './Components';
+import {ActivitiesCard} from '../../components';
 import {GET_DELIVERIES} from '../../../graphql';
 import NoData from '../../../assets/images/NoData.png'
-import DummyData from './DummyData';
+import DummyData from '../../components/DummyData';
 
 const imageWidth = Dimensions.get('window').width - 200;
 
-const CancelledActivities = ({navigation, session}) => {
+const AllActivities = ({navigation, session}) => {
 
   // const {data, loading, error, refetch} = useQuery(GET_DELIVERIES, {
   //   fetchPolicy: 'network-only',
@@ -56,7 +56,7 @@ const CancelledActivities = ({navigation, session}) => {
     <View style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={DummyData.cancelled.getDeliveries}
+        data={DummyData.all.getDeliveries}
         // data={data.getDeliveries}
         keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl   colors={[COLOR]} tintColor={COLOR} />}
@@ -78,7 +78,7 @@ const mapStateToProps = (state) => ({
   session: state.session,
 });
 
-export default connect(mapStateToProps, null)(CancelledActivities);
+export default connect(mapStateToProps, null)(AllActivities);
 
 const styles = StyleSheet.create({
   container: {
