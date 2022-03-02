@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const arrangeAddons = addons => {
   if (addons.length > 0) {
     let selectedAddons = {};
@@ -48,6 +50,116 @@ export const getDeductedVoucher = (shipping, deliveryFee) => {
     totalDelivery = deliveryFee;
   }
   return totalDelivery;
+};
+
+export const getShippingVoucher = async promos => {
+  let autoApply = promos.filter(promo => promo.type === 'auto');
+  let shipping = promos.filter(promo => promo.type === 'shipping');
+
+  await autoApply.map((promo, value) => {
+    return delete promo.__typename;
+  });
+  await shipping.map(promo => {
+    let shippingObj = {...promo, amount: promo.origAmount};
+    delete shippingObj.origAmount;
+    delete promo.__typename;
+    return shippingObj;
+  });
+  return [...autoApply, ...shipping];
+};
+
+export const getPromotionVouchers = async (promos, shop_id) => {
+  let deals = promos.filter(promo => promo.type === 'deal');
+  let promotions = promos.filter(promo => promo.type === 'promotion');
+
+  deals = await deals.map(promo => {
+    delete promo.__typename;
+    return {...promo, shop_id: String(shop_id)};
+  });
+  promotions = await promotions.map(promo => {
+    delete promo.__typename;
+    return {...promo, shop_id: String(shop_id)};
+  });
+  const promoData = [...deals, ...promotions].map(promo => {
+    const removeKeys = promo.items.map(item => {
+      delete item.__typename;
+      return item;
+    });
+    return {...promo, items: removeKeys, type: 'promotion'};
+  });
+  return promoData;
+};
+
+export const getTotalDeductedVoucher = (promos, deliveryFee) => {
+  const groupPromo = _(promos)
+    .groupBy('type')
+    .map((objs, key) => ({
+      amount: _.sumBy(objs, 'amount'),
+      discount_totalamount: _.sumBy(objs, 'discount_totalamount'),
+      type: key,
+    }))
+    .value();
+  const promotions = groupPromo.filter(promo => promo.type === 'promotion');
+  const deal = groupPromo.filter(promo => promo.type === 'deal');
+  const autoApply = groupPromo.filter(promo => promo.type === 'auto');
+  const shipping = groupPromo.filter(promo => promo.type === 'shipping');
+  let totalDeducted = 0;
+
+  if (promotions.length > 0) {
+    totalDeducted += promotions[0].discount_totalamount;
+  }
+  if (deal.length > 0) {
+    totalDeducted += deal[0].discount_totalamount;
+  }
+  if (shipping.length > 0) {
+    totalDeducted += shipping[0].amount;
+  }
+  if (autoApply.length > 0) {
+    const {amount} = autoApply[0];
+    if (amount > 0) {
+      totalDeducted += amount;
+    } else {
+      totalDeducted += deliveryFee;
+    }
+  }
+
+  return totalDeducted;
+};
+
+export const getTotalDeductedDeliveryFee = (promos, deliveryFee) => {
+  const groupPromo = _(promos)
+    .groupBy('type')
+    .map((objs, key) => ({
+      amount: _.sumBy(objs, 'amount'),
+      discount_totalamount: _.sumBy(objs, 'discount_totalamount'),
+      type: key,
+    }))
+    .value();
+  // const promotions = groupPromo.filter(promo => promo.type === 'promotion');
+  // const deal = groupPromo.filter(promo => promo.type === 'deal');
+  const autoApply = groupPromo.filter(promo => promo.type === 'auto');
+  const shipping = groupPromo.filter(promo => promo.type === 'shipping');
+  let totalDeducted = 0;
+
+  // if (promotions.length > 0) {
+  //   totalDeducted += promotions[0].discount_totalamount;
+  // }
+  // if (deal.length > 0) {
+  //   totalDeducted += deal[0].discount_totalamount;
+  // }
+  if (shipping.length > 0) {
+    totalDeducted += shipping[0].amount;
+  }
+  if (autoApply.length > 0) {
+    const {amount} = autoApply[0];
+    if (amount > 0) {
+      totalDeducted += amount;
+    } else {
+      totalDeducted += deliveryFee;
+    }
+  }
+
+  return deliveryFee - totalDeducted;
 };
 
 export const getMobileNumberFormat = customerInfo => {

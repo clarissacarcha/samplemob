@@ -42,12 +42,6 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
   const [getVoucherCode] = useLazyQuery(GET_VOUCHER_CODE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    // variables: {
-    //   input: {
-    //     shopid: temporaryCart.items[0]?.shopid,
-    //     code: voucher,
-    //   },
-    // },
     onCompleted: ({getVoucherCode}) => {
       const {success, message, type} = getVoucherCode;
       setShowInlineError(true);
@@ -80,8 +74,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
           totalDeliveryFee = deliveryFee;
         }
 
-        const voucherObj = [...filterPromo, {...voucher, amount: totalDeliveryFee}];
-
+        const voucherObj = [...filterPromo, {...voucher, origAmount: amount, amount: totalDeliveryFee}];
         dispatch({
           type: 'SET_TOKTOKFOOD_PROMOTIONS',
           payload: voucherObj,

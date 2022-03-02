@@ -81,6 +81,20 @@ const voucherType = `
   product_id
   regions
   type
+
+  items {
+    product_id
+    amount
+    total_amount
+    srp_amount
+    srp_totalamount
+    quantity
+    discounted_amount
+    discounted_totalamount
+    discount_amount
+    discount_totalamount
+    on_top
+  }
 `;
 
 export const GET_TEMPORARY_CART = gql`

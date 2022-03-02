@@ -38,6 +38,10 @@ import {
 } from './components';
 import {
   getDeductedVoucher,
+  getPromotionVouchers,
+  getShippingVoucher,
+  getTotalDeductedVoucher,
+  getTotalDeductedDeliveryFee,
   getItemOrderType,
   getMobileNumberFormat,
   getOrderType,
@@ -160,7 +164,7 @@ const MainComponent = () => {
   }, [temporaryCart, location, isFocus]);
 
   useEffect(() => {
-    onGetAutoApply();
+    // onGetAutoApply();
   }, [paymentMethod]);
 
   const [getDeliverFee] = useLazyQuery(GET_SHIPPING_FEE, {
@@ -181,19 +185,19 @@ const MainComponent = () => {
       //     paymentMethod: 'CASH',
       //   },
       // });
-      getAutoShipping({
-        variables: {
-          input: {
-            region: items[0]?.shopRegion,
-            email,
-            subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
-            cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
-            brandId: items[0].companyId,
-            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
-            orders,
-          },
-        },
-      });
+      // getAutoShipping({
+      //   variables: {
+      //     input: {
+      //       region: items[0]?.shopRegion,
+      //       email,
+      //       subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+      //       cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
+      //       brandId: items[0].companyId,
+      //       paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+      //       orders,
+      //     },
+      //   },
+      // });
     },
   });
 
@@ -239,6 +243,7 @@ const MainComponent = () => {
   const [postResquestTakeMoney] = useMutation(REQUEST_TAKE_MONEY, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onError: error => {
+      console.log(error.response);
       setShowLoader(false);
       setTimeout(() => {
         onErrorAlert({alert, error});
@@ -344,6 +349,7 @@ const MainComponent = () => {
       original_shipping_fee: delivery?.price ? delivery.price : 0,
       // order_type: 1,
       // order_type: await getItemOrderType(customerFranchisee),
+      // handle_shipping_promo: 1,
       handle_shipping_promo: Number(VOUCHER_FlAG),
       daystoship: 0,
       daystoship_to: 0,
@@ -392,14 +398,14 @@ const MainComponent = () => {
     let totalPrice = temporaryCart?.totalAmountWithAddons;
     let deductedFee = 0;
     const CUSTOMER_CART = await fixOrderLogs();
-    const SHIPPING_VOUCHERS = autoShipping?.success
-      ? await handleAutoShippingVouchers(autoShippingVoucher)
-      : await handleShippingVouchers(shippingVoucher);
+    // const SHIPPING_VOUCHERS = autoShipping?.success
+    //   ? await handleAutoShippingVouchers(autoShippingVoucher)
+    //   : await handleShippingVouchers(shippingVoucher);
 
     if (orderType === 'Delivery') {
-      if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
-        deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
-      }
+      // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
+      //   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
+      // }
       totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
     }
 
@@ -508,12 +514,12 @@ const MainComponent = () => {
   };
 
   const processData = (WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS) => {
-    if (shippingVoucher.length > 0 || autoShipping?.success) {
-      const deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
-
+    if (promotionVoucher.length > 0) {
+      const deductedFee = getTotalDeductedDeliveryFee(promotionVoucher, delivery?.price);
+      console.log(deductedFee);
       const DEDUCTVOUCHER = {
         ...ORDER,
-        order_logs: [{...ORDER.order_logs[0], delivery_amount: delivery?.price - deductedFee}],
+        order_logs: [{...ORDER.order_logs[0], delivery_amount: deductedFee}],
       };
       return WALLET
         ? {...WALLET, ...CUSTOMER, ...DEDUCTVOUCHER, ...SHIPPING_VOUCHERS}
@@ -524,9 +530,9 @@ const MainComponent = () => {
   };
 
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
-    const SHIPPING_VOUCHERS = autoShipping?.success
-      ? await handleAutoShippingVouchers(autoShippingVoucher)
-      : await handleShippingVouchers(shippingVoucher);
+    // const SHIPPING_VOUCHERS = autoShipping?.success
+    //   ? await handleAutoShippingVouchers(autoShippingVoucher)
+    //   : await handleShippingVouchers(shippingVoucher);
     const ORDER = {
       total_amount: temporaryCart.totalAmount,
       srp_totalamount: temporaryCart.totalAmount,
@@ -538,6 +544,7 @@ const MainComponent = () => {
       order_logs: CUSTOMER_CART,
     };
     const CUSTOMER = {
+      shopid: temporaryCart?.items[0].shopid,
       company_id: String(temporaryCart?.items[0]?.companyId),
       name:
         receiver.contactPerson && receiver.contactPerson !== ''
@@ -555,8 +562,10 @@ const MainComponent = () => {
       regCode: '0',
       provCode: '0',
       citymunCode: '0',
+      shippingvouchers: await getShippingVoucher(promotionVoucher),
+      vouchers: await getPromotionVouchers(promotionVoucher, temporaryCart?.items[0].shopid),
     };
-    const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
+    const data = processData(WALLET, CUSTOMER, ORDER, []);
     console.log(data, 'DATA');
     postCustomerOrder({
       variables: {
@@ -741,12 +750,12 @@ const MainComponent = () => {
         <MyOrderList />
         <Separator />
 
-        {orderType === 'Delivery' && (
+        {/* {orderType === 'Delivery' && (
           <>
             <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} />
             <Separator />
           </>
-        )}
+        )} */}
 
         {/* <AlsoOrder /> */}
         {delivery === null ? (
