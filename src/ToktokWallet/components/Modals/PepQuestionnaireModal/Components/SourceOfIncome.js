@@ -22,6 +22,7 @@ export const SourceOfIncome = ({
     const [data,setData] = useState([]);
     const [visible,setVisible] = useState(false);
     const [selectedData,setSelectedData] = useState([])
+    const alert = useAlert();
    
     const [getSourceOfIncome , {loading}] = useLazyQuery(GET_SOURCE_OF_INCOME , {
         client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,

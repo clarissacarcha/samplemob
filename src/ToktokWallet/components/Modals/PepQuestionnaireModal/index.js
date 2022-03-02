@@ -10,8 +10,7 @@ import {
     SourceOfIncome,
     SourceOfWealth
 } from "./Components"
-import BottomSheetSourceOfIncome from 'toktokwallet/screens/KYCScreens/ToktokWalletVerification/Components/VerifyFullname/BottomSheetSourceOfIncome'
-import BottomSheetSourceOfWealth from 'toktokwallet/screens/KYCScreens/ToktokWalletVerification/Components/VerifyFullname/BottomSheetSourceOfWealth'
+
 const {COLOR, FONT_FAMILY: FONT ,SIZE,FONT_SIZE} = CONSTANTS
 
 const Question = ({question,errorMessage,setErrorMessage,index,chooseAnswer,pepInfoAnswer})=> {
@@ -161,9 +160,6 @@ export const PepQuestionnaireModal = ({
         "","","",""
     ])
     const [agree,setAgree] = useState(false)
-   
-    const SourceOfIncomeRef = useRef(null)
-    const SourceOfWealthRef = useRef(null)
 
     const closeModal = ()=> {
         onRequestClose();
@@ -363,10 +359,6 @@ export const PepQuestionnaireModal = ({
                       
                     </View>
                 </ScrollView>
-             
-                    {/* <BottomSheetSourceOfIncome ref={SourceOfIncomeRef} changeIncomeInfo={changeIncomeInfo}/>
-                    <BottomSheetSourceOfWealth ref={SourceOfWealthRef} changeWealthInfo={changeWealthInfo}/> */}
-               
                 <BuildingBottom/>
                 
               
