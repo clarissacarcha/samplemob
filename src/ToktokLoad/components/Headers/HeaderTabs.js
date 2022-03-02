@@ -34,14 +34,14 @@ export const HeaderTabs = (props) => {
     const itemTabWidth = fitToScreen ? width / tabs.length : moderateScale(127);
     return (
       <TouchableOpacity
-        onPress={() => setActiveTab(item.id)}
+        onPress={() => setActiveTab(item?.id)}
         hitSlop={styles.hitSlop}
       >
         <View style={[{ width: itemTabWidth }]}>
-          <Text style={[styles.tabText, { color: activeTab == item.id ? "#F6841F" : "#707070"} ]}>
-            {item.name ?? item.categoryName}
+          <Text style={[styles.tabText, { color: activeTab == item?.id ? "#F6841F" : "#707070"} ]}>
+            {item?.name ?? item?.categoryName}
           </Text>
-          <View style={activeTab == item.id && styles.activeTabContainer} />
+          <View style={activeTab == item?.id && styles.activeTabContainer} />
         </View>
       </TouchableOpacity>
     );

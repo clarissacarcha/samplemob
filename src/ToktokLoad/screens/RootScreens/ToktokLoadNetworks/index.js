@@ -121,8 +121,8 @@ const MainComponent = ({ navigation, route }) => {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Buy Load for</Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image source={{ uri: route.params.network.iconUrl }} resizeMode="contain" style={{ height: 15, width: 40 }} />
+        <View style={styles.headerContentContainer}>
+          <Image source={{ uri: route.params.network.iconUrl }} style={styles.networkLogo} />
           <Text style={styles.mobileNo}>{route.params?.mobileNumber}</Text>
         </View>
       </View>
@@ -132,11 +132,6 @@ const MainComponent = ({ navigation, route }) => {
         placeholder="Search Load Products Here"
         containerStyle={{ paddingHorizontal: moderateScale(16), paddingBottom: moderateScale(hasSearch ? 16 : 0) }}
         onSubmitEditing={processSearch}
-        onKeyboardVisible={(val) => {
-          // console.log(val)
-          // setKeyboardVisible(val)
-          // if(val && !search){ setLoads([]) }
-        }}
       />
       { (!hasSearch && !getSearchLoading) && (
         <HeaderTabs
@@ -183,7 +178,16 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M
   },
   mobileNo: {
-    fontSize: 20
+    fontSize: moderateScale(20)
+  },
+  headerContentContainer: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  networkLogo: {
+    height: moderateScale(20),
+    width: moderateScale(40),
+    resizeMode: "contain"
   }
 })
 

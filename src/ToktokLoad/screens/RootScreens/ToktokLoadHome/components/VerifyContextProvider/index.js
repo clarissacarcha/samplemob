@@ -19,9 +19,10 @@ export const VerifyContextProvider = ({children, navigation})=> {
   const [mobileNumber, setMobileNumber] = useState(formattedMobile);
   const [adHighlight,setAdHighlight] = useState([]);
   const [adsRegular,setAdsRegular] = useState([]);
+  const [adsActions, setAdsAction] = useState({ loading: false, error: {} });
   const prompt = usePrompt();
 
-  const [getAdvertisements] = useLazyQuery(GET_ADVERTISEMENTS, {
+  const [getAdvertisements, { loading, error }] = useLazyQuery(GET_ADVERTISEMENTS, {
     fetchPolicy:"network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onCompleted: ({getAdvertisements})=> {
@@ -37,17 +38,18 @@ export const VerifyContextProvider = ({children, navigation})=> {
         setAdsRegular(adsRegular)
     },
     onError: (error)=> {
-      ErrorUtility.StandardErrorHandling({
-        error,
-        navigation,
-        prompt,
-      });
+      // ErrorUtility.StandardErrorHandling({
+      //   error,
+      //   navigation,
+      //   prompt,
+      // });
     }
   })
 
   useEffect(()=> {
-    getAdvertisements()
-  },[])
+    console.log(loading)
+    setAdsAction({ loading, error });
+  },[loading, error])
 
   const tabList = [
     { id: 1, name: "Buy Load" },
@@ -65,7 +67,9 @@ export const VerifyContextProvider = ({children, navigation})=> {
         setMobileNumber,
         tabList,
         adHighlight,
-        adsRegular
+        adsRegular,
+        adsActions,
+        getAdvertisements
       }}
     >
       {children}
