@@ -68,7 +68,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
   const [itemDescription, setItemDescription] = useState(route.params.orderData.cargo);
   const [otherItem, setOtherItem] = useState('');
   const [notes, setNotes] = useState(route.params.orderData.notes);
-  const [isExpress, setIsExpress] = useState(route.params.orderData.isExpress);
+  const [isExpress, setIsExpress] = useState(false);
   // const [isCashOnDelivery, setIsCashOnDelivery] = useState(route.params.orderData.isCashOnDelivery);
   const [cashOnDelivery, setCashOnDelivery] = useState(route.params.orderData.cashOnDelivery);
   const [itemsToPurchase, setItemsToPurchase] = useState([FORM_DATA]);
@@ -86,6 +86,9 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
   const [hasWallet, setHasWallet] = useState(null);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [quotationHash, setQuotationHash] = useState(null);
+  const [quotationDirections, setQuotationDirections] = useState(null);
 
   const [getToktokWalletBalance] = useLazyQuery(GET_TOKTOK_WALLET_BALANCE, {
     fetchPolicy: 'network-only',
@@ -120,6 +123,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     getDeliveryPriceAndDirectionsInitial({
       variables: {
         input: {
+          // quotationHash,
           consumerId: session.user.consumer.id,
           promoCode: '',
           // promoCode: bookingData.promoCode,
@@ -159,6 +163,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
       getDeliveryPriceAndDirectionsInitial({
         variables: {
           input: {
+            // quotationHash,
             consumerId: session.user.consumer.id,
             promoCode: '',
             // promoCode: bookingData.promoCode,
@@ -190,6 +195,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
       getDeliveryPriceAndDirectionsInitial({
         variables: {
           input: {
+            quotationHash,
             consumerId: session.user.consumer.id,
             promoCode: '',
             // promoCode: bookingData.promoCode,
@@ -230,6 +236,14 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
       onCompleted: data => {
         console.log(JSON.stringify({onCompleted: data.getDeliveryPriceAndDirections.pricing}, null, 4));
         setInitialPrice(data.getDeliveryPriceAndDirections.pricing.price);
+        setQuotationHash(data.getDeliveryPriceAndDirections.hash);
+
+        // if (data.getDeliveryPriceAndDirections.directions) {
+        //   console.log('------------------------------ WITH QUOTATION DIRECTIONS ------------------------------');
+        //   setQuotationDirections(data.getDeliveryPriceAndDirections.directions);
+        // } else {
+        //   console.log('------------------------------ WITHOUT QUOTATION DIRECTIONS ------------------------------');
+        // }
       },
     },
   );
@@ -243,16 +257,6 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
       // console.log(JSON.stringify(data.getDeliveryPriceAndDirections, null, 4));
       const {hash, pricing, directions} = data.getDeliveryPriceAndDirections;
       const {price, distance, duration, discount, expressFee} = pricing;
-      // const updatedBookingData = {
-      //   ...bookingData,
-      //   hash,
-      //   price,
-      //   discount,
-      //   distance,
-      //   duration,
-      //   directions,
-      // };
-      // navigation.navigate('ConsumerMap', {callbackData: updatedBookingData});
 
       let finalItemDescription = itemDescription;
 
@@ -260,9 +264,15 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
         finalItemDescription = otherItem;
       }
 
-      console.log(JSON.stringify({hash, pricing, directions}, null, 4));
+      if (data.getDeliveryPriceAndDirections.directions) {
+        console.log('------------------------------ WITH QUOTATION DIRECTIONS ------------------------------');
+      } else {
+        console.log('------------------------------ WITHOUT QUOTATION DIRECTIONS ------------------------------');
+      }
 
-      navigation.push('DeliverySummary', {
+      console.log(JSON.stringify({hash, pricing}, null, 4));
+
+      const routeParams = {
         orderData: {
           ...route.params.orderData,
           paymentMethod,
@@ -281,7 +291,11 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
           directions,
         },
         walletBalance: walletBalance,
-      });
+      };
+
+      // routeParams.orderData.directions = quotationDirections;
+
+      navigation.push('DeliverySummary', routeParams);
     },
   });
 
@@ -387,6 +401,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
     getDeliveryPriceAndDirections({
       variables: {
         input: {
+          // quotationHash,
           consumerId: session.user.consumer.id,
           promoCode: '',
           // promoCode: bookingData.promoCode,

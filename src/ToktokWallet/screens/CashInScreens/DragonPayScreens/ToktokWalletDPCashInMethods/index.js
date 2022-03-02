@@ -122,7 +122,8 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                 onCashIn: onCashIn,
                 processingFee: processingFee,
                 paymentMethod: paymentMethod,
-                paymentChoice: paymentChoice
+                paymentChoice: paymentChoice,
+                providerServiceFee: postCashInPayPandaRequest.providerServiceFee
             })
         }
     })
@@ -178,7 +179,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                         processingFee: postComputeProcessingFee.processingFee,
                     },
                 isSwipe: true,
-                swipeTitle: `Confirm`,
+                swipeTitle: `Swipe to Confirm`,
                 onSwipeFail: onSwipeFail,
                 onSwipeSuccess: onSwipeSuccess,
             })
@@ -202,21 +203,28 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                         ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                             <ActivityIndicator size={36} color={COLOR.YELLOW} />
                         </View>
-                        :  <FlatList 
-                                ListHeaderComponent={() => {
-                                    if(cashInMethods.length > 0) return null
-                                    if(loading) return null
-                                    return <NoData/>
-                                }}
-                                refreshControl={<RefreshControl refreshing={loading} onRefresh={getCashInPartnerTypes} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
-                                showsVerticalScrollIndicator={false}
-                                data={cashInMethods}
-                                // ItemSeparatorComponent={()=><View style={styles.divider}/>}
-                                keyExtractor={item=>item.id}
-                                renderItem={({item,index})=>(
-                                    <PaymentMethod onPress={()=>ProcessPayment(item.name, item.transactionTypeId , item.id)} label={item.name}/>
-                                )}
-                            />
+                        :  cashInMethods.length == 0
+                            ? <NoData/>
+                            : cashInMethods.map((item,index)=> {
+                                return <PaymentMethod onPress={()=>ProcessPayment(item.name, item.transactionTypeId , item.id)} label={item.name}/>
+                            })
+                            
+                        // <FlatList 
+                        //         alwaysBounceVertical={false}
+                        //         ListHeaderComponent={() => {
+                        //             if(cashInMethods.length > 0) return null
+                        //             if(loading) return null
+                        //             return <NoData/>
+                        //         }}
+                        //         refreshControl={<RefreshControl refreshing={loading} onRefresh={getCashInPartnerTypes} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
+                        //         showsVerticalScrollIndicator={false}
+                        //         data={cashInMethods}
+                        //         // ItemSeparatorComponent={()=><View style={styles.divider}/>}
+                        //         keyExtractor={item=>item.id}
+                        //         renderItem={({item,index})=>(
+                        //             <PaymentMethod onPress={()=>ProcessPayment(item.name, item.transactionTypeId , item.id)} label={item.name}/>
+                        //         )}
+                        //     />
                     }
                 </View>
                 <BuildingBottom/>

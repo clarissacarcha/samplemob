@@ -21,6 +21,7 @@ export const WalletLandingPage = connect(null,mapDispatchtoProps)(({refreshing, 
     return (
         <View style={styles.container}>
             <ScrollView 
+                    alwaysBounceVertical={false}
                     stickyHeaderIndices={[0]}
                     nestedScrollEnabled
                     scrollEnabled={true}

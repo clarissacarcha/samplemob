@@ -12,6 +12,7 @@ import {onErrorAlert} from 'src/util/ErrorUtility'
 import { AlertOverlay } from 'src/components'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import CONSTANTS from 'common/res/constants'
+import CheckBox from 'react-native-check-box'
 const { COLOR , FONT_FAMILY: FONT , SIZE , FONT_SIZE , MARGIN } = CONSTANTS
 
 //SELF IMPORTS
@@ -48,6 +49,7 @@ export const ToktokWalletRequestMoney = ({navigation,route})=> {
     })
     const [getAccountLoading,setGetAccountLoading] = useState(false)
     const [showPrompt , setShowPrompt] = useState(false)
+    const [isCertify, setCertify] = useState(true)
     const alert = useAlert()
 
     const [postRequestMoney , {loading}] = useMutation(POST_REQUEST_MONEY,{
@@ -87,7 +89,7 @@ export const ToktokWalletRequestMoney = ({navigation,route})=> {
             isSwipe: true,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            swipeTitle: `Request ${tokwaAccount.wallet.currency.code} ${amount != "" ? numberFormat(amount) : "0"}`,
+            swipeTitle: `Swipe to Request ${tokwaAccount.wallet.currency.code} ${amount != "" ? numberFormat(amount) : "0"}`,
             data: {
                 amount: amount,
                 note: note,
@@ -192,9 +194,34 @@ export const ToktokWalletRequestMoney = ({navigation,route})=> {
                         setMobileNo={setMobileNo}
                     />  
 
-                    <View style={{height: SIZE.FORM_HEIGHT,marginTop: 50,justifyContent:"flex-end"}}>
+                    <View style={{height: SIZE.FORM_HEIGHT + 50 ,marginTop: 50,justifyContent:"flex-end"}}>
+
+                        <View style={{
+                            flexDirection:"row",     
+                            marginBottom: 25,
+                        }}>
+
+                                <CheckBox
+                                    isChecked={isCertify}
+                                    onClick={()=>{
+                                        return setCertify(!isCertify)
+                                    }}
+                                    style={{
+                                        alignSelf: "center",
+                                        marginRight: 2,
+                                    }}
+                                />
+
+                                <TouchableOpacity 
+                                    // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                                    onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
+                                    style={{paddingLeft: 5,marginRight: 16}}
+                                >
+                                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby read and accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before proceeding with my transaction.</Text>
+                                </TouchableOpacity>
+                        </View>
                          {
-                             proceed && swipeEnabled
+                             proceed && swipeEnabled && isCertify
                              ? <YellowButton label="Proceed" onPress={confirmRequest}/>
                              : <DisabledButton label="Proceed"/>
                          }

@@ -12,8 +12,6 @@ export const CheckTokwaKYCRegistration = ({children, kycStatus})=>{
 
     const navigation = useNavigation()
 
-    console.log(`MY KYC STATUS IS ${kycStatus}`)
-
      // If KYC status is Rejected
      if(kycStatus == 0){
         return <RejectedKyc/>

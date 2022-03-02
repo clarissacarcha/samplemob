@@ -6,6 +6,10 @@ import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp';
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
+import {
+    SourceOfIncome,
+    SourceOfWealth
+} from "./Components"
 import BottomSheetSourceOfIncome from 'toktokwallet/screens/KYCScreens/ToktokWalletVerification/Components/VerifyFullname/BottomSheetSourceOfIncome'
 import BottomSheetSourceOfWealth from 'toktokwallet/screens/KYCScreens/ToktokWalletVerification/Components/VerifyFullname/BottomSheetSourceOfWealth'
 const {COLOR, FONT_FAMILY: FONT ,SIZE,FONT_SIZE} = CONSTANTS
@@ -278,7 +282,25 @@ export const PepQuestionnaireModal = ({
                             index={1}
                         />
 
-                        <DropDownQuestion
+                        <SourceOfIncome
+                            pepInfoAnswer={{
+                                value: pepInfo.questionnaire.sourceOfIncomeId,
+                                des: pepInfo.questionnaire.sourceOfIncomeDes,
+                                others: pepInfo.questionnaire.sourceOfIncome
+                            }}
+                            setPepInfo={setPepInfo}
+                        />
+
+                        <SourceOfWealth
+                            pepInfoAnswer={{
+                                value: pepInfo.questionnaire.sourceOfWealthId,
+                                des: pepInfo.questionnaire.sourceOfWealthDes,
+                                others: pepInfo.questionnaire.sourceOfWealth
+                            }}
+                            setPepInfo={setPepInfo}
+                        />
+
+                        {/* <DropDownQuestion
                             question="3) Source of Income"
                             index={0}
                             sourceRef={SourceOfIncomeRef}
@@ -300,7 +322,7 @@ export const PepQuestionnaireModal = ({
                                 others: pepInfo.questionnaire.sourceOfWealth
                             }}
                             setPepInfo={setPepInfo}
-                        />
+                        /> */}
                     </View>
 
                     <View style={{flexDirection:"row",marginTop :50,alignItems:"center"}}>
@@ -313,7 +335,7 @@ export const PepQuestionnaireModal = ({
                             pepInfo.questionnaire.isPep != ""
                             && pepInfo.questionnaire.isFamilyPep != ""
                             && pepInfo.questionnaire.sourceOfIncomeId != ""
-                            && pepInfo.questionnaire.sourceOfWealthId != ""
+                            // && pepInfo.questionnaire.sourceOfWealthId != ""
                             && (
                                 pepInfo.questionnaire.isPep == "1"
                                 ? pepInfo.questionnaire.pepPosition != ""
@@ -325,15 +347,15 @@ export const PepQuestionnaireModal = ({
                                 : pepInfo.questionnaire.familyPepPosition == ""
                             )
                             && (
-                                pepInfo.questionnaire.sourceOfIncomeId == "0"
+                                pepInfo.questionnaire.sourceOfIncomeId.includes("0")
                                 ? pepInfo.questionnaire.sourceOfIncome != ""
                                 : pepInfo.questionnaire.sourceOfIncome == ""
                             )
-                            && (
-                                pepInfo.questionnaire.sourceOfWealthId == "0"
-                                ? pepInfo.questionnaire.sourceOfWealth != ""
-                                : pepInfo.questionnaire.sourceOfWealth == ""
-                            )
+                            // && (
+                            //     pepInfo.questionnaire.sourceOfWealthId.includes("0")
+                            //     ? pepInfo.questionnaire.sourceOfWealth != ""
+                            //     : pepInfo.questionnaire.sourceOfWealth == ""
+                            // )
                             && agree
                             ? <YellowButton label="Proceed" onPress={onPress}/>
                             : <DisabledButton label="Proceed"/>
@@ -342,8 +364,8 @@ export const PepQuestionnaireModal = ({
                     </View>
                 </ScrollView>
              
-                    <BottomSheetSourceOfIncome ref={SourceOfIncomeRef} changeIncomeInfo={changeIncomeInfo}/>
-                    <BottomSheetSourceOfWealth ref={SourceOfWealthRef} changeWealthInfo={changeWealthInfo}/>
+                    {/* <BottomSheetSourceOfIncome ref={SourceOfIncomeRef} changeIncomeInfo={changeIncomeInfo}/>
+                    <BottomSheetSourceOfWealth ref={SourceOfWealthRef} changeWealthInfo={changeWealthInfo}/> */}
                
                 <BuildingBottom/>
                 

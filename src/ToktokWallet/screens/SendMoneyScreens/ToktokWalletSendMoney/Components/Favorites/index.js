@@ -159,7 +159,7 @@ export const Favorites = forwardRef(({setMobileNo},ref)=> {
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        marginTop: 20,
+        marginTop: 50,
         justifyContent:"flex-end"
     },
     favorite: {
