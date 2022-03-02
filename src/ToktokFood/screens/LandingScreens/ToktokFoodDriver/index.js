@@ -48,7 +48,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
   });
 
   // data fetching for tsransaction
-  const [getTransactionByRefNum, {startPolling, stopPolling, error: transactionError, loading: transactionLoading}] =
+  const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading}] =
     useLazyQuery(GET_ORDER_TRANSACTION_BY_REF_NUM, {
       variables: {
         input: {
@@ -62,26 +62,23 @@ const ToktokFoodDriver = ({route, navigation}) => {
         checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
       },
       onCompleted: ({getTransactionByRefNum}) => {
-        if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
-          setTransaction(getTransactionByRefNum);
-          const {orderIsfor, tDeliveryId, orderStatus} = getTransactionByRefNum;
-          console.log('fetching orders...', orderStatus);
-          if (orderStatus === 's' || orderStatus === 'c') {
-            stopPolling();
-          } else {
-            startPolling(10000);
-          }
-
-          if (orderIsfor === 1 && tDeliveryId) {
-            getToktokFoodRiderDetails({
-              variables: {
-                input: {
-                  deliveryId: tDeliveryId,
-                },
+        // if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
+        setTransaction(getTransactionByRefNum);
+        const {orderIsfor, tDeliveryId, orderStatus} = getTransactionByRefNum;
+        console.log('fetching orders...', orderStatus);
+        if (orderIsfor === 1 && tDeliveryId) {
+          getToktokFoodRiderDetails({
+            variables: {
+              input: {
+                deliveryId: tDeliveryId,
               },
-            });
-          }
+            },
+          });
         }
+        if (orderStatus !== 's' || orderStatus !== 'c') {
+          handleGetTransactionByRefNum();
+        }
+        // }
       },
     });
 
@@ -145,7 +142,13 @@ const ToktokFoodDriver = ({route, navigation}) => {
 
   useEffect(() => {
     if (isFocus) {
-      handleGetTransactionByRefNum();
+      getTransactionByRefNum({
+        variables: {
+          input: {
+            referenceNum: referenceNum,
+          },
+        },
+      });
     }
   }, [isFocus]);
 
@@ -164,13 +167,15 @@ const ToktokFoodDriver = ({route, navigation}) => {
   }, [riderSeconds, isFocus]);
 
   const handleGetTransactionByRefNum = () => {
-    getTransactionByRefNum({
-      variables: {
-        input: {
-          referenceNum: referenceNum,
+    setTimeout(() => {
+      getTransactionByRefNum({
+        variables: {
+          input: {
+            referenceNum: referenceNum,
+          },
         },
-      },
-    });
+      });
+    }, 10000);
   };
 
   const handleMapRider = () => {

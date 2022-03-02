@@ -55,6 +55,11 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading, refetch}] = useLazyQuery(
     GET_ORDER_TRANSACTION_BY_REF_NUM,
     {
+      variables: {
+        input: {
+          referenceNum: referenceNum,
+        },
+      },
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
       onError: () => {
@@ -62,8 +67,21 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
       },
       onCompleted: ({getTransactionByRefNum}) => {
         // console.log(getTransactionByRefNum);
-        if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
-          setTransaction(getTransactionByRefNum);
+        // if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
+        setTransaction(getTransactionByRefNum);
+        const {orderIsfor, tDeliveryId, orderStatus} = getTransactionByRefNum;
+        console.log('fetching orders...', orderStatus);
+        if (orderIsfor === 1 && tDeliveryId) {
+          getToktokFoodRiderDetails({
+            variables: {
+              input: {
+                deliveryId: tDeliveryId,
+              },
+            },
+          });
+        }
+        if (orderStatus !== 's' || orderStatus !== 'c') {
+          handleGetTransactionByRefNum();
         }
       },
     },
@@ -90,8 +108,16 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   }, [navigation]);
 
   useEffect(() => {
-    handleGetTransactionByRefNum();
-  }, []);
+    if (isFocus) {
+      getTransactionByRefNum({
+        variables: {
+          input: {
+            referenceNum: referenceNum,
+          },
+        },
+      });
+    }
+  }, [isFocus]);
 
   // useEffect(() => {
   //   if (isFocus) {
@@ -140,13 +166,15 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   }, [riderSeconds]);
 
   const handleGetTransactionByRefNum = () => {
-    getTransactionByRefNum({
-      variables: {
-        input: {
-          referenceNum: referenceNum,
+    setTimeout(() => {
+      getTransactionByRefNum({
+        variables: {
+          input: {
+            referenceNum: referenceNum,
+          },
         },
-      },
-    });
+      });
+    }, 10000);
   };
 
   const handleMapRider = () => {
