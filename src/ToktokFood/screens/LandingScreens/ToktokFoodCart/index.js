@@ -69,6 +69,12 @@ import {FONT, FONT_SIZE} from '../../../../res/variables';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 
+/*
+  This variable is used for identifier whether the user is able to checkout or not 
+  if the user's toktokwallet is pending
+*/
+const MINIMUM_CHECKOUT = 2000;
+
 const MainComponent = () => {
   const route = useRoute();
   const navigation = useNavigation();
@@ -108,6 +114,8 @@ const MainComponent = () => {
   const isFocus = useIsFocused();
 
   const [closeInfo, setCloseInfo] = useState({visible: false, shopName: ''});
+
+  const [diablePlaceOrder, setDisablePlaceOrder] = useState(true);
 
   const [getAutoShipping, {loading: loadingShipping}] = useLazyQuery(GET_AUTO_SHIPPING, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -726,6 +734,7 @@ const MainComponent = () => {
             subtotal={totalAmount}
             deliveryFee={delivery.price}
             forDelivery={orderType === 'Delivery'}
+            oneCartTotal={v => setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
           />
         )}
         <Separator />
@@ -737,6 +746,7 @@ const MainComponent = () => {
           notes={riderNotes}
           onNotesChange={n => setRiderNotes(n)}
           onPlaceOrder={() => setShowConfirmation(true)}
+          disableWalletCheckout={diablePlaceOrder}
         />
         {checkShop != null && (
           <OrderTypeSelection

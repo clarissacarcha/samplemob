@@ -4,12 +4,16 @@ import {VerifyContext} from '../components';
 
 import styles from '../styles';
 
-const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = true}) => {
+const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = true, oneCartTotal}) => {
   // deliveryFee = deliveryFee ? deliveryFee : 0;
   // subtotal = subtotal ? subtotal : 0;
   const {shippingVoucher, temporaryCart} = useContext(VerifyContext);
   const [totalBasket, setTotalBasket] = useState(temporaryCart.totalAmount);
   const [totalShipping, setTotalShipping] = useState(0);
+
+  useEffect(() => {
+    oneCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
+  }, [shippingVoucher, totalBasket, totalShipping]);
 
   const getVoucherFee = useCallback(() => {
     // console.log(autoShipping, shippingVoucher)
