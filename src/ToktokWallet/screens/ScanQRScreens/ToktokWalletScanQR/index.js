@@ -49,7 +49,7 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
     const [postVerifyTransactionQrCode , {loading}] = useMutation(POST_VERIFY_TRANSACTION_QR_CODE, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=>{
-            return "QR code must be valid"
+            return setErrMessage("QR code must be valid")
             // return alertHook({message:"Qr code must be valid"})
         },
         onCompleted: ({postVerifyTransactionQrCode})=>{
@@ -57,10 +57,10 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
             const { account } = postVerifyTransactionQrCode
             if(account){
                 if(account.mobileNumber === tokwaAccount.mobileNumber){
-                    return "You cannot send money to yourself"
+                    return setErrMessage("You cannot send money to yourself")
                     // return alertHook({message: "You cannot send money to yourself"})
                 }
-               
+                setErrMessage("")
                 return navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: account})
             }
         }
