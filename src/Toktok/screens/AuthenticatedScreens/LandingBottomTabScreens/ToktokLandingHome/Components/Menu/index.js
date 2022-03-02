@@ -65,24 +65,12 @@ export const Menu = ({setUserLocation, constants}) => {
   return (
     <View style={styles.menuBox}>
       
-      <View style={styles.colGroup}> 
         <MenuIcon
           label={'Delivery'}
           icon={DeliveryIcon}
           onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
         />
 
-        <MenuIcon
-          label={'Go'}
-          icon={GoIcon}
-          onPress={() => {
-            // navigation.push('ToktokProfile');
-          }}
-          isNew
-        />
-      </View>
-
-      <View style={styles.colGroup}> 
         <MenuIcon 
           label={'Pabili'} 
           icon={PabiliIcon} 
@@ -96,9 +84,7 @@ export const Menu = ({setUserLocation, constants}) => {
             // navigation.push('ToktokProfile');
           }}
         /> */}
-      </View>   
-
-      <View style={styles.colGroup}>     
+    
         {showToktokWallet && (
           <MenuIcon
             label={'Wallet'}
@@ -108,9 +94,7 @@ export const Menu = ({setUserLocation, constants}) => {
             }}
           />
         )}
-      </View> 
-      
-      <View style={styles.colGroup}>  
+       
         {/* TOKTOKFOOD COMING SOON */}
         {constants.isToktokfoodComingSoonDisplayed == 1 && (
           <MenuIcon
@@ -121,7 +105,15 @@ export const Menu = ({setUserLocation, constants}) => {
             }}
           />
         )}
-      </View>  
+
+        <MenuIcon
+          label={'Go'}
+          icon={GoIcon}
+          onPress={() => {
+            // navigation.push('ToktokProfile');
+          }}
+          isNew
+        />
       
     </View>
   );
@@ -129,10 +121,8 @@ export const Menu = ({setUserLocation, constants}) => {
 
 const styles = StyleSheet.create({
   menuBox: {
-    // paddingVertical: SIZE.MARGIN / 2,
     flexDirection: 'row',
     borderRadius: 5,
-    justifyContent: 'space-around',
     backgroundColor: 'white',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
@@ -146,11 +136,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5
   },
-  colGroup: {
-    flexDirection: 'column', 
-    justifyContent: 'space-around',
-  },
   menuButton: {
+    width: '25%',
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10
