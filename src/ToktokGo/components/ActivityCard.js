@@ -4,17 +4,17 @@
 
  import React from 'react';
  import { View, Text, StyleSheet, TouchableHighlight, Image } from 'react-native';
- import { DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR, FONT_COLOR } from '../../../../res/constants';
- import {COLOR, FONT_SIZE } from '../../../../common/res/constants';
+ import { DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR, FONT_COLOR } from '../../res/constants';
+ import {COLOR, FONT_SIZE } from '../../common/res/constants';
  import { constant, throttle } from 'lodash';
  import 'moment-timezone';
  
  import EIcon from 'react-native-vector-icons/Entypo';
  import FA5Icon from 'react-native-vector-icons/FontAwesome5';
- import constants from '../../../../common/res/constants';
- import Wallet from '../../../../assets/images/Wallet.png';
- import Vector from '../../../../assets/images/Vector.png'
- import ToktokWalletText from '../../../../assets/images/ToktokwalletText.png'
+ import constants from '../../common/res/constants';
+ import Wallet from '../../assets/images/Wallet.png';
+ import Vector from '../../assets/images/Vector.png'
+ import ToktokWalletText from '../../assets/images/ToktokwalletText.png'
  
  const getDisplayAddress = ({ stop }) => {
      if (stop.addressBreakdown) {

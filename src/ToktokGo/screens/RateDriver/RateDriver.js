@@ -1,16 +1,16 @@
 import React, { useState, useRef } from 'react'
 import { View, StyleSheet, Text, TouchableHighlight, Image, ScrollView, TouchableOpacity, TextInput, ImageBackground, Dimensions } from 'react-native';
-import { HeaderBack, HeaderTitle, AlertOverlay } from '../../../../components';
-import CONSTANTS from '../../../../common/res/constants'
+import { HeaderBack, HeaderTitle, AlertOverlay } from '../../../components';
+import CONSTANTS from '../../../common/res/constants'
 import FAIcon from 'react-native-vector-icons/FontAwesome';
-import Feedback1 from '../../../../assets/images/Feedback1.png';
-import Feedback2 from '../../../../assets/images/Feedback2.png';
-import Feedback3 from '../../../../assets/images/Feedback3.png';
-import Feedback4 from '../../../../assets/images/Feedback4.png';
-import Feedback5 from '../../../../assets/images/Feedback5.png';
-import Feedback6 from '../../../../assets/images/Feedback6.png';
-import { COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR } from '../../../../res/constants';
-import {FeedbackModal} from './FeedbackModal';
+import Feedback1 from '../../../assets/images/Feedback1.png';
+import Feedback2 from '../../../assets/images/Feedback2.png';
+import Feedback3 from '../../../assets/images/Feedback3.png';
+import Feedback4 from '../../../assets/images/Feedback4.png';
+import Feedback5 from '../../../assets/images/Feedback5.png';
+import Feedback6 from '../../../assets/images/Feedback6.png';
+import { COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR } from '../../../res/constants';
+import {FeedbackModal} from './components';
 
 const Star = ({ onPress, color, isLast }) => {
     return <FAIcon onPress={onPress} name="star" size={35} style={{ marginRight: isLast ? 0 : 25 }} color={color} />;
