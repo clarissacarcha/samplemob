@@ -255,8 +255,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     let {title} = showDialogMessage;
     setShowDialogMessage(prev => ({...prev, show: false}));
     if (title !== 'Order Complete' || title !== 'OOPS! Order Declined!' || title !== 'Order Cancelled') {
-      // let tab = selectedTab(title);
-      // navigation.navigate('ToktokFoodOrderTransactions', {tab});
+      let tab = selectedTab(title);
+      navigation.navigate('ToktokFoodOrderTransactions', {tab});
       setSeconds(300);
     }
   };

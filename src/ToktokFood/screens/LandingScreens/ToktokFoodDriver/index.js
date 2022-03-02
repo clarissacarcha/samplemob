@@ -266,8 +266,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
       return navigation.replace('ToktokFoodLanding');
     }
     if (title !== 'Order Complete' || title !== 'OOPS! Order Declined!' || title !== 'Order Cancelled') {
-      // let tab = selectedTab(title);
-      // navigation.navigate('ToktokFoodOrderTransactions', {tab});
+      let tab = selectedTab(title);
+      navigation.navigate('ToktokFoodOrderTransactions', {tab});
       setSeconds(300);
       setMinutes(5);
     }
