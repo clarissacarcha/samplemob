@@ -1,6 +1,11 @@
 import React , {useState} from "react";
 import { View , Text , StyleSheet, TouchableOpacity } from 'react-native';
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp';
+import {useLazyQuery} from '@apollo/react-hooks'
+import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from 'src/graphql'
+import { GET_SOURCE_OF_WEALTH } from 'toktokwallet/graphql'
+import { onErrorAlert } from 'src/util/ErrorUtility';
+import { useAlert } from 'src/hooks';
 import CONSTANTS from 'common/res/constants'
 //SELF IMPORTS 
 import {
@@ -16,11 +21,90 @@ export const SourceOfWealth = ({
 
     const [data,setData] = useState([]);
     const [visible,setVisible] = useState(false);
+    const [selectedData,setSelectedData] = useState([])
     const [sourceOfWealths,setSourceOfWealths] = useState([])
+
+    const [getSourceOfWealth] = useLazyQuery(GET_SOURCE_OF_WEALTH , {
+        client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+        fetchPolicy:"network-only",
+        onCompleted: ({getSourceOfWealth})=> {
+            const data = [...getSourceOfWealth , {id: "0" , description: "Others"}]
+            const finalData = data.map((item,index)=> {
+                return {
+                    ...item,
+                    selected: false
+                }
+            } )
+
+            setData(finalData)
+        },
+        onError: (error) => {
+          onErrorAlert({alert, error});
+        }
+    })
 
     const openModal = ()=> {
         setVisible(true)
     }
+
+    const doneProcess = ()=> {
+        const sourceOfWealthrray = selectedData.map((data)=>data.id)
+        setPepInfo(state=>{
+            return {
+                ...state,
+                questionnaire: {
+                    ...state.questionnaire,
+                    sourceOfWealthId: sourceOfWealthrray,
+                }
+            }
+        })
+    }
+
+    const removeSelected = (index)=> {
+        const findIndex = data.findIndex((d)=> d.id === selectedData[index].id )
+        const currentData = [...data]
+        currentData[findIndex] = {
+            ...currentData[findIndex],
+            selected: !currentData[findIndex].selected
+        }
+        if(selectedData[index].id == 0){
+            setPepInfo(state=>{
+                return {
+                    ...state,
+                    questionnaire: {
+                        ...state.questionnaire,
+                        sourceOfWealth: ""
+                    }
+                }
+            })
+        }
+
+        setData(currentData)
+        doneProcess()
+    }
+
+    const onChangeText = (value)=>{
+        setPepInfo(state=>{
+            return {
+                ...state,
+                questionnaire: {
+                    ...state.questionnaire,
+                    sourceOfWealth: value
+                }
+            }
+        })
+    }
+
+    useEffect(()=>getSourceOfWealth(),[])
+    useEffect(()=>doneProcess(),[selectedData])
+    useEffect(()=> {
+        const selected = data.filter((item,index)=> {
+            if(item.selected){
+                return item
+            }
+        })
+        setSelectedData(selected)
+    },[data])
 
     return (
         <>
@@ -28,6 +112,9 @@ export const SourceOfWealth = ({
             visible={visible}
             setVisible={setVisible}
             data={data}
+            setData={setData}
+            loading={loading}
+            doneProcess={doneProcess}
             setSourceOfWealths={setSourceOfWealths}
         />
         <View style={{marginTop: 10}}>
@@ -44,6 +131,34 @@ export const SourceOfWealth = ({
                     <VectorIcon iconSet={ICON_SET.Feather} name="chevron-down"/>
                 </TouchableOpacity>
         </View>
+        {
+            selectedData.length > 0 &&
+            <View style={{ marginTop: 10, flexDirection: "row",flexWrap:"wrap",alignItems:"center"}}>
+                {
+                    selectedData.map((item,index)=>(
+                        <View style={{...styles.input,padding: 2, height: 30, marginHorizontal: 2, justifyContent:'center',alignItems:"center",flexDirection:"row"}}>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{item.description}</Text>
+                            <TouchableHighlight onPress={()=>removeSelected(index)} underlayColor={"transparent"}>
+                                <View style={{height: 30,width: 20,justifyContent:'center',alignItems:"flex-end"}}>
+                                <VectorIcon color={"black"} size={10} iconSet={ICON_SET.FontAwesome5} name="times"/>
+                                </View>
+                            </TouchableHighlight>
+                        </View>
+                    ))
+                }
+            </View>
+        }
+        {
+            pepInfoAnswer?.value.includes("0") &&
+            <View style={{marginTop: 10,}}>
+                <TextInput 
+                    placeholder="Specify source of wealth"
+                    style={styles.input}
+                    value={pepInfoAnswer.others}
+                    onChangeText={onChangeText}
+                />
+            </View>
+        }
         </>
     )
 }
