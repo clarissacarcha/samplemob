@@ -73,10 +73,12 @@ export const getPromotionVouchers = async (promos, shop_id) => {
   let promotions = promos.filter(promo => promo.type === 'promotion');
 
   deals = await deals.map(promo => {
+    delete promo.origAmount;
     delete promo.__typename;
     return {...promo, shop_id: String(shop_id)};
   });
   promotions = await promotions.map(promo => {
+    delete promo.origAmount;
     delete promo.__typename;
     return {...promo, shop_id: String(shop_id)};
   });
