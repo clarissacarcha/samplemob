@@ -19,7 +19,8 @@ export class TransactionUtility {
     prompt,
     onErrorAlert,
     alert,
-    title = "Transaction Failed"
+    title = "Transaction Failed",
+    event = null,
   })=> {
     
     const {graphQLErrors, networkError} = error;
@@ -109,7 +110,7 @@ export class TransactionUtility {
 
       const finalPrompType = graphQLErrors[0]?.payload?.errorType ? graphQLErrors[0]?.payload?.errorType : promptType
       let promptMessage = graphQLErrors[0]?.message;
-      if(graphQLErrors[0]?.code == "INTERNAL_SERVER_ERROR" && graphQLErrors[0]?.message == "Something went wrong."){
+      if(event == "fundTransfer" && graphQLErrors[0]?.code == "INTERNAL_SERVER_ERROR" && graphQLErrors[0]?.message == "Something went wrong."){
         promptTitle = "Transaction Pending"
         promptMessage = "";
       }
