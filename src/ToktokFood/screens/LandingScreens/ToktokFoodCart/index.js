@@ -284,7 +284,7 @@ const MainComponent = () => {
       }
     },
     onCompleted: async ({checkoutOrder}) => {
-      console.log(checkoutOrder);
+      console.log('checkoutOrder', checkoutOrder);
       if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
@@ -301,12 +301,17 @@ const MainComponent = () => {
           });
       } else {
         // error prompt
+        console.log('potek', checkoutOrder);
         setShowLoader(false);
         setTimeout(() => {
-          setTokWaPlaceOrderErr({
-            message: checkoutOrder.message,
-            visible: true,
-          });
+          if (checkoutOrder.message === 'Sorry but the store is currently closed.') {
+            setCloseInfo({visible: true, shopName: shopname});
+          } else {
+            setTokWaPlaceOrderErr({
+              message: checkoutOrder.message,
+              visible: true,
+            });
+          }
         }, 500);
       }
     },
@@ -612,23 +617,6 @@ const MainComponent = () => {
       </HeaderImageBackground>
 
       <DialogMessage
-        visibility={closeInfo.visible}
-        title="Restaurant Closed"
-        // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
-        restaurantClosedMessage={() => (
-          <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
-            <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName} </Text>
-            is currently not accepting orders right now. Please try again another time. Thank you!
-          </Text>
-        )}
-        type="warning"
-        btn1Title="OK"
-        onCloseModal={() => {
-          setCloseInfo({visible: false, shopName: ''});
-        }}
-      />
-
-      <DialogMessage
         visibility={showConfirmation}
         title={'Proceed with Order?'}
         messages={'Are you sure you want to proceed with your order?'}
@@ -654,8 +642,24 @@ const MainComponent = () => {
             close={() => setTokWaPlaceOrderErr({error: {}, visible: false})}
           /> */}
           <DialogMessage
+            visibility={closeInfo.visible}
+            title="Restaurant Closed"
+            // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
+            restaurantClosedMessage={() => (
+              <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
+                <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName} </Text>
+                is currently not accepting orders right now. Please try again another time. Thank you!
+              </Text>
+            )}
+            type="warning"
+            btn1Title="OK"
+            onCloseModal={() => {
+              setCloseInfo({visible: false, shopName: ''});
+            }}
+          />
+          <DialogMessage
             visibility={tokWaPlaceOrderErr.visible}
-            title="Unavailable Products"
+            title={"Unavailable Products"}
             messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
             type="warning"
             onCloseModal={() => {
@@ -695,6 +699,23 @@ const MainComponent = () => {
               }
             }}
             btnTitle={tokwaErrorBtnTitle(pinAttempt)}
+          />
+          <DialogMessage
+            visibility={closeInfo.visible}
+            title="Restaurant Closed"
+            // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
+            restaurantClosedMessage={() => (
+              <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
+                <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName} </Text>
+                is currently not accepting orders right now. Please try again another time. Thank you!
+              </Text>
+            )}
+            type="warning"
+            btn1Title="OK"
+            onCloseModal={() => {
+              setCloseInfo({visible: false, shopName: ''});
+              setShowEnterPinCode(false);
+            }}
           />
           <DialogMessage
             visibility={tokWaPlaceOrderErr.visible}

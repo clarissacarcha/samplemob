@@ -21,7 +21,6 @@ export const FoodCart = () => {
   const {customerInfo} = useSelector(state => state.toktokFood);
   const isFocus = useIsFocused();
   const {temporaryCart, setTemporaryCart, setFoodCartHeight} = useContext(VerifyContext);
-
   const [getAllTemporaryCart, {loading: cartLoading}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -65,7 +64,11 @@ export const FoodCart = () => {
   };
 
   const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodCart', {shopId: id, userId: customerInfo.userId});
+    navigation.navigate('ToktokFoodCart', {
+      shopId: id,
+      userId: customerInfo.userId,
+      shopname: temporaryCart?.items[0]?.shopName,
+    });
   };
 
   if (temporaryCart.cartItemsLength == 0 || cartLoading || hasTemporaryCart?.checkHasTemporaryCart.shopid == 0) {
