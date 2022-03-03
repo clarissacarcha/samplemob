@@ -49,16 +49,16 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
     const [postVerifyTransactionQrCode , {loading}] = useMutation(POST_VERIFY_TRANSACTION_QR_CODE, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onError: (error)=>{
-            return setErrMessage("QR code must be valid")
-            // return alertHook({message:"Qr code must be valid"})
+            // return setErrMessage("QR code must be valid")
+            return alertHook({message:"Qr code must be valid"})
         },
         onCompleted: ({postVerifyTransactionQrCode})=>{
             setTorch(false)
             const { account } = postVerifyTransactionQrCode
             if(account){
                 if(account.mobileNumber === tokwaAccount.mobileNumber){
-                    return setErrMessage("You cannot send money to yourself")
-                    // return alertHook({message: "You cannot send money to yourself"})
+                    // return setErrMessage("You cannot send money to yourself")
+                    return alertHook({message: "You cannot send money to yourself"})
                 }
                 setErrMessage("")
                 return navigation.navigate("ToktokWalletScanQRConfirm", {recipientInfo: account})
@@ -78,6 +78,7 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
         const checkifOutside = checkifOutsideBox(boundaryArea , resultBounds)
 
         if(!checkifOutside){
+            setErrMessage("")
             postVerifyTransactionQrCode({
                 variables: {
                     input: {
@@ -160,11 +161,12 @@ export const ToktokWalletScanQR = ({navigation,route})=> {
                     <Text style={{color: "white",fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,color: COLOR.YELLOW}}>Position the QR code within the frame.</Text>
                     {
                         errMessage != "" &&
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,color: COLOR.RED,marginTop: 10}}>{errMessage}</Text>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,color: COLOR.RED,marginBottom: 20,textAlign:"center"}}>{errMessage}</Text>
                     }
                 </View>
                 <Actions 
                     tokwaAccount={tokwaAccount}
+                    setErrMessage={setErrMessage}
                     onUploadSuccess={(qrCode)=>{
                         postVerifyTransactionQrCode({
                             variables: {
