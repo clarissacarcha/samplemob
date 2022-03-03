@@ -185,14 +185,14 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                     pepPosition: VerifyUserData.pepInfo.questionnaire.pepPosition,
                     isFamilyPep: VerifyUserData.pepInfo.questionnaire.isFamilyPep,
                     familyPepPosition: VerifyUserData.pepInfo.questionnaire.familyPepPosition,
-                    sourceOfIncomeId:  VerifyUserData.pepInfo.questionnaire.sourceOfIncomeId,
+                    sourceOfIncomeId:  JSON.stringify(VerifyUserData.pepInfo.questionnaire.sourceOfIncomeId),
                     sourceOfIncome: VerifyUserData.pepInfo.questionnaire.sourceOfIncome,
-                    sourceOfWealthId: VerifyUserData.pepInfo.questionnaire.sourceOfWealthId,
+                    sourceOfWealthId: JSON.stringify(VerifyUserData.pepInfo.questionnaire.sourceOfWealthId),
                     sourceOfWealth: VerifyUserData.pepInfo.questionnaire.sourceOfWealth,
                 }
             }
         }
-        
+
         postKYCRegister({
             variables: {
                 input: input

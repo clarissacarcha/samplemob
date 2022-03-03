@@ -1,5 +1,5 @@
 import React , {useState,useEffect} from "react";
-import { View , Text , StyleSheet, TouchableOpacity } from 'react-native';
+import { View , Text , StyleSheet, TouchableOpacity , TouchableHighlight , TextInput } from 'react-native';
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp';
 import {useLazyQuery} from '@apollo/react-hooks'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from 'src/graphql'
