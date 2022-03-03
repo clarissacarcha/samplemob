@@ -129,9 +129,9 @@ export const Submit = ()=> {
                 pepPosition: pepInfo.questionnaire.pepPosition,
                 isFamilyPep: pepInfo.questionnaire.isFamilyPep,
                 familyPepPosition: pepInfo.questionnaire.familyPepPosition,
-                sourceOfIncomeId: pepInfo.questionnaire.sourceOfIncomeId,
+                sourceOfIncomeId: JSON.stringify(pepInfo.questionnaire.sourceOfIncomeId),
                 sourceOfIncome: pepInfo.questionnaire.sourceOfIncome,
-                sourceOfWealthId: pepInfo.questionnaire.sourceOfWealthId,
+                sourceOfWealthId: JSON.stringify(pepInfo.questionnaire.sourceOfWealthId),
                 sourceOfWealth: pepInfo.questionnaire.sourceOfWealth
             }
         }
