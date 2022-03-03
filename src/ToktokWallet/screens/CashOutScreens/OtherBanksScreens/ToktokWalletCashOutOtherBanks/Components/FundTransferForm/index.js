@@ -352,7 +352,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 error,
                 navigation,
                 prompt,
-                alert
+                alert,
+                event: "fundTransfer"
             })
         }
     })
