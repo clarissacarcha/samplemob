@@ -1,4 +1,4 @@
-import React , {useState} from "react";
+import React , {useState,useEffect} from "react";
 import { View , Text , StyleSheet, TouchableOpacity } from 'react-native';
 import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp';
 import {useLazyQuery} from '@apollo/react-hooks'
@@ -24,7 +24,7 @@ export const SourceOfWealth = ({
     const [selectedData,setSelectedData] = useState([])
     const [sourceOfWealths,setSourceOfWealths] = useState([])
 
-    const [getSourceOfWealth] = useLazyQuery(GET_SOURCE_OF_WEALTH , {
+    const [getSourceOfWealth , {loading}] = useLazyQuery(GET_SOURCE_OF_WEALTH , {
         client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
         fetchPolicy:"network-only",
         onCompleted: ({getSourceOfWealth})=> {
