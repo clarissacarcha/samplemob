@@ -12,7 +12,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
-import { navigationRef } from './RootNavigation';
+import {navigationRef} from './RootNavigation';
 /*-------------------- IMPORT SCREENS START--------------------*/
 
 import DrawerContent from '../Drawer';
@@ -25,6 +25,7 @@ import ToktokWalletScreens from './toktokwallet';
 import ToktokLoadScreens from './toktokload';
 import ToktokMallScreens from './toktokmall';
 import ToktokBillScreens from './toktokbills';
+import ToktokGoScreens from './toktokgo';
 
 /*---------- CONSUMER SCREENS ----------*/
 
@@ -47,6 +48,7 @@ import SelectedDelivery from '../../screens/AuthenticatedStack/ConsumerScreens/D
 // import SenderDetails from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SenderDetails';
 // import AddLocation from '../../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/AddLocation';
 import ConsumerChangePassword from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerChangePassword';
+import EnterPassword from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/EnterPassword';
 
 // import ConsumerProfile from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerProfile';
 import DeliveryTracking from '../../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
@@ -83,6 +85,7 @@ import TalkToUs from '../../screens/AuthenticatedStack/CommonScreens/TalkToUs';
 import OrderCancellation from '../../screens/AuthenticatedStack/CommonScreens/OrderCancellation';
 // import Notifications from '../../screens/AuthenticatedStack/CommonScreens/Notifications';
 import DeliveryRating from '../../screens/AuthenticatedStack/CommonScreens/DeliveryRating';
+import RateDriver from '../../ToktokGo/screens/RateDriver/RateDriver';
 // import Announcements from '../../screens/AuthenticatedStack/CommonScreens/Announcement/Announcements';
 // import GCashAccount from '../../screens/AuthenticatedStack/CommonScreens/GCashAccount';
 
@@ -233,7 +236,7 @@ const DriverHomeBottomTab = ({navigation}) => (
             style={{paddingVertical: 12, paddingHorizontal: 20}}
           />
         ),
-        tabBarButton: (props) => <TouchableWithoutFeedback {...props} onPress={() => navigation.openDrawer()} />,
+        tabBarButton: props => <TouchableWithoutFeedback {...props} onPress={() => navigation.openDrawer()} />,
       }}
     />
   </DriverHome.Navigator>
@@ -247,6 +250,7 @@ const AuthenticatedStack = () => (
     {ToktokMallScreens({Navigator: Authenticated})}
     {ToktokWalletScreens({Navigator: Authenticated})}
     {ToktokBillScreens({Navigator: Authenticated})}
+    {ToktokGoScreens({Navigator: Authenticated})}
 
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 
@@ -275,6 +279,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="DeliveryRating" component={DeliveryRating} />
     <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
     <Authenticated.Screen name="OrderCancellation" component={OrderCancellation} />
+    <Authenticated.Screen name="RateDriver" component={RateDriver} />
 
     {/********** Menu **********/}
     {/* <Authenticated.Screen name="SavedLocations" component={SavedLocations} />
@@ -320,15 +325,16 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="Order" component={Order} />
     <Authenticated.Screen name="SearchLocationFilter" component={SearchLocationFilter} />
     <Authenticated.Screen name="DriverDeliveriesTab" component={DriverDeliveriesTab} />
+    <Authenticated.Screen name="EnterPassword" component={EnterPassword} />
   </Authenticated.Navigator>
 );
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
   constants: state.constants,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
 });
 

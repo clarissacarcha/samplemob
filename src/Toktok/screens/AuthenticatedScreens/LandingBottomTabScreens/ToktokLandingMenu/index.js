@@ -1,23 +1,23 @@
 import React from 'react';
-import {APP_FLAVOR, MEDIUM} from '../../../../../res/constants';
-import {COLOR, FONT, SIZE, FONT_SIZE} from '../../../../../res/variables';
-import {VectorIcon, ICON_SET} from '../../../../../revamp/';
-import {AUTH_CLIENT, END_USER_SESSION} from '../../../../../graphql';
-import {onError} from '../../../../../util/ErrorUtility';
-import {AlertOverlay} from '../../../../../components';
+import { APP_FLAVOR, MEDIUM } from '../../../../../res/constants';
+import { COLOR, FONT, SIZE, FONT_SIZE } from '../../../../../res/variables';
+import { VectorIcon, ICON_SET } from '../../../../../revamp/';
+import { AUTH_CLIENT, END_USER_SESSION } from '../../../../../graphql';
+import { onError } from '../../../../../util/ErrorUtility';
+import { AlertOverlay } from '../../../../../components';
 
-import {useMutation} from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 
-import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import { Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar, TouchableOpacity } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import RNFS from 'react-native-fs';
 
 import OneSignal from 'react-native-onesignal';
 import ToktokWashed from '../../../../../assets/images/ToktokWashed.png';
 
-import {Header} from './Components';
+import { Header } from './Components';
 
-const DrawerButton = ({label, onPress, restrict}) => {
+const DrawerButton = ({ label, onPress, restrict }) => {
   if (restrict && restrict != APP_FLAVOR) {
     return null;
   }
@@ -31,22 +31,22 @@ const DrawerButton = ({label, onPress, restrict}) => {
           name="chevron-thin-right"
           color={COLOR.BLACK}
           size={16}
-          style={{marginRight: 2}}
+          style={{ marginRight: 2 }}
         />
       </View>
     </TouchableHighlight>
   );
 };
 
-export const ToktokLandingMenu = ({navigation}) => {
+export const ToktokLandingMenu = ({ navigation }) => {
   const session = useSelector(state => state.session);
   const constants = useSelector(state => state.constants);
   const dispatch = useDispatch();
-
-  const [endUserSession, {loading}] = useMutation(END_USER_SESSION, {
+  const userName = session.user.username
+  const [endUserSession, { loading }] = useMutation(END_USER_SESSION, {
     client: AUTH_CLIENT,
     onError: onError,
-    onCompleted: ({endUserSession}) => {
+    onCompleted: ({ endUserSession }) => {
       onSignOut();
     },
   });
@@ -54,12 +54,12 @@ export const ToktokLandingMenu = ({navigation}) => {
   let fullName = '';
   if (session.user) {
     if (APP_FLAVOR == 'C') {
-      const {firstName, lastName} = session.user.person;
+      const { firstName, lastName } = session.user.person;
       fullName = `${firstName} ${lastName}`;
     }
 
     if (APP_FLAVOR == 'D') {
-      const {firstName, lastName} = session.user.person;
+      const { firstName, lastName } = session.user.person;
       fullName = `${firstName} ${lastName}`;
     }
   }
@@ -67,36 +67,39 @@ export const ToktokLandingMenu = ({navigation}) => {
   const onSignOut = () => {
     // End User Session
 
-    if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
+    if (RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
     OneSignal.deleteTag('userId');
-    dispatch({type: 'DESTROY_SESSION'});
+    dispatch({ type: 'DESTROY_SESSION' });
     navigation.replace('UnauthenticatedStack', {
       screen: 'Login',
     });
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'space-between'}}>
+    <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'space-between' }}>
       <AlertOverlay visible={loading} />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Header>
-          <View style={{marginTop: StatusBar.currentHeight, margin: SIZE.MARGIN}}>
+          <View style={{ margin: SIZE.MARGIN }}>
             {/*--------------- AVATAR ---------------*/}
             {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
               <View
                 style={{
                   height: 80,
                   borderRadius: 5,
-                  // justifyContent: 'flex-start',
-                  // alignItems: 'center',
-                  flexDirection: 'row',
+                  alignItems: 'center',
+                  flexDirection: 'column',
                 }}>
                 <Image
-                  source={{uri: session.user.person.avatarThumbnail}}
+                  source={{ uri: session.user.person.avatarThumbnail }}
                   resizeMode={'cover'}
-                  style={{width: 80, height: 80, backgroundColor: 'black', borderRadius: 5}}
+                  style={{ width: 80, height: 80, backgroundColor: 'black', borderRadius: 50 }}
                 />
-                <Text style={{marginLeft: 8, fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD}}>{fullName}</Text>
+                <Text style={{  fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD,paddingTop:5  }}>{fullName}</Text>
+                <Text style={{  fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR,paddingTop:3 }}>{session.user.username}</Text>
+                <TouchableOpacity onPress={() => {navigation.push('ToktokProfile')}}>
+                  <Text style={{  fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, color: COLOR.ORANGE,paddingTop:5 }}>View Profile</Text>
+                </TouchableOpacity>
               </View>
             ) : (
               <View
@@ -112,24 +115,32 @@ export const ToktokLandingMenu = ({navigation}) => {
                   source={ToktokWashed}
                   resizeMode={'contain'}
                   tintColor={MEDIUM}
-                  style={{width: 40, height: 40, borderRadius: 5}}
+                  style={{ width: 40, height: 40, borderRadius: 5 }}
                 />
               </View>
             )}
             {/*--------------- FULL NAME ---------------*/}
           </View>
         </Header>
-        <View style={{height: SIZE.MARGIN / 2, backgroundColor: COLOR.LIGHT}} />
+        <View style={{ height: SIZE.MARGIN / 2, backgroundColor: COLOR.LIGHT }} />
 
-        <View style={{flex: 1, backgroundColor: 'white'}}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
+          <Text style={{ paddingLeft: 20, paddingTop: 20, fontFamily: FONT.BOLD }}> Accounts</Text>
           <ScrollView>
             {/*--------------- MY DELIVERIES ---------------*/}
             <DrawerButton
-              label="My Saved Locations"
+              label="Saved Locations"
               onPress={() => {
                 navigation.push('ToktokSavedLocations');
               }}
               restrict="C"
+            />
+            {/*--------------- CHANGE PASSWORD ---------------*/}
+            <DrawerButton
+              label="Change Password"
+              onPress={() => {
+                navigation.push('EnterPassword', { userName })
+              }}
             />
 
             {/*--------------- ANNOUNCEMENTS ---------------*/}
@@ -139,25 +150,29 @@ export const ToktokLandingMenu = ({navigation}) => {
                 navigation.push('ToktokAnnouncements');
               }}
             />
-
             {/*--------------- TALK TO US ---------------*/}
+            <Text style={{
+              paddingLeft: 20,
+              paddingTop: 20,
+              borderTopWidth: 5,
+              borderTopColor: '#F8F8F8',
+              fontFamily: FONT.BOLD
+            }}>Help Centre</Text>
             <DrawerButton
-              label="Talk to Us"
+              label="Contact Us"
+              style={{ borderTopWidth: 1, borderTopColor: "red", backgroundColor: "red" }}
               onPress={() => {
                 navigation.push('TalkToUs');
               }}
             />
 
             {/*--------------- CHANGE PASSWORD ---------------*/}
-            <DrawerButton
-              label="Change Password"
-              onPress={() => {
-                navigation.push('ConsumerChangePassword');
-              }}
-            />
-
-            {/*--------------- CHANGE PASSWORD ---------------*/}
-            <DrawerButton label="Sign Out" onPress={endUserSession} />
+            <Text style={{
+              borderTopWidth: 5,
+              borderTopColor: '#F8F8F8',
+              fontFamily: FONT.BOLD
+            }}></Text>
+            <DrawerButton label="Log Out" onPress={endUserSession} />
           </ScrollView>
         </View>
       </View>
@@ -184,6 +199,8 @@ const styles = StyleSheet.create({
   },
 
   headerText: {
-    // fontFamily: FONT.BOLD,
+    fontFamily: FONT.REGULAR,
+    fontSize:FONT_SIZE.M,
+    lineHeight:FONT_SIZE.L
   },
 });
