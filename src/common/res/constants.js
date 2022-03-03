@@ -16,6 +16,7 @@ const COLOR = {
 const FONT_FAMILY = {
   REGULAR: 'FiraSans-Regular',
   BOLD: 'FiraSans-Bold',
+  Thin800: 'FiraSans-Thin-800',
 };
 
 const FONT_SIZE = {

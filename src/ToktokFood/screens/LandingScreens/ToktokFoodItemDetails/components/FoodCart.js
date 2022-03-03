@@ -5,8 +5,8 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 import {VerifyContext} from './VerifyContextProvider';
-import uuid from 'react-native-uuid';
 import _ from 'lodash';
+import {useSelector, useDispatch} from 'react-redux';
 
 // Utils
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
@@ -22,7 +22,6 @@ import {
 import {useMutation, useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-import {useDispatch, useSelector} from 'react-redux';
 import Loader from 'toktokfood/components/Loader';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import {onErrorAlert} from 'src/util/ErrorUtility';
@@ -292,6 +291,7 @@ export const FoodCart = ({loading, action}) => {
     }).then(({data}) => {
       let {status, message} = data.deleteShopTemporaryCart;
       if (status == 200) {
+        dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
         addToCart(showDialogMessage.items);
       } else {
         setLoader(false);

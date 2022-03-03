@@ -1,5 +1,8 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
+import {useSelector} from 'react-redux';
+import _ from 'lodash';
+
 import {VerifyContext} from '../components';
 
 import styles from '../styles';
@@ -10,49 +13,96 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
   const {shippingVoucher, temporaryCart} = useContext(VerifyContext);
   const [totalBasket, setTotalBasket] = useState(temporaryCart.totalAmount);
   const [totalShipping, setTotalShipping] = useState(0);
+  const [totalPromotions, setTotalPromotions] = useState(0);
+  const [totalDelivery, setTotalDelivery] = useState(0);
+  const [totalDeal, setTotalDeal] = useState(0);
+
+  const {promotionVoucher} = useSelector(state => state.toktokFood);
+
+  const totalSumSF = totalDelivery + totalShipping;
+  const totalSF = totalSumSF > deliveryFee ? deliveryFee.toFixed(2) : totalSumSF.toFixed(2);
 
   useEffect(() => {
     oneCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
   }, [shippingVoucher, totalBasket, totalShipping]);
 
   const getVoucherFee = useCallback(() => {
-    // console.log(autoShipping, shippingVoucher)
-    if (autoShipping?.success) {
-      const {amount, is_percentage} = autoShipping.voucher;
+    const groupPromo = _(promotionVoucher)
+      .groupBy('type')
+      .map((objs, key) => ({
+        amount: _.sumBy(objs, 'amount'),
+        discount_totalamount: _.sumBy(objs, 'discount_totalamount'),
+        type: key,
+      }))
+      .value();
+    const promotions = groupPromo.filter(promo => promo.type === 'promotion');
+    const deal = groupPromo.filter(promo => promo.type === 'deal');
+    const autoApply = groupPromo.filter(promo => promo.type === 'auto');
+    const shipping = groupPromo.filter(promo => promo.type === 'shipping');
+
+    if (promotions.length > 0) {
+      setTotalPromotions(promotions[0].discount_totalamount);
+    } else {
+      setTotalPromotions(0);
+    }
+    if (deal.length > 0) {
+      setTotalDeal(deal[0].discount_totalamount);
+    } else {
+      setTotalDeal(0);
+    }
+    if (shipping.length > 0) {
+      setTotalDelivery(shipping[0].amount);
+    } else {
+      setTotalDelivery(0);
+    }
+    if (autoApply.length > 0) {
+      const {amount} = autoApply[0];
       if (amount > 0) {
-        const pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
-        const totalFee = pAmount > deliveryFee ? deliveryFee : pAmount;
-        // let totalSF = deliveryFee - pAmount;
-        // totalSF = totalSF > 0 ? totalSF : 0;
-        setTotalShipping(totalFee);
+        setTotalShipping(amount);
       } else {
         setTotalShipping(deliveryFee);
       }
+    } else {
+      setTotalShipping(0);
     }
 
-    if (shippingVoucher.length > 0) {
-      const {type} = shippingVoucher[0];
-      const {amount, is_percentage} = shippingVoucher[0].voucher;
-      if (type === 'shipping' && amount > 0) {
-        let pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
-        // let totalSF = pAmount > deliveryFee ? pAmount - deliveryFee : deliveryFee - pAmount;
-        pAmount = pAmount > 0 ? pAmount : 0;
-        const deliveryAmount = pAmount > deliveryFee ? deliveryFee : pAmount;
-        setTotalShipping(deliveryAmount);
-      }
-      if (type === 'shipping' && amount === 0) {
-        setTotalShipping(deliveryFee);
-      }
-      if (type !== 'shipping') {
-        const totalBasketDiscount = amount > totalBasket ? amount - totalBasket : totalBasket - amount;
-        setTotalBasket(totalBasketDiscount);
-      }
-    } else {
-      if (!autoShipping?.success) {
-        setTotalShipping(0);
-      }
-    }
-  }, [autoShipping, shippingVoucher, deliveryFee, totalBasket]);
+    // console.log(autoShipping, shippingVoucher)
+    // if (autoShipping?.success) {
+    //   const {amount, is_percentage} = autoShipping.voucher;
+    //   if (amount > 0) {
+    //     const pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
+    //     const totalFee = pAmount > deliveryFee ? deliveryFee : pAmount;
+    //     // let totalSF = deliveryFee - pAmount;
+    //     // totalSF = totalSF > 0 ? totalSF : 0;
+    //     setTotalShipping(totalFee);
+    //   } else {
+    //     setTotalShipping(deliveryFee);
+    //   }
+    // }
+
+    // if (shippingVoucher.length > 0) {
+    //   const {type} = shippingVoucher[0];
+    //   const {amount, is_percentage} = shippingVoucher[0].voucher;
+    //   if (type === 'shipping' && amount > 0) {
+    //     let pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
+    //     // let totalSF = pAmount > deliveryFee ? pAmount - deliveryFee : deliveryFee - pAmount;
+    //     pAmount = pAmount > 0 ? pAmount : 0;
+    //     const deliveryAmount = pAmount > deliveryFee ? deliveryFee : pAmount;
+    //     setTotalShipping(deliveryAmount);
+    //   }
+    //   if (type === 'shipping' && amount === 0) {
+    //     setTotalShipping(deliveryFee);
+    //   }
+    //   if (type !== 'shipping') {
+    //     const totalBasketDiscount = amount > totalBasket ? amount - totalBasket : totalBasket - amount;
+    //     setTotalBasket(totalBasketDiscount);
+    //   }
+    // } else {
+    //   if (!autoShipping?.success) {
+    //     setTotalShipping(0);
+    //   }
+    // }
+  }, [promotionVoucher, deliveryFee]);
 
   useEffect(() => {
     getVoucherFee();
@@ -70,6 +120,13 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
             <Text>Subtotal</Text>
             <Text style={styles.subtotal}>{`PHP ${totalBasket?.toFixed(2)}`}</Text>
           </View>
+          {(totalPromotions > 0 || totalDeal > 0) && (
+            <View style={styles.header}>
+              <Text>Item discount</Text>
+              <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal).toFixed(2)}`}</Text>
+            </View>
+          )}
+
           <View style={styles.header}>
             <Text>Delivery Fee</Text>
             <View style={styles.deliveryFee}>
@@ -80,10 +137,10 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
             </View>
           </View>
 
-          {(autoShipping?.success || shippingVoucher.length > 0) && forDelivery && (
+          {(totalDelivery > 0 || totalShipping > 0) && (
             <View style={styles.header}>
-              <Text>Shipping Voucher Applied</Text>
-              <Text style={styles.subtotal}>{`-PHP ${totalShipping.toFixed(2)}`}</Text>
+              <Text>Delivery fee discount</Text>
+              <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
             </View>
           )}
 
@@ -96,7 +153,8 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
           <Text style={styles.totalPrice}>{`PHP ${(
             temporaryCart.totalAmountWithAddons +
             deliveryFee -
-            totalShipping
+            totalSumSF -
+            (totalPromotions + totalDeal)
           ).toFixed(2)}`}</Text>
         ) : (
           <Text style={styles.totalPrice}>{`PHP ${temporaryCart.totalAmount.toFixed(2)}`}</Text>

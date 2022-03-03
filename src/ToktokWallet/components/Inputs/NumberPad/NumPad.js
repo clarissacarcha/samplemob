@@ -1,5 +1,5 @@
 import React from "react";
-import { View , StyleSheet , TouchableOpacity , Dimensions , Text } from "react-native";
+import { View , StyleSheet , TouchableHighlight, TouchableOpacity , Dimensions , Text } from "react-native";
 import { verticalScale,moderateScale } from 'toktokwallet/helper'
 import CONSTANTS from 'common/res/constants'
 import FIcon from 'react-native-vector-icons/Feather';
@@ -21,21 +21,27 @@ const RowPad = ({
   
     return (
         <View style={styles.rowPad}>
-            <TouchableOpacity onPress={()=>onPress(first.value)} disabled={!first.enableButton} style={[styles.button, {...(!first.enableButton ? {backgroundColor:"transparent"} : {})}]}>
+            <TouchableHighlight underlayColor={COLOR.ORANGE} onPress={()=>onPress(first.value)} disabled={!first.enableButton} style={[styles.button, {...(!first.enableButton ? {backgroundColor:"transparent"} : {})}]}>
+                <>
                 <Text style={styles.textBtn}>{first.value}</Text>
-            </TouchableOpacity>
+                </>
+            </TouchableHighlight>
 
-            <TouchableOpacity onPress={()=>onPress(second.value)} disabled={!second.enableButton} style={[styles.button, {...(!second.enableButton ? {backgroundColor:"transparent"} : {})}]}>
+            <TouchableHighlight underlayColor={COLOR.ORANGE} onPress={()=>onPress(second.value)} disabled={!second.enableButton} style={[styles.button, {...(!second.enableButton ? {backgroundColor:"transparent"} : {})}]}>
+                <>
                 <Text style={styles.textBtn}>{second.value}</Text>
-            </TouchableOpacity>
+                </>
+            </TouchableHighlight>
 
-            <TouchableOpacity onPress={()=>onPress(third.value)} disabled={!third.enableButton} style={[styles.button, {...(!third.enableButton ? {backgroundColor:"transparent"} : {})}]}>
+            <TouchableHighlight underlayColor={COLOR.ORANGE} onPress={()=>onPress(third.value)} disabled={!third.enableButton} style={[styles.button, {...(!third.enableButton ? {backgroundColor:"transparent"} : {})}]}>
+               <>
                {
                    third.value == "remove"
                    ?  pinCode.length > 0 && <FIcon name="delete" size={30} color="white"/>
                    :  <Text style={styles.textBtn}>{third.value}</Text>
                }
-            </TouchableOpacity>
+               </>
+            </TouchableHighlight>
         </View>
     )
 }
@@ -137,7 +143,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLOR.YELLOW,
         // backgroundColor: '#F7F7FA',
         borderRadius: 5,
-        height: verticalScale(width * .16),
+        height: moderateScale(width * .16),
         width: moderateScale(width * .16),
         justifyContent: 'center',
         alignItems: 'center',

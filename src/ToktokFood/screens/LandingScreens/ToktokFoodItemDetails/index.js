@@ -2,24 +2,22 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {View, ImageBackground, Text, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
+import {useSelector} from 'react-redux';
+import {useLazyQuery} from '@apollo/react-hooks';
 
-import {FoodCart, VerifyContextProvider, VerifyContext, FoodImageSlider} from './components';
+import {FoodCart, Variations, VerifyContextProvider, VerifyContext, FoodImageSlider} from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
-
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import VoucherList from 'toktokfood/components/VoucherList';
 // import ContentLoader from 'react-native-easy-content-loader';
-
-import {Variations} from './components';
-import {useSelector} from 'react-redux';
 
 import styles from './styles';
 
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_PRODUCT_DETAILS, GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
-import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+
 import {reseller_badge} from 'toktokfood/assets/images';
-// import ChangeAddress from 'toktokfood/components/ChangeAddress';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 
@@ -146,7 +144,11 @@ const MainComponent = () => {
     const {itemname, basePrice, price, resellerDiscount, summary} = productDetails;
     return (
       <View style={styles.foodContainer}>
-        {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge />}
+        {/* <View>
+          <VoucherList isReseller />
+        </View> */}
+
+        {/* {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge />} */}
         <View style={styles.foodDetails}>
           <View style={styles.foodNameWrapper}>
             <Text style={styles.foodName}>{itemname}</Text>

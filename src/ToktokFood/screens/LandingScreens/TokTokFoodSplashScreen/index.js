@@ -75,7 +75,7 @@ const TokTokFoodSplashScreen = () => {
     onCompleted: ({getConsumer}) => {
       dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_FRANCHISEE', payload: {...getConsumer}});
     },
-    onError: error => console.log(error),
+    onError: error => console.log('getConsumerStatus', error),
   });
 
   const [getKycStatus] = useLazyQuery(GET_KYC_STATUS, {
@@ -106,7 +106,7 @@ const TokTokFoodSplashScreen = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: error => {
-      // console.log(JSON.stringify(error));
+      console.log('getToktokUserInfo', error);
       setErrorModal({error, visible: true});
     },
     onCompleted: async ({getAccount}) => {

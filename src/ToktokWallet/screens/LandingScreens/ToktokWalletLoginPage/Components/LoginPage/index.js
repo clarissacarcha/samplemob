@@ -13,6 +13,7 @@ import { useLazyQuery } from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import AsyncStorage from '@react-native-community/async-storage'
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
@@ -123,9 +124,15 @@ export const LoginPage = ()=> {
                         resizeMode="contain"
                     />
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center",marginTop: 20}}>Enter MPIN</Text>
+                    <View style={{flexDirection:"row", justifyContent:"center",alignItems:"center"}}>
+                            <View style={{backgroundColor:COLOR.YELLOW, marginRight: 5, justifyContent:"center",alignItems:"center", height: FONT_SIZE.M,width: FONT_SIZE.M,borderRadius:  FONT_SIZE.M}}>
+                                <AntDesign name="exclamation" size={FONT_SIZE.XS} color="white"/>
+                            </View>
+                            <Text style={{ fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Do not share your MPIN with anyone.</Text>
+                    </View>
                     <View style={{position: 'relative',flex: 1,justifyContent:"center",alignItems:"center"}}>
                         <CircleIndicator pinCode={pinCode} showPin={showPin} numberOfBox={4}/>
-                        <TextInput
+                        {/* <TextInput
                             caretHidden
                             value={pinCode}
                             ref={inputRef}
@@ -139,7 +146,7 @@ export const LoginPage = ()=> {
                             }
                             }}
                             onSubmitEditing={pinCode.length == 4 ? onPress: null}
-                        />
+                        /> */}
                 
                         {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
                         {/* <Biometrics
@@ -168,7 +175,13 @@ export const LoginPage = ()=> {
                         >
                                 <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot MPIN?</Text>
                         </TouchableOpacity>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>Do not share your MPIN with anyone.</Text>
+                        {/* <View style={{flexDirection:"row", justifyContent:"center",alignItems:"center"}}>
+                            <View style={{backgroundColor:COLOR.YELLOW, marginRight: 5, justifyContent:"center",alignItems:"center", height: FONT_SIZE.M,width: FONT_SIZE.M,borderRadius:  FONT_SIZE.M}}>
+                                <AntDesign name="exclamation" size={FONT_SIZE.XS} color="white"/>
+                            </View>
+                            <Text style={{ fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Do not share your MPIN with anyone.</Text>
+                        </View> */}
+                       
                         </View>
                 </View>
                 {/* <View style={styles.btn}>

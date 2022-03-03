@@ -58,14 +58,14 @@ export const VerifyContextProvider = ({children}) => {
         cartItemsLength: 0,
         totalAmount: 0,
         items: [],
-      })
+      });
     });
 
     return unsubscribe;
   }, [navigation]);
 
   useEffect(() => {
-    if(isFocus){
+    if (isFocus) {
       getAllTemporaryCart({
         variables: {
           input: {

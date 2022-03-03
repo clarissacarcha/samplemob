@@ -27,7 +27,13 @@ const StyledTextInput = ({
 
   return (
     <View style={styles.container}>
-      <TextInput value={value} onChangeText={onChangeText} style={styles.input} placeholder={placeholder} />
+      <TextInput
+        autoCapitalize="characters"
+        value={value}
+        onChangeText={onChangeText}
+        style={styles.input}
+        placeholder={placeholder}
+      />
 
       {hasIcon && renderIcon()}
     </View>
@@ -51,13 +57,8 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    // marginHorizontal: 10,
-    // borderWidth: 1,
-    // borderColor: '#E5EAEA',
-    // borderRadius: 5,
     paddingLeft: 10,
     height: moderateScale(40),
-    // color: DARK,
     fontSize: FONT_SIZE.M,
   },
   removeText: {

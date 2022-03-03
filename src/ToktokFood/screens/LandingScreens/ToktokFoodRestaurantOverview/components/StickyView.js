@@ -213,7 +213,7 @@ export const StickyView = () => {
         alwaysShowTitle={false}
         headerMinHeight={headerMinHeight}
         headerMaxHeight={headerMaxHeight}
-        headerTitleStyle={{zIndex: offset <= 132 ? 1 : -1, justifyContent: 'flex-start'}}
+        // headerTitleStyle={{zIndex: offset <= 132 ? 1 : -1, justifyContent: 'flex-start'}}
         extraScrollHeight={10}
         // backgroundImageScale={2}
         title={renderTitle}

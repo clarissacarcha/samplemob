@@ -31,7 +31,7 @@ export const ValidateRequirements = (context)=> {
         noError = false;
     }
     if(forms[2].filename == ""){
-        setFileError( 2 , "BIR 2302 Form is required.");
+        setFileError( 2 , "BIR 2303 Form is required.");
         noError = false;
     }
     if(forms[3].filename == ""){

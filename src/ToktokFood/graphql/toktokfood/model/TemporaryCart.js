@@ -63,6 +63,38 @@ const voucherType = `
   requirement
   set_end_date
   no_of_stocks
+
+  voucher_id
+  voucher_type
+  voucher_code
+  voucher_name
+  vcode_isset
+  discounted_totalamount
+  discount_totalamount
+  discount_type
+  discount_amount
+  discount_cap
+  minimum_purchase
+  shouldered_by
+  start_date
+  end_date
+  product_id
+  regions
+  type
+
+  items {
+    product_id
+    amount
+    total_amount
+    srp_amount
+    srp_totalamount
+    quantity
+    discounted_amount
+    discounted_totalamount
+    discount_amount
+    discount_totalamount
+    on_top
+  }
 `;
 
 export const GET_TEMPORARY_CART = gql`
@@ -126,6 +158,9 @@ export const GET_AUTO_SHIPPING = gql`
       message
       type
       voucher {
+        ${voucherType}
+      }
+      promotion {
         ${voucherType}
       }
     }

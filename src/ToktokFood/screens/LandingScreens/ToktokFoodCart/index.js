@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {useRoute, useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -12,6 +12,8 @@ import {
   RefreshControl,
   Text,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -36,6 +38,10 @@ import {
 } from './components';
 import {
   getDeductedVoucher,
+  getPromotionVouchers,
+  getShippingVoucher,
+  getTotalDeductedVoucher,
+  getTotalDeductedDeliveryFee,
   getItemOrderType,
   getMobileNumberFormat,
   getOrderType,
@@ -46,9 +52,7 @@ import {
   tokwaErrorTitle,
 } from './functions';
 
-import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {
   GET_AUTO_SHIPPING,
   GET_SHIPPING_FEE,
@@ -68,6 +72,7 @@ import EnterPinCode from 'toktokfood/components/EnterPinCode';
 import {FONT, FONT_SIZE} from '../../../../res/variables';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
+import {parseAmountComputation} from './functions';
 
 /*
   This variable is used for identifier whether the user is able to checkout or not 
@@ -81,7 +86,10 @@ const MainComponent = () => {
   const nowDate = moment().format('YYYY-DD-YYYY');
 
   const {shopname} = route.params;
-  const {location, customerInfo, customerFranchisee, receiver} = useSelector(state => state.toktokFood);
+  const dispatch = useDispatch();
+  const {location, customerInfo, customerFranchisee, promotionVoucher, receiver} = useSelector(
+    state => state.toktokFood,
+  );
   const {user} = useSelector(state => state.session);
   const {
     totalAmount,
@@ -122,9 +130,24 @@ const MainComponent = () => {
     fetchPolicy: 'network-only',
     onError: error => console.log('getAutoShipping', error.response),
     onCompleted: ({getAutoShipping}) => {
-      // console.log(getAutoShipping);
+      console.log(getAutoShipping);
+      const {promotion, voucher} = getAutoShipping;
+      const filterPromo = promotionVoucher.filter(promo => promo.type !== 'auto' && promo.type !== 'deal');
       if (getAutoShipping.success) {
         setAutoShippingVoucher(getAutoShipping);
+        if (voucher && !promotion) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: [...filterPromo, voucher]});
+        }
+        if (promotion && !voucher) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: [...filterPromo, promotion]});
+        }
+        if (voucher && promotion) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: [...filterPromo, voucher, promotion]});
+        }
+      } else {
+        if (!voucher || !promotion) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: filterPromo});
+        }
       }
       setAutoShipping(getAutoShipping);
     },
@@ -149,30 +172,16 @@ const MainComponent = () => {
   }, [temporaryCart, location, isFocus]);
 
   useEffect(() => {
-    if (delivery) {
-      const {items} = temporaryCart;
-      const {email} = customerInfo;
-      getAutoShipping({
-        variables: {
-          input: {
-            region: items[0]?.shopRegion,
-            email,
-            subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
-            cartItems: [{shopid: items[0]?.shopid, shippingfee: delivery?.price}],
-            brandId: items[0]?.companyId,
-            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
-          },
-        },
-      });
-    }
+    // onGetAutoApply();
   }, [paymentMethod]);
 
   const [getDeliverFee] = useLazyQuery(GET_SHIPPING_FEE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: ({getShippingFee}) => {
+    onCompleted: async ({getShippingFee}) => {
       const {items} = temporaryCart;
       const {email} = customerInfo;
+      const orders = await parseAmountComputation(temporaryCart?.items);
       setDeliveryInfo(getShippingFee);
       // console.log({
       //   input: {
@@ -184,18 +193,19 @@ const MainComponent = () => {
       //     paymentMethod: 'CASH',
       //   },
       // });
-      getAutoShipping({
-        variables: {
-          input: {
-            region: items[0]?.shopRegion,
-            email,
-            subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
-            cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
-            brandId: items[0]?.companyId,
-            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
-          },
-        },
-      });
+      // getAutoShipping({
+      //   variables: {
+      //     input: {
+      //       region: items[0]?.shopRegion,
+      //       email,
+      //       subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+      //       cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
+      //       brandId: items[0].companyId,
+      //       paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+      //       orders,
+      //     },
+      //   },
+      // });
     },
   });
 
@@ -241,6 +251,7 @@ const MainComponent = () => {
   const [postResquestTakeMoney] = useMutation(REQUEST_TAKE_MONEY, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onError: error => {
+      console.log(error.response);
       setShowLoader(false);
       setTimeout(() => {
         onErrorAlert({alert, error});
@@ -273,7 +284,7 @@ const MainComponent = () => {
       }
     },
     onCompleted: async ({checkoutOrder}) => {
-      console.log(checkoutOrder);
+      console.log('checkoutOrder', checkoutOrder);
       if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
@@ -290,16 +301,53 @@ const MainComponent = () => {
           });
       } else {
         // error prompt
+        console.log('potek', checkoutOrder);
         setShowLoader(false);
         setTimeout(() => {
-          setTokWaPlaceOrderErr({
-            message: checkoutOrder.message,
-            visible: true,
-          });
+          if (checkoutOrder.message === 'Sorry but the store is currently closed.') {
+            setCloseInfo({visible: true, shopName: shopname});
+          } else {
+            setTokWaPlaceOrderErr({
+              message: checkoutOrder.message,
+              visible: true,
+            });
+          }
         }, 500);
       }
     },
   });
+
+  const onGetAutoApply = useCallback(async () => {
+    if (delivery) {
+      const {items} = temporaryCart;
+      const {email} = customerInfo;
+      const orders = await parseAmountComputation(temporaryCart?.items);
+      // console.log({
+      //   input: {
+      //     region: items[0]?.shopRegion,
+      //     email,
+      //     subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+      //     cartItems: [{shopid: items[0]?.shopid, shippingfee: delivery?.price}],
+      //     brandId: items[0].companyId,
+      //     paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+      //     orders,
+      //   },
+      // });
+      getAutoShipping({
+        variables: {
+          input: {
+            region: items[0]?.shopRegion,
+            email,
+            subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+            cartItems: [{shopid: items[0]?.shopid, shippingfee: delivery?.price}],
+            brandId: items[0].companyId,
+            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+            orders,
+          },
+        },
+      });
+    }
+  }, [paymentMethod]);
 
   const fixOrderLogs = async () => {
     const VOUCHER_FlAG =
@@ -314,6 +362,7 @@ const MainComponent = () => {
       original_shipping_fee: delivery?.price ? delivery.price : 0,
       // order_type: 1,
       // order_type: await getItemOrderType(customerFranchisee),
+      // handle_shipping_promo: 1,
       handle_shipping_promo: Number(VOUCHER_FlAG),
       daystoship: 0,
       daystoship_to: 0,
@@ -365,17 +414,17 @@ const MainComponent = () => {
     let totalPrice = temporaryCart?.totalAmountWithAddons;
     let deductedFee = 0;
     const CUSTOMER_CART = await fixOrderLogs();
-    const SHIPPING_VOUCHERS = autoShipping?.success
-      ? await handleAutoShippingVouchers(autoShippingVoucher)
-      : await handleShippingVouchers(shippingVoucher);
+    // const SHIPPING_VOUCHERS = autoShipping?.success
+    //   ? await handleAutoShippingVouchers(autoShippingVoucher)
+    //   : await handleShippingVouchers(shippingVoucher);
 
     if (orderType === 'Delivery') {
-      if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
-        deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
-      }
+      // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
+      //   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
+      // }
       totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
     }
-    // console.log(totalPrice, temporaryCart);
+
     postResquestTakeMoney({
       variables: {
         input: {
@@ -483,12 +532,12 @@ const MainComponent = () => {
   };
 
   const processData = (WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS) => {
-    if (shippingVoucher.length > 0 || autoShipping?.success) {
-      const deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
-
+    if (promotionVoucher.length > 0) {
+      const deductedFee = getTotalDeductedDeliveryFee(promotionVoucher, delivery?.price);
+      console.log(deductedFee);
       const DEDUCTVOUCHER = {
         ...ORDER,
-        order_logs: [{...ORDER.order_logs[0], delivery_amount: delivery?.price - deductedFee}],
+        order_logs: [{...ORDER.order_logs[0], delivery_amount: deductedFee}],
       };
       return WALLET
         ? {...WALLET, ...CUSTOMER, ...DEDUCTVOUCHER, ...SHIPPING_VOUCHERS}
@@ -499,9 +548,9 @@ const MainComponent = () => {
   };
 
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
-    const SHIPPING_VOUCHERS = autoShipping?.success
-      ? await handleAutoShippingVouchers(autoShippingVoucher)
-      : await handleShippingVouchers(shippingVoucher);
+    // const SHIPPING_VOUCHERS = autoShipping?.success
+    //   ? await handleAutoShippingVouchers(autoShippingVoucher)
+    //   : await handleShippingVouchers(shippingVoucher);
     const ORDER = {
       total_amount: temporaryCart.totalAmount,
       srp_totalamount: temporaryCart.totalAmount,
@@ -513,6 +562,7 @@ const MainComponent = () => {
       order_logs: CUSTOMER_CART,
     };
     const CUSTOMER = {
+      shopid: temporaryCart?.items[0].shopid,
       company_id: String(temporaryCart?.items[0]?.companyId),
       name:
         receiver.contactPerson && receiver.contactPerson !== ''
@@ -530,8 +580,10 @@ const MainComponent = () => {
       regCode: '0',
       provCode: '0',
       citymunCode: '0',
+      shippingvouchers: await getShippingVoucher(promotionVoucher),
+      vouchers: await getPromotionVouchers(promotionVoucher, temporaryCart?.items[0].shopid),
     };
-    const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
+    const data = processData(WALLET, CUSTOMER, ORDER, []);
     console.log(data, 'DATA');
     postCustomerOrder({
       variables: {
@@ -565,23 +617,6 @@ const MainComponent = () => {
       </HeaderImageBackground>
 
       <DialogMessage
-        visibility={closeInfo.visible}
-        title="Restaurant Closed"
-        // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
-        restaurantClosedMessage={() => (
-          <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
-            <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName} </Text>
-            is currently not accepting orders right now. Please try again another time. Thank you!
-          </Text>
-        )}
-        type="warning"
-        btn1Title="OK"
-        onCloseModal={() => {
-          setCloseInfo({visible: false, shopName: ''});
-        }}
-      />
-
-      <DialogMessage
         visibility={showConfirmation}
         title={'Proceed with Order?'}
         messages={'Are you sure you want to proceed with your order?'}
@@ -607,8 +642,24 @@ const MainComponent = () => {
             close={() => setTokWaPlaceOrderErr({error: {}, visible: false})}
           /> */}
           <DialogMessage
+            visibility={closeInfo.visible}
+            title="Restaurant Closed"
+            // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
+            restaurantClosedMessage={() => (
+              <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
+                <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName} </Text>
+                is currently not accepting orders right now. Please try again another time. Thank you!
+              </Text>
+            )}
+            type="warning"
+            btn1Title="OK"
+            onCloseModal={() => {
+              setCloseInfo({visible: false, shopName: ''});
+            }}
+          />
+          <DialogMessage
             visibility={tokWaPlaceOrderErr.visible}
-            title="Unavailable Products"
+            title={"Unavailable Products"}
             messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
             type="warning"
             onCloseModal={() => {
@@ -648,6 +699,23 @@ const MainComponent = () => {
               }
             }}
             btnTitle={tokwaErrorBtnTitle(pinAttempt)}
+          />
+          <DialogMessage
+            visibility={closeInfo.visible}
+            title="Restaurant Closed"
+            // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
+            restaurantClosedMessage={() => (
+              <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
+                <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName} </Text>
+                is currently not accepting orders right now. Please try again another time. Thank you!
+              </Text>
+            )}
+            type="warning"
+            btn1Title="OK"
+            onCloseModal={() => {
+              setCloseInfo({visible: false, shopName: ''});
+              setShowEnterPinCode(false);
+            }}
           />
           <DialogMessage
             visibility={tokWaPlaceOrderErr.visible}
@@ -716,12 +784,12 @@ const MainComponent = () => {
         <MyOrderList />
         <Separator />
 
-        {orderType === 'Delivery' && (
+        {/* {orderType === 'Delivery' && (
           <>
-            <OrderVoucher autoShipping={autoShipping} />
+            <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} />
             <Separator />
           </>
-        )}
+        )} */}
 
         {/* <AlsoOrder /> */}
         {delivery === null ? (
