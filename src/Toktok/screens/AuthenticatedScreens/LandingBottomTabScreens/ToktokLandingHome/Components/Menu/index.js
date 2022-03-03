@@ -106,7 +106,7 @@ export const Menu = ({setUserLocation, constants}) => {
         }}
         isNew
       />
-      )}
+      {/* )} */}
       {/* <MenuIcon
         label={'profile'}
         icon={ProfileIcon}
