@@ -1,5 +1,5 @@
 import React , {useEffect,useState , useRef} from 'react'
-import { View , Text , StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { View , Text , StyleSheet, TextInput, TouchableOpacity, Alert ,Platform } from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { Separator , DisabledButton , BuildingBottom } from 'toktokwallet/components'
 import { useAccount } from 'toktokwallet/hooks'
@@ -173,28 +173,30 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                                 !isFocus && amount != "" &&
                                                 <Text style={{fontFamily: FONT.BOLD,fontSize: 30,marginLeft: 10}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                                             }
-                                               <TextInput
-                                                        onFocus={()=>setIsFocus(true)}
-                                                        onBlur={()=>{
-                                                            setIsFocus(false)
-                                                        }}
-                                                        caretHidden={!isFocus}
-                                                        value={amount}
-                                                        ref={inputRef}
-                                                        // style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
-                                                        style={{textAlign:"center", marginTop: 12,fontSize: 32, fontFamily: FONT.BOLD, height: '100%', width: inputWidth, ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
-                                                        keyboardType="numeric"
-                                                        returnKeyType="done"
-                                                        placeholder={amount == "" ? "0.00" : ""}
-                                                        placeholderTextColor="black"
-                                                        onChangeText={changeAmountText}
-                                                        textAlign="right"
-                                                        textAlignVertical="center"
-                                                        // onContentSizeChange={(e)=> {
-                                                        //     setInputWidth(e.nativeEvent.contentSize.width)
-                                                        // }}
-                                                    />
-                                            {/* <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/> */}
+                                                <TextInput
+                                                    onFocus={()=>setIsFocus(true)}
+                                                    onBlur={()=>{
+                                                        setIsFocus(false)
+                                                    }}
+                                                    caretHidden={!isFocus}
+                                                    value={amount}
+                                                    ref={inputRef}
+                                                    keyboardType="numeric"
+                                                    returnKeyType="done"
+                                                    placeholder={amount == "" ? "0.00" : ""}
+                                                    placeholderTextColor="black"
+                                                    onChangeText={changeAmountText}
+                                                    textAlign="right"
+                                                    textAlignVertical="center"
+                                                    style={{
+                                                        fontSize: 33,
+                                                        fontFamily: FONT.BOLD,
+                                                        marginLeft: 5,
+                                                        width: inputWidth, 
+                                                        ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})
+                                                    }}
+                                                />
+    
                                         </View>
                                         
                                     </View>
@@ -281,15 +283,11 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     input: {
-        marginHorizontal: 20,
         borderRadius: 5,
         height: 60,
-        // flexShrink: 1,
-        // // flexGrow: 1,
         flex: 1,
-        width: 150,
         justifyContent:"center",
-        alignItems:"center",
+        ...(Platform.OS === "ios" ? {alignItems:"center"} : {}),
         flexDirection:"row"
       },
 })
