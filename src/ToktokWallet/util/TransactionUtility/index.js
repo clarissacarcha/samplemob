@@ -108,7 +108,10 @@ export class TransactionUtility {
       }
 
       const finalPrompType = graphQLErrors[0]?.payload?.errorType ? graphQLErrors[0]?.payload?.errorType : promptType
-
+      if(graphQLErrors[0]?.code == "INTERNAL_SERVER_ERROR" && graphQLErrors[0]?.message == "Something went wrong."){
+        promptTitle = "Transaction Pending"
+      }
+      
       prompt({
         type: finalPrompType,
         message: graphQLErrors[0]?.message,
