@@ -125,11 +125,11 @@ export const ToktokWalletRequestMoney = ({navigation,route})=> {
                                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                                     </View>
                                     <TouchableOpacity onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" ,{
-                                        onCashIn: null,
+                                        onCashIn: ()=> null,
                                         amount: 0,
                                     })} style={styles.topUp}>
                                             <View style={styles.topUpbtn}>
-                                                    <FIcon5 name={'plus'} size={12}/> 
+                                                <FIcon5 name={'plus'} size={12} color="black"/> 
                                             </View>
                                     </TouchableOpacity>
                                     <PendingEnvelopeIcon
