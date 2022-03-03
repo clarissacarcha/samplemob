@@ -3,11 +3,6 @@ import {View,Text,StyleSheet,TextInput,TouchableOpacity,Dimensions,Image} from '
 import {useLazyQuery} from '@apollo/react-hooks'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import { GET_ACCOUNT } from 'toktokwallet/graphql'
-import { useContacts } from 'toktokwallet/hooks'
-import { ContactSuggestion } from 'toktokwallet/components'
-import heart from "toktokwallet/assets/images/heart.png"
-import heartFill from "toktokwallet/assets/images/heart-fill.png"
-import {FavoritesContext } from "../ContextProvider"
 import CONSTANTS from 'common/res/constants'
 
 const {FONT_SIZE , SIZE , FONT_FAMILY: FONT , COLOR} = CONSTANTS
@@ -23,17 +18,12 @@ export const EnterMobileNo = ({
     setMobileNo , 
     recipientDetails,
     tokwaAccount,
-    setGetAccountLoading,
-    favoritesRef
+    setGetAccountLoading
 })=> {
-    const { favorites } = useContext(FavoritesContext)
-    const [errorMessage,setErrorMessage] = useState("")
-    const [suggestContact,setSuggestContact] = useState("")
-    const [isFavorite,setIsFavorite] = useState(false);
-    const inputMobileRef = useRef()
-    const { contacts } = useContacts();
 
-    
+    const [errorMessage,setErrorMessage] = useState("")
+    const inputMobileRef = useRef()
+
     const [getAccount, {data: walletData,error: walletError,loading: walletLoading}] = useLazyQuery(GET_ACCOUNT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy: "network-only",
@@ -66,37 +56,22 @@ export const EnterMobileNo = ({
     }
 
 
-    const filterByContacts = (value)=> {
-        if(value.length >= 4){
-            const result = contacts.filter((contact)=>{
-                return contact.name.toLowerCase().includes(value.toLowerCase()) || contact.number.toLowerCase().includes(value.toLowerCase())
-            })
-            return result[0]
-        }
-        return null
-    }
+    const changeMobileNo = (value)=> {
+        const mobile = value.replace(/[^0-9]/g,"")
 
-
-    const changeMobileNo = (text)=> {
-        // enable if type name is an option
-        const filteredContact = filterByContacts(text)
-        setSuggestContact(filteredContact)
-        // const value = text.replace(/[^0-9 A-Za-z]/g,"")
-        const value = text.replace(/[^0-9]/g,"")
-
-        if(value.length > 11) return
+        if(mobile.length > 11) return
         
-        if(checkMobileFormat(value)) {
-            checkIFSameNumber(value)
+        if(checkMobileFormat(mobile)) {
+            checkIFSameNumber(mobile)
         }else{
             setErrorMessage("Mobile number must be valid.")
             setProceed(false)
         }
 
-        if(value[0] == "9" && value.length >= 3){
-            setMobileNo("0"+value)
+        if(value[0] == "9"){
+            setMobileNo("09")
         }else{
-            setMobileNo(value)
+            setMobileNo(mobile)
         }
        
     }
@@ -104,7 +79,7 @@ export const EnterMobileNo = ({
 
     const checkMobileFormat = (mobile)=> {
         if(mobile.length != 11) return false
-        if(mobile.slice(0,2) != "09") return false
+        if(mobile[1] != "9") return false
         return true
 }
 
@@ -126,23 +101,19 @@ export const EnterMobileNo = ({
 
     }
 
-    const fetchRecipientInfo = ()=> {
-        getAccount({
-            variables: {
-                input: {
-                    mobileNumber: mobileNo
-                }
-            }
-        })
-    }
-
     useEffect(()=>{
         if(mobileNo == ""){
             setErrorMessage("")
             setProceed(false)
         }
         if(mobileNo.length == 11){
-            fetchRecipientInfo()
+            getAccount({
+                variables: {
+                    input: {
+                        mobileNumber: mobileNo
+                    }
+                }
+            })
         }
 
         return ()=> {
@@ -162,14 +133,7 @@ export const EnterMobileNo = ({
     },[walletLoading])
 
     return (
-        <>
-         
        <View style={styles.container}>
-            <ContactSuggestion
-                contactInfo={suggestContact}
-                setContactInfo={setSuggestContact}
-                onPress={setRecipientMobileNo}
-            />
             <View style={styles.content}>
             <TouchableOpacity onPress={()=>{
                     return inputMobileRef.current.focus()
@@ -210,10 +174,20 @@ export const EnterMobileNo = ({
                     </View>
                 </TouchableOpacity>
 
-               
+                <TextInput
+                        ref={inputMobileRef}
+                        caretHidden
+                        // autoFocus={true}
+                        value={mobileNo}
+                        style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
+                        keyboardType="number-pad"
+                        returnKeyType="done"
+                        onChangeText={(value)=>{
+                                changeMobileNo(value)
+                        }}
+                    />
             </View>
        </View>
-       </>
     )
 }
 
@@ -240,6 +214,8 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         justifyContent:"center",
         alignItems:'center',
+        flexDirection: "row",
+      
     },
     contactAddress: {
         // width:65,
@@ -250,15 +226,6 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         marginRight: 10,
         zIndex: 1,
-    },
-    addFavorites: {
-       justifyContent:"center",
-       alignItems:"center"
-    },
-    heart: {
-        height: FONT_SIZE.XS + 12,
-        width: FONT_SIZE.XS + 12,
-        marginHorizontal: 5
     },
     addressbtn: {
         flex: 1,

@@ -12,6 +12,8 @@ import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/Pabili.png
 import ProfileIcon from '../../../../../../../assets/icons/ProfileIcon.png';
 import ToktokMallIcon from '../../../../../../../assets/toktokmall-assets/icons/toktokmall-logo.png';
 import OthersIcon from '../../../../../../../assets/icons/OthersIcon.png';
+import ToktokLoadIcon from '../../../../../../../assets/toktok/icons/menu/ToktokLoad.png';
+import ToktokBillsIcon from '../../../../../../../assets/toktok/icons/menu/ToktokBills.png';
 
 const MenuIcon = ({label, icon, onPress, isNew = false}) => {
   const useThrottle = (cb, delayDuration) => {
@@ -99,7 +101,20 @@ export const Menu = ({setUserLocation, constants}) => {
           navigation.push('ToktokProfile');
         }}
       />
-
+      <MenuIcon
+        label={'Bills'}
+        icon={ToktokBillsIcon}
+        onPress={() => {
+          navigation.push('ToktokBillsLanding');
+        }}
+      />
+      <MenuIcon
+        label={'Load'}
+        icon={ToktokLoadIcon}
+        onPress={() => {
+          navigation.push('ToktokLoadHome');
+        }}
+      />
       {/* <MenuIcon
         label={'toktokfood'}
         icon={ProfileIcon}

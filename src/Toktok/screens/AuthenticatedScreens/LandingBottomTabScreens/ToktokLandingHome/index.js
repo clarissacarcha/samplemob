@@ -32,6 +32,19 @@ const Screen = ({navigation, constants}) => {
         return;
       }
 
+      if (notification.additionalData.classification === 'toktokbills') {
+        setTimeout(() => {
+          navigation.navigate('ToktokBillsNotifications');
+        }, 10);
+        return;
+      }
+
+      if (notification.additionalData.classification === 'toktokload') {
+        setTimeout(() => {
+          navigation.navigate('ToktokLoadHome');
+        }, 10);
+        return;
+      }
       const type = notification.additionalData.type;
 
       if (type) {

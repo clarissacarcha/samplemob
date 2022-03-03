@@ -15,6 +15,7 @@ const baseUrl = `${ENVIRONMENTS.TOKTOK_SERVER}/`;
 const wsUrl = `ws://${HOST_PORT}/graphql`;
 
 const toktokWalletBaseUrl = `${ENVIRONMENTS.TOKTOKWALLET_SERVER}/`;
+const toktokBillsLoadBaseUrl = `${ENVIRONMENTS.TOKTOKBILLSLOAD_SERVER}/`;
 const toktokFoodBaseUrl = `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/`;
 
 // const errorLink = onError(({graphQLErrors, networkError}) => {
@@ -94,6 +95,21 @@ const setToktokWalletEnterpriseGraphqlTokenLink = setContext(async (_, {headers}
   }
 });
 
+const setToktokBillsLoadGraphqlTokenLink = setContext(async (_, {headers}) => {
+  try {
+    const accountToken = await AsyncStorage.getItem('accessToken');
+    return {
+      headers: {
+        ...headers,
+        authorization: accountToken ? `Bearer ${accountToken}` : '',
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
 const wsLink = new WebSocketLink({
   uri: wsUrl,
   options: {
@@ -128,6 +144,10 @@ const toktokWalletEnterpriseGraphqlUploadLink = createUploadLink({
   uri: `${toktokWalletBaseUrl}enterprise/graphql/`,
 });
 
+const toktokBillsLoadGraphqlUploadLink = createUploadLink({
+  uri: `${toktokBillsLoadBaseUrl}graphql/`,
+});
+
 const splitLink = split(({query}) => {
   const definition = getMainDefinition(query);
   return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
@@ -144,6 +164,11 @@ const toktokWalletGraphqlLink = ApolloLink.from([
 const toktokWalletEnterpriseGraphqlLink = ApolloLink.from([
   setToktokWalletEnterpriseGraphqlTokenLink,
   toktokWalletEnterpriseGraphqlUploadLink,
+]);
+const toktokBillsLoadGraphqlLink = ApolloLink.from([
+  errorLinkLogger,
+  setToktokBillsLoadGraphqlTokenLink,
+  toktokBillsLoadGraphqlUploadLink,
 ]);
 
 const toktokFoodGraphqlLink = ApolloLink.from([
@@ -172,7 +197,11 @@ export const TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT = new ApolloClient({
   link: toktokWalletEnterpriseGraphqlLink,
 });
 
+export const TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: toktokBillsLoadGraphqlLink,
+});
 export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
-  link: toktokFoodGraphqlLink,
+  link: toktokBillsLoadGraphqlLink,
 });

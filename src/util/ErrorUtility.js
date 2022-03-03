@@ -3,8 +3,7 @@ import {Alert} from 'react-native';
 import {ApolloError} from 'apollo-client';
 import {navigate, replace} from 'src/app/Nav/RootNavigation';
 
-export const onError = error => {
-  console.log(JSON.stringify(error), 'asdasd');
+export const onError = (error) => {
   const {graphQLErrors, networkError} = error;
 
   if (networkError) {

@@ -26,7 +26,6 @@ export const PromptModal = ({
   children,
   event
 }) => {
-
   const closeModal = ()=> setVisible(false)
   const onThrottledPress = useThrottle(onPress? onPress : closeModal, 2000)
 
@@ -48,6 +47,19 @@ export const PromptModal = ({
       break;
   }
 
+  const titleColor = () => {
+    switch(type){
+      case "success":
+        return "#F6841F";
+      case "error":
+        return "#F73C21";
+      case "warning":
+        return "#FFBF00";
+     
+      default: 
+        return "#000000"; 
+    }
+  }
   return (
     <Modal 
       visible={visible}
@@ -62,7 +74,7 @@ export const PromptModal = ({
             <Text
               style={[
                 styles.successText,
-                { color: event === "TOKTOKWALLET" ? "black" : COLOR.ORANGE }
+                { color: event === "TOKTOKWALLET" ? "black" : titleColor() }
               ]}
             >
               {title}

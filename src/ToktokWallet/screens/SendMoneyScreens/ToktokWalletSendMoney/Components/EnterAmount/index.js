@@ -9,11 +9,16 @@ const { FONT_SIZE , COLOR , SIZE , FONT_FAMILY: FONT} = CONSTANTS
 export const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount , recipientDetails , errorAmountMessage , setErrorAmountMessage}) => {
 
     const [tempAmount,setTempAmount] = useState("")
-    const [isFocus,setIsFocus] = useState(false)
 
 
     const changeAmount = (value)=>{
-        formatAmount(value , setAmount)
+        const num = value.replace(/[^0-9.]/g, '')
+        const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
+        if(!checkFormat) return       
+        let decimalValueArray = num.split(".")
+        if(decimalValueArray[0].length > 6) return
+        if(num[0] == ".") return setAmount("0.")
+        setAmount(num)
     }
 
     useEffect(()=>{
