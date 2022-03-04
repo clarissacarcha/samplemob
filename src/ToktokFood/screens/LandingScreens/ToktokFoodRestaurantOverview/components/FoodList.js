@@ -133,9 +133,11 @@ export const FoodList = props => {
         <Text style={styles.promoText}>PHP {resellerDiscount?.referralShopRate.toFixed(2)}</Text>
         {/* <Text style={styles.resellerDiscountText}>PHP {price?.toFixed(2)}</Text> */}
 
-        <View style={styles.voucherContainer}>
-          <Text style={styles.voucherText}>Piso Chibog</Text>
-        </View>
+        {activeTab?.id === '0' && (
+          <View style={styles.voucherContainer}>
+            <Text style={styles.voucherText}>Piso Chibog</Text>
+          </View>
+        )}
       </View>
     );
   };
