@@ -275,7 +275,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
     onError: error => {
-      console.log('tpin-error', error);
+      console.log('tpin-error', toktokWallet, error);
       setShowLoader(false);
       if (toktokWallet.paymentMethod == 'COD') {
         setTimeout(() => {
@@ -412,20 +412,21 @@ const MainComponent = () => {
   };
 
   const onToktokWalletOrder = async () => {
-    let totalPrice = temporaryCart?.totalAmountWithAddons;
+    const deliveryPrice = orderType === 'Delivery' ? delivery?.price : 0;
+    const totalPrice = temporaryCart?.totalAmountWithAddons;
     const CUSTOMER_CART = await fixOrderLogs();
     // const SHIPPING_VOUCHERS = autoShipping?.success
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
     //   : await handleShippingVouchers(shippingVoucher);
     const amount = await getTotalAmount(promotionVoucher, delivery?.price);
-    const parseAmount = Number((delivery?.price + totalPrice - amount).toFixed(2));
+    const parseAmount = Number((deliveryPrice + totalPrice - amount).toFixed(2));
     // if (orderType === 'Delivery') {
     //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
     //   //   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
     //   // }
     //   totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
     // }
-
+    // console.log(parseAmount);
     postResquestTakeMoney({
       variables: {
         input: {

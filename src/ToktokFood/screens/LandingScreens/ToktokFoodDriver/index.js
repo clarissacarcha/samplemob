@@ -48,8 +48,9 @@ const ToktokFoodDriver = ({route, navigation}) => {
   });
 
   // data fetching for tsransaction
-  const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading}] =
-    useLazyQuery(GET_ORDER_TRANSACTION_BY_REF_NUM, {
+  const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading}] = useLazyQuery(
+    GET_ORDER_TRANSACTION_BY_REF_NUM,
+    {
       variables: {
         input: {
           referenceNum: referenceNum,
@@ -62,6 +63,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
       },
       onCompleted: ({getTransactionByRefNum}) => {
+        console.log(getTransactionByRefNum);
         // if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
         setTransaction(getTransactionByRefNum);
         const {orderIsfor, tDeliveryId, orderStatus} = getTransactionByRefNum;
@@ -80,7 +82,8 @@ const ToktokFoodDriver = ({route, navigation}) => {
         }
         // }
       },
-    });
+    },
+  );
 
   const [getToktokFoodRiderDetails, {error: riderError, loading: riderLoading, refetch: riderRefetch}] = useLazyQuery(
     GET_RIDER_DETAILS,
