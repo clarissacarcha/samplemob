@@ -18,9 +18,9 @@ export const Notification = ({
         <View style={styles.container}> 
             <View style={{flex:1,marginRight: 16}}>
                     <Text style={styles.title}>{status}</Text>
-                    <Text numberOfLines={1} style={styles.message}>{item.body}</Text>
+                    <Text numberOfLines={2} style={styles.message}>{item.body}</Text>
             </View>
-            <View style={{alignItems:"flex-end",flexBasis: "auto",}}>
+            <View style={{alignItems:"flex-end",flexBasis: "auto",justifyContent:"center"}}>
                 <Text numberOfLines={1} style={styles.datetime}>{dateCreated}</Text>
                 <Text numberOfLines={1} style={styles.datetime}>{timeCreated}</Text>
             </View>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         flexDirection:"row"
     },
     title: {
-        fontFamily: FONT.REGULAR,
+        fontFamily: FONT.BOLD,
         fontSize: FONT_SIZE.M
     },
     message: {

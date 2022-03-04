@@ -1,14 +1,10 @@
 import React from 'react'
 import { View , Text , StyleSheet, ActivityIndicator ,FlatList , RefreshControl } from 'react-native'
 import {GET_NOTIFICATIONS_BY_CLASSIFICATION } from 'toktokwallet/graphql'
-import { onErrorAlert } from 'src/util/ErrorUtility'
-import { useAlert } from 'src/hooks'
 import { SomethingWentWrong } from 'src/components'
 import { useQuery } from '@apollo/react-hooks'
-import {VectorIcon , ICON_SET } from 'src/revamp'
-import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
-import { Separator, CheckIdleState , SwipeDownToRefresh , NoData} from 'toktokwallet/components'
+import { NoData} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants';
 
 //SELF IMPORTS
@@ -70,10 +66,11 @@ export const ToktokLoadNotifications = ({navigation,route})=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:"white"
+        backgroundColor:"white",
+        paddingVertical: 10,
     },
     separator: {
-        height: 2,
+        height: 3,
         backgroundColor: COLOR.LIGHT,
     },
 })
