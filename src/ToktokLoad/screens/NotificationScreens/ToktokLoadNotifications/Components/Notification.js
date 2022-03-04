@@ -18,7 +18,7 @@ export const Notification = ({
         <View style={styles.container}> 
             <View style={{flex:1,marginRight: 16}}>
                     <Text style={styles.title}>{status}</Text>
-                    <Text numberOfLines={2} style={styles.message}>{item.body}</Text>
+                    <Text style={styles.message}>{item.body}</Text>
             </View>
             <View style={{alignItems:"flex-end",flexBasis: "auto",justifyContent:"center"}}>
                 <Text numberOfLines={1} style={styles.datetime}>{dateCreated}</Text>
