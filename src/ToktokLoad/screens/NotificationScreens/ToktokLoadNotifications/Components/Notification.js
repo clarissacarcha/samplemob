@@ -12,7 +12,7 @@ export const Notification = ({
     
     const status = item.type == "postPayLoadSuccessful" ? "Load success" : "Load failed";
     const dateCreated = moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY')
-    const timeCreated = moment(item.createdAt).tz('Asia/Manila').format('hh:mma')
+    const timeCreated = moment(item.createdAt).tz('Asia/Manila').format('hh:mm A')
 
     return (
         <View style={styles.container}> 
