@@ -30,7 +30,7 @@ export const Notification = ({
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
+        paddingVertical: 16,
         flexDirection:"row"
     },
     title: {
