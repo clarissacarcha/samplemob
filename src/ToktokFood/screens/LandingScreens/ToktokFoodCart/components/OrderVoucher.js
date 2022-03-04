@@ -138,10 +138,10 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
   const onShowError = useCallback(() => {
     if (autoShipping) {
       if (autoShipping?.success) {
-        setShowHighlighted(true);
+        setShowHighlighted(autoShipping?.success);
         setShowHighlightedError(false);
       } else {
-        setShowHighlighted(true);
+        setShowHighlighted(autoShipping?.success);
         setShowHighlightedError(true);
       }
     }

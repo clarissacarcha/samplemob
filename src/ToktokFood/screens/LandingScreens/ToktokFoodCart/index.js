@@ -173,7 +173,7 @@ const MainComponent = () => {
   }, [temporaryCart, location, isFocus]);
 
   useEffect(() => {
-    // onGetAutoApply();
+    onGetAutoApply();
   }, [paymentMethod]);
 
   const [getDeliverFee] = useLazyQuery(GET_SHIPPING_FEE, {
@@ -195,19 +195,19 @@ const MainComponent = () => {
       //     orders,
       //   },
       // });
-      // getAutoShipping({
-      //   variables: {
-      //     input: {
-      //       region: items[0]?.shopRegion,
-      //       email,
-      //       subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
-      //       cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
-      //       brandId: items[0].companyId,
-      //       paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
-      //       orders,
-      //     },
-      //   },
-      // });
+      getAutoShipping({
+        variables: {
+          input: {
+            region: items[0]?.shopRegion,
+            email,
+            subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+            cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
+            brandId: items[0].companyId,
+            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+            orders,
+          },
+        },
+      });
     },
   });
 
@@ -793,12 +793,12 @@ const MainComponent = () => {
         <MyOrderList />
         <Separator />
 
-        {/* {orderType === 'Delivery' && (
+        {orderType === 'Delivery' && (
           <>
             <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} />
             <Separator />
           </>
-        )} */}
+        )}
 
         {/* <AlsoOrder /> */}
         {delivery === null ? (
