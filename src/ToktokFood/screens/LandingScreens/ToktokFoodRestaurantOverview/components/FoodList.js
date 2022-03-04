@@ -21,7 +21,6 @@ import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import {verticalScale, getDeviceHeight, moderateScale, getIphoneNotchSize} from 'toktokfood/helper/scale';
 import {reseller_badge, empty_search_2} from 'toktokfood/assets/images';
 import {TOKFOODCOLOR} from 'res/variables';
-import {filter} from 'lodash';
 
 export const FoodList = props => {
   const {activeTab, id, tagsLoading} = props;
@@ -128,8 +127,15 @@ export const FoodList = props => {
 
     return (
       <View style={styles.resellerPrice}>
-        <Text style={styles.listPrice}>PHP {resellerDiscount?.referralShopRate.toFixed(2)}</Text>
-        <Text style={styles.resellerDiscountText}>PHP {price?.toFixed(2)}</Text>
+        <Text numberOfLines={1} style={styles.fromText}>
+          from
+        </Text>
+        <Text style={styles.promoText}>PHP {resellerDiscount?.referralShopRate.toFixed(2)}</Text>
+        {/* <Text style={styles.resellerDiscountText}>PHP {price?.toFixed(2)}</Text> */}
+
+        <View style={styles.voucherContainer}>
+          <Text style={styles.voucherText}>Piso Chibog</Text>
+        </View>
       </View>
     );
   };
@@ -159,7 +165,6 @@ export const FoodList = props => {
           ]}>
           <View style={{flex: 1}}>
             <Text style={styles.listText}>{item.itemname}</Text>
-            {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge item={item} />}
             {resellerDiscount?.referralShopRate > 0 ? (
               <ResellerPrice item={item} />
             ) : (
@@ -178,6 +183,8 @@ export const FoodList = props => {
                 {item.summary}
               </Text>
             )}
+
+            {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge item={item} />}
           </View>
           <View>
             <Image resizeMode="cover" source={{uri: item.filename}} style={styles.img} />
@@ -328,6 +335,12 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     textDecorationLine: 'line-through',
   },
+  promoText: {
+    color: '#FF6200',
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
+    textDecorationLine: 'line-through',
+  },
   fromText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
@@ -337,5 +350,20 @@ const styles = StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
     paddingVertical: 3,
+  },
+  voucherContainer: {
+    alignItems: 'center',
+    backgroundColor: '#FFA700',
+    borderRadius: 5,
+    flexDirection: 'row',
+    height: 20,
+    justifyContent: 'center',
+    marginHorizontal: 5,
+    paddingHorizontal: 7,
+  },
+  voucherText: {
+    color: COLOR.WHITE,
+    fontSize: 12,
+    fontWeight: '700',
   },
 });

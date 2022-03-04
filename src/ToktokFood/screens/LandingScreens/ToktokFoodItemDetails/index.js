@@ -144,9 +144,9 @@ const MainComponent = () => {
     const {itemname, basePrice, price, resellerDiscount, summary} = productDetails;
     return (
       <View style={styles.foodContainer}>
-        {/* <View>
+        <View>
           <VoucherList isReseller />
-        </View> */}
+        </View>
 
         {/* {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge />} */}
         <View style={styles.foodDetails}>

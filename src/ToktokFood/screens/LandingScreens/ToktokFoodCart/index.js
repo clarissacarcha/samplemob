@@ -412,8 +412,10 @@ const MainComponent = () => {
   };
 
   const onToktokWalletOrder = async () => {
+    const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+
     const deliveryPrice = orderType === 'Delivery' ? delivery?.price : 0;
-    const totalPrice = temporaryCart?.totalAmountWithAddons;
+    const totalPrice = promotions.length > 0 ? temporaryCart?.srpTotalAmount : temporaryCart?.totalAmountWithAddons;
     const CUSTOMER_CART = await fixOrderLogs();
     // const SHIPPING_VOUCHERS = autoShipping?.success
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
@@ -549,11 +551,11 @@ const MainComponent = () => {
   };
 
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
-    // const SHIPPING_VOUCHERS = autoShipping?.success
-    //   ? await handleAutoShippingVouchers(autoShippingVoucher)
-    //   : await handleShippingVouchers(shippingVoucher);
+    const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+    const totalPrice = promotions.length > 0 ? temporaryCart?.srpTotalAmount : temporaryCart?.totalAmount;
+
     const amount = await getTotalAmount(promotionVoucher, 0);
-    const parsedAmount = Number((temporaryCart?.totalAmount - amount).toFixed(2));
+    const parsedAmount = Number((totalPrice - amount).toFixed(2));
     // console.log(temporaryCart?.totalAmount);
     const ORDER = {
       // total_amount: temporaryCart.totalAmount,

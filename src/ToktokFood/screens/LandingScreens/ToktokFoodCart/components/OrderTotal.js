@@ -42,6 +42,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
 
     if (promotions.length > 0) {
       setTotalPromotions(promotions[0].discount_totalamount);
+      setTotalBasket(temporaryCart.srpTotalAmount);
     } else {
       setTotalPromotions(0);
     }

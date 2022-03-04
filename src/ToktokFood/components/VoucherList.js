@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, ImageBackground, View, StyleSheet, Text} from 'react-native';
 // import {useNavigation} from '@react-navigation/native';
 // import {useSelector} from 'react-redux';
@@ -22,18 +22,21 @@ const VoucherList = ({
   const voucherStyle = isDisabled ? {...styles.voucherContainer, opacity: 0.4} : styles.voucherContainer;
   const [voucherData, setVoucherData] = useState(data);
 
-  useEffect(() => {
+  const onSetVoucher = useCallback(() => {
     if (isReseller) {
       setVoucherData([{id: 0, name: 'Reseller -1.75%'}, ...data]);
       //   voucherData.unshift();
     }
-  }, [isReseller, data]);
+  }, [isReseller]);
+
+  useEffect(() => {
+    onSetVoucher();
+  }, [onSetVoucher]);
 
   // const onCloseItem = id => {
   //   const filterData = voucherData.filter(item => item.id !== id);
   //   setVoucherData(filterData);
   // };
-
   const voucherList = ({item}) => {
     if (item.id === 0) {
       return (

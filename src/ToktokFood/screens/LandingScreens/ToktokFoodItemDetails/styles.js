@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
   },
   foodPrice: {
-    marginEnd: 3,
+    // marginEnd: 3,
     color: '#FF6200',
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.XL,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     // padding: 3,
   },
   resellerPrice: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
   },
   resellerText: {
     color: COLOR.WHITE,
@@ -88,8 +88,8 @@ const styles = StyleSheet.create({
   resellerDiscountText: {
     color: TOKFOODCOLOR.GRAY,
     fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.XL,
-    marginLeft: 10,
+    fontSize: FONT_SIZE.M,
+    textAlign: 'right',
     textDecorationLine: 'line-through',
   },
 });
