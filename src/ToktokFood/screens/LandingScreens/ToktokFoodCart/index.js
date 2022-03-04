@@ -38,6 +38,7 @@ import {
 } from './components';
 import {
   getDeductedVoucher,
+  getTotalAmount,
   getPromotionVouchers,
   getShippingVoucher,
   getTotalDeductedVoucher,
@@ -183,17 +184,17 @@ const MainComponent = () => {
       const {email} = customerInfo;
       const orders = await parseAmountComputation(temporaryCart?.items);
       setDeliveryInfo(getShippingFee);
-      console.log({
-        input: {
-          region: items[0]?.shopRegion,
-          email,
-          subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
-          cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
-          brandId: items[0].companyId,
-          paymentMethod: 'CASH',
-          orders,
-        },
-      });
+      // console.log({
+      //   input: {
+      //     region: items[0]?.shopRegion,
+      //     email,
+      //     subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+      //     cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
+      //     brandId: items[0].companyId,
+      //     paymentMethod: 'CASH',
+      //     orders,
+      //   },
+      // });
       getAutoShipping({
         variables: {
           input: {
@@ -376,21 +377,20 @@ const MainComponent = () => {
     let items = [];
     return Promise.all(
       temporaryCart.items.map(async item => {
+        const totalAmount =
+          (item.resellerDiscount ? item.resellerDiscount.toFixed(2) : item.basePrice.toFixed(2)) * item.quantity;
         let data = {
           sys_shop: item.shopid,
           product_id: item.productid,
-          amount: item.resellerDiscount ?? item.basePrice,
+          amount: Number((item.resellerDiscount ?? item.basePrice).toFixed(2)),
           srp_amount: item.basePrice,
           srp_totalamount: Number(item.basePrice.toFixed(2)) * item.quantity,
-          total_amount:
-            Number(item.resellerDiscount ? item.resellerDiscount.toFixed(2) : item.basePrice.toFixed(2)) *
-            item.quantity,
+          total_amount: Number(totalAmount),
           quantity: item.quantity,
           order_type: 1,
           notes: item.notes,
           addons: await fixAddOns(item.addonsDetails),
         };
-        console.log('temporary cart data', data);
         items.push(data);
       }),
     ).then(() => {
@@ -413,24 +413,24 @@ const MainComponent = () => {
 
   const onToktokWalletOrder = async () => {
     let totalPrice = temporaryCart?.totalAmountWithAddons;
-    let deductedFee = 0;
     const CUSTOMER_CART = await fixOrderLogs();
     // const SHIPPING_VOUCHERS = autoShipping?.success
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
     //   : await handleShippingVouchers(shippingVoucher);
-
-    if (orderType === 'Delivery') {
-      // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
-      //   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
-      // }
-      totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
-    }
+    const amount = await getTotalAmount(promotionVoucher, delivery?.price);
+    const parseAmount = Number((delivery?.price + totalPrice - amount).toFixed(2));
+    // if (orderType === 'Delivery') {
+    //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
+    //   //   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
+    //   // }
+    //   totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
+    // }
 
     postResquestTakeMoney({
       variables: {
         input: {
           currency: toktokWallet.currency,
-          amount: totalPrice,
+          amount: parseAmount,
           toktokuser_id: toktokWallet.toktokuser_id,
           payment_method: paymentMethod,
           name: toktokWallet.name,
@@ -535,7 +535,6 @@ const MainComponent = () => {
   const processData = (WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS) => {
     if (promotionVoucher.length > 0) {
       const deductedFee = getTotalDeductedDeliveryFee(promotionVoucher, delivery?.price);
-      console.log(deductedFee);
       const DEDUCTVOUCHER = {
         ...ORDER,
         order_logs: [{...ORDER.order_logs[0], delivery_amount: deductedFee}],
@@ -552,11 +551,16 @@ const MainComponent = () => {
     // const SHIPPING_VOUCHERS = autoShipping?.success
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
     //   : await handleShippingVouchers(shippingVoucher);
+    const amount = await getTotalAmount(promotionVoucher, 0);
+    const parsedAmount = Number((temporaryCart?.totalAmount - amount).toFixed(2));
+    // console.log(temporaryCart?.totalAmount);
     const ORDER = {
-      total_amount: temporaryCart.totalAmount,
-      srp_totalamount: temporaryCart.totalAmount,
+      // total_amount: temporaryCart.totalAmount,
+      // srp_totalamount: temporaryCart.totalAmount,
+      total_amount: parsedAmount,
+      srp_totalamount: parsedAmount,
       notes: riderNotes,
-      order_isfor: orderType == 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
+      order_isfor: orderType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       // order_type: 2,
       order_type: await getOrderType(customerFranchisee),
       payment_method: paymentMethod,
@@ -583,6 +587,10 @@ const MainComponent = () => {
       citymunCode: '0',
       shippingvouchers: await getShippingVoucher(promotionVoucher),
       vouchers: await getPromotionVouchers(promotionVoucher, temporaryCart?.items[0].shopid),
+      reseller_account_type: customerFranchisee?.franchiseeAccountType || '',
+      reseller_code: customerFranchisee?.franchiseeCode || '',
+      referral_code: customerFranchisee?.franchiseeCode ? '' : customerFranchisee?.referralCode || '',
+      discounted_totalamount: parsedAmount,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, []);
     console.log(data, 'DATA');
@@ -660,7 +668,7 @@ const MainComponent = () => {
           />
           <DialogMessage
             visibility={tokWaPlaceOrderErr.visible}
-            title={"Unavailable Products"}
+            title={'Unavailable Products'}
             messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
             type="warning"
             onCloseModal={() => {

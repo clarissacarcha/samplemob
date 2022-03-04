@@ -63,6 +63,10 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
       onSetEta();
     }
 
+    if (transaction?.orderStatus === 'po' && etaMinutes === 0) {
+      setEtaMinutes(45);
+    }
+
     return () => clearInterval();
   }, [riderDetails, transaction]);
 

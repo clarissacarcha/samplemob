@@ -38,6 +38,30 @@ export const tokwaErrorBtnTitle = pinAttempt => {
   }
 };
 
+export const getTotalAmount = async (promos, deliveryFee) => {
+  let autoApply = promos.filter(promo => promo.type === 'auto');
+  let shipping = promos.filter(promo => promo.type === 'shipping');
+  let deals = promos.filter(promo => promo.type === 'deal');
+  let promotions = promos.filter(promo => promo.type === 'promotion');
+  let totalAmount = 0;
+
+  await autoApply.map(async promo => {
+    const deductedAmount = await getDeductedVoucher(promo, deliveryFee);
+    totalAmount += deductedAmount;
+  });
+  await shipping.map(async promo => {
+    const deductedAmount = await getDeductedVoucher(promo, deliveryFee);
+    totalAmount += deductedAmount;
+  });
+  await deals.map(async promo => {
+    totalAmount += promo?.discount_totalamount;
+  });
+  await promotions.map(async promo => {
+    totalAmount += promo?.discount_totalamount;
+  });
+  return totalAmount;
+};
+
 export const getDeductedVoucher = (shipping, deliveryFee) => {
   let totalDelivery = 0;
   if (shipping?.amount > 0) {
@@ -55,16 +79,22 @@ export const getDeductedVoucher = (shipping, deliveryFee) => {
 export const getShippingVoucher = async promos => {
   let autoApply = promos.filter(promo => promo.type === 'auto');
   let shipping = promos.filter(promo => promo.type === 'shipping');
-
-  await autoApply.map((promo, value) => {
-    return delete promo.__typename;
-  });
-  await shipping.map(promo => {
+  autoApply = await autoApply.map(promo => {
     let shippingObj = {...promo, amount: promo.origAmount};
-    delete shippingObj.origAmount;
     delete promo.__typename;
     return shippingObj;
   });
+  shipping = await shipping.map(promo => {
+    let shippingObj = {...promo, amount: promo.origAmount};
+    delete promo.__typename;
+    return shippingObj;
+  });
+
+  await [...autoApply, ...shipping].map(promo => {
+    delete promo.origAmount;
+    delete promo.__typename;
+  });
+
   return [...autoApply, ...shipping];
 };
 
