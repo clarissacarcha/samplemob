@@ -123,7 +123,7 @@ export const HeaderDownloadReceipt = ({
       prompt({
         type: "success",
         title: "Receipt Downloaded!",
-        message: "Your tansaction receipt has been saved to your gallery.",
+        message: "Your transaction receipt has been saved to your gallery.",
         event: "TOKTOKBILLSLOAD"
       });
       onPressDownloadReceipt(false);
