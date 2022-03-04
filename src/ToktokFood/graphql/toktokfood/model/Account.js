@@ -47,8 +47,8 @@ export const POST_CONTACT_US = gql`
 `;
 
 export const GET_KYC_STATUS = gql`
-  query getKycStatus {
-    getKycStatus {
+  query getKycStatus($input: KycAccount) {
+    getKycStatus(input: $input) {
       status
       account {
         id

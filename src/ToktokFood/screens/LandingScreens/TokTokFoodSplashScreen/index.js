@@ -88,10 +88,11 @@ const TokTokFoodSplashScreen = () => {
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        referenceNumber: String(user.id),
+        referenceNumber: user.id,
       },
     },
     onCompleted: ({getKycStatus}) => {
+      // console.log(getKycStatus, user);
       if (getKycStatus) {
         dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: {...getKycStatus}});
         return showHomPage();
