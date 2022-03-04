@@ -67,10 +67,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor:"white",
+        paddingHorizontal: 16,
         paddingVertical: 10,
     },
     separator: {
-        height: 3,
+        height: 2,
         backgroundColor: COLOR.LIGHT,
     },
 })
