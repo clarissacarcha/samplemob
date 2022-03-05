@@ -216,6 +216,9 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                         <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: 10}}>Current Balance: </Text>
                                         <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, marginTop: 10}}>{numberFormat(tokwaAccount.wallet.balance)}</Text>
                                     </Text>
+                                    {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: 10,color: COLOR.YELLOW}}>Remaining limit to cash in: 
+                                            <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD,color: COLOR.YELLOW}}>PHP {numberFormat(+tokwaAccount.person.accountType.walletSize - tokwaAccount.wallet.balance)}</Text>
+                                        </Text> */}
                                 
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
                          </View>
