@@ -156,14 +156,11 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
 
 
       const ProcessPayment = (method , paymentChoice , cashInPartnerTypeId , isCredit )=> {
-
-        // CALL PROCESSING FEE PAYPANDA API HERE
-
         setPaymentMethod(method);
         setPaymentChoice(paymentChoice)
         setCashInPartnerTypeId(cashInPartnerTypeId)
 
-        if(isCredit){
+        if(!isCredit){
             proceedPayment({
                 paymentChoice,
                 method,
@@ -179,7 +176,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
           paymentChoice,
           method
       })=> {
-    
+        // CALL PROCESSING FEE PAYPANDA API HERE
         postComputeProcessingFee({
             variables: {
                 input: {
