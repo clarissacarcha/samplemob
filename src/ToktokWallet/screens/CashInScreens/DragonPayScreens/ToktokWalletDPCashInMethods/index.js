@@ -155,7 +155,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
       }
 
 
-      const ProcessPayment = (method , paymentChoice , cashInPartnerTypeId )=> {
+      const ProcessPayment = (method , paymentChoice , cashInPartnerTypeId , isCredit )=> {
 
         // CALL PROCESSING FEE PAYPANDA API HERE
 
@@ -163,7 +163,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
         setPaymentChoice(paymentChoice)
         setCashInPartnerTypeId(cashInPartnerTypeId)
 
-        if(method != "Online Banking Debit/Credit Card"){
+        if(isCredit){
             proceedPayment({
                 paymentChoice,
                 method,
@@ -240,7 +240,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                         :  cashInMethods.length == 0
                             ? <NoData/>
                             : cashInMethods.map((item,index)=> {
-                                return <PaymentMethod onPress={()=>ProcessPayment(item.name, item.transactionTypeId , item.id)} label={item.name}/>
+                                return <PaymentMethod onPress={()=>ProcessPayment(item.name, item.transactionTypeId , item.id , item.isCredit)} label={item.name}/>
                             })
                     }
                 </View>
