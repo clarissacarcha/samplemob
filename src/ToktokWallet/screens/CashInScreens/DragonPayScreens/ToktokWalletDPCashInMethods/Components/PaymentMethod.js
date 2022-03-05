@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
         justifyContent:"center"
     },
     divider: {
-        height: 2,
+        height: 1,
         width: "100%",
         backgroundColor: COLOR.YELLOW,
     },
