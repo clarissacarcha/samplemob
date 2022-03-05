@@ -62,9 +62,10 @@ export const FoodList = props => {
 
   const filterProducts = useCallback(products => {
     setListData([]);
+    let productHolder = [];
     if (products.length) {
-      let productHolder = [];
-      products.map(product => {
+      const removedFalsyProducts = products.filter(Boolean);
+      removedFalsyProducts.map(product => {
         let variantHolder = [];
         const variants = product.variants;
         if (variants.length === 1) {
@@ -90,8 +91,8 @@ export const FoodList = props => {
           }
         }
       });
-      setListData(productHolder);
     }
+    setListData(productHolder);
   }, []);
 
   useEffect(() => {
