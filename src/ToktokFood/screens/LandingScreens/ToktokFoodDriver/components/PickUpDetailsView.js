@@ -72,7 +72,8 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   };
 
   const isShowIcon = useMemo(() => {
-    return orderStatus !== 'p' || false;
+    // return orderStatus !== 'p' || false;
+    return true;
   }, [orderStatus]);
 
   const renderEstimatedTime = () => {

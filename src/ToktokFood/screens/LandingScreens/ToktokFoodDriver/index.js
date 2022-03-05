@@ -296,11 +296,16 @@ const ToktokFoodDriver = ({route, navigation}) => {
     if (reasons && title === 'Order Cancelled') {
       return navigation.replace('ToktokFoodLanding');
     }
-    if (title !== 'Order Complete' || title !== 'OOPS! Order Declined!' || title !== 'Order Cancelled') {
-      let tab = selectedTab(title);
-      navigation.navigate('ToktokFoodOrderTransactions', {tab});
+    if (title === 'No Response from Merchant') {
       setSeconds(300);
       setMinutes(5);
+    } else {
+      if (title !== 'Order Complete' || title !== 'OOPS! Order Declined!' || title !== 'Order Cancelled') {
+        let tab = selectedTab(title);
+        navigation.navigate('ToktokFoodOrderTransactions', {tab});
+        setSeconds(300);
+        setMinutes(5);
+      }
     }
   };
 
