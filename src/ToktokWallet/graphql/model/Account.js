@@ -66,6 +66,7 @@ export const GET_MY_ACCOUNT = gql`
             wallet {
                 id
                 balance
+                creditCardBalance
                 status
                 accountId
                 motherId
