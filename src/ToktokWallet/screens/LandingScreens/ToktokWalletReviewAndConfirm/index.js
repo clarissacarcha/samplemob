@@ -63,6 +63,11 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
         <ScrollView bounces={false} alwaysBounceVertical={false} style={styles.container} contentContainerStyle={{flexGrow:1}}>
             <View style={styles.header}>
               <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: "black"}}>Review and Confirm</Text>
+              <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start",marginTop:5}}>
+                    <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.XL} />  
+                    <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M,marginLeft: 3,marginTop: -2,marginRight: 16}}>Please review the accuracy and completenes of the details
+provided before you confirm</Text> 
+              </View>
             </View>
             <View style={styles.content}>
                
@@ -75,12 +80,12 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                         Transaction cannot be reversed once confirmed and submitted
                     </Text>
                 }
-                {
+                {/* {
                     !data.fundTransferType &&
                     <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,textAlign:"left",marginTop: 10}}>
                     <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.M} /> Please review the accuracy and completeness of the details provided before you confirm.
                     </Text>
-                }
+                } */}
                 {
                     data.fundTransferType && data.fundTransferType == "Instapay" &&
                     <>
@@ -160,8 +165,7 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: "#FFF2D5",
-        paddingHorizontal: 16,
-        height: 50,
+        padding: 16,
         justifyContent:"center"
     },
     proceedBtn: {

@@ -5,7 +5,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {POST_CASH_IN_PAYPANDA_REQUEST,POST_REQUEST_CASH_IN,GET_CASH_IN_PARTNER_TYPES,POST_COMPUTE_PROCESSING_FEE} from 'toktokwallet/graphql'
 import { Separator , CheckIdleState , DisabledButton , NoData , BuildingBottom } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
-import {YellowButton,HeaderBack,HeaderTitle } from 'src/revamp';
+import {YellowButton,HeaderBack,HeaderTitle,VectorIcon,ICON_SET } from 'src/revamp';
 import { SomethingWentWrong } from 'src/components'
 import { useAccount } from 'toktokwallet/hooks'
 import { TransactionUtility } from 'toktokwallet/util'
@@ -15,6 +15,7 @@ import { AlertOverlay } from 'src/components'
 
 //SELF IMPORTS
 import {
+    ConfirmCreditCardModal,
     PaymentMethod
 } from "./Components";
 
@@ -27,6 +28,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
     const { tokwaAccount }  = useAccount();
     const [processingFee ,setProcessingFee] = useState(0);
     const [paymentMethod , setPaymentMethod] = useState("");
+    const [visible,setVisible] = useState(false);
     const [cashInMethods , setCashInMethods] = useState(null);
     const [paymentChoice,setPaymentChoice] = useState(null);
     const [cashInPartnerTypeId,setCashInPartnerTypeId] = useState(null);
@@ -160,6 +162,24 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
         setPaymentMethod(method);
         setPaymentChoice(paymentChoice)
         setCashInPartnerTypeId(cashInPartnerTypeId)
+
+        if(method != "Online Banking Debit/Credit Card"){
+            proceedPayment({
+                paymentChoice,
+                method,
+            });
+            return;
+        }
+
+        setVisible(true)
+        return;
+      }
+
+      const proceedPayment = ({
+          paymentChoice,
+          method
+      })=> {
+    
         postComputeProcessingFee({
             variables: {
                 input: {
@@ -172,7 +192,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                 label:"Cash In" , 
                 event: "Cash In Dragon Pay",
                 data: {
-                        method: method, 
+                        method: paymentMethod, 
                         amount: amount,
                         accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
                         accountNumber: tokwaAccount.mobileNumber,
@@ -184,18 +204,32 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                 onSwipeSuccess: onSwipeSuccess,
             })
         }).catch(error=>console.log(error))
-     
       }
       
 
 
     return (
         <CheckIdleState>
+            <ConfirmCreditCardModal
+                    visible={visible}
+                    setVisible={setVisible}
+                    onPress={()=> {
+                        proceedPayment({
+                            paymentChoice,
+                            method: paymentMethod
+                        })
+                        setVisible(false)
+                    }}
+            />
             <AlertOverlay visible={loading || postComputePFLoading || cashInLoading}/>
             <Separator/>
             <View style={styles.container}>
                 <View style={styles.paymentoptions}>
                     <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD}}>Cash in Method</Text>
+                    <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start",marginTop:5}}>
+                    <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.XL} />  
+                    <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M,marginLeft: 3,marginTop: -2,marginRight: 16}}>Your toktokwallet balance is considered non-transferable depending on the cash in method used. If you cash in via Credit Card or Foreign Debit Card, you are not allowed to transfer this fund to any toktokwallet users account and/or other bank accounts. You can only use this as payments for goods and services.</Text> 
+                    </View>
                 </View>
                 <View style={styles.content}>
                     {
@@ -208,23 +242,6 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                             : cashInMethods.map((item,index)=> {
                                 return <PaymentMethod onPress={()=>ProcessPayment(item.name, item.transactionTypeId , item.id)} label={item.name}/>
                             })
-                            
-                        // <FlatList 
-                        //         alwaysBounceVertical={false}
-                        //         ListHeaderComponent={() => {
-                        //             if(cashInMethods.length > 0) return null
-                        //             if(loading) return null
-                        //             return <NoData/>
-                        //         }}
-                        //         refreshControl={<RefreshControl refreshing={loading} onRefresh={getCashInPartnerTypes} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
-                        //         showsVerticalScrollIndicator={false}
-                        //         data={cashInMethods}
-                        //         // ItemSeparatorComponent={()=><View style={styles.divider}/>}
-                        //         keyExtractor={item=>item.id}
-                        //         renderItem={({item,index})=>(
-                        //             <PaymentMethod onPress={()=>ProcessPayment(item.name, item.transactionTypeId , item.id)} label={item.name}/>
-                        //         )}
-                        //     />
                     }
                 </View>
                 <BuildingBottom/>
@@ -239,10 +256,13 @@ const styles = StyleSheet.create({
         backgroundColor:"white",
         // padding: 16,
     },
+    headerReminder: {
+        padding: 16,
+        backgroundColor:"#FFF2D5"
+    },
     paymentoptions: {
         backgroundColor: "#FFF2D5",
-        paddingHorizontal: 16,
-        height: 50,
+        padding: 16,
         justifyContent:"center"
     },
     content: {
