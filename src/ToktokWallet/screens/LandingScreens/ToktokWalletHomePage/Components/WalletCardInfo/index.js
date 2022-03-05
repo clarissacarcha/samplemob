@@ -65,7 +65,7 @@ const WalletCardInfo = ({loading})=> {
                         <View style={styles.walletContent}>
                                  <View>
                                     {
-                                    <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(+tokwaAccount.wallet.balance + +tokwaAccount.wallet.creditCardBalance)}</Text>
+                                    <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(+tokwaAccount.wallet.balance)}</Text>
                                     }         
                                     <Text style={{fontSize:FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
                                 </View>

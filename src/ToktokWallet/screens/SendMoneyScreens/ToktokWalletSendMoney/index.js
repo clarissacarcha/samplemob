@@ -95,7 +95,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                             <View>  
                                     <View style={styles.walletContent}>
                                         <View>
-                                            <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                                            <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.transferableBalance ? tokwaAccount.wallet.transferableBalance : 0)}</Text>
                                             <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Transferable Amount</Text>
                                         </View>
                                         <TouchableOpacity
