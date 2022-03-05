@@ -58,7 +58,7 @@ export const EnterAmount = ({amount , setAmount , setSwipeEnabled  , tokwaAccoun
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal:16,
-        marginTop: 55
+        marginTop: 20
     },
     amount: {
         height: SIZE.FORM_HEIGHT,
