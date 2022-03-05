@@ -57,6 +57,7 @@ export default (state = INITIAL_STATE, action) => {
           currency: {...state.wallet.currency},  
           balance: +payload.wallet.balance , 
           creditCardBalance: +payload.wallet.creditCardBalance,
+          transferableBalance: +payload.wallet.transferableBalance,
           recentTransactions: payload.transactions.recentTransactions, 
           allTransactions: payload.transactions.allTransactions,
         }

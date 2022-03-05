@@ -47,7 +47,7 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                     <View style={{height: 32}}/>
                     <View style={styles.walletContent}>
                             <View>
-                                <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>PHP {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                                <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>PHP {numberFormat(tokwaAccount.wallet.transferableBalance ? tokwaAccount.wallet.transferableBalance : 0)}</Text>
                                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Transferable Amount</Text>
                             </View>
                             <TouchableOpacity 

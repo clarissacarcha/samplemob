@@ -52,7 +52,7 @@ export const ToktokWalletBalanceInfo = ({
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>ka-toktok, did you know?</Text>
                 </View>
                 <ContentInfo
-                    balance={tokwaAccount.wallet.balance}
+                    balance={tokwaAccount.wallet.transferableBalance}
                     title="Transferable Amount"
                     body="Cash Ins via online banks, debit card, OTC bank, OTC non-bank and JC Wallet can be transferred to other toktokwallet users’ accounts and/or bank accounts."
                 />

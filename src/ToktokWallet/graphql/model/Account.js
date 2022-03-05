@@ -67,6 +67,7 @@ export const GET_MY_ACCOUNT = gql`
                 id
                 balance
                 creditCardBalance
+                transferableBalance
                 totalBalance
                 status
                 accountId
