@@ -7,6 +7,7 @@ export const GET_WALLET = gql`
             id
             balance
             creditCardBalance
+            totalBalance
             status
             accountId
             motherId

@@ -214,7 +214,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                     { message != "" && <Text style={{textAlign:"center", fontFamily: FONT.REGULAR, color: "red", marginTop: 10,marginBottom: 10, fontSize: FONT_SIZE.S}}>{message}</Text>}
                                     <Text>
                                         <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: 10}}>Current Balance: </Text>
-                                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, marginTop: 10}}>{numberFormat(tokwaAccount.wallet.balance)}</Text>
+                                        <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, marginTop: 10}}>{numberFormat(tokwaAccount.wallet.balance + tokwaAccount.wallet.creditCardBalance)}</Text>
                                     </Text>
                                 
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>

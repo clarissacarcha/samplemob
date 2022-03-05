@@ -1,13 +1,15 @@
 import React from 'react'
-import {View,StyleSheet,Text} from 'react-native'
+import {View,StyleSheet,Text,TouchableOpacity} from 'react-native'
 import { numberFormat } from 'toktokwallet/helper';
 import { 
     HeaderImageBackground,
     HeaderTitle,
     Separator,
-    CheckIdleState
+    CheckIdleState,
+    TransferableHeaderReminder
 } from 'toktokwallet/components'
 import { useSelector } from 'react-redux';
+import { VectorIcon , ICON_SET } from 'src/revamp';
 import CONSTANTS from 'common/res/constants'
 
 //SElF IMPORTS
@@ -30,11 +32,12 @@ export const ToktokWalletCashOutHomePage = ({navigation,route})=> {
                 <HeaderImageBackground>
                     <HeaderTitle label={screenLabel ?? "Fund Transfer"} />
                     <View style={styles.walletBalance}>
-                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
+                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance + tokwaAccount.wallet.creditCardBalance : 0)}</Text>
                         <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,marginBottom: 5}}>Available Balance</Text>
                     </View>
                 </HeaderImageBackground>
             </View>
+            <TransferableHeaderReminder/>
             <Separator/>
             <View style={styles.transferOptions}>
                 { tokwaAccount.constants.isFundTransferEnrolledAccountEnabled == "1" && <CashOutOption label="Enrolled Accounts" route="ToktokWalletCashOut" screenLabel={screenLabel} /> }
@@ -72,5 +75,9 @@ const styles = StyleSheet.create({
     transferOptions: {
         flex: 1,
         paddingHorizontal: 16,
+    },
+    headerReminder: {
+        padding: 16,
+        backgroundColor:"#FFF2D5"
     },
 })
