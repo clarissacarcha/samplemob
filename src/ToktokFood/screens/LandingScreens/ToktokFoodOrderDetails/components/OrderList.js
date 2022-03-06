@@ -37,6 +37,7 @@ const OrderList = ({orderDetails}) => {
     let {parentProductId, itemname, parentProductName} = item.productDetails;
     let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
     let productName = parentProductId ? parentProductName : itemname;
+    console.log(item);
     return (
       <View style={styles.listContainer}>
         {item.productDetails.filename && (
@@ -51,7 +52,7 @@ const OrderList = ({orderDetails}) => {
             <Text numberOfLines={1} style={styles.listName}>
               {productName}
             </Text>
-            <Text style={styles.seeAll}>{`PHP ${item.totalAmountWithAddons.toFixed(2)}`}</Text>
+            <Text style={styles.seeAll}>{`PHP ${item.srpAmount.toFixed(2)}`}</Text>
           </View>
           <View>
             <Text style={styles.notes}>x{item.quantity}</Text>
