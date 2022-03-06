@@ -16,8 +16,6 @@ const RestaurantItem = ({activeTab, item}) => {
   const [validImg, setValidImg] = useState(true);
   const {id} = activeTab;
 
-  console.log(item);
-
   const onRestaurantNavigate = () => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };

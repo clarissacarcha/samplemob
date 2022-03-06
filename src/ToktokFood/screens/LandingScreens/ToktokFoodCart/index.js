@@ -428,7 +428,7 @@ const MainComponent = () => {
     //   // }
     //   totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
     // }
-    // console.log(parseAmount);
+    console.log(parseAmount, temporaryCart, customerInfo);
     postResquestTakeMoney({
       variables: {
         input: {
@@ -571,7 +571,7 @@ const MainComponent = () => {
     };
     const CUSTOMER = {
       shopid: temporaryCart?.items[0].shopid,
-      company_id: String(temporaryCart?.items[0]?.companyId),
+      company_id: String(temporaryCart?.items[0]?.shopid),
       name:
         receiver.contactPerson && receiver.contactPerson !== ''
           ? receiver.contactPerson
@@ -582,7 +582,7 @@ const MainComponent = () => {
           : getMobileNumberFormat(customerInfo),
       email: customerInfo.email,
       address: location.address,
-      user_id: customerInfo.userId,
+      user_id: Number(customerInfo.toktokUserid),
       latitude: location.latitude,
       longitude: location.longitude,
       regCode: '0',
