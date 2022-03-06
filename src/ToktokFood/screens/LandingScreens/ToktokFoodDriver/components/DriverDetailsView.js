@@ -355,7 +355,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
         {renderActions()}
       </View>
 
-      <DialogMessage
+      {/* <DialogMessage
         visibility={showModal}
         title="Still Preparing Order"
         messages="Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting."
@@ -365,7 +365,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
           // setShowError(true);
           setShowModal(false);
         }}
-      />
+      /> */}
     </View>
   );
 };

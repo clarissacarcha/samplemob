@@ -158,7 +158,7 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         {renderActions()}
       </View>
 
-      <DialogMessage
+      {/* <DialogMessage
         visibility={showModal}
         title="Still Preparing Order"
         messages="Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting."
@@ -168,7 +168,7 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
           setShowModal(false);
           setEtaMinutes(45);
         }}
-      />
+      /> */}
     </View>
   );
 };
