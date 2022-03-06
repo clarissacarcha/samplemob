@@ -36,7 +36,7 @@ import {
 
 const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
-  const {location} = useSelector(state => state.toktokFood);
+  const {showError} = useSelector(state => state.toktokFood.exhaust);
 
   const [additionalMins, setAdditionalMins] = useState(0);
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState('');
@@ -44,7 +44,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
   const [newETA, setNewETA] = useState(false);
   const [newStartDateTime, setNewStartDateTime] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [showError, setShowError] = useState(false);
+  // const [showError, setShowError] = useState(false);
 
   const {
     shopDetails,
@@ -71,31 +71,31 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
   const minutesInHours = 60;
   const isFocus = useIsFocused();
 
-  useEffect(() => {
-    // Set Eta Minutes if rider picked up the order and on the way
-    if (transaction?.orderStatus === 'f' && riderDetails && etaMinutes === 0) {
-      onSetEta();
-    }
+  // useEffect(() => {
+  //   // Set Eta Minutes if rider picked up the order and on the way
+  //   if (transaction?.orderStatus === 'f' && riderDetails && etaMinutes === 0) {
+  //     onSetEta();
+  //   }
 
-    if (transaction?.orderStatus === 'po' && etaMinutes === 0) {
-      setEtaMinutes(45);
-    }
+  //   if (transaction?.orderStatus === 'po' && etaMinutes === 0) {
+  //     setEtaMinutes(45);
+  //   }
 
-    return () => clearInterval();
-  }, [riderDetails, transaction]);
+  //   return () => clearInterval();
+  // }, [riderDetails, transaction]);
 
-  useEffect(() => {
-    if (etaMinutes > 0) {
-      setTimeout(() => {
-        setEtaMinutes(etaMinutes - 1);
-      }, 60000);
-    }
+  // useEffect(() => {
+  //   if (etaMinutes > 0) {
+  //     setTimeout(() => {
+  //       setEtaMinutes(etaMinutes - 1);
+  //     }, 60000);
+  //   }
 
-    if (etaMinutes === 0 && orderStatus === 'po') {
-      setShowModal(true);
-    }
-    return () => clearTimeout();
-  });
+  //   if (etaMinutes === 0 && orderStatus === 'po') {
+  //     setShowModal(true);
+  //   }
+  //   return () => clearTimeout();
+  // });
 
   // useEffect(() => {
   //   if (isFocus && estimatedDeliveryTime != '') {
@@ -269,16 +269,18 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
     const getTimeByStatus = status => {
       switch (status) {
         case 'po':
+        case 'rp':
           if (showError) {
             return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
           }
           return 'Estimated Delivery Time: 15-45 Minutes';
-        case 'rp':
-          return 'Estimated Delivery Time: 15-45 Minutes';
         // return onGetPickupDate();
         case 'f':
-          return onGetPickupDate();
-        // return 'Rider is nearby your location. Thank you for patiently waiting.';
+          if (showError) {
+            return 'Rider is nearby your location. Thank you for patiently waiting.';
+          }
+          return 'Estimated Delivery Time: 15-45 Minutes';
+        // return onGetPickupDate();
         default:
           return 'Estimated Delivery Time: 15-45 Minutes';
       }
@@ -360,7 +362,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
         type="warning"
         onCloseModal={() => {
           setEtaMinutes(45);
-          setShowError(true);
+          // setShowError(true);
           setShowModal(false);
         }}
       />
@@ -447,10 +449,9 @@ const styles = StyleSheet.create({
   },
   timeContainer: {
     flexDirection: 'row',
-    // marginTop: verticalScale(5),
-    alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingHorizontal: moderateScale(10),
+    paddingHorizontal: moderateScale(15),
+    // width: '95%',
   },
   title: {
     fontSize: FONT_SIZE.L,

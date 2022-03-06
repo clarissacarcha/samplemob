@@ -22,6 +22,10 @@ const INITIAL_STATE = {
   shippingVoucher: [],
   location: {},
   receiver: {},
+  exhaust: {
+    minutesRemaining: 0,
+    showError: false,
+  },
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -52,6 +56,8 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, promotionVoucher: action.payload};
     case 'SET_TOKTOKFOOD_SHIPPING':
       return {...state, shippingVoucher: action.payload};
+    case 'SET_TOKTOKFOOD_EXHAUST':
+      return {...state, exhaust: action.payload};
     default:
       return state;
   }
