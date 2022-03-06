@@ -358,8 +358,6 @@ const ToktokFoodDriver = ({route, navigation}) => {
         riderDetails={riderDetails}
         transaction={transaction}
         referenceNum={referenceNum}
-        showError={showError}
-        minutesRemaining={minutes}
       />
     );
   };
@@ -374,8 +372,6 @@ const ToktokFoodDriver = ({route, navigation}) => {
         riderDetails={riderDetails}
         transaction={transaction}
         referenceNum={referenceNum}
-        showError={showError}
-        minutesRemaining={minutes}
       />
     );
   }, [transaction, riderDetails, referenceNum, showError]);
