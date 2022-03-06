@@ -11,7 +11,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
   // deliveryFee = deliveryFee ? deliveryFee : 0;
   // subtotal = subtotal ? subtotal : 0;
   const {shippingVoucher, temporaryCart} = useContext(VerifyContext);
-  const [totalBasket, setTotalBasket] = useState(temporaryCart.totalAmount);
+  const [totalBasket, setTotalBasket] = useState(temporaryCart.totalAmountWithAddons);
   const [totalShipping, setTotalShipping] = useState(0);
   const [totalPromotions, setTotalPromotions] = useState(0);
   const [totalDelivery, setTotalDelivery] = useState(0);
@@ -115,50 +115,52 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
 
   return (
     <View style={[styles.sectionContainer, styles.totalContainer]}>
-      {forDelivery && (
-        <>
-          <View style={styles.header}>
-            <Text>Subtotal</Text>
-            <Text style={styles.subtotal}>{`PHP ${totalBasket?.toFixed(2)}`}</Text>
-          </View>
-          {(totalPromotions > 0 || totalDeal > 0) && (
-            <View style={styles.header}>
-              <Text>Item discount</Text>
-              <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal).toFixed(2)}`}</Text>
-            </View>
-          )}
-
-          <View style={styles.header}>
-            <Text>Delivery Fee</Text>
-            <View style={styles.deliveryFee}>
-              {/* {(autoShipping?.success || shippingVoucher.length > 0) && (
-                <Text style={styles.deliveryFeeText}>{`\u20B1${deliveryFee.toFixed(2)}`}</Text>
-              )} */}
-              <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
-            </View>
-          </View>
-
-          {(totalDelivery > 0 || totalShipping > 0) && (
-            <View style={styles.header}>
-              <Text>Delivery fee discount</Text>
-              <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
-            </View>
-          )}
-
-          <View style={styles.divider} />
-        </>
+      {/* {forDelivery && ( */}
+      {/* <> */}
+      <View style={styles.header}>
+        <Text>Subtotal</Text>
+        <Text style={styles.subtotal}>{`PHP ${totalBasket?.toFixed(2)}`}</Text>
+      </View>
+      {(totalPromotions > 0 || totalDeal > 0) && (
+        <View style={styles.header}>
+          <Text>Item Discount</Text>
+          <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal).toFixed(2)}`}</Text>
+        </View>
       )}
+
+      {forDelivery && (
+        <View style={styles.header}>
+          <Text>Delivery Fee</Text>
+          <View style={styles.deliveryFee}>
+            {/* {(autoShipping?.success || shippingVoucher.length > 0) && (
+          <Text style={styles.deliveryFeeText}>{`\u20B1${deliveryFee.toFixed(2)}`}</Text>
+        )} */}
+            <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
+          </View>
+        </View>
+      )}
+
+      {(totalDelivery > 0 || totalShipping > 0) && (
+        <View style={styles.header}>
+          <Text>Delivery Fee Discount</Text>
+          <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
+        </View>
+      )}
+
+      <View style={styles.divider} />
+      {/* </> */}
+      {/* )} */}
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
           <Text style={styles.totalPrice}>{`PHP ${(
-            temporaryCart.totalAmountWithAddons +
+            totalBasket +
             deliveryFee -
             totalSumSF -
             (totalPromotions + totalDeal)
           ).toFixed(2)}`}</Text>
         ) : (
-          <Text style={styles.totalPrice}>{`PHP ${temporaryCart.totalAmount.toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${totalBasket - totalSumSF - (totalPromotions + totalDeal)}`}</Text>
         )}
       </View>
     </View>

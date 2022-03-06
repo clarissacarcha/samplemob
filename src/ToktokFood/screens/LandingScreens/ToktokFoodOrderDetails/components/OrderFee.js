@@ -22,7 +22,7 @@ const getShippingDiscount = (promoDetails, deliveryFee) => {
 };
 
 const OrderFee = ({data, forDelivery}) => {
-  let {originalShippingFee, actualTotalamount, deliveryAmount, promoDetails, totalAmount} = data;
+  let {originalShippingFee, actualTotalamount, deliveryAmount, promoDetails, promoDiscounts, totalAmount} = data;
   let deliveryFee = deliveryAmount ? deliveryAmount : 0;
   // let withShippingVoucher = promoDetails ? getShippingDiscount(promoDetails, originalShippingFee) : deliveryFee;
   // console.log(actualTotalamount, deliveryAmount, originalShippingFee);
@@ -32,6 +32,14 @@ const OrderFee = ({data, forDelivery}) => {
         <Text>Subtotal</Text>
         <Text style={styles.subtotal}>{`PHP ${totalAmount.toFixed(2)}`}</Text>
       </View>
+
+      {promoDiscounts && (
+        <View style={styles.header}>
+          <Text>Item Discount</Text>
+          <Text style={styles.subtotal}>{`-PHP ${promoDiscounts.toFixed(2)}`}</Text>
+        </View>
+      )}
+
       {forDelivery && (
         <View style={styles.header}>
           <Text>Delivery Fee</Text>
