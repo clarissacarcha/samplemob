@@ -168,6 +168,7 @@ export const FoodList = props => {
           ]}>
           <View style={{flex: 1}}>
             <Text style={styles.listText}>{item.itemname}</Text>
+
             {resellerDiscount?.referralShopRate > 0 ? (
               <ResellerPrice item={item} />
             ) : (
@@ -178,6 +179,12 @@ export const FoodList = props => {
                   </Text>
                 )}
                 <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
+
+                {activeTab?.id === '0' && (
+                  <View style={styles.voucherContainer}>
+                    <Text style={styles.voucherText}>Piso Chibog</Text>
+                  </View>
+                )}
               </View>
             )}
 
@@ -351,6 +358,7 @@ const styles = StyleSheet.create({
     // flexShrink: 1,
   },
   priceContainer: {
+    alignItems: 'center',
     flexDirection: 'row',
     paddingVertical: 3,
   },

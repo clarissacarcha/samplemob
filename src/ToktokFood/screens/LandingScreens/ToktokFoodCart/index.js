@@ -796,12 +796,14 @@ const MainComponent = () => {
         <MyOrderList />
         <Separator />
 
-        {orderType === 'Delivery' && (
+        {/*  {orderType === 'Delivery' && (
           <>
             <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} />
             <Separator />
           </>
-        )}
+        )} */}
+        <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} />
+        <Separator />
 
         {/* <AlsoOrder /> */}
         {delivery === null ? (

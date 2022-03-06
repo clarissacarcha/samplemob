@@ -57,7 +57,7 @@ const MainComponent = () => {
     },
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails);
-      // console.log(getProductDetails);
+      console.log(getProductDetails);
       getTemporaryCart({
         variables: {
           input: {
@@ -144,9 +144,9 @@ const MainComponent = () => {
     const {itemname, basePrice, price, resellerDiscount, summary} = productDetails;
     return (
       <View style={styles.foodContainer}>
-        {/* <View>
-          <VoucherList isReseller />
-        </View> */}
+        <View>
+          <VoucherList isReseller={resellerDiscount?.referralShopRate > 0} />
+        </View>
 
         {/* {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge />} */}
         <View style={styles.foodDetails}>
