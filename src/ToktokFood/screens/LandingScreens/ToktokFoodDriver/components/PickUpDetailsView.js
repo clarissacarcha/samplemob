@@ -23,10 +23,10 @@ import moment from 'moment';
 
 const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
-
+  const {showError} = useSelector(state => state.toktokFood.exhaust);
   const [etaMinutes, setEtaMinutes] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [showError, setShowError] = useState(false);
+  // const [showError, setShowError] = useState(false);
 
   // const {location} = useSelector(state => state.toktokFood);
   const {shopDetails, orderStatus, isconfirmed, address, dateOrderProcessed, dateReadyPickup, isdeclined, dateOrdered} =
@@ -40,28 +40,30 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
   );
   const date = orderStatus === 'po' ? dateOrderProcessed : dateReadyPickup;
 
-  useEffect(() => {
-    // Set Eta Minutes if rider picked up the order and on the way
-    if (orderStatus === 'po' && etaMinutes === 0) {
-      const edt = moment(date, 'YYYY-MM-DD HH:mm:ss').add(1, 'minutes').format('YYYY-MM-DD HH:mm:ss');
-      const timeNow = moment().format('YYYY-MM-DD HH:mm:ss');
-      if (edt <= timeNow) {
-        setShowModal(true);
-      }
-      setEtaMinutes(60);
-    }
+  // useEffect(() => {
+  //   // Set Eta Minutes if rider picked up the order and on the way
+  //   if (orderStatus === 'po' && etaMinutes === 43) {
+  //     // const edt = moment(date, 'YYYY-MM-DD HH:mm:ss').add(1, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+  //     // const timeNow = moment().format('YYYY-MM-DD HH:mm:ss');
+  //     // if (edt <= timeNow) {
+  //     //   setShowModal(true);
+  //     // }
+  //     setShowModal(true);
+  //     // setEtaMinutes(60);
+  //   }
 
-    // console.log(etaMinutes, orderStatus);
-  }, [orderStatus, etaMinutes]);
+  //   // console.log(etaMinutes, orderStatus);
+  // }, [orderStatus, etaMinutes]);
 
-  useEffect(() => {
-    if (etaMinutes > 0) {
-      setTimeout(() => {
-        setEtaMinutes(etaMinutes - 1);
-      }, 1000);
-    }
-    return () => clearTimeout();
-  });
+  // useEffect(() => {
+  //   if (etaMinutes > 0) {
+  //     setTimeout(() => {
+  //       setEtaMinutes(etaMinutes - 1);
+  //       console.log('etaMinutes', etaMinutes);
+  //     }, 60000);
+  //   }
+  //   return () => clearTimeout();
+  // }, [etaMinutes]);
 
   // const onSetBackgroundTimer = () => {
   //   console.log(date);
@@ -82,11 +84,10 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         case 'p':
           return 'Estimated Pickup Time: ASAP';
         case 'po':
+        case 'rp':
           if (showError) {
             return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
           }
-          return 'Estimated Pickup Time: 15-45 Minutes';
-        case 'rp':
           return 'Estimated Pickup Time: ASAP';
         default:
           return '';
@@ -97,7 +98,9 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
       return (
         <View style={styles.timeContainer}>
           <Image resizeMode="contain" source={time} style={styles.timeImg} />
-          <Text style={styles.time}>{getTimeByStatus()}</Text>
+          <Text numberOfLines={2} style={styles.time}>
+            {getTimeByStatus()}
+          </Text>
         </View>
       );
     }
@@ -155,16 +158,17 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
         {renderActions()}
       </View>
 
-      <DialogMessage
+      {/* <DialogMessage
         visibility={showModal}
         title="Still Preparing Order"
         messages="Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting."
         type="warning"
         onCloseModal={() => {
-          setShowError(true);
+          // setShowError(true);
           setShowModal(false);
+          setEtaMinutes(45);
         }}
-      />
+      /> */}
     </View>
   );
 };
@@ -272,13 +276,16 @@ const styles = StyleSheet.create({
   time: {
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
-    // fontWeight: '500',
+    fontWeight: 'bold',
     marginLeft: moderateScale(5),
+    // marginTop: verticalScale(2),
     textAlign: 'center',
   },
   timeContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     paddingHorizontal: moderateScale(15),
+    width: '95%',
     // marginTop: verticalScale(10),
   },
   timeImg: {

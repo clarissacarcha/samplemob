@@ -27,6 +27,7 @@ import {
 
 const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
   const [additionalMins, setAdditionalMins] = useState(0);
+  const {showError} = useSelector(state => state.toktokFood.exhaust);
   const [newETA, setNewETA] = useState(false);
   const {
     // latitude,
@@ -80,7 +81,7 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
   });
 
   const isShowIcon = useMemo(() => {
-    return orderStatus !== 'p' || false;
+    return true;
   }, [orderStatus]);
 
   const onSetEta = () => {
@@ -181,11 +182,10 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
         case 'p':
           return 'Estimated Pickup Time: ASAP';
         case 'po':
-          if (edt <= timeNow) {
+        case 'rp':
+          if (showError) {
             return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
           }
-          return 'Estimated Pickup Time: 15-45 Minutes';
-        case 'rp':
           return 'Estimated Pickup Time: ASAP';
         default:
           return '';
@@ -227,12 +227,19 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
     const getTimeByStatus = status => {
       switch (status) {
         case 'po':
+        case 'rp':
+          if (showError) {
+            return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
+          }
           return 'Estimated Delivery Time: 15-45 Minutes';
         // case 'rp':
         //   return onGetPickupDate();
         case 'f':
-          return onGetPickupDate();
-        // return 'Rider is nearby your location. Thank you for patiently waiting.';
+          if (showError) {
+            return 'Rider is nearby your location. Thank you for patiently waiting.';
+          }
+          return 'Estimated Delivery Time: 15-45 Minutes';
+        // return onGetPickupDate();
         // return `${etaMinutes} Minutes`;
         default:
           return 'Estimated Delivery Time: 15-45 Minutes';

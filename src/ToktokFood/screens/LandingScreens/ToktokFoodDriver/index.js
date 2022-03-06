@@ -19,6 +19,7 @@ import {removeEstimatedDeliveryTime} from 'toktokfood/helper/estimatedDeliveryTi
 import {CancelOrder, DriverAnimationView, DriverDetailsView, PickUpDetailsView, RiderMapView} from './components';
 
 const ToktokFoodDriver = ({route, navigation}) => {
+  const {showError, minutesRemaining} = useSelector(state => state.toktokFood.exhaust);
   const referenceNum = route.params ? route.params.referenceNum : '';
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -34,6 +35,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
     type: '',
     reasons: '',
   });
+  // const [showError, setShowError] = useState(false);
   const checkOrderResponse5mins = useRef(null);
   const getRiderDetailsInterval = useRef(null);
   const preparingOrderInterval = useRef(null);
@@ -116,6 +118,22 @@ const ToktokFoodDriver = ({route, navigation}) => {
   useEffect(() => {
     if (transaction?.orderStatus === 'p' && minutes === 0) {
       setMinutes(5);
+    } else if (transaction?.orderStatus === 'po' || transaction?.orderStatus === 'rp') {
+      const dateProcessed = moment(transaction?.dateOrderProcessed).add(45, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+      const remainingMinutes = moment(dateProcessed).diff(moment(), 'minutes');
+      console.log('remainingMinutes', remainingMinutes);
+      const payload = {minutesRemaining: remainingMinutes, showError: false};
+      dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
+      setMinutes(remainingMinutes);
+    } else if (transaction?.orderStatus === 'f') {
+      if (riderDetails) {
+        const {duration} = riderDetails;
+        const remainingMinutes = duration + 5;
+        console.log('remainingMinutes', remainingMinutes);
+        const payload = {minutesRemaining: remainingMinutes, showError: false};
+        dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
+        setMinutes(remainingMinutes);
+      }
     }
 
     return () => clearInterval();
@@ -125,9 +143,11 @@ const ToktokFoodDriver = ({route, navigation}) => {
     if (minutes > 0) {
       setTimeout(() => {
         setMinutes(minutes - 1);
+        const payload = {minutesRemaining: minutes - 1, showError: false};
+        dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
       }, 60000);
     }
-
+    console.log('taena', minutes);
     if (minutes === 0 && transaction?.orderStatus === 'p') {
       setShowDialogMessage({
         title: 'No Response from Merchant',
@@ -135,6 +155,22 @@ const ToktokFoodDriver = ({route, navigation}) => {
         show: true,
         type: 'warning',
       });
+    }
+    if (
+      minutesRemaining <= 0 &&
+      !showError &&
+      (transaction?.orderStatus === 'po' || transaction?.orderStatus === 'rp')
+    ) {
+      setShowDialogMessage({
+        title: 'Still Preparing Order',
+        message: 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.',
+        show: true,
+        type: 'warning',
+      });
+    }
+    if (minutesRemaining <= 0 && !showError && transaction?.orderStatus === 'f') {
+      const payload = {minutesRemaining: minutes, showError: true};
+      dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
     }
     return () => clearTimeout();
   }, [minutes]);
@@ -299,6 +335,9 @@ const ToktokFoodDriver = ({route, navigation}) => {
     if (title === 'No Response from Merchant') {
       setSeconds(300);
       setMinutes(5);
+    } else if (title === 'Still Preparing Order') {
+      const payload = {minutesRemaining: minutes, showError: true};
+      dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
     } else {
       if (title !== 'Order Complete' || title !== 'OOPS! Order Declined!' || title !== 'Order Cancelled') {
         let tab = selectedTab(title);
@@ -335,7 +374,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         referenceNum={referenceNum}
       />
     );
-  }, [transaction, riderDetails, referenceNum]);
+  }, [transaction, riderDetails, referenceNum, showError]);
 
   return (
     <View style={{flex: 1, backgroundColor: '#F9F9F9'}}>
@@ -385,7 +424,9 @@ const ToktokFoodDriver = ({route, navigation}) => {
         btn1Title="Browse Menu"
         btn2Title="OK"
         hasTwoButtons={
-          showDialogMessage.title !== 'Order Complete' && showDialogMessage.title !== 'No Response from Merchant'
+          showDialogMessage.title !== 'Order Complete' &&
+          showDialogMessage.title !== 'No Response from Merchant' &&
+          showDialogMessage.title !== 'Still Preparing Order'
         }
       />
       <CancelOrder

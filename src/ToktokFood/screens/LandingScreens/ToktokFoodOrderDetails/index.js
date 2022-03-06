@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useRef, useMemo} from 'react';
 import {ScrollView, StyleSheet, View, Alert, Text} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import BackgroundTimer from 'react-native-background-timer';
 
@@ -33,7 +33,7 @@ import {useIsFocused} from '@react-navigation/native';
 import moment from 'moment';
 
 const ToktokFoodOrderDetails = ({route, navigation}) => {
-  const {price} = useSelector(state => state.toktokFood.totalAmount);
+  const {minutesRemaining, showError} = useSelector(state => state.toktokFood.exhaust);
   const referenceNum = route.params ? route.params.referenceNum : '';
   const orderStatus = route.params ? route.params.orderStatus : '';
 
@@ -45,6 +45,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const checkOrderResponse5mins = useRef(null);
   const getRiderDetailsInterval = useRef(null);
   const isFocus = useIsFocused();
+  const dispatch = useDispatch();
   const [showDialogMessage, setShowDialogMessage] = useState({
     title: '',
     message: '',
@@ -128,6 +129,22 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   useEffect(() => {
     if (transaction?.orderStatus === 'p' && minutes === 0) {
       setMinutes(5);
+    } else if (transaction?.orderStatus === 'po' || transaction?.orderStatus === 'rp') {
+      const dateProcessed = moment(transaction?.dateOrderProcessed).add(45, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+      const remainingMinutes = moment(dateProcessed).diff(moment(), 'minutes');
+      console.log('remainingMinutes', remainingMinutes);
+      const payload = {minutesRemaining: remainingMinutes, showError};
+      dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
+      setMinutes(remainingMinutes);
+    } else if (transaction?.orderStatus === 'f') {
+      if (riderDetails) {
+        const {duration} = riderDetails;
+        const remainingMinutes = duration + 5;
+        console.log('remainingMinutes', remainingMinutes);
+        const payload = {minutesRemaining: remainingMinutes, showError: false};
+        dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
+        setMinutes(remainingMinutes);
+      }
     }
 
     return () => clearInterval();
@@ -137,6 +154,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     if (minutes > 0) {
       setTimeout(() => {
         setMinutes(minutes - 1);
+        const payload = {minutesRemaining: minutes - 1, showError: false};
+        dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
       }, 60000);
     }
 
@@ -147,6 +166,22 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         show: true,
         type: 'warning',
       });
+    }
+    if (
+      minutesRemaining <= 0 &&
+      !showError &&
+      (transaction?.orderStatus === 'po' || transaction?.orderStatus === 'rp')
+    ) {
+      setShowDialogMessage({
+        title: 'Still Preparing Order',
+        message: 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.',
+        show: true,
+        type: 'warning',
+      });
+    }
+    if (minutesRemaining <= 0 && !showError && transaction?.orderStatus === 'f') {
+      const payload = {minutesRemaining: minutes, showError: true};
+      dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
     }
     return () => clearTimeout();
   }, [minutes]);
@@ -309,11 +344,19 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const onCloseModal = () => {
     let {title} = showDialogMessage;
     setShowDialogMessage(prev => ({...prev, show: false}));
-    if (title !== 'Order Complete' || title !== 'OOPS! Order Declined!' || title !== 'Order Cancelled') {
-      let tab = selectedTab(title);
-      navigation.navigate('ToktokFoodOrderTransactions', {tab});
+    if (title === 'No Response from Merchant') {
       setSeconds(300);
       setMinutes(5);
+    } else if (title === 'Still Preparing Order') {
+      const payload = {minutesRemaining: minutes, showError: true};
+      dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
+    } else {
+      if (title !== 'Order Complete' || title !== 'OOPS! Order Declined!' || title !== 'Order Cancelled') {
+        let tab = selectedTab(title);
+        navigation.navigate('ToktokFoodOrderTransactions', {tab});
+        setSeconds(300);
+        setMinutes(5);
+      }
     }
   };
 
@@ -350,7 +393,9 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         btn1Title={`Browse${'\n'}Restaurant`}
         btn2Title="OK"
         hasTwoButtons={
-          showDialogMessage.title !== 'Order Complete' && showDialogMessage.title !== 'No Response from Merchant'
+          showDialogMessage.title !== 'Order Complete' &&
+          showDialogMessage.title !== 'No Response from Merchant' &&
+          showDialogMessage.title !== 'Still Preparing Order'
         }
       />
       <HeaderImageBackground searchBox={false}>
