@@ -208,7 +208,7 @@ export const Receipt = connect(null,mapDispatchtoProps)(({children, setVisible,f
                </Text>
 
                <Text style={styles.refDate}>
-                    {moment(refDate).tz('Asia/Manila').format('MMM DD YYYY h:mm a')}
+                    {moment(refDate).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}
                </Text>
 
               

@@ -9,6 +9,7 @@ import {
   TouchableHighlight,
   Platform,
   Linking,
+  SafeAreaView,
 } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import {connect} from 'react-redux';
@@ -145,7 +146,11 @@ const Splash = ({setConstants}) => {
 
   // Updated Version = ALLOW
   if (checkPoint === 'A') {
-    return <Nav />;
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <Nav />
+      </SafeAreaView>
+    );
   }
 
   if (checkPoint === 'NO_NETWORK_CONNECTION') {
@@ -224,6 +229,9 @@ const mapDispatchToProps = dispatch => ({
 export default connect(null, mapDispatchToProps)(Splash);
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   splash: {
     flex: 1,
     justifyContent: 'center',

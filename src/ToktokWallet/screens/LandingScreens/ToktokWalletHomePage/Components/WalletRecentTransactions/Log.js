@@ -63,12 +63,12 @@ const Log = ({
                 onPress={OnThrottledPress}
             >
                 <View style={styles.transactionDetails}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{name}</Text>
-                    <Text style={{color: "#929191",fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR}}>{phrase}</Text>
+                    <Text numberOfLines={1} style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{name}</Text>
+                    <Text numberOfLines={1} style={{color: "#929191",fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR}}>{phrase}</Text>
                 </View>
                 <View style={styles.transactionAmount}>
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR , color: amountcolor}}>{transactionAmount}</Text>
-                    <Text style={{color: "#929191",fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR, alignSelf: "flex-end"}}>{referenceDate}</Text>
+                    <Text numberOfLines={1} style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR , color: amountcolor}}>{transactionAmount}</Text>
+                    <Text numberOfLines={1} style={{color: "#929191",fontSize: FONT_SIZE.S,fontFamily: FONT.REGULAR, alignSelf: "flex-end"}}>{referenceDate}</Text>
                 </View>
 
             </TouchableOpacity>
@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     },
     transactionDetails: {
         flex: 1,
+        paddingRight: 10,
     },
     transactionAmount: {
         flexBasis: "auto",
@@ -106,3 +107,4 @@ const styles = StyleSheet.create({
 })
 
 export default Log
+

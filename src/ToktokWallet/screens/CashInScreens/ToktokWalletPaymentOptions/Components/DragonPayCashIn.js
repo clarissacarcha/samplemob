@@ -1,5 +1,5 @@
 import React , {useEffect,useState , useRef} from 'react'
-import { View , Text , StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View , Text , StyleSheet, TextInput, TouchableOpacity, Alert ,Platform } from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import { Separator , DisabledButton , BuildingBottom } from 'toktokwallet/components'
 import { useAccount } from 'toktokwallet/hooks'
@@ -9,6 +9,8 @@ import { useSelector , useDispatch } from 'react-redux'
 import CONSTANTS from 'common/res/constants'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert , usePrompt } from 'src/hooks'
+import { useDebounce } from 'toktokwallet/hooks'
+import CheckBox from 'react-native-check-box'
 import { YellowButton } from 'src/revamp'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS
@@ -38,6 +40,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
     const [maxLimitMessage,setMaxLimitMessage] = useState("")
     const [isFocus,setIsFocus] = useState(false)
     const [inputWidth,setInputWidth] = useState(inputAmountLength["0"])
+    const [isCertify, setCertify] = useState(true)
     const inputRef = useRef(null);
 
     const dispatch = useDispatch();
@@ -120,7 +123,7 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
         //  if(limitMessage) return setMessage(limitMessage)
          if(num == "")return setMessage("")
          if(num < 1) return setMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
-         setDisablebtn(false)
+        //  setDisablebtn(false)
          setMessage("")
          
      }
@@ -135,8 +138,21 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
         showInput()
     },[])
 
+    const checkLimit = useDebounce(async (amount)=> {
+        console.log("Typing ")
+        const checkLimit = await AmountLimitHelper.postCheckIncomingLimit({
+            amount,
+            setErrorMessage: setMessage
+        })
+
+        if(!checkLimit) return;
+        setDisablebtn(false)
+    },1000)
+
     useEffect(()=>{
+        setDisablebtn(true)
         setInputWidth(inputAmountLength[amount.length])
+        if(amount != "")  checkLimit(amount)
     },[amount])
     
     return (
@@ -157,28 +173,30 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                                 !isFocus && amount != "" &&
                                                 <Text style={{fontFamily: FONT.BOLD,fontSize: 30,marginLeft: 10}}>{amount ? numberFormat(amount) : "0.00"}</Text>
                                             }
-                                               <TextInput
-                                                        onFocus={()=>setIsFocus(true)}
-                                                        onBlur={()=>{
-                                                            setIsFocus(false)
-                                                        }}
-                                                        caretHidden={!isFocus}
-                                                        value={amount}
-                                                        ref={inputRef}
-                                                        // style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent',zIndex: 1}}
-                                                        style={{textAlign:"center", marginTop: 12,fontSize: 32, fontFamily: FONT.BOLD, height: '100%', width: inputWidth, ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})}}
-                                                        keyboardType="numeric"
-                                                        returnKeyType="done"
-                                                        placeholder={amount == "" ? "0.00" : ""}
-                                                        placeholderTextColor="black"
-                                                        onChangeText={changeAmountText}
-                                                        textAlign="right"
-                                                        textAlignVertical="center"
-                                                        // onContentSizeChange={(e)=> {
-                                                        //     setInputWidth(e.nativeEvent.contentSize.width)
-                                                        // }}
-                                                    />
-                                            {/* <FIcon5 name="pen" style={{ alignSelf:"center", marginLeft: 15}} size={20}/> */}
+                                                <TextInput
+                                                    onFocus={()=>setIsFocus(true)}
+                                                    onBlur={()=>{
+                                                        setIsFocus(false)
+                                                    }}
+                                                    caretHidden={!isFocus}
+                                                    value={amount}
+                                                    ref={inputRef}
+                                                    keyboardType="numeric"
+                                                    returnKeyType="done"
+                                                    placeholder={amount == "" ? "0.00" : ""}
+                                                    placeholderTextColor="black"
+                                                    onChangeText={changeAmountText}
+                                                    textAlign="right"
+                                                    textAlignVertical="center"
+                                                    style={{
+                                                        fontSize: 33,
+                                                        fontFamily: FONT.BOLD,
+                                                        marginLeft: 5,
+                                                        width: inputWidth, 
+                                                        ...(!isFocus && amount != "" ? {position: 'absolute', color: 'transparent',zIndex: 1} : {})
+                                                    }}
+                                                />
+    
                                         </View>
                                         
                                     </View>
@@ -189,15 +207,46 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                     </Text>
                                 
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
+                         </View>
+                      
+                         <View style={{flex:1 ,justifyContent:"flex-end",alignItems:"center",paddingBottom: 25}}>
+                         {/* <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginBottom: 10 ,textAlign:"center"}}>
+                         Please read our Terms and Conditions before you proceed with your transaction.
+                         </Text> */}
+                    <View style={{
+                        flexDirection:"row",     
+                    }}>
+
+                    <CheckBox
+                            isChecked={isCertify}
+                            onClick={()=>{
+                                return setCertify(!isCertify)
+                            }}
+                            style={{
+                                alignSelf: "center",
+                                marginRight: 2,
+                            }}
+                        />
+
+                        <TouchableOpacity 
+                            // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
+                            style={{paddingLeft: 5}}
+                        >
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby read and accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before proceeding with my transaction.</Text>
+                        </TouchableOpacity>
+                    </View>
                         
                          </View>
+
                          <View style={styles.cashinbutton}>
                                     {
-                                        (amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "")
+                                        (!isCertify || amount < 1 || amount > transactionType.cashInLimit || disablebtn || message != "" )
                                         ? <DisabledButton label="Cash In"/>
                                         : <YellowButton label="Cash In" onPress={confirmAmount}/>
                                     }
                         </View>
+                      
                 </View>
                 <BuildingBottom/>
             </View>
@@ -234,15 +283,11 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     input: {
-        marginHorizontal: 20,
         borderRadius: 5,
         height: 60,
-        // flexShrink: 1,
-        // // flexGrow: 1,
         flex: 1,
-        width: 150,
         justifyContent:"center",
-        alignItems:"center",
+        ...(Platform.OS === "ios" ? {alignItems:"center"} : {}),
         flexDirection:"row"
       },
 })

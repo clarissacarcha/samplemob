@@ -61,6 +61,7 @@ buck-out/
 
 # Personal Notes
 MY_TODOS.md
+MY_DYNAMODB.md
 
 # Environment Variables
 src/res/environments.js

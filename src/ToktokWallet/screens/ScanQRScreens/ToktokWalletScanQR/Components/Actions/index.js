@@ -13,7 +13,7 @@ import MyQRCode from './MyQRCode'
 
 const {height,width} = Dimensions.get("window")
 
-export const Actions = ({onUploadSuccess, tokwaAccount})=> {
+export const Actions = ({onUploadSuccess, tokwaAccount , setErrMessage})=> {
 
     const alertHook = useAlert()
     const navigation = useNavigation()
@@ -54,9 +54,10 @@ export const Actions = ({onUploadSuccess, tokwaAccount})=> {
         .then(response => {
             const { values } = response; // Array of detected QR code values. Empty if nothing found.
             if(values.length == 0 ) return alertHook({message:"No QR code detected!"})
-             values.map(async (qrcode)=>{
-                await onUploadSuccess(qrcode)
-             })
+            // if(values.length == 0 ) return setErrMessage("No QR code detected!")
+            values.map(async (qrcode)=>{
+            await onUploadSuccess(qrcode)
+            })
         })
         .catch(error => console.log('Cannot detect QR code in image', error));
     }
