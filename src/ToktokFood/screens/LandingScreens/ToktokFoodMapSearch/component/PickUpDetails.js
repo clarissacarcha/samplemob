@@ -146,7 +146,7 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
           </View>
           <View style={[styles.inputWrapper]}>
             <TextInput
-              maxLength={12}
+              maxLength={10}
               style={styles.input}
               keyboardType="number-pad"
               placeholder="Contact Person's Number"

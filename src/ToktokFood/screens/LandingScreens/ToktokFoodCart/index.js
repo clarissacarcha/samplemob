@@ -578,7 +578,7 @@ const MainComponent = () => {
           : `${customerInfo.firstName} ${customerInfo.lastName}`,
       contactnumber:
         receiver.contactPersonNumber && receiver.contactPersonNumber !== ''
-          ? receiver.contactPersonNumber
+          ? getMobileNumberFormat({conno: receiver.contactPersonNumber})
           : getMobileNumberFormat(customerInfo),
       landmark: receiver.landmark && receiver.landmark !== '' ? receiver.landmark : '',
       email: customerInfo.email,
