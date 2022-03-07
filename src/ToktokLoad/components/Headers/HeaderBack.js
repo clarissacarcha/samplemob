@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
   },
   backContainer: {
     paddingHorizontal: 15,
-    flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
     flexDirection: "row"

@@ -25,7 +25,7 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={"toktokload"} />,
+    headerTitle: () => <HeaderTitle label={"Payment Summary"} />,
   });
 
   const { loads, mobileNumber } = route.params;
@@ -79,19 +79,19 @@ export const ToktokLoadSummary = ({ navigation, route }) => {
         }
       >
         <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Payment Summary</Text>
+          <Text style={styles.headerText}>Review and Confirm</Text>
         </View>
         <SummaryDetails
           loadDetails={loads?.loadDetails ? loads.loadDetails : loads}
           mobileNumber={mobileNumber}
         />
-        <Separator />
+        <View style={styles.line} />
         <PaymentMethod
           loadDetails={loads?.loadDetails ? loads.loadDetails : loads}
           getMyAccount={getMyAccount}
           onCashIn={onCashIn}
         />
-        <Separator />
+        <View style={styles.line} />
       </ScrollView>
       <PayNowButton loadDetails={loads?.loadDetails ? loads.loadDetails : loads } mobileNumber={mobileNumber} />
     </View>
@@ -104,17 +104,20 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
   headerContainer: {
-    alignItems: "center",
-    marginTop: moderateScale(20),
-    marginBottom: moderateScale(30)
+    backgroundColor: "#F6841F70",
+    paddingHorizontal: moderateScale(25),
+    paddingVertical: moderateScale(20)
   },
   headerText: {
-    color: "#F6841F",
-    fontSize: FONT_SIZE.L,
+    fontSize: FONT_SIZE.M,
     fontFamily: FONT.BOLD
   },
   separator: {
     height: moderateScale(30),
     backgroundColor: "#F7F7FA"
-  }
+  },
+  line: {
+    height: 1,
+    backgroundColor: "#F6841F"
+  },
 })

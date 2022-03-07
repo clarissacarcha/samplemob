@@ -45,3 +45,11 @@ export const GET_LOAD_ITEMS = gql`
     }
   }
 `
+export const GET_SEARCH_LOAD_ITEMS = gql`
+  query getSearchLoadItems($input: GetSearchLoadItemsInput) {
+    getSearchLoadItems(input: $input) {
+      ${loadDetails}
+    }
+  }
+`
+

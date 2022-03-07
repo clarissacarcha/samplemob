@@ -13,7 +13,7 @@ export const OrangeButton = ({label, disabled, onPress})=> {
       disabled={disabled}
       style={[
         styles.container,
-        {  backgroundColor: disabled ? "#DADADA" : "#F6841F" }
+        {  backgroundColor: disabled ? "#F6841F70" : "#F6841F" }
       ]}
     >
       <Text style={styles.label}>{label}</Text>

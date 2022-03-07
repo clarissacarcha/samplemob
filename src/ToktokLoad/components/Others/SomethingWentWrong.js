@@ -17,7 +17,7 @@ export const SomethingWentWrong = ({onRefetch, error}) => {
       <Image source={SomethingWrong} style={styles.image} resizeMode={'contain'} />
       <Text style={styles.text}>Oops! Something went wrong...</Text>
       { networkError && <Text style={styles.text}>Please check your internet connection</Text> }
-      { graphQLErrors.length > 0 && <Text style={styles.text}>{graphQLErrors[0].message}</Text> }
+      { graphQLErrors?.length > 0 && <Text style={styles.text}>{graphQLErrors[0].message}</Text> }
       {onRefetch && (
         <TouchableOpacity onPress={onRefetch} style={styles.autoFill}>
           <Text style={{color: "white", fontSize: FONT_SIZE.L, fontFamily: FONTS.BOLD}}>Retry</Text>
