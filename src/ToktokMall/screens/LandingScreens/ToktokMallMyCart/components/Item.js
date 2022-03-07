@@ -28,7 +28,7 @@ export const Item = ({
 
   const CartContextData = useContext(CartContext)
   const [selected, setSelected] = useState((data.product.enabled === 1 && data.product.noOfStocks !== 0)? state : false)
-  const [qty, setQty] = useState(data.quantity || 1)
+  const [qty, setQty] = useState(1)
   const [product, setproduct] = useState({})
 
   useEffect(() => {
@@ -38,6 +38,7 @@ export const Item = ({
   useEffect(() => {
     // setQty(data.quantity)
     getRealtimeItemQuantity()
+    setQty(data.quantity)
     setproduct(data.product)    
   },[data])
 
