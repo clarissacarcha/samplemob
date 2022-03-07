@@ -198,12 +198,12 @@ const ToktokFoodDriver = ({route, navigation}) => {
     };
   }, [seconds, transaction]);
 
-  useEffect(() => {
-    handleMapRider();
-    return () => {
-      BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
-    };
-  }, [riderSeconds, isFocus]);
+  // useEffect(() => {
+  //   handleMapRider();
+  //   return () => {
+  //     BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
+  //   };
+  // }, [riderSeconds, isFocus]);
 
   const handleGetTransactionByRefNum = () => {
     setTimeout(() => {

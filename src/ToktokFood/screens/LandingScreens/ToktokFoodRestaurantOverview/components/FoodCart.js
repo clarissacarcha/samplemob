@@ -81,7 +81,7 @@ export const FoodCart = () => {
           <Text style={styles.total}>{`${temporaryCart.cartItemsLength} ${
             temporaryCart.cartItemsLength > 1 ? 'items' : 'item'
           }`}</Text>
-          <Text style={styles.total}>Total: {temporaryCart.totalAmountWithAddons.toFixed(2)}</Text>
+          <Text style={styles.total}>Total : PHP {temporaryCart.totalAmountWithAddons.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
           disabled={temporaryCart.cartItemsLength == 0}

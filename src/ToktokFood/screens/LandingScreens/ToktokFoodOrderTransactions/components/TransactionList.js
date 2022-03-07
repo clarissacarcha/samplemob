@@ -40,6 +40,7 @@ export const TransactionList = props => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getTransactions}) => {
+      console.log('getTransactions', getTransactions);
       setTransactionList(getTransactions);
     },
   });
@@ -93,7 +94,7 @@ export const TransactionList = props => {
     getOrderTransactions({
       variables: {
         input: {
-          userId: `${customerInfo.userId}`,
+          userId: `${customerInfo.toktokUserid}`,
           orderStatus: orderStatus,
           page: 0,
           limit: 10,
