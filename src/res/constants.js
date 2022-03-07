@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.30.0'; // Used for Version Check
+export const APP_VERSION = '1.30.4'; // Used for Version Check
 export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
 export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
 export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
@@ -20,20 +20,8 @@ export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 
 /* LOCAL PORTS */
 
-// export const PROTOCOL = 'http';
-// export const HOST_PORT = '192.168.0.102:3000'; // Myutini
-
 export const PROTOCOL = 'https';
 export const HOST_PORT = 'graphql.toktok.ph:2096'; // Test
-
-// export const TOKTOK_FOOD_PROTOCOL = 'http';
-// export const TOKTOK_FOOD_PROTOCOL_HOST_PORT = 'localhost:3002';
-
-// export const PROTOCOL = 'https';
-// export const HOST_PORT = 'graphql.toktok.ph:2096'; // Prod
-
-// export const TOKTOK_WALLET_PROTOCOL = 'http';
-// export const TOKTOK_WALLET_PROTOCOL_HOST_PORT = '192.168.0.103:3100';
 
 export const COLORS = {
   YELLOW: '#FDBA1C',

@@ -25,6 +25,7 @@ export const ContextProvider = ({children})=> {
     const [address,setAddress] = useState("")
     const [amount,setAmount] = useState("")
     const [note,setNote] = useState("")
+    const [emailAddress,setEmailAddress] = useState("")
     const [savedAccounts,setSaveAccounts] = useState([])
     const [banks,setBanks] = useState([])
     const [activeAccount,setActiveAccount] = useState(null)
@@ -62,6 +63,8 @@ export const ContextProvider = ({children})=> {
                 setAmount,
                 note,
                 setNote,
+                emailAddress,
+                setEmailAddress,
                 savedAccounts,
                 setSaveAccounts,
                 banks,

@@ -97,7 +97,7 @@ const SuccessfulCashOutModal = ({visible, setVisible, cashoutLogParams, tokwaAcc
                      {
                         tokwaAccount.constants.UbFundTransferType == "api" &&
                         <>
-                        <TransactionInfo label="Convenience Fee" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(+cashoutLogParams.providerServiceFee + +cashoutLogParams.systemServiceFee)}`}/>
+                        <TransactionInfo label="Fee" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(+cashoutLogParams.providerServiceFee + +cashoutLogParams.systemServiceFee)}`}/>
                         <TransactionInfo label="Total Amount" value={`${tokwaAccount.wallet.currency.code} ${numberFormat(+cashoutLogParams.providerServiceFee + +cashoutLogParams.systemServiceFee + +cashoutLogParams.amount)}`}/>
                         </>
                      }

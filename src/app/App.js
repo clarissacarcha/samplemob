@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {StyleSheet, SafeAreaView, StatusBar, View} from 'react-native';
+import {StyleSheet, StatusBar, View} from 'react-native';
 import Splash from './Splash';
 
 import {
@@ -20,25 +20,17 @@ const App = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
-      <SafeAreaView style={styles.safeArea}>
-        <ReduxProvider>
-          <ApolloProvider>
-            <AlertProvider>
-              <PromptProvider>
-                <Splash />
-              </PromptProvider>
-            </AlertProvider>
-          </ApolloProvider>
-        </ReduxProvider>
-      </SafeAreaView>
+      <ReduxProvider>
+        <ApolloProvider>
+          <AlertProvider>
+            <PromptProvider>
+              <Splash />
+            </PromptProvider>
+          </AlertProvider>
+        </ApolloProvider>
+      </ReduxProvider>
     </>
   );
 };
 
 export default App;
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-});
