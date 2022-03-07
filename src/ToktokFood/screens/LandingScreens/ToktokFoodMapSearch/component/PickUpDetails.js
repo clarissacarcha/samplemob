@@ -8,7 +8,7 @@ import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {useNavigation} from '@react-navigation/native';
 
 import {useKeyboard} from 'toktokfood/hooks';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import {DELETE_SHOP_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -23,28 +23,28 @@ import {useAlert} from 'src/hooks';
 import {clearShopHistory} from 'toktokfood/helper/persistentHistory';
 import AddressBookModal from './AddressBookModal';
 
-const PickUpDetails = (props) => {
-  const {pinAddress, onConfirm, isCart} = props;
+// const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
+
+const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
   const navigation = useNavigation();
   const keyboardHeight = useKeyboard();
-  const dispatchToStore = useDispatch();
   const [showSuccess, setShowSuccess] = useState(false);
   const [showContacts, setShowContacts] = useState(false);
 
-  const {customerInfo} = useSelector((state) => state.toktokFood);
+  const {customerInfo} = useSelector(state => state.toktokFood);
   const alert = useAlert();
-  const {receiver, location} = useSelector((state) => state.toktokFood);
+  const {receiver, location} = useSelector(state => state.toktokFood);
 
   const initialState = {
-    completeAddress: '',
+    landmark: receiver ? receiver?.landmark : '',
     contactPerson: location ? location?.details?.contactPerson : '',
     contactPersonNumber: location ? location?.details?.contactPersonNumber : '',
   };
 
   const reducer = (state, action) => {
     switch (action.type) {
-      case 'SET_COMPLETE_ADDRESS':
-        return {...state, completeAddress: action.value};
+      case 'SET_LANDMARK':
+        return {...state, landmark: action.value};
       case 'SET_CONTACT_NAME':
         return {...state, contactPerson: action.value};
       case 'SET_CONTACT_NUMBER':
@@ -58,7 +58,7 @@ const PickUpDetails = (props) => {
   const [checkHasTemporaryCart, {data: temporaryCart}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onError: (err) => {
+    onError: err => {
       Alert.alert('', 'Something went wrong.');
     },
   });
@@ -72,7 +72,7 @@ const PickUpDetails = (props) => {
         branchid: 0,
       },
     },
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert, error});
     },
     onCompleted: ({deleteShopTemporaryCart}) => {
@@ -82,7 +82,6 @@ const PickUpDetails = (props) => {
   });
 
   const onConfirmAddress = () => {
-    dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: state});
     if (temporaryCart?.checkHasTemporaryCart?.shopid !== 0) {
       deleteShopTemporaryCart();
     } else {
@@ -105,7 +104,7 @@ const PickUpDetails = (props) => {
     <>
       <AddressBookModal
         visibility={showContacts}
-        onSelected={(v) => onContactSelected(v)}
+        onSelected={v => onContactSelected(v)}
         onClose={() => setShowContacts(false)}
       />
       <Loader visibility={loading} message="Saving" hasImage={false} loadingIndicator />
@@ -129,9 +128,9 @@ const PickUpDetails = (props) => {
           <View style={styles.inputWrapper}>
             <TextInput
               style={styles.input}
-              placeholder="Your Complete Address"
-              value={state.completeAddress}
-              onChangeText={(value) => dispatch({type: 'SET_COMPLETE_ADDRESS', value})}
+              placeholder="Landmark"
+              value={state.landmark}
+              onChangeText={value => dispatch({type: 'SET_LANDMARK', value})}
             />
           </View>
           <View style={[styles.inputWrapper, styles.customInputWrapper]}>
@@ -139,7 +138,7 @@ const PickUpDetails = (props) => {
               style={[styles.input, {width: '72%'}]}
               placeholder="Contact Person"
               value={state.contactPerson}
-              onChangeText={(value) => dispatch({type: 'SET_CONTACT_NAME', value})}
+              onChangeText={value => dispatch({type: 'SET_CONTACT_NAME', value})}
             />
             <TouchableOpacity style={styles.addressBookButton} onPress={() => setShowContacts(true)}>
               <Text style={styles.addressBookText}>Address Book</Text>
@@ -147,12 +146,12 @@ const PickUpDetails = (props) => {
           </View>
           <View style={[styles.inputWrapper]}>
             <TextInput
-              maxLength={11}
+              maxLength={12}
               style={styles.input}
               keyboardType="number-pad"
               placeholder="Contact Person's Number"
               value={state.contactPersonNumber}
-              onChangeText={(value) => dispatch({type: 'SET_CONTACT_NUMBER', value})}
+              onChangeText={value => dispatch({type: 'SET_CONTACT_NUMBER', value})}
             />
           </View>
 

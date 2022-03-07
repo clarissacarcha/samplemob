@@ -59,8 +59,9 @@ const ToktokFoodMapSearch = () => {
   };
 
   const onConfirmAddress = details => {
-    saveUserLocation({...mapInfo.fullInfo, details}).then(() => {
-      dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...mapInfo.fullInfo, details}});
+    saveUserLocation({mapInfo: {...mapInfo.fullInfo}, details: {...details}}).then(() => {
+      dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...mapInfo.fullInfo}});
+      dispatch({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: {...details}});
     });
   };
 
