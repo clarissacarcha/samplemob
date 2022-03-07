@@ -108,7 +108,6 @@ const Component =  ({
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: (response) => {
-      console.log("CHECK_ITEM_FROM_CART", response.checkItemFromCart)
       setQtyOnCart(response.checkItemFromCart?.quantity || 0)
     },
     onError: (err) => {
@@ -560,7 +559,7 @@ const Component =  ({
           onBuyNow(input)
         }}
         onSelectVariation={(value, images) => {
-          initCartItem(value.Id)
+          initCartItem(value)
           setSelectedVariation(value)
           setVariantImages(images)
         }}
