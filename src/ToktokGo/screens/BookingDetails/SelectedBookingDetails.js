@@ -58,17 +58,16 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
         setShowSuccessfull(!showSuccessfull)
     }
 
-    // useEffect(() => {
-    //   console.log('zion', session);  
-    //   const oldStatus = session.dummyStatus;
-    //   if(oldStatus == 4) {
-    //     const updateStatus = {
-    //       ...session,
-    //       dummyStatus: oldStatus + 1
-    //     }
-    //     createSession(updateStatus);
-    //   }
-    // }, [])
+    useEffect(() => {
+      const oldStatus = session.dummyStatus;
+      if(oldStatus == 4) {
+        const updateStatus = {
+          ...session,
+          dummyStatus: oldStatus + 1
+        }
+        createSession(updateStatus);
+      }
+    }, [])
 
     const declineBooking = () => {
       console.log("DECLINED!")
@@ -94,8 +93,6 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
         //   },
         // });
       };
-
-      console.log('zionn', delivery);
   
 
     return (
@@ -109,7 +106,7 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
           <BookingNote delivery={delivery}/>
           <BookingMap delivery={delivery}/>
           <BookingAddress delivery={delivery}/>
-          <BookingTotal delivery={delivery} dummyStatus={7}/>
+          <BookingTotal delivery={delivery} dummyStatus={session.dummyStatus}/>
 
           <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
           
