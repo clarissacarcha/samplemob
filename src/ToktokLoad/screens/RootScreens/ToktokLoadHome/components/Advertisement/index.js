@@ -2,6 +2,7 @@ import React from "react";
 import { View , Text , StyleSheet , Image , FlatList , Dimensions } from 'react-native'
 import { moderateScale } from 'toktokload/helper'
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { blank } from 'toktokload/assets/ads'
 import CONSTANTS from 'common/res/constants'
 
 const { FONT_SIZE, COLOR , SIZE , FONT_FAMILY: FONT , MARGIN} = CONSTANTS
@@ -12,7 +13,9 @@ const DisplayImage = ({item,index,autoplay})=> {
     return (
         <View style={{flex:1}}>
             <Image
-                source={item.image}
+                source={{
+                    uri: item.filename
+                }}
                 style={[styles.adImage, {...(autoplay ? {width}: {})}]}
                 resizeMode="cover"
             />

@@ -162,7 +162,7 @@ export const Favorites = memo(({ navigation, route }) => {
   if(error){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} error={error} />
+        <SomethingWentWrong error={error} />
       </View>
     )
   }

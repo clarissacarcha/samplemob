@@ -1,5 +1,5 @@
 import React , {useState , useEffect} from 'react'
-import {View,Text,StyleSheet,TextInput,TouchableOpacity,Platform,FlatList,ActivityIndicator,Image} from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Platform, FlatList, ActivityIndicator, Image, Keyboard} from 'react-native'
 import { sortBy } from 'lodash'
 import { Separator } from 'toktokbills/components'
 import { search_ic } from 'toktokbills/assets/icons'
@@ -9,7 +9,7 @@ import { moderateScale } from 'toktokbills/helper'
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE , MARGIN } = CONSTANTS
 
-export const SearchInput = ({search = "", onChangeText, placeholder, containerStyle }) => {
+export const SearchInput = ({search = "", onChangeText, placeholder, containerStyle, onSubmitEditing }) => {
 
   return (
     <View style={[ styles.searchField, containerStyle ]}>
@@ -19,7 +19,8 @@ export const SearchInput = ({search = "", onChangeText, placeholder, containerSt
           style={styles.input}
           placeholder={placeholder}
           onChangeText={onChangeText}
-          value={search}
+          onSubmitEditing={onSubmitEditing}
+          returnKeyType="search"
         />
       </View>
     </View>
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     paddingHorizontal: moderateScale(15),
-    height: SIZE.FORM_HEIGHT,
+    height: moderateScale(40),
     fontSize: FONT_SIZE.M,
     borderRadius: 5,
     backgroundColor:"#F7F7FA",

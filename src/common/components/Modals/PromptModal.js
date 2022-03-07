@@ -84,7 +84,13 @@ export const PromptModal = ({
           {children}
           <TouchableOpacity
             onPress={onThrottledPress}
-            style={[styles.btn, { backgroundColor: event === "TOKTOKWALLET" ? "#FDBA1C" : COLOR.ORANGE}]}
+            style={[
+              styles.btn,
+              {
+                backgroundColor: event === "TOKTOKWALLET" ? "#FDBA1C" : COLOR.ORANGE,
+                width: event === "TOKTOKWALLET" ? moderateScale(100) : "95%",
+              }
+            ]}
           >
             <Text style={[styles.btnText, { color: event === "TOKTOKWALLET" ? "black" : "white" }]}>OK</Text>
           </TouchableOpacity>
@@ -139,12 +145,12 @@ const styles = StyleSheet.create({
   },
   btn: {
     height: moderateScale(40),
-    width: moderateScale(100),
     borderRadius: 5,
     backgroundColor: COLOR.ORANGE,
     justifyContent:"center",
     alignItems:'center',
     marginTop: moderateScale(20),
+    marginBottom: moderateScale(5),
   },
   btnText: {
     fontFamily: FONT.BOLD,

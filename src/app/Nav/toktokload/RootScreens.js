@@ -1,6 +1,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import {
+  ToktokLoadFavorites,
   ToktokLoadHome,
   ToktokLoadNetworks,
   ToktokLoadSummary,
@@ -9,6 +10,20 @@ import { moderateScale } from "toktokload/helper";
 
 export default ({Navigator}) => (
   <>
+    <Navigator.Screen
+      name="ToktokLoadFavorites"
+      component={ToktokLoadFavorites}
+      options={{
+        headerTitleAlign: 'center',
+        headerStyle: {
+          borderBottomWidth: .5,
+          borderBottomColor: "#DDDDDD",
+          elevation: 0,
+          shadowOpacity: 0,
+          // height: Platform.OS == 'ios' ? moderateScale(60) : moderateScale(80)
+        },
+      }}
+    />
     <Navigator.Screen
       name="ToktokLoadHome"
       component={ToktokLoadHome}

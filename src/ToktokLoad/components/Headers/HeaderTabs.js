@@ -11,7 +11,7 @@ let scrollPosition = 0;
 
 export const HeaderTabs = (props) => {
 
-  const {activeTab, setActiveTab, tabs, loading, fitToScreen = true, selectedLoad, subContainerStyle} = props;
+  const {activeTab, setActiveTab, tabs, loading, fitToScreen = true, selectedLoad, subContainerStyle , overLap = true } = props;
   const flatListRef = useRef();
 
   const handleScroll = (event) => {
@@ -34,14 +34,14 @@ export const HeaderTabs = (props) => {
     const itemTabWidth = fitToScreen ? width / tabs.length : moderateScale(127);
     return (
       <TouchableOpacity
-        onPress={() => setActiveTab(item.id)}
+        onPress={() => setActiveTab(item?.id)}
         hitSlop={styles.hitSlop}
       >
         <View style={[{ width: itemTabWidth }]}>
-          <Text style={[styles.tabText, { color: activeTab == item.id ? "#F6841F" : "#707070"} ]}>
-            {item.name ?? item.categoryName}
+          <Text style={[styles.tabText, { color: activeTab == item?.id ? "#F6841F" : "#707070"} ]}>
+            {item?.name ?? item?.categoryName}
           </Text>
-          <View style={activeTab == item.id && styles.activeTabContainer} />
+          <View style={activeTab == item?.id && styles.activeTabContainer} />
         </View>
       </TouchableOpacity>
     );
@@ -55,7 +55,7 @@ export const HeaderTabs = (props) => {
     )
   }
   return (
-    <View style={[styles.mainContainer, subContainerStyle]}>
+    <View style={[styles.mainContainer, subContainerStyle , {...(overLap ? {zIndex: 1} : {})}]}>
       <View style={[styles.shadow]}>
         <FlatList
           extraData={props}
@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     overflow: "hidden",
     paddingBottom: 5,
-    zIndex: 1
   },
   container: {
     flex: 1,
