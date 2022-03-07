@@ -153,12 +153,16 @@ const OrderAddress = ({transaction, riderDetails}) => {
             <Text style={styles.restaurant}>Deliver to</Text>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
-              <Text font style={styles.addressText} numberOfLines={1}>
-                {transaction?.address ? transaction.address : ''}
-              </Text>
-              <Text font style={[styles.addressText, {color: '#525252'}]} numberOfLines={2}>
-                Landmark: {transaction?.landmark ? transaction.landmark : ''}
-              </Text>
+              <View style={styles.addressWrapper}>
+                <Text font style={styles.addressText} numberOfLines={1}>
+                  {transaction?.address ? transaction.address : ''}
+                </Text>
+                {transaction?.landmark && (
+                  <Text font style={[styles.addressText, {color: '#525252'}]} numberOfLines={2}>
+                    Landmark: {transaction?.landmark ? transaction.landmark : ''}
+                  </Text>
+                )}
+              </View>
             </View>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={user} resizeMode="contain" />
@@ -253,4 +257,7 @@ const styles = StyleSheet.create({
     flex: isIphoneXorAbove() ? 0.7 : 1,
     flexDirection: 'row',
   },
+  addressWrapper: {
+    flexDirection: 'column',
+  }
 });
