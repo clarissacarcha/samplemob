@@ -156,6 +156,9 @@ const OrderAddress = ({transaction, riderDetails}) => {
               <Text font style={styles.addressText} numberOfLines={1}>
                 {transaction?.address ? transaction.address : ''}
               </Text>
+              <Text font style={[styles.addressText, {color: '#525252'}]} numberOfLines={2}>
+                Landmark: {transaction?.landmark ? transaction.landmark : ''}
+              </Text>
             </View>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={user} resizeMode="contain" />
