@@ -24,7 +24,6 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
     totalAmount: 0,
     items: [],
   });
-  const [showEmptyCart, setShowEmptyCart] = useState(false);
   const {customerInfo} = useSelector(state => state.toktokFood);
   const isFocus = useIsFocused();
 

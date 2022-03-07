@@ -580,6 +580,7 @@ const MainComponent = () => {
         receiver.contactPersonNumber && receiver.contactPersonNumber !== ''
           ? receiver.contactPersonNumber
           : getMobileNumberFormat(customerInfo),
+      landmark: receiver.landmark && receiver.landmark !== '' ? receiver.landmark : '',
       email: customerInfo.email,
       address: location.address,
       user_id: Number(customerInfo.toktokUserid),
