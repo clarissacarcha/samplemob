@@ -45,13 +45,11 @@ const ToktokFoodMapSearch = () => {
           longitude,
           address: result.formattedAddress,
         };
-        if (mapInfo.address !== result.formattedAddress) {
-          setMapInfo({
-            coordinates: {latitude, longitude},
-            address: result.formattedAddress,
-            fullInfo: payload,
-          });
-        }
+        setMapInfo({
+          coordinates: {latitude, longitude},
+          address: result.formattedAddress,
+          fullInfo: payload,
+        });
       } catch (error) {
         console.log(error);
       }

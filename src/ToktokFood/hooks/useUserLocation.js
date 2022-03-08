@@ -41,12 +41,14 @@ export const useUserLocation = () => {
               address: address.formattedAddress,
             };
             dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...payload}});
+            const NAME =
+              customerInfo.firstName && customerInfo.lastName
+                ? `${customerInfo.firstName} ${customerInfo.lastName}`
+                : '';
             dispatch({
               type: 'SET_TOKTOKFOOD_ORDER_RECEIVER',
               payload: {
-                contactPerson: `${customerInfo.firstName ? customerInfo.firstName : ''} ${
-                  customerInfo.lastName ? customerInfo.lastName : ''
-                }`,
+                contactPerson: NAME,
                 contactPersonNumber: customerInfo.conno ? customerInfo.conno : '',
                 landmark: '',
               },
