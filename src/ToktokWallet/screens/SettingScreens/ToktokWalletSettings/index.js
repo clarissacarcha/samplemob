@@ -17,6 +17,7 @@ const SettingHeaderTitle = ({title})=> {
     )
 }
 
+
 export const ToktokWalletSettings = ({navigation , route })=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
@@ -53,7 +54,8 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>
             <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>
             {
-                +tokwaAccount.person.accountType.level < 3 &&
+                ( !tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3  ) 
+                || ( tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2  ) &&
                 <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
             }
             <Separator/>

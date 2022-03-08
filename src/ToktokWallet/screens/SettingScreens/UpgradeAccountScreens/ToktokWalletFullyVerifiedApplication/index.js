@@ -10,8 +10,9 @@ import { GET_CHECK_FULLY_VERIFIED_UPGRADE_REQUEST, GET_CHECK_PENDING_DISBURSEMEN
 import { useQuery, useLazyQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
-import {SomethingWentWrong} from 'src/components'
+import {SomethingWentWrong,AlertOverlay} from 'src/components'
 import { SuccessfulModal } from "toktokwallet/components";
+import { useAccount } from 'toktokwallet/hooks';
 import { useDispatch } from 'react-redux'
 
 const { COLOR , FONT_SIZE , FONT_FAMILY: FONT, SHADOW  } = CONSTANTS
@@ -45,7 +46,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
         isPendingVcs: false
     })
     const [isLinked, setIsLinked] = useState(false)
-    const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const { tokwaAccount , getMyAccountLoading , getMyAccount }  = useAccount();
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const dispatch = useDispatch()
 
@@ -77,6 +78,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
     }
 
     useEffect(() => {
+        getMyAccount()
         checkHasLinkBankAccount()
         checkHasVcs()
         if(route.params){
@@ -109,6 +111,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
 
     return (
         <CheckIdleState>
+        <AlertOverlay visible={getMyAccountLoading}/>
         <SuccessfulModal
             visible={showSuccessModal}
             title="Success!"
