@@ -132,7 +132,7 @@ export const FoodList = props => {
           from
         </Text>
         <Text style={styles.promoText}>PHP {resellerDiscount?.referralShopRate.toFixed(2)}</Text>
-        {/* <Text style={styles.resellerDiscountText}>PHP {price?.toFixed(2)}</Text> */}
+        <Text style={styles.resellerDiscountText}>PHP {price?.toFixed(2)}</Text>
 
         {activeTab?.id === '0' && (
           <View style={styles.voucherContainer}>
@@ -168,7 +168,7 @@ export const FoodList = props => {
           ]}>
           <View style={{flex: 1}}>
             <Text style={styles.listText}>{item.itemname}</Text>
-
+            {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge item={item} />}
             {resellerDiscount?.referralShopRate > 0 ? (
               <ResellerPrice item={item} />
             ) : (
@@ -193,8 +193,6 @@ export const FoodList = props => {
                 {item.summary}
               </Text>
             )}
-
-            {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge item={item} />}
           </View>
           <View>
             <Image resizeMode="cover" source={{uri: item.filename}} style={styles.img} />
@@ -340,7 +338,7 @@ const styles = StyleSheet.create({
   },
   resellerDiscountText: {
     color: TOKFOODCOLOR.GRAY,
-    fontFamily: FONT.BOLD,
+    // fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
     marginLeft: 10,
     textDecorationLine: 'line-through',
@@ -349,7 +347,7 @@ const styles = StyleSheet.create({
     color: '#FF6200',
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
-    textDecorationLine: 'line-through',
+    // textDecorationLine: 'line-through',
   },
   fromText: {
     fontFamily: FONT.REGULAR,
