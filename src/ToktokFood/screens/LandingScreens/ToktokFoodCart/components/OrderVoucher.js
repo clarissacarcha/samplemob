@@ -45,13 +45,14 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
     fetchPolicy: 'network-only',
     onError: err => console.log(err),
     onCompleted: ({getVoucherCode}) => {
-      const {success, message, type} = getVoucherCode;
-      setShowInlineError(true);
+      const {success, message} = getVoucherCode;
+      // setShowInlineError(true);
       console.log(getVoucherCode);
 
       if (!success) {
         setShowError(true);
         setVoucherError(`* ${message}`);
+        setShowInlineError(true);
         const filterPromo = promotionVoucher.filter(promo => promo.type !== 'promotion' && promo.type !== 'shipping');
         const filterPromotions = promotionVoucher.filter(promo => promo.type === 'promotion');
         // console.log(filterPromo, promotionVoucher);
@@ -83,6 +84,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
           payload: voucherObj,
         });
         setShowError(false);
+        setShowInlineError(true);
         // setShowError(!showError);
         // setVoucherError(null);
         // if (type !== 'shipping') {
@@ -151,12 +153,18 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
   }, [autoShipping]);
 
   useEffect(() => {
-    if (!autoShipping?.success && voucher) {
-      onApplyVoucher();
-    }
+    // if (!autoShipping?.success && voucher) {
+    //   onApplyVoucher();
+    // }
 
     onShowError();
   }, [autoShipping, onShowError]);
+
+  useEffect(() => {
+    if (!autoShipping?.success && voucher) {
+      onApplyVoucher();
+    }
+  }, [paymentMethod]);
 
   const onChangeText = value => {
     setVoucherError(null);
