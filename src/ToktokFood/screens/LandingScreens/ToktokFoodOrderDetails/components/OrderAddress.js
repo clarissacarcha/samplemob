@@ -157,9 +157,12 @@ const OrderAddress = ({transaction, riderDetails}) => {
                 <Text font style={styles.addressText} numberOfLines={1}>
                   {transaction?.address ? transaction.address : ''}
                 </Text>
-                {transaction?.landmark && (
-                  <Text font style={[styles.addressText, {color: '#525252'}]} numberOfLines={2}>
-                    Landmark: {transaction?.landmark ? transaction.landmark : ''}
+                {transaction?.landmark != undefined && transaction?.landmark !== '' && (
+                  <Text
+                    font
+                    numberOfLines={2}
+                    style={[styles.addressText, {color: '#525252', marginTop: transaction.landmark === '' ? 0 : 4}]}>
+                    Landmark: {transaction.landmark}
                   </Text>
                 )}
               </View>
@@ -259,5 +262,5 @@ const styles = StyleSheet.create({
   },
   addressWrapper: {
     flexDirection: 'column',
-  }
+  },
 });
