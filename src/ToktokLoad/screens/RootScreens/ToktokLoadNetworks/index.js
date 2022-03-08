@@ -26,6 +26,7 @@ const ErrorComponent = ({ error, onRefetch }) => {
 }
 
 const MainComponent = ({ navigation, route }) => {
+  console.log(route.params?.refreshLoadList)
  
   const networkId = route.params?.network.id;
   const {
@@ -36,10 +37,11 @@ const MainComponent = ({ navigation, route }) => {
     search,
     setSearch,
     hasSearch,
-    setHasSearch
+    setHasSearch,
+    activeTab,
+    setActiveTab
   } = useContext(VerifyContext);
   const [loadVariants, setLoadVariant]= useState([]);
-  const [activeTab, setActiveTab] = useState(null);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   
   const [getLoadVariants, {loading, error}] = useLazyQuery(GET_LOAD_VARIANTS, {
@@ -47,7 +49,7 @@ const MainComponent = ({ navigation, route }) => {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onCompleted:({ getLoadVariants })=> {
         if(getLoadVariants.length > 0){
-          setActiveTab(getLoadVariants[0].id);
+          setActiveTab(getLoadVariants[0]);
           setLoadVariant(getLoadVariants);
         }
     }
@@ -103,7 +105,8 @@ const MainComponent = ({ navigation, route }) => {
       return (
         <LoadList
           navigation={navigation}
-          loadVariantId={activeTab}
+          route={route}
+          loadVariantId={activeTab?.id}
           mobileNumber={route.params?.mobileNumber}
           networkId={networkId}
           processSearch={processSearch}
@@ -129,7 +132,7 @@ const MainComponent = ({ navigation, route }) => {
       <SearchInput
         search={search}
         onChangeText={onSearchChange}
-        placeholder="Search Load Products Here"
+        placeholder="Search load products here!"
         containerStyle={{ paddingHorizontal: moderateScale(16), paddingBottom: moderateScale(hasSearch ? 16 : 0) }}
         onSubmitEditing={processSearch}
       />

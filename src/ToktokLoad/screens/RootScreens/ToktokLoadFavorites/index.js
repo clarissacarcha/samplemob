@@ -12,6 +12,7 @@ import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, Em
 import { FavoriteDetails } from "./components";
 import { SomethingWentWrong } from "toktokload/components";
 import { AlertOverlay } from 'src/components';
+import { VerifyContextProvider, VerifyContext } from "./components";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
@@ -20,39 +21,46 @@ import { empty_favorite, empty_search } from 'toktokload/assets/images';
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
-import { GET_CHECK_FAVORITE_LOAD, GET_FAVORITE_LOADS, PATCH_REMOVE_FAVORITE_LOAD } from 'toktokload/graphql/model';
+import { GET_CHECK_FAVORITE_LOAD, GET_FAVORITE_LOADS, PATCH_REMOVE_FAVORITE_LOAD, POST_FAVORITE_LOAD } from 'toktokload/graphql/model';
 import { usePrompt } from 'src/hooks';
 
+const MainComponent = ({navigation,route})=> {
 
-export const ToktokLoadFavorites = ({navigation,route})=> {
-
-  navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={"Favorites"} />,
-  });
-
-
-  const { mobileErrorMessage, mobileNumber } = route.params
+  const { mobileErrorMessage, mobileNumber, loadVariantId, processGetLoadItems } = route.params
 
   const prompt = usePrompt();
   const isFocused = useIsFocused();
+  const {
+    selectedLoad,
+    setSelectedLoad,
+    search,
+    setSearch,
+    loadFavorite,
+    setLoadFavorite,
+    hasSearch,
+    setHasSearch,
+  } = useContext(VerifyContext);
   const [checkFavoriteLoadPrompt, setCheckFavoriteLoadPrompt] = useState({ title: "", message: "", show: false });
   const [favorites, setFavorites] = useState([]);
   const [isMounted, setIsMounted] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedLoad, setSelectedLoad] = useState({});
-  const [search, setSearch] = useState("");
-  const [searchData, setSearchData] = useState("");
 
-  const [getFavoriteLoads, {loading, error}] = useLazyQuery(GET_FAVORITE_LOADS, {
+  const [getFavoriteLoads, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(GET_FAVORITE_LOADS, {
     fetchPolicy: "network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    variables: {
+      input: {
+        loadVariantId
+      }
+    },
     onError: () => {
       setFavorites([]);
     },
     onCompleted:({ getFavoriteLoads })=> {
+      setLoadFavorite(null);
       setIsMounted(false);
       setFavorites(getFavoriteLoads);
+      setHasSearch(false);
     }
   });
   
@@ -92,11 +100,26 @@ export const ToktokLoadFavorites = ({navigation,route})=> {
       });
     },
     onCompleted:({ patchRemoveFavoriteLoad })=> {
-      const data = _.remove(favorites, function(item) {
-        return item.loadItemId == selectedLoad.loadItemId 
-      });
-      setSelectedLoad({});
+      processGetLoadItems();
+      processGetFavoriteLoads("refresh");
       console.log(patchRemoveFavoriteLoad, "REMOVE")
+    }
+  });
+
+  const [postFavoriteLoad, {loading: postFavoriteLoading, error: postFavoriteError}] = useMutation(POST_FAVORITE_LOAD, {
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: (error) => {
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        title: ""
+      });
+    },
+    onCompleted:({ postFavoriteLoad })=> {
+      processGetLoadItems();
+      processGetFavoriteLoads("refresh");
+      console.log(postFavoriteLoad, "ADD")
     }
   });
 
@@ -106,10 +129,16 @@ export const ToktokLoadFavorites = ({navigation,route})=> {
     }
   }, [isFocused])
 
+  useEffect(() => {
+    if(search == "" && hasSearch){
+      processGetFavoriteLoads();
+    }
+  }, [search, hasSearch])
 
   const onPressNext = () => {
     if(selectedLoad && Object.keys(selectedLoad).length > 0){
-      getCheckFavoriteLoad({ variables: { input: { loadItemId: selectedLoad.loadItemId } } });
+      navigation.navigate("ToktokLoadSummary", { loads: selectedLoad, mobileNumber });
+      // getCheckFavoriteLoad({ variables: { input: { loadItemId: selectedLoad.loadItemId } } });
     }
   }
 
@@ -135,29 +164,45 @@ export const ToktokLoadFavorites = ({navigation,route})=> {
     return favorites
   }
     
-  const onSearch = (value) => {
+  const processSearch = () => {
     setSelectedLoad({});
-    setSearch(value);
-    if(value){
+    if(search){
       const filteredContacts = favorites.filter((item) => {
-        let { loadDetails } = item;
-        let searchKey = value.toLowerCase();
+        let searchKey = search.toLowerCase();
         
-        return loadDetails.name.toLowerCase().includes(searchKey) || loadDetails.amount.toString().includes(searchKey)
-          || loadDetails.descriptions.toLowerCase().includes(searchKey) || loadDetails.networkDetails.name.toLowerCase().includes(searchKey)
+        return item.name.toLowerCase().includes(searchKey) || item.amount.toString().includes(searchKey)
+          || item.descriptions.toLowerCase().includes(searchKey) || item.networkDetails.name.toLowerCase().includes(searchKey)
       });
-      setSearchData(filteredContacts)
-    } else {
-      setSearchData([]);
+      setHasSearch(true);
+      setFavorites(filteredContacts)
     }
   }
+
+  const onPressFavorite = (item, index) => {
+    setLoadFavorite(item.id);
+    let data = [...favorites];
+    let favData = {
+      variables: {
+        input: {
+          loadItemId: item.id,
+        }
+      }
+    }
+    // ADD OR REMOVE FAVORITE
+    if(item.favorite){
+      patchRemoveFavoriteLoad(favData)
+    } else {
+      postFavoriteLoad(favData)
+    }
+  }
+
 
   const ListEmptyComponent = () => {
     if(isMounted) return null
 
-    const imageSrc = search ? empty_search : empty_favorite;
-    const label = search ? "No Results Found" : "You don’t have favorites yet";
-    const message = search ? "Try to search something similar" : "Check our products and add them to your favorites!";
+    const imageSrc = hasSearch ? empty_search : empty_favorite;
+    const label = hasSearch ? "No Results Found" : "You don’t have favorites yet";
+    const message = hasSearch ? "Try to search something similar" : "Check our products and add them to your favorites!";
     return (
       <View style={styles.container}>
         <EmptyList imageSrc={imageSrc} label={label} message={message} />
@@ -165,32 +210,36 @@ export const ToktokLoadFavorites = ({navigation,route})=> {
     )
   }
     
-  if(error){
+  if(getFavoritesError){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={() => processGetFavoriteLoads('refresh')} error={error} />
+        <SomethingWentWrong onRefetch={() => processGetFavoriteLoads('refresh')} error={getFavoritesError} />
       </View>
     )
   }
 
   return (
     <View style={styles.container}>
-      <AlertOverlay visible={checkLoading || patchFavoriteLoading}/>
+      {/* <AlertOverlay visible={checkLoading || patchFavoriteLoading}/> */}
       <SearchInput
         search={search}
-        onChangeText={onSearch}
+        onChangeText={(value) => { setSearch(value) }}
         placeholder="Search Favorites"
         containerStyle={{ padding: moderateScale(16) }}
+        onSubmitEditing={processSearch}
       />
       <FlatList
         extraData={{favorites, selectedLoad}}
-        data={getData()}
+        data={favorites}
         renderItem={({ item, index }) => (
           <FavoriteDetails
             item={item}
             index={index}
-            setSelectedLoad={setSelectedLoad}
-            selectedLoad={selectedLoad}
+            onPressFavorite={() => onPressFavorite(item, index)}
+            patchFavoriteLoading={patchFavoriteLoading}
+            postFavoriteLoading={postFavoriteLoading}
+            loadFavorite={loadFavorite}
+            getLoadItemsLoading={getFavoritesLoading}
           />
         )}
         keyExtractor={(item, index) => index.toString()}
@@ -198,7 +247,7 @@ export const ToktokLoadFavorites = ({navigation,route})=> {
         ListEmptyComponent={ListEmptyComponent}
         refreshControl={
           <RefreshControl
-            refreshing={loading}
+            refreshing={getFavoritesLoading && !loadFavorite}
             onRefresh={() => processGetFavoriteLoads('refresh')}
           />
         }
@@ -213,6 +262,19 @@ export const ToktokLoadFavorites = ({navigation,route})=> {
     </View>
   );
 }
+export const ToktokLoadFavorites = ({ navigation, route }) => {
+
+  navigation.setOptions({
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitle label={"Favorites"} />,
+  });
+
+  return (
+    <VerifyContextProvider navigation={navigation}>
+      <MainComponent navigation={navigation} route={route} />
+    </VerifyContextProvider>
+  );
+};
 
 const styles = StyleSheet.create({
     container: {
