@@ -44,8 +44,10 @@ export const useUserLocation = () => {
             dispatch({
               type: 'SET_TOKTOKFOOD_ORDER_RECEIVER',
               payload: {
-                contactPerson: `${customerInfo.firstName} ${customerInfo.lastName}`,
-                contactPersonNumber: customerInfo.conno,
+                contactPerson: `${customerInfo.firstName ? customerInfo.firstName : ''} ${
+                  customerInfo.lastName ? customerInfo.lastName : ''
+                }`,
+                contactPersonNumber: customerInfo.conno ? customerInfo.conno : '',
                 landmark: '',
               },
             });

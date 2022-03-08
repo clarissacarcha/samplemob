@@ -45,6 +45,7 @@ const transaction = `
   latitude
   longitude
   declinedNote
+  srpTotalamount
   shopDetails {
     id
     shopname
