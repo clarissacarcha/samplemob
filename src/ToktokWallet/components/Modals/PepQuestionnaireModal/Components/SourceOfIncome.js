@@ -137,7 +137,7 @@ export const SourceOfIncome = ({
                     selectedData.map((item,index)=>(
                         <View style={{...styles.input,padding: 2, height: 30, marginHorizontal: 2, justifyContent:'center',alignItems:"center",flexDirection:"row"}}>
                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{item.description}</Text>
-                            <TouchableHighlight onPress={()=>removeSelected(index)} underlayColor={"transparent"}>
+                            <TouchableHighlight hitSlop={{top: 40,right: 40,bottom: 40,left: 40}} onPress={()=>removeSelected(index)} underlayColor={"transparent"}>
                                 <View style={{height: 30,width: 20,justifyContent:'center',alignItems:"flex-end"}}>
                                 <VectorIcon color={"black"} size={10} iconSet={ICON_SET.FontAwesome5} name="times"/>
                                 </View>
