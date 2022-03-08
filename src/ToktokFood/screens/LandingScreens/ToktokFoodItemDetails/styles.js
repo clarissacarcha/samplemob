@@ -12,8 +12,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   foodDetails: {
+    width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     paddingVertical: verticalScale(3),
     marginTop: Platform.OS === 'android' ? verticalScale(8) : verticalScale(3),
   },
@@ -21,6 +22,8 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.XL,
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
+    flex: 1,
+    marginRight: moderateScale(5),
   },
   foodPrice: {
     // marginEnd: 3,
@@ -78,7 +81,8 @@ const styles = StyleSheet.create({
     // padding: 3,
   },
   resellerPrice: {
-    // flexDirection: 'row',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   resellerText: {
     color: COLOR.WHITE,
@@ -87,10 +91,11 @@ const styles = StyleSheet.create({
   },
   resellerDiscountText: {
     color: TOKFOODCOLOR.GRAY,
-    fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.M,
+    // fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.XL,
     textAlign: 'right',
     textDecorationLine: 'line-through',
+    marginLeft: moderateScale(8),
   },
 });
 export default styles;

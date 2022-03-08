@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useRef, useContext, useCallback, useState} from 'react';
-import {Image, View, Text, TouchableOpacity, Alert} from 'react-native';
+import React, {useRef, useContext, useCallback, useState, useMemo} from 'react';
+import {Image, View, Text, TouchableOpacity, Alert, ImageBackground} from 'react-native';
 // import _ from 'lodash';
 import styles from '../styles';
 import {useNavigation} from '@react-navigation/native';
@@ -19,6 +19,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {FONT, FONT_SIZE} from 'res/variables';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {moderateScale} from 'toktokfood/helper/scale';
+import {reseller_badge} from 'toktokfood/assets/images';
 
 const MyOrderList = () => {
   // const route = useRoute();
@@ -69,6 +70,31 @@ const MyOrderList = () => {
     });
   };
 
+  const roundedPercentage = (number, precision) => {
+    const rounded = Math.pow(10, precision);
+    return (Math.round(number * rounded) / rounded).toFixed(precision);
+  };
+
+  const ResellerDiscountBadge = useMemo(
+    () =>
+      ({resellerDiscount, basePrice, totalAmount}) => {
+        const percentage = (100 * (basePrice - resellerDiscount)) / basePrice;
+        const finalPercentage = roundedPercentage(percentage, 1);
+        // const {discRatetype, referralDiscount} = resellerDiscount;
+        // const discountText = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
+        return (
+          <React.Fragment>
+            <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
+              <Text style={styles.resellerText}>Reseller -{finalPercentage}%</Text>
+            </ImageBackground>
+            <Text style={styles.basePrice}>PHP {totalAmount.toFixed(2)}</Text>
+            <Text style={styles.foodPrice}>PHP {resellerDiscount.toFixed(2)}</Text>
+          </React.Fragment>
+        );
+      },
+    [temporaryCart?.items?.resellerDiscount],
+  );
+
   const FoodItem = ({item}) => {
     const {
       productid,
@@ -83,10 +109,10 @@ const MyOrderList = () => {
       addonsDetails,
       notes,
       parentProductName,
+      resellerDiscount,
     } = item;
     const addons = arrangeAddons(addonsDetails);
     const totalAmountWithAddons = parseFloat(addonsTotalAmount) + parseFloat(basePrice);
-
     return (
       <SwipeRow
         disableRightSwipe
@@ -118,7 +144,15 @@ const MyOrderList = () => {
               style={styles.actionText}>
               Edit
             </Text>
-            <Text style={styles.foodPrice}>PHP {totalAmountWithAddons.toFixed(2)}</Text>
+            {resellerDiscount > 0 ? (
+              <ResellerDiscountBadge
+                resellerDiscount={resellerDiscount}
+                basePrice={basePrice}
+                totalAmount={totalAmountWithAddons}
+              />
+            ) : (
+              <Text style={styles.foodPrice}>PHP {totalAmountWithAddons.toFixed(2)}</Text>
+            )}
           </View>
           <View style={{borderTopWidth: 1, borderTopColor: '#E6E6E6'}} />
         </View>
@@ -202,7 +236,7 @@ const MyOrderList = () => {
             onPress={() =>
               navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: `${temporaryCart.items[0]?.shopid}`}})
             }
-            style={styles.actionText}>
+            style={{...styles.actionText, flex: 0}}>
             Add Items
           </Text>
         </View>
@@ -227,9 +261,7 @@ const MyOrderList = () => {
                 marginBottom: moderateScale(10),
               }}>
               <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>
-                {isCollapsed
-                  ? 'Hide'
-                  : 'See More'}
+                {isCollapsed ? 'Hide' : 'See More'}
               </Text>
               <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={12} color={'#FFA700'} />
             </TouchableOpacity>

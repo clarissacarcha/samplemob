@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useState, useMemo} from 'react';
+import {Image, StyleSheet, Text, View, TouchableOpacity, ImageBackground} from 'react-native';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 // Fonts/Colors/Images
 // import {COLORS} from 'res/constants';
-import {FONT_SIZE, FONT} from 'res/variables';
-import {no_image} from 'toktokfood/assets/images';
-
+import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
+import {no_image, reseller_badge} from 'toktokfood/assets/images';
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 
@@ -33,11 +33,35 @@ const OrderList = ({orderDetails}) => {
     dataSource = data;
   }
 
+  const roundedPercentage = (number, precision) => {
+    const rounded = Math.pow(10, precision);
+    return (Math.round(number * rounded) / rounded).toFixed(precision);
+  };
+
+  const ResellerDiscountBadge = useMemo(
+    () =>
+      ({amount, srpAmount}) => {
+        const percentage = (100 * (srpAmount - amount)) / srpAmount;
+        const finalPercentage = roundedPercentage(percentage, 1);
+        // const {discRatetype, referralDiscount} = resellerDiscount;
+        // const discountText = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
+        return (
+          <View style={{alignItems: 'flex-end'}}>
+            <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
+              <Text style={styles.resellerText}>Reseller -{finalPercentage}%</Text>
+            </ImageBackground>
+            <Text style={{...styles.seeAll, position: 'absolute', bottom: moderateScale(-20)}}>PHP {amount.toFixed(2)}</Text>
+          </View>
+        );
+      },
+    [],
+  );
+
   const Item = ({item}) => {
     let {parentProductId, itemname, parentProductName} = item.productDetails;
     let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
     let productName = parentProductId ? parentProductName : itemname;
-    console.log(item);
+    const {amount, srpAmount} = item;
     return (
       <View style={styles.listContainer}>
         {item.productDetails.filename && (
@@ -52,7 +76,11 @@ const OrderList = ({orderDetails}) => {
             <Text numberOfLines={1} style={styles.listName}>
               {productName}
             </Text>
-            <Text style={styles.seeAll}>{`PHP ${item.srpAmount.toFixed(2)}`}</Text>
+            {amount !== srpAmount ? (
+              <ResellerDiscountBadge amount={amount} srpAmount={srpAmount} />
+            ) : (
+              <Text style={styles.seeAll}>{`PHP ${item.srpAmount.toFixed(2)}`}</Text>
+            )}
           </View>
           <View>
             <Text style={styles.notes}>x{item.quantity}</Text>
@@ -141,5 +169,22 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     padding: moderateScale(20),
+  },
+  resellerBadge: {
+    // alignSelf: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    height: 25,
+    // width: 90,
+    // borderWidth: 1,
+    // backgroundColor: TOKFOODCOLOR.YELLOWBG,
+    // borderRadius: 5,
+    // padding: 3,
+  },
+  resellerText: {
+    color: COLOR.WHITE,
+    fontSize: FONT_SIZE.XS,
+    fontWeight: '700',
   },
 });

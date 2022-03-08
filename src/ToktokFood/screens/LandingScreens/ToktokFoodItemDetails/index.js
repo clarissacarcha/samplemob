@@ -150,10 +150,10 @@ const MainComponent = () => {
 
         {/* {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge />} */}
         <View style={styles.foodDetails}>
-          <View style={styles.foodNameWrapper}>
-            <Text style={styles.foodName}>{itemname}</Text>
+          {/* <View style={styles.foodNameWrapper}> */}
+          <Text style={styles.foodName}>{itemname}</Text>
             {/* <MIcon name="favorite-border" size={22} color="#808080" style={styles.heart} /> */}
-          </View>
+          {/* </View> */}
           {resellerDiscount?.referralShopRate > 0 ? (
             <ResellerPrice />
           ) : (

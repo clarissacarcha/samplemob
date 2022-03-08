@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(10),
   },
   myOrderWrapper: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: verticalScale(10),
@@ -45,12 +46,14 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
+    flex: 1,
   },
   actionText: {
     marginEnd: 3,
     color: '#FFA700',
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    flex: 1,
   },
   textAddressContainer: {
     maxWidth: '90%',
@@ -84,14 +87,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   foodPrice: {
-    marginEnd: 3,
+    // marginEnd: 3,
     color: '#FF6200',
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
   },
   priceWrapper: {
     flex: 1,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
   orderInfoWrapper: {
@@ -277,6 +280,29 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  resellerBadge: {
+    // alignSelf: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    height: 25,
+    // width: 90,
+    // borderWidth: 1,
+    // backgroundColor: TOKFOODCOLOR.YELLOWBG,
+    // borderRadius: 5,
+    // padding: 3,
+  },
+  resellerText: {
+    color: COLOR.WHITE,
+    fontSize: FONT_SIZE.XS,
+    fontWeight: '700',
+  },
+  basePrice: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.M,
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid',
   },
 });
 
