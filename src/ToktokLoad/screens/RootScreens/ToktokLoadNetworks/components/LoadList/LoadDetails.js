@@ -43,12 +43,9 @@ export const LoadDetails = ({
   }
   
   return (
+    <>
     <TouchableOpacity
-      onPress={() => {
-        // let backgroundColor = index == 0 ? isSelected ? "#fff" : "rgba(246,132,31,0.8)" : "#fff";
-        // setSubContainerStyle({backgroundColor, index});
-        setSelectedLoad(isSelected ? {} : item);
-      }}
+      onPress={() => { setSelectedLoad(isSelected ? {} : item) }}
       style={[
         styles.container,
         { backgroundColor: isSelected ? "rgba(246,132,31,0.8)" : "#fff"}
@@ -80,6 +77,8 @@ export const LoadDetails = ({
         )}
       </View>
     </TouchableOpacity>
+    </>
+   
   );
 };
 

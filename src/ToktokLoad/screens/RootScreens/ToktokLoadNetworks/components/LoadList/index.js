@@ -1,9 +1,10 @@
 import React, {useState, useContext, useEffect, memo, useCallback, useMemo} from "react";
-import {View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl} from "react-native";
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, ScrollView} from "react-native";
 
 //UTILS
 import { moderateScale, globeLoads, tmLoads, smartLoads } from "toktokload/helper";
 import { ErrorUtility } from 'toktokload/util';
+import {VectorIcon, ICON_SET} from 'src/revamp';
 
 //COMPONENTS
 import { LoadDetails } from "./LoadDetails";
@@ -20,9 +21,11 @@ import { stubTrue } from "lodash";
 
 //IMAGES
 import { empty_load_item, empty_search } from "toktokload/assets/images";
+import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
-export const LoadList = memo(({ loadVariantId, navigation, mobileNumber, networkId, processSearch, getSearchLoading }) => {
+export const LoadList = memo((props) => {
 
+  const { loadVariantId, navigation, route, mobileNumber, networkId, processSearch, getSearchLoading, label } = props;
   const prompt = usePrompt();
   const {
     selectedLoad,
@@ -34,7 +37,10 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber, network
     search,
     setSearch,
     hasSearch,
-    setHasSearch
+    setHasSearch,
+    favorites,
+    setFavorites,
+    activeTab
   } = useContext(VerifyContext);
   const [isMounted, setIsMounted] = useState(true);
   
@@ -47,7 +53,8 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber, network
     onCompleted: ({ getLoadItems }) => {
       setLoadFavorite(null);
       setIsMounted(false);
-      setLoads(getLoadItems);
+      setLoads(getLoadItems.filter((item) => { return item.favorite == null }));
+      setFavorites(getLoadItems.filter((item) => { return item.favorite != null }))
     }
   });
 
@@ -93,14 +100,12 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber, network
 
   useEffect(() => {
     if(search == ""){
-      clearStates();
       processGetLoadItems();
     }
   }, [loadVariantId])
 
   useEffect(() => {
     if(search == "" && hasSearch){
-      clearStates();
       processGetLoadItems();
     }
   }, [search, hasSearch])
@@ -113,7 +118,8 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber, network
     setSelectedLoad({});
   }
 
-  const processGetLoadItems = () => {
+  const processGetLoadItems = (action) => {
+    if(!action){ clearStates() }
     getLoadItems({
       variables: {
         input: {
@@ -148,12 +154,17 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber, network
     }
   }
 
+  const onPressSeeAll = () => {
+    navigation.navigate("ToktokLoadFavorites", { mobileNumber, loadVariantId, processGetLoadItems });
+  }
+
   const ListEmptyComponent = useMemo(() => {
     if(isMounted || getLoadItemsLoading) return null
 
     const imageSrc = search ? empty_search : empty_load_item;
     const label = search ? "No Results Found" : "No Load Item";
     const message = search ? "Try to search something similar" : "No load item available as of the moment.";
+    
     return (
       <View style={styles.emptyContainer}>
         <EmptyList imageSrc={imageSrc} label={label} message={message} />
@@ -176,43 +187,87 @@ export const LoadList = memo(({ loadVariantId, navigation, mobileNumber, network
     )
   }
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={loads}
-        renderItem={({ item, index }) => (
-          <LoadDetails
-            index={index}
-            item={item}
-            onPressFavorite={() => onPressFavorite(item, index)}
-            patchFavoriteLoading={patchFavoriteLoading}
-            postFavoriteLoading={postFavoriteLoading}
-            loadFavorite={loadFavorite}
-            getLoadItemsLoading={getLoadItemsLoading}
+    <>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={(getLoadItemsLoading || getSearchLoading) && !loadFavorite}
+          onRefresh={() => {
+            setSelectedLoad({});
+            search ? processSearch() : processGetLoadItems("refresh");
+          }}
+        />
+      }
+      style={!hasSearch && { flex: 1 }}
+      contentContainerStyle={hasSearch && { flexGrow: 1 } }
+    >
+      {/* DISPLAY FAVORITES */}
+      { favorites.length > 0 && !hasSearch && (
+        <>
+          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={styles.label}>Favorites</Text>
+          { favorites.length > 3 && (
+            <TouchableOpacity style={styles.seeAllContainer} onPress={onPressSeeAll}>
+              <Text style={styles.seeAllText}>See All</Text>
+              <VectorIcon color="#F6841F" size={15} iconSet={ICON_SET.Entypo} name="chevron-right"/>
+            </TouchableOpacity>
+          )}
+          </View>
+          <FlatList
+            data={favorites.slice(0, 3)}
+            scrollEnabled={false}
+            initialNumToRender={3}
+            renderItem={({ item, index }) => (
+              <LoadDetails
+                index={index}
+                item={item}
+                onPressFavorite={() => onPressFavorite(item, index)}
+                patchFavoriteLoading={patchFavoriteLoading}
+                postFavoriteLoading={postFavoriteLoading}
+                loadFavorite={loadFavorite}
+                getLoadItemsLoading={getLoadItemsLoading}
+              />
+            )}
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyExtractor={(item, index) => index.toString()}
           />
-        )}
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyExtractor={(item, index) => index.toString()}
-        ListEmptyComponent={ListEmptyComponent}
-        refreshControl={
-          <RefreshControl
-            refreshing={(getLoadItemsLoading || getSearchLoading) && !loadFavorite}
-            onRefresh={() => {
-              setSelectedLoad({});
-              search ? processSearch() : processGetLoadItems();
-            }}
-          />
-        }
-      />
-      {(loads && loads.length > 0) && (
-        <View style={{ padding: moderateScale(16) }}>
-          <OrangeButton
-            disabled={Object.keys(selectedLoad).length == 0}
-            label='Next'
-            onPress={() => onPressNext()}
-          />
-        </View>
+        </>
       )}
-    </View>
+      {/* DISPLAY LOADS WITHOUT FAVORITES */}
+      {(loads.length > 0 || hasSearch) && (
+        <>
+          {(loads.length > 0 && !hasSearch) &&  <Text style={styles.label}>{activeTab.name}</Text>}
+          <FlatList
+            data={loads}
+            scrollEnabled={false}
+            renderItem={({ item, index }) => (
+              <LoadDetails
+                index={index}
+                item={item}
+                onPressFavorite={() => onPressFavorite(item, index)}
+                patchFavoriteLoading={patchFavoriteLoading}
+                postFavoriteLoading={postFavoriteLoading}
+                loadFavorite={loadFavorite}
+                getLoadItemsLoading={getLoadItemsLoading}
+              />
+            )}
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={ListEmptyComponent}
+          />
+        </>
+      )}
+    </ScrollView>
+    {(loads.length > 0 || favorites.length > 0) && (
+      <View style={{ padding: moderateScale(16) }}>
+        <OrangeButton
+          disabled={Object.keys(selectedLoad).length == 0}
+          label='Next'
+          onPress={() => onPressNext()}
+        />
+      </View>
+    )}
+    </>
   );
 });
 
@@ -226,5 +281,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "white"
+  },
+  label: {
+    color: "#F6841F",
+    fontFamily: FONT.BOLD,
+    paddingHorizontal: moderateScale(16),
+    paddingTop: moderateScale(16),
+    paddingBottom: moderateScale(5)
+  },
+  seeAllText: {
+    color: "#F6841F",
+    paddingHorizontal: moderateScale(5),
+  },
+  seeAllContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: moderateScale(16),
+     paddingTop: moderateScale(16)
   }
 })

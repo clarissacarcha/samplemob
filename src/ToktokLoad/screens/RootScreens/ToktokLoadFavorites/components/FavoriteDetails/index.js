@@ -1,28 +1,51 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, memo} from "react";
 import {View, Text, StyleSheet, FlatList, Platform, TouchableOpacity, Image, Dimensions} from "react-native";
 
 //UTIL
 import { moderateScale } from "toktokload/helper";
+import { useThrottle } from 'src/hooks';
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
+import { VerifyContext } from "../VerifyContextProvider";
 import { heart_fill_icon, heart_no_fill_icon, heart_selected_fill_icon } from "src/ToktokLoad/assets/icons";
 
-const { width, height } = Dimensions.get("screen");
-export const FavoriteDetails = ({ item, index, setSelectedLoad, selectedLoad }) => {
+//COMPONENTS
+import { LoadingIndicator } from "src/ToktokLoad/components";
 
-  const { loadDetails, mobileNumber } = item;
-  const { amount } = loadDetails;
-  const isSelected = selectedLoad.id == item.id;
+const { width, height } = Dimensions.get("screen");
+export const FavoriteDetails = ({
+  item,
+  index,
+  onPressFavorite,
+  patchFavoriteLoading,
+  postFavoriteLoading,
+  loadFavorite,
+  getLoadItemsLoading
+}) => {
+
+  const { selectedLoad, setSelectedLoad, loads, setLoads, setSubContainerStyle } = useContext(VerifyContext);
+  const { amount, name, favorite, descriptions } = item;
+
+  const isSelected = selectedLoad?.id == item.id;
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
-  const numberOfLines = isSelected ? null : 1;
+  const numberOfLines = isSelected ? null : 2;
 
+  const onPressThrottled = useThrottle(onPressFavorite, 500);
+
+  const imgSelected = () => {
+    if(favorite){
+      return isSelected ? heart_selected_fill_icon : heart_fill_icon
+    } else {
+      return isSelected ? heart_no_fill_icon : heart_selected_fill_icon
+    }
+  }
+  
   return (
+    <>
     <TouchableOpacity
-      onPress={() => {
-        setSelectedLoad(isSelected ? {} : item);
-      }}
+      onPress={() => { setSelectedLoad(isSelected ? {} : item) }}
       style={[
         styles.container,
         { backgroundColor: isSelected ? "rgba(246,132,31,0.8)" : "#fff"}
@@ -32,18 +55,30 @@ export const FavoriteDetails = ({ item, index, setSelectedLoad, selectedLoad }) 
       <View style={[styles.amountContainer, { borderColor: colorAmount }]}>
         <Text style={[ styles.amount, { color: colorAmount }]}>₱{amount}</Text>
       </View>
-      <View style={{ paddingLeft: moderateScale(20), flex: 1 }}>
-        <Text style={[ styles.loadName, { color: colorDesc }]}>{loadDetails.name}</Text>
-        <Text style={[ styles.descriptions, { color: colorDesc }]}>
-          {loadDetails.networkDetails.name}
-        </Text>
-        { !!loadDetails.descriptions && (
+      <View style={styles.detailsContainer}>
+        <Text style={[ styles.loadName, { color: colorDesc }]}>{name}</Text>
+        { !!descriptions && (
           <Text style={[ styles.descriptions, { color: colorDesc }]} numberOfLines={numberOfLines}>
-            {loadDetails.descriptions}
+            {descriptions}
           </Text>
         )}
       </View> 
+      <View style={styles.heartIconContainer}>
+        {((getLoadItemsLoading && loadFavorite) || patchFavoriteLoading || postFavoriteLoading) && loadFavorite == item.id ? (
+          <LoadingIndicator isLoading={true} size="small" color={colorAmount} />
+        ) : (
+          <TouchableOpacity
+            onPress={onPressThrottled}
+            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+            disabled={loadFavorite != null}
+          >
+            <Image source={imgSelected()} style={styles.heartIcon} />
+          </TouchableOpacity>
+        )}
+      </View>
     </TouchableOpacity>
+    </>
+   
   );
 };
 
@@ -53,6 +88,7 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(15),
     flexDirection: "row",
     alignItems: "center",
+    flex: 1,
   },
   amountContainer: {
     borderWidth: 1,
@@ -74,7 +110,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain"
   },
   heartIconContainer: {
-    flex: 1,
     alignItems: "flex-end"
   },
   loadName: {
@@ -83,6 +118,11 @@ const styles = StyleSheet.create({
   },
   descriptions: {
     fontSize: FONT_SIZE.M,
-    marginTop: 5
+  },
+  detailsContainer: {
+    paddingHorizontal: moderateScale(20),
+    flex: 1
   }
-});
+})
+
+

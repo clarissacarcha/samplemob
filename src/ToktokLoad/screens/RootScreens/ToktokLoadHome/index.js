@@ -27,9 +27,9 @@ const FavoritesNav = ({onPress})=> {
 
 const MainComponent = ({ navigation, route }) => {
 
-  navigation.setOptions({
-    headerRight: ()=> <FavoritesNav onPress={goToFavorites}/>
-  })
+  // navigation.setOptions({
+  //   headerRight: ()=> <FavoritesNav onPress={goToFavorites}/>
+  // })
 
   const { adsActions, adsRegular, getAdvertisements, mobileNumber, mobileErrorMessage } = useContext(VerifyContext);
   const [categories, setCategories]= useState([]);
@@ -45,14 +45,14 @@ const MainComponent = ({ navigation, route }) => {
      
     },
     onCompleted: ({getLoadCategories})=> {
-        setActiveTab(getLoadCategories[0]?.id)
+        setActiveTab(getLoadCategories[0])
         setCategories(getLoadCategories)
     }
   })
 
 
   const getActiveCategoryName = (activeTab)=> {
-    return categories.filter(tab=>tab?.id===activeTab)[0]
+    return categories.filter(tab=>tab?.id===activeTab?.id)[0]
   }
 
   useEffect(()=>{
@@ -89,7 +89,7 @@ const MainComponent = ({ navigation, route }) => {
       />
       <LoadCategory 
         navigation={navigation}
-        activeTab={activeTab}
+        activeTab={activeTab?.id}
         activeCategory={()=>getActiveCategoryName(activeTab)}
       />
   

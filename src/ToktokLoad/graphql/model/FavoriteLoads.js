@@ -1,43 +1,43 @@
 import gql from 'graphql-tag'
 
 export const GET_FAVORITE_LOADS = gql`
-  query {
-    getFavoriteLoads {
+  query getFavoriteLoads($input: GetFavoriteLoadsInput!){
+    getFavoriteLoads(input: $input) {
       id
-      loadItemId
-      loadDetails {
+      name
+      amount
+      itemCode
+      descriptions
+      comRateId
+      termsAndConditions
+      providerId
+      networkId
+      planCode
+      referralCommissionItemId
+      networkDetails {
         id
         name
-        amount
-        itemCode
-        descriptions
         comRateId
-        termsAndConditions
-        providerId
-        networkId
-        planCode
-        referralCommissionItemId
-        networkDetails {
-          id
-          name
-          comRateId
-        }
-        commissionRateDetails {
-          id
-          ofps
-          startup
-          mcjr
-          mcsuper
-          jc
-          mc
-          mcmeg
-          others
-          providerComValue
-          systemServiceFee
-          providerServiceFee
-          providerComRate
-          comType
-        }
+      }
+      favorite {
+        id
+        loadItemId
+      }
+      commissionRateDetails {
+        id
+        ofps
+        startup
+        mcjr
+        mcsuper
+        jc
+        mc
+        mcmeg
+        others
+        providerComValue
+        systemServiceFee
+        providerServiceFee
+        providerComRate
+        comType
       }
     }
   } 
