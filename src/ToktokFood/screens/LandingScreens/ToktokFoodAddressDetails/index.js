@@ -28,7 +28,7 @@ const initialPickUpDetails = {
 const ToktokFoodAddressDetails = ({route}) => {
   const navigation = useNavigation();
 
-  const {location} = useSelector((state) => state.toktokFood);
+  const {location} = useSelector(state => state.toktokFood);
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -47,7 +47,7 @@ const ToktokFoodAddressDetails = ({route}) => {
 
   const [state, dispatch] = useReducer(reducer, initialPickUpDetails);
 
-  const onSearchMapNavigate = (c) => {
+  const onSearchMapNavigate = c => {
     if (typeof c === 'object') {
       navigation.replace('ToktokFoodMapSearch', {
         coordinates: c,
@@ -95,7 +95,7 @@ const ToktokFoodAddressDetails = ({route}) => {
     );
   };
 
-  const getGooglePlaceAutocomplete = async (searchString) => {
+  const getGooglePlaceAutocomplete = async searchString => {
     try {
       const API_RESULT = await axios({
         url: `${PROTOCOL}://${HOST_PORT}/graphql`,
@@ -133,7 +133,7 @@ const ToktokFoodAddressDetails = ({route}) => {
 
   const [getGooglePlaceDetails] = useLazyQuery(GET_GOOGLE_PLACE_DETAILS, {
     fetchPolicy: 'network-only',
-    onCompleted: (data) => {
+    onCompleted: data => {
       const {latitude, longitude} = data.getGooglePlaceDetails.location;
       dispatch({
         type: 'SET_PICKUP_ADDRESS_COORDINATES',
@@ -165,23 +165,27 @@ const ToktokFoodAddressDetails = ({route}) => {
 
   const renderItem = ({item}) => {
     const formattedAddressParts = item.formattedAddress.split(',');
-    return (
-      <>
-        <TouchableWithoutFeedback onPress={() => onResultSelect(item, formattedAddressParts.toString())}>
-          <View style={styles.placeItem}>
-            <MIcon style={styles.placeIcon} name="place" size={23} color={COLOR.ORANGE} />
-            <View style={styles.addressContainer}>
-              <Text numberOfLines={1} style={styles.placeName}>
-                {formattedAddressParts[0]}
-              </Text>
-              <Text style={styles.placeAddress} numberOfLines={1}>
-                {formattedAddressParts}
-              </Text>
+    if (formattedAddressParts[0].indexOf('Undefined') === -1) {
+      return (
+        <>
+          <TouchableWithoutFeedback onPress={() => onResultSelect(item, formattedAddressParts.toString())}>
+            <View style={styles.placeItem}>
+              <MIcon style={styles.placeIcon} name="place" size={23} color={COLOR.ORANGE} />
+              <View style={styles.addressContainer}>
+                <Text numberOfLines={1} style={styles.placeName}>
+                  {formattedAddressParts[0]}
+                </Text>
+                <Text style={styles.placeAddress} numberOfLines={1}>
+                  {formattedAddressParts}
+                </Text>
+              </View>
             </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </>
-    );
+          </TouchableWithoutFeedback>
+        </>
+      );
+    } else {
+      <></>;
+    }
   };
 
   useEffect(() => {
@@ -212,7 +216,7 @@ const ToktokFoodAddressDetails = ({route}) => {
                 placeholder="Enter Location"
                 style={[styles.searchBox, styles.textInputFontStyles]}
                 onFocus={() => debouncedGetGooglePlaceAutocomplete()}
-                onChangeText={(query) => dispatch({type: 'SET_PICKUP_ADDRESS', value: query})}
+                onChangeText={query => dispatch({type: 'SET_PICKUP_ADDRESS', value: query})}
               />
               <MIcon
                 onPress={() => dispatch({type: 'SET_PICKUP_ADDRESS', value: ''})}
