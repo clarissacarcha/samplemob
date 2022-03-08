@@ -583,7 +583,7 @@ const MainComponent = () => {
       landmark: receiver.landmark && receiver.landmark !== '' ? receiver.landmark : '',
       email: customerInfo.email,
       address: location.address,
-      user_id: Number(customerInfo.toktokUserid),
+      user_id: Number(customerInfo.userId),
       latitude: location.latitude,
       longitude: location.longitude,
       regCode: '0',
@@ -597,7 +597,7 @@ const MainComponent = () => {
       discounted_totalamount: parsedAmount,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, []);
-    console.log(data, 'DATA');
+    console.log('DATA', data);
     postCustomerOrder({
       variables: {
         input: data,

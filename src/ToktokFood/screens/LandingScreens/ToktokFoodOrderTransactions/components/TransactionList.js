@@ -94,7 +94,7 @@ export const TransactionList = props => {
     getOrderTransactions({
       variables: {
         input: {
-          userId: `${customerInfo.toktokUserid}`,
+          userId: `${customerInfo.userId}`,
           orderStatus: orderStatus,
           page: 0,
           limit: 10,
