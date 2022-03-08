@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
 import ContentLoader from 'react-native-easy-content-loader';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import {down_arrow_ic, markerIcon} from 'toktokfood/assets/images';
 import {moderateScale} from 'toktokfood/helper/scale';
@@ -16,10 +16,13 @@ import {CHECK_HAS_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 
 const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleContainer}) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const {location, customerInfo} = useSelector(state => state.toktokFood);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const onSetLocationDetails = () => {
+    dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
+    dispatch({type: 'SET_TOKTOKFOOD_SHIPPING', payload: []});
     navigation.navigate('ToktokFoodAddressDetails');
     setShowConfirmation(false);
   };

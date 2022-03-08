@@ -36,7 +36,7 @@ import {
 
 const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCancel}) => {
   const navigation = useNavigation();
-  const {showError} = useSelector(state => state.toktokFood.exhaust);
+  const {showError, minutesRemaining} = useSelector(state => state.toktokFood.exhaust);
 
   const [additionalMins, setAdditionalMins] = useState(0);
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState('');
@@ -279,7 +279,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
           if (showError) {
             return 'Rider is nearby your location. Thank you for patiently waiting.';
           }
-          return 'Estimated Delivery Time: 15-45 Minutes';
+          return `Estimated Delivery Time: ${minutesRemaining} minutes`;
         // return onGetPickupDate();
         default:
           return 'Estimated Delivery Time: 15-45 Minutes';
