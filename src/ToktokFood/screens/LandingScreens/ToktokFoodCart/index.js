@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+// import _ from 'lodash';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -38,7 +39,10 @@ import {
 } from './components';
 import {
   getDeductedVoucher,
+  getResellerDiscount,
   getTotalAmount,
+  getTotalAmountOrder,
+  getTotalDiscountAmount,
   getPromotionVouchers,
   getShippingVoucher,
   getTotalDeductedVoucher,
@@ -415,7 +419,12 @@ const MainComponent = () => {
     const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
 
     const deliveryPrice = orderType === 'Delivery' ? delivery?.price : 0;
-    const totalPrice = promotions.length > 0 ? temporaryCart?.srpTotalAmount : temporaryCart?.totalAmountWithAddons;
+    const totalPrice =
+      promotions.length > 0 ? await getTotalAmountOrder(promotions, temporaryCart.items) : temporaryCart?.totalAmount;
+    // const totalPrice =
+    //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;
+    // const totalResellerDiscount =
+    //   promotions.length > 0 ? (await getResellerDiscount(promotions, temporaryCart.items)).toFixed(2) : 0;
     const CUSTOMER_CART = await fixOrderLogs();
     // const SHIPPING_VOUCHERS = autoShipping?.success
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
@@ -428,7 +437,7 @@ const MainComponent = () => {
     //   // }
     //   totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
     // }
-    console.log(parseAmount, temporaryCart, customerInfo);
+    // console.log(parseAmount, toktokWallet.toktokuser_id);
     postResquestTakeMoney({
       variables: {
         input: {
@@ -441,6 +450,7 @@ const MainComponent = () => {
         },
       },
     }).then(({data}) => {
+      // console.log(data);
       let {success, message} = data.postRequestTakeMoney;
       if (success == 1) {
         let {requestTakeMoneyId, validator} = data.postRequestTakeMoney.data;
@@ -552,11 +562,20 @@ const MainComponent = () => {
 
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
     const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
-    const totalPrice = promotions.length > 0 ? temporaryCart?.srpTotalAmount : temporaryCart?.totalAmount;
+    // const autoApply = promotionVoucher.filter(promo => promo.type === 'auto');
+    // const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
+    // const mergeShipping = _.merge(autoApply, shipping);
+    // console.log(mergeShipping);
+    const totalPrice =
+      promotions.length > 0 ? await getTotalAmountOrder(promotions, temporaryCart.items) : temporaryCart?.totalAmount;
+    // const totalResellerDiscount =
+    //   promotions.length > 0 ? (await getResellerDiscount(promotions, temporaryCart.items)).toFixed(2) : 0;
 
     const amount = await getTotalAmount(promotionVoucher, 0);
     const parsedAmount = Number((totalPrice - amount).toFixed(2));
     // console.log(temporaryCart?.totalAmount);
+    // console.log(amount, parsedAmount, totalPrice);
+
     const ORDER = {
       // total_amount: temporaryCart.totalAmount,
       // srp_totalamount: temporaryCart.totalAmount,
@@ -571,7 +590,7 @@ const MainComponent = () => {
     };
     const CUSTOMER = {
       shopid: temporaryCart?.items[0].shopid,
-      company_id: String(temporaryCart?.items[0]?.shopid),
+      company_id: Number(temporaryCart?.items[0]?.companyId),
       name:
         receiver.contactPerson && receiver.contactPerson !== ''
           ? receiver.contactPerson

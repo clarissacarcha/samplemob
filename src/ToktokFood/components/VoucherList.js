@@ -14,6 +14,7 @@ import {reseller_badge} from 'toktokfood/assets/images';
 
 const VoucherList = ({
   data = [],
+  discountRate = 0,
   isDisabled = false,
   isReseller = false,
   hasClose = false,
@@ -24,7 +25,7 @@ const VoucherList = ({
 
   const onSetVoucher = useCallback(() => {
     if (isReseller) {
-      setVoucherData([{id: 0, name: 'Reseller -1.75%'}, ...data]);
+      setVoucherData([{id: 0, name: `Reseller ${discountRate}`}, ...data]);
       //   voucherData.unshift();
     }
   }, [isReseller]);

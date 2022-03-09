@@ -5,6 +5,8 @@ import _ from 'lodash';
 
 import {VerifyContext} from '../components';
 
+import {getResellerDiscount} from '../functions';
+
 import styles from '../styles';
 
 const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = true, oneCartTotal}) => {
@@ -15,18 +17,20 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
   const [totalShipping, setTotalShipping] = useState(0);
   const [totalPromotions, setTotalPromotions] = useState(0);
   const [totalDelivery, setTotalDelivery] = useState(0);
+  // const [totalReseller, setTotalReseller] = useState(0);
   const [totalDeal, setTotalDeal] = useState(0);
 
   const {promotionVoucher} = useSelector(state => state.toktokFood);
 
   const totalSumSF = totalDelivery + totalShipping;
   const totalSF = totalSumSF > deliveryFee ? deliveryFee.toFixed(2) : totalSumSF.toFixed(2);
+  const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmountWithAddons;
 
   useEffect(() => {
     oneCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
   }, [shippingVoucher, totalBasket, totalShipping]);
 
-  const getVoucherFee = useCallback(() => {
+  const getVoucherFee = useCallback(async () => {
     const groupPromo = _(promotionVoucher)
       .groupBy('type')
       .map((objs, key) => ({
@@ -41,8 +45,12 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     const shipping = groupPromo.filter(promo => promo.type === 'shipping');
 
     if (promotions.length > 0) {
-      setTotalPromotions(promotions[0].discount_totalamount);
-      setTotalBasket(temporaryCart.srpTotalAmount);
+      // setTotalPromotions(promotions[0].discount_totalamount);
+      const promotion = promotionVoucher.filter(promo => promo.type === 'promotion');
+      const totalResellerDisc = await getResellerDiscount(promotion, temporaryCart.items);
+      // console.log(totalResellerDisc);
+      setTotalPromotions(totalResellerDisc);
+      // setTotalBasket(temporaryCart.srpTotalAmount);
     } else {
       setTotalPromotions(0);
     }
@@ -125,6 +133,13 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         <View style={styles.header}>
           <Text>Item Discount</Text>
           <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal).toFixed(2)}`}</Text>
+        </View>
+      )}
+
+      {totalReseller > 0 && (
+        <View style={styles.header}>
+          <Text>Item Discount (Reseller)</Text>
+          <Text style={styles.subtotal}>{`-PHP ${totalReseller.toFixed(2)}`}</Text>
         </View>
       )}
 

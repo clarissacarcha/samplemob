@@ -29,6 +29,7 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
   const navigation = useNavigation();
   const keyboardHeight = useKeyboard();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showInvalidMobile, setShowInvalidMobile] = useState(false);
   const [showContacts, setShowContacts] = useState(false);
 
   const {customerInfo} = useSelector(state => state.toktokFood);
@@ -81,7 +82,7 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
     },
   });
 
-  const onConfirmAddress = () => {
+  const proceedChangeAddress = () => {
     if (temporaryCart?.checkHasTemporaryCart?.shopid !== 0) {
       deleteShopTemporaryCart();
     } else {
@@ -89,6 +90,19 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
       onConfirm(state);
     }
     clearShopHistory();
+  };
+
+  const onConfirmAddress = () => {
+    const mobileNumber = state.contactPersonNumber.replace(/\s/g, '').replace(/[()]/g, '');
+    if (mobileNumber.length !== 0) {
+      if (mobileNumber.length !== 10 || mobileNumber[0] !== '9') {
+        setShowInvalidMobile(true);
+      } else {
+        proceedChangeAddress();
+      }
+    } else {
+      proceedChangeAddress();
+    }
   };
 
   const onContactSelected = (contact = {name: '', number: ''}) => {
@@ -119,6 +133,16 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
           isCart ? navigation.navigate('ToktokFoodHome') : navigation.pop();
         }}
       />
+      <DialogMessage
+        visibility={showInvalidMobile}
+        title="Invalid Mobile Number"
+        messages="Kindly provide valid mobile number"
+        type="warning"
+        btn1Title="OK"
+        onCloseModal={() => {
+          setShowInvalidMobile(false);
+        }}
+      />
       <View style={[styles.proto, styles.cartBorder, {bottom: keyboardHeight - 35}]}>
         <View style={styles.sheet}>
           <Text style={styles.pickUpAddressTitle}>Drop-off Address Details</Text>
@@ -144,10 +168,13 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
               <Text style={styles.addressBookText}>Address Book</Text>
             </TouchableOpacity>
           </View>
-          <View style={[styles.inputWrapper]}>
+          <View style={[styles.inputWrapper, {flexDirection: 'row'}]}>
+            <View style={styles.countryCodeWrapper}>
+              <Text style={styles.countryCodeText}>+63</Text>
+            </View>
             <TextInput
               maxLength={10}
-              style={styles.input}
+              style={[styles.input, {height: 57}]}
               keyboardType="number-pad"
               placeholder="Contact Person's Number"
               value={state.contactPersonNumber}
@@ -236,6 +263,21 @@ const styles = StyleSheet.create({
   customInputWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  countryCodeWrapper: {
+    height: '100%',
+    marginRight: 5,
+    display: 'flex',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    backgroundColor: '#F0F0F0',
+  },
+  countryCodeText: {
+    fontSize: 14,
+    color: COLOR.BLACK,
+    fontFamily: FONT.BOLD,
   },
 });
 export default PickUpDetails;

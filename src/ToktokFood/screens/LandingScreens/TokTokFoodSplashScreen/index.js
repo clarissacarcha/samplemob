@@ -42,11 +42,11 @@ const TokTokFoodSplashScreen = () => {
 
   const [getConsumerStatus] = useLazyQuery(GET_CONSUMER_TYPE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    context: {
-      headers: {
-        'x-api-key': 'ABCD1234',
-      },
-    },
+    // context: {
+    //   headers: {
+    //     'x-api-key': 'ABCD1234',
+    //   },
+    // },
     fetchPolicy: 'network-only',
     variables: {
       input: {
