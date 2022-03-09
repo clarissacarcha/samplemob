@@ -482,7 +482,7 @@ const MainComponent = () => {
       variables: {
         input: {
           request_money_id: toktokWalletCredit.requestTakeMoneyId,
-          pin: Number(+pinCode),
+          pin: String(+pinCode),
           pin_type: toktokWalletCredit.validator,
         },
       },
