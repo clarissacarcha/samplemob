@@ -1,9 +1,10 @@
 import React , {useState , useEffect , useRef } from 'react';
-import { View, Text, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, Image } from 'react-native';
 
 //COMPONENTS
-import { HeaderBack, HeaderTitle, Separator, OrangeButton, NumberBoxes, BuildingBottom } from 'toktokload/components';
+import { HeaderBack, HeaderTitle, Separator, OrangeButton, NumberBoxes, BuildingBottom, NumPad, CircleIndicator } from 'toktokload/components';
 import { AlertOverlay } from 'src/components';
+import {VectorIcon, ICON_SET} from 'src/revamp';
 
 //HELPER & UTIL
 import { moderateScale, numberFormat } from 'toktokload/helper';
@@ -18,8 +19,10 @@ import { usePrompt, useAlert } from 'src/hooks';
 import { onErrorAlert } from 'src/util/ErrorUtility';
 import { useSelector } from 'react-redux';
 
-// FONTS AND COLORS
+//IMAGES, FONTS AND COLORS 
 import CONSTANTS from 'common/res/constants'
+import {toktokload_logo} from 'toktokload/assets/images';
+
 import moment from 'moment';
 
 const {COLOR , FONT_FAMILY: FONT , FONT_SIZE, SIZE} = CONSTANTS
@@ -28,7 +31,17 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={"toktokload"} isRightIcon/>,
+    headerTitle: () => <HeaderTitle label={""}/>,
+    headerStyle: {
+      elevation: 0,
+      shadowColor: "#fff",
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0,
+      shadowRadius: 0,
+    }
   });
   
 
@@ -66,6 +79,13 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
       navigation.navigate("ToktokLoadReceipt", { receipt: postLoadTransaction.data  })
     }
   })
+
+  useEffect(()=>{
+    if(pinCode.length > 0) setErrorMessage("")
+    if(pinCode.length == 6){
+      onPressConfirm();
+    }
+  },[pinCode])
 
   useEffect(()=>{
     const unsubscribe = navigation.addListener('blur', (e) => {
@@ -125,42 +145,23 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
     <View style={styles.subContainer}>
       <AlertOverlay visible={loading}/>
       <View style={styles.inputContainer}>
-        <Text style={styles.otpText}>Enter {requestMoneyDetails?.validator} </Text>
-        <View style={{flexDirection:"row"}}>
-          <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={showPin} isError={errorMessage != ""} />
-          <TextInput
-            caretHidden
-            value={pinCode}
-            ref={inputRef}
-            style={styles.input}
-            keyboardType="number-pad"
-            returnKeyType="done"
-            onChangeText={(value) => {
-              if (value.length <= 6) {
-                const code = value.replace(/[^0-9]/,"")
-                setPinCode(code);
-                setErrorMessage("")
-              }
-            }}
-          />
+        <Image source={toktokload_logo} style={{ width: moderateScale(200), height: moderateScale(80), resizeMode: "contain" }} />
+        <Text style={styles.otpText}>Enter {requestMoneyDetails?.validator}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", marginBottom: moderateScale(30) }}>
+          <VectorIcon iconSet={ICON_SET.AntDesign} name="exclamationcircle" size={15} color={COLOR.ORANGE} />
+          <Text style={styles.otpMessage}>Do not share your TPIN with anyone.</Text>
         </View>
-        { errorMessage != "" && <Text style={styles.errorText}>{errorMessage}</Text> }
+        <CircleIndicator pinCode={pinCode} showPin={showPin} error={!!errorMessage} />
+        <Text style={styles.errorText}>{errorMessage}</Text>
+        <View style={{ paddingBottom: moderateScale(10) }}>
+          <NumPad setPinCode={setPinCode} pinCode={pinCode} />
+        </View>
         { requestMoneyDetails?.validator === "TPIN" && (
-          <>
-            <TouchableOpacity style={{ marginVertical: moderateScale(50) }} onPress={onPressShowTPIN}>
-              <Text style={styles.forgotTPIN}>{showPin ? "Hide TPIN" : "Show TPIN"}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onPressForgotTPIN}>
-              <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
-            </TouchableOpacity>
-          </>
+          <TouchableOpacity onPress={onPressForgotTPIN} style={{ marginVertical: moderateScale(20) }}>
+            <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
+          </TouchableOpacity>
         )}
       </View>
-      <OrangeButton
-        disabled={pinCode.length < 6}
-        label="Confirm"
-        onPress={onPressConfirm}
-      />
     </View>
   )
 }
@@ -177,12 +178,12 @@ const styles = StyleSheet.create({
   inputContainer: {
     flex: 1,
     alignItems:"center",
-    marginTop: moderateScale(100)
+    justifyContent: "center"
   },
   otpText: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
-    marginBottom: moderateScale(30)
+    marginBottom: moderateScale(5)
   },
   input: {
     height: '100%',
@@ -193,12 +194,18 @@ const styles = StyleSheet.create({
   errorText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
-    color: COLOR.RED,
+    color: "#ED3A19",
     marginHorizontal: moderateScale(16),
-    textAlign: "center"
+    textAlign: "center",
+    marginTop: moderateScale(10)
   },
   forgotTPIN: {
     color: "#FF8A48",
-    fontSize: FONT_SIZE.M
-  }
+    fontSize: FONT_SIZE.M,
+    fontFamily: FONT.BOLD
+  },
+  otpMessage: {
+    fontSize: FONT_SIZE.M,
+    marginLeft: moderateScale(5)
+  },
 })
