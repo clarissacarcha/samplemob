@@ -13,7 +13,7 @@ export const HeaderTitle = ({isRightIcon, rightIcon = null, rightIconOnPress, is
         {
           isLogo
           ? <Image resizeMode="contain" style={{height: moderateScale(23),width: moderateScale(130)}} source={require('toktokwallet/assets/images/toktokwallet.png')} />
-          : <Text style={{fontSize: moderateScale(FONT_SIZE.L),fontFamily: FONT.BOLD,color: labelColor}}>{label}</Text>
+          : <Text style={{fontSize: moderateScale(FONT_SIZE.L), fontFamily: FONT.REGULAR, color: labelColor, fontWeight: "400"}}>{label}</Text>
         }
       </View>
     )

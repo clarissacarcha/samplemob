@@ -19,6 +19,7 @@ const transaction = `
     networkDetails {
       id
       name
+      iconUrl
     }
   }
   senderWalletBalance

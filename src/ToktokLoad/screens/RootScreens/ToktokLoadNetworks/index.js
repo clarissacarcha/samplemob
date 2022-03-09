@@ -26,7 +26,6 @@ const ErrorComponent = ({ error, onRefetch }) => {
 }
 
 const MainComponent = ({ navigation, route }) => {
-  console.log(route.params?.refreshLoadList)
  
   const networkId = route.params?.network.id;
   const {
@@ -43,6 +42,7 @@ const MainComponent = ({ navigation, route }) => {
   } = useContext(VerifyContext);
   const [loadVariants, setLoadVariant]= useState([]);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
   
   const [getLoadVariants, {loading, error}] = useLazyQuery(GET_LOAD_VARIANTS, {
     fetchPolicy:"network-only",
@@ -125,7 +125,17 @@ const MainComponent = ({ navigation, route }) => {
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Buy Load for</Text>
         <View style={styles.headerContentContainer}>
-          <Image source={{ uri: route.params.network.iconUrl }} style={styles.networkLogo} />
+          { imageLoading && (
+            <View style={{ position: "absolute", left: 10 }}>
+              <LoadingIndicator isLoading={true} size="small" />
+            </View>
+          )}
+          <Image
+            source={{ uri: route.params.network.iconUrl }}
+            style={styles.networkLogo}
+            onLoadStart={() => { setImageLoading(true) }}
+            onLoadEnd={() => { setImageLoading(false) }}
+          />
           <Text style={styles.mobileNo}>{route.params?.mobileNumber}</Text>
         </View>
       </View>
@@ -178,14 +188,15 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: "#707070",
-    fontSize: FONT_SIZE.M
+    fontSize: FONT_SIZE.L
   },
   mobileNo: {
     fontSize: moderateScale(20)
   },
   headerContentContainer: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    paddingVertical: moderateScale(10)
   },
   networkLogo: {
     height: moderateScale(20),

@@ -31,10 +31,10 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.XL,
     fontFamily: FONT.BOLD,
     color: "#F6841F",
-    paddingTop: moderateScale(20)
+    paddingTop: moderateScale(30)
   },
   mobile: {
     fontSize: FONT_SIZE.XL,
-    paddingTop: moderateScale(5)
+    padding: moderateScale(10),
   },
 })

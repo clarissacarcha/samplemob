@@ -9,7 +9,7 @@ import { ErrorUtility } from 'toktokload/util';
 import { useSelector } from 'react-redux'
 
 //COMPONENTS
-import { OrangeButton } from "src/ToktokLoad/components";
+import { OrangeButton, LoadingIndicator } from "src/ToktokLoad/components";
 import { VerifyContext } from "../VerifyContextProvider";
 
 //UTIL
@@ -28,6 +28,7 @@ import {Advertisement} from "../Advertisement";
 import { NetworkListModal } from "../NetworkListModal";
 
 export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
+
   const {
     mobileErrorMessage,
     setMobileErrorMessage,
@@ -36,9 +37,12 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
     setSubContainerStyle,
     adHighlight
   } = useContext(VerifyContext);
+
   const [visible,setVisible] = useState(false);
   const [activeNetwork,setActiveNetwork] = useState(null)
   const [networks,setNetworks] = useState([])
+  const [imageLoading, setImageLoading] = useState(true);
+
   const prompt = usePrompt();
   const { user } = useSelector((state) => state.session);
   const formattedMobile = user?.username.replace("+63", "0");
@@ -152,7 +156,18 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
             {
               activeNetwork 
               ? <View style={{flexDirection:"row",alignItems:"center"}}>
-                  <Image source={{uri: activeNetwork.iconUrl}} style={styles.networkImage} resizeMode="contain"/>
+                  { imageLoading && (
+                    <View style={{ position: "absolute", left: 10 }}>
+                      <LoadingIndicator isLoading={true} size="small" />
+                    </View>
+                  )}
+                  <Image
+                    source={{uri: activeNetwork.iconUrl}}
+                    style={styles.networkImage}
+                    resizeMode="contain"
+                    onLoadStart={() => { setImageLoading(true) }}
+                    onLoadEnd={() => { setImageLoading(false) }}
+                  />
                   <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginLeft: 5}}>{activeNetwork.name}</Text>
                 </View>
               : <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Select {activeCategory()?.name ? activeCategory().name : ""}..</Text>
