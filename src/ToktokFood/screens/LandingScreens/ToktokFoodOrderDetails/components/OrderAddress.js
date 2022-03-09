@@ -173,7 +173,9 @@ const OrderAddress = ({transaction, riderDetails}) => {
             </View>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={phoneBlack} resizeMode="contain" />
-              <Text style={styles.addressText}>{conno}</Text>
+              <Text style={styles.addressText}>
+                {orderStatus == 'c' || orderStatus == 's' ? `${conno}` : `+63${conno}`}
+              </Text>
             </View>
           </>
         )}
