@@ -121,12 +121,17 @@ const MainComponent = () => {
 
   const ResellerDiscountBadge = () => {
     const {discRatetype, referralDiscount} = productDetails?.resellerDiscount;
-    const discountText = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
+    const discountRate = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
     return (
-      <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
-        <Text style={styles.resellerText}>Reseller {discountText}</Text>
-      </ImageBackground>
+      <View>
+        <VoucherList isReseller={productDetails.resellerDiscount?.referralShopRate > 0} discountRate={discountRate} />
+      </View>
     );
+    // return (
+    //   <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
+    //     <Text style={styles.resellerText}>Reseller {discountText}</Text>
+    //   </ImageBackground>
+    // );
   };
 
   const ResellerPrice = () => {
@@ -142,17 +147,16 @@ const MainComponent = () => {
 
   const ItemDetails = () => {
     const {itemname, basePrice, price, resellerDiscount, summary} = productDetails;
+    const {discRatetype, referralDiscount} = productDetails?.resellerDiscount;
+    const discountRate = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
+
     return (
       <View style={styles.foodContainer}>
-        <View>
-          <VoucherList isReseller={resellerDiscount?.referralShopRate > 0} />
-        </View>
-
-        {/* {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge />} */}
+        {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge />}
         <View style={styles.foodDetails}>
           {/* <View style={styles.foodNameWrapper}> */}
           <Text style={styles.foodName}>{itemname}</Text>
-            {/* <MIcon name="favorite-border" size={22} color="#808080" style={styles.heart} /> */}
+          {/* <MIcon name="favorite-border" size={22} color="#808080" style={styles.heart} /> */}
           {/* </View> */}
           {resellerDiscount?.referralShopRate > 0 ? (
             <ResellerPrice />
