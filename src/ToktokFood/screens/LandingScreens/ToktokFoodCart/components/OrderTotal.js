@@ -44,6 +44,8 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     const autoApply = groupPromo.filter(promo => promo.type === 'auto');
     const shipping = groupPromo.filter(promo => promo.type === 'shipping');
 
+    // console.log(promotionVoucher);
+
     if (promotions.length > 0) {
       // setTotalPromotions(promotions[0].discount_totalamount);
       const promotion = promotionVoucher.filter(promo => promo.type === 'promotion');
@@ -55,7 +57,11 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       setTotalPromotions(0);
     }
     if (deal.length > 0) {
-      setTotalDeal(deal[0].discount_totalamount);
+      // setTotalDeal(deal[0].discount_totalamount);
+      const deals = promotionVoucher.filter(promo => promo.type === 'deal');
+      const totalResellerDisc = await getResellerDiscount(deals, temporaryCart.items);
+      // console.log(totalResellerDisc)
+      setTotalDeal(totalResellerDisc);
     } else {
       setTotalDeal(0);
     }
@@ -136,7 +142,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         </View>
       )}
 
-      {totalReseller > 0 && (
+      {totalPromotions === 0 && totalDeal === 0 && totalReseller > 0 && (
         <View style={styles.header}>
           <Text>Item Discount (Reseller)</Text>
           <Text style={styles.subtotal}>{`-PHP ${totalReseller.toFixed(2)}`}</Text>

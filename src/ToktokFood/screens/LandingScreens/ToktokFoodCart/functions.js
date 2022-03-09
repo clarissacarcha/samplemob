@@ -51,8 +51,10 @@ export const getResellerDiscount = async (promotions, cartItems) => {
         // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
         if (filteredProd) {
           const deductedDiscount =
-            item?.discount_type === '3' ? items?.basePrice - item?.discounted_totalamount : item?.discount_totalamount;
-          // console.log(items);
+            item?.discount_type === '3'
+              ? (items?.resellerDiscount || items?.basePrice) - 1
+              : item?.discount_totalamount;
+          // console.log(items, deductedDiscount);
           totalReseller += deductedDiscount;
           // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
         }
@@ -75,10 +77,7 @@ export const getTotalAmountOrder = async (promotions, cartItems) => {
         const filteredProd = _.includes(productIds, items.productid);
         // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
         if (filteredProd) {
-          const deductedDiscount =
-            item?.discount_type === '3'
-              ? items?.basePrice - item?.discounted_totalamount
-              : items?.basePrice - item?.discount_totalamount;
+          const deductedDiscount = item?.discount_type === '3' ? 1 : items?.basePrice - item?.discount_totalamount;
 
           const resellerDiscount = (items.quantity - 1) * (items?.resellerDiscount || items?.basePrice);
           // console.log(items);
@@ -107,9 +106,9 @@ export const getTotalAmount = async (promos, deliveryFee) => {
     const deductedAmount = await getDeductedVoucher(promo, deliveryFee);
     totalAmount += deductedAmount;
   });
-  await deals.map(async promo => {
-    totalAmount += promo?.discount_totalamount;
-  });
+  // await deals.map(async promo => {
+  //   totalAmount += promo?.discount_totalamount;
+  // });
   // await promotions.map(async promo => {
   //   totalAmount += promo?.discount_totalamount;
   // });
@@ -158,13 +157,13 @@ export const getShippingVoucher = async promos => {
   let autoApply = promos.filter(promo => promo.type === 'auto');
   let shipping = promos.filter(promo => promo.type === 'shipping');
   autoApply = await autoApply.map(promo => {
-    let shippingObj = {...promo, amount: promo.origAmount};
-    delete promo.__typename;
+    let shippingObj = {...promo, amount: promo.amount};
+    delete shippingObj.__typename;
     return shippingObj;
   });
   shipping = await shipping.map(promo => {
     let shippingObj = {...promo, amount: promo.origAmount};
-    delete promo.__typename;
+    delete shippingObj.__typename;
     return shippingObj;
   });
 
@@ -172,7 +171,7 @@ export const getShippingVoucher = async promos => {
     delete promo.origAmount;
     delete promo.__typename;
   });
-
+  // console.log(autoApply, shipping)
   return [...autoApply, ...shipping];
 };
 

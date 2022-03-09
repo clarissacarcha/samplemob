@@ -417,10 +417,13 @@ const MainComponent = () => {
 
   const onToktokWalletOrder = async () => {
     const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+    const deals = promotionVoucher.filter(promo => promo.type === 'deal');
 
     const deliveryPrice = orderType === 'Delivery' ? delivery?.price : 0;
     const totalPrice =
-      promotions.length > 0 ? await getTotalAmountOrder(promotions, temporaryCart.items) : temporaryCart?.totalAmount;
+      promotions.length > 0 || deals.length > 0
+        ? await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)
+        : temporaryCart?.totalAmount;
     // const totalPrice =
     //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;
     // const totalResellerDiscount =
@@ -437,7 +440,7 @@ const MainComponent = () => {
     //   // }
     //   totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
     // }
-    // console.log(parseAmount, toktokWallet.toktokuser_id);
+    console.log(parseAmount, totalPrice, amount);
     postResquestTakeMoney({
       variables: {
         input: {
@@ -479,7 +482,7 @@ const MainComponent = () => {
       variables: {
         input: {
           request_money_id: toktokWalletCredit.requestTakeMoneyId,
-          pin: +pinCode,
+          pin: Number(+pinCode),
           pin_type: toktokWalletCredit.validator,
         },
       },
@@ -562,12 +565,17 @@ const MainComponent = () => {
 
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
     const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+    const deals = promotionVoucher.filter(promo => promo.type === 'deal');
     // const autoApply = promotionVoucher.filter(promo => promo.type === 'auto');
     // const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
     // const mergeShipping = _.merge(autoApply, shipping);
     // console.log(mergeShipping);
+    // const totalPrice =
+    //   promotions.length > 0 ? await getTotalAmountOrder(promotions, temporaryCart.items) : temporaryCart?.totalAmount;
     const totalPrice =
-      promotions.length > 0 ? await getTotalAmountOrder(promotions, temporaryCart.items) : temporaryCart?.totalAmount;
+      promotions.length > 0 || deals.length > 0
+        ? await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)
+        : temporaryCart?.totalAmount;
     // const totalResellerDiscount =
     //   promotions.length > 0 ? (await getResellerDiscount(promotions, temporaryCart.items)).toFixed(2) : 0;
 
@@ -590,7 +598,7 @@ const MainComponent = () => {
     };
     const CUSTOMER = {
       shopid: temporaryCart?.items[0].shopid,
-      company_id: Number(temporaryCart?.items[0]?.companyId),
+      company_id: String(temporaryCart?.items[0]?.companyId),
       name:
         receiver.contactPerson && receiver.contactPerson !== ''
           ? receiver.contactPerson
