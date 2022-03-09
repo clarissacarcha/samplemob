@@ -5,10 +5,10 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 // Fonts/Colors/Images
 // import {COLORS} from 'res/constants';
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
-import {no_image, reseller_badge} from 'toktokfood/assets/images';
+import {no_image, reseller_badge, food_placeholder} from 'toktokfood/assets/images';
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
-
+import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 // Data
 // import {foodData} from 'toktokfood/helper/strings';
 
@@ -50,7 +50,9 @@ const OrderList = ({orderDetails}) => {
             <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
               <Text style={styles.resellerText}>Reseller -{finalPercentage}%</Text>
             </ImageBackground>
-            <Text style={{...styles.seeAll, position: 'absolute', bottom: moderateScale(-20)}}>PHP {amount.toFixed(2)}</Text>
+            <Text style={{...styles.seeAll, position: 'absolute', bottom: moderateScale(-20)}}>
+              PHP {amount.toFixed(2)}
+            </Text>
           </View>
         );
       },
@@ -64,13 +66,22 @@ const OrderList = ({orderDetails}) => {
     const {amount, srpAmount} = item;
     return (
       <View style={styles.listContainer}>
-        {item.productDetails.filename && (
+        <View style={styles.progressiveImageContainer}>
+          {item.productDetails.filename && (
+            <ProgressiveImage
+              style={styles.foodItemImage}
+              source={item.productDetails.filename}
+              placeholder={food_placeholder}
+            />
+          )}
+        </View>
+        {/* {item.productDetails.filename && (
           <Image
             style={styles.listImg}
             source={validImg ? {uri: item.productDetails.filename} : no_image}
             onError={() => setValidImg(false)}
           />
-        )}
+        )} */}
         <View style={styles.list}>
           <View style={styles.listInfo}>
             <Text numberOfLines={1} style={styles.listName}>
@@ -186,5 +197,20 @@ const styles = StyleSheet.create({
     color: COLOR.WHITE,
     fontSize: FONT_SIZE.XS,
     fontWeight: '700',
+  },
+  foodItemImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+    resizeMode: 'cover',
+  },
+  progressiveImageContainer: {
+    width: 80,
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F7F7FA',
+    borderRadius: 10,
+    marginRight: moderateScale(10),
   },
 });

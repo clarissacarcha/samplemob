@@ -74,10 +74,9 @@ const styles = StyleSheet.create({
     tintColor: 'black',
   },
   foodItemImage: {
-    width: moderateScale(80),
-    height: moderateScale(80),
-    marginRight: 8,
-    borderRadius: 12,
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
     resizeMode: 'cover',
   },
   orderItemContainer: {
@@ -303,6 +302,15 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     textDecorationLine: 'line-through',
     textDecorationStyle: 'solid',
+  },
+  progressiveImageContainer: {
+    width: 80,
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F7F7FA',
+    borderRadius: 10,
+    marginRight: moderateScale(10),
   },
 });
 

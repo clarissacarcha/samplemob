@@ -27,7 +27,7 @@ import {
 
 const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
   const [additionalMins, setAdditionalMins] = useState(0);
-  const {showError} = useSelector(state => state.toktokFood.exhaust);
+  const {showError, minutesRemaining} = useSelector(state => state.toktokFood.exhaust);
   const [newETA, setNewETA] = useState(false);
   const {
     // latitude,
@@ -238,7 +238,7 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
           if (showError) {
             return 'Rider is nearby your location. Thank you for patiently waiting.';
           }
-          return 'Estimated Delivery Time: 15-45 Minutes';
+          return `Estimated Delivery Time: ${minutesRemaining} ${minutesRemaining > 1 ? 'minutes' : 'minute'}`;
         // return onGetPickupDate();
         // return `${etaMinutes} Minutes`;
         default:
