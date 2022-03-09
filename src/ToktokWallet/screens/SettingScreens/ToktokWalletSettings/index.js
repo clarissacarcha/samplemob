@@ -56,8 +56,9 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             {
                 ( !tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3  ) 
                 ? <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
-                :  ( tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2  ) &&
-                   <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
+                :  ( tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2  ) 
+                    ? <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
+                    : null
             }       
             <Separator/>
             <SettingHeaderTitle title="Help Centre"/>
