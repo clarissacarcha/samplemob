@@ -8,7 +8,7 @@ import { moderateScale } from "toktokload/helper";
 import { ErrorUtility } from 'toktokload/util';
 
 //COMPONENTS
-import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, EmptyList, SearchInput } from "src/ToktokLoad/components";
+import { OrangeButton, HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, EmptyList, SearchInput, ToastModal } from "src/ToktokLoad/components";
 import { FavoriteDetails } from "./components";
 import { SomethingWentWrong } from "toktokload/components";
 import { AlertOverlay } from 'src/components';
@@ -44,6 +44,7 @@ const MainComponent = ({navigation,route})=> {
   const [favorites, setFavorites] = useState([]);
   const [isMounted, setIsMounted] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [favoriteModal, setFavoriteModal] = useState({ show: false, message: "" });
 
   const [getFavoriteLoads, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(GET_FAVORITE_LOADS, {
     fetchPolicy: "network-only",
@@ -102,7 +103,8 @@ const MainComponent = ({navigation,route})=> {
     onCompleted:({ patchRemoveFavoriteLoad })=> {
       processGetLoadItems();
       processGetFavoriteLoads("refresh");
-      console.log(patchRemoveFavoriteLoad, "REMOVE")
+      setFavoriteModal({ show: true, message: "Removed from your Favorites" });
+      console.log(patchRemoveFavoriteLoad, "REMOVE");
     }
   });
 
@@ -119,7 +121,8 @@ const MainComponent = ({navigation,route})=> {
     onCompleted:({ postFavoriteLoad })=> {
       processGetLoadItems();
       processGetFavoriteLoads("refresh");
-      console.log(postFavoriteLoad, "ADD")
+      setFavoriteModal({ show: true, message: "Added to your Favorites" });
+      console.log(postFavoriteLoad, "ADD");
     }
   });
 
@@ -221,6 +224,7 @@ const MainComponent = ({navigation,route})=> {
   return (
     <View style={styles.container}>
       {/* <AlertOverlay visible={checkLoading || patchFavoriteLoading}/> */}
+      <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
       <SearchInput
         search={search}
         onChangeText={(value) => { setSearch(value) }}

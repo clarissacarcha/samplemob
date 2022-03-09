@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext, useState} from 'react'
 import { View, Text, StyleSheet, Modal, TouchableHighlight, TouchableOpacity, Dimensions, FlatList, Image, TouchableWithoutFeedback} from 'react-native'
 import { load_logo } from 'toktokload/assets/images'
 import { useThrottle } from 'src/hooks'
@@ -6,17 +6,32 @@ import { LoadingIndicator } from "src/ToktokLoad/components";
 import { VerifyContext } from '../VerifyContextProvider';
 import CONSTANTS from 'common/res/constants';
 
+//UTIL
+import { moderateScale } from "toktokload/helper";
+
 const { MARGIN , COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 const { width , height } = Dimensions.get("window")
 
 const RenderItem = ({item,index,onPress}) => {
 
+  const [imageLoading, setImageLoading] = useState(true);
   const onPressThrottle = useThrottle(()=>onPress(index), 2000)
 
   return (
     <TouchableHighlight onPress={onPressThrottle} underlayColor={COLOR.LIGHT} style={styles.network}>
       <View style={{flexDirection:"row" ,justifyContent:"center" , alignItems:'center'}}>
-        <Image style={styles.image} source={{ uri: item.iconUrl }} resizeMode="contain"/>
+        { imageLoading && (
+          <View style={{ position: "absolute", left: 10 }}>
+            <LoadingIndicator isLoading={true} size="small" />
+          </View>
+        )}
+        <Image
+          style={styles.image}
+          source={{ uri: item.iconUrl }}
+          resizeMode="contain"
+          onLoadStart={() => { setImageLoading(true) }}
+          onLoadEnd={() => { setImageLoading(false) }}
+        />
         <View style={{flex:1}}>
           <Text numberOfLines={2} style={styles.text}>{item.name}</Text>
         </View>
@@ -103,8 +118,8 @@ const styles = StyleSheet.create({
     alignItems:"center"
   },
   image: {
-    height: 15,
-    width: 40,
+    height: moderateScale(20),
+    width: moderateScale(40),
   },
   text: {
     fontFamily: FONT.REGULAR,

@@ -9,7 +9,7 @@ import {VectorIcon, ICON_SET} from 'src/revamp';
 //COMPONENTS
 import { LoadDetails } from "./LoadDetails";
 import { VerifyContext } from "../VerifyContextProvider";
-import { EmptyList, OrangeButton, LoadingIndicator, SearchInput } from "src/ToktokLoad/components";
+import { EmptyList, OrangeButton, LoadingIndicator, SearchInput, ToastModal } from "src/ToktokLoad/components";
 import { SomethingWentWrong } from "toktokload/components";
 
 //GRAPHQL & HOOKS
@@ -43,6 +43,7 @@ export const LoadList = memo((props) => {
     activeTab
   } = useContext(VerifyContext);
   const [isMounted, setIsMounted] = useState(true);
+  const [favoriteModal, setFavoriteModal] = useState({ show: false, message: "" });
   
   const [getLoadItems, {loading: getLoadItemsLoading, error: getLoadItemsError}]  = useLazyQuery(GET_LOAD_ITEMS, {
     fetchPolicy: "cache-and-network",
@@ -72,8 +73,9 @@ export const LoadList = memo((props) => {
       if(search){
         processSearch();
       } else {
-        processGetLoadItems();
+        processFavorite();
       }
+      setFavoriteModal({ show: true, message: "Added to your Favorites" });
       console.log(postFavoriteLoad, "ADD")
     }
   });
@@ -92,8 +94,9 @@ export const LoadList = memo((props) => {
       if(search){
         processSearch();
       } else {
-        processGetLoadItems();
+        processFavorite("hasFav");
       }
+      setFavoriteModal({ show: true, message: "Removed from your Favorites" });
       console.log(patchRemoveFavoriteLoad, "REMOVE")
     }
   });
@@ -130,7 +133,7 @@ export const LoadList = memo((props) => {
   };
 
   const onPressFavorite = (item, index) => {
-    setLoadFavorite(item.id);
+    setLoadFavorite({ item, index });
     let data = [...loads];
     let favData = {
       variables: {
@@ -140,7 +143,13 @@ export const LoadList = memo((props) => {
       }
     }
 
-    // ADD OR REMOVE FAVORITE
+    // // ADD OR REMOVE FAVORITE
+    // if(item.favorite){
+    //   patchRemoveFavoriteLoad(favData)
+    // } else {
+    //   postFavoriteLoad(favData)
+    // }
+
     if(item.favorite){
       patchRemoveFavoriteLoad(favData)
     } else {
@@ -158,6 +167,28 @@ export const LoadList = memo((props) => {
     navigation.navigate("ToktokLoadFavorites", { mobileNumber, loadVariantId, processGetLoadItems });
   }
 
+  const processFavorite = (action) => {
+    if(action){
+      let data = { ...loadFavorite.item, ["favorite"]: null};
+      setLoads(prev => ([ ...prev, data ].sort((a, b) => {
+        if(a.name === b.name) return a.amount - b.amount
+        return a.name > b.name ? 1 : -1
+      })));
+      favorites.splice(loadFavorite.index, 1)
+      setFavorites(favorites)
+    } else {
+      let data = { ...loadFavorite.item, ["favorite"]: { loadItemId: loadFavorite.item.id }};
+      setFavorites(prev => ([ ...prev, data ].sort((a, b) => {
+        if(a.name === b.name) return a.amount - b.amount
+        return a.name > b.name ? 1 : -1
+      })));
+      loads.splice(loadFavorite.index, 1)
+      setLoads(loads)
+    }
+    setLoadFavorite(null);
+    setSelectedLoad({});
+  }
+
   const ListEmptyComponent = useMemo(() => {
     if(isMounted || getLoadItemsLoading) return null
 
@@ -172,7 +203,7 @@ export const LoadList = memo((props) => {
     )
   });
 
-  if((getLoadItemsLoading && !loadFavorite && loads.length == 0) || (getSearchLoading && !loadFavorite)){
+  if(isMounted || (getLoadItemsLoading && !loadFavorite && loads.length == 0) || (getSearchLoading && !loadFavorite)){
     return (
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
@@ -188,6 +219,7 @@ export const LoadList = memo((props) => {
   }
   return (
     <>
+    <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
     <ScrollView
       refreshControl={
         <RefreshControl
@@ -213,11 +245,19 @@ export const LoadList = memo((props) => {
             </TouchableOpacity>
           )}
           </View>
-          <FlatList
+          {/* <FlatList
+            extraData={favorites}
             data={favorites.slice(0, 3)}
             scrollEnabled={false}
             initialNumToRender={3}
             renderItem={({ item, index }) => (
+             
+            )}
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyExtractor={(item, index) => index.toString()}
+          /> */}
+          {favorites.slice(0, 3).map((item, index) => {
+            return (
               <LoadDetails
                 index={index}
                 item={item}
@@ -227,20 +267,17 @@ export const LoadList = memo((props) => {
                 loadFavorite={loadFavorite}
                 getLoadItemsLoading={getLoadItemsLoading}
               />
-            )}
-            contentContainerStyle={{ flexGrow: 1 }}
-            keyExtractor={(item, index) => index.toString()}
-          />
+            )
+          })}
         </>
       )}
       {/* DISPLAY LOADS WITHOUT FAVORITES */}
+      
       {(loads.length > 0 || hasSearch) && (
         <>
-          {(loads.length > 0 && !hasSearch) &&  <Text style={styles.label}>{activeTab.name}</Text>}
-          <FlatList
-            data={loads}
-            scrollEnabled={false}
-            renderItem={({ item, index }) => (
+          {(loads.length > 0 && !hasSearch && favorites.length > 0) &&  <Text style={styles.label}>{activeTab.name}</Text>}
+          {loads.map((item, index) => {
+            return (
               <LoadDetails
                 index={index}
                 item={item}
@@ -250,12 +287,12 @@ export const LoadList = memo((props) => {
                 loadFavorite={loadFavorite}
                 getLoadItemsLoading={getLoadItemsLoading}
               />
-            )}
-            contentContainerStyle={{ flexGrow: 1 }}
-            keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={ListEmptyComponent}
-          />
+            )
+          })}
         </>
+      )}
+      {((loads.length === 0 && favorites.length === 0) || hasSearch) && (
+        ListEmptyComponent
       )}
     </ScrollView>
     {(loads.length > 0 || favorites.length > 0) && (

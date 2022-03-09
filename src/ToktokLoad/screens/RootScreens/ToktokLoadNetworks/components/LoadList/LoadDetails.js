@@ -25,17 +25,16 @@ export const LoadDetails = ({
 }) => {
 
   const { selectedLoad, setSelectedLoad, loads, setLoads, setSubContainerStyle } = useContext(VerifyContext);
-  const { amount, name, favorite, descriptions } = item;
 
-  const isSelected = selectedLoad?.id == item.id;
+  const isSelected = selectedLoad?.id == item?.id;
   const colorAmount = isSelected ? "#fff" : "#F6841F";
   const colorDesc = isSelected ? "#fff" : "#707070";
   const numberOfLines = isSelected ? null : 2;
 
-  const onPressThrottled = useThrottle(onPressFavorite, 500);
+  const onPressThrottled = useThrottle(onPressFavorite, 1500);
 
   const imgSelected = () => {
-    if(favorite){
+    if(item?.favorite){
       return isSelected ? heart_selected_fill_icon : heart_fill_icon
     } else {
       return isSelected ? heart_no_fill_icon : heart_selected_fill_icon
@@ -45,6 +44,7 @@ export const LoadDetails = ({
   return (
     <>
     <TouchableOpacity
+      key={index}
       onPress={() => { setSelectedLoad(isSelected ? {} : item) }}
       style={[
         styles.container,
@@ -53,18 +53,18 @@ export const LoadDetails = ({
       activeOpacity={.8}
     >
       <View style={[styles.amountContainer, { borderColor: colorAmount }]}>
-        <Text style={[ styles.amount, { color: colorAmount }]}>₱{amount}</Text>
+        <Text style={[ styles.amount, { color: colorAmount }]}>₱{item?.amount}</Text>
       </View>
       <View style={styles.detailsContainer}>
-        <Text style={[ styles.loadName, { color: colorDesc }]}>{name}</Text>
-        { !!descriptions && (
+        <Text style={[ styles.loadName, { color: colorDesc }]}>{item?.name}</Text>
+        { !!item?.descriptions && (
           <Text style={[ styles.descriptions, { color: colorDesc }]} numberOfLines={numberOfLines}>
-            {descriptions}
+            {item?.descriptions}
           </Text>
         )}
       </View> 
       <View style={styles.heartIconContainer}>
-        {((getLoadItemsLoading && loadFavorite) || patchFavoriteLoading || postFavoriteLoading) && loadFavorite == item.id ? (
+        {((getLoadItemsLoading && loadFavorite) || patchFavoriteLoading || postFavoriteLoading) && loadFavorite.item.id == item.id ? (
           <LoadingIndicator isLoading={true} size="small" color={colorAmount} />
         ) : (
           <TouchableOpacity

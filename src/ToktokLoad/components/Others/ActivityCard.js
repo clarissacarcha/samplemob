@@ -32,21 +32,17 @@ export const ActivityCard = ({ item, onPress, isLastItem = false }) => {
           <Text style={styles.subText}>{transactionDateTime}</Text>
         </View>
         <View style={styles.detailTwoContainer}>
-          {/* <Image source={wallet_icon} style={styles.networkIcon} /> */}
-          <View>
+          <Image source={{ uri: loadDetails?.networkDetails.iconUrl }} style={styles.networkIcon} />
+          <View style={{ paddingLeft: moderateScale(10), flexShrink: 1 }}>
             <Text>{loadDetails?.networkDetails.name}</Text>
             <Text style={styles.subText}>{destinationNumber}</Text>
           </View>
         </View>
-        { status !== 3 && (
-          <>
-            <View style={styles.divider} />
-            <View style={styles.detailThreeContainer}>
-              <Image source={toktokwallet_logo} style={styles.toktokwalletLogo} />
-              <Text style={styles.totalAmount}>Total: ₱{totalAmount}</Text>
-            </View>
-          </>
-        )}
+        <View style={styles.divider} />
+        <View style={styles.detailThreeContainer}>
+          <Image source={toktokwallet_logo} style={styles.toktokwalletLogo} />
+          <Text style={styles.totalAmount}>Total: ₱{totalAmount}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   )
