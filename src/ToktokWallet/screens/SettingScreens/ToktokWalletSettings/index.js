@@ -55,9 +55,10 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>
             {
                 ( !tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3  ) 
-                || ( tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2  ) &&
-                <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
-            }
+                ? <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
+                :  ( tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2  ) &&
+                   <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
+            }       
             <Separator/>
             <SettingHeaderTitle title="Help Centre"/>
             <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy"/>
