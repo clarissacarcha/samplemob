@@ -34,7 +34,6 @@ const OrderFee = ({data, forDelivery}) => {
   let deliveryFee = deliveryAmount ? deliveryAmount : 0;
   const promotionDiscount = promoDiscounts || 0;
   // let withShippingVoucher = promoDetails ? getShippingDiscount(promoDetails, originalShippingFee) : deliveryFee;
-  console.log('data', data);
   return (
     <View style={styles.container}>
       <View style={styles.header}>

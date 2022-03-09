@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useRef, useContext, useCallback, useState, useMemo} from 'react';
 import {Image, View, Text, TouchableOpacity, Alert, ImageBackground} from 'react-native';
@@ -19,7 +20,8 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {FONT, FONT_SIZE} from 'res/variables';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {moderateScale} from 'toktokfood/helper/scale';
-import {reseller_badge} from 'toktokfood/assets/images';
+import {reseller_badge, food_placeholder} from 'toktokfood/assets/images';
+import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
 const MyOrderList = () => {
   // const route = useRoute();
@@ -126,7 +128,10 @@ const MyOrderList = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.orderItemContainer}>
-          {productLogo && <Image style={styles.foodItemImage} source={{uri: productLogo}} />}
+          <View style={styles.progressiveImageContainer}>
+            <ProgressiveImage style={styles.foodItemImage} source={productLogo} placeholder={food_placeholder} />
+          </View>
+          {/* {productLogo && <Image style={styles.foodItemImage} source={{uri: productLogo}} />} */}
           <View style={styles.orderInfoWrapper}>
             <Text style={(styles.orderText, {fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L})}>
               {parentProductId ? parentProductName : productName}
