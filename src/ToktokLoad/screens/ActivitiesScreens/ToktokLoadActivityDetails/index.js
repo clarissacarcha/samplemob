@@ -60,9 +60,12 @@ export const ToktokLoadActivityDetails = ({ navigation, route }) => {
       </View>
       <View style={styles.separator} />
       <View style={styles.networkDetails}>
-        <View>
-          <Text style={styles.network}>{loadDetails?.networkDetails.name}</Text>
-          <Text style={styles.mobileNumber}>{destinationNumber}</Text>
+        <View style={styles.networkContainer}>
+          <Image source={{ uri: loadDetails?.networkDetails.iconUrl }} style={styles.networkIcon} />
+          <View style={{ paddingLeft: moderateScale(10), flexShrink: 1 }}>
+            <Text style={styles.network}>{loadDetails?.networkDetails.name}</Text>
+            <Text style={styles.mobileNumber}>{destinationNumber}</Text>
+          </View>
         </View>
         <View>
           <Text style={styles.mediumBoldOrange}>₱{numberFormat(amount)}</Text>
@@ -179,5 +182,15 @@ const styles = StyleSheet.create({
   },
   network: {
     fontSize: FONT_SIZE.M,
+  },
+  networkIcon: {
+    width: moderateScale(40),
+    height: moderateScale(20),
+    resizeMode: "contain"
+  },
+  networkContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1
   }
 });
