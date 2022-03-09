@@ -45,8 +45,8 @@ const MainComponent = ({ navigation, route }) => {
      
     },
     onCompleted: ({getLoadCategories})=> {
-        setActiveTab(getLoadCategories[0])
-        setCategories(getLoadCategories)
+      setActiveTab(getLoadCategories[0])
+      setCategories(getLoadCategories)
     }
   })
 
@@ -84,37 +84,33 @@ const MainComponent = ({ navigation, route }) => {
         setActiveTab={setActiveTab}
         fitToScreen={false}
         overLap={false}
-        // loading={loading}
-        // subContainerStyle={subContainerStyle}
       />
       <LoadCategory 
         navigation={navigation}
         activeTab={activeTab?.id}
         activeCategory={()=>getActiveCategoryName(activeTab)}
       />
-  
-        <ActionButton 
-            fixNativeFeedbackRadius={true} 
-            hideShadow={false} 
-            spacing={15} 
-            size={50} 
-            nativeFeedbackRippleColor="transparent" 
-            degrees={0} 
-            renderIcon={()=><Image style={{height: 30 ,width: 30}} resizeMode="contain" source={load}/>} 
-            buttonColor="white"
-            titleBgColor="transparent"
-            bgColor="rgba(0,0,0,0.5)"
-            offsetY={75}
-            offsetX={14}
-        >
-              {/* <ActionButton.Item activeOpacity={0} size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="Activities" buttonColor="white" onPress={() => console.log("notes tapped!")}>
-                <Icon name="md-create" style={styles.actionButtonIcon} />
-              </ActionButton.Item>
-              <ActionButton.Item size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="toktokwallet" buttonColor="white" onPress={() => navigation.navigate("ToktokLoadFavorites" , {mobileErrorMessage , mobileNumber})}>
-                <Icon name="md-create" style={styles.actionButtonIcon} />
-              </ActionButton.Item> */}
-        </ActionButton>
-     
+      {/* <ActionButton 
+          fixNativeFeedbackRadius={true} 
+          hideShadow={false} 
+          spacing={15} 
+          size={50} 
+          nativeFeedbackRippleColor="transparent" 
+          degrees={0} 
+          renderIcon={()=><Image style={{height: 30 ,width: 30}} resizeMode="contain" source={load}/>} 
+          buttonColor="white"
+          titleBgColor="transparent"
+          bgColor="rgba(0,0,0,0.5)"
+          offsetY={75}
+          offsetX={14}
+      >
+        <ActionButton.Item activeOpacity={0} size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="Activities" buttonColor="white" onPress={() => console.log("notes tapped!")}>
+          <Icon name="md-create" style={styles.actionButtonIcon} />
+        </ActionButton.Item>
+        <ActionButton.Item size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="toktokwallet" buttonColor="white" onPress={() => navigation.navigate("ToktokLoadFavorites" , {mobileErrorMessage , mobileNumber})}>
+          <Icon name="md-create" style={styles.actionButtonIcon} />
+        </ActionButton.Item>
+      </ActionButton> */}
     </View>
   );
 };

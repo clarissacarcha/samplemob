@@ -6,6 +6,9 @@ import { LoadingIndicator } from "src/ToktokLoad/components";
 import { VerifyContext } from '../VerifyContextProvider';
 import CONSTANTS from 'common/res/constants';
 
+//UTIL
+import { moderateScale } from "toktokload/helper";
+
 const { MARGIN , COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 const { width , height } = Dimensions.get("window")
 
@@ -103,8 +106,8 @@ const styles = StyleSheet.create({
     alignItems:"center"
   },
   image: {
-    height: 15,
-    width: 40,
+    height: moderateScale(20),
+    width: moderateScale(40),
   },
   text: {
     fontFamily: FONT.REGULAR,

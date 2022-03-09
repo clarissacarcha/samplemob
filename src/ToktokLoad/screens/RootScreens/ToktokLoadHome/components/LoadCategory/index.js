@@ -178,12 +178,14 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
                 maxLength={+activeNetwork?.inputLength?.inputLength ?? 11}
               />
             </View>
-            <TouchableOpacity
-              onPress={onPressContacts}
-              style={styles.contactsContainer}
-            >
-              <Image source={contact_icon} style={styles.icon} />
-            </TouchableOpacity>
+            { +activeNetwork?.inputLength?.inputLength === 11 && (
+              <TouchableOpacity
+                onPress={onPressContacts}
+                style={styles.contactsContainer}
+              >
+                <Image source={contact_icon} style={styles.icon} />
+              </TouchableOpacity>
+            )}
           </View>
         </>
       }
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: "row",
-    marginTop: moderateScale(15)
+    marginTop: moderateScale(10)
   },
   input: {
     backgroundColor: "#F8F8F8",
@@ -238,8 +240,8 @@ const styles = StyleSheet.create({
     resizeMode: "contain"
   },
   networkImage: {
-    height:  moderateScale(20),
-    width:  moderateScale(20),
+    height: moderateScale(20),
+    width: moderateScale(40),
   }
 })
 
