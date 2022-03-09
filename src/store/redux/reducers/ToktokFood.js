@@ -25,6 +25,7 @@ const INITIAL_STATE = {
   exhaust: {
     minutesRemaining: 0,
     showError: false,
+    duration: 0,
   },
 };
 

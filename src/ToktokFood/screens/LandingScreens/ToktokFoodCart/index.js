@@ -597,7 +597,6 @@ const MainComponent = () => {
       discounted_totalamount: parsedAmount,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, []);
-    console.log('DATA', data);
     postCustomerOrder({
       variables: {
         input: data,

@@ -13,13 +13,14 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
 // Components
 import {VerifyContext} from '../components';
+import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 // Utils
 import {verticalScale, getDeviceHeight, moderateScale, getIphoneNotchSize} from 'toktokfood/helper/scale';
-import {reseller_badge, empty_search_2} from 'toktokfood/assets/images';
+import {reseller_badge, empty_search_2, food_placeholder} from 'toktokfood/assets/images';
 import {TOKFOODCOLOR} from 'res/variables';
 
 export const FoodList = props => {
@@ -194,9 +195,12 @@ export const FoodList = props => {
               </Text>
             )}
           </View>
-          <View>
-            <Image resizeMode="cover" source={{uri: item.filename}} style={styles.img} />
+          <View style={{width: 70, height: 70}}>
+            <ProgressiveImage style={styles.img} source={item.filename} placeholder={food_placeholder} />
           </View>
+          {/* <View>
+            <Image resizeMode="cover" source={{uri: item.filename}} style={styles.img} />
+          </View> */}
         </TouchableOpacity>
         <ItemSepartor />
       </Fragment>
@@ -289,8 +293,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   img: {
-    height: moderateScale(70),
-    width: moderateScale(70),
+    height: '100%',
+    width: '100%',
     borderRadius: 5,
   },
   listText: {

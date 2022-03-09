@@ -279,7 +279,7 @@ const DriverDetailsView = ({eta, transaction, riderDetails, referenceNum, onCanc
           if (showError) {
             return 'Rider is nearby your location. Thank you for patiently waiting.';
           }
-          return `Estimated Delivery Time: ${minutesRemaining} minutes`;
+          return `Estimated Delivery Time: ${minutesRemaining} ${minutesRemaining > 1 ? 'minutes' : 'minute'}`;
         // return onGetPickupDate();
         default:
           return 'Estimated Delivery Time: 15-45 Minutes';
