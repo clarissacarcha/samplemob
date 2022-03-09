@@ -407,20 +407,32 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
           address_id: `${id}`
         };
 
-        let formData = new FormData();
-        formData.append('signature', data.appSignature);
-        formData.append('data', JSON.stringify(body));
-        updateUserAddress('remove', id);
+        // let formData = new FormData();
+        // formData.append('signature', data.appSignature);
+        // formData.append('data', JSON.stringify(body));
+        // updateUserAddress('remove', id);
 
-        await axios
-          .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
-          .then((response) => {
-            EventRegister.emit("refreshCheckoutData")
-            console.log("response.data", response.data)
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        // await axios
+        //   .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
+        //   .then((response) => {
+            // EventRegister.emit("refreshCheckoutData")
+            // console.log("response.data", response.data)
+        //   })
+        //   .catch((error) => {
+        //     console.log(error);
+        //   });
+        const req = await ApiCall("delete_address", body, true)
+      
+        if(req.responseData && req.responseData.success == 1){
+          EventRegister.emit("refreshCheckoutData")
+          console.log("response.data", response.data)
+        }else if(req.responseError && req.responseError.success == 0){
+          Toast.show(req.responseError.message, Toast.LONG)
+        }else if(req.responseError){
+          Toast.show("Something went wrong", Toast.LONG)
+        }else if(req.responseError == null && req.responseData == null){
+          Toast.show("Something went wrong", Toast.LONG)
+        }
       }
     });
   };
