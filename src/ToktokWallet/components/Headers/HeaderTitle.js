@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     header: {
         // marginTop: Platform.OS === "ios" ? 22 : 42,
         marginTop: StatusBar.currentHeight + 12,
-        height: 24,
+        height: moderateScale(24),
         width: "100%",
         flexDirection:"row"
     },

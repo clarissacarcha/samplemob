@@ -11,7 +11,7 @@ import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert , usePrompt } from 'src/hooks'
 import { useDebounce } from 'toktokwallet/hooks'
 import CheckBox from 'react-native-check-box'
-import { YellowButton } from 'src/revamp'
+import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp'
 
 const {COLOR , FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS
 
@@ -114,16 +114,10 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
          if(!checkFormat) return       
          let decimalValueArray = num.split(".")
          if(decimalValueArray[0].length > 6) return
-         // if(num.length > 6) return
-        
-         // setAmount(num * 0.01)
          if(num[0] == ".") return setAmount("0.")
          setAmount(num)
-        //  const limitMessage = checkRecipientWalletLimitation(num)
-        //  if(limitMessage) return setMessage(limitMessage)
          if(num == "")return setMessage("")
          if(num < 1) return setMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`)
-        //  setDisablebtn(false)
          setMessage("")
          
      }
@@ -158,6 +152,23 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
     return (
         <>
             <Separator/>
+            <View style={styles.headerReminder}>
+                <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}>
+                 <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.XL} />  
+                 <Text style={{fontFamily:FONT.BOLD,fontSize: FONT_SIZE.M,marginLeft: 3}}>Cash In Limits</Text> 
+                </View>
+                <View>
+                    <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M}}>
+                    All transactions are subject to our Cash In Limits that  are set to
+                    its users based on their approved account level as regulated by
+                    the Bangko Sentral ng Pilipinas. You may expect a refund for an
+                    over-limit transaction within 3 to 5 business days. For the
+                    corresponding wallet size, please see
+                    <Text style={{fontFamily:FONT.BOLD,fontSize:FONT_SIZE.M,color: COLOR.YELLOW}} onPress={()=>navigation.navigate("ToktokWalletTransactionLimit")}> User Level and Transaction Limit.</Text>
+                    </Text>
+
+                </View>
+            </View>
             <View style={styles.container}>
                 <View style={styles.paypandaLogo}>
                         <Text style={{fontSize: FONT_SIZE.L ,fontFamily: FONT.BOLD}}>Please enter amount to Cash In</Text>
@@ -205,37 +216,21 @@ export const DragonPayCashIn = ({navigation,route, transactionType}) => {
                                         <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: 10}}>Current Balance: </Text>
                                         <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, marginTop: 10}}>{numberFormat(tokwaAccount.wallet.balance)}</Text>
                                     </Text>
+                                    {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: 10,color: COLOR.YELLOW}}>Remaining limit to cash in: 
+                                            <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD,color: COLOR.YELLOW}}>PHP {numberFormat(+tokwaAccount.person.accountType.walletSize - tokwaAccount.wallet.balance)}</Text>
+                                        </Text> */}
                                 
                                     <Text style={{fontFamily: FONT.REGULAR, color: "red",marginTop: 5,fontSize: FONT_SIZE.S}}>{maxLimitMessage}</Text>
                          </View>
                       
-                         <View style={{flex:1 ,justifyContent:"flex-end",alignItems:"center",paddingBottom: 25}}>
-                         {/* <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginBottom: 10 ,textAlign:"center"}}>
-                         Please read our Terms and Conditions before you proceed with your transaction.
-                         </Text> */}
-                    <View style={{
-                        flexDirection:"row",     
-                    }}>
-
-                    <CheckBox
-                            isChecked={isCertify}
-                            onClick={()=>{
-                                return setCertify(!isCertify)
-                            }}
-                            style={{
-                                alignSelf: "center",
-                                marginRight: 2,
-                            }}
-                        />
-
+                         <View style={{flex:1 ,justifyContent:"flex-end",alignItems:"center",paddingBottom: 20}}>
                         <TouchableOpacity 
                             // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
                             onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
-                            style={{paddingLeft: 5}}
+                            style={{}}
                         >
-                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby read and accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before proceeding with my transaction.</Text>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Please read our <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before you proceed with your transaction.</Text>
                         </TouchableOpacity>
-                    </View>
                         
                          </View>
 
@@ -264,6 +259,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingBottom: 16,
     }, 
+    headerReminder: {
+        padding: 16,
+        backgroundColor:"#FFF2D5"
+    },
     paypandaLogo: {
         width: "100%",
         justifyContent:"center",
