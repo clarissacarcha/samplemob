@@ -38,17 +38,9 @@ const styles = StyleSheet.create({
         alignSelf:"center",
         backgroundColor:"white",
         borderRadius: 5,
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4.84,
-        elevation: 10,
         flexDirection:"row",
         justifyContent:"center",
         alignItems:'center',
-        flexDirection: "row",
         padding: 10, 
     },
     recipient: {

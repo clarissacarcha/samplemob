@@ -1,5 +1,5 @@
-import React from 'react'
-import {View,Text,StyleSheet,ScrollView} from 'react-native'
+import React , {useState} from 'react'
+import {View,Text,StyleSheet,ScrollView,TouchableOpacity} from 'react-native'
 import { HeaderBack, YellowButton, HeaderTitle } from 'src/revamp'
 import { Separator, SwipeProceedButton, CheckIdleState , FlagSecureScreen , BuildingBottom } from 'toktokwallet/components'
 import { VectorIcon , ICON_SET } from 'src/revamp'
@@ -16,6 +16,123 @@ import {
 } from "./Components"
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
+
+const ViewMorePesonet = ({
+    viewMore,
+    setViewMore
+})=>{
+    return (
+        <>
+            <View style={{flexDirection:"row"}}>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginRight: 5}}>
+                    -  
+                </Text>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",}}>
+                Same banking day transfer if made between 8:00AM - 3:00 PM (funds to be credited by 11:00 PM)
+                </Text>
+            </View>
+            <View style={{flexDirection:"row",}}>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginRight: 5}}>
+                    -  
+                </Text>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",}}>
+                Next banking day transfer if made 3:01 PM onwards ( funds to be credited by 11:00 PM)
+                </Text>
+            </View>
+            <View style={{flexDirection:"row",marginBottom: 10}}>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginRight: 5}}>
+                    -  
+                </Text>
+                <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",}}>
+                Banking days are from Monday to Friday excluding holidays. Please take note that transactions during weekends can be credited by Tuesday due to batch processing.
+                </Text>
+            </View>
+            <TouchableOpacity onPress={()=>setViewMore(!viewMore)} style={{width: "100%",alignItems:"flex-end"}}> 
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color:COLOR.YELLOW}}>Read Less <VectorIcon iconSet={ICON_SET.Feather} name="chevron-up" color={COLOR.YELLOW} size={FONT_SIZE.L} /></Text>
+            </TouchableOpacity>
+        </>
+    )
+}
+
+const RenderFundTransferReminder = ({
+    fundTransferType,
+    event
+})=> {  
+
+    const [viewMore,setViewMore] = useState(false)
+
+    if(fundTransferType == "Instapay"){
+        return (
+            <>
+            <View style={{marginVertical: 10}}>
+            <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left"}}>
+            <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.M} /> Please ensure that all information is correct and validated before proceeding with this transaction.
+            </Text>
+            </View>
+            <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginBottom: 10,}}>
+                Based on the bank and amount provided, this transaction will be processed realtime via
+                <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,}}> InstaPay</Text>.
+            </Text>
+            </>
+        )
+    }
+
+    return(
+        <>
+            <View style={{marginVertical: 10}}>
+            <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left"}}>
+            <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.M} /> Please ensure that all information is correct and validated before proceeding with this transaction.
+            </Text>
+            </View>
+            <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginBottom: 10}}>
+                Based on the bank and amount provided, this transaction will be processed via 
+                <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,}}> PESONet</Text>.
+            </Text>
+            {
+                viewMore 
+                ? <ViewMorePesonet 
+                    setViewMore={setViewMore}
+                    viewMore={viewMore}
+                />
+                : <TouchableOpacity onPress={()=>setViewMore(!viewMore)} style={{width: "100%",alignItems:"flex-end"}}> 
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color:COLOR.YELLOW}}>Read more <VectorIcon iconSet={ICON_SET.Feather} name="chevron-down" color={COLOR.YELLOW} size={FONT_SIZE.L} /></Text>
+                  </TouchableOpacity>
+            }
+          
+            </>
+    )
+}
+
+const RenderOtherServieReminder = ({
+    event
+})=> {
+
+    if(event == "Send Money"){
+        return (
+            <>
+            <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start",marginTop:5}}>
+                    <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.XL} />  
+                    <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M,marginLeft: 3,marginTop: -2,marginRight: 16}}>
+                    Please ensure that all information is correct and validated before proceeding with this transaction.
+                    </Text> 
+            </View>
+            <Text style={{fontFamily:FONT.BOLD,fontSize: FONT_SIZE.M,marginLeft: 3,marginTop: 10,marginRight: 16}}>
+            Transaction cannot be reversed once confirmed and submitted.
+            </Text> 
+            </>
+        )
+    }
+
+    return (
+        <>
+         <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start",marginTop:5}}>
+                <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.XL} />  
+                <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M,marginLeft: 3,marginTop: -2,marginRight: 16}}>Please review the accuracy and completenes of the details
+                    provided before you confirm</Text> 
+        </View>
+        </>
+    )
+}
 
 export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
 
@@ -63,72 +180,30 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
         <ScrollView bounces={false} alwaysBounceVertical={false} style={styles.container} contentContainerStyle={{flexGrow:1}}>
             <View style={styles.header}>
               <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,color: "black"}}>Review and Confirm</Text>
-            </View>
+              {
+                  data.fundTransferType
+                  ? <RenderFundTransferReminder
+                        fundTransferType={data.fundTransferType}
+                        event={event}
+                    />
+                   : <RenderOtherServieReminder
+                        event={event}
+                   /> 
+              }
+              </View>
+             
             <View style={styles.content}>
                
                 {RenderDisplay()}
             </View>
-            <View style={{flex:1 ,justifyContent:"center",alignItems:"flex-start",padding: 16}}>
-                {
-                    event == "Send Money" &&
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop: 15,textAlign:'left'}}>
-                        Transaction cannot be reversed once confirmed and submitted
-                    </Text>
-                }
-                {
-                    !data.fundTransferType &&
-                    <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,textAlign:"left",marginTop: 10}}>
-                    <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.M} /> Please review the accuracy and completeness of the details provided before you confirm.
-                    </Text>
-                }
-                {
-                    data.fundTransferType && data.fundTransferType == "Instapay" &&
-                    <>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginBottom: 10,}}>
-                        Based on the bank and amount provided, this transaction will be processed realtime via
-                        <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,}}> InstaPay</Text>.
-                    </Text>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,textAlign:"left"}}>
-                    <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.M} /> Please ensure that all information is correct and validated before proceeding with this transaction.
-                    </Text>
-                    </>
-                }
-                {
-                    data.fundTransferType && data.fundTransferType == "Pesonet" &&
-                    <>
-                    <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginBottom: 10}}>
-                         Based on the bank and amount provided, this transaction will be processed via 
-                         <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,}}> PESONet</Text>.
-                    </Text>
-                    <View style={{flexDirection:"row"}}>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginRight: 5}}>
-                            -  
-                        </Text>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",}}>
-                        Same banking day transfer if made between 8:00AM - 3:00 PM (funds to be credited by 11:00 PM)
-                        </Text>
-                    </View>
-                    <View style={{flexDirection:"row",}}>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginRight: 5}}>
-                            -  
-                        </Text>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",}}>
-                        Next banking day transfer if made 3:01 PM onwards ( funds to be credited by 11:00 PM)
-                        </Text>
-                    </View>
-                    <View style={{flexDirection:"row",marginBottom: 10}}>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",marginRight: 5}}>
-                            -  
-                        </Text>
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,textAlign:"left",}}>
-                        Banking days are from Monday to Friday excluding holidays. Please take note that transactions during weekends can be credited by Tuesday due to batch processing.
-                        </Text>
-                    </View>
-                    <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,textAlign:"left"}}>
-                    <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.M} /> Please ensure that all information is correct and validated before proceeding with this transaction.
-                    </Text>
-                    </>
-                }
+            <View style={{flex:1 ,justifyContent:"flex-end",alignItems:"center",paddingHorizontal: 16}}>
+                     <TouchableOpacity 
+                            // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                            onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
+                            style={{paddingLeft: 5,marginRight: 16}}
+                        >
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Please read our <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before you proceed with your transaction.</Text>
+                        </TouchableOpacity>
             </View>
             <View style={styles.proceedBtn}>
                 {
@@ -160,8 +235,7 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: "#FFF2D5",
-        paddingHorizontal: 16,
-        height: 50,
+        padding: 16,
         justifyContent:"center"
     },
     proceedBtn: {
