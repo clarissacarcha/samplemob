@@ -8,8 +8,9 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { GET_COMPLETED_ORDERS, GET_COMPLETED_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
 import {placeholder, storeIcon, emptyorders} from '../../../../assets';
-import { Price } from '../../../../helpers';
+import { getRefComAccountType, Price } from '../../../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useSelector } from 'react-redux';
 
 const Store = ({data}) => {
   return (
@@ -193,6 +194,7 @@ const testdata = [{
 
 export const Completed = ({id, email}) => {
 
+  const session = useSelector(state=>state.session)
   const [toggleDrop, setToggleDrop] = useState(false)
   const [data, setData] = useState([])
   const [userId, setUserId] = useState(id)
@@ -204,7 +206,8 @@ export const Completed = ({id, email}) => {
     variables: {
       input: {
         userId: userId || id,
-        email: semail || email
+        email: semail || email,
+        refCom: getRefComAccountType({session})
       }
     },
     onCompleted: (response) => {
@@ -292,7 +295,8 @@ export const Completed = ({id, email}) => {
           input: {
             // userId: 9999,
             userId: data.userId,
-            email: data.email
+            email: data.email,
+            refCom: getRefComAccountType({session})
           }
         }})
       }
