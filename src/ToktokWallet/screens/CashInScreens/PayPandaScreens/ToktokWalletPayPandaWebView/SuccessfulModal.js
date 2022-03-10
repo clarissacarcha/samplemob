@@ -47,8 +47,14 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
         case "F":
             status = "Failed"
             break
-        default:
+        case "C":
             status = "Cancelled"
+            break
+        case "Q":
+            status = "Successful"
+            break
+        default:
+            status = "Pending"
             break;
     }
 
