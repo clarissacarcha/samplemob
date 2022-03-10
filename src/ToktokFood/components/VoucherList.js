@@ -50,9 +50,10 @@ const VoucherList = ({
     return (
       <View style={voucherStyle}>
         <Text style={styles.voucherText}>{item.vname}</Text>
-        {(hasClose || (item.type !== 'deal' && item.type !== 'auto')) && (
-          <MIcon style={styles.closeIcon} name="close" size={14} color="white" onPress={() => onCloseItem(item.id)} />
-        )}
+        {hasClose ||
+          (item?.type && item.type !== 'deal' && item.type !== 'auto' && (
+            <MIcon style={styles.closeIcon} name="close" size={14} color="white" onPress={() => onCloseItem(item.id)} />
+          ))}
       </View>
     );
   };

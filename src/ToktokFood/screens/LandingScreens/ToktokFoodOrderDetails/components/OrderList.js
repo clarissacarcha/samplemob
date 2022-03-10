@@ -40,9 +40,10 @@ const OrderList = ({orderDetails}) => {
 
   const ResellerDiscountBadge = useMemo(
     () =>
-      ({amount, srpAmount}) => {
-        const percentage = (100 * (srpAmount - amount)) / srpAmount;
+      ({amount, srpAmount, resellerDiscount}) => {
+        const percentage = (100 * (srpAmount - resellerDiscount)) / srpAmount;
         const finalPercentage = roundedPercentage(percentage, 1);
+        // console.log(finalPercentage, percentage);
         // const {discRatetype, referralDiscount} = resellerDiscount;
         // const discountText = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
         return (
@@ -63,7 +64,7 @@ const OrderList = ({orderDetails}) => {
     let {parentProductId, itemname, parentProductName} = item.productDetails;
     let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
     let productName = parentProductId ? parentProductName : itemname;
-    const {amount, srpAmount} = item;
+    const {amount, srpAmount, resellerDiscount} = item;
     return (
       <View style={styles.listContainer}>
         <View style={styles.progressiveImageContainer}>
@@ -87,8 +88,8 @@ const OrderList = ({orderDetails}) => {
             <Text numberOfLines={1} style={styles.listName}>
               {productName}
             </Text>
-            {amount !== srpAmount ? (
-              <ResellerDiscountBadge amount={amount} srpAmount={srpAmount} />
+            {resellerDiscount > 0 ? (
+              <ResellerDiscountBadge resellerDiscount={resellerDiscount} amount={amount} srpAmount={srpAmount} />
             ) : (
               <Text style={styles.seeAll}>{`PHP ${item.srpAmount.toFixed(2)}`}</Text>
             )}
@@ -108,7 +109,6 @@ const OrderList = ({orderDetails}) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.note}>My Order</Text>
-        {/* <Text style={styles.seeAll}>See All</Text> */}
       </View>
       {isCollapsed ? data.map(item => <Item item={item} />) : dataSource.map(item => <Item item={item} />)}
       {data.length > 5 && (

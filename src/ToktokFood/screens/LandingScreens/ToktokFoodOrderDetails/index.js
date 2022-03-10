@@ -74,7 +74,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         // if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
         setTransaction(getTransactionByRefNum);
         const {orderIsfor, tDeliveryId, orderStatus} = getTransactionByRefNum;
-        console.log('fetching orders...', orderStatus);
+        console.log('fetching orders...', getTransactionByRefNum);
         if (orderIsfor === 1 && tDeliveryId) {
           getToktokFoodRiderDetails({
             variables: {

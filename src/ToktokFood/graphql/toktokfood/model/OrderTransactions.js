@@ -74,6 +74,7 @@ const transaction = `
     curcode
     notes
     totalAmountWithAddons
+    resellerDiscount
     productDetails {
       Id
       itemname
