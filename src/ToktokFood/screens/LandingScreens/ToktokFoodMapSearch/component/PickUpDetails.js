@@ -26,20 +26,20 @@ import AddressBookModal from './AddressBookModal';
 // const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
 
 const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
+  const alert = useAlert();
+
   const navigation = useNavigation();
   const keyboardHeight = useKeyboard();
   const [showSuccess, setShowSuccess] = useState(false);
-  const [showInvalidMobile, setShowInvalidMobile] = useState(false);
   const [showContacts, setShowContacts] = useState(false);
+  const [showInvalidMobile, setShowInvalidMobile] = useState(false);
 
-  const {customerInfo} = useSelector(state => state.toktokFood);
-  const alert = useAlert();
-  const {receiver, location} = useSelector(state => state.toktokFood);
+  const {receiver, customerInfo} = useSelector(state => state.toktokFood);
 
   const initialState = {
-    landmark: receiver ? receiver?.landmark : '',
-    contactPerson: location ? location?.details?.contactPerson : '',
-    contactPersonNumber: location ? location?.details?.contactPersonNumber : '',
+    landmark: '',
+    contactPerson: '',
+    contactPersonNumber: '',
   };
 
   const reducer = (state, action) => {
