@@ -56,6 +56,12 @@ const products = `
     sysShop
     maxQtyIsset
   }
+  promotionVouchers {
+    id
+    voucherCode
+    voucherName
+    vname
+  }
 `;
 
 export const GET_PRODUCT_CATEGORIES = gql`

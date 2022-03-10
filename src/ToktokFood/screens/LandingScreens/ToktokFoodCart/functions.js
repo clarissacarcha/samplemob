@@ -38,6 +38,111 @@ export const tokwaErrorBtnTitle = pinAttempt => {
   }
 };
 
+export const getResellerDiscount = async (promotions, cartItems) => {
+  let totalReseller = 0;
+  const productIds = [];
+  return Promise.all(
+    promotions.map(item => {
+      const filteredId = item.product_id.split(',');
+      productIds.push(...filteredId);
+
+      cartItems.map(items => {
+        const filteredProd = _.includes(productIds, items.productid);
+        // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
+        if (filteredProd) {
+          const deductedDiscount =
+            item?.discount_type === '3'
+              ? (items?.resellerDiscount || items?.basePrice) - 1
+              : item?.discount_totalamount;
+          // console.log(items, deductedDiscount);
+          totalReseller += deductedDiscount;
+          // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
+        }
+      });
+    }),
+  ).then(() => {
+    return totalReseller;
+  });
+};
+
+export const getTotalAmountOrder = async (promotions, cartItems) => {
+  let totalAmount = 0;
+  const productIds = [];
+  return Promise.all(
+    promotions.map(item => {
+      const filteredId = item.product_id.split(',');
+      productIds.push(...filteredId);
+
+      cartItems.map(items => {
+        const filteredProd = _.includes(productIds, items.productid);
+        // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
+        // console.log(filteredProd, items.productid);
+
+        if (filteredProd) {
+          const deductedDiscount = item?.discount_type === '3' ? 1 : items?.basePrice - item?.discount_totalamount;
+
+          const resellerDiscount = (items.quantity - 1) * (items?.resellerDiscount || items?.basePrice);
+          totalAmount += deductedDiscount + resellerDiscount;
+          // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
+        } else {
+          const resellerDiscount = items.quantity * (items?.resellerDiscount || items?.basePrice);
+          totalAmount += resellerDiscount;
+        }
+      });
+    }),
+  ).then(() => {
+    return totalAmount;
+  });
+};
+
+export const getTotalAmount = async (promos, deliveryFee) => {
+  let autoApply = promos.filter(promo => promo.type === 'auto');
+  let shipping = promos.filter(promo => promo.type === 'shipping');
+  let deals = promos.filter(promo => promo.type === 'deal');
+  let promotions = promos.filter(promo => promo.type === 'promotion');
+  let totalAmount = 0;
+
+  await autoApply.map(async promo => {
+    const deductedAmount = await getDeductedVoucher(promo, deliveryFee);
+    totalAmount += deductedAmount;
+  });
+  await shipping.map(async promo => {
+    const deductedAmount = await getDeductedVoucher(promo, deliveryFee);
+    totalAmount += deductedAmount;
+  });
+  // await deals.map(async promo => {
+  //   totalAmount += promo?.discount_totalamount;
+  // });
+  // await promotions.map(async promo => {
+  //   totalAmount += promo?.discount_totalamount;
+  // });
+  return totalAmount;
+};
+
+export const getTotalDiscountAmount = async (promos, deliveryFee) => {
+  let autoApply = promos.filter(promo => promo.type === 'auto');
+  let shipping = promos.filter(promo => promo.type === 'shipping');
+  let deals = promos.filter(promo => promo.type === 'deal');
+  let promotions = promos.filter(promo => promo.type === 'promotion');
+  let totalAmount = 0;
+
+  await autoApply.map(async promo => {
+    const deductedAmount = await getDeductedVoucher(promo, deliveryFee);
+    totalAmount += deductedAmount;
+  });
+  await shipping.map(async promo => {
+    const deductedAmount = await getDeductedVoucher(promo, deliveryFee);
+    totalAmount += deductedAmount;
+  });
+  await deals.map(async promo => {
+    totalAmount += promo?.discount_totalamount;
+  });
+  await promotions.map(async promo => {
+    totalAmount += promo?.discount_totalamount;
+  });
+  return totalAmount;
+};
+
 export const getDeductedVoucher = (shipping, deliveryFee) => {
   let totalDelivery = 0;
   if (shipping?.amount > 0) {
@@ -55,16 +160,22 @@ export const getDeductedVoucher = (shipping, deliveryFee) => {
 export const getShippingVoucher = async promos => {
   let autoApply = promos.filter(promo => promo.type === 'auto');
   let shipping = promos.filter(promo => promo.type === 'shipping');
-
-  await autoApply.map((promo, value) => {
-    return delete promo.__typename;
-  });
-  await shipping.map(promo => {
-    let shippingObj = {...promo, amount: promo.origAmount};
-    delete shippingObj.origAmount;
-    delete promo.__typename;
+  autoApply = await autoApply.map(promo => {
+    let shippingObj = {...promo, amount: promo.amount};
+    delete shippingObj.__typename;
     return shippingObj;
   });
+  shipping = await shipping.map(promo => {
+    let shippingObj = {...promo, amount: promo.origAmount};
+    delete shippingObj.__typename;
+    return shippingObj;
+  });
+
+  await [...autoApply, ...shipping].map(promo => {
+    delete promo.origAmount;
+    delete promo.__typename;
+  });
+  // console.log(autoApply, shipping)
   return [...autoApply, ...shipping];
 };
 
@@ -73,10 +184,12 @@ export const getPromotionVouchers = async (promos, shop_id) => {
   let promotions = promos.filter(promo => promo.type === 'promotion');
 
   deals = await deals.map(promo => {
+    delete promo.origAmount;
     delete promo.__typename;
     return {...promo, shop_id: String(shop_id)};
   });
   promotions = await promotions.map(promo => {
+    delete promo.origAmount;
     delete promo.__typename;
     return {...promo, shop_id: String(shop_id)};
   });

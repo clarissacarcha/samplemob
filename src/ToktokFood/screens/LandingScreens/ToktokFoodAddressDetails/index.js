@@ -11,6 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import {FONT, FONT_SIZE, COLOR} from 'res/variables';
 import {GET_GOOGLE_PLACE_DETAILS} from '../../../../graphql';
+import ContentLoader from 'react-native-easy-content-loader';
 
 import {useSelector} from 'react-redux';
 
@@ -28,7 +29,7 @@ const initialPickUpDetails = {
 const ToktokFoodAddressDetails = ({route}) => {
   const navigation = useNavigation();
 
-  const {location} = useSelector((state) => state.toktokFood);
+  const {location} = useSelector(state => state.toktokFood);
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -47,7 +48,7 @@ const ToktokFoodAddressDetails = ({route}) => {
 
   const [state, dispatch] = useReducer(reducer, initialPickUpDetails);
 
-  const onSearchMapNavigate = (c) => {
+  const onSearchMapNavigate = c => {
     if (typeof c === 'object') {
       navigation.replace('ToktokFoodMapSearch', {
         coordinates: c,
@@ -95,7 +96,7 @@ const ToktokFoodAddressDetails = ({route}) => {
     );
   };
 
-  const getGooglePlaceAutocomplete = async (searchString) => {
+  const getGooglePlaceAutocomplete = async searchString => {
     try {
       const API_RESULT = await axios({
         url: `${PROTOCOL}://${HOST_PORT}/graphql`,
@@ -129,11 +130,11 @@ const ToktokFoodAddressDetails = ({route}) => {
 
   const debouncedGetGooglePlaceAutocomplete = useDebounce(() => {
     getGooglePlaceAutocomplete(state.pickUpAddress);
-  }, 500);
+  }, 800);
 
   const [getGooglePlaceDetails] = useLazyQuery(GET_GOOGLE_PLACE_DETAILS, {
     fetchPolicy: 'network-only',
-    onCompleted: (data) => {
+    onCompleted: data => {
       const {latitude, longitude} = data.getGooglePlaceDetails.location;
       dispatch({
         type: 'SET_PICKUP_ADDRESS_COORDINATES',
@@ -163,25 +164,59 @@ const ToktokFoodAddressDetails = ({route}) => {
     });
   };
 
+  const renderLoader = () => {
+    if (state.pickUpAddress !== '') {
+      return (
+        <>
+          {[1, 2, 3, 4, 5].map((v) => (
+            <View key={v}>
+              <View style={styles.placeItem}>
+                <View style={styles.iconLoader}></View>
+                <View style={{flex: 1}}>
+                  <View style={{width: '100%'}}>
+                    <ContentLoader
+                      active
+                      pRows={2}
+                      pWidth={['40%', '80%']}
+                      title={false}
+                      primaryColor="#FFFFFF"
+                      secondaryColor="rgba(256,186,28,0.4)"
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+          ))}
+        </>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
   const renderItem = ({item}) => {
     const formattedAddressParts = item.formattedAddress.split(',');
-    return (
-      <>
-        <TouchableWithoutFeedback onPress={() => onResultSelect(item, formattedAddressParts.toString())}>
-          <View style={styles.placeItem}>
-            <MIcon style={styles.placeIcon} name="place" size={23} color={COLOR.ORANGE} />
-            <View style={styles.addressContainer}>
-              <Text numberOfLines={1} style={styles.placeName}>
-                {formattedAddressParts[0]}
-              </Text>
-              <Text style={styles.placeAddress} numberOfLines={1}>
-                {formattedAddressParts}
-              </Text>
+    if (formattedAddressParts[0].indexOf('Undefined') === -1) {
+      return (
+        <>
+          <TouchableWithoutFeedback onPress={() => onResultSelect(item, formattedAddressParts.toString())}>
+            <View style={styles.placeItem}>
+              <MIcon style={styles.placeIcon} name="place" size={27} color={COLOR.ORANGE} />
+              <View style={styles.addressContainer}>
+                <Text numberOfLines={1} style={styles.placeName}>
+                  {formattedAddressParts[0]}
+                </Text>
+                <Text style={styles.placeAddress} numberOfLines={1}>
+                  {formattedAddressParts}
+                </Text>
+              </View>
             </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </>
-    );
+          </TouchableWithoutFeedback>
+        </>
+      );
+    } else {
+      <></>;
+    }
   };
 
   useEffect(() => {
@@ -212,7 +247,7 @@ const ToktokFoodAddressDetails = ({route}) => {
                 placeholder="Enter Location"
                 style={[styles.searchBox, styles.textInputFontStyles]}
                 onFocus={() => debouncedGetGooglePlaceAutocomplete()}
-                onChangeText={(query) => dispatch({type: 'SET_PICKUP_ADDRESS', value: query})}
+                onChangeText={query => dispatch({type: 'SET_PICKUP_ADDRESS', value: query})}
               />
               <MIcon
                 onPress={() => dispatch({type: 'SET_PICKUP_ADDRESS', value: ''})}
@@ -228,6 +263,7 @@ const ToktokFoodAddressDetails = ({route}) => {
         <View style={styles.placeListContainer}>
           <FlatList
             data={addressList}
+            ListEmptyComponent={renderLoader}
             renderItem={renderItem}
             keyExtractor={(item, index) => index}
             keyboardShouldPersistTaps="handled"
@@ -310,18 +346,25 @@ const styles = StyleSheet.create({
     paddingEnd: 12,
   },
   placeIcon: {
-    marginEnd: 7,
+    marginEnd: 4,
   },
   placeName: {
-    marginBottom: 2,
+    marginBottom: 3,
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
   },
   placeAddress: {
+    maxWidth: '98%',
     color: COLOR.DARK,
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
+  },
+  iconLoader: {
+    width: 25,
+    height: 25,
+    borderRadius: 50,
+    backgroundColor: 'rgba(256,186,28,0.4)',
   },
 });
 

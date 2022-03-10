@@ -35,6 +35,12 @@ export const GET_SHOPS = gql`
         shopId
         noOfStocks
       }
+      promotionVouchers {
+        id
+        regionCodes
+        voucherCode
+        voucherName
+      }
     }
   }
 `;

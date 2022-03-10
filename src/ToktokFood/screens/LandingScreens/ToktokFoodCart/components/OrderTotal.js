@@ -5,28 +5,32 @@ import _ from 'lodash';
 
 import {VerifyContext} from '../components';
 
+import {getResellerDiscount} from '../functions';
+
 import styles from '../styles';
 
 const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = true, oneCartTotal}) => {
   // deliveryFee = deliveryFee ? deliveryFee : 0;
   // subtotal = subtotal ? subtotal : 0;
   const {shippingVoucher, temporaryCart} = useContext(VerifyContext);
-  const [totalBasket, setTotalBasket] = useState(temporaryCart.totalAmount);
+  const [totalBasket, setTotalBasket] = useState(temporaryCart.totalAmountWithAddons);
   const [totalShipping, setTotalShipping] = useState(0);
   const [totalPromotions, setTotalPromotions] = useState(0);
   const [totalDelivery, setTotalDelivery] = useState(0);
+  // const [totalReseller, setTotalReseller] = useState(0);
   const [totalDeal, setTotalDeal] = useState(0);
 
   const {promotionVoucher} = useSelector(state => state.toktokFood);
 
   const totalSumSF = totalDelivery + totalShipping;
   const totalSF = totalSumSF > deliveryFee ? deliveryFee.toFixed(2) : totalSumSF.toFixed(2);
+  const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmountWithAddons;
 
   useEffect(() => {
     oneCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
   }, [shippingVoucher, totalBasket, totalShipping]);
 
-  const getVoucherFee = useCallback(() => {
+  const getVoucherFee = useCallback(async () => {
     const groupPromo = _(promotionVoucher)
       .groupBy('type')
       .map((objs, key) => ({
@@ -40,13 +44,24 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     const autoApply = groupPromo.filter(promo => promo.type === 'auto');
     const shipping = groupPromo.filter(promo => promo.type === 'shipping');
 
+    // console.log(promotionVoucher);
+
     if (promotions.length > 0) {
-      setTotalPromotions(promotions[0].discount_totalamount);
+      // setTotalPromotions(promotions[0].discount_totalamount);
+      const promotion = promotionVoucher.filter(promo => promo.type === 'promotion');
+      const totalResellerDisc = await getResellerDiscount(promotion, temporaryCart.items);
+      // console.log(totalResellerDisc);
+      setTotalPromotions(totalResellerDisc);
+      // setTotalBasket(temporaryCart.srpTotalAmount);
     } else {
       setTotalPromotions(0);
     }
     if (deal.length > 0) {
-      setTotalDeal(deal[0].discount_totalamount);
+      // setTotalDeal(deal[0].discount_totalamount);
+      const deals = promotionVoucher.filter(promo => promo.type === 'deal');
+      const totalResellerDisc = await getResellerDiscount(deals, temporaryCart.items);
+      // console.log(totalResellerDisc)
+      setTotalDeal(totalResellerDisc);
     } else {
       setTotalDeal(0);
     }
@@ -114,50 +129,59 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
 
   return (
     <View style={[styles.sectionContainer, styles.totalContainer]}>
-      {forDelivery && (
-        <>
-          <View style={styles.header}>
-            <Text>Subtotal</Text>
-            <Text style={styles.subtotal}>{`PHP ${totalBasket?.toFixed(2)}`}</Text>
-          </View>
-          {(totalPromotions > 0 || totalDeal > 0) && (
-            <View style={styles.header}>
-              <Text>Item discount</Text>
-              <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal).toFixed(2)}`}</Text>
-            </View>
-          )}
-
-          <View style={styles.header}>
-            <Text>Delivery Fee</Text>
-            <View style={styles.deliveryFee}>
-              {/* {(autoShipping?.success || shippingVoucher.length > 0) && (
-                <Text style={styles.deliveryFeeText}>{`\u20B1${deliveryFee.toFixed(2)}`}</Text>
-              )} */}
-              <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
-            </View>
-          </View>
-
-          {(totalDelivery > 0 || totalShipping > 0) && (
-            <View style={styles.header}>
-              <Text>Delivery fee discount</Text>
-              <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
-            </View>
-          )}
-
-          <View style={styles.divider} />
-        </>
+      {/* {forDelivery && ( */}
+      {/* <> */}
+      <View style={styles.header}>
+        <Text>Subtotal</Text>
+        <Text style={styles.subtotal}>{`PHP ${totalBasket?.toFixed(2)}`}</Text>
+      </View>
+      {(totalPromotions > 0 || totalDeal > 0) && (
+        <View style={styles.header}>
+          <Text>Item Discount</Text>
+          <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal).toFixed(2)}`}</Text>
+        </View>
       )}
+
+      {totalPromotions === 0 && totalDeal === 0 && totalReseller > 0 && (
+        <View style={styles.header}>
+          <Text>Item Discount (Reseller)</Text>
+          <Text style={styles.subtotal}>{`-PHP ${totalReseller.toFixed(2)}`}</Text>
+        </View>
+      )}
+
+      {forDelivery && (
+        <View style={styles.header}>
+          <Text>Delivery Fee</Text>
+          <View style={styles.deliveryFee}>
+            {/* {(autoShipping?.success || shippingVoucher.length > 0) && (
+          <Text style={styles.deliveryFeeText}>{`\u20B1${deliveryFee.toFixed(2)}`}</Text>
+        )} */}
+            <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
+          </View>
+        </View>
+      )}
+
+      {(totalDelivery > 0 || totalShipping > 0) && (
+        <View style={styles.header}>
+          <Text>Delivery Fee Discount</Text>
+          <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
+        </View>
+      )}
+
+      <View style={styles.divider} />
+      {/* </> */}
+      {/* )} */}
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
           <Text style={styles.totalPrice}>{`PHP ${(
-            temporaryCart.totalAmountWithAddons +
+            totalBasket +
             deliveryFee -
             totalSumSF -
             (totalPromotions + totalDeal)
           ).toFixed(2)}`}</Text>
         ) : (
-          <Text style={styles.totalPrice}>{`PHP ${temporaryCart.totalAmount.toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${totalBasket - totalSumSF - (totalPromotions + totalDeal)}`}</Text>
         )}
       </View>
     </View>

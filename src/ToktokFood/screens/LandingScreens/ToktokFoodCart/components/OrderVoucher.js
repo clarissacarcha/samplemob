@@ -3,6 +3,7 @@ import React, {useCallback, useContext, useEffect, useMemo, useState} from 'reac
 import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useSelector, useDispatch} from 'react-redux';
+import _ from 'lodash';
 // import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
 // Components
@@ -42,19 +43,22 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
   const [getVoucherCode] = useLazyQuery(GET_VOUCHER_CODE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
+    onError: err => console.log(err),
     onCompleted: ({getVoucherCode}) => {
-      const {success, message, type} = getVoucherCode;
-      setShowInlineError(true);
+      const {success, message} = getVoucherCode;
+      // setShowInlineError(true);
       console.log(getVoucherCode);
 
       if (!success) {
         setShowError(true);
         setVoucherError(`* ${message}`);
+        setShowInlineError(true);
         const filterPromo = promotionVoucher.filter(promo => promo.type !== 'promotion' && promo.type !== 'shipping');
-
+        const filterPromotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+        // console.log(filterPromo, promotionVoucher);
         dispatch({
           type: 'SET_TOKTOKFOOD_PROMOTIONS',
-          payload: filterPromo,
+          payload: _.unionBy(filterPromo, filterPromotions, 'id'),
         });
         // setShippingVoucher([]);
         // setVoucherError('* Oops! Voucher not applied for this order. Please review details of voucher and try again.');
@@ -80,6 +84,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
           payload: voucherObj,
         });
         setShowError(false);
+        setShowInlineError(true);
         // setShowError(!showError);
         // setVoucherError(null);
         // if (type !== 'shipping') {
@@ -138,22 +143,28 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
   const onShowError = useCallback(() => {
     if (autoShipping) {
       if (autoShipping?.success) {
-        setShowHighlighted(true);
+        setShowHighlighted(autoShipping?.success);
         setShowHighlightedError(false);
       } else {
-        setShowHighlighted(true);
+        setShowHighlighted(autoShipping?.success);
         setShowHighlightedError(true);
       }
     }
   }, [autoShipping]);
 
   useEffect(() => {
-    if (!autoShipping?.success && voucher) {
-      onApplyVoucher();
-    }
+    // if (!autoShipping?.success && voucher) {
+    //   onApplyVoucher();
+    // }
 
     onShowError();
   }, [autoShipping, onShowError]);
+
+  useEffect(() => {
+    if (!autoShipping?.success && voucher) {
+      onApplyVoucher();
+    }
+  }, [paymentMethod]);
 
   const onChangeText = value => {
     setVoucherError(null);
@@ -222,7 +233,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
           // onRemoveVoucher={onRemoveVoucher}
           label="Voucher"
           value={voucher}
-          placeholder="Input Voucher(optional)"
+          placeholder="Input Voucher (Optional)"
         />
 
         <TouchableOpacity disabled={voucher === ''} onPress={onApplyVoucher} style={styles.apply}>

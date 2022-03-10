@@ -11,6 +11,7 @@ const transaction = `
   conno
   email
   address
+  landmark
   notes
   orderStatus
   dateDeclined
@@ -44,6 +45,7 @@ const transaction = `
   latitude
   longitude
   declinedNote
+  srpTotalamount
   shopDetails {
     id
     shopname
@@ -72,6 +74,7 @@ const transaction = `
     curcode
     notes
     totalAmountWithAddons
+    resellerDiscount
     productDetails {
       Id
       itemname
@@ -111,6 +114,7 @@ export const GET_ORDER_TRANSACTION_BY_REF_NUM = gql`
   query getTransactionByRefNum($input: GetTransactionByRefNumInput){
     getTransactionByRefNum(input: $input) {
       ${transaction}
+      promoDiscounts
     }
   }
 `;

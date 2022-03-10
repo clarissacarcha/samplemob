@@ -13,15 +13,15 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
 // Components
 import {VerifyContext} from '../components';
+import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 // Utils
 import {verticalScale, getDeviceHeight, moderateScale, getIphoneNotchSize} from 'toktokfood/helper/scale';
-import {reseller_badge, empty_search_2} from 'toktokfood/assets/images';
+import {reseller_badge, empty_search_2, food_placeholder} from 'toktokfood/assets/images';
 import {TOKFOODCOLOR} from 'res/variables';
-import {filter} from 'lodash';
 
 export const FoodList = props => {
   const {activeTab, id, tagsLoading} = props;
@@ -50,7 +50,7 @@ export const FoodList = props => {
       },
     },
   );
-
+  console.log(listData);
   // data fetching for product
   const [getSearchProductsByShop, {loading: searchProductsLoading}] = useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -63,9 +63,10 @@ export const FoodList = props => {
 
   const filterProducts = useCallback(products => {
     setListData([]);
+    let productHolder = [];
     if (products.length) {
-      let productHolder = [];
-      products.map(product => {
+      const removedFalsyProducts = products.filter(Boolean);
+      removedFalsyProducts.map(product => {
         let variantHolder = [];
         const variants = product.variants;
         if (variants.length === 1) {
@@ -91,8 +92,8 @@ export const FoodList = props => {
           }
         }
       });
-      setListData(productHolder);
     }
+    setListData(productHolder);
   }, []);
 
   useEffect(() => {
@@ -128,8 +129,17 @@ export const FoodList = props => {
 
     return (
       <View style={styles.resellerPrice}>
-        <Text style={styles.listPrice}>PHP {resellerDiscount?.referralShopRate.toFixed(2)}</Text>
+        <Text numberOfLines={1} style={styles.fromText}>
+          from
+        </Text>
+        <Text style={styles.promoText}>PHP {resellerDiscount?.referralShopRate.toFixed(2)}</Text>
         <Text style={styles.resellerDiscountText}>PHP {price?.toFixed(2)}</Text>
+
+        {activeTab?.id === '0' && (
+          <View style={styles.voucherContainer}>
+            <Text style={styles.voucherText}>Piso Chibog</Text>
+          </View>
+        )}
       </View>
     );
   };
@@ -145,7 +155,7 @@ export const FoodList = props => {
   };
 
   const ItemList = ({item, index}) => {
-    const {resellerDiscount} = item;
+    const {promotionVouchers, resellerDiscount} = item;
     return (
       <Fragment>
         <TouchableOpacity
@@ -170,6 +180,12 @@ export const FoodList = props => {
                   </Text>
                 )}
                 <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
+
+                {activeTab?.id === '0' && promotionVouchers.length > 0 && (
+                  <View style={styles.voucherContainer}>
+                    <Text style={styles.voucherText}>{promotionVouchers[0].vname}</Text>
+                  </View>
+                )}
               </View>
             )}
 
@@ -179,9 +195,12 @@ export const FoodList = props => {
               </Text>
             )}
           </View>
-          <View>
-            <Image resizeMode="cover" source={{uri: item.filename}} style={styles.img} />
+          <View style={{width: 70, height: 70}}>
+            <ProgressiveImage style={styles.img} source={item.filename} placeholder={food_placeholder} />
           </View>
+          {/* <View>
+            <Image resizeMode="cover" source={{uri: item.filename}} style={styles.img} />
+          </View> */}
         </TouchableOpacity>
         <ItemSepartor />
       </Fragment>
@@ -274,8 +293,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   img: {
-    height: moderateScale(70),
-    width: moderateScale(70),
+    height: '100%',
+    width: '100%',
     borderRadius: 5,
   },
   listText: {
@@ -323,10 +342,16 @@ const styles = StyleSheet.create({
   },
   resellerDiscountText: {
     color: TOKFOODCOLOR.GRAY,
-    fontFamily: FONT.BOLD,
+    // fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
     marginLeft: 10,
     textDecorationLine: 'line-through',
+  },
+  promoText: {
+    color: '#FF6200',
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
+    // textDecorationLine: 'line-through',
   },
   fromText: {
     fontFamily: FONT.REGULAR,
@@ -335,7 +360,23 @@ const styles = StyleSheet.create({
     // flexShrink: 1,
   },
   priceContainer: {
+    alignItems: 'center',
     flexDirection: 'row',
     paddingVertical: 3,
+  },
+  voucherContainer: {
+    alignItems: 'center',
+    backgroundColor: '#FFA700',
+    borderRadius: 5,
+    flexDirection: 'row',
+    height: 20,
+    justifyContent: 'center',
+    marginHorizontal: 5,
+    paddingHorizontal: 7,
+  },
+  voucherText: {
+    color: COLOR.WHITE,
+    fontSize: 12,
+    fontWeight: '700',
   },
 });

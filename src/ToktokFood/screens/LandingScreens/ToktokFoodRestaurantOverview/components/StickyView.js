@@ -105,9 +105,11 @@ export const StickyView = () => {
   useEffect(() => {
     if (data) {
       let categories = data.getProductCategories;
-      categories.sort(function (a, b) {
-        return a.categoryName > b.categoryName;
-      });
+      // categories.sort(function (a, b) {
+      //   return a.categoryName > b.categoryName;
+      // });
+      // console.log(categories);
+
       setProductCategories(categories);
       setActiveTab(categories[0]);
     }

@@ -147,15 +147,25 @@ const OrderAddress = ({transaction, riderDetails}) => {
           <Image style={styles.icons} source={store} resizeMode="contain" />
           <Text style={styles.addressText}>{shopname}</Text>
         </View>
-        {orderIsfor === 1 ? (
+        {orderIsfor === 1 && (
           <>
             <View style={styles.horizontalContainer} />
             <Text style={styles.restaurant}>Deliver to</Text>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
-              <Text font style={styles.addressText} numberOfLines={1}>
-                {transaction?.address ? transaction.address : ''}
-              </Text>
+              <View style={styles.addressWrapper}>
+                <Text font style={styles.addressText} numberOfLines={1}>
+                  {transaction?.address ? transaction.address : ''}
+                </Text>
+                {transaction?.landmark != undefined && transaction?.landmark !== '' && (
+                  <Text
+                    font
+                    numberOfLines={2}
+                    style={[styles.addressText, {color: '#525252', marginTop: transaction.landmark === '' ? 0 : 4}]}>
+                    Landmark: {transaction.landmark}
+                  </Text>
+                )}
+              </View>
             </View>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={user} resizeMode="contain" />
@@ -163,16 +173,10 @@ const OrderAddress = ({transaction, riderDetails}) => {
             </View>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={phoneBlack} resizeMode="contain" />
-              <Text style={styles.addressText}>{conno}</Text>
+              <Text style={styles.addressText}>{conno[0] === '+' ? `${conno}` : `+63${conno}`}</Text>
             </View>
           </>
-        ) : orderStatus !== 's' && orderStatus !== 'c' ? (
-          <>
-            <Separator style={{height: 1, marginVertical: moderateScale(10)}} />
-            <Text style={styles.restaurant}>Estimated Pickup Time:</Text>
-            <Text>ASAP</Text>
-          </>
-        ) : null}
+        )}
       </View>
     </View>
   );
@@ -255,5 +259,8 @@ const styles = StyleSheet.create({
     paddingLeft: moderateScale(6),
     flex: isIphoneXorAbove() ? 0.7 : 1,
     flexDirection: 'row',
+  },
+  addressWrapper: {
+    flexDirection: 'column',
   },
 });

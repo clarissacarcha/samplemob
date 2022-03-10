@@ -36,6 +36,14 @@ const RestaurantItem = ({activeTab, item}) => {
     </View>
   );
 
+  const renderPromotionVouchers = () => (
+    <View style={styles.promotionChipAdmin}>
+      <Text numberOfLines={1} style={styles.promoText}>
+        {item?.promotionVouchers[0].voucherName}
+      </Text>
+    </View>
+  );
+
   return (
     <View>
       <TouchableOpacity onPress={() => onRestaurantNavigate(item)}>
@@ -45,6 +53,7 @@ const RestaurantItem = ({activeTab, item}) => {
           resizeMode="cover"
           onError={() => setValidImg(false)}
         />
+        {item.promotionVouchers.length > 0 && id === 2 && renderPromotionVouchers()}
       </TouchableOpacity>
 
       <View style={styles.restaurantInfo}>
@@ -139,6 +148,7 @@ const styles = StyleSheet.create({
   },
   promoChipAdmin: {
     alignItems: 'center',
+    alignSelf: 'flex-start',
     backgroundColor: '#FFA700',
     borderRadius: 5,
     height: scale(27),
@@ -146,6 +156,19 @@ const styles = StyleSheet.create({
     // marginTop: moderateScale(5),
     marginRight: moderateScale(5),
     paddingHorizontal: moderateScale(5),
+  },
+  promotionChipAdmin: {
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: '#FFA700',
+    borderRadius: 5,
+    height: scale(27),
+    flex: 1,
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 0,
+    paddingHorizontal: moderateScale(5),
+    maxWidth: (getDeviceWidth - 20) / 2,
   },
   promoText: {
     fontSize: 12,

@@ -8,6 +8,7 @@ import ImageLoader from './ImageLoader';
 export const FoodImageSlider = props => {
   const [isLoading, setIsLoading] = useState(true);
   const {images} = props;
+  const containerStyle = images.length > 0 ? styles.container : styles.emptyContainer;
 
   const FoodImages = ({item, index}) => {
     return (
@@ -24,7 +25,7 @@ export const FoodImageSlider = props => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={containerStyle}>
       <Carousel
         loop={true}
         autoplay={true}
@@ -41,9 +42,12 @@ export const FoodImageSlider = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: 'flex',
     width: scale(345),
     height: scale(190),
+  },
+  emptyContainer: {
+    flex: 1,
+    // borderWidth: 1,
   },
   imageBanner: {
     width: '100%',

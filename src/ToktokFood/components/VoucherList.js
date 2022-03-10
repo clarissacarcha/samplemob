@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, ImageBackground, View, StyleSheet, Text} from 'react-native';
 // import {useNavigation} from '@react-navigation/native';
 // import {useSelector} from 'react-redux';
@@ -14,6 +14,7 @@ import {reseller_badge} from 'toktokfood/assets/images';
 
 const VoucherList = ({
   data = [],
+  discountRate = 0,
   isDisabled = false,
   isReseller = false,
   hasClose = false,
@@ -22,18 +23,21 @@ const VoucherList = ({
   const voucherStyle = isDisabled ? {...styles.voucherContainer, opacity: 0.4} : styles.voucherContainer;
   const [voucherData, setVoucherData] = useState(data);
 
-  useEffect(() => {
+  const onSetVoucher = useCallback(() => {
     if (isReseller) {
-      setVoucherData([{id: 0, name: 'Reseller -1.75%'}, ...data]);
+      setVoucherData([{id: 0, name: `Reseller ${discountRate}`}, ...data]);
       //   voucherData.unshift();
     }
-  }, [isReseller, data]);
+  }, [isReseller]);
+
+  useEffect(() => {
+    onSetVoucher();
+  }, [onSetVoucher]);
 
   // const onCloseItem = id => {
   //   const filterData = voucherData.filter(item => item.id !== id);
   //   setVoucherData(filterData);
   // };
-
   const voucherList = ({item}) => {
     if (item.id === 0) {
       return (
@@ -46,9 +50,10 @@ const VoucherList = ({
     return (
       <View style={voucherStyle}>
         <Text style={styles.voucherText}>{item.vname}</Text>
-        {(hasClose || (item.type !== 'deal' && item.type !== 'auto')) && (
-          <MIcon style={styles.closeIcon} name="close" size={14} color="white" onPress={() => onCloseItem(item.id)} />
-        )}
+        {hasClose ||
+          (item?.type && item.type !== 'deal' && item.type !== 'auto' && (
+            <MIcon style={styles.closeIcon} name="close" size={14} color="white" onPress={() => onCloseItem(item.id)} />
+          ))}
       </View>
     );
   };

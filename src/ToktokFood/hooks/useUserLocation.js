@@ -10,16 +10,28 @@ import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 import {getFormattedAddress, getLocation} from 'toktokfood/helper';
 import {getUserLocation} from 'toktokfood/helper/PersistentLocation';
 
+import {useSelector} from 'react-redux';
+
+const checkContactNumber = (contact = '') => {
+  if (contact !== '') {
+    if (contact.slice(0, 2) === '63') {
+      return contact.slice(2, contact.length);
+    }
+    return contact;
+  }
+  return '';
+};
+
 export const useUserLocation = () => {
+  const {customerInfo} = useSelector(state => state.toktokFood);
+
   const dispatch = useDispatch();
 
   const initUserLocation = async () => {
     const saveLocation = await getUserLocation();
-    if (saveLocation !== null) {
-      dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...saveLocation}});
-      if (Object.keys(saveLocation).length === 4) {
-        dispatch({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: {...saveLocation?.details}});
-      }
+    if (saveLocation !== null && Object.keys(saveLocation).length === 2) {
+      dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...saveLocation.mapInfo}});
+      dispatch({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: {...saveLocation.details}});
     } else {
       // Get user initial location
       getLocation()
@@ -31,7 +43,6 @@ export const useUserLocation = () => {
             // getFormattedAddress example object result:
             // {"addressBreakdown": {"city": "", "country": "", "province": ""}, "formattedAddress": ""}
             // redux reducer structure for tokfood location: location: {address: "", latitude: 0, longitude: 0, }
-
             const {latitude, longitude} = res;
             const address = await getFormattedAddress(latitude, longitude);
             const payload = {
@@ -40,6 +51,18 @@ export const useUserLocation = () => {
               address: address.formattedAddress,
             };
             dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...payload}});
+            const NAME =
+              customerInfo.firstName && customerInfo.lastName
+                ? `${customerInfo.firstName} ${customerInfo.lastName}`
+                : '';
+            dispatch({
+              type: 'SET_TOKTOKFOOD_ORDER_RECEIVER',
+              payload: {
+                contactPerson: NAME,
+                contactPersonNumber: customerInfo.conno ? checkContactNumber(customerInfo.conno) : '',
+                landmark: '',
+              },
+            });
           }
         })
         .catch(() => {});

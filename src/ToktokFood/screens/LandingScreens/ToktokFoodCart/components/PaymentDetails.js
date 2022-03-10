@@ -168,7 +168,7 @@ const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
                     )}
                     {customerWallet && customerWallet?.account && (
                       <Text style={{color: '#707070', fontSize: FONT_SIZE.S}}>
-                        Balance: PHP {toktokWallet?.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.00
+                        Balance: PHP {toktokWallet?.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                       </Text>
                     )}
                   </View>

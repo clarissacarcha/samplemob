@@ -45,13 +45,11 @@ const ToktokFoodMapSearch = () => {
           longitude,
           address: result.formattedAddress,
         };
-        if (mapInfo.address !== result.formattedAddress) {
-          setMapInfo({
-            coordinates: {latitude, longitude},
-            address: result.formattedAddress,
-            fullInfo: payload,
-          });
-        }
+        setMapInfo({
+          coordinates: {latitude, longitude},
+          address: result.formattedAddress,
+          fullInfo: payload,
+        });
       } catch (error) {
         console.log(error);
       }
@@ -59,8 +57,9 @@ const ToktokFoodMapSearch = () => {
   };
 
   const onConfirmAddress = details => {
-    saveUserLocation({...mapInfo.fullInfo, details}).then(() => {
-      dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...mapInfo.fullInfo, details}});
+    saveUserLocation({mapInfo: {...mapInfo.fullInfo}, details: {...details}}).then(() => {
+      dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...mapInfo.fullInfo}});
+      dispatch({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: {...details}});
     });
   };
 
