@@ -588,7 +588,7 @@ const MainComponent = () => {
       // total_amount: temporaryCart.totalAmount,
       // srp_totalamount: temporaryCart.totalAmount,
       total_amount: parsedAmount,
-      srp_totalamount: parsedAmount,
+      srp_totalamount: temporaryCart?.srpTotalAmount,
       notes: riderNotes,
       order_isfor: orderType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       // order_type: 2,
@@ -624,6 +624,7 @@ const MainComponent = () => {
       discounted_totalamount: parsedAmount,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, []);
+    console.log('DATA', data);
     postCustomerOrder({
       variables: {
         input: data,
