@@ -196,7 +196,7 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                
                 {RenderDisplay()}
             </View>
-            <View style={{flex:1 ,justifyContent:"flex-end",alignItems:"center",paddingHorizontal: 16}}>
+            <View style={{flex:1 ,justifyContent:"flex-end",alignItems:"center",paddingHorizontal: 16,marginVertical: 10,marginTop: 40}}>
                      <TouchableOpacity 
                             // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
                             onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
