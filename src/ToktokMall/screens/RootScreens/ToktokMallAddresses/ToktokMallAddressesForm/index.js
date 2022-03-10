@@ -11,6 +11,7 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_CITY, GET_CUSTOMER_ADDRESS_DETAILS} from '../../../../../graphql/toktokmall/model/Address';
+import { ApiCall, ArrayCopy } from '../../../../helpers';
 import {TOKTOK_MALL_GRAPHQL_CLIENT} from '../../../../../graphql';
 import {connect, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -176,29 +177,47 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
 
           const endpoint = route.params?.update ? `update_address` : `save_address`;
 
-          console.log(body, data.appSignature);
-          let formData = new FormData();
-          formData.append('signature', data.appSignature);
-          formData.append('data', JSON.stringify(body));
+          // console.log(body, data.appSignature);
+          // let formData = new FormData();
+          // formData.append('signature', data.appSignature);
+          // formData.append('data', JSON.stringify(body));
 
-          await axios
-            .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/${endpoint}`, formData)
-            .then((response) => {
-              if (response.data && response.data.success == 1) {
-                setIsLoading(false);
-                EventRegister.emit("refreshCheckoutData")
-                dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
-                  type: 'Success',
-                  message: route.params?.update ? 'Address Updated!' : 'Address Added!'
-                }})
-                callback();
-              } else {
-                console.log('Response', response.data);
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          // await axios
+          //   .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/${endpoint}`, formData)
+          //   .then((response) => {
+          //     if (response.data && response.data.success == 1) {
+          //       setIsLoading(false);
+          //       EventRegister.emit("refreshCheckoutData")
+                // dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+                //   type: 'Success',
+                //   message: route.params?.update ? 'Address Updated!' : 'Address Added!'
+                // }})
+                // callback();
+          //     } else {
+          //       console.log('Response', response.data);
+          //     }
+          //   })
+          //   .catch((error) => {
+          //     console.log(error);
+          //   });
+          const req = await ApiCall(endpoint, body, true)
+      
+          if(req.responseData && req.responseData.success == 1){
+            setIsLoading(false);
+            EventRegister.emit("refreshCheckoutData")
+            dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+              type: 'Success',
+              message: route.params?.update ? 'Address Updated!' : 'Address Added!'
+            }})
+            callback();
+      
+          }else if(req.responseError && req.responseError.success == 0){
+            Toast.show(req.responseError.message, Toast.LONG)
+          }else if(req.responseError){
+            Toast.show("Something went wrong", Toast.LONG)
+          }else if(req.responseError == null && req.responseData == null){
+            Toast.show("Something went wrong", Toast.LONG)
+          }
         }
       });
     }
@@ -214,38 +233,69 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
           address_id: `${newAddressForm.id}`,
         };
 
-        let formData = new FormData();
-        formData.append('signature', data.appSignature);
-        formData.append('data', JSON.stringify(body));
+        // let formData = new FormData();
+        // formData.append('signature', data.appSignature);
+        // formData.append('data', JSON.stringify(body));
 
-        await axios
-          .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
-          .then(async (response) => {
-            console.log(response.data);
-            setIsLoading(false);
+        // await axios
+        //   .post(`http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/delete_address`, formData)
+        //   .then(async (response) => {
+        //     console.log(response.data);
+            // setIsLoading(false);
 
-            EventRegister.emit("refreshCheckoutData")
-            const refresh = () =>
-              setTimeout(() => {
-                EventRegister.emit('refreshAddress');
-              }, 1000);
+            // EventRegister.emit("refreshCheckoutData")
+            // const refresh = () =>
+            //   setTimeout(() => {
+            //     EventRegister.emit('refreshAddress');
+            //   }, 1000);
 
-            dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
-              type: 'Success',
-              message: 'Address Deleted!',
-              onCloseCallback: () => {
-                EventRegister.emit("refreshCheckoutData")
-                updateUserAddress('remove', newAddressForm.id);
-                refresh()
-                navigation.goBack();
-              }
-            }})
+            // dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+            //   type: 'Success',
+            //   message: 'Address Deleted!',
+            //   onCloseCallback: () => {
+            //     EventRegister.emit("refreshCheckoutData")
+            //     updateUserAddress('remove', newAddressForm.id);
+            //     refresh()
+            //     navigation.goBack();
+            //   }
+            // }})
             
-          })
-          .catch((error) => {
-            setIsLoading(false);
-            console.log(error);
-          });
+        //   })
+        //   .catch((error) => {
+        //     setIsLoading(false);
+        //     console.log(error);
+        //   });
+        const req = await ApiCall("delete_address", body, true)
+      
+        if(req.responseData && req.responseData.success == 1){
+          setIsLoading(false);
+
+          EventRegister.emit("refreshCheckoutData")
+          const refresh = () =>
+            setTimeout(() => {
+              EventRegister.emit('refreshAddress');
+            }, 1000);
+
+          dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+            type: 'Success',
+            message: 'Address Deleted!',
+            onCloseCallback: () => {
+              EventRegister.emit("refreshCheckoutData")
+              updateUserAddress('remove', newAddressForm.id);
+              refresh()
+              navigation.goBack();
+            }
+          }})
+        }else if(req.responseError && req.responseError.success == 0){
+          setIsLoading(false);
+          Toast.show(req.responseError.message, Toast.LONG)
+        }else if(req.responseError){
+          setIsLoading(false);
+          Toast.show("Something went wrong", Toast.LONG)
+        }else if(req.responseError == null && req.responseData == null){
+          setIsLoading(false);
+          Toast.show("Something went wrong", Toast.LONG)
+        }
       }
     });
   };
