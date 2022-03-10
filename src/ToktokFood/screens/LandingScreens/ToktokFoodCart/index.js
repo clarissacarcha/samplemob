@@ -422,7 +422,7 @@ const MainComponent = () => {
     const deliveryPrice = orderType === 'Delivery' ? delivery?.price : 0;
     const totalPrice =
       promotions.length > 0 || deals.length > 0
-        ? await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)
+        ? (await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)) + temporaryCart.addonsTotalAmount
         : temporaryCart?.totalAmount;
     // const totalPrice =
     //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;

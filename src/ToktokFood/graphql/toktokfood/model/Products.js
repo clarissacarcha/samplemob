@@ -93,6 +93,12 @@ export const GET_PRODUCT_DETAILS = gql`
   query getProductDetails($input: GetProductDetailsInput) {
     getProductDetails(input: $input) {
       ${products}
+      productVouchers {
+        id
+        voucherCode
+        voucherName
+        vname
+      }
     }
   }
 `;

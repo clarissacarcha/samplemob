@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import {VerifyContext} from '../components';
 
-import {getResellerDiscount} from '../functions';
+import {getCartTotalAmountOrder, getResellerDiscount} from '../functions';
 
 import styles from '../styles';
 
@@ -44,7 +44,18 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     const autoApply = groupPromo.filter(promo => promo.type === 'auto');
     const shipping = groupPromo.filter(promo => promo.type === 'shipping');
 
-    // console.log(promotionVoucher);
+    // console.log(temporaryCart, promotions, deal);
+
+    if (promotions.length > 0 || deal.length > 0) {
+      const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+      const deal = promotionVoucher.filter(promo => promo.type === 'deal');
+      const totalBasketAmount = await getCartTotalAmountOrder([...promotions, ...deal], temporaryCart.items);
+      // console.log(promotions, deal, totalBasketAmount);
+      setTotalBasket(totalBasketAmount);
+    } else {
+      // console.log(temporaryCart);
+      setTotalBasket(temporaryCart.totalAmountWithAddons);
+    }
 
     if (promotions.length > 0) {
       // setTotalPromotions(promotions[0].discount_totalamount);
@@ -52,7 +63,6 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       const totalResellerDisc = await getResellerDiscount(promotion, temporaryCart.items);
       // console.log(totalResellerDisc);
       setTotalPromotions(totalResellerDisc);
-      // setTotalBasket(temporaryCart.srpTotalAmount);
     } else {
       setTotalPromotions(0);
     }
@@ -181,7 +191,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
             (totalPromotions + totalDeal)
           ).toFixed(2)}`}</Text>
         ) : (
-          <Text style={styles.totalPrice}>{`PHP ${totalBasket - totalSumSF - (totalPromotions + totalDeal)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(totalBasket - totalSumSF - (totalPromotions + totalDeal)).toFixed(2)}`}</Text>
         )}
       </View>
     </View>

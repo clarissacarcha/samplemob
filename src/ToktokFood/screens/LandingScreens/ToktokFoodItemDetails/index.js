@@ -125,7 +125,7 @@ const MainComponent = () => {
     return (
       <View>
         <VoucherList
-          data={productDetails?.promotionVouchers}
+          data={productDetails?.productVouchers}
           discountRate={discountRate}
           hasClose={false}
           isReseller={productDetails.resellerDiscount?.referralShopRate > 0}
@@ -151,13 +151,13 @@ const MainComponent = () => {
   };
 
   const ItemDetails = () => {
-    const {itemname, basePrice, price, promotionVouchers, resellerDiscount, summary} = productDetails;
+    const {itemname, basePrice, price, productVouchers, resellerDiscount, summary} = productDetails;
     // const {discRatetype, referralDiscount} = productDetails?.resellerDiscount;
     // const discountRate = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
 
     return (
       <View style={styles.foodContainer}>
-        {(resellerDiscount?.referralShopRate > 0 || promotionVouchers.length > 0) && <ResellerDiscountBadge />}
+        {(resellerDiscount?.referralShopRate > 0 || productVouchers.length > 0) && <ResellerDiscountBadge />}
         <View style={styles.foodDetails}>
           {/* <View style={styles.foodNameWrapper}> */}
           <Text style={styles.foodName}>{itemname}</Text>
