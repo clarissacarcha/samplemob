@@ -191,7 +191,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
             (totalPromotions + totalDeal)
           ).toFixed(2)}`}</Text>
         ) : (
-          <Text style={styles.totalPrice}>{`PHP ${totalBasket - totalSumSF - (totalPromotions + totalDeal)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(totalBasket - totalSumSF - (totalPromotions + totalDeal)).toFixed(2)}`}</Text>
         )}
       </View>
     </View>
