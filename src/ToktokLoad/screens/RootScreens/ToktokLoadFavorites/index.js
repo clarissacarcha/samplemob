@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState, memo } from "react";
+import React, { useCallback, useContext, useEffect, useState, memo, useMemo } from "react";
 import { View, Text, StyleSheet, FlatList, RefreshControl } from "react-native";
 import { useIsFocused } from '@react-navigation/native';
 import _ from 'lodash';
@@ -199,8 +199,38 @@ const MainComponent = ({navigation,route})=> {
     }
   }
 
+  const displayFavorites = useMemo(() => {
+    return (
+      <FlatList
+        extraData={[favorites, selectedLoad]}
+        data={favorites}
+        renderItem={({ item, index }) => (
+          <FavoriteDetails
+            item={item}
+            index={index}
+            onPressFavorite={() => onPressFavorite(item, index)}
+            patchFavoriteLoading={patchFavoriteLoading}
+            postFavoriteLoading={postFavoriteLoading}
+            loadFavorite={loadFavorite}
+            getLoadItemsLoading={getFavoritesLoading}
+          />
+        )}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ flexGrow: 1 }}
+        ListEmptyComponent={() => ( <ListEmptyComponent /> )}
+        refreshControl={
+          <RefreshControl
+            refreshing={getFavoritesLoading && !loadFavorite}
+            onRefresh={() => processGetFavoriteLoads('refresh')}
+          />
+        }
+      />
+    )
+  }, [favorites, patchFavoriteLoading, postFavoriteLoading, loadFavorite, getFavoritesLoading])
+
 
   const ListEmptyComponent = () => {
+    console.log("Sd")
     if(isMounted) return null
 
     const imageSrc = hasSearch ? empty_search : empty_favorite;
@@ -232,30 +262,7 @@ const MainComponent = ({navigation,route})=> {
         containerStyle={{ padding: moderateScale(16) }}
         onSubmitEditing={processSearch}
       />
-      <FlatList
-        extraData={{favorites, selectedLoad}}
-        data={favorites}
-        renderItem={({ item, index }) => (
-          <FavoriteDetails
-            item={item}
-            index={index}
-            onPressFavorite={() => onPressFavorite(item, index)}
-            patchFavoriteLoading={patchFavoriteLoading}
-            postFavoriteLoading={postFavoriteLoading}
-            loadFavorite={loadFavorite}
-            getLoadItemsLoading={getFavoritesLoading}
-          />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ flexGrow: 1 }}
-        ListEmptyComponent={ListEmptyComponent}
-        refreshControl={
-          <RefreshControl
-            refreshing={getFavoritesLoading && !loadFavorite}
-            onRefresh={() => processGetFavoriteLoads('refresh')}
-          />
-        }
-      />
+      { displayFavorites }
       <View style={{ padding: moderateScale(16) }}>
         <OrangeButton
           disabled={!(selectedLoad && Object.keys(selectedLoad).length > 0) || !mobileNumber || mobileErrorMessage}

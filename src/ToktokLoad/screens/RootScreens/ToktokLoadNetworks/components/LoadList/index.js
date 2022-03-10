@@ -126,7 +126,8 @@ export const LoadList = memo((props) => {
     getLoadItems({
       variables: {
         input: {
-          loadVariantId
+          loadVariantId,
+          networkId
         }
       },
     });
@@ -230,8 +231,7 @@ export const LoadList = memo((props) => {
           }}
         />
       }
-      style={!hasSearch && { flex: 1 }}
-      contentContainerStyle={hasSearch && { flexGrow: 1 } }
+      contentContainerStyle={(hasSearch && loads.length === 0) && { flexGrow: 1 } }
     >
       {/* DISPLAY FAVORITES */}
       { favorites.length > 0 && !hasSearch && (
@@ -245,17 +245,6 @@ export const LoadList = memo((props) => {
             </TouchableOpacity>
           )}
           </View>
-          {/* <FlatList
-            extraData={favorites}
-            data={favorites.slice(0, 3)}
-            scrollEnabled={false}
-            initialNumToRender={3}
-            renderItem={({ item, index }) => (
-             
-            )}
-            contentContainerStyle={{ flexGrow: 1 }}
-            keyExtractor={(item, index) => index.toString()}
-          /> */}
           {favorites.slice(0, 3).map((item, index) => {
             return (
               <LoadDetails
@@ -272,38 +261,36 @@ export const LoadList = memo((props) => {
         </>
       )}
       {/* DISPLAY LOADS WITHOUT FAVORITES */}
-      
       {(loads.length > 0 || hasSearch) && (
         <>
           {(loads.length > 0 && !hasSearch && favorites.length > 0) &&  <Text style={styles.label}>{activeTab.name}</Text>}
-          {loads.map((item, index) => {
-            return (
-              <LoadDetails
-                index={index}
-                item={item}
-                onPressFavorite={() => onPressFavorite(item, index)}
-                patchFavoriteLoading={patchFavoriteLoading}
-                postFavoriteLoading={postFavoriteLoading}
-                loadFavorite={loadFavorite}
-                getLoadItemsLoading={getLoadItemsLoading}
-              />
-            )
-          })}
+          { loads.length === 0 ? (
+            ListEmptyComponent
+          ) : (
+            loads.map((item, index) => {
+              return (
+                <LoadDetails
+                  index={index}
+                  item={item}
+                  onPressFavorite={() => onPressFavorite(item, index)}
+                  patchFavoriteLoading={patchFavoriteLoading}
+                  postFavoriteLoading={postFavoriteLoading}
+                  loadFavorite={loadFavorite}
+                  getLoadItemsLoading={getLoadItemsLoading}
+                />
+              )
+            })
+          )}
         </>
       )}
-      {((loads.length === 0 && favorites.length === 0) || hasSearch) && (
-        ListEmptyComponent
-      )}
     </ScrollView>
-    {(loads.length > 0 || favorites.length > 0) && (
-      <View style={{ padding: moderateScale(16) }}>
-        <OrangeButton
-          disabled={Object.keys(selectedLoad).length == 0}
-          label='Next'
-          onPress={() => onPressNext()}
-        />
-      </View>
-    )}
+    <View style={{ padding: moderateScale(16) }}>
+      <OrangeButton
+        disabled={Object.keys(selectedLoad).length == 0}
+        label='Next'
+        onPress={() => onPressNext()}
+      />
+    </View>
     </>
   );
 });
