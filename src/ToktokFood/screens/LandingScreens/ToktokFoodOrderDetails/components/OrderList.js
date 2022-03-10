@@ -43,7 +43,7 @@ const OrderList = ({orderDetails}) => {
       ({amount, srpAmount, resellerDiscount}) => {
         const percentage = (100 * (srpAmount - resellerDiscount)) / srpAmount;
         const finalPercentage = roundedPercentage(percentage, 1);
-        // console.log(finalPercentage, percentage);
+        // console.log(srpAmount, resellerDiscount);
         // const {discRatetype, referralDiscount} = resellerDiscount;
         // const discountText = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
         return (
@@ -52,7 +52,7 @@ const OrderList = ({orderDetails}) => {
               <Text style={styles.resellerText}>Reseller -{finalPercentage}%</Text>
             </ImageBackground>
             <Text style={{...styles.seeAll, position: 'absolute', bottom: moderateScale(-20)}}>
-              PHP {amount.toFixed(2)}
+              PHP {srpAmount.toFixed(2)}
             </Text>
           </View>
         );
