@@ -12,6 +12,16 @@ import {getUserLocation} from 'toktokfood/helper/PersistentLocation';
 
 import {useSelector} from 'react-redux';
 
+const checkContactNumber = (contact = '') => {
+  if (contact !== '') {
+    if (contact.slice(0, 2) === '63') {
+      return contact.slice(2, contact.length);
+    }
+    return contact;
+  }
+  return '';
+};
+
 export const useUserLocation = () => {
   const {customerInfo} = useSelector(state => state.toktokFood);
 
@@ -49,7 +59,7 @@ export const useUserLocation = () => {
               type: 'SET_TOKTOKFOOD_ORDER_RECEIVER',
               payload: {
                 contactPerson: NAME,
-                contactPersonNumber: customerInfo.conno ? customerInfo.conno : '',
+                contactPersonNumber: customerInfo.conno ? checkContactNumber(customerInfo.conno) : '',
                 landmark: '',
               },
             });
