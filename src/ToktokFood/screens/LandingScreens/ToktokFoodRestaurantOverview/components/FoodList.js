@@ -50,7 +50,7 @@ export const FoodList = props => {
       },
     },
   );
-
+  console.log(listData);
   // data fetching for product
   const [getSearchProductsByShop, {loading: searchProductsLoading}] = useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -155,7 +155,7 @@ export const FoodList = props => {
   };
 
   const ItemList = ({item, index}) => {
-    const {resellerDiscount} = item;
+    const {promotionVouchers, resellerDiscount} = item;
     return (
       <Fragment>
         <TouchableOpacity
@@ -181,9 +181,9 @@ export const FoodList = props => {
                 )}
                 <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
 
-                {activeTab?.id === '0' && (
+                {activeTab?.id === '0' && promotionVouchers.length > 0 && (
                   <View style={styles.voucherContainer}>
-                    <Text style={styles.voucherText}>Piso Chibog</Text>
+                    <Text style={styles.voucherText}>{promotionVouchers[0].vname}</Text>
                   </View>
                 )}
               </View>
