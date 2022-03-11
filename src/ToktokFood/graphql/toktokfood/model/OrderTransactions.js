@@ -115,6 +115,7 @@ export const GET_ORDER_TRANSACTION_BY_REF_NUM = gql`
     getTransactionByRefNum(input: $input) {
       ${transaction}
       promoDiscounts
+      srpTotal
     }
   }
 `;

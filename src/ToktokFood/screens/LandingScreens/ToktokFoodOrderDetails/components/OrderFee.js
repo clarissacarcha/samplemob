@@ -7,6 +7,7 @@ import {FONT_SIZE, FONT} from 'res/variables';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+// import {getSubtotalOrder} from '../function';
 
 const getShippingDiscount = (promoDetails, deliveryFee) => {
   const {amount, isPercentage} = promoDetails;
@@ -29,6 +30,7 @@ const OrderFee = ({data, forDelivery}) => {
     promoDetails,
     promoDiscounts,
     srpTotalamount,
+    srpTotal,
     totalAmount,
   } = data;
   let deliveryFee = deliveryAmount ? deliveryAmount : 0;
@@ -38,7 +40,7 @@ const OrderFee = ({data, forDelivery}) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text>Subtotal</Text>
-        <Text style={styles.subtotal}>{`PHP ${srpTotalamount.toFixed(2)}`}</Text>
+        <Text style={styles.subtotal}>{`PHP ${srpTotal.toFixed(2)}`}</Text>
       </View>
 
       {promoDiscounts > 0 && (

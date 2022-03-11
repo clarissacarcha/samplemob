@@ -43,21 +43,25 @@ const OrderList = ({orderDetails}) => {
       ({amount, srpAmount, resellerDiscount}) => {
         const percentage = (100 * (srpAmount - resellerDiscount)) / srpAmount;
         const finalPercentage = roundedPercentage(percentage, 1);
-        // console.log(srpAmount, resellerDiscount);
+        const itemAmount = amount === 1 ? srpAmount : resellerDiscount;
+        // console.log(srpAmount, resellerDiscount, amount);
         // const {discRatetype, referralDiscount} = resellerDiscount;
         // const discountText = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
         return (
           <View style={{alignItems: 'flex-end'}}>
-            <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
-              <Text style={styles.resellerText}>Reseller -{finalPercentage}%</Text>
-            </ImageBackground>
+            {amount !== 1 && (
+              <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
+                <Text style={styles.resellerText}>Reseller -{finalPercentage}%</Text>
+              </ImageBackground>
+            )}
+
             <Text style={{...styles.seeAll, position: 'absolute', bottom: moderateScale(-20)}}>
-              PHP {srpAmount.toFixed(2)}
+              PHP {itemAmount.toFixed(2)}
             </Text>
           </View>
         );
       },
-    [],
+    [data],
   );
 
   const Item = ({item}) => {
@@ -65,6 +69,7 @@ const OrderList = ({orderDetails}) => {
     let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
     let productName = parentProductId ? parentProductName : itemname;
     const {amount, srpAmount, resellerDiscount} = item;
+    // console.log(item);
     return (
       <View style={styles.listContainer}>
         <View style={styles.progressiveImageContainer}>
