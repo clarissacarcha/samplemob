@@ -77,6 +77,12 @@ export const GET_PRODUCTS_BY_SHOP_CATEGORY = gql`
   query getProductsByShopCategory($input: GetProductByShopCategoryInput) {
     getProductsByShopCategory(input: $input) {
       ${products}
+      promoVoucher {
+        id
+        voucherCode
+        voucherName
+        vname
+      }
     }
   }
 `;
