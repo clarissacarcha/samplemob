@@ -20,6 +20,9 @@ const transaction = `
       id
       name
       iconUrl
+      categoryDetails {
+        name
+      }
     }
   }
   senderWalletBalance
