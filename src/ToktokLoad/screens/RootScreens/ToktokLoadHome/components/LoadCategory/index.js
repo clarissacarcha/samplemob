@@ -70,7 +70,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
 
   useEffect(()=>{
     setMobileErrorMessage("")
-    if(activeCategory()?.name == "Telco") setMobileNumber(formattedMobile)
+    if(+activeNetwork?.inputLength?.inputLength === 11) setMobileNumber(formattedMobile)
   },[activeNetwork])
 
   const onChangeText = (value) => {
