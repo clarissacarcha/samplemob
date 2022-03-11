@@ -424,7 +424,7 @@ const MainComponent = () => {
     const totalPrice =
       promotions.length > 0 || deals.length > 0
         ? (await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)) + temporaryCart.addonsTotalAmount
-        : temporaryCart?.totalAmount;
+        : temporaryCart?.totalAmountWithAddons;
     // const totalPrice =
     //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;
     // const totalResellerDiscount =
