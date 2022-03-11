@@ -50,7 +50,7 @@ export const FoodList = props => {
       },
     },
   );
-  console.log(listData);
+
   // data fetching for product
   const [getSearchProductsByShop, {loading: searchProductsLoading}] = useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
