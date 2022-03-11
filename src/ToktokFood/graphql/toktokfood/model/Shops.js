@@ -91,3 +91,12 @@ export const GET_SHOP_DETAILS = gql`
     }
   }
 `;
+
+export const GET_SHOP_STATUS = gql`
+  query getShopStatus($input: GetShopStatusInput!) {
+    getShopStatus(input: $input) {
+      shopname
+      status
+    }
+  }
+`;
