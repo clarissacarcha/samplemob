@@ -47,7 +47,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
     onCompleted: ({getVoucherCode}) => {
       const {success, message} = getVoucherCode;
       // setShowInlineError(true);
-      console.log(getVoucherCode);
+      // console.log(getVoucherCode);
 
       if (!success) {
         setShowError(true);
@@ -97,6 +97,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
         //   setVoucherError('* Invalid voucher code. Please check your voucher code.');
         // }
       }
+      setVoucher('');
     },
   });
 
