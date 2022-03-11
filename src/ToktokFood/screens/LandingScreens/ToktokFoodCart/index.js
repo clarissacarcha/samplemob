@@ -183,7 +183,7 @@ const MainComponent = () => {
   }, [paymentMethod]);
 
   const checkShopOpenStatus = () => {
-    setShowLoader(true);
+    setLoadingWallet(true);
     if (temporaryCart && temporaryCart.items.length > 0) {
       getShopStatus({variables: {input: {shopId: temporaryCart.items[0]?.shopid}}});
     }
@@ -245,14 +245,15 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getShopStatus}) => {
-      setShowCloseShop({visible: true, shopName: getShopStatus.shopname});
-      setShowLoader(false);
+      setLoadingWallet(false);
       if (getShopStatus.status === 'open') {
         placeCustomerOrder();
+      } else {
+        setShowCloseShop({visible: true, shopName: getShopStatus.shopname});
       }
     },
     onError: error => {
-      setShowLoader(false);
+      setLoadingWallet(false);
     },
   });
 
