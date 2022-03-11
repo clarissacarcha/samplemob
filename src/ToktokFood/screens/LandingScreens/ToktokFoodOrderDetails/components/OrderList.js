@@ -78,8 +78,8 @@ const OrderList = ({orderDetails}) => {
         </View>
         {/* {item.productDetails.filename && (
           <Image
-            style={styles.listImg}
-            source={validImg ? {uri: item.productDetails.filename} : no_image}
+            style={styles.foodItemImage}
+            source={validImg ? {uri: item.productDetails.filename} : food_placeholder}
             onError={() => setValidImg(false)}
           />
         )} */}

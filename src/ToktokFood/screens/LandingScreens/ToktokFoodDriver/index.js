@@ -125,7 +125,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
       const dateProcessed = moment(transaction?.dateOrderProcessed).add(45, 'minutes').format('YYYY-MM-DD HH:mm:ss');
       const remainingMinutes = moment(dateProcessed).diff(moment(), 'minutes');
       console.log('remainingMinutes', remainingMinutes);
-      const payload = {minutesRemaining: remainingMinutes, showError: false, duration: 0};
+      const payload = {minutesRemaining: remainingMinutes, showError: remainingMinutes <= 0, duration: 0};
       dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
       setMinutes(remainingMinutes);
     } else if (transaction?.orderStatus === 'f') {

@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useRef} from 'react';
 import {Animated} from 'react-native';
+import FastImage from 'react-native-fast-image' 
 
 const ProgressiveImage = ({placeholder, source, style}) => {
   const defaultImageAnimated = useRef(new Animated.Value(0)).current;
@@ -17,23 +18,17 @@ const ProgressiveImage = ({placeholder, source, style}) => {
 
   return (
     <React.Fragment>
-      <Animated.Image
+      <FastImage
         source={placeholder}
-        resizeMode="cover"
+        resizeMode={FastImage.resizeMode.cover}
         style={{
-          resizeMode: 'cover',
-          opacity: defaultImageAnimated,
           ...style,
         }}
-        onLoad={handleDefaultImageLoad}
-        blurRadius={1}
       />
-      <Animated.Image
+      <FastImage
         source={{uri: source}}
-        resizeMode="cover"
+        resizeMode={FastImage.resizeMode.cover}
         style={{
-          resizeMode: 'cover',
-          opacity: imageAnimated,
           position: 'absolute',
           top: 0,
           bottom: 0,
@@ -42,7 +37,6 @@ const ProgressiveImage = ({placeholder, source, style}) => {
           backgroundColor: '#fff',
           ...style,
         }}
-        onLoad={handleImageLoad}
       />
     </React.Fragment>
   );
