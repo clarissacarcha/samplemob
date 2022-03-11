@@ -318,6 +318,7 @@ const MainComponent = () => {
       if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
+            dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
             setTimeout(() => {
               setShowLoader(false);
               navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
@@ -413,7 +414,7 @@ const MainComponent = () => {
           amount: Number((item.resellerDiscount ?? item.basePrice).toFixed(2)),
           srp_amount: item.basePrice,
           srp_totalamount: Number(item.basePrice.toFixed(2)) * item.quantity,
-          total_amount: Number(totalAmount),
+          total_amount: Number(totalAmount.toFixed(2)),
           quantity: item.quantity,
           order_type: 1,
           notes: item.notes,
@@ -447,7 +448,7 @@ const MainComponent = () => {
     const totalPrice =
       promotions.length > 0 || deals.length > 0
         ? (await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)) + temporaryCart.addonsTotalAmount
-        : temporaryCart?.totalAmount;
+        : temporaryCart?.totalAmountWithAddons;
     // const totalPrice =
     //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;
     // const totalResellerDiscount =

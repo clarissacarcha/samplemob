@@ -27,7 +27,7 @@ import {GET_VOUCHER_CODE} from 'toktokfood/graphql/toktokfood';
 const OrderVoucher = ({autoShipping, deliveryFee}) => {
   const dispatch = useDispatch();
   const {paymentMethod, shippingVoucher, setShippingVoucher, temporaryCart} = useContext(VerifyContext);
-  const {promotionVoucher} = useSelector(state => state.toktokFood);
+  const {customerInfo, promotionVoucher} = useSelector(state => state.toktokFood);
 
   // State
   const [voucher, setVoucher] = useState('');
@@ -47,7 +47,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
     onCompleted: ({getVoucherCode}) => {
       const {success, message} = getVoucherCode;
       // setShowInlineError(true);
-      console.log(getVoucherCode);
+      // console.log(getVoucherCode);
 
       if (!success) {
         setShowError(true);
@@ -97,6 +97,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
         //   setVoucherError('* Invalid voucher code. Please check your voucher code.');
         // }
       }
+      setVoucher('');
     },
   });
 
@@ -121,6 +122,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
       getVoucherCode({
         variables: {
           input: {
+            userId: Number(customerInfo.userId),
             brandId: items[0].companyId,
             shopid: items[0]?.shopid,
             code: voucher,
