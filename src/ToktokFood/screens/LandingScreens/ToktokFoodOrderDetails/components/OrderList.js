@@ -64,51 +64,55 @@ const OrderList = ({orderDetails}) => {
     [data],
   );
 
-  const Item = ({item}) => {
-    let {parentProductId, itemname, parentProductName} = item.productDetails;
-    let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
-    let productName = parentProductId ? parentProductName : itemname;
-    const {amount, srpAmount, resellerDiscount} = item;
-    // console.log(item);
-    return (
-      <View style={styles.listContainer}>
-        <View style={styles.progressiveImageContainer}>
-          {item.productDetails.filename && (
-            <ProgressiveImage
-              style={styles.foodItemImage}
-              source={item.productDetails.filename}
-              placeholder={food_placeholder}
-            />
-          )}
-        </View>
-        {/* {item.productDetails.filename && (
+  const Item = useMemo(
+    () =>
+      ({item}) => {
+        let {parentProductId, itemname, parentProductName} = item.productDetails;
+        let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
+        let productName = parentProductId ? parentProductName : itemname;
+        const {amount, srpAmount, resellerDiscount} = item;
+        // console.log(item);
+        return (
+          <View style={styles.listContainer}>
+            <View style={styles.progressiveImageContainer}>
+              {item.productDetails.filename && (
+                <ProgressiveImage
+                  style={styles.foodItemImage}
+                  source={item.productDetails.filename}
+                  placeholder={food_placeholder}
+                />
+              )}
+            </View>
+            {/* {item.productDetails.filename && (
           <Image
             style={styles.foodItemImage}
             source={validImg ? {uri: item.productDetails.filename} : food_placeholder}
             onError={() => setValidImg(false)}
           />
         )} */}
-        <View style={styles.list}>
-          <View style={styles.listInfo}>
-            <Text numberOfLines={1} style={styles.listName}>
-              {productName}
-            </Text>
-            {resellerDiscount > 0 ? (
-              <ResellerDiscountBadge resellerDiscount={resellerDiscount} amount={amount} srpAmount={srpAmount} />
-            ) : (
-              <Text style={styles.seeAll}>{`PHP ${item.srpAmount.toFixed(2)}`}</Text>
-            )}
+            <View style={styles.list}>
+              <View style={styles.listInfo}>
+                <Text numberOfLines={1} style={styles.listName}>
+                  {productName}
+                </Text>
+                {resellerDiscount > 0 ? (
+                  <ResellerDiscountBadge resellerDiscount={resellerDiscount} amount={amount} srpAmount={srpAmount} />
+                ) : (
+                  <Text style={styles.seeAll}>{`PHP ${item.totalAmountWithAddons.toFixed(2)}`}</Text>
+                )}
+              </View>
+              <View>
+                <Text style={styles.notes}>x{item.quantity}</Text>
+                {parentProductId && <Text style={styles.notes}>{`Variation: ${itemname}`}</Text>}
+                {!!parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} />}
+                {!!item.notes && <Text style={styles.notes}>{`Note: ${JSON.parse(item.notes)}`}</Text>}
+              </View>
+            </View>
           </View>
-          <View>
-            <Text style={styles.notes}>x{item.quantity}</Text>
-            {parentProductId && <Text style={styles.notes}>{`Variation: ${itemname}`}</Text>}
-            {!!parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} />}
-            {!!item.notes && <Text style={styles.notes}>{`Note: ${JSON.parse(item.notes)}`}</Text>}
-          </View>
-        </View>
-      </View>
-    );
-  };
+        );
+      },
+    [data, dataSource],
+  );
 
   return (
     <View style={styles.container}>
