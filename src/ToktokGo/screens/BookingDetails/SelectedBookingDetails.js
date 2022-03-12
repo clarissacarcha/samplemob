@@ -1,8 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ScrollView, StyleSheet, Text, TextInput, View, Dimensions, Image } from 'react-native'
 import { 
-    HeaderBack, 
-    HeaderTitle } from '../../../components/';
+  BookingID, 
+  BookingDriverDetails,
+  BookingAddress, 
+  BookingInfo, 
+  BookingNote, 
+  BookingTotal, 
+  BookingStatus,
+  BookingCancelledNote,
+  BookingMap 
+} from './Sections';
+import { ScrollView, StyleSheet, Text, TextInput, View, Dimensions, Image } from 'react-native'
+import {  HeaderBack,  HeaderTitle } from '../../../components/';
 import CONSTANTS from '../../../common/res/constants';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import EIcons from 'react-native-vector-icons/EvilIcons';
@@ -49,16 +58,16 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
         setShowSuccessfull(!showSuccessfull)
     }
 
-    // useEffect(() => {
-    //   const oldStatus = session.dummyStatus;
-    //   if(oldStatus == 4) {
-    //     const updateStatus = {
-    //       ...session,
-    //       dummyStatus: oldStatus + 1
-    //     }
-    //     createSession(updateStatus);
-    //   }
-    // }, [])
+    useEffect(() => {
+      const oldStatus = session.dummyStatus;
+      if(oldStatus == 4) {
+        const updateStatus = {
+          ...session,
+          dummyStatus: oldStatus + 1
+        }
+        createSession(updateStatus);
+      }
+    }, [])
 
     const declineBooking = () => {
       console.log("DECLINED!")
@@ -73,14 +82,36 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
           ...session,
           dummyStatus: 2
         }
+        createSession(updateStatus);
+        // patchDeliveryAccepted({
+        //   variables: {
+        //     input: {
+        //       deliveryId: getDelivery.id,
+        //       driverId: session.user.driver.id,
+        //       userId: session.user.id,
+        //     },
+        //   },
+        // });
       };
-
-      console.log('zionn', delivery);
   
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
-            <Text>hi</Text>
+          <BookingID delivery={delivery}/>
+          <BookingDriverDetails stop={delivery.senderStop}/>
+
+          <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+          
+          <BookingInfo delivery={delivery}/>
+          <BookingNote delivery={delivery}/>
+          <BookingMap delivery={delivery}/>
+          <BookingAddress delivery={delivery}/>
+          <BookingTotal delivery={delivery} dummyStatus={session.dummyStatus}/>
+
+          <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+          
+          <BookingStatus logs={delivery.logs} delivery={delivery} session={session}/>
+          <BookingCancelledNote/>
         </ScrollView>
     )
 }
