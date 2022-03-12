@@ -1,5 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, View, StyleSheet, Text, ScrollView, TouchableOpacity, Platform, Alert, Appearance} from 'react-native';
+import {
+  Modal,
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Platform,
+  Alert,
+  Appearance,
+  SafeAreaView,
+} from 'react-native';
 
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
@@ -12,7 +23,7 @@ import _ from 'lodash';
 
 import FIcon from 'react-native-vector-icons/Feather';
 
-const AddressBookModal = (props) => {
+const AddressBookModal = props => {
   const {visibility, onClose, onSelected} = props;
 
   const [contacts, setContacts] = useState([]);
@@ -110,7 +121,7 @@ const AddressBookModal = (props) => {
     try {
       Contacts.getAllWithoutPhotos((err, list) => {
         const mappedContacts = list
-          .filter((contact) => {
+          .filter(contact => {
             if (Platform.OS === 'android') {
               if (contact.phoneNumbers.length === 0 || !contact.displayName) {
                 return false;
@@ -125,14 +136,14 @@ const AddressBookModal = (props) => {
               return true;
             }
           })
-          .map((contact) => {
+          .map(contact => {
             return {
               name: `${contact.givenName} ${contact.familyName}`,
               number: contact.phoneNumbers[0].number,
             };
           });
 
-        const sortedContacts = _.sortBy(mappedContacts, (contact) => contact.name);
+        const sortedContacts = _.sortBy(mappedContacts, contact => contact.name);
         setContacts(sortedContacts);
       });
     } catch {
@@ -182,19 +193,21 @@ const AddressBookModal = (props) => {
         visible={visibility}
         onRequestClose={() => onClose()}
         style={styles.modal}>
-        <View style={styles.contactWrapper}>
-          <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center'}} onPress={() => onClose()}>
-            <FIcon name="chevron-down" size={30} color={Appearance.getColorScheme() === 'dark' ? '#000' : '#000'} />
-          </TouchableOpacity>
-          <View style={styles.header}>
-            <Text style={styles.headerLabel}>Contact List</Text>
+        <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
+          <View style={styles.contactWrapper}>
+            <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center'}} onPress={() => onClose()}>
+              <FIcon name="chevron-down" size={30} color={Appearance.getColorScheme() === 'dark' ? '#000' : '#000'} />
+            </TouchableOpacity>
+            <View style={styles.header}>
+              <Text style={styles.headerLabel}>Contact List</Text>
+            </View>
+            <ScrollView style={{flex: 1}}>
+              {contacts.map(v => (
+                <ContactItem item={v} />
+              ))}
+            </ScrollView>
           </View>
-          <ScrollView style={{flex: 1}}>
-            {contacts.map((v) => (
-              <ContactItem item={v} />
-            ))}
-          </ScrollView>
-        </View>
+        </SafeAreaView>
       </Modal>
     </>
   );
@@ -207,7 +220,6 @@ const styles = StyleSheet.create({
   contactWrapper: {
     width: '100%',
     height: '100%',
-    marginTop: Platform.OS === 'ios' ? 16 : 15,
   },
   header: {
     justifyContent: 'center',

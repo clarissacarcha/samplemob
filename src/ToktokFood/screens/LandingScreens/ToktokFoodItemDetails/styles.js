@@ -31,6 +31,12 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.XL,
   },
+  foodPriceLine: {
+    textDecorationLine: 'line-through',
+    color: '#FF6200',
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.XL,
+  },
   foodNameWrapper: {
     paddingHorizontal: 4,
     flexDirection: 'row',

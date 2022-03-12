@@ -66,6 +66,7 @@ import {
   CHECK_SHOP_VALIDATIONS,
   REQUEST_TAKE_MONEY,
   VERIFY_PIN,
+  GET_SHOP_STATUS,
 } from 'toktokfood/graphql/toktokfood';
 
 import moment from 'moment';
@@ -121,6 +122,7 @@ const MainComponent = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [loadingWallet, setLoadingWallet] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [closeShop, setShowCloseShop] = useState({visible: false, shopName: ''});
   const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
   const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({error: {}, visible: false});
   const alert = useAlert();
@@ -180,6 +182,13 @@ const MainComponent = () => {
     onGetAutoApply();
   }, [paymentMethod]);
 
+  const checkShopOpenStatus = () => {
+    setLoadingWallet(true);
+    if (temporaryCart && temporaryCart.items.length > 0) {
+      getShopStatus({variables: {input: {shopId: temporaryCart.items[0]?.shopid}}});
+    }
+  };
+
   const [getDeliverFee] = useLazyQuery(GET_SHIPPING_FEE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -231,6 +240,22 @@ const MainComponent = () => {
       },
     },
   );
+
+  const [getShopStatus, {loading: shopStatusLoading, error: shopStatusError}] = useLazyQuery(GET_SHOP_STATUS, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getShopStatus}) => {
+      setLoadingWallet(false);
+      if (getShopStatus.status === 'open') {
+        placeCustomerOrder();
+      } else {
+        setShowCloseShop({visible: true, shopName: getShopStatus.shopname});
+      }
+    },
+    onError: error => {
+      setLoadingWallet(false);
+    },
+  });
 
   const [checkShopValidations, {loading: shopValidationLoading, error: shopValidationError, refetch}] = useLazyQuery(
     CHECK_SHOP_VALIDATIONS,
@@ -294,6 +319,7 @@ const MainComponent = () => {
       if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
+            dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
             setTimeout(() => {
               setShowLoader(false);
               navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
@@ -389,7 +415,7 @@ const MainComponent = () => {
           amount: Number((item.resellerDiscount ?? item.basePrice).toFixed(2)),
           srp_amount: item.basePrice,
           srp_totalamount: Number(item.basePrice.toFixed(2)) * item.quantity,
-          total_amount: Number(totalAmount),
+          total_amount: Number(totalAmount.toFixed(2)),
           quantity: item.quantity,
           order_type: 1,
           notes: item.notes,
@@ -423,7 +449,7 @@ const MainComponent = () => {
     const totalPrice =
       promotions.length > 0 || deals.length > 0
         ? (await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)) + temporaryCart.addonsTotalAmount
-        : temporaryCart?.totalAmount;
+        : temporaryCart?.totalAmountWithAddons;
     // const totalPrice =
     //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;
     // const totalResellerDiscount =
@@ -668,10 +694,29 @@ const MainComponent = () => {
         }}
         onCloseBtn2={() => {
           setShowConfirmation(false);
-          placeCustomerOrder();
+          checkShopOpenStatus();
         }}
         hasTwoButtons
       />
+
+      <DialogMessage
+        visibility={closeShop.visible}
+        title="Restaurant Closed"
+        restaurantClosedMessage={() => (
+          <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
+            <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>
+              {closeShop.shopName === '' ? temporaryCart.items[0]?.shopName : closeShop.shopName}{' '}
+            </Text>
+            is currently not accepting orders right now. Please try again another time. Thank you!
+          </Text>
+        )}
+        type="warning"
+        btn1Title="OK"
+        onCloseModal={() => {
+          setShowCloseShop({visible: false, shopName: ''});
+        }}
+      />
+
       <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="Loading" />
       {paymentMethod === 'COD' && (
         <>
@@ -687,7 +732,7 @@ const MainComponent = () => {
             // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
             restaurantClosedMessage={() => (
               <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
-                <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName} </Text>
+                <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName}</Text>
                 is currently not accepting orders right now. Please try again another time. Thank you!
               </Text>
             )}

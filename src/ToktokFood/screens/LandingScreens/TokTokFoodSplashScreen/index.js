@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import {COLOR} from 'res/variables';
 import {CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT, TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
-import {splash} from 'toktokfood/assets/images';
+import {splash, splash_new} from 'toktokfood/assets/images';
 import AlertModal from 'toktokfood/components/AlertModal';
 
 import {
@@ -229,8 +229,8 @@ const TokTokFoodSplashScreen = () => {
   return (
     <>
       <AlertModal visible={errorModal.visible} error={errorModal.error} close={() => navigation.pop()} />
-      <ImageBackground style={styles.container} source={splash} resizeMode="cover">
-        <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.WHITE} />
+      <ImageBackground style={styles.container} source={splash_new} resizeMode="cover">
+        <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.ORANGE} />
       </ImageBackground>
     </>
   );
