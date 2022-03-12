@@ -75,6 +75,7 @@ export const siomai = require('./images/sample_banners/siomai.png');
 export const banner_1 = require('./images/sample_banners/banner_1.png');
 export const burger_king = require('./images/sample_banners/burger_king.jpeg');
 export const splash = require('./images/splash.png');
+export const splash_new = require('./images/splash_new.png');
 
 // Test Rider
 export const rider1 = require('./images/riders/rider1.png');

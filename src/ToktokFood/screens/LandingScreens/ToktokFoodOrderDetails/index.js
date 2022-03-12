@@ -409,7 +409,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         }
       />
       <HeaderImageBackground searchBox={false}>
-        <HeaderTitle />
+        <HeaderTitle backOnly />
       </HeaderImageBackground>
       {(transactionLoading && Object.entries(transaction).length == 0) ||
       Object.entries(transaction).length == 0 ||
