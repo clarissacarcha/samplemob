@@ -24,7 +24,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
 
   const totalSumSF = totalDelivery + totalShipping;
   const totalSF = totalSumSF > deliveryFee ? deliveryFee.toFixed(2) : totalSumSF.toFixed(2);
-  const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmountWithAddons;
+  const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
 
   useEffect(() => {
     oneCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
