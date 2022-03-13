@@ -9,7 +9,6 @@ import Loader from 'toktokfood/components/Loader';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 
 // Hooks
-import {useUserLocation} from 'toktokfood/hooks';
 import {useSelector} from 'react-redux';
 import {moderateScale, getStatusbarHeight, verticalScale, getDeviceHeight} from 'toktokfood/helper/scale';
 import {SamplePolicy} from 'toktokfood/helper/strings';
