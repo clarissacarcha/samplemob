@@ -1,14 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, ImageBackground, StyleSheet, StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 
+import {Alert} from 'react-native';
+
 import {COLOR} from 'res/variables';
 import {CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT, TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
-import {splash, splash_new} from 'toktokfood/assets/images';
+import {splash_new} from 'toktokfood/assets/images';
 import AlertModal from 'toktokfood/components/AlertModal';
 
 import {
@@ -17,8 +18,14 @@ import {
   GET_CONSUMER_TYPE,
   GET_KYC_STATUS,
   PATCH_PERSON_HAS_TOKTOKFOOD,
+  DELETE_SHOP_TEMPORARY_CART,
+  CHECK_HAS_TEMPORARY_CART,
 } from 'toktokfood/graphql/toktokfood';
+
 import {useUserLocation} from 'toktokfood/hooks';
+import {useMutation, useLazyQuery} from '@apollo/react-hooks';
+
+import {setNewInstall} from 'toktokfood/helper/PersistentLocation';
 
 const TokTokFoodSplashScreen = () => {
   useUserLocation(); // user location hook
@@ -26,7 +33,7 @@ const TokTokFoodSplashScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const {user} = useSelector(state => state.session);
-  const {location} = useSelector(state => state.toktokFood);
+  const {location, customerInfo, receiver} = useSelector(state => state.toktokFood);
   const [errorModal, setErrorModal] = useState({error: {}, visible: false});
   const [createdFlag, setCreatedFlag] = useState(false);
 
@@ -111,6 +118,7 @@ const TokTokFoodSplashScreen = () => {
       }
       if (user.toktokfoodUserId != null) {
         dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
+        checkHasTemporaryCart({variables: {input: {userId: getAccount.userId}}});
       }
     },
   });
@@ -127,8 +135,64 @@ const TokTokFoodSplashScreen = () => {
     });
   };
 
+  const checkContactNumber = (contact = '') => {
+    if (contact !== '') {
+      if (contact.slice(0, 2) === '63') {
+        return contact.slice(2, contact.length);
+      }
+      return contact;
+    }
+    return '';
+  };
+
+  const [checkHasTemporaryCart, {data: temporaryCart}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: err => {
+      Alert.alert('', 'Something went wrong.');
+      console.log(`🍔 Temporary cart error: ' ToktokFoodSplashScreen.js`, err);
+    },
+  });
+
+  const [deleteShopTemporaryCart, {loading}] = useMutation(DELETE_SHOP_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    variables: {
+      input: {
+        userid: customerInfo.userId,
+        shopid: temporaryCart?.checkHasTemporaryCart?.shopid,
+        branchid: 0,
+      },
+    },
+    onCompleted: () => {
+      setNewInstall();
+      navigation.replace('ToktokFoodLanding');
+    },
+    onError: () => {
+      Alert.alert('', 'Something went wrong.');
+      console.log(`🍔 Temporary cart error: ' ToktokFoodSplashScreen.js`);
+    },
+  });
+
   const showHomPage = () => {
-    navigation.replace('ToktokFoodLanding');
+    const NAME =
+      customerInfo.firstName && customerInfo.lastName ? `${customerInfo.firstName} ${customerInfo.lastName}` : '';
+    dispatch({
+      type: 'SET_TOKTOKFOOD_ORDER_RECEIVER',
+      payload: {
+        contactPerson: NAME,
+        contactPersonNumber: customerInfo.conno ? checkContactNumber(customerInfo.conno) : '',
+        landmark: '',
+      },
+    });
+    if (temporaryCart) {
+      if (temporaryCart.checkHasTemporaryCart.shopid !== 0 && Object.keys(receiver).length !== 3) {
+        deleteShopTemporaryCart();
+      } else {
+        navigation.replace('ToktokFoodLanding');
+      }
+    } else {
+      navigation.replace('ToktokFoodLanding');
+    }
   };
 
   useEffect(async () => {
@@ -137,7 +201,7 @@ const TokTokFoodSplashScreen = () => {
   }, []);
 
   useEffect(() => {
-    StatusBar.setHidden(true, 'slide');
+    // StatusBar.setHidden(true, 'slide');
     if (location != undefined) {
       if (user.toktokfoodUserId != null) {
         getToktokFoodUserInfo({

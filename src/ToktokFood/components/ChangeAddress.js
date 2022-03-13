@@ -43,7 +43,6 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
     fetchPolicy: 'network-only',
     onCompleted: cart => {
       if (cart?.checkHasTemporaryCart?.shopid !== 0) {
-        console.log(cart?.checkHasTemporaryCart?.shopid);
         setShowConfirmation(true);
       } else {
         onSetLocationDetails();

@@ -221,7 +221,7 @@ const MainComponent = () => {
           },
         },
       });
-    },
+    }
   });
 
   const [deleteShopTemporaryCart, {loading: deleteLoading, error: deleteError}] = useMutation(
