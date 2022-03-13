@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.31.0'; // Used for Version Check
+export const APP_VERSION = '1.31.1'; // Used for Version Check
 export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
 export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
 export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
