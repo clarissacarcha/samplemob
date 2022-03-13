@@ -17,7 +17,7 @@ import {GET_MY_ACCOUNT} from 'toktokwallet/graphql';
 
 // enum implementation on JavaScript
 
-const PaymentDetails = ({refreshing, orderType}) => {
+const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
   const navigation = useNavigation();
   const {toktokWallet, setToktokWallet, paymentMethod, setPaymentMethod, setPMLoading, pmLoading, temporaryCart} =
     useContext(VerifyContext);
@@ -73,9 +73,13 @@ const PaymentDetails = ({refreshing, orderType}) => {
   };
 
   const onToktokWalletCashInNavigate = () => {
-    navigation.navigate('ToktokWalletHomePage', {
-      screen: 'ToktokWalletPaymentOptions',
+    navigation.navigate('ToktokWalletPaymentOptions', {
+      amount: 0,
+      onCashIn: onCashIn,
     });
+    // navigation.navigate('ToktokWalletHomePage', {
+    //   screen: 'ToktokWalletPaymentOptions',
+    // });
   };
 
   const DisplayComponent = () => {
@@ -141,7 +145,7 @@ const PaymentDetails = ({refreshing, orderType}) => {
           <React.Fragment>
             <View style={styles.paymentContainer}>
               <TouchableOpacity
-                disabled={!customerWallet || customerWallet?.status !== 1}
+                disabled={!customerWallet || customerWallet?.status !== 1 || loadingShipping}
                 onPress={() => setPaymentMethod('TOKTOKWALLET')}
                 style={[
                   styles.tokwaButton,
@@ -157,17 +161,20 @@ const PaymentDetails = ({refreshing, orderType}) => {
                       <Text style={styles.toktokText}>toktok</Text>
                       <Text style={styles.walletText}>wallet</Text>
                     </View>
-                    {customerWallet && !customerWallet?.account ? (
+                    {customerWallet && !customerWallet?.account && (
                       <Text style={{color: '#707070', fontSize: FONT_SIZE.S}}>
                         Status: {getKycStatus(customerWallet?.status)}
                       </Text>
-                    ) : (
+                    )}
+                    {customerWallet && customerWallet?.account && (
                       <Text style={{color: '#707070', fontSize: FONT_SIZE.S}}>
-                        Balance: PHP {toktokWallet?.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.00
+                        Balance: PHP {toktokWallet?.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                       </Text>
                     )}
                   </View>
-                  <TouchableOpacity disabled={!customerWallet || customerWallet?.status !== 1} onPress={onPressTopUp}>
+                  <TouchableOpacity
+                    disabled={!customerWallet || customerWallet?.status !== 1}
+                    onPress={onToktokWalletCashInNavigate}>
                     <Text style={{color: '#FCB81A', fontSize: FONT_SIZE.M, paddingLeft: 15}}>Top up</Text>
                   </TouchableOpacity>
                 </View>
@@ -177,17 +184,21 @@ const PaymentDetails = ({refreshing, orderType}) => {
                   disabled={
                     !customerWallet ||
                     customerWallet?.status < 1 ||
-                    (temporaryCart.totalAmount > 2000 && customerWallet?.status === 2)
+                    (temporaryCart.totalAmount > 2000 && customerWallet?.status === 2) ||
+                    loadingShipping
                   }
                   onPress={() => setPaymentMethod('COD')}
                   style={[
                     styles.cashButton,
                     styles.shadow,
                     {backgroundColor: COLORS.WHITE},
-                    {opacity: loading || customerWallet ? 1 : 0.4},
-                    {borderColor: customerWallet && paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.WHITE},
+                    {opacity: loading || (customerWallet?.status === 1 || (temporaryCart.totalAmount <= 2000 && customerWallet?.status === 2)) ? 1 : 0.4},
+                    {
+                      borderColor:
+                        (customerWallet?.status === 1 || (temporaryCart.totalAmount <= 2000 && customerWallet?.status === 2)) && paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.WHITE,
+                    },
                   ]}>
-                  <Text style={[styles.cashText, {color: COLORS.BLACK}]}>Cash</Text>
+                  <Text style={[styles.cashText, {color: '#000000'}]}>Cash</Text>
                 </TouchableOpacity>
               )}
             </View>

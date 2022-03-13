@@ -14,6 +14,33 @@ export const GET_SHOPS = gql`
       estimatedDistance
       estimatedDeliveryTime
       promoName
+      promos {
+        id
+        shippingDiscountName
+        shippingDiscountCode
+        shopId
+        noOfStocks
+      }
+      promoByAdmin {
+        id
+        shippingDiscountName
+        shippingDiscountCode
+        shopId
+        noOfStocks
+      }
+      promoByMerchant {
+        id
+        shippingDiscountName
+        shippingDiscountCode
+        shopId
+        noOfStocks
+      }
+      promotionVouchers {
+        id
+        regionCodes
+        voucherCode
+        voucherName
+      }
     }
   }
 `;
@@ -61,6 +88,15 @@ export const GET_SHOP_DETAILS = gql`
       allowPickup
       email
       mobile
+    }
+  }
+`;
+
+export const GET_SHOP_STATUS = gql`
+  query getShopStatus($input: GetShopStatusInput!) {
+    getShopStatus(input: $input) {
+      shopname
+      status
     }
   }
 `;

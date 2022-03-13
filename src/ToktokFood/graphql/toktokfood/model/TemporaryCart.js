@@ -2,6 +2,8 @@ import gql from 'graphql-tag';
 
 const tempCart = `
   totalAmount
+  addonsTotalAmount
+  totalAmountWithAddons
   items {
     id
     shopid
@@ -11,6 +13,7 @@ const tempCart = `
     quantity
     basePrice
     totalAmount
+    addonsTotalAmount
     productName
     productLogo
     notes
@@ -20,6 +23,7 @@ const tempCart = `
     shopRegion
     parentProductId
     parentProductName
+    resellerDiscount
     shopName
     addonsDetails {
       id
@@ -29,6 +33,67 @@ const tempCart = `
       optionDetailsId
       optionDetailsName
     }
+  }
+`;
+
+const voucherType = `
+  id
+  key
+  shopid
+  amount
+  minimum
+  minimum_price
+  sf_discount
+  valid
+  valid_from
+  valid_until
+  vcode
+  vname
+  is_percentage
+  is_subsidize
+  sf_discount
+  on_top
+  handle_shipping_promo
+  code_required
+  limit_perCustomer
+  payment_method
+  percentage_subsidize
+  company_id
+  region
+  requirement
+  set_end_date
+  no_of_stocks
+
+  voucher_id
+  voucher_type
+  voucher_code
+  voucher_name
+  vcode_isset
+  discounted_totalamount
+  discount_totalamount
+  discount_type
+  discount_amount
+  discount_cap
+  minimum_purchase
+  shouldered_by
+  start_date
+  end_date
+  product_id
+  regions
+  type
+
+  items {
+    product_id
+    amount
+    total_amount
+    srp_amount
+    srp_totalamount
+    quantity
+    discounted_amount
+    discounted_totalamount
+    discount_amount
+    discount_totalamount
+    on_top
   }
 `;
 
@@ -42,6 +107,7 @@ export const GET_TEMPORARY_CART = gql`
 export const GET_ALL_TEMPORARY_CART = gql`
   query getAllTemporaryCart($input: GetAllTemporaryCartInput) {
     getAllTemporaryCart(input: $input) {
+      srpTotalAmount
       ${tempCart}
     }
   }
@@ -93,17 +159,10 @@ export const GET_AUTO_SHIPPING = gql`
       message
       type
       voucher {
-        id
-        shopid
-        amount
-        minimum
-        minimum_price
-        sf_discount
-        valid
-        valid_until
-        vcode
-        vname
-        is_percentage
+        ${voucherType}
+      }
+      promotion {
+        ${voucherType}
       }
     }
   }
@@ -116,17 +175,7 @@ export const GET_VOUCHER_CODE = gql`
       message
       type
       voucher {
-        id
-        shopid
-        amount
-        minimum
-        minimum_price
-        sf_discount
-        valid
-        valid_until
-        vcode
-        vname
-        is_percentage
+        ${voucherType}
       }
     }
   }

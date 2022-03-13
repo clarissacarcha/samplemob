@@ -21,7 +21,9 @@ export const ProceedButton = ({
     setSwipeEnabled,
     note,
     recipientInfo,
-    isCertify
+    isCertify,
+    setErrorMessage,
+    errorMessage,
 })=> {
 
     const prompt = usePrompt()

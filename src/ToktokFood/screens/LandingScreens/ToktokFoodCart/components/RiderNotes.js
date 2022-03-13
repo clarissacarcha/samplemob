@@ -11,7 +11,14 @@ const {COLOR} = CONSTANTS;
 
 import {verticalScale} from 'toktokfood/helper/scale';
 
-const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = false, forDelivery = true}) => {
+const RiderNotes = ({
+  onNotesChange,
+  notes = '',
+  onPlaceOrder,
+  showPlaceOrder = false,
+  forDelivery = true,
+  disableWalletCheckout = true,
+}) => {
   const navigation = useNavigation();
   const {toktokWallet, temporaryCart, paymentMethod} = useContext(VerifyContext);
   const {customerWallet} = useSelector(state => state.toktokFood);
@@ -27,7 +34,7 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
         {forDelivery && (
           <>
             <View style={[styles.deliverWrapper, {paddingVertical: verticalScale(10)}]}>
-              <Text style={styles.sectionTitle}>Note to Rider</Text>
+              <Text style={styles.sectionTitle}>Note to Driver</Text>
             </View>
             <View>
               <TextInput
@@ -38,6 +45,7 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
                 value={notes}
                 placeholderTextColor={COLOR.MEDIUM}
                 onChangeText={v => onNotesChange(v)}
+                maxLength={320}
               />
             </View>
           </>
@@ -51,7 +59,7 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
             label="Place Order"
             disabled={
               isDisabled ||
-              (temporaryCart.totalAmount > 2000 && customerWallet?.status === 2) ||
+              (disableWalletCheckout && customerWallet?.status === 2) ||
               !customerWallet ||
               customerWallet?.status === 0
             }

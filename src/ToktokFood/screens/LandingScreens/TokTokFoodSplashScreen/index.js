@@ -4,12 +4,20 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, ImageBackground, StyleSheet, StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
+
 import {COLOR} from 'res/variables';
 import {CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT, TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
-import {splash} from 'toktokfood/assets/images';
+import {splash, splash_new} from 'toktokfood/assets/images';
 import AlertModal from 'toktokfood/components/AlertModal';
 
-import {CREATE_ACCOUNT, GET_ACCOUNT, GET_KYC_STATUS, PATCH_PERSON_HAS_TOKTOKFOOD} from 'toktokfood/graphql/toktokfood';
+import {
+  CREATE_ACCOUNT,
+  GET_ACCOUNT,
+  GET_CONSUMER_TYPE,
+  GET_KYC_STATUS,
+  PATCH_PERSON_HAS_TOKTOKFOOD,
+} from 'toktokfood/graphql/toktokfood';
 import {useUserLocation} from 'toktokfood/hooks';
 
 const TokTokFoodSplashScreen = () => {
@@ -20,85 +28,100 @@ const TokTokFoodSplashScreen = () => {
   const {user} = useSelector(state => state.session);
   const {location} = useSelector(state => state.toktokFood);
   const [errorModal, setErrorModal] = useState({error: {}, visible: false});
+  const [createdFlag, setCreatedFlag] = useState(false);
 
   const [createAccount] = useMutation(CREATE_ACCOUNT, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onCompleted: ({createAccount}) => {
       let {status} = createAccount;
       if (status == 200) {
-        getToktokUserInfo({
-          variables: {
-            input: {
-              toktokUserId: user.id,
-            },
-          },
-        });
+        setCreatedFlag(true);
       }
     },
   });
 
-  const [updateToktokUser, {data: updateToktokSuccess}] = useMutation(PATCH_PERSON_HAS_TOKTOKFOOD, {
-    client: CLIENT,
-    onCompleted: ({patchToktokFoodUserId}) => {
-      // // const res = API_RESULT.data.data;
-      // // console.log(JSON.stringify(res));
-      // if (patchToktokFoodUserId.status == 200) {
-      //   dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...patchToktokFoodUserId}});
-      //   showHomPage();
-      // } else {
-      //   Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
-      // }
-    },
-  });
-
-  const [getKycStatus] = useLazyQuery(GET_KYC_STATUS, {
-    client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
-    context: {
-      headers: {
-        'x-api-key': 'ABCD1234',
-      },
-    },
+  const [getConsumerStatus] = useLazyQuery(GET_CONSUMER_TYPE, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    // context: {
+    //   headers: {
+    //     'x-api-key': 'ABCD1234',
+    //   },
+    // },
     fetchPolicy: 'network-only',
     variables: {
       input: {
         referenceNumber: String(user.id),
       },
     },
-    onCompleted: ({getKycStatus}) => {
-      if (getKycStatus) {
-        return dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: {...getKycStatus}});
-      }
-      return dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: null});
+    onCompleted: ({getConsumer}) => {
+      dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_FRANCHISEE', payload: {...getConsumer}});
     },
-    onError: error => console.log(error),
+    onError: error => console.log('getConsumerStatus', error),
   });
 
-  const [getToktokUserInfo, {data: foodPerson, error: foodPersonError, loading: foodPersonLoading}] = useLazyQuery(
-    GET_ACCOUNT,
-    {
-      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      fetchPolicy: 'network-only',
-      onError: error => {
-        setErrorModal({error, visible: true});
-      },
-      onCompleted: ({getAccount}) => {
-        // console.log(JSON.stringify({foodPerson}));
-        if (user.toktokfoodUserId != null) {
-          dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
-          showHomPage();
-        } else {
-          addToktokFoodId(getAccount);
-        }
+  const [getKycStatus] = useLazyQuery(GET_KYC_STATUS, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    // context: {
+    //   headers: {
+    //     'x-api-key': 'ABCD1234',
+    //   },
+    // },
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        referenceNumber: user.id,
       },
     },
-  );
+    onCompleted: ({getKycStatus}) => {
+      // console.log(getKycStatus, user);
+      if (getKycStatus) {
+        dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: {...getKycStatus}});
+        return showHomPage();
+      }
+      dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: null});
+      return showHomPage();
+    },
+    onError: error => console.log('getKycStatus', error),
+  });
+
+  const [updateToktokUser] = useMutation(PATCH_PERSON_HAS_TOKTOKFOOD, {
+    client: CLIENT,
+    onCompleted: ({patchToktokFoodUserId}) => {
+      // console.log('patchToktokFoodUserId: ' + JSON.stringify(patchToktokFoodUserId));
+      if (patchToktokFoodUserId.status != 200) {
+        Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
+      }
+    },
+  });
+
+  const [getToktokFoodUserInfo] = useLazyQuery(GET_ACCOUNT, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: error => {
+      console.log('getToktokUserInfo', error);
+      setErrorModal({error, visible: true});
+    },
+    onCompleted: async ({getAccount}) => {
+      await getConsumerStatus();
+      await getKycStatus();
+      console.log('GET ACCOUNT:' + JSON.stringify(getAccount));
+
+      if (createdFlag) {
+        addToktokFoodId(getAccount);
+      }
+      if (user.toktokfoodUserId != null) {
+        dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
+      }
+    },
+  });
 
   const addToktokFoodId = account => {
+    dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...account}});
     updateToktokUser({
       variables: {
         input: {
-          toktokUserId: `"${user.id}"`,
-          toktokfoodUserId: `"${account.userId}"`,
+          toktokUserId: Number(user.id),
+          toktokfoodUserId: Number(account.userId),
         },
       },
     });
@@ -108,16 +131,16 @@ const TokTokFoodSplashScreen = () => {
     navigation.replace('ToktokFoodLanding');
   };
 
-  useEffect(() => {
-    getKycStatus(); // get kyc status on load
+  useEffect(async () => {
+    await AsyncStorage.removeItem('toktokWalletEnterpriseToken');
+    // await getKycStatus(); // get kyc status on load
   }, []);
 
   useEffect(() => {
     StatusBar.setHidden(true, 'slide');
-
     if (location != undefined) {
       if (user.toktokfoodUserId != null) {
-        getToktokUserInfo({
+        getToktokFoodUserInfo({
           variables: {
             input: {
               toktokUserId: user.id,
@@ -129,6 +152,18 @@ const TokTokFoodSplashScreen = () => {
       }
     }
   }, [user, location]);
+
+  useEffect(() => {
+    if (createdFlag) {
+      getToktokFoodUserInfo({
+        variables: {
+          input: {
+            toktokUserId: user.id,
+          },
+        },
+      });
+    }
+  }, [createdFlag]);
 
   const processCreateAccount = () => {
     let {firstName, lastName, birthdate, emailAddress, gender} = user.person;
@@ -153,6 +188,7 @@ const TokTokFoodSplashScreen = () => {
       },
     });
   };
+
   // const patchToktokFoodUserId = async getAccount => {
   // try {
   // console.log(getAccount.userId);
@@ -193,8 +229,8 @@ const TokTokFoodSplashScreen = () => {
   return (
     <>
       <AlertModal visible={errorModal.visible} error={errorModal.error} close={() => navigation.pop()} />
-      <ImageBackground style={styles.container} source={splash} resizeMode="cover">
-        <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.WHITE} />
+      <ImageBackground style={styles.container} source={splash_new} resizeMode="cover">
+        <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.ORANGE} />
       </ImageBackground>
     </>
   );

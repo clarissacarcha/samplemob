@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {Image, Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 // Fonts/Colors
@@ -10,7 +11,7 @@ import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 import {checkRiderDetails} from 'toktokfood/helper/ShowRiderDetails';
 
 const OrderRider = ({riderDetails, transaction, referenceNum}) => {
-  const {user, vehicle} = riderDetails;
+  const {user, vehicle} = riderDetails.driver;
   const [showDriverModal, setShowDriverModal] = useState(false);
 
   useEffect(() => {
@@ -25,12 +26,12 @@ const OrderRider = ({riderDetails, transaction, referenceNum}) => {
   };
 
   const onMessage = () => {
-    const url = `sms:${user.person.mobileNumber}`;
+    const url = `sms:${user.username}`;
     Linking.openURL(url);
   };
 
   const onCall = () => {
-    const url = `tel:${user.person.mobileNumber}`;
+    const url = `tel:${user.username}`;
     Linking.openURL(url);
   };
 
@@ -39,7 +40,7 @@ const OrderRider = ({riderDetails, transaction, referenceNum}) => {
       <Image resizeMode="cover" style={styles.avatar} source={{uri: user.person.avatar}} />
       <View style={styles.leftContainer}>
         <Text style={styles.riderName}>{`${user.person.firstName} ${user.person.lastName}`}</Text>
-        <Text style={styles.orderNumber}>{user.person.mobileNumber}</Text>
+        <Text style={styles.orderNumber}>{user.username}</Text>
         <Text style={styles.notes}>{vehicle.plateNumber}</Text>
         <Text style={styles.notes}>{`${vehicle.brand.brand} ${vehicle.model.model}`}</Text>
         {/* <Text style={styles.notes}>{parseFloat(rating).toFixed(1)}</Text>

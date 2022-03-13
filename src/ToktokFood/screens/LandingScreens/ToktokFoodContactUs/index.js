@@ -68,7 +68,7 @@ const ToktokFoodContactUs = ({ navigation }) => {
             <View style={styles.contactContainer}>
               <TouchableOpacity onPress={() => onTelNumber()} style={styles.btnContainter}>
                 <Image source={call_ic} style={styles.icons} />
-                <Text style={{ marginLeft: 10 }}>(623) 8424 8617</Text>
+                <Text style={{ marginLeft: 10 }}>(632) 8424 8617</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => onEmail()} style={styles.btnContainter}>
                 <Image source={email_ic} style={styles.icons} />
