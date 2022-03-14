@@ -57,7 +57,6 @@ const MainComponent = () => {
     },
     onCompleted: ({getProductDetails}) => {
       setProductDetails(getProductDetails);
-      console.log(getProductDetails);
       getTemporaryCart({
         variables: {
           input: {
@@ -73,7 +72,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: error => {
-      onErrorAlert({alert, error});
+      // onErrorAlert({alert, error});
     },
     onCompleted: ({getTemporaryCart}) => {
       let {items, totalAmount} = getTemporaryCart;

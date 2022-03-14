@@ -55,7 +55,6 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       setTotalReseller(0);
       // setTotalBasket(temporaryCart.totalAmountWithAddons);
     } else {
-      console.log(temporaryCart);
       setTotalBasket(
         temporaryCart.totalAmountWithAddons + (temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount),
       );
@@ -67,7 +66,6 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       // setTotalPromotions(promotions[0].discount_totalamount);
       const promotion = promotionVoucher.filter(promo => promo.type === 'promotion');
       const totalResellerDisc = await getResellerDiscount(promotion, temporaryCart.items);
-      // console.log(totalResellerDisc);
       setTotalPromotions(totalResellerDisc);
     } else {
       setTotalPromotions(0);
@@ -142,7 +140,6 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
   useEffect(() => {
     setTotalBasket(temporaryCart.totalAmountWithAddons + totalReseller);
   }, [temporaryCart]);
-  console.log(totalBasket);
 
   return (
     <View style={[styles.sectionContainer, styles.totalContainer]}>
@@ -199,9 +196,12 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
             (totalPromotions + totalDeal)
           ).toFixed(2)}`}</Text>
         ) : (
-          <Text style={styles.totalPrice}>{`PHP ${(totalBasket - totalSumSF - (totalPromotions + totalDeal)).toFixed(
-            2,
-          )}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(
+            totalBasket -
+            totalSumSF -
+            totalReseller -
+            (totalPromotions + totalDeal)
+          ).toFixed(2)}`}</Text>
         )}
       </View>
     </View>

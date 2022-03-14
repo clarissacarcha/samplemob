@@ -49,7 +49,7 @@ export const getResellerDiscount = async (promotions, cartItems) => {
       cartItems.map(items => {
         const filteredProd = _.includes(productIds, items.productid);
         // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
-        if (filteredProd) {
+        if (filteredProd && totalReseller === 0) {
           const deductedDiscount = item?.discount_type === '3' ? items?.basePrice - 1 : item?.discount_totalamount;
           // console.log(items, deductedDiscount);
           totalReseller += deductedDiscount;
@@ -69,17 +69,22 @@ export const getTotalAmountOrder = async (promotions, cartItems) => {
     promotions.map(item => {
       const filteredId = item.product_id.split(',');
       productIds.push(...filteredId);
+      let totalReseller = 0;
 
       cartItems.map(items => {
         const filteredProd = _.includes(productIds, items.productid);
         // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
-        // console.log(filteredProd, items, totalAmount);
 
         if (filteredProd) {
           const deductedDiscount = item?.discount_type === '3' ? 1 : items?.basePrice - item?.discount_totalamount;
-
           const resellerDiscount = (items.quantity - 1) * (items?.resellerDiscount || items?.basePrice);
-          totalAmount += deductedDiscount + resellerDiscount;
+
+          if (totalReseller === 0) {
+            totalAmount += deductedDiscount + resellerDiscount;
+          } else {
+            totalAmount += items.quantity * (items?.resellerDiscount || items?.basePrice);
+          }
+          totalReseller = deductedDiscount;
           // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
         } else {
           const resellerDiscount = items.quantity * (items?.resellerDiscount || items?.basePrice);
