@@ -310,12 +310,14 @@ export const Variations = ({data, productId}) => {
       <View style={styles.variantWrapper}>
         <View style={styles.variantSubWrapper}>
           <RadioButton
-            onValueChange={c => {
-              setSelectedVariants(item);
-              setCount({type: 'ADD', quantity: 1});
+            onValueChange={() => {
+              if (item.Id !== selectedVariants?.Id) {
+                setSelectedVariants(item);
+                setCount({type: 'ADD', quantity: 1});
+              }
             }}
             name={item.itemname}
-            selected={item.Id == selectedVariants?.Id}
+            selected={item.Id === selectedVariants?.Id}
           />
         </View>
         <Text style={styles.variationPrice}>PHP {item.price.toFixed(2)}</Text>

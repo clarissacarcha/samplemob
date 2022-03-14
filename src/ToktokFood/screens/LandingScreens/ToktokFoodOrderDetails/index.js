@@ -376,7 +376,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
 
   const OrderListComponent = useMemo(() => {
     return <OrderList orderDetails={transaction.orderDetails} />;
-  }, [transaction]);
+  }, [transaction?.orderStatus]);
 
   return (
     <View style={styles.container}>
