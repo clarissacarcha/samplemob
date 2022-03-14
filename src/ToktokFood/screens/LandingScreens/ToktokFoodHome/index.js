@@ -13,7 +13,7 @@ const ToktokFoodHome = () => {
   // const [viewHeight, setViewHeight] = useState(100);
 
   const getWindowDimension = event => {
-    StatusBar.setHidden(false, 'slide');
+    // StatusBar.setHidden(false, 'slide');
     let height = event.nativeEvent.layout.height;
     // setViewHeight(height);
   };

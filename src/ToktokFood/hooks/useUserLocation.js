@@ -1,30 +1,16 @@
 import {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
-import {useLazyQuery} from '@apollo/react-hooks';
-
-// Graphql
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from '../../graphql/client/graphql';
-import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
 // Helpers
 import {getFormattedAddress, getLocation} from 'toktokfood/helper';
 import {getUserLocation} from 'toktokfood/helper/PersistentLocation';
 
-import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
+import {useLazyQuery} from '@apollo/react-hooks';
 
-const checkContactNumber = (contact = '') => {
-  if (contact !== '') {
-    if (contact.slice(0, 2) === '63') {
-      return contact.slice(2, contact.length);
-    }
-    return contact;
-  }
-  return '';
-};
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
 export const useUserLocation = () => {
-  const {customerInfo} = useSelector(state => state.toktokFood);
-
   const dispatch = useDispatch();
 
   const initUserLocation = async () => {
@@ -51,18 +37,6 @@ export const useUserLocation = () => {
               address: address.formattedAddress,
             };
             dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...payload}});
-            const NAME =
-              customerInfo.firstName && customerInfo.lastName
-                ? `${customerInfo.firstName} ${customerInfo.lastName}`
-                : '';
-            dispatch({
-              type: 'SET_TOKTOKFOOD_ORDER_RECEIVER',
-              payload: {
-                contactPerson: NAME,
-                contactPersonNumber: customerInfo.conno ? checkContactNumber(customerInfo.conno) : '',
-                landmark: '',
-              },
-            });
           }
         })
         .catch(() => {});
