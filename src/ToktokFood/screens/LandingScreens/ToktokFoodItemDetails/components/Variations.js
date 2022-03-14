@@ -99,8 +99,10 @@ export const Variations = ({data, productId}) => {
               return {...prev, [item.optionName]: selected[item.optionName]};
             });
           } else {
-            const {[item.optionName]: val, ...data} = selected;
-            setSelected(data);
+            if (!item.isRequired) {
+              const {[item.optionName]: val, ...data} = selected;
+              setSelected(data);
+            }
           }
         } else {
           if (selected[item.optionName].length != item.noOfSelection) {
