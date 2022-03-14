@@ -34,15 +34,17 @@ export const Variations = ({data, productId}) => {
   const [dataOptions, setDataOptions] = useState([]);
 
   useEffect(() => {
-    if (Object.keys(data).length > 0 && data?.variants.length > 0) {
+    const variants = filterVariants();
+    if (variants.length > 0) {
       let selectedVar = productId
-        ? data.variants.find(val => {
+        ? variants.find(val => {
             return productId == val.Id;
           })
-        : data.variants[0];
+        : variants[0];
       setSelectedVariants(selectedVar);
+      console.log('selectedVar', selectedVar);
     }
-  }, [data.variants]);
+  }, []);
 
   useEffect(() => {
     if (Object.keys(data).length && data?.options.length) {
