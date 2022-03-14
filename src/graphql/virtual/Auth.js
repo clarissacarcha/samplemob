@@ -125,3 +125,16 @@ export const END_USER_SESSION = gql`
     }
   }
 `;
+
+export const GET_APP_SERVICES = gql`
+  query {
+    getAppServices {
+      service
+      displayName
+      identifier
+      isEnabled
+      isEarlyAccess
+      isMaintenance
+    }
+  }
+`;

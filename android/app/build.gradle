@@ -153,8 +153,8 @@ android {
         applicationId "ph.cloudpanda.toktok"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1300400
-        versionName "1.30.4"
+        versionCode 1310100
+        versionName "1.31.1"
         missingDimensionStrategy 'react-native-camera', 'general' // react-native-camera option to use 'mlkit' for machine learning
         multiDexEnabled true // dex merger more than 64k
     }
