@@ -374,6 +374,10 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     return <OrderTitle transaction={transaction} riderDetails={riderDetails} referenceNum={referenceNum} />;
   }, [transaction, riderDetails]);
 
+  const OrderListComponent = useMemo(() => {
+    return <OrderList orderDetails={transaction.orderDetails} />;
+  }, [transaction]);
+
   return (
     <View style={styles.container}>
       <DialogMessage
@@ -433,7 +437,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
               <Separator />
             </>
           )}
-          <OrderList orderDetails={transaction.orderDetails} />
+          {/* <OrderList orderDetails={transaction.orderDetails} /> */}
+          {OrderListComponent}
           <Separator />
           {transaction?.promoDetails && transaction?.orderIsfor === 1 && (
             <>

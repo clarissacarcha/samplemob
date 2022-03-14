@@ -56,7 +56,7 @@ const OrderList = ({orderDetails}) => {
             )}
 
             <Text style={{...styles.seeAll, position: 'absolute', bottom: moderateScale(-20)}}>
-              PHP {itemAmount.toFixed(2)}
+              PHP {srpAmount.toFixed(2)}
             </Text>
           </View>
         );

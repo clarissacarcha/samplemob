@@ -116,6 +116,7 @@ export const GET_ORDER_TRANSACTION_BY_REF_NUM = gql`
       ${transaction}
       promoDiscounts
       srpTotal
+      resellerDiscountTotal
     }
   }
 `;

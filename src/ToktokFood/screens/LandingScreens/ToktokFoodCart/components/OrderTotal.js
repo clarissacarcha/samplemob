@@ -17,14 +17,14 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
   const [totalShipping, setTotalShipping] = useState(0);
   const [totalPromotions, setTotalPromotions] = useState(0);
   const [totalDelivery, setTotalDelivery] = useState(0);
-  // const [totalReseller, setTotalReseller] = useState(0);
+  const [totalReseller, setTotalReseller] = useState(temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount);
   const [totalDeal, setTotalDeal] = useState(0);
 
   const {promotionVoucher} = useSelector(state => state.toktokFood);
 
   const totalSumSF = totalDelivery + totalShipping;
   const totalSF = totalSumSF > deliveryFee ? deliveryFee.toFixed(2) : totalSumSF.toFixed(2);
-  const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
+  // const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
 
   useEffect(() => {
     oneCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
@@ -50,12 +50,17 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
       const deal = promotionVoucher.filter(promo => promo.type === 'deal');
       const totalBasketAmount = await getCartTotalAmountOrder([...promotions, ...deal], temporaryCart.items);
-      // console.log(promotions, deal, totalBasketAmount);
+      // console.log(promotions, deal, totalBasketAmount, totalReseller);
       setTotalBasket(totalBasketAmount);
+      setTotalReseller(0);
       // setTotalBasket(temporaryCart.totalAmountWithAddons);
     } else {
-      // console.log(temporaryCart);
-      setTotalBasket(temporaryCart.totalAmountWithAddons + totalReseller);
+      console.log(temporaryCart);
+      setTotalBasket(
+        temporaryCart.totalAmountWithAddons + (temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount),
+      );
+      // setTotalBasket(temporaryCart.totalAmountWithAddons + totalReseller);
+      setTotalReseller(temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount);
     }
 
     if (promotions.length > 0) {
@@ -137,6 +142,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
   useEffect(() => {
     setTotalBasket(temporaryCart.totalAmountWithAddons + totalReseller);
   }, [temporaryCart]);
+  console.log(totalBasket);
 
   return (
     <View style={[styles.sectionContainer, styles.totalContainer]}>
@@ -193,7 +199,9 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
             (totalPromotions + totalDeal)
           ).toFixed(2)}`}</Text>
         ) : (
-          <Text style={styles.totalPrice}>{`PHP ${(totalBasket - totalSumSF - (totalPromotions + totalDeal)).toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(totalBasket - totalSumSF - (totalPromotions + totalDeal)).toFixed(
+            2,
+          )}`}</Text>
         )}
       </View>
     </View>

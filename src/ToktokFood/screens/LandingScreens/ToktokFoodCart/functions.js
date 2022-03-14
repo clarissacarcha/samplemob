@@ -103,17 +103,16 @@ export const getCartTotalAmountOrder = async (promotions, cartItems) => {
       cartItems.map(items => {
         const filteredProd = _.includes(productIds, items.productid);
         // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
-        // console.log(filteredProd, items.productid);
-
+        const totalAmountWAddons = items.addonsTotalAmount * items.quantity;
         if (filteredProd) {
           const deductedDiscount = item?.discount_type === '3' ? 1 : items?.basePrice - item?.discount_totalamount;
 
           const resellerDiscount = (items.quantity - 1) * (items?.resellerDiscount || items?.basePrice);
-          totalAmount += items.basePrice + resellerDiscount;
+          totalAmount += items.basePrice + resellerDiscount + totalAmountWAddons;
           // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
         } else {
           const resellerDiscount = items.quantity * (items?.resellerDiscount || items?.basePrice);
-          totalAmount += resellerDiscount;
+          totalAmount += resellerDiscount + totalAmountWAddons;
         }
       });
     }),
