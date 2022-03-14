@@ -221,7 +221,7 @@ const MainComponent = () => {
           },
         },
       });
-    }
+    },
   });
 
   const [deleteShopTemporaryCart, {loading: deleteLoading, error: deleteError}] = useMutation(
@@ -508,7 +508,8 @@ const MainComponent = () => {
       variables: {
         input: {
           request_money_id: toktokWalletCredit.requestTakeMoneyId,
-          pin: String(+pinCode),
+          // String(+pinCode), retain to pinCode to avoid error from toktokwallet user starting ZERO digit
+          pin: pinCode,
           pin_type: toktokWalletCredit.validator,
         },
       },
