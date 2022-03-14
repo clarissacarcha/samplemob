@@ -40,18 +40,19 @@ const OrderList = ({orderDetails}) => {
 
   const ResellerDiscountBadge = useMemo(
     () =>
-      ({amount, srpAmount, resellerDiscount}) => {
-        const percentage = (100 * (srpAmount - resellerDiscount)) / srpAmount;
+      ({item}) => {
+        const {amount, basePrice, srpAmount, resellerDiscount, resellerRate} = item;
+        const percentage = (100 * (Number(basePrice) - resellerDiscount)) / srpAmount;
         const finalPercentage = roundedPercentage(percentage, 1);
         const itemAmount = amount === 1 ? srpAmount : resellerDiscount;
-        // console.log(srpAmount, resellerDiscount, amount);
+        // console.log(item);
         // const {discRatetype, referralDiscount} = resellerDiscount;
         // const discountText = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
         return (
           <View style={{alignItems: 'flex-end'}}>
             {amount !== 1 && (
               <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
-                <Text style={styles.resellerText}>Reseller -{finalPercentage}%</Text>
+                <Text style={styles.resellerText}>Reseller -{resellerRate}%</Text>
               </ImageBackground>
             )}
 
@@ -96,7 +97,7 @@ const OrderList = ({orderDetails}) => {
                   {productName}
                 </Text>
                 {resellerDiscount > 0 ? (
-                  <ResellerDiscountBadge resellerDiscount={resellerDiscount} amount={amount} srpAmount={srpAmount} />
+                  <ResellerDiscountBadge item={item} />
                 ) : (
                   <Text style={styles.seeAll}>{`PHP ${item.totalAmountWithAddons.toFixed(2)}`}</Text>
                 )}
