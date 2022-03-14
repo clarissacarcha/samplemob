@@ -10,7 +10,7 @@ import {VerifyContext} from './VerifyContextProvider';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 
 // Hooks
-import {useUserLocation} from 'toktokfood/hooks';
+
 import {useSelector} from 'react-redux';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 import {arrow_right, help_centre_ic, wallet_ic} from 'toktokfood/assets/images';

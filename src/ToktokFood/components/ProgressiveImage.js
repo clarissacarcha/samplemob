@@ -25,19 +25,21 @@ const ProgressiveImage = ({placeholder, source, style}) => {
           ...style,
         }}
       />
-      <FastImage
-        source={{uri: source}}
-        resizeMode={FastImage.resizeMode.cover}
-        style={{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: '#fff',
-          ...style,
-        }}
-      />
+      {source && (
+        <FastImage
+          source={{uri: source}}
+          resizeMode={FastImage.resizeMode.cover}
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#fff',
+            ...style,
+          }}
+        />
+      )}
     </React.Fragment>
   );
 };

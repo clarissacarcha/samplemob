@@ -88,7 +88,7 @@ const PickUpDetailsView = ({transaction, riderDetails, referenceNum, onCancel}) 
           if (showError) {
             return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
           }
-          return 'Estimated Pickup Time: ASAP';
+          return 'Estimated Pickup Time: 15-45 minutes';
         default:
           return '';
       }

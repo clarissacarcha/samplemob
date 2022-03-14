@@ -128,7 +128,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
             code: voucher,
             region: items[0]?.shopRegion,
             subtotal: temporaryCart.totalAmount,
-            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+            paymentMethod: paymentMethod,
             promoCount,
             orders,
           },

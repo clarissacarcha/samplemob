@@ -5,9 +5,9 @@ import {Image, View, Text, TouchableOpacity, Alert, ImageBackground} from 'react
 // import _ from 'lodash';
 import styles from '../styles';
 import {useNavigation} from '@react-navigation/native';
-// import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
-import {useMutation} from '@apollo/react-hooks';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 
 import {delete_ic} from 'toktokfood/assets/images';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
@@ -15,7 +15,7 @@ import {VerifyContext} from '../components';
 import {arrangeAddons} from '../functions';
 
 import Loader from 'toktokfood/components/Loader';
-import {DELETE_TEMPORARY_CART_ITEM} from 'toktokfood/graphql/toktokfood';
+import {DELETE_TEMPORARY_CART_ITEM, GET_ALL_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {FONT, FONT_SIZE} from 'res/variables';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -28,12 +28,29 @@ const MyOrderList = () => {
   // const { cart } = route.params;
   const navigation = useNavigation();
   // const {location, customerInfo, shopLocation} = useSelector(state => state.toktokFood, _.isEqual);
+  const {customerInfo} = useSelector(state => state.toktokFood);
   const {temporaryCart, setTemporaryCart} = useContext(VerifyContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const swipeListViewRef = useRef(null);
 
   const [deleteTemporaryCartItem, {loading: deleteLoading}] = useMutation(DELETE_TEMPORARY_CART_ITEM, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+  });
+
+  const [getAllTemporaryCart] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getAllTemporaryCart}) => {
+      let {items, srpTotalAmount, totalAmount, totalAmountWithAddons, addonsTotalAmount} = getAllTemporaryCart;
+      setTemporaryCart({
+        cartItemsLength: items.length,
+        srpTotalAmount,
+        totalAmount,
+        totalAmountWithAddons,
+        addonsTotalAmount,
+        items: items,
+      });
+    },
   });
 
   const displayAddOns = addons => {
@@ -199,12 +216,21 @@ const MyOrderList = () => {
           const index = temporaryCart.items.findIndex(val => val.id == item.id);
           temporaryCart.items.splice(index, 1);
 
-          setTemporaryCart({
-            totalAmountWithAddons,
-            totalAmount: amount,
-            addonsTotalAmount: addonsAmount,
-            items: [...temporaryCart.items],
+          getAllTemporaryCart({
+            variables: {
+              input: {
+                userId: customerInfo.userId,
+              },
+            },
           });
+
+          // setTemporaryCart({
+          //   totalAmountWithAddons,
+          //   totalAmount: amount,
+          //   addonsTotalAmount: addonsAmount,
+          //   items: [...temporaryCart.items],
+          //   // srpTotalAmount,
+          // });
           const isLastItem = temporaryCart.items.length == 0;
           if (isLastItem) {
             return navigation.goBack();
