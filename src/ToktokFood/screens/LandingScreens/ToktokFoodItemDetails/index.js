@@ -56,6 +56,7 @@ const MainComponent = () => {
       onErrorAlert({alert, error});
     },
     onCompleted: ({getProductDetails}) => {
+      // console.log(getProductDetails);
       setProductDetails(getProductDetails);
       getTemporaryCart({
         variables: {
@@ -93,6 +94,7 @@ const MainComponent = () => {
             basePrice = parseFloat(selectedVariants?.basePrice);
           } else {
             basePrice = parseFloat(selectedVariants?.price);
+            // basePrice = parseFloat(productDetails?.price || productDetails?.basePrice);
           }
         }
       } else {
