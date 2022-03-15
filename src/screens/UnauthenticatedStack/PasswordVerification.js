@@ -20,7 +20,6 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
   const inputRef = useRef();
 
   const alert = useAlert();
-  const [userRecord, setUserRecord] = useState(null);
   const [password, setPassword] = useState('');
 
   const [verifyLogin, {loading}] = useMutation(VERIFY_LOGIN, {
@@ -51,21 +50,7 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
         userId: user.id,
       }); // Set onesignal userId tag for the phone
 
-      setUserRecord(user);
-
-      await getAppServices();
-    },
-  });
-
-  const [getAppServices] = useLazyQuery(GET_APP_SERVICES, {
-    client: AUTH_CLIENT,
-    onError: error => {
-      console.log({appServiceErrror: error});
-    },
-    onCompleted: ({getAppServices}) => {
-      setAppServices(getAppServices);
-
-      if (userRecord.person.firstName == null || userRecord.person.lastName == null) {
+      if (user.person.firstName == null || user.person.lastName == null) {
         navigation.replace('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {

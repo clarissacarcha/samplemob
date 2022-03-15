@@ -15,8 +15,6 @@ import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
 import ToktokSuperApp from '../assets/images/ToktokSuperApp.png';
 
 const Landing = ({createSession, destroySession, setAppServices, navigation}) => {
-  const [userRecord, setUserRecord] = useState(null);
-
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
     client: AUTH_CLIENT,
     onError: error => {
@@ -67,37 +65,23 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
           userId: user.id,
         });
 
-        setUserRecord(user);
-
-        await getAppServices();
+        if (user.person.firstName == null || user.person.lastName == null) {
+          navigation.replace('RootDrawer', {
+            screen: 'AuthenticatedStack',
+            params: {
+              screen: 'PostRegistration',
+            },
+          });
+        } else {
+          navigation.replace('RootDrawer', {
+            screen: 'AuthenticatedStack',
+            params: {
+              screen: 'ConsumerLanding',
+            },
+          });
+        }
       } catch (error) {
         console.log(error);
-      }
-    },
-  });
-
-  const [getAppServices] = useLazyQuery(GET_APP_SERVICES, {
-    client: AUTH_CLIENT,
-    onError: error => {
-      console.log({appServiceErrror: error});
-    },
-    onCompleted: ({getAppServices}) => {
-      setAppServices(getAppServices);
-
-      if (userRecord.person.firstName == null || userRecord.person.lastName == null) {
-        navigation.replace('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'PostRegistration',
-          },
-        });
-      } else {
-        navigation.replace('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'ConsumerLanding',
-          },
-        });
       }
     },
   });
