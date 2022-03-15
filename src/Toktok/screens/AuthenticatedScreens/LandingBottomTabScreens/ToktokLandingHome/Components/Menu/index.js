@@ -53,6 +53,9 @@ export const Menu = ({setUserLocation, constants}) => {
   const [appServices, setAppServices] = useState(null);
   const [menuData, setMenuData] = useState([]);
 
+  /**
+   * DO NOT EDIT THIS VARIABLE
+   */
   const menuDataConstant = [
     {
       identifier: 'delivery',
