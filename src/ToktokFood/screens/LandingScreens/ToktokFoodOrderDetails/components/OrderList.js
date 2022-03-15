@@ -41,11 +41,10 @@ const OrderList = ({orderDetails}) => {
   const ResellerDiscountBadge = useMemo(
     () =>
       ({item}) => {
-        const {amount, basePrice, srpAmount, resellerDiscount, resellerRate} = item;
+        const {amount, basePrice, srpAmount, totalAmountWithAddons, resellerDiscount, resellerRate} = item;
         const percentage = (100 * (Number(basePrice) - resellerDiscount)) / srpAmount;
         const finalPercentage = roundedPercentage(percentage, 1);
         const itemAmount = amount === 1 ? srpAmount : resellerDiscount;
-        // console.log(item);
         // const {discRatetype, referralDiscount} = resellerDiscount;
         // const discountText = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
         return (
@@ -57,7 +56,7 @@ const OrderList = ({orderDetails}) => {
             )}
 
             <Text style={{...styles.seeAll, position: 'absolute', bottom: moderateScale(-20)}}>
-              PHP {srpAmount.toFixed(2)}
+              PHP {totalAmountWithAddons.toFixed(2)}
             </Text>
           </View>
         );

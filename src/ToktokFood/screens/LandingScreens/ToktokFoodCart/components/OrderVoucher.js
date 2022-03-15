@@ -40,7 +40,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
   const applyTextStyle = voucher ? styles.subText : {...styles.subText, color: '#C4C4C4'};
   // const voucherData = [...promotionVoucher, ...shippingVoucher];
 
-  const [getVoucherCode] = useLazyQuery(GET_VOUCHER_CODE, {
+  const [getVoucherCode, {loading}] = useLazyQuery(GET_VOUCHER_CODE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: err => console.log(err),
@@ -238,7 +238,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
           placeholder="Input Voucher (Optional)"
         />
 
-        <TouchableOpacity disabled={voucher === ''} onPress={onApplyVoucher} style={styles.apply}>
+        <TouchableOpacity disabled={voucher === '' || loading} onPress={onApplyVoucher} style={styles.apply}>
           <Text style={applyTextStyle}>Apply</Text>
         </TouchableOpacity>
       </View>

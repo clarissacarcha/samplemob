@@ -2,7 +2,8 @@
 import {useLazyQuery} from '@apollo/react-hooks';
 import React, {useEffect, useMemo, useState} from 'react';
 import {Platform, RefreshControl, StyleSheet, View, SectionList, Text, Image} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
 // GraphQL & Queries
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -13,6 +14,7 @@ import {CategoryList, ModalKycStatus, RestaurantList} from './index';
 import ChangeAddress from 'toktokfood/components/ChangeAddress';
 import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import YellowButton from 'toktokfood/components/YellowButton';
 
 // Assets
 import {FONT_SIZE} from 'res/variables';
@@ -33,6 +35,9 @@ const tabs = [
 ];
 
 const StickyView = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const {location} = useSelector(state => state.toktokFood);
 
@@ -187,6 +192,12 @@ const StickyView = () => {
     setActiveTab(item);
   };
 
+  const onSetLocationDetails = () => {
+    dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
+    dispatch({type: 'SET_TOKTOKFOOD_SHIPPING', payload: []});
+    navigation.navigate('ToktokFoodAddressDetails');
+  };
+
   const EmptyList = () => {
     if (activeTab.id === 1) {
       return (
@@ -196,6 +207,10 @@ const StickyView = () => {
           <Text style={styles.emptyText}>
             It seems like there is no open restaurant{'\n'}near you. Refresh or try again later.
           </Text>
+
+          <View style={styles.btnContainer}>
+            <YellowButton onPress={onSetLocationDetails} label="Try other location" btnStyle={styles.btnStyle} />
+          </View>
         </View>
       );
     }
@@ -204,6 +219,10 @@ const StickyView = () => {
         <Image style={styles.emptyImg} resizeMode="contain" source={empty_promos} />
         <Text style={styles.emptyTextTitle}>No Promos Available</Text>
         <Text style={styles.emptyText}>There are no restaurants with promos{'\n'}available as of the moment.</Text>
+
+        <View style={styles.btnContainer}>
+          <YellowButton onPress={onSetLocationDetails} label="Try other location" btnStyle={styles.btnStyle} />
+        </View>
       </View>
     );
   };
@@ -295,6 +314,14 @@ const StickyView = () => {
 }
 
 const styles = StyleSheet.create({
+  btnContainer: {
+    paddingTop: 20,
+  },
+  btnStyle: {
+    width: 150,
+    borderRadius: 5,
+    height: 35,
+  },
   container: {
     backgroundColor: 'transparent',
   },

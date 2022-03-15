@@ -15,7 +15,7 @@ import NetInfo from '@react-native-community/netinfo';
 import {connect} from 'react-redux';
 import OneSignal from 'react-native-onesignal';
 import {APP_FLAVOR, APP_VERSION, MEDIUM, COLOR, DARK} from '../res/constants';
-import {AUTH_CLIENT, GET_APP_VERSION_STATUS, GET_GLOBAL_SETTINGS} from '../graphql';
+import {AUTH_CLIENT, GET_APP_VERSION_STATUS, GET_GLOBAL_SETTINGS, GET_APP_SERVICES} from '../graphql';
 
 import Nav from './Nav';
 import SplashImage from '../assets/images/Splash.png';
@@ -35,7 +35,7 @@ const mapKeyValueToObject = keyValueArray => {
   return result;
 };
 
-const Splash = ({setConstants}) => {
+const Splash = ({setConstants, setAppServices}) => {
   const [checkPoint, setcheckPoint] = useState(''); // A-Allow, S-Suggest, B-Block, M-Maintenance
   const [deepLink, setDeepLink] = useState('');
 
@@ -92,6 +92,13 @@ const Splash = ({setConstants}) => {
       if (APP_FLAVOR === 'D') {
         oneSignalInit(constantsObject.driverOneSignalAppId);
       }
+
+      const appServicesResult = await AUTH_CLIENT.query({
+        query: GET_APP_SERVICES,
+        fetchPolicy: 'network-only',
+      });
+
+      setAppServices(appServicesResult.data.getAppServices);
 
       /**
        * Check App Version Status
@@ -223,6 +230,7 @@ const Splash = ({setConstants}) => {
 
 const mapDispatchToProps = dispatch => ({
   setConstants: payload => dispatch({type: 'SET_CONSTANTS', payload}),
+  setAppServices: payload => dispatch({type: 'SET_APP_SERVICES', payload}),
 });
 
 export default connect(null, mapDispatchToProps)(Splash);
