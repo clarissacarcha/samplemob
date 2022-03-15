@@ -41,6 +41,26 @@ export const GET_SHOPS = gql`
         voucherCode
         voucherName
       }
+      hasOpen
+      hasProduct
+      operatingHours {
+        id
+        shopId
+        fromTime
+        toTime
+        day
+        status
+        dayStatus
+      }
+      nextOperatingHrs {
+        id
+        shopId
+        fromTime
+        toTime
+        day
+        status
+        dayStatus
+      }
     }
   }
 `;
