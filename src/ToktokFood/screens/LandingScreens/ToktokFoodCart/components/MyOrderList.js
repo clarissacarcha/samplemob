@@ -5,7 +5,7 @@ import {Image, View, Text, TouchableOpacity, Alert, ImageBackground} from 'react
 // import _ from 'lodash';
 import styles from '../styles';
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 
@@ -25,6 +25,7 @@ import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
 const MyOrderList = () => {
   // const route = useRoute();
+  const dispatch = useDispatch();
   // const { cart } = route.params;
   const navigation = useNavigation();
   // const {location, customerInfo, shopLocation} = useSelector(state => state.toktokFood, _.isEqual);
@@ -233,6 +234,7 @@ const MyOrderList = () => {
           // });
           const isLastItem = temporaryCart.items.length == 0;
           if (isLastItem) {
+            dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
             return navigation.goBack();
           }
         } else {

@@ -4,6 +4,7 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useSelector} from 'react-redux';
+import _ from 'lodash';
 
 import styles from '../styles';
 import {wallet} from 'toktokfood/assets/images';
@@ -17,15 +18,17 @@ import {GET_MY_ACCOUNT} from 'toktokwallet/graphql';
 
 // enum implementation on JavaScript
 
-const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
+const PaymentDetails = ({deliveryFee, refreshing, orderType, loadingShipping}) => {
   const navigation = useNavigation();
   const {toktokWallet, setToktokWallet, paymentMethod, setPaymentMethod, setPMLoading, pmLoading, temporaryCart} =
     useContext(VerifyContext);
   const {user} = useSelector(state => state.session);
-  const {customerInfo, customerWallet} = useSelector(state => state.toktokFood);
-  const [hasToktokWallet, setHasToktokWallet] = useState(false);
+  const {customerInfo, customerWallet, promotionVoucher} = useSelector(state => state.toktokFood);
 
-  const isDisabled = paymentMethod == 'TOKTOKWALLET' ? temporaryCart?.totalAmount > toktokWallet?.balance : false;
+  const [hasToktokWallet, setHasToktokWallet] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(temporaryCart?.totalAmount);
+
+  const isDisabled = paymentMethod == 'TOKTOKWALLET' ? totalAmount > toktokWallet?.balance : false;
 
   const [getMyAccount, {loading, error}] = useLazyQuery(GET_MY_ACCOUNT, {
     fetchPolicy: 'network-only',
@@ -61,6 +64,29 @@ const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
       }
     }
   }, [customerInfo, user, refreshing, setPaymentMethod, getMyAccount]);
+
+  useEffect(() => {
+    if (deliveryFee) {
+      let totalAmt = 0;
+      const groupPromo = _(promotionVoucher)
+        .groupBy('type')
+        .map((objs, key) => ({
+          amount: _.sumBy(objs, 'amount'),
+          discount_totalamount: _.sumBy(objs, 'discount_totalamount'),
+          type: key,
+        }))
+        .value();
+      const promotions = groupPromo.filter(promo => promo.type === 'promotion');
+      const deal = groupPromo.filter(promo => promo.type === 'deal');
+      if (promotions.length > 0) {
+        totalAmt += promotions[0]?.discount_totalamount;
+      }
+      if (deal.length > 0) {
+        totalAmt += deal[0]?.discount_totalamount;
+      }
+      setTotalAmount(temporaryCart?.totalAmount + deliveryFee - totalAmt);
+    }
+  }, [deliveryFee]);
 
   const onCashIn = ({balance}) => {
     // do something here
@@ -184,7 +210,7 @@ const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
                   disabled={
                     !customerWallet ||
                     customerWallet?.status < 1 ||
-                    (temporaryCart.totalAmount > 2000 && customerWallet?.status === 2) ||
+                    (totalAmount > 2000 && customerWallet?.status === 2) ||
                     loadingShipping
                   }
                   onPress={() => setPaymentMethod('COD')}
@@ -192,10 +218,18 @@ const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
                     styles.cashButton,
                     styles.shadow,
                     {backgroundColor: COLORS.WHITE},
-                    {opacity: loading || (customerWallet?.status === 1 || (temporaryCart.totalAmount <= 2000 && customerWallet?.status === 2)) ? 1 : 0.4},
+                    {
+                      opacity:
+                        loading || customerWallet?.status === 1 || (totalAmount <= 2000 && customerWallet?.status === 2)
+                          ? 1
+                          : 0.4,
+                    },
                     {
                       borderColor:
-                        (customerWallet?.status === 1 || (temporaryCart.totalAmount <= 2000 && customerWallet?.status === 2)) && paymentMethod === 'COD' ? COLORS.YELLOW : COLORS.WHITE,
+                        (customerWallet?.status === 1 || (totalAmount <= 2000 && customerWallet?.status === 2)) &&
+                        paymentMethod === 'COD'
+                          ? COLORS.YELLOW
+                          : COLORS.WHITE,
                     },
                   ]}>
                   <Text style={[styles.cashText, {color: '#000000'}]}>Cash</Text>
@@ -219,7 +253,7 @@ const PaymentDetails = ({refreshing, orderType, loadingShipping}) => {
 
             {!customerWallet && <CreateToktokWallet />}
             {customerWallet && customerWallet?.status === 0 && <DeclinedWallet />}
-            {customerWallet && customerWallet?.status === 2 && temporaryCart.totalAmount > 2000 && <ExceedLimit />}
+            {customerWallet && customerWallet?.status === 2 && totalAmount > 2000 && <ExceedLimit />}
           </React.Fragment>
         )}
       </>

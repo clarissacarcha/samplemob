@@ -894,7 +894,12 @@ const MainComponent = () => {
           />
         )}
         <Separator />
-        <PaymentDetails orderType={orderType} loadingShipping={loadingShipping} refreshing={refreshing} />
+        <PaymentDetails
+          orderType={orderType}
+          deliveryFee={delivery?.price}
+          loadingShipping={loadingShipping}
+          refreshing={refreshing}
+        />
         <Separator />
         <RiderNotes
           forDelivery={orderType === 'Delivery'}
