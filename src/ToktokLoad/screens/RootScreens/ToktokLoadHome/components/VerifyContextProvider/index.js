@@ -47,7 +47,6 @@ export const VerifyContextProvider = ({children, navigation})=> {
   })
 
   useEffect(()=> {
-    console.log(loading)
     setAdsAction({ loading, error });
   },[loading, error])
 
