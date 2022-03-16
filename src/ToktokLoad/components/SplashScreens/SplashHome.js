@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF6E1"
   },
   loadLogo: {
-    height: width * 0.45,
-    width: width * 0.45,
+    height: width * 0.4,
+    width: width * 0.4,
     marginTop: 20,
   },
 })
