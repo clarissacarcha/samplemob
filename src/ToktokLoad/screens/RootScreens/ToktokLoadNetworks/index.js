@@ -1,12 +1,13 @@
-import React, {useContext, useEffect, useState, useCallback, useMemo} from "react";
+import React, {useContext, useEffect, useState, useCallback, useMemo , useRef } from "react";
 import {View, Text, StyleSheet, Image} from "react-native";
 
 //UTIL
 import { moderateScale } from "toktokload/helper";
+import { useDebounce } from "toktokwallet/hooks";
 
 //COMPONENTS
 import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, SearchInput } from "src/ToktokLoad/components";
-import { LoadList, VerifyContextProvider, VerifyContext } from "./components";
+import { LoadList, VerifyContextProvider, VerifyContext , SearchLoadingIndicator } from "./components";
 import { SomethingWentWrong } from "toktokload/components";
 
 //FONTS & COLORS
@@ -43,6 +44,7 @@ const MainComponent = ({ navigation, route }) => {
   const [loadVariants, setLoadVariant]= useState([]);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
+  const [searchLoading,setSearchLoading] = useState(false);
   
   const [getLoadVariants, {loading, error}] = useLazyQuery(GET_LOAD_VARIANTS, {
     fetchPolicy:"network-only",
@@ -64,6 +66,7 @@ const MainComponent = ({ navigation, route }) => {
       setLoadFavorite(null);
       setLoads(getSearchLoadItems);
       setHasSearch(true);
+      setSearchLoading(false);
     }
   });
 
@@ -82,22 +85,27 @@ const MainComponent = ({ navigation, route }) => {
   }
 
   const onSearchChange = (value) => {
+    setSearchLoading(value.length > 0)
     setSearch(value);
+    debounceProcessSearch(value);
   }
 
-  const processSearch = useCallback(() => {
-    if(search){
+  const debounceProcessSearch = useDebounce((value)=>processSearch(value) , 100);
+
+  const processSearch = (value)=> {
+    console.log("Debounce here")
+    if(value != ""){
       setSelectedLoad({});
       getSearchLoadItems({
         variables: {
           input: {
             networkId,
-            searchKey: search
+            searchKey: value
           }
         }
       })
     }
-  })
+  }
 
   const displayLoadList = () => {
     if(getSearchError) return <ErrorComponent error={getSearchError} onRefetch={() => processSearch()} />
@@ -111,6 +119,7 @@ const MainComponent = ({ navigation, route }) => {
           networkId={networkId}
           processSearch={processSearch}
           getSearchLoading={getSearchLoading}
+          searchLoading={searchLoading}
         />
       )
     }
@@ -144,9 +153,11 @@ const MainComponent = ({ navigation, route }) => {
         onChangeText={onSearchChange}
         placeholder="Search load products here!"
         containerStyle={{ paddingHorizontal: moderateScale(16), paddingBottom: moderateScale(hasSearch ? 16 : 0) }}
-        onSubmitEditing={processSearch}
+        returnKeyType="done"
+        onClear={()=>setSearch("")}
+        // onSubmitEditing={processSearch}
       />
-      { (!hasSearch && !getSearchLoading) && (
+      { (!hasSearch && !getSearchLoading && !searchLoading) && (
         <HeaderTabs
           tabs={loadVariants}
           scrollEnabled={true}
