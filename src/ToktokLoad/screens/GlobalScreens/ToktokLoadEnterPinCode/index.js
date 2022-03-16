@@ -2,7 +2,8 @@ import React , {useState , useEffect , useRef } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, Image } from 'react-native';
 
 //COMPONENTS
-import { HeaderBack, HeaderTitle, Separator, OrangeButton, NumberBoxes, BuildingBottom, NumPad, CircleIndicator } from 'toktokload/components';
+import { HeaderBack, HeaderTitle, Separator, OrangeButton, NumberBoxes } from 'toktokload/components';
+import { NumPad, CircleIndicator, BuildingBottom, HeaderCancel } from 'toktokwallet/components';
 import { AlertOverlay } from 'src/components';
 import {VectorIcon, ICON_SET} from 'src/revamp';
 
@@ -22,6 +23,7 @@ import { useSelector } from 'react-redux';
 //IMAGES, FONTS AND COLORS 
 import CONSTANTS from 'common/res/constants'
 import {toktokload_logo} from 'toktokload/assets/images';
+import tokwaLogo from 'toktokwallet/assets/images/tokwa2.png'
 
 import moment from 'moment';
 
@@ -30,8 +32,9 @@ const {COLOR , FONT_FAMILY: FONT , FONT_SIZE, SIZE} = CONSTANTS
 export const ToktokLoadEnterPinCode = ({navigation, route})=> {
 
   navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={""}/>,
+    headerLeft: ()=> <HeaderBack color={COLOR.YELLOW} isThinBack />,
+    headerTitle: ()=> <HeaderTitle label={[""]}/>,
+    headerRight: ()=> <HeaderCancel navigation={navigation} screenPopNo={3} />,
     headerStyle: {
       elevation: 0,
       shadowColor: "#fff",
@@ -42,7 +45,7 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
       shadowOpacity: 0,
       shadowRadius: 0,
     }
-  });
+  })
   
 
   const prompt = usePrompt();
@@ -145,10 +148,10 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
     <View style={styles.subContainer}>
       <AlertOverlay visible={loading}/>
       <View style={styles.inputContainer}>
-        <Image source={toktokload_logo} style={{ width: moderateScale(200), height: moderateScale(80), resizeMode: "contain" }} />
+        <Image source={tokwaLogo} style={{ width: moderateScale(200), height: moderateScale(80), resizeMode: "contain" }} />
         <Text style={styles.otpText}>Enter {requestMoneyDetails?.validator}</Text>
         <View style={{ flexDirection: "row", alignItems: "center", marginBottom: moderateScale(30) }}>
-          <VectorIcon iconSet={ICON_SET.AntDesign} name="exclamationcircle" size={15} color={COLOR.ORANGE} />
+          <VectorIcon iconSet={ICON_SET.AntDesign} name="exclamationcircle" size={15} color={COLOR.YELLOW} />
           <Text style={styles.otpMessage}>Do not share your TPIN with anyone.</Text>
         </View>
         <CircleIndicator pinCode={pinCode} showPin={showPin} error={!!errorMessage} />
@@ -162,6 +165,7 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
           </TouchableOpacity>
         )}
       </View>
+      <BuildingBottom/>
     </View>
   )
 }
@@ -200,7 +204,7 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(10)
   },
   forgotTPIN: {
-    color: "#FF8A48",
+    color: COLOR.ORANGE,
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.BOLD
   },

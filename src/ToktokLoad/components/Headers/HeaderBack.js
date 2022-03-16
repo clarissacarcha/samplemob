@@ -2,12 +2,11 @@ import React from "react";
 import {StyleSheet, View, TouchableOpacity,Text } from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {throttle} from "lodash";
-import FIcon5 from "react-native-vector-icons/FontAwesome5";
 import { COLOR, FONT } from "src/res/variables"; 
 import { moderateScale } from "toktokload/helper";
+import {VectorIcon, ICON_SET} from 'src/revamp';
 
-
-export const HeaderBack = ({onBack , color = "#F6841F" , label}) => {
+export const HeaderBack = ({onBack , color = "#F6841F" , label, isThinBack =  false}) => {
   const navigation = useNavigation();
 
   const onPress = throttle(
@@ -24,7 +23,11 @@ export const HeaderBack = ({onBack , color = "#F6841F" , label}) => {
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.backContainer}>
-      <FIcon5 name="chevron-left" color={color} size={moderateScale(16)}/>
+      { isThinBack ? (
+        <VectorIcon iconSet={ICON_SET.Entypo} name="chevron-thin-left" color={color} size={moderateScale(16)}/>
+      ) : (
+        <VectorIcon iconSet={ICON_SET.FontAwesome5} name="chevron-left" color={color} size={moderateScale(16)}/>
+      )}
        <Text style={{fontFamily: FONT.BOLD,fontSize: moderateScale(14),marginLeft: 5}}>{label}</Text>
     </TouchableOpacity>
   );
