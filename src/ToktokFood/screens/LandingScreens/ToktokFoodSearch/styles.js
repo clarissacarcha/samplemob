@@ -79,8 +79,12 @@ export default styles = StyleSheet.create({
     marginTop: moderateScale(-110),
   },
   emptyImg: {
-    height: moderateScale(175),
-    width: moderateScale(220),
+    height: moderateScale(198),
+    width: moderateScale(236),
+  },
+  emptyShop: {
+    height: moderateScale(191),
+    width: moderateScale(198),
   },
   emptyTextTitle: {
     color: '#F6841F',

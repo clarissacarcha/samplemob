@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Modal, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Modal, Text, TouchableOpacity, Dimensions} from 'react-native';
 import {verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
+
+const phoneDimensions = Dimensions.get('window');
 
 // import {useSelector} from 'react-redux';
 
@@ -32,14 +34,15 @@ const ToktokFoodRestaurantOverview = ({route}) => {
     if (isAboutToOpen) {
       return (
         <Text style={styles.closeText}>
-          Restaurant is currently closed. Please comeback at {moment(fromTime, 'hh:mm:ss').format('LT')}
+          Restaurant is currently closed. {'\n'}Please comeback at {moment(fromTime, 'hh:mm:ss').format('LT')}
         </Text>
       );
     }
     return (
       <Text style={styles.closeText}>
-        Restaurant is currently closed. Please comeback on {getWeekDay(nxtDay, true)},{' '}
-        {moment(fromTime, 'hh:mm:ss').add(1, 'day').format('MMMM DD')} at {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
+        Restaurant is currently closed. {'\n'}Please comeback on {getWeekDay(nxtDay, true)},{' '}
+        {moment(fromTime, 'hh:mm:ss').add(1, 'day').format('MMMM DD')} at{' '}
+        {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
       </Text>
     );
   };
@@ -88,11 +91,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     backgroundColor: 'rgba(34, 34, 34, 0.5)',
-    // backgroundColor: '#fff',
   },
   wrapper: {
-    height: '21%',
-    width: '101%',
+    width: phoneDimensions.width + 10,
+    paddingLeft: 5,
+    paddingBottom: 20,
     position: 'absolute',
     backgroundColor: COLOR.WHITE,
   },
@@ -103,7 +106,7 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 15,
     borderTopStartRadius: 15,
     borderColor: COLOR.ORANGE,
-    marginHorizontal: -2,
+    marginHorizontal: 0,
   },
   sheet: {
     flex: 1,
@@ -111,10 +114,10 @@ const styles = StyleSheet.create({
   },
   closeText: {
     fontSize: 15,
-    marginTop: 17,
     lineHeight: 20,
     fontFamily: FONT.BOLD,
-    marginBottom: verticalScale(16),
+    marginVertical: 20,
+    textAlign: 'center',
   },
   closeButton: {
     display: 'flex',

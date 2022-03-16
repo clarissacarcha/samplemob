@@ -179,8 +179,8 @@ const ToktokFoodSearch = ({route}) => {
       return (
         <View style={[styles.emptyContainer]}>
           <Image
-            style={styles.emptyImg}
-            resizeMode="contain"
+            resizeMode="cover"
+            style={search != '' ? styles.emptyShop : styles.emptyImg}
             source={search != '' ? new_empty_shop_icon : empty_search_2}
           />
           {search != '' ? (
