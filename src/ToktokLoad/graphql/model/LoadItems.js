@@ -53,3 +53,11 @@ export const GET_SEARCH_LOAD_ITEMS = gql`
   }
 `
 
+export const GET_NETWORK_LOAD_ITEMS = gql`
+  query getNetworkLoadItems($input: GetNetworkLoadItemsInput){
+    getNetworkLoadItems(input: $input){
+      ${loadDetails}
+    }
+  }
+`
+

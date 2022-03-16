@@ -4,24 +4,32 @@ import { sortBy } from 'lodash'
 import { Separator } from 'toktokbills/components'
 import { search_ic } from 'toktokbills/assets/icons'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
+import { VectorIcon , ICON_SET } from 'src/revamp';
 import { moderateScale } from 'toktokbills/helper'
 
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE , MARGIN } = CONSTANTS
 
-export const SearchInput = ({search = "", onChangeText, placeholder, containerStyle, onSubmitEditing }) => {
+export const SearchInput = ({onClear , search = "", onChangeText, placeholder, containerStyle, onSubmitEditing , returnKeyType = "search" }) => {
 
   return (
     <View style={[ styles.searchField, containerStyle ]}>
       <View style={[ styles.inputContainer, {flexDirection: "row"} ]}>
         <Image style={styles.icon} resizeMode="contain" source={search_ic}/>
         <TextInput 
+          value={search}
           style={styles.input}
           placeholder={placeholder}
           onChangeText={onChangeText}
           onSubmitEditing={onSubmitEditing}
-          returnKeyType="search"
+          returnKeyType={returnKeyType}
         />
+        {
+          search != "" &&
+          <TouchableOpacity onPress={onClear} hitSlop={{top: 20,right: 20,bottom: 20,left: 20}} style={{...styles.icon,justifyContent:"flex-end",alignItems:"flex-end"}}>
+              <VectorIcon iconSet={ICON_SET.FontAwesome5} color={COLOR.DARK} name="times"/>
+          </TouchableOpacity>
+        }
       </View>
     </View>
   )

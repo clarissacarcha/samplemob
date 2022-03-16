@@ -11,6 +11,7 @@ import { LoadDetails } from "./LoadDetails";
 import { VerifyContext } from "../VerifyContextProvider";
 import { EmptyList, OrangeButton, LoadingIndicator, SearchInput, ToastModal } from "src/ToktokLoad/components";
 import { SomethingWentWrong } from "toktokload/components";
+import { SearchLoadingIndicator } from "../SearchLoadingIndicator"
 
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
@@ -25,7 +26,7 @@ import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
 
 export const LoadList = memo((props) => {
 
-  const { loadVariantId, navigation, route, mobileNumber, networkId, processSearch, getSearchLoading, label } = props;
+  const { loadVariantId, navigation, route, mobileNumber, networkId, processSearch, getSearchLoading, label, searchLoading } = props;
   const prompt = usePrompt();
   const {
     selectedLoad,
@@ -204,7 +205,11 @@ export const LoadList = memo((props) => {
     )
   });
 
-  if(isMounted || (getLoadItemsLoading && !loadFavorite && loads.length == 0) || (getSearchLoading && !loadFavorite)){
+  if(searchLoading){
+    return <SearchLoadingIndicator />
+  }
+
+  if(isMounted || (getLoadItemsLoading && !loadFavorite && loads.length == 0) || (getSearchLoading && !loadFavorite && !searchLoading)){
     return (
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
