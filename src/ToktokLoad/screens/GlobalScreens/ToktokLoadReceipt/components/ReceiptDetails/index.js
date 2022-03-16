@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
 
 //UTIL
-import { moderateScale, numberFormat } from "toktokload/helper";
+import { moderateScale, numberFormat, currencyCode } from "toktokload/helper";
 
 //IMAGES
 import { check_fill_icon } from "toktokload/assets/icons";
@@ -36,12 +36,12 @@ export const ReceiptDetails = ({ route }) => {
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Total Amount </Text>
-          <Text style={styles.description}>PHP {numberFormat(totalAmount)}</Text>
+          <Text style={styles.description}>{currencyCode}{numberFormat(totalAmount)}</Text>
         </View>
         { discount > 0 && (
           <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
             <Text style={styles.title}>Discount </Text>
-            <Text style={styles.description}>PHP {numberFormat(discount)}</Text>
+            <Text style={styles.description}>{currencyCode}{numberFormat(discount)}</Text>
           </View> 
         )}
         <View style={[ styles.bodyContainer ]}>
