@@ -16,3 +16,4 @@ export const numberFormatInteger = value => {
     .replace(/\d(?=(\d{3})+\.)/g, '$&,')
     .replace('.00', '');
 };
+export const currencyCode = "₱";

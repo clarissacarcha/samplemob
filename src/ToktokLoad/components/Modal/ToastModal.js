@@ -2,14 +2,10 @@ import React, {useEffect} from 'react'
 import { View , Text , StyleSheet , Image , Dimensions , TouchableOpacity} from 'react-native'
 import { useThrottle } from 'src/hooks'
 import { moderateScale } from 'toktokwallet/helper'
-import Error from 'src/common/assets/globalert/Error.png'
-import Question from 'src/common/assets/globalert/Question.png'
-import Success from 'src/common/assets/globalert/Success.png'
-import Warning from 'src/common/assets/globalert/Warning.png'
-import TOKWA_WARNING_ICON from 'toktokwallet/assets/images/warning.png'
+
 import CONSTANTS from 'common/res/constants';
-import {VectorIcon, ICON_SET} from 'src/revamp';
 import Modal from 'react-native-modal';
+import { check_icon } from 'toktokload/assets/icons'
 
 const { width } = Dimensions.get("screen")
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE  , SHADOW } = CONSTANTS
@@ -44,7 +40,7 @@ export const ToastModal = ({
     >
       <View style={styles.modalBody}>
         <View style={styles.content}>
-          <VectorIcon iconSet={ICON_SET.AntDesign} name="check" size={moderateScale(70)} color={COLOR.ORANGE} />
+          <Image source={check_icon} style={{ width: moderateScale(70), height: moderateScale(70), resizeMode: "contain", marginBottom: moderateScale(15) }} />
           { !!title && (
             <Text style={[ styles.successText, { color: "#F6841F" } ]}>
               {title}

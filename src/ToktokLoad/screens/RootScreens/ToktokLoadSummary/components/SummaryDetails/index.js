@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
 
 //UTIL
-import { moderateScale, numberFormat } from "toktokload/helper";
+import { moderateScale, numberFormat, currencyCode } from "toktokload/helper";
 
 //FONTS & COLORS & IMAGES
 import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
@@ -16,16 +16,16 @@ export const SummaryDetails = ({ loadDetails, mobileNumber, discount = 0 }) => {
       <View style={styles.detailsContainer}>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Load Amount</Text>
-          <Text style={styles.description}>PHP {numberFormat(amount)}</Text>
+          <Text style={styles.description}>{currencyCode}{numberFormat(amount)}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
           <Text style={styles.title}>Service Fee</Text>
-          <Text style={styles.description}>PHP {numberFormat(commissionRateDetails.systemServiceFee)}</Text>
+          <Text style={styles.description}>{currencyCode}{numberFormat(commissionRateDetails.systemServiceFee)}</Text>
         </View>
         { discount > 0 && (
           <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
             <Text style={styles.title}>Discount</Text>
-            <Text style={styles.description}>PHP {numberFormat(discount)}</Text>
+            <Text style={styles.description}>{currencyCode}{numberFormat(discount)}</Text>
           </View>
         )}
       </View>
@@ -33,7 +33,7 @@ export const SummaryDetails = ({ loadDetails, mobileNumber, discount = 0 }) => {
       <View style={styles.totalAmountContainer}>
         <View style={styles.bodyContainer}>
           <Text style={styles.title}>Total Amount</Text>
-          <Text style={styles.description}>PHP {numberFormat(totalAmount)}</Text>
+          <Text style={styles.description}>{currencyCode}{numberFormat(totalAmount)}</Text>
         </View>
       </View>
     </View>

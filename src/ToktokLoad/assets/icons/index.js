@@ -13,3 +13,4 @@ export const heart_selected_fill_icon = require('./heart-selected-fill.png');
 // PROMPT ICONS
 export const error_icon = require('./error-icon.png');
 export const success_icon = require('./success-icon.png');
+export const check_icon = require('./check-icon.png');

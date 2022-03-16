@@ -70,7 +70,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
 
   useEffect(()=>{
     setMobileErrorMessage("")
-    if(+activeNetwork?.inputLength?.inputLength === 11) setMobileNumber(formattedMobile)
+    if(activeNetwork?.inputLength?.name.toLowerCase() === "mobile number") setMobileNumber(formattedMobile)
   },[activeNetwork])
 
   const onChangeText = (value) => {
@@ -193,7 +193,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
                 maxLength={+activeNetwork?.inputLength?.inputLength ?? 11}
               />
             </View>
-            { +activeNetwork?.inputLength?.inputLength === 11 && (
+            { activeNetwork?.inputLength?.name.toLowerCase() === "mobile number" && (
               <TouchableOpacity
                 onPress={onPressContacts}
                 style={styles.contactsContainer}
