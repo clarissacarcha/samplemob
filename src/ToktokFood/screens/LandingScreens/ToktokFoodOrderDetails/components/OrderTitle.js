@@ -182,10 +182,11 @@ const OrderTitle = ({transaction, riderDetails, referenceNum}) => {
         case 'p':
           return 'Estimated Pickup Time: ASAP';
         case 'po':
-        case 'rp':
           if (showError) {
             return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
           }
+          return 'Estimated Pickup Time: 15-45 minutes';
+        case 'rp':
           return 'Estimated Pickup Time: ASAP';
         default:
           return '';

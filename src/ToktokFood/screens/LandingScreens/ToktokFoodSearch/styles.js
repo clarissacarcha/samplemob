@@ -197,4 +197,15 @@ export default styles = StyleSheet.create({
     marginTop: 7,
     height: verticalScale(40),
   },
+  closedTag: {
+    backgroundColor: COLOR.ORANGE,
+    width: 60,
+    borderRadius: 10,
+    paddingVertical: 3,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  closedText: {
+    color: '#fff',
+  },
 });

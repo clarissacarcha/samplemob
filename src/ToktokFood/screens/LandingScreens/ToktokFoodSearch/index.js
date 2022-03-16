@@ -29,6 +29,10 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import {saveNewShopHistory, getShopHistory, clearShopHistory} from 'toktokfood/helper/persistentHistory';
 
+import {useLazyQuery} from '@apollo/react-hooks';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import {GET_SEARCH_FOOD} from 'toktokfood/graphql/toktokfood';
+
 const ToktokFoodSearch = ({route}) => {
   const {location} = useSelector(state => state.toktokFood);
   const [shopList, setShopList] = useState([]);
@@ -111,38 +115,28 @@ const ToktokFoodSearch = ({route}) => {
     setHistory([]);
   };
 
+  const [getSearchFood, {data, error, loading: loadingSearchFood}] = useLazyQuery(GET_SEARCH_FOOD, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getSearchFood}) => {
+      console.log('getSearchFood', getSearchFood);
+      setShopList(search != '' ? getSearchFood : []);
+      setLoading(false);
+    },
+  });
+
   const searchFood = async (s = '', radius = 3) => {
     try {
       setLoading(true);
-      const API_RESULT = await axios({
-        url: `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/graphql`,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: {
-          query: `
-            query {
-              getSearchFood(input: {
-                foodName: "${s}",
-                radius: ${radius},
-                userLatitude: ${location.latitude},
-                userLongitude: ${location.longitude}
-              }) {
-                id
-                ratings
-                shopname
-                logo
-                banner
-                address
-                estimatedDistance
-                estimatedDeliveryTime
-              }
-          }`,
+      getSearchFood({
+        variables: {
+          input: {
+            foodName: s,
+            userLatitude: location.latitude,
+            userLongitude: location.longitude,
+          },
         },
       });
-      const {getSearchFood} = API_RESULT.data.data;
-      setShopList(s != '' ? getSearchFood : []);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -168,6 +162,11 @@ const ToktokFoodSearch = ({route}) => {
             <MCIcon name="map-marker-outline" color="#868686" size={13} />
             <Text style={styles.subInfoText}>{item.estimatedDistance} KM</Text>
           </View>
+          {!item.hasOpen && (
+            <View style={styles.closedTag}>
+              <Text style={styles.closedText}>Closed</Text>
+            </View>
+          )}
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -252,8 +251,8 @@ const ToktokFoodSearch = ({route}) => {
               placeholder="What would you like to eat?"
               onChangeText={text => {
                 setSearch(text);
-                searchFood(text);
               }}
+              onSubmitEditing={() => searchFood(search)}
               style={[styles.searchBox, styles.textInputFontStyles]}
             />
           </View>
