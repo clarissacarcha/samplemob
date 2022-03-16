@@ -11,7 +11,7 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 //components
-import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, SomethingWentWrong } from "src/ToktokLoad/components";
+import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, SomethingWentWrong, SplashHome } from "src/ToktokLoad/components";
 import { BuyLoad, Favorites, VerifyContextProvider, VerifyContext, Advertisement , LoadCategory } from "./components";
 
 import CONSTANTS from 'common/res/constants'
@@ -34,6 +34,7 @@ const MainComponent = ({ navigation, route }) => {
   const { adsActions, adsRegular, getAdvertisements, mobileNumber, mobileErrorMessage } = useContext(VerifyContext);
   const [categories, setCategories]= useState([]);
   const [activeTab, setActiveTab] = useState(null);
+  const [showSplash, setShowSplash] = useState(true);
   const prompt = usePrompt();
 
   const goToFavorites = ()=> navigation.navigate("ToktokLoadFavorites", {mobileErrorMessage,mobileNumber})
@@ -50,10 +51,19 @@ const MainComponent = ({ navigation, route }) => {
     }
   })
 
+  navigation.setOptions({
+    headerShown: !showSplash,
+  })
 
   const getActiveCategoryName = (activeTab)=> {
     return categories.filter(tab=>tab?.id===activeTab?.id)[0]
   }
+
+  useEffect(()=>{
+    setTimeout(() => {
+      setShowSplash(false);
+    }, 1500)
+  },[])
 
   useEffect(()=>{
     getDataList();
@@ -64,10 +74,13 @@ const MainComponent = ({ navigation, route }) => {
     getAdvertisements();
   }
 
-  if(loading || adsActions.loading){
+  if(!showSplash && (loading || adsActions.loading)){
     return <View style={styles.container}>
             <LoadingIndicator isLoading={true} isFlex />
           </View>
+  }
+  if(showSplash || (loading || adsActions.loading)){
+    return <SplashHome />
   }
   if(error || adsActions.error){
     return <View style={styles.container}>

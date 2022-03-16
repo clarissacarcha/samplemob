@@ -93,7 +93,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
     }
 
     if(mobile.length != activeNetwork?.inputLength?.inputLength){
-      setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name}`);
+      setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name.toLowerCase()}`);
     }else{
       setMobileErrorMessage("")
     }

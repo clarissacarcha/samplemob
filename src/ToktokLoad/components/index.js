@@ -4,3 +4,4 @@ export * from "./Inputs";
 export * from "./Loading";
 export * from "./Modal";
 export * from "./Others";
+export * from "./SplashScreens";
