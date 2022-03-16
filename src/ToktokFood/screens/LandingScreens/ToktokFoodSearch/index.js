@@ -119,6 +119,7 @@ const ToktokFoodSearch = ({route}) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getSearchFood}) => {
+      console.log('getSearchFood', getSearchFood);
       setShopList(search != '' ? getSearchFood : []);
       setLoading(false);
     },
@@ -161,6 +162,11 @@ const ToktokFoodSearch = ({route}) => {
             <MCIcon name="map-marker-outline" color="#868686" size={13} />
             <Text style={styles.subInfoText}>{item.estimatedDistance} KM</Text>
           </View>
+          {!item.hasOpen && (
+            <View style={styles.closedTag}>
+              <Text style={styles.closedText}>Closed</Text>
+            </View>
+          )}
         </View>
       </View>
     </TouchableWithoutFeedback>

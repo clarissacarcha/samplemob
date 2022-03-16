@@ -39,7 +39,7 @@ const ToktokFoodRestaurantOverview = ({route}) => {
     return (
       <Text style={styles.closeText}>
         Restaurant is currently closed. Please comeback on {getWeekDay(nxtDay, true)},{' '}
-        {moment(fromTime, 'hh:mm:ss').format('MMMM DD')} at {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
+        {moment(fromTime, 'hh:mm:ss').add(1, 'day').format('MMMM DD')} at {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
       </Text>
     );
   };
