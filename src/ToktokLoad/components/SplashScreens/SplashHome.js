@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     padding: 16,
     justifyContent:'center',
     alignItems:'center',
-    backgroundColor: "#FFF6E1"
+    backgroundColor: "#FBFAE3"
   },
   loadLogo: {
     height: width * 0.45,
