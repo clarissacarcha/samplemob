@@ -45,6 +45,7 @@ const MainComponent = ({navigation,route})=> {
   const [isMounted, setIsMounted] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [favoriteModal, setFavoriteModal] = useState({ show: false, message: "" });
+  const [data, setData] = useState([]);
 
   const [getFavoriteLoads, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(GET_FAVORITE_LOADS, {
     fetchPolicy: "network-only",
@@ -60,6 +61,7 @@ const MainComponent = ({navigation,route})=> {
     onCompleted:({ getFavoriteLoads })=> {
       setLoadFavorite(null);
       setIsMounted(false);
+      setData(getFavoriteLoads);
       setFavorites(getFavoriteLoads);
       setHasSearch(false);
     }
@@ -102,7 +104,7 @@ const MainComponent = ({navigation,route})=> {
     },
     onCompleted:({ patchRemoveFavoriteLoad })=> {
       processGetLoadItems();
-      processGetFavoriteLoads("refresh");
+      processFavorite();
       setFavoriteModal({ show: true, message: "Removed from your Favorites" });
       console.log(patchRemoveFavoriteLoad, "REMOVE");
     }
@@ -120,7 +122,7 @@ const MainComponent = ({navigation,route})=> {
     },
     onCompleted:({ postFavoriteLoad })=> {
       processGetLoadItems();
-      processGetFavoriteLoads("refresh");
+      processFavorite();
       setFavoriteModal({ show: true, message: "Added to your Favorites" });
       console.log(postFavoriteLoad, "ADD");
     }
@@ -160,29 +162,23 @@ const MainComponent = ({navigation,route})=> {
     patchRemoveFavoriteLoad({ variables: { input: { loadItemId: selectedLoad.loadItemId } } });
   }
 
-  const getData = () => {
-    if(search){
-      return searchData.length > 0 ? searchData : []
-    }
-    return favorites
-  }
-    
-  const processSearch = () => {
+  const processSearch = (value) => {
+    setSearch(value)
     setSelectedLoad({});
-    if(search){
-      const filteredContacts = favorites.filter((item) => {
-        let searchKey = search.toLowerCase();
+    if(value){
+      const filteredSearch = data.filter((item) => {
+        let searchKey = value.toLowerCase();
         
         return item.name.toLowerCase().includes(searchKey) || item.amount.toString().includes(searchKey)
           || item.descriptions.toLowerCase().includes(searchKey) || item.networkDetails.name.toLowerCase().includes(searchKey)
       });
       setHasSearch(true);
-      setFavorites(filteredContacts)
+      setFavorites(filteredSearch)
     }
   }
 
   const onPressFavorite = (item, index) => {
-    setLoadFavorite(item.id);
+    setLoadFavorite({ item, index });
     let data = [...favorites];
     let favData = {
       variables: {
@@ -197,6 +193,17 @@ const MainComponent = ({navigation,route})=> {
     } else {
       postFavoriteLoad(favData)
     }
+  }
+
+  const processFavorite = () => {
+    let dataIndex = data.findIndex((item) => item.id === loadFavorite.item.id)
+    favorites.splice(loadFavorite.index, 1)
+    setFavorites(favorites)
+    data.splice(dataIndex, 1)
+    setData(data)
+  
+    setLoadFavorite(null);
+    setSelectedLoad({});
   }
 
   const displayFavorites = useMemo(() => {
@@ -230,7 +237,6 @@ const MainComponent = ({navigation,route})=> {
 
 
   const ListEmptyComponent = () => {
-    console.log("Sd")
     if(isMounted) return null
 
     const imageSrc = hasSearch ? empty_search : empty_favorite;
@@ -257,10 +263,10 @@ const MainComponent = ({navigation,route})=> {
       <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
       <SearchInput
         search={search}
-        onChangeText={(value) => { setSearch(value) }}
+        onChangeText={processSearch}
         placeholder="Search Favorites"
         containerStyle={{ padding: moderateScale(16) }}
-        onSubmitEditing={processSearch}
+        // onSubmitEditing={processSearch}
       />
       { displayFavorites }
       <View style={{ padding: moderateScale(16) }}>

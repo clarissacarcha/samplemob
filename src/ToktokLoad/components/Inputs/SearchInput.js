@@ -10,7 +10,7 @@ import { moderateScale } from 'toktokbills/helper'
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE , MARGIN } = CONSTANTS
 
-export const SearchInput = ({onClear , search = "", onChangeText, placeholder, containerStyle, onSubmitEditing , returnKeyType = "search" }) => {
+export const SearchInput = ({onClear , search = "", onChangeText, placeholder, containerStyle, onSubmitEditing , returnKeyType = "done", hasClear }) => {
 
   return (
     <View style={[ styles.searchField, containerStyle ]}>
@@ -25,9 +25,9 @@ export const SearchInput = ({onClear , search = "", onChangeText, placeholder, c
           returnKeyType={returnKeyType}
         />
         {
-          search != "" &&
+          (search != "" && hasClear) &&
           <TouchableOpacity onPress={onClear} hitSlop={{top: 20,right: 20,bottom: 20,left: 20}} style={{...styles.icon,justifyContent:"flex-end",alignItems:"flex-end"}}>
-              <VectorIcon iconSet={ICON_SET.FontAwesome5} color={COLOR.DARK} name="times"/>
+            <VectorIcon iconSet={ICON_SET.FontAwesome5} color={COLOR.DARK} name="times"/>
           </TouchableOpacity>
         }
       </View>

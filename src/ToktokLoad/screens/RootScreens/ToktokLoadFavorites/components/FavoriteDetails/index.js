@@ -64,7 +64,7 @@ export const FavoriteDetails = ({
         )}
       </View> 
       <View style={styles.heartIconContainer}>
-        {((getLoadItemsLoading && loadFavorite) || patchFavoriteLoading || postFavoriteLoading) && loadFavorite == item.id ? (
+        {((getLoadItemsLoading && loadFavorite) || patchFavoriteLoading || postFavoriteLoading) && loadFavorite.item.id == item.id ? (
           <LoadingIndicator isLoading={true} size="small" color={colorAmount} />
         ) : (
           <TouchableOpacity

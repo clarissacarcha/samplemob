@@ -110,10 +110,9 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: COLOR.LIGHT,
-    marginVertical: 8,
   },
   network: {
-    paddingVertical: 5,
+    paddingVertical: 16,
     flexDirection:'row',
     alignItems:"center"
   },
