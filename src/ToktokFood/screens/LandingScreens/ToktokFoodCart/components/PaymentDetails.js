@@ -86,7 +86,7 @@ const PaymentDetails = ({deliveryFee, refreshing, orderType, loadingShipping}) =
       }
       setTotalAmount(temporaryCart?.totalAmount + deliveryFee - totalAmt);
     }
-  }, [deliveryFee]);
+  }, [deliveryFee, promotionVoucher]);
 
   const onCashIn = ({balance}) => {
     // do something here
@@ -242,9 +242,9 @@ const PaymentDetails = ({deliveryFee, refreshing, orderType, loadingShipping}) =
                   style={{
                     fontSize: FONT_SIZE.M,
                     textAlign: 'center',
-                    color: '#F6841F',
+                    color: 'red',
                     marginVertical: 10,
-                    fontWeight: '500',
+                    fontWeight: '400',
                   }}>
                   Insufficient balance. Please click here to cash in.
                 </Text>

@@ -30,7 +30,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     oneCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
   }, [shippingVoucher, totalBasket, totalShipping]);
 
-  const getVoucherFee = useCallback(async () => {
+  const getVoucherFee = async () => {
     const groupPromo = _(promotionVoucher)
       .groupBy('type')
       .map((objs, key) => ({
@@ -131,11 +131,11 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     //     setTotalShipping(0);
     //   }
     // }
-  }, [promotionVoucher, deliveryFee]);
+  };
 
   useEffect(() => {
     getVoucherFee();
-  }, [getVoucherFee]);
+  }, [promotionVoucher, deliveryFee]);
 
   useEffect(() => {
     setTotalBasket(temporaryCart.totalAmountWithAddons + totalReseller);
