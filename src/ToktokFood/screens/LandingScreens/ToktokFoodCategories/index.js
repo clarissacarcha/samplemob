@@ -36,16 +36,16 @@ const ToktokFoodCategories = () => {
         <HeaderSearchBox />
       </HeaderImageBackground>
       <ChangeAddress />
-      <RenderFilter />
+      {/* <RenderFilter /> */}
       <CategoryList filterSearch={filterSearch} horizontal={false} />
-      <ModalFilterSearch
+      {/* <ModalFilterSearch
         data={searchData}
         handleModal={handleFilter}
         handleSelected={setFilterSearch}
         selected={filterSearch}
         visible={showFilter}
         setShowFilter={setShowFilter}
-      />
+      /> */}
     </View>
   );
 };

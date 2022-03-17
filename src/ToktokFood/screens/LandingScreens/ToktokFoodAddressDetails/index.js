@@ -219,9 +219,9 @@ const ToktokFoodAddressDetails = ({route}) => {
     }
   };
 
-  useEffect(() => {
-    dispatch({type: 'SET_PICKUP_ADDRESS', value: location.address});
-  }, []);
+  // useEffect(() => {
+  //   dispatch({type: 'SET_PICKUP_ADDRESS', value: location.address});
+  // }, []);
 
   useEffect(() => {
     state.pickUpAddress !== '' ? debouncedGetGooglePlaceAutocomplete() : setAddressList([]);
