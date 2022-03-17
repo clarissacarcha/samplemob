@@ -248,7 +248,7 @@ const ToktokFoodSearch = ({route}) => {
               multiline={false}
               placeholder="What would you like to eat?"
               onChangeText={text => {
-                // setSearch(text);
+                setSearch(text);
               }}
               onSubmitEditing={() => searchFood(search)}
               style={[styles.searchBox, styles.textInputFontStyles]}
