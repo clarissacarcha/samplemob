@@ -155,7 +155,6 @@ export const SourceOfIncome = ({
                     style={styles.input}
                     value={pepInfoAnswer.others}
                     onChangeText={onChangeText}
-                    maxLength={50}
                 />
             </View>
         }

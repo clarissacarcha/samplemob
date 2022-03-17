@@ -1,15 +1,16 @@
-import React, {useEffect, useContext, useState, useCallback} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect, useContext, useState, useMemo} from 'react';
 import Toast from 'react-native-simple-toast';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 import {VerifyContext} from './VerifyContextProvider';
-import uuid from 'react-native-uuid';
 import _ from 'lodash';
+import {useSelector, useDispatch} from 'react-redux';
 
 // Utils
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
-import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {scale, moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {
   POST_TEMPORARY_CART,
   PATCH_TEMPORARY_CART_ITEM,
@@ -21,7 +22,6 @@ import {
 import {useMutation, useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-import {useDispatch, useSelector} from 'react-redux';
 import Loader from 'toktokfood/components/Loader';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import {onErrorAlert} from 'src/util/ErrorUtility';
@@ -49,16 +49,16 @@ export const FoodCart = ({loading, action}) => {
     selectedVariants,
     basePrice,
   } = useContext(VerifyContext);
-  const {customerInfo} = useSelector((state) => state.toktokFood);
+  const {customerInfo} = useSelector(state => state.toktokFood);
   const [showDialogMessage, setShowDialogMessage] = useState({show: false, items: []});
   const [tempData, setTempData] = useState({});
-  const required = Object.keys(requiredOptions).filter((val) => {
+  const required = Object.keys(requiredOptions).filter(val => {
     return selected[val] == undefined;
   });
 
   const [postTemporaryCart, {loading: postLoading, error: postError}] = useMutation(POST_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    onError: (error) => {
+    onError: error => {
       setLoader(false);
       setTimeout(() => {
         onErrorAlert({alert, error});
@@ -71,7 +71,7 @@ export const FoodCart = ({loading, action}) => {
 
   const [patchTemporaryCartItem, {loading: patchLoading, error: patchError}] = useMutation(PATCH_TEMPORARY_CART_ITEM, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    onError: (error) => {
+    onError: error => {
       setLoader(false);
       setTimeout(() => {
         onErrorAlert({alert, error});
@@ -86,12 +86,10 @@ export const FoodCart = ({loading, action}) => {
     DELETE_TEMPORARY_CART_ITEM,
     {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      onError: (err) => {
+      onError: () => {
         setLoader(false);
       },
-      onCompleted: ({deleteTemporaryCartItem}) => {
-        // console.log(patchTemporaryCartItem)
-      },
+      onCompleted: ({deleteTemporaryCartItem}) => console.log(patchTemporaryCartItem),
     },
   );
 
@@ -99,7 +97,7 @@ export const FoodCart = ({loading, action}) => {
     DELETE_SHOP_TEMPORARY_CART,
     {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      onError: (err) => {
+      onError: () => {
         setLoader(false);
         setTimeout(() => {
           Alert.alert('', 'Something went wrong.');
@@ -116,10 +114,10 @@ export const FoodCart = ({loading, action}) => {
     {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
-      onError: (err) => {
+      onError: err => {
         setLoader(false);
         setTimeout(() => {
-          onErrorAlert({alert, error});
+          onErrorAlert({alert, err});
         }, 100);
       },
     },
@@ -137,12 +135,12 @@ export const FoodCart = ({loading, action}) => {
       setTempData(data);
       if (data?.maxQtyIsset == 1) {
         if (temporaryCart.items.length > 0) {
-          const hasItem = temporaryCart.items.filter((item) => {
+          const hasItem = temporaryCart.items.filter(item => {
             return item.productid == data.Id;
           });
           if (hasItem.length > 0) {
             let currentQty = 0;
-            hasItem.map((item) => {
+            hasItem.map(item => {
               currentQty += item.quantity;
             });
             let isEditQtty = selectedItemId == undefined ? count.quantity + currentQty : count.quantity;
@@ -155,15 +153,26 @@ export const FoodCart = ({loading, action}) => {
               selectedItemId == undefined
                 ? exceededQty > data.maxQty - 1
                 : selectedQty + (data.maxQty - currentQty) == count.quantity;
-            setDisableMaxQty(
-              (currentQty == data.maxQty && selectedItemId == undefined) ||
-                (selectedItemId == undefined && disableMaxQtyCondition),
-            );
+
+            if (productDetails?.contSellingIsset > 0 || selectedVariants?.contSellingIsset > 0) {
+              setDisableMaxQty(false);
+            } else {
+              setDisableMaxQty(
+                (currentQty == data.maxQty && selectedItemId == undefined) ||
+                  (selectedItemId == undefined && disableMaxQtyCondition),
+              );
+            }
+
             setDisableAdd(disableAddCondition);
             return;
           }
         }
-        setDisableMaxQty(count.quantity > data.maxQty);
+        if (productDetails?.contSellingIsset > 0 || selectedVariants?.contSellingIsset > 0) {
+          setDisableMaxQty(false);
+        } else {
+          setDisableMaxQty(count.quantity > data.maxQty);
+        }
+
         setDisableAdd(count.quantity > data.maxQty - 1);
       } else {
         setDisableAdd(data?.stocks == count.quantity);
@@ -185,7 +194,7 @@ export const FoodCart = ({loading, action}) => {
   };
 
   const onRestaurantNavigate = async () => {
-    let required = await Object.keys(requiredOptions).filter((val) => {
+    let required = await Object.keys(requiredOptions).filter(val => {
       return selected[val] == undefined;
     });
     if (required.length > 0) {
@@ -198,8 +207,8 @@ export const FoodCart = ({loading, action}) => {
   const extractAddons = () => {
     let addons = [];
     if (Object.values(selected).length > 0) {
-      Object.values(selected).map((item) => {
-        item.map((val) => {
+      Object.values(selected).map(item => {
+        item.map(val => {
           addons.push(val.addon_id);
         });
       });
@@ -219,24 +228,23 @@ export const FoodCart = ({loading, action}) => {
       notes: notes,
     };
 
-    let filterItemByProductId = await temporaryCart.items.filter((item) => {
-      // console.log(item.productid)
+    let filterItemByProductId = await temporaryCart.items.filter(item => {
       return item.productid == items.productid;
     });
     // return null
-    let duplicateItem = await filterItemByProductId.filter((item) => {
+    let duplicateItem = await filterItemByProductId.filter(item => {
       let sortedData = item.addonsDetails.sort((a, b) => a.id - b.id);
       return isEqual(sortedData, items.addons);
     });
 
-    let editedItem = await temporaryCart.items.filter((item) => {
+    let editedItem = await temporaryCart.items.filter(item => {
       return item.id == selectedItemId;
     });
 
     if (duplicateItem.length == 0) {
       if (selectedItemId) {
         setLoader(true);
-        items['updateid'] = selectedItemId;
+        items.updateid = selectedItemId;
         return patchCartItem(items);
       }
       if (temporaryCart.items.length > 0) {
@@ -255,7 +263,7 @@ export const FoodCart = ({loading, action}) => {
     } else {
       let sameAsDuplicateItem = duplicateItem[0]?.id == selectedItemId;
       let editedId = sameAsDuplicateItem ? selectedItemId : duplicateItem[0].id;
-      items['updateid'] = editedId;
+      items.updateid = editedId;
 
       setLoader(true);
       if ((duplicateItem.length > 0 || items.quantity != duplicateItem[0].quantity) && !selectedItemId) {
@@ -270,7 +278,7 @@ export const FoodCart = ({loading, action}) => {
   };
 
   const onPressProceed = () => {
-    setShowDialogMessage((prev) => ({...prev, show: false}));
+    setShowDialogMessage(prev => ({...prev, show: false}));
     setLoader(true);
     deleteShopTemporaryCart({
       variables: {
@@ -283,6 +291,7 @@ export const FoodCart = ({loading, action}) => {
     }).then(({data}) => {
       let {status, message} = data.deleteShopTemporaryCart;
       if (status == 200) {
+        dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
         addToCart(showDialogMessage.items);
       } else {
         setLoader(false);
@@ -307,7 +316,7 @@ export const FoodCart = ({loading, action}) => {
     });
   };
 
-  const patchCartItem = (items) => {
+  const patchCartItem = items => {
     patchTemporaryCartItem({variables: {input: items}}).then(({data}) => {
       let {status, message} = data.patchTemporaryCartItem;
       if (status == 200) {
@@ -325,7 +334,7 @@ export const FoodCart = ({loading, action}) => {
     });
   };
 
-  const addToCart = (items) => {
+  const addToCart = items => {
     postTemporaryCart({variables: {input: items}}).then(({data}) => {
       let {status, message} = data.postTemporaryCart;
       if (status == 200) {
@@ -371,6 +380,20 @@ export const FoodCart = ({loading, action}) => {
   const isEnabled = () =>
     required.length > 0 || disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading;
 
+  const isAddEnabled = useMemo(() => {
+    const checkStocks =
+      tempData?.maxQty > tempData?.stocks && tempData?.maxQtyIsset > 0 ? tempData?.maxQty : tempData?.stocks;
+    // const checkContinuous =
+    //   tempData?.contSellingIsset > 0 ? 1000 : tempData?.maxQtyIsset > 0 ? checkStocks : tempData?.stocks;
+    const checkIsMaxQtySet =
+      tempData?.maxQtyIsset > 0 ? checkStocks : tempData?.contSellingIsset > 0 ? 1000 : tempData?.stocks;
+    const disabled =
+      tempData?.contSellingIsset > 0 && count.quantity < checkIsMaxQtySet
+        ? false
+        : disableAdd || count.quantity >= checkIsMaxQtySet;
+    return disabled;
+  });
+
   return (
     <>
       <Loader
@@ -389,7 +412,7 @@ export const FoodCart = ({loading, action}) => {
         btn1Title="Cancel"
         btn2Title="Proceed"
         onCloseBtn1={() => {
-          setShowDialogMessage((prev) => ({...prev, show: false}));
+          setShowDialogMessage(prev => ({...prev, show: false}));
         }}
         onCloseBtn2={() => {
           onPressProceed();
@@ -415,10 +438,18 @@ export const FoodCart = ({loading, action}) => {
             </TouchableOpacity>
             <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
-              disabled={disableAdd || count.quantity >= tempData?.stocks}
+              disabled={isAddEnabled}
               style={[
                 styles.countButtons,
-                {backgroundColor: COLOR.ORANGE, opacity: disableAdd || count.quantity >= tempData?.stocks ? 0.5 : 1},
+                {
+                  backgroundColor: COLOR.ORANGE,
+                  opacity:
+                    tempData?.contSellingIsset > 0 && count.quantity < tempData?.maxQty
+                      ? 1
+                      : disableAdd || count.quantity >= tempData?.stocks
+                      ? 0.5
+                      : 1,
+                },
               ]}
               onPress={_.debounce(() => updateCartTotal(), 100, {leading: true, trailing: false})}>
               <MIcon name="add" color={COLOR.WHITE} size={20} />
@@ -426,6 +457,13 @@ export const FoodCart = ({loading, action}) => {
           </View>
           <Text style={styles.total}>Total: PHP {totalPrice.toFixed(2)}</Text>
         </View>
+
+        {isAddEnabled && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>You have reached the max quantity available for this product.</Text>
+          </View>
+        )}
+
         <TouchableOpacity
           disabled={isEnabled()}
           style={[
@@ -479,6 +517,15 @@ const styles = StyleSheet.create({
     color: COLOR.WHITE,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
+  },
+  errorText: {
+    fontSize: FONT_SIZE.M,
+    color: '#F12F31',
+    textAlign: 'center',
+  },
+  errorContainer: {
+    paddingHorizontal: moderateScale(20),
+    paddingVertical: moderateScale(10),
   },
   foodItemTotalWrapper: {
     display: 'flex',

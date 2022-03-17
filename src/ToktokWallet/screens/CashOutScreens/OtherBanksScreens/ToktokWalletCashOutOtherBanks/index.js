@@ -56,8 +56,8 @@ const MainComponent = ({navigation, screenLabel})=> {
                 <HeaderImageBackground>
                     <HeaderTitle label={screenLabel ?? "Fund Transfer" }/>
                     <View style={styles.walletBalance}>
-                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
-                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,marginBottom: 5}}>Available Balance</Text>
+                        <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>{tokwaAccount.wallet.currency.code} {numberFormat(tokwaAccount.wallet.transferableBalance ? tokwaAccount.wallet.transferableBalance : 0)}</Text>
+                        <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR,marginBottom: 5}}>Transferable Amount</Text>
                     </View>
                 </HeaderImageBackground>
             </View>

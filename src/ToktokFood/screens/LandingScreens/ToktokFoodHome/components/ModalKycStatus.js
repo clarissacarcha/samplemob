@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import Modal from 'react-native-modal';
 
-import {wallet} from 'toktokfood/assets/images';
+import {walletLabel} from 'toktokfood/assets/images';
 import {moderateScale} from 'toktokfood/helper/scale';
 
 import {COLORS} from 'res/constants';
@@ -43,7 +43,7 @@ const ModalKycStatus = () => {
       <Modal isVisible={showModal === null} onBackdropPress={() => setShowModal(false)}>
         <View style={styles.container}>
           <ScrollView contentContainerStyle={styles.contentContainerStyle} style={styles.content}>
-            <Image source={wallet} style={styles.walletIcon} />
+            <Image source={walletLabel} resizeMode="contain" style={styles.walletIcon} />
 
             <Text style={styles.header}>Use toktokwallet as payment method for faster transaction</Text>
 
@@ -78,20 +78,21 @@ export default ModalKycStatus;
 const styles = StyleSheet.create({
   actions: {
     paddingHorizontal: moderateScale(20),
-    marginVertical: moderateScale(10),
+    paddingVertical: moderateScale(20),
   },
   container: {
     backgroundColor: 'white',
     borderRadius: 20,
-    flex: 1,
-    marginVertical: moderateScale(100),
+    // flex: 1,
+    height: moderateScale(550),
+    // marginVertical: moderateScale(100),
   },
   content: {
     paddingVertical: moderateScale(30),
-    paddingHorizontal: moderateScale(20),
+    paddingHorizontal: moderateScale(30),
   },
   contentContainerStyle: {
-    alignItems: 'center',
+    // alignItems: 'center',
     paddingBottom: 50,
   },
   browseButton: {
@@ -123,23 +124,24 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 20,
-    fontWeight: '500',
+    fontWeight: '700',
     marginBottom: moderateScale(20),
     textAlign: 'center',
   },
   paragraph1: {
-    fontSize: FONT_SIZE.L,
+    fontSize: FONT_SIZE.M,
     marginBottom: moderateScale(15),
-    textAlign: 'center',
+    // textAlign: 'center',
   },
   paragraph2: {
     color: COLORS.YELLOWTEXT,
-    fontSize: FONT_SIZE.L,
-    textAlign: 'center',
+    fontSize: FONT_SIZE.M,
+    // textAlign: 'center',
   },
   walletIcon: {
-    width: 70,
-    height: 70,
+    alignSelf: 'center',
+    width: 90,
+    height: 90,
     marginBottom: moderateScale(20),
   },
 });

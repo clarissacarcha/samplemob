@@ -24,6 +24,7 @@ export const star = require('./images/star-orange.png');
 export const delivered = require('./images/delivered.png');
 export const pickedUp = require('./images/picked-up.png');
 export const wallet = require('./images/tokwallet.png');
+export const walletLabel = require('./images/toktokwallet-label.png');
 export const success_ic = require('./images/prompts_icons/success2.png');
 export const error_ic = require('./images/prompts_icons/error.png');
 export const warning_ic = require('./images/prompts_icons/warning_ic.png');
@@ -47,13 +48,11 @@ export const notifications = require('./images/bottom_nav_icons/notif-outline.pn
 export const favorites = require('./images/bottom_nav_icons/favorites-outline.png');
 export const me = require('./images/bottom_nav_icons/me-outline.png');
 
-
 export const home_fill = require('./images/bottom_nav_icons/menu-fill.png');
 export const history_fill = require('./images/bottom_nav_icons/history-fill.png');
 export const notifications_fill = require('./images/bottom_nav_icons/notif-fill.png');
 export const favorites_fill = require('./images/bottom_nav_icons/favorites-fill.png');
 export const me_fill = require('./images/bottom_nav_icons/me-fill.png');
-
 
 // Temp Animations
 export const merchant_wait = require('./images/animations/merchant_wait.gif');
@@ -67,7 +66,6 @@ export const toktok_rider = require('./images/animations/toktok_rider.gif');
 export const ordering = require('./images/animations/ordering_loader.gif');
 export const ready_for_pickup = require('./images/animations/ready_for_pickup.gif');
 
-
 // Test Banners
 export const starbucks = require('./images/sample_banners/starbucks.png');
 export const starbucks2 = require('./images/sample_banners/starbucks2.png');
@@ -77,6 +75,7 @@ export const siomai = require('./images/sample_banners/siomai.png');
 export const banner_1 = require('./images/sample_banners/banner_1.png');
 export const burger_king = require('./images/sample_banners/burger_king.jpeg');
 export const splash = require('./images/splash.png');
+export const splash_new = require('./images/splash_new.png');
 
 // Test Rider
 export const rider1 = require('./images/riders/rider1.png');
@@ -87,14 +86,15 @@ export const empty_following = require('./images/empty_icons/empty-following.png
 export const empty_shop = require('./images/empty_icons/empty-shop.png');
 export const empty_shop_2 = require('./images/empty_icons/empty-shop-2.png');
 export const empty_search = require('./images/empty_icons/empty-search.png');
-export const empty_cart = require('./images/empty_icons/empty-cart.png');
+export const empty_search_2 = require('./images/empty_icons/empty-search-2.png');
+export const empty_cart = require('./images/empty_icons/empty-cart-2.png');
 export const no_image = require('./images/empty_icons/no-image.png');
-
+export const empty_promos = require('./images/empty_icons/empty-promos.png');
+export const food_placeholder = require('./images/empty_icons/food-placeholder.png');
 
 // Rider Map Icons
 export const rider_ic = require('./images/rider_map_ic.png');
 export const customer_map_ic = require('./images/customer_map_ic.png');
-
 
 // Me Icons
 export const help_centre_ic = require('./images/me_icons/help-centre.png');
@@ -105,3 +105,8 @@ export const email_ic = require('./images/me_icons/email.png');
 export const call_ic = require('./images/me_icons/call.png');
 export const wallet_ic = require('./images/me_icons/wallet.png');
 
+// Reseller
+export const reseller_badge = require('./images/reseller-badge.png');
+
+// New empty shop result icon
+export const new_empty_shop_icon = require('./images/empty_icons/empty_result.png');

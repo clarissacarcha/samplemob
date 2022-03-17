@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useCallback, useEffect, useMemo} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import DashedLine from 'react-native-dashed-line';
@@ -14,8 +14,7 @@ import {delivered, pickedUp} from 'toktokfood/assets/images';
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 import moment from 'moment';
 
-const OrderFee = ({ status = 2, transaction }) => {
-
+const OrderFee = ({status = 2, transaction, riderDetails}) => {
   let {
     dateOrdered,
     dateFulfilled,
@@ -28,19 +27,40 @@ const OrderFee = ({ status = 2, transaction }) => {
     orderStatus,
     isdeclined,
     dateCancelled,
-    dateDeclined
-  } = transaction
-  const otwRestaurantDate = dateReadyPickup.toString() != 'Invalid date' ? dateReadyPickup : dateBookingConfirmed
- 
+    dateDeclined,
+  } = transaction;
+
+  const [firstImage, setFirstImage] = useState(null);
+  const [secondImage, setSecondImage] = useState(null);
+
+  useEffect(() => {
+    updateImage();
+  }, [updateImage]);
+
+  const updateImage = useCallback(() => {
+    deliveryImgurl && setFirstImage(deliveryImgurl);
+    deliveryImgurl2 && setSecondImage(deliveryImgurl2);
+  }, [deliveryImgurl, deliveryImgurl2]);
+
+  const otwRestaurantDate = riderDetails ? riderDetails.deliveryLogs.find(item => item.status == 3) : null;
+  const pickedupOrderDate = riderDetails ? riderDetails.deliveryLogs.find(item => item.status == 4) : null;
+
   const renderLogInfo = (title, date) => (
     <View style={styles.logContainer}>
       <View style={styles.logsTitle}>
-        { date != 'Invalid date' ? (
-          <View style={{ backgroundColor: COLORS.YELLOWTEXT, height: moderateScale(14), width: moderateScale(14), borderRadius: 10  }} />
+        {date != 'Invalid date' ? (
+          <View
+            style={{
+              backgroundColor: COLORS.YELLOWTEXT,
+              height: moderateScale(14),
+              width: moderateScale(14),
+              borderRadius: 10,
+            }}
+          />
         ) : (
-          <FIcon5 name="circle" color={"#CECECE"} size={moderateScale(15)} />
+          <FIcon5 name="circle" color={'#CECECE'} size={moderateScale(15)} />
         )}
-        <Text style={[styles.logText, { color: orderStatus == 'c' ? '#FFA700' : 'black' }]}>{title}</Text>
+        <Text style={[styles.logText, {color: orderStatus == 'c' ? '#FFA700' : 'black'}]}>{title}</Text>
       </View>
       {date != 'Invalid date' && <Text style={styles.dateText}>{date}</Text>}
     </View>
@@ -55,34 +75,39 @@ const OrderFee = ({ status = 2, transaction }) => {
   const renderDashImage = (dash = true, image) => (
     <View style={styles.dashedImage}>
       {dash && <DashedLine axis="vertical" dashGap={1} dashColor="#DDDDDD" dashLength={3} />}
-      <Image style={[styles.pickedUp, {borderRadius: 10, height: verticalScale(150)}]} source={{ uri: image }} resizeMode="cover" />
+      <Image
+        style={[styles.pickedUp, {borderRadius: 10, height: verticalScale(150)}]}
+        source={{uri: image}}
+        resizeMode="cover"
+      />
     </View>
   );
 
   const displayComponent = () => {
-    if(orderStatus == 'c'){
+    if (orderStatus == 'c') {
       let date = isdeclined == 1 ? dateDeclined : dateCancelled;
-      return renderLogInfo('Cancelled', moment(date).format('lll'))
-    } else if(orderIsfor == 1){
+      return renderLogInfo('Cancelled', moment(date).format('lll'));
+    } else if (orderIsfor == 1) {
       return (
         <>
           {renderLogInfo('Order Placed', moment(dateOrdered).format('lll'))}
           {renderDash()}
-          {renderLogInfo('On the way to restaurant', moment(otwRestaurantDate).format('lll'))}
+          {renderLogInfo(
+            'On the way to restaurant',
+            moment(otwRestaurantDate?.createdAt ?? 'Invalid Date').format('lll'),
+          )}
           {renderDash()}
-          {renderLogInfo('Picked up order', moment(dateFulfilled).format('lll'))}
-          {(moment(dateFulfilled).format('lll') == 'Invalid date' || deliveryImgurl == null )&& 
-            renderDash()
-          }
-          {(moment(dateFulfilled).format('lll') != 'Invalid date' && deliveryImgurl != null )
-            && renderDashImage(true, deliveryImgurl)}
+          {renderLogInfo('Picked up order', moment(pickedupOrderDate?.createdAt ?? 'Invalid Date').format('lll'))}
+          {firstImage == null && renderDash()}
+          {firstImage != null && renderDashImage(true, firstImage)}
           {renderLogInfo('On the Way to Recipient', moment(dateFulfilled).format('lll'))}
           {renderDash()}
           {renderLogInfo('Item Delivered', moment(dateShipped).format('lll'))}
-          {(moment(dateShipped).format('lll') != 'Invalid date' && deliveryImgurl2 != null )
-          && renderDashImage(false, deliveryImgurl2)}
+          {moment(dateShipped).format('lll') != 'Invalid date' &&
+            secondImage != null &&
+            renderDashImage(false, secondImage)}
         </>
-      )
+      );
     } else {
       return (
         <>
@@ -92,9 +117,9 @@ const OrderFee = ({ status = 2, transaction }) => {
           {renderDash()}
           {renderLogInfo('Picked up order', moment(dateShipped).format('lll'))}
         </>
-      )
+      );
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -125,18 +150,18 @@ const styles = StyleSheet.create({
   dashedLine: {
     paddingLeft: moderateScale(6),
     height: verticalScale(16),
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   dashedImage: {
     flex: 1,
     paddingLeft: moderateScale(6),
     flexDirection: 'row',
-    height: verticalScale(170)
+    height: verticalScale(170),
   },
   logContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   logText: {
     fontSize: FONT_SIZE.M,
@@ -144,12 +169,12 @@ const styles = StyleSheet.create({
   },
   logsTitle: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   pickedUp: {
     flex: 1,
     height: verticalScale(140),
     marginLeft: moderateScale(10),
-    marginTop: verticalScale(10)
+    marginTop: verticalScale(10),
   },
 });

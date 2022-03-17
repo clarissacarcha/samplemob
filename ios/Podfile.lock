@@ -199,6 +199,15 @@ PODS:
   - jail-monkey (2.6.0):
     - React-Core
   - libevent (2.1.12)
+  - libwebp (1.2.1):
+    - libwebp/demux (= 1.2.1)
+    - libwebp/mux (= 1.2.1)
+    - libwebp/webp (= 1.2.1)
+  - libwebp/demux (1.2.1):
+    - libwebp/webp
+  - libwebp/mux (1.2.1):
+    - libwebp/demux
+  - libwebp/webp (1.2.1)
   - nanopb (1.30906.0):
     - nanopb/decode (= 1.30906.0)
     - nanopb/encode (= 1.30906.0)
@@ -545,6 +554,10 @@ PODS:
     - React
   - RNDeviceInfo (5.6.5):
     - React
+  - RNFastImage (8.5.11):
+    - React-Core
+    - SDWebImage (~> 5.11.1)
+    - SDWebImageWebPCoder (~> 0.8.4)
   - RNFS (2.18.0):
     - React
   - RNGestureHandler (1.10.3):
@@ -562,6 +575,12 @@ PODS:
     - React
   - RNVectorIcons (6.7.0):
     - React
+  - SDWebImage (5.11.1):
+    - SDWebImage/Core (= 5.11.1)
+  - SDWebImage/Core (5.11.1)
+  - SDWebImageWebPCoder (0.8.4):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.10)
   - Toast (4.0.0)
   - toolbar-android (0.2.1):
     - React
@@ -659,6 +678,7 @@ DEPENDENCIES:
   - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
+  - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -700,12 +720,15 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMSessionFetcher
     - libevent
+    - libwebp
     - nanopb
     - OneSignal
     - OneSignalXCFramework
     - OpenSSL-Universal
     - PromisesObjC
     - Protobuf
+    - SDWebImage
+    - SDWebImageWebPCoder
     - Toast
     - YogaKit
     - ZXingObjC
@@ -827,6 +850,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
+  RNFastImage:
+    :path: "../node_modules/react-native-fast-image"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -883,6 +908,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
   jail-monkey: 07b83767601a373db876e939b8dbf3f5eb15f073
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   OneSignal: b44755cd425704bdef8d8912030ed26619446773
   OneSignalXCFramework: cd6290d43d4f7dd0443d34e7be8b95996417644e
@@ -941,6 +967,7 @@ SPEC CHECKSUMS:
   RNCCheckbox: 6369808337432cdbd5025d62ceced2480b4c51df
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNDeviceInfo: c5f8f3a456adcbba405ace475254b08febc4c095
+  RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
   RNFS: 3ab21fa6c56d65566d1fb26c2228e2b6132e5e32
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
@@ -949,6 +976,8 @@ SPEC CHECKSUMS:
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
+  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   toolbar-android: 2a73856e98b750d7e71ce4644d3f41cc98211719
   Yoga: 2b4a01651f42a32f82e6cef3830a3ba48088237f

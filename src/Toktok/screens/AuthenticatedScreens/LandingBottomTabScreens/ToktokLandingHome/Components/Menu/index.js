@@ -1,17 +1,20 @@
 import React, {useRef, useEffect, useCallback, useState} from 'react';
+import _ from 'lodash';
 import {useSelector} from 'react-redux';
-import {View, Text, StyleSheet, TouchableOpacity, Image, Share} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image, Share, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
 
 import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/Toktok.png';
-import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/ToktokfoodMenu.png';
-import WalletIcon from '../../../../../../../assets/toktok/icons/menu/ToktokWallet.png';
 import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/Pabili.png';
+import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/ToktokfoodMenu.png';
+import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/ToktokGo.png';
+import WalletIcon from '../../../../../../../assets/toktok/icons/menu/ToktokWallet.png';
 import ProfileIcon from '../../../../../../../assets/icons/ProfileIcon.png';
 import ToktokMallIcon from '../../../../../../../assets/toktokmall-assets/icons/toktokmall-logo.png';
 import OthersIcon from '../../../../../../../assets/icons/OthersIcon.png';
+import AppServices from '../../../../../../../store/redux/reducers/AppServices';
 
 const MenuIcon = ({label, icon, onPress, isNew = false}) => {
   const useThrottle = (cb, delayDuration) => {
@@ -47,88 +50,135 @@ const MenuIcon = ({label, icon, onPress, isNew = false}) => {
 export const Menu = ({setUserLocation, constants}) => {
   const navigation = useNavigation();
   const state = useSelector(state => state);
+  const [appServices, setAppServices] = useState(null);
+  const [menuData, setMenuData] = useState([]);
 
-  const [showToktokWallet, setShowToktokWallet] = useState(true);
+  /**
+   * DO NOT EDIT THIS VARIABLE
+   */
+  const menuDataConstant = [
+    {
+      identifier: 'delivery',
+      label: 'Delivery',
+      icon: DeliveryIcon,
+      onPress: () => navigation.push('ToktokDelivery', {setUserLocation}),
+    },
+    {
+      identifier: 'pabili',
+      label: 'Pabili',
+      icon: PabiliIcon,
+      onPress: () => navigation.push('Pabili'),
+    },
+    {
+      identifier: 'foodComingSoon',
+      label: 'Food',
+      icon: ToktokfoodIcon,
+      onPress: () => navigation.push('ToktokfoodMerchantComingSoon'),
+      isNew: true,
+    },
+    {
+      identifier: 'food',
+      label: 'Food',
+      icon: ToktokfoodIcon,
+      onPress: () => navigation.push('TokTokFoodSplashScreen'),
+      isNew: true,
+    },
+    {
+      identifier: 'goComingSoon',
+      label: 'Go',
+      icon: ToktokGoIcon,
+      onPress: () => navigation.push('ToktokgoComingSoon'),
+      isNew: true,
+    },
+    {
+      identifier: 'wallet',
+      label: 'Wallet',
+      icon: WalletIcon,
+      onPress: () => navigation.push('ToktokWalletLoginPage'),
+    },
+    {
+      identifier: 'mall',
+      label: 'Mall',
+      icon: ToktokMallIcon,
+      onPress: () => navigation.push('ToktokMallLanding'),
+    },
+    {
+      identifier: 'profile',
+      label: 'Profile',
+      icon: ProfileIcon,
+      onPress: () => navigation.push('ToktokProfile'),
+    },
+  ];
 
   useEffect(() => {
-    if (constants != null && state != null) {
-      if (constants.isToktokwalletAvailable == 0) {
-        if (!state.session.user.hasEarlyAccess && !state.session.user.hasDriverAccount) {
-          setShowToktokWallet(false);
-        }
+    const appServicesObject = _.keyBy(state.appServices, 'identifier');
+    setAppServices(appServicesObject);
+
+    const filteredMenuData = menuDataConstant.filter(menuDataItem => {
+      if (menuDataItem.identifier === 'profile') {
+        return true;
       }
-    }
-  }, [constants, state]);
+
+      const appService = appServicesObject[menuDataItem.identifier];
+
+      /**
+       * DO NOT BYPASS THIS VALIDATION. ASK FOR HELP IF UNSURE.
+       *  Check if menuDataItem.identified exists in appServices
+       */
+      if (!appService) {
+        console.log(`Menu item ${menuDataItem.identifier} not set in App Services. Do not bypass this validation.`);
+        return false;
+      }
+
+      /**
+       * DO NOT BYPASS THIS VALIDATION. ASK FOR HELP IF UNSURE.
+       * Check if menuDataItem should be displayed.
+       */
+      const isEnabled = appService.isEnabled;
+      const isEnabledInEarlyAccess = constants.isEarlyAccess === 'TRUE' && appService.isEarlyAccess;
+      const isDisplayed = isEnabled || isEnabledInEarlyAccess;
+
+      if (!isDisplayed) {
+        console.log(`Menu item ${menuDataItem.identifier} is hidden in App Services. Do not bypass this validation.`);
+        return false;
+      }
+
+      return true;
+    });
+
+    console.log(JSON.stringify({filteredMenuData}, null, 2));
+
+    setMenuData(filteredMenuData);
+  }, []);
+
+  if (!appServices) {
+    return <View />;
+  }
 
   return (
     <View style={styles.menuBox}>
-      <MenuIcon
-        label={'delivery'}
-        icon={DeliveryIcon}
-        onPress={() => navigation.push('ToktokDelivery', {setUserLocation})}
+      <FlatList
+        keyExtractor={item => item.identifier}
+        data={menuData}
+        numColumns={4}
+        renderItem={({item}) => (
+          <MenuIcon label={item.label} icon={item.icon} onPress={item.onPress} isNew={item.isNew} />
+        )}
       />
-      <MenuIcon label={'pabili'} icon={PabiliIcon} onPress={() => navigation.push('Pabili')} />
-
-      {showToktokWallet && (
-        <MenuIcon
-          label={'toktokwallet'}
-          icon={WalletIcon}
-          onPress={() => {
-            navigation.push('ToktokWalletLoginPage');
-          }}
-          isNew
-        />
-      )}
-
-      {/* TOKTOKFOOD COMING SOON */}
-      {constants.isToktokfoodComingSoonDisplayed == 1 && (
-        <MenuIcon
-          label={'toktokfood'}
-          icon={ToktokfoodIcon}
-          onPress={() => {
-            navigation.push('ToktokfoodMerchantComingSoon');
-          }}
-          isNew
-        />
-      )}
-
-      <MenuIcon
-        label={'profile'}
-        icon={ProfileIcon}
-        onPress={() => {
-          navigation.push('ToktokProfile');
-        }}
-      />
-
-      {/* <MenuIcon
-        label={'toktokfood'}
-        icon={ProfileIcon}
-        onPress={() => {
-          navigation.push('TokTokFoodSplashScreen');
-        }}
-      /> */}
-      {/* <MenuIcon
-        label={'toktokmall'}
-        icon={ToktokMallIcon}
-        onPress={() => {
-          navigation.push('ToktokMallLanding');
-        }}
-      /> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   menuBox: {
-    paddingVertical: SIZE.MARGIN / 2,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    marginHorizontal: 8,
     backgroundColor: 'white',
-    flexWrap: 'wrap',
   },
   menuButton: {
     justifyContent: 'center',
     alignItems: 'center',
+    width: '25%',
+    marginVertical: SIZE.MARGIN / 2,
   },
   label: {
     fontSize: FONT_SIZE.M,
