@@ -155,6 +155,7 @@ const MainComponent = ({ navigation, route }) => {
         containerStyle={{ paddingHorizontal: moderateScale(16), paddingBottom: moderateScale(hasSearch ? 16 : 0) }}
         returnKeyType="done"
         onClear={()=>setSearch("")}
+        hasClear
         // onSubmitEditing={processSearch}
       />
       { (!hasSearch && !getSearchLoading && !searchLoading) && (

@@ -51,8 +51,9 @@ export const ToktokLoadContacts = ({navigation, route}) => {
     }
   }, [contacts])
 
-  const onSearchChange = () => {
-    const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(searchString.toLowerCase()));
+  const onSearchChange = (value) => {
+    setSearchString(value)
+    const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(value.toLowerCase()));
     setFilteredData(filteredContacts);
     setSelectedContact("");
   };
@@ -134,10 +135,9 @@ export const ToktokLoadContacts = ({navigation, route}) => {
       <View style={{ padding: 16 }}>
         <SearchInput
           search={searchString}
-          onChangeText={(value) => setSearchString(value)}
+          onChangeText={onSearchChange}
           value={searchString}
           placeholder="Search contacts"
-          onSubmitEditing={onSearchChange}
         />
       </View>
       <FlatList

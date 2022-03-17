@@ -72,7 +72,7 @@ export const LoadList = memo((props) => {
     },
     onCompleted:({ postFavoriteLoad })=> {
       if(search){
-        processSearch();
+        processSearch(search);
       } else {
         processFavorite();
       }
@@ -93,7 +93,7 @@ export const LoadList = memo((props) => {
     },
     onCompleted:({ patchRemoveFavoriteLoad })=> {
       if(search){
-        processSearch();
+        processSearch(search);
       } else {
         processFavorite("hasFav");
       }
