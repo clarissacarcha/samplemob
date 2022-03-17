@@ -2,7 +2,7 @@
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
 import React, {useEffect, useState, useContext, useMemo} from 'react';
-import {Image, ImageBackground, Platform, StyleSheet, Text, View} from 'react-native';
+import {Image, ImageBackground, Platform, StyleSheet, Text, View, Dimensions} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -32,6 +32,8 @@ import {VerifyContext, CategoryTabs} from '../components';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 // import LoadingIndicator from '../../../../components/LoadingIndicator';
+
+const phoneWindow = Dimensions.get('window');
 
 export const StickyView = () => {
   const routes = useRoute();
@@ -141,7 +143,7 @@ export const StickyView = () => {
       <View style={styles.title}>
         <ImageBackground
           source={{uri: shopDetails.banner}}
-          resizeMode="stretch"
+          resizeMode="cover"
           imageStyle={styles.bannerImg}
           style={styles.banner}>
           <HeaderTitle backOnly searchBox={false} isFoodHome />
@@ -240,7 +242,7 @@ const styles = StyleSheet.create({
   banner: {
     flex: 1,
     // height: 400,
-    paddingTop: 10,
+    // paddingTop: 10,
   },
   bannerImg: {
     // height: 400,

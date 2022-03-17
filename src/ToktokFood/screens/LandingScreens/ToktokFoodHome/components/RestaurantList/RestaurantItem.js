@@ -6,15 +6,35 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Assets & Utils
 import {moderateScale, scale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {getWeekDay} from 'toktokfood/helper/strings';
 import {time, no_image} from 'toktokfood/assets/images';
 
 // Fonts, Colors & Images
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
+import moment from 'moment';
 
 const RestaurantItem = ({activeTab, item}) => {
   const navigation = useNavigation();
   const [validImg, setValidImg] = useState(true);
   const {id} = activeTab;
+  const {hasOpen, nextOperatingHrs, operatingHours} = item;
+  const {fromTime, day: nxtDay} = nextOperatingHrs;
+  const {fromTime: currFromTime} = operatingHours;
+
+  const displayNextOpeningHours = () => {
+    if (hasOpen) {
+      return null;
+    }
+    const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
+    if (isAboutToOpen) {
+      return <Text style={styles.overlayText}>Opens at {moment(fromTime, 'hh:mm:ss').format('LT')}</Text>;
+    }
+    return (
+      <Text style={styles.overlayText}>
+        Opens on {getWeekDay(nxtDay)} {moment(fromTime, 'hh:mm:ss').format('LT')}
+      </Text>
+    );
+  };
 
   const onRestaurantNavigate = () => {
     navigation.navigate('ToktokFoodRestaurantOverview', {item});
@@ -47,12 +67,16 @@ const RestaurantItem = ({activeTab, item}) => {
   return (
     <View>
       <TouchableOpacity onPress={() => onRestaurantNavigate(item)}>
-        <Image
-          style={styles.img}
-          source={validImg ? {uri: item.logo, cache: 'default'} : no_image}
-          resizeMode="cover"
-          onError={() => setValidImg(false)}
-        />
+        <View style={styles.overlayContainer}>
+          <Image
+            style={styles.img}
+            source={validImg ? {uri: item.logo, cache: 'default'} : no_image}
+            resizeMode="cover"
+            onError={() => setValidImg(false)}
+          />
+          <View style={{...styles.overlay, opacity: hasOpen ? 0 : 0.6}} />
+          {displayNextOpeningHours()}
+        </View>
         {item.promotionVouchers.length > 0 && id === 2 && renderPromotionVouchers()}
       </TouchableOpacity>
 
@@ -109,9 +133,35 @@ const styles = StyleSheet.create({
     fontSize: Platform.OS === 'android' ? 9 : 10,
   },
   img: {
-    width: '90%',
-    height: 150,
+    width: '100%',
+    height: '100%',
     borderRadius: 10,
+  },
+  overlayContainer: {
+    // width: '90%',
+    // borderWidth: 1,
+    // borderColor: 'red',
+    width: 180,
+    height: 180,
+    borderRadius: 10,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    backgroundColor: 'rgba(0, 0, 0, 1)',
+    borderRadius: 10,
+  },
+  overlayText: {
+    fontWeight: 'bold',
+    opacity: 1,
+    position: 'absolute',
+    alignSelf: 'center',
+    top: '45%',
+    color: '#fff',
+    fontSize: 14,
   },
   ratings: {
     alignItems: 'flex-start',
@@ -162,12 +212,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     backgroundColor: '#FFA700',
     borderRadius: 5,
-    height: scale(27),
-    flex: 1,
+    // height: moderateScale(27),
+    // flex: 1,
     justifyContent: 'center',
     position: 'absolute',
     bottom: 0,
     paddingHorizontal: moderateScale(5),
+    paddingVertical: moderateScale(5),
     maxWidth: (getDeviceWidth - 20) / 2,
   },
   promoText: {

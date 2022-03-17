@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, ImageBackground, StyleSheet, StatusBar} from 'react-native';
+import {ImageBackground, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -294,7 +294,7 @@ const TokTokFoodSplashScreen = () => {
     <>
       <AlertModal visible={errorModal.visible} error={errorModal.error} close={() => navigation.pop()} />
       <ImageBackground style={styles.container} source={splash_new} resizeMode="cover">
-        <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.ORANGE} />
+        {/* <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.ORANGE} /> */}
       </ImageBackground>
     </>
   );
