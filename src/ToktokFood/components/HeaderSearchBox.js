@@ -6,12 +6,12 @@ import {searchIcon} from '../assets/images';
 import {FONT, FONT_SIZE, COLOR} from '../../res/variables';
 
 // State must be global to share with other components
-const HeaderSearchBox = (props) => {
+const HeaderSearchBox = props => {
   const {onSearch, search} = props;
 
   const routes = useRoute();
   const navigation = useNavigation();
-  
+
   const searchByCategory = routes.params?.searchByCategory;
   const [foodQuery, setFoodQuery] = useState(searchByCategory);
 
@@ -22,41 +22,38 @@ const HeaderSearchBox = (props) => {
     navigation.navigate('ToktokFoodSearch', {isSearchPage: true});
   };
 
-  const PlaceHolderSearchBox = () => {
-    return (
-      <View onTouchStart={() => showSearchPage()} style={styles.searchBoxContainer}>
-        <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
-          <Image style={styles.searchBoxIcon} source={searchIcon} />
-          <View style={[styles.searchBox, styles.textInputFontStyles]}>
-            <Text style={styles.placeholderText}>What would you like to eat?</Text>
-          </View>
+  const PlaceHolderSearchBox = (
+    <View onTouchStart={() => showSearchPage()} style={styles.searchBoxContainer}>
+      <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
+        <Image style={styles.searchBoxIcon} source={searchIcon} />
+        <View style={[styles.searchBox, styles.textInputFontStyles]}>
+          <Text style={styles.placeholderText}>What would you like to eat?</Text>
         </View>
       </View>
-    );
-  };
+    </View>
+  );
 
-  const SearchBox = () => {
-    return (
-      <View style={styles.searchBoxContainer}>
-        <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
-          <Image style={styles.searchBoxIcon} source={searchIcon} />
-          <TextInput
-            // defaultValue={search}
-            multiline={false}
-            autoFocus={true}
-            placeholder="What would you like to eat?"
-            onChangeText={(text) => {
-              onSearch(text);
-              // setFoodQuery(text); // array of food object
-            }}
-            style={[styles.searchBox, styles.textInputFontStyles]}
-          />
-        </View>
+  const SearchBox = (
+    <View style={styles.searchBoxContainer}>
+      <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
+        <Image style={styles.searchBoxIcon} source={searchIcon} />
+        <TextInput
+          // defaultValue={search}
+          multiline={false}
+          autoFocus={true}
+          placeholder="What would you like to eat?"
+          onChangeText={text => {
+            onSearch(text);
+            console.log(text);
+            // setFoodQuery(text); // array of food object
+          }}
+          style={[styles.searchBox, styles.textInputFontStyles]}
+        />
       </View>
-    );
-  };
+    </View>
+  );
 
-  return <>{isForSearchPage() ? <SearchBox /> : <PlaceHolderSearchBox />}</>;
+  return <>{isForSearchPage() ? SearchBox : PlaceHolderSearchBox}</>;
 };
 
 export default HeaderSearchBox;
