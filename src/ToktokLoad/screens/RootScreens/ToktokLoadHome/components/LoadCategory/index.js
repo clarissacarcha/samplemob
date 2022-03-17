@@ -207,7 +207,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
       { mobileErrorMessage != "" && <Text style={styles.errorMessage}>{mobileErrorMessage}</Text> }
       <View style={{ flex: 1, justifyContent: "flex-end" }}>
         { adHighlight.length > 0 && <Advertisement ads={adHighlight}/> }
-        <View style={{marginTop: 20}}/>
+        <View style={{marginTop: 15}}/>
         <OrangeButton
           label="Next"
           disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
@@ -226,7 +226,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: "row",
-    marginTop: moderateScale(10)
   },
   input: {
     backgroundColor: "#F8F8F8",
