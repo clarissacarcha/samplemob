@@ -2,8 +2,8 @@ import React , {useState , useEffect , useRef } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, Image } from 'react-native';
 
 //COMPONENTS
-import { HeaderBack, HeaderTitle, Separator, OrangeButton, NumberBoxes } from 'toktokload/components';
-import { NumPad, CircleIndicator, BuildingBottom, HeaderCancel } from 'toktokwallet/components';
+import { HeaderBack, HeaderTitle, Separator, HeaderCancel } from 'toktokload/components';
+import { NumPad, CircleIndicator, BuildingBottom } from 'toktokwallet/components';
 import { AlertOverlay } from 'src/components';
 import {VectorIcon, ICON_SET} from 'src/revamp';
 
@@ -34,7 +34,7 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
   navigation.setOptions({
     headerLeft: ()=> <HeaderBack color={COLOR.YELLOW} isThinBack />,
     headerTitle: ()=> <HeaderTitle label={[""]}/>,
-    headerRight: ()=> <HeaderCancel navigation={navigation} screenPopNo={3} />,
+    headerRight: ()=> <HeaderCancel navigation={navigation} onPressYes={() => navigation.pop(3) } />,
     headerStyle: {
       elevation: 0,
       shadowColor: "#fff",
