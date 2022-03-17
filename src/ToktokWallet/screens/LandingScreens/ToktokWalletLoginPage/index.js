@@ -146,6 +146,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
                         isPinCodeCheckingEnabled={tokwaAccount.constants.isPinCodeCheckingEnabled }
                   />
                 : <RenderAccessComponent kycStatus={kycStatus}/>
+                
             }
             
         </FlagSecureScreen>

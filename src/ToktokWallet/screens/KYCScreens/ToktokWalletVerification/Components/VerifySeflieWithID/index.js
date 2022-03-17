@@ -208,7 +208,9 @@ export const VerifySelfieWithID = ()=> {
                         pepInfo,
                         setPepInfo
                     })
+                    setShowPepVideoRequest(false)
                  }}
+                 setShowPepQuestionnaire={setShowPepQuestionnaire}
              />
              <PepQuestionnaireModal 
                 visible={showPepQuestionnaire} 

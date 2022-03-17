@@ -301,8 +301,8 @@ export const PepQuestionnaireModal = ({
                     <View style={{flexDirection:"row",marginTop :50,alignItems:"center"}}>
                             <TouchableOpacity onPress={()=>setAgree(!agree)} style={[styles.answerbox, {height: 20, backgroundColor: agree ? COLOR.YELLOW : "transparent"}]}/>
                             <Text style={{paddingRight: 16, fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M, textAlign:"left"}}>
-                            <Text style={{paddingRight: 16, fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M, textAlign:"left"}}>I HEREBY CERTIFY </Text>
-                             that the above infomation provided is true and correct to the best of my knowledege
+                            <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M, textAlign:"left"}}>I HEREBY CERTIFY </Text>
+                             that the above infomation is complete, true, and correct as to the best of my knowledege
                              </Text>
                     </View>
                     
