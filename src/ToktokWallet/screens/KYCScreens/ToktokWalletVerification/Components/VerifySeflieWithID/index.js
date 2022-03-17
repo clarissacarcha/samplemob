@@ -4,7 +4,7 @@ import EIcon from 'react-native-vector-icons/EvilIcons'
 import {VerifyContext} from '../VerifyContextProvider'
 import {useNavigation} from '@react-navigation/native'
 import { ICON_SET, VectorIcon, YellowButton } from 'src/revamp'
-import { BuildingBottom , PepQuestionnaireModal } from 'toktokwallet/components'
+import { BuildingBottom , PepQuestionnaireModal , PepRequestVideoCallModal } from 'toktokwallet/components'
 import { moderateScale } from 'toktokwallet/helper'
 import { useMutation } from '@apollo/react-hooks'
 import { useAlert } from 'src/hooks'
@@ -46,9 +46,6 @@ const MainComponent = ({children , onPress })=> {
         <>
         <ScrollView contentContainerStyle={{flexGrow: 1}} style={styles.content}>
         <View style={styles.mainInput}>
-                {/* <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>One last step before you get a verified toktokwallet</Text>
-                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>Take a photo to verify your identity.</Text>  
-                 */}
                <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Take a selfie with your Valid ID</Text>
                 <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S,color:"#929191"}}>One last step before you get a verified toktokwallet.</Text>  
                 
@@ -97,6 +94,7 @@ taking a selfie </Text>
 export const VerifySelfieWithID = ()=> {
 
     const [showPepQuestionnaire,setShowPepQuestionnaire] = useState(false)
+    const [showPepVideoRequest,setShowPepVideoRequest] = useState(false)
     const VerifyUserData = useContext(VerifyContext)
     const {
         setCacheImagesList,
@@ -201,6 +199,17 @@ export const VerifySelfieWithID = ()=> {
         return(
             <>
              <AlertOverlay visible={loading}/>
+             <PepRequestVideoCallModal
+                 visible={showPepVideoRequest} 
+                 setVisible={setShowPepVideoRequest}
+                 callback={()=>{
+                    navigation.navigate("ToktokWalletPepVideoCallSchedule" , {
+                        setCurrentIndex,
+                        pepInfo,
+                        setPepInfo
+                    })
+                 }}
+             />
              <PepQuestionnaireModal 
                 visible={showPepQuestionnaire} 
                 setVisible={setShowPepQuestionnaire}
@@ -209,11 +218,7 @@ export const VerifySelfieWithID = ()=> {
                 setPepInfo={setPepInfo}
                 callback={()=>{
                     setShowPepQuestionnaire(false)
-                    navigation.navigate("ToktokWalletPepVideoCallSchedule" , {
-                        setCurrentIndex,
-                        pepInfo,
-                        setPepInfo
-                    })
+                    setShowPepVideoRequest(true)
                 }}
             />
             <MainComponent onPress={Proceed}>

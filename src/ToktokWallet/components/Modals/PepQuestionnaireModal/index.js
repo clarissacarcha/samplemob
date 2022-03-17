@@ -238,7 +238,7 @@ export const PepQuestionnaireModal = ({
                     style={styles.headings}
                 >
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,textAlign:"center"}}>Politically Exposed Person (PEP) Questionnaire</Text>
-                    <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop:20}}>
+                    <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop:20,fontStyle: "italic"}}>
                     A “politically exposed person” or PEP is a current or former
                     senior official in the executive, legislative, administrative,
                     military or judicial branch of a foreign government, elected
@@ -253,8 +253,8 @@ export const PepQuestionnaireModal = ({
                     </Text>
                     <View style={styles.questions}>
                         <Question
-                            question="1) Have you been categorized as PEP (Political Exposed Person)
-                            by a bank, brokerage firm or any financial institution?"
+                            question="1) Have you ever been categorized as PEP (Political Exposed Person)
+                            by a bank, brokerage firm, or any financial institution?"
                             errorMessage={errorMessage}
                             setErrorMessage={setErrorMessage}
                             chooseAnswer={chooseAnswer}
@@ -296,34 +296,14 @@ export const PepQuestionnaireModal = ({
                             setPepInfo={setPepInfo}
                         />
 
-                        {/* <DropDownQuestion
-                            question="3) Source of Income"
-                            index={0}
-                            sourceRef={SourceOfIncomeRef}
-                            pepInfoAnswer={{
-                                value: pepInfo.questionnaire.sourceOfIncomeId,
-                                des: pepInfo.questionnaire.sourceOfIncomeDes,
-                                others: pepInfo.questionnaire.sourceOfIncome
-                            }}
-                            setPepInfo={setPepInfo}
-                        />
-
-                        <DropDownQuestion
-                            question="4) Source of Wealth"
-                            index={1}
-                            sourceRef={SourceOfWealthRef}
-                            pepInfoAnswer={{
-                                value: pepInfo.questionnaire.sourceOfWealthId,
-                                des: pepInfo.questionnaire.sourceOfWealthDes,
-                                others: pepInfo.questionnaire.sourceOfWealth
-                            }}
-                            setPepInfo={setPepInfo}
-                        /> */}
                     </View>
 
                     <View style={{flexDirection:"row",marginTop :50,alignItems:"center"}}>
                             <TouchableOpacity onPress={()=>setAgree(!agree)} style={[styles.answerbox, {height: 20, backgroundColor: agree ? COLOR.YELLOW : "transparent"}]}/>
-                            <Text style={{paddingRight: 16, fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M, textAlign:"left"}}>I hereby certify that the above infomation provided is true and correct to the best of my knowledege</Text>
+                            <Text style={{paddingRight: 16, fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M, textAlign:"left"}}>
+                            <Text style={{paddingRight: 16, fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M, textAlign:"left"}}>I HEREBY CERTIFY </Text>
+                             that the above infomation provided is true and correct to the best of my knowledege
+                             </Text>
                     </View>
                     
                     <View style={{flexGrow: 1,justifyContent:"flex-end",marginBottom: 16,marginTop: 100}}>
@@ -353,8 +333,8 @@ export const PepQuestionnaireModal = ({
                                 : pepInfo.questionnaire.sourceOfWealth == ""
                             )
                             && agree
-                            ? <YellowButton label="Proceed" onPress={onPress}/>
-                            : <DisabledButton label="Proceed"/>
+                            ? <YellowButton label="Save" onPress={onPress}/>
+                            : <DisabledButton label="Save"/>
                         }
                       
                     </View>
