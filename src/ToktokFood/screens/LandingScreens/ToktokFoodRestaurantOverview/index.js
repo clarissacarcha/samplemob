@@ -19,6 +19,8 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 // import {getWeekDay} from 'toktokfood/helper/strings';
 
 const ToktokFoodRestaurantOverview = ({route}) => {
+  const [showCart, setShowCart] = useState(false);
+
   // const {item} = route.params;
 
   // const navigation = useNavigation();
@@ -89,8 +91,8 @@ const ToktokFoodRestaurantOverview = ({route}) => {
         {/* <CloseOverlay /> */}
         {/* <ProductOverlay /> */}
         <View style={styles.container}>
-          <StickyView />
-          <FoodCart />
+          <StickyView onCheckShop={v => setShowCart(v)} />
+          {showCart && <FoodCart />}
         </View>
       </VerifyContextProvider>
     </>

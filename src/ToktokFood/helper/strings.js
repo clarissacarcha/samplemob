@@ -4,7 +4,7 @@ export const getWeekDay = (day, full = false) => {
   let nameDay = full ? 'Monday' : 'Mon';
   switch (Number(day)) {
     case 0:
-      nameDay = full ? 'Sunday' : 'Mon';
+      nameDay = full ? 'Sunday' : 'Sun';
       break;
     case 1:
       nameDay = full ? 'Monday' : 'Mon';
@@ -21,7 +21,7 @@ export const getWeekDay = (day, full = false) => {
     case 5:
       nameDay = full ? 'Friday' : 'Fri';
       break;
-    case 5:
+    case 6:
       nameDay = full ? 'Saturday' : 'Sat';
       break;
     default:
