@@ -902,6 +902,7 @@ const MainComponent = () => {
         />
         <Separator />
         <RiderNotes
+          deliveryFee={delivery?.price}
           forDelivery={orderType === 'Delivery'}
           showPlaceOrder={delivery == null || pmLoading || user?.toktokWalletAccountId == null}
           notes={riderNotes}
