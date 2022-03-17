@@ -90,7 +90,7 @@ const MainComponent = ({ navigation, route }) => {
     debounceProcessSearch(value);
   }
 
-  const debounceProcessSearch = useDebounce((value)=>processSearch(value) , 100);
+  const debounceProcessSearch = useDebounce((value)=>processSearch(value) , 500);
 
   const processSearch = (value)=> {
     console.log("Debounce here")
