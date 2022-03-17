@@ -138,11 +138,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   overlayContainer: {
-    // width: '90%',
+    width: '90%',
     // borderWidth: 1,
     // borderColor: 'red',
-    width: 180,
-    height: 180,
+    // width: 180,
+    height: 160,
     borderRadius: 10,
   },
   overlay: {
