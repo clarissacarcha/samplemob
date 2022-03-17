@@ -1,12 +1,15 @@
-import React, {useContext, useState} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {useSelector} from 'react-redux';
-import FIcon5 from 'react-native-vector-icons/FontAwesome5';
+import {useSelector, useDispatch} from 'react-redux';
+import _ from 'lodash';
+// import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 
 // Components
-// import Loader from 'toktokfood/components/Loader';
+import InlineError from 'toktokfood/components/InlineError';
 import StyledTextInput from 'toktokfood/components/StyledTextInput';
+import VoucherList from 'toktokfood/components/VoucherList';
 import {VerifyContext} from './VerifyContextProvider';
 
 // Fonts/Colors
@@ -15,74 +18,155 @@ import {FONT_SIZE} from 'res/variables';
 
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
+import {parseAmountComputation} from '../functions';
 
 // Queries
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_VOUCHER_CODE} from 'toktokfood/graphql/toktokfood';
 
-const OrderVoucher = ({autoShipping}) => {
-  const {shippingVoucher, setShippingVoucher, temporaryCart} = useContext(VerifyContext);
-  const {customerInfo} = useSelector(state => state.toktokFood);
+const OrderVoucher = ({autoShipping, deliveryFee}) => {
+  const dispatch = useDispatch();
+  const {paymentMethod, shippingVoucher, setShippingVoucher, temporaryCart} = useContext(VerifyContext);
+  const {customerInfo, promotionVoucher} = useSelector(state => state.toktokFood);
 
   // State
   const [voucher, setVoucher] = useState('');
   const [voucherError, setVoucherError] = useState(null);
+  const [showHighlighted, setShowHighlighted] = useState(false);
+  const [showHighlightedError, setShowHighlightedError] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [showInlineError, setShowInlineError] = useState(false);
 
-  // console.log(shippingVoucher);
+  const applyTextStyle = voucher ? styles.subText : {...styles.subText, color: '#C4C4C4'};
+  // const voucherData = [...promotionVoucher, ...shippingVoucher];
 
-  const [getVoucherCode] = useLazyQuery(GET_VOUCHER_CODE, {
+  const [getVoucherCode, {loading}] = useLazyQuery(GET_VOUCHER_CODE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    // variables: {
-    //   input: {
-    //     shopid: temporaryCart.items[0]?.shopid,
-    //     code: voucher,
-    //   },
-    // },
+    onError: err => console.log(err),
     onCompleted: ({getVoucherCode}) => {
-      const {success, message, type} = getVoucherCode;
+      const {success, message} = getVoucherCode;
+      // setShowInlineError(true);
+      // console.log(getVoucherCode);
 
       if (!success) {
-        setShowError(!showError);
+        setShowError(true);
         setVoucherError(`* ${message}`);
+        setShowInlineError(true);
+        const filterPromo = promotionVoucher.filter(promo => promo.type !== 'promotion' && promo.type !== 'shipping');
+        const filterPromotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+        // console.log(filterPromo, promotionVoucher);
+        dispatch({
+          type: 'SET_TOKTOKFOOD_PROMOTIONS',
+          payload: _.unionBy(filterPromo, filterPromotions, 'id'),
+        });
+        // setShippingVoucher([]);
+        // setVoucherError('* Oops! Voucher not applied for this order. Please review details of voucher and try again.');
       } else {
-        if (type !== 'shipping') {
-          setShippingVoucher([getVoucherCode]);
-        }
-        if (type === 'shipping' && !autoShipping.success) {
-          setShippingVoucher([getVoucherCode]);
+        const {voucher} = getVoucherCode;
+        const filterPromo = promotionVoucher.filter(promo => promo.id !== voucher.id);
+        const {amount, is_percentage} = voucher;
+        let totalDeliveryFee = 0;
+
+        if (amount > 0) {
+          const pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
+          const totalFee = pAmount > deliveryFee ? deliveryFee : pAmount;
+          // let totalSF = deliveryFee - pAmount;
+          // totalSF = totalSF > 0 ? totalSF : 0;
+          totalDeliveryFee = totalFee;
         } else {
-          setShowError(!showError);
-          setVoucherError('* Invalid voucher code. Please check your voucher code.');
+          totalDeliveryFee = deliveryFee;
         }
+
+        const voucherObj = [...filterPromo, {...voucher, origAmount: amount, amount: totalDeliveryFee}];
+        dispatch({
+          type: 'SET_TOKTOKFOOD_PROMOTIONS',
+          payload: voucherObj,
+        });
+        setShowError(false);
+        setShowInlineError(true);
+        // setShowError(!showError);
+        // setVoucherError(null);
+        // if (type !== 'shipping') {
+        //   setShippingVoucher([getVoucherCode]);
+        // }
+        // if (type === 'shipping' && !autoShipping.success) {
+        //   setShippingVoucher([getVoucherCode]);
+        // } else {
+        //   setShowError(!showError);
+        //   setVoucherError('* Invalid voucher code. Please check your voucher code.');
+        // }
       }
+      setVoucher('');
     },
   });
 
-  const onApplyVoucher = () => {
+  const onApplyVoucher = async () => {
     const {cartItemsLength, items} = temporaryCart;
-    const {email} = customerInfo;
     const promoCount = 0;
-    const isMystery = 0;
 
     if (cartItemsLength) {
+      const orders = await parseAmountComputation(temporaryCart?.items);
+      // console.log({
+      //   input: {
+      //     brandId: items[0].companyId,
+      //     shopid: items[0]?.shopid,
+      //     code: voucher,
+      //     region: items[0]?.shopRegion,
+      //     subtotal: temporaryCart.totalAmount,
+      //     paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+      //     promoCount,
+      //     orders,
+      //   },
+      // });
       getVoucherCode({
         variables: {
           input: {
+            userId: Number(customerInfo.userId),
             brandId: items[0].companyId,
             shopid: items[0]?.shopid,
             code: voucher,
             region: items[0]?.shopRegion,
-            email,
             subtotal: temporaryCart.totalAmount,
+            paymentMethod: paymentMethod,
             promoCount,
-            isMystery,
+            orders,
           },
         },
       });
     }
   };
+
+  const onCloseItem = id => {
+    const filterData = promotionVoucher.filter(item => item.id !== id);
+    dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: filterData});
+  };
+
+  const onShowError = useCallback(() => {
+    if (autoShipping) {
+      if (autoShipping?.success) {
+        setShowHighlighted(autoShipping?.success);
+        setShowHighlightedError(false);
+      } else {
+        setShowHighlighted(autoShipping?.success);
+        setShowHighlightedError(true);
+      }
+    }
+  }, [autoShipping]);
+
+  useEffect(() => {
+    // if (!autoShipping?.success && voucher) {
+    //   onApplyVoucher();
+    // }
+
+    onShowError();
+  }, [autoShipping, onShowError]);
+
+  useEffect(() => {
+    if (!autoShipping?.success && voucher) {
+      onApplyVoucher();
+    }
+  }, [paymentMethod]);
 
   const onChangeText = value => {
     setVoucherError(null);
@@ -90,70 +174,82 @@ const OrderVoucher = ({autoShipping}) => {
     setVoucher(value);
   };
 
-  const onRemoveVoucher = () => {
-    setShippingVoucher([]);
-  };
+  // const onRemoveVoucher = () => {
+  //   setShippingVoucher([]);
+  // };
+
+  // const renderAutoShipping = () => (
+  //   <View style={styles.autoShippingContainer}>
+  //     <FIcon5 name="check-circle" size={17} color="#06A44E" />
+  //     <Text style={styles.autoShippingText}>
+  //       Order is eligible for shipping voucher promo. Voucher is automatically applied.
+  //     </Text>
+  //   </View>
+  // );
+
+  const Vouchers = () =>
+    useMemo(() => {
+      return (
+        <View style={styles.voucherContainer}>
+          <VoucherList data={promotionVoucher} onCloseItem={onCloseItem} />
+        </View>
+      );
+    }, [promotionVoucher]);
 
   // const renderVoucher = () => {
-  //   const {valid_until, vname} = shippingVoucher[0].voucher;
+  //   const {vname} = shippingVoucher[0].voucher;
+
   //   return (
-  //     <View style={styles.voucherContainer}>
-  //       <Text style={styles.voucherText}>{vname}</Text>
-  //       <Text style={styles.validText}>Valid until: {valid_until}</Text>
+  //     <View style={styles.autoShippingContainer}>
+  //       <FIcon5 name="check-circle" size={17} color="#06A44E" />
+  //       <Text style={styles.autoShippingText}>{vname}</Text>
   //     </View>
   //   );
   // };
-
-  const renderAutoShipping = () => (
-    <View style={styles.autoShippingContainer}>
-      <FIcon5 name="check-circle" size={17} color="#06A44E" />
-      <Text style={styles.autoShippingText}>
-        Order is eligible for shipping voucher promo. Voucher is automatically applied.
-      </Text>
-    </View>
-  );
-
-  const renderVoucher = () => {
-    const {valid_until, vname} = shippingVoucher[0].voucher;
-
-    return (
-      <View style={styles.autoShippingContainer}>
-        <FIcon5 name="check-circle" size={17} color="#06A44E" />
-        <Text style={styles.autoShippingText}>{vname}</Text>
-      </View>
-    );
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Voucher</Text>
       </View>
 
-      {voucherError && (
+      {/* {voucherError && (
         <View style={styles.subHeader}>
           <Text style={styles.subText}>{voucherError}</Text>
         </View>
-      )}
+      )} */}
 
-      {autoShipping?.success && renderAutoShipping()}
+      <InlineError isError={showHighlightedError} isVisible={showHighlighted} setIsVisible={setShowHighlighted} />
 
-      {shippingVoucher.length > 0 && renderVoucher()}
+      <Vouchers />
+      {/* {autoShipping?.success && renderAutoShipping()} */}
 
+      {/* {shippingVoucher.length > 0 && renderVoucher()} */}
+
+      {/* {!autoShipping?.success && ( */}
+      {/* )} */}
       <View style={styles.formContainer}>
         <StyledTextInput
           hasIcon={shippingVoucher.length > 0}
-          error={voucherError}
+          // error={voucherError}
           onChangeText={onChangeText}
-          onRemoveVoucher={onRemoveVoucher}
+          // onRemoveVoucher={onRemoveVoucher}
           label="Voucher"
           value={voucher}
+          placeholder="Input Voucher (Optional)"
         />
 
-        <TouchableOpacity onPress={onApplyVoucher} style={styles.apply}>
-          <Text style={styles.subText}>Apply</Text>
+        <TouchableOpacity disabled={voucher === '' || loading} onPress={onApplyVoucher} style={styles.apply}>
+          <Text style={applyTextStyle}>Apply</Text>
         </TouchableOpacity>
       </View>
+
+      <InlineError
+        isError={showError}
+        inlineMessage={voucherError}
+        isInlineError
+        isVisible={showInlineError}
+        setIsVisible={setShowInlineError}
+      />
     </View>
   );
 };
@@ -182,7 +278,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: moderateScale(10),
-    paddingHorizontal: moderateScale(20),
+    paddingHorizontal: moderateScale(15),
   },
   header: {
     borderBottomWidth: 1,
@@ -195,6 +291,7 @@ const styles = StyleSheet.create({
   subHeader: {
     backgroundColor: '#FFFCF4',
     paddingHorizontal: moderateScale(20),
+    paddingVertical: moderateScale(5),
   },
   subText: {
     color: '#F6841F',
@@ -209,18 +306,7 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScale(10),
   },
   voucherContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: moderateScale(10),
-  },
-  voucherText: {
-    fontWeight: '500',
-    fontSize: FONT_SIZE.L,
-    color: '#FFA700',
-  },
-  validText: {
-    fontSize: FONT_SIZE.M,
-    color: '#9E9E9E',
+    paddingHorizontal: moderateScale(15),
+    paddingTop: moderateScale(10),
   },
 });

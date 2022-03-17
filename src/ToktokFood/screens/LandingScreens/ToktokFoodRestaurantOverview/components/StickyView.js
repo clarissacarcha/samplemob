@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
-import React, {useEffect, useState, useContext, useRef, useMemo} from 'react';
-import {Image, Platform, StyleSheet, Text, View, StatusBar} from 'react-native';
+import React, {useEffect, useState, useContext, useMemo} from 'react';
+import {Image, ImageBackground, Platform, StyleSheet, Text, View, Dimensions} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {FONT_SIZE, FONT, COLOR} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 // import CustomStarRating from 'toktokfood/components/CustomStarRating';
@@ -14,7 +15,7 @@ import ContentLoader from 'react-native-easy-content-loader';
 
 // Components
 // import {RestaurantList} from '../../ToktokFoodHome/components';
-import HeaderTabs from 'toktokfood/components/HeaderTabs';
+// import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import {GET_PRODUCT_CATEGORIES, CHECK_SHOP_VALIDATIONS, GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
 // Utils
@@ -30,7 +31,9 @@ import {FoodList, HeaderTitleSearchBox} from '../components';
 import {VerifyContext, CategoryTabs} from '../components';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import LoadingIndicator from '../../../../components/LoadingIndicator';
+// import LoadingIndicator from '../../../../components/LoadingIndicator';
+
+const phoneWindow = Dimensions.get('window');
 
 export const StickyView = () => {
   const routes = useRoute();
@@ -39,12 +42,10 @@ export const StickyView = () => {
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
   const [shopDetails, setShopDetails] = useState({});
-  const searchProduct = useRef('');
-  const {setNavBarHeight, temporaryCart, setTemporaryCart} = useContext(VerifyContext);
+  const {setNavBarHeight} = useContext(VerifyContext);
   const {customerInfo, location} = useSelector(state => state.toktokFood);
 
-  const {id, address, shopname, ratings, banner, estimatedDeliveryTime, estimatedDistance, logo, latitude, longitude} =
-    routes.params.item;
+  const {id} = routes.params.item;
 
   const headerMaxHeight = verticalScale(450);
   const headerMinHeight = verticalScale(110);
@@ -63,22 +64,24 @@ export const StickyView = () => {
 
   const [getShopDetails, {error: shopDetailsError, loading: shopDetailsLoading}] = useLazyQuery(GET_SHOP_DETAILS, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
+      let {latitude, longitude} = getShopDetails;
+
+      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       setShopDetails(getShopDetails);
     },
   });
 
-  const [checkShopValidations, {data: checkShop, loading: shopValidationLoading, error: shopValidationError}] =
-    useLazyQuery(CHECK_SHOP_VALIDATIONS, {
-      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      fetchPolicy: 'network-only',
-    });
+  // const [checkShopValidations, {data: checkShop, loading: shopValidationLoading, error: shopValidationError}] =
+  //   useLazyQuery(CHECK_SHOP_VALIDATIONS, {
+  //     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+  //     fetchPolicy: 'network-only',
+  //   });
 
   useEffect(() => {
     // checkShopValidations({ variables: { input: { shopId: id } }})
     if (isFocus && location) {
-      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       getProductCategories();
       // console.log(
       //   JSON.stringify({
@@ -99,14 +102,16 @@ export const StickyView = () => {
         },
       });
     }
-  }, [isFocus, location]);
+  }, [isFocus, location, shopDetails]);
 
   useEffect(() => {
     if (data) {
       let categories = data.getProductCategories;
-      categories.sort(function (a, b) {
-        return a.categoryName > b.categoryName;
-      });
+      // categories.sort(function (a, b) {
+      //   return a.categoryName > b.categoryName;
+      // });
+      // console.log(categories);
+
       setProductCategories(categories);
       setActiveTab(categories[0]);
     }
@@ -133,10 +138,17 @@ export const StickyView = () => {
     );
   }, [activeTab, productCategories, loading]);
 
-  const renderTitle = () => {
+  const renderTitle = useMemo(() => {
     return (
       <View style={styles.title}>
-        <HeaderTitle backOnly searchBox={false} />
+        <ImageBackground
+          source={{uri: shopDetails.banner}}
+          resizeMode="cover"
+          imageStyle={styles.bannerImg}
+          style={styles.banner}>
+          <HeaderTitle backOnly searchBox={false} isFoodHome />
+        </ImageBackground>
+
         <View style={styles.titleInfo}>
           {/* <ChangeAddress styleContainer={{paddingTop: moderateScale(10)}} /> */}
           {shopDetailsLoading || shopDetailsError || (shopDetails && Object.keys(shopDetails).length == 0) ? (
@@ -155,17 +167,7 @@ export const StickyView = () => {
             <View style={styles.content}>
               <Image source={{uri: shopDetails.logo}} style={styles.logo} resizeMode="cover" />
               <View style={{flexShrink: 1, marginHorizontal: 10}}>
-                <Text style={styles.titleText}>
-                  {`${shopDetails.shopname} (${shopDetails.address})`}
-                </Text>
-                {/* <CustomStarRating
-                  rating={shopDetails.ratings ?? '0'}
-                  starImgStyle={{width: scale(15), height: scale(15), marginVertical: 5}}
-                  ratingStyle={{color: 'black', fontSize: FONT_SIZE.S}}
-                  readOnly
-                  showRating
-                  rightRating
-                /> */}
+                <Text style={styles.titleText}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
                 <View style={styles.branchInfo}>
                   <Image source={time} style={styles.timeImg} />
                   <Text style={styles.branches}>{`${shopDetails.estimatedDeliveryTime} mins`}</Text>
@@ -175,14 +177,8 @@ export const StickyView = () => {
                 <Text style={{color: '#FFA700', fontSize: FONT_SIZE.S}}>
                   {shopDetails?.allowPickup ? 'Available for pick-up and delivery' : 'Available for delivery only'}
                 </Text>
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingVertical: 3,
-                    marginTop: 2,
-                  }}>
+
+                <View style={styles.shopDetailsContainer}>
                   <MCIcon name="phone" color="#868686" size={13} />
                   <Text style={{fontSize: FONT_SIZE.S, marginHorizontal: 4}}>
                     {shopDetails?.mobile ? shopDetails?.mobile : ''}
@@ -208,7 +204,7 @@ export const StickyView = () => {
         </View>
       </View>
     );
-  };
+  }, [shopDetails, shopDetailsLoading, productCategories, activeTab, loading]);
 
   const renderContent = useMemo(() => {
     return <FoodList id={id} activeTab={activeTab} tagsLoading={loading} />;
@@ -221,11 +217,11 @@ export const StickyView = () => {
         alwaysShowTitle={false}
         headerMinHeight={headerMinHeight}
         headerMaxHeight={headerMaxHeight}
-        headerTitleStyle={{zIndex: offset <= 132 ? 1 : -1, justifyContent: 'flex-start'}}
+        // headerTitleStyle={{zIndex: offset <= 132 ? 1 : -1, justifyContent: 'flex-start'}}
         extraScrollHeight={10}
-        backgroundImageScale={1.1}
-        title={renderTitle()}
-        backgroundImage={{uri: shopDetails.banner}}
+        // backgroundImageScale={2}
+        title={renderTitle}
+        // backgroundImage={{uri: shopDetails.banner}}
         statusBarColor="transparent"
         navbarColor="white"
         backgroundColor="transparent"
@@ -243,6 +239,15 @@ export const StickyView = () => {
 };
 
 const styles = StyleSheet.create({
+  banner: {
+    flex: 1,
+    // height: 400,
+    // paddingTop: 10,
+  },
+  bannerImg: {
+    // height: 400,
+    // width: 400,
+  },
   branches: {
     fontWeight: '400',
     fontSize: 10,
@@ -281,6 +286,13 @@ const styles = StyleSheet.create({
   ratings: {
     paddingVertical: 4,
     alignItems: 'flex-start',
+  },
+  shopDetailsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 3,
+    marginTop: 2,
   },
   tabContainer: {
     paddingHorizontal: 10,

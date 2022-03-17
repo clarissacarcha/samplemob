@@ -7,6 +7,7 @@ export const GET_CASH_IN_PARTNER_TYPES = gql`
             orderNumber
             name
             transactionTypeId
+            isCredit
             status
         }
     }

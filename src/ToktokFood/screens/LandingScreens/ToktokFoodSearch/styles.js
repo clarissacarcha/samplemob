@@ -46,7 +46,7 @@ export default styles = StyleSheet.create({
   restaurantName: {
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
-    marginBottom: 2
+    marginBottom: 2,
   },
   restaurantTitle: {
     color: COLOR.BLACK,
@@ -75,18 +75,29 @@ export default styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     flex: 1,
-    paddingTop: verticalScale(80),
+    justifyContent: 'center',
+    marginTop: moderateScale(-110),
   },
   emptyImg: {
-    height: moderateScale(175),
-    width: moderateScale(250),
+    height: moderateScale(198),
+    width: moderateScale(236),
+  },
+  emptyShop: {
+    height: moderateScale(191),
+    width: moderateScale(198),
+  },
+  emptyTextTitle: {
+    color: '#F6841F',
+    fontSize: 17,
+    marginTop: moderateScale(20),
+    fontWeight: '700',
   },
   emptyText: {
-    color: '#9E9E9E',
-    fontSize: FONT_SIZE.L,
-    marginTop: moderateScale(20),
-    marginHorizontal: moderateScale(50),
+    fontSize: FONT_SIZE.M,
     textAlign: 'center',
+    marginTop: moderateScale(5),
+    marginHorizontal: moderateScale(20),
+    color: '#000',
   },
   ratingImg: {
     width: moderateScale(15),
@@ -178,5 +189,27 @@ export default styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.REGULAR,
     color: COLOR.BLACK,
+  },
+  footerText: {
+    fontSize: 13,
+    marginTop: moderateScale(20),
+  },
+  footerContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 7,
+    height: verticalScale(40),
+  },
+  closedTag: {
+    backgroundColor: COLOR.ORANGE,
+    width: 60,
+    borderRadius: 10,
+    paddingVertical: 3,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  closedText: {
+    color: '#fff',
   },
 });

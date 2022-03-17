@@ -14,6 +14,53 @@ export const GET_SHOPS = gql`
       estimatedDistance
       estimatedDeliveryTime
       promoName
+      promos {
+        id
+        shippingDiscountName
+        shippingDiscountCode
+        shopId
+        noOfStocks
+      }
+      promoByAdmin {
+        id
+        shippingDiscountName
+        shippingDiscountCode
+        shopId
+        noOfStocks
+      }
+      promoByMerchant {
+        id
+        shippingDiscountName
+        shippingDiscountCode
+        shopId
+        noOfStocks
+      }
+      promotionVouchers {
+        id
+        regionCodes
+        voucherCode
+        voucherName
+      }
+      hasOpen
+      hasProduct
+      operatingHours {
+        id
+        shopId
+        fromTime
+        toTime
+        day
+        status
+        dayStatus
+      }
+      nextOperatingHrs {
+        id
+        shopId
+        fromTime
+        toTime
+        day
+        status
+        dayStatus
+      }
     }
   }
 `;
@@ -61,6 +108,49 @@ export const GET_SHOP_DETAILS = gql`
       allowPickup
       email
       mobile
+    }
+  }
+`;
+
+export const GET_SHOP_STATUS = gql`
+  query getShopStatus($input: GetShopStatusInput!) {
+    getShopStatus(input: $input) {
+      shopname
+      status
+    }
+  }
+`;
+
+export const GET_SEARCH_FOOD = gql`
+  query getSearchFood($input: FoodInput!) {
+    getSearchFood(input: $input) {
+      id
+      ratings
+      shopname
+      logo
+      banner
+      address
+      estimatedDistance
+      estimatedDeliveryTime
+      hasOpen
+      nextOperatingHrs {
+        id
+        shopId
+        fromTime
+        toTime
+        day
+        status
+        dayStatus
+      }
+      operatingHours {
+        id
+        shopId
+        fromTime
+        toTime
+        day
+        status
+        dayStatus
+      }
     }
   }
 `;

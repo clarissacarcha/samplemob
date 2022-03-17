@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     },
     information: {
         paddingVertical: 15,
-        borderBottomColor:"#FFF2D5",
+        borderBottomColor: COLOR.YELLOW,
         borderBottomWidth: 1,
         flexDirection:"row"
     }

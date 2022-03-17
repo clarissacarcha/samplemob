@@ -47,14 +47,23 @@ export const POST_CONTACT_US = gql`
 `;
 
 export const GET_KYC_STATUS = gql`
-  query getKycStatus($input: GetKycStatusInput!) {
+  query getKycStatus($input: KycAccount) {
     getKycStatus(input: $input) {
-      referenceNumber
       status
       account {
         id
         motherReferenceNumber
       }
+    }
+  }
+`;
+
+export const GET_CONSUMER_TYPE = gql`
+  query getConsumer {
+    getConsumer {
+      referralCode
+      franchiseeCode
+      franchiseeAccountType
     }
   }
 `;

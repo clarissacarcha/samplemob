@@ -72,6 +72,7 @@ const Question = ({question,errorMessage,setErrorMessage,index,chooseAnswer,pepI
                         onChangeText={onChangeText} 
                         style={styles.input}
                         placeholder="Specify position"
+                        maxLength={50}
                     />
                         {/* {
                             errorMessage[index] != "" &&
@@ -82,67 +83,6 @@ const Question = ({question,errorMessage,setErrorMessage,index,chooseAnswer,pepI
             }
 
           
-        </View>
-    )
-}
-
-const DropDownQuestion = ({question , sourceRef, pepInfoAnswer, index ,setPepInfo})=> {
-
-    const openBottomSheet = ()=> {
-        sourceRef.current.expand()
-    }
-
-    const onChangeText = (value)=>{
-        if(index == 0){
-            setPepInfo(state=>{
-                return {
-                    ...state,
-                    questionnaire: {
-                        ...state.questionnaire,
-                        sourceOfIncome: value,
-                    }
-                }
-            })
-        }
-
-        if(index == 1){
-            setPepInfo(state=>{
-                return {
-                    ...state,
-                    questionnaire: {
-                        ...state.questionnaire,
-                        sourceOfWealth: value,
-                    }
-                }
-            })
-        }
-    }
-
-    return (
-        <View style={{marginTop: 10}}>
-             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{question}</Text>
-            <TouchableOpacity onPress={openBottomSheet} style={[styles.input , {flexDirection:"row", justifyContent:"flex-start",alignItems:"center"}]}>
-                <Text
-                    style={pepInfoAnswer.des != "" 
-                        ? {flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR} 
-                        : {flex: 1,color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}
-                    }
-                >
-                    {pepInfoAnswer.des != "" ? pepInfoAnswer.des : "- Select -"}
-                </Text>
-                <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right"/>
-            </TouchableOpacity>
-            {
-                pepInfoAnswer.value == "0" &&
-                <View style={{marginTop: 10,}}>
-                    <TextInput 
-                        placeholder={`Specify source of ${index == 0 ? "income" : "wealth"}`}
-                        style={styles.input}
-                        value={pepInfoAnswer.others}
-                        onChangeText={onChangeText}
-                    />
-                </View>
-            }
         </View>
     )
 }
