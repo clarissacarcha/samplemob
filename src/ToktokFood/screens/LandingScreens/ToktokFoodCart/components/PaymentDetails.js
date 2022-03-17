@@ -84,9 +84,9 @@ const PaymentDetails = ({deliveryFee, refreshing, orderType, loadingShipping}) =
       if (deal.length > 0) {
         totalAmt += deal[0]?.discount_totalamount;
       }
-      setTotalAmount(temporaryCart?.totalAmount + deliveryFee - totalAmt);
+      setTotalAmount(temporaryCart?.totalAmountWithAddons + deliveryFee - totalAmt);
     }
-  }, [deliveryFee, promotionVoucher]);
+  }, [deliveryFee, promotionVoucher ]);
 
   const onCashIn = ({balance}) => {
     // do something here
