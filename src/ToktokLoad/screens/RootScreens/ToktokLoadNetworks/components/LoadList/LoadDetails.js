@@ -48,7 +48,7 @@ export const LoadDetails = ({
       onPress={() => { setSelectedLoad(isSelected ? {} : item) }}
       style={[
         styles.container,
-        { backgroundColor: isSelected ? "rgba(246,132,31,0.8)" : "#fff"}
+        { backgroundColor: isSelected ? "#F6841F" : "#fff"}
       ]}
       activeOpacity={.8}
     >
@@ -56,7 +56,7 @@ export const LoadDetails = ({
         <Text style={[ styles.amount, { color: colorAmount }]}>₱{item?.amount}</Text>
       </View>
       <View style={styles.detailsContainer}>
-        <Text style={[ styles.loadName, { color: colorDesc }]}>{item?.name}</Text>
+        <Text style={[ styles.loadName, { color: colorDesc }]} numberOfLines={numberOfLines}>{item?.name}</Text>
         { !!item?.descriptions && (
           <Text style={[ styles.descriptions, { color: colorDesc }]} numberOfLines={numberOfLines}>
             {item?.descriptions}

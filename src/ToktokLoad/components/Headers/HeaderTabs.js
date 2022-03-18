@@ -66,6 +66,7 @@ export const HeaderTabs = (props) => {
           onScroll={handleScroll}
           ref={flatListRef}
           keyExtractor={(val, index) => index.toString()}
+          contentContainerStyle={{ alignItems: "center" }}
         />
       </View>
     </View>
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
-    paddingVertical: moderateScale(15)
+    marginVertical: moderateScale(15),
   },
   hitSlop: {
     top: moderateScale(30),

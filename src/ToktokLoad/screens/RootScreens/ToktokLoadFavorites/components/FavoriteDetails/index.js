@@ -48,7 +48,7 @@ export const FavoriteDetails = ({
       onPress={() => { setSelectedLoad(isSelected ? {} : item) }}
       style={[
         styles.container,
-        { backgroundColor: isSelected ? "rgba(246,132,31,0.8)" : "#fff"}
+        { backgroundColor: isSelected ? "#F6841F" : "#fff"}
       ]}
       activeOpacity={.8}
     >
