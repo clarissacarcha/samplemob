@@ -104,7 +104,11 @@ const MainComponent = ({navigation,route})=> {
     },
     onCompleted:({ patchRemoveFavoriteLoad })=> {
       processGetLoadItems();
-      processFavorite();
+      if(search){
+        processFavorite();
+      } else {
+        getFavoriteLoads();
+      }
       setFavoriteModal({ show: true, message: "Removed from your Favorites" });
       console.log(patchRemoveFavoriteLoad, "REMOVE");
     }
@@ -122,7 +126,11 @@ const MainComponent = ({navigation,route})=> {
     },
     onCompleted:({ postFavoriteLoad })=> {
       processGetLoadItems();
-      processFavorite();
+      if(search){
+        processFavorite();
+      } else {
+        getFavoriteLoads();
+      }
       setFavoriteModal({ show: true, message: "Added to your Favorites" });
       console.log(postFavoriteLoad, "ADD");
     }
