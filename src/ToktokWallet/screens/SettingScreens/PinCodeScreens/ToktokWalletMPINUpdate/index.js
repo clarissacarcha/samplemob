@@ -97,7 +97,8 @@ export const ToktokWalletMPINUpdate =  ({navigation , route})=> {
             variables: {
             input: {
                 pinCode: pinCode,
-                otp: otp
+                otp: otp,
+                deviceType: Platform.OS === "ios" ? "IOS" : "Android"
             }
             }
         })

@@ -20,7 +20,8 @@ export const LogItem = ({
   // const refNo = MaskLeftZero(item.id)
   const requestNo = item.refNo
   const refNo = item.refNo
-  const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM DD, YYYY');
+  const refDateTime = moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
+  const refDate = moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY');
   const refTime = moment(item.createdAt).tz('Asia/Manila').format('hh:mm A');
   const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
 
@@ -55,7 +56,7 @@ export const LogItem = ({
       </View>
       <View style={styles.transactionAmount}>
         <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
-        <Text style={{color: "#9E9E9E",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
+        <Text style={{color: "#9E9E9E",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDateTime}</Text>
       </View>
     </TouchableOpacity>
     </>

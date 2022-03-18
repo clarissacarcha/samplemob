@@ -48,11 +48,11 @@ const Details = ({
       setVisible={setVisible}
     >
       <View>
-        <Text style={styles.labelText}>Status of toktokdelivery: Status</Text>
+        <Text style={styles.labelText}>Status of toktokdelivery: Success</Text>
         {/* {renderDetails({details})} */}
         <Text style={styles.labelText}>Amount: {amount}</Text>
         <Text style={styles.labelText}>Amount Paid: {amount}</Text>
-        { refNo && <Text style={styles.labelText}>Ref No: {refNo}</Text>}
+        { refNo && <Text style={styles.labelText}>Reference No: {refNo}</Text>}
         { refDate && <Text style={styles.labelText}>toktokdelivery Date: {refDate}</Text>}
         { refDate && <Text style={styles.labelText}>toktokdelivery Time: {refTime}</Text>}
       </View>

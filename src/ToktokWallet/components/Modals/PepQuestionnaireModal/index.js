@@ -239,7 +239,7 @@ export const PepQuestionnaireModal = ({
                     </View>
 
                     <View style={{flexDirection:"row",marginTop :50,alignItems:"center"}}>
-                            <TouchableOpacity onPress={()=>setAgree(!agree)} style={[styles.answerbox, {height: 20, backgroundColor: agree ? COLOR.YELLOW : "transparent"}]}/>
+                            <TouchableOpacity hitSlop={styles.hitSlop} onPress={()=>setAgree(!agree)} style={[styles.answerbox, {height: 20, backgroundColor: agree ? COLOR.YELLOW : "transparent"}]}/>
                             <Text style={{paddingRight: 16, fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M, textAlign:"left"}}>
                             <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M, textAlign:"left"}}>I HEREBY CERTIFY </Text>
                              that the above infomation is complete, true, and correct as to the best of my knowledege
@@ -314,5 +314,11 @@ const styles =  StyleSheet.create({
         fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.M,
         paddingHorizontal: 10,
+    },
+    hitSlop: {
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 20
     }
 })

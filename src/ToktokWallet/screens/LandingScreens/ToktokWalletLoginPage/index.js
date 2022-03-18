@@ -38,8 +38,8 @@ const RenderRestricted = ({
     return null
 }
 
-const RenderAccessComponent = ({kycStatus})=> (
-    <CheckTokwaKYCRegistration kycStatus={kycStatus}>
+const RenderAccessComponent = ({kycRecord,kycStatus})=> (
+    <CheckTokwaKYCRegistration kycRecord={kycRecord} kycStatus={kycStatus}>
         
         <CheckWalletAccountRestriction>
         <LoginPage/>
@@ -122,6 +122,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
     })
 
     const kycStatus = useMemo(()=> data?.getUserToktokWalletData?.kycStatus, [data])
+    const kycRecord = useMemo(()=> data?.getUserToktokWalletData, [data])
 
     if (loading) {
         return (
@@ -145,7 +146,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
                         pinSet={pinSet}
                         isPinCodeCheckingEnabled={tokwaAccount.constants.isPinCodeCheckingEnabled }
                   />
-                : <RenderAccessComponent kycStatus={kycStatus}/>
+                : <RenderAccessComponent kycRecord={kycRecord} kycStatus={kycStatus}/>
                 
             }
             

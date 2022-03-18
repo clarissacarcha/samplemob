@@ -52,7 +52,7 @@ const Details = ({
         {/* {renderDetails({details})} */}
         <Text style={styles.labelText}>Amount: {amount}</Text>
         <Text style={styles.labelText}>Amount Paid: {amount}</Text>
-        { refNo && <Text style={styles.labelText}>Ref No: {refNo}</Text>}
+        { refNo && <Text style={styles.labelText}>Reference No: {refNo}</Text>}
         { refDate && <Text style={styles.labelText}>toktokload Date: {refDate}</Text>}
         { refDate && <Text style={styles.labelText}>toktokload Time: {refTime}</Text>}
       </View>
