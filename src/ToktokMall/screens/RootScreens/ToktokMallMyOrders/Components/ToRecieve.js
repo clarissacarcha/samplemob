@@ -6,9 +6,10 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { GET_TORECEIVE_ORDERS, GET_TORECEIVE_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
 import {Loading} from '../../../../Components';
 import {placeholder, storeIcon, emptyorders} from '../../../../assets';
-import { Price } from '../../../../helpers';
+import { getRefComAccountType, Price } from '../../../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 const Store = ({data}) => {
   return (
@@ -137,6 +138,7 @@ const testdata = [{
 export const ToRecieve = ({id, email}) => {
 
   const [data, setData] = useState([])
+  const session = useSelector(state=>state.session)
 
   const [getOrders, {loading, error}] = useLazyQuery(GET_TORECEIVE_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -197,7 +199,8 @@ export const ToRecieve = ({id, email}) => {
           input: {
             // userId: 9999,
             userId: data.userId,
-            email: data.email
+            email: data.email,
+            refCom: getRefComAccountType({session})
           }
         }})
       }
