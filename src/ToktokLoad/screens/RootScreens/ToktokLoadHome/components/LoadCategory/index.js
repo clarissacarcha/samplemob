@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {View, Text, StyleSheet, TextInput, Image, TouchableOpacity} from "react-native";
+import {View, Text, StyleSheet, TextInput, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView} from "react-native";
 import {VectorIcon, ICON_SET} from 'src/revamp';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_LOAD_CATEGORIES , GET_LOAD_CATEGORY_NETWORKS } from 'toktokload/graphql';
@@ -181,7 +181,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
       {
         activeNetwork &&
         <>
-          <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,marginTop: 16}}>Buy Load For</Text>
+          <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M,marginVertical: 16}}>Buy Load For</Text>
           <View style={styles.inputContainer}>
             <View style={styles.input} >
               <TextInput

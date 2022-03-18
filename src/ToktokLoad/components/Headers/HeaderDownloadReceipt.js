@@ -122,7 +122,7 @@ export const HeaderDownloadReceipt = ({
       // Toast.show(`Receipt ${filename} has been downloaded.` , Toast.LONG);
       prompt({
         type: "success",
-        title: "Receipt Downloaded!",
+        title: "Receipt Downloaded",
         message: "Your transaction receipt has been saved to your gallery.",
         event: "TOKTOKBILLSLOAD"
       });

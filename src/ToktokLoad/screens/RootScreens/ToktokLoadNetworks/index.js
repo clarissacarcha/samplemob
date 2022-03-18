@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState, useCallback, useMemo , useRef } from "react";
-import {View, Text, StyleSheet, Image} from "react-native";
+import {View, Text, StyleSheet, Image, Keyboard} from "react-native";
 
 //UTIL
 import { moderateScale } from "toktokload/helper";
@@ -154,7 +154,10 @@ const MainComponent = ({ navigation, route }) => {
         placeholder="Search load products here!"
         containerStyle={{ paddingHorizontal: moderateScale(16), paddingBottom: moderateScale(hasSearch ? 16 : 0) }}
         returnKeyType="done"
-        onClear={()=>setSearch("")}
+        onClear={()=> {
+          setSearch("");
+          Keyboard.dismiss();
+        }}
         hasClear
         // onSubmitEditing={processSearch}
       />
@@ -203,12 +206,15 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L
   },
   mobileNo: {
-    fontSize: moderateScale(20)
+    fontSize: moderateScale(20),
+    flexShrink: 1,
+    marginLeft: moderateScale(10)
   },
   headerContentContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: moderateScale(10)
+    paddingVertical: moderateScale(10),
+    paddingHorizontal: moderateScale(50)
   },
   networkLogo: {
     height: moderateScale(20),
