@@ -13,67 +13,86 @@ import {GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
 import {COLOR, FONT, FONT_SIZE, SIZE} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
-import {useNavigation} from '@react-navigation/native';
+// import {useNavigation} from '@react-navigation/native';
 
-import moment from 'moment';
-import {getWeekDay} from 'toktokfood/helper/strings';
+// import moment from 'moment';
+// import {getWeekDay} from 'toktokfood/helper/strings';
 
 const ToktokFoodRestaurantOverview = ({route}) => {
-  const {item} = route.params;
+  const [showCart, setShowCart] = useState(false);
 
-  const navigation = useNavigation();
+  // const {item} = route.params;
 
-  const {hasOpen, nextOperatingHrs, operatingHours} = item;
-  const {fromTime, day: nxtDay} = nextOperatingHrs;
-  const {fromTime: currFromTime} = operatingHours;
+  // const navigation = useNavigation();
 
-  const [showOverlay, setShowOverlay] = useState(hasOpen === false);
+  // const {hasOpen, hasProduct, nextOperatingHrs, operatingHours} = item;
+  // const {fromTime, day: nxtDay} = nextOperatingHrs;
+  // const {fromTime: currFromTime} = operatingHours;
 
-  const displayNextOpeningHours = () => {
-    const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
-    if (isAboutToOpen) {
-      return (
-        <Text style={styles.closeText}>
-          Restaurant is currently closed. {'\n'}Please comeback at {moment(fromTime, 'hh:mm:ss').format('LT')}
-        </Text>
-      );
-    }
-    return (
-      <Text style={styles.closeText}>
-        Restaurant is currently closed. {'\n'}Please comeback on {getWeekDay(nxtDay, true)},{' '}
-        {moment(fromTime, 'hh:mm:ss').add(1, 'day').format('MMMM DD')} at{' '}
-        {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
-      </Text>
-    );
-  };
+  // const [showOverlay, setShowOverlay] = useState(hasOpen === false);
+  // const [showProductOverlay, setShowProductOverlay] = useState(hasProduct === false);
 
-  const onNavigate = () => {
-    setShowOverlay(false);
-    navigation.goBack();
-  };
+  // const displayNextOpeningHours = () => {
+  //   const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
+  //   if (isAboutToOpen) {
+  //     return (
+  //       <Text style={styles.closeText}>
+  //         Restaurant is currently closed. {'\n'}Please comeback at {moment(fromTime, 'hh:mm:ss').format('LT')}
+  //       </Text>
+  //     );
+  //   }
+  //   return (
+  //     <Text style={styles.closeText}>
+  //       Restaurant is currently closed. {'\n'}Please comeback on {getWeekDay(nxtDay, true)},{' '}
+  //       {moment(fromTime, 'hh:mm:ss').add(1, 'day').format('MMMM DD')} at{' '}
+  //       {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
+  //     </Text>
+  //   );
+  // };
 
-  const CloseOverlay = (
-    <Modal visible={showOverlay} transparent={true} animationType="fade" presentationStyle="overFullScreen">
-      <View style={styles.content}>
-        <View style={[styles.wrapper, styles.sheetBorder]}>
-          <View style={styles.sheet}>
-            {displayNextOpeningHours()}
-            <TouchableOpacity style={styles.closeButton} onPress={() => onNavigate()}>
-              <Text style={styles.buttonText}>OK</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
+  // const onNavigate = () => {
+  //   setShowOverlay(false);
+  //   navigation.goBack();
+  // };
+
+  // const CloseOverlay = () => (
+  //   <Modal visible={showOverlay} transparent={true} animationType="fade" presentationStyle="overFullScreen">
+  //     <View style={styles.content}>
+  //       <View style={[styles.wrapper, styles.sheetBorder]}>
+  //         <View style={styles.sheet}>
+  //           {displayNextOpeningHours()}
+  //           <TouchableOpacity style={styles.closeButton} onPress={() => onNavigate()}>
+  //             <Text style={styles.buttonText}>OK</Text>
+  //           </TouchableOpacity>
+  //         </View>
+  //       </View>
+  //     </View>
+  //   </Modal>
+  // );
+
+  // const ProductOverlay = (
+  //   <Modal visible={showProductOverlay} transparent={true} animationType="fade" presentationStyle="overFullScreen">
+  //     <View style={styles.content}>
+  //       <View style={[styles.wrapper, styles.sheetBorder]}>
+  //         <View style={styles.sheet}>
+  //           {displayNextOpeningHours()}
+  //           <TouchableOpacity style={styles.closeButton} onPress={() => onNavigate()}>
+  //             <Text style={styles.buttonText}>OK</Text>
+  //           </TouchableOpacity>
+  //         </View>
+  //       </View>
+  //     </View>
+  //   </Modal>
+  // );
 
   return (
     <>
-      {CloseOverlay}
       <VerifyContextProvider>
+        {/* <CloseOverlay /> */}
+        {/* <ProductOverlay /> */}
         <View style={styles.container}>
-          <StickyView />
-          <FoodCart />
+          <StickyView onCheckShop={v => setShowCart(v)} />
+          {showCart && <FoodCart />}
         </View>
       </VerifyContextProvider>
     </>

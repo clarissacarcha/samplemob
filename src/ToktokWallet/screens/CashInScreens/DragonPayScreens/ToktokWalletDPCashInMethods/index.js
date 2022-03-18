@@ -189,7 +189,7 @@ export const ToktokWalletDPCashInMethods = ({navigation , route})=> {
                 label:"Cash In" , 
                 event: "Cash In Dragon Pay",
                 data: {
-                        method: paymentMethod, 
+                        method, 
                         amount: amount,
                         accountName: `${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`,
                         accountNumber: tokwaAccount.mobileNumber,

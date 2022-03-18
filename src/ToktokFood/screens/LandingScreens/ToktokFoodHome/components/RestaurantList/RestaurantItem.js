@@ -27,11 +27,11 @@ const RestaurantItem = ({activeTab, item}) => {
     }
     const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
     if (isAboutToOpen) {
-      return <Text style={styles.overlayText}>Opens at {moment(fromTime, 'hh:mm:ss').format('LT')}</Text>;
+      return <Text style={styles.overlayText}>Opens at {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}</Text>;
     }
     return (
       <Text style={styles.overlayText}>
-        Opens on {getWeekDay(nxtDay)} {moment(fromTime, 'hh:mm:ss').format('LT')}
+        Opens on {getWeekDay(nxtDay)} {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}
       </Text>
     );
   };
@@ -138,11 +138,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   overlayContainer: {
-    // width: '90%',
+    width: getDeviceWidth / 2 - 30,
     // borderWidth: 1,
     // borderColor: 'red',
-    width: 180,
-    height: 180,
+    // width: 180,
+    height: 160,
     borderRadius: 10,
   },
   overlay: {

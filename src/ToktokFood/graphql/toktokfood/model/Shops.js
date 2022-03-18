@@ -108,6 +108,26 @@ export const GET_SHOP_DETAILS = gql`
       allowPickup
       email
       mobile
+      hasProduct
+      hasOpen
+      nextOperatingHrs {
+        id
+        shopId
+        fromTime
+        toTime
+        day
+        status
+        dayStatus
+      }
+      operatingHours {
+        id
+        shopId
+        fromTime
+        toTime
+        day
+        status
+        dayStatus
+      }
     }
   }
 `;

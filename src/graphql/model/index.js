@@ -18,6 +18,7 @@ export * from './PartnerBranch';
 export * from './PartnerBranchOrder';
 export * from './Person';
 export * from './SavedLocation';
+export * from './SuperAppPromo';
 export * from './ToktokWallet';
 export * from './ToktokWalletLog';
 export * from './ToktokWalletKYC';

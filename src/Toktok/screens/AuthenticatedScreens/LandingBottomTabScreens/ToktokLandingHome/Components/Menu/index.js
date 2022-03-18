@@ -1,20 +1,32 @@
 import React, {useRef, useEffect, useCallback, useState} from 'react';
 import _ from 'lodash';
 import {useSelector} from 'react-redux';
-import {View, Text, StyleSheet, TouchableOpacity, Image, Share, FlatList} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image, Share, FlatList, Dimensions} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
+import {Shadow} from '../../../../../../../revamp';
 
-import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/Toktok.png';
-import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/Pabili.png';
-import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/ToktokfoodMenu.png';
-import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/ToktokGo.png';
-import WalletIcon from '../../../../../../../assets/toktok/icons/menu/ToktokWallet.png';
-import ProfileIcon from '../../../../../../../assets/icons/ProfileIcon.png';
-import ToktokMallIcon from '../../../../../../../assets/toktokmall-assets/icons/toktokmall-logo.png';
-import OthersIcon from '../../../../../../../assets/icons/OthersIcon.png';
-import AppServices from '../../../../../../../store/redux/reducers/AppServices';
+// import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/Toktok.png';
+// import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/Pabili.png';
+// import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/ToktokfoodMenu.png';
+// import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/ToktokGo.png';
+// import WalletIcon from '../../../../../../../assets/toktok/icons/menu/ToktokWallet.png';
+// import ProfileIcon from '../../../../../../../assets/toktok/icons/menu/Profile.png';
+// import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/ToktokMall.png';
+// import TalkToUsIcon from '../../../../../../../assets/toktok/icons/menu/TalkToUs.png';
+// import WhatsNewIcon from '../../../../../../../assets/toktok/icons/menu/WhatsNew.png';
+
+import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/DeliveryService.png';
+import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/PabiliService.png';
+import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/FoodService.png';
+import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoService.png';
+import WalletIcon from '../../../../../../../assets/toktok/icons/menu/WalletService.png';
+// import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/ToktokMall.png';
+
+import ProfileIcon from '../../../../../../../assets/toktok/icons/menu/ProfileService.png';
+import HelpIcon from '../../../../../../../assets/toktok/icons/menu/HelpService.png';
+import PromosIcon from '../../../../../../../assets/toktok/icons/menu/PromosService.png';
 
 const MenuIcon = ({label, icon, onPress, isNew = false}) => {
   const useThrottle = (cb, delayDuration) => {
@@ -34,12 +46,12 @@ const MenuIcon = ({label, icon, onPress, isNew = false}) => {
 
   return (
     <TouchableOpacity style={styles.menuButton} onPress={onPressThrottled}>
+      {isNew && (
+        <View style={styles.new}>
+          <Text style={styles.newText}>NEW</Text>
+        </View>
+      )}
       <View style={styles.menuIconBox}>
-        {isNew && (
-          <View style={styles.new}>
-            <Text style={styles.newText}>NEW</Text>
-          </View>
-        )}
         <Image style={styles.menuIcon} source={icon} />
       </View>
       <Text style={styles.label}>{label}</Text>
@@ -70,6 +82,12 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => navigation.push('Pabili'),
     },
     {
+      identifier: 'wallet',
+      label: 'Wallet',
+      icon: WalletIcon,
+      onPress: () => navigation.push('ToktokWalletLoginPage'),
+    },
+    {
       identifier: 'foodComingSoon',
       label: 'Food',
       icon: ToktokfoodIcon,
@@ -90,23 +108,29 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => navigation.push('ToktokgoComingSoon'),
       isNew: true,
     },
+    // {
+    //   identifier: 'mall',
+    //   label: 'Mall',
+    //   icon: ToktokMallIcon,
+    //   onPress: () => navigation.push('ToktokMallLanding'),
+    // },
     {
-      identifier: 'wallet',
-      label: 'Wallet',
-      icon: WalletIcon,
-      onPress: () => navigation.push('ToktokWalletLoginPage'),
-    },
-    {
-      identifier: 'mall',
-      label: 'Mall',
-      icon: ToktokMallIcon,
-      onPress: () => navigation.push('ToktokMallLanding'),
+      identifier: 'promos',
+      label: 'Promos',
+      icon: PromosIcon,
+      onPress: () => navigation.push('SuperAppPromos'),
     },
     {
       identifier: 'profile',
       label: 'Profile',
       icon: ProfileIcon,
       onPress: () => navigation.push('ToktokProfile'),
+    },
+    {
+      identifier: 'help',
+      label: 'Help',
+      icon: HelpIcon,
+      onPress: () => navigation.push('TalkToUs'),
     },
   ];
 
@@ -115,7 +139,7 @@ export const Menu = ({setUserLocation, constants}) => {
     setAppServices(appServicesObject);
 
     const filteredMenuData = menuDataConstant.filter(menuDataItem => {
-      if (menuDataItem.identifier === 'profile') {
+      if (['profile', 'promos', 'help'].includes(menuDataItem.identifier)) {
         return true;
       }
 
@@ -182,37 +206,36 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: FONT_SIZE.M,
-    color: COLOR.YELLOW,
+    // color: COLOR.YELLOW,
   },
   menuIconBox: {
     height: 50,
     width: 50,
-    paddingHorizontal: 5,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    backgroundColor: COLOR.TRANSPARENT_YELLOW,
-    overflow: 'hidden',
+    // backgroundColor: COLOR.TRANSPARENT_YELLOW,
+    // borderWidth: 1,
   },
   menuIcon: {
-    height: 40,
-    width: 40,
+    height: 50,
+    width: 50,
     resizeMode: 'contain',
   },
   new: {
-    height: 12,
-    width: 25,
-    backgroundColor: COLOR.ORANGE,
+    height: 18,
+    width: 40,
+    backgroundColor: '#ED3A19',
     position: 'absolute',
     top: 0,
-    left: 0,
-    borderRadius: 5,
+    right: 9,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 9,
   },
   newText: {
-    fontSize: 8,
+    fontSize: 10,
     color: 'white',
   },
 });

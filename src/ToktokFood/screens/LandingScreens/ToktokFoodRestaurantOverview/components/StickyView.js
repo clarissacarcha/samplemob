@@ -1,12 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect, useState, useContext, useMemo} from 'react';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useRoute} from '@react-navigation/native';
-import React, {useEffect, useState, useContext, useMemo} from 'react';
-import {Image, ImageBackground, Platform, StyleSheet, Text, View, Dimensions} from 'react-native';
+import {
+  Image,
+  ImageBackground,
+  Modal,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Dimensions,
+} from 'react-native';
 import ReactNativeParallaxHeader from 'react-native-parallax-header';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import moment from 'moment';
+import {useIsFocused} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
-import {FONT_SIZE, FONT, COLOR} from 'res/variables';
+import {FONT_SIZE, FONT, COLOR, SIZE} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 // import CustomStarRating from 'toktokfood/components/CustomStarRating';
 // import ChangeAddress from 'toktokfood/components/ChangeAddress';
@@ -27,21 +41,26 @@ import {
   scale,
   verticalScale,
 } from 'toktokfood/helper/scale';
+import {getWeekDay} from 'toktokfood/helper/strings';
+
 import {FoodList, HeaderTitleSearchBox} from '../components';
 import {VerifyContext, CategoryTabs} from '../components';
-import {useIsFocused} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
 // import LoadingIndicator from '../../../../components/LoadingIndicator';
 
 const phoneWindow = Dimensions.get('window');
 
-export const StickyView = () => {
+export const StickyView = ({onCheckShop}) => {
   const routes = useRoute();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   const [offset, setOffset] = useState(0);
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
-  const [shopDetails, setShopDetails] = useState({});
+  const [shopDetails, setShopDetails] = useState(null);
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [showProductOverlay, setShowProductOverlay] = useState(false);
+
   const {setNavBarHeight} = useContext(VerifyContext);
   const {customerInfo, location} = useSelector(state => state.toktokFood);
 
@@ -66,10 +85,11 @@ export const StickyView = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
-      let {latitude, longitude} = getShopDetails;
+      let {latitude, longitude, hasOpen} = getShopDetails;
 
       dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       setShopDetails(getShopDetails);
+      onCheckShop(hasOpen);
     },
   });
 
@@ -102,7 +122,7 @@ export const StickyView = () => {
         },
       });
     }
-  }, [isFocus, location, shopDetails]);
+  }, [isFocus, location]);
 
   useEffect(() => {
     if (data) {
@@ -142,7 +162,7 @@ export const StickyView = () => {
     return (
       <View style={styles.title}>
         <ImageBackground
-          source={{uri: shopDetails.banner}}
+          source={{uri: shopDetails?.banner}}
           resizeMode="cover"
           imageStyle={styles.bannerImg}
           style={styles.banner}>
@@ -165,14 +185,14 @@ export const StickyView = () => {
             />
           ) : (
             <View style={styles.content}>
-              <Image source={{uri: shopDetails.logo}} style={styles.logo} resizeMode="cover" />
+              <Image source={{uri: shopDetails?.logo}} style={styles.logo} resizeMode="cover" />
               <View style={{flexShrink: 1, marginHorizontal: 10}}>
-                <Text style={styles.titleText}>{`${shopDetails.shopname} (${shopDetails.address})`}</Text>
+                <Text style={styles.titleText}>{`${shopDetails?.shopname} (${shopDetails?.address})`}</Text>
                 <View style={styles.branchInfo}>
                   <Image source={time} style={styles.timeImg} />
-                  <Text style={styles.branches}>{`${shopDetails.estimatedDeliveryTime} mins`}</Text>
+                  <Text style={styles.branches}>{`${shopDetails?.estimatedDeliveryTime} mins`}</Text>
                   <MCIcon name="map-marker-outline" color="#868686" size={13} />
-                  <Text style={styles.branches}>{shopDetails.estimatedDistance}</Text>
+                  <Text style={styles.branches}>{shopDetails?.estimatedDistance}</Text>
                 </View>
                 <Text style={{color: '#FFA700', fontSize: FONT_SIZE.S}}>
                   {shopDetails?.allowPickup ? 'Available for pick-up and delivery' : 'Available for delivery only'}
@@ -210,8 +230,75 @@ export const StickyView = () => {
     return <FoodList id={id} activeTab={activeTab} tagsLoading={loading} />;
   }, [id, activeTab, loading]);
 
+  const OperatingHours = () => {
+    const {nextOperatingHrs, operatingHours} = shopDetails;
+    const {fromTime, day: nxtDay} = nextOperatingHrs;
+    const {fromTime: currFromTime} = operatingHours;
+    const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
+    if (isAboutToOpen) {
+      return (
+        <Text style={styles.closeText}>
+          Restaurant is currently closed. {'\n'}Please come back at {moment(fromTime, 'hh:mm:ss').format('LT')}
+        </Text>
+      );
+    }
+    return (
+      <Text style={styles.closeText}>
+        Restaurant is currently closed. {'\n'}Please come back on {getWeekDay(nxtDay, true)},{' '}
+        {moment(fromTime, 'hh:mm:ss').add(1, 'day').format('MMMM DD')} at{' '}
+        {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
+      </Text>
+    );
+  };
+
+  const onNavigate = () => {
+    setShowOverlay(true);
+    setShowProductOverlay(true);
+    navigation.goBack();
+  };
+
+  const CloseOverlay = useMemo(
+    () => (
+      <Modal visible={!showOverlay} transparent={true} animationType="fade">
+        <View style={styles.modalContent}>
+          <View style={[styles.wrapper, styles.sheetBorder]}>
+            <View style={styles.sheet}>
+              {shopDetails && <OperatingHours />}
+              <TouchableOpacity style={styles.closeButton} onPress={() => onNavigate()}>
+                <Text style={styles.buttonText}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    ),
+    [shopDetails, showOverlay],
+  );
+
+  const ProductOverlay = useMemo(
+    () => (
+      <Modal visible={!showProductOverlay} transparent={true} animationType="fade" presentationStyle="overFullScreen">
+        <View style={styles.modalContent}>
+          <View style={[styles.wrapper, styles.sheetBorder]}>
+            <View style={styles.sheet}>
+              <Text style={styles.closeText}>
+                Restaurant is currently unavailable. {'\n'} Please come back at a later time
+              </Text>
+              <TouchableOpacity style={styles.closeButton} onPress={() => onNavigate()}>
+                <Text style={styles.buttonText}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    ),
+    [shopDetails, showProductOverlay],
+  );
+  // console.log(shopDetails)
   return (
     <>
+      {shopDetails && !shopDetails?.hasOpen && shopDetails?.hasProduct && CloseOverlay}
+      {shopDetails && !shopDetails?.hasProduct && !shopDetails?.hasOpen && ProductOverlay}
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
@@ -349,5 +436,52 @@ const styles = StyleSheet.create({
     width: scale(13),
     height: scale(13),
     resizeMode: 'contain',
+  },
+  modalContent: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(34, 34, 34, 0.5)',
+  },
+  wrapper: {
+    width: getDeviceWidth + 10,
+    paddingLeft: 5,
+    paddingBottom: 20,
+    position: 'absolute',
+    backgroundColor: COLOR.WHITE,
+  },
+  sheetBorder: {
+    borderTopWidth: 3,
+    borderEndWidth: 2,
+    borderStartWidth: 2,
+    borderTopEndRadius: 15,
+    borderTopStartRadius: 15,
+    borderColor: COLOR.ORANGE,
+    marginHorizontal: 0,
+  },
+  sheet: {
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+  closeText: {
+    fontSize: 15,
+    lineHeight: 20,
+    fontFamily: FONT.BOLD,
+    marginVertical: 20,
+    textAlign: 'center',
+  },
+  closeButton: {
+    display: 'flex',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: SIZE.BUTTON_HEIGHT,
+    backgroundColor: '#FFA700',
+    width: getDeviceWidth - 28,
+  },
+  buttonText: {
+    color: COLOR.WHITE,
+    fontSize: FONT_SIZE.L,
+    fontFamily: FONT.BOLD,
   },
 });
