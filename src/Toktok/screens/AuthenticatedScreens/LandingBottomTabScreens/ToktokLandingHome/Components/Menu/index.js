@@ -5,6 +5,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Image, Share, FlatList, Dimens
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
+import {Shadow} from '../../../../../../../revamp';
 
 // import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/Toktok.png';
 // import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/Pabili.png';
@@ -21,10 +22,11 @@ import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/PabiliServ
 import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/FoodService.png';
 import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoService.png';
 import WalletIcon from '../../../../../../../assets/toktok/icons/menu/WalletService.png';
+// import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/ToktokMall.png';
+
 import ProfileIcon from '../../../../../../../assets/toktok/icons/menu/ProfileService.png';
-import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/ToktokMall.png';
-import TalkToUsIcon from '../../../../../../../assets/toktok/icons/menu/TalkToUsService.png';
-import WhatsNewIcon from '../../../../../../../assets/toktok/icons/menu/WhatsNewService.png';
+import HelpIcon from '../../../../../../../assets/toktok/icons/menu/HelpService.png';
+import PromosIcon from '../../../../../../../assets/toktok/icons/menu/PromosService.png';
 
 const MenuIcon = ({label, icon, onPress, isNew = false}) => {
   const useThrottle = (cb, delayDuration) => {
@@ -106,11 +108,17 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => navigation.push('ToktokgoComingSoon'),
       isNew: true,
     },
+    // {
+    //   identifier: 'mall',
+    //   label: 'Mall',
+    //   icon: ToktokMallIcon,
+    //   onPress: () => navigation.push('ToktokMallLanding'),
+    // },
     {
-      identifier: 'mall',
-      label: 'Mall',
-      icon: ToktokMallIcon,
-      onPress: () => navigation.push('ToktokMallLanding'),
+      identifier: 'promos',
+      label: 'Promos',
+      icon: PromosIcon,
+      onPress: () => navigation.push('SuperAppPromos'),
     },
     {
       identifier: 'profile',
@@ -119,16 +127,9 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => navigation.push('ToktokProfile'),
     },
     {
-      identifier: 'whatsNew',
-      label: `What's New`,
-      icon: WhatsNewIcon,
-      onPress: () => navigation.push('ToktokProfile'),
-    },
-
-    {
-      identifier: 'talkToUs',
-      label: 'Talk To Us',
-      icon: TalkToUsIcon,
+      identifier: 'help',
+      label: 'Help',
+      icon: HelpIcon,
       onPress: () => navigation.push('TalkToUs'),
     },
   ];
@@ -138,7 +139,7 @@ export const Menu = ({setUserLocation, constants}) => {
     setAppServices(appServicesObject);
 
     const filteredMenuData = menuDataConstant.filter(menuDataItem => {
-      if (['profile', 'whatsNew', 'talkToUs'].includes(menuDataItem.identifier)) {
+      if (['profile', 'promos', 'help'].includes(menuDataItem.identifier)) {
         return true;
       }
 
