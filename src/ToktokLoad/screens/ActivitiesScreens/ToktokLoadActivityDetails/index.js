@@ -53,7 +53,7 @@ export const ToktokLoadActivityDetails = ({ navigation, route }) => {
           <Text style={styles.transactionDateTime}>{transactionDateTime}</Text>
           <View style={styles.rowAlignItemsCenter}>
             <VectorIcon size={moderateScale(20)} iconSet={ICON_SET.Ionicon} color={statusData.color} name={statusData.iconName}/>
-            <Text style={[styles.statusText, { color: statusData.color }]}>{statusData.text} {toktokwalletReturnRefNo && "- Refunded"}</Text>
+            <Text style={[styles.statusText, { color: statusData.color }]}>{statusData.text}</Text>
           </View>
         </View>
         <Image source={toktokwallet_logo} style={styles.walletLogo} />
