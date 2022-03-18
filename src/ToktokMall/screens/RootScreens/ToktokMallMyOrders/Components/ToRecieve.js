@@ -32,16 +32,22 @@ const Summary = ({data}) => {
     <>
       <View style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
         <View style={{flex: 1}}>
-          <Text style={{color: "#9E9E9E", fontSize: 12}}>Order #: {data?.referenceNum}</Text>
-          <Text style={{color: "#9E9E9E", fontSize: 12}}>Order Placed: {data?.orderPlaced} </Text>
+          <Text style={{color: '#9E9E9E', fontSize: 12}}>Order #: {data?.referenceNum}</Text>
+          <Text style={{color: '#9E9E9E', fontSize: 12}}>Order Placed: {data?.orderPlaced} </Text>
         </View>
         <View styl={{flex: 1}}>
-          <Text style={{fontSize: 14}}>Order Total: <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={data?.orderTotal} /></Text></Text>
+          <Text style={{fontSize: 14}}>
+            Order Total:{' '}
+            <Text style={{color: '#F6841F', fontSize: 14}}>
+              <Price amount={data?.orderTotal} />
+            </Text>
+          </Text>
+          <Text style={{color: '#9E9E9E', fontSize: 12}}>Receive by: {data?.items[0]?.shipping?.receiveBy} </Text>
         </View>
       </View>
-      <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
+      <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
     </>
-  )
+  );
 }
 
 const Item = ({data, fulldata}) => {

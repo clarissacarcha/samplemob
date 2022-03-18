@@ -23,12 +23,13 @@ import { useMutation } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApiCall } from '../../../../../helpers';
 
 export const ToktokMallContactUs = ({navigation}) => {
   
   const session = useSelector(state => state.session)
+  const dispatch = useDispatch()
   const [messageModalShown, setMessageModalShown] = useState(false)
   const [message, setMessage] = useState('')
 
@@ -58,7 +59,10 @@ export const ToktokMallContactUs = ({navigation}) => {
       const {responseData: {success}} = await ApiCall("send_contact_message", body, true, "")
       if(success == 1){
         setMessage('')
-        setMessageModalShown(true)
+        dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+          type: 'Success',
+          message: "Sent!"
+        }})
       }else{
         Toast.show("Something went wrong.")
       }

@@ -51,8 +51,6 @@
 		</dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
-		<key>NSAllowsArbitraryLoadsInWebContent</key>
-		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to take images for profile and deliveries.</string>
