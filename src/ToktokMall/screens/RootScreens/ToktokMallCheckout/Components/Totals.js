@@ -116,7 +116,7 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
           <Text>{FormatToText.currency(merchandiseTotal)}</Text>
         </View>
         <View style={styles.textContainer}>
-          <Text>Shipping Fee:</Text>
+          <Text>Shipping Total:</Text>
           <View style={{flexDirection: 'row'}}>
 
             <View style={{flex: 0}}>

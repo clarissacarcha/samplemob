@@ -389,7 +389,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             <>
               <View style={{flexDirection: 'row'}}>
                 <View style={{flex: 0}}>
-                  <Text>Delivery Fee: </Text>
+                  <Text>Shipping Fee: </Text>
                 </View>
                 <View style={{flex: 0}}>
                   <Text 
