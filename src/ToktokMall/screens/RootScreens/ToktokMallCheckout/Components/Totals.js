@@ -46,10 +46,12 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
         if(discount?.amount){
           let voucheramount = discount?.amount;
           if (shipping.shippingfee && voucheramount && shipping.shippingfee - voucheramount < 0) {
-            total = total + 0;
+            total = total + 0
           }else{
             total = total + parseFloat(discount.discountedAmount)
           }
+        }else if(discount?.amount === 0){
+          total = total + 0
         }
       }else{
         total = total + parseFloat(shipping.shippingfee)
@@ -70,7 +72,7 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
   const getDiscount = (type) => {
     if (type == 'shipping') {
       if(CheckoutContextData.shippingVouchers.length > 0){
-        return CheckoutContextData.shippingVouchers[0]?.amount
+        return CheckoutContextData.shippingVouchers[0]?.valid
       }else{
         return false
       }
