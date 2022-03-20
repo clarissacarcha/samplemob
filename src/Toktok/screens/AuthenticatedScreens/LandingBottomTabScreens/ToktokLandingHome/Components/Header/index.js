@@ -41,20 +41,36 @@ const SearchInput = () => {
   );
 
   return (
-    <ThrottledHighlight
-      underlayColor={COLOR.WHITE_UNDERLAY}
-      onPress={() => {
-        navigation.push('ToktokSearch');
-      }}
-      delay={100}
-      style={{bottom: -10, marginHorizontal: SIZE.MARGIN, borderRadius: 5, borderWidth: 1, borderColor: COLOR.LIGHT}}>
-      <View style={{...styles.inputBox, borderRadius: 5}}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View style={{flex: 1}}>{RenderedWriter}</View>
-          <FeatherIcon name="search" size={25} color={COLOR.DARK} />
+    <Shadow>
+      <ThrottledHighlight
+        underlayColor={COLOR.WHITE_UNDERLAY}
+        onPress={() => {
+          navigation.push('ToktokSearch');
+        }}
+        delay={100}
+        style={{
+          bottom: -10,
+          marginHorizontal: SIZE.MARGIN,
+          borderRadius: 5,
+          // borderWidth: 1,
+          // borderColor: COLOR.LIGHT,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}>
+        <View style={{...styles.inputBox, borderRadius: 5}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{flex: 1}}>{RenderedWriter}</View>
+            <FeatherIcon name="search" size={25} color={COLOR.DARK} />
+          </View>
         </View>
-      </View>
-    </ThrottledHighlight>
+      </ThrottledHighlight>
+    </Shadow>
   );
 };
 

@@ -49,7 +49,7 @@ import {VerifyContext, CategoryTabs} from '../components';
 
 const phoneWindow = Dimensions.get('window');
 
-export const StickyView = () => {
+export const StickyView = ({onCheckShop}) => {
   const routes = useRoute();
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -85,10 +85,11 @@ export const StickyView = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
-      let {latitude, longitude} = getShopDetails;
+      let {latitude, longitude, hasOpen} = getShopDetails;
 
       dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       setShopDetails(getShopDetails);
+      onCheckShop(hasOpen);
     },
   });
 
@@ -237,13 +238,13 @@ export const StickyView = () => {
     if (isAboutToOpen) {
       return (
         <Text style={styles.closeText}>
-          Restaurant is currently closed. {'\n'}Please comeback at {moment(fromTime, 'hh:mm:ss').format('LT')}
+          Restaurant is currently closed. {'\n'}Please come back at {moment(fromTime, 'hh:mm:ss').format('LT')}
         </Text>
       );
     }
     return (
       <Text style={styles.closeText}>
-        Restaurant is currently closed. {'\n'}Please comeback on {getWeekDay(nxtDay, true)},{' '}
+        Restaurant is currently closed. {'\n'}Please come back on {getWeekDay(nxtDay, true)},{' '}
         {moment(fromTime, 'hh:mm:ss').add(1, 'day').format('MMMM DD')} at{' '}
         {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
       </Text>

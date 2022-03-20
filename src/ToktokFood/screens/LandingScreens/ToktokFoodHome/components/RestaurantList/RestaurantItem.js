@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   overlayContainer: {
-    width: '90%',
+    width: getDeviceWidth / 2 - 30,
     // borderWidth: 1,
     // borderColor: 'red',
     // width: 180,
