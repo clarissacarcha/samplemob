@@ -31,7 +31,11 @@ const ToktokFoodMapSearch = () => {
       longitude: route.params.coordinates.longitude,
     },
     address: route.params.address,
-    fullInfo: {},
+    fullInfo: {
+      latitude: route.params.coordinates.latitude,
+      longitude: route.params.coordinates.longitude,
+      address: route.params.address,
+    },
   });
 
   const onMapMove = async c => {
