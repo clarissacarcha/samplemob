@@ -23,6 +23,8 @@ const ToktokFoodMapSearch = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const [mapMoveCount, setMapMoveCount] = useState(0);
+
   const [mapInfo, setMapInfo] = useState({
     coordinates: {
       latitude: route.params.coordinates.latitude,
@@ -32,9 +34,15 @@ const ToktokFoodMapSearch = () => {
     fullInfo: {},
   });
 
-  // Add work around for this
   const onMapMove = async c => {
+    setMapMoveCount(prevState => prevState + 1);
+
     const {latitude, longitude} = c;
+
+    if (mapMoveCount === 0) {
+      return;
+    }
+
     try {
       const result = await getFormattedAddress(latitude, longitude);
       const payload = {
@@ -71,7 +79,7 @@ const ToktokFoodMapSearch = () => {
             // onMapReady={() => setIsLoaded(true)}
             style={styles.mapView}
             provider={PROVIDER_GOOGLE}
-            region={{
+            initialRegion={{
               ...mapInfo.coordinates,
               ...MAP_DELTA_LOW,
             }}
