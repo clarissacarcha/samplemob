@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
-import {View, Text, StyleSheet, Platform,Image, TouchableOpacity} from "react-native";
+import {View, Text, StyleSheet, Platform,Image, TouchableOpacity, ScrollView, RefreshControl} from "react-native";
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_LOAD_CATEGORIES , GET_LOAD_CATEGORY_NETWORKS } from 'toktokload/graphql';
 import { useLazyQuery } from '@apollo/react-hooks'
@@ -31,7 +31,7 @@ const MainComponent = ({ navigation, route }) => {
   //   headerRight: ()=> <FavoritesNav onPress={goToFavorites}/>
   // })
 
-  const { adsActions, adsRegular, getAdvertisements, mobileNumber, mobileErrorMessage } = useContext(VerifyContext);
+  const { adsActions, adsRegular, getAdvertisements, mobileNumber, mobileErrorMessage, refreshing, setRefreshing } = useContext(VerifyContext);
   const [categories, setCategories]= useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
@@ -43,9 +43,10 @@ const MainComponent = ({ navigation, route }) => {
     fetchPolicy:"network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: (error) => {
-     
+      setRefreshing(false);
     },
     onCompleted: ({getLoadCategories})=> {
+      setRefreshing(false);
       setActiveTab(getLoadCategories[0])
       setCategories(getLoadCategories)
     }
@@ -74,12 +75,17 @@ const MainComponent = ({ navigation, route }) => {
     getAdvertisements();
   }
 
-  if(!showSplash && (loading || adsActions.loading)){
+  const onRefresh = () => {
+    setRefreshing(true);
+    getDataList();
+  }
+
+  if(!showSplash && !refreshing && (loading || adsActions.loading)){
     return <View style={styles.container}>
             <LoadingIndicator isLoading={true} isFlex />
           </View>
   }
-  if(showSplash || (loading || adsActions.loading)){
+  if(showSplash || ((loading || adsActions.loading) && !refreshing)){
     return <SplashHome />
   }
   if(error || adsActions.error){
@@ -88,7 +94,16 @@ const MainComponent = ({ navigation, route }) => {
           </View>
   }
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={loading || adsActions.loading}
+          onRefresh={onRefresh}
+        />
+      }
+    >
       { adsRegular.length > 0 && <Advertisement autoplay ads={adsRegular}/>}
       <HeaderTabs
         tabs={categories}
@@ -124,7 +139,7 @@ const MainComponent = ({ navigation, route }) => {
           <Icon name="md-create" style={styles.actionButtonIcon} />
         </ActionButton.Item>
       </ActionButton> */}
-    </View>
+    </ScrollView>
   );
 };
 

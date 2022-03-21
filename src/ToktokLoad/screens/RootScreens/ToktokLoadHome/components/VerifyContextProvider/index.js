@@ -20,24 +20,27 @@ export const VerifyContextProvider = ({children, navigation})=> {
   const [adHighlight,setAdHighlight] = useState([]);
   const [adsRegular,setAdsRegular] = useState([]);
   const [adsActions, setAdsAction] = useState({ loading: false, error: {} });
+  const [refreshing, setRefreshing] = useState(false);
   const prompt = usePrompt();
 
   const [getAdvertisements, { loading, error }] = useLazyQuery(GET_ADVERTISEMENTS, {
     fetchPolicy:"network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onCompleted: ({getAdvertisements})=> {
-        let adHighlight = [];
-        let adsRegular = [];
+      let adHighlight = [];
+      let adsRegular = [];
 
-        getAdvertisements.map((ad)=> {
-            if(ad.type == 1) adHighlight.push(ad)
-            if(ad.type == 2) adsRegular.push(ad)
-        })
+      getAdvertisements.map((ad)=> {
+          if(ad.type == 1) adHighlight.push(ad)
+          if(ad.type == 2) adsRegular.push(ad)
+      })
 
-        setAdHighlight(adHighlight)
-        setAdsRegular(adsRegular)
+      setAdHighlight(adHighlight);
+      setAdsRegular(adsRegular);
+      setRefreshing(false);
     },
     onError: (error)=> {
+      setRefreshing(false);
       // ErrorUtility.StandardErrorHandling({
       //   error,
       //   navigation,
@@ -68,7 +71,9 @@ export const VerifyContextProvider = ({children, navigation})=> {
         adHighlight,
         adsRegular,
         adsActions,
-        getAdvertisements
+        getAdvertisements,
+        refreshing,
+        setRefreshing
       }}
     >
       {children}
