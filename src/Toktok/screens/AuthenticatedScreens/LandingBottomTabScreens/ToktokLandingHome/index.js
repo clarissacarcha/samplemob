@@ -41,7 +41,7 @@ const Screen = ({navigation, constants}) => {
 
       if (notification.additionalData.classification === 'toktokload') {
         setTimeout(() => {
-          navigation.navigate('ToktokLoadHome');
+          navigation.navigate('ToktokLandingNotifications', {screen: 'ToktokLoadNotifications'});
         }, 10);
         return;
       }
