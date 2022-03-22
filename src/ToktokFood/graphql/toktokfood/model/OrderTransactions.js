@@ -11,13 +11,17 @@ const transaction = `
   conno
   email
   address
+  landmark
   notes
   orderStatus
   dateDeclined
   dateFulfilled
   dateOrdered
+  actualAmount
+  actualTotalamount
   totalAmount
   deliveryAmount
+  originalShippingFee
   paymentMethod
   dateAssigned
   dateOrdered
@@ -41,6 +45,7 @@ const transaction = `
   latitude
   longitude
   declinedNote
+  srpTotalamount
   shopDetails {
     id
     shopname
@@ -51,6 +56,7 @@ const transaction = `
   }
   orderDetails {
     id
+    basePrice
     orderId
     productId
     quantity
@@ -68,6 +74,8 @@ const transaction = `
     currency
     curcode
     notes
+    totalAmountWithAddons
+    resellerDiscount
     productDetails {
       Id
       itemname
@@ -91,7 +99,121 @@ const transaction = `
     status
     validUntil
   }
+  deliveryLogs {
+    status
+    createdAt
+  }
 `;
+
+const transactionRef = `
+  id
+  sysShop
+  referenceNum
+  merchantId
+  paypandaRef
+  userId
+  name
+  conno
+  email
+  address
+  landmark
+  notes
+  orderStatus
+  dateDeclined
+  dateFulfilled
+  dateOrdered
+  actualAmount
+  actualTotalamount
+  totalAmount
+  deliveryAmount
+  originalShippingFee
+  paymentMethod
+  dateAssigned
+  dateOrdered
+  dateOrderProcessed
+  dateReadyPickup
+  dateBookingConfirmed
+  dateFulfilled
+  dateReturntosender
+  dateRedeliver
+  dateShipped
+  dateReceived
+  dateCancelled
+  dateCancelledDeclined
+  tDeliveryId
+  tShareLink
+  isconfirmed
+  deliveryImgurl
+  deliveryImgurl2
+  orderIsfor
+  isdeclined
+  latitude
+  longitude
+  declinedNote
+  srpTotalamount
+  promoDiscounts
+  srpTotal
+  resellerDiscountTotal
+  shopDetails {
+    id
+    shopname
+    address
+    logo
+    latitude
+    longitude
+  }
+  orderDetails {
+    id
+    basePrice
+    orderId
+    productId
+    quantity
+    srpAmount
+    srpTotalamount
+    amount
+    totalAmount
+    refcomTotalamount
+    refcomRate
+    orderType
+    addons
+    status
+    exrateNToPhp
+    exratePhpToN
+    currency
+    curcode
+    notes
+    totalAmountWithAddons
+    resellerDiscount
+    resellerRate
+    productDetails {
+      Id
+      itemname
+      filename
+      parentProductId
+      parentProductName
+    }
+  }
+  promoDetails {
+    id
+    shopId
+    shippingDiscountName
+    shippingDiscountCode
+    email
+    orderRefnum
+    paypandaRef
+    isPercentage
+    amount
+    orderDate
+    paymentDate
+    status
+    validUntil
+  }
+  deliveryLogs {
+    status
+    createdAt
+  }
+`;
+
 export const GET_ORDER_TRANSACTIONS = gql`
   query getTransactions($input: GetTransactionInput){
     getTransactions(input: $input) {
@@ -102,7 +224,7 @@ export const GET_ORDER_TRANSACTIONS = gql`
 export const GET_ORDER_TRANSACTION_BY_REF_NUM = gql`
   query getTransactionByRefNum($input: GetTransactionByRefNumInput){
     getTransactionByRefNum(input: $input) {
-      ${transaction}
+      ${transactionRef}
     }
   }
 `;

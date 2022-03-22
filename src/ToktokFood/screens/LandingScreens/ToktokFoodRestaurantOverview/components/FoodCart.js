@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useContext} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -18,19 +18,20 @@ export const FoodCart = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const {id} = route.params.item;
-  const {customerInfo} = useSelector((state) => state.toktokFood);
+  const {customerInfo} = useSelector(state => state.toktokFood);
   const isFocus = useIsFocused();
   const {temporaryCart, setTemporaryCart, setFoodCartHeight} = useContext(VerifyContext);
-
-  const [getAllTemporaryCart, {loading: cartLoading, error: cartError}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
+  const [getAllTemporaryCart, {loading: cartLoading}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getAllTemporaryCart}) => {
-      let {items, totalAmount} = getAllTemporaryCart;
+      let {items, totalAmount, totalAmountWithAddons} = getAllTemporaryCart;
+      console.log('getAllTemporaryCart', getAllTemporaryCart);
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
         items: items,
+        totalAmountWithAddons,
       });
     },
   });
@@ -57,13 +58,17 @@ export const FoodCart = () => {
     }
   }, [isFocus, customerInfo]);
 
-  const getFoodCartHeight = (event) => {
+  const getFoodCartHeight = event => {
     let height = event.nativeEvent.layout.height;
     setFoodCartHeight(height);
   };
 
   const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodCart', {shopId: id, userId: customerInfo.userId});
+    navigation.navigate('ToktokFoodCart', {
+      shopId: id,
+      userId: customerInfo.userId,
+      shopname: temporaryCart?.items[0]?.shopName,
+    });
   };
 
   if (temporaryCart.cartItemsLength == 0 || cartLoading || hasTemporaryCart?.checkHasTemporaryCart.shopid == 0) {
@@ -71,12 +76,12 @@ export const FoodCart = () => {
   }
   return (
     <>
-      <View onLayout={(event) => getFoodCartHeight(event)} style={[styles.container, styles.cartBorder]}>
+      <View onLayout={event => getFoodCartHeight(event)} style={[styles.container, styles.cartBorder]}>
         <View style={styles.foodItemTotalWrapper}>
           <Text style={styles.total}>{`${temporaryCart.cartItemsLength} ${
             temporaryCart.cartItemsLength > 1 ? 'items' : 'item'
           }`}</Text>
-          <Text style={styles.total}>Total: {temporaryCart.totalAmount.toFixed(2)}</Text>
+          <Text style={styles.total}>Total: PHP {temporaryCart.totalAmountWithAddons.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
           disabled={temporaryCart.cartItemsLength == 0}

@@ -41,6 +41,10 @@ user {
     rating
     referralCode
     referralName
+    franchiseeCode
+    franchiseeFirstName
+    franchiseeLastName
+    franchiseeAccountType
     status
   }
   driver {
@@ -118,6 +122,19 @@ export const END_USER_SESSION = gql`
   mutation {
     endUserSession {
       message
+    }
+  }
+`;
+
+export const GET_APP_SERVICES = gql`
+  query {
+    getAppServices {
+      service
+      displayName
+      identifier
+      isEnabled
+      isEarlyAccess
+      isMaintenance
     }
   }
 `;

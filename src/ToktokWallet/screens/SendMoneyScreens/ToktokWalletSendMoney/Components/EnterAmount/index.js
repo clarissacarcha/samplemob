@@ -23,7 +23,7 @@ export const EnterAmount = ({tokwaAccount , setSwipeEnabled , amount  ,setAmount
 
     useEffect(()=>{
    
-            if(amount >= 1 && amount <= tokwaAccount.wallet.balance){
+            if(amount >= 1 && amount <= tokwaAccount.wallet.transferableBalance){
                 setSwipeEnabled(true)
                 setErrorAmountMessage("")
             }else if(amount < 1 && amount != ""){

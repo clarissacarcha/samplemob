@@ -19,6 +19,7 @@ import DrawerContent from '../Drawer';
 import Landing from '../../screens/Landing';
 
 /*---------- CONSUMER SCREENS ----------*/
+import SuperAppScreens from './superApp';
 import ToktokScreens from './toktok';
 import ToktokFoodScreens from './toktokfood';
 import ToktokWalletScreens from './toktokwallet';
@@ -251,6 +252,7 @@ const AuthenticatedStack = () => (
     {ToktokWalletScreens({Navigator: Authenticated})}
     {ToktokBillScreens({Navigator: Authenticated})}
     {ToktokGoScreens({Navigator: Authenticated})}
+    {SuperAppScreens({Navigator: Authenticated})}
 
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 

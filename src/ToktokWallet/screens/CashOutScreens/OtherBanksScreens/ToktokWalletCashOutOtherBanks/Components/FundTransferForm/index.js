@@ -53,7 +53,7 @@ const Amount = ({
     }
 
     useEffect(()=>{
-            if(amount >= 1 && ( +amount + (+providerServiceFee + +systemServiceFee)) <= tokwaAccount.wallet.balance){
+            if(amount >= 1 && ( +amount + (+providerServiceFee + +systemServiceFee)) <= tokwaAccount.wallet.transferableBalance){
                 changeErrorMessagge("amount","")
             }else if(amount < 1 && amount != ""){
                 changeErrorMessagge("amount",`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00.`)
@@ -352,7 +352,8 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                 error,
                 navigation,
                 prompt,
-                alert
+                alert,
+                event: "fundTransfer"
             })
         }
     })
@@ -549,35 +550,16 @@ export const FundTransferForm = ({selectBanks, screenLabel})=> {
                     })
                 }}
             />
+            
             <View style={styles.proceedBtn}>
-                    {/* <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginBottom: 10 ,textAlign:"center"}}>
-                         Please read our Terms and Conditions before you proceed with your transaction.
-                    </Text> */}
-                    <View style={{
-                        flexDirection:"row",   
-                        paddingBottom: 25,
-                    }}>
-
-                    <CheckBox
-                            isChecked={isCertify}
-                            onClick={()=>{
-                                return setCertify(!isCertify)
-                            }}
-                            style={{
-                                alignSelf: "center",
-                                marginRight: 2,
-                            }}
-                        />
-
                         <TouchableOpacity 
                             // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
                             onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
-                            style={{paddingLeft: 5,marginRight: 16}}
+                            style={{marginBottom: 20}}
                         >
-                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby read and accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before proceeding with my transaction.</Text>
+                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Please read our <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before you proceed with your transaction.</Text>
                         </TouchableOpacity>
-                    </View>
-                    {
+                                     {
                         isCertify 
                         ? <YellowButton label="Proceed" onPress={onPress}/>
                         : <DisabledButton label="Proceed"/>

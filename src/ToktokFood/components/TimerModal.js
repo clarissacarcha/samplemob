@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useRef} from 'react';
 import {View, Modal, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
@@ -11,9 +12,7 @@ import {success_ic, error_ic, warning_ic, question_ic} from 'toktokfood/assets/i
 // Utils
 import {verticalScale, moderateScale, scale} from 'toktokfood/helper/scale';
 
-
-
-const TimerModal = (props) => {
+const TimerModal = props => {
   const {title, message, estimatedDeliveryTime, onCallBack, orderStatus} = props;
   const [visible, setVisible] = useState(false);
   const [duration, setDuration] = useState(1800000);
@@ -22,66 +21,66 @@ const TimerModal = (props) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
-      console.log('blur')
-      BackgroundTimer.clearInterval(timer.current)
+      BackgroundTimer.clearInterval(timer.current);
     });
 
     return unsubscribe;
   }, [navigation]);
 
   useEffect(() => {
-    if(estimatedDeliveryTime){
-      timer.current = BackgroundTimer.setInterval(() => { 
-        checkTimeReached()
+    if (estimatedDeliveryTime) {
+      timer.current = BackgroundTimer.setInterval(() => {
+        checkTimeReached();
       }, 30000);
     } else {
-      if(duration > 0){
-        timer.current = BackgroundTimer.setInterval(() => { 
-          setDuration(prev => prev - 5000)
+      if (duration > 0) {
+        timer.current = BackgroundTimer.setInterval(() => {
+          setDuration(prev => prev - 5000);
         }, 5000);
       } else {
-        setVisible(true)
+        setVisible(true);
       }
-     
     }
-    return () => { BackgroundTimer.clearInterval(timer.current) }
-  }, [duration, estimatedDeliveryTime])
+    return () => {
+      BackgroundTimer.clearInterval(timer.current);
+    };
+  }, [duration, estimatedDeliveryTime]);
 
   const checkTimeReached = () => {
-    let edt = moment(estimatedDeliveryTime, 'h:mm a')
-    console.log(estimatedDeliveryTime)
-    if(moment().isAfter(edt)){
-      BackgroundTimer.clearInterval(timer.current)
-      setVisible(true)
+    let edt = moment(estimatedDeliveryTime, 'h:mm a');
+    console.log(estimatedDeliveryTime);
+    if (moment().isAfter(edt)) {
+      BackgroundTimer.clearInterval(timer.current);
+      setVisible(true);
     }
-  }
+  };
 
   const onCloseModal = () => {
-    setVisible(false)
-    onCallBack()
-  }
+    setVisible(false);
+    onCallBack();
+  };
 
   const checkMessage = () => {
-    switch(orderStatus){
+    switch (orderStatus) {
       case 'po':
-        return "Preparing your order took longer than expected. Let's wait for another 10 minutes for it to be ready."
+        return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
       case 'rp':
-        return "Aw. Seems like there is no rider yet. Please wait until we get you a rider!"
+        return 'Aw. Seems like there is no rider yet. Please wait until we get you a rider!';
       case 'f':
-        return "Sorry. Looks like your rider is stucked in traffic. Let's give him few minutes to arrive."
-     }
-  }
+        return "Sorry. Looks like your rider is stucked in traffic. Let's give him few minutes to arrive.";
+    }
+  };
 
   const checkTitle = () => {
-    switch(orderStatus){
+    switch (orderStatus) {
       case 'po':
-        return "Still Preparing Order"
+        return 'Still Preparing Order';
       case 'rp':
-        return "Cannot Find Rider"
+        return 'Cannot Find Rider';
       case 'f':
-        return "Rider in Traffic"
-     }
-  }
+        return 'Rider in Traffic';
+    }
+  };
 
   return (
     <>
@@ -139,7 +138,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONTS.REGULAR,
     marginTop: moderateScale(8),
-    marginBottom: moderateScale(15)
+    marginBottom: moderateScale(15),
   },
   buttonWrapper: {
     marginHorizontal: 10,
@@ -159,7 +158,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#868686',
     borderRadius: NUMBERS.BORDER_RADIUS,
-    marginRight: 20
+    marginRight: 20,
   },
   btn2Style: {
     flex: 1,

@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {useLazyQuery} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
 import {APP_FLAVOR} from '../res/constants';
-import {AUTH_CLIENT, GET_USER_SESSION, GET_GLOBAL_SETTINGS} from '../graphql';
+import {AUTH_CLIENT, GET_USER_SESSION, GET_GLOBAL_SETTINGS, GET_APP_SERVICES} from '../graphql';
 import {onError} from '../util/ErrorUtility';
 
 const imageWidth = Dimensions.get('window').width - 80;
@@ -14,7 +14,7 @@ import SplashImage from '../assets/images/LinearGradiant.png';
 import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
 import ToktokSuperApp from '../assets/images/ToktokLogo.png';
 
-const Landing = ({createSession, destroySession, navigation}) => {
+const Landing = ({createSession, destroySession, setAppServices, navigation}) => {
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
     client: AUTH_CLIENT,
     onError: error => {
@@ -46,7 +46,7 @@ const Landing = ({createSession, destroySession, navigation}) => {
         });
       }
     },
-    onCompleted: ({getUserSession}) => {
+    onCompleted: async ({getUserSession}) => {
       try {
         const {user, accessToken} = getUserSession;
         AsyncStorage.setItem('accessToken', accessToken);
@@ -66,32 +66,18 @@ const Landing = ({createSession, destroySession, navigation}) => {
           userId: user.id,
         });
 
-        //TODO: Check for valid user status and access token. Also check for existing user record is valid
-
-        if (APP_FLAVOR === 'C') {
-          if (user.person.firstName == null || user.person.lastName == null) {
-            navigation.replace('RootDrawer', {
-              screen: 'AuthenticatedStack',
-              params: {
-                screen: 'PostRegistration',
-              },
-            });
-          } else {
-            navigation.replace('RootDrawer', {
-              screen: 'AuthenticatedStack',
-              params: {
-                // screen: 'CheckConsumerLocation',
-                screen: 'ConsumerLanding',
-              },
-            });
-          }
-        }
-
-        if (APP_FLAVOR === 'D') {
+        if (user.person.firstName == null || user.person.lastName == null) {
           navigation.replace('RootDrawer', {
             screen: 'AuthenticatedStack',
             params: {
-              screen: 'DriverHomeBottomTab',
+              screen: 'PostRegistration',
+            },
+          });
+        } else {
+          navigation.replace('RootDrawer', {
+            screen: 'AuthenticatedStack',
+            params: {
+              screen: 'ConsumerLanding',
             },
           });
         }
@@ -138,6 +124,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+  setAppServices: payload => dispatch({type: 'SET_APP_SERVICES', payload}),
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
 });
 

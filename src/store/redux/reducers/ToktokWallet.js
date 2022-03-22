@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   wallet: {
     id: 0,
     balance: 0,
+    creditCardBalance: 0,
     status: 0,
     accountId: 0,
     motherId: 0,
@@ -55,6 +56,8 @@ export default (state = INITIAL_STATE, action) => {
           ...state.wallet,
           currency: {...state.wallet.currency},  
           balance: +payload.wallet.balance , 
+          creditCardBalance: +payload.wallet.creditCardBalance,
+          transferableBalance: +payload.wallet.transferableBalance,
           recentTransactions: payload.transactions.recentTransactions, 
           allTransactions: payload.transactions.allTransactions,
         }

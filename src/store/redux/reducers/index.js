@@ -1,4 +1,5 @@
 import Application from './Application';
+import AppServices from './AppServices';
 import Session from './Session';
 import Constants from './Constants';
 import Nav from './Nav';
@@ -8,6 +9,7 @@ import ToktokLoad from './ToktokLoad';
 
 export default {
   application: Application,
+  appServices: AppServices,
   session: Session,
   constants: Constants,
   nav: Nav,
