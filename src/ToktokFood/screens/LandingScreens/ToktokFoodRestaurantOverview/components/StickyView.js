@@ -60,6 +60,7 @@ export const StickyView = ({onCheckShop}) => {
   const [shopDetails, setShopDetails] = useState(null);
   const [showOverlay, setShowOverlay] = useState(false);
   const [showProductOverlay, setShowProductOverlay] = useState(false);
+  const [nextSched, setNextSched] = useState(null);
 
   const {setNavBarHeight} = useContext(VerifyContext);
   const {customerInfo, location} = useSelector(state => state.toktokFood);
@@ -85,8 +86,10 @@ export const StickyView = ({onCheckShop}) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
-      let {latitude, longitude, hasOpen} = getShopDetails;
-
+      let {latitude, longitude, hasOpen, nextOperatingHrs} = getShopDetails;
+      if (nextOperatingHrs) {
+        setNextSched(nextOperatingHrs);
+      }
       dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       setShopDetails(getShopDetails);
       onCheckShop(hasOpen);
@@ -231,22 +234,28 @@ export const StickyView = ({onCheckShop}) => {
   }, [id, activeTab, loading]);
 
   const OperatingHours = () => {
-    const {nextOperatingHrs, operatingHours} = shopDetails;
-    const {fromTime, day: nxtDay} = nextOperatingHrs;
+    const {operatingHours, dayLapsed} = shopDetails;
     const {fromTime: currFromTime} = operatingHours;
     const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
-    if (isAboutToOpen) {
+    if (nextSched === null) {
       return (
         <Text style={styles.closeText}>
-          Restaurant is currently closed. {'\n'}Please come back at {moment(fromTime, 'hh:mm:ss').format('LT')}
+          Restaurant is currently unavailable. {'\n'}Please come back at a later time.
+        </Text>
+      );
+    }
+    if (isAboutToOpen || dayLapsed === 0) {
+      return (
+        <Text style={styles.closeText}>
+          Restaurant is currently closed. {'\n'}Please come back at {moment(nextSched.fromTime, 'hh:mm:ss').format('LT')}
         </Text>
       );
     }
     return (
       <Text style={styles.closeText}>
-        Restaurant is currently closed. {'\n'}Please come back on {getWeekDay(nxtDay, true)},{' '}
-        {moment(fromTime, 'hh:mm:ss').add(1, 'day').format('MMMM DD')} at{' '}
-        {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
+        Restaurant is currently closed. {'\n'}Please come back on {getWeekDay(nextSched.day, true)},{' '}
+        {moment(nextSched.fromTime, 'hh:mm:ss').add(dayLapsed, 'day').format('MMMM DD')} at{' '}
+        {moment(nextSched.fromTime, 'hh:mm:ss').format('hh:mm A')}.
       </Text>
     );
   };

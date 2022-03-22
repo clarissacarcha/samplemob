@@ -3,7 +3,7 @@ import {food1, image1, image2, image3, image4} from 'toktokfood/assets/images';
 export const getWeekDay = (day, full = false) => {
   let nameDay = full ? 'Monday' : 'Mon';
   switch (Number(day)) {
-    case 0:
+    case 7:
       nameDay = full ? 'Sunday' : 'Sun';
       break;
     case 1:

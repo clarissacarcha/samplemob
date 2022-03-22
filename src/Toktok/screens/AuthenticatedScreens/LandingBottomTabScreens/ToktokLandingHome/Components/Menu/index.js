@@ -91,7 +91,7 @@ export const Menu = ({setUserLocation, constants}) => {
       identifier: 'foodComingSoon',
       label: 'Food',
       icon: ToktokfoodIcon,
-      onPress: () => navigation.push('ToktokfoodMerchantComingSoon'),
+      onPress: () => navigation.push('TokTokFoodSplashScreen'),
       isNew: true,
     },
     {
