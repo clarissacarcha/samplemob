@@ -123,14 +123,14 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.XL, 
     textAlign:"center",
     marginTop: 10,
-    marginHorizontal: moderateScale(20),
+    marginHorizontal: moderateScale(10),
     color: "#F6841F"
   },
   messageText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
     textAlign:"center",
-    marginHorizontal: moderateScale(20),
+    marginHorizontal: moderateScale(10),
     marginTop: 10,
   },
   largeIcon: {

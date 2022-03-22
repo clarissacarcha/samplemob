@@ -8,6 +8,7 @@ export const GET_TOKTOKFOOD_NOTIFICATIONS = gql`
       shopId
       userId
       orderStatus
+      orderIsfor
       referenceNum
       status
     }

@@ -1,8 +1,8 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {Image, StyleSheet, Text, View, Alert} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
 import ContentLoader from 'react-native-easy-content-loader';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 import {down_arrow_ic, markerIcon} from 'toktokfood/assets/images';
 import {moderateScale} from 'toktokfood/helper/scale';
@@ -16,10 +16,13 @@ import {CHECK_HAS_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 
 const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleContainer}) => {
   const navigation = useNavigation();
-  const {location, customerInfo} = useSelector((state) => state.toktokFood);
+  const dispatch = useDispatch();
+  const {location, customerInfo} = useSelector(state => state.toktokFood);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const onSetLocationDetails = () => {
+    dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
+    dispatch({type: 'SET_TOKTOKFOOD_SHIPPING', payload: []});
     navigation.navigate('ToktokFoodAddressDetails');
     setShowConfirmation(false);
   };
@@ -38,17 +41,16 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
   const [checkHasTemporaryCart, {data: temporaryCart}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: (cart) => {
+    onCompleted: cart => {
       if (cart?.checkHasTemporaryCart?.shopid !== 0) {
-        console.log(cart?.checkHasTemporaryCart?.shopid);
         setShowConfirmation(true);
       } else {
         onSetLocationDetails();
       }
     },
-    onError: (err) => {
-      Alert.alert('', 'Something went wrong.');
-    },
+    // onError: err => {
+    //   Alert.alert('', 'Something went wrong.');
+    // },
   });
 
   const showConfirmationDialog = () => {
@@ -72,21 +74,23 @@ const ChangeAddress = ({title = '', searchBox = true, backOnly = false, styleCon
         }}
         hasTwoButtons
       />
-      <View onTouchEndCapture={() => showConfirmationDialog()} style={[styles.container, styleContainer]}>
+      <TouchableOpacity onPress={() => showConfirmationDialog()} style={[styles.container, styleContainer]}>
         <Text style={{color: '#FFA700', fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S}}>Deliver to</Text>
         <View style={styles.divider} />
         {location.address == undefined ? (
           renderLoader()
         ) : (
           <View style={styles.textAddressContainer}>
-            <Image style={styles.addressMarkerIcon} source={markerIcon} />
-            <Text style={styles.textAddress} numberOfLines={1}>
-              {location.address}
-            </Text>
+            <View style={{flexDirection: 'row'}}>
+              <Image style={styles.addressMarkerIcon} source={markerIcon} />
+              <Text style={styles.textAddress} numberOfLines={1}>
+                {location.address}
+              </Text>
+            </View>
             <Image style={styles.downArrowIc} source={down_arrow_ic} />
           </View>
         )}
-      </View>
+      </TouchableOpacity>
     </>
   );
 };
@@ -97,20 +101,26 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: moderateScale(25),
+    paddingHorizontal: moderateScale(20),
     paddingTop: moderateScale(20),
     paddingBottom: moderateScale(15),
   },
   textAddressContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    flexShrink: 1,
+    flex: 1,
+    paddingRight: moderateScale(5),
+    // flex: 0.9,
+    // maxWidth: moderateScale(280),
+    // justifyContent: 'space-between',
   },
   textAddress: {
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.S,
     fontFamily: FONT.REGULAR,
-    flexShrink: 1,
+    flex: 1,
+    top: moderateScale(3),
+    paddingRight: moderateScale(5),
   },
   addressMarkerIcon: {
     width: moderateScale(18),
@@ -127,7 +137,6 @@ const styles = StyleSheet.create({
   downArrowIc: {
     width: moderateScale(12),
     height: moderateScale(12),
-    marginLeft: 4,
     resizeMode: 'contain',
   },
 });

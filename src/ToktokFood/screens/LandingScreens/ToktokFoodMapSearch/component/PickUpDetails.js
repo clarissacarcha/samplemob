@@ -8,7 +8,7 @@ import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
 import {useNavigation} from '@react-navigation/native';
 
 import {useKeyboard} from 'toktokfood/hooks';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import {DELETE_SHOP_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -23,28 +23,29 @@ import {useAlert} from 'src/hooks';
 import {clearShopHistory} from 'toktokfood/helper/persistentHistory';
 import AddressBookModal from './AddressBookModal';
 
-const PickUpDetails = (props) => {
-  const {pinAddress, onConfirm, isCart} = props;
+// const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
+
+const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
+  const alert = useAlert();
+
   const navigation = useNavigation();
   const keyboardHeight = useKeyboard();
-  const dispatchToStore = useDispatch();
   const [showSuccess, setShowSuccess] = useState(false);
   const [showContacts, setShowContacts] = useState(false);
+  const [showInvalidMobile, setShowInvalidMobile] = useState(false);
 
-  const {customerInfo} = useSelector((state) => state.toktokFood);
-  const alert = useAlert();
-  const {receiver, location} = useSelector((state) => state.toktokFood);
+  const {receiver, customerInfo} = useSelector(state => state.toktokFood);
 
   const initialState = {
-    completeAddress: '',
-    contactPerson: location ? location?.details?.contactPerson : '',
-    contactPersonNumber: location ? location?.details?.contactPersonNumber : '',
+    landmark: '',
+    contactPerson: '',
+    contactPersonNumber: '',
   };
 
   const reducer = (state, action) => {
     switch (action.type) {
-      case 'SET_COMPLETE_ADDRESS':
-        return {...state, completeAddress: action.value};
+      case 'SET_LANDMARK':
+        return {...state, landmark: action.value};
       case 'SET_CONTACT_NAME':
         return {...state, contactPerson: action.value};
       case 'SET_CONTACT_NUMBER':
@@ -58,7 +59,7 @@ const PickUpDetails = (props) => {
   const [checkHasTemporaryCart, {data: temporaryCart}] = useLazyQuery(CHECK_HAS_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onError: (err) => {
+    onError: err => {
       Alert.alert('', 'Something went wrong.');
     },
   });
@@ -72,7 +73,7 @@ const PickUpDetails = (props) => {
         branchid: 0,
       },
     },
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert, error});
     },
     onCompleted: ({deleteShopTemporaryCart}) => {
@@ -81,8 +82,7 @@ const PickUpDetails = (props) => {
     },
   });
 
-  const onConfirmAddress = () => {
-    dispatchToStore({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: state});
+  const proceedChangeAddress = () => {
     if (temporaryCart?.checkHasTemporaryCart?.shopid !== 0) {
       deleteShopTemporaryCart();
     } else {
@@ -90,6 +90,19 @@ const PickUpDetails = (props) => {
       onConfirm(state);
     }
     clearShopHistory();
+  };
+
+  const onConfirmAddress = () => {
+    const mobileNumber = state.contactPersonNumber.replace(/\s/g, '').replace(/[()]/g, '');
+    if (mobileNumber.length !== 0) {
+      if (mobileNumber.length !== 10 || mobileNumber[0] !== '9') {
+        setShowInvalidMobile(true);
+      } else {
+        proceedChangeAddress();
+      }
+    } else {
+      proceedChangeAddress();
+    }
   };
 
   const onContactSelected = (contact = {name: '', number: ''}) => {
@@ -105,7 +118,7 @@ const PickUpDetails = (props) => {
     <>
       <AddressBookModal
         visibility={showContacts}
-        onSelected={(v) => onContactSelected(v)}
+        onSelected={v => onContactSelected(v)}
         onClose={() => setShowContacts(false)}
       />
       <Loader visibility={loading} message="Saving" hasImage={false} loadingIndicator />
@@ -120,18 +133,28 @@ const PickUpDetails = (props) => {
           isCart ? navigation.navigate('ToktokFoodHome') : navigation.pop();
         }}
       />
+      <DialogMessage
+        visibility={showInvalidMobile}
+        title="Invalid Mobile Number"
+        messages="Kindly provide valid mobile number"
+        type="warning"
+        btn1Title="OK"
+        onCloseModal={() => {
+          setShowInvalidMobile(false);
+        }}
+      />
       <View style={[styles.proto, styles.cartBorder, {bottom: keyboardHeight - 35}]}>
         <View style={styles.sheet}>
-          <Text style={styles.pickUpAddressTitle}>Pickup Address Details</Text>
+          <Text style={styles.pickUpAddressTitle}>Drop-off Address Details</Text>
           <TextTicker loop duration={10000} repeatSpacer={25} marqueeDelay={1000} style={styles.pickUpAddress}>
             {pinAddress + '.'}
           </TextTicker>
           <View style={styles.inputWrapper}>
             <TextInput
               style={styles.input}
-              placeholder="Your Complete Address"
-              value={state.completeAddress}
-              onChangeText={(value) => dispatch({type: 'SET_COMPLETE_ADDRESS', value})}
+              placeholder="Landmark"
+              value={state.landmark}
+              onChangeText={value => dispatch({type: 'SET_LANDMARK', value})}
             />
           </View>
           <View style={[styles.inputWrapper, styles.customInputWrapper]}>
@@ -139,20 +162,23 @@ const PickUpDetails = (props) => {
               style={[styles.input, {width: '72%'}]}
               placeholder="Contact Person"
               value={state.contactPerson}
-              onChangeText={(value) => dispatch({type: 'SET_CONTACT_NAME', value})}
+              onChangeText={value => dispatch({type: 'SET_CONTACT_NAME', value})}
             />
             <TouchableOpacity style={styles.addressBookButton} onPress={() => setShowContacts(true)}>
               <Text style={styles.addressBookText}>Address Book</Text>
             </TouchableOpacity>
           </View>
-          <View style={[styles.inputWrapper]}>
+          <View style={[styles.inputWrapper, {flexDirection: 'row'}]}>
+            <View style={styles.countryCodeWrapper}>
+              <Text style={styles.countryCodeText}>+63</Text>
+            </View>
             <TextInput
-              maxLength={11}
-              style={styles.input}
+              maxLength={10}
+              style={[styles.input, {height: 57}]}
               keyboardType="number-pad"
               placeholder="Contact Person's Number"
               value={state.contactPersonNumber}
-              onChangeText={(value) => dispatch({type: 'SET_CONTACT_NUMBER', value})}
+              onChangeText={value => dispatch({type: 'SET_CONTACT_NUMBER', value})}
             />
           </View>
 
@@ -185,8 +211,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   pickUpAddressTitle: {
-    fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.XL,
+    fontSize: FONT_SIZE.L,
     marginBottom: verticalScale(17),
   },
   pickUpAddress: {
@@ -238,6 +263,21 @@ const styles = StyleSheet.create({
   customInputWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  countryCodeWrapper: {
+    height: '100%',
+    marginRight: 5,
+    display: 'flex',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    backgroundColor: '#F0F0F0',
+  },
+  countryCodeText: {
+    fontSize: 14,
+    color: COLOR.BLACK,
+    fontFamily: FONT.BOLD,
   },
 });
 export default PickUpDetails;

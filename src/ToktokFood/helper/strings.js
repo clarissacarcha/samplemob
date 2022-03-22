@@ -1,5 +1,36 @@
 import {food1, image1, image2, image3, image4} from 'toktokfood/assets/images';
 
+export const getWeekDay = (day, full = false) => {
+  let nameDay = full ? 'Monday' : 'Mon';
+  switch (Number(day)) {
+    case 0:
+      nameDay = full ? 'Sunday' : 'Sun';
+      break;
+    case 1:
+      nameDay = full ? 'Monday' : 'Mon';
+      break;
+    case 2:
+      nameDay = full ? 'Tuesday' : 'Tue';
+      break;
+    case 3:
+      nameDay = full ? 'Wednessday' : 'Wed';
+      break;
+    case 4:
+      nameDay = full ? 'Thursday' : 'Thu';
+      break;
+    case 5:
+      nameDay = full ? 'Friday' : 'Fri';
+      break;
+    case 6:
+      nameDay = full ? 'Saturday' : 'Sat';
+      break;
+    default:
+      nameDay = full ? 'Monday' : 'Mon';
+      break;
+  }
+  return nameDay;
+};
+
 export const availableTips = [
   {
     id: 1,

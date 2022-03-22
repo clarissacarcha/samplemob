@@ -59,7 +59,7 @@ const SuccessfulModal = ({successModalVisible , amount , cashInLogParams , onCas
         onCompleted: ({getWallet})=> {
             refreshWallet();
             onCashIn({
-                balance: getWallet.balance
+                balance: getWallet.totalBalance
             })
             return navigation.pop(4)
         }

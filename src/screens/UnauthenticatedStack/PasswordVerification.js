@@ -27,7 +27,6 @@ const PasswordVerification = ({ navigation, route, createSession }) => {
   const inputRef = useRef();
 
   const alert = useAlert();
-
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -42,7 +41,7 @@ const PasswordVerification = ({ navigation, route, createSession }) => {
         deviceType: Platform.select({ ios: 'I', android: 'A' }),
       },
     },
-    onError: (error) => {
+    onError: error => {
       console.log(error);
       onErrorAlert({ alert, error });
     },
@@ -59,42 +58,23 @@ const PasswordVerification = ({ navigation, route, createSession }) => {
         userId: user.id,
       }); // Set onesignal userId tag for the phone
 
-      if (APP_FLAVOR == 'C') {
-        if (user.person.firstName == null || user.person.lastName == null) {
-          navigation.replace('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'PostRegistration',
-            },
-          });
-          return;
-        }
-
+      if (user.person.firstName == null || user.person.lastName == null) {
         navigation.replace('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
-            // screen: 'CheckConsumerLocation',
+            screen: 'PostRegistration',
+          },
+        });
+      } else {
+        navigation.replace('RootDrawer', {
+          screen: 'AuthenticatedStack',
+          params: {
             screen: 'ConsumerLanding',
           },
         });
-        return;
-      }
-
-      if (APP_FLAVOR == 'D') {
-        navigation.replace('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'DriverHomeBottomTab',
-          },
-        });
-        return;
       }
     },
   });
-
-  // useEffect(() => {
-  //   inputRef.current.focus();
-  // }, []);
 
   const onSubmit = () => {
     if (!password) {

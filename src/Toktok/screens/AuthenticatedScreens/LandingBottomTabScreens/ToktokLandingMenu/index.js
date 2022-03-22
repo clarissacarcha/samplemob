@@ -128,8 +128,8 @@ export const ToktokLandingMenu = ({ navigation }) => {
           <Text style={{ paddingLeft: 20, paddingTop: 20, fontFamily: FONT.BOLD }}> Accounts</Text>
           <ScrollView>
             {/*--------------- MY DELIVERIES ---------------*/}
-            <DrawerButton
-              label="Saved Locations"
+            {/* <DrawerButton
+              label="My Saved Locations"
               onPress={() => {
                 navigation.push('ToktokSavedLocations');
               }}
@@ -159,7 +159,7 @@ export const ToktokLandingMenu = ({ navigation }) => {
               fontFamily: FONT.BOLD
             }}>Help Centre</Text>
             <DrawerButton
-              label="Contact Us"
+              label="Help"
               style={{ borderTopWidth: 1, borderTopColor: "red", backgroundColor: "red" }}
               onPress={() => {
                 navigation.push('TalkToUs');

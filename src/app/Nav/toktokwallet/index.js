@@ -2,6 +2,7 @@ import React from 'react';
 import {View,PanResponder} from 'react-native';
 import CashInScreens from "./CashInScreens";
 import CashOutScreens from "./CashOutScreens";
+import GlobalScreens from "./GlobalScreens";
 import KYCScreens from './KYCScreens';
 import LandingScreens from './LandingScreens';
 import ScanQRScreens from './ScanQRScreens';
@@ -14,6 +15,7 @@ export default ({Navigator}) => {
     <>
         {CashInScreens({Navigator})}
         {CashOutScreens({Navigator})}
+        {GlobalScreens({Navigator})}
         {KYCScreens({Navigator})}
         {LandingScreens({Navigator})}
         {ScanQRScreens({Navigator})}

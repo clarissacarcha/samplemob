@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {View,Text,StyleSheet, TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet, TouchableOpacity,ScrollView} from 'react-native'
 import {numberFormat} from 'toktokwallet/helper'
 import {useSelector} from 'react-redux'
 import {useAlert} from 'src/hooks/useAlert'
@@ -8,7 +8,8 @@ import CheckBox from 'react-native-check-box'
 import {
     HeaderImageBackground,
     HeaderTitle,
-    CheckIdleState
+    CheckIdleState,
+    TransferableHeaderReminder
 } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 
@@ -46,8 +47,8 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                     <View style={{height: 32}}/>
                     <View style={styles.walletContent}>
                             <View>
-                                <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>PHP {numberFormat(tokwaAccount.wallet.balance ? tokwaAccount.wallet.balance : 0)}</Text>
-                                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                                <Text style={{fontSize: 24,fontFamily: FONT.BOLD}}>PHP {numberFormat(tokwaAccount.wallet.transferableBalance ? tokwaAccount.wallet.transferableBalance : 0)}</Text>
+                                <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Transferable Amount</Text>
                             </View>
                             <TouchableOpacity 
                                 onPress={()=> navigation.navigate("ToktokWalletPaymentOptions" ,{onCashIn: ()=> null,amount: 0})} 
@@ -61,8 +62,13 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                 </HeaderImageBackground>
                 <RecipientInfo recipientInfo={recipientInfo}/>
             </View>
+            <View style={{marginTop: 32}}/>
+            <TransferableHeaderReminder/>
 
-
+            <ScrollView
+                contentContainerStyle={{ flexGrow: 1}}
+                style={{flex:1, backgroundColor:"white"}}
+            >
             <EnterAmount 
                 amount={amount} 
                 setAmount={setAmount} 
@@ -79,33 +85,14 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
             />
 
             <View style={{paddingHorizontal: 16}}> 
-                        {/* <Text style={{fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginBottom: 10 ,textAlign:"center"}}>
-                             Please read our Terms and Conditions before you proceed with your transaction.
-                         </Text>   */}
-                    <View style={{
-                        flexDirection:"row",   
-                        marginBottom: 25,  
-                    }}>
+                <TouchableOpacity 
+                    // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
+                    onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
+                    style={{paddingLeft: 5,marginRight: 16,marginBottom: 20}}
+                >
+                    <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Please read our <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before you proceed with your transaction.</Text>
+                </TouchableOpacity>
 
-                    <CheckBox
-                            isChecked={isCertify}
-                            onClick={()=>{
-                                return setCertify(!isCertify)
-                            }}
-                            style={{
-                                alignSelf: "center",
-                                marginRight: 2,
-                            }}
-                        />
-
-                        <TouchableOpacity 
-                            // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")} 
-                            onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
-                            style={{paddingLeft: 5,marginRight: 16}}
-                        >
-                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>I hereby read and accept the <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before proceeding with my transaction.</Text>
-                        </TouchableOpacity>
-                    </View>
 
                 <ProceedButton 
                     amount={amount} 
@@ -119,7 +106,7 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
                     isCertify={isCertify}
                 />
             </View>   
-
+            </ScrollView>
         </View>
       </CheckIdleState>
     )
@@ -128,7 +115,7 @@ export const ToktokWalletScanQRConfirm = ({navigation,route})=> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "#FFF2D5"
     },
     headings: {
         height: 190,

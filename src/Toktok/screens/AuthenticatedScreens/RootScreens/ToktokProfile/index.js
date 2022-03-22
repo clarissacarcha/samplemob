@@ -7,11 +7,12 @@ import {useMutation} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
 import QRCode from 'react-native-qrcode-svg';
 import {COLOR, DARK, FONT_SIZE, LIGHT, MEDIUM, FONT_MEDIUM, FONT_REGULAR} from '../../../../../res/constants';
+import {COLOR as COLOR_V} from '../../../../../res/variables';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../../../components';
 // import {BlackButton} from '../../../../components/ui';
 import {BlackButton} from '../../../../../revamp';
 import {useAlert} from '../../../../../hooks/useAlert';
-import {onError, onErrorAlert} from '../../../../../util/ErrorUtility';
+import {onErrorAlert} from '../../../../../util/ErrorUtility';
 import {PATCH_PERSON_POST_REGISTRATION} from '../../../../../graphql';
 
 const ImageWidth = (Dimensions.get('window').width - 40) / 2;
@@ -77,6 +78,10 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
       return;
     }
     patchPersonPostRegistration();
+  };
+
+  const onOnlineFranchiseeLogin = () => {
+    navigation.push('OnlineFranchiseeLogin');
   };
 
   const onProfilePress = () => {
@@ -185,6 +190,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
           keyboardType="email-address"
           autoCapitalize="none"
           caretHidden
+          placeholderTextColor={LIGHT}
         />
 
         {/*-------------------- REFERRAL CODE --------------------*/}
@@ -203,11 +209,12 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
               onChangeText={value => setReferralCode(value)}
               style={styles.input}
               placeholder="Referral Code"
+              placeholderTextColor={LIGHT}
             />
           </View>
         )}
 
-        {/*-------------------- REFERRAL Name --------------------*/}
+        {/*-------------------- REFERRAL NAME --------------------*/}
         {session.user.consumer.referralName && (
           <View>
             <Text style={styles.label}>Referral Name</Text>
@@ -217,8 +224,42 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
           </View>
         )}
 
+        {/*-------------------- FRANCHISEE CODE --------------------*/}
+        {session.user.consumer.franchiseeCode && (
+          <View>
+            <Text style={styles.label}>Franchisee Code</Text>
+            <View style={[styles.input, {justifyContent: 'center'}]}>
+              <Text style={{color: MEDIUM}}>{session.user.consumer.franchiseeCode}</Text>
+            </View>
+          </View>
+        )}
+
+        {/*-------------------- FRANCHISEE NAME --------------------*/}
+        {session.user.consumer.franchiseeCode && (
+          <View>
+            <Text style={styles.label}>Franchisee Name</Text>
+            <View style={[styles.input, {justifyContent: 'center'}]}>
+              <Text
+                style={{
+                  color: MEDIUM,
+                }}>{`${session.user.consumer.franchiseeFirstName}${session.user.consumer.franchiseeLastName}`}</Text>
+            </View>
+          </View>
+        )}
+
+        {/*-------------------- LINK ONLINE FRANCHISEE --------------------*/}
+        {!session.user.consumer.franchiseeCode && (
+          <BlackButton
+            onPress={onOnlineFranchiseeLogin}
+            label="Link toktok franchisee account"
+            touchableStyle={{marginHorizontal: 10, marginTop: 20}}
+          />
+        )}
+
         {/*-------------------- UPDATE BUTTON --------------------*/}
         <BlackButton onPress={onSubmit} label="Update Profile" touchableStyle={{marginHorizontal: 10, marginTop: 20}} />
+
+        <View style={{height: 20}} />
 
         {/*-------------------- CHANGE PASSWORD BUTTON --------------------*/}
         {/* <BlackButton
@@ -260,20 +301,23 @@ const styles = StyleSheet.create({
   },
   input: {
     marginHorizontal: 10,
-    borderWidth: 1,
-    borderColor: MEDIUM,
-    borderRadius: 5,
-    paddingLeft: 10,
+    // borderWidth: 1,
+    // borderColor: MEDIUM,
+    // borderRadius: 5,
+    // paddingLeft: 10,
+    // height: 50,
+    // color: DARK,
+    // fontFamily: FONT_REGULAR,
+    // fontSize: FONT_SIZE.M,
     height: 50,
-    color: DARK,
-    fontFamily: FONT_REGULAR,
-    fontSize: FONT_SIZE.M,
+    borderRadius: 5,
+    paddingHorizontal: 8,
+    backgroundColor: COLOR_V.LIGHT,
   },
   label: {
     marginHorizontal: 10,
     marginTop: 20,
     marginBottom: 5,
-    fontSize: 12,
     color: DARK,
     fontFamily: FONT_MEDIUM,
     fontSize: FONT_SIZE.M,

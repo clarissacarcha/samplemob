@@ -1,21 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useLazyQuery} from '@apollo/react-hooks';
-import React, {useEffect, useRef, useState} from 'react';
-import {Platform, RefreshControl, ScrollView, StyleSheet, View, SectionList, Text, Image} from 'react-native';
-import {useSelector} from 'react-redux';
+import React, {useEffect, useMemo, useState} from 'react';
+import {Platform, RefreshControl, StyleSheet, View, SectionList, Text, Image} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+
+// GraphQL & Queries
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import ChangeAddress from 'toktokfood/components/ChangeAddress';
-import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
+// Components
+import {CategoryList, ModalKycStatus, RestaurantList} from './index';
+import ChangeAddress from 'toktokfood/components/ChangeAddress';
+import HeaderTabs from 'toktokfood/components/HeaderTabs';
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import YellowButton from 'toktokfood/components/YellowButton';
+
+// Assets
 import {FONT_SIZE} from 'res/variables';
-import {empty_shop_2} from 'toktokfood/assets/images';
+import {empty_promos, new_empty_shop_icon} from 'toktokfood/assets/images';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
-// Components
-import {CategoryList, ModalKycStatus, RestaurantList} from './index';
-// import RestaurantItem from './RestaurantList/RestaurantItem';
 
 const tabs = [
   {
@@ -26,23 +32,14 @@ const tabs = [
     id: 2,
     name: 'Promos',
   },
-  // {
-  //   id: 3,
-  //   name: 'All',
-  // },
 ];
 
 const StickyView = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const {location} = useSelector(state => state.toktokFood);
-
-  const RenderNavBar = () => {
-    return (
-      <View style={[styles.headerWrapper, styles.navbarWrapper]}>
-        <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={setActiveTab} />
-      </View>
-    );
-  };
 
   // const RenderTitle = () => (
   //   <>
@@ -60,16 +57,13 @@ const StickyView = () => {
   const [loadMore, setLoadMore] = useState(false);
   const [pendingProcess, setPendingProcess] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  let variableInput = {
-    limit: 10,
+  const variableInput = {
+    limit: 11,
     radius: 3,
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
     tabId: activeTab.id,
   };
-
-  // console.log(variableInput);
-  // const scrollRef = useRef();
 
   // data fetching for shops
   const [getShops, {data, error, loading, fetchMore, refetch}] = useLazyQuery(GET_SHOPS, {
@@ -80,25 +74,33 @@ const StickyView = () => {
     fetchPolicy: 'network-only',
   });
 
-  useEffect(() => {
-    if (location) {
-      getShops({
-        variables: {
-          input: {
-            page: 0,
-            limit: 10,
-            radius: 3,
-            userLongitude: location?.longitude,
-            userLatitude: location?.latitude,
-            tabId: activeTab.id,
-          },
-        },
-      });
-    }
-  }, [location, activeTab]);
+  const sample = [
+    {type: 'ADDRESS', data: []}, // Static sections.
+    {type: 'CATEGORIES', data: []},
+    {type: 'RESTAURANTS', data: data && data?.getShops.length > 0 ? data.getShops : [{index: 1}]},
+  ];
+
+  // Commented for optimization
+  // useEffect(() => {
+  //   if (location) {
+  //     getShops({
+  //       variables: {
+  //         input: {
+  //           page: 0,
+  //           limit: 20,
+  //           radius: 3,
+  //           userLongitude: location?.longitude,
+  //           userLatitude: location?.latitude,
+  //           tabId: activeTab.id,
+  //         },
+  //       },
+  //     });
+  //   }
+  // }, [location, activeTab]);
 
   useEffect(() => {
     if (location) {
+      console.log(location.latitude, location.longitude);
       getShops({
         variables: {
           input: {
@@ -108,7 +110,7 @@ const StickyView = () => {
         },
       });
     }
-  }, [location, activeTab]);
+  }, [location]);
 
   useEffect(() => {
     if (page != 0 && data && data.getShops.length > 0) {
@@ -149,16 +151,16 @@ const StickyView = () => {
   //   navigation.navigate('ToktokFoodCategories');
   // };
 
-  const handleLoadMore = nativeEvent => {
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 120;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+  };
+
+  const onLoadMore = nativeEvent => {
     if (!loadMore && pendingProcess) {
       setPage(prev => prev + 1);
       setLoadMore(isCloseToBottom(nativeEvent));
     }
-  };
-
-  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingToBottom = 120;
-    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
   };
 
   const onRefresh = () => {
@@ -177,22 +179,59 @@ const StickyView = () => {
     });
   };
 
-  const sample = [
-    {type: 'ADDRESS', data: []}, // Static sections.
-    {type: 'CATEGORIES', data: []},
-    {type: 'RESTAURANTS', data: data ? data.getShops : [{index: 1}]},
-  ];
+  const onSelectActiveTab = async item => {
+    await getShops({
+      variables: {
+        input: {
+          ...variableInput,
+          page: 0,
+          tabId: item.id,
+        },
+      },
+    });
+    setActiveTab(item);
+  };
+
+  const onSetLocationDetails = () => {
+    dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
+    dispatch({type: 'SET_TOKTOKFOOD_SHIPPING', payload: []});
+    navigation.navigate('ToktokFoodAddressDetails');
+  };
 
   const EmptyList = () => {
-    return (
-      <>
+    if (activeTab.id === 1) {
+      return (
         <View style={styles.emptyContainer}>
-          <Image style={styles.emptyImg} resizeMode="contain" source={empty_shop_2} />
+          <Image style={styles.emptyImg} resizeMode="contain" source={new_empty_shop_icon} />
+          <Text style={styles.emptyTextTitle}>No Restaurant Available</Text>
           <Text style={styles.emptyText}>
-            It seems like there is no open restaurant near you. Refresh or try again later.
+            It seems like there is no open restaurant{'\n'}near you. Refresh or try again later.
           </Text>
+
+          <View style={styles.btnContainer}>
+            <YellowButton onPress={onSetLocationDetails} label="Try other location" btnStyle={styles.btnStyle} />
+          </View>
         </View>
-      </>
+      );
+    }
+    return (
+      <View style={styles.emptyContainer}>
+        <Image style={styles.emptyImg} resizeMode="contain" source={empty_promos} />
+        <Text style={styles.emptyTextTitle}>No Promos Available</Text>
+        <Text style={styles.emptyText}>There are no restaurants with promos{'\n'}available as of the moment.</Text>
+
+        <View style={styles.btnContainer}>
+          <YellowButton onPress={onSetLocationDetails} label="Try other location" btnStyle={styles.btnStyle} />
+        </View>
+      </View>
+    );
+  };
+
+  const RenderNavBar = () => {
+    return (
+      <View style={[styles.headerWrapper, styles.navbarWrapper]}>
+        <HeaderTabs activeTab={activeTab} tabs={tabs} setActiveTab={onSelectActiveTab} />
+      </View>
     );
   };
 
@@ -203,26 +242,30 @@ const StickyView = () => {
         keyExtractor={(item, index) => item + index}
         stickyHeaderIndices={[2]}
         stickySectionHeadersEnabled
-        contentContainerStyle={{justifyContent: 'center'}}
+        // contentContainerStyle={{justifyContent: 'center'}}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
         }
         onScroll={({nativeEvent}) => {
           if (isCloseToBottom(nativeEvent)) {
-            handleLoadMore(nativeEvent);
+            onLoadMore(nativeEvent);
           }
         }}
         scrollEventThrottle={15}
         renderItem={props => {
+          if (loading || error || location == undefined) {
+            return (
+              <View style={styles.loaderContainer}>
+                <LoadingIndicator style={styles.loaderStyle} isFlex isLoading={true} />
+              </View>
+            );
+          }
+          if ((!data || data?.getShops?.length === 0) && props.index < 1) {
+            return EmptyList();
+          }
           if (props.index < 1) {
             return (
-              <RestaurantList
-                location={location}
-                loading={loading}
-                error={error}
-                data={props.section.data}
-                loadMore={loadMore}
-              />
+              <RestaurantList activeTab={activeTab} loading={loading} data={props?.section?.data} loadMore={loadMore} />
             ); //empty list design
           }
           return null;
@@ -243,32 +286,42 @@ const StickyView = () => {
         }}
       />
       <ModalKycStatus />
-
-      {/* <ScrollView
-        stickyHeaderIndices={[2]}
-        nestedScrollEnabled
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
-        }
-        onScroll={({nativeEvent}) => {
-          if (isCloseToBottom(nativeEvent)) {
-            handleLoadMore(nativeEvent);
-          }
-        }}
-        scrollEventThrottle={15}> */}
-      {/* <View style={styles.adsContainer}>
-          <AdvertisementSection />
-        </View> */}
-      {/* <ChangeAddress />
-        <CategoryList horizontal homeRefreshing={refreshing} rightText="See all" />
-        <RenderNavBar /> */}
-      {/* <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} /> */}
-      {/* </ScrollView> */}
     </>
   );
 };
 
+{
+  /* <ScrollView
+  stickyHeaderIndices={[2]}
+  nestedScrollEnabled
+  refreshControl={
+    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FFA700']} tintColor="#FFA700" />
+  }
+  onScroll={({nativeEvent}) => {
+    if (isCloseToBottom(nativeEvent)) {
+      handleLoadMore(nativeEvent);
+    }
+  }}
+  scrollEventThrottle={15}>
+  <View style={styles.adsContainer}>
+    <AdvertisementSection />
+  </View>
+  <ChangeAddress />
+  <CategoryList horizontal homeRefreshing={refreshing} rightText="See all" />
+  <RenderNavBar />
+  <RestaurantList location={location} loading={loading} error={error} data={data} loadMore={loadMore} />
+  </ScrollView> */
+}
+
 const styles = StyleSheet.create({
+  btnContainer: {
+    paddingTop: 20,
+  },
+  btnStyle: {
+    width: 150,
+    borderRadius: 5,
+    height: 35,
+  },
   container: {
     backgroundColor: 'transparent',
   },
@@ -288,20 +341,37 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   emptyContainer: {
-    height: verticalScale(300),
     alignItems: 'center',
-    justifyContent: 'center',
+    height: verticalScale(500),
+    paddingTop: moderateScale(50),
+    // justifyContent: 'center',
   },
   emptyImg: {
-    height: moderateScale(175),
-    width: moderateScale(250),
+    width: moderateScale(193),
+    height: moderateScale(146),
+    right: moderateScale(5),
+  },
+  emptyTextTitle: {
+    color: '#F6841F',
+    fontSize: 17,
+    marginTop: moderateScale(20),
+    fontWeight: '700',
   },
   emptyText: {
-    color: '#9E9E9E',
-    fontSize: FONT_SIZE.L,
+    fontSize: FONT_SIZE.M,
     textAlign: 'center',
-    marginTop: moderateScale(20),
+    marginTop: moderateScale(5),
     marginHorizontal: moderateScale(20),
+    color: '#000',
+  },
+  loaderStyle: {
+    // marginVertical: 30,
+    justifyContent: 'flex-start',
+  },
+  loaderContainer: {
+    justifyContent: 'flex-start',
+    height: verticalScale(500),
+    paddingTop: moderateScale(50),
   },
 });
 

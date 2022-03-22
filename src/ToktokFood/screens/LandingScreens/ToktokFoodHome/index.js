@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, View, StatusBar} from 'react-native';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
@@ -13,7 +13,7 @@ const ToktokFoodHome = () => {
   // const [viewHeight, setViewHeight] = useState(100);
 
   const getWindowDimension = event => {
-    StatusBar.setHidden(false, 'slide');
+    // StatusBar.setHidden(false, 'slide');
     let height = event.nativeEvent.layout.height;
     // setViewHeight(height);
   };

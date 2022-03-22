@@ -60,7 +60,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
         referralCode,
       },
     },
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert, error});
     },
     onCompleted: ({res}) => {
@@ -178,7 +178,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
         <Text style={styles.label}>First Name</Text>
         <TextInput
           value={firstName}
-          onChangeText={(value) => setFirstName(value)}
+          onChangeText={value => setFirstName(value)}
           style={styles.input}
           placeholder="First Name"
         />
@@ -187,7 +187,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
         <Text style={styles.label}>Last Name</Text>
         <TextInput
           value={lastName}
-          onChangeText={(value) => setLastName(value)}
+          onChangeText={value => setLastName(value)}
           style={styles.input}
           placeholder="Last Name"
         />
@@ -196,7 +196,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
         <Text style={styles.label}>Email Address</Text>
         <TextInput
           value={emailAddress}
-          onChangeText={(value) => setEmailAddress(value)}
+          onChangeText={value => setEmailAddress(value)}
           style={styles.input}
           placeholder="Email Address"
           keyboardType="email-address"
@@ -217,7 +217,7 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
             <Text style={styles.label}>Referral Code</Text>
             <TextInput
               value={referralCode}
-              onChangeText={(value) => setReferralCode(value)}
+              onChangeText={value => setReferralCode(value)}
               style={styles.input}
               placeholder="Referral Code"
             />
@@ -248,13 +248,13 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
   constants: state.constants,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConsumerProfile);
@@ -290,7 +290,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 20,
     marginBottom: 5,
-    fontSize: 12,
     color: DARK,
     fontFamily: FONT_MEDIUM,
     fontSize: FONT_SIZE.M,

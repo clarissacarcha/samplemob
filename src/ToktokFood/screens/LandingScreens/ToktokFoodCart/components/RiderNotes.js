@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useContext} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Text, View, TextInput} from 'react-native';
 import {useSelector} from 'react-redux';
+import _ from 'lodash';
 
 import styles from '../styles';
 import YellowButton from 'toktokfood/components/YellowButton';
@@ -11,15 +12,53 @@ const {COLOR} = CONSTANTS;
 
 import {verticalScale} from 'toktokfood/helper/scale';
 
-const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = false, forDelivery = true}) => {
+const RiderNotes = ({
+  onNotesChange,
+  notes = '',
+  onPlaceOrder,
+  showPlaceOrder = false,
+  forDelivery = true,
+  disableWalletCheckout = true,
+  deliveryFee = 0,
+}) => {
   const navigation = useNavigation();
   const {toktokWallet, temporaryCart, paymentMethod} = useContext(VerifyContext);
-  const {customerWallet} = useSelector(state => state.toktokFood);
-  const isDisabled = paymentMethod === 'TOKTOKWALLET' ? temporaryCart?.totalAmount > toktokWallet?.balance : false;
+  const {customerWallet, promotionVoucher} = useSelector(state => state.toktokFood);
+  const [totalAmount, setTotalAmount] = useState(temporaryCart?.totalAmount);
+
+  const isDisabled = paymentMethod === 'TOKTOKWALLET' ? totalAmount > toktokWallet?.balance : false;
 
   // const onPlaceOrderNavigate = () => {
   //   navigation.replace('ToktokFoodDriver');
   // };
+
+  const onValidateAmount = useCallback(() => {
+    if (deliveryFee) {
+      const deliveryFeeTotal = forDelivery ? deliveryFee : 0;
+      let totalAmt = 0;
+      const groupPromo = _(promotionVoucher)
+        .groupBy('type')
+        .map((objs, key) => ({
+          amount: _.sumBy(objs, 'amount'),
+          discount_totalamount: _.sumBy(objs, 'discount_totalamount'),
+          type: key,
+        }))
+        .value();
+      const promotions = groupPromo.filter(promo => promo.type === 'promotion');
+      const deal = groupPromo.filter(promo => promo.type === 'deal');
+      if (promotions.length > 0) {
+        totalAmt += promotions[0]?.discount_totalamount;
+      }
+      if (deal.length > 0) {
+        totalAmt += deal[0]?.discount_totalamount;
+      }
+      setTotalAmount(temporaryCart?.totalAmount + deliveryFeeTotal - totalAmt);
+    }
+  }, [deliveryFee, promotionVoucher]);
+
+  useEffect(() => {
+    onValidateAmount();
+  }, [onValidateAmount]);
 
   return (
     <>
@@ -27,7 +66,7 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
         {forDelivery && (
           <>
             <View style={[styles.deliverWrapper, {paddingVertical: verticalScale(10)}]}>
-              <Text style={styles.sectionTitle}>Note to Rider</Text>
+              <Text style={styles.sectionTitle}>Note to Driver</Text>
             </View>
             <View>
               <TextInput
@@ -38,6 +77,7 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
                 value={notes}
                 placeholderTextColor={COLOR.MEDIUM}
                 onChangeText={v => onNotesChange(v)}
+                maxLength={320}
               />
             </View>
           </>
@@ -51,7 +91,7 @@ const RiderNotes = ({onNotesChange, notes = '', onPlaceOrder, showPlaceOrder = f
             label="Place Order"
             disabled={
               isDisabled ||
-              (temporaryCart.totalAmount > 2000 && customerWallet?.status === 2) ||
+              (disableWalletCheckout && customerWallet?.status === 2) ||
               !customerWallet ||
               customerWallet?.status === 0
             }

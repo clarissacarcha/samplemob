@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.WHITE,
   },
-  createText: {textDecorationLine: 'underline', color: COLOR.YELLOW, fontWeight: '600', paddingBottom: 10},
+  createText: {textDecorationLine: 'underline', color: COLOR.YELLOW, fontWeight: '700', paddingBottom: 10},
   deliveryFee: {
     flexDirection: 'row',
   },
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(10),
   },
   myOrderWrapper: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: verticalScale(10),
@@ -45,12 +46,14 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
     color: COLOR.BLACK,
     fontFamily: FONT.BOLD,
+    flex: 1,
   },
   actionText: {
     marginEnd: 3,
     color: '#FFA700',
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    flex: 1,
   },
   textAddressContainer: {
     maxWidth: '90%',
@@ -71,10 +74,9 @@ const styles = StyleSheet.create({
     tintColor: 'black',
   },
   foodItemImage: {
-    width: moderateScale(80),
-    height: moderateScale(80),
-    marginRight: 8,
-    borderRadius: 12,
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
     resizeMode: 'cover',
   },
   orderItemContainer: {
@@ -84,14 +86,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   foodPrice: {
-    marginEnd: 3,
+    // marginEnd: 3,
     color: '#FF6200',
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.L,
   },
   priceWrapper: {
     flex: 1,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
   orderInfoWrapper: {
@@ -277,6 +279,38 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  resellerBadge: {
+    // alignSelf: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    height: 25,
+    // width: 90,
+    // borderWidth: 1,
+    // backgroundColor: TOKFOODCOLOR.YELLOWBG,
+    // borderRadius: 5,
+    // padding: 3,
+  },
+  resellerText: {
+    color: COLOR.WHITE,
+    fontSize: FONT_SIZE.XS,
+    fontWeight: '700',
+  },
+  basePrice: {
+    color: '#9E9E9E',
+    fontSize: FONT_SIZE.M,
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid',
+  },
+  progressiveImageContainer: {
+    width: 80,
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F7F7FA',
+    borderRadius: 10,
+    marginRight: moderateScale(10),
   },
 });
 
