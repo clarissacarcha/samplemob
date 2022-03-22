@@ -13,7 +13,7 @@ export const getWeekDay = (day, full = false) => {
       nameDay = full ? 'Tuesday' : 'Tue';
       break;
     case 3:
-      nameDay = full ? 'Wednessday' : 'Wed';
+      nameDay = full ? 'Wednesday' : 'Wed';
       break;
     case 4:
       nameDay = full ? 'Thursday' : 'Thu';
