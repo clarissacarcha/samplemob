@@ -61,6 +61,7 @@ export const GET_SHOPS = gql`
         status
         dayStatus
       }
+      dayLapsed
     }
   }
 `;
@@ -128,6 +129,7 @@ export const GET_SHOP_DETAILS = gql`
         status
         dayStatus
       }
+      dayLapsed
     }
   }
 `;

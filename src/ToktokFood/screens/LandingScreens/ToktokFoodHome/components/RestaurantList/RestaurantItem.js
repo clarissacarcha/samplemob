@@ -17,7 +17,7 @@ const RestaurantItem = ({activeTab, item}) => {
   const navigation = useNavigation();
   const [validImg, setValidImg] = useState(true);
   const {id} = activeTab;
-  const {hasOpen, nextOperatingHrs, operatingHours} = item;
+  const {hasOpen, nextOperatingHrs, operatingHours, dayLapsed, hasProduct} = item;
   const {fromTime: currFromTime} = operatingHours;
   const [nextSched, setNextSched] = useState(null);
 
@@ -27,14 +27,15 @@ const RestaurantItem = ({activeTab, item}) => {
     }
   }, [nextOperatingHrs]);
 
-  // const {fromTime, day: nxtDay} = nextOperatingHrs;
-
   const displayNextOpeningHours = () => {
     if (hasOpen) {
       return null;
     }
+    if (nextSched === null || (!hasOpen && !hasProduct)) {
+      return <Text style={styles.overlayText}>Currently Unavailable</Text>;
+    }
     const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
-    if (isAboutToOpen) {
+    if (isAboutToOpen || dayLapsed === 0) {
       return <Text style={styles.overlayText}>Opens at {moment(nextSched.fromTime, 'hh:mm:ss').format('LT')}</Text>;
     }
     return (
@@ -83,7 +84,7 @@ const RestaurantItem = ({activeTab, item}) => {
             onError={() => setValidImg(false)}
           />
           <View style={{...styles.overlay, opacity: hasOpen ? 0 : 0.6}} />
-          {nextSched && displayNextOpeningHours()}
+          {displayNextOpeningHours()}
         </View>
         {item.promotionVouchers.length > 0 && id === 2 && renderPromotionVouchers()}
       </TouchableOpacity>
