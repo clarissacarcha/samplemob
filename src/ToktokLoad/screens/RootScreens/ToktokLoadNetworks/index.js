@@ -134,11 +134,6 @@ const MainComponent = ({ navigation, route }) => {
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Buy Load for</Text>
         <View style={styles.headerContentContainer}>
-          { imageLoading && (
-            <View style={{ position: "absolute", left: 10 }}>
-              <LoadingIndicator isLoading={true} size="small" />
-            </View>
-          )}
           <Image
             source={{ uri: route.params.network.iconUrl }}
             style={styles.networkLogo}

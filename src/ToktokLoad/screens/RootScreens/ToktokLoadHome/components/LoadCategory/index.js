@@ -79,7 +79,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
     let mobile = fieldFormat == 2 ? value.replace(/[^A-Za-z0-9 -.]/g, '') : value.replace(/[^0-9.]/g, '')
     if(activeCategory()?.name == "Telco"){
         if(mobile.length != 0 && (mobile.substring(0, 2) != "09" || mobile.length != 11)){
-          setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name}`);
+          setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name.toLowerCase()}`);
         } else {
           setMobileErrorMessage("");
         }

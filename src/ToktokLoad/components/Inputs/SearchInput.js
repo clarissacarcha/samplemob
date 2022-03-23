@@ -25,10 +25,11 @@ export const SearchInput = ({onClear , search = "", onChangeText, placeholder, c
           returnKeyType={returnKeyType}
         />
         {
-          (search != "" && hasClear) &&
-          <TouchableOpacity onPress={onClear} hitSlop={{top: 20,right: 20,bottom: 20,left: 20}} style={{...styles.icon,justifyContent:"flex-end",alignItems:"flex-end"}}>
-            <VectorIcon iconSet={ICON_SET.FontAwesome5} color={COLOR.DARK} name="times"/>
-          </TouchableOpacity>
+          search != "" && (
+            <TouchableOpacity onPress={onClear} hitSlop={{top: 20,right: 20,bottom: 20,left: 20}} style={{...styles.icon,justifyContent:"flex-end",alignItems:"flex-end"}}>
+              <VectorIcon iconSet={ICON_SET.FontAwesome5} color={COLOR.DARK} name="times"/>
+            </TouchableOpacity>
+          )
         }
       </View>
     </View>
