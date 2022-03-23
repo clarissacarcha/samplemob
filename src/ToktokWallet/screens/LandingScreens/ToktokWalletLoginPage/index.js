@@ -106,7 +106,6 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
             // if( getUserToktokWalletData.accountToken ) {
             //     await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
             // }
-  
             if(getUserToktokWalletData.toktokWalletAccountId && !session.user.toktokWalletAccountId){
                 // UPDATE SESSION HERE
                 dispatch({
@@ -140,13 +139,14 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
         <FlagSecureScreen>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             {
-                isRooted || ( !pinSet && tokwaAccount.constants.isPinCodeCheckingEnabled == "1" )
-                ? <RenderRestricted 
-                        isRooted={isRooted}
-                        pinSet={pinSet}
-                        isPinCodeCheckingEnabled={tokwaAccount.constants.isPinCodeCheckingEnabled }
-                  />
-                : <RenderAccessComponent kycPep={kycPep} kycStatus={kycStatus}/>
+                // isRooted || ( !pinSet && tokwaAccount.constants.isPinCodeCheckingEnabled == "1" )
+                // ? <RenderRestricted 
+                //         isRooted={isRooted}
+                //         pinSet={pinSet}
+                //         isPinCodeCheckingEnabled={tokwaAccount.constants.isPinCodeCheckingEnabled }
+                //   />
+                // : <RenderAccessComponent kycPep={kycPep} kycStatus={kycStatus}/>
+                <RenderAccessComponent kycPep={kycPep} kycStatus={kycStatus}/>
                 
             }
             
