@@ -42,6 +42,11 @@ export const GET_FAVORITE_LOADS = gql`
     }
   } 
 `
+export const POST_CHECK_DISABLED_LOAD_ITEM = gql`
+  mutation {
+    postCheckDisabledLoadItems
+  }
+`
 export const POST_FAVORITE_LOAD = gql`
   mutation postFavoriteLoad($input: FavoriteLoadInput) {
     postFavoriteLoad(input: $input) {

@@ -16,7 +16,7 @@ import { SearchLoadingIndicator } from "../SearchLoadingIndicator"
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
-import { GET_LOAD_ITEMS, GET_SEARCH_LOAD_ITEMS, POST_FAVORITE_LOAD, PATCH_REMOVE_FAVORITE_LOAD } from 'toktokload/graphql/model';
+import { GET_LOAD_ITEMS, GET_SEARCH_LOAD_ITEMS, POST_FAVORITE_LOAD, PATCH_REMOVE_FAVORITE_LOAD, POST_CHECK_DISABLED_LOAD_ITEM } from 'toktokload/graphql/model';
 import { usePrompt } from 'src/hooks';
 import { stubTrue } from "lodash";
 
@@ -102,6 +102,14 @@ export const LoadList = memo((props) => {
     }
   });
 
+  const [postCheckDisabledLoadItems, {loading: postLoading, error: postError}]  = useMutation(POST_CHECK_DISABLED_LOAD_ITEM, {
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: (error) => {
+    },
+    onCompleted: ({ postCheckDisabledLoadItems }) => {
+    }
+  });
+
   useEffect(() => {
     if(search == ""){
       processGetLoadItems();
@@ -124,6 +132,7 @@ export const LoadList = memo((props) => {
 
   const processGetLoadItems = (action) => {
     if(!action){ clearStates() }
+    postCheckDisabledLoadItems();
     getLoadItems({
       variables: {
         input: {
@@ -209,17 +218,17 @@ export const LoadList = memo((props) => {
     return <SearchLoadingIndicator />
   }
 
-  if(isMounted || (getLoadItemsLoading && !loadFavorite && loads.length == 0) || (getSearchLoading && !loadFavorite && !searchLoading)){
+  if(postLoading || isMounted || (getLoadItemsLoading && !loadFavorite && loads.length == 0) || (getSearchLoading && !loadFavorite && !searchLoading)){
     return (
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
       </View>
     )
   }
-  if(getLoadItemsError){
+  if(getLoadItemsError || postError){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={() => processGetLoadItems()} error={getLoadItemsError} />
+        <SomethingWentWrong onRefetch={() => processGetLoadItems()} error={getLoadItemsError ?? postError} />
       </View>
     )
   }

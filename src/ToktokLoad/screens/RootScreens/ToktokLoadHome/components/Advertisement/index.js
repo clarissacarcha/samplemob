@@ -5,6 +5,7 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { blank } from 'toktokload/assets/ads'
 import CONSTANTS from 'common/res/constants'
 import { LoadingIndicator } from "src/ToktokLoad/components";
+import FastImage from 'react-native-fast-image';
 
 const { FONT_SIZE, COLOR , SIZE , FONT_FAMILY: FONT , MARGIN} = CONSTANTS
 const { width , height } = Dimensions.get("window")
@@ -19,13 +20,16 @@ const DisplayImage = ({item, index, autoplay })=> {
           <LoadingIndicator isLoading={true} size="small" />
         </View>
       )}
-      <Image
-        source={{ uri: item.filename }}
+      <FastImage
         style={[styles.adImage, {...(autoplay ? {width}: { borderRadius: moderateScale(10) })}]}
+        source={{
+            uri: item.filename,
+            priority: FastImage.priority.high,
+        }}
+        resizeMode={FastImage.resizeMode.stretch}
         onLoadStart={() => { setImageLoading(true) }}
         onLoadEnd={() => { setImageLoading(false) }}
-        resizeMode="stretch"
-      />
+    />
     </View> 
   )
 }

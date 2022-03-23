@@ -70,6 +70,17 @@ export class ErrorUtility {
       })
       return;
     }
+
+    if(graphQLErrors[0]?.payload?.code == "loadPending"){
+      prompt({
+        type: "warning",
+        title: graphQLErrors[0]?.payload?.errorTitle,
+        message: graphQLErrors[0]?.message,
+        event: "TOKTOKBILLSLOAD",
+        onPress: () => navigation.navigate("ToktokLoadHome")
+      });
+      return;
+    }
     
     const maxAttempt = graphQLErrors[0]?.payload?.code == "VALIDATORMAXREQUEST";
     prompt({
@@ -80,7 +91,7 @@ export class ErrorUtility {
     });
 
     if(title){
-      return navigation.pop();
+      return navigation.navigate("ToktokLoadHome");
     }
   }
 }
