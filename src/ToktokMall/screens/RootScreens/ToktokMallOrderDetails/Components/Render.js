@@ -4,14 +4,15 @@ import {View, Text, TouchableOpacity, Image, FlatList, RefreshControl, ScrollVie
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { GET_ORDER_DETAILS } from '../../../../../graphql/toktokmall/model';
-import {Loading} from '../../../../Components';
+import {Loading, RefComDiscountRate} from '../../../../Components';
 import {placeholder, storeIcon} from '../../../../assets';
-import { FormatDateTime, FormatToText, Price } from '../../../../helpers';
+import { FormatDateTime, FormatToText, getRefComAccountType, Price } from '../../../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
 import { FONT } from '../../../../../res/variables';
 import CustomIcon from "../../../../Components/Icons";
 import moment from 'moment';
 import DashedLine from 'react-native-dashed-line';
+import { useSelector } from 'react-redux';
 
 const Store = ({data}) => {
 
@@ -303,6 +304,7 @@ const testdata = [{
 export const Renderer = ({id, email}) => {
 
   const [data, setData] = useState([])
+  const session = useSelector(state => state.session)
 
   const [getOrderDetails, {loading, error}] = useLazyQuery(GET_ORDER_DETAILS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -332,7 +334,8 @@ export const Renderer = ({id, email}) => {
     console.log("order id", id)
     getOrderDetails({variables: {
       input: {
-        orderId: id
+        orderId: id,
+        refCom: getRefComAccountType({session})
       }
     }})
     
