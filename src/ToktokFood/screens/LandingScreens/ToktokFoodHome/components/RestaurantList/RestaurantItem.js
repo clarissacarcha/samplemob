@@ -36,7 +36,7 @@ const RestaurantItem = ({activeTab, item}) => {
     }
     const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
     if (isAboutToOpen || dayLapsed === 0) {
-      return <Text style={styles.overlayText}>Opens at {moment(nextSched.fromTime, 'hh:mm:ss').format('LT')}</Text>;
+      return <Text style={styles.overlayText}>Opens at {moment(currFromTime, 'hh:mm:ss').format('LT')}</Text>;
     }
     return (
       <Text style={styles.overlayText}>
