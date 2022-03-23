@@ -275,6 +275,7 @@ const MainComponent = ({navigation,route})=> {
         placeholder="Search Favorites"
         containerStyle={{ padding: moderateScale(16) }}
         // onSubmitEditing={processSearch}
+        onClear={() => { setSearch("") }}
       />
       { displayFavorites }
       <View style={{ padding: moderateScale(16) }}>

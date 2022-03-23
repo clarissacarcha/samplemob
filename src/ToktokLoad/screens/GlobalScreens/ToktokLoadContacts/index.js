@@ -138,6 +138,7 @@ export const ToktokLoadContacts = ({navigation, route}) => {
           onChangeText={onSearchChange}
           value={searchString}
           placeholder="Search contacts"
+          onClear={() => { setSearchString("") }}
         />
       </View>
       <FlatList
