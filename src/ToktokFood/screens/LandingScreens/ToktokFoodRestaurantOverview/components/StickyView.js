@@ -237,6 +237,7 @@ export const StickyView = ({onCheckShop}) => {
     const {operatingHours, dayLapsed} = shopDetails;
     const {fromTime: currFromTime} = operatingHours;
     const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
+
     if (nextSched === null) {
       return (
         <Text style={styles.closeText}>
@@ -247,7 +248,7 @@ export const StickyView = ({onCheckShop}) => {
     if (isAboutToOpen || dayLapsed === 0) {
       return (
         <Text style={styles.closeText}>
-          Restaurant is currently closed. {'\n'}Please come back at {moment(nextSched.fromTime, 'hh:mm:ss').format('LT')}
+          Restaurant is currently closed. {'\n'}Please come back at {moment(currFromTime, 'hh:mm:ss').format('LT')}
         </Text>
       );
     }
