@@ -61,7 +61,6 @@ export const GET_SHOPS = gql`
         status
         dayStatus
       }
-      dayLapsed
     }
   }
 `;
