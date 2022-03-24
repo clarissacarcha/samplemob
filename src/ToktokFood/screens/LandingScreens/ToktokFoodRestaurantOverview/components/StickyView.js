@@ -248,7 +248,7 @@ export const StickyView = ({onCheckShop}) => {
     if (isAboutToOpen || dayLapsed === 0) {
       return (
         <Text style={styles.closeText}>
-          Restaurant is currently closed. {'\n'}Please come back at {moment(currFromTime, 'hh:mm:ss').format('LT')}
+          Restaurant is currently closed. {'\n'}Please come back at {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('LT')}
         </Text>
       );
     }

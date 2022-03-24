@@ -21,6 +21,8 @@ const RestaurantItem = ({activeTab, item}) => {
   const {fromTime: currFromTime} = operatingHours;
   const [nextSched, setNextSched] = useState(null);
 
+  console.log(item.shopname, item);
+
   useEffect(() => {
     if (nextOperatingHrs) {
       setNextSched(nextOperatingHrs);
@@ -36,7 +38,11 @@ const RestaurantItem = ({activeTab, item}) => {
     }
     const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
     if (isAboutToOpen || dayLapsed === 0) {
-      return <Text style={styles.overlayText}>Opens at {moment(currFromTime, 'hh:mm:ss').format('LT')}</Text>;
+      return (
+        <Text style={styles.overlayText}>
+          Opens at {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('LT')}
+        </Text>
+      );
     }
     return (
       <Text style={styles.overlayText}>
