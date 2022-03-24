@@ -218,7 +218,7 @@ export const LoadList = memo((props) => {
     return <SearchLoadingIndicator />
   }
 
-  if(postLoading || isMounted || (getLoadItemsLoading && !loadFavorite && loads.length == 0) || (getSearchLoading && !loadFavorite && !searchLoading)){
+  if(isMounted || (postLoading && getLoadItemsLoading && !loadFavorite && loads.length == 0) || (getSearchLoading && !loadFavorite && !searchLoading)){
     return (
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
@@ -238,10 +238,10 @@ export const LoadList = memo((props) => {
     <ScrollView
       refreshControl={
         <RefreshControl
-          refreshing={(getLoadItemsLoading || getSearchLoading) && !loadFavorite}
+          refreshing={(getLoadItemsLoading || getSearchLoading || postLoading) && !loadFavorite}
           onRefresh={() => {
             setSelectedLoad({});
-            search ? processSearch() : processGetLoadItems("refresh");
+            search ? processSearch(search) : processGetLoadItems("refresh");
           }}
         />
       }

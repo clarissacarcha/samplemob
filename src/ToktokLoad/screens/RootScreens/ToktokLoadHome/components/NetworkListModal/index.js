@@ -14,7 +14,7 @@ const { width , height } = Dimensions.get("window")
 
 const RenderItem = ({item,index,onPress}) => {
 
-  const [imageLoading, setImageLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(false);
   const onPressThrottle = useThrottle(()=>onPress(index), 2000)
 
   return (
@@ -27,7 +27,7 @@ const RenderItem = ({item,index,onPress}) => {
         )}
         <Image
           style={styles.image}
-          source={{ uri: item.iconUrl }}
+          source={{ uri: item.iconUrl, cache: "force-cache" }}
           resizeMode="contain"
           onLoadStart={() => { setImageLoading(true) }}
           onLoadEnd={() => { setImageLoading(false) }}

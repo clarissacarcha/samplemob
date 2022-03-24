@@ -21,6 +21,7 @@ export const VerifyContextProvider = ({children, navigation})=> {
   const [adsRegular,setAdsRegular] = useState([]);
   const [adsActions, setAdsAction] = useState({ loading: false, error: {} });
   const [refreshing, setRefreshing] = useState(false);
+  const [activeNetwork, setActiveNetwork] = useState(null);
   const prompt = usePrompt();
 
   const [getAdvertisements, { loading, error }] = useLazyQuery(GET_ADVERTISEMENTS, {
@@ -73,7 +74,9 @@ export const VerifyContextProvider = ({children, navigation})=> {
         adsActions,
         getAdvertisements,
         refreshing,
-        setRefreshing
+        setRefreshing,
+        activeNetwork,
+        setActiveNetwork
       }}
     >
       {children}

@@ -10,11 +10,15 @@ import { heart_selected_fill_icon } from 'toktokload/assets/icons'
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+//UTIL
+import { moderateScale } from "toktokload/helper";
+
 //components
-import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, SomethingWentWrong, SplashHome } from "src/ToktokLoad/components";
+import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, SomethingWentWrong, SplashHome, OrangeButton } from "src/ToktokLoad/components";
 import { BuyLoad, Favorites, VerifyContextProvider, VerifyContext, Advertisement , LoadCategory } from "./components";
 
 import CONSTANTS from 'common/res/constants'
+import { KeyboardAvoidingView } from "react-native";
 const { COLOR , FONT_FAMILY: FONT , SIZE , FONT_SIZE , MARGIN , SHADOW } = CONSTANTS
 
 const FavoritesNav = ({onPress})=> {
@@ -31,7 +35,18 @@ const MainComponent = ({ navigation, route }) => {
   //   headerRight: ()=> <FavoritesNav onPress={goToFavorites}/>
   // })
 
-  const { adsActions, adsRegular, getAdvertisements, mobileNumber, mobileErrorMessage, refreshing, setRefreshing } = useContext(VerifyContext);
+  const {
+    adsActions,
+    adsRegular,
+    getAdvertisements,
+    mobileNumber,
+    mobileErrorMessage,
+    refreshing,
+    setRefreshing,
+    adHighlight,
+    activeNetwork,
+    setActiveNetwork
+  } = useContext(VerifyContext);
   const [categories, setCategories]= useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
@@ -80,6 +95,10 @@ const MainComponent = ({ navigation, route }) => {
     getDataList();
   }
 
+  const onPressNext = () => {
+    navigation.navigate("ToktokLoadNetworks", { mobileNumber , network: activeNetwork });
+  }
+
   if(!showSplash && !refreshing && (loading || adsActions.loading)){
     return <View style={styles.container}>
             <LoadingIndicator isLoading={true} isFlex />
@@ -94,9 +113,12 @@ const MainComponent = ({ navigation, route }) => {
           </View>
   }
   return (
+    // <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "padding"} keyboardVerticalOffset={30}>
     <ScrollView
-      contentContainerStyle={styles.container}
+      style={styles.container}
+      contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
       refreshControl={
         <RefreshControl
           refreshing={loading || adsActions.loading}
@@ -118,6 +140,15 @@ const MainComponent = ({ navigation, route }) => {
         activeTab={activeTab?.id}
         activeCategory={()=>getActiveCategoryName(activeTab)}
       />
+      <View style={{ flex: 1, justifyContent: "flex-end", padding: moderateScale(16) }}>
+        { adHighlight.length > 0 && <Advertisement ads={adHighlight}/> }
+        <View style={{marginTop: 15}}/>
+        <OrangeButton
+          label="Next"
+          disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
+          onPress={onPressNext}
+        />
+      </View>
       {/* <ActionButton 
           fixNativeFeedbackRadius={true} 
           hideShadow={false} 
@@ -140,6 +171,8 @@ const MainComponent = ({ navigation, route }) => {
         </ActionButton.Item>
       </ActionButton> */}
     </ScrollView>
+      
+    // </KeyboardAvoidingView>
   );
 };
 

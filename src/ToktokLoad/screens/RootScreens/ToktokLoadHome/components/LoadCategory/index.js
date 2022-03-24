@@ -35,11 +35,12 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
     mobileNumber,
     setMobileNumber,
     setSubContainerStyle,
-    adHighlight
+    adHighlight,
+    activeNetwork,
+    setActiveNetwork
   } = useContext(VerifyContext);
 
   const [visible,setVisible] = useState(false);
-  const [activeNetwork,setActiveNetwork] = useState(null)
   const [networks,setNetworks] = useState([])
   const [imageLoading, setImageLoading] = useState(true);
 
@@ -76,8 +77,8 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
   const onChangeText = (value) => {
     // let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
     const fieldFormat = activeNetwork?.inputLength?.fieldFormat
-    let mobile = fieldFormat == 2 ? value.replace(/[^A-Za-z0-9 -.]/g, '') : value.replace(/[^0-9.]/g, '')
-    if(activeCategory()?.name == "Telco"){
+    let mobile = fieldFormat == 2 ? value.replace(/[^A-Za-z0-9]/g, '') : value.replace(/[^0-9.]/g, '')
+    if(activeNetwork?.inputLength?.name.toLowerCase() === "mobile number"){
         if(mobile.length != 0 && (mobile.substring(0, 2) != "09" || mobile.length != 11)){
           setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name.toLowerCase()}`);
         } else {
@@ -205,15 +206,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
         </>
       }
       { mobileErrorMessage != "" && <Text style={styles.errorMessage}>{mobileErrorMessage}</Text> }
-      <View style={{ flex: 1, justifyContent: "flex-end" }}>
-        { adHighlight.length > 0 && <Advertisement ads={adHighlight}/> }
-        <View style={{marginTop: 15}}/>
-        <OrangeButton
-          label="Next"
-          disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
-          onPress={onPressNext}
-        />
-      </View>
+     
     </View>
   );
 };

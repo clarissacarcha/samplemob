@@ -35,7 +35,6 @@ export const HeaderTabs = (props) => {
     return (
       <TouchableOpacity
         onPress={() => setActiveTab(item)}
-        hitSlop={styles.hitSlop}
       >
         <View style={[{ width: itemTabWidth }]}>
           <Text style={[styles.tabText, { color: activeTab?.id == item?.id ? "#F6841F" : "#707070"} ]}>
