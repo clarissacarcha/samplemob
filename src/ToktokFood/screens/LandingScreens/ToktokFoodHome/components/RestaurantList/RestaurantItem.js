@@ -21,8 +21,6 @@ const RestaurantItem = ({activeTab, item}) => {
   const {fromTime: currFromTime} = operatingHours;
   const [nextSched, setNextSched] = useState(null);
 
-  console.log(item.shopname, item);
-
   useEffect(() => {
     if (nextOperatingHrs) {
       setNextSched(nextOperatingHrs);
