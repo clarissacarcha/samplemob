@@ -67,9 +67,9 @@ export const ToktokLoadActivityDetails = ({ navigation, route }) => {
             <Text style={styles.mobileNumber}>{destinationNumber}</Text>
           </View>
         </View>
-        <View>
+        {/* <View>
           <Text style={styles.mediumBoldOrange}>₱{numberFormat(amount)}</Text>
-        </View>
+        </View> */}
       </View>
       <View style={styles.separator} />
       <View style={{ paddingVertical: moderateScale(16) }}>
