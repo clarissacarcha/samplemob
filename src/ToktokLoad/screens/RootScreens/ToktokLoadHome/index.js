@@ -113,8 +113,9 @@ const MainComponent = ({ navigation, route }) => {
           </View>
   }
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "position"} keyboardVerticalOffset={30}>
+    // <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "padding"} keyboardVerticalOffset={30}>
     <ScrollView
+      style={styles.container}
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
@@ -171,7 +172,7 @@ const MainComponent = ({ navigation, route }) => {
       </ActionButton> */}
     </ScrollView>
       
-    </KeyboardAvoidingView>
+    // </KeyboardAvoidingView>
   );
 };
 
