@@ -21,7 +21,7 @@ import { empty_favorite, empty_search } from 'toktokload/assets/images';
 //GRAPHQL & HOOKS
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
-import { GET_CHECK_FAVORITE_LOAD, GET_FAVORITE_LOADS, PATCH_REMOVE_FAVORITE_LOAD, POST_FAVORITE_LOAD } from 'toktokload/graphql/model';
+import { GET_CHECK_FAVORITE_LOAD, GET_FAVORITE_LOADS, PATCH_REMOVE_FAVORITE_LOAD, POST_FAVORITE_LOAD, POST_CHECK_DISABLED_LOAD_ITEM } from 'toktokload/graphql/model';
 import { usePrompt } from 'src/hooks';
 
 const MainComponent = ({navigation,route})=> {
@@ -109,6 +109,8 @@ const MainComponent = ({navigation,route})=> {
       } else {
         getFavoriteLoads();
       }
+      setLoadFavorite(null);
+      setSelectedLoad({});
       setFavoriteModal({ show: true, message: "Removed from your Favorites" });
       console.log(patchRemoveFavoriteLoad, "REMOVE");
     }
@@ -131,8 +133,19 @@ const MainComponent = ({navigation,route})=> {
       } else {
         getFavoriteLoads();
       }
+      setLoadFavorite(null);
+      setSelectedLoad({});
       setFavoriteModal({ show: true, message: "Added to your Favorites" });
       console.log(postFavoriteLoad, "ADD");
+    }
+  });
+
+  const [postCheckDisabledLoadItems, {loading: postLoading, error: postError}]  = useMutation(POST_CHECK_DISABLED_LOAD_ITEM, {
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: (error) => {
+    },
+    onCompleted: ({ postCheckDisabledLoadItems }) => {
+      processGetLoadItems();
     }
   });
 
@@ -164,6 +177,7 @@ const MainComponent = ({navigation,route})=> {
       clearStates();
     }
     getFavoriteLoads();
+    postCheckDisabledLoadItems();
   })
     
   const onPressOkPrompt = () => {
@@ -209,9 +223,6 @@ const MainComponent = ({navigation,route})=> {
     setFavorites(favorites)
     data.splice(dataIndex, 1)
     setData(data)
-  
-    setLoadFavorite(null);
-    setSelectedLoad({});
   }
 
   const displayFavorites = useMemo(() => {
@@ -235,13 +246,13 @@ const MainComponent = ({navigation,route})=> {
         ListEmptyComponent={() => ( <ListEmptyComponent /> )}
         refreshControl={
           <RefreshControl
-            refreshing={getFavoritesLoading && !loadFavorite}
+            refreshing={(getFavoritesLoading || postLoading) && !loadFavorite}
             onRefresh={() => processGetFavoriteLoads('refresh')}
           />
         }
       />
     )
-  }, [favorites, patchFavoriteLoading, postFavoriteLoading, loadFavorite, getFavoritesLoading])
+  }, [favorites, patchFavoriteLoading, postFavoriteLoading, loadFavorite, getFavoritesLoading, postLoading])
 
 
   const ListEmptyComponent = () => {
@@ -257,10 +268,10 @@ const MainComponent = ({navigation,route})=> {
     )
   }
     
-  if(getFavoritesError){
+  if(getFavoritesError || postError){
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={() => processGetFavoriteLoads('refresh')} error={getFavoritesError} />
+        <SomethingWentWrong onRefetch={() => processGetFavoriteLoads('refresh')} error={getFavoritesError ?? postError} />
       </View>
     )
   }
