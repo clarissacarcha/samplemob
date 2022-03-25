@@ -3,9 +3,10 @@ const COLOR = {
   LIGHT: '#F7F7FA', // Form backgroundColor and item separator
   MEDIUM: '#D3D3D3', // Placeholder Color
   DARK: '#808080', // Text and Icons
-  MEDIUM_DARK : '#F8F8F8',
+  MEDIUM_DARK: '#F8F8F8',
   BLACK: '#222222', // Text and Icons
   YELLOW: '#FDBA1C',
+  LIGHT_YELLOW: '#FFFCF4',
   ORANGE: '#F5841F',
   YELLOW_UNDERLAY: '#96641e', //TouchableHightlight underlayColor for YELLOW background
   WHITE_UNDERLAY: '#FDBA1C', //TouchableHightlight underlayColor for WHITE background
