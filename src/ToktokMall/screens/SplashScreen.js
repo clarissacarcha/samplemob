@@ -16,6 +16,7 @@ import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../graphql';
 import { TOKTOK_MALL_AUTH_GRAPHQL_CLIENT } from '../../graphql';
 import { GET_CUSTOMER_IF_EXIST, GET_CUSTOMER_RECORDS, GET_MY_CART, GET_ORDERS_NOTIFICATION } from '../../graphql/toktokmall/model';
+import {DynamicApiCall} from '../helpers'
 import {GET_SIGNATURE} from '../../graphql/toktokmall/virtual';
 import axios from 'axios';
 import moment from 'moment';
@@ -110,7 +111,7 @@ const Splash = ({
 
   const RegisterUser = async (signature) => {
 
-    let body = {
+    let variables = {
       firstname: session?.user.person.firstName,
       lastname: session?.user.person.lastName,
       // userid: session?.user.id,
@@ -121,28 +122,25 @@ const Splash = ({
       birthday: session?.user.person.birthdate ? moment(session?.user.person.birthdate).format("Y-m-d") : "",
       gender: session?.user.person.gender || "NA"
     }
+    console.log(variables)
+    const req = await DynamicApiCall("create_user", signature, variables, {debug: true})
 
-    try{
-
-      const {responseData, responseError} = await DynamicApiCall("create_user", signature, body)      
-      
-      if(responseData && responseData.success == 1){
-        // console.log("Response", responseData) 
-        setRegisterRetries(1)
-        authUser({
-          variables: {
-            input: {
-              toktokId: parseInt(responseData.user_id)
-            }
-          }
-        })
-      }else{
-        setFailed(true)
-       console.log("Response", responseData) 
-       console.log("Response Error", responseError)
-      }
-    }catch(err){
-      console.log(err)
+    if(req.responseData && req.responseData.success == 1){
+      setRegisterRetries(1)
+      authUser({variables: {
+        input: {
+          toktokId: parseInt(response.data.user_id)
+        }
+      }})
+    }else if(req.responseError && req.responseError.success == 0){
+      setFailed(true)
+      Toast.show(req.responseError.message, Toast.LONG)
+    }else if(req.responseError){
+      setFailed(true)
+      Toast.show("Something went wrong", Toast.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      setFailed(true)
+      Toast.show("Something went wrong", Toast.LONG)
     }
 
     return
