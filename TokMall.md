@@ -47,3 +47,12 @@ function FormatMapper(data) {
 # VALUES
 
 - Ramen Nagi Voucher TJCRNXJ8KHFG
+
+
+USER REGISTRATION (Splash Screen)
+CART
+PRODUCT DETAILS
+ - Add to cart
+PLACE ORDER
+ADDRESSES
+NOTIFICATIONS

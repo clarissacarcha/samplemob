@@ -16,7 +16,7 @@ import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../graphql';
 import { TOKTOK_MALL_AUTH_GRAPHQL_CLIENT } from '../../graphql';
 import { GET_CUSTOMER_IF_EXIST, GET_CUSTOMER_RECORDS, GET_MY_CART, GET_ORDERS_NOTIFICATION } from '../../graphql/toktokmall/model';
-import {ApiCall} from '../helpers'
+import {DynamicApiCall} from '../helpers'
 import {GET_SIGNATURE} from '../../graphql/toktokmall/virtual';
 import axios from 'axios';
 import moment from 'moment';
@@ -150,9 +150,8 @@ const Splash = ({
   //       setFailed(true)
   //   })
 
-  // }
   const RegisterUser = async (signature) => {
-    
+
     let variables = {
       firstname: session?.user.person.firstName,
       lastname: session?.user.person.lastName,
@@ -165,7 +164,7 @@ const Splash = ({
       gender: session?.user.person.gender || "NA"
     }
     console.log(variables)
-    const req = await ApiCall("create_user", variables, true)
+    const req = await DynamicApiCall("create_user", signature, variables, {debug: true})
 
     if(req.responseData && req.responseData.success == 1){
       setRegisterRetries(1)
