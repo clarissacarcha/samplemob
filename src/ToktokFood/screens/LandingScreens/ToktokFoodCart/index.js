@@ -245,10 +245,11 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getShopStatus}) => {
-      setLoadingWallet(false);
       if (getShopStatus.status === 'open') {
+        setLoadingWallet(false);
         placeCustomerOrder();
       } else {
+        setLoadingWallet(false);
         setShowCloseShop({visible: true, shopName: getShopStatus.shopname});
       }
     },
