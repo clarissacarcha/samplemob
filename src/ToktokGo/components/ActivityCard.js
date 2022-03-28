@@ -5,7 +5,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native';
 import {DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR, FONT_COLOR} from '../../res/constants';
-import {COLOR, FONT_SIZE} from '../../common/res/constants';
 import {constant, throttle} from 'lodash';
 import 'moment-timezone';
 
@@ -81,7 +80,7 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
 
   return (
     <View style={{paddingHorizontal: 16, paddingTop: 16, marginBottom: lastItem ? 20 : 0}}>
-      <TouchableHighlight onPress={onPressThrottled} underlayColor={COLOR} style={styles.card}>
+      <TouchableHighlight onPress={onPressThrottled} underlayColor={constants.COLOR.YELLOW} style={styles.card}>
         <View style={styles.taskBox}>
           {/*-------------------- CARD HEADER --------------------*/}
           {/* {APP_FLAVOR === 'D' && ( */}
@@ -257,7 +256,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   iconBox: {
-    backgroundColor: COLOR,
+    backgroundColor: constants.COLOR.YELLOW,
     height: 24,
     width: 24,
     borderRadius: 5,
@@ -296,7 +295,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: COLOR,
+    backgroundColor: constants.COLOR.YELLOW,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
     paddingHorizontal: 20,
@@ -306,7 +305,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: COLOR,
+    backgroundColor: constants.COLOR.YELLOW,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
     paddingHorizontal: 20,
