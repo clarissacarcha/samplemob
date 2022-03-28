@@ -1,18 +1,17 @@
-import React,{useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, ActivityIndicator, FlatList, RefreshControl, Image, StyleSheet, Dimensions} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import {COLOR, MEDIUM} from '../../../res/constants'
+import {COLOR, MEDIUM} from '../../../res/constants';
 import {ActivitiesCard} from '../../components';
 import {GET_DELIVERIES} from '../../../graphql';
-import NoData from '../../../assets/images/NoData.png'
+import NoData from '../../../assets/images/NoData.png';
 import DummyData from '../../components/DummyData';
 
 const imageWidth = Dimensions.get('window').width - 200;
 
 const CancelledActivities = ({navigation, session}) => {
-
   // const {data, loading, error, refetch} = useQuery(GET_DELIVERIES, {
   //   fetchPolicy: 'network-only',
   //   variables: {
@@ -25,8 +24,6 @@ const CancelledActivities = ({navigation, session}) => {
   //     console.log(e);
   //   },
   // });
-
- 
 
   // useFocusEffect(() => {
   // refetch();
@@ -58,23 +55,21 @@ const CancelledActivities = ({navigation, session}) => {
         showsVerticalScrollIndicator={false}
         data={DummyData.cancelled.getDeliveries}
         // data={data.getDeliveries}
-        keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl   colors={[COLOR]} tintColor={COLOR} />}
-            renderItem={({item, index}) => (  
-            <ActivitiesCard
-              delivery={item}
-              onPress={() =>
-                navigation.push('SelectedBookingDetails', {delivery: item, label: ['Booking', 'Details']})
-              }
-            // lastItem={data.getDeliveries.length == index + 1 ? true : false}
+        keyExtractor={item => item.id}
+        refreshControl={<RefreshControl colors={[COLOR]} tintColor={COLOR} />}
+        renderItem={({item, index}) => (
+          <ActivitiesCard
+            delivery={item}
+            onPress={() => navigation.push('SelectedBookingDetails', {delivery: item, label: ['Booking', 'Details']})}
+            lastItem={DummyData.cancelled.getDeliveries.length == index + 1 ? true : false}
           />
-          )}
+        )}
       />
     </View>
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 
