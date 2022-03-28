@@ -39,7 +39,7 @@ const SearchContact = ({navigation, route}) => {
         }
 
         const mappedContacts = contacts
-          .filter((contact) => {
+          .filter(contact => {
             if (Platform.OS === 'android') {
               if (contact.phoneNumbers.length === 0 || !contact.displayName) {
                 return false;
@@ -54,14 +54,14 @@ const SearchContact = ({navigation, route}) => {
               return true;
             }
           })
-          .map((contact) => {
+          .map(contact => {
             return {
               name: `${contact.givenName} ${contact.familyName}`,
               number: contact.phoneNumbers[0].number,
             };
           });
 
-        const sortedContacts = _.sortBy(mappedContacts, (contact) => contact.name);
+        const sortedContacts = _.sortBy(mappedContacts, contact => contact.name);
 
         setData(sortedContacts);
         setFilteredData(sortedContacts);
@@ -71,9 +71,9 @@ const SearchContact = ({navigation, route}) => {
     }
   };
 
-  const onSearchChange = (value) => {
+  const onSearchChange = value => {
     setSearchString(value);
-    const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(value.toLowerCase()));
+    const filteredContacts = data.filter(contact => contact.name.toLowerCase().includes(value.toLowerCase()));
     setFilteredData(filteredContacts);
   };
 
