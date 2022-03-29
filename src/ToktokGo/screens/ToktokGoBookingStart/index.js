@@ -1,12 +1,12 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-const ToktokGoLanding = () => {
+const ToktokGoBookingStart = () => {
   return (
     <View>
-      <Text>Landing</Text>
+      <Text>Booking start</Text>
     </View>
   );
 };
 
-export default ToktokGoLanding;
+export default ToktokGoBookingStart;

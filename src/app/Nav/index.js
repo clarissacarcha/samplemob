@@ -86,7 +86,7 @@ import TalkToUs from '../../screens/AuthenticatedStack/CommonScreens/TalkToUs';
 import OrderCancellation from '../../screens/AuthenticatedStack/CommonScreens/OrderCancellation';
 // import Notifications from '../../screens/AuthenticatedStack/CommonScreens/Notifications';
 import DeliveryRating from '../../screens/AuthenticatedStack/CommonScreens/DeliveryRating';
-import RateDriver from '../../ToktokGo/screens/RateDriver/RateDriver';
+import RateDriver from '../../ToktokGo/screens/ToktokGoRateDriver';
 // import Announcements from '../../screens/AuthenticatedStack/CommonScreens/Announcement/Announcements';
 // import GCashAccount from '../../screens/AuthenticatedStack/CommonScreens/GCashAccount';
 
