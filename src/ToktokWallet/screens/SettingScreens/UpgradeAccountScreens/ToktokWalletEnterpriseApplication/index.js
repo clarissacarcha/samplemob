@@ -96,6 +96,7 @@ const MainComponent = ({navigation})=> {
 
     return (
         <>
+        <Separator/>
         <PepQuestionnaireModal 
             visible={showPepQuestionnaire} 
             setVisible={setShowPepQuestionnaire}
@@ -106,7 +107,6 @@ const MainComponent = ({navigation})=> {
                 setShowPepQuestionnaire(false)
             }}
         />
-        <Separator/>
         <ScrollView style={styles.container}>
             <HeaderReminders/>
             <UploadForms/>
