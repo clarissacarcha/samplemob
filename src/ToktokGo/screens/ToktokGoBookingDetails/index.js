@@ -11,7 +11,7 @@ import {
   BookingMap,
 } from './Sections';
 import {ScrollView, StyleSheet, Text, TextInput, View, Dimensions, Image} from 'react-native';
-import {HeaderBack, HeaderTitle} from '../../../components/';
+import {HeaderBack, HeaderTitle} from '../../../components';
 import CONSTANTS from '../../../common/res/constants';
 import {TouchableOpacity} from '@gorhom/bottom-sheet';
 import EIcons from 'react-native-vector-icons/EvilIcons';

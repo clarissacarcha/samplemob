@@ -1,6 +1,7 @@
 import React from 'react';
-import SelectedBookingDetails from '../../../ToktokGo/screens/BookingDetails/SelectedBookingDetails';
+import SelectedBookingDetails from '../../../ToktokGo/screens/ToktokGoBookingDetails';
 import PinLocation from '../../../Toktok/screens/SavedLocationScreens/PinLocation';
+import ToktokGoBookingStart from '../../../ToktokGo/screens/ToktokGoBookingStart';
 
 const navbarShadowOption = {
   backgroundColor: 'white',
@@ -18,6 +19,7 @@ const navbarShadowOption = {
 export default ({Navigator}) => (
   <>
     {/* INSERT SCREENS HERE */}
+    <Navigator.Screen name="ToktokGoBookingStart" component={ToktokGoBookingStart} />
     <Navigator.Screen
       name="SelectedBookingDetails"
       component={SelectedBookingDetails}
