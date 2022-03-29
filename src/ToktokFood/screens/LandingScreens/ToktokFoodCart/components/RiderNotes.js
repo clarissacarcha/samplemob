@@ -20,17 +20,25 @@ const RiderNotes = ({
   forDelivery = true,
   disableWalletCheckout = true,
   deliveryFee = 0,
+  orderType,
 }) => {
   const navigation = useNavigation();
   const {toktokWallet, temporaryCart, paymentMethod} = useContext(VerifyContext);
   const {customerWallet, promotionVoucher} = useSelector(state => state.toktokFood);
   const [totalAmount, setTotalAmount] = useState(temporaryCart?.totalAmount);
 
-  const isDisabled = paymentMethod === 'TOKTOKWALLET' ? totalAmount > toktokWallet?.balance : false;
+  const isDisabled =
+    paymentMethod == 'TOKTOKWALLET'
+      ? forDelivery
+        ? totalAmount > toktokWallet?.balance
+        : false
+      : totalAmount - deliveryFee > toktokWallet?.balance;
 
   // const onPlaceOrderNavigate = () => {
   //   navigation.replace('ToktokFoodDriver');
   // };
+
+  console.log('disableWalletCheckout', disableWalletCheckout);
 
   const onValidateAmount = useCallback(() => {
     if (deliveryFee) {
