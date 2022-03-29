@@ -35,7 +35,6 @@ const MainComponent = ({navigation})=> {
     const IDTypeRef = useRef()
     const [idIndex,setIDIndex] = useState(1)
     const alert = useAlert();
-    const [data,setData] = useState(null)
     const [showPepQuestionnaire,setShowPepQuestionnaire] = useState(true)
 
     const onPress = (index)=> {
@@ -43,25 +42,31 @@ const MainComponent = ({navigation})=> {
         IDTypeRef.current.expand()
     }
 
-    const [getEnterpriseUpgradeRequest, { loading }] = useLazyQuery(GET_ENTERPRISE_UPGRADE_REQUEST , {
+    // const [getEnterpriseUpgradeRequest, { loading }] = useLazyQuery(GET_ENTERPRISE_UPGRADE_REQUEST , {
+    //     fetchPolicy:"network-only",
+    //     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    //     onCompleted: ({getEnterpriseUpgradeRequest})=> {
+    //         console.log(JSON.stringify(getEnterpriseUpgradeRequest))
+    //         setData(getEnterpriseUpgradeRequest)
+    //     },
+    //     onError: (error)=> onErrorAlert({alert,error,navigation})
+    // })
+
+    const {data , error ,loading } = useQuery(GET_ENTERPRISE_UPGRADE_REQUEST , {
         fetchPolicy:"network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onCompleted: ({getEnterpriseUpgradeRequest})=> {
-            console.log(JSON.stringify(getEnterpriseUpgradeRequest))
-            setData(getEnterpriseUpgradeRequest)
-        },
         onError: (error)=> onErrorAlert({alert,error,navigation})
     })
-
-    useEffect(()=>{
-        getEnterpriseUpgradeRequest()
-    },[])
 
     if(loading){
         return <AlertOverlay visible={loading}/>
     }
 
-    if(data?.status == 2 || data?.status == 5){
+    if (error) {
+        return <SomethingWentWrong />;
+    }
+
+    if(data?.getEnterpriseUpgradeRequest?.status == 2 || data?.getEnterpriseUpgradeRequest?.status == 5){
         return (
             <>
                 <Separator/>
@@ -70,7 +75,7 @@ const MainComponent = ({navigation})=> {
         )
     }
 
-    if(data?.status == 3){
+    if(data?.getEnterpriseUpgradeRequest?.status == 3){
         // Status is for compliance
         return (
             <>
@@ -96,7 +101,6 @@ const MainComponent = ({navigation})=> {
 
     return (
         <>
-        <Separator/>
         <PepQuestionnaireModal 
             visible={showPepQuestionnaire} 
             setVisible={setShowPepQuestionnaire}
@@ -107,6 +111,7 @@ const MainComponent = ({navigation})=> {
                 setShowPepQuestionnaire(false)
             }}
         />
+        <Separator/>
         <ScrollView style={styles.container}>
             <HeaderReminders/>
             <UploadForms/>
