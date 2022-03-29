@@ -192,7 +192,7 @@ const MainComponent = ({navigation,route})=> {
         let searchKey = value.toLowerCase();
         
         return item.name.toLowerCase().includes(searchKey) || item.amount.toString().includes(searchKey)
-          || item.descriptions.toLowerCase().includes(searchKey) || item.networkDetails.name.toLowerCase().includes(searchKey)
+          || item.descriptions.toLowerCase().includes(searchKey);
       });
       setHasSearch(true);
       setFavorites(filteredSearch)
