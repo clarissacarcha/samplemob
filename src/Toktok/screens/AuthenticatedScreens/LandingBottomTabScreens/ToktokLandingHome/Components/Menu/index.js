@@ -22,7 +22,7 @@ import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/PabiliServ
 import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/FoodService.png';
 import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoService.png';
 import WalletIcon from '../../../../../../../assets/toktok/icons/menu/WalletService.png';
-// import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/ToktokMall.png';
+import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/MallService.png';
 
 import ProfileIcon from '../../../../../../../assets/toktok/icons/menu/ProfileService.png';
 import HelpIcon from '../../../../../../../assets/toktok/icons/menu/HelpService.png';
@@ -108,12 +108,12 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => navigation.push('ToktokgoComingSoon'),
       isNew: true,
     },
-    // {
-    //   identifier: 'mall',
-    //   label: 'Mall',
-    //   icon: ToktokMallIcon,
-    //   onPress: () => navigation.push('ToktokMallLanding'),
-    // },
+    {
+      identifier: 'mall',
+      label: 'Mall',
+      icon: ToktokMallIcon,
+      onPress: () => navigation.push('ToktokMallLanding'),
+    },
     {
       identifier: 'promos',
       label: 'Promos',
