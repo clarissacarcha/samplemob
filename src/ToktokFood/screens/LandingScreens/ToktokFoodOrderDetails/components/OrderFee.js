@@ -7,6 +7,7 @@ import {FONT_SIZE, FONT} from 'res/variables';
 
 // Utils
 import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
+// import {getSubtotalOrder} from '../function';
 
 const getShippingDiscount = (promoDetails, deliveryFee) => {
   const {amount, isPercentage} = promoDetails;
@@ -22,16 +23,41 @@ const getShippingDiscount = (promoDetails, deliveryFee) => {
 };
 
 const OrderFee = ({data, forDelivery}) => {
-  let {originalShippingFee, totalAmount, deliveryAmount, promoDetails} = data;
+  let {
+    originalShippingFee,
+    // actualTotalamount,
+    deliveryAmount,
+    promoDetails,
+    promoDiscounts,
+    resellerDiscountTotal,
+    srpTotalamount,
+    srpTotal,
+    totalAmount,
+  } = data;
   let deliveryFee = deliveryAmount ? deliveryAmount : 0;
+  const promotionDiscount = promoDiscounts || 0;
   // let withShippingVoucher = promoDetails ? getShippingDiscount(promoDetails, originalShippingFee) : deliveryFee;
-  // console.log(promoDetails, deliveryAmount, originalShippingFee);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text>Subtotal</Text>
-        <Text style={styles.subtotal}>{`PHP ${totalAmount.toFixed(2)}`}</Text>
+        <Text style={styles.subtotal}>{`PHP ${srpTotal.toFixed(2)}`}</Text>
       </View>
+
+      {promoDiscounts > 0 && (
+        <View style={styles.header}>
+          <Text>Item Discount</Text>
+          <Text style={styles.subtotal}>{`-PHP ${promoDiscounts.toFixed(2)}`}</Text>
+        </View>
+      )}
+
+      {resellerDiscountTotal > 0 && (
+        <View style={styles.header}>
+          <Text>Item Discount (Reseller)</Text>
+          <Text style={styles.subtotal}>{`-PHP ${resellerDiscountTotal.toFixed(2)}`}</Text>
+        </View>
+      )}
+
       {forDelivery && (
         <View style={styles.header}>
           <Text>Delivery Fee</Text>

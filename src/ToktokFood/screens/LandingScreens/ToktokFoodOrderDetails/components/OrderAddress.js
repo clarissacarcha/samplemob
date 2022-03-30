@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -11,7 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useIsFocused} from '@react-navigation/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import DashedLine from 'react-native-dashed-line';
-
+import Separator from 'toktokfood/components/Separator';
 // Fonts/Colors
 import {COLORS} from 'res/constants';
 import {FONT_SIZE, FONT, COLOR} from 'res/variables';
@@ -24,8 +25,6 @@ import {moderateScale, verticalScale, isIphoneXorAbove} from 'toktokfood/helper/
 import DialogMessage from 'toktokfood/components/DialogMessage';
 
 const OrderAddress = ({transaction, riderDetails}) => {
-  console.log(transaction);
-
   const isFocus = useIsFocused();
   const navigation = useNavigation();
   const {location} = useSelector(state => state.toktokFood);
@@ -148,15 +147,25 @@ const OrderAddress = ({transaction, riderDetails}) => {
           <Image style={styles.icons} source={store} resizeMode="contain" />
           <Text style={styles.addressText}>{shopname}</Text>
         </View>
-        {orderIsfor == 1 && (
+        {orderIsfor === 1 && (
           <>
             <View style={styles.horizontalContainer} />
             <Text style={styles.restaurant}>Deliver to</Text>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={locationOutline} resizeMode="contain" />
-              <Text font style={styles.addressText} numberOfLines={1}>
-                {transaction?.address ? transaction.address : ''}
-              </Text>
+              <View style={styles.addressWrapper}>
+                <Text font style={styles.addressText} numberOfLines={1}>
+                  {transaction?.address ? transaction.address : ''}
+                </Text>
+                {transaction?.landmark != undefined && transaction?.landmark !== '' && (
+                  <Text
+                    font
+                    numberOfLines={2}
+                    style={[styles.addressText, {color: '#525252', marginTop: transaction.landmark === '' ? 0 : 4}]}>
+                    Landmark: {transaction.landmark}
+                  </Text>
+                )}
+              </View>
             </View>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={user} resizeMode="contain" />
@@ -164,7 +173,7 @@ const OrderAddress = ({transaction, riderDetails}) => {
             </View>
             <View style={styles.restauranContainer}>
               <Image style={styles.icons} source={phoneBlack} resizeMode="contain" />
-              <Text style={styles.addressText}>{conno}</Text>
+              <Text style={styles.addressText}>{conno[0] === '+' ? `${conno}` : `+63${conno}`}</Text>
             </View>
           </>
         )}
@@ -217,6 +226,7 @@ const styles = StyleSheet.create({
   restaurant: {
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.BOLD,
+    marginBottom: moderateScale(5),
   },
   restauranContainer: {
     flexDirection: 'row',
@@ -249,5 +259,8 @@ const styles = StyleSheet.create({
     paddingLeft: moderateScale(6),
     flex: isIphoneXorAbove() ? 0.7 : 1,
     flexDirection: 'row',
+  },
+  addressWrapper: {
+    flexDirection: 'column',
   },
 });

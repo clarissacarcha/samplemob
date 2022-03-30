@@ -1,12 +1,13 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useRef, useContext, useCallback} from 'react';
-import {Image, View, Text, TouchableOpacity, Alert} from 'react-native';
+import React, {useRef, useContext, useCallback, useState, useMemo} from 'react';
+import {Image, View, Text, TouchableOpacity, Alert, ImageBackground} from 'react-native';
 // import _ from 'lodash';
 import styles from '../styles';
 import {useNavigation} from '@react-navigation/native';
-// import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
-import {useMutation} from '@apollo/react-hooks';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 
 import {delete_ic} from 'toktokfood/assets/images';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
@@ -14,21 +15,43 @@ import {VerifyContext} from '../components';
 import {arrangeAddons} from '../functions';
 
 import Loader from 'toktokfood/components/Loader';
-import {DELETE_TEMPORARY_CART_ITEM} from 'toktokfood/graphql/toktokfood';
+import {DELETE_TEMPORARY_CART_ITEM, GET_ALL_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {FONT, FONT_SIZE} from 'res/variables';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import {moderateScale} from 'toktokfood/helper/scale';
+import {reseller_badge, food_placeholder} from 'toktokfood/assets/images';
+import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
 const MyOrderList = () => {
   // const route = useRoute();
+  const dispatch = useDispatch();
   // const { cart } = route.params;
   const navigation = useNavigation();
   // const {location, customerInfo, shopLocation} = useSelector(state => state.toktokFood, _.isEqual);
+  const {customerInfo} = useSelector(state => state.toktokFood);
   const {temporaryCart, setTemporaryCart} = useContext(VerifyContext);
-
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const swipeListViewRef = useRef(null);
 
   const [deleteTemporaryCartItem, {loading: deleteLoading}] = useMutation(DELETE_TEMPORARY_CART_ITEM, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+  });
+
+  const [getAllTemporaryCart] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getAllTemporaryCart}) => {
+      let {items, srpTotalAmount, totalAmount, totalAmountWithAddons, addonsTotalAmount} = getAllTemporaryCart;
+      setTemporaryCart({
+        cartItemsLength: items.length,
+        srpTotalAmount,
+        totalAmount,
+        totalAmountWithAddons,
+        addonsTotalAmount,
+        items: items,
+      });
+    },
   });
 
   const displayAddOns = addons => {
@@ -67,6 +90,31 @@ const MyOrderList = () => {
     });
   };
 
+  const roundedPercentage = (number, precision) => {
+    const rounded = Math.pow(10, precision);
+    return (Math.round(number * rounded) / rounded).toFixed(precision);
+  };
+
+  const ResellerDiscountBadge = useMemo(
+    () =>
+      ({resellerDiscount, basePrice, totalAmount}) => {
+        const percentage = (100 * (basePrice - resellerDiscount)) / basePrice;
+        const finalPercentage = roundedPercentage(percentage, 1);
+        // const {discRatetype, referralDiscount} = resellerDiscount;
+        // const discountText = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
+        return (
+          <React.Fragment>
+            <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
+              <Text style={styles.resellerText}>Reseller -{finalPercentage}%</Text>
+            </ImageBackground>
+            <Text style={styles.basePrice}>PHP {totalAmount.toFixed(2)}</Text>
+            <Text style={styles.foodPrice}>PHP {resellerDiscount.toFixed(2)}</Text>
+          </React.Fragment>
+        );
+      },
+    [temporaryCart?.items?.resellerDiscount],
+  );
+
   const FoodItem = ({item}) => {
     const {
       productid,
@@ -81,10 +129,10 @@ const MyOrderList = () => {
       addonsDetails,
       notes,
       parentProductName,
+      resellerDiscount,
     } = item;
     const addons = arrangeAddons(addonsDetails);
     const totalAmountWithAddons = parseFloat(addonsTotalAmount) + parseFloat(basePrice);
-
     return (
       <SwipeRow
         disableRightSwipe
@@ -98,15 +146,18 @@ const MyOrderList = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.orderItemContainer}>
-          {productLogo && <Image style={styles.foodItemImage} source={{uri: productLogo}} />}
+          <View style={styles.progressiveImageContainer}>
+            <ProgressiveImage style={styles.foodItemImage} source={productLogo} placeholder={food_placeholder} />
+          </View>
+          {/* {productLogo && <Image style={styles.foodItemImage} source={{uri: productLogo}} />} */}
           <View style={styles.orderInfoWrapper}>
             <Text style={(styles.orderText, {fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L})}>
               {parentProductId ? parentProductName : productName}
             </Text>
             <Text style={[styles.orderText]}>{`x${quantity}`}</Text>
-            {parentProductId && <Text style={styles.orderText}>{`Variant: ${productName}`}</Text>}
+            {parentProductId && <Text style={styles.orderText}>{`Variation: ${productName}`}</Text>}
             {addonsDetails.length > 0 && displayAddOns(addons)}
-            {!!notes && <Text style={styles.orderText}>{`Notes: ${notes}`}</Text>}
+            {!!notes && <Text style={styles.orderText}>{`Note: ${notes}`}</Text>}
           </View>
           <View style={styles.priceWrapper}>
             <Text
@@ -116,7 +167,15 @@ const MyOrderList = () => {
               style={styles.actionText}>
               Edit
             </Text>
-            <Text style={styles.foodPrice}>PHP {totalAmountWithAddons.toFixed(2)}</Text>
+            {resellerDiscount > 0 ? (
+              <ResellerDiscountBadge
+                resellerDiscount={resellerDiscount}
+                basePrice={basePrice}
+                totalAmount={totalAmountWithAddons}
+              />
+            ) : (
+              <Text style={styles.foodPrice}>PHP {totalAmountWithAddons.toFixed(2)}</Text>
+            )}
           </View>
           <View style={{borderTopWidth: 1, borderTopColor: '#E6E6E6'}} />
         </View>
@@ -158,14 +217,24 @@ const MyOrderList = () => {
           const index = temporaryCart.items.findIndex(val => val.id == item.id);
           temporaryCart.items.splice(index, 1);
 
-          setTemporaryCart({
-            totalAmountWithAddons,
-            totalAmount: amount,
-            addonsTotalAmount: addonsAmount,
-            items: [...temporaryCart.items],
+          getAllTemporaryCart({
+            variables: {
+              input: {
+                userId: customerInfo.userId,
+              },
+            },
           });
+
+          // setTemporaryCart({
+          //   totalAmountWithAddons,
+          //   totalAmount: amount,
+          //   addonsTotalAmount: addonsAmount,
+          //   items: [...temporaryCart.items],
+          //   // srpTotalAmount,
+          // });
           const isLastItem = temporaryCart.items.length == 0;
           if (isLastItem) {
+            dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
             return navigation.goBack();
           }
         } else {
@@ -179,6 +248,16 @@ const MyOrderList = () => {
     [temporaryCart],
   );
 
+  const data = temporaryCart.items;
+  let dataSource = [];
+  let remaining = [];
+  if (data.length > 5) {
+    dataSource = data.slice(0, 5);
+    remaining = data.slice(4, -1);
+  } else {
+    dataSource = data;
+  }
+
   return (
     <>
       <Loader visibility={deleteLoading} message="Removing from Cart" hasImage={false} loadingIndicator />
@@ -190,15 +269,35 @@ const MyOrderList = () => {
             onPress={() =>
               navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: `${temporaryCart.items[0]?.shopid}`}})
             }
-            style={styles.actionText}>
+            style={{...styles.actionText, flex: 0}}>
             Add Items
           </Text>
         </View>
         <View>
           {temporaryCart?.items.length === 0 ? (
             <LoadingIndicator isLoading={true} size="small" style={{paddingVertical: 20}} />
+          ) : isCollapsed ? (
+            data.map(item => <FoodItem item={item} />)
           ) : (
-            temporaryCart.items.map(item => <FoodItem item={item} />)
+            dataSource.map(item => <FoodItem item={item} />)
+          )}
+          {data.length > 5 && (
+            <TouchableOpacity
+              onPress={() => setIsCollapsed(!isCollapsed)}
+              activeOpacity={0.9}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingTop: moderateScale(10),
+                paddingBottom: moderateScale(20),
+                marginBottom: moderateScale(10),
+              }}>
+              <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>
+                {isCollapsed ? 'Hide' : 'See More'}
+              </Text>
+              <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={12} color={'#FFA700'} />
+            </TouchableOpacity>
           )}
           {/* {temporaryCart.items.length == 0 ? (
             <LoadingIndicator isLoading={true} size="small" style={{paddingVertical: 20}} />

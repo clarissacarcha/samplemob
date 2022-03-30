@@ -108,13 +108,13 @@ const Drawer = ({navigation}) => {
         <View style={{flex: 1, backgroundColor: 'white'}}>
           <ScrollView>
             {/*--------------- MY DELIVERIES ---------------*/}
-            <DrawerButton
+            {/* <DrawerButton
               label="My Saved Locations"
               onPress={() => {
                 navigation.push('SavedLocations');
               }}
               restrict="C"
-            />
+            /> */}
 
             {/*--------------- ANNOUNCEMENTS ---------------*/}
             <DrawerButton

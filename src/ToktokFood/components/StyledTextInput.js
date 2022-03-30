@@ -6,7 +6,15 @@ import {FONT_SIZE} from 'res/variables';
 
 import {moderateScale} from 'toktokfood/helper/scale';
 
-const StyledTextInput = ({onChangeText, onRemoveVoucher, label, value, error = null, hasIcon = false}) => {
+const StyledTextInput = ({
+  onChangeText,
+  onRemoveVoucher,
+  label,
+  value,
+  error = null,
+  hasIcon = false,
+  placeholder = '',
+}) => {
   const renderIcon = () => {
     // const iconColor = error ? '#F6841F' : '#06A44E';
     // const iconName = error ? 'times-circle' : 'check-circle';
@@ -19,7 +27,13 @@ const StyledTextInput = ({onChangeText, onRemoveVoucher, label, value, error = n
 
   return (
     <View style={styles.container}>
-      <TextInput value={value} onChangeText={onChangeText} style={styles.input} placeholder={label} />
+      <TextInput
+        autoCapitalize="characters"
+        value={value}
+        onChangeText={onChangeText}
+        style={styles.input}
+        placeholder={placeholder}
+      />
 
       {hasIcon && renderIcon()}
     </View>
@@ -43,13 +57,8 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    // marginHorizontal: 10,
-    // borderWidth: 1,
-    // borderColor: '#E5EAEA',
-    // borderRadius: 5,
     paddingLeft: 10,
     height: moderateScale(40),
-    // color: DARK,
     fontSize: FONT_SIZE.M,
   },
   removeText: {

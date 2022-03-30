@@ -40,10 +40,11 @@ export const VerifyContextProvider = ({children}) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getAllTemporaryCart}) => {
-      let {items, totalAmount, totalAmountWithAddons, addonsTotalAmount} = getAllTemporaryCart;
+      let {items, srpTotalAmount, totalAmount, totalAmountWithAddons, addonsTotalAmount} = getAllTemporaryCart;
       // console.log(getAllTemporaryCart, 'temp cart');
       setTemporaryCart({
         cartItemsLength: items.length,
+        srpTotalAmount,
         totalAmount,
         totalAmountWithAddons,
         addonsTotalAmount,
@@ -58,14 +59,14 @@ export const VerifyContextProvider = ({children}) => {
         cartItemsLength: 0,
         totalAmount: 0,
         items: [],
-      })
+      });
     });
 
     return unsubscribe;
   }, [navigation]);
 
   useEffect(() => {
-    if(isFocus){
+    if (isFocus) {
       getAllTemporaryCart({
         variables: {
           input: {

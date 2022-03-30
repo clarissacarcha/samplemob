@@ -14,11 +14,11 @@
 //   }
 // }
 import moment from 'moment';
-export const orderStatusMessageDelivery = (orderStatus, dateOrdered, riderDetails, shopname) => {
+export const orderStatusMessageDelivery = (orderStatus, dateOrdered, custAddress = '', riderDetails, shopname) => {
   if (orderStatus == 'po' || orderStatus == 'rp') {
     return {id: orderStatus, title: 'Preparing Order', message: 'Give restaurant some time to prepare your order'};
   } else if (orderStatus == 'f') {
-    return {id: orderStatus, title: 'Your order is on the way to you...', message: 'Driver is heading to you'};
+    return {id: orderStatus, title: 'Your order is on the way to you', message: `Driver is heading to ${custAddress}`};
   } else if (orderStatus == 's') {
     return {id: orderStatus, title: 'Order Completed', message: ''};
   } else if (orderStatus == 'c') {

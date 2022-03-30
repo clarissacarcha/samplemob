@@ -3,24 +3,23 @@ import {View, StyleSheet, Text, TextInput, TouchableHighlight, Image, Alert, Pla
 import SmsRetriever from 'react-native-sms-retriever';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
-import {useMutation} from '@apollo/react-hooks';
+import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
 import {getUniqueId} from 'react-native-device-info';
 import {COLOR, DARK, APP_FLAVOR, MEDIUM} from '../../res/constants';
 import {FONT} from '../../res/variables';
-import {AUTH_CLIENT, VERIFY_LOGIN} from '../../graphql';
+import {AUTH_CLIENT, VERIFY_LOGIN, GET_APP_SERVICES} from '../../graphql';
 import {AlertOverlay} from '../../components';
 import {onError, onErrorAlert} from '../../util/ErrorUtility';
 import {useAlert} from '../../hooks/useAlert';
 
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
 
-const PasswordVerification = ({navigation, route, createSession}) => {
+const PasswordVerification = ({navigation, route, createSession, setAppServices}) => {
   const {mobile} = route.params;
   const inputRef = useRef();
 
   const alert = useAlert();
-
   const [password, setPassword] = useState('');
 
   const [verifyLogin, {loading}] = useMutation(VERIFY_LOGIN, {
@@ -39,7 +38,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
       onErrorAlert({alert, error});
     },
 
-    onCompleted: data => {
+    onCompleted: async data => {
       const {user, accessToken} = data.verifyLogin;
 
       AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
@@ -51,42 +50,23 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         userId: user.id,
       }); // Set onesignal userId tag for the phone
 
-      if (APP_FLAVOR == 'C') {
-        if (user.person.firstName == null || user.person.lastName == null) {
-          navigation.replace('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'PostRegistration',
-            },
-          });
-          return;
-        }
-
+      if (user.person.firstName == null || user.person.lastName == null) {
         navigation.replace('RootDrawer', {
           screen: 'AuthenticatedStack',
           params: {
-            // screen: 'CheckConsumerLocation',
+            screen: 'PostRegistration',
+          },
+        });
+      } else {
+        navigation.replace('RootDrawer', {
+          screen: 'AuthenticatedStack',
+          params: {
             screen: 'ConsumerLanding',
           },
         });
-        return;
-      }
-
-      if (APP_FLAVOR == 'D') {
-        navigation.replace('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'DriverHomeBottomTab',
-          },
-        });
-        return;
       }
     },
   });
-
-  // useEffect(() => {
-  //   inputRef.current.focus();
-  // }, []);
 
   const onSubmit = () => {
     if (!password) {
@@ -131,6 +111,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
 
 const mapDispatchToProps = dispatch => ({
   createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+  setAppServices: payload => dispatch({type: 'SET_APP_SERVICES', payload}),
 });
 
 export default connect(null, mapDispatchToProps)(PasswordVerification);

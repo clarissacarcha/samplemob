@@ -16,7 +16,9 @@ import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {GET_ALL_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import {useIsFocused} from '@react-navigation/native';
 
-const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = false}) => {
+import {getNewInstall, removeSetInstall} from 'toktokfood/helper/PersistentLocation';
+
+const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = false, isFoodHome = false}) => {
   const navigation = useNavigation();
   const {location} = useSelector(state => state.toktokFood);
   const [allTemporaryCart, setAllTemporaryCart] = useState({
@@ -24,7 +26,8 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
     totalAmount: 0,
     items: [],
   });
-  const [showEmptyCart, setShowEmptyCart] = useState(false);
+  const [newInstallFlag, setNewInstallFlag] = useState(false);
+
   const {customerInfo} = useSelector(state => state.toktokFood);
   const isFocus = useIsFocused();
 
@@ -41,7 +44,14 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
     },
   });
 
+  const initNewInstallFlag = async () => {
+    const flag = await getNewInstall();
+    setNewInstallFlag(flag);
+  };
+
   useEffect(() => {
+    initNewInstallFlag();
+
     if (isFocus && customerInfo) {
       // console.log('FF: ' + JSON.stringify(customerInfo));
       getAllTemporaryCart({
@@ -52,7 +62,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
         },
       });
     }
-  }, [isFocus, customerInfo]);
+  }, [isFocus]);
 
   const onSetLocationDetails = () => {
     navigation.navigate('ToktokFoodAddressDetails');
@@ -82,14 +92,29 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
   );
 
   const onBack = () => {
-    isHome ? navigation.navigate('ToktokLandingHome') : navigation.goBack();
+    if (isHome) {
+      return navigation.navigate('ToktokLandingHome');
+    }
+    if (isFoodHome) {
+      return navigation.navigate('ToktokFoodHome');
+    }
+    return navigation.goBack();
   };
 
-  const onPressCart = () => {
-    if (allTemporaryCart.cartItemsLength > 0) {
-      navigation.navigate('ToktokFoodCart', {userId: customerInfo.userId});
-    } else {
-      navigation.navigate('ToktokFoodEmptyCart');
+  const onPressCart = async () => {
+    if (allTemporaryCart) {
+      if (newInstallFlag) {
+        removeSetInstall().then(() => {
+          setNewInstallFlag(false);
+          navigation.navigate('ToktokFoodEmptyCart');
+        });
+      } else {
+        if (allTemporaryCart.cartItemsLength > 0 && newInstallFlag === false) {
+          navigation.navigate('ToktokFoodCart', {userId: customerInfo.userId});
+        } else {
+          navigation.navigate('ToktokFoodEmptyCart');
+        }
+      }
     }
   };
 
@@ -119,7 +144,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
           <LoadingIndicator isLoading={true} size="small" />
         ) : (
           <TouchableOpacity onPress={onPressCart} style={styles.headerBack}>
-            {allTemporaryCart.cartItemsLength > 0 && (
+            {allTemporaryCart.cartItemsLength > 0 && newInstallFlag === false && (
               <View
                 style={{
                   right: -10,

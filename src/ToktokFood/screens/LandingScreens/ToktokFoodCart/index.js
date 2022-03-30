@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {useRoute, useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -12,6 +12,9 @@ import {
   RefreshControl,
   Text,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+// import _ from 'lodash';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -34,11 +37,27 @@ import {
   VerifyContextProvider,
   VerifyContext,
 } from './components';
-import {getDeductedVoucher, tokwaErrorBtnTitle, tokwaErrorMessage, tokwaErrorTitle} from './functions';
+import {
+  getDeductedVoucher,
+  getResellerDiscount,
+  getTotalAmount,
+  getTotalAmountOrder,
+  getTotalDiscountAmount,
+  getPromotionVouchers,
+  getShippingVoucher,
+  getTotalDeductedVoucher,
+  getTotalDeductedDeliveryFee,
+  getItemOrderType,
+  getMobileNumberFormat,
+  getOrderType,
+  handleAutoShippingVouchers,
+  handleShippingVouchers,
+  tokwaErrorBtnTitle,
+  tokwaErrorMessage,
+  tokwaErrorTitle,
+} from './functions';
 
-import {useSelector} from 'react-redux';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {
   GET_AUTO_SHIPPING,
   GET_SHIPPING_FEE,
@@ -47,6 +66,7 @@ import {
   CHECK_SHOP_VALIDATIONS,
   REQUEST_TAKE_MONEY,
   VERIFY_PIN,
+  GET_SHOP_STATUS,
 } from 'toktokfood/graphql/toktokfood';
 
 import moment from 'moment';
@@ -58,6 +78,13 @@ import EnterPinCode from 'toktokfood/components/EnterPinCode';
 import {FONT, FONT_SIZE} from '../../../../res/variables';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
+import {parseAmountComputation} from './functions';
+
+/*
+  This variable is used for identifier whether the user is able to checkout or not 
+  if the user's toktokwallet is pending
+*/
+const MINIMUM_CHECKOUT = 2000;
 
 const MainComponent = () => {
   const route = useRoute();
@@ -65,7 +92,10 @@ const MainComponent = () => {
   const nowDate = moment().format('YYYY-DD-YYYY');
 
   const {shopname} = route.params;
-  const {location, customerInfo, shopLocation, receiver} = useSelector(state => state.toktokFood);
+  const dispatch = useDispatch();
+  const {location, customerInfo, customerFranchisee, promotionVoucher, receiver} = useSelector(
+    state => state.toktokFood,
+  );
   const {user} = useSelector(state => state.session);
   const {
     totalAmount,
@@ -73,6 +103,7 @@ const MainComponent = () => {
     toktokWallet,
     paymentMethod,
     pmLoading,
+    autoShippingVoucher,
     setAutoShippingVoucher,
     setPaymentMethod,
     shippingVoucher,
@@ -91,12 +122,43 @@ const MainComponent = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [loadingWallet, setLoadingWallet] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [closeShop, setShowCloseShop] = useState({visible: false, shopName: ''});
   const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
   const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({error: {}, visible: false});
   const alert = useAlert();
   const isFocus = useIsFocused();
 
   const [closeInfo, setCloseInfo] = useState({visible: false, shopName: ''});
+
+  const [diablePlaceOrder, setDisablePlaceOrder] = useState(true);
+
+  const [getAutoShipping, {loading: loadingShipping}] = useLazyQuery(GET_AUTO_SHIPPING, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: error => console.log('getAutoShipping', error.response),
+    onCompleted: ({getAutoShipping}) => {
+      console.log(getAutoShipping);
+      const {promotion, voucher} = getAutoShipping;
+      const filterPromo = promotionVoucher.filter(promo => promo.type !== 'auto' && promo.type !== 'deal');
+      if (getAutoShipping.success) {
+        setAutoShippingVoucher(getAutoShipping);
+        if (voucher && !promotion) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: [...filterPromo, voucher]});
+        }
+        if (promotion && !voucher) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: [...filterPromo, promotion]});
+        }
+        if (voucher && promotion) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: [...filterPromo, voucher, promotion]});
+        }
+      } else {
+        if (!voucher || !promotion) {
+          dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: filterPromo});
+        }
+      }
+      setAutoShipping(getAutoShipping);
+    },
+  });
 
   useEffect(() => {
     if (temporaryCart && temporaryCart.items.length > 0) {
@@ -116,24 +178,24 @@ const MainComponent = () => {
     }
   }, [temporaryCart, location, isFocus]);
 
-  const [getAutoShipping] = useLazyQuery(GET_AUTO_SHIPPING, {
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onError: error => console.log('getAutoShipping', error.response),
-    onCompleted: ({getAutoShipping}) => {
-      if (getAutoShipping.success) {
-        setAutoShippingVoucher([getAutoShipping]);
-      }
-      setAutoShipping(getAutoShipping);
-    },
-  });
+  useEffect(() => {
+    onGetAutoApply();
+  }, [paymentMethod]);
+
+  const checkShopOpenStatus = () => {
+    setLoadingWallet(true);
+    if (temporaryCart && temporaryCart.items.length > 0) {
+      getShopStatus({variables: {input: {shopId: temporaryCart.items[0]?.shopid}}});
+    }
+  };
 
   const [getDeliverFee] = useLazyQuery(GET_SHIPPING_FEE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: ({getShippingFee}) => {
+    onCompleted: async ({getShippingFee}) => {
       const {items} = temporaryCart;
       const {email} = customerInfo;
+      const orders = await parseAmountComputation(temporaryCart?.items);
       setDeliveryInfo(getShippingFee);
       // console.log({
       //   input: {
@@ -142,6 +204,8 @@ const MainComponent = () => {
       //     subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
       //     cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
       //     brandId: items[0].companyId,
+      //     paymentMethod: 'CASH',
+      //     orders,
       //   },
       // });
       getAutoShipping({
@@ -152,6 +216,8 @@ const MainComponent = () => {
             subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
             cartItems: [{shopid: items[0]?.shopid, shippingfee: getShippingFee?.price}],
             brandId: items[0].companyId,
+            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+            orders,
           },
         },
       });
@@ -174,6 +240,22 @@ const MainComponent = () => {
       },
     },
   );
+
+  const [getShopStatus, {loading: shopStatusLoading, error: shopStatusError}] = useLazyQuery(GET_SHOP_STATUS, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getShopStatus}) => {
+      setLoadingWallet(false);
+      if (getShopStatus.status === 'open') {
+        placeCustomerOrder();
+      } else {
+        setShowCloseShop({visible: true, shopName: getShopStatus.shopname});
+      }
+    },
+    onError: error => {
+      setLoadingWallet(false);
+    },
+  });
 
   const [checkShopValidations, {loading: shopValidationLoading, error: shopValidationError, refetch}] = useLazyQuery(
     CHECK_SHOP_VALIDATIONS,
@@ -200,6 +282,7 @@ const MainComponent = () => {
   const [postResquestTakeMoney] = useMutation(REQUEST_TAKE_MONEY, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onError: error => {
+      console.log(error.response);
       setShowLoader(false);
       setTimeout(() => {
         onErrorAlert({alert, error});
@@ -221,7 +304,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
     onError: error => {
-      console.log('tpin-error', error);
+      console.log('tpin-error', toktokWallet, error);
       setShowLoader(false);
       if (toktokWallet.paymentMethod == 'COD') {
         setTimeout(() => {
@@ -232,9 +315,11 @@ const MainComponent = () => {
       }
     },
     onCompleted: async ({checkoutOrder}) => {
+      console.log('checkoutOrder', checkoutOrder);
       if (checkoutOrder.status == '200') {
         deleteShopTemporaryCart()
           .then(() => {
+            dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
             setTimeout(() => {
               setShowLoader(false);
               navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
@@ -248,18 +333,58 @@ const MainComponent = () => {
           });
       } else {
         // error prompt
+        console.log('potek', checkoutOrder);
         setShowLoader(false);
         setTimeout(() => {
-          setTokWaPlaceOrderErr({
-            message: checkoutOrder.message,
-            visible: true,
-          });
+          if (checkoutOrder.message === 'Sorry but the store is currently closed.') {
+            setCloseInfo({visible: true, shopName: shopname});
+          } else {
+            setTokWaPlaceOrderErr({
+              message: checkoutOrder.message,
+              visible: true,
+            });
+          }
         }, 500);
       }
     },
   });
 
+  const onGetAutoApply = useCallback(async () => {
+    if (delivery) {
+      const {items} = temporaryCart;
+      const {email} = customerInfo;
+      const orders = await parseAmountComputation(temporaryCart?.items);
+      // console.log({
+      //   input: {
+      //     region: items[0]?.shopRegion,
+      //     email,
+      //     subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+      //     cartItems: [{shopid: items[0]?.shopid, shippingfee: delivery?.price}],
+      //     brandId: items[0].companyId,
+      //     paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+      //     orders,
+      //   },
+      // });
+      getAutoShipping({
+        variables: {
+          input: {
+            region: items[0]?.shopRegion,
+            email,
+            subtotal: [{shopid: items[0]?.shopid, subtotal: temporaryCart.totalAmount}],
+            cartItems: [{shopid: items[0]?.shopid, shippingfee: delivery?.price}],
+            brandId: items[0].companyId,
+            paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+            orders,
+          },
+        },
+      });
+    }
+  }, [paymentMethod]);
+
   const fixOrderLogs = async () => {
+    const VOUCHER_FlAG =
+      shippingVoucher.length > 0 ? shippingVoucher[0]?.voucher?.handle_shipping_promo : autoShipping?.success ? 1 : 0;
+
     let orderLogs = {
       sys_shop: temporaryCart.items[0]?.shopid,
       branchid: temporaryCart.items[0]?.branchid,
@@ -267,7 +392,10 @@ const MainComponent = () => {
       hash: delivery?.hash ? delivery.hash : '',
       hash_delivery_amount: delivery?.hash_price ? delivery.hash_price : '',
       original_shipping_fee: delivery?.price ? delivery.price : 0,
-      handle_shipping_promo: shippingVoucher.length > 0 || autoShipping?.success ? 1 : 0,
+      // order_type: 1,
+      // order_type: await getItemOrderType(customerFranchisee),
+      // handle_shipping_promo: 1,
+      handle_shipping_promo: Number(VOUCHER_FlAG),
       daystoship: 0,
       daystoship_to: 0,
       items: await fixItems(),
@@ -279,13 +407,15 @@ const MainComponent = () => {
     let items = [];
     return Promise.all(
       temporaryCart.items.map(async item => {
+        const totalAmount =
+          (item.resellerDiscount ? item.resellerDiscount.toFixed(2) : item.basePrice.toFixed(2)) * item.quantity;
         let data = {
           sys_shop: item.shopid,
           product_id: item.productid,
-          amount: item.basePrice,
+          amount: Number((item.resellerDiscount ?? item.basePrice).toFixed(2)),
           srp_amount: item.basePrice,
-          srp_totalamount: item.totalAmount,
-          total_amount: item.totalAmount,
+          srp_totalamount: Number(item.basePrice.toFixed(2)) * item.quantity,
+          total_amount: Number(totalAmount.toFixed(2)),
           quantity: item.quantity,
           order_type: 1,
           notes: item.notes,
@@ -311,12 +441,75 @@ const MainComponent = () => {
     });
   };
 
+  const onToktokWalletOrder = async () => {
+    const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+    const deals = promotionVoucher.filter(promo => promo.type === 'deal');
+
+    const deliveryPrice = orderType === 'Delivery' ? delivery?.price : 0;
+    const totalPrice =
+      promotions.length > 0 || deals.length > 0
+        ? (await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)) + temporaryCart.addonsTotalAmount
+        : temporaryCart?.totalAmountWithAddons;
+    // const totalPrice =
+    //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;
+    // const totalResellerDiscount =
+    //   promotions.length > 0 ? (await getResellerDiscount(promotions, temporaryCart.items)).toFixed(2) : 0;
+    const CUSTOMER_CART = await fixOrderLogs();
+    // const SHIPPING_VOUCHERS = autoShipping?.success
+    //   ? await handleAutoShippingVouchers(autoShippingVoucher)
+    //   : await handleShippingVouchers(shippingVoucher);
+    const amount = await getTotalAmount(promotionVoucher, delivery?.price);
+    const parseAmount = Number((deliveryPrice + totalPrice - amount).toFixed(2));
+    // if (orderType === 'Delivery') {
+    //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
+    //   //   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
+    //   // }
+    //   totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
+    // }
+    // console.log(parseAmount, totalPrice, amount, temporaryCart);
+    postResquestTakeMoney({
+      variables: {
+        input: {
+          currency: toktokWallet.currency,
+          amount: parseAmount,
+          toktokuser_id: toktokWallet.toktokuser_id,
+          payment_method: paymentMethod,
+          name: toktokWallet.name,
+          notes: toktokWallet.notes,
+        },
+      },
+    }).then(({data}) => {
+      // console.log(data);
+      let {success, message} = data.postRequestTakeMoney;
+      if (success == 1) {
+        let {requestTakeMoneyId, validator} = data.postRequestTakeMoney.data;
+        setShowEnterPinCode(true);
+        setLoadingWallet(false);
+        setToktokWalletCredit({
+          requestTakeMoneyId,
+          validator,
+          cart: CUSTOMER_CART,
+          orderRefNum: data.postRequestTakeMoney.orderRefNum,
+          hashAmount: data.postRequestTakeMoney.hash_amount,
+        });
+      } else {
+        setLoadingWallet(false);
+        let parseError = JSON.parse(message);
+        let messageErr = parseError.errors[0].message;
+        setTimeout(() => {
+          setPinAttempt({show: true, message: messageErr});
+        }, 100);
+      }
+    });
+  };
+
   const toktokWalletPaymentMethod = pinCode => {
     verifyPin({
       variables: {
         input: {
           request_money_id: toktokWalletCredit.requestTakeMoneyId,
-          pin: +pinCode,
+          // String(+pinCode), retain to pinCode to avoid error from toktokwallet user starting ZERO digit
+          pin: pinCode,
           pin_type: toktokWalletCredit.validator,
         },
       },
@@ -348,63 +541,18 @@ const MainComponent = () => {
   };
 
   const placeCustomerOrder = async () => {
+    // const CUSTOMER_CART = await fixOrderLogs();
+    // console.log(CUSTOMER_CART);
     if (delivery !== null && !pmLoading) {
       paymentMethod == 'COD' ? setShowLoader(true) : setLoadingWallet(true);
       const CUSTOMER_CART = await fixOrderLogs();
-      const SHIPPING_VOUCHERS = autoShipping?.success
-        ? await handleAutoShippingVouchers()
-        : await handleShippingVouchers();
 
       await refetch({variables: {input: {shopId: `${temporaryCart.items[0]?.shopid}`}}})
-        .then(({data}) => {
+        .then(async ({data}) => {
           let {isOpen} = data.checkShopValidations;
-          if (isOpen == 1) {
-            if (paymentMethod == 'TOKTOKWALLET') {
-              let totalPrice = 0;
-              let deductedFee = 0;
-              if (orderType === 'Delivery') {
-                if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
-                  deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
-                }
-                totalPrice = parseInt(temporaryCart.totalAmountWithAddons) + (delivery.price - deductedFee);
-              } else {
-                totalPrice = parseInt(temporaryCart.totalAmountWithAddons);
-              }
-              // setShowLoader(false);
-              // console.log(totalPrice, deductedFee, SHIPPING_VOUCHERS);
-              postResquestTakeMoney({
-                variables: {
-                  input: {
-                    currency: toktokWallet.currency,
-                    amount: totalPrice,
-                    toktokuser_id: toktokWallet.toktokuser_id,
-                    payment_method: paymentMethod,
-                    name: toktokWallet.name,
-                    notes: toktokWallet.notes,
-                  },
-                },
-              }).then(({data}) => {
-                let {success, message} = data.postRequestTakeMoney;
-                if (success == 1) {
-                  let {requestTakeMoneyId, validator} = data.postRequestTakeMoney.data;
-                  setShowEnterPinCode(true);
-                  setLoadingWallet(false);
-                  setToktokWalletCredit({
-                    requestTakeMoneyId,
-                    validator,
-                    cart: CUSTOMER_CART,
-                    orderRefNum: data.postRequestTakeMoney.orderRefNum,
-                    hashAmount: data.postRequestTakeMoney.hash_amount,
-                  });
-                } else {
-                  setLoadingWallet(false);
-                  let parseError = JSON.parse(message);
-                  let messageErr = parseError.errors[0].message;
-                  setTimeout(() => {
-                    setPinAttempt({show: true, message: messageErr});
-                  }, 100);
-                }
-              });
+          if (isOpen === 1) {
+            if (paymentMethod === 'TOKTOKWALLET') {
+              await onToktokWalletOrder();
             } else {
               placeCustomerOrderProcess(CUSTOMER_CART);
             }
@@ -427,55 +575,13 @@ const MainComponent = () => {
     }
   };
 
-  const mobileNumberFormat = () => {
-    let {conno} = customerInfo;
-    if (conno.charAt(0) == '6') {
-      return `+${conno}`;
-    }
-    return conno;
-  };
-
-  const handleShippingVouchers = async () => {
-    let sVoucher = [];
-    return Promise.all(
-      shippingVoucher.map(item => {
-        const {is_percentage, id, shopid, vname, vcode, amount} = item.voucher;
-        sVoucher.push({
-          is_percentage: parseInt(is_percentage),
-          id: null,
-          shopid,
-          vname,
-          vcode,
-          amount,
-        });
-      }),
-    ).then(() => {
-      return {shippingvouchers: sVoucher};
-    });
-  };
-
-  const handleAutoShippingVouchers = async () => {
-    const {is_percentage, id, shopid, vname, vcode, amount} = autoShipping.voucher;
-    let sVoucher = {
-      is_percentage: parseInt(is_percentage),
-      id: parseInt(id),
-      shopid,
-      vname,
-      vcode,
-      amount,
-    };
-    return {shippingvouchers: [sVoucher]};
-  };
-
   const processData = (WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS) => {
-    if (shippingVoucher.length > 0 || autoShipping?.success) {
-      const deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
-
+    if (promotionVoucher.length > 0) {
+      const deductedFee = getTotalDeductedDeliveryFee(promotionVoucher, delivery?.price);
       const DEDUCTVOUCHER = {
         ...ORDER,
-        order_logs: [{...ORDER.order_logs[0], delivery_amount: delivery?.price - deductedFee}],
+        order_logs: [{...ORDER.order_logs[0], delivery_amount: deductedFee}],
       };
-
       return WALLET
         ? {...WALLET, ...CUSTOMER, ...DEDUCTVOUCHER, ...SHIPPING_VOUCHERS}
         : {...CUSTOMER, ...DEDUCTVOUCHER, ...SHIPPING_VOUCHERS};
@@ -485,37 +591,67 @@ const MainComponent = () => {
   };
 
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
+    const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+    const deals = promotionVoucher.filter(promo => promo.type === 'deal');
+    // const autoApply = promotionVoucher.filter(promo => promo.type === 'auto');
+    // const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
+    // const mergeShipping = _.merge(autoApply, shipping);
+    // console.log(mergeShipping);
+    // const totalPrice =
+    //   promotions.length > 0 ? await getTotalAmountOrder(promotions, temporaryCart.items) : temporaryCart?.totalAmount;
+    const totalPrice =
+      promotions.length > 0 || deals.length > 0
+        ? await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)
+        : temporaryCart?.totalAmount;
+    // const totalResellerDiscount =
+    //   promotions.length > 0 ? (await getResellerDiscount(promotions, temporaryCart.items)).toFixed(2) : 0;
+
+    const amount = await getTotalAmount(promotionVoucher, 0);
+    const parsedAmount = Number((totalPrice - amount).toFixed(2));
+    // console.log(temporaryCart?.totalAmount);
+    // console.log(amount, parsedAmount, totalPrice);
+
+    const ORDER = {
+      // total_amount: temporaryCart.totalAmount,
+      // srp_totalamount: temporaryCart.totalAmount,
+      total_amount: parsedAmount,
+      srp_totalamount: temporaryCart?.srpTotalAmount,
+      notes: riderNotes,
+      order_isfor: orderType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
+      // order_type: 2,
+      order_type: await getOrderType(customerFranchisee),
+      payment_method: paymentMethod,
+      order_logs: CUSTOMER_CART,
+    };
     const CUSTOMER = {
+      shopid: temporaryCart?.items[0].shopid,
+      company_id: String(temporaryCart?.items[0]?.companyId),
       name:
         receiver.contactPerson && receiver.contactPerson !== ''
           ? receiver.contactPerson
           : `${customerInfo.firstName} ${customerInfo.lastName}`,
       contactnumber:
         receiver.contactPersonNumber && receiver.contactPersonNumber !== ''
-          ? receiver.contactPersonNumber
-          : mobileNumberFormat(),
+          ? getMobileNumberFormat({conno: receiver.contactPersonNumber})
+          : getMobileNumberFormat(customerInfo),
+      landmark: receiver.landmark && receiver.landmark !== '' ? receiver.landmark : '',
       email: customerInfo.email,
       address: location.address,
-      user_id: customerInfo.userId,
+      user_id: Number(customerInfo.userId),
       latitude: location.latitude,
       longitude: location.longitude,
       regCode: '0',
       provCode: '0',
       citymunCode: '0',
+      shippingvouchers: await getShippingVoucher(promotionVoucher),
+      vouchers: await getPromotionVouchers(promotionVoucher, temporaryCart?.items[0].shopid),
+      reseller_account_type: customerFranchisee?.franchiseeAccountType || '',
+      reseller_code: customerFranchisee?.franchiseeCode || '',
+      referral_code: customerFranchisee?.franchiseeCode ? '' : customerFranchisee?.referralCode || '',
+      discounted_totalamount: parsedAmount,
     };
-    const SHIPPING_VOUCHERS = autoShipping?.success
-      ? await handleAutoShippingVouchers()
-      : await handleShippingVouchers();
-    const ORDER = {
-      total_amount: temporaryCart.totalAmount,
-      srp_totalamount: temporaryCart.totalAmount,
-      notes: riderNotes,
-      order_isfor: orderType == 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
-      order_type: 2,
-      payment_method: paymentMethod,
-      order_logs: CUSTOMER_CART,
-    };
-    const data = processData(WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS);
+    const data = processData(WALLET, CUSTOMER, ORDER, []);
+    console.log('DATA', data);
     postCustomerOrder({
       variables: {
         input: data,
@@ -548,23 +684,6 @@ const MainComponent = () => {
       </HeaderImageBackground>
 
       <DialogMessage
-        visibility={closeInfo.visible}
-        title="Restaurant Closed"
-        // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
-        restaurantClosedMessage={() => (
-          <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
-            <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName} </Text>
-            is currently not accepting orders right now. Please try again another time. Thank you!
-          </Text>
-        )}
-        type="warning"
-        btn1Title="OK"
-        onCloseModal={() => {
-          setCloseInfo({visible: false, shopName: ''});
-        }}
-      />
-
-      <DialogMessage
         visibility={showConfirmation}
         title={'Proceed with Order?'}
         messages={'Are you sure you want to proceed with your order?'}
@@ -576,12 +695,31 @@ const MainComponent = () => {
         }}
         onCloseBtn2={() => {
           setShowConfirmation(false);
-          placeCustomerOrder();
+          checkShopOpenStatus();
         }}
         hasTwoButtons
       />
+
+      <DialogMessage
+        visibility={closeShop.visible}
+        title="Restaurant Closed"
+        restaurantClosedMessage={() => (
+          <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
+            <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>
+              {closeShop.shopName === '' ? temporaryCart.items[0]?.shopName : closeShop.shopName}{' '}
+            </Text>
+            is currently not accepting orders right now. Please try again another time. Thank you!
+          </Text>
+        )}
+        type="warning"
+        btn1Title="OK"
+        onCloseModal={() => {
+          setShowCloseShop({visible: false, shopName: ''});
+        }}
+      />
+
       <Loader hasImage={false} loadingIndicator visibility={loadingWallet} message="Loading" />
-      {paymentMethod == 'COD' && (
+      {paymentMethod === 'COD' && (
         <>
           {/* <AlertModal
             message={tokWaPlaceOrderErr.message}
@@ -590,12 +728,29 @@ const MainComponent = () => {
             close={() => setTokWaPlaceOrderErr({error: {}, visible: false})}
           /> */}
           <DialogMessage
+            visibility={closeInfo.visible}
+            title="Restaurant Closed"
+            // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
+            restaurantClosedMessage={() => (
+              <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
+                <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName}</Text>
+                is currently not accepting orders right now. Please try again another time. Thank you!
+              </Text>
+            )}
+            type="warning"
+            btn1Title="OK"
+            onCloseModal={() => {
+              setCloseInfo({visible: false, shopName: ''});
+            }}
+          />
+          <DialogMessage
             visibility={tokWaPlaceOrderErr.visible}
-            title="Unavailable Products"
+            title={'Unavailable Products'}
             messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
             type="warning"
             onCloseModal={() => {
-              setTokWaPlaceOrderErr({error: {}, visible: false});
+              navigation.goBack();
+              // setTokWaPlaceOrderErr({error: {}, visible: false});
             }}
             btnTitle="OK"
           />
@@ -632,12 +787,29 @@ const MainComponent = () => {
             btnTitle={tokwaErrorBtnTitle(pinAttempt)}
           />
           <DialogMessage
+            visibility={closeInfo.visible}
+            title="Restaurant Closed"
+            // messages={`${closeInfo.shopName} is currently not accepting orders right now. Please try again another time. Thank you!`}
+            restaurantClosedMessage={() => (
+              <Text style={{textAlign: 'center', marginTop: moderateScale(8), marginBottom: moderateScale(15)}}>
+                <Text style={{color: COLOR.YELLOW, fontWeight: '700'}}>{closeInfo.shopName} </Text>
+                is currently not accepting orders right now. Please try again another time. Thank you!
+              </Text>
+            )}
+            type="warning"
+            btn1Title="OK"
+            onCloseModal={() => {
+              setCloseInfo({visible: false, shopName: ''});
+              setShowEnterPinCode(false);
+            }}
+          />
+          <DialogMessage
             visibility={tokWaPlaceOrderErr.visible}
             title="Unavailable Products"
-            messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
+            messages={tokWaPlaceOrderErr?.message}
             type="warning"
             onCloseModal={() => {
-              setTokWaPlaceOrderErr({error: {}, visible: false});
+              navigation.goBack();
             }}
             btnTitle="OK"
           />
@@ -698,12 +870,14 @@ const MainComponent = () => {
         <MyOrderList />
         <Separator />
 
-        {orderType === 'Delivery' && (
+        {/*  {orderType === 'Delivery' && (
           <>
-            <OrderVoucher autoShipping={autoShipping} />
+            <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} />
             <Separator />
           </>
-        )}
+        )} */}
+        <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} />
+        <Separator />
 
         {/* <AlsoOrder /> */}
         {delivery === null ? (
@@ -716,17 +890,25 @@ const MainComponent = () => {
             subtotal={totalAmount}
             deliveryFee={delivery.price}
             forDelivery={orderType === 'Delivery'}
+            oneCartTotal={v => setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
           />
         )}
         <Separator />
-        <PaymentDetails orderType={orderType} refreshing={refreshing} />
+        <PaymentDetails
+          orderType={orderType}
+          deliveryFee={delivery?.price}
+          loadingShipping={loadingShipping}
+          refreshing={refreshing}
+        />
         <Separator />
         <RiderNotes
+          deliveryFee={delivery?.price}
           forDelivery={orderType === 'Delivery'}
           showPlaceOrder={delivery == null || pmLoading || user?.toktokWalletAccountId == null}
           notes={riderNotes}
           onNotesChange={n => setRiderNotes(n)}
           onPlaceOrder={() => setShowConfirmation(true)}
+          disableWalletCheckout={diablePlaceOrder}
         />
         {checkShop != null && (
           <OrderTypeSelection

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {Image, StyleSheet, View, Text} from 'react-native';
 
 // Fonts/Colors
@@ -34,7 +34,8 @@ const statusImage = (riderDetails, orderIsfor, orderStatus) => {
 
 const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNum, dateOrdered}) => {
   const [showDriverModal, setShowDriverModal] = useState(false);
-  const status = orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus, dateOrdered) : orderStatusMessagePickUp(orderStatus);
+  // const status =
+  //   orderIsfor == 1 ? orderStatusMessageDelivery(orderStatus, dateOrdered) : orderStatusMessagePickUp(orderStatus);
 
   useEffect(() => {
     if (riderDetails != null && orderStatus != 's') {
@@ -46,6 +47,16 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
     let res = await checkRiderDetails(referenceNum);
     setShowDriverModal(res?.status == 200);
   };
+
+  const checkOrderStatus = useMemo(() => {
+    return orderStatus != 's' && orderStatus != 'c' && orderIsfor == 1;
+  }, [orderStatus]);
+
+  const checkStatusMessage = useMemo(() => {
+    return orderIsfor == 1
+      ? orderStatusMessageDelivery(orderStatus, dateOrdered)
+      : orderStatusMessagePickUp(orderStatus);
+  }, [orderIsfor, orderStatus, dateOrdered]);
 
   return (
     <View style={styles.container}>
@@ -74,10 +85,12 @@ const DriverAnimationView = ({orderStatus, riderDetails, orderIsfor, referenceNu
       </RatingModal> */}
       {/* Contact Support */}
       <View style={styles.imgContainer}>
-        {orderStatus != 's' && orderStatus != 'c' && orderStatus != 'f' && orderIsfor == 1 && (
-          <Text style={{...styles.title, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>{status.title}</Text>
+        {checkOrderStatus && (
+          <Text style={{...styles.title, color: isPastOrder(dateOrdered) ? '#FD0606' : COLORS.DARK}}>
+            {checkStatusMessage.title}
+          </Text>
         )}
-        {orderIsfor == 2 && <Text style={styles.title}>{status.title}</Text>}
+        {orderIsfor === 2 && <Text style={styles.title}>{checkStatusMessage.title}</Text>}
         <Image style={styles.img} source={statusImage(riderDetails, orderIsfor, orderStatus)} resizeMode="contain" />
       </View>
     </View>
@@ -106,11 +119,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    // paddingVertical: verticalScale(10),
+    // Vertical: verticalScale(10),
   },
   title: {
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
+    fontWeight: '600',
     paddingBottom: verticalScale(30),
   },
 });

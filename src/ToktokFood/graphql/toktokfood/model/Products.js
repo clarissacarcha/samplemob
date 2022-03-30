@@ -43,6 +43,7 @@ const products = `
     Id
     itemid
     catId
+    contSellingIsset
     itemname
     price
     stocks
@@ -54,6 +55,12 @@ const products = `
     filename
     sysShop
     maxQtyIsset
+  }
+  promotionVouchers {
+    id
+    voucherCode
+    voucherName
+    vname
   }
 `;
 
@@ -70,6 +77,12 @@ export const GET_PRODUCTS_BY_SHOP_CATEGORY = gql`
   query getProductsByShopCategory($input: GetProductByShopCategoryInput) {
     getProductsByShopCategory(input: $input) {
       ${products}
+      promoVoucher {
+        id
+        voucherCode
+        voucherName
+        vname
+      }
     }
   }
 `;
@@ -86,6 +99,12 @@ export const GET_PRODUCT_DETAILS = gql`
   query getProductDetails($input: GetProductDetailsInput) {
     getProductDetails(input: $input) {
       ${products}
+      productVouchers {
+        id
+        voucherCode
+        voucherName
+        vname
+      }
     }
   }
 `;

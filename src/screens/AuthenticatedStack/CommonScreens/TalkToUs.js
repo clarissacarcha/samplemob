@@ -25,7 +25,7 @@ const imageWidth = Dimensions.get('window').width - 40;
 const TalkToUs = ({navigation, constants}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Talk', 'to Us']} />,
+    headerTitle: () => <HeaderTitle label={['Help', '']} />,
   });
 
   return (
@@ -33,7 +33,7 @@ const TalkToUs = ({navigation, constants}) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{paddingHorizontal: 20, paddingTop: 20, marginBottom: 0}}>
           <View />
-          <Image
+          {/* <Image
             source={Logo}
             style={{
               height: imageWidth,
@@ -41,7 +41,7 @@ const TalkToUs = ({navigation, constants}) => {
               borderRadius: 50,
               marginBottom: 20,
             }}
-          />
+          /> */}
           <View style={{marginBottom: 20}}>
             <TouchableHighlight
               onPress={() => {
@@ -141,13 +141,13 @@ const TalkToUs = ({navigation, constants}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
   constants: state.constants,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TalkToUs);
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   taskBox: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 5,
     shadowColor: '#000',
 
     shadowOffset: {

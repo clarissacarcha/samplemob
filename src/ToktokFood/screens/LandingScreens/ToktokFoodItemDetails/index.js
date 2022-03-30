@@ -2,24 +2,22 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {View, ImageBackground, Text, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
+import {useSelector} from 'react-redux';
+import {useLazyQuery} from '@apollo/react-hooks';
 
-import {FoodCart, VerifyContextProvider, VerifyContext, FoodImageSlider} from './components';
+import {FoodCart, Variations, VerifyContextProvider, VerifyContext, FoodImageSlider} from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
-
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import VoucherList from 'toktokfood/components/VoucherList';
 // import ContentLoader from 'react-native-easy-content-loader';
-
-import {Variations} from './components';
-import {useSelector} from 'react-redux';
 
 import styles from './styles';
 
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {useLazyQuery} from '@apollo/react-hooks';
 import {GET_PRODUCT_DETAILS, GET_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
-import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
+import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+
 import {reseller_badge} from 'toktokfood/assets/images';
-// import ChangeAddress from 'toktokfood/components/ChangeAddress';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 
@@ -58,6 +56,7 @@ const MainComponent = () => {
       onErrorAlert({alert, error});
     },
     onCompleted: ({getProductDetails}) => {
+      // console.log(getProductDetails);
       setProductDetails(getProductDetails);
       getTemporaryCart({
         variables: {
@@ -74,7 +73,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: error => {
-      onErrorAlert({alert, error});
+      // onErrorAlert({alert, error});
     },
     onCompleted: ({getTemporaryCart}) => {
       let {items, totalAmount} = getTemporaryCart;
@@ -92,9 +91,10 @@ const MainComponent = () => {
       if (productDetails?.variants.length > 0) {
         if (selectedVariants && Object.keys(selectedVariants).length > 0) {
           if (selectedVariants?.basePrice) {
-            basePrice = parseInt(selectedVariants?.basePrice);
+            basePrice = parseFloat(selectedVariants?.basePrice);
           } else {
-            basePrice = parseInt(selectedVariants?.price);
+            basePrice = parseFloat(selectedVariants?.price);
+            // basePrice = parseFloat(productDetails?.price || productDetails?.basePrice);
           }
         }
       } else {
@@ -122,12 +122,22 @@ const MainComponent = () => {
 
   const ResellerDiscountBadge = () => {
     const {discRatetype, referralDiscount} = productDetails?.resellerDiscount;
-    const discountText = discRatetype === 'p' ? `${referralDiscount}%` : referralDiscount;
+    const discountRate = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
     return (
-      <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
-        <Text style={styles.resellerText}>Reseller -{discountText}</Text>
-      </ImageBackground>
+      <View>
+        <VoucherList
+          data={productDetails?.productVouchers}
+          discountRate={discountRate}
+          hasClose={false}
+          isReseller={productDetails.resellerDiscount?.referralShopRate > 0}
+        />
+      </View>
     );
+    // return (
+    //   <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
+    //     <Text style={styles.resellerText}>Reseller {discountText}</Text>
+    //   </ImageBackground>
+    // );
   };
 
   const ResellerPrice = () => {
@@ -142,15 +152,18 @@ const MainComponent = () => {
   };
 
   const ItemDetails = () => {
-    const {itemname, basePrice, price, resellerDiscount, summary} = productDetails;
+    const {itemname, basePrice, price, productVouchers, resellerDiscount, summary} = productDetails;
+    // const {discRatetype, referralDiscount} = productDetails?.resellerDiscount;
+    // const discountRate = discRatetype === 'p' ? `-${referralDiscount * 100}%` : referralDiscount;
+
     return (
       <View style={styles.foodContainer}>
-        {resellerDiscount?.referralShopRate > 0 && <ResellerDiscountBadge />}
+        {(resellerDiscount?.referralShopRate > 0 || productVouchers.length > 0) && <ResellerDiscountBadge />}
         <View style={styles.foodDetails}>
-          <View style={styles.foodNameWrapper}>
-            <Text style={styles.foodName}>{itemname}</Text>
-            {/* <MIcon name="favorite-border" size={22} color="#808080" style={styles.heart} /> */}
-          </View>
+          {/* <View style={styles.foodNameWrapper}> */}
+          <Text style={styles.foodName}>{itemname}</Text>
+          {/* <MIcon name="favorite-border" size={22} color="#808080" style={styles.heart} /> */}
+          {/* </View> */}
           {resellerDiscount?.referralShopRate > 0 ? (
             <ResellerPrice />
           ) : (

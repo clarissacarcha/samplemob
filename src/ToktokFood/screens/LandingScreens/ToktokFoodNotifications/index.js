@@ -21,7 +21,7 @@ import {GET_TOKTOKFOOD_NOTIFICATIONS} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
 const ToktokFoodNotifications = () => {
-  const {customerInfo} = useSelector((state) => state.toktokFood);
+  const {customerInfo} = useSelector(state => state.toktokFood);
   const isFocus = useIsFocused();
   const navigation = useNavigation();
   // State
@@ -37,11 +37,7 @@ const ToktokFoodNotifications = () => {
       },
     },
     onCompleted: ({getToktokFoodNotifications}) => {
-      console.log(getToktokFoodNotifications);
       setNotification(getToktokFoodNotifications);
-    },
-    onError: (error) => {
-      console.log(error.response);
     },
   });
 
@@ -51,19 +47,34 @@ const ToktokFoodNotifications = () => {
     }
   }, [isFocus]);
 
-  const getStatus = (status, referenceNum) => {
+  const getStatus = (status, referenceNum, orderIsfor) => {
     switch (status) {
       case 'c':
         return {title: 'Cancelled Order', desc: `Order ${referenceNum} has been cancelled`};
       case 'p':
         return {title: 'Upcoming Order', desc: `Ongoing order ${referenceNum}`};
       case 'po':
-        return {title: 'Preparing Order', desc: `Preparing order ${referenceNum}`};
+        return {title: 'Preparing Order', desc: `Your order ${referenceNum} is being prepared`};
       case 'rp':
-        return {title: 'Ready for Pickup', desc: `Order ${referenceNum} is ready for pickup`};
+        return {title: 'Ready for Pickup', desc: `Your order ${referenceNum} is ready for pickup`};
       case 'f':
-        return {title: 'Item picked up', desc: `Order ${referenceNum} has been picked up`};
+        if (orderIsfor === 1) {
+          return {
+            title: 'Item picked up',
+            desc: `Almost there! Your order ${referenceNum} has been picked up by Rider and is on the way to you.`,
+          };
+        }
+        return {
+          title: 'Item picked up',
+          desc: `Order ${referenceNum} has been picked up successfully. Thank you for ordering using toktokfood!`,
+        };
       case 's':
+        if (orderIsfor === 1) {
+          return {
+            title: 'Delivered',
+            desc: `Order ${referenceNum} has been delivered successfully. Thank you for ordering using toktokfood!`,
+          };
+        }
         return {title: 'Completed Order', desc: `Order ${referenceNum} has been delivered`};
     }
   };
@@ -88,7 +99,7 @@ const ToktokFoodNotifications = () => {
             {getStatus(item.orderStatus, item.referenceNum).title}
           </Text>
           <Text numberOfLines={2} style={styles.notificationContent}>
-            {getStatus(item.orderStatus, item.referenceNum).desc}
+            {getStatus(item.orderStatus, item.referenceNum, item.orderIsfor).desc}
           </Text>
         </View>
       </View>

@@ -21,12 +21,12 @@ export const FoodCart = () => {
   const {customerInfo} = useSelector(state => state.toktokFood);
   const isFocus = useIsFocused();
   const {temporaryCart, setTemporaryCart, setFoodCartHeight} = useContext(VerifyContext);
-
   const [getAllTemporaryCart, {loading: cartLoading}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getAllTemporaryCart}) => {
       let {items, totalAmount, totalAmountWithAddons} = getAllTemporaryCart;
+      console.log('getAllTemporaryCart', getAllTemporaryCart);
       setTemporaryCart({
         cartItemsLength: items.length,
         totalAmount,
@@ -64,7 +64,11 @@ export const FoodCart = () => {
   };
 
   const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodCart', {shopId: id, userId: customerInfo.userId});
+    navigation.navigate('ToktokFoodCart', {
+      shopId: id,
+      userId: customerInfo.userId,
+      shopname: temporaryCart?.items[0]?.shopName,
+    });
   };
 
   if (temporaryCart.cartItemsLength == 0 || cartLoading || hasTemporaryCart?.checkHasTemporaryCart.shopid == 0) {
@@ -77,7 +81,7 @@ export const FoodCart = () => {
           <Text style={styles.total}>{`${temporaryCart.cartItemsLength} ${
             temporaryCart.cartItemsLength > 1 ? 'items' : 'item'
           }`}</Text>
-          <Text style={styles.total}>Total: {temporaryCart.totalAmountWithAddons.toFixed(2)}</Text>
+          <Text style={styles.total}>Total: PHP {temporaryCart.totalAmountWithAddons.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
           disabled={temporaryCart.cartItemsLength == 0}

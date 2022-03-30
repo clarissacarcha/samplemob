@@ -9,7 +9,6 @@ import Loader from 'toktokfood/components/Loader';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 
 // Hooks
-import {useUserLocation} from 'toktokfood/hooks';
 import {useSelector} from 'react-redux';
 import {moderateScale, getStatusbarHeight, verticalScale, getDeviceHeight} from 'toktokfood/helper/scale';
 import {SamplePolicy} from 'toktokfood/helper/strings';
@@ -40,7 +39,11 @@ export const ContactForm = ({}) => {
     onCompleted: ({postContactUs}) => {
       let {success, message} = postContactUs;
       if (success) {
-        setResponse({message: "Thank you for reaching out to us. We will check your concern and get back to you in 24 hrs.", show: true, type: 'success'});
+        setResponse({
+          message: 'Thank you for reaching out to us. We will check your concern and get back to you in 24 hrs.',
+          show: true,
+          type: 'success',
+        });
       } else {
         setResponse({message, show: true, type: 'error'});
       }
@@ -56,7 +59,7 @@ export const ContactForm = ({}) => {
       postContactUs({
         variables: {
           input: {
-            sendToEmail: 'mmoran@cloudpanda.ph',
+            sendToEmail: 'food@toktok.ph',
             name: `${firstName} ${lastName}`,
             email: email,
             message: message,
