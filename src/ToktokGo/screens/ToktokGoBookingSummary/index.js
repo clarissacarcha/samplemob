@@ -41,7 +41,6 @@ const ToktokGoBookingSummary = ({navigation}) => {
 
       <BookingMap />
 
-      <View style={[styles.card2]} />
       <View style={[styles.card]}>
         <BookingDistanceTime />
         <View style={styles.divider} />
@@ -68,30 +67,22 @@ export default ToktokGoBookingSummary;
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
+    right: -4.5,
+    width: '102%',
+    borderWidth: 3,
+    borderTopColor: constants.COLOR.ORANGE,
+    borderLeftColor: constants.COLOR.ORANGE,
+    borderRightColor: constants.COLOR.ORANGE,
+
     position: 'absolute',
     paddingTop: 13,
     paddingHorizontal: 16,
     bottom: 0,
     zIndex: 999,
-    width: '100%',
     backgroundColor: constants.COLOR.WHITE,
     marginTop: 8,
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    height: true ? '58%' : '60%', // if tokwa insufficient balance, use 60%
-  },
-  card2: {
-    flex: 1,
-    position: 'absolute',
-    bottom: 3,
-    zIndex: 999,
-    width: '100%',
-    backgroundColor: constants.COLOR.ORANGE,
-    marginTop: 8,
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    height: true ? '58%' : '60%', // if tokwa insufficient balance, use 60%
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
   },
   divider: {
     borderBottomWidth: 2,

@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     backgroundColor: CONSTANTS.COLOR.ORANGE,
     borderRadius: 5,
+    marginBottom: 16,
     paddingVertical: 11,
     alignItems: 'center',
   },
