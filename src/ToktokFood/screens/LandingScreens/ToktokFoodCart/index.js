@@ -93,7 +93,7 @@ const MainComponent = () => {
 
   const {shopname} = route.params;
   const dispatch = useDispatch();
-  const {location, customerInfo, customerFranchisee, promotionVoucher, receiver} = useSelector(
+  const {location, customerInfo, customerFranchisee, promotionVoucher, receiver, customerWallet} = useSelector(
     state => state.toktokFood,
   );
   const {user} = useSelector(state => state.session);
@@ -891,7 +891,7 @@ const MainComponent = () => {
             subtotal={totalAmount}
             deliveryFee={delivery.price}
             forDelivery={orderType === 'Delivery'}
-            oneCartTotal={v => setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
+            oneCartTotal={v => customerWallet?.status === 2 && setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
           />
         )}
         <Separator />
