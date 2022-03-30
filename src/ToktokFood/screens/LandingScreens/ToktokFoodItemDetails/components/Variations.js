@@ -34,15 +34,17 @@ export const Variations = ({data, productId}) => {
   const [dataOptions, setDataOptions] = useState([]);
 
   useEffect(() => {
-    if (Object.keys(data).length > 0 && data?.variants.length > 0) {
+    const variants = filterVariants();
+    if (variants.length > 0) {
       let selectedVar = productId
-        ? data.variants.find(val => {
+        ? variants.find(val => {
             return productId == val.Id;
           })
-        : data.variants[0];
+        : variants[0];
       setSelectedVariants(selectedVar);
+      console.log('selectedVar', selectedVar);
     }
-  }, [data.variants]);
+  }, []);
 
   useEffect(() => {
     if (Object.keys(data).length && data?.options.length) {
@@ -99,8 +101,10 @@ export const Variations = ({data, productId}) => {
               return {...prev, [item.optionName]: selected[item.optionName]};
             });
           } else {
-            const {[item.optionName]: val, ...data} = selected;
-            setSelected(data);
+            if (!item.isRequired) {
+              const {[item.optionName]: val, ...data} = selected;
+              setSelected(data);
+            }
           }
         } else {
           if (selected[item.optionName].length != item.noOfSelection) {
@@ -144,110 +148,118 @@ export const Variations = ({data, productId}) => {
       <React.Fragment>
         {data.options?.length > 0 &&
           data.options.map((item, index) => {
-            let temp = [];
-            let dataSource = [];
-            let remaining = [];
+            if (item.optionLogs.length > 0) {
+              let temp = [];
+              let dataSource = [];
+              let remaining = [];
 
-            if (item.optionLogs.length > 5) {
-              dataSource = item.optionLogs.slice(0, 5);
-              remaining = item.optionLogs.slice(4, -1);
-            } else {
-              dataSource = item.optionLogs;
-            }
+              if (item.optionLogs.length > 5) {
+                dataSource = item.optionLogs.slice(0, 5);
+                remaining = item.optionLogs.slice(4, -1);
+              } else {
+                dataSource = item.optionLogs;
+              }
 
-            if (!requiredOptions[item.optionName] && item.isRequired) {
-              setRequiredOptions(prev => {
-                return {...prev, [item.optionName]: item.isRequired};
-              });
-            }
+              if (!requiredOptions[item.optionName] && item.isRequired) {
+                setRequiredOptions(prev => {
+                  return {...prev, [item.optionName]: item.isRequired};
+                });
+              }
 
-            const listData =
-              dataOptions.length > 0 ? (dataOptions[index]?.isCollapsed ? item.optionLogs : dataSource) : [];
+              const listData =
+                dataOptions.length > 0 ? (dataOptions[index]?.isCollapsed ? item.optionLogs : dataSource) : [];
 
-            const variantNote = i => {
-              const {isRequired, noOfSelection, optionName} = i;
-              // Required ; 1 option - select 1
-              if (isRequired && noOfSelection === 1) {
-                return (
-                  <Text style={styles.variationTitle}>
-                    {optionName.toLowerCase()} (Select {item.noOfSelection})
-                  </Text>
-                );
-              }
-              // Required ; multiple - select up to (n)
-              if (isRequired && noOfSelection > 1) {
-                return (
-                  <Text style={styles.variationTitle}>
-                    {optionName.toLowerCase()} (Select up to {item.noOfSelection})
-                  </Text>
-                );
-              }
-              // Optional  ; 1 option -  select 1
-              if (!isRequired && noOfSelection === 1) {
-                return (
-                  <Text style={styles.variationTitle}>
-                    {optionName.toLowerCase()} (Select {item.noOfSelection})
-                  </Text>
-                );
-              }
-              // Optional ; multiple - select up to (n)
-              if (!isRequired && noOfSelection > 1) {
-                return (
-                  <Text style={styles.variationTitle}>
-                    {optionName.toLowerCase()} (Select up to {item.noOfSelection})
-                  </Text>
-                );
-              }
-            };
-            return (
-              <View style={styles.variations}>
-                <View style={styles.flexCenter}>
-                  {variantNote(item)}
-                  <View style={styles.requiredContainer}>
-                    <Text style={styles.requiredText}>{item.isRequired ? 'Required' : 'Optional'}</Text>
-                  </View>
-                </View>
-                {listData.map(optionLogs => {
-                  let index = -1;
-                  if (selected[item.optionName]) {
-                    index = selected[item.optionName].findIndex(v => {
-                      return v.addon_id == optionLogs.id;
-                    });
-                  }
+              const variantNote = i => {
+                const {isRequired, noOfSelection, optionName} = i;
+                // Required ; 1 option - select 1
+                if (isRequired && noOfSelection === 1) {
                   return (
-                    <View style={styles.variationsWrapper}>
-                      <RadioButton
-                        isMultiple={item.noOfSelection > 1}
-                        onValueChange={c => {
-                          onValueChange({item, optionLogs, index, temp});
-                        }}
-                        name={optionLogs.optionName}
-                        selected={index > -1}
-                      />
-                      <Text style={styles.variationPrice}>+ {optionLogs.optionPrice.toFixed(2)}</Text>
-                    </View>
-                  );
-                })}
-
-                {item.optionLogs?.length > 5 && (
-                  <TouchableOpacity onPress={() => onToggleItems(index)} activeOpacity={0.9} style={styles.showMore}>
-                    <Text style={styles.showMoreText}>
-                      {dataOptions.length > 0 && dataOptions[index].isCollapsed
-                        ? `Hide ${remaining.length > 1 ? 'Items' : 'Item'}`
-                        : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
-                          'Show More'}
+                    <Text style={styles.variationTitle}>
+                      {optionName.toLowerCase()} (Select {item.noOfSelection})
                     </Text>
-                    <FA5Icon
-                      name={
-                        dataOptions?.length > 0 ? (dataOptions[index].isCollapsed ? 'chevron-up' : 'chevron-down') : ''
-                      }
-                      size={12}
-                      color={'#FFA700'}
-                    />
-                  </TouchableOpacity>
-                )}
-              </View>
-            );
+                  );
+                }
+                // Required ; multiple - select up to (n)
+                if (isRequired && noOfSelection > 1) {
+                  return (
+                    <Text style={styles.variationTitle}>
+                      {optionName.toLowerCase()} (Select up to {item.noOfSelection})
+                    </Text>
+                  );
+                }
+                // Optional  ; 1 option -  select 1
+                if (!isRequired && noOfSelection === 1) {
+                  return (
+                    <Text style={styles.variationTitle}>
+                      {optionName.toLowerCase()} (Select {item.noOfSelection})
+                    </Text>
+                  );
+                }
+                // Optional ; multiple - select up to (n)
+                if (!isRequired && noOfSelection > 1) {
+                  return (
+                    <Text style={styles.variationTitle}>
+                      {optionName.toLowerCase()} (Select up to {item.noOfSelection})
+                    </Text>
+                  );
+                }
+              };
+              return (
+                <View style={styles.variations}>
+                  <View style={styles.flexCenter}>
+                    {variantNote(item)}
+                    <View style={styles.requiredContainer}>
+                      <Text style={styles.requiredText}>{item.isRequired ? 'Required' : 'Optional'}</Text>
+                    </View>
+                  </View>
+                  {listData.map(optionLogs => {
+                    let index = -1;
+                    if (selected[item.optionName]) {
+                      index = selected[item.optionName].findIndex(v => {
+                        return v.addon_id == optionLogs.id;
+                      });
+                    }
+                    return (
+                      <View style={styles.variationsWrapper}>
+                        <RadioButton
+                          isMultiple={item.noOfSelection > 1 || (item.noOfSelection === 1 && !item.isRequired)}
+                          onValueChange={c => {
+                            onValueChange({item, optionLogs, index, temp});
+                          }}
+                          name={optionLogs.optionName}
+                          selected={index > -1}
+                        />
+                        <Text style={styles.variationPrice}>+ {optionLogs.optionPrice.toFixed(2)}</Text>
+                      </View>
+                    );
+                  })}
+
+                  {item.optionLogs?.length > 5 && (
+                    <TouchableOpacity onPress={() => onToggleItems(index)} activeOpacity={0.9} style={styles.showMore}>
+                      <Text style={styles.showMoreText}>
+                        {dataOptions.length > 0 && dataOptions[index].isCollapsed
+                          ? `Hide ${remaining.length > 1 ? 'Items' : 'Item'}`
+                          : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
+                            'Show More'}
+                      </Text>
+                      <FA5Icon
+                        name={
+                          dataOptions?.length > 0
+                            ? dataOptions[index].isCollapsed
+                              ? 'chevron-up'
+                              : 'chevron-down'
+                            : ''
+                        }
+                        size={12}
+                        color={'#FFA700'}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              );
+            }
+
+            return null;
           })}
 
         {/* <FlatList
@@ -302,12 +314,14 @@ export const Variations = ({data, productId}) => {
       <View style={styles.variantWrapper}>
         <View style={styles.variantSubWrapper}>
           <RadioButton
-            onValueChange={c => {
-              setSelectedVariants(item);
-              setCount({type: 'ADD', quantity: 1});
+            onValueChange={() => {
+              if (item.Id !== selectedVariants?.Id) {
+                setSelectedVariants(item);
+                setCount({type: 'ADD', quantity: 1});
+              }
             }}
             name={item.itemname}
-            selected={item.Id == selectedVariants?.Id}
+            selected={item.Id === selectedVariants?.Id}
           />
         </View>
         <Text style={styles.variationPrice}>PHP {item.price.toFixed(2)}</Text>
@@ -332,7 +346,7 @@ export const Variations = ({data, productId}) => {
     const variants = data.variants;
     if (variants.length) {
       variants.map(variant => {
-        if (variant.enabled === 1) {
+        if (variant.enabled === 1 && (variant.stocks > 0 || variant.contSellingIsset > 0)) {
           variantHolder.push(variant);
         }
       });
@@ -352,12 +366,17 @@ export const Variations = ({data, productId}) => {
       dataSource = variants;
     }
 
-    if (data?.variants.length) {
+    if (variants.length) {
       const listData = isCollapsed ? variants : dataSource;
       return (
         <React.Fragment>
           <View style={styles.variantContainer}>
-            <Text style={styles.variantTitle}>Variations</Text>
+            <View style={styles.flexCenter}>
+              <Text style={styles.variantTitle}>Variation (Select 1)</Text>
+              <View style={styles.requiredContainer}>
+                <Text style={styles.requiredText}>Required</Text>
+              </View>
+            </View>
             {listData.map(item => (
               <Variant item={item} />
             ))}

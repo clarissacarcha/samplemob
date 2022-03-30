@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useRef, useMemo} from 'react';
 import {ScrollView, StyleSheet, View, Alert, Text} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import BackgroundTimer from 'react-native-background-timer';
 
@@ -33,17 +33,19 @@ import {useIsFocused} from '@react-navigation/native';
 import moment from 'moment';
 
 const ToktokFoodOrderDetails = ({route, navigation}) => {
-  const {price} = useSelector(state => state.toktokFood.totalAmount);
+  const {minutesRemaining, showError, duration} = useSelector(state => state.toktokFood.exhaust);
   const referenceNum = route.params ? route.params.referenceNum : '';
   const orderStatus = route.params ? route.params.orderStatus : '';
 
   const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(0);
   const [riderSeconds, setRiderSeconds] = useState(0);
   const [transaction, setTransaction] = useState({});
   const [riderDetails, setRiderDetails] = useState(null);
   const checkOrderResponse5mins = useRef(null);
   const getRiderDetailsInterval = useRef(null);
   const isFocus = useIsFocused();
+  const dispatch = useDispatch();
   const [showDialogMessage, setShowDialogMessage] = useState({
     title: '',
     message: '',
@@ -51,17 +53,39 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     type: '',
   });
 
+  const timerRef = useRef(null);
+  const fetchingRef = useRef(null);
+
   const [getTransactionByRefNum, {error: transactionError, loading: transactionLoading, refetch}] = useLazyQuery(
     GET_ORDER_TRANSACTION_BY_REF_NUM,
     {
+      variables: {
+        input: {
+          referenceNum: referenceNum,
+        },
+      },
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       onError: () => {
         checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
       },
       onCompleted: ({getTransactionByRefNum}) => {
-        if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
-          setTransaction(getTransactionByRefNum);
+        // console.log(getTransactionByRefNum);
+        // if (JSON.stringify(getTransactionByRefNum) != JSON.stringify(transaction)) {
+        setTransaction(getTransactionByRefNum);
+        const {orderIsfor, tDeliveryId, orderStatus} = getTransactionByRefNum;
+        console.log('fetching orders...', getTransactionByRefNum);
+        if (orderIsfor === 1 && tDeliveryId) {
+          getToktokFoodRiderDetails({
+            variables: {
+              input: {
+                deliveryId: tDeliveryId,
+              },
+            },
+          });
+        }
+        if (orderStatus !== 's' || orderStatus !== 'c') {
+          handleGetTransactionByRefNum();
         }
       },
     },
@@ -71,7 +95,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     GET_RIDER_DETAILS,
     {
       client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       onCompleted: ({getDeliveryDetails}) => {
         setRiderDetails(getDeliveryDetails);
       },
@@ -88,14 +112,84 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   }, [navigation]);
 
   useEffect(() => {
-    handleGetTransactionByRefNum();
-  }, []);
-
-  useEffect(() => {
     if (isFocus) {
-      setSeconds(300);
+      getTransactionByRefNum({
+        variables: {
+          input: {
+            referenceNum: referenceNum,
+          },
+        },
+      });
     }
   }, [isFocus]);
+
+  // useEffect(() => {
+  //   if (isFocus) {
+  //     setSeconds(300);
+  //   }
+  // }, [isFocus]);
+
+  useEffect(() => {
+    if (transaction?.orderStatus === 'p' && minutes === 0) {
+      setMinutes(5);
+    } else if (transaction?.orderStatus === 'po' || transaction?.orderStatus === 'rp') {
+      const dateProcessed = moment(transaction?.dateOrderProcessed).add(45, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+      const remainingMinutes = moment(dateProcessed).diff(moment(), 'minutes');
+      console.log('remainingMinutes', remainingMinutes);
+      const payload = {minutesRemaining: remainingMinutes, showError: remainingMinutes <= 0, duration: 0};
+      dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
+      setMinutes(remainingMinutes);
+    } else if (transaction?.orderStatus === 'f') {
+      if (riderDetails && duration === 0) {
+        const {duration: riderDuration} = riderDetails;
+        const remainingMinutes = riderDuration + 5;
+        console.log('remainingMinutes', remainingMinutes);
+        const payload = {minutesRemaining: remainingMinutes, showError: false, duration: 1};
+        dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
+        setMinutes(remainingMinutes);
+      }
+    }
+  }, [transaction]);
+
+  useEffect(() => {
+    if (minutes > 0) {
+      timerRef.current = setTimeout(() => {
+        setMinutes(minutes - 1);
+        const payload = {minutesRemaining: minutes - 1, showError: false};
+        dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload, duration});
+      }, 60000);
+    }
+
+    if (minutes === 0 && transaction?.orderStatus === 'p') {
+      setShowDialogMessage({
+        title: 'No Response from Merchant',
+        message: "Merchant hasn't confirmed your order.\nPlease try again.",
+        show: true,
+        type: 'warning',
+      });
+    }
+    if (
+      minutesRemaining <= 0 &&
+      !showError &&
+      (transaction?.orderStatus === 'po' || transaction?.orderStatus === 'rp')
+    ) {
+      setShowDialogMessage({
+        title: 'Still Preparing Order',
+        message: 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.',
+        show: true,
+        type: 'warning',
+      });
+    }
+    if (minutesRemaining <= 0 && !showError && transaction?.orderStatus === 'f') {
+      const payload = {minutesRemaining: minutes, showError: true, duration};
+      dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
+    }
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [minutes]);
 
   useEffect(() => {
     handleOrderProcess();
@@ -104,21 +198,28 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     };
   }, [seconds, transaction]);
 
-  useEffect(() => {
-    handleMapRider();
-    return () => {
-      BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
-    };
-  }, [riderSeconds]);
+  // useEffect(() => {
+  //   handleMapRider();
+  //   return () => {
+  //     BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
+  //   };
+  // }, [riderSeconds]);
 
   const handleGetTransactionByRefNum = () => {
-    getTransactionByRefNum({
-      variables: {
-        input: {
-          referenceNum: referenceNum,
+    fetchingRef.current = setTimeout(() => {
+      getTransactionByRefNum({
+        variables: {
+          input: {
+            referenceNum: referenceNum,
+          },
         },
-      },
-    });
+      });
+    }, 10000);
+    return () => {
+      if (fetchingRef.current) {
+        clearTimeout(fetchingRef.current);
+      }
+    };
   };
 
   const handleMapRider = () => {
@@ -136,7 +237,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         setRiderSeconds(300);
       }
     }
-    console.log('Rider Details Updated ' + riderSeconds);
+    // console.log('Rider Details Updated ' + riderSeconds);
   };
 
   const handleOrderProcess = async () => {
@@ -181,18 +282,18 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
             checkOrderResponse5mins.current = BackgroundTimer.setInterval(() => setSeconds(seconds - 5), 5000);
           } else {
             if (riderDetails == null) {
-              BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
-              BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
-              if (transaction.orderStatus == 'p') {
-                setShowDialogMessage({
-                  title: 'No Response from Merchant',
-                  message: "Merchant hasn't confirmed your order.\nPlease try again.",
-                  show: true,
-                  type: 'warning',
-                });
-              } else {
-                setSeconds(300);
-              }
+              // BackgroundTimer.clearInterval(checkOrderResponse5mins.current);
+              // BackgroundTimer.clearInterval(getRiderDetailsInterval.current);
+              // if (transaction.orderStatus === 'p' && !showDialogMessage.show) {
+              //   setShowDialogMessage({
+              //     title: 'No Response from Merchant',
+              //     message: "Merchant hasn't confirmed your order.\nPlease try again.",
+              //     show: true,
+              //     type: 'warning',
+              //   });
+              // } else {
+              //   setSeconds(300);
+              // }
             } else {
               setSeconds(300);
             }
@@ -242,6 +343,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
       case 'Order Complete':
         return 2;
       case 'OOPS! Order Declined!':
+        return 3;
       case 'Order Cancelled':
         return 3;
       default:
@@ -252,17 +354,29 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   const onCloseModal = () => {
     let {title} = showDialogMessage;
     setShowDialogMessage(prev => ({...prev, show: false}));
-    if (title == 'Order Complete' || title == 'OOPS! Order Declined!' || title == 'Order Cancelled') {
-      let tab = selectedTab(title);
-      navigation.navigate('ToktokFoodOrderTransactions', {tab});
-    } else {
+    if (title === 'No Response from Merchant') {
       setSeconds(300);
+      setMinutes(5);
+    } else if (title === 'Still Preparing Order') {
+      const payload = {minutesRemaining: minutes, showError: true, duration: 0};
+      dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
+    } else {
+      if (title !== 'Order Complete' || title !== 'OOPS! Order Declined!' || title !== 'Order Cancelled') {
+        let tab = selectedTab(title);
+        navigation.navigate('ToktokFoodOrderTransactions', {tab});
+        setSeconds(300);
+        setMinutes(5);
+      }
     }
   };
 
   const displayOrderTitle = useMemo(() => {
     return <OrderTitle transaction={transaction} riderDetails={riderDetails} referenceNum={referenceNum} />;
   }, [transaction, riderDetails]);
+
+  const OrderListComponent = useMemo(() => {
+    return <OrderList orderDetails={transaction.orderDetails} />;
+  }, [transaction?.orderStatus]);
 
   return (
     <View style={styles.container}>
@@ -277,19 +391,29 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         }}
         onCloseBtn1={() => {
           setShowDialogMessage(prev => ({...prev, show: false}));
-          navigation.navigate('ToktokFoodHome');
+          // if (showDialogMessage.title === 'OOPS! Order Declined!' || showDialogMessage.title === 'Order Cancelled') {
+          // navigation.navigate('ToktokFoodHome');
+          // navigation.navigate('ToktokFoodRestaurantOverview', {item});
+          navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: transaction.sysShop}});
+          // } else {
+          //   navigation.navigate('ToktokFoodHome');
+          // }
         }}
         onCloseBtn2={() => {
-          onCloseModal();
+          setShowDialogMessage(prev => ({...prev, show: false}));
+          navigation.navigate('ToktokFoodHome');
+          // onCloseModal();
         }}
         btn1Title={`Browse${'\n'}Restaurant`}
         btn2Title="OK"
         hasTwoButtons={
-          showDialogMessage.title !== 'Order Complete' && showDialogMessage.title !== 'No Response from Merchant'
+          showDialogMessage.title !== 'Order Complete' &&
+          showDialogMessage.title !== 'No Response from Merchant' &&
+          showDialogMessage.title !== 'Still Preparing Order'
         }
       />
       <HeaderImageBackground searchBox={false}>
-        <HeaderTitle />
+        <HeaderTitle backOnly />
       </HeaderImageBackground>
       {(transactionLoading && Object.entries(transaction).length == 0) ||
       Object.entries(transaction).length == 0 ||
@@ -313,7 +437,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
               <Separator />
             </>
           )}
-          <OrderList orderDetails={transaction.orderDetails} />
+          {/* <OrderList orderDetails={transaction.orderDetails} /> */}
+          {OrderListComponent}
           <Separator />
           {transaction?.promoDetails && transaction?.orderIsfor === 1 && (
             <>

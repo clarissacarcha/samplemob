@@ -1,15 +1,14 @@
 import React from 'react';
-import {FlatList, Image, Platform, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Platform, StyleSheet, Text, View} from 'react-native';
 // Fonts & Colors
 import {FONT_SIZE} from 'res/variables';
-import {empty_shop_2} from 'toktokfood/assets/images';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 // Utils
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 import RestaurantItem from './RestaurantItem';
 
 const RestaurantList = props => {
-  const {loading, error, data, loadMore, location} = props;
+  const {activeTab, data, loadMore} = props;
 
   const renderFooter = () => {
     if (loadMore) {
@@ -19,24 +18,12 @@ const RestaurantList = props => {
     }
   };
 
-  const listEmpty = () => (
-    <View style={styles.emptyContainer}>
-      <Image style={styles.emptyImg} resizeMode="contain" source={empty_shop_2} />
-      <Text style={styles.emptyText}>
-        It seems like there is no open restaurant near you. Refresh or try again later.
-      </Text>
-    </View>
-  );
-
-  // if (loading || error || location == undefined) {
-  //   return <LoadingIndicator style={{marginVertical: 20}} isFlex isLoading={true} />;
-  // }
   return (
     <FlatList
       data={data}
       extraData={loadMore}
       numColumns={2}
-      renderItem={({item}) => <RestaurantItem item={item} />}
+      renderItem={({item}) => <RestaurantItem activeTab={activeTab} item={item} />}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       keyExtractor={(val, index) => index.toString()}

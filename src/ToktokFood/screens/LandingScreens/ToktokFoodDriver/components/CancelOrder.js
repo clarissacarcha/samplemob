@@ -18,25 +18,17 @@ const CancelOrder = ({
   failedCancel,
   referenceOrderNumber = '',
   setShowLoader,
-  onCallBackResult
+  onCallBackResult,
 }) => {
   const reasonList = [
-    {
-      id: 1,
-      reason: 'I changed my mind',
-    },
-    {
-      id: 2,
-      reason: 'I wanted to change location',
-    },
-    {
-      id: 3,
-      reason: 'Merchant took so long to accept',
-    },
-    {
-      id: 4,
-      reason: 'Change order type (Pick up or Delivery)',
-    },
+    {id: 1, reason: "I'd like to change my order"},
+    {id: 2, reason: "I'll use another food app"},
+    {id: 3, reason: "I'd like to change my delivery address"},
+    {id: 4, reason: 'I found a cheaper option'},
+    {id: 5, reason: "I'd like to add another order"},
+    {id: 6, reason: "I'd like to have my order delivered"},
+    {id: 7, reason: "I'd like to have my order picked up"},
+    {id: 8, reason: 'Merchant took so long to accept my order'},
   ];
 
   const navigation = useNavigation();
@@ -46,12 +38,12 @@ const CancelOrder = ({
   const [postCancelOrder] = useMutation(PATCH_CANCEL_CUSTOMER_ORDER, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',
-    onError: (error) => {
-      failedCancel()
+    onError: error => {
+      failedCancel();
     },
     onCompleted: ({cancelOrder}) => {
       setShowReason(false);
-      onCallBackResult(cancelOrder)
+      onCallBackResult(cancelOrder);
     },
   });
 
@@ -76,38 +68,15 @@ const CancelOrder = ({
     setShowReason(false);
   };
 
-  const RoundedButton = (props) => {
+  const RoundedButton = props => {
     const {id, selected, onSelect} = props;
     const componentClick = () => {
       onSelect(selected);
     };
     return (
       <>
-        <View
-          onTouchStart={() => componentClick()}
-          key={id}
-          style={[
-            {
-              width: 20,
-              height: 20,
-              borderWidth: 2,
-              borderRadius: 50,
-              marginRight: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderColor: '#FFA700',
-            },
-          ]}>
-          {selected ? (
-            <View
-              style={{
-                height: 11,
-                width: 11,
-                borderRadius: 50,
-                backgroundColor: '#FFA700',
-              }}
-            />
-          ) : null}
+        <View onTouchStart={() => componentClick()} key={id} style={[styles.roundedButtonContainer]}>
+          {selected ? <View style={styles.roundedButtonWrapper} /> : null}
         </View>
       </>
     );
@@ -122,7 +91,7 @@ const CancelOrder = ({
             <View style={styles.reasonListWrapper}>
               {reasonList.map((v, i) => {
                 return (
-                  <View style={styles.itemWrapper}>
+                  <View style={[styles.itemWrapper]}>
                     <RoundedButton
                       id={v.id}
                       onSelect={() => setSelectedReason(v.reason)}
@@ -144,7 +113,7 @@ const CancelOrder = ({
                 onPress={() => proccessCancelOrder()}
                 style={[styles.reasonButtons, {opacity: selectedReason ? 1 : 0.3}, {backgroundColor: '#FFA700'}]}>
                 <Text style={styles.reasonButtonText}>Proceed</Text>
-              </TouchableOpacity> 
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -188,9 +157,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     backgroundColor: 'rgba(34, 34, 34, 0.5)',
+    // backgroundColor: '#fff',
   },
   wrapper: {
     height: '40%',
@@ -209,12 +179,12 @@ const styles = StyleSheet.create({
   },
   sheet: {
     flex: 1,
-    padding: 15,
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   cancelTitle: {
-    fontSize: 19,
+    fontSize: 20,
     marginTop: 6,
     textAlign: 'center',
     fontFamily: FONT.BOLD,
@@ -241,12 +211,13 @@ const styles = StyleSheet.create({
   },
   reasonWrapper: {
     width: '90%',
-    height: verticalScale(400),
+    // flex: 1,
+    // height: verticalScale(500),
     borderRadius: 5,
     display: 'flex',
     alignItems: 'center',
     backgroundColor: '#FFFF',
-    paddingVertical: scale(18),
+    // paddingVertical: scale(18),
   },
   shadow: {
     backgroundColor: 'white',
@@ -262,12 +233,11 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   reasonContent: {
-    flex: 1,
-    paddingVertical: 10,
+    flexGrow: 1,
+    paddingVertical: verticalScale(25),
   },
   reasonListWrapper: {
-    marginTop: 18,
-    height: 200,
+    marginTop: 15,
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
@@ -275,11 +245,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    height: 50,
-    padding: 5,
+    height: 35,
+    padding: 2,
   },
   itemText: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: FONT.REGULAR,
   },
   reasonButtonWrapper: {
@@ -308,6 +278,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#FFA700',
     backgroundColor: COLOR.WHITE,
+  },
+  roundedButtonContainer: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderRadius: 50,
+    marginRight: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#FFA700',
+  },
+  roundedButtonWrapper: {
+    height: 11,
+    width: 11,
+    borderRadius: 50,
+    backgroundColor: '#FFA700',
   },
 });
 

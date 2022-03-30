@@ -12,13 +12,14 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
-import { navigationRef } from './RootNavigation';
+import {navigationRef} from './RootNavigation';
 /*-------------------- IMPORT SCREENS START--------------------*/
 
 import DrawerContent from '../Drawer';
 import Landing from '../../screens/Landing';
 
 /*---------- CONSUMER SCREENS ----------*/
+import SuperAppScreens from './superApp';
 import ToktokScreens from './toktok';
 import ToktokFoodScreens from './toktokfood';
 import ToktokWalletScreens from './toktokwallet';
@@ -233,7 +234,7 @@ const DriverHomeBottomTab = ({navigation}) => (
             style={{paddingVertical: 12, paddingHorizontal: 20}}
           />
         ),
-        tabBarButton: (props) => <TouchableWithoutFeedback {...props} onPress={() => navigation.openDrawer()} />,
+        tabBarButton: props => <TouchableWithoutFeedback {...props} onPress={() => navigation.openDrawer()} />,
       }}
     />
   </DriverHome.Navigator>
@@ -245,6 +246,7 @@ const AuthenticatedStack = () => (
     {ToktokFoodScreens({Navigator: Authenticated})}
     {ToktokMallScreens({Navigator: Authenticated})}
     {ToktokWalletScreens({Navigator: Authenticated})}
+    {SuperAppScreens({Navigator: Authenticated})}
 
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 
@@ -321,12 +323,12 @@ const AuthenticatedStack = () => (
   </Authenticated.Navigator>
 );
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
   constants: state.constants,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
 });
 

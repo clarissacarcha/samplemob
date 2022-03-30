@@ -18,8 +18,15 @@ const INITIAL_STATE = {
   customerInfo: {},
   customerWallet: {},
   customerFranchisee: null,
+  promotionVoucher: [],
+  shippingVoucher: [],
   location: {},
   receiver: {},
+  exhaust: {
+    minutesRemaining: 0,
+    showError: false,
+    duration: 0,
+  },
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -46,6 +53,12 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, shopLocation: action.payload};
     case 'SET_TOKTOKFOOD_ORDER_RECEIVER':
       return {...state, receiver: action.payload};
+    case 'SET_TOKTOKFOOD_PROMOTIONS':
+      return {...state, promotionVoucher: action.payload};
+    case 'SET_TOKTOKFOOD_SHIPPING':
+      return {...state, shippingVoucher: action.payload};
+    case 'SET_TOKTOKFOOD_EXHAUST':
+      return {...state, exhaust: action.payload};
     default:
       return state;
   }

@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useContext, useState} from 'react';
+import React, {useEffect, useContext, useState, useMemo} from 'react';
 import Toast from 'react-native-simple-toast';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 import {VerifyContext} from './VerifyContextProvider';
-import uuid from 'react-native-uuid';
 import _ from 'lodash';
+import {useSelector, useDispatch} from 'react-redux';
 
 // Utils
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
-import {scale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {scale, moderateScale, verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 import {
   POST_TEMPORARY_CART,
   PATCH_TEMPORARY_CART_ITEM,
@@ -22,7 +22,6 @@ import {
 import {useMutation, useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
-import {useDispatch, useSelector} from 'react-redux';
 import Loader from 'toktokfood/components/Loader';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import {onErrorAlert} from 'src/util/ErrorUtility';
@@ -155,7 +154,7 @@ export const FoodCart = ({loading, action}) => {
                 ? exceededQty > data.maxQty - 1
                 : selectedQty + (data.maxQty - currentQty) == count.quantity;
 
-            if (productDetails?.contSellingIsset === 1) {
+            if (productDetails?.contSellingIsset > 0 || selectedVariants?.contSellingIsset > 0) {
               setDisableMaxQty(false);
             } else {
               setDisableMaxQty(
@@ -168,7 +167,7 @@ export const FoodCart = ({loading, action}) => {
             return;
           }
         }
-        if (productDetails?.contSellingIsset === 1) {
+        if (productDetails?.contSellingIsset > 0 || selectedVariants?.contSellingIsset > 0) {
           setDisableMaxQty(false);
         } else {
           setDisableMaxQty(count.quantity > data.maxQty);
@@ -230,7 +229,6 @@ export const FoodCart = ({loading, action}) => {
     };
 
     let filterItemByProductId = await temporaryCart.items.filter(item => {
-      // console.log(item.productid)
       return item.productid == items.productid;
     });
     // return null
@@ -293,6 +291,7 @@ export const FoodCart = ({loading, action}) => {
     }).then(({data}) => {
       let {status, message} = data.deleteShopTemporaryCart;
       if (status == 200) {
+        dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
         addToCart(showDialogMessage.items);
       } else {
         setLoader(false);
@@ -381,6 +380,20 @@ export const FoodCart = ({loading, action}) => {
   const isEnabled = () =>
     required.length > 0 || disabledMaxQty || loading || postLoading || patchLoading || deleteLoading || hasCartLoading;
 
+  const isAddEnabled = useMemo(() => {
+    const checkStocks =
+      tempData?.maxQty > tempData?.stocks && tempData?.maxQtyIsset > 0 ? tempData?.maxQty : tempData?.stocks;
+    // const checkContinuous =
+    //   tempData?.contSellingIsset > 0 ? 1000 : tempData?.maxQtyIsset > 0 ? checkStocks : tempData?.stocks;
+    const checkIsMaxQtySet =
+      tempData?.maxQtyIsset > 0 ? checkStocks : tempData?.contSellingIsset > 0 ? 1000 : tempData?.stocks;
+    const disabled =
+      tempData?.contSellingIsset > 0 && count.quantity < checkIsMaxQtySet
+        ? false
+        : disableAdd || count.quantity >= checkIsMaxQtySet;
+    return disabled;
+  });
+
   return (
     <>
       <Loader
@@ -425,15 +438,13 @@ export const FoodCart = ({loading, action}) => {
             </TouchableOpacity>
             <Text style={styles.countText}>{count.quantity}</Text>
             <TouchableOpacity
-              disabled={
-                productDetails?.contSellingIsset === 1 ? false : disableAdd || count.quantity >= tempData?.stocks
-              }
+              disabled={isAddEnabled}
               style={[
                 styles.countButtons,
                 {
                   backgroundColor: COLOR.ORANGE,
                   opacity:
-                    productDetails?.contSellingIsset === 1
+                    tempData?.contSellingIsset > 0 && count.quantity < tempData?.maxQty
                       ? 1
                       : disableAdd || count.quantity >= tempData?.stocks
                       ? 0.5
@@ -446,6 +457,13 @@ export const FoodCart = ({loading, action}) => {
           </View>
           <Text style={styles.total}>Total: PHP {totalPrice.toFixed(2)}</Text>
         </View>
+
+        {isAddEnabled && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>You have reached the max quantity available for this product.</Text>
+          </View>
+        )}
+
         <TouchableOpacity
           disabled={isEnabled()}
           style={[
@@ -499,6 +517,15 @@ const styles = StyleSheet.create({
     color: COLOR.WHITE,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
+  },
+  errorText: {
+    fontSize: FONT_SIZE.M,
+    color: '#F12F31',
+    textAlign: 'center',
+  },
+  errorContainer: {
+    paddingHorizontal: moderateScale(20),
+    paddingVertical: moderateScale(10),
   },
   foodItemTotalWrapper: {
     display: 'flex',

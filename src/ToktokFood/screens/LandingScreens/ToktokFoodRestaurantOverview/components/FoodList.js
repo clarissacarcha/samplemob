@@ -1,7 +1,7 @@
 /* eslint-disable radix */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useContext, Fragment, useState} from 'react';
+import React, {useEffect, useContext, Fragment, useState, useCallback} from 'react';
 import {View, ImageBackground, StyleSheet, Text, TouchableOpacity, Image, Platform, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import ContentLoader from 'react-native-easy-content-loader';
@@ -13,15 +13,15 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
 // Components
 import {VerifyContext} from '../components';
+import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 // Utils
 import {verticalScale, getDeviceHeight, moderateScale, getIphoneNotchSize} from 'toktokfood/helper/scale';
-import {reseller_badge} from 'toktokfood/assets/images';
+import {reseller_badge, empty_search_2, food_placeholder} from 'toktokfood/assets/images';
 import {TOKFOODCOLOR} from 'res/variables';
-import {filter} from 'lodash';
 
 export const FoodList = props => {
   const {activeTab, id, tagsLoading} = props;
@@ -61,35 +61,40 @@ export const FoodList = props => {
     },
   });
 
-  const filterProducts = products => {
+  const filterProducts = useCallback(products => {
+    setListData([]);
+    let productHolder = [];
     if (products.length) {
-      let productHolder = [];
-      products.map(product => {
+      const removedFalsyProducts = products.filter(Boolean);
+      removedFalsyProducts.map(product => {
         let variantHolder = [];
         const variants = product.variants;
-        if (variants.length) {
-          variants.map(variant => {
-            if (variant.enabled === 1 && variant.stocks > 0) {
-              variantHolder.push(variant);
-            }
-          });
-          if (variantHolder.length) {
-            product.variants = variantHolder;
+        if (variants.length === 1) {
+          if (variants[0].enabled === 2) {
+            productHolder.push(product);
+          } else if (variants[0].enabled === 1) {
+            product.variants = variants;
             productHolder.push(product);
           }
         } else {
-          productHolder.push(product);
+          if (variants.length) {
+            variants.map(variant => {
+              if (variant.enabled === 1 && (variant.stocks > 0 || variant.contSellingIsset > 0)) {
+                variantHolder.push(variant);
+              }
+            });
+            if (variantHolder.length) {
+              product.variants = variantHolder;
+              productHolder.push(product);
+            }
+          } else {
+            productHolder.push(product);
+          }
         }
       });
-      setListData(productHolder);
     }
-  };
-
-  // const listData = searchProduct
-  //   ? searchProducts?.getSearchProductsByShop
-  //   : products
-  //   ? products.getProductsByShopCategory
-  //   : [];
+    setListData(productHolder);
+  }, []);
 
   useEffect(() => {
     if (activeTab?.id) {
@@ -108,6 +113,8 @@ export const FoodList = props => {
           },
         },
       });
+    } else {
+      getProductsByShopCategory();
     }
   }, [searchProduct]);
 
@@ -118,19 +125,28 @@ export const FoodList = props => {
   const ItemSepartor = () => <View style={styles.separtor} />;
 
   const ResellerPrice = ({item}) => {
-    const {price, resellerDiscount} = item;
+    const {price, promoVoucher, resellerDiscount} = item;
 
     return (
       <View style={styles.resellerPrice}>
-        <Text style={styles.listPrice}>PHP {resellerDiscount?.referralShopRate.toFixed(2)}</Text>
+        <Text numberOfLines={1} style={styles.fromText}>
+          from
+        </Text>
+        <Text style={styles.promoText}>PHP {resellerDiscount?.referralShopRate.toFixed(2)}</Text>
         <Text style={styles.resellerDiscountText}>PHP {price?.toFixed(2)}</Text>
+
+        {activeTab?.id === '0' && promoVoucher && (
+          <View style={styles.voucherContainer}>
+            <Text style={styles.voucherText}>{promoVoucher.vname}</Text>
+          </View>
+        )}
       </View>
     );
   };
 
   const ResellerDiscountBadge = ({item}) => {
     const {discRatetype, referralDiscount} = item?.resellerDiscount;
-    const discountText = discRatetype === 'p' ? `${referralDiscount}%` : referralDiscount;
+    const discountText = discRatetype === 'p' ? `${referralDiscount * 100}%` : referralDiscount;
     return (
       <ImageBackground resizeMode="contain" source={reseller_badge} style={styles.resellerBadge}>
         <Text style={styles.resellerText}>Reseller -{discountText}</Text>
@@ -139,7 +155,7 @@ export const FoodList = props => {
   };
 
   const ItemList = ({item, index}) => {
-    const {resellerDiscount} = item;
+    const {promoVoucher, resellerDiscount} = item;
     return (
       <Fragment>
         <TouchableOpacity
@@ -157,7 +173,20 @@ export const FoodList = props => {
             {resellerDiscount?.referralShopRate > 0 ? (
               <ResellerPrice item={item} />
             ) : (
-              <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
+              <View style={styles.priceContainer}>
+                {item.variants.length > 0 && (
+                  <Text numberOfLines={1} style={styles.fromText}>
+                    from
+                  </Text>
+                )}
+                <Text style={styles.listPrice}>PHP {item.price.toFixed(2)}</Text>
+
+                {activeTab?.id === '0' && promoVoucher && (
+                  <View style={styles.voucherContainer}>
+                    <Text style={styles.voucherText}>{promoVoucher.vname}</Text>
+                  </View>
+                )}
+              </View>
             )}
 
             {!!item.summary && (
@@ -166,14 +195,26 @@ export const FoodList = props => {
               </Text>
             )}
           </View>
-          <View>
-            <Image resizeMode="cover" source={{uri: item.filename}} style={styles.img} />
+          <View style={{width: 70, height: 70}}>
+            <ProgressiveImage style={styles.img} source={item.filename} placeholder={food_placeholder} />
           </View>
+          {/* <View>
+            <Image resizeMode="cover" source={{uri: item.filename}} style={styles.img} />
+          </View> */}
         </TouchableOpacity>
         <ItemSepartor />
       </Fragment>
     );
   };
+
+  const EmptyScreenComponent = () => (
+    <View style={styles.emptyContainer}>
+      <Image style={styles.emptyImg} resizeMode="contain" source={empty_search_2} />
+      <Text style={styles.emptyText}>
+        Sorry, products in this category seems to be out of stock already. Please come back again some other time.
+      </Text>
+    </View>
+  );
 
   if (productsLoading || tagsLoading || productsError || searchProductsLoading) {
     const listSize = parseInt((getDeviceHeight / verticalScale(100)).toFixed(0));
@@ -209,7 +250,7 @@ export const FoodList = props => {
 
   return (
     <ScrollView contentContainerStyle={{...styles.scrollContainer, minHeight: minHeight}}>
-      {listData?.length > 0 ? listData.map(item => <ItemList item={item} />) : null}
+      {listData?.length > 0 ? listData.map(item => <ItemList item={item} />) : <EmptyScreenComponent />}
       {/* <FlatList
         data={
           searchProduct ? searchProducts?.getSearchProductsByShop : products ? products.getProductsByShopCategory : []
@@ -233,13 +274,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.WHITE,
   },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    // flex: 1,
+    paddingHorizontal: moderateScale(50),
+  },
+  emptyImg: {
+    height: moderateScale(164),
+    width: moderateScale(194),
+  },
+  emptyText: {
+    marginTop: moderateScale(20),
+    textAlign: 'center',
+  },
   headerBack: {
     paddingHorizontal: 18,
     justifyContent: 'center',
   },
   img: {
-    height: moderateScale(70),
-    width: moderateScale(70),
+    height: '100%',
+    width: '100%',
     borderRadius: 5,
   },
   listText: {
@@ -256,7 +311,6 @@ const styles = StyleSheet.create({
     color: '#FF6200',
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
-    paddingVertical: 3,
   },
   listContainer: {
     flexDirection: 'row',
@@ -288,9 +342,41 @@ const styles = StyleSheet.create({
   },
   resellerDiscountText: {
     color: TOKFOODCOLOR.GRAY,
-    fontFamily: FONT.BOLD,
+    // fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
     marginLeft: 10,
     textDecorationLine: 'line-through',
+  },
+  promoText: {
+    color: '#FF6200',
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
+    // textDecorationLine: 'line-through',
+  },
+  fromText: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.M,
+    paddingRight: 2,
+    // flexShrink: 1,
+  },
+  priceContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingVertical: 3,
+  },
+  voucherContainer: {
+    alignItems: 'center',
+    backgroundColor: '#FFA700',
+    borderRadius: 5,
+    flexDirection: 'row',
+    height: 20,
+    justifyContent: 'center',
+    marginHorizontal: 5,
+    paddingHorizontal: 7,
+  },
+  voucherText: {
+    color: COLOR.WHITE,
+    fontSize: 12,
+    fontWeight: '700',
   },
 });

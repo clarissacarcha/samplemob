@@ -13,7 +13,6 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 
 // Hooks
-import {useUserLocation} from 'toktokfood/hooks';
 import {useSelector} from 'react-redux';
 import {moderateScale, getStatusbarHeight} from 'toktokfood/helper/scale';
 import {arrow_right, terms_and_conditions_ic, policy_ic, contact_support_ic, wallet_ic} from 'toktokfood/assets/images';
@@ -77,7 +76,7 @@ export const HelpCentre = ({getMyAccount, loading}) => {
                   <Text style={{fontSize: FONT_SIZE.XL, fontFamily: FONT.REGULAR, color: '#f6841f'}}>wallet</Text>
                 </Text>
                 <Text style={{color: '#929191', fontSize: FONT_SIZE.M, paddingHorizontal: 5, marginVertical: 10}}>
-                  (Balance: PHP {walletBalance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.00)
+                  (Balance: PHP {walletBalance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')})
                 </Text>
               </View>
               <TouchableOpacity onPress={onPressTopUp}>

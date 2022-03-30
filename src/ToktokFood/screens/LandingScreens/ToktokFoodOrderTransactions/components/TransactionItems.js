@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Text, TouchableWithoutFeedback, Platform, Image} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {View, StyleSheet, Text, TouchableWithoutFeedback, Platform, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {scale, verticalScale} from 'toktokfood/helper/scale';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 // Fonts, Colors & Images
 import {COLOR, FONT, FONT_SIZE} from 'res/variables';
-import { time } from 'toktokfood/assets/images';
+import {time} from 'toktokfood/assets/images';
 
-import { getOrderStatus, getSubMessageStatus, sameDay, dayTitle, isPastOrder } from '../functions';
+import {getOrderStatus, getSubMessageStatus, sameDay, dayTitle, isPastOrder} from '../functions';
 
 const orderStatusDate = (item, focusTab) => {
-  let { dateOrdered, dateShipped, dateCancelledDeclined } = item;
-  let orderStatus = getOrderStatus(focusTab)
- 
-  switch(orderStatus){
+  let {dateOrdered, dateShipped, dateCancelledDeclined} = item;
+  let orderStatus = getOrderStatus(focusTab);
+
+  switch (orderStatus) {
     case 's':
       return dateShipped;
     case 'c':
@@ -22,62 +22,75 @@ const orderStatusDate = (item, focusTab) => {
     default:
       return dateOrdered;
   }
-}
+};
 
-export const TransactionItems = (props) => {
-
+export const TransactionItems = props => {
   const navigation = useNavigation();
 
-  const { item, index, data, focusTab } = props;
-  let { address, orderStatus, shopDetails, orderDetails } = item;
-  let nextItem = data[index + 1] ? data[index + 1]  : false
-  let isSameDay = false, lowerText = '', upperText = '';
+  const {item, index, data, focusTab} = props;
+  let {address, orderStatus, shopDetails, orderDetails} = item;
+  let nextItem = data[index + 1] ? data[index + 1] : false;
+  let isSameDay = false,
+    lowerText = '',
+    upperText = '';
   let dateCurrent = orderStatusDate(item, focusTab);
   let dateNext = orderStatusDate(nextItem, focusTab);
 
-  if(index === 0){
-    upperText = dayTitle(dateCurrent)
+  if (index === 0) {
+    upperText = dayTitle(dateCurrent);
   }
-  if(nextItem){
-    isSameDay = sameDay(dateCurrent.toString(), dateNext.toString())
-    lowerText = !isSameDay ? dayTitle(dateNext) : ''
+  if (nextItem) {
+    isSameDay = sameDay(dateCurrent.toString(), dateNext.toString());
+    lowerText = !isSameDay ? dayTitle(dateNext) : '';
   }
 
-  const onTransactionsNavigate = (referenceNum) => {
-    if(orderStatus == 's' || orderStatus == 'c'){
-      navigation.navigate('ToktokFoodOrderDetails', { referenceNum, orderStatus })
+  const onTransactionsNavigate = referenceNum => {
+    if (orderStatus == 's' || orderStatus == 'c') {
+      navigation.navigate('ToktokFoodOrderDetails', {referenceNum, orderStatus});
     } else {
-      navigation.navigate('ToktokFoodDriver', { referenceNum })
+      navigation.navigate('ToktokFoodDriver', {referenceNum});
     }
   };
-  
+
   return (
     <>
-    { !!upperText && <Text style={styles.dayTitle}>{upperText}</Text> }
-    <TouchableWithoutFeedback key={item.orderId} onPress={() => onTransactionsNavigate(item.referenceNum)}>
-      <View style={styles.itemContainer}>
-        <View style={styles.imgWrapper}>
-          <Image resizeMode="cover" source={{ uri: shopDetails.logo}} style={styles.imgShop} />
-        </View>
-        <View style={styles.restaurantInfo}>
-          <View style={styles.infoWrapper}>
-            <Text numberOfLines={1} style={styles.restaurantDetails}>
-              {`${shopDetails.shopname} • ${shopDetails.address}`}
-            </Text>
-            <Text numberOfLines={1} style={styles.destinationDetails}>
-              {orderDetails.length + ' items • ' + address}
-            </Text>
-            <View style={styles.activityWrapper}>
-              <Image resizeMode="contain" source={time} style={{...styles.timeImg, tintColor: isPastOrder(item.dateOrdered, focusTab) ? '#F80000' : COLOR.DARK}} />
-              <Text numberOfLines={1} style={{...styles.statusMessage, color: isPastOrder(item.dateOrdered, focusTab) ? '#F80000' : COLOR.DARK }}>
-                { getSubMessageStatus(item) }
+      {!!upperText && <Text style={styles.dayTitle}>{upperText}</Text>}
+      <TouchableWithoutFeedback key={item.orderId} onPress={() => onTransactionsNavigate(item.referenceNum)}>
+        <View style={styles.itemContainer}>
+          <View style={styles.imgWrapper}>
+            <Image resizeMode="cover" source={{uri: shopDetails.logo}} style={styles.imgShop} />
+          </View>
+          <View style={styles.restaurantInfo}>
+            <View style={styles.infoWrapper}>
+              <Text numberOfLines={1} style={styles.restaurantDetails}>
+                {`${shopDetails.shopname} • ${shopDetails.address}`}
               </Text>
+              <Text numberOfLines={1} style={styles.destinationDetails}>
+                {orderDetails.length + `${orderDetails.length > 1 ? ' items' : ' item'} • ` + address}
+              </Text>
+              <View style={styles.activityWrapper}>
+                <Image
+                  resizeMode="contain"
+                  source={time}
+                  style={{
+                    ...styles.timeImg,
+                    tintColor: isPastOrder(item.dateOrdered, focusTab) ? '#F80000' : COLOR.DARK,
+                  }}
+                />
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    ...styles.statusMessage,
+                    color: isPastOrder(item.dateOrdered, focusTab) ? '#F80000' : COLOR.DARK,
+                  }}>
+                  {getSubMessageStatus(item)}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-    </TouchableWithoutFeedback>
-    { !!lowerText && <Text style={styles.dayTitle}>{lowerText}</Text> }
+      </TouchableWithoutFeedback>
+      {!!lowerText && <Text style={styles.dayTitle}>{lowerText}</Text>}
     </>
   );
 };
@@ -105,19 +118,19 @@ const styles = StyleSheet.create({
     color: COLOR.DARK,
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.S,
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
   },
   dayTitle: {
     paddingHorizontal: 16,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   timeImg: {
     width: scale(15),
     height: scale(15),
     tintColor: COLOR.DARK,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
   imgShop: {
     height: 75,
@@ -143,4 +156,3 @@ const styles = StyleSheet.create({
     marginEnd: 4,
   },
 });
-

@@ -68,7 +68,7 @@ export const ToktokLandingMenu = ({navigation}) => {
   const onSignOut = () => {
     // End User Session
 
-    if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
+    if (RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
     OneSignal.deleteTag('userId');
     dispatch({type: 'DESTROY_SESSION'});
     ToktokMallSession.destroy();
@@ -126,13 +126,13 @@ export const ToktokLandingMenu = ({navigation}) => {
         <View style={{flex: 1, backgroundColor: 'white'}}>
           <ScrollView>
             {/*--------------- MY DELIVERIES ---------------*/}
-            <DrawerButton
+            {/* <DrawerButton
               label="My Saved Locations"
               onPress={() => {
                 navigation.push('ToktokSavedLocations');
               }}
               restrict="C"
-            />
+            /> */}
 
             {/*--------------- ANNOUNCEMENTS ---------------*/}
             <DrawerButton
@@ -144,7 +144,7 @@ export const ToktokLandingMenu = ({navigation}) => {
 
             {/*--------------- TALK TO US ---------------*/}
             <DrawerButton
-              label="Talk to Us"
+              label="Help"
               onPress={() => {
                 navigation.push('TalkToUs');
               }}
