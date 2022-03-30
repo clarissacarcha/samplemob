@@ -21,6 +21,7 @@ export const BookingSelectPaymentMethod = ({selectedPaymentMethod, setViewSelect
         </TouchableOpacity>
       </View>
 
+      {/*---Todo: add condition here---*/}
       {selectedPaymentMethod == 1 && (
         <>
           <View style={styles.container}>
@@ -34,12 +35,14 @@ export const BookingSelectPaymentMethod = ({selectedPaymentMethod, setViewSelect
               </View>
             </View>
 
+            {/*---Todo: add condition here---*/}
             {true && (
               <TouchableOpacity style={styles.cashInWrapper}>
                 <Text style={styles.cashIntextStyle}>Cash in</Text>
               </TouchableOpacity>
             )}
 
+            {/*---Todo: add condition here---*/}
             {false && (
               <TouchableOpacity>
                 <Text style={styles.noTokWa}>Create your toktokwallet</Text>
@@ -48,6 +51,7 @@ export const BookingSelectPaymentMethod = ({selectedPaymentMethod, setViewSelect
             )}
           </View>
 
+          {/*---Todo: add condition here---*/}
           {false && (
             <View style={styles.warningWrapper}>
               <Image source={WarningIcon} resizeMode={'contain'} style={styles.warningIconStyle} />
@@ -57,6 +61,7 @@ export const BookingSelectPaymentMethod = ({selectedPaymentMethod, setViewSelect
         </>
       )}
 
+      {/*---Todo: add condition here---*/}
       {selectedPaymentMethod == 2 && (
         <View style={styles.container}>
           <View style={styles.elementWrapper}>
