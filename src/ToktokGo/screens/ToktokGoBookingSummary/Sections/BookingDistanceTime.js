@@ -17,7 +17,7 @@ export const BookingDistanceTime = ({}) => {
       <View>
         <View style={styles.elementWrapper}>
           <FIcon name={'clock'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
-          <Text style={styles.textStyle}>5 mins</Text>
+          <Text style={styles.textStyle}>03:00 PM - 03:15 PM</Text>
         </View>
         <Text style={styles.bottomTextStyle}>Estimated Time of Drop-off</Text>
       </View>
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   bottomTextStyle: {
-    color: CONSTANTS.COLOR.LIGHT_DARK,
+    color: CONSTANTS.COLOR.DARK,
     fontSize: CONSTANTS.FONT_SIZE.S,
     marginLeft: 10,
   },

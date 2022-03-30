@@ -3,9 +3,9 @@ import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import FIcon from 'react-native-vector-icons/Fontisto';
 
-export const BookingConfirmButton = ({}) => {
+export const BookingConfirmButton = ({SheetManager}) => {
   return (
-    <TouchableOpacity style={styles.buttonWrapper}>
+    <TouchableOpacity style={styles.buttonWrapper} onPress={() => SheetManager.show('passenger_capacity')}>
       <Text style={styles.confirmText}>Confirm Booking</Text>
     </TouchableOpacity>
   );

@@ -22,10 +22,6 @@ export const VehicleCard = ({carImage, data}) => {
 };
 
 const styles = StyleSheet.create({
-  selected: {
-    borderWidth: 1,
-    borderColor: CONSTANTS.COLOR.ORANGE,
-  },
   card: {
     paddingHorizontal: 16,
     backgroundColor: 'white',

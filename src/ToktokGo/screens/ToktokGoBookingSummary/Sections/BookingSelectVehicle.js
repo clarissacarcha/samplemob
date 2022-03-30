@@ -7,7 +7,7 @@ import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 import SedanIMG from '../../../../assets/images/Sedan.png';
 import SUVIMG from '../../../../assets/images/SUV.png';
 
-export const BookingSelectVehicle = ({data}) => {
+export const BookingSelectVehicle = ({data, setSelectedVehicle, selectedVehicle}) => {
   return (
     <>
       <View style={styles.container}>
@@ -21,8 +21,17 @@ export const BookingSelectVehicle = ({data}) => {
         </TouchableOpacity>
       </View>
 
-      <VehicleCard isSelected={true} carImage={SedanIMG} data={data[0]} />
-      <VehicleCard isSelected={false} carImage={SUVIMG} data={data[1]} />
+      <TouchableOpacity
+        onPress={() => setSelectedVehicle(1)}
+        style={selectedVehicle === 1 ? styles.selected : {marginTop: 16}}>
+        <VehicleCard isSelected={true} carImage={SedanIMG} data={data[0]} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => setSelectedVehicle(2)}
+        style={selectedVehicle === 2 ? styles.selected : {marginTop: 16}}>
+        <VehicleCard isSelected={false} carImage={SUVIMG} data={data[1]} />
+      </TouchableOpacity>
     </>
   );
 };
@@ -53,5 +62,11 @@ const styles = StyleSheet.create({
     height: 9,
     width: 6,
     marginLeft: 10,
+  },
+  selected: {
+    borderRadius: 5,
+    marginTop: 16,
+    borderWidth: 1,
+    borderColor: CONSTANTS.COLOR.ORANGE,
   },
 });
