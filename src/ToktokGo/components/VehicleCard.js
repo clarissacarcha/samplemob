@@ -1,11 +1,10 @@
 import React from 'react';
 import {Text, StyleSheet, Image, View} from 'react-native';
-import SedanIMG from '../../assets/images/Sedan.png';
 import CONSTANTS from '../../common/res/constants';
 
-export const VehicleCard = ({isSelected, carImage, data}) => {
+export const VehicleCard = ({carImage, data}) => {
   return (
-    <View style={[styles.card, isSelected ? styles.selected : null]}>
+    <View style={styles.card}>
       <View style={styles.container}>
         <View style={styles.elementWrapper}>
           <Image source={carImage} resizeMode={'contain'} style={{width: 115, height: 70}} />
@@ -28,7 +27,6 @@ const styles = StyleSheet.create({
     borderColor: CONSTANTS.COLOR.ORANGE,
   },
   card: {
-    marginTop: 16,
     paddingHorizontal: 16,
     backgroundColor: 'white',
     borderRadius: 5,
