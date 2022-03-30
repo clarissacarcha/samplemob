@@ -316,8 +316,12 @@ export const Variations = ({data, productId}) => {
           <RadioButton
             onValueChange={() => {
               if (item.Id !== selectedVariants?.Id) {
-                setSelectedVariants(item);
-                setCount({type: 'ADD', quantity: 1});
+                if (item.price === selectedVariants.price) {
+                  setSelectedVariants(item);
+                } else {
+                  setSelectedVariants(item);
+                  setCount({type: 'ADD', quantity: 1});
+                }
               }
             }}
             name={item.itemname}
