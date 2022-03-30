@@ -42,16 +42,6 @@ const MainComponent = ({navigation})=> {
         IDTypeRef.current.expand()
     }
 
-    // const [getEnterpriseUpgradeRequest, { loading }] = useLazyQuery(GET_ENTERPRISE_UPGRADE_REQUEST , {
-    //     fetchPolicy:"network-only",
-    //     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-    //     onCompleted: ({getEnterpriseUpgradeRequest})=> {
-    //         console.log(JSON.stringify(getEnterpriseUpgradeRequest))
-    //         setData(getEnterpriseUpgradeRequest)
-    //     },
-    //     onError: (error)=> onErrorAlert({alert,error,navigation})
-    // })
-
     const {data , error ,loading } = useQuery(GET_ENTERPRISE_UPGRADE_REQUEST , {
         fetchPolicy:"network-only",
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -70,7 +60,7 @@ const MainComponent = ({navigation})=> {
         return (
             <>
                 <Separator/>
-                <PendingRequest enterpriseRequest={data}/>
+                <PendingRequest enterpriseRequest={data?.getEnterpriseUpgradeRequest}/>
             </>
         )
     }
@@ -80,13 +70,13 @@ const MainComponent = ({navigation})=> {
         return (
             <>
             <Separator/>
-            <SetRequestRecords data={data}/>
+            <SetRequestRecords data={data?.getEnterpriseUpgradeRequest}/>
             <ScrollView style={styles.container}>
                 <HeaderReminders/>
                 <UploadForms/>
                 <TakePhotoID onPress={onPress}/>
                 </ScrollView>
-                <Resubmit id={data.id}/>
+                <Resubmit id={data?.getEnterpriseUpgradeRequest?.id}/>
                 <BottomSheetIDType 
                     ref={IDTypeRef} 
                     idIndex={idIndex} 

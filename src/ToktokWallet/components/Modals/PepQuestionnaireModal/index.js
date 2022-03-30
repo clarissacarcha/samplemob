@@ -178,7 +178,7 @@ export const PepQuestionnaireModal = ({
                     style={styles.headings}
                 >
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,textAlign:"center"}}>Politically Exposed Person (PEP) Questionnaire</Text>
-                    <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop:20,fontStyle: "italic"}}>
+                    <Text style={{textAlign:"left",fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop:20,fontStyle: "italic"}}>
                     A “politically exposed person” or PEP is a current or former
                     senior official in the executive, legislative, administrative,
                     military or judicial branch of a foreign government, elected
