@@ -40,11 +40,33 @@ const vehicles = [
     name: 'Sedan',
     description: 'Perfect for 2 persons ride',
     price: 380,
+    typeId: 1,
+    baseFare: 100,
+    perKM: 150,
   },
   {
     name: 'Small MPV',
     description: 'Perfect for 2-4 persons',
     price: 500,
+    typeId: 2,
+    baseFare: 150,
+    perKM: 180,
+  },
+  {
+    name: 'Large MPV',
+    description: 'Perfect for 3-5 persons',
+    price: 600,
+    typeId: 3,
+    baseFare: 180,
+    perKM: 210,
+  },
+  {
+    name: 'Van',
+    description: 'Perfect for 4-8 persons',
+    price: 700,
+    typeId: 4,
+    baseFare: 210,
+    perKM: 260,
   },
 ];
 
