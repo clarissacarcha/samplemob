@@ -6,6 +6,9 @@ import ToktokGoLanding from '../../../ToktokGo/screens/ToktokGoLanding';
 import ToktokGoHealthCare from '../../../ToktokGo/screens/ToktokGoHealthCare';
 import ToktokGoBookingSummary from '../../../ToktokGo/screens/ToktokGoBookingSummary';
 import ToktokGoBookingSelectLocations from '../../../ToktokGo/screens/ToktokGoBookingSelectLocations';
+import ToktokGoRecentDestinations from '../../../ToktokGo/screens/ToktokGoBookingRecentDestinations';
+import ToktokGoFrequentlyUsed from '../../../ToktokGo/screens/ToktokGoBookingFrequentlyUsed';
+import ToktokGoBookingVehicle from '../../../ToktokGo/screens/ToktokGoBookingVehicle';
 
 const navbarShadowOption = {
   backgroundColor: 'white',
@@ -37,6 +40,27 @@ export default ({Navigator}) => (
     <Navigator.Screen
       name="ToktokGoBookingSelectLocations"
       component={ToktokGoBookingSelectLocations}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Navigator.Screen
+      name="ToktokGoRecentDestinations"
+      component={ToktokGoRecentDestinations}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Navigator.Screen
+      name="ToktokGoFrequentlyUsed"
+      component={ToktokGoFrequentlyUsed}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Navigator.Screen
+      name="ToktokGoBookingVehicle"
+      component={ToktokGoBookingVehicle}
       options={{
         headerShown: false,
       }}
