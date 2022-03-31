@@ -150,7 +150,7 @@ const MainComponent = ({navigation,route})=> {
   });
 
   useEffect(() => {
-    if(isFocused){
+    if(isFocused && search == ""){
       processGetFavoriteLoads();
     }
   }, [isFocused])
