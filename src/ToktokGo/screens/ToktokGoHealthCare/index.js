@@ -5,7 +5,7 @@ import Graphics from '../../../assets/toktokgo/toktokgo-health-care-graphics.png
 import constants from '../../../common/res/constants';
 import FAIcons from 'react-native-vector-icons/FontAwesome';
 
-const ToktokGoHealthCare = () => {
+const ToktokGoHealthCare = ({navigation}) => {
   return (
     <ImageBackground source={GradientBackground} style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -52,7 +52,7 @@ const ToktokGoHealthCare = () => {
         </View>
       </ScrollView>
       <View style={styles.fabcontainer}>
-        <TouchableOpacity style={styles.fab}>
+        <TouchableOpacity style={styles.fab} onPress={() => navigation.push('ToktokGoBookingStart')}>
           <Text style={styles.fabtext}>Accept</Text>
         </TouchableOpacity>
       </View>

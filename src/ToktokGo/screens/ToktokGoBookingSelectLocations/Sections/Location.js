@@ -1,11 +1,10 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {Text, View, TextInput, StyleSheet, Image} from 'react-native';
 import BackgroundLanding from '../../../../assets/images/BackGroundLanding.png';
 import CONSTANTS from '../../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
-export const Location = () => {
-  const inputRef = useRef(null);
+export const Location = ({onChange, inputRef}) => {
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE}}>
       <View style={{flexDirection: 'row', alignItems: 'center', paddingHorizontal: 30, paddingBottom: 20}}>
@@ -25,7 +24,7 @@ export const Location = () => {
 
           <TextInput
             ref={inputRef}
-            // onChangeText={(value) => setPassword(value)}
+            onChangeText={value => onChange(value)}
             style={styles.input}
             placeholder="Where to?"
           />
