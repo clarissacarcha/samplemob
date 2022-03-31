@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {Text, View, FlatList, TouchableHighlight, Dimensions, StyleSheet} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -6,9 +6,8 @@ import Data from '../../../components/BookingDummyData';
 import Home from '../../../../assets/icons/home-address-icon.png';
 import Office from '../../../../assets/icons/office-address-icon.png';
 import {LocationCard} from '../../../components';
-export const SavedLocations = () => {
-  const height = Dimensions.get('window').height / 4;
 
+export const SavedLocations = () => {
   return (
     <>
       <TouchableHighlight onPress={() => console.log('trigger')}>

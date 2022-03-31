@@ -23,7 +23,7 @@ const navbarShadowOption = {
 export default ({Navigator}) => (
   <>
     {/* INSERT SCREENS HERE */}
-    <Navigator.Screen name="ToktokGoBookingStart" component={ToktokGoBookingStart} />
+    <Navigator.Screen name="ToktokGoBookingStart" component={ToktokGoBookingStart} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokGoLanding" component={ToktokGoLanding} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokGoHealthCare" component={ToktokGoHealthCare} options={{headerShown: false}} />
     <Navigator.Screen
@@ -33,13 +33,10 @@ export default ({Navigator}) => (
     />
     <Navigator.Screen name="PinLocation" component={PinLocation} />
     <Navigator.Screen name="ToktokGoBookingSummary" component={ToktokGoBookingSummary} options={{headerShown: false}} />
-
     <Navigator.Screen
       name="ToktokGoBookingSelectLocations"
       component={ToktokGoBookingSelectLocations}
-      options={{
-        headerShown: false,
-      }}
+      options={{headerShown: false}}
     />
   </>
 );

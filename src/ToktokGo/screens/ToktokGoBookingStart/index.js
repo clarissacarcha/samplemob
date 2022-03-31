@@ -1,10 +1,18 @@
 import React from 'react';
 import {Text, View} from 'react-native';
+import constants from '../../../common/res/constants';
+import {Landing, SavedLocations, RecentDestinations, Header} from '../ToktokGoBookingStart/Sections';
 
-const ToktokGoBookingStart = () => {
+const ToktokGoBookingStart = ({navigation}) => {
   return (
-    <View>
-      <Text>Booking start</Text>
+    <View style={{flex: 1, backgroundColor: constants.COLOR.WHITE}}>
+      <View>
+        <Header navigation={navigation} />
+        <Landing navigation={navigation} />
+        <RecentDestinations />
+        <View style={{borderBottomWidth: 6, borderBottomColor: constants.COLOR.LIGHT}} />
+        <SavedLocations />
+      </View>
     </View>
   );
 };
