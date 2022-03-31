@@ -31,7 +31,7 @@ export const ReceiptDetails = ({ route }) => {
           <Text style={styles.description}>{transactionDateTime}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={[styles.title, { textTransform: "capitalize" }]}>{loadDetails.networkDetails.categoryDetails.name} Load </Text>
+          <Text style={[styles.title, { textTransform: "capitalize" }]}>Load Provider </Text>
           <Text style={styles.description}>{loadDetails.networkDetails.name}</Text>
         </View>
         <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
