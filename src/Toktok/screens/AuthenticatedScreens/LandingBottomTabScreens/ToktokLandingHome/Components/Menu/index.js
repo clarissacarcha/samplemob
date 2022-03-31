@@ -106,14 +106,14 @@ export const Menu = ({setUserLocation, constants}) => {
       identifier: 'goComingSoon',
       label: 'Go',
       icon: ToktokGoIcon,
-      onPress: () => navigation.push('ToktokgoComingSoon'),
+      onPress: () => navigation.push('ToktokGoLanding'),
       isNew: true,
     },
     {
       identifier: 'go',
       label: 'Go',
       icon: ToktokGoIcon,
-      onPress: () => navigation.push('ToktokgoComingSoon'),
+      onPress: () => navigation.push('ToktokGoLanding'),
       isNew: true,
     },
     {
