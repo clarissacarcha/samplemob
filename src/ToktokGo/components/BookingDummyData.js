@@ -25,4 +25,13 @@ const vehicles = [
     description: 'Perfect for 2 persons ride',
     price: 380,
   },
+  {
+    name: 'Small MPV',
+    description: 'Perfect for 2-4 persons',
+    price: 500,
+  },
 ];
+
+export default {
+  vehicles,
+};
