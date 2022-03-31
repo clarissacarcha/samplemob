@@ -109,7 +109,6 @@ const setToktokBillsLoadGraphqlTokenLink = setContext(async (_, {headers}) => {
   }
 });
 
-
 const wsLink = new WebSocketLink({
   uri: wsUrl,
   options: {
@@ -148,6 +147,10 @@ const toktokBillsLoadGraphqlUploadLink = createUploadLink({
   uri: `${toktokBillsLoadBaseUrl}graphql/`,
 });
 
+const toktokQuotationUploadLink = createUploadLink({
+  uri: `${baseUrl}quotation/graphql/`,
+});
+
 const splitLink = split(({query}) => {
   const definition = getMainDefinition(query);
   return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
@@ -178,6 +181,8 @@ const toktokFoodGraphqlLink = ApolloLink.from([
   toktokFoodGraphqlUploadLink,
 ]);
 
+const toktokQuotationGraphqlLink = ApolloLink.from([errorLinkLogger, setTokenLink, toktokQuotationUploadLink]);
+
 export const CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
   link,
@@ -205,4 +210,9 @@ export const TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT = new ApolloClient({
 export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
   link: toktokBillsLoadGraphqlLink,
+});
+
+export const TOKTOK_QUOTATION_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: toktokQuotationGraphqlLink,
 });
