@@ -52,7 +52,7 @@ const ToktokGoHealthCare = ({navigation}) => {
         </View>
       </ScrollView>
       <View style={styles.fabcontainer}>
-        <TouchableOpacity style={styles.fab} onPress={() => navigation.push('ToktokGoBookingStart')}>
+        <TouchableOpacity style={styles.fab} onPress={() => navigation.replace('ToktokGoBookingStart')}>
           <Text style={styles.fabtext}>Accept</Text>
         </TouchableOpacity>
       </View>

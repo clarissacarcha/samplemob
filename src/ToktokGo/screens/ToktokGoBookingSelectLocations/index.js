@@ -18,16 +18,10 @@ const ToktokGoSelectedLocations = ({navigation}) => {
   const [getPlaceAutocomplete] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
     client: TOKTOK_QUOTATION_CLIENT,
     fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        searchString: '1592 Cypress',
-        sessionToken: 'dsfgv234f24121212',
-      },
-    },
     onCompleted: response => {
       console.log(response);
     },
-    onError: error => console.log('getConsumegetPlaceAutocompleterStatus', error),
+    onError: error => console.log('getPlaceAutocomplete', error),
   });
 
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
