@@ -5,6 +5,7 @@ import ToktokGoBookingStart from '../../../ToktokGo/screens/ToktokGoBookingStart
 import ToktokGoLanding from '../../../ToktokGo/screens/ToktokGoLanding';
 import ToktokGoHealthCare from '../../../ToktokGo/screens/ToktokGoHealthCare';
 import ToktokGoBookingSummary from '../../../ToktokGo/screens/ToktokGoBookingSummary';
+import ToktokGoBookingSelectLocations from '../../../ToktokGo/screens/ToktokGoBookingSelectLocations';
 
 const navbarShadowOption = {
   backgroundColor: 'white',
@@ -32,5 +33,13 @@ export default ({Navigator}) => (
     />
     <Navigator.Screen name="PinLocation" component={PinLocation} />
     <Navigator.Screen name="ToktokGoBookingSummary" component={ToktokGoBookingSummary} options={{headerShown: false}} />
+
+    <Navigator.Screen
+      name="ToktokGoBookingSelectLocations"
+      component={ToktokGoBookingSelectLocations}
+      options={{
+        headerShown: false,
+      }}
+    />
   </>
 );
