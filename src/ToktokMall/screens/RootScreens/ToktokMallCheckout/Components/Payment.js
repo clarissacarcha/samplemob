@@ -181,6 +181,7 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
                   onCashIn: ({balance}) => {
                       setTimeout(() => {
                         EventRegister.emit("ToktokMallWalletRefreshAccountBalance")
+                        EventRegister.emit("ToktokMallWalletRefreshAccountStatus")
                       }, 700);
           // dispatch({ type: "TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE", payload: balance})
                   },
