@@ -4,7 +4,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { ToktokLandingDeliveries } from 'toktok/screens';
 import { COLOR, FONT_SIZE } from '../../../res/variables'
 import CONSTANTS from '../../../common/res/constants'
-import { ToktokLoadFailedActivities, ToktokLoadPendingActivities, ToktokLoadSuccessActivities } from 'toktokload/screens';
+import { ToktokLoadAllActivities, ToktokLoadFailedActivities, ToktokLoadPendingActivities, ToktokLoadSuccessActivities } from 'toktokload/screens';
 
 const ToktokGoActivitiesTopTab = createMaterialTopTabNavigator();
 
@@ -18,8 +18,20 @@ const ToktokLoadActivities = () => {
         indicatorStyle: {
           width: 0, height: 0, elevation: 0,      
         },
+        scrollEnabled: true
       }
     }>
+      <ToktokGoActivitiesTopTab.Screen
+        name="ToktokLoadAllActivities"
+        component={ToktokLoadAllActivities}
+        options={{
+          tabBarLabel: ({focused}) => (
+            <View style={focused ? styles.viewFocused : styles.viewNotFocused}>
+              <Text style={focused ? styles.textFocused : styles.textNotFocused}>All</Text>
+            </View>
+          )
+        }}
+      />
       <ToktokGoActivitiesTopTab.Screen
         name="ToktokLoadSuccessActivities"
         component={ToktokLoadSuccessActivities}

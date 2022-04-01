@@ -426,7 +426,7 @@ export const termsAndConditionsDetails = {
         content: `The toktokload team is committed to exceeding the standards of customer service. Teams’ top priority is to hear the customers' concerns, feedback, needs and requests granting customers the best service they need. Users may submit a ticket or even call the CSR, all the information disclosed will be confidential and resolved in the teams’ utmost manner.`,
       },
       {
-        content: `For any concern go to: load@toktok.ph\nOr contact: 8424.8617`,
+        content: `For any concern go to: load@toktok.ph\nOr contact: 84248617`,
       },
       
     ],

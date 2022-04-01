@@ -77,10 +77,12 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
   const onChangeText = (value) => {
     // let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
     const fieldFormat = activeNetwork?.inputLength?.fieldFormat
-    let mobile = fieldFormat == 2 ? value.replace(/[^A-Za-z0-9]/g, '') : value.replace(/[^0-9.]/g, '')
+    let mobile = fieldFormat == 2 ? value.replace (/[^A-Za-z0-9]/g, '') : value.replace(/[^0-9]/g, '');
+    let errMessage = activeNetwork.inputLength.fieldPlaceholder;
+
     if(activeNetwork?.inputLength?.name.toLowerCase() === "mobile number"){
         if(mobile.length != 0 && (mobile.substring(0, 2) != "09" || mobile.length != 11)){
-          setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name.toLowerCase()}`);
+          setMobileErrorMessage(errMessage);
         } else {
           setMobileErrorMessage("");
         }
@@ -92,9 +94,9 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
         }
         return
     }
-
-    if(mobile.length != activeNetwork?.inputLength?.inputLength){
-      setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name.toLowerCase()}`);
+   
+    if(mobile.length != 0 && mobile.length != activeNetwork?.inputLength?.inputLength){
+      setMobileErrorMessage(errMessage);
     }else{
       setMobileErrorMessage("")
     }
@@ -171,7 +173,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
                   />
                   <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginLeft: 5}}>{activeNetwork.name}</Text>
                 </View>
-              : <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Select {activeCategory()?.name ? activeCategory().name : ""}..</Text>
+              : <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Select {activeCategory()?.name ? activeCategory().name : ""}</Text>
             }   
           </View>
           <View style={{justifyContent:"center",alignItems:"flex-end"}}>
