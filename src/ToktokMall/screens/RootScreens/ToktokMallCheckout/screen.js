@@ -519,6 +519,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     })();
 
     EventRegister.addEventListener("refreshCheckoutData", init)
+    EventRegister.addEventListener("ToktokMallWalletRefreshAccountStatus", () => setWalletAccountStatus())
   }, [])
 
   console.log("addressData", addressData)

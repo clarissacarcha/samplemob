@@ -112,7 +112,7 @@ export const Menu = ({setUserLocation, constants}) => {
       identifier: 'mall',
       label: 'Mall',
       icon: ToktokMallIcon,
-      onPress: () => navigation.push('ToktokMallLanding'),
+      onPress: () => navigation.push('ToktokMallSplashScreen'),
     },
     {
       identifier: 'promos',
