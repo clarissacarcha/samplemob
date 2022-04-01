@@ -77,7 +77,7 @@ const ToktokFoodNotifications = () => {
           };
         }
         return {
-          title: 'Completed Order',
+          title: 'Order Completed',
           desc: `Order ${referenceNum} has been picked up successfully. Thank you for ordering using toktokfood!`,
         };
     }
