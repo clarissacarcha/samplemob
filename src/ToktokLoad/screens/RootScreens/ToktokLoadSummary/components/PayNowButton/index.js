@@ -87,7 +87,7 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
             Please review the accuracy of the details provided and read our
           </Text>
           <Text style={styles.paymentPolicy} onPress={onPressTermsAndContidions}> Terms and Conditions </Text>
-          <Text>before you proceed with your transaction</Text>
+          <Text>before you proceed with your transaction.</Text>
         </Text>
         <OrangeButton
           onPress={onPressThrottled}

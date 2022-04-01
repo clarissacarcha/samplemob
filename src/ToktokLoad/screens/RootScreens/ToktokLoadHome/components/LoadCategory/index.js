@@ -173,7 +173,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
                   />
                   <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S,marginLeft: 5}}>{activeNetwork.name}</Text>
                 </View>
-              : <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Select {activeCategory()?.name ? activeCategory().name : ""}..</Text>
+              : <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Select {activeCategory()?.name ? activeCategory().name : ""}</Text>
             }   
           </View>
           <View style={{justifyContent:"center",alignItems:"flex-end"}}>
