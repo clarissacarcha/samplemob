@@ -12,6 +12,7 @@ let scrollPosition = 0;
 export const HeaderTabs = (props) => {
 
   const {activeTab, setActiveTab, tabs, loading, fitToScreen = true, selectedLoad, subContainerStyle , overLap = true } = props;
+  const [has25Chars, setHas25Chars] = useState(false);
   const flatListRef = useRef();
 
   const handleScroll = (event) => {
@@ -30,18 +31,19 @@ export const HeaderTabs = (props) => {
     }
   }, [loading]);
 
-  const renderItem = ({item}) => {
+  const renderItem = ({item, index}) => {
     const itemTabWidth = fitToScreen ? width / tabs.length : moderateScale(127);
+    const tabName = item?.name ?? item?.categoryName;
+
+    if(tabName.length > 15){ setHas25Chars(true) }
     return (
-      <TouchableOpacity
-        onPress={() => setActiveTab(item)}
-      >
-        <View style={[{ width: itemTabWidth }]}>
+      <TouchableOpacity onPress={() => setActiveTab(item)}>
+        <View  style={[{ width: itemTabWidth, height: has25Chars ? moderateScale(65) : moderateScale(46), paddingHorizontal: moderateScale(10), justifyContent: "center" }]}>
           <Text style={[styles.tabText, { color: activeTab?.id == item?.id ? "#F6841F" : "#707070"} ]}>
-            {item?.name ?? item?.categoryName}
+            { tabName }
           </Text>
-          <View style={activeTab?.id == item?.id && styles.activeTabContainer} />
         </View>
+        <View style={activeTab?.id == item?.id && styles.activeTabContainer} />
       </TouchableOpacity>
     );
   };
@@ -108,6 +110,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
     marginVertical: moderateScale(15),
+    flexShrink: 1
   },
   hitSlop: {
     top: moderateScale(30),
