@@ -77,10 +77,12 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
   const onChangeText = (value) => {
     // let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
     const fieldFormat = activeNetwork?.inputLength?.fieldFormat
-    let mobile = fieldFormat == 2 ? value.replace(/[^A-Za-z0-9]/g, '') : value.replace(/[^0-9]/g, '')
+    let mobile = fieldFormat == 2 ? value.replace (/[^A-Za-z0-9]/g, '') : value.replace(/[^0-9]/g, '');
+    let errMessage = activeNetwork.inputLength.fieldPlaceholder;
+
     if(activeNetwork?.inputLength?.name.toLowerCase() === "mobile number"){
         if(mobile.length != 0 && (mobile.substring(0, 2) != "09" || mobile.length != 11)){
-          setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name.toLowerCase()}`);
+          setMobileErrorMessage(errMessage);
         } else {
           setMobileErrorMessage("");
         }
@@ -94,7 +96,7 @@ export const LoadCategory = ({ navigation , activeCategory , activeTab }) => {
     }
    
     if(mobile.length != 0 && mobile.length != activeNetwork?.inputLength?.inputLength){
-      setMobileErrorMessage(`Enter ${activeNetwork?.inputLength?.inputLength}-digits valid ${activeNetwork?.inputLength?.name.toLowerCase()}`);
+      setMobileErrorMessage(errMessage);
     }else{
       setMobileErrorMessage("")
     }
