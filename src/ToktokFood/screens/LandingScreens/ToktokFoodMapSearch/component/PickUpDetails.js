@@ -212,6 +212,7 @@ const styles = StyleSheet.create({
   },
   pickUpAddressTitle: {
     fontSize: FONT_SIZE.L,
+    fontWeight: '500',
     marginBottom: verticalScale(17),
   },
   pickUpAddress: {
