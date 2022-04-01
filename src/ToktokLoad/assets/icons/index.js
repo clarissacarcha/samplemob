@@ -1,6 +1,7 @@
 export const check_fill_icon = require('./check-fill-icon.png');
 export const contact_icon = require('./contact-icon.png');
 export const download_icon = require('./download-icon.png');
+export const paper_airplane_icon = require('./paper-airplane-icon.png');
 export const search_icon = require('./search-icon.png');
 export const wallet_icon = require('./wallet-icon.png');
 export const warning_icon = require('./warning-icon.png');
