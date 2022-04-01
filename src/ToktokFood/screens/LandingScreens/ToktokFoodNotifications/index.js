@@ -72,7 +72,7 @@ const ToktokFoodNotifications = () => {
         // console.log(status, orderIsfor, referenceNum);
         if (orderIsfor === 1) {
           return {
-            title: 'Delivered',
+            title: 'Delivery Completed',
             desc: `Order ${referenceNum} has been delivered successfully. Thank you for ordering using toktokfood!`,
           };
         }
