@@ -9,8 +9,20 @@ export const Notification = ({
     item,
     index
 })=> {
+
+    let status = "Load pending";
+    switch(item.type){
+        case "postPayLoadSuccessful":
+            status = "Load success";
+            break;
+        case "postPayLoadFailed":
+            status = "Load failed";
+            break;
+        default:
+            status = "Load pending";
+            break;
+    }
     
-    const status = item.type == "postPayLoadSuccessful" ? "Load success" : "Load failed";
     const dateCreated = moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY')
     const timeCreated = moment(item.createdAt).tz('Asia/Manila').format('hh:mm A')
 
