@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import constants from '../../../common/res/constants';
 import toktokgoSplash from '../../../assets/toktokgo/toktokgo-splash.png';

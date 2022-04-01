@@ -1,20 +1,45 @@
 import React from 'react';
 import {Text, StyleSheet, Image, View} from 'react-native';
 import CONSTANTS from '../../common/res/constants';
+import {numberFormat} from '../../helper';
+
+import SedanIMG from '../../assets/images/Sedan.png';
+import SuvIMG from '../../assets/images/SUV.png';
+import MpvIMG from '../../assets/images/MPV2.png';
+import VanIMG from '../../assets/images/Van.png';
 
 export const VehicleCard = ({carImage, data}) => {
+  const render_image = type => {
+    switch (type) {
+      case 1: {
+        return SedanIMG;
+      }
+      case 2: {
+        return SuvIMG;
+      }
+      case 3: {
+        return MpvIMG;
+      }
+      case 4: {
+        return VanIMG;
+      }
+    }
+  };
+
+  console.log(render_image(data.typeId));
+
   return (
     <View style={styles.card}>
       <View style={styles.container}>
         <View style={styles.elementWrapper}>
-          <Image source={carImage} resizeMode={'contain'} style={{width: 115, height: 70}} />
+          <Image source={render_image(data.typeId)} resizeMode={'contain'} style={{width: 115, height: 70}} />
           <View style={{marginLeft: 15}}>
             <Text style={styles.carTextStyle}>{data.name}</Text>
             <Text style={styles.descTextStlye}>{data.description}</Text>
           </View>
         </View>
         <View style={styles.elementWrapper}>
-          <Text style={styles.priceTextStyle}>₱{data.price}</Text>
+          <Text style={styles.priceTextStyle}>₱{numberFormat(data.price)}</Text>
         </View>
       </View>
     </View>

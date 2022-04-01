@@ -5,6 +5,10 @@ import ToktokGoBookingStart from '../../../ToktokGo/screens/ToktokGoBookingStart
 import ToktokGoLanding from '../../../ToktokGo/screens/ToktokGoLanding';
 import ToktokGoHealthCare from '../../../ToktokGo/screens/ToktokGoHealthCare';
 import ToktokGoBookingSummary from '../../../ToktokGo/screens/ToktokGoBookingSummary';
+import ToktokGoBookingSelectLocations from '../../../ToktokGo/screens/ToktokGoBookingSelectLocations';
+import ToktokGoRecentDestinations from '../../../ToktokGo/screens/ToktokGoBookingRecentDestinations';
+import ToktokGoFrequentlyUsed from '../../../ToktokGo/screens/ToktokGoBookingFrequentlyUsed';
+import ToktokGoBookingVehicle from '../../../ToktokGo/screens/ToktokGoBookingVehicle';
 
 const navbarShadowOption = {
   backgroundColor: 'white',
@@ -22,7 +26,7 @@ const navbarShadowOption = {
 export default ({Navigator}) => (
   <>
     {/* INSERT SCREENS HERE */}
-    <Navigator.Screen name="ToktokGoBookingStart" component={ToktokGoBookingStart} />
+    <Navigator.Screen name="ToktokGoBookingStart" component={ToktokGoBookingStart} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokGoLanding" component={ToktokGoLanding} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokGoHealthCare" component={ToktokGoHealthCare} options={{headerShown: false}} />
     <Navigator.Screen
@@ -32,5 +36,31 @@ export default ({Navigator}) => (
     />
     <Navigator.Screen name="PinLocation" component={PinLocation} />
     <Navigator.Screen name="ToktokGoBookingSummary" component={ToktokGoBookingSummary} options={{headerShown: false}} />
+    <Navigator.Screen
+      name="ToktokGoBookingSelectLocations"
+      component={ToktokGoBookingSelectLocations}
+      options={{headerShown: false}}
+    />
+    <Navigator.Screen
+      name="ToktokGoRecentDestinations"
+      component={ToktokGoRecentDestinations}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Navigator.Screen
+      name="ToktokGoFrequentlyUsed"
+      component={ToktokGoFrequentlyUsed}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Navigator.Screen
+      name="ToktokGoBookingVehicle"
+      component={ToktokGoBookingVehicle}
+      options={{
+        headerShown: false,
+      }}
+    />
   </>
 );
