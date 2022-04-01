@@ -86,13 +86,13 @@ export const StickyView = ({onCheckShop}) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
-      let {latitude, longitude, hasOpen, nextOperatingHrs} = getShopDetails;
+      let {latitude, longitude, hasOpen, nextOperatingHrs, hasProduct} = getShopDetails;
       if (nextOperatingHrs) {
         setNextSched(nextOperatingHrs);
       }
       dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       setShopDetails(getShopDetails);
-      onCheckShop(hasOpen);
+      onCheckShop(hasOpen && hasProduct);
     },
   });
 
@@ -234,11 +234,11 @@ export const StickyView = ({onCheckShop}) => {
   }, [id, activeTab, loading]);
 
   const OperatingHours = () => {
-    const {operatingHours, dayLapsed} = shopDetails;
+    const {operatingHours, dayLapsed, hasProduct} = shopDetails;
     const {fromTime: currFromTime} = operatingHours;
     const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
 
-    if (nextSched === null) {
+    if (nextSched === null || !hasProduct) {
       return (
         <Text style={styles.closeText}>
           Restaurant is currently unavailable. {'\n'}Please come back at a later time.
@@ -308,7 +308,7 @@ export const StickyView = ({onCheckShop}) => {
   return (
     <>
       {shopDetails && !shopDetails?.hasOpen && shopDetails?.hasProduct && CloseOverlay}
-      {shopDetails && !shopDetails?.hasProduct && !shopDetails?.hasOpen && ProductOverlay}
+      {shopDetails && !shopDetails?.hasProduct && ProductOverlay}
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}

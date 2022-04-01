@@ -152,7 +152,7 @@ const StickyView = () => {
   // };
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingToBottom = 120;
+    const paddingToBottom = 220;
     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
   };
 

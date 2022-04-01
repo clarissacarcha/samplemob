@@ -27,11 +27,13 @@ const RestaurantItem = ({activeTab, item}) => {
     }
   }, [nextOperatingHrs]);
 
+  console.log(item.shopname, item);
+
   const displayNextOpeningHours = () => {
-    if (hasOpen) {
+    if (hasOpen && hasProduct) {
       return null;
     }
-    if (nextSched === null || (!hasOpen && !hasProduct)) {
+    if (nextSched === null || !hasProduct) {
       return <Text style={styles.overlayText}>Currently Unavailable</Text>;
     }
     const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
@@ -87,7 +89,7 @@ const RestaurantItem = ({activeTab, item}) => {
             resizeMode="cover"
             onError={() => setValidImg(false)}
           />
-          <View style={{...styles.overlay, opacity: hasOpen ? 0 : 0.6}} />
+          <View style={{...styles.overlay, opacity: hasOpen && hasProduct ? 0 : 0.6}} />
           {displayNextOpeningHours()}
         </View>
         {item.promotionVouchers.length > 0 && id === 2 && renderPromotionVouchers()}
