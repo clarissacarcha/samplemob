@@ -4,7 +4,13 @@ import CONSTANTS from '../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import Data from '../../../components/BookingDummyData';
 import {LocationCard} from '../../../components';
-export const FrequentlyUsed = () => {
+export const FrequentlyUsed = ({navigation}) => {
+  const onPressLocation = () => {
+    navigation.push('ToktokGoBookingConfirmPickup', {
+      popTo: 2,
+    });
+  };
+
   return (
     <>
       <View
@@ -25,7 +31,7 @@ export const FrequentlyUsed = () => {
           }}>
           Frequently Used
         </Text>
-        <TouchableOpacity onPress={() => console.log('trigger')}>
+        <TouchableOpacity onPress={() => navigation.push('ToktokGoFrequentlyUsed')}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
               style={{
@@ -43,7 +49,7 @@ export const FrequentlyUsed = () => {
         showsVerticalScrollIndicator={false}
         data={Data.frequentlyUsed}
         // keyExtractor={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} />}
+        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressLocation} />}
       />
     </>
   );

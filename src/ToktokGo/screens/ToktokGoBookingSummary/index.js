@@ -49,6 +49,7 @@ const ToktokGoBookingSummary = ({navigation}) => {
           data={BookingDummyData.vehicles}
           setSelectedVehicle={setSelectedVehicle}
           selectedVehicle={selectedVehicle}
+          navigation={navigation}
         />
 
         <View style={styles.divider} />

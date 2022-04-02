@@ -63,6 +63,8 @@ export default ({Navigator}) => (
       options={{
         headerShown: false,
       }}
+    />
+    <Navigator.Screen
       name="ToktokGoBookingConfirmPickup"
       component={ToktokGoBookingConfirmPickup}
       options={{headerShown: false}}
