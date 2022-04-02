@@ -7,7 +7,9 @@ export const ConfirmDestinationButton = ({navigation}) => {
     <TouchableOpacity
       style={styles.buttonWrapper}
       onPress={() => {
-        navigation.push('ToktokGoBookingConfirmPickup');
+        navigation.push('ToktokGoBookingConfirmPickup', {
+          popTo: 3,
+        });
       }}>
       <Text style={styles.confirmText}>Confirm Destination</Text>
     </TouchableOpacity>

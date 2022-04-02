@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const GET_PLACE_AUTOCOMPLETE = gql`
-  query getPlaceAutocomplete($input: GetPlaceAutocompleteInput) {
+  query getPlaceAutocomplete($input: GetPlaceAutocompleteInput!) {
     getPlaceAutocomplete(input: $input) {
       formattedAddress
       placeId

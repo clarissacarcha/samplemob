@@ -18,7 +18,7 @@ export const FrequentlyUsed = ({navigation}) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          paddingHorizontal: 13,
+          marginHorizontal: 16,
           paddingVertical: 10,
           backgroundColor: CONSTANTS.COLOR.WHITE,
         }}>
@@ -27,7 +27,6 @@ export const FrequentlyUsed = ({navigation}) => {
             fontSize: CONSTANTS.FONT_SIZE.M,
             color: CONSTANTS.COLOR.ORANGE,
             fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
-            marginLeft: 7,
           }}>
           Frequently Used
         </Text>
@@ -41,7 +40,7 @@ export const FrequentlyUsed = ({navigation}) => {
               }}>
               See All
             </Text>
-            <MIcon name={'keyboard-arrow-right'} size={23} color={CONSTANTS.COLOR.ORANGE} />
+            <MIcon name={'keyboard-arrow-right'} size={23} color={CONSTANTS.COLOR.ORANGE} style={{marginRight: -7}} />
           </View>
         </TouchableOpacity>
       </View>

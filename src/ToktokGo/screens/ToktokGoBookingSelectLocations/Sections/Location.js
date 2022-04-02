@@ -3,31 +3,57 @@ import {Text, View, TextInput, StyleSheet, Image} from 'react-native';
 import BackgroundLanding from '../../../../assets/images/BackGroundLanding.png';
 import CONSTANTS from '../../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
-export const Location = ({onChange, inputRef}) => {
+export const Location = ({onChange, inputRef, selectedInput, setSelectedInput}) => {
   return (
-    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE}}>
-      <View style={{flexDirection: 'row', alignItems: 'center', paddingHorizontal: 30, paddingBottom: 20}}>
-        <FA5Icon name="map-pin" size={18} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 2}} />
-        <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, paddingHorizontal: 10}}>
-          Inoza Tower, 40th Street, Bonifacio Global City
-        </Text>
-      </View>
+    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, marginHorizontal: 16, marginBottom: 15}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <View style={styles.containerInput}>
-          <FA5Icon
-            name="map-marker-alt"
-            size={20}
-            color={CONSTANTS.COLOR.ORANGE}
-            style={{padding: 10, marginLeft: 10}}
-          />
-
-          <TextInput
-            ref={inputRef}
-            onChangeText={value => onChange(value)}
-            style={styles.input}
-            placeholder="Where to?"
-          />
+        <View style={selectedInput == 'P' ? styles.containerInput : styles.textContainerInput}>
+          <FA5Icon name="map-pin" size={18} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 16}} />
+          {selectedInput == 'P' ? (
+            <TextInput
+              ref={inputRef}
+              onChangeText={value => onChange(value)}
+              style={styles.input}
+              placeholder="Where to?"
+            />
+          ) : (
+            <TouchableOpacity onPress={() => setSelectedInput('P')}>
+              <Text
+                style={{
+                  fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+                  fontSize: CONSTANTS.FONT_SIZE.M,
+                  paddingHorizontal: 10,
+                }}>
+                Inoza Tower, 40th Street, Bonifacio Global City
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+      <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 19}}>
+        <View style={selectedInput == 'D' ? styles.containerInput : styles.textContainerInput}>
+          <FA5Icon name="map-marker-alt" size={18} color={CONSTANTS.COLOR.ORANGE} style={{marginLeft: 16}} />
+          {selectedInput == 'D' ? (
+            <TextInput
+              ref={inputRef}
+              onChangeText={value => onChange(value)}
+              style={styles.input}
+              placeholder="Where to?"
+            />
+          ) : (
+            <TouchableOpacity onPress={() => setSelectedInput('D')}>
+              <Text
+                style={{
+                  fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+                  fontSize: CONSTANTS.FONT_SIZE.M,
+                  paddingHorizontal: 10,
+                }}>
+                Inoza Tower, 40th Street, Bonifacio Global City
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>
@@ -35,22 +61,20 @@ export const Location = ({onChange, inputRef}) => {
 };
 const styles = StyleSheet.create({
   input: {
-    borderWidth: 1,
-    paddingLeft: 5,
-    height: 50,
+    marginLeft: 12,
     color: CONSTANTS.COLOR.DARK,
-    borderColor: '#F8F8F8',
-    width: '88%',
+    width: '100%',
   },
   containerInput: {
-    marginHorizontal: 20,
-    borderWidth: 1,
+    flex: 1,
     backgroundColor: '#F8F8F8',
-    borderColor: '#F8F8F8',
-    marginVertical: 2,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     borderRadius: 5,
+  },
+  textContainerInput: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
