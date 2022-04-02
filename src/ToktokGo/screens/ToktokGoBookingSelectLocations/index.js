@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {Text, View, TouchableHighlight} from 'react-native';
-import {Location, Header, FrequentlyUsed, SavedLocations} from './Sections';
+import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation} from './Sections';
 import CONSTANTS from '../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_LOCATION} from '../../graphql';
@@ -11,8 +11,11 @@ import {throttle, debounce} from 'lodash';
 
 const ToktokGoSelectedLocations = ({navigation}) => {
   const [sessionToken, setSessionToken] = useState(uuid.v4());
-  const [searchString, setSearchString] = useState('');
+  const [searchDestination, setSearchDestination] = useState('');
+  const [searchOrigin, setSearchOrigin] = useState('Inoza Tower, 40th Street, Bonifacio Global City');
   const [selectedInput, setSelectedInput] = useState('D');
+  const [searchResponse, setSearchResponse] = useState([]);
+  const [searchOriginResponse, setSearchOriginResponse] = useState([]);
 
   const inputRef = useRef();
 
@@ -20,7 +23,11 @@ const ToktokGoSelectedLocations = ({navigation}) => {
     client: TOKTOK_QUOTATION_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log(response);
+      if (selectedInput == 'P') {
+        setSearchOriginResponse(response.getPlaceAutocomplete);
+      } else {
+        setSearchResponse(response.getPlaceAutocomplete);
+      }
     },
     onError: error => console.log('getPlaceAutocomplete', error),
   });
@@ -42,35 +49,62 @@ const ToktokGoSelectedLocations = ({navigation}) => {
     onError: error => console.log('error', error),
   });
 
-  useEffect(() => {
-    // getPlaceByLocation();
-    getPlaceAutocomplete({
-      variables: {
-        input: {
-          searchString: searchString,
-          sessionToken: sessionToken,
-        },
-      },
-    });
-  }, [searchString, sessionToken]);
-
   const onChange = value => {
-    setSearchString(value);
+    setSearchDestination(value);
+    debounce(
+      () =>
+        getPlaceAutocomplete({
+          variables: {
+            input: {
+              searchString: value,
+              sessionToken: sessionToken,
+            },
+          },
+        }),
+      1000,
+    )();
   };
-
+  const onChangeOrigin = value => {
+    setSearchOrigin(value);
+    debounce(
+      () =>
+        getPlaceAutocomplete({
+          variables: {
+            input: {
+              searchString: value,
+              sessionToken: sessionToken,
+            },
+          },
+        }),
+      1000,
+    )();
+  };
+  console.log(searchResponse?.length == 0 && searchOriginResponse?.length == 0, searchOriginResponse);
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
       <View>
         <Header navigation={navigation} />
         <Location
-          onChange={debounce(onChange, 1000)}
+          onChangeOrigin={onChangeOrigin}
+          onChange={onChange}
           inputRef={inputRef}
           selectedInput={selectedInput}
           setSelectedInput={setSelectedInput}
+          titleOrigin={searchOrigin}
+          title={searchDestination}
         />
-        <FrequentlyUsed navigation={navigation} />
-        <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
-        <SavedLocations />
+        {searchResponse?.length == 0 && searchOriginResponse?.length == 0 ? (
+          <View>
+            <FrequentlyUsed navigation={navigation} />
+            <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+            <SavedLocations />
+          </View>
+        ) : (
+          <SearchLocation
+            searchResponse={selectedInput == 'P' ? searchOriginResponse : searchResponse}
+            title={selectedInput == 'P' ? searchOrigin : searchDestination}
+          />
+        )}
       </View>
       <TouchableHighlight
         onPress={() => {

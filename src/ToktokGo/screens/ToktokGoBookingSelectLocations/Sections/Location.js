@@ -5,7 +5,7 @@ import CONSTANTS from '../../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-export const Location = ({onChange, inputRef, selectedInput, setSelectedInput}) => {
+export const Location = ({onChange, inputRef, selectedInput, setSelectedInput, titleOrigin, title, onChangeOrigin}) => {
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, marginHorizontal: 16, marginBottom: 15}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -14,9 +14,10 @@ export const Location = ({onChange, inputRef, selectedInput, setSelectedInput}) 
           {selectedInput == 'P' ? (
             <TextInput
               ref={inputRef}
-              onChangeText={value => onChange(value)}
+              onChangeText={value => onChangeOrigin(value)}
               style={styles.input}
-              placeholder="Where to?"
+              // placeholder={titleOrigin ? titleOrigin : pickUpValue}
+              value={titleOrigin}
             />
           ) : (
             <TouchableOpacity onPress={() => setSelectedInput('P')}>
@@ -26,7 +27,7 @@ export const Location = ({onChange, inputRef, selectedInput, setSelectedInput}) 
                   fontSize: CONSTANTS.FONT_SIZE.M,
                   paddingHorizontal: 10,
                 }}>
-                Inoza Tower, 40th Street, Bonifacio Global City
+                {titleOrigin}
               </Text>
             </TouchableOpacity>
           )}
@@ -41,6 +42,7 @@ export const Location = ({onChange, inputRef, selectedInput, setSelectedInput}) 
               onChangeText={value => onChange(value)}
               style={styles.input}
               placeholder="Where to?"
+              value={title}
             />
           ) : (
             <TouchableOpacity onPress={() => setSelectedInput('D')}>
@@ -50,7 +52,7 @@ export const Location = ({onChange, inputRef, selectedInput, setSelectedInput}) 
                   fontSize: CONSTANTS.FONT_SIZE.M,
                   paddingHorizontal: 10,
                 }}>
-                Inoza Tower, 40th Street, Bonifacio Global City
+                {!title ? 'Where to?' : title}
               </Text>
             </TouchableOpacity>
           )}
