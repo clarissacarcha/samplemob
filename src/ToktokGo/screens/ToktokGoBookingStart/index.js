@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import constants from '../../../common/res/constants';
 import {Landing, SavedLocations, RecentDestinations, Header} from '../ToktokGoBookingStart/Sections';

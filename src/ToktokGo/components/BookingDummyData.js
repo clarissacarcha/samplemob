@@ -70,9 +70,15 @@ const vehicles = [
   },
 ];
 
+const pickupLocation = {
+  formattedAddress: 'Pasig City Hall, Caruncho Avenue, Barangay San Nicolas, Pasig, Metro Manila, Philippines',
+  placeId: 'ChIJQbl32dXHlzMRgBKT0bdFSV4',
+};
+
 export default {
   vehicles,
   recentDestinations,
   savedLocations,
   frequentlyUsed,
+  pickupLocation,
 };
