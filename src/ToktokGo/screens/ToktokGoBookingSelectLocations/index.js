@@ -13,7 +13,6 @@ const ToktokGoSelectedLocations = ({navigation}) => {
   const [sessionToken, setSessionToken] = useState(uuid.v4());
   const [searchString, setSearchString] = useState('');
   const inputRef = useRef();
-  console.log('nor', sessionToken);
 
   const [getPlaceAutocomplete] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
     client: TOKTOK_QUOTATION_CLIENT,
@@ -66,7 +65,10 @@ const ToktokGoSelectedLocations = ({navigation}) => {
         <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
         <SavedLocations />
       </View>
-      <TouchableHighlight onPress={() => console.log('trigger')}>
+      <TouchableHighlight
+        onPress={() => {
+          navigation.push('ToktokGoBookingConfirmDestination');
+        }}>
         <View
           style={{
             paddingHorizontal: CONSTANTS.SIZE.MARGIN,
