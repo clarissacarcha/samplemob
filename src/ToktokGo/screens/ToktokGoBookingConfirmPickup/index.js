@@ -1,21 +1,35 @@
-import React, {useRef} from 'react';
-import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image} from 'react-native';
+import React, {useRef, useCallback} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, BackHandler} from 'react-native';
 import {Pickup, ConfirmPickupButton, NotesToDriver} from './Sections';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import {SheetManager} from 'react-native-actions-sheet';
 
-const ToktokGoBookingConfirmPickup = ({navigation}) => {
+const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
+  const {popTo} = route.params;
   const dropDownRef = useRef(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        navigation.pop(popTo);
+        return true;
+      };
+      BackHandler.addEventListener('hardwareBackPress', onBackPress); // detect back button press
+      return () => BackHandler.removeEventListener('hardwareBackPress');
+    }, []),
+  );
+
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop(popTo)}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
       <Pickup />
       <View style={styles.card}>
         <NotesToDriver dropDownRef={dropDownRef} />
-        <ConfirmPickupButton />
+        <ConfirmPickupButton navigation={navigation} />
       </View>
     </View>
   );

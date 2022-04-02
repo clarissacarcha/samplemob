@@ -61,7 +61,7 @@ const ToktokGoSelectedLocations = ({navigation}) => {
       <View>
         <Header navigation={navigation} />
         <Location onChange={debounce(onChange, 1000)} inputRef={inputRef} />
-        <FrequentlyUsed />
+        <FrequentlyUsed navigation={navigation} />
         <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
         <SavedLocations />
       </View>

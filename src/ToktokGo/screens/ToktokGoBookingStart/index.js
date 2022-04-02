@@ -9,7 +9,7 @@ const ToktokGoBookingStart = ({navigation}) => {
       <View>
         <Header navigation={navigation} />
         <Landing navigation={navigation} />
-        <RecentDestinations />
+        <RecentDestinations navigation={navigation} />
         <View style={{borderBottomWidth: 6, borderBottomColor: constants.COLOR.LIGHT}} />
         <SavedLocations />
       </View>

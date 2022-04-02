@@ -7,7 +7,7 @@ import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 import SedanIMG from '../../../../assets/images/Sedan.png';
 import SUVIMG from '../../../../assets/images/SUV.png';
 
-export const BookingSelectVehicle = ({data, setSelectedVehicle, selectedVehicle}) => {
+export const BookingSelectVehicle = ({navigation, data, setSelectedVehicle, selectedVehicle}) => {
   return (
     <>
       <View style={styles.container}>
@@ -15,7 +15,7 @@ export const BookingSelectVehicle = ({data, setSelectedVehicle, selectedVehicle}
           <Text style={styles.textStyle}>Select Vehicle</Text>
         </View>
 
-        <TouchableOpacity style={styles.elementWrapper}>
+        <TouchableOpacity onPress={() => navigation.push('ToktokGoBookingVehicle')} style={styles.elementWrapper}>
           <Text style={styles.seeAlltextStyle}>See All</Text>
           <Image source={ArrowRightIcon} resizeMode={'contain'} style={styles.arrowIconStyle} />
         </TouchableOpacity>

@@ -4,7 +4,13 @@ import CONSTANTS from '../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import Data from '../../../components/BookingDummyData';
 import {LocationCard} from '../../../components';
-export const RecentDestinations = () => {
+export const RecentDestinations = ({navigation}) => {
+  const onPressLocation = () => {
+    navigation.push('ToktokGoBookingConfirmPickup', {
+      popTo: 1,
+    });
+  };
+
   return (
     <>
       <View
@@ -25,7 +31,7 @@ export const RecentDestinations = () => {
           }}>
           Recent Destinations
         </Text>
-        <TouchableOpacity onPress={() => console.log('trigger')}>
+        <TouchableOpacity onPress={() => navigation.push('ToktokGoRecentDestinations')}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
               style={{
@@ -44,7 +50,7 @@ export const RecentDestinations = () => {
         showsVerticalScrollIndicator={false}
         data={Data.recentDestinations}
         // keyExtractor={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} />}
+        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressLocation} />}
       />
     </>
   );
