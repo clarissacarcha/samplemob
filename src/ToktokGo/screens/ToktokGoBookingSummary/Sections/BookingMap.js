@@ -111,14 +111,12 @@ const decodeLegsPolyline = legs => {
     return leg.steps.map(step => {
       const decodedStepPolyline = PolylineUtility.decode(step.polyline.points);
 
-      const stepLatLng = decodedStepPolyline.map(point => {
+      return decodedStepPolyline.map(point => {
         return {
           latitude: point[0],
           longitude: point[1],
         };
       });
-
-      return stepLatLng;
     });
   });
 
@@ -149,10 +147,7 @@ export const BookingMap = ({}) => {
   };
 
   useEffect(() => {
-    console.log('FITTING');
-
     const {northeast, southwest} = SAMPLE_BOUNDS;
-
     const coordinates = [
       {
         ...northeast,
@@ -161,7 +156,6 @@ export const BookingMap = ({}) => {
         ...southwest,
       },
     ];
-
     setTimeout(() => {
       mapRef.current.fitToCoordinates(
         coordinates,
@@ -173,7 +167,7 @@ export const BookingMap = ({}) => {
             top: 20,
           },
         },
-        3000,
+        3000, // Animation duration in milliseconds.
       );
     }, 1000);
   }, []);
