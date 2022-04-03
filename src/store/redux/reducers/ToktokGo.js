@@ -53,6 +53,24 @@ const INITIAL_STATE = {
     paymentMethod: null,
     passengerCount: 1,
   },
+  route: {
+    distance: {
+      killometer: null,
+    },
+    duration: {
+      minute: null,
+    },
+    bounds: {
+      northeast: {
+        latitude: null,
+        longitude: null,
+      },
+      southWest: {
+        latitude: null,
+        longitude: null,
+      },
+    },
+  },
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -65,6 +83,8 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, destination: action.payload};
     case 'SET_TOKTOKGO_BOOKING_DETAILS':
       return {...state, details: action.payload};
+    case 'SET_TOKTOKGO_BOOKING_ROUTE':
+      return {...state, route: action.payload};
     case 'SET_TOKTOKGO_BOOKING_INITIAL_STATE':
       return INITIAL_STATE;
     default:
