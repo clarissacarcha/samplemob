@@ -8,6 +8,29 @@ export const GET_PLACE_AUTOCOMPLETE = gql`
     }
   }
 `;
+
+export const GET_PLACE_BY_ID = gql`
+  query getPlaceById($input: GetPlaceByIdInput!) {
+    getPlaceById(input: $input) {
+      hash
+      place {
+        formattedAddress
+        location {
+          latitude
+          longitude
+        }
+        addressBreakdown {
+          city
+          province
+          region
+          country
+          postal
+        }
+      }
+    }
+  }
+`;
+
 export const GET_PLACE_BY_LOCATION = gql`
   query getPlaceByLocation($input: GetPlaceByLocationInput) {
     getPlaceByLocation(input: $input) {

@@ -5,9 +5,17 @@ import CONSTANTS from '../../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-export const Location = ({onChange, inputRef, selectedInput, setSelectedInput, titleOrigin, title, onChangeOrigin}) => {
+export const Location = ({
+  onChange,
+  inputRef,
+  selectedInput,
+  onChangeSelectedInput,
+  titleOrigin,
+  title,
+  onChangeOrigin,
+}) => {
   return (
-    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, marginHorizontal: 16, marginBottom: 15}}>
+    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, paddingHorizontal: 16, marginBottom: 15}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <View style={selectedInput == 'P' ? styles.containerInput : styles.textContainerInput}>
           <FA5Icon name="map-pin" size={18} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 16}} />
@@ -20,7 +28,7 @@ export const Location = ({onChange, inputRef, selectedInput, setSelectedInput, t
               value={titleOrigin}
             />
           ) : (
-            <TouchableOpacity onPress={() => setSelectedInput('P')}>
+            <TouchableOpacity onPress={() => onChangeSelectedInput('P')}>
               <Text
                 style={{
                   fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
@@ -45,7 +53,7 @@ export const Location = ({onChange, inputRef, selectedInput, setSelectedInput, t
               value={title}
             />
           ) : (
-            <TouchableOpacity onPress={() => setSelectedInput('D')}>
+            <TouchableOpacity onPress={() => onChangeSelectedInput('D')}>
               <Text
                 style={{
                   fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
@@ -73,10 +81,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 5,
+    overflow: 'hidden',
   },
   textContainerInput: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    paddingRight: 8,
   },
 });

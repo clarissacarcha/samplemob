@@ -2,13 +2,13 @@ import React from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const ConfirmDestinationButton = ({navigation}) => {
+export const ConfirmDestinationButton = ({navigation, popTo}) => {
   return (
     <TouchableOpacity
       style={styles.buttonWrapper}
       onPress={() => {
         navigation.push('ToktokGoBookingConfirmPickup', {
-          popTo: 3,
+          popTo: popTo + 1,
         });
       }}>
       <Text style={styles.confirmText}>Confirm Destination</Text>

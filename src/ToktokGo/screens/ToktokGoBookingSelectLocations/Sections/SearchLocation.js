@@ -3,14 +3,14 @@ import {Text, View, FlatList, TouchableOpacity, Dimensions, StyleSheet} from 're
 import CONSTANTS from '../../../../common/res/constants';
 import {SearchDisplayCard} from '../../../components';
 
-export const SearchLocation = ({title, searchResponse}) => {
+export const SearchLocation = ({title, searchResponse, onSelectPlace}) => {
   return (
     <>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={searchResponse}
         // keyExtractor={item => item.id}
-        renderItem={({item, index}) => <SearchDisplayCard item={item} title={title} />}
+        renderItem={({item, index}) => <SearchDisplayCard item={item} onSelectPlace={onSelectPlace} />}
       />
     </>
   );

@@ -4,10 +4,10 @@ import CONSTANTS from '../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import Data from '../../../components/BookingDummyData';
 import {LocationCard} from '../../../components';
-export const FrequentlyUsed = ({navigation}) => {
+export const FrequentlyUsed = ({navigation, popTo}) => {
   const onPressLocation = () => {
     navigation.push('ToktokGoBookingConfirmPickup', {
-      popTo: 2,
+      popTo: popTo + 1,
     });
   };
 
