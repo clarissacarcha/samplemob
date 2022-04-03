@@ -5,10 +5,18 @@ import {Pickup, ConfirmPickupButton, NotesToDriver} from './Sections';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import {SheetManager} from 'react-native-actions-sheet';
+import {GET_QUOTATION} from '../../graphql';
+import {TOKTOK_QUOTATION_CLIENT} from '../../../graphql';
+import {useDispatch, useSelector} from 'react-redux';
+import {useLazyQuery} from '@apollo/react-hooks';
+import {decodeLegsPolyline} from '../../helpers';
 
 const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const {popTo} = route.params;
+  const dispatch = useDispatch();
   const dropDownRef = useRef(null);
+
+  const {destination, origin} = useSelector(state => state.toktokGo);
 
   useFocusEffect(
     useCallback(() => {
@@ -18,8 +26,37 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       };
       BackHandler.addEventListener('hardwareBackPress', onBackPress); // detect back button press
       return () => BackHandler.removeEventListener('hardwareBackPress');
-    }, []),
+    }, [navigation]),
   );
+
+  const [getQuotation] = useLazyQuery(GET_QUOTATION, {
+    client: TOKTOK_QUOTATION_CLIENT,
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        service: 'GO',
+        origin: {
+          placeHash: origin.hash,
+        },
+        destinations: {
+          placeHash: destination.hash,
+        },
+      },
+    },
+    onCompleted: response => {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ROUTE', payload: response.getQuotation.route});
+      navigation.push('ToktokGoBookingSummary', {
+        popTo: popTo + 1,
+        quotationDataResult: response.getQuotation,
+        decodedPolyline: decodeLegsPolyline(response.getQuotation.route.legs),
+      });
+    },
+    onError: error => console.log('error', error),
+  });
+
+  const onConfirm = () => {
+    getQuotation();
+  };
 
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
@@ -29,7 +66,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       <Pickup />
       <View style={styles.card}>
         <NotesToDriver dropDownRef={dropDownRef} navigation={navigation} popTo={popTo} />
-        <ConfirmPickupButton navigation={navigation} />
+        <ConfirmPickupButton onConfirm={onConfirm} />
       </View>
     </View>
   );

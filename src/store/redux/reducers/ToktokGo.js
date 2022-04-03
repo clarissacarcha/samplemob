@@ -70,6 +70,9 @@ const INITIAL_STATE = {
         longitude: null,
       },
     },
+    legs: {
+      steps: [],
+    },
   },
 };
 

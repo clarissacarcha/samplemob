@@ -9,6 +9,13 @@ import {useSelector} from 'react-redux';
 const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   const {destination} = useSelector(state => state.toktokGo);
   const {popTo} = route.params;
+
+  const onConfirm = () => {
+    navigation.push('ToktokGoBookingConfirmPickup', {
+      popTo: popTo + 1,
+    });
+  };
+
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
@@ -20,7 +27,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
           <FA5Icon name="map-marker-alt" size={20} color={constants.COLOR.ORANGE} style={{marginRight: 10}} />
           <Text>{destination.place.formattedAddress}</Text>
         </View>
-        <ConfirmDestinationButton navigation={navigation} popTo={popTo} />
+        <ConfirmDestinationButton onConfirm={onConfirm} />
       </View>
     </View>
   );

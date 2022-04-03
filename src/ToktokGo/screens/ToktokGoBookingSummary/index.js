@@ -1,10 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Image, StatusBar} from 'react-native';
-import {GET_QUOTATION} from '../../graphql';
-import {TOKTOK_QUOTATION_CLIENT} from 'src/graphql';
-import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import constants from '../../../common/res/constants';
-import {useDispatch, useSelector} from 'react-redux';
 import {SheetManager} from 'react-native-actions-sheet';
 import {
   BookingDistanceTime,
@@ -16,39 +12,13 @@ import {
 import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet} from './Components';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 
-const ToktokGoBookingSummary = ({navigation}) => {
-  const dispatch = useDispatch();
-  const {origin, destination} = useSelector(state => state.toktokGo);
+const ToktokGoBookingSummary = ({navigation, route}) => {
+  const {quotationDataResult, decodedPolyline} = route.params;
   const [selectedVehicle, setSelectedVehicle] = useState('1');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1);
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
-  const [quotationData, setQuotationData] = useState({});
-
-  const [getQuotation] = useLazyQuery(GET_QUOTATION, {
-    client: TOKTOK_QUOTATION_CLIENT,
-    fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        service: 'GO',
-        origin: {
-          placeHash: origin.hash,
-        },
-        destinations: {
-          placeHash: destination.hash,
-        },
-      },
-    },
-    onCompleted: response => {
-      setQuotationData(response.getQuotation);
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_ROUTE', payload: response.getQuotation.route});
-    },
-    onError: error => console.log('error', error),
-  });
-
-  useEffect(() => {
-    getQuotation();
-  }, []);
+  const [quotationData, setQuotationData] = useState(quotationDataResult);
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -69,7 +39,7 @@ const ToktokGoBookingSummary = ({navigation}) => {
         setViewPaymenetSucessModal={setViewPaymenetSucessModal}
       />
 
-      <BookingMap quotationData={quotationData} />
+      <BookingMap decodedPolyline={decodedPolyline} />
 
       <View style={styles.card}>
         <BookingDistanceTime quotationData={quotationData} />
