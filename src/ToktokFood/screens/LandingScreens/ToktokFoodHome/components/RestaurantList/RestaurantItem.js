@@ -27,8 +27,6 @@ const RestaurantItem = ({activeTab, item}) => {
     }
   }, [nextOperatingHrs]);
 
-  console.log(item.shopname, item);
-
   const displayNextOpeningHours = () => {
     if (hasOpen && hasProduct) {
       return null;

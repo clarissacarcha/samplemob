@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Text, View, TextInput} from 'react-native';
@@ -38,7 +39,7 @@ const RiderNotes = ({
   //   navigation.replace('ToktokFoodDriver');
   // };
 
-  console.log('disableWalletCheckout', disableWalletCheckout);
+  // console.log('disableWalletCheckout', disableWalletCheckout);
 
   const onValidateAmount = useCallback(() => {
     if (deliveryFee) {
