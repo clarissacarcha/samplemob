@@ -24,7 +24,6 @@ const ToktokGoBookingStart = ({navigation}) => {
     client: TOKTOK_QUOTATION_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log(response);
       setBookingInitialState(response.getPlaceById);
     },
     onError: error => console.log('error', error),
@@ -44,9 +43,6 @@ const ToktokGoBookingStart = ({navigation}) => {
       });
     }, [navigation]),
   );
-
-  console.log('ORIGIN FROM REDUX:', origin);
-
   return (
     <View style={{flex: 1, backgroundColor: constants.COLOR.WHITE}}>
       <View>
