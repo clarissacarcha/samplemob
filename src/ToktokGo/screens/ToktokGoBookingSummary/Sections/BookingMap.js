@@ -3,7 +3,7 @@ import {View, StyleSheet, Image, Text} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
 import PolylineUtility from '@mapbox/polyline';
 import _ from 'lodash';
-
+import {useSelector} from 'react-redux';
 import CONSTANTS from '../../../../common/res/constants';
 import LocationIcon from '../../../../assets/images/locationIcon.png';
 import PinIcon from '../../../../assets/images/pinIcon.png';
@@ -127,7 +127,9 @@ const SAMPLE_POLYLINE = decodeLegsPolyline(SAMPLE_LEGS);
 
 // console.log(JSON.stringify({polyline: decodeLegsPolyline(SAMPLE_LEGS)}, null, 2));
 
-export const BookingMap = ({}) => {
+export const BookingMap = ({quotationData}) => {
+  const {origin, destination} = useSelector(state => state.toktokGo);
+
   const mapRef = useRef();
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
