@@ -250,7 +250,7 @@ const MainComponent = () => {
     fetchPolicy: 'network-only',
     onCompleted: ({getShopStatus}) => {
       if (getShopStatus.status === 'open') {
-        setLoadingWallet(false);
+        // setLoadingWallet(false);
         placeCustomerOrder();
       } else {
         setLoadingWallet(false);

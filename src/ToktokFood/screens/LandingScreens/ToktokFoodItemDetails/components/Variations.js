@@ -42,7 +42,7 @@ export const Variations = ({data, productId}) => {
           })
         : variants[0];
       setSelectedVariants(selectedVar);
-      console.log('selectedVar', selectedVar);
+      // console.log('selectedVar', selectedVar);
     }
   }, []);
 

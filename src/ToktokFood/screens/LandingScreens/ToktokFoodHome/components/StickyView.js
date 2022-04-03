@@ -157,7 +157,7 @@ const StickyView = () => {
   };
 
   const onLoadMore = nativeEvent => {
-    if (!loadMore && pendingProcess) {
+    if (!loadMore) {
       setPage(prev => prev + 1);
       setLoadMore(isCloseToBottom(nativeEvent));
     }
