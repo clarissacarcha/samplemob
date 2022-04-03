@@ -19,7 +19,9 @@ export const Landing = ({navigation}) => {
         <ThrottledHighlight
           underlayColor={CONSTANTS.COLOR.WHITE_UNDERLAY}
           onPress={() => {
-            navigation.push('ToktokGoBookingSelectLocations', navigation);
+            navigation.push('ToktokGoBookingSelectLocations', {
+              popTo: 1,
+            });
           }}
           delay={100}
           style={styles.searchBox}>

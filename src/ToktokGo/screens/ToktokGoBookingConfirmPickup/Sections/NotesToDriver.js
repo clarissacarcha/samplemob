@@ -1,12 +1,20 @@
 import React from 'react';
-import {Text, StyleSheet, View, TextInput} from 'react-native';
+import {Text, StyleSheet, View, TextInput, TouchableOpacity} from 'react-native';
 import constants from '../../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import {useSelector} from 'react-redux';
 
-export const NotesToDriver = ({dropDownRef}) => {
+export const NotesToDriver = ({dropDownRef, navigation, popTo}) => {
+  const {origin} = useSelector(state => state.toktokGo);
+
   return (
     <View>
-      <View
+      <TouchableOpacity
+        onPress={() =>
+          navigation.push('ToktokGoBookingSelectLocations', {
+            popTo: popTo + 1,
+          })
+        }
         style={{
           backgroundColor: '#F8F8F8',
           flexDirection: 'row',
@@ -15,8 +23,8 @@ export const NotesToDriver = ({dropDownRef}) => {
           paddingVertical: 10,
         }}>
         <FA5Icon name="map-pin" size={18} color={constants.COLOR.YELLOW} style={{marginRight: 10}} />
-        <Text>Bonifacio High Street - Central Square</Text>
-      </View>
+        <Text>{origin.place.formattedAddress}</Text>
+      </TouchableOpacity>
       <Text style={{fontSize: constants.FONT_SIZE.M, fontFamily: constants.FONT_FAMILY.BOLD, paddingVertical: 10}}>
         Notes to Driver
       </Text>

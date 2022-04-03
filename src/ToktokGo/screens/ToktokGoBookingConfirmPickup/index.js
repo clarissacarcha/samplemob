@@ -28,7 +28,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       </TouchableOpacity>
       <Pickup />
       <View style={styles.card}>
-        <NotesToDriver dropDownRef={dropDownRef} />
+        <NotesToDriver dropDownRef={dropDownRef} navigation={navigation} popTo={popTo} />
         <ConfirmPickupButton navigation={navigation} />
       </View>
     </View>

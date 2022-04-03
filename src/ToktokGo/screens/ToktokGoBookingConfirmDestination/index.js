@@ -5,7 +5,10 @@ import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import {SheetManager} from 'react-native-actions-sheet';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-const ToktokGoBookingConfirmDestination = ({navigation}) => {
+import {useSelector} from 'react-redux';
+const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
+  const {destination} = useSelector(state => state.toktokGo);
+  const {popTo} = route.params;
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
@@ -15,9 +18,9 @@ const ToktokGoBookingConfirmDestination = ({navigation}) => {
       <View style={styles.card}>
         <View style={{flexDirection: 'row', textAlign: 'center'}}>
           <FA5Icon name="map-marker-alt" size={20} color={constants.COLOR.ORANGE} style={{marginRight: 10}} />
-          <Text>Bonifacio High Street - Central Square</Text>
+          <Text>{destination.place.formattedAddress}</Text>
         </View>
-        <ConfirmDestinationButton navigation={navigation} />
+        <ConfirmDestinationButton navigation={navigation} popTo={popTo} />
       </View>
     </View>
   );
