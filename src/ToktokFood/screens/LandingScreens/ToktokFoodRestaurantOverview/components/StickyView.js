@@ -31,7 +31,7 @@ import ContentLoader from 'react-native-easy-content-loader';
 // import {RestaurantList} from '../../ToktokFoodHome/components';
 // import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import {GET_PRODUCT_CATEGORIES, CHECK_SHOP_VALIDATIONS, GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
+import {GET_PRODUCT_CATEGORIES, GET_PRODUCTS_BY_SHOP_CATEGORY, GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
 // Utils
 import {
   getDeviceWidth,
@@ -54,12 +54,14 @@ export const StickyView = ({onCheckShop}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState(0);
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
   const [shopDetails, setShopDetails] = useState(null);
   const [showOverlay, setShowOverlay] = useState(false);
   const [showProductOverlay, setShowProductOverlay] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+
   const [nextSched, setNextSched] = useState(null);
 
   const {setNavBarHeight} = useContext(VerifyContext);
@@ -72,7 +74,7 @@ export const StickyView = ({onCheckShop}) => {
   const isFocus = useIsFocused();
 
   // data fetching for product tags/tabs
-  const [getProductCategories, {data, error, loading}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
+  const [getProductCategories, {data, loading}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
     variables: {
       input: {
         id: id,
@@ -96,6 +98,26 @@ export const StickyView = ({onCheckShop}) => {
     },
   });
 
+  const [getProductsByShopCategory, {data: categoryProducts, loading: productsLoading, fetchMore}] = useLazyQuery(
+    GET_PRODUCTS_BY_SHOP_CATEGORY,
+    {
+      variables: {
+        input: {
+          id: id,
+          catId: activeTab?.id,
+          page: 0,
+          // key: searchProduct,
+        },
+      },
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'cache and network',
+      // onCompleted: ({getProductsByShopCategory}) => {
+      //   const products = getProductsByShopCategory;
+      //   filterProducts(products);
+      // },
+    },
+  );
+
   // const [checkShopValidations, {data: checkShop, loading: shopValidationLoading, error: shopValidationError}] =
   //   useLazyQuery(CHECK_SHOP_VALIDATIONS, {
   //     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -106,6 +128,7 @@ export const StickyView = ({onCheckShop}) => {
     // checkShopValidations({ variables: { input: { shopId: id } }})
     if (isFocus && location) {
       getProductCategories();
+      getProductsByShopCategory();
       // console.log(
       //   JSON.stringify({
       //     input: {
@@ -143,6 +166,40 @@ export const StickyView = ({onCheckShop}) => {
   const getNavBarHeight = event => {
     let height = event.nativeEvent.layout.height;
     setNavBarHeight(height);
+  };
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 220;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+  };
+
+  const onLoadMore = () => {
+    if (!productsLoading) {
+      setShowMore(true);
+      fetchMore({
+        variables: {
+          input: {
+            id: id,
+            catId: activeTab?.id,
+            page: page + 1,
+          },
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          setPage(page + 1);
+          setShowMore(false);
+
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          return {
+            getProductsByShopCategory: [
+              ...previousResult.getProductsByShopCategory,
+              ...fetchMoreResult.getProductsByShopCategory,
+            ],
+          };
+        },
+      });
+    }
   };
 
   const renderNavBar = useMemo(() => {
@@ -230,8 +287,17 @@ export const StickyView = ({onCheckShop}) => {
   }, [shopDetails, shopDetailsLoading, productCategories, activeTab, loading]);
 
   const renderContent = useMemo(() => {
-    return <FoodList id={id} activeTab={activeTab} tagsLoading={loading} />;
-  }, [id, activeTab, loading]);
+    return (
+      <FoodList
+        id={id}
+        activeTab={activeTab}
+        data={categoryProducts}
+        productsLoading={productsLoading}
+        showMore={showMore}
+        tagsLoading={loading}
+      />
+    );
+  }, [id, activeTab, categoryProducts, loading, productsLoading, showMore]);
 
   const OperatingHours = () => {
     const {operatingHours, dayLapsed, hasProduct} = shopDetails;
@@ -248,7 +314,8 @@ export const StickyView = ({onCheckShop}) => {
     if (isAboutToOpen || dayLapsed === 0) {
       return (
         <Text style={styles.closeText}>
-          Restaurant is currently closed. {'\n'}Please come back at {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('LT')}
+          Restaurant is currently closed. {'\n'}Please come back at{' '}
+          {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('LT')}
         </Text>
       );
     }
@@ -327,8 +394,13 @@ export const StickyView = ({onCheckShop}) => {
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
-          onScrollEndDrag: event => setOffset(event.nativeEvent.contentOffset.y),
-          onMomentumScrollEnd: event => setOffset(event.nativeEvent.contentOffset.y),
+          onScrollEndDrag: ({nativeEvent}) => {
+            if (isCloseToBottom(nativeEvent)) {
+              onLoadMore();
+            }
+          },
+          // onScrollEndDrag: event => setOffset(event.nativeEvent.contentOffset.y),
+          // onMomentumScrollEnd: event => setOffset(event.nativeEvent.contentOffset.y),
         }}
       />
     </>
