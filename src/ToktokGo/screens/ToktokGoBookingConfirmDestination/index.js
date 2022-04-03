@@ -1,18 +1,42 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image} from 'react-native';
 import {DestinationMap, ConfirmDestinationButton} from './Sections';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-import {SheetManager} from 'react-native-actions-sheet';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {GET_PLACE_BY_LOCATION} from '../../graphql';
+import {useMutation, useLazyQuery} from '@apollo/react-hooks';
+import {TOKTOK_QUOTATION_CLIENT} from 'src/graphql';
+
 const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   const {destination} = useSelector(state => state.toktokGo);
   const {popTo} = route.params;
+  const dispatch = useDispatch();
 
   const onConfirm = () => {
     navigation.push('ToktokGoBookingConfirmPickup', {
       popTo: popTo + 1,
+    });
+  };
+
+  const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
+    client: TOKTOK_QUOTATION_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      console.log('getPlaceByLocation', response);
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: response.getPlaceByLocation});
+    },
+    onError: error => console.log('error', error),
+  });
+  const onDragEndMarker = e => {
+    console.log(e);
+    getPlaceByLocation({
+      variables: {
+        input: {
+          location: e,
+        },
+      },
     });
   };
 
@@ -21,7 +45,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      <DestinationMap />
+      <DestinationMap onDragEndMarker={onDragEndMarker} />
       <View style={styles.card}>
         <View style={{flexDirection: 'row', textAlign: 'center'}}>
           <FA5Icon name="map-marker-alt" size={20} color={constants.COLOR.ORANGE} style={{marginRight: 10}} />

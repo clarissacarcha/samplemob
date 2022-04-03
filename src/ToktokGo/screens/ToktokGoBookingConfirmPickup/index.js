@@ -5,7 +5,7 @@ import {Pickup, ConfirmPickupButton, NotesToDriver} from './Sections';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import {SheetManager} from 'react-native-actions-sheet';
-import {GET_QUOTATION} from '../../graphql';
+import {GET_QUOTATION, GET_PLACE_BY_LOCATION} from '../../graphql';
 import {TOKTOK_QUOTATION_CLIENT} from '../../../graphql';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -15,7 +15,6 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const {popTo} = route.params;
   const dispatch = useDispatch();
   const dropDownRef = useRef(null);
-
   const {destination, origin} = useSelector(state => state.toktokGo);
 
   useFocusEffect(
@@ -58,12 +57,31 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     getQuotation();
   };
 
+  const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
+    client: TOKTOK_QUOTATION_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      console.log('getPlaceByLocation', response);
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: response.getPlaceByLocation});
+    },
+    onError: error => console.log('error', error),
+  });
+  const onDragEndMarker = e => {
+    console.log(e);
+    getPlaceByLocation({
+      variables: {
+        input: {
+          location: e,
+        },
+      },
+    });
+  };
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop(popTo)}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      <Pickup />
+      <Pickup onDragEndMarker={onDragEndMarker} />
       <View style={styles.card}>
         <NotesToDriver dropDownRef={dropDownRef} navigation={navigation} popTo={popTo} />
         <ConfirmPickupButton onConfirm={onConfirm} />

@@ -32,7 +32,7 @@ export const GET_PLACE_BY_ID = gql`
 `;
 
 export const GET_PLACE_BY_LOCATION = gql`
-  query getPlaceByLocation($input: GetPlaceByLocationInput) {
+  query getPlaceByLocation($input: GetPlaceByLocationInput!) {
     getPlaceByLocation(input: $input) {
       hash
       place {
