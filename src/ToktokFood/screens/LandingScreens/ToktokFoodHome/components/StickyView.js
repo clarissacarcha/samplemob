@@ -71,7 +71,7 @@ const StickyView = () => {
       setRefreshing(false);
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache and network',
   });
 
   const sample = [
