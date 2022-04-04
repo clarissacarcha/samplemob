@@ -1,17 +1,20 @@
 import React from 'react';
 import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
+import {useDispatch} from 'react-redux';
 import CONSTANTS from '../../../../common/res/constants';
 import CashIcon from '../../../../assets/images/CashIcon.png';
 import WalletIcon from '../../../../assets/images/Wallet.png';
 
-export const PaymentMethodModal = ({viewSelectPaymentModal, setViewSelectPaymentModal, setSelectedPaymentMethod}) => {
+export const PaymentMethodModal = ({viewSelectPaymentModal, setViewSelectPaymentModal}) => {
+  const dispatch = useDispatch();
+
   const tokwaSelected = () => {
-    setSelectedPaymentMethod(1);
+    dispatch({type: 'SET_TOKTOKGO_PAYMENT_METHOD', payload: '1'});
     setViewSelectPaymentModal(false);
   };
 
   const cashSelected = () => {
-    setSelectedPaymentMethod(2);
+    dispatch({type: 'SET_TOKTOKGO_PAYMENT_METHOD', payload: '2'});
     setViewSelectPaymentModal(false);
   };
 

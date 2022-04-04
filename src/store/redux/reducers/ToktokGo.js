@@ -2,6 +2,8 @@ import uuid from 'react-native-uuid';
 
 const INITIAL_STATE = {
   sessionToken: uuid.v4(),
+  selectedVehicle: '1',
+  selectedPaymentMethod: '1',
   origin: {
     hash: null,
     name: null,
@@ -80,6 +82,10 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'SET_TOKTOKGO_BOOKING_SESSION_TOKEN':
       return {...state, sessionToken: action.payload};
+    case 'SET_TOKTOKGO_PAYMENT_METHOD':
+      return {...state, selectedPaymentMethod: action.payload};
+    case 'SET_TOKTOKGO_SELECTED_VEHICLE':
+      return {...state, selectedVehicle: action.payload};
     case 'SET_TOKTOKGO_BOOKING_ORIGIN':
       return {...state, origin: action.payload};
     case 'SET_TOKTOKGO_BOOKING_DESTINATION':

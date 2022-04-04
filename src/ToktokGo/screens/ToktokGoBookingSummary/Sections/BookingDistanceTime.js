@@ -10,25 +10,29 @@ export const BookingDistanceTime = ({quotationData}) => {
   const minTime = moment().format('hh:mm A');
 
   return (
-    <View style={styles.container}>
-      <View>
-        <View style={styles.elementWrapper}>
-          <FIcon name={'map'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
-          <Text style={styles.textStyle}>{quotationData.route?.distance.kilometer} km</Text>
+    <>
+      <View style={styles.container}>
+        <View>
+          <View style={styles.elementWrapper}>
+            <FIcon name={'map'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
+            <Text style={styles.textStyle}>{quotationData.route?.distance.kilometer} km</Text>
+          </View>
+          <Text style={styles.bottomTextStyle}>Distance</Text>
         </View>
-        <Text style={styles.bottomTextStyle}>Distance</Text>
+
+        <View>
+          <View style={styles.elementWrapper}>
+            <FIcon name={'clock'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
+            <Text style={styles.textStyle}>
+              {minTime} - {maxTime}
+            </Text>
+          </View>
+          <Text style={styles.bottomTextStyle}>Estimated Time of Drop-off</Text>
+        </View>
       </View>
 
-      <View>
-        <View style={styles.elementWrapper}>
-          <FIcon name={'clock'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
-          <Text style={styles.textStyle}>
-            {minTime} - {maxTime}
-          </Text>
-        </View>
-        <Text style={styles.bottomTextStyle}>Estimated Time of Drop-off</Text>
-      </View>
-    </View>
+      <View style={styles.divider} />
+    </>
   );
 };
 
@@ -54,5 +58,11 @@ const styles = StyleSheet.create({
     color: CONSTANTS.COLOR.DARK,
     fontSize: CONSTANTS.FONT_SIZE.S,
     marginLeft: 10,
+  },
+  divider: {
+    borderBottomWidth: 2,
+    borderBottomColor: CONSTANTS.COLOR.LIGHT,
+    marginVertical: 16,
+    marginHorizontal: -16,
   },
 });

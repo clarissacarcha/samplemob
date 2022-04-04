@@ -1,14 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions} from 'react-native';
 import CONSTANTS from '../../common/res/constants';
 import {numberFormat} from '../../helper';
-
+import {useDispatch, useSelector} from 'react-redux';
 import SedanIMG from '../../assets/images/Sedan.png';
 import SuvIMG from '../../assets/images/SUV.png';
 import MpvIMG from '../../assets/images/MPV2.png';
 import VanIMG from '../../assets/images/Van.png';
 
-export const VehicleCard = ({type, data, selectedVehicle, setSelectedVehicle}) => {
+const ImageWidth = (Dimensions.get('window').width - 230) / 2;
+
+export const VehicleCard = ({type, data}) => {
+  const {selectedVehicle} = useSelector(state => state.toktokGo);
+  const dispatch = useDispatch();
   const render_image = type => {
     switch (type) {
       case '1': {
@@ -29,14 +33,14 @@ export const VehicleCard = ({type, data, selectedVehicle, setSelectedVehicle}) =
   return (
     <View style={styles.card}>
       <TouchableOpacity
-        onPress={() => setSelectedVehicle(data?.vehicleType?.id)}
+        onPress={() => dispatch({type: 'SET_TOKTOKGO_SELECTED_VEHICLE', payload: data?.vehicleType?.id})}
         style={data?.vehicleType?.id == selectedVehicle ? styles.selected : {paddingHorizontal: 16}}>
         <View style={styles.container}>
           <View style={styles.elementWrapper}>
             <Image
               source={render_image(data?.vehicleType?.id)}
               resizeMode={'contain'}
-              style={{width: 115, height: 70}}
+              style={{width: ImageWidth, height: ImageWidth}}
             />
             <View style={{marginLeft: 15}}>
               <Text style={styles.carTextStyle}>{data?.vehicleType?.name}</Text>
