@@ -14,11 +14,8 @@ import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 
 const ToktokGoBookingSummary = ({navigation, route}) => {
   const {quotationDataResult, decodedPolyline} = route.params;
-  const [selectedVehicle, setSelectedVehicle] = useState('1');
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1);
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
-  const [quotationData, setQuotationData] = useState(quotationDataResult);
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -31,7 +28,6 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
       <PaymentMethodModal
         viewSelectPaymentModal={viewSelectPaymentModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
-        setSelectedPaymentMethod={setSelectedPaymentMethod}
       />
 
       <PaymentSuccesModal
@@ -42,22 +38,12 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
       <BookingMap decodedPolyline={decodedPolyline} />
 
       <View style={styles.card}>
-        <BookingDistanceTime quotationData={quotationData} />
-        <View style={styles.divider} />
+        <BookingDistanceTime quotationData={quotationDataResult} />
 
-        <BookingSelectVehicle
-          data={quotationData}
-          setSelectedVehicle={setSelectedVehicle}
-          selectedVehicle={selectedVehicle}
-          navigation={navigation}
-        />
+        <BookingSelectVehicle data={quotationDataResult} navigation={navigation} />
 
-        <View style={styles.divider} />
+        <BookingSelectPaymentMethod setViewSelectPaymentModal={setViewSelectPaymentModal} />
 
-        <BookingSelectPaymentMethod
-          setViewSelectPaymentModal={setViewSelectPaymentModal}
-          selectedPaymentMethod={selectedPaymentMethod}
-        />
         <BookingConfirmButton SheetManager={SheetManager} />
       </View>
     </View>
@@ -84,12 +70,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
-  },
-  divider: {
-    borderBottomWidth: 2,
-    borderBottomColor: constants.COLOR.LIGHT,
-    marginVertical: 16,
-    marginHorizontal: -16,
   },
   iconDimensions: {
     width: 10,

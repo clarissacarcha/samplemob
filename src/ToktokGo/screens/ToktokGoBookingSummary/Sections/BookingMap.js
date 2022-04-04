@@ -36,10 +36,10 @@ export const BookingMap = ({decodedPolyline}) => {
         coordinates,
         {
           edgePadding: {
-            right: 20,
-            bottom: 20,
-            left: 20,
-            top: 20,
+            right: 100,
+            bottom: 100,
+            left: 100,
+            top: 100,
           },
         },
         3000, // Animation duration in milliseconds.
@@ -51,7 +51,7 @@ export const BookingMap = ({decodedPolyline}) => {
     <MapView
       ref={mapRef}
       provider={PROVIDER_GOOGLE}
-      style={{height: '60%', width: '100%'}}
+      style={{height: '40%', width: '100%'}}
       initialRegion={INITIAL_REGION}>
       <Marker
         key={key => {

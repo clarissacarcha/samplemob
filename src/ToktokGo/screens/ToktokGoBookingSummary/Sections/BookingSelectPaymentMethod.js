@@ -1,13 +1,15 @@
 import React from 'react';
 import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
+import {useSelector} from 'react-redux';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 import WalletIcon from '../../../../assets/images/Wallet.png';
 import CashIcon from '../../../../assets/images/CashIcon.png';
 import WarningIcon from '../../../../assets/icons/Warning.png';
 
-export const BookingSelectPaymentMethod = ({selectedPaymentMethod, setViewSelectPaymentModal}) => {
+export const BookingSelectPaymentMethod = ({setViewSelectPaymentModal}) => {
+  const {selectedPaymentMethod} = useSelector(state => state.toktokGo);
   return (
     <>
       <View style={styles.container}>
@@ -22,7 +24,7 @@ export const BookingSelectPaymentMethod = ({selectedPaymentMethod, setViewSelect
       </View>
 
       {/*---Todo: add condition here---*/}
-      {selectedPaymentMethod == 1 && (
+      {selectedPaymentMethod == '1' && (
         <>
           <View style={styles.container}>
             <View style={styles.elementWrapper}>
@@ -62,7 +64,7 @@ export const BookingSelectPaymentMethod = ({selectedPaymentMethod, setViewSelect
       )}
 
       {/*---Todo: add condition here---*/}
-      {selectedPaymentMethod == 2 && (
+      {selectedPaymentMethod == '2' && (
         <View style={styles.container}>
           <View style={styles.elementWrapper}>
             <Image source={CashIcon} resizeMode={'contain'} style={styles.walletIconStyle} />

@@ -5,13 +5,7 @@ import CONSTANTS from '../../../common/res/constants';
 import {Header, VehicleCard} from '../../components';
 
 const ToktokGoBookingVehicle = ({navigation, route}) => {
-  const {data, selectedVehicle, setSelectedVehicle} = route.params;
-
-  const [seeAllSelectedVehicle, setseeAllSelectedVehicle] = useState(selectedVehicle);
-
-  useEffect(() => {
-    setSelectedVehicle(seeAllSelectedVehicle);
-  }, [seeAllSelectedVehicle]);
+  const {data} = route.params;
 
   return (
     <View style={{flex: 1}}>
@@ -24,13 +18,7 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
           const lastItem = index == Data.frequentlyUsed.length - 1 ? true : false;
           return (
             <View style={{marginHorizontal: 16}}>
-              <VehicleCard
-                type={'isFromSeeAll'}
-                data={item}
-                selectedVehicle={seeAllSelectedVehicle}
-                lastItem={lastItem}
-                setSelectedVehicle={setseeAllSelectedVehicle}
-              />
+              <VehicleCard type={'isFromSeeAll'} data={item} lastItem={lastItem} />
             </View>
           );
         }}

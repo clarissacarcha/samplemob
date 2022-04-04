@@ -5,7 +5,7 @@ import CONSTANTS from '../../../../common/res/constants';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 
-export const BookingSelectVehicle = ({navigation, data, setSelectedVehicle, selectedVehicle}) => {
+export const BookingSelectVehicle = ({navigation, data}) => {
   return (
     <>
       <View style={styles.container}>
@@ -14,23 +14,17 @@ export const BookingSelectVehicle = ({navigation, data, setSelectedVehicle, sele
         </View>
 
         <TouchableOpacity
-          onPress={() => navigation.push('ToktokGoBookingVehicle', {data, selectedVehicle, setSelectedVehicle})}
+          onPress={() => navigation.push('ToktokGoBookingVehicle', {data})}
           style={styles.elementWrapper}>
           <Text style={styles.seeAlltextStyle}>See All</Text>
           <Image source={ArrowRightIcon} resizeMode={'contain'} style={styles.arrowIconStyle} />
         </TouchableOpacity>
       </View>
 
-      <VehicleCard
-        data={data.vehicleTypeRates?.[0]}
-        selectedVehicle={selectedVehicle}
-        setSelectedVehicle={setSelectedVehicle}
-      />
-      <VehicleCard
-        data={data.vehicleTypeRates?.[1]}
-        selectedVehicle={selectedVehicle}
-        setSelectedVehicle={setSelectedVehicle}
-      />
+      <VehicleCard data={data.vehicleTypeRates?.[0]} />
+      <VehicleCard data={data.vehicleTypeRates?.[1]} />
+
+      <View style={styles.divider} />
     </>
   );
 };
@@ -68,5 +62,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
     borderWidth: 1,
     borderColor: CONSTANTS.COLOR.ORANGE,
+  },
+  divider: {
+    borderBottomWidth: 2,
+    borderBottomColor: CONSTANTS.COLOR.LIGHT,
+    marginBottom: 16,
+    marginHorizontal: -16,
   },
 });
