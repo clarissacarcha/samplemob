@@ -38,7 +38,7 @@ export const HeaderTabs = (props) => {
     if(tabName.length > 15){ setHas25Chars(true) }
     return (
       <TouchableOpacity onPress={() => setActiveTab(item)}>
-        <View  style={[{ width: itemTabWidth, height: has25Chars ? moderateScale(65) : moderateScale(46), paddingHorizontal: moderateScale(10), justifyContent: "center" }]}>
+        <View  style={[styles.textContainer, { width: itemTabWidth }, has25Chars && { height: moderateScale(65) }]}>
           <Text style={[styles.tabText, { color: activeTab?.id == item?.id ? "#F6841F" : "#707070"} ]}>
             { tabName }
           </Text>
@@ -128,5 +128,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+  },
+  textContainer: {
+    paddingHorizontal: moderateScale(10),
+    justifyContent: "center" 
   }
 });
