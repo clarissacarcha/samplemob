@@ -177,6 +177,7 @@ export const GET_PRODUCT_DETAILS = gql`
 			refComDiscountRate
 			refCom
 			soldCount
+			contSellingIsset
     	images {
       	arrangement
       	filename

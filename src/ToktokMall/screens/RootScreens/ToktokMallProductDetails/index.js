@@ -179,7 +179,8 @@ const Component =  ({
         setRelevantProducts(response.getProductDetails.relevantProducts)
         setPromotions(response.getProductDetails.promotions)
         setIsFetching(false)
-        if(response.getProductDetails.noOfStocks <= 0) {
+        if(response.getProductDetails.noOfStocks <= 0 &&
+          response.getProductDetails.contSellingIsset == 0) {
           setisOutOfStock(true)
           dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL', payload: {
             action: {
