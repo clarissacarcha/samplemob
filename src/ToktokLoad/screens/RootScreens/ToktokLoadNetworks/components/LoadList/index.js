@@ -205,7 +205,7 @@ export const LoadList = memo((props) => {
 
     const imageSrc = search ? empty_search : empty_load_item;
     const label = search ? "No Results Found" : "No Load Item";
-    const message = search ? "Try to search something similar" : "No load item available as of the moment.";
+    const message = search ? "Try to search something similar." : "No load item available as of the moment.";
     
     return (
       <View style={styles.emptyContainer}>
@@ -298,13 +298,15 @@ export const LoadList = memo((props) => {
         </>
       )}
     </ScrollView>
-    <View style={{ padding: moderateScale(16) }}>
-      <OrangeButton
-        disabled={Object.keys(selectedLoad).length == 0}
-        label='Next'
-        onPress={() => onPressNext()}
-      />
-    </View>
+    { loads.length > 0 && (
+      <View style={{ padding: moderateScale(16) }}>
+        <OrangeButton
+          disabled={Object.keys(selectedLoad).length == 0}
+          label='Next'
+          onPress={() => onPressNext()}
+        />
+      </View>
+    )}
     </>
   );
 });

@@ -176,7 +176,7 @@ const MainComponent = ({navigation,route})=> {
     if(action == 'refresh'){
       clearStates();
     }
-    getFavoriteLoads();
+    search ? processSearch(search) : getFavoriteLoads();
     postCheckDisabledLoadItems();
   })
     
@@ -260,7 +260,7 @@ const MainComponent = ({navigation,route})=> {
 
     const imageSrc = hasSearch ? empty_search : empty_favorite;
     const label = hasSearch ? "No Results Found" : "You don’t have favorites yet";
-    const message = hasSearch ? "Try to search something similar" : "Check our products and add them to your favorites!";
+    const message = hasSearch ? "Try to search something similar." : "Check our products and add them to your favorites!";
     return (
       <View style={styles.container}>
         <EmptyList imageSrc={imageSrc} label={label} message={message} />
@@ -292,13 +292,15 @@ const MainComponent = ({navigation,route})=> {
         }}
       />
       { displayFavorites }
-      <View style={{ padding: moderateScale(16) }}>
-        <OrangeButton
-          disabled={!(selectedLoad && Object.keys(selectedLoad).length > 0) || !mobileNumber || mobileErrorMessage}
-          label='Next'
-          onPress={onPressNext}
-        />
-      </View>
+      {favorites.length > 0 && (
+        <View style={{ padding: moderateScale(16) }}>
+          <OrangeButton
+            disabled={!(selectedLoad && Object.keys(selectedLoad).length > 0) || !mobileNumber || mobileErrorMessage}
+            label='Next'
+            onPress={onPressNext}
+          />
+        </View>
+      )}
     </View>
   );
 }

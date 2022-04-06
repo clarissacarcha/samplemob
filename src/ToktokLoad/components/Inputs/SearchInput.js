@@ -2,7 +2,6 @@ import React , {useState , useEffect} from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Platform, FlatList, ActivityIndicator, Image, Keyboard} from 'react-native'
 import { sortBy } from 'lodash'
 import { Separator } from 'toktokbills/components'
-import { search_ic } from 'toktokbills/assets/icons'
 import { HeaderBack , HeaderTitle } from 'src/revamp'
 import { VectorIcon , ICON_SET } from 'src/revamp';
 import { moderateScale } from 'toktokbills/helper'
@@ -14,8 +13,8 @@ export const SearchInput = ({onClear , search = "", onChangeText, placeholder, c
 
   return (
     <View style={[ styles.searchField, containerStyle ]}>
-      <View style={[ styles.inputContainer, {flexDirection: "row"} ]}>
-        <Image style={styles.icon} resizeMode="contain" source={search_ic}/>
+      <View style={[ styles.inputContainer ]}>
+        <VectorIcon iconSet={ICON_SET.Fontisto} color={COLOR.DARK} name="search" color={COLOR.ORANGE} size={moderateScale(15)} />
         <TextInput 
           value={search}
           style={styles.input}
@@ -26,8 +25,8 @@ export const SearchInput = ({onClear , search = "", onChangeText, placeholder, c
         />
         {
           search != "" && (
-            <TouchableOpacity onPress={onClear} hitSlop={{top: 20,right: 20,bottom: 20,left: 20}} style={{...styles.icon,justifyContent:"flex-end",alignItems:"flex-end"}}>
-              <VectorIcon iconSet={ICON_SET.FontAwesome5} color={COLOR.DARK} name="times"/>
+            <TouchableOpacity onPress={onClear} hitSlop={{top: 20,right: 20,bottom: 20,left: 20}} style={styles.closeBtn}>
+              <VectorIcon iconSet={ICON_SET.Ionicon} color={COLOR.DARK} name="md-close" size={moderateScale(20)}/>
             </TouchableOpacity>
           )
         }
@@ -59,7 +58,9 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     borderRadius: 5,
     backgroundColor:"#F7F7FA",
-    fontFamily: FONT.REGULAR
+    fontFamily: FONT.REGULAR,
+    flexDirection: "row",
+    alignItems: "center"
   },
   input: {
     fontSize: FONT_SIZE.M,
@@ -74,5 +75,8 @@ const styles = StyleSheet.create({
     width: moderateScale(20),
     alignSelf: "center",
     tintColor: "#F6841F"
+  },
+  closeBtn: {
+   paddingLeft: moderateScale(10)
   }
 })
