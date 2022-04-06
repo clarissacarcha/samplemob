@@ -11,6 +11,7 @@ import {
     CashInDragonPay,
     CashOut,
     CashOutOtherBank,
+    MerchantPayment,
     SendMoney
 } from "./Components"
 
@@ -102,11 +103,11 @@ const RenderFundTransferReminder = ({
     )
 }
 
-const RenderOtherServieReminder = ({
+const RenderOtherServiceReminder = ({
     event
 })=> {
 
-    if(event == "Send Money"){
+    if(event == "Send Money" || event == "merchantPayment"){
         return (
             <>
             <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start",marginTop:5}}>
@@ -166,6 +167,8 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                 return <SendMoney data={data}/>
             case "Fund Transfer":
                 return <CashOutOtherBank data={data}/>
+            case "merchantPayment":
+                return <MerchantPayment data={data}/>
             default:
                 return
         }
@@ -183,7 +186,7 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                         fundTransferType={data.fundTransferType}
                         event={event}
                     />
-                   : <RenderOtherServieReminder
+                   : <RenderOtherServiceReminder
                         event={event}
                    /> 
               }
