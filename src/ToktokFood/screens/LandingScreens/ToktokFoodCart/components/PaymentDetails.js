@@ -35,6 +35,20 @@ const PaymentDetails = ({deliveryFee, refreshing, orderType, loadingShipping}) =
         : false
       : totalAmount - deliveryFee > toktokWallet?.balance;
 
+  const hasBalance = () => {
+    let disabled = false;
+    if (paymentMethod === 'TOKTOKWALLET') {
+      if (orderType === 'Delivery') {
+        disabled = totalAmount > toktokWallet?.balance;
+      } else {
+        disabled = totalAmount - deliveryFee > toktokWallet?.balance;
+      }
+    } else {
+      disabled = false;
+    }
+    return disabled;
+  };
+
   const [getMyAccount, {loading, error}] = useLazyQuery(GET_MY_ACCOUNT, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -241,7 +255,7 @@ const PaymentDetails = ({deliveryFee, refreshing, orderType, loadingShipping}) =
                 </TouchableOpacity>
               )}
             </View>
-            {isDisabled && (
+            {hasBalance() && (
               <TouchableOpacity activeOpacity={0.9} onPress={() => onToktokWalletCashInNavigate()}>
                 <Text
                   style={{
