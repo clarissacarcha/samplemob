@@ -49,7 +49,11 @@ export const ToktokWalletMerchantPaymentConfirm = ({
                             >
                                     <View style={styles.merchantInfo}>
                                       <View style={styles.merchantLogoView}>
-                                            <Image source={tokwaLogo} style={styles.merchantLogo} resizeMode="contain"/>
+                                          {
+                                              merchant.logo
+                                              ?< Image source={{uri: merchant.logo}} style={styles.merchantLogo} resizeMode="contain"/>
+                                              : <Image source={tokwaLogo} style={styles.merchantLogo} resizeMode="contain"/>
+                                          }
                                       </View>
                                       <View style={{marginTop: 10,alignItems:"center"}}>
                                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>{merchant.merchantName} {branch.branchName}</Text>
