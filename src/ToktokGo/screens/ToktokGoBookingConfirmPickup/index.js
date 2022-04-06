@@ -16,7 +16,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const dispatch = useDispatch();
   const dropDownRef = useRef(null);
   const {destination, origin} = useSelector(state => state.toktokGo);
-
+  console.log('DESTINATION: ', destination, 'ORIGIN: ', origin);
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
@@ -43,11 +43,11 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       },
     },
     onCompleted: response => {
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_ROUTE', payload: response.getQuotation.route});
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ROUTE', payload: response.getQuotation.quotation.route});
       navigation.push('ToktokGoBookingSummary', {
         popTo: popTo + 1,
-        quotationDataResult: response.getQuotation,
-        decodedPolyline: decodeLegsPolyline(response.getQuotation.route.legs),
+        quotationDataResult: response.getQuotation.quotation,
+        decodedPolyline: decodeLegsPolyline(response.getQuotation.quotation.route.legs),
       });
     },
     onError: error => console.log('error', error),

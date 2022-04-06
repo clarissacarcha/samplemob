@@ -3,41 +3,45 @@ import gql from 'graphql-tag';
 export const GET_QUOTATION = gql`
   query getQuotation($input: GetQuotationInput!) {
     getQuotation(input: $input) {
-      route {
-        distance {
-          kilometer
-        }
-        duration {
-          minute
-        }
-        bounds {
-          northeast {
-            latitude
-            longitude
+      quotation {
+        route {
+          hash
+          distance {
+            kilometer
           }
-          southwest {
-            latitude
-            longitude
+          duration {
+            minute
           }
-        }
-        legs {
-          steps {
-            polyline {
-              points
+          bounds {
+            northeast {
+              latitude
+              longitude
+            }
+            southwest {
+              latitude
+              longitude
+            }
+          }
+          legs {
+            steps {
+              polyline {
+                points
+              }
             }
           }
         }
-      }
-      vehicleTypeRates {
-        vehicleType {
-          id
-          name
-          phrase
-        }
-        rate {
-          amount
-          flatRate
-          mileageFee
+        vehicleTypeRates {
+          hash
+          vehicleType {
+            id
+            name
+            phrase
+          }
+          rate {
+            amount
+            flatRate
+            mileageFee
+          }
         }
       }
     }
