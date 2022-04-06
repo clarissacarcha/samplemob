@@ -3,10 +3,9 @@ import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions} from 'react
 import CONSTANTS from '../../common/res/constants';
 import {numberFormat} from '../../helper';
 import {useDispatch, useSelector} from 'react-redux';
-import SedanIMG from '../../assets/images/Sedan.png';
-import SuvIMG from '../../assets/images/SUV.png';
-import MpvIMG from '../../assets/images/MPV2.png';
-import VanIMG from '../../assets/images/Van.png';
+import SedanIMG from '../../assets/images/vehicleTypes/Sedan.png';
+import SmallMpvIMG from '../../assets/images/vehicleTypes/SmallMPV.png';
+import LargeMpvIMG from '../../assets/images/vehicleTypes/LargeMPV.png';
 
 const ImageWidth = (Dimensions.get('window').width - 230) / 2;
 
@@ -16,16 +15,13 @@ export const VehicleCard = ({type, data}) => {
   const render_image = type => {
     switch (type) {
       case '1': {
-        return null;
-      }
-      case '2': {
         return SedanIMG;
       }
-      case '3': {
-        return MpvIMG;
+      case '2': {
+        return SmallMpvIMG;
       }
-      case '4': {
-        return VanIMG;
+      case '3': {
+        return LargeMpvIMG;
       }
     }
   };
