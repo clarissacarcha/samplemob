@@ -1,4 +1,5 @@
 export * from './ToktokMallAddresses';
+export * from './ToktokMallActivities';
 export * from './ToktokMallCheckout';
 export * from './ToktokMallMyOrders';
 export * from './ToktokMallNotificationsx';
