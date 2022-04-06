@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect} from 'react';
 import {View, StyleSheet, Image, Text} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
@@ -15,15 +15,22 @@ export const Pickup = ({onDragEndMarker}) => {
     longitudeDelta: 10.145791545510278,
   };
 
-  const ORIGIN = {
-    latitude: origin.place.location.latitude,
-    longitude: origin.place.location.longitude,
-  };
-
-  const TO = {
-    latitude: 13.283971976125885,
-    longitude: 123.67090702056886,
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      mapRef.current.fitToCoordinates(
+        [origin.place.location],
+        {
+          edgePadding: {
+            right: 100,
+            bottom: 100,
+            left: 100,
+            top: 100,
+          },
+        },
+        3000, // Animation duration in milliseconds.
+      );
+    }, 1000);
+  }, [origin.place.location]);
 
   return (
     <MapView
@@ -35,7 +42,7 @@ export const Pickup = ({onDragEndMarker}) => {
         key={key => {
           1;
         }}
-        coordinate={ORIGIN}
+        coordinate={origin.place.location}
         draggable
         onDragEnd={e => {
           onDragEndMarker(e.nativeEvent.coordinate);

@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect} from 'react';
 import {View, StyleSheet, Image, Text} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
@@ -6,7 +6,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
 
 export const DestinationMap = ({onDragEndMarker}) => {
-  const {destination} = useSelector(state => state.toktokGo);
+  const {destination, origin} = useSelector(state => state.toktokGo);
   const mapRef = useRef();
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
@@ -15,10 +15,22 @@ export const DestinationMap = ({onDragEndMarker}) => {
     longitudeDelta: 10.145791545510278,
   };
 
-  const DESTINATION = {
-    latitude: destination.place.location.latitude == null ? 13.283971976125885 : destination.place.location.latitude,
-    longitude: destination.place.location.longitude == null ? 123.67090702056886 : destination.place.location.longitude,
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      mapRef.current.fitToCoordinates(
+        [destination?.place?.location?.latitude ? destination.place.location : origin.place.location],
+        {
+          edgePadding: {
+            right: 100,
+            bottom: 100,
+            left: 100,
+            top: 100,
+          },
+        },
+        3000, // Animation duration in milliseconds.
+      );
+    }, 1000);
+  }, [destination.place.location]);
 
   return (
     <MapView
@@ -30,7 +42,7 @@ export const DestinationMap = ({onDragEndMarker}) => {
         key={key => {
           1;
         }}
-        coordinate={DESTINATION}
+        coordinate={destination?.place?.location?.latitude ? destination.place.location : origin.place.location}
         draggable
         onDragEnd={e => {
           onDragEndMarker(e.nativeEvent.coordinate);
