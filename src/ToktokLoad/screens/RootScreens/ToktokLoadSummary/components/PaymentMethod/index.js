@@ -37,16 +37,13 @@ export const PaymentMethod = ({ loadDetails, onCashIn }) => {
   }
  
   const displayCashIn = () => {
-    if(parseFloat(totalAmount) > parseFloat(tokwaBalance)) {
-      return (
-        <View style={styles.cashinContainer}>
-          <TouchableOpacity style={styles.cashinBtn} onPress={onPressTopUp}>
-            <Text style={styles.cashinText}>Cash In</Text>
-          </TouchableOpacity>
-        </View>
-      )
-    }
-    return
+    return (
+      <View style={styles.cashinContainer}>
+        <TouchableOpacity style={styles.cashinBtn} onPress={onPressTopUp}>
+          <Text style={styles.cashinText}>Cash In</Text>
+        </TouchableOpacity>
+      </View>
+    )
   }
 
   const displayNoToktokWalletAccount = () => {
@@ -173,7 +170,7 @@ const styles = StyleSheet.create({
   },
   cashinText: {
     color: "#F6841F",
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.XS,
     textAlign: "center"
   },
   createAccount: {
@@ -195,7 +192,7 @@ const styles = StyleSheet.create({
   cashinBtn: {
     borderColor: "#F6841F",
     borderWidth: 1,
-    borderRadius: 2,
+    borderRadius: 5,
     paddingHorizontal: moderateScale(10),
     paddingVertical: moderateScale(5)
   },
