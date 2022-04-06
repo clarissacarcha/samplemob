@@ -59,34 +59,66 @@ const Item = ({data}) => {
 
   return (
     <>
-      <TouchableOpacity 
-        activeOpacity={0.5} 
+      <TouchableOpacity
+        activeOpacity={0.5}
         onPress={() => {
-          navigation.navigate("ToktokMallProductDetails", data)
-          , console.log(data)
-        }} 
+          navigation.navigate('ToktokMallProductDetails', data), console.log(data);
+        }}
         style={{
-          flex: 2, 
-          paddingBottom: 4, 
-          marginHorizontal: 2, 
-          alignItems: 'center', 
-          backgroundColor: '#fff', 
-          borderRadius: 5
+          flex: 2,
+          paddingBottom: 4,
+          marginHorizontal: 2,
+          alignItems: 'center',
+          backgroundColor: '#fff',
+          borderRadius: 5,
         }}>
-        {data?.discountRate != "" && 
-          <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
-            <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{data?.discountRate}</Text>
-          </View>}
+        {data?.discountRate != '' && (
+          <View
+            style={{position: 'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
+            <Text
+              style={{
+                fontSize: 8,
+                paddingHorizontal: 4,
+                paddingLeft: 8,
+                paddingTop: 1,
+                paddingBottom: 3,
+                color: '#fff',
+                fontFamily: FONT.BOLD,
+              }}>
+              {data?.discountRate}
+            </Text>
+          </View>
+        )}
         <View style={{height: 4}}></View>
-        <Image source={getImageSource(data?.images)} style={{width: 100, height: 100, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} />
+        <Image
+          source={getImageSource(data?.images)}
+          style={{width: 100, height: 100, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}}
+        />
+        <Text
+          style={{fontSize: 13, fontWeight: '500', paddingVertical: 5, width: 90}}
+          numberOfLines={1}
+          ellipsizeMode="tail">
+          {data?.itemname}
+        </Text>
         <View style={{height: 2}}></View>
-        <Text style={{fontSize: 14, fontWeight: '600', color: "#F6841F", alignSelf: 'flex-start', paddingHorizontal: 5}}><Price amount={data?.price} /></Text>
+        <Text
+          style={{fontSize: 14, fontWeight: '600', color: '#F6841F', alignSelf: 'flex-start', paddingHorizontal: 5}}>
+          <Price amount={data?.price} />
+        </Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <View style={{flex: 2}}>
-						{data?.compareAtPrice != "0.00" ? 
-						<Text style={{fontSize: 10, textDecorationLine: 'line-through', alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}>
-							<Price amount={data?.compareAtPrice} />
-						</Text> : null}
+            {data?.compareAtPrice != '0.00' ? (
+              <Text
+                style={{
+                  fontSize: 10,
+                  textDecorationLine: 'line-through',
+                  alignSelf: 'flex-start',
+                  paddingHorizontal: 5,
+                  color: '#9E9E9E',
+                }}>
+                <Price amount={data?.compareAtPrice} />
+              </Text>
+            ) : null}
             {/* {data?.compareAtPrice == "0.00" && data?.otherinfo ?
 						<Text style={{fontSize: 8, alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}>
 							{truncateString(data?.otherinfo, 25)}
@@ -96,10 +128,15 @@ const Item = ({data}) => {
             <Text style={{fontSize: 9.5, alignSelf: 'center', color: "#FDBA1C"}}>{data?.discountRate}</Text>
           </View> */}
         </View>
-        {data.refComDiscountRate && data.refComDiscountRate != "" ? <RefComDiscountRate value={data.refComDiscountRate} w="80%" /> : null}        
+        {data.refComDiscountRate && data.refComDiscountRate != '' ? (
+          <>
+            <RefComDiscountRate value={data.refComDiscountRate} w="80%" />
+            <View style={{height: 5}}></View>
+          </>
+        ) : null}
       </TouchableOpacity>
     </>
-  )
+  );
 }
 
 const Empty = ({data}) => {

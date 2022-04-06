@@ -5,10 +5,13 @@ import { AlertOverlay} from '../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 import {placeholder} from '../../../../assets';
-import {ArrayCopy, Price} from '../../../../helpers';
+import {ApiCall, ArrayCopy, Price} from '../../../../helpers';
 import AIcons from 'react-native-vector-icons/dist/Entypo'
 
 import { CartContext } from '../ContextProvider';
+import { EventRegister } from 'react-native-event-listeners';
+import { debounce } from 'lodash';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const Item = ({
   forceSelect,
@@ -30,6 +33,7 @@ export const Item = ({
   const [selected, setSelected] = useState((data.product.enabled === 1 && data.product.noOfStocks !== 0)? state : false)
   const [qty, setQty] = useState(1)
   const [product, setproduct] = useState({})
+  const [shopId, setShopId] = useState()
 
   useEffect(() => {
     getRealtimeItemQuantity()
@@ -39,6 +43,7 @@ export const Item = ({
     // setQty(data.quantity)
     getRealtimeItemQuantity()
     setQty(data.quantity)
+    setShopId(data.shopid)
     setproduct(data.product)    
   },[data])
 
@@ -122,6 +127,26 @@ export const Item = ({
       }
     }
   }
+
+  const updateItemQuantityOnCart = async (qty) => {
+    try {
+      const ToktokMallUser = await AsyncStorage.getItem("ToktokMallUser")
+      const user = JSON.parse(ToktokMallUser)
+      let variables = {
+        userid: user.userId,
+        shopid: shopId,
+        branchid: 0,
+        productid: product.Id,
+        quantity: qty
+      }
+      const req = await ApiCall("insert_cart", variables, true)
+      if(req.responseData && req.responseData.success == 1){
+        EventRegister.emit('refreshToktokmallShoppingCart')
+      }
+    }catch(error){
+      console.error('updateItemQuantityOnCart', error);
+    }
+  }
   
   return (
     <View>          
@@ -199,6 +224,7 @@ export const Item = ({
                         onChangeQuantity(qty - 1, product?.Id)
                         setQty(qty - 1)
                         updateRealtimeItemQuantity(qty - 1)
+                        debounce(() => updateItemQuantityOnCart(qty - 1), 500)();
                       // }
                     }}
                   >
@@ -224,6 +250,7 @@ export const Item = ({
                         onChangeQuantity(qty + 1, product?.Id)
                         setQty(qty + 1)
                         updateRealtimeItemQuantity(qty + 1)
+                        debounce(() => updateItemQuantityOnCart(qty + 1), 500)();
                       // }
                     }}
                   >
