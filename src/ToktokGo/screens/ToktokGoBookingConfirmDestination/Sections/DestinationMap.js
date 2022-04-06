@@ -3,8 +3,10 @@ import {View, StyleSheet, Image, Text} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import {useSelector} from 'react-redux';
 
-export const DestinationMap = ({}) => {
+export const DestinationMap = ({onDragEndMarker}) => {
+  const {destination} = useSelector(state => state.toktokGo);
   const mapRef = useRef();
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
@@ -13,15 +15,11 @@ export const DestinationMap = ({}) => {
     longitudeDelta: 10.145791545510278,
   };
 
-  const FROM = {
-    latitude: 13.357554369495743,
-    longitude: 123.71824264526369,
+  const DESTINATION = {
+    latitude: destination.place.location.latitude == null ? 13.283971976125885 : destination.place.location.latitude,
+    longitude: destination.place.location.longitude == null ? 123.67090702056886 : destination.place.location.longitude,
   };
 
-  const TO = {
-    latitude: 13.283971976125885,
-    longitude: 123.67090702056886,
-  };
   return (
     <MapView
       ref={mapRef}
@@ -32,7 +30,11 @@ export const DestinationMap = ({}) => {
         key={key => {
           1;
         }}
-        coordinate={FROM}>
+        coordinate={DESTINATION}
+        draggable
+        onDragEnd={e => {
+          onDragEndMarker(e.nativeEvent.coordinate);
+        }}>
         <View style={{alignItems: 'center'}}>
           <FA5Icon name="map-marker-alt" size={20} color={CONSTANTS.COLOR.ORANGE} />
         </View>

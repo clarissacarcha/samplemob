@@ -69,9 +69,15 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
   };
 
   const onPressLocation = () => {
-    navigation.push('ToktokGoBookingConfirmPickup', {
-      popTo: popTo + 1,
-    });
+    if (selectedInput == 'D') {
+      navigation.push('ToktokGoBookingConfirmDestination', {
+        popTo: popTo + 1,
+      });
+    } else {
+      navigation.push('ToktokGoBookingConfirmPickup', {
+        popTo: popTo + 1,
+      });
+    }
   };
 
   const onSelectPlace = value => {
