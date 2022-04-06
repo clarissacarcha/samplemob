@@ -34,6 +34,7 @@ export const VariationBottomSheet = forwardRef(({
   const [originalPrice, setOriginalPrice] = useState(item?.compareAtPrice || 0)
   const [qty, setQty] = useState(1)
   const [variation, setVariation] = useState("")
+  const [isContinueSelling, setIsContinueSelling] = useState(item?.contSellingIsset)
   const [variationWithTypes, setVariationWithTypes] = useState({})
   const [variationArr, setVariationArr] = useState([])
   const [image, setImage] = useState(item?.images ? item?.images[0] : null)
@@ -70,6 +71,7 @@ export const VariationBottomSheet = forwardRef(({
     setStock(item?.noOfStocks)
     setItemPrice(item?.price)
     setOriginalPrice(item?.compareAtPrice)
+    setIsContinueSelling(item?.contSellingIsset)
     setQty(1)
     setProduct(item)
     onSelectVariation("")
@@ -93,56 +95,124 @@ export const VariationBottomSheet = forwardRef(({
   // }, [item, variationWithTypes]);
   // console.log(variation)
 
+  const RenderQuantity = () => {
+
+    const getValue = () => {
+      if(!isContinueSelling){
+        if(stock >= 1){
+          return qty
+        }else return 0
+      }else if(isContinueSelling){
+        return qty
+      }else {
+        return 0
+      }
+    }
+
+    const isMinusDisabled = () => {
+      if(!isContinueSelling && qty === 1 || !isContinueSelling && stock === 0) return true
+      else if(isContinueSelling == 1 && qty === 1) return true
+      else if(isContinueSelling == 1 && qty > 1) return false
+      else return false
+    }
+
+    const isPlusDisabled = () => {
+      if(!isContinueSelling && qty >= stock) return true
+    }
+
+    return (
+      <>
+        <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
+        <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 1}}>
+              <Text style={{fontFamily: FONT.BOLD, fontSize: 14}}>Quantity</Text>
+            </View>
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-end'}}>
+              <View style={{flex: 2}}></View>
+              <View style={{flex: 4, flexDirection: 'row'}}>
+                <TouchableOpacity disabled={isMinusDisabled()} onPress={() => {
+                  let increment = qty - 1
+                  if(increment > 0) {
+                    setQty(increment)
+                  }
+                }} style={{flex: 1.5, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 0.8, borderColor: "#F8F8F8"}}>
+                  <CustomIcon.FA5Icon name="minus" size={14} color={isMinusDisabled() ? "#9E9E9E":"#F6841F"} />
+                </TouchableOpacity>
+                <View style={{paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F8F8F8'}}>
+                  <Text style={{fontSize: 16}}>{getValue()}</Text>
+                </View>
+                <TouchableOpacity disabled={isPlusDisabled()} onPress={() => {
+                  let increment = qty + 1                 
+                  if(increment <= stock && isContinueSelling === 0){
+                    setQty(increment) 
+                  }else if(isContinueSelling === 1){
+                    setQty(increment) 
+                  }else{
+                    Toast.show("Not enought stocks")
+                  }
+                }} style={{flex: 1.5, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 0.8, borderColor: "#F8F8F8"}}>
+                  <CustomIcon.FA5Icon name="plus" size={14} color={isPlusDisabled() ? "#9E9E9E":"#F6841F"} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </>
+    )
+  }
+
   const RenderOptions = ({type, onBuyNow, onAddToCart}) => {
 
-    if(type == 1) //Add to Cart
+    if(type == 1){ //Add to Cart
       return (
         <>
           <View style={{flex: 2}} />
-          <TouchableOpacity disabled={stock === 0} onPress={() => {
+          <TouchableOpacity disabled={!isContinueSelling && stock === 0} onPress={() => {
             onAddToCart({qty, variation})
             setQty(1)
-            }} style={{flex: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: stock === 0 ? "#9E9E9E":"#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: 'white'}}>
-            <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: stock === 0 ? "#9E9E9E":"#F6841F"}}>Add to Cart</Text>
+            }} style={{flex: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: !isContinueSelling && stock === 0 ? "#9E9E9E":"#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: 'white'}}>
+            <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: !isContinueSelling && stock === 0 ? "#9E9E9E":"#F6841F"}}>Add to Cart</Text>
           </TouchableOpacity>
           <View style={{flex: 2}} />
         </>
       )
-    else if(type == 2) //Buy Now
+    } else if(type == 2){ //Buy Now
       return (
         <>
           <View style={{flex: 2}} />
-          <TouchableOpacity  disabled={stock === 0} onPress={() => {
+          <TouchableOpacity  disabled={!isContinueSelling && stock === 0} onPress={() => {
             onBuyNow({qty, variation, product})
             setQty(1)
-          }} style={{flex: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: stock === 0 ? "#9E9E9E":"#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: stock === 0 ? "#9E9E9E":"#F6841F"}}>
+          }} style={{flex: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: !isContinueSelling && stock === 0 ? "#9E9E9E":"#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: !isContinueSelling && stock === 0 ? "#9E9E9E":"#F6841F"}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: "#FFF"}}>Buy now</Text>
           </TouchableOpacity>
           <View style={{flex: 2}} />
         </>
       )
-    else
+    } else {
       return (
         <>
           <View style={{flex: 3}} />
-          <TouchableOpacity disabled={stock === 0}
+          <TouchableOpacity disabled={!isContinueSelling && stock === 0}
             onPress={() => {
               onAddToCart({qty, variation})
               setQty(1)
             }} 
             style={{flex: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: stock === 0 ? "#9E9E9E":"#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: 'white'}}>
-            <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: stock === 0 ? "#9E9E9E":"#F6841F"}}>Add to Cart</Text>
+            <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: !isContinueSelling && stock === 0 ? "#9E9E9E":"#F6841F"}}>Add to Cart</Text>
           </TouchableOpacity>
           <View style={{flex: 1}} />
-          <TouchableOpacity disabled={stock === 0} onPress={() => {
+          <TouchableOpacity disabled={!isContinueSelling && stock === 0} onPress={() => {
             onBuyNow({qty, variation})
             setQty(1)
-          }} style={{flex: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: stock === 0 ? "#9E9E9E":"#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: stock === 0 ? "#9E9E9E":"#F6841F"}}>
+          }} style={{flex: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: !isContinueSelling && stock === 0 ? "#9E9E9E":"#F6841F", paddingHorizontal: 20, paddingVertical: 12, borderRadius: 5, backgroundColor: !isContinueSelling && stock === 0 ? "#9E9E9E":"#F6841F"}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 14, color: "#FFF"}}>Buy now</Text>
           </TouchableOpacity>
           <View style={{flex: 3}} />
         </>
       )
+    }
   }
 
   const RenderVariation = ({variant, index}) => {
@@ -224,12 +294,12 @@ export const VariationBottomSheet = forwardRef(({
           <View style={{flex: 8, justifyContent: 'center'}}>
             <View style={{flexDirection: 'row'}}>
               <View style={{flex: 1.5}}></View>
-              <View style={{flex: 4}}>
+              <View style={{flex: 6}}>
                 <View style={{flexDirection:'row'}}>
                   <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={itemprice * qty} /></Text>
                   <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11, marginTop: 2.5, marginLeft: 8}}>{originalPrice == 0 ? "" : <Price amount={originalPrice*qty} />}</Text>                
                 </View>
-                <Text style={{color: "#9E9E9E", fontSize: 12, marginTop: 5}}>Stock: {stock}</Text>
+                <Text style={{color: "#9E9E9E", fontSize: 12, marginTop: 5}}>Stock: {isContinueSelling ? "pre-order" : stock}</Text>
               </View>
               <View style={{flex: 6, justifyContent: 'center'}}>
                 <Text style={{marginTop: 8}}></Text>
@@ -298,40 +368,7 @@ export const VariationBottomSheet = forwardRef(({
         </>
       }
 
-      <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
-      <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{flex: 1}}>
-            <Text style={{fontFamily: FONT.BOLD, fontSize: 14}}>Quantity</Text>
-          </View>
-          <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-end'}}>
-            <View style={{flex: 2}}></View>
-            <View style={{flex: 4, flexDirection: 'row'}}>
-              <TouchableOpacity disabled={qty === 1 || stock === 0} onPress={() => {
-                let increment = qty - 1
-                if(increment > 0) {
-                  setQty(increment)
-                }
-              }} style={{flex: 1.5, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 0.8, borderColor: "#F8F8F8"}}>
-                <CustomIcon.FA5Icon name="minus" size={14} color={qty === 1 || stock === 0 ? "#9E9E9E":"#F6841F"} />
-              </TouchableOpacity>
-              <View style={{paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F8F8F8'}}>
-                <Text style={{fontSize: 16}}>{stock >= 1 ? qty : 0}</Text>
-              </View>
-              <TouchableOpacity disabled={qty >= stock} onPress={() => {
-                let increment = qty + 1
-                if(increment <= stock){
-                  setQty(increment) 
-                }else{
-                  Toast.show("Not enought stocks")
-                }
-              }} style={{flex: 1.5, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 0.8, borderColor: "#F8F8F8"}}>
-                <CustomIcon.FA5Icon name="plus" size={14} color={qty >= stock ? "#9E9E9E":"#F6841F"} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
+      <RenderQuantity />
 
       {/* {item?.variantSummary && item?.variantSummary.length == 0 && <View style={{flex: 1, height: '15%'}} />} */}
 
@@ -363,5 +400,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: .2,
     borderColor: "silver",
     paddingHorizontal:12,
-  }
+  },
+
 });
