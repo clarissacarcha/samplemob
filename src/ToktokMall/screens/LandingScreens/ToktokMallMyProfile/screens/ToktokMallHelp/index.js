@@ -15,6 +15,7 @@ import CustomIcon from '../../../../../Components/Icons';
 import {AlertOverlay} from '../../../../../../components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
 import AIcons from 'react-native-vector-icons/dist/AntDesign'
+import {throttle, debounce} from 'lodash'
 
 export const ToktokMallHelp = ({navigation}) => {
   navigation.setOptions({
@@ -26,7 +27,9 @@ export const ToktokMallHelp = ({navigation}) => {
   return (
     <>
       <View style={styles.container}>
-        <TouchableOpacity  onPress = {() => {navigation.navigate('ToktokMallSecurity')}} style = {styles.row}>
+        <TouchableOpacity  onPress = {() => {
+          debounce(() => navigation.navigate('ToktokMallSecurity'))
+        }} style = {styles.row}>
           <Text style = {{fontFamily: FONT.REGULAR, fontSize: 14}}>Security and Privacy</Text>
           <AIcons 
             name = {'right'}
@@ -34,7 +37,9 @@ export const ToktokMallHelp = ({navigation}) => {
             size = {17}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress = {() => {navigation.navigate('ToktokMallTermsAndConditions')}} style = {styles.row}>
+        <TouchableOpacity onPress = {() => {
+          debounce(() => navigation.navigate('ToktokMallTermsAndConditions'))
+        }} style = {styles.row}>
           <Text style = {{fontFamily: FONT.REGULAR, fontSize: 14}}>Terms and Conditions</Text>
           <AIcons 
             name = {'right'}
@@ -42,7 +47,9 @@ export const ToktokMallHelp = ({navigation}) => {
             size = {17}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress = {() => {navigation.navigate('ToktokMallContactUs')}} style = {styles.row}>
+        <TouchableOpacity onPress = {() => {
+          debounce(() => navigation.navigate('ToktokMallContactUs'))
+        }} style = {styles.row}>
           <Text style = {{fontFamily: FONT.REGULAR, fontSize: 14}}>Contact Us</Text>
           <AIcons 
             name = {'right'}
