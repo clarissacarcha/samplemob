@@ -1,9 +1,12 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect} from 'react';
 import {View, StyleSheet, Image, Text} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-export const Pickup = ({}) => {
+import {useSelector} from 'react-redux';
+
+export const Pickup = ({onDragEndMarker}) => {
+  const {origin} = useSelector(state => state.toktokGo);
   const mapRef = useRef();
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
@@ -12,15 +15,23 @@ export const Pickup = ({}) => {
     longitudeDelta: 10.145791545510278,
   };
 
-  const FROM = {
-    latitude: 13.357554369495743,
-    longitude: 123.71824264526369,
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      mapRef.current.fitToCoordinates(
+        [origin.place.location],
+        {
+          edgePadding: {
+            right: 100,
+            bottom: 100,
+            left: 100,
+            top: 100,
+          },
+        },
+        3000, // Animation duration in milliseconds.
+      );
+    }, 1000);
+  }, [origin.place.location]);
 
-  const TO = {
-    latitude: 13.283971976125885,
-    longitude: 123.67090702056886,
-  };
   return (
     <MapView
       ref={mapRef}
@@ -31,7 +42,11 @@ export const Pickup = ({}) => {
         key={key => {
           1;
         }}
-        coordinate={FROM}>
+        coordinate={origin.place.location}
+        draggable
+        onDragEnd={e => {
+          onDragEndMarker(e.nativeEvent.coordinate);
+        }}>
         <View style={{alignItems: 'center'}}>
           <FA5Icon name="map-pin" size={18} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 2}} />
         </View>
