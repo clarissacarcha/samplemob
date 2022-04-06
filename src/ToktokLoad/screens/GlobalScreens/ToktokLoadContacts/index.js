@@ -87,7 +87,7 @@ export const ToktokLoadContacts = ({navigation, route}) => {
         <EmptyList
           imageSrc={empty_search}
           label="No Results Found"
-          message="Try to search something similar"
+          message="Try to search something similar."
         />
       </View>
       
@@ -162,13 +162,15 @@ export const ToktokLoadContacts = ({navigation, route}) => {
         ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={{ flexGrow: 1 }}
       />
-      <View style={{ padding: 16 }}>
-        <OrangeButton
-          onPress={setRecipient}
-          disabled={Object.keys(selectedContact).length === 0}
-          label="Next"
-        />
-      </View>
+      {(filteredData.length > 0 || !searchString) && (
+        <View style={{ padding: 16 }}>
+          <OrangeButton
+            onPress={setRecipient}
+            disabled={Object.keys(selectedContact).length === 0}
+            label="Next"
+          />
+        </View>
+      )}
     </View>
   );
 };
