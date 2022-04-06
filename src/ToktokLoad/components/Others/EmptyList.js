@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
     color: "#F6841F",
     fontSize: FONT_SIZE.XL,
     fontFamily: FONT.BOLD,
-    textAlign: "center"
+    textAlign: "center",
+    paddingTop: moderateScale(10)
   },
   message: {
     fontSize: FONT_SIZE.M,

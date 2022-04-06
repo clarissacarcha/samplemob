@@ -259,7 +259,7 @@ const MainComponent = ({navigation,route})=> {
     if(isMounted) return null
 
     const imageSrc = hasSearch ? empty_search : empty_favorite;
-    const label = hasSearch ? "No Results Found" : "You don’t have favorites yet";
+    const label = hasSearch ? "No Results Found" : "No Favorites";
     const message = hasSearch ? "Try to search something similar." : "Check our products and add them to your favorites!";
     return (
       <View style={styles.container}>
