@@ -61,12 +61,28 @@ const Component = ({
       // console.log('response', response.getMyCart[0].parsed.data[0].product)
       if(response.getMyCart){
         let count = 0;
-        response.getMyCart.parsed.map(({data}) => data.map(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0) && (count+=item.quantity)))
+        response.getMyCart.parsed.map(({data}) => {
+          data.map(item => {
+            if(item.product.enabled === 1 && item.product.noOfStocks !== 0){
+              count+=item.quantity
+            }else if(item.product.enabled === 1 && item.product.contSellingIsset === 1){
+              count+=item.quantity
+            }
+          })
+        })
         dispatch({ type: "TOKTOK_MALL_CART_COUNT", action: "set", payload: count})
         setMyCartData(response.getMyCart.parsed)
         setrawitems(response.getMyCart.raw)
         let total = 0
-        response.getMyCart.parsed.map(({data}) => data.map(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0) && total++))
+        response.getMyCart.parsed.map(({data}) => {
+          data.map(item => {
+            if(item.product.enabled === 1 && item.product.noOfStocks !== 0){
+              total++
+            }else if(item.product.enabled === 1 && item.product.contSellingIsset === 1){
+              total++
+            }
+          })
+        })
         settotalitems(total)
 
         if(response.getMyCart.total > 0){

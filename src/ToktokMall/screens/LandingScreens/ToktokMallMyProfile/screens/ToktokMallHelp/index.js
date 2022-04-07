@@ -28,7 +28,7 @@ export const ToktokMallHelp = ({navigation}) => {
     <>
       <View style={styles.container}>
         <TouchableOpacity  onPress = {() => {
-          debounce(() => navigation.navigate('ToktokMallSecurity'))
+          debounce(() => navigation.push('ToktokMallSecurity'))()
         }} style = {styles.row}>
           <Text style = {{fontFamily: FONT.REGULAR, fontSize: 14}}>Security and Privacy</Text>
           <AIcons 
@@ -38,7 +38,7 @@ export const ToktokMallHelp = ({navigation}) => {
           />
         </TouchableOpacity>
         <TouchableOpacity onPress = {() => {
-          debounce(() => navigation.navigate('ToktokMallTermsAndConditions'))
+          debounce(() => navigation.push('ToktokMallTermsAndConditions'))()
         }} style = {styles.row}>
           <Text style = {{fontFamily: FONT.REGULAR, fontSize: 14}}>Terms and Conditions</Text>
           <AIcons 
@@ -48,7 +48,7 @@ export const ToktokMallHelp = ({navigation}) => {
           />
         </TouchableOpacity>
         <TouchableOpacity onPress = {() => {
-          debounce(() => navigation.navigate('ToktokMallContactUs'))
+          debounce(() => navigation.push('ToktokMallContactUs'))()
         }} style = {styles.row}>
           <Text style = {{fontFamily: FONT.REGULAR, fontSize: 14}}>Contact Us</Text>
           <AIcons 

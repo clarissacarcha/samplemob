@@ -19,6 +19,7 @@ export const GET_MY_CART =  gql`
 					price
 					compareAtPrice
 					noOfStocks
+					contSellingIsset
 					img {
 						filename
 					}
@@ -45,6 +46,7 @@ export const GET_MY_CART =  gql`
 						price
 						compareAtPrice
 						noOfStocks
+						contSellingIsset
 						img {
 							filename
 						}
