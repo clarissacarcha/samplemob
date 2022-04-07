@@ -5,10 +5,13 @@ import { AlertOverlay} from '../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 import {placeholder} from '../../../../assets';
-import {ArrayCopy, Price} from '../../../../helpers';
+import {ApiCall, ArrayCopy, Price} from '../../../../helpers';
 import AIcons from 'react-native-vector-icons/dist/Entypo'
 
 import { CartContext } from '../ContextProvider';
+import { EventRegister } from 'react-native-event-listeners';
+import { debounce } from 'lodash';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const Item = ({
   forceSelect,
@@ -30,6 +33,7 @@ export const Item = ({
   const [selected, setSelected] = useState((data.product.enabled === 1 && data.product.noOfStocks !== 0)? state : false)
   const [qty, setQty] = useState(1)
   const [product, setproduct] = useState({})
+  const [shopId, setShopId] = useState()
 
   useEffect(() => {
     getRealtimeItemQuantity()
@@ -39,6 +43,7 @@ export const Item = ({
     // setQty(data.quantity)
     getRealtimeItemQuantity()
     setQty(data.quantity)
+    setShopId(data.shopid)
     setproduct(data.product)    
   },[data])
 
@@ -122,8 +127,6 @@ export const Item = ({
       }
     }
   }
-<<<<<<< Updated upstream
-=======
 
   const updateItemQuantityOnCart = async (qty) => {
     try {
@@ -200,7 +203,6 @@ export const Item = ({
       </>
     )
   }
->>>>>>> Stashed changes
   
   return (
     <View>          
@@ -265,60 +267,9 @@ export const Item = ({
                   <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data?.qty}</Text>
                 </View> */}
               </View>
-<<<<<<< Updated upstream
-              {product.enabled == 1 && product.noOfStocks !== 0 &&
-                <View style={{flexDirection: 'row', marginTop: 7, alignItems: 'center', height: 40}}>
-                  <Text style = {{fontFamily: FONT.REGULAR, fontSize: 12}}>Qty</Text>
-                  <TouchableOpacity 
-                    style = {{marginLeft: 10,  alignItems: 'center', justifyContent: 'center',  height: 25,width: 25,
-                      borderWidth: 1, borderColor: '#F8F8F8'
-                    }}
-                    disabled = {qty == 1}
-                    onPress = {() => {
-                      // if(selected){
-                        onChangeQuantity(qty - 1, product?.Id)
-                        setQty(qty - 1)
-                        updateRealtimeItemQuantity(qty - 1)
-                      // }
-                    }}
-                  >
-                    <AIcons
-                      name = {'minus'}
-                      size = {18}
-                      color = {qty == 1 ? '#D7D7D7':  COLOR.ORANGE}
-                    />
-                  </TouchableOpacity>
-                  <View 
-                    style = {{backgroundColor: '#F8F8F8', padding: 2, height: 25,width: 35, alignItems: 'center', justifyContent: 'center',
-                    borderWidth: 1, borderColor: '#F8F8F8'
-                  }}>
-                    <Text style={{fontSize: 12}}>{qty}</Text>
-                  </View>
-                  <TouchableOpacity
-                    style = {{alignItems: 'center', justifyContent: 'center',  height: 25,width: 25,
-                      borderWidth: 1, borderColor: '#F8F8F8'
-                    }}
-                    disabled={product.noOfStocks === qty || qty === 200}
-                    onPress = {() => {
-                      // if(selected){
-                        onChangeQuantity(qty + 1, product?.Id)
-                        setQty(qty + 1)
-                        updateRealtimeItemQuantity(qty + 1)
-                      // }
-                    }}
-                  >
-                  <AIcons
-                    name = {'plus'}
-                    size = {15}
-                    color = {qty == product.noOfStocks || qty === 200 ? '#D7D7D7':  COLOR.ORANGE}
-                  />
-                </TouchableOpacity>
-              </View>
-=======
 
               {/* {product.enabled == 1 && product.contSellingIsset === 0 && product.noOfStocks !== 0 &&
                 <RenderQuantity />
->>>>>>> Stashed changes
               }
 
               {product.enabled == 1 && product.contSellingIsset === 1 &&
