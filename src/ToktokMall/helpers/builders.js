@@ -89,7 +89,7 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 
 			items.push({
 				sys_shop: val.shop.id,
-				product_id: item.product.Id,
+				product_id: item.product.Id || item.id,
 				itemname: item.product.itemname,
 				quantity: item.qty,
 				// amount: parseFloat(item.amount),

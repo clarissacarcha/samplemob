@@ -140,9 +140,9 @@ export const Item = ({
         quantity: qty
       }
       const req = await ApiCall("insert_cart", variables, true)
-      if(req.responseData && req.responseData.success == 1){
-        EventRegister.emit('refreshToktokmallShoppingCart')
-      }
+      // if(req.responseData && req.responseData.success == 1){
+      //   EventRegister.emit('refreshToktokmallShoppingCart')
+      // }
     }catch(error){
       console.error('updateItemQuantityOnCart', error);
     }
