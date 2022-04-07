@@ -1,28 +1,48 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Image, FlatList, RefreshControl, Dimensions} from 'react-native';
-
+import {
+  View, 
+  Text, 
+  TouchableOpacity, 
+  Image, 
+  FlatList, 
+  RefreshControl, 
+  Dimensions, 
+  StyleSheet
+} from 'react-native';
+import { 
+  getRefComAccountType, 
+  Price 
+} from '../../../../helpers';
+import {
+  shopIcon,
+  emptyorders, 
+  carIcon 
+} from '../../../../assets';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import { GET_TOSHIP_ORDERS, GET_TOSHIP_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
-import {Loading} from '../../../../Components';
-import {placeholder, storeIcon, emptyorders} from '../../../../assets';
-import { getRefComAccountType, Price } from '../../../../helpers';
-import AsyncStorage from '@react-native-community/async-storage';
+import { GET_TOSHIP_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
+import { Loading } from '../../../../Components';
+import { Hairline } from '../../../../../components/widgets';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const Store = ({data}) => {
+const walletIcon = require('../../../../assets/images/tokwaicon.png');
+
+const Store = ({data, items}) => {
+  const itemLength = items.length;
+
   return (
     <>
-      <View style={{flexDirection: 'row', paddingHorizontal: 15, paddingVertical: 20}}>
-        <View style={{flex: 0}}>
-          <Image source={storeIcon} style={{width: 24, height: 24, resizeMode: 'stretch'}} />
+      <View style={styles.storeContainer}>
+        <View style={styles.storeLeftContainer}>
+          <Image source={shopIcon} style={styles.storeWalletImage} />
+          <Text style={styles.storeShopName}>{data?.shopname}</Text>
         </View>
-        <View style={{flex: 1, paddingHorizontal: 7.5, justifyContent: 'center'}}>
-          <Text style={{fontSize: 14}}>{data.shopname}</Text>
+        <View style={styles.storeItemContainer}>
+          <Text style={styles.storeItemText}>{itemLength > 1 ? `${itemLength} items` : `${itemLength} item`}</Text>
         </View>
       </View>
-      <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
     </>
   )
 }
@@ -30,111 +50,67 @@ const Store = ({data}) => {
 const Summary = ({data}) => {
   return (
     <>
-      <View style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
-        <View style={{flex: 1}}>
-          <Text style={{color: "#9E9E9E", fontSize: 12}}>Order #: {data?.referenceNum}</Text>
-          <Text style={{color: "#9E9E9E", fontSize: 12}}>Order Placed: {data?.orderPlaced} </Text>
+      <View style={styles.summaryContainer}>
+        <View style={styles.summarySubContainer}>
+          <Image source={walletIcon} style={styles.summaryWalletIcon} />
         </View>
-        <View styl={{flex: 1}}>
-          <Text style={{fontSize: 14}}>Order Total: <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={data?.orderTotal} /></Text></Text>
+        <View style={{...styles.summarySubContainer, alignItems: 'flex-end'}}>
+          <Text style={styles.summaryTotalText}>Total: <Text style={{fontSize: 13, color: "#F6841F", fontWeight: '600'}}><Price amount={data?.orderTotal} /></Text></Text>
         </View>
       </View>
-      <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
     </>
   )
 }
 
-const Item = ({data, fulldata}) => {
-
-  const navigation = useNavigation()
-  let product = data?.product
-
-  const getImageSource = (img) => {
-    if(img && typeof img == "object" && img.filename != null){
-      return {uri: img.filename}
-    }else {
-      return placeholder
-    }
-  }
+export const ToShipItem = ({fulldata, shop}) => {
+  const navigation = useNavigation();
+  const {
+    referenceNum,
+    orderPlaced,
+  } = fulldata;
 
   return (
     <>
-      <TouchableOpacity 
+      <TouchableOpacity
         onPress={() => {
           navigation.navigate("ToktokMallOrderDetails", {...fulldata, orderId: fulldata.id})
         }}
-        style={{flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 15}}
+        style={styles.renderItemButtonContainer}
       >
-        <View style={{flex: 2, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, borderRadius: 5}}>
-          <Image source={getImageSource(product?.image || product?.img)} style={{width: 55, height: 80, resizeMode: 'stretch', borderRadius: 5}} />
-        </View>
-        <View style={{flex: 8}}>
-          <View style={{flex: 1, justifyContent: 'center'}}>
-            <View>
-              <Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>{product?.name ? product?.name : product?.itemname}</Text>
+        <View style={styles.renderItemContainer}>
+          <View style={styles.renderItemSubContainer}>
+            <View style={styles.renderItemFirstContainer}>
+              <View style={styles.renderItemFCRight}>
+                <View style={styles.renderItemIDContainer}>
+                  <Text style={styles.renderItemIDText}>
+                    Oder ID
+                  </Text>
+                  <Text style={styles.renderItemID}>{referenceNum}</Text>
+                </View>
+                
+                <Text style={styles.renderItemPlaced}>{orderPlaced}</Text>
+              </View>
+              <View style={styles.renderItemFCLeft}>
+                <Image style={styles.renderItemFCLeftIcon} source={carIcon}/>
+                <Text style={styles.renderItemFCLeftText}>Order to ship</Text>
+              </View>
             </View>
-            <View style={{flexDirection: 'row'}}>
-              <View style={{flex: 0}}>
-                <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={product?.price} /></Text>
-              </View>
-              <View style={{flex: 0, paddingHorizontal: 10}}>
-                <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11}}>{parseFloat(product?.compareAtPrice) > 0 ? <Price amount={product?.compareAtPrice} /> : null}</Text>
-              </View>
-           </View>
-            <View style={{flexDirection: 'row', paddingVertical: 5}}>
-              <View style={{flex: 1.5}}>
-                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {product?.variant || 'None'}</Text>
-              </View>
-              <View style={{flex: 1, flexDirection: 'row-reverse'}}>
-                <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data?.quantity}</Text>
-              </View>
-              <View style={{flex: 0.2}}></View>
+
+            <Store data={shop} items={fulldata.items[0].products[0].data} />
+
+            <View style={styles.hairLineContainer}>
+              <Hairline />
             </View>
+
+            <Summary data={fulldata}/>
           </View>
-        </View>        
+        </View>
       </TouchableOpacity>
-      <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
     </>
   )
 }
 
-const testdata = [{
-  shop: {name: "Face Mask PH"},
-  items: [{
-    label: "Improved Copper Mask 2.0 White or Bronze",
-    originalPrice: 380,
-    price: 190,
-    variation: "Black",
-    qty: 1,
-    image: ""
-  }, {
-    label: "Improved Copper Mask 2.0 White or Bronze",
-    originalPrice: 380,
-    price: 190,
-    variation: "White",
-    qty: 1,
-    image: ""
-  }],
-  datePlaced: "6-14-21",
-  orderNumber: "000X001",
-  total: 460
-}, {
-  shop: {name: "The Apparel"},
-  items: [{
-    label: "Graphic Tees",
-    originalPrice: 380,
-    price: 190,
-    variation: "White, L",
-    qty: 1,
-    image: ""
-  }],
-  datePlaced: "6-27-21",
-  orderNumber: "000X002",
-  total: 270
-}]
-
 export const ToShip = ({id, email}) => {
-
   const [data, setData] = useState([])
   const session = useSelector(state=>state.session)
 
@@ -145,7 +121,6 @@ export const ToShip = ({id, email}) => {
       if(response.getToShipTransactions){
         setData(response.getToShipTransactions)
       }
-      console.log(response)
     },
     onError: (err) => {
       console.log(err)
@@ -157,34 +132,30 @@ export const ToShip = ({id, email}) => {
     return (
       <>
         {items && items.length > 0 && items.map((data) => {
-
           return (
             <>
-              <Store data={data.shop} />
-              
               {data.products && data.products.length > 0 && data.products.map((order) => {
-
                 return (
                   <>
                   {order.data.map((product, i) => {
-
                     return (
                       <>
-                        <Item key={i} data={product} fulldata={item} />
+                        <ToShipItem
+                          dataLength={data.length} 
+                          key={i} 
+                          shop={data.shop}
+                          data={product} 
+                          fulldata={item} 
+                        />
                       </>
                     )
                   })}
                   </>
                 )
-                
               })}
-
             </>
           )
         })}
-        {/* <Store data={item?.shipping?.shop} /> */}
-        {/* {item.orderData.map((raw, i) => <Item key={i} data={raw} fulldata={item} />)} */}
-        <Summary data={item} />
       </>
     )
   }
@@ -218,14 +189,13 @@ export const ToShip = ({id, email}) => {
   if(!loading && data && data.length == 0){
     return (
       <>
-        <View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
-          <Image source={emptyorders} style={{width: '80%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}} />
-          <View style={{height: 8}} />
-          <View>
-    				<Text style={{fontSize: 16, color: "#9E9E9E"}}>You don’t have orders yet</Text>
+        <View style={styles.noDataContainer}>
+          <Image source={emptyorders} style={styles.noDataImage} />
+          <View style={styles.noDataTextContainer}>
+            <Text style={styles.noDataTitle}>No Orders</Text>
+    				<Text style={styles.noDataBody}>Go browse and checkout something you like</Text>
 		    	</View>
         </View>
-        <View style={{flex: 0.2}} />
       </>
     )
   }
@@ -234,6 +204,7 @@ export const ToShip = ({id, email}) => {
     <>
       <FlatList 
         data={data}
+        contentContainerStyle={styles.flatlistStyle}
         renderItem={renderItem}
         refreshControl={
           <RefreshControl 
@@ -248,3 +219,154 @@ export const ToShip = ({id, email}) => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  //Main Style
+  flatlistStyle: {
+    paddingVertical: 8
+  },
+  noDataContainer: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  noDataImage: {
+    width: '80%', 
+    height: Dimensions.get("screen").height / 4, 
+    resizeMode: 'contain'
+  },
+  noDataTextContainer: {
+    alignItems: 'center',
+    marginTop: 8
+  },
+  noDataTitle: {
+    fontSize: 18, 
+    fontWeight: "600", 
+    color: "#F6841F", 
+    marginBottom: 8
+  },
+  noDataBody: {
+    fontSize: 13, 
+    fontWeight: "400", 
+    color: "#000000"
+  },
+
+  //Render Item Style
+  renderItemButtonContainer: {
+    flexDirection: 'row'
+  },
+  renderItemContainer: {
+    paddingHorizontal: 16, 
+    paddingVertical: 8, 
+    flex: 1
+  },
+  renderItemSubContainer: {
+    flex: 1, 
+    borderRadius: 5,
+    backgroundColor: 'white',
+    shadowColor: '#470000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    elevation: 2,
+  },
+  renderItemFirstContainer: {
+    height: 64,
+    backgroundColor: "#FFFCF4",
+    marginBottom: 16,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    flex: 1
+  },
+  renderItemFCRight: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  renderItemIDContainer: {
+    flexDirection: 'row'
+  },
+  renderItemIDText: {
+    fontWeight: "400",
+    fontSize: 13
+  },
+  renderItemID: {
+    color: "#F6841F", 
+    marginLeft: 8
+  },
+  renderItemPlaced: {
+    fontWeight: "400",
+    fontSize: 11,
+    color: "#525252"
+  },
+  renderItemFCLeft: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flexDirection: 'row'
+  },
+  renderItemFCLeftIcon: {
+    height: 14, 
+    width: 16,
+    marginRight: 8
+  },
+  renderItemFCLeftText: {
+    fontSize: 13,
+    fontWeight: "400"
+  },
+  hairLineContainer: {
+    marginHorizontal: 16, 
+    marginVertical: 18
+  },
+
+  //Store Style
+  storeContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 16
+  },
+  storeLeftContainer: {
+    flex: 1, 
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  storeWalletImage: {
+    width: 25, 
+    height: 25, 
+    resizeMode: 'contain'
+  },
+  storeShopName: {
+    fontSize: 13, 
+    marginLeft: 8,
+    fontWeight: "400"
+  },
+  storeItemContainer: {
+    flex: 1, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  storeItemText: {
+    fontSize: 13, 
+    fontWeight: "400"
+  },
+
+  //Summary
+  summaryContainer: {
+    flexDirection: 'row', 
+    paddingHorizontal: 16, 
+    alignItems: 'center', 
+    marginBottom: 16
+  },
+  summarySubContainer: {
+    flex: 1
+  },
+  summaryWalletIcon: {
+    width: 100, 
+    height: 20, 
+    resizeMode: 'contain'
+  },
+  summaryTotalText: {
+    fontSize: 13, 
+    color: "#F6841F", 
+    fontWeight: '600'
+  }
+}) 

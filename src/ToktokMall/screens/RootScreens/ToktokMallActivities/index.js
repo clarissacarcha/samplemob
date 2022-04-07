@@ -2,8 +2,15 @@ import AsyncStorage from '@react-native-community/async-storage';
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, BackHandler} from 'react-native';
 import {HeaderTab} from '../../../Components';
-import {Processing, ToShip, ToRecieve, Completed, Cancelled} from './Components';
-import {useFocusEffect} from '@react-navigation/native'
+import {
+  Processing, 
+  ToShip, 
+  ToRecieve, 
+  Completed, 
+  Cancelled,
+  All
+} from './Components';
+import { useFocusEffect } from '@react-navigation/native'
 
 export const ToktokMallActivities = ({navigation, route}) => {
 
@@ -33,13 +40,15 @@ export const ToktokMallActivities = ({navigation, route}) => {
         }}
       />
 
-      {activeTab == 0 && <Processing />}
+      {activeTab == 0 && <All />}
 
-      {activeTab == 1 && <ToShip />}
+      {activeTab == 1 && <Processing />}
 
-      {activeTab == 2 && <ToRecieve />}
+      {activeTab == 2 && <ToShip />}
 
-      {activeTab == 3 && <Completed />}
+      {activeTab == 3 && <ToRecieve />}
+
+      {activeTab == 4 && <Completed />}
 
       {/* {activeTab == 3 && <Cancelled />} */}
       
