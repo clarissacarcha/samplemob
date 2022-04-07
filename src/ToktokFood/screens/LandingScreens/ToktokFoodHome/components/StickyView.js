@@ -63,6 +63,7 @@ const StickyView = () => {
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
     tabId: activeTab.id,
+    version: 2,
   };
 
   // data fetching for shops
@@ -71,7 +72,7 @@ const StickyView = () => {
       setRefreshing(false);
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache and network',
   });
 
   const sample = [
