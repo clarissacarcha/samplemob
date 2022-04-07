@@ -63,6 +63,7 @@ const StickyView = () => {
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
     tabId: activeTab.id,
+    version: 2,
   };
 
   // data fetching for shops
