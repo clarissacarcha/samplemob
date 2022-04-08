@@ -1,11 +1,22 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, Image, FlatList, ScrollView} from 'react-native';
+import { useLazyQuery } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
-import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, Loading} from '../../../Components';
 import {Renderer} from './Components';
 import { ApiCall } from '../../../helpers';
-import {connect} from "react-redux"
+import {connect, useSelector} from "react-redux"
 import {EventRegister} from 'react-native-event-listeners'
+import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
+import { GET_ORDER_DETAILS } from '../../../../graphql/toktokmall/model';
+import { getRefComAccountType } from '../../../helpers';
+
+import {
+  RenderOrderInfo,
+  RenderStore,
+  RenderSummary,
+  RenderHistory
+} from './Components'
 
 const Component = ({navigation, route, notificationCountSession, notifications}) => {
 
@@ -23,6 +34,22 @@ const Component = ({navigation, route, notificationCountSession, notifications})
     headerTitle: () => <HeaderTitle label={['Order Details', '']} />,
     headerRight: () => <HeaderRight hidden={true} />
   });
+
+  const [data, setData] = useState([])
+  const session = useSelector(state => state.session)
+  const [getOrderDetails, {loading, error}] = useLazyQuery(GET_ORDER_DETAILS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      if(response.getOrderDetails){
+        // console.log('order details',response.getOrderDetails)
+        setData(response.getOrderDetails)
+      }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
 
   const readNotification = async (payload) => {
     const req = await ApiCall(`read_notification`, payload, true)
@@ -43,12 +70,28 @@ const Component = ({navigation, route, notificationCountSession, notifications})
       }
     })
   }, [])
-  
+
+  useEffect(() => {    
+    getOrderDetails({variables: {
+      input: {
+        orderId: route.params.orderId,
+        refCom: getRefComAccountType({session})
+      }
+    }})
+  }, [])
+
+  if(loading) {
+    return <Loading state={loading} />
+  }
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-    
-			<Renderer id={route.params.orderId} />
-      
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <RenderOrderInfo data={data} />
+        <RenderStore data={data} />
+        <RenderSummary data={data} />
+        <RenderHistory data={data} />
+      </ScrollView>
     </View>
   );
 };
