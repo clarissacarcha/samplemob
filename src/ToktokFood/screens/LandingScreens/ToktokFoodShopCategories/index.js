@@ -60,7 +60,6 @@ const ToktokFoodShopCategories = () => {
 
   useEffect(() => {
     if (isFocus && !loading) {
-      console.log(isFocus);
       refetch();
     }
   }, [isFocus]);
@@ -94,13 +93,18 @@ const ToktokFoodShopCategories = () => {
     }
   };
 
+  const onShopNavigate = item => {
+    navigation.navigate('ToktokFoodRestaurantOverview', {item});
+  };
+
+  const onSetLocationDetails = () => {
+    navigation.navigate('ToktokFoodAddressDetails');
+  };
+
   const renderItem = ({item}) => {
     const image = item.banner ? {uri: item.banner} : fastfood;
     return (
-      <TouchableOpacity
-        style={styles.itemContainer}
-        //   onPress={() => showSearchPage(item)}
-      >
+      <TouchableOpacity style={styles.itemContainer} onPress={() => onShopNavigate(item)}>
         {/* <Image style={styles.img} resizeMode="cover" source={image} /> */}
         <FastImage source={image} resizeMode={FastImage.resizeMode.cover} style={styles.img} />
 
@@ -124,12 +128,6 @@ const ToktokFoodShopCategories = () => {
         </View>
       </TouchableOpacity>
     );
-  };
-
-  const onSetLocationDetails = () => {
-    // dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
-    // dispatch({type: 'SET_TOKTOKFOOD_SHIPPING', payload: []});
-    navigation.navigate('ToktokFoodAddressDetails');
   };
 
   const renderEmpty = () => {
