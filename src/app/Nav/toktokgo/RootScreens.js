@@ -12,6 +12,8 @@ import ToktokGoBookingVehicle from '../../../ToktokGo/screens/ToktokGoBookingVeh
 import ToktokGoBookingConfirmPickup from '../../../ToktokGo/screens/ToktokGoBookingConfirmPickup';
 import ToktokGoBookingConfirmDestination from '../../../ToktokGo/screens/ToktokGoBookingConfirmDestination';
 import ToktokGoFindingDriver from '../../../ToktokGo/screens/ToktokGoFindingDriver';
+import ToktokGoOnTheWayRoute from '../../../ToktokGo/screens/ToktokGoOnTheWayRoute';
+
 const navbarShadowOption = {
   backgroundColor: 'white',
   shadowColor: '#000',
@@ -75,5 +77,6 @@ export default ({Navigator}) => (
       options={{headerShown: false}}
     />
     <Navigator.Screen name="ToktokGoFindingDriver" component={ToktokGoFindingDriver} options={{headerShown: false}} />
+    <Navigator.Screen name="ToktokGoOnTheWayRoute" component={ToktokGoOnTheWayRoute} options={{headerShown: false}} />
   </>
 );
