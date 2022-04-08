@@ -15,7 +15,8 @@ import {
   RenderOrderInfo,
   RenderStore,
   RenderSummary,
-  RenderHistory
+  RenderDeliveryLog,
+  RenderBuyAgain
 } from './Components'
 
 const Component = ({navigation, route, notificationCountSession, notifications}) => {
@@ -90,7 +91,8 @@ const Component = ({navigation, route, notificationCountSession, notifications})
         <RenderOrderInfo data={data} />
         <RenderStore data={data} />
         <RenderSummary data={data} />
-        <RenderHistory data={data} />
+        <RenderDeliveryLog data={data} />
+        {/* <RenderBuyAgain data={data}/> */}
       </ScrollView>
     </View>
   );
