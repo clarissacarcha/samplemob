@@ -1,7 +1,8 @@
-import React from 'react'
-import {View,Text,Modal,StyleSheet,TouchableOpacity, Dimensions} from 'react-native'
-import { YellowButton } from 'src/revamp'
-import CONSTANTS from 'common/res/constants'
+import React from 'react';
+import {View,Text,Modal,StyleSheet,TouchableOpacity, Dimensions} from 'react-native';
+import { YellowButton } from 'src/revamp';
+import { OrangeButton } from 'toktokwallet/components';
+import CONSTANTS from 'common/res/constants';
 
 const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 const { width } = Dimensions.get("window")
@@ -30,7 +31,7 @@ export const TransactionModal = ({
                     }}>
                         {children}
                         <View style={{justifyContent:"flex-end", width: "50%",alignSelf:"center",marginTop: 16}}>
-                            <YellowButton label="OK" onPress={closeModal}/>
+                            <OrangeButton label="OK" onPress={closeModal}/>
                         </View>
                     </View>
             </View>

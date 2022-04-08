@@ -3,6 +3,7 @@ export * from "./HelpCentreScreens";
 export * from "./PinCodeScreens";
 export * from "./ToktokWalletCashInLogs";
 export * from "./ToktokWalletCashOutLogs";
+export * from "./ToktokWalletMerchantPaymentLogs";
 export * from "./ToktokWalletPaymentChart";
 export * from "./ToktokWalletRequestMoneyLogs";
 export * from "./ToktokWalletSendMoneyLogs";

@@ -6,6 +6,7 @@ import UpgradeAccountScreens from './UpgradeAccountScreens';
 import {
     ToktokWalletCashInLogs,
     ToktokWalletCashOutLogs,
+    ToktokWalletMerchantPaymentLogs,
     ToktokWalletPaymentChart,
     ToktokWalletRequestMoneyLogs,
     ToktokWalletSendMoneyLogs,
@@ -22,6 +23,7 @@ export default ({Navigator}) => (
     {UpgradeAccountScreens({Navigator})}
     <Navigator.Screen name="ToktokWalletCashInLogs" component={ToktokWalletCashInLogs}/>
     <Navigator.Screen name="ToktokWalletCashOutLogs" component={ToktokWalletCashOutLogs}/>
+    <Navigator.Screen name="ToktokWalletMerchantPaymentLogs" component={ToktokWalletMerchantPaymentLogs}/>
     <Navigator.Screen name="ToktokWalletPaymentChart" component={ToktokWalletPaymentChart}/>
     <Navigator.Screen name="ToktokWalletRequestMoneyLogs" component={ToktokWalletRequestMoneyLogs}/>
     <Navigator.Screen name="ToktokWalletSendMoneyLogs" component={ToktokWalletSendMoneyLogs}/>

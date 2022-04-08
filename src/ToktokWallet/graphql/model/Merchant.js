@@ -44,3 +44,19 @@ export const POST_MERCHANT_PAYMENT = gql`
         }
     }
 `
+
+export const GET_MERCHANT_PAYMENTS = gql`
+    query {
+        getMerchantPayments {
+            id
+            createdAt
+            amount
+            transaction {
+                id
+                refNo
+                createdAt
+                amount
+            }
+        }
+    }
+`
