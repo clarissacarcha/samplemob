@@ -176,3 +176,37 @@ export const GET_SEARCH_FOOD = gql`
     }
   }
 `;
+
+export const GET_SHOP_BY_CATEGORY = gql`
+  query getShopByCategory($input: ShopCategoryInput!) {
+    getShopByCategory(input: $input) {
+      id
+      ratings
+      shopname
+      logo
+      banner
+      address
+      estimatedDistance
+      estimatedDeliveryTime
+      hasOpen
+      nextOperatingHrs {
+        id
+        shopId
+        fromTime
+        toTime
+        day
+        status
+        dayStatus
+      }
+      operatingHours {
+        id
+        shopId
+        fromTime
+        toTime
+        day
+        status
+        dayStatus
+      }
+    }
+  }
+`;
