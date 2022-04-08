@@ -50,7 +50,7 @@ export const ToktokMallActivities = ({navigation, route}) => {
 
       {activeTab == 4 && <Completed />}
 
-      {/* {activeTab == 3 && <Cancelled />} */}
+      {activeTab == 5 && <Cancelled />}
       
     </View>
   );

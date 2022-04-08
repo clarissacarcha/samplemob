@@ -1,5 +1,31 @@
 import gql from 'graphql-tag'
 
+export const GET_TRANSACTIONS = gql`
+  query getActvities($input: getActivitiesInput) {
+    getActivities(input: $input) {
+      id
+      referenceNum
+      dateOrdered
+      totalAmount
+      orderStatus
+      orderType
+      orderIds
+      shopIds
+      status
+      orders {
+        orderId
+        shopId
+        shopName
+        totalItems
+        items {
+          productId
+        }
+      }
+      history
+    }
+  }
+`
+
 export const GET_CONFIRMED_TRANSACTIONS = gql`
 	query getConfirmedTransactions($input: GetOrdersInput){
     getConfirmedTransactions(input: $input){

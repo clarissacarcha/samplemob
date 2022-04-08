@@ -100,8 +100,11 @@ export const HeaderTab = (props) => {
             <View style={styles.orderStatusButtonContainer}>
               <Tab index={3} active={activeTab} label="To Receive" onPress={() => onTabPress(3)} />
             </View>
-            <View style={{...styles.orderStatusButtonContainer, marginRight: 16}}>
+            <View style={styles.orderStatusButtonContainer}>
               <Tab index={4} active={activeTab} label="Delivered" onPress={() => onTabPress(4)} />
+            </View>
+            <View style={{...styles.orderStatusButtonContainer, marginRight: 16}}>
+              <Tab index={5} active={activeTab} label="Cancelled" onPress={() => onTabPress(5)} />
             </View>
           </ScrollView>
         </View>
