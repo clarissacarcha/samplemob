@@ -15,6 +15,8 @@ export ToktokFoodOrderTransactions from './ToktokFoodOrderTransactions';
 export ToktokFoodAddressDetails from './ToktokFoodAddressDetails';
 export ToktokFoodMapSearch from './ToktokFoodMapSearch';
 export ToktokFoodCategories from './ToktokFoodCategories';
+export ToktokFoodCategoriesScreen from './ToktokFoodCategoriesScreen';
+export ToktokFoodShopCategories from './ToktokFoodShopCategories';
 export ToktokRiderRating from './ToktokRiderRating';
 export ToktokFoodMe from './ToktokFoodMe';
 export ToktokFoodTermsAndConditions from './ToktokFoodTermsAndConditions';

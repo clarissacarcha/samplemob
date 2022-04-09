@@ -63,6 +63,7 @@ const StickyView = () => {
     userLongitude: location?.longitude,
     userLatitude: location?.latitude,
     tabId: activeTab.id,
+    version: 2,
   };
 
   // data fetching for shops
@@ -71,7 +72,7 @@ const StickyView = () => {
       setRefreshing(false);
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache and network',
   });
 
   const sample = [
@@ -152,12 +153,12 @@ const StickyView = () => {
   // };
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingToBottom = 120;
+    const paddingToBottom = 220;
     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
   };
 
   const onLoadMore = nativeEvent => {
-    if (!loadMore && pendingProcess) {
+    if (!loadMore) {
       setPage(prev => prev + 1);
       setLoadMore(isCloseToBottom(nativeEvent));
     }

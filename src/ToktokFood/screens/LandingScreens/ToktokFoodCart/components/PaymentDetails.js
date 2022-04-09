@@ -28,7 +28,26 @@ const PaymentDetails = ({deliveryFee, refreshing, orderType, loadingShipping}) =
   const [hasToktokWallet, setHasToktokWallet] = useState(false);
   const [totalAmount, setTotalAmount] = useState(temporaryCart?.totalAmount);
 
-  const isDisabled = paymentMethod == 'TOKTOKWALLET' ? totalAmount > toktokWallet?.balance : false;
+  const isDisabled =
+    paymentMethod == 'TOKTOKWALLET'
+      ? orderType === 'Delivery'
+        ? totalAmount > toktokWallet?.balance
+        : false
+      : totalAmount - deliveryFee > toktokWallet?.balance;
+
+  const hasBalance = () => {
+    let disabled = false;
+    if (paymentMethod === 'TOKTOKWALLET') {
+      if (orderType === 'Delivery') {
+        disabled = totalAmount > toktokWallet?.balance;
+      } else {
+        disabled = totalAmount - deliveryFee > toktokWallet?.balance;
+      }
+    } else {
+      disabled = false;
+    }
+    return disabled;
+  };
 
   const [getMyAccount, {loading, error}] = useLazyQuery(GET_MY_ACCOUNT, {
     fetchPolicy: 'network-only',
@@ -86,7 +105,7 @@ const PaymentDetails = ({deliveryFee, refreshing, orderType, loadingShipping}) =
       }
       setTotalAmount(temporaryCart?.totalAmountWithAddons + deliveryFee - totalAmt);
     }
-  }, [deliveryFee, promotionVoucher ]);
+  }, [deliveryFee, promotionVoucher]);
 
   const onCashIn = ({balance}) => {
     // do something here
@@ -236,7 +255,7 @@ const PaymentDetails = ({deliveryFee, refreshing, orderType, loadingShipping}) =
                 </TouchableOpacity>
               )}
             </View>
-            {isDisabled && (
+            {hasBalance() && (
               <TouchableOpacity activeOpacity={0.9} onPress={() => onToktokWalletCashInNavigate()}>
                 <Text
                   style={{

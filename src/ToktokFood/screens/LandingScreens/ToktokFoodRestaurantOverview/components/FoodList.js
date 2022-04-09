@@ -12,6 +12,7 @@ import {GET_PRODUCTS_BY_SHOP_CATEGORY, GET_SEARCH_PRODUCTS_BY_SHOP} from 'toktok
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
 // Components
+import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {VerifyContext} from '../components';
 import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
@@ -24,7 +25,7 @@ import {reseller_badge, empty_search_2, food_placeholder} from 'toktokfood/asset
 import {TOKFOODCOLOR} from 'res/variables';
 
 export const FoodList = props => {
-  const {activeTab, id, tagsLoading} = props;
+  const {activeTab, id, data, productsLoading, showMore, tagsLoading} = props;
   const navigation = useNavigation();
   const [listData, setListData] = useState([]);
   const {searchProduct, setSearchProduct, temporaryCart, foodCartHeight, navBartHeight} = useContext(VerifyContext);
@@ -32,24 +33,24 @@ export const FoodList = props => {
   const minHeight = getDeviceHeight - navBar - foodCartHeight;
 
   // data fetching for product under specific category
-  const [getProductsByShopCategory, {error: productsError, loading: productsLoading}] = useLazyQuery(
-    GET_PRODUCTS_BY_SHOP_CATEGORY,
-    {
-      variables: {
-        input: {
-          id: id,
-          catId: activeTab?.id,
-          // key: searchProduct,
-        },
-      },
-      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      fetchPolicy: 'network-only',
-      onCompleted: ({getProductsByShopCategory}) => {
-        const products = getProductsByShopCategory;
-        filterProducts(products);
-      },
-    },
-  );
+  // const [getProductsByShopCategory, {error: productsError, loading: productsLoading}] = useLazyQuery(
+  //   GET_PRODUCTS_BY_SHOP_CATEGORY,
+  //   {
+  //     variables: {
+  //       input: {
+  //         id: id,
+  //         catId: activeTab?.id,
+  //         // key: searchProduct,
+  //       },
+  //     },
+  //     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+  //     fetchPolicy: 'cache and network',
+  //     onCompleted: ({getProductsByShopCategory}) => {
+  //       const products = getProductsByShopCategory;
+  //       filterProducts(products);
+  //     },
+  //   },
+  // );
 
   // data fetching for product
   const [getSearchProductsByShop, {loading: searchProductsLoading}] = useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
@@ -60,6 +61,12 @@ export const FoodList = props => {
       filterProducts(products);
     },
   });
+
+  useEffect(() => {
+    if (data) {
+      filterProducts(data?.getProductsByShopCategory);
+    }
+  }, [data]);
 
   const filterProducts = useCallback(products => {
     setListData([]);
@@ -99,7 +106,7 @@ export const FoodList = props => {
   useEffect(() => {
     if (activeTab?.id) {
       setSearchProduct('');
-      getProductsByShopCategory();
+      // getProductsByShopCategory();
     }
   }, [activeTab]);
 
@@ -114,7 +121,7 @@ export const FoodList = props => {
         },
       });
     } else {
-      getProductsByShopCategory();
+      // getProductsByShopCategory();
     }
   }, [searchProduct]);
 
@@ -216,7 +223,7 @@ export const FoodList = props => {
     </View>
   );
 
-  if (productsLoading || tagsLoading || productsError || searchProductsLoading) {
+  if (productsLoading || tagsLoading || searchProductsLoading) {
     const listSize = parseInt((getDeviceHeight / verticalScale(100)).toFixed(0));
 
     return (
@@ -251,6 +258,10 @@ export const FoodList = props => {
   return (
     <ScrollView contentContainerStyle={{...styles.scrollContainer, minHeight: minHeight}}>
       {listData?.length > 0 ? listData.map(item => <ItemList item={item} />) : <EmptyScreenComponent />}
+
+      <View style={styles.loaderContainer}>
+        <LoadingIndicator isLoading={showMore} />
+      </View>
       {/* <FlatList
         data={
           searchProduct ? searchProducts?.getSearchProductsByShop : products ? products.getProductsByShopCategory : []
@@ -300,6 +311,9 @@ const styles = StyleSheet.create({
   listText: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
+  },
+  loaderContainer: {
+    paddingTop: 20,
   },
   summary: {
     fontFamily: FONT.REGULAR,

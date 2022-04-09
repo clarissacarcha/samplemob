@@ -101,7 +101,7 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
   }, [filterSearch]);
 
   const onNavigateCategories = () => {
-    navigation.navigate('ToktokFoodCategories');
+    navigation.navigate('ToktokFoodCategoriesScreen');
   };
 
   const handleLoadMore = () => {
@@ -112,7 +112,8 @@ const CategoryList = ({horizontal, rightText = '', filterSearch = 0, homeRefresh
   };
 
   const showSearchPage = item => {
-    navigation.navigate('ToktokFoodSearch', {searchByCategory: item.categoryName, isSearchPage: true});
+    navigation.navigate('ToktokFoodShopCategories', {category: item});
+    // navigation.navigate('ToktokFoodSearch', {searchByCategory: item.categoryName, isSearchPage: true});
   };
 
   const renderItem = ({item}) => {
