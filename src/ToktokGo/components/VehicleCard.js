@@ -10,7 +10,7 @@ import LargeMpvIMG from '../../assets/images/vehicleTypes/LargeMPV.png';
 const ImageWidth = (Dimensions.get('window').width - 230) / 2;
 
 export const VehicleCard = ({type, data}) => {
-  const {selectedVehicle} = useSelector(state => state.toktokGo);
+  const {details} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
   const render_image = type => {
     switch (type) {
@@ -29,8 +29,13 @@ export const VehicleCard = ({type, data}) => {
   return (
     <View style={styles.card}>
       <TouchableOpacity
-        onPress={() => dispatch({type: 'SET_TOKTOKGO_SELECTED_VEHICLE', payload: data?.vehicleType?.id})}
-        style={data?.vehicleType?.id == selectedVehicle ? styles.selected : {paddingHorizontal: 16}}>
+        onPress={() => {
+          dispatch({
+            type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+            payload: {...details, vehicleType: data.vehicleType, rate: data.rate},
+          });
+        }}
+        style={data?.vehicleType?.id == details.vehicleType.id ? styles.selected : {paddingHorizontal: 16}}>
         <View style={styles.container}>
           <View style={styles.elementWrapper}>
             <Image
@@ -48,7 +53,7 @@ export const VehicleCard = ({type, data}) => {
           </View>
         </View>
       </TouchableOpacity>
-      {data?.vehicleType?.id == selectedVehicle && type && (
+      {data?.vehicleType?.id == details.vehicleType.id && type && (
         <View style={styles.priceDetails}>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.fareText}>Base fare</Text>

@@ -1,10 +1,21 @@
 import React from 'react';
 import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import ActionSheet, {SheetManager} from 'react-native-actions-sheet';
+import {useDispatch} from 'react-redux';
 import ProtectionIMG from '../../../../assets/images/Protection.png';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const PassengerCapacityActionSheet = ({}) => {
+export const PassengerCapacityActionSheet = ({navigation, details, popTo}) => {
+  const dispatch = useDispatch();
+
+  const navigateToFindingDriver = num => {
+    SheetManager.hide('passenger_capacity');
+    dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, passengerCount: num}});
+    navigation.push('ToktokGoFindingDriver', {
+      popTo: popTo + 1,
+    });
+  };
+
   return (
     <ActionSheet id="passenger_capacity" overlayColor="none">
       <View style={styles.container}>
@@ -15,11 +26,11 @@ export const PassengerCapacityActionSheet = ({}) => {
         </Text>
         <Text style={styles.description}>How many of you are taking this ride?</Text>
         <View style={styles.divider} />
-        <TouchableOpacity onPress={() => SheetManager.hide('passenger_capacity')}>
+        <TouchableOpacity onPress={() => navigateToFindingDriver(1)}>
           <Text>Just me</Text>
         </TouchableOpacity>
         <View style={styles.divider} />
-        <TouchableOpacity onPress={() => SheetManager.hide('passenger_capacity')}>
+        <TouchableOpacity onPress={() => navigateToFindingDriver(2)}>
           <Text style={{color: CONSTANTS.COLOR.DARK}}>2 of us</Text>
         </TouchableOpacity>
       </View>
