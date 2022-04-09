@@ -1,10 +1,10 @@
 import React from 'react';
-import {Text, StyleSheet, View, Image} from 'react-native';
+import {Text, StyleSheet, View, Image, TouchableOpacity} from 'react-native';
 import constants from '../../../../common/res/constants';
 import Cancel from '../../../../assets/icons/Cancelled.png';
 import Message from '../../../../assets/images/messageIcon.png';
 import Phone from '../../../../assets/images/phoneIcon.png';
-export const Actions = () => {
+export const Actions = ({SheetManager}) => {
   return (
     <View style={styles.Info}>
       <View
@@ -33,7 +33,8 @@ export const Actions = () => {
         <Image source={Message} style={{height: 12, width: 12, marginRight: 10}} resizeMode="contain" />
         <Text style={{color: constants.COLOR.ORANGE}}>Message</Text>
       </View>
-      <View
+      <TouchableOpacity
+        onPress={() => SheetManager.show('cancel_booking')}
         style={{
           borderColor: '#ED3A19',
           borderWidth: 1,
@@ -45,7 +46,7 @@ export const Actions = () => {
         }}>
         <Image source={Cancel} style={{height: 12, width: 12, marginRight: 10}} resizeMode="contain" />
         <Text style={{color: 'red'}}>Cancel</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
