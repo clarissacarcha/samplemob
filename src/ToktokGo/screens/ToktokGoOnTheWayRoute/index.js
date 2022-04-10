@@ -1,7 +1,7 @@
 import React, {useRef, useCallback, useState} from 'react';
 import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, Linking, Platform} from 'react-native';
 import {Map, SeeBookingDetails, DriverStatus, DriverInfo, Actions, DriverStatusDestination} from './Sections';
-import {DriverArrivedModal, DriverCancelled} from './Components';
+import {DriverArrivedModal} from './Components';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 
@@ -12,6 +12,7 @@ import {
   DriverCancelledModal,
   CancelBookingActionSheet,
   CancelBookingNoFeeModal,
+  DriverCancelled,
 } from '../CancelationModals';
 import DummyData from '../../components/DummyData';
 
@@ -41,7 +42,6 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
     });
   };
   const onCancel = () => {
-    setViewCancelReasonModal(true);
     setCancel(false);
   };
   const onCancelWithFee = () => {
@@ -79,13 +79,13 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
         type={bookingCancelledType}
       />
       <CancelBookingModal
-        isVisible={cancellationFee}
-        setVisible={setCancellationFee}
+        isVisible={driverCancel}
+        setVisible={setDriverCancel}
         setViewCancelReasonModal={setViewCancelReasonModal}
       />
       <DriverCancelledModal
-        driverVisible={driverCancel}
-        setDriverVisible={setDriverCancel}
+        driverVisible={cancellationFee}
+        setDriverVisible={setCancellationFee}
         setVisible={setViewSuccessCancelBookingModal}
         setType={setBookingCancelledType}
       />
@@ -116,7 +116,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
           onPress={() => {
             setCancel(true), setBookingCancelledType(1);
           }}>
-          <Text style={{color: 'red'}}>Cancel Booking</Text>
+          <Text style={{color: 'red'}}>Driver Cancelled Booking</Text>
           <DriverCancelled cancel={cancel} onCancel={onCancel} onCancelWithFee={onCancelWithFee} />
         </TouchableOpacity>
       </View>

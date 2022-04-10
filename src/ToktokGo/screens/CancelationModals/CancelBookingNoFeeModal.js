@@ -20,7 +20,7 @@ export const CancelBookingNoFeeModal = ({isVisible, setVisible, setNextModal, se
           onPress={() => {
             driverFee();
           }}>
-          <Text style={{color: 'red'}}>Driver Fee</Text>
+          <Text style={{color: 'red'}}>Cancellation Fee</Text>
         </TouchableOpacity>
         <View style={styles.card}>
           <View style={styles.container}>
