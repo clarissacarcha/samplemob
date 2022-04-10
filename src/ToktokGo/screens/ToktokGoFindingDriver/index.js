@@ -18,11 +18,10 @@ const ToktokGoFindingDriver = ({navigation, route}) => {
   const [waitingStatus, setWaitingStatus] = useState(1);
 
   useEffect(() => {
-    console.log(waitingStatus);
     if (waitingStatus < 6) {
       const interval = setTimeout(() => {
         setWaitingStatus(waitingStatus + 1);
-      }, 1000);
+      }, 10000);
       return () => clearInterval(interval);
     }
   }, [waitingStatus]);
