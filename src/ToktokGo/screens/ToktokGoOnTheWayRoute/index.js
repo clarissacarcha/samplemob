@@ -3,12 +3,25 @@ import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image} from 'react-
 import {Map, SeeBookingDetails, DriverStatus, DriverInfo, Actions, DriverStatusDestination} from './Sections';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
+import {SheetManager} from 'react-native-actions-sheet';
+import {
+  CancelBookingModal,
+  ReasonCancelModal,
+  SuccesCancelBookingModal,
+  DriverCancelledModal,
+  CancelBookingActionSheet,
+} from '../CancelationModals';
 
 const ToktokGoOnTheWayRoute = ({navigation, route}) => {
   const [status, setStatus] = useState(0);
   const [action, setAction] = useState(true);
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
+      <CancelBookingModal />
+      <ReasonCancelModal />
+      <SuccesCancelBookingModal />
+      <DriverCancelledModal />
+      <CancelBookingActionSheet />
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
@@ -17,7 +30,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
         {action ? <DriverStatus status={status} /> : <DriverStatusDestination />}
         <View style={styles.divider} />
         <DriverInfo />
-        {action && <Actions />}
+        {action && <Actions SheetManager={SheetManager} />}
         <SeeBookingDetails />
       </View>
     </View>
