@@ -3,16 +3,17 @@ import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-nati
 import CONSTANTS from '../../../common/res/constants';
 import SuccessIMG from '../../../assets/images/Sucess.png';
 
-export const SuccesCancelBookingModal = ({}) => {
+export const SuccesCancelBookingModal = ({visible, setVisible, type}) => {
   return (
-    <Modal animationType="fade" transparent={true} visible={false} style={StyleSheet.absoluteFill}>
+    <Modal animationType="fade" transparent={true} visible={visible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
             <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
-            <Text style={styles.modalTitle}>Payment On Hold</Text>
-            {false && <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>}
-            {true && (
+            <Text style={styles.modalTitle}>Booking Cancelled</Text>
+            {type == 1 ? (
+              <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>
+            ) : (
               <Text style={styles.modalDescription}>
                 Your booking has been cancelled. Cancellation fee will be charged in your next booking. You may read
                 more about our
@@ -23,7 +24,12 @@ export const SuccesCancelBookingModal = ({}) => {
                 .
               </Text>
             )}
-            <TouchableOpacity style={styles.buttonContainer} onPress={() => {}}>
+
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => {
+                setVisible(!visible);
+              }}>
               <Text style={styles.buttonText}>OK</Text>
             </TouchableOpacity>
           </View>

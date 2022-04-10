@@ -11,11 +11,15 @@ import {
   CancelRetryButton,
 } from './Sections';
 import {DriverFoundModal} from './Components';
+import {ReasonCancelModal, CancelBookingNoFeeModal, SuccesCancelBookingModal} from '../CancelationModals';
 
 const ToktokGoFindingDriver = ({navigation, route}) => {
   const {routeDetails, destination, origin} = useSelector(state => state.toktokGo);
   const [showDriverFoundModal, setShowDriverFoundModal] = useState(false);
   const [waitingStatus, setWaitingStatus] = useState(1);
+  const [viewCancelBookingModal, setViewCancelBookingModal] = useState(false);
+  const [viewCancelReasonModal, setViewCancelReasonModal] = useState(false);
+  const [viewSuccessCancelBookingModal, setViewSuccessCancelBookingModal] = useState(false);
 
   useEffect(() => {
     if (waitingStatus < 6) {
@@ -51,6 +55,21 @@ const ToktokGoFindingDriver = ({navigation, route}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: constants.COLOR.WHITE}}>
+      <CancelBookingNoFeeModal
+        isVisible={viewCancelBookingModal}
+        setVisible={setViewCancelBookingModal}
+        setNextModal={setViewCancelReasonModal}
+      />
+      <ReasonCancelModal
+        isVisible={viewCancelReasonModal}
+        setVisible={setViewCancelReasonModal}
+        setNextModal={setViewSuccessCancelBookingModal}
+      />
+      <SuccesCancelBookingModal
+        visible={viewSuccessCancelBookingModal}
+        setVisible={setViewSuccessCancelBookingModal}
+        type={1}
+      />
       <DriverFoundModal
         showDriverFoundModal={showDriverFoundModal}
         setShowDriverFoundModal={setShowDriverFoundModal}
@@ -69,7 +88,11 @@ const ToktokGoFindingDriver = ({navigation, route}) => {
         <BookingDistanceTime routeDetails={routeDetails} />
         <DistanceOriginAddress destination={destination} origin={origin} />
         <TotalBreakdown />
-        <CancelRetryButton waitingStatus={waitingStatus} setWaitingStatus={setWaitingStatus} />
+        <CancelRetryButton
+          waitingStatus={waitingStatus}
+          setWaitingStatus={setWaitingStatus}
+          setViewCancelBookingModal={setViewCancelBookingModal}
+        />
       </View>
     </View>
   );
