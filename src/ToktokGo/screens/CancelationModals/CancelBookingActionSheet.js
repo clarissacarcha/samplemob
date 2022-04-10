@@ -5,7 +5,7 @@ import CONSTANTS from '../../../common/res/constants';
 import tokGoIMG from '../../../assets/images/tokGo.png';
 import tokWaIMG from '../../../assets/images/Wallet.png';
 
-export const CancelBookingActionSheet = ({}) => {
+export const CancelBookingActionSheet = ({setVisible}) => {
   const [selectedPayment, setSelectedPayment] = useState();
   const [data, setData] = useState([
     {
@@ -31,9 +31,9 @@ export const CancelBookingActionSheet = ({}) => {
         <View>
           <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD, marginBottom: 16}}>Select Payment</Text>
 
-          <View opacity={false ? 0.5 : 1}>
+          <View opacity={true ? 0.5 : 1}>
             <TouchableOpacity
-              disabled={false}
+              disabled={true}
               onPress={() => {
                 setSelectedPayment(1);
               }}
@@ -69,7 +69,11 @@ export const CancelBookingActionSheet = ({}) => {
           <Text style={styles.textStyles}>Total</Text>
           <Text style={styles.textStyles}>₱50.00</Text>
         </View>
-        <TouchableOpacity style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => {
+            SheetManager.hide('cancel_booking'), setVisible(true);
+          }}>
           <Text style={styles.buttonText}>Confirm</Text>
         </TouchableOpacity>
       </View>

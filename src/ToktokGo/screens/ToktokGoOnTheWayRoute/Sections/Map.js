@@ -1,13 +1,13 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {View, StyleSheet, Image, Text} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
-import MapView, {Marker, PROVIDER_GOOGLE, MapViewDirections} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
 import Car from '../../../../assets/images/Car.png';
 import constants from '../../../../common/res/constants';
-export const Map = () => {
-  const {origin} = useSelector(state => state.toktokGo);
+export const Map = ({decodedPolyline}) => {
+  const {origin, destination} = useSelector(state => state.toktokGo);
 
   const mapRef = useRef();
   const INITIAL_REGION = {
@@ -18,19 +18,19 @@ export const Map = () => {
   };
 
   const ORIGIN = {
-    latitude: 13.1659,
-    longitude: 123.6386,
+    latitude: origin.place.location.latitude,
+    longitude: origin.place.location.longitude,
   };
 
   const TO = {
-    latitude: 13.1542,
-    longitude: 123.5504,
+    latitude: destination.place.location.latitude,
+    longitude: destination.place.location.longitude,
   };
 
   useEffect(() => {
     setTimeout(() => {
       mapRef.current.fitToCoordinates(
-        [ORIGIN],
+        [ORIGIN, TO],
         {
           edgePadding: {
             right: 100,
@@ -67,6 +67,11 @@ export const Map = () => {
           <Image source={Car} style={{height: 36, width: 36}} resizeMode="contain" />
         </View>
       </Marker>
+      <Polyline
+        coordinates={decodedPolyline}
+        strokeColor={CONSTANTS.COLOR.ORANGE} // fallback for when `strokeColors` is not supported by the map-provider
+        strokeWidth={3}
+      />
     </MapView>
   );
 };

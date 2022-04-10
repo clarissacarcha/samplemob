@@ -6,9 +6,14 @@ import TokWaIMG from '../../../assets/images/wallet-whiteOutline.png';
 import TokGoWhiteIMG from '../../../assets/images/tokGo-whiteOutline.png';
 import TokGoIMG from '../../../assets/images/tokGo.png';
 
-export const DriverCancelledModal = ({}) => {
+export const DriverCancelledModal = ({driverVisible, setType, setVisible, setDriverVisible}) => {
+  const submit = () => {
+    setType(2);
+    setVisible(true);
+    setDriverVisible(false);
+  };
   return (
-    <Modal animationType="fade" transparent={true} visible={false} style={StyleSheet.absoluteFill}>
+    <Modal animationType="fade" transparent={true} visible={driverVisible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
@@ -23,7 +28,11 @@ export const DriverCancelledModal = ({}) => {
               compensate the driver. Would you like to pay now?
             </Text>
             {true && (
-              <TouchableOpacity style={styles.buttonContainer} onPress={() => {}}>
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={() => {
+                  submit();
+                }}>
                 <Image source={TokGoWhiteIMG} style={styles.buttonImg} resizeMode={'contain'} />
                 <Text style={styles.buttonText}>Pay in Next Booking</Text>
               </TouchableOpacity>

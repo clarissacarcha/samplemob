@@ -26,7 +26,12 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
 
-      <PassengerCapacityActionSheet navigation={navigation} popTo={popTo} details={details} />
+      <PassengerCapacityActionSheet
+        navigation={navigation}
+        popTo={popTo}
+        details={details}
+        decodedPolyline={decodedPolyline}
+      />
 
       <PaymentMethodModal
         viewSelectPaymentModal={viewSelectPaymentModal}

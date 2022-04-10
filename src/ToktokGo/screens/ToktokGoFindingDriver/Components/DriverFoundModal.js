@@ -8,11 +8,12 @@ import Star from '../../../../assets/images/star.png';
 const ImageWidth = (Dimensions.get('window').width - 210) / 2;
 
 export const DriverFoundModal = ({showDriverFoundModal, setShowDriverFoundModal, navigation, route}) => {
-  const {popTo} = route.params;
+  const {popTo, decodedPolyline} = route.params;
   const navigateTo = () => {
-    setShowDriverFoundModal(!showDriverFoundModal);
+    setShowDriverFoundModal(false);
     navigation.push('ToktokGoOnTheWayRoute', {
       popTo: popTo + 1,
+      decodedPolyline,
     });
   };
 
@@ -23,7 +24,7 @@ export const DriverFoundModal = ({showDriverFoundModal, setShowDriverFoundModal,
           <View style={{alignItems: 'center'}}>
             <Text style={styles.modalTitle}>Driver Found</Text>
             <Image source={User} style={styles.profileImage} resizeMode="cover" />
-            <Text style={styles.profileName}>Jaymard Oppa</Text>
+            <Text style={styles.profileName}>Rick Sanchez</Text>
             <View style={styles.iconContainer}>
               <Text>5.0</Text>
               <Image source={Star} style={styles.starStyles} resizeMode="contain" />
