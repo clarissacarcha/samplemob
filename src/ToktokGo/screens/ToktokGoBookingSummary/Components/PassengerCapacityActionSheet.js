@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import ProtectionIMG from '../../../../assets/images/Protection.png';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const PassengerCapacityActionSheet = ({navigation, details, popTo}) => {
+export const PassengerCapacityActionSheet = ({navigation, details, popTo, decodedPolyline}) => {
   const dispatch = useDispatch();
 
   const navigateToFindingDriver = num => {
@@ -13,6 +13,7 @@ export const PassengerCapacityActionSheet = ({navigation, details, popTo}) => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, passengerCount: num}});
     navigation.push('ToktokGoFindingDriver', {
       popTo: popTo + 1,
+      decodedPolyline,
     });
   };
 

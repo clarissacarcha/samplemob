@@ -5,57 +5,52 @@ import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
 
-export const Pickup = ({onDragEndMarker}) => {
+export const Pickup = ({onDragEndMarker, mapRegion}) => {
   const {origin} = useSelector(state => state.toktokGo);
   const mapRef = useRef();
-  const INITIAL_REGION = {
-    latitude: 11.22309004847093,
-    latitudeDelta: 19.887065883877668,
-    longitude: 121.97818368673325,
-    longitudeDelta: 10.145791545510278,
-  };
 
-  useEffect(() => {
-    setTimeout(() => {
-      mapRef.current.fitToCoordinates(
-        [origin.place.location],
-        {
-          edgePadding: {
-            right: 100,
-            bottom: 100,
-            left: 100,
-            top: 100,
-          },
-        },
-        3000, // Animation duration in milliseconds.
-      );
-    }, 1000);
-  }, [origin.place.location]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     mapRef.current.fitToCoordinates(
+  //       [origin.place.location],
+  //       {
+  //         edgePadding: {
+  //           right: 100,
+  //           bottom: 100,
+  //           left: 100,
+  //           top: 100,
+  //         },
+  //       },
+  //       3000, // Animation duration in milliseconds.
+  //     );
+  //   }, 1000);
+  // }, [origin.place.location]);
 
   return (
-    <MapView
-      ref={mapRef}
-      provider={PROVIDER_GOOGLE}
-      style={{height: '90%', width: '100%'}}
-      initialRegion={INITIAL_REGION}>
-      <Marker
-        key={key => {
-          1;
-        }}
-        coordinate={origin.place.location}
-        draggable
-        onDragEnd={e => {
-          onDragEndMarker(e.nativeEvent.coordinate);
-        }}>
-        <View style={{alignItems: 'center'}}>
-          <FA5Icon name="map-pin" size={18} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 2}} />
-        </View>
-      </Marker>
-    </MapView>
+    <View style={styles.container}>
+      <MapView
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        style={{height: '90%', width: '100%'}}
+        region={{...mapRegion}}
+        onRegionChangeComplete={e => {
+          onDragEndMarker(e);
+        }}></MapView>
+      <View style={{alignItems: 'center', zIndex: 999, alignContent: 'center', position: 'absolute'}}>
+        <FA5Icon name="map-pin" size={18} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 2}} />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    // flex: 1,
+    // ...StyleSheet.absoluteFillObject,
+    // position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   pinLocation: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -1,8 +1,8 @@
 import React, {useState, useRef} from 'react';
 import {Text, StyleSheet, ScrollView, View, Modal, TouchableOpacity, TextInput} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
-
-export const ReasonCancelModal = ({isVisible, setVisible, setReason, setNextModal}) => {
+import {SheetManager} from 'react-native-actions-sheet';
+export const ReasonCancelModal = ({isVisible, setVisible, setReason, setNextModal, type, setType}) => {
   const dropDownRef = useRef(null);
   const [selectedReason, setSelectedReason] = useState();
   const [data, setData] = useState([
@@ -26,7 +26,13 @@ export const ReasonCancelModal = ({isVisible, setVisible, setReason, setNextModa
 
   const confirm = () => {
     setVisible(!isVisible);
-    setNextModal(true);
+
+    if (type) {
+      SheetManager.show('cancel_booking');
+      setType(null);
+    } else {
+      setNextModal(true);
+    }
   };
 
   return (

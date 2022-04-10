@@ -3,9 +3,9 @@ import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-nati
 import CONSTANTS from '../../../common/res/constants';
 import WarningIMG from '../../../assets/images/warning.png';
 
-export const CancelBookingModal = ({}) => {
+export const CancelBookingModal = ({isVisible, setVisible, setViewCancelReasonModal}) => {
   return (
-    <Modal animationType="fade" transparent={true} visible={false} style={StyleSheet.absoluteFill}>
+    <Modal animationType="fade" transparent={true} visible={isVisible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
@@ -18,13 +18,22 @@ export const CancelBookingModal = ({}) => {
             </Text>
 
             <View style={styles.retryContainer}>
-              <View style={styles.cancelButtonContainer}>
-                <Text style={styles.textStyle}>Cancel</Text>
-              </View>
+              <TouchableOpacity
+                style={styles.cancelButtonContainer}
+                onPress={() => {
+                  setVisible(false);
+                }}>
+                <Text style={styles.textStyle}>No</Text>
+              </TouchableOpacity>
 
-              <View style={styles.retryButtonContainer}>
-                <Text style={styles.cancelTextStyle}>Retry</Text>
-              </View>
+              <TouchableOpacity
+                style={styles.retryButtonContainer}
+                underlayColor={CONSTANTS.COLOR.LIGHT}
+                onPress={() => {
+                  setVisible(false), setViewCancelReasonModal(true);
+                }}>
+                <Text style={styles.cancelTextStyle}>Yes</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>

@@ -1,4 +1,4 @@
-import React, {useRef, useCallback} from 'react';
+import React, {useRef, useCallback, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, BackHandler} from 'react-native';
 import {Pickup, ConfirmPickupButton, NotesToDriver} from './Sections';
@@ -10,12 +10,14 @@ import {TOKTOK_QUOTATION_CLIENT} from '../../../graphql';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {decodeLegsPolyline} from '../../helpers';
+import {MAP_DELTA_LOW} from '../../../res/constants';
 
 const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const {popTo} = route.params;
   const dispatch = useDispatch();
   const dropDownRef = useRef(null);
   const {destination, origin} = useSelector(state => state.toktokGo);
+  const [mapRegion, setMapRegion] = useState({...origin.place.location, ...MAP_DELTA_LOW});
   console.log('DESTINATION: ', destination, 'ORIGIN: ', origin);
   useFocusEffect(
     useCallback(() => {
@@ -67,11 +69,14 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     onError: error => console.log('error', error),
   });
   const onDragEndMarker = e => {
-    console.log(e);
+    setMapRegion(e);
     getPlaceByLocation({
       variables: {
         input: {
-          location: e,
+          location: {
+            latitude: e.latitude,
+            longitude: e.longitude,
+          },
         },
       },
     });
@@ -81,7 +86,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop(popTo)}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      <Pickup onDragEndMarker={onDragEndMarker} />
+      <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />
       <View style={styles.card}>
         <NotesToDriver dropDownRef={dropDownRef} navigation={navigation} popTo={popTo} />
         <ConfirmPickupButton onConfirm={onConfirm} />

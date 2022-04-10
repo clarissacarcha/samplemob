@@ -2,14 +2,20 @@ import React from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const SeeBookingDetails = ({onConfirm}) => {
+export const SeeBookingDetails = ({item, navigation}) => {
   return (
-    <TouchableOpacity onPress={onConfirm} style={styles.buttonWrapper}>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.push('SelectedBookingDetails', {
+          delivery: item,
+          label: ['Booking', 'Details'],
+        });
+      }}
+      style={styles.buttonWrapper}>
       <Text style={styles.confirmText}>See Booking Details</Text>
     </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   buttonWrapper: {
     backgroundColor: CONSTANTS.COLOR.ORANGE,
