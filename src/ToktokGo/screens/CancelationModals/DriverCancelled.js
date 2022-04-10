@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, StyleSheet, Image, View, Modal, TouchableOpacity, StatusBar} from 'react-native';
-import CONSTANTS from '../../../../common/res/constants';
-import WarningIMG from '../../../../common/assets/globalert/Warning.png';
+import CONSTANTS from '../../../common/res/constants';
+import WarningIMG from '../../../common/assets/globalert/Warning.png';
 
 export const DriverCancelled = ({onCancel, cancel, onCancelWithFee, setVisible}) => {
   return (
@@ -29,11 +29,7 @@ export const DriverCancelled = ({onCancel, cancel, onCancelWithFee, setVisible})
               </View>
             </View>
 
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={() => {
-                onCancel(false);
-              }}>
+            <TouchableOpacity style={styles.buttonContainer} onPress={onCancel}>
               <Text style={styles.buttonText}>OK</Text>
             </TouchableOpacity>
           </View>
