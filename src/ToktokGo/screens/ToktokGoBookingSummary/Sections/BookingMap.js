@@ -2,7 +2,6 @@ import React, {useRef, useEffect} from 'react';
 import {View, StyleSheet, Image, Text} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
 import _ from 'lodash';
-import {useSelector} from 'react-redux';
 import CONSTANTS from '../../../../common/res/constants';
 import LocationIcon from '../../../../assets/images/locationIcon.png';
 import PinIcon from '../../../../assets/images/pinIcon.png';
@@ -11,8 +10,7 @@ import OfficeIcon from '../../../../assets/icons/office-address-icon.png';
 
 // console.log(JSON.stringify({polyline: decodeLegsPolyline(SAMPLE_LEGS)}, null, 2));
 
-export const BookingMap = ({decodedPolyline}) => {
-  const {route, origin, destination} = useSelector(state => state.toktokGo);
+export const BookingMap = ({decodedPolyline, routeDetails, origin, destination}) => {
   const mapRef = useRef();
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
@@ -22,7 +20,7 @@ export const BookingMap = ({decodedPolyline}) => {
   };
 
   useEffect(() => {
-    const {northeast, southwest} = route.bounds;
+    const {northeast, southwest} = routeDetails.bounds;
     const coordinates = [
       {
         ...northeast,
@@ -54,6 +52,7 @@ export const BookingMap = ({decodedPolyline}) => {
       style={{height: '40%', width: '100%'}}
       initialRegion={INITIAL_REGION}>
       <Marker
+        tracksViewChanges={false}
         key={key => {
           1;
         }}
@@ -82,6 +81,7 @@ export const BookingMap = ({decodedPolyline}) => {
       </Marker>
 
       <Marker
+        tracksViewChanges={false}
         key={key => {
           2;
         }}

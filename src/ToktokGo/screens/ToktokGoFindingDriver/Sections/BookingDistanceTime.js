@@ -4,10 +4,10 @@ import CONSTANTS from '../../../../common/res/constants';
 import FIcon from 'react-native-vector-icons/Fontisto';
 import moment from 'moment';
 
-export const BookingDistanceTime = ({}) => {
-  // const minDuration = quotationData.route?.duration.minute;
-  // const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
-  // const minTime = moment().format('hh:mm A');
+export const BookingDistanceTime = ({routeDetails}) => {
+  const minDuration = routeDetails.duration.minute;
+  const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
+  const minTime = moment().format('hh:mm A');
 
   return (
     <>
@@ -15,7 +15,7 @@ export const BookingDistanceTime = ({}) => {
         <View>
           <View style={styles.elementWrapper}>
             <FIcon name={'map'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
-            <Text style={styles.textStyle}>3 km</Text>
+            <Text style={styles.textStyle}>{routeDetails.distance.kilometer} km</Text>
           </View>
           <Text style={styles.bottomTextStyle}>Distance</Text>
         </View>
@@ -23,7 +23,9 @@ export const BookingDistanceTime = ({}) => {
         <View>
           <View style={styles.elementWrapper}>
             <FIcon name={'clock'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
-            <Text style={styles.textStyle}>03:00 PM - 03:30 PM</Text>
+            <Text style={styles.textStyle}>
+              {minTime} - {maxTime}
+            </Text>
           </View>
           <Text style={styles.bottomTextStyle}>Estimated Time of Drop-off</Text>
         </View>

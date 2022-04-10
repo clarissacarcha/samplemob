@@ -1,15 +1,13 @@
 import React from 'react';
 import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
-import {useSelector} from 'react-redux';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 import WalletIcon from '../../../../assets/images/Wallet.png';
 import CashIcon from '../../../../assets/images/CashIcon.png';
 import WarningIcon from '../../../../assets/icons/Warning.png';
 
-export const BookingSelectPaymentMethod = ({setViewSelectPaymentModal}) => {
-  const {selectedPaymentMethod} = useSelector(state => state.toktokGo);
+export const BookingSelectPaymentMethod = ({setViewSelectPaymentModal, viewPaymenetSucessModal, details}) => {
   return (
     <>
       <View style={styles.container}>
@@ -17,14 +15,16 @@ export const BookingSelectPaymentMethod = ({setViewSelectPaymentModal}) => {
           <Text style={styles.textStyle}>Payment Method</Text>
         </View>
 
-        <TouchableOpacity style={styles.elementWrapper} onPress={() => setViewSelectPaymentModal(true)}>
+        <TouchableOpacity
+          style={styles.elementWrapper}
+          onPress={() => setViewSelectPaymentModal(!viewPaymenetSucessModal)}>
           <Text style={styles.seeAlltextStyle}>See All</Text>
           <Image source={ArrowRightIcon} resizeMode={'contain'} style={styles.arrowIconStyle} />
         </TouchableOpacity>
       </View>
 
       {/*---Todo: add condition here---*/}
-      {selectedPaymentMethod == '1' && (
+      {details.paymentMethod == 1 && (
         <>
           <View style={styles.container}>
             <View style={styles.elementWrapper}>
@@ -64,7 +64,7 @@ export const BookingSelectPaymentMethod = ({setViewSelectPaymentModal}) => {
       )}
 
       {/*---Todo: add condition here---*/}
-      {selectedPaymentMethod == '2' && (
+      {details.paymentMethod == 2 && (
         <View style={styles.container}>
           <View style={styles.elementWrapper}>
             <Image source={CashIcon} resizeMode={'contain'} style={styles.walletIconStyle} />

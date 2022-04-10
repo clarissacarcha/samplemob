@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Image, StatusBar} from 'react-native';
 import constants from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
+import {useSelector} from 'react-redux';
 import {
   BookingDistanceTime,
   BookingSelectVehicle,
@@ -13,6 +14,8 @@ import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet} fr
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 
 const ToktokGoBookingSummary = ({navigation, route}) => {
+  const {popTo} = route.params;
+  const {details, routeDetails, origin, destination} = useSelector(state => state.toktokGo);
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
@@ -23,11 +26,12 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
 
-      <PassengerCapacityActionSheet />
+      <PassengerCapacityActionSheet navigation={navigation} popTo={popTo} details={details} />
 
       <PaymentMethodModal
         viewSelectPaymentModal={viewSelectPaymentModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
+        details={details}
       />
 
       <PaymentSuccesModal
@@ -35,15 +39,21 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
         setViewPaymenetSucessModal={setViewPaymenetSucessModal}
       />
 
-      <BookingMap decodedPolyline={decodedPolyline} />
+      <BookingMap
+        decodedPolyline={decodedPolyline}
+        routeDetails={routeDetails}
+        origin={origin}
+        destination={destination}
+      />
 
       <View style={styles.card}>
         <BookingDistanceTime quotationData={quotationDataResult} />
-
         <BookingSelectVehicle data={quotationDataResult} navigation={navigation} />
-
-        <BookingSelectPaymentMethod setViewSelectPaymentModal={setViewSelectPaymentModal} />
-
+        <BookingSelectPaymentMethod
+          viewPaymenetSucessModal={viewPaymenetSucessModal}
+          setViewSelectPaymentModal={setViewSelectPaymentModal}
+          details={details}
+        />
         <BookingConfirmButton SheetManager={SheetManager} />
       </View>
     </View>
