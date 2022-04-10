@@ -1,9 +1,8 @@
 import React, {useState, useRef} from 'react';
 import {Text, StyleSheet, ScrollView, View, Modal, TouchableOpacity, TextInput} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
-import WarningIMG from '../../../assets/images/warning.png';
 
-export const ReasonCancelModal = ({}) => {
+export const ReasonCancelModal = ({isVisible, setVisible, setReason, setNextModal}) => {
   const dropDownRef = useRef(null);
   const [selectedReason, setSelectedReason] = useState();
   const [data, setData] = useState([
@@ -25,8 +24,13 @@ export const ReasonCancelModal = ({}) => {
     },
   ]);
 
+  const confirm = () => {
+    setVisible(!isVisible);
+    setNextModal(true);
+  };
+
   return (
-    <Modal animationType="fade" transparent={true} visible={false} style={StyleSheet.absoluteFill}>
+    <Modal animationType="fade" transparent={true} visible={isVisible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.containerHeader}>
@@ -76,7 +80,7 @@ export const ReasonCancelModal = ({}) => {
               paddingTop: 20,
             }}>
             <TouchableOpacity
-              onPress={() => setShowReason(!showReason)}
+              onPress={() => setVisible(!isVisible)}
               style={{
                 flex: 1,
                 paddingVertical: 10,
@@ -97,7 +101,7 @@ export const ReasonCancelModal = ({}) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => succefullCancel()}
+              onPress={() => confirm()}
               style={{
                 flex: 1,
                 paddingVertical: 10,
