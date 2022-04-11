@@ -107,7 +107,7 @@ const RenderOtherServiceReminder = ({
     event
 })=> {
 
-    if(event == "Send Money" || event == "merchantPayment"){
+    if(event == "Send Money"){
         return (
             <>
             <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start",marginTop:5}}>
@@ -120,6 +120,17 @@ const RenderOtherServiceReminder = ({
             Transaction cannot be reversed once confirmed and submitted.
             </Text> 
             </>
+        )
+    }
+
+    if(event == "merchantPayment"){
+        return (
+            <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start",marginTop:5}}>
+                    <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.XL} />  
+                    <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M,marginLeft: 3,marginTop: -2,marginRight: 16}}>
+                    Please ensure that all information is correct and validated before proceeding with this transaction.
+                    </Text> 
+            </View>
         )
     }
 

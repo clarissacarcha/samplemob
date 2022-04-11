@@ -51,7 +51,7 @@ export const MerchantPayment = ({data})=>{
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Total Amount</Text>  
                     </View>
                     <View style={{flex:1,alignItems:"flex-end"}}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{numberFormat(amount)}</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>PHP {numberFormat(amount)}</Text>
                     </View>
             </View>
       
