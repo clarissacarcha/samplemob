@@ -201,9 +201,7 @@ export const FoodCart = ({loading, action}) => {
     if (required.length > 0) {
       Alert.alert(`${required[0]} is required.`);
     } else {
-      if (orderInstructions !== 'Select one') {
-        processAddToCart();
-      }
+      processAddToCart();
     }
   };
 
@@ -229,7 +227,7 @@ export const FoodCart = ({loading, action}) => {
       quantity: count.quantity,
       addons: extractAddons(),
       notes: notes,
-      order_instructions: orderInstructions,
+      order_instructions: orderInstructions === 'Select one' ? '' : orderInstructions,
     };
 
     let filterItemByProductId = await temporaryCart.items.filter(item => {

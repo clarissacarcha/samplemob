@@ -399,7 +399,11 @@ export const Variations = ({data, productId}) => {
 
   const orderInstructionModalComponent = () => {
     return (
-      <Modal animationIn="zoomIn" animationOut="zoomOut" isVisible={isModalVisible}>
+      <Modal
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+        isVisible={isModalVisible}
+        onBackdropPress={() => setIsModalVisible(false)}>
         <View style={styles.modalContainer}>
           {ORDER_INSTRUCTIONS_OPTIONS.map(instruction => {
             return (
