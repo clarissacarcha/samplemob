@@ -1,7 +1,13 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, BackHandler} from 'react-native';
-import {HeaderTab} from '../../../Components';
+import {
+  View, 
+  StyleSheet, 
+  BackHandler
+} from 'react-native';
+import { 
+  HeaderTab,
+  LoadingOverlay
+} from '../../../Components';
 import {
   Processing, 
   ToShip, 
@@ -10,11 +16,12 @@ import {
   Cancelled,
   All
 } from './Components';
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native';
 
 export const ToktokMallActivities = ({navigation, route}) => {
 
-  const [activeTab, setActiveTab] = useState(route.params.tab || 0)
+  const [activeTab, setActiveTab] = useState(route.params.tab || 0);
+  const [apiloader, setapiloader] = useState(false)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -26,6 +33,10 @@ export const ToktokMallActivities = ({navigation, route}) => {
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
     }, [])
   )
+
+  const onPressBuy = () => {
+    setapiloader(!apiloader);
+  }
 
   return (
     <View style={styles.container}>
@@ -48,10 +59,11 @@ export const ToktokMallActivities = ({navigation, route}) => {
 
       {activeTab == 3 && <ToRecieve />}
 
-      {activeTab == 4 && <Completed />}
+      {activeTab == 4 && <Completed onPressBuy={onPressBuy} />}
 
-      {activeTab == 5 && <Cancelled />}
+      {activeTab == 5 && <Cancelled onPressBuy={onPressBuy} />}
       
+      {apiloader && <LoadingOverlay isVisible={apiloader} />}
     </View>
   );
 };

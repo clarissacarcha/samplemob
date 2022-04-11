@@ -12,23 +12,99 @@ import { emptyorders } from '../../../../assets';
 import { RenderItem } from './subComponents';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import { GET_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
+import { 
+  GET_BUY_AGAIN,
+  GET_TRANSACTIONS
+} from '../../../../../graphql/toktokmall/model';
 import { useNavigation } from '@react-navigation/native';
 import { Loading } from '../../../../Components';
-
+import { ApiCall } from '../../../../helpers';
+import { EventRegister } from 'react-native-event-listeners';
 import AsyncStorage from '@react-native-community/async-storage';
 
-export const CancelledItem = ({fulldata}) => {
-  const navigation = useNavigation()
+const getAccessToken = async () => { 
+  const accessToken = await AsyncStorage.getItem('accessToken');
+  return accessToken
+};
+
+export const CancelledItem = ({fulldata, onPressBuy: parentBuyOnpress}) => {
+  const navigation = useNavigation();
+
+  const [getBuyAgain] = useLazyQuery(GET_BUY_AGAIN, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    context: { headers: { authorization: "Bearer: " + getAccessToken() }},  
+    onCompleted: (response) => {
+      if(response.getBuyAgain) { 
+        const { toaddItems, toupdateItems } = response.getBuyAgain;
+        if(toaddItems.length > 0) {
+          toaddItems.map(async (item, index) => {
+            try {
+              let variables = {
+                userid: item.userid,
+                shopid: item.shopid,
+                branchid: item.branchid,
+                productid: item.productid,
+                quantity: item.quantity
+              }
+              const req = await ApiCall("insert_cart", variables, true);
+              if(req) {
+                if(index === toaddItems.length - 1 && toupdateItems.length === 0) {
+                  parentBuyOnpress();
+                  navigation.navigate("ToktokMallMyCart");
+                  EventRegister.emit('refreshToktokmallShoppingCart');
+                }
+              }
+            } catch (err) {
+              console.log(err)
+            } 
+          })
+        }
+
+        if(toupdateItems.length > 0) {
+          toupdateItems.map(async (item, index) => {
+            try {
+              let variables = {
+                userid: item.userid,
+                shopid: item.shopid,
+                branchid: item.branchid,
+                productid: item.productid,
+                quantity: item.quantity
+              }
+              const req = await ApiCall("update_cart", variables, true);
+              console.log(req)
+              if(req) {
+                if(index === toupdateItems.length - 1) {
+                  parentBuyOnpress();
+                  navigation.navigate("ToktokMallMyCart");
+                  EventRegister.emit('refreshToktokmallShoppingCart');                  
+                }
+              }
+            } catch (err) {
+              console.log(err)
+            } 
+          })
+        }
+      } 
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  });
 
   onPressCard = () => {
     navigation.navigate("ToktokMallOrderDetails", {...fulldata, orderId: fulldata.id})
   }
 
   onPressBuy = () => {
+    parentBuyOnpress();
+
     const { items } = fulldata.orders;
-    const { productId } = items;
-    navigation.navigate("ToktokMallProductDetails", {Id: productId})
+
+    getBuyAgain({variables: {
+      input: {
+        items: items
+      }
+    }})
   }
 
   return <RenderItem 
@@ -38,13 +114,8 @@ export const CancelledItem = ({fulldata}) => {
   />
 }
 
-export const Cancelled = () => {
+export const Cancelled = (props) => {
   const [data, setData] = useState([]);
-
-  const getAccessToken = async () => { 
-    const accessToken = await AsyncStorage.getItem('accessToken');
-    return accessToken
-  };
 
   const [getOrders, {loading, error}] = useLazyQuery(GET_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -64,6 +135,7 @@ export const Cancelled = () => {
     return (
       <CancelledItem 
         fulldata={item}
+        {...props}
       />
     )
   };
@@ -72,7 +144,7 @@ export const Cancelled = () => {
     getOrders({variables: {
       input: {
         refCom: "",
-        filter: "5"
+        filter: 5
       }
     }})
   };

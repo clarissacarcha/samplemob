@@ -29,7 +29,6 @@ export const RenderItem = (props) => {
         status,
         orders
     } = fulldata;
-
     const cancelled = status.status === 5;
 
     return (

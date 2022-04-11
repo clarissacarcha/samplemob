@@ -81,7 +81,7 @@ export const All = () => {
         getOrders({variables: {
           input: {
             refCom: "",
-            filter: "0"
+            filter: 0
           }
         }})
       }

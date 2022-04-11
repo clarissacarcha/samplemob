@@ -67,7 +67,7 @@ export const ToShip = ({id, email}) => {
         getOrders({variables: {
           input: {
             refCom: "",
-            filter: "2"
+            filter: 2
           }
         }})
       }

@@ -19,9 +19,27 @@ export const GET_TRANSACTIONS = gql`
         totalItems
         items {
           productId
+          quantity
+          data {
+            sysShop
+            itemname
+            name
+            price
+            variant
+          }
         }
       }
       history
+    }
+  }
+`
+
+export const GET_BUY_AGAIN = gql`
+  query getBuyAgain($input: getBuyAgainInput) {
+    getBuyAgain(input: $input) {
+      invalidItems
+      toaddItems
+      toupdateItems
     }
   }
 `

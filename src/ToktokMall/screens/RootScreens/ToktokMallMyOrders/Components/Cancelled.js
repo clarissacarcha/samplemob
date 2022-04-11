@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native';
-import {HeaderTab} from '../../../../Components';
-
+import { HeaderTab } from '../../../../Components';
 
 const Store = ({data}) => {
   return (

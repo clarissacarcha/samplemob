@@ -67,7 +67,7 @@ export const Processing = ({id, email}) => {
         getOrders({variables: {
           input: {
             refCom: "",
-            filter: "1"
+            filter: 1
           }
         }})
       }

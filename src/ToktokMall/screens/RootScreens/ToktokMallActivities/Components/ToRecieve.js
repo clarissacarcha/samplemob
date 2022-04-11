@@ -67,7 +67,7 @@ export const ToRecieve = () => {
         getOrders({variables: {
           input: {
             refCom: "",
-            filter: "3"
+            filter: 3
           }
         }})
       }
