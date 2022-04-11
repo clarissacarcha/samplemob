@@ -19,6 +19,7 @@ import moment from 'moment';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import _ from 'lodash';
 
 import {FONT_SIZE, FONT, COLOR, SIZE} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -61,6 +62,8 @@ export const StickyView = ({onCheckShop}) => {
   const [showOverlay, setShowOverlay] = useState(false);
   const [showProductOverlay, setShowProductOverlay] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [hasMorePage, setHasMorePage] = useState(true);
+  // const [loadMore, setLoadMore] = useState(false);
 
   const [nextSched, setNextSched] = useState(null);
 
@@ -174,7 +177,7 @@ export const StickyView = ({onCheckShop}) => {
   };
 
   const onLoadMore = () => {
-    if (!productsLoading) {
+    if (!showMore && hasMorePage) {
       setShowMore(true);
       fetchMore({
         variables: {
@@ -191,11 +194,17 @@ export const StickyView = ({onCheckShop}) => {
           if (!fetchMoreResult) {
             return previousResult;
           }
+          if (!fetchMoreResult?.getProductsByShopCategory.length) {
+            setHasMorePage(false);
+          }
+          const mergeData = _.unionBy(
+            previousResult.getProductsByShopCategory,
+            fetchMoreResult.getProductsByShopCategory,
+            'Id',
+          );
+
           return {
-            getProductsByShopCategory: [
-              ...previousResult.getProductsByShopCategory,
-              ...fetchMoreResult.getProductsByShopCategory,
-            ],
+            getProductsByShopCategory: mergeData,
           };
         },
       });
