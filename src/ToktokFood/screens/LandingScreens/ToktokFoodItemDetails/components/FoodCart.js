@@ -48,6 +48,7 @@ export const FoodCart = ({loading, action}) => {
     temporaryCart,
     selectedVariants,
     basePrice,
+    orderInstructions,
   } = useContext(VerifyContext);
   const {customerInfo} = useSelector(state => state.toktokFood);
   const [showDialogMessage, setShowDialogMessage] = useState({show: false, items: []});
@@ -200,7 +201,9 @@ export const FoodCart = ({loading, action}) => {
     if (required.length > 0) {
       Alert.alert(`${required[0]} is required.`);
     } else {
-      processAddToCart();
+      if (orderInstructions !== 'Select one') {
+        processAddToCart();
+      }
     }
   };
 
@@ -226,6 +229,7 @@ export const FoodCart = ({loading, action}) => {
       quantity: count.quantity,
       addons: extractAddons(),
       notes: notes,
+      order_instructions: orderInstructions,
     };
 
     let filterItemByProductId = await temporaryCart.items.filter(item => {
