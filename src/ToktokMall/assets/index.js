@@ -27,6 +27,7 @@ export const emptynotification = require("../assets/images/empty-notification.pn
 export const emptysearch = require("../assets/images/empty-search.png")
 export const contactus = require("../assets/images/contact-us.png");
 export const walletIcon = require("../assets/images/tokwaicon.png");
+export const emptyPlaceOrder = require("../assets/images/empty_place_order.png");
 
 //ICONS
 export const successIcon = require("../assets/icons/success.png")

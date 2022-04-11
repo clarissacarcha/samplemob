@@ -20,6 +20,7 @@ import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
 import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy, getRefComAccountType} from "../../../helpers"
+import {emptyPlaceOrder} from "../../../assets"
 
 import {CheckoutContext} from './ContextProvider';
 import { EventRegister } from 'react-native-event-listeners';
@@ -589,48 +590,48 @@ const Component = ({route, navigation, createMyCartSession}) => {
   }
 
   return (
-    
     <>
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        removeClippedSubviews={true}
-      >
-        <AlertModal
-          navigation = {navigation}
-          isVisible = {alertModal}
-          setIsVisible = {setAlertModal}
+      <ScrollView showsVerticalScrollIndicator={false} removeClippedSubviews={true}>
+        <AlertModal navigation={navigation} isVisible={alertModal} setIsVisible={setAlertModal} />
+        <CheckoutModal
+          navigation={navigation}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          goToOrders={onGoToOrders}
         />
-        <CheckoutModal 
-          navigation={navigation} 
-          isVisible={isVisible} 
-          setIsVisible={setIsVisible} 
-          goToOrders = {onGoToOrders}
-        />
-        <MessageModal 
-          navigation={navigation} 
-          isVisible={walletmodal} 
-          setIsVisible={setwalletmodal} 
-        />
-        <View style ={{paddingBottom: 30}}>
+        <MessageModal navigation={navigation} isVisible={walletmodal} setIsVisible={setwalletmodal} />
+        <View style={{paddingBottom: 30}}>
           <AddressForm
             data={addressData}
-            onEdit={() => navigation.push("ToktokMallAddressesMenu", {
-              onGoBack: (data) => {
-                // setAddressData(data)
-                init()
-              }
-            })}
+            onEdit={() =>
+              navigation.push('ToktokMallAddressesMenu', {
+                onGoBack: data => {
+                  // setAddressData(data)
+                  init();
+                },
+              })
+            }
           />
-          <Shops 
-            address={addressData}
-            customer={customerData}
-            raw={paramsData}
-            retrieve={(data) => {
-              setShippingDiscounts(data.shippingDiscounts)
-            }}
-            shipping={addressData?.shippingSummary} 
-            shippingRates={shippingRates}      
-          />
+          {!paramsData ? (
+            <Shops
+              address={addressData}
+              customer={customerData}
+              raw={paramsData}
+              retrieve={data => {
+                setShippingDiscounts(data.shippingDiscounts);
+              }}
+              shipping={addressData?.shippingSummary}
+              shippingRates={shippingRates}
+            />
+          ) : (
+            <View style={{flex: 1, backgroundColor: 'trasparent'}}>
+              <View style={{flex: 1, backgroundColor: 'white', marginTop: 8, alignItems: 'center', padding: 25}}>
+                <Image source={emptyPlaceOrder} />
+                <Text style={{color: '#F6841F', fontSize: 18, padding: 5}}>No Items</Text>
+                <Text>Hmm, there are no items to check out.</Text>
+              </View>
+            </View>
+          )}
           {/* <Vouchers 
             items={paramsData}
             navigation={navigation} 
@@ -644,8 +645,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
               setVoucher(temp)
             }}
           /> */}
-          <Payment 
-            payment={payment} 
+          <Payment
+            payment={payment}
             total={grandTotal}
             list={paymentList}
             currentBalance={toktokMall.toktokWalletBalance}
@@ -655,7 +656,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             // status={walletAccountStatus}
             status={walletAccountStatus}
           />
-          <Totals 
+          <Totals
             raw={paramsData}
             setGrandTotal={setGrandTotal}
             shipping={addressData?.shippingSummary}
@@ -665,7 +666,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <Button 
+        <Button
           enabled={!loading}
           loading={isLoading}
           balance={currentBalance}
@@ -673,14 +674,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
           shipping={addressData}
           shippingRates={shippingRates}
           onPress={async () => {
-            if(!isLoading){
-              await postCheckoutSetting()              
-            }      
-          }} 
+            if (!isLoading) {
+              await postCheckoutSetting();
+            }
+          }}
         />
       </View>
     </>
-    
   );
 };
 
