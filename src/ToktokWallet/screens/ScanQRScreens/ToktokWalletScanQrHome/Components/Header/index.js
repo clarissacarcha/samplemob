@@ -13,7 +13,7 @@ export const Header = ()=> {
                 <Text style={{fontFamily:FONT.BOLD,fontSize: FONT_SIZE.M,marginLeft: 3}}>New to Scan QR Transactions?</Text> 
             </View>
             <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M}}>
-            Make your payment experience extremely quick and easy with your favorite Merchant QR Partners and/or send money to your loved ones using toktokwallet scan QR transactions. Just simply scan QR, enter the amount then confirm your payment.
+            Make your payment experience extremely quick and easy with your favorite Merchant QR Partners and/or send money to your loved ones using toktokwallet scan QR transactions. Just simply scan QR, enter the amount then confirm.
             </Text>
 
         </View>
