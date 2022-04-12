@@ -11,9 +11,9 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import styles from './styles';
 
-import {VectorIcon, ICON_SET} from 'src/revamp';
+// import {VectorIcon, ICON_SET} from 'src/revamp';
 // import {COLORS} from 'src/res/constants';
-import {COLOR, FONT, FONT_SIZE} from 'res/variables';
+// import {COLOR, FONT, FONT_SIZE} from 'res/variables';
 
 // Components
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
@@ -33,7 +33,7 @@ const ToktokFoodShopCategories = () => {
   const navigation = useNavigation();
   const route = useRoute();
   // State
-  const [refreshing, setRefreshing] = useState(false);
+  // const [refreshing, setRefreshing] = useState(false);
   const [loadMore, setLoadMore] = useState(false);
   const [hasMorePage, setHasMorePage] = useState(true);
   const [page, setPage] = useState(0);
@@ -60,6 +60,8 @@ const ToktokFoodShopCategories = () => {
 
   useEffect(() => {
     if (isFocus && !loading) {
+      setHasMorePage(true);
+      setPage(0);
       refetch();
     }
   }, [isFocus]);
