@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { View , Text , StyleSheet, ScrollView, TouchableOpacity , Image} from 'react-native';
 import { HeaderBack , HeaderTitle , ICON_SET, VectorIcon  } from 'src/revamp';
-import { CheckIdleState, FlagSecureScreen , BuildingBottom, TransferableHeaderReminder } from 'toktokwallet/components';
+import { CheckIdleState, FlagSecureScreen , BuildingBottom, TransferableHeaderReminder , Separator } from 'toktokwallet/components';
 import {useAlert} from 'src/hooks/useAlert';
 import { useAccount } from 'toktokwallet/hooks';
 import tokwaLogo from 'toktokwallet/assets/images/tokwa.png'
@@ -41,6 +41,7 @@ export const ToktokWalletMerchantPaymentConfirm = ({
         <FlagSecureScreen>
             <CheckIdleState>
                 <View style={styles.container}>
+                    <Separator/>
                     <TransferableHeaderReminder/>
                     <View style={styles.content}>
                             <ScrollView
