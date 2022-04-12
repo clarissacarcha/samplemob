@@ -29,20 +29,24 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination})
         ...southwest,
       },
     ];
-    setTimeout(() => {
-      mapRef.current.fitToCoordinates(
-        coordinates,
-        {
-          edgePadding: {
-            right: 100,
-            bottom: 100,
-            left: 100,
-            top: 100,
+    const setMap = () => {
+      setTimeout(() => {
+        mapRef.current.fitToCoordinates(
+          coordinates,
+          {
+            edgePadding: {
+              right: 100,
+              bottom: 100,
+              left: 100,
+              top: 100,
+            },
           },
-        },
-        3000, // Animation duration in milliseconds.
-      );
-    }, 1000);
+          3000, // Animation duration in milliseconds.
+        );
+      }, 1000);
+    };
+
+    return setMap();
   }, []);
 
   return (

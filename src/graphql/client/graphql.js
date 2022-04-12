@@ -17,6 +17,7 @@ const wsUrl = `ws://${HOST_PORT}/graphql`;
 const toktokWalletBaseUrl = `${ENVIRONMENTS.TOKTOKWALLET_SERVER}/`;
 const toktokBillsLoadBaseUrl = `${ENVIRONMENTS.TOKTOKBILLSLOAD_SERVER}/`;
 const toktokFoodBaseUrl = `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/`;
+const toktokGoBaseUrl = `${ENVIRONMENTS.TOKTOKGO_SERVER}/`;
 
 // const errorLink = onError(({graphQLErrors, networkError}) => {
 //   if (graphQLErrors) {
@@ -109,6 +110,20 @@ const setToktokBillsLoadGraphqlTokenLink = setContext(async (_, {headers}) => {
   }
 });
 
+const setToktokGoGraphqlTokenLink = setContext(async (_, {headers}) => {
+  try {
+    const accountToken = await AsyncStorage.getItem('accessToken');
+    return {
+      headers: {
+        ...headers,
+        'x-api-key': 'da2-rdqlcmbtz5devocswpuknsavwu',
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const wsLink = new WebSocketLink({
   uri: wsUrl,
   options: {
@@ -151,6 +166,10 @@ const toktokQuotationUploadLink = createUploadLink({
   uri: `${baseUrl}quotation/graphql/`,
 });
 
+const toktokGoUploadLink = createUploadLink({
+  uri: `${toktokGoBaseUrl}graphql/`,
+});
+
 const splitLink = split(({query}) => {
   const definition = getMainDefinition(query);
   return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
@@ -180,6 +199,8 @@ const toktokFoodGraphqlLink = ApolloLink.from([
   // setToktokFoodGraphqlTokenLink,
   toktokFoodGraphqlUploadLink,
 ]);
+
+const toktokGoGraphqlLink = ApolloLink.from([errorLinkLogger, setToktokGoGraphqlTokenLink, toktokGoUploadLink]);
 
 const toktokQuotationGraphqlLink = ApolloLink.from([errorLinkLogger, setTokenLink, toktokQuotationUploadLink]);
 
@@ -212,7 +233,12 @@ export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
   link: toktokBillsLoadGraphqlLink,
 });
 
-export const TOKTOK_QUOTATION_CLIENT = new ApolloClient({
+export const TOKTOK_QUOTATION_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
   link: toktokQuotationGraphqlLink,
+});
+
+export const TOKTOK_GO_GRAPHQL_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: toktokGoGraphqlLink,
 });

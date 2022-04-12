@@ -47,3 +47,17 @@ export const GET_QUOTATION = gql`
     }
   }
 `;
+
+export const GET_TRIP_FARE = gql`
+  query getTripFare($input: GetTripFareInput!) {
+    getTripFare(input: $input) {
+      hash
+      tripFare {
+        flatRate
+        mileageFee
+        discount
+        total
+      }
+    }
+  }
+`;

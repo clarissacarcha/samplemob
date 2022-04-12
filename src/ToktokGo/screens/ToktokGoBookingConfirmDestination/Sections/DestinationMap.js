@@ -8,7 +8,7 @@ import {COLOR, DARK, MEDIUM, LIGHT, MAP_DELTA_LOW} from '../../../../res/constan
 
 import {GET_PLACE_BY_LOCATION} from '../../../graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_QUOTATION_CLIENT} from 'src/graphql';
+import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import {number} from 'prop-types';
 export const DestinationMap = ({onDragEndMarker, mapRegion}) => {
   return (
@@ -16,7 +16,7 @@ export const DestinationMap = ({onDragEndMarker, mapRegion}) => {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={{height: '90%', width: '100%'}}
-        region={{...mapRegion}}
+        initialRegion={{...mapRegion}}
         onRegionChangeComplete={e => {
           onDragEndMarker(e);
         }}></MapView>
