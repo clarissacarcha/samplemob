@@ -45,10 +45,15 @@ const INITIAL_STATE = {
       phrase: null,
     },
     rate: {
-      amount: null,
-      flatRate: null,
-      mileageFee: null,
+      hash: null,
+      tripFare: {
+        flatRate: null,
+        mileageFee: null,
+        discount: null,
+        total: null,
+      },
     },
+    voucher: null,
     noteToDriver: null,
     paymentMethod: 1,
     passengerCount: 1,

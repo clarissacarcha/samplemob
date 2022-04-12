@@ -7,7 +7,7 @@ import BookingDummyData from '../../components/BookingDummyData';
 import {useFocusEffect} from '@react-navigation/native';
 import {GET_PLACE_BY_ID} from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_QUOTATION_CLIENT} from '../../../graphql';
+import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from '../../../graphql';
 import uuid from 'react-native-uuid';
 
 const ToktokGoBookingStart = ({navigation}) => {
@@ -21,7 +21,7 @@ const ToktokGoBookingStart = ({navigation}) => {
   };
 
   const [getPlaceById] = useLazyQuery(GET_PLACE_BY_ID, {
-    client: TOKTOK_QUOTATION_CLIENT,
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
       setBookingInitialState(response.getPlaceById);

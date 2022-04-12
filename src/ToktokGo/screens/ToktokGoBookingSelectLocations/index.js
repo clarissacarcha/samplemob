@@ -4,7 +4,7 @@ import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation} from '
 import CONSTANTS from '../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID} from '../../graphql';
-import {TOKTOK_QUOTATION_CLIENT} from 'src/graphql';
+import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {throttle, debounce} from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
@@ -23,20 +23,18 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
   const [searchOrigin, setSearchOrigin] = useState(origin.place.formattedAddress);
 
   const [getPlaceAutocomplete] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
-    client: TOKTOK_QUOTATION_CLIENT,
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log('CALLED HERE');
       setSearchResponse(response.getPlaceAutocomplete);
     },
     onError: error => console.log('getPlaceAutocomplete', error),
   });
 
   const [getPlaceById] = useLazyQuery(GET_PLACE_BY_ID, {
-    client: TOKTOK_QUOTATION_CLIENT,
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log(response);
       if (selectedInput == 'D') {
         dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: response.getPlaceById});
       } else {

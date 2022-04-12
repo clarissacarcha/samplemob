@@ -6,11 +6,12 @@ import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import {SheetManager} from 'react-native-actions-sheet';
 import {GET_QUOTATION, GET_PLACE_BY_LOCATION} from '../../graphql';
-import {TOKTOK_QUOTATION_CLIENT} from '../../../graphql';
+import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from '../../../graphql';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {decodeLegsPolyline} from '../../helpers';
+import {decodeLegsPolyline, useDebounce} from '../../helpers';
 import {MAP_DELTA_LOW} from '../../../res/constants';
+import {throttle} from 'lodash';
 
 const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const {popTo} = route.params;
@@ -18,20 +19,10 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const dropDownRef = useRef(null);
   const {destination, origin} = useSelector(state => state.toktokGo);
   const [mapRegion, setMapRegion] = useState({...origin.place.location, ...MAP_DELTA_LOW});
-  console.log('DESTINATION: ', destination, 'ORIGIN: ', origin);
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        navigation.pop(popTo);
-        return true;
-      };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress); // detect back button press
-      return () => BackHandler.removeEventListener('hardwareBackPress');
-    }, [navigation]),
-  );
+  const [initialRegionChange, setInitialRegionChange] = useState(true);
 
   const [getQuotation] = useLazyQuery(GET_QUOTATION, {
-    client: TOKTOK_QUOTATION_CLIENT,
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
       input: {
@@ -55,31 +46,37 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     onError: error => console.log('error', error),
   });
 
-  const onConfirm = () => {
-    getQuotation();
-  };
-
+  const onConfirm = throttle(getQuotation, 1000, {trailing: false});
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
-    client: TOKTOK_QUOTATION_CLIENT,
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log('getPlaceByLocation', response);
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: response.getPlaceByLocation});
     },
     onError: error => console.log('error', error),
   });
-  const onDragEndMarker = e => {
-    setMapRegion(e);
-    getPlaceByLocation({
-      variables: {
-        input: {
-          location: {
-            latitude: e.latitude,
-            longitude: e.longitude,
+
+  const debouncedRequest = useDebounce(
+    value =>
+      getPlaceByLocation({
+        variables: {
+          input: {
+            location: {
+              latitude: value.latitude,
+              longitude: value.longitude,
+            },
           },
         },
-      },
-    });
+      }),
+    1000,
+  );
+
+  const onDragEndMarker = e => {
+    if (!initialRegionChange) {
+      setMapRegion(e);
+      debouncedRequest(e);
+    }
+    setInitialRegionChange(false);
   };
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>

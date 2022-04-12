@@ -5,8 +5,13 @@ import CONSTANTS from '../../../common/res/constants';
 import {Header, VehicleCard} from '../../components';
 
 const ToktokGoBookingVehicle = ({navigation, route}) => {
-  const {data} = route.params;
+  const {data, selectVehicle, loading, selectedVehicle} = route.params;
+  const [selectedVehicleType, setSelectedVehicle] = useState(selectedVehicle);
 
+  const onSelectVehicle = data => {
+    setSelectedVehicle(data);
+    selectVehicle(data);
+  };
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
       <Header navigation={navigation} title={'Select Vehicle'} />
@@ -15,16 +20,23 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
         data={data.vehicleTypeRates}
         // keyExtractor={item => item.id}
         renderItem={({item, index}) => {
-          const lastItem = index == Data.frequentlyUsed.length - 1 ? true : false;
+          const lastItem = index == data.vehicleTypeRates.length - 1 ? true : false;
           return (
             <View style={{marginHorizontal: 16}}>
-              <VehicleCard type={'isFromSeeAll'} data={item} lastItem={lastItem} />
+              <VehicleCard
+                type={'isFromSeeAll'}
+                data={item}
+                selectVehicle={onSelectVehicle}
+                selectedVehicle={selectedVehicleType}
+                loading={loading}
+                lastItem={lastItem}
+              />
             </View>
           );
         }}
       />
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.buttonStyle}>
+        <TouchableOpacity onPress={() => navigation.pop()} style={styles.buttonStyle}>
           <Text style={styles.textStyle}>Select Vehicle</Text>
         </TouchableOpacity>
       </View>

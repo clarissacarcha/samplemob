@@ -32,7 +32,7 @@ export const Pickup = ({onDragEndMarker, mapRegion}) => {
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{height: '90%', width: '100%'}}
-        region={{...mapRegion}}
+        initialRegion={{...mapRegion}}
         onRegionChangeComplete={e => {
           onDragEndMarker(e);
         }}></MapView>

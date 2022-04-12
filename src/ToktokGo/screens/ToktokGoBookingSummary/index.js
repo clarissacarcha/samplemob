@@ -1,17 +1,21 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Image, StatusBar, TouchableWithoutFeedback} from 'react-native';
 import constants from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   BookingDistanceTime,
   BookingSelectVehicle,
   BookingSelectPaymentMethod,
   BookingConfirmButton,
   BookingMap,
+  BookingVoucher,
 } from './Sections';
 import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet} from './Components';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
+import {GET_TRIP_FARE} from '../../graphql';
+import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
+import {useLazyQuery} from '@apollo/react-hooks';
 
 const ToktokGoBookingSummary = ({navigation, route}) => {
   const {popTo} = route.params;
@@ -19,7 +23,63 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
+  const dispatch = useDispatch();
+  const [selectedVehicle, setSelectedVehicle] = useState(quotationDataResult.vehicleTypeRates?.[0]);
+  const [selectedVouchers, setSelectedVouchers] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [expandBookingDetails, setExpandBookingDetails] = useState(true);
+
+  const [getTripFare, {called}] = useLazyQuery(GET_TRIP_FARE, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+        payload: {...details, rate: response.getTripFare},
+      });
+    },
+    onError: error => console.log('error', error),
+  });
+
+  const selectVehicle = data => {
+    setLoading(true);
+    setSelectedVehicle(data);
+  };
+
+  const setSelectedVouchersNull = () => {
+    setSelectedVouchers(null);
+    dispatch({
+      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+      payload: {...details, voucher: null},
+    });
+  };
+
+  const dispatchRequest = async () => {
+    dispatch({
+      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+      payload: {...details, vehicleType: selectedVehicle.vehicleType},
+    });
+    getTripFare({
+      variables: {
+        input: {
+          vehicleTypeRateHash: selectedVehicle.hash,
+          voucherHash: selectedVouchers?.hash ? selectedVouchers?.hash : '',
+        },
+      },
+    });
+  };
+
+  useEffect(() => {
+    dispatchRequest();
+  }, [selectedVehicle, selectedVouchers]);
+
+  useEffect(() => {
+    setSelectedVouchers(details.voucher);
+  }, [details.voucher]);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [details]);
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -57,7 +117,18 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
       <TouchableWithoutFeedback onPress={() => setExpandBookingDetails(true)} style={styles.card}>
         <View style={styles.card}>
           <BookingDistanceTime quotationData={quotationDataResult} />
-          <BookingSelectVehicle data={quotationDataResult} navigation={navigation} />
+          <BookingSelectVehicle
+            data={quotationDataResult}
+            selectedVehicle={selectedVehicle}
+            navigation={navigation}
+            selectVehicle={selectVehicle}
+            loading={loading}
+          />
+          <BookingVoucher
+            navigation={navigation}
+            selectedVouchers={selectedVouchers}
+            setSelectedVouchersNull={setSelectedVouchersNull}
+          />
           <BookingSelectPaymentMethod
             viewPaymenetSucessModal={viewPaymenetSucessModal}
             setViewSelectPaymentModal={setViewSelectPaymentModal}

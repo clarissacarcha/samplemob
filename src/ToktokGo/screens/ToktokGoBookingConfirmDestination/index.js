@@ -7,18 +7,25 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
 import {GET_PLACE_BY_LOCATION} from '../../graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_QUOTATION_CLIENT} from 'src/graphql';
+import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import {MAP_DELTA_LOW} from '../../../res/constants';
+import {useDebounce} from '../../helpers';
+import {throttle} from 'lodash';
 
 const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   const {destination, origin} = useSelector(state => state.toktokGo);
   const {popTo} = route.params;
+  const [initialRegionChange, setInitialRegionChange] = useState(true);
   const dispatch = useDispatch();
-  const onConfirm = () => {
-    navigation.push('ToktokGoBookingConfirmPickup', {
-      popTo: popTo + 1,
-    });
-  };
+  const onConfirm = throttle(
+    () => {
+      navigation.push('ToktokGoBookingConfirmPickup', {
+        popTo: popTo + 1,
+      });
+    },
+    1000,
+    {trailing: false},
+  );
 
   const [mapRegion, setMapRegion] = useState(
     destination?.place?.location?.latitude
@@ -27,27 +34,35 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   );
 
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
-    client: TOKTOK_QUOTATION_CLIENT,
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log('getPlaceByLocation', response);
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: response.getPlaceByLocation});
     },
     onError: error => console.log('error', error),
   });
 
-  const onDragEndMarker = e => {
-    setMapRegion(e);
-    getPlaceByLocation({
-      variables: {
-        input: {
-          location: {
-            latitude: e.latitude,
-            longitude: e.longitude,
+  const debouncedRequest = useDebounce(
+    value =>
+      getPlaceByLocation({
+        variables: {
+          input: {
+            location: {
+              latitude: value.latitude,
+              longitude: value.longitude,
+            },
           },
         },
-      },
-    });
+      }),
+    1000,
+  );
+
+  const onDragEndMarker = e => {
+    if (!initialRegionChange) {
+      setMapRegion(e);
+      debouncedRequest(e);
+    }
+    setInitialRegionChange(false);
   };
 
   return (
