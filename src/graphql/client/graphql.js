@@ -174,6 +174,19 @@ export const TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT = new ApolloClient({
 });
 
 export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          getShops: {
+            merge(existing = [], incoming) {
+              console.log(existing, incoming);
+              return [...existing, ...incoming];
+            },
+          },
+        },
+      },
+    },
+  }),
   link: toktokFoodGraphqlLink,
 });
