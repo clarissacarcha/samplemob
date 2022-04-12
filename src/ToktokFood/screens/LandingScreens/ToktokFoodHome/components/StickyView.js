@@ -182,7 +182,6 @@ const StickyView = () => {
       // {fetchPolicy: 'network-only'},
       setRefreshing(false);
     });
-    console.log('refresh');
   };
 
   const onSelectActiveTab = async item => {
