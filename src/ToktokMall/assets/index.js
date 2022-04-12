@@ -47,3 +47,4 @@ export const shopIcon = require("./icons/shop-outline.png");
 export const destination = require("../assets/icons/destination.png");
 export const origin = require("../assets/icons/origin.png");
 export const cancelledIcon = require("./icons/cancelled.png")
+export const deliveredIcon = require("../assets/icons/double-check.png");

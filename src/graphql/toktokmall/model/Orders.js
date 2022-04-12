@@ -191,3 +191,37 @@ export const GET_ORDER_DETAILS = gql`
     }
   }
 `
+
+export const GET_ACTIVIY_ORDER_DETAILS = gql`
+	query getActivityOrderDetails($input: getOrderDetailsInput) {
+		getActivityOrderDetails(input: $input) {
+			status
+			referenceNum
+			paymentMethod
+			totalAmount
+			payments
+			location
+			logs
+			orders {
+			  shopId
+			  shopName
+			  totalItems
+			  shippingFee
+			  totalAmount
+			  items {
+				productId
+				quantity
+				data {
+				  itemname
+				  name
+				  price
+				  variant
+				  img {
+					filename
+				  }
+				}
+			  }
+			}
+    	}
+  	}
+`

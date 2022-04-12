@@ -3,22 +3,14 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import { Price } from '../../../../helpers';
 import { FONT, COLOR } from '../../../../../res/variables';
 import { origin, destination} from './../../../../assets';
-import CustomIcon from "../../../../Components/Icons";
 import AIcons from 'react-native-vector-icons/dist/AntDesign';
+import { RenderDot } from './SubComponents';
 
 export const RenderSummary = ({data}) => {
-    const grandTotal = parseFloat(data?.shipping?.deliveryAmount) + parseFloat(data?.totalAmount)
+    const grandTotal = parseFloat(data?.payments?.shippingFee) + parseFloat(data?.totalAmount)
   
     const [bolean,setBolean] = useState(false);
-  
-    const smallDots = (number,color) => (
-      <View style={{alignItems: 'center'}}>
-        {[...Array(number)].map((index) => 
-            <CustomIcon.FA5Icon key = {index} name="stop" size={2} color={color} style={{marginVertical: 1, marginHorizontal: 2}} />
-          )}
-      </View>
-    )
-  
+    
     return (
       <>
         <View style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
@@ -26,13 +18,13 @@ export const RenderSummary = ({data}) => {
             <Text style={{fontSize: 13}}>Shipping Fee:</Text>
             <Text style={{fontSize: 13}}>
               Order Total (
-                {data?.orderData?.length}{' '}
-                {data?.orderData?.length > 1 ? "items" : "item"}
+                {data?.orders?.totalItems}{' '}
+                {data?.orders?.totalItems > 1 ? "items" : "item"}
               ): 
             </Text>
           </View>
           <View styl={{flex: 1}}>
-            <Text style={{fontSize: 13}}><Price amount={data?.shipping?.deliveryAmount} /></Text>
+            <Text style={{fontSize: 13}}><Price amount={data?.payments?.shippingFee} /></Text>
             <Text style={{color: "#F6841F", fontSize: 13, fontFamily: FONT.BOLD}}><Price amount={data?.totalAmount} /></Text>
           </View>
         </View>
@@ -45,8 +37,8 @@ export const RenderSummary = ({data}) => {
               style={{ height: 20, width: 12, resizeMode: 'contain' }}
               source={origin}
             />
-            <View style={{}}>
-              {smallDots(7, '#ccc')}
+            <View>
+              <RenderDot number={7} color={'#ccc'}/>
             </View>
             <Image
               style={{ height: 20, width: 12, resizeMode: 'contain' }}
@@ -57,13 +49,13 @@ export const RenderSummary = ({data}) => {
           <View style={{ flex: 1, justifyContent: 'center', marginVertical:16}}>
             <View style={{ flexDirection: 'row' }}>
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 13, fontWeight: '100' }} numberOfLines={2}>{data?.shipping?.store?.shopname}</Text>
+                <Text style={{ fontSize: 13, fontWeight: '100' }} numberOfLines={2}>{data?.location?.destination?.name}</Text>
               </View>
             </View>
             <View>
             <View style={{ flexDirection: 'row', paddingTop: 3 }}>
                 <View style={{ flex: 1.5 }}>
-                  <Text style={{ color: "#525252", fontSize: 11 }}>{data?.shipping?.store?.__typename}</Text>
+                  <Text style={{ color: "#525252", fontSize: 11 }}>{data?.location?.destination?.address}</Text>
                 </View>
                 <View style={{ flex: 0.2 }}></View>
               </View>
@@ -71,13 +63,17 @@ export const RenderSummary = ({data}) => {
             <View style={{flex: 1, justifyContent: 'center',paddingTop:16}}>
               <View style={{flexDirection: 'row'}}>
                 <View style={{flex: 1}}>
-                  <Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>Juan Dela Cruz</Text>
+                  <Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>
+                    {data?.location?.origin?.name}
+                  </Text>
                 </View>
               </View>
   
               <View style={{flexDirection: 'row', paddingTop: 3}}>
                 <View style={{flex: 1.5}}>
-                  <Text style={{color: "#525252", fontSize: 11}}>10F Inoza Tower, 40th Street, Bonifacio Global City</Text>
+                  <Text style={{color: "#525252", fontSize: 11}}>
+                    {data?.location?.origin?.address}
+                  </Text>
                 </View>
                 <View style={{flex: 0.2}}></View>
               </View>
@@ -94,8 +90,8 @@ export const RenderSummary = ({data}) => {
               <Text style={{fontSize: 13,paddingTop:8}}>Merchandise Subtotal: </Text>
             </View>
             <View styl={{flex: 1}}>
-              <Text style={{fontSize: 13}}><Price amount={data?.shipping?.deliveryAmount} /></Text>
-              <Text style={{color: "#F6841F", fontSize: 13, fontFamily: FONT.BOLD,paddingTop:8}}><Price amount={data?.totalAmount} /></Text>
+              <Text style={{fontSize: 13}}><Price amount={data?.payments?.shippingFee} /></Text>
+              <Text style={{color: "#F6841F", fontSize: 13, fontFamily: FONT.BOLD,paddingTop:8}}><Price amount={data?.payments.subTotal} /></Text>
             </View>
           </View>
         }

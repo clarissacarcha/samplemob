@@ -2,17 +2,17 @@ import React from 'react'
 import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { FONT } from '../../../../../res/variables';
 
-export const RenderBuyAgain = ({ data }) => {
-  return (
+export const RenderBuyAgain = ({ data, onPressBuy}) => {
+  
+  return data?.status?.status === 4 ||  data?.status?.status === 5?
     <View style={styles.container}> 
-        <TouchableOpacity style={styles.buyAgainButton} onPress={() => {
-            navigation.navigate("ToktokMallProductDetails", {Id: data.productId})
-        }} >
+        <TouchableOpacity style={styles.buyAgainButton} onPress={() => onPressBuy()} >
             <Text style={styles.buyAgainText}>Buy Again</Text>
         </TouchableOpacity>
     </View>
-  )
+  : <></>
 }
+
 const styles = StyleSheet.create({
     container: {
         borderTopWidth:.50,

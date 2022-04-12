@@ -8,7 +8,7 @@ import { ApiCall } from '../../../helpers';
 import {connect, useSelector} from "react-redux"
 import {EventRegister} from 'react-native-event-listeners'
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import { GET_ORDER_DETAILS } from '../../../../graphql/toktokmall/model';
+import { GET_ACTIVIY_ORDER_DETAILS } from '../../../../graphql/toktokmall/model';
 import { getRefComAccountType } from '../../../helpers';
 
 import {
@@ -20,7 +20,7 @@ import {
 } from './Components'
 
 const Component = ({navigation, route, notificationCountSession, notifications}) => {
-
+  
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack={() => {
       EventRegister.emit('refreshToktokmallNotifications')
@@ -38,13 +38,13 @@ const Component = ({navigation, route, notificationCountSession, notifications})
 
   const [data, setData] = useState([])
   const session = useSelector(state => state.session)
-  const [getOrderDetails, {loading, error}] = useLazyQuery(GET_ORDER_DETAILS, {
+  const [getOrderDetails, {loading, error}] = useLazyQuery(GET_ACTIVIY_ORDER_DETAILS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
-      if(response.getOrderDetails){
-        // console.log('order details',response.getOrderDetails)
-        setData(response.getOrderDetails)
+      if(response.getActivityOrderDetails){
+        // console.log('order details',response.getActivityOrderDetails)
+        setData(response.getActivityOrderDetails)
       }
     },
     onError: (err) => {
@@ -85,6 +85,10 @@ const Component = ({navigation, route, notificationCountSession, notifications})
     return <Loading state={loading} />
   }
 
+  onPressBuy = () => {
+    navigation.navigate("ToktokMallProductDetails", {Id: route.params.id})
+  }
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -92,7 +96,7 @@ const Component = ({navigation, route, notificationCountSession, notifications})
         <RenderStore data={data} />
         <RenderSummary data={data} />
         <RenderDeliveryLog data={data} />
-        {/* <RenderBuyAgain data={data}/> */}
+        <RenderBuyAgain data={data} onPressBuy={onPressBuy}/>
       </ScrollView>
     </View>
   );

@@ -5,12 +5,20 @@ import CustomIcon from "../../../../../Components/Icons";
 
 import { RenderDot } from './RenderDot';
 
-export const RenderRow = ({ rows, item, index, active, value }) => {
-    const stateColor = active ? "#F6841F" : "#CCCCCC"
+export const RenderRow = ({ rows, item, index }) => {
+    const statuses = [
+        "Order delivered",
+        "Order is ready to be delivered",
+        "Booking order is confirmed",
+        "Order is ready to be picked up",
+        "Preparing Order", 
+        "Order Confirmed",
+    ]
+    const stateColor = item.date ? "#F6841F" : "#CCCCCC"
 
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-            <View style={{ flexDirection: 'column', marginRight: 25}}>
+            <View style={{ flexDirection: 'column', marginRight: 20}}>
                 {   
                     index !== 0 
                     ? <RenderDot number={3} color={'#ccc'}/>
@@ -28,12 +36,15 @@ export const RenderRow = ({ rows, item, index, active, value }) => {
                 </View>
             </View>
             <View style={{ flex: 3, justifyContent: 'center' }}>
-                <Text style={{ fontSize: 13, color: active ? "#F6841F" : "#929191", fontFamily: active ? FONT.BOLD : FONT.REGULAR }}>
-                    {item.state}
+                <Text style={{ 
+                    fontSize: 12, color: item.date ? "#F6841F" : "#929191", 
+                    fontFamily: item.date ? FONT.BOLD : FONT.REGULAR 
+                }}>
+                    {statuses[index]}
                 </Text>
             </View>
             <View style={{ flex: 2, justifyContent: 'center', alignItems: 'flex-end' }}>
-                <Text style={{ fontSize: 12, color: "#929191" }}>{value}</Text>
+                <Text style={{ fontSize: 12, color: "#929191" }}>{item.date}</Text>
             </View>
         </View>
     )
