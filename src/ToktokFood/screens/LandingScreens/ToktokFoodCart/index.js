@@ -616,6 +616,13 @@ const MainComponent = () => {
     // console.log(temporaryCart?.totalAmount);
     // console.log(amount, parsedAmount, totalPrice);
 
+    const DELIVERY_RECEIVER =
+      receiver.contactPerson && receiver.contactPerson !== ''
+        ? receiver.contactPerson
+        : `${customerInfo.firstName} ${customerInfo.lastName}`;
+
+    const replaceName = DELIVERY_RECEIVER.replace(/[^a-z0-9]/gi, '');
+
     const ORDER = {
       // total_amount: temporaryCart.totalAmount,
       // srp_totalamount: temporaryCart.totalAmount,
@@ -631,10 +638,7 @@ const MainComponent = () => {
     const CUSTOMER = {
       shopid: temporaryCart?.items[0].shopid,
       company_id: String(temporaryCart?.items[0]?.companyId),
-      name:
-        receiver.contactPerson && receiver.contactPerson !== ''
-          ? receiver.contactPerson
-          : `${customerInfo.firstName} ${customerInfo.lastName}`,
+      name: replaceName,
       contactnumber:
         receiver.contactPersonNumber && receiver.contactPersonNumber !== ''
           ? getMobileNumberFormat({conno: receiver.contactPersonNumber})
