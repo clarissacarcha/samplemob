@@ -30,6 +30,7 @@ export const Location = ({
           ) : (
             <TouchableOpacity onPress={() => onChangeSelectedInput('P')}>
               <Text
+                numberOfLines={1}
                 style={{
                   fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
                   fontSize: CONSTANTS.FONT_SIZE.M,
@@ -55,6 +56,7 @@ export const Location = ({
           ) : (
             <TouchableOpacity onPress={() => onChangeSelectedInput('D')}>
               <Text
+                numberOfLines={1}
                 style={{
                   fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
                   fontSize: CONSTANTS.FONT_SIZE.M,

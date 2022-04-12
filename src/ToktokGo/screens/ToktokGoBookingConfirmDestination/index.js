@@ -8,17 +8,23 @@ import {useDispatch, useSelector} from 'react-redux';
 import {GET_PLACE_BY_LOCATION} from '../../graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_QUOTATION_CLIENT} from 'src/graphql';
+import {MAP_DELTA_LOW} from '../../../res/constants';
 
 const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
-  const {destination} = useSelector(state => state.toktokGo);
+  const {destination, origin} = useSelector(state => state.toktokGo);
   const {popTo} = route.params;
   const dispatch = useDispatch();
-
   const onConfirm = () => {
     navigation.push('ToktokGoBookingConfirmPickup', {
       popTo: popTo + 1,
     });
   };
+
+  const [mapRegion, setMapRegion] = useState(
+    destination?.place?.location?.latitude
+      ? {...destination.place.location, ...MAP_DELTA_LOW}
+      : {...origin.place.location, ...MAP_DELTA_LOW},
+  );
 
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_CLIENT,
@@ -29,12 +35,16 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
     },
     onError: error => console.log('error', error),
   });
+
   const onDragEndMarker = e => {
-    console.log(e);
+    setMapRegion(e);
     getPlaceByLocation({
       variables: {
         input: {
-          location: e,
+          location: {
+            latitude: e.latitude,
+            longitude: e.longitude,
+          },
         },
       },
     });
@@ -45,7 +55,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      <DestinationMap onDragEndMarker={onDragEndMarker} />
+      <DestinationMap onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />
       <View style={styles.card}>
         <View style={{flexDirection: 'row', textAlign: 'center'}}>
           <FA5Icon name="map-marker-alt" size={20} color={constants.COLOR.ORANGE} style={{marginRight: 10}} />

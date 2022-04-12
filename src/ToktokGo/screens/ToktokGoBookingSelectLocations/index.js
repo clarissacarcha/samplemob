@@ -42,6 +42,7 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
       } else {
         dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: response.getPlaceById});
       }
+      onPressLocation();
     },
     onError: error => console.log('error', error),
   });
@@ -95,7 +96,6 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
         },
       },
     });
-    onPressLocation();
   };
 
   const onChangeSelectedInput = value => {

@@ -1,61 +1,40 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {View, StyleSheet, Image, Text} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {COLOR, DARK, MEDIUM, LIGHT, MAP_DELTA_LOW} from '../../../../res/constants';
 
-export const DestinationMap = ({onDragEndMarker}) => {
-  const {destination, origin} = useSelector(state => state.toktokGo);
-  const mapRef = useRef();
-  const INITIAL_REGION = {
-    latitude: 11.22309004847093,
-    latitudeDelta: 19.887065883877668,
-    longitude: 121.97818368673325,
-    longitudeDelta: 10.145791545510278,
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      mapRef.current.fitToCoordinates(
-        [destination?.place?.location?.latitude ? destination.place.location : origin.place.location],
-        {
-          edgePadding: {
-            right: 100,
-            bottom: 100,
-            left: 100,
-            top: 100,
-          },
-        },
-        3000, // Animation duration in milliseconds.
-      );
-    }, 1000);
-  }, [destination.place.location]);
-
+import {GET_PLACE_BY_LOCATION} from '../../../graphql';
+import {useMutation, useLazyQuery} from '@apollo/react-hooks';
+import {TOKTOK_QUOTATION_CLIENT} from 'src/graphql';
+import {number} from 'prop-types';
+export const DestinationMap = ({onDragEndMarker, mapRegion}) => {
   return (
-    <MapView
-      ref={mapRef}
-      provider={PROVIDER_GOOGLE}
-      style={{height: '90%', width: '100%'}}
-      initialRegion={INITIAL_REGION}>
-      <Marker
-        key={key => {
-          1;
-        }}
-        coordinate={destination?.place?.location?.latitude ? destination.place.location : origin.place.location}
-        draggable
-        onDragEnd={e => {
-          onDragEndMarker(e.nativeEvent.coordinate);
-        }}>
-        <View style={{alignItems: 'center'}}>
-          <FA5Icon name="map-marker-alt" size={20} color={CONSTANTS.COLOR.ORANGE} />
-        </View>
-      </Marker>
-    </MapView>
+    <View style={styles.container}>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={{height: '90%', width: '100%'}}
+        region={{...mapRegion}}
+        onRegionChangeComplete={e => {
+          onDragEndMarker(e);
+        }}></MapView>
+      <View style={{alignItems: 'center', zIndex: 999, alignContent: 'center', position: 'absolute'}}>
+        <FA5Icon name="map-marker-alt" size={20} color={CONSTANTS.COLOR.ORANGE} />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    // flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    // position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   pinLocation: {
     flexDirection: 'row',
     alignItems: 'center',

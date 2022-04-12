@@ -1,24 +1,23 @@
 import React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
+import {Text, StyleSheet, TouchableOpacity, View} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const CancelRetryButton = ({}) => {
+export const CancelRetryButton = ({waitingStatus, setWaitingStatus, setViewCancelBookingModal}) => {
   return (
     <>
-      {false && (
-        <View style={styles.cancelContainer}>
+      {waitingStatus != 6 ? (
+        <TouchableOpacity style={styles.cancelContainer} onPress={() => setViewCancelBookingModal(true)}>
           <Text style={styles.textStyle}>Cancel</Text>
-        </View>
-      )}
-      {true && (
+        </TouchableOpacity>
+      ) : (
         <View style={styles.retryContainer}>
-          <View style={styles.cancelButtonContainer}>
+          <TouchableOpacity style={styles.cancelButtonContainer} onPress={() => setViewCancelBookingModal(true)}>
             <Text style={styles.textStyle}>Cancel</Text>
-          </View>
+          </TouchableOpacity>
 
-          <View style={styles.retryButtonContainer}>
+          <TouchableOpacity style={styles.retryButtonContainer} onPress={() => setWaitingStatus(1)}>
             <Text style={styles.cancelTextStyle}>Retry</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       )}
     </>

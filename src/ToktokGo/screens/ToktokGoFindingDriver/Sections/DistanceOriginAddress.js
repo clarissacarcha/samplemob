@@ -5,11 +5,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import EIcon from 'react-native-vector-icons/Entypo';
 import moment from 'moment';
 
-export const DistanceOriginAddress = ({}) => {
-  // const minDuration = quotationData.route?.duration.minute;
-  // const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
-  // const minTime = moment().format('hh:mm A');
-
+export const DistanceOriginAddress = ({destination, origin}) => {
   return (
     <>
       <View style={styles.container}>
@@ -29,29 +25,21 @@ export const DistanceOriginAddress = ({}) => {
             />
           </View>
           <View style={{flex: 1}}>
-            {/*-------------------- SENDER DETAILS --------------------*/}
+            {/*-------------------- ORIGIN DETAILS --------------------*/}
             <View
               style={{
                 flex: 1,
                 marginBottom: 10,
               }}>
-              <Text style={styles.addressContainer}>
-                <View>
-                  <Text style={styles.landmarkTextStyle}>Inoza Tower</Text>
-                  <Text style={{fontSize: 11, color: '#525252'}}>Inoza Tower, 40th Street, Bonifacio Global City</Text>
-                </View>
-              </Text>
+              <View style={styles.addressContainer}>
+                <Text style={styles.landmarkTextStyle}>{origin.place.addressBreakdown.city}</Text>
+                <Text style={{fontSize: 11, color: '#525252'}}>{origin.place.formattedAddress}</Text>
+              </View>
             </View>
-            {/*-------------------- RECIPIENT DETAILS --------------------*/}
-            <View style={{flex: 1, justifyContent: 'flex-end'}}>
-              {true && (
-                <View>
-                  <Text style={styles.landmarkTextStyle}>Bonifacio High Street - Central Square</Text>
-                  <Text style={styles.completeAddressTextStyle}>
-                    Bonifacio High Street - Central Square C1, 5th Ave, Taguig
-                  </Text>
-                </View>
-              )}
+            {/*-------------------- DESTINATION DETAILS --------------------*/}
+            <View style={styles.addressContainer}>
+              <Text style={styles.landmarkTextStyle}>{destination.place.addressBreakdown.city}</Text>
+              <Text style={styles.completeAddressTextStyle}>{destination.place.formattedAddress}</Text>
             </View>
           </View>
         </View>
