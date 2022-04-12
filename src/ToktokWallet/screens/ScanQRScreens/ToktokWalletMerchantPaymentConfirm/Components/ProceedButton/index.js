@@ -36,7 +36,7 @@ export const ProceedButton = ({
     const [successModalVisible, setSuccessModalVisible] = useState(false)
     const [transactionInfo,setTransactionInfo] = useState(null)
 
-    const [postRequestMerchantPayment , {loading: requestLoading}] = useMutation(postRequestMerchantPayment, {
+    const [postRequestMerchantPayment , {loading: requestLoading}] = useMutation(POST_REQUEST_MERCHANT_PAYMENT, {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postRequestMerchantPayment})=> {
             return navigation.navigate("ToktokWalletTPINValidator", {
