@@ -24,7 +24,8 @@ const SuccessfulModal = ({
     merchant ,
     branch ,
     terminal,
-    note
+    note,
+    tokwaAccount
 })=> {
     const navigation = useNavigation()
 
@@ -50,8 +51,8 @@ const SuccessfulModal = ({
             >
                   <View style={styles.recipientInfo}>
                         <TransactionInfo label="Merchant/Branch" value={`${merchant.merchantName} ${branch.branchName}`}/>
-                        <TransactionInfo label="Date" value={moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}/>
-                        <TransactionInfo label="Status" value="Success"/>
+                        <TransactionInfo label="Account Name" value={`${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`}/>
+                        <TransactionInfo label="Account Number" value={tokwaAccount.mobileNumber}/>
                         <TransactionInfo label="Amount" value={`PHP ${numberFormat(transaction.amount)}`}/>
                         { note != "" && <TransactionInfo label="Note" value={note}/>}
                 </View>

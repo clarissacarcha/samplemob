@@ -57,7 +57,7 @@ export const ToktokWalletMerchantPaymentConfirm = ({
                                       </View>
                                       <View style={{marginTop: 10,alignItems:"center"}}>
                                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L}}>{merchant.merchantName} {branch.branchName}</Text>
-                                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>{terminal.terminalCode}</Text>
+                                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,color: COLOR.ORANGE}}>{terminal.terminalName}</Text>
                                       </View>
                                     </View>
                                     <EnterAmount 

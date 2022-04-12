@@ -4,7 +4,7 @@ import { numberFormat , AmountLimitHelper } from 'toktokwallet/helper'
 import {useMutation} from '@apollo/react-hooks'
 import { TransactionUtility } from 'toktokwallet/util'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import { POST_MERCHANT_PAYMENT } from 'toktokwallet/graphql'
+import { POST_REQUEST_MERCHANT_PAYMENT,POST_MERCHANT_PAYMENT } from 'toktokwallet/graphql'
 import {useNavigation} from '@react-navigation/native'
 import {useAlert, usePrompt} from 'src/hooks'
 import {onErrorAlert} from 'src/util/ErrorUtility'
@@ -36,6 +36,23 @@ export const ProceedButton = ({
     const [successModalVisible, setSuccessModalVisible] = useState(false)
     const [transactionInfo,setTransactionInfo] = useState(null)
 
+    const [postRequestMerchantPayment , {loading: requestLoading}] = useMutation(postRequestMerchantPayment, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postRequestMerchantPayment})=> {
+            return navigation.navigate("ToktokWalletTPINValidator", {
+                callBackFunc: Proceed,
+            })
+        },
+        onError: (error)=> {
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert      
+            })
+        }
+    })
+
     const [postMerchantPayment , {data ,error, loading }] = useMutation(POST_MERCHANT_PAYMENT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: ({postMerchantPayment})=> {
@@ -58,9 +75,7 @@ export const ProceedButton = ({
     }
 
     const onSwipeSuccess = ()=> {
-        return navigation.navigate("ToktokWalletTPINValidator", {
-            callBackFunc: Proceed,
-        })
+        postRequestMerchantPayment()
     }
 
     const reviewAndConfirm = async ()=> {
@@ -112,7 +127,7 @@ export const ProceedButton = ({
 
     return (
         <>
-         <AlertOverlay visible={loading}/>
+         <AlertOverlay visible={requestLoading || loading}/>
            {
                transactionInfo &&
                <SuccessfulModal 
@@ -122,6 +137,7 @@ export const ProceedButton = ({
                     merchant={merchant}
                     branch={branch}
                     terminal={terminal}
+                    tokwaAccount={tokwaAccount}
                 />
            }
             <View style={styles.container}>
