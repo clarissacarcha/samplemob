@@ -210,8 +210,17 @@ export const Menu = ({setUserLocation, constants}) => {
 
 const styles = StyleSheet.create({
   menuBox: {
-    marginHorizontal: 8,
     backgroundColor: 'white',
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+
+    elevation: 9,
   },
   menuButton: {
     justifyContent: 'center',

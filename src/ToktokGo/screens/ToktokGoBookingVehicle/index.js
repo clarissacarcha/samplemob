@@ -8,7 +8,7 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
   const {data} = route.params;
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
       <Header navigation={navigation} title={'Select Vehicle'} />
       <FlatList
         showsVerticalScrollIndicator={false}
