@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     color: constants.COLOR.BLACK,
   },
   textContainer: {
+    marginLeft: 16,
     marginTop: 16,
     flexDirection: 'row',
   },
@@ -95,12 +96,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     shadowColor: '#000',
     shadowOffset: {
-      width: 0,
-      height: -10,
+      width: -150,
+      height: -150,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    elevation: 6,
+    shadowOpacity: 0.58,
+    shadowRadius: 16.0,
+
+    elevation: 24,
   },
   fab: {
     backgroundColor: constants.COLOR.ORANGE,

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, StyleSheet, View, Dimensions, Image} from 'react-native';
-import FindingDriver from '../../../../assets/images/FindingDriver.png';
+import FindingDriver from '../../../../assets/images/finding-driverfinal.gif';
 import NoFound from '../../../../assets/images/NoDriverFound.png';
 import CONSTANTS from '../../../../common/res/constants';
 

@@ -13,7 +13,7 @@ export const TotalBreakdown = ({}) => {
           <View style={{flex: 1}}>
             <AccordionBooking
               titleText={'Total'}
-              titleAmount={'₱ ' + 380.0}
+              titleAmount={'₱ ' + '380.00'}
               subTexts={[
                 {amount: '₱300.00', text: 'Sedan'},
                 {amount: '₱80.00', text: 'Distance'},

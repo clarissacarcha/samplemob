@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, StatusBar} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image, StatusBar, TouchableWithoutFeedback} from 'react-native';
 import constants from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
 import {useSelector} from 'react-redux';
@@ -19,6 +19,7 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
+  const [expandBookingDetails, setExpandBookingDetails] = useState(true);
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -45,22 +46,26 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
       />
 
       <BookingMap
+        setExpandBookingDetails={setExpandBookingDetails}
+        expandBookingDetails={expandBookingDetails}
         decodedPolyline={decodedPolyline}
         routeDetails={routeDetails}
         origin={origin}
         destination={destination}
       />
 
-      <View style={styles.card}>
-        <BookingDistanceTime quotationData={quotationDataResult} />
-        <BookingSelectVehicle data={quotationDataResult} navigation={navigation} />
-        <BookingSelectPaymentMethod
-          viewPaymenetSucessModal={viewPaymenetSucessModal}
-          setViewSelectPaymentModal={setViewSelectPaymentModal}
-          details={details}
-        />
-        <BookingConfirmButton SheetManager={SheetManager} />
-      </View>
+      <TouchableWithoutFeedback onPress={() => setExpandBookingDetails(true)} style={styles.card}>
+        <View style={styles.card}>
+          <BookingDistanceTime quotationData={quotationDataResult} />
+          <BookingSelectVehicle data={quotationDataResult} navigation={navigation} />
+          <BookingSelectPaymentMethod
+            viewPaymenetSucessModal={viewPaymenetSucessModal}
+            setViewSelectPaymentModal={setViewSelectPaymentModal}
+            details={details}
+          />
+          {expandBookingDetails && <BookingConfirmButton SheetManager={SheetManager} />}
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -75,14 +80,12 @@ const styles = StyleSheet.create({
     borderTopColor: constants.COLOR.ORANGE,
     borderLeftColor: constants.COLOR.ORANGE,
     borderRightColor: constants.COLOR.ORANGE,
-
+    borderBottomColor: constants.COLOR.WHITE,
     position: 'absolute',
     paddingTop: 13,
     paddingHorizontal: 16,
     bottom: 0,
-    zIndex: 999,
     backgroundColor: constants.COLOR.WHITE,
-    marginTop: 8,
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
   },

@@ -57,8 +57,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   dimensions: {
-    width: 120,
-    height: 140,
+    width: 53,
+    height: 65,
   },
   title: {
     color: CONSTANTS.COLOR.ORANGE,
