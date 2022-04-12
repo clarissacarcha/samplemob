@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import React, {useEffect, useState, useContext, useCallback} from 'react';
 import {StyleSheet, Platform, Text, TextInput, View, TouchableOpacity} from 'react-native';
-import {COLOR, FONT, FONT_SIZE} from 'res/variables';
+import {COLOR, FONT, FONT_SIZE, SHADOW} from 'res/variables';
 import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
 import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
@@ -10,6 +10,10 @@ import {VerifyContext} from './VerifyContextProvider';
 // import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import Separator from 'toktokfood/components/Separator';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import Modal from 'react-native-modal';
+
+const ORDER_INSTRUCTIONS_OPTIONS = ['Remove or edit unavailable item', 'Cancel my order'];
+
 export const Variations = ({data, productId}) => {
   const {
     // totalPrice,
@@ -28,10 +32,13 @@ export const Variations = ({data, productId}) => {
     selectedVariants,
     setSelectedVariants,
     basePrice,
+    orderInstructions,
+    setOrderInstructions,
   } = useContext(VerifyContext);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [dataOptions, setDataOptions] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const variants = filterVariants();
@@ -261,50 +268,6 @@ export const Variations = ({data, productId}) => {
 
             return null;
           })}
-
-        {/* <FlatList
-          data={listData}
-          renderItem={({item: optionLogs}) => {
-            let index = -1;
-            if (selected[item.optionName]) {
-              index = selected[item.optionName].findIndex(v => {
-                return v.addon_id == optionLogs.id;
-              });
-            }
-            return (
-              <View style={styles.variationsWrapper}>
-                <RadioButton
-                  isMultiple={item.noOfSelection > 1}
-                  onValueChange={c => {
-                    onValueChange({item, optionLogs, index, temp});
-                  }}
-                  name={optionLogs.optionName}
-                  selected={index > -1}
-                />
-                <Text style={styles.variationPrice}>+ {optionLogs.optionPrice.toFixed(2)}</Text>
-              </View>
-            );
-          }}
-          scrollEnabled={false}
-          showsVerticalScrollIndicator={false}
-          ListFooterComponent={
-            item.optionLogs.length > 5 && (
-              <TouchableOpacity onPress={() => onToggleItems(index)} activeOpacity={0.9} style={styles.showMore}>
-                <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>
-                  {dataOptions.length > 0 && dataOptions[index].isCollapsed
-                    ? `Hide ${remaining.length > 1 ? 'Items' : 'Item'}`
-                    : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
-                      'Show More'}
-                </Text>
-                <FA5Icon
-                  name={dataOptions.length > 0 ? (dataOptions[index].isCollapsed ? 'chevron-up' : 'chevron-down') : ''}
-                  size={12}
-                  color={'#FFA700'}
-                />
-              </TouchableOpacity>
-            )
-          }
-        /> */}
       </React.Fragment>
     );
   };
@@ -385,29 +348,6 @@ export const Variations = ({data, productId}) => {
               <Variant item={item} />
             ))}
             {variants.length > 5 && <VariantShowMore remaining={remaining} />}
-            {/* <FlatList
-              data={isCollapsed ? data.variants : dataSource}
-              renderItem={renderVariants}
-              style={{flex: 1}}
-              scrollEnabled={false}
-              showsVerticalScrollIndicator={false}
-              ListFooterComponent={
-                data.variants.length > 5 && (
-                  <TouchableOpacity
-                    onPress={() => setIsCollapsed(!isCollapsed)}
-                    activeOpacity={0.9}
-                    style={styles.showMore}>
-                    <Text style={{marginRight: moderateScale(12), color: '#FFA700'}}>
-                      {isCollapsed
-                        ? `Hide ${remaining.length > 1 ? 'Items' : 'Item'}`
-                        : // : `(${remaining.length}) More ${remaining.length > 1 ? 'items' : 'item'}`}
-                          'Show More'}
-                    </Text>
-                    <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={12} color={'#FFA700'} />
-                  </TouchableOpacity>
-                )
-              }
-            /> */}
           </View>
           <Separator />
         </React.Fragment>
@@ -416,46 +356,19 @@ export const Variations = ({data, productId}) => {
     return null;
   };
 
-  // const Notes = () =>
-  //   useMemo(() => {
-  //     return (
-  //       <View style={[styles.variations]}>
-  //         <View style={styles.instructionContainer}>
-  //           <Text style={styles.variationTitle}>Special Instructions</Text>
-  //           <View style={styles.requiredContainer}>
-  //             <Text style={styles.requiredText}>Optional</Text>
-  //           </View>
-  //         </View>
-  //         <TextInput
-  //           value={notes}
-  //           multiline={true}
-  //           numberOfLines={4}
-  //           style={styles.input}
-  //           maxLength={60}
-  //           placeholder="e.g. no cutlery."
-  //           placeholderTextColor={COLOR.MEDIUM}
-  //           onChangeText={notes => setNotes(notes)}
-  //         />
-  //       </View>
-  //     );
-  //   });
-
-  return (
-    <>
-      <Variants />
-      <Options />
-
+  const specialInstructionsComponent = () => {
+    return (
       <View style={[styles.variations]}>
         <View style={styles.instructionContainer}>
-          <Text style={styles.variationTitle}>Special Instructions</Text>
-          <View style={styles.requiredContainer}>
+          <Text style={{...styles.variationTitle, fontWeight: '400'}}>Special Instructions (Optional)</Text>
+          {/* <View style={styles.requiredContainer}>
             <Text style={styles.requiredText}>Optional</Text>
-          </View>
+          </View> */}
         </View>
         <TextInput
           value={notes}
           multiline={true}
-          numberOfLines={4}
+          // numberOfLines={4}
           style={styles.input}
           maxLength={60}
           placeholder="e.g. no cutlery."
@@ -463,7 +376,59 @@ export const Variations = ({data, productId}) => {
           onChangeText={notes => setNotes(notes)}
         />
       </View>
-      {/* <FlatList ListFooterComponent={Notes} data={data.options} renderItem={renderOptions} style={{flex: 1}} /> */}
+    );
+  };
+
+  const orderInstructionComponent = () => {
+    return (
+      <View style={[styles.variations, {borderBottomWidth: 0}]}>
+        <View style={{...styles.instructionContainer}}>
+          <Text style={{...styles.variationTitle, fontWeight: '400'}}>Order Instruction</Text>
+        </View>
+        <View style={styles.divider} />
+        <Text style={{color: '#525252'}}>If this item is unavailable</Text>
+        <TouchableOpacity activeOpacity={0.9} onPress={() => setIsModalVisible(true)}>
+          <View style={styles.orderInstructionContainer}>
+            <Text style={{color: orderInstructions === 'Select one' ? '#9E9E9E' : '#000'}}>{orderInstructions}</Text>
+            <FA5Icon name={'chevron-down'} size={12} color={'#FFA700'} />
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const orderInstructionModalComponent = () => {
+    return (
+      <Modal
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+        isVisible={isModalVisible}
+        onBackdropPress={() => setIsModalVisible(false)}>
+        <View style={styles.modalContainer}>
+          {ORDER_INSTRUCTIONS_OPTIONS.map(instruction => {
+            return (
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => {
+                  setOrderInstructions(instruction);
+                  setIsModalVisible(false);
+                }}>
+                <Text style={styles.modalInstructionText}>{instruction}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </Modal>
+    );
+  };
+
+  return (
+    <>
+      <Variants />
+      <Options />
+      {specialInstructionsComponent()}
+      {orderInstructionComponent()}
+      {orderInstructionModalComponent()}
     </>
   );
 };
@@ -514,17 +479,18 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
   },
   input: {
-    height: moderateScale(90),
-    borderWidth: 1,
-    borderRadius: 10,
+    // height: moderateScale(90),
+    // borderWidth: 1,
+    // borderRadius: 10,
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.REGULAR,
     borderColor: COLOR.MEDIUM,
-    textAlignVertical: 'top',
-    marginVertical: scale(6),
-    paddingTop: 15,
-    paddingHorizontal: scale(15),
+    marginTop: scale(5),
+    // textAlignVertical: 'top',
+    // marginVertical: scale(6),
+    // paddingTop: 15,
+    // paddingHorizontal: scale(15),
   },
   flexCenter: {
     flexDirection: 'row',
@@ -574,4 +540,32 @@ const styles = StyleSheet.create({
     borderBottomColor: '#F7F7FA',
   },
   showMoreText: {marginHorizontal: moderateScale(10), color: '#FFA700'},
+  orderInstructionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: scale(8),
+    paddingHorizontal: scale(15),
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    paddingVertical: scale(10),
+    ...SHADOW,
+    elevation: 1,
+    shadowColor: 'rgba(0, 0, 0, 0.4)',
+  },
+  divider: {
+    height: 2,
+    width: '100%',
+    backgroundColor: '#F7F7FA',
+    marginTop: scale(10),
+    marginBottom: scale(16),
+  },
+  modalContainer: {
+    backgroundColor: '#fff',
+    padding: scale(20),
+    borderRadius: 10,
+  },
+  modalInstructionText: {
+    marginVertical: scale(10),
+  },
 });
