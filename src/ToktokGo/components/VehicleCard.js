@@ -65,11 +65,13 @@ export const VehicleCard = ({type, data, selectVehicle, loading, selectedVehicle
           <View style={styles.priceDetails}>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.fareText}>Base fare</Text>
-              <Text>₱{numberFormat(details?.rate?.tripFare?.flatRate)}</Text>
+              <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>₱{numberFormat(details?.rate?.tripFare?.flatRate)}</Text>
             </View>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.kmText}>Per KM</Text>
-              <Text>₱{numberFormat(details?.rate?.tripFare?.mileageFee)}</Text>
+              <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
+                ₱{numberFormat(details?.rate?.tripFare?.mileageFee)}
+              </Text>
             </View>
           </View>
         ))}
@@ -85,12 +87,12 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 3,
+      height: 1,
     },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
 
-    elevation: 6,
+    elevation: 2,
   },
   container: {
     justifyContent: 'space-between',
@@ -98,6 +100,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   elementWrapper: {
+    marginVertical: -10,
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
@@ -136,6 +139,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   priceDetails: {
+    borderRadius: 5,
     backgroundColor: 'white',
     flex: 1,
     padding: 16,

@@ -40,7 +40,7 @@ export const BookingSelectPaymentMethod = ({setViewSelectPaymentModal, viewPayme
             {/*---Todo: add condition here---*/}
             {true && (
               <TouchableOpacity style={styles.cashInWrapper}>
-                <Text style={styles.cashIntextStyle}>Cash in</Text>
+                <Text style={styles.cashIntextStyle}>Cash In</Text>
               </TouchableOpacity>
             )}
 
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
-    color: CONSTANTS.COLOR.BLACK,
+    color: CONSTANTS.COLOR.ALMOST_BLACK,
     fontSize: CONSTANTS.FONT_SIZE.M,
   },
   seeAlltextStyle: {

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, StatusBar} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image, StatusBar, TouchableWithoutFeedback} from 'react-native';
 import constants from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
 import {useDispatch, useSelector} from 'react-redux';
@@ -27,6 +27,7 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
   const [selectedVehicle, setSelectedVehicle] = useState(quotationDataResult.vehicleTypeRates?.[0]);
   const [selectedVouchers, setSelectedVouchers] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [expandBookingDetails, setExpandBookingDetails] = useState(true);
 
   const [getTripFare, {called}] = useLazyQuery(GET_TRIP_FARE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -105,33 +106,37 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
       />
 
       <BookingMap
+        setExpandBookingDetails={setExpandBookingDetails}
+        expandBookingDetails={expandBookingDetails}
         decodedPolyline={decodedPolyline}
         routeDetails={routeDetails}
         origin={origin}
         destination={destination}
       />
 
-      <View style={styles.card}>
-        <BookingDistanceTime quotationData={quotationDataResult} />
-        <BookingSelectVehicle
-          data={quotationDataResult}
-          selectedVehicle={selectedVehicle}
-          navigation={navigation}
-          selectVehicle={selectVehicle}
-          loading={loading}
-        />
-        <BookingVoucher
-          navigation={navigation}
-          selectedVouchers={selectedVouchers}
-          setSelectedVouchersNull={setSelectedVouchersNull}
-        />
-        <BookingSelectPaymentMethod
-          viewPaymenetSucessModal={viewPaymenetSucessModal}
-          setViewSelectPaymentModal={setViewSelectPaymentModal}
-          details={details}
-        />
-        <BookingConfirmButton SheetManager={SheetManager} />
-      </View>
+      <TouchableWithoutFeedback onPress={() => setExpandBookingDetails(true)} style={styles.card}>
+        <View style={styles.card}>
+          <BookingDistanceTime quotationData={quotationDataResult} />
+          <BookingSelectVehicle
+            data={quotationDataResult}
+            selectedVehicle={selectedVehicle}
+            navigation={navigation}
+            selectVehicle={selectVehicle}
+            loading={loading}
+          />
+          <BookingVoucher
+            navigation={navigation}
+            selectedVouchers={selectedVouchers}
+            setSelectedVouchersNull={setSelectedVouchersNull}
+          />
+          <BookingSelectPaymentMethod
+            viewPaymenetSucessModal={viewPaymenetSucessModal}
+            setViewSelectPaymentModal={setViewSelectPaymentModal}
+            details={details}
+          />
+          {expandBookingDetails && <BookingConfirmButton SheetManager={SheetManager} />}
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -146,14 +151,12 @@ const styles = StyleSheet.create({
     borderTopColor: constants.COLOR.ORANGE,
     borderLeftColor: constants.COLOR.ORANGE,
     borderRightColor: constants.COLOR.ORANGE,
-
+    borderBottomColor: constants.COLOR.WHITE,
     position: 'absolute',
     paddingTop: 13,
     paddingHorizontal: 16,
     bottom: 0,
-    zIndex: 999,
     backgroundColor: constants.COLOR.WHITE,
-    marginTop: 8,
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
   },

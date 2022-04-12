@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
-    color: CONSTANTS.COLOR.BLACK,
+    color: CONSTANTS.COLOR.ALMOST_BLACK,
     fontSize: CONSTANTS.FONT_SIZE.M,
   },
   seeAlltextStyle: {

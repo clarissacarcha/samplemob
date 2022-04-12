@@ -51,8 +51,8 @@ const SearchInput = () => {
         style={styles.searchBox}>
         <View style={styles.inputBox}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <FeatherIcon name="search" size={25} color={COLOR.ORANGE} />
-            <View style={{flex: 1, marginLeft: 20}}>{RenderedWriter}</View>
+            <FeatherIcon name="search" size={20} color={COLOR.ORANGE} />
+            <View style={{flex: 1, marginLeft: 10}}>{RenderedWriter}</View>
           </View>
         </View>
       </ThrottledHighlight>
@@ -66,21 +66,21 @@ export const HeaderSearchField = () => {
   return (
     <>
       <View style={styles.headerBox}>
-          <View style={styles.greetingBox}>
-            <Text style={styles.greetingText}>
-              Hello, {session.user.person.firstName} {session.user.person.lastName}
-            </Text>
-          </View>
-          <SearchInput />
+        <View style={styles.greetingBox}>
+          <Text style={styles.greetingText}>
+            Hello, {session.user.person.firstName} {session.user.person.lastName}
+          </Text>
+        </View>
+        <SearchInput />
       </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  searchContainer:{ 
-    alignItems: 'center', 
-    // backgroundColor:COLOR.TRANSPARENT_YELLOW 
+  searchContainer: {
+    alignItems: 'center',
+    // backgroundColor:COLOR.TRANSPARENT_YELLOW
   },
   headerBox: {
     backgroundColor: 'white',
@@ -106,17 +106,18 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
   },
   searchBox: {
-    bottom: 5, 
-    borderRadius: 5,  
-    backgroundColor: 'white', 
+    bottom: 5,
+    borderRadius: 5,
+    backgroundColor: 'white',
     marginHorizontal: 16,
     shadowColor: '#000',
 
     shadowOffset: {
-        width: 0,
-        height: 2,
+      width: 0,
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5, }
+    elevation: 5,
+  },
 });
