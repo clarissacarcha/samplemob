@@ -245,7 +245,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
         total: grandTotal, 
         toktokid: toktokSession.user.id,
         // toktokid: 1,
-        transactionTypeId: "TOKTOKWALLET PAYMENT"
+        // transactionTypeId: "TOKTOKWALLET PAYMENT"
+        transactionTypeId: 110
       })
       setIsLoading(false)
 
