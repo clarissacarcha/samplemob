@@ -9,31 +9,31 @@ import {
   TextInput,
   TouchableHighlight,
   View,
-  Dimensions
+  Dimensions,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useAlert } from '../../hooks/useAlert';
-import { APP_FLAVOR, DARK, MEDIUM, ORANGE,SIZES } from '../../res/constants';
+import React, {useEffect, useState} from 'react';
+import {useAlert} from '../../hooks/useAlert';
+import {APP_FLAVOR, DARK, MEDIUM, ORANGE, SIZES} from '../../res/constants';
 import constants from '../../common/res/constants';
-import { COLOR, FONT, FONT_SIZE, SIZE } from '../../res/variables';
-import { AUTH_CLIENT, LOGIN_REGISTER } from '../../graphql';
-import { AlertOverlay, AlertModal } from '../../components';
+import {COLOR, FONT, FONT_SIZE, SIZE} from '../../res/variables';
+import {AUTH_CLIENT, LOGIN_REGISTER} from '../../graphql';
+import {AlertOverlay, AlertModal} from '../../components';
 import LoginBanner from '../../assets/images/ToktokLogo.png';
 import SmsRetriever from 'react-native-sms-retriever';
 import Splash from '../../assets/images/LinearGradiant.png';
-import { connect } from 'react-redux';
-import { onError, onErrorAlert } from '../../util/ErrorUtility';
-import { useMutation } from '@apollo/react-hooks';
+import {connect} from 'react-redux';
+import {onError, onErrorAlert} from '../../util/ErrorUtility';
+import {useMutation} from '@apollo/react-hooks';
 
 const imageWidth = Dimensions.get('window').width - 80;
 
-const Login = ({ navigation, session }) => {
+const Login = ({navigation, session}) => {
   const [mobile, setMobile] = useState('');
   const [delay, setDelay] = useState(true);
 
   const alert = useAlert();
 
-  const [loginRegister, { loading }] = useMutation(LOGIN_REGISTER, {
+  const [loginRegister, {loading}] = useMutation(LOGIN_REGISTER, {
     client: AUTH_CLIENT,
     variables: {
       input: {
@@ -46,11 +46,11 @@ const Login = ({ navigation, session }) => {
     },
     onCompleted: data => {
       if (data.loginRegister === 'REGISTER') {
-        navigation.push('SmsVerification', { mobile });
+        navigation.push('SmsVerification', {mobile});
       }
 
       if (data.loginRegister === 'LOGIN') {
-        navigation.push('PasswordVerification', { mobile });
+        navigation.push('PasswordVerification', {mobile});
       }
 
       setMobile(''); //empty out the mobile number
@@ -132,11 +132,11 @@ const Login = ({ navigation, session }) => {
         style={{
           flex: 1,
           justifyContent: 'center',
-          alignItems:'center'
+          alignItems: 'center',
         }}>
         <Image
           source={LoginBanner}
-          style={{ height: imageWidth - 70, width: imageWidth - 150 , marginBottom: "30%", }}
+          style={{height: imageWidth - 70, width: imageWidth - 150, marginBottom: '30%'}}
           resizeMode="contain"
         />
       </ImageBackground>
@@ -153,12 +153,8 @@ const Login = ({ navigation, session }) => {
       }}>
       <AlertOverlay visible={loading} />
       {/* <AlertModal visible={true} /> */}
-      <View style={{flex:1,justifyContent:'center',alignItems:'center',marginBottom:"20%"}}>
-        <Image
-          source={LoginBanner}
-          style={{ height: imageWidth - 70, width: imageWidth - 150 }}
-          resizeMode="contain"
-        />
+      <View style={{flex: 1, alignItems: 'center', marginBottom: '20%', marginTop: '40%'}}>
+        <Image source={LoginBanner} style={{height: imageWidth - 120, width: imageWidth - 170}} resizeMode="contain" />
         {/* <View style={{height: 50, paddingHorizontal: 20, justifyContent: 'flex-end', marginBottom: 10}}>
           <Text style={{fontFamily: FONT.BOLD, color: COLOR.BLACK}}>{`Enter your ${
             APP_FLAVOR == 'C' ? 'mobile' : 'rider'
@@ -166,9 +162,9 @@ const Login = ({ navigation, session }) => {
         </View> */}
 
         {/*-------------------- INPUT ROW --------------------*/}
-       <View style={{ flexDirection: 'row', marginHorizontal: 35 }}>
+        <View style={styles.inputContainer}>
           <View style={styles.inputView}>
-            <Text style={{ fontSize: 13, color: DARK }}>+63</Text>
+            <Text style={{fontSize: 13, color: DARK}}>+63</Text>
           </View>
           <TextInput
             value={mobile}
@@ -180,14 +176,23 @@ const Login = ({ navigation, session }) => {
             onSubmitEditing={() => onSubmit(mobile)}
             placeholderTextColor={MEDIUM}
           />
-          
         </View>
 
         <TouchableHighlight onPress={() => onSubmit(mobile)} underlayColor={COLOR.ORANGE} style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={{ color: COLOR.WHITE, fontSize: FONT_SIZE.M,paddingHorizontal:'37%',fontWeight:"600",lineHeight:SIZES.L,fontFamily: constants.FONT_FAMILY.BOLD }}>Continue</Text>
-        </View>
-      </TouchableHighlight>
+          <View style={styles.submit}>
+            <Text
+              style={{
+                color: COLOR.WHITE,
+                fontSize: FONT_SIZE.M,
+                paddingHorizontal: '36%',
+                fontWeight: '600',
+                lineHeight: SIZES.L,
+                fontFamily: constants.FONT_FAMILY.BOLD,
+              }}>
+              Continue
+            </Text>
+          </View>
+        </TouchableHighlight>
 
         {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
         {/* <TouchableHighlight
@@ -205,11 +210,8 @@ const Login = ({ navigation, session }) => {
             <Text style={{color: COLOR, fontSize: 20}}>Auto Fill</Text>
           </View>
         </TouchableHighlight> */}
-          {/*-------------------- SUBMIT BUTTON --------------------*/}
-    
+        {/*-------------------- SUBMIT BUTTON --------------------*/}
       </View>
-
-    
     </ImageBackground>
   );
 };
@@ -229,8 +231,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     justifyContent: 'center',
     height: 40,
-    backgroundColor:'#F8F8F8',  
-    borderColor: "#F8F8F8",
+    backgroundColor: '#F8F8F8',
+    borderColor: '#F8F8F8',
   },
   input: {
     flex: 1,
@@ -238,16 +240,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     fontSize: FONT_SIZE.M,
     lineHeight: SIZES.L,
-    height: 40,
+    height: 50,
     color: DARK,
     borderTopRightRadius: SIZE.BORDER_RADIUS,
     borderBottomRightRadius: SIZE.BORDER_RADIUS,
-    backgroundColor:'#F8F8F8',
+    backgroundColor: '#F8F8F8',
     borderTopColor: '#F8F8F8',
     borderBottomColor: '#F8F8F8',
-    borderRightColor: "#F8F8F8",
-    borderLeftColor:"#CCCCCC",
-    fontWeight:"400"
+    borderRightColor: '#F8F8F8',
+    borderLeftColor: '#CCCCCC',
+    fontWeight: '400',
   },
   submitBox: {
     margin: 16,
@@ -276,5 +278,16 @@ const styles = StyleSheet.create({
     // width: 50,
     paddingHorizontal: 10,
     alignSelf: 'flex-end',
+  },
+  inputContainer: {
+    marginHorizontal: '10%',
+    backgroundColor: '#F8F8F8',
+    marginVertical: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#F8F8F8',
   },
 });

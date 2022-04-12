@@ -183,8 +183,12 @@ const UnauthenticatedStack = () => (
     />
     <Unauthenticated.Screen name="AccountBlocked" component={AccountBlocked} />
     <Unauthenticated.Screen name="ForgotPasswordRequest" component={ForgotPasswordRequest} />
-    <Unauthenticated.Screen name="ForgotPasswordVerification" component={ForgotPasswordVerification} />
-    <Unauthenticated.Screen name="ForgotPasswordReset" component={ForgotPasswordReset} />
+    <Unauthenticated.Screen
+      name="ForgotPasswordVerification"
+      component={ForgotPasswordVerification}
+      options={{headerShown: false}}
+    />
+    <Unauthenticated.Screen name="ForgotPasswordReset" component={ForgotPasswordReset} options={{headerShown: false}} />
   </Unauthenticated.Navigator>
 );
 
