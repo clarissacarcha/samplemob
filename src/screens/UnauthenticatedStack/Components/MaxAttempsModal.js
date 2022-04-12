@@ -4,7 +4,6 @@ import CONSTANTS from '../../../common/res/constants';
 import WarningIMG from '../../../assets/images/warning.png';
 
 export const MaxAttempsModal = ({isVisible, setVisible}) => {
-  console.log('isVisible', isVisible);
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>

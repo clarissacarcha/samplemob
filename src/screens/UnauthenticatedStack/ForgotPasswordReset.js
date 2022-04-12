@@ -172,7 +172,6 @@ const PostRegistration = ({navigation, route}) => {
     }
 
     setInvalidPassword(errorArray);
-    console.log(validation);
     return result;
   };
 

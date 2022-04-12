@@ -41,7 +41,6 @@ const NumberBox = ({onPress, value, borderError}) => (
 );
 
 const NumberBoxes = ({verificationCode, onNumPress, borderError}) => {
-  console.log(borderError);
   const numberBoxes = [];
   var i;
   for (i = 0; i <= 5; i++) {
