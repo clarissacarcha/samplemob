@@ -50,7 +50,7 @@ const SuccessfulModal = ({
                 onPress={Proceed}
             >
                   <View style={styles.recipientInfo}>
-                        <TransactionInfo label="Merchant/Branch" value={`${merchant.merchantName} ${branch.branchName}`}/>
+                        <TransactionInfo label="Merchant/Branch" value={`${merchant.merchantName} ${branch.branchName} (${terminal.terminalName})`}/>
                         <TransactionInfo label="Account Name" value={`${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`}/>
                         <TransactionInfo label="Account Number" value={tokwaAccount.mobileNumber}/>
                         <TransactionInfo label="Amount" value={`PHP ${numberFormat(transaction.amount)}`}/>
