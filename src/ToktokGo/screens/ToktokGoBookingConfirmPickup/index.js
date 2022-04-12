@@ -21,17 +21,6 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const [mapRegion, setMapRegion] = useState({...origin.place.location, ...MAP_DELTA_LOW});
   const [initialRegionChange, setInitialRegionChange] = useState(true);
 
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        navigation.pop(popTo);
-        return true;
-      };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress); // detect back button press
-      return () => BackHandler.removeEventListener('hardwareBackPress');
-    }, [navigation]),
-  );
-
   const [getQuotation] = useLazyQuery(GET_QUOTATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
