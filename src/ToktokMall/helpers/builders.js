@@ -50,8 +50,8 @@ export const BuildPostCheckoutBody = async ({
 			disrate: [],
 			vouchers: vouchers,
 			shippingvouchers: CheckShippingVouchers(shippingVouchers),
-			reseller_code: referral?.referralCode && referral?.referralCode != null ? referral?.referralCode : "",
-			reseller_account_type: referral?.franchiseeAccountType && referral?.franchiseeAccountType != null ? referral?.franchiseeAccountType : "",
+			referral_code: referral?.referralCode && referral?.referralCode != null ? referral?.referralCode : "",
+			referral_account_type: referral?.franchiseeAccountType && referral?.franchiseeAccountType != null ? referral?.franchiseeAccountType : "",
 			payment_method: paymentMethod,
 			hash_amount: hashAmount,
 			reference_num: referenceNum,
@@ -159,10 +159,10 @@ export const CheckShippingVouchers = (data) => {
 	}
 }
 
-export const GetOrderType = (reseller) => {
-	if(reseller && reseller?.referralCode != null){
-		//reseller
-		return 4
+export const GetOrderType = (referral) => {
+	if(referral && referral?.referralCode != null){
+		//referral
+		return 3
 	}else{
 		//regular
 		return 2
