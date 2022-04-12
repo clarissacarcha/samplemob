@@ -60,3 +60,9 @@ export const GET_MERCHANT_PAYMENTS = gql`
         }
     }
 `
+
+export const POST_REQUEST_MERCHANT_PAYMENT = gql`
+    mutation {
+        postRequestMerchantPayment
+    }
+`
