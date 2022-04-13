@@ -66,7 +66,7 @@ export const RenderDetails = forwardRef(({
 	// We need to know if all item is selected in the shop so that we can check the shop checkbox too.
 	useEffect(() => {
 		const shopId = item.shop.id;
-		const newSelectedItemArr = selectedItemsArr.filter((i) => i.shopId === shopId);
+		const newSelectedItemArr = selectedItemsArr.filter((i) => i?.shopId === shopId);
 		const newSelectedItemArrLength = newSelectedItemArr.length;
 		const actualDataLength = item.data.length;
 

@@ -162,6 +162,17 @@ const Component = ({
     getPreITems();
   }, [route.params, myCartData])
 
+  useEffect(() => {
+    if(selectedItemsArr && selectedItemsArr.length > 0) {
+      let items = ArrayCopy(selectedItemsArr);
+      let checker = items.filter(item => item === null);
+      if(checker.length > 0) {
+        let newItems = items.filter(item => item !== null);
+        setSelectedItemsArr(newItems)
+      }
+    }
+  }, [selectedItemsArr])
+
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -237,7 +248,7 @@ const Component = ({
     let temp = data
     let a = 0;
     for (var x = 0; x < temp.length; x++) {
-      a = a + temp[x].amount
+      a = a + (temp[x]?.amount || 0)
     }
     setSubTotal(a);
   };
