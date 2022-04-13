@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         fontSize: 13
     },
     renderItemID: {
-        color: "#FDBA1C ",
+        color: "#FDBA1C",
         fontWeight: '600',
         marginLeft: 3
     },
