@@ -14,7 +14,7 @@ const TransactionInfo = ({label,value})=> (
             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>{label}</Text>
         </View>
         <View style={{flex: 1,justifyContent:"center",alignItems:"flex-end"}}>
-            <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M}}>{value}</Text>
+            <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M,textAlign:"right"}}>{value}</Text>
         </View>
     </View>
 )
