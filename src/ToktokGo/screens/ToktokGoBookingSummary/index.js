@@ -83,6 +83,7 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
+      <StatusBar backgroundColor={viewSelectPaymentModal ? 'rgba(0,0,0,0.6)' : null} />
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>

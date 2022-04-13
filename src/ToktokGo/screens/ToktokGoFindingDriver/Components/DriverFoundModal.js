@@ -5,7 +5,7 @@ import User from '../../../../assets/images/user-icon.png';
 import Vaccinated from '../../../../assets/images/vaccinated.png';
 import Star from '../../../../assets/images/star.png';
 
-const ImageWidth = (Dimensions.get('window').width - 210) / 2;
+const ImageWidth = (Dimensions.get('window').width - 190) / 2;
 
 export const DriverFoundModal = ({showDriverFoundModal, setShowDriverFoundModal, navigation, route}) => {
   const {popTo, decodedPolyline} = route.params;
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   profileImage: {
     height: ImageWidth,
     width: ImageWidth,
-    borderRadius: 50,
+    borderRadius: 60,
     borderWidth: 4,
     borderColor: CONSTANTS.COLOR.ORANGE,
   },
