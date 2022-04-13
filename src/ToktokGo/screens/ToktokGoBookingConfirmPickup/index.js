@@ -17,10 +17,10 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const {popTo} = route.params;
   const dispatch = useDispatch();
   const dropDownRef = useRef(null);
-  const {destination, origin} = useSelector(state => state.toktokGo);
+  const {details, destination, origin} = useSelector(state => state.toktokGo);
   const [mapRegion, setMapRegion] = useState({...origin.place.location, ...MAP_DELTA_LOW});
   const [initialRegionChange, setInitialRegionChange] = useState(true);
-
+  const [note, setNote] = useState('');
   const [getQuotation] = useLazyQuery(GET_QUOTATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -37,6 +37,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     },
     onCompleted: response => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ROUTE', payload: response.getQuotation.quotation.route});
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, noteToDriver: note}});
       navigation.push('ToktokGoBookingSummary', {
         popTo: popTo + 1,
         quotationDataResult: response.getQuotation.quotation,
@@ -83,9 +84,9 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop(popTo)}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />
+      {mapRegion.latitude && <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
       <View style={styles.card}>
-        <NotesToDriver dropDownRef={dropDownRef} navigation={navigation} popTo={popTo} />
+        <NotesToDriver dropDownRef={dropDownRef} navigation={navigation} popTo={popTo} note={note} setNote={setNote} />
         <ConfirmPickupButton onConfirm={onConfirm} />
       </View>
     </View>

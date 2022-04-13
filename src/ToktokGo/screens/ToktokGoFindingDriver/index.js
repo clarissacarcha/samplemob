@@ -14,13 +14,14 @@ import {DriverFoundModal} from './Components';
 import {ReasonCancelModal, CancelBookingNoFeeModal, SuccesCancelBookingModal} from '../CancelationModals';
 
 const ToktokGoFindingDriver = ({navigation, route}) => {
+  const {bookedData, popTo} = route.params;
   const {routeDetails, destination, origin} = useSelector(state => state.toktokGo);
   const [showDriverFoundModal, setShowDriverFoundModal] = useState(false);
   const [waitingStatus, setWaitingStatus] = useState(1);
   const [viewCancelBookingModal, setViewCancelBookingModal] = useState(false);
   const [viewCancelReasonModal, setViewCancelReasonModal] = useState(false);
   const [viewSuccessCancelBookingModal, setViewSuccessCancelBookingModal] = useState(false);
-
+  console.log('BOOKED DATA:', destination);
   useEffect(() => {
     if (waitingStatus < 6) {
       const interval = setTimeout(() => {
@@ -76,7 +77,7 @@ const ToktokGoFindingDriver = ({navigation, route}) => {
         navigation={navigation}
         route={route}
       />
-      <BackButton navigation={navigation} />
+      <BackButton navigation={navigation} popTo={popTo} />
       <TouchableOpacity
         style={{position: 'absolute', zIndex: 999, right: 0, top: 100}}
         onPress={() => setShowDriverFoundModal(!showDriverFoundModal)}>

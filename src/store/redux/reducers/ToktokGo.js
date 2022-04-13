@@ -59,6 +59,7 @@ const INITIAL_STATE = {
     passengerCount: 1,
   },
   routeDetails: {
+    hash: null,
     distance: {
       killometer: null,
     },
@@ -79,6 +80,7 @@ const INITIAL_STATE = {
       steps: [],
     },
   },
+  paymentMethod: 'CASH',
 };
 
 export default (state = INITIAL_STATE, action) => {

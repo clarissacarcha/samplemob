@@ -61,3 +61,19 @@ export const GET_TRIP_FARE = gql`
     }
   }
 `;
+
+export const TRIP_BOOK = gql`
+  mutation tripBook($input: TripBookInput!) {
+    tripBook(input: $input) {
+      message
+      trip {
+        id
+        notes
+        passengerCount
+        paymentMethod
+        status
+        tag
+      }
+    }
+  }
+`;

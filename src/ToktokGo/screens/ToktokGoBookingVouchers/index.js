@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
+import {Text, View, FlatList, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import Data from '../../components/BookingDummyData';
 import CONSTANTS from '../../../common/res/constants';
 import {Header} from '../../components';
@@ -10,6 +10,7 @@ import {VoucherCard} from './Components/VoucherCard';
 import {TextInput} from 'react-native-gesture-handler';
 import {throttle} from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
+import NoVouchers from '../../../assets/toktokgo/no-vouchers.png';
 
 const ToktokGoBookingVouchers = ({navigation}) => {
   const {details} = useSelector(state => state.toktokGo);
@@ -42,19 +43,25 @@ const ToktokGoBookingVouchers = ({navigation}) => {
           <Text style={styles.enterVoucherApply}>Apply</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={data.getVouchers}
-        keyExtractor={item => item.id}
-        renderItem={({item, index}) => {
-          const lastItem = index == data.getVouchers.length - 1 ? true : false;
-          return (
-            <View style={{marginHorizontal: 16}}>
-              <VoucherCard item={item} onApply={() => onApply(item)} lastItem={lastItem} />
-            </View>
-          );
-        }}
-      />
+      {data.getVouchers.length > 0 ? (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={data.getVouchers}
+          keyExtractor={item => item.id}
+          renderItem={({item, index}) => {
+            const lastItem = index == data.getVouchers.length - 1 ? true : false;
+            return (
+              <View style={{marginHorizontal: 16}}>
+                <VoucherCard item={item} onApply={() => onApply(item)} lastItem={lastItem} />
+              </View>
+            );
+          }}
+        />
+      ) : (
+        <ScrollView>
+          <Image source={NoVouchers} />
+        </ScrollView>
+      )}
     </View>
   );
 };

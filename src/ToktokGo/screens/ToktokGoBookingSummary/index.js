@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Image, StatusBar, TouchableWithoutFeedback} from 'react-native';
 import constants from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
-import {useDispatch, useSelector} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import {
   BookingDistanceTime,
   BookingSelectVehicle,
@@ -13,13 +13,13 @@ import {
 } from './Sections';
 import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet} from './Components';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-import {GET_TRIP_FARE} from '../../graphql';
+import {GET_TRIP_FARE, TRIP_BOOK} from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
-import {useLazyQuery} from '@apollo/react-hooks';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 
-const ToktokGoBookingSummary = ({navigation, route}) => {
+const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const {popTo} = route.params;
-  const {details, routeDetails, origin, destination} = useSelector(state => state.toktokGo);
+  const {details, routeDetails, origin, destination, paymentMethod} = useSelector(state => state.toktokGo);
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
@@ -39,6 +39,21 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
       });
     },
     onError: error => console.log('error', error),
+  });
+
+  const [tripBook] = useMutation(TRIP_BOOK, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onError: err => {
+      console.log(err);
+    },
+    onCompleted: response => {
+      console.log(response);
+      navigation.replace('ToktokGoFindingDriver', {
+        popTo: popTo + 1,
+        decodedPolyline,
+        bookedData: response.tripBook.trip,
+      });
+    },
   });
 
   const selectVehicle = data => {
@@ -81,6 +96,22 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
     setLoading(false);
   }, [details]);
 
+  const confirmBooking = num => {
+    SheetManager.hide('passenger_capacity');
+    tripBook({
+      variables: {
+        input: {
+          userId: session.user.id,
+          tripFareHash: details?.rate?.hash,
+          routeHash: routeDetails?.hash,
+          passengerCount: num,
+          paymentMethod: paymentMethod,
+          ...(details?.noteToDriver ? {notes: details?.noteToDriver} : {}),
+        },
+      },
+    });
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <StatusBar backgroundColor={viewSelectPaymentModal ? 'rgba(0,0,0,0.6)' : null} />
@@ -88,12 +119,7 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
 
-      <PassengerCapacityActionSheet
-        navigation={navigation}
-        popTo={popTo}
-        details={details}
-        decodedPolyline={decodedPolyline}
-      />
+      <PassengerCapacityActionSheet confirmBooking={confirmBooking} />
 
       <PaymentMethodModal
         viewSelectPaymentModal={viewSelectPaymentModal}
@@ -142,7 +168,11 @@ const ToktokGoBookingSummary = ({navigation, route}) => {
   );
 };
 
-export default ToktokGoBookingSummary;
+const mapStateToProps = state => ({
+  session: state.session,
+});
+
+export default connect(mapStateToProps, null)(ToktokGoBookingSummary);
 
 const styles = StyleSheet.create({
   card: {

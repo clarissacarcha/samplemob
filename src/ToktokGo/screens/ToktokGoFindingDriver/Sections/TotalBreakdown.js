@@ -15,8 +15,8 @@ export const TotalBreakdown = ({}) => {
               titleText={'Total'}
               titleAmount={'₱ ' + '380.00'}
               subTexts={[
-                {amount: '₱300.00', text: 'Sedan'},
-                {amount: '₱80.00', text: 'Distance'},
+                {amount: '₱300.00', text: 'Sedan', key: 1},
+                {amount: '₱80.00', text: 'Distance', key: 2},
               ]}
               dummyStatus={2}
             />

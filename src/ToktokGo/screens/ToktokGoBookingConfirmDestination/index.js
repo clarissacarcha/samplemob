@@ -70,7 +70,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      <DestinationMap onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />
+      {mapRegion.latitude && <DestinationMap onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
       <View style={styles.card}>
         <View style={{flexDirection: 'row', textAlign: 'center'}}>
           <FA5Icon name="map-marker-alt" size={20} color={constants.COLOR.ORANGE} style={{marginRight: 10}} />

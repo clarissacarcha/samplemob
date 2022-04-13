@@ -47,7 +47,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, setReason, setNextModa
           <ScrollView style={styles.scrollview}>
             {data.map((text, key) => {
               return (
-                <View style={styles.radioButtonContainer}>
+                <View style={styles.radioButtonContainer} key={key}>
                   <TouchableOpacity
                     onPress={() => {
                       setSelectedReason(text.value);

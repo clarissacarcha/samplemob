@@ -4,7 +4,7 @@ import constants from '../../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
 
-export const NotesToDriver = ({dropDownRef, navigation, popTo}) => {
+export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote}) => {
   const {origin} = useSelector(state => state.toktokGo);
 
   return (
@@ -30,10 +30,10 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo}) => {
       </Text>
       <TextInput
         ref={dropDownRef}
-        // value={description}
+        value={note}
         placeholder="e.g. I have two luggage"
         keyboardType="default"
-        // onChangeText={(value) => setDescription(value)}
+        onChangeText={value => setNote(value)}
         style={styles.Input}
         numberOfLines={5}
         multiline
