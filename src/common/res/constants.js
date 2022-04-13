@@ -16,6 +16,7 @@ const COLOR = {
   RED: '#F93154',
   GREEN: '#198754',
   BACKGROUND_YELLOW: '#FBFAE3',
+  GRAY: '#9E9E9E',
 };
 
 const FONT_FAMILY = {

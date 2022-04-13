@@ -49,9 +49,24 @@ export const VehicleCard = ({type, data, selectVehicle, loading, selectedVehicle
               {loading ? (
                 <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
               ) : (
-                <Text style={styles.priceTextStyle}>
-                  ₱{numberFormat(details?.rate?.tripFare?.total ? details?.rate?.tripFare?.total : 0)}
-                </Text>
+                <View>
+                  <Text style={styles.priceTextStyle}>
+                    ₱{numberFormat(details?.rate?.tripFare?.total ? details?.rate?.tripFare?.total : 0)}
+                  </Text>
+                  {details?.rate?.tripFare?.total != data?.rate?.amount && (
+                    <Text
+                      style={{
+                        marginLeft: 10,
+                        textAlign: 'center',
+                        fontSize: CONSTANTS.FONT_SIZE.XS,
+                        color: CONSTANTS.COLOR.GRAY,
+                        textDecorationLine: 'line-through',
+                        textDecorationStyle: 'solid',
+                      }}>
+                      ₱{numberFormat(data?.rate?.amount)}
+                    </Text>
+                  )}
+                </View>
               )}
             </View>
           ) : (

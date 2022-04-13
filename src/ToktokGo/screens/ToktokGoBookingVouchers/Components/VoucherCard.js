@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
   descTextStlye: {
     fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
     fontSize: CONSTANTS.FONT_SIZE.S,
+    color: CONSTANTS.COLOR.GRAY,
   },
   floatingImage: {
     position: 'absolute',
