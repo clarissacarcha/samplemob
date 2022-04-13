@@ -15,6 +15,7 @@ import {
     cancelledIcon
 } from '../../../../../assets';
 import { Hairline } from '../../../../../../components/widgets';
+import { DisplayDateAndTime } from '../../../../../helpers';
 import CustomIcon from './.../../../../../../../Components/Icons';
 
 export const RenderItem = (props) => {
@@ -31,6 +32,8 @@ export const RenderItem = (props) => {
     } = fulldata;
     const cancelled = status.status === 5;
 
+    const date = DisplayDateAndTime(status.date);
+
     return (
         <TouchableOpacity
             onPress={onPressCard}
@@ -38,7 +41,7 @@ export const RenderItem = (props) => {
         >
             <View style={styles.renderItemContainer}>
                 <View style={styles.renderItemSubContainer}>
-                    <View style={styles.renderItemFirstContainer(cancelled)}>
+                    <View style={styles.renderItemFirstContainer}>
                         <View style={styles.renderItemFCRight}>
                             <View style={styles.renderItemIDContainer}>
                             <Text style={styles.renderItemIDText}>
@@ -47,18 +50,18 @@ export const RenderItem = (props) => {
                             <Text style={styles.renderItemID}>{referenceNum}</Text>
                             </View>
                             
-                            <Text style={styles.renderItemPlaced}>{status.date}</Text>
+                            <Text style={styles.renderItemPlaced}>{date}</Text>
                         </View>
                         <View style={styles.renderItemFCLeft}>
                             <View style={styles.iconContainer}>
                                 {
-                                    status.status === 4 ?
+                                    status.status === 5 ?
                                     <CustomIcon.MCIcon name="check-all" size={15} color={"#F6841F"} />
                                     :
                                     <Image style={styles.renderItemFCLeftIcon} source={cancelled ? cancelledIcon : carIcon}/>
                                 }
                             </View>
-                            <Text style={styles.renderItemFCLeftText(cancelled)}>{status.description}</Text>
+                            <Text style={styles.renderItemFCLeftText}>{status.description}</Text>
                         </View>
                     </View>
 
@@ -81,7 +84,7 @@ export const RenderItem = (props) => {
 
 const styles = StyleSheet.create({
     iconContainer: {
-        marginRight: 8
+        marginRight: 9.2
     },
     renderItemButtonContainer: {
         flexDirection: 'row'
@@ -100,20 +103,14 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         elevation: 2,
     },
-    renderItemFirstContainer: (cancelled) => {
-        return { 
-            height: 64,
-            backgroundColor: cancelled ? "#FFFFFF" : "#FFFCF4",
-            marginBottom: 16,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            borderWidth: cancelled ? 1 : 0,
-            borderTopLeftRadius: cancelled ? 5 : 0,
-            borderTopRightRadius: cancelled ? 5 : 0,
-            borderColor: cancelled ? 'red' : null,
-            paddingHorizontal: 16,
-            flex: 1
-        }
+    renderItemFirstContainer: {
+        height: 64,
+        backgroundColor: "#FFFCF4",
+        marginBottom: 16,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingHorizontal: 16,
+        flex: 1
     },
     renderItemFCRight: {
         flex: 1,
@@ -128,8 +125,9 @@ const styles = StyleSheet.create({
         fontSize: 13
     },
     renderItemID: {
-        color: "#F6841F", 
-        marginLeft: 8
+        color: "#FDBA1C ",
+        fontWeight: '600',
+        marginLeft: 3
     },
     renderItemPlaced: {
         fontWeight: "400",
@@ -147,12 +145,10 @@ const styles = StyleSheet.create({
         width: 15,
         resizeMode: 'contain',
     },
-    renderItemFCLeftText: (cancelled) => {
-        return {
-            fontSize: 13,
-            fontWeight: "400",
-            color: cancelled ? "red" : "black"
-        }
+    renderItemFCLeftText: {
+        fontSize: 13,
+        fontWeight: "400",
+        color: "black"
     },
     hairLineContainer: {
         marginHorizontal: 16, 
