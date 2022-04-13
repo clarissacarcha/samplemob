@@ -44,7 +44,7 @@ export const VehicleCard = ({type, data, selectVehicle, loading, selectedVehicle
               <Text style={styles.descTextStlye}>{data?.vehicleType?.phrase}</Text>
             </View>
           </View>
-          {data?.vehicleType?.id == selectedVehicle?.vehicleType?.id && (
+          {data?.vehicleType?.id == selectedVehicle?.vehicleType?.id ? (
             <View style={styles.elementWrapper}>
               {loading ? (
                 <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
@@ -54,6 +54,8 @@ export const VehicleCard = ({type, data, selectVehicle, loading, selectedVehicle
                 </Text>
               )}
             </View>
+          ) : (
+            <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
           )}
         </View>
       </TouchableOpacity>
