@@ -9,6 +9,7 @@ import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {throttle, debounce} from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
 import {useDebounce} from '../../helpers';
+import {ToktokgoBeta} from '../../components';
 
 const ToktokGoSelectedLocations = ({navigation, route}) => {
   const {popTo} = route.params;
@@ -119,11 +120,12 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
           title={searchDestination}
         />
         {searchResponse?.length == 0 ? (
-          <View>
-            <FrequentlyUsed navigation={navigation} popTo={popTo} />
-            <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
-            <SavedLocations />
-          </View>
+          // <View>
+          //   <FrequentlyUsed navigation={navigation} popTo={popTo} />
+          //   <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+          //   <SavedLocations />
+          // </View>
+          <ToktokgoBeta />
         ) : (
           <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />
         )}
