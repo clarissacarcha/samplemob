@@ -34,7 +34,9 @@ export const RenderDetails = forwardRef(({
 	onItemDelete,
 	onChangeQuantity,
 	refreshing,
-	willDelete
+	willDelete,
+	preSelectedItems,
+	selectedItemsArr
 }, ref) => {
 
 	const navigation = useNavigation()
@@ -60,6 +62,18 @@ export const RenderDetails = forwardRef(({
 	useEffect(() => {
 		setSelectedItemsCount(0)
 	}, [refreshing])
+
+	// We need to know if all item is selected in the shop so that we can check the shop checkbox too.
+	useEffect(() => {
+		const shopId = item.shop.id;
+		const newSelectedItemArr = selectedItemsArr.filter((i) => i.shopId === shopId);
+		const newSelectedItemArrLength = newSelectedItemArr.length;
+		const actualDataLength = item.data.length;
+
+		if(newSelectedItemArrLength === actualDataLength) {
+			setSelectedItemsCount(newSelectedItemArrLength)
+		}
+	}, [item, selectedItemsArr])
 
 	useEffect(() => {
 		// console.log("Selected Count: ", selectedItemsCount)
@@ -169,12 +183,12 @@ export const RenderDetails = forwardRef(({
       <Store
         state={getStoreCheckboxState()}
         data={item?.shop || {}}
-				disabled={storeCheckboxIsDisabled()}
+		disabled={storeCheckboxIsDisabled()}
         onSelect={(raw) => {
-          toggleCheckBox(raw.checked);
-          onStoreSelect(raw, CartContext.willDelete ? item.data : item.data.filter(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0)));
-					CartContextData.setSelectAll(false);
-					CartContextData.setSelectedFrom('store')
+			toggleCheckBox(raw.checked);
+			onStoreSelect(raw, CartContext.willDelete ? item.data : item.data.filter(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0)));
+			CartContextData.setSelectAll(false);
+			CartContextData.setSelectedFrom('store')
         }}
         onPress={onPress}
       />
@@ -228,72 +242,73 @@ export const RenderDetails = forwardRef(({
           return (
             <Wrapper {...props}>
               <Item
+			  	preSelectedItems={preSelectedItems}
                 key={i}
                 index={i}
-								state={getCheckboxState()}
-								heldItem = {heldItem}
-								forceSelect={selectedItemsCount == item.data.length}
-								forceSelectToZero = {selectedItemsCount == 0  }
-								data={data}
-								recenter = {() => {
-									if(ref.current.length > 0){
-										ref.current.map((item, index) => {
-											//IF TRACKED REFERENCE IS THE CURRENT SWIPEABLE, SKIP 
-											if(trackingIndex == index){
-												return
-											}else{
-												//HIDE ACTIVE SWIPEABLE VIEWS NOW
-												if(item.recenter){
-												item.recenter()
-												}
-											}
-										})
-									}
-								}}
+				state={getCheckboxState()}
+				heldItem = {heldItem}
+				forceSelect={selectedItemsCount == item.data.length}
+				forceSelectToZero = {selectedItemsCount == 0  }
+				data={data}
+				recenter = {() => {
+					if(ref.current.length > 0){
+						ref.current.map((item, index) => {
+							//IF TRACKED REFERENCE IS THE CURRENT SWIPEABLE, SKIP 
+							if(trackingIndex == index){
+								return
+							}else{
+								//HIDE ACTIVE SWIPEABLE VIEWS NOW
+								if(item.recenter){
+								item.recenter()
+								}
+							}
+						})
+					}
+				}}
                 onHold={(raw) => {
 
-									if(ref.current && ref.current.length > 0){
-										ref.current.map((item, index) => {
-											// console.log(item)
-											if(item.current != null){
-												item?.recenter()
-											}
-										})
-									}									
+					if(ref.current && ref.current.length > 0){
+						ref.current.map((item, index) => {
+							// console.log(item)
+							if(item.current != null){
+								item?.recenter()
+							}
+						})
+					}									
 
-									setHeldItem(raw)
-									if (raw.checked) {
-                    setSelectedItemsCount(selectedItemsCount + 1);
-                  } else if (!raw.checked) {
-                    setSelectedItemsCount(selectedItemsCount - 1);
-                  }
-									console.log(raw)
-									onItemLongPress(raw);
-									// swipableRef.recenter()
+					setHeldItem(raw)
+					if (raw.checked) {
+						setSelectedItemsCount(selectedItemsCount + 1);
+					} else if (!raw.checked) {
+						setSelectedItemsCount(selectedItemsCount - 1);
+					}
+
+					onItemLongPress(raw);
+					// swipableRef.recenter()
                 }}
-                onSelect={(raw) => {		
-									if(ref.current && ref.current.length > 0){
-										ref.current.map((item, index) => {
-											// console.log(item)
-											if(item.current != null){
-												item?.recenter()
-											}
-										})
-									}									
+                onSelect={(raw) => {
+					if(ref.current && ref.current.length > 0){
+						ref.current.map((item, index) => {
+							// console.log(item)
+							if(item.current != null){
+								item?.recenter()
+							}
+						})
+					}									
 
-                  if (raw.checked) {
-                    setSelectedItemsCount(selectedItemsCount + 1);
-                  } else if (!raw.checked) {
-										CartContextData.setSelectAll(false);
-                    setSelectedItemsCount(selectedItemsCount - 1);
-                  }
-                  onItemSelect(raw);
+					if (raw.checked) {
+						setSelectedItemsCount(selectedItemsCount + 1);
+					} else if (!raw.checked) {
+						CartContextData.setSelectAll(false);
+						setSelectedItemsCount(selectedItemsCount - 1);
+					}
 
+					onItemSelect(raw);
                 }}
                 item={item}
-								onChangeQuantity={onChangeQuantity}
-								willDelete = {willDelete}
-								setHeldItem = {setHeldItem}
+				onChangeQuantity={onChangeQuantity}
+				willDelete = {willDelete}
+				setHeldItem = {setHeldItem}
               />
            </Wrapper>
           );

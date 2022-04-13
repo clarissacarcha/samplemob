@@ -10,7 +10,7 @@ import Toast from 'react-native-simple-toast';
 import {MessageModal, LoadingOverlay} from '../../../Components';
 import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails, RenderEmpty} from './components';
 import {MergeStoreProducts, ArrayCopy, getRefComAccountType} from '../../../helpers';
-import { create } from 'lodash';
+import { create, map, set } from 'lodash';
 import {useSelector} from 'react-redux';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
 
@@ -20,10 +20,11 @@ import { GET_MY_CART, GET_VERIFY_CHECKOUT } from '../../../../graphql/toktokmall
 import AsyncStorage from '@react-native-community/async-storage';
 import {EventRegister} from 'react-native-event-listeners';
 
-import { CartContext } from './ContextProvider';
+import { CartContext, CartContextProvider } from './ContextProvider';
 import { useFocusEffect } from '@react-navigation/core';
 
 const Component = ({
+  route,
   navigation,
   createMyCartCountSession
 }) => {
@@ -50,6 +51,7 @@ const Component = ({
   const [rawitems, setrawitems] = useState([])
   const [selectedItemsArr, setSelectedItemsArr] = useState([])
   const [swiperReferences, setSwiperReferences] = useState([])
+  const [preSelectedItems, setPreSelectedItems] = useState([])
   const dispatch = useDispatch()
 
   const swiperRefs = useRef([])
@@ -143,6 +145,7 @@ const Component = ({
     CartContextData.setSelectedFrom('')
     setSubTotal(0)
     setMyCartData([])
+    setPreSelectedItems([])
     setItemsToCheckoutArr([])
     setItemsToDelArr([])
     setSelectedItemsArr([])
@@ -151,8 +154,13 @@ const Component = ({
 
   useEffect(() => {
     init()
-    EventRegister.addEventListener('refreshToktokmallShoppingCart', init)    
+    EventRegister.addEventListener('refreshToktokmallShoppingCart', init) 
   }, [])
+
+  // Read changes in route params and myCartData. This will trigger our way of selecting items from buy again function.
+  useEffect(() => {
+    getPreITems();
+  }, [route.params, myCartData])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -176,6 +184,38 @@ const Component = ({
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
     }, [])
   )
+
+  // Function that will select our items from buy again function.
+  const getPreITems = () => {
+    if(route.params?.items && rawitems.length > 0) {
+      setPreSelectedItems(route.params.items);
+      const allitems = route.params.items.map(item => {
+        const order = rawitems.find(raw => raw.productid === item);
+        
+        if(!order) return;
+
+        const orderIndex = rawitems.findIndex(raw => raw.productid === item);
+        const data = {};
+
+        data.checked = true;
+        data.id = order.productid;
+        data.productId = order.productid;
+        data.shopId = order.shopid;     
+        data.product = {
+          ...order.product,
+          Id: order.productid
+        };
+        data.amount = parseFloat(order.product.price * order.quantity);
+        data.qty = order.quantity;
+        data.index = orderIndex;
+
+        return data;
+      })
+
+      setSelectedItemsArr(allitems)
+      getSubTotal(allitems)
+    }
+  }
 
   const onChangeQuantity = (id, qty) => {
     // let items = ArrayCopy(itemsToCheckoutArr)
@@ -268,7 +308,6 @@ const Component = ({
   }
 
   const selectItem = (raw) => {
-
     let items = ArrayCopy(selectedItemsArr)
     let existing = items.findIndex((e) => e.id == raw.productId)
     if(existing == -1){
@@ -314,10 +353,12 @@ const Component = ({
   const unSelectitem = (raw) => {
     
     let items = ArrayCopy(selectedItemsArr)
-    let itemIndex = items.findIndex((e) => e.id == raw.productId)
+    items.map(item => console.log(item))
+    let itemIndex = items.findIndex((e) => e.id === raw.productId)
     if(itemIndex > -1){
       items.splice(itemIndex, 1)
     }
+    
     setSelectedItemsArr(items)
     // if(!willDelete){
       getSubTotal(items)
@@ -586,6 +627,8 @@ const Component = ({
                         item={item}
                         refreshing={loading}
                         willDelete={willDelete}
+                        preSelectedItems={preSelectedItems}
+                        selectedItemsArr={selectedItemsArr}
                         onPress={() => {
                           navigation.navigate('ToktokMallStore', {id: item.shop.id});
                         }}

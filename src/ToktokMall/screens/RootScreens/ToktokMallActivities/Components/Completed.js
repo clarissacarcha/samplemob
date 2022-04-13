@@ -19,6 +19,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Loading } from '../../../../Components';
 import { ApiCall } from '../../../../helpers';
+import { EventRegister } from 'react-native-event-listeners';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const getAccessToken = async () => { 
@@ -34,6 +35,7 @@ export const CompletedItem = ({fulldata, onPressBuy: parentBuyOnpress}) => {
     context: { headers: { authorization: "Bearer: " + getAccessToken() }},  
     onCompleted: (response) => {
       if(response.getBuyAgain) { 
+        const itemsToBeSelected = [];
         const { toaddItems, toupdateItems } = response.getBuyAgain;
         if(toaddItems.length > 0) {
           toaddItems.map(async (item, index) => {
@@ -45,11 +47,14 @@ export const CompletedItem = ({fulldata, onPressBuy: parentBuyOnpress}) => {
                 productid: item.productid,
                 quantity: item.quantity
               }
+
+              itemsToBeSelected.push(item.productid);
+              
               const req = await ApiCall("insert_cart", variables, true);
               if(req) {
                 if(index === toaddItems.length - 1 && toupdateItems.length === 0) {
                   parentBuyOnpress();
-                  navigation.navigate("ToktokMallMyCart");
+                  navigation.navigate("ToktokMallMyCart", {items: itemsToBeSelected});
                   EventRegister.emit('refreshToktokmallShoppingCart');
                 }
               }
@@ -69,12 +74,14 @@ export const CompletedItem = ({fulldata, onPressBuy: parentBuyOnpress}) => {
                 productid: item.productid,
                 quantity: item.quantity
               }
+
+              itemsToBeSelected.push(item.productid);
+
               const req = await ApiCall("update_cart", variables, true);
-              console.log(req)
               if(req) {
                 if(index === toupdateItems.length - 1) {
                   parentBuyOnpress();
-                  navigation.navigate("ToktokMallMyCart");
+                  navigation.navigate("ToktokMallMyCart", {items: itemsToBeSelected});
                   EventRegister.emit('refreshToktokmallShoppingCart');                  
                 }
               }

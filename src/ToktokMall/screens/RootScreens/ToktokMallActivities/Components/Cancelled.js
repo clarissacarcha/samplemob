@@ -34,10 +34,12 @@ export const CancelledItem = ({fulldata, onPressBuy: parentBuyOnpress}) => {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     context: { headers: { authorization: "Bearer: " + getAccessToken() }},  
     onCompleted: (response) => {
-      if(response.getBuyAgain) { 
+      if(response.getBuyAgain) {
+        const itemsToBeSelected = [];
         const { toaddItems, toupdateItems } = response.getBuyAgain;
         if(toaddItems.length > 0) {
           toaddItems.map(async (item, index) => {
+            
             try {
               let variables = {
                 userid: item.userid,
@@ -46,11 +48,15 @@ export const CancelledItem = ({fulldata, onPressBuy: parentBuyOnpress}) => {
                 productid: item.productid,
                 quantity: item.quantity
               }
+
+              itemsToBeSelected.push(item.productid);
+
               const req = await ApiCall("insert_cart", variables, true);
               if(req) {
                 if(index === toaddItems.length - 1 && toupdateItems.length === 0) {
+                  console.log("asdzxczxc: " + itemsToBeSelected) 
                   parentBuyOnpress();
-                  navigation.navigate("ToktokMallMyCart");
+                  navigation.navigate("ToktokMallMyCart", {items: itemsToBeSelected});
                   EventRegister.emit('refreshToktokmallShoppingCart');
                 }
               }
@@ -70,12 +76,14 @@ export const CancelledItem = ({fulldata, onPressBuy: parentBuyOnpress}) => {
                 productid: item.productid,
                 quantity: item.quantity
               }
+
+              itemsToBeSelected.push(item.productid)
+
               const req = await ApiCall("update_cart", variables, true);
-              console.log(req)
               if(req) {
                 if(index === toupdateItems.length - 1) {
                   parentBuyOnpress();
-                  navigation.navigate("ToktokMallMyCart");
+                  navigation.navigate("ToktokMallMyCart", {items: itemsToBeSelected});
                   EventRegister.emit('refreshToktokmallShoppingCart');                  
                 }
               }
