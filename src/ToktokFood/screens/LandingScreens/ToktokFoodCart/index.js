@@ -621,7 +621,7 @@ const MainComponent = () => {
         ? receiver.contactPerson
         : `${customerInfo.firstName} ${customerInfo.lastName}`;
 
-    const replaceName = DELIVERY_RECEIVER.replace(/[^a-z0-9]/gi, '');
+    const replaceName = DELIVERY_RECEIVER.replace(/[^a-z0-9_ ]/gi, '');
 
     const ORDER = {
       // total_amount: temporaryCart.totalAmount,
