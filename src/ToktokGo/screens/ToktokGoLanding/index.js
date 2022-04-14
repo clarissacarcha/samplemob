@@ -10,18 +10,18 @@ import {connect, useDispatch, useSelector} from 'react-redux';
 const ToktokGoLanding = ({navigation, session}) => {
   const dispatch = useDispatch();
   const {routeDetails} = useSelector(state => state.toktokGo);
-  const [getTrip] = useLazyQuery(GET_TRIP, {
+  const [getTripByConsumerUserId] = useLazyQuery(GET_TRIP_BY_CONSUMER_USER_ID, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log('BOOKED DATA:', response.getTrip.route.origin);
-      dispatchToSession(response.getTrip);
+      console.log('BOOKED DATA:', response.getTripByConsumerUserId.route.origin);
+      dispatchToSession(response.getTripByConsumerUserId);
       setTimeout(() => {
-        if (response.getTrip.status == 'BOOKED' && response.getTrip.tag == 'ONGOING') {
+        if (response.getTripByConsumerUserId.status == 'BOOKED' && response.getTripByConsumerUserId.tag == 'ONGOING') {
           navigation.replace('ToktokGoFindingDriver', {
             popTo: 1,
             decodedPolyline: null,
-            bookedData: response.getTrip,
+            bookedData: response.getTripByConsumerUserId,
           });
         } else {
           navigation.replace('ToktokGoHealthCare');
@@ -47,7 +47,7 @@ const ToktokGoLanding = ({navigation, session}) => {
   };
 
   const checkOngoingTrip = () => {
-    getTrip({
+    getTripByConsumerUserId({
       variables: {
         input: {
           consumerUserId: session.user.id,

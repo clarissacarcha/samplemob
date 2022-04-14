@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-export const GET_TRIP = gql`
-  query getTrip($input: GetTripInput) {
-    getTrip(input: $input) {
+export const GET_TRIP_BY_CONSUMER_USER_ID = gql`
+  query getTripByConsumerUserId($input: GetTripByConsumerUserIdInput) {
+    getTripByConsumerUserId(input: $input) {
       id
       status
       tag
