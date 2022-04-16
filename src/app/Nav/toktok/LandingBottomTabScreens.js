@@ -78,7 +78,7 @@ const ToktokLanding = () => (
       component={NotificationsTopTab}
       options={{
         tabBarLabel: ({focused}) => (
-          <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Notification</Text>
+          <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Notifications</Text>
         ),
         tabBarIcon: ({color}) => (
           <Image

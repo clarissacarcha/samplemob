@@ -12,13 +12,16 @@ export const SuccesCancelBookingModal = ({visible, setVisible, type}) => {
             <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
             <Text style={styles.modalTitle}>Booking Cancelled</Text>
             {type == 1 ? (
-              <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>
+              <Text style={styles.modalDescription}>
+                Your booking has been cancelled. We received your payment for cancellation fee of{' '}
+                <Text style={{color: CONSTANTS.COLOR.ORANGE, fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>₱50.00</Text> and
+                e-receipt is sent to your registered email.
+              </Text>
             ) : (
               <Text style={styles.modalDescription}>
-                Your booking has been cancelled. Cancellation fee will be charged in your next booking. You may read
-                more about our
+                Your booking has been cancelled. No show fee will be charged in your next booking. You may read more
+                about our{' '}
                 <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>
-                  {' '}
                   Cancellation Policies
                 </Text>
                 .

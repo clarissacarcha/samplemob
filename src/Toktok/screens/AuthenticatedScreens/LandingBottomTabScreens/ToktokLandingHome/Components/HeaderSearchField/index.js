@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, StatusBar, ImageBackground} from 'react-native';
+import {View, Text, StyleSheet, TextInput, StatusBar, Image} from 'react-native';
 import {useSelector} from 'react-redux';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {Shadow} from '../../../../../../../revamp';
 import {ThrottledHighlight} from '../../../../../../../components_section';
 import TypeWriter from 'react-native-typewriter';
 import {useNavigation} from '@react-navigation/core';
+import SearchIcon from '../../../../../../../assets/images/SearchIcon.png';
 
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
 
@@ -51,7 +52,7 @@ const SearchInput = () => {
         style={styles.searchBox}>
         <View style={styles.inputBox}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <FeatherIcon name="search" size={20} color={COLOR.ORANGE} />
+            <Image source={SearchIcon} resizeMode={'contain'} style={{width: 18, height: 18}} />
             <View style={{flex: 1, marginLeft: 10}}>{RenderedWriter}</View>
           </View>
         </View>

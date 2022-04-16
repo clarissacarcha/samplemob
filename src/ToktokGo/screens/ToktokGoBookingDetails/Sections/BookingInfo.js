@@ -3,14 +3,6 @@ import {Text, StyleSheet, Image, View} from 'react-native';
 import constants from '../../../../common/res/constants';
 import {APP_FLAVOR, MEDIUM} from '../../../../res/constants';
 import {FONT} from '../../../../res/variables';
-// import CashImage from '../../../../assets/toktok/images/Cash.png';
-// import CashGreyImage from '../../../../assets/toktok/images/CashGrey.png';
-// import ToktokIcon from '../../../../assets/toktok/icons/menu/Toktok.png';
-// import ToktokFoodDelivery from '../../../../assets/toktok/images/toktokfood-logo.png';
-// import ToktokMallDelivery from '../../../../assets/toktok/images/toktokmall-logo.png';
-// import PabiliImage from '../../../../assets/toktok/icons/menu/Pabili.png';
-// import AIcons from 'react-native-vector-icons/AntDesign';
-// import FIcons from 'react-native-vector-icons/FontAwesome';
 
 import MapIcon from '../../../../assets/images/mapIcon.png';
 import ClockIcon from '../../../../assets/images/clockIcon.png';
@@ -88,9 +80,9 @@ export const BookingInfo = ({delivery, orderDetails}) => {
           <View style={{flex: 1, marginLeft: 70}}>
             <Text style={{fontFamily: FONT.REGULAR, fontSize: constants.FONT_SIZE.M}}>Estimated Time of Drop off</Text>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
-              <Image source={ClockIcon} resizeMode="contain" style={{width: 12, height: 15, marginRight: 8}} />
+              <Image source={ClockIcon} resizeMode="contain" style={{width: 16, height: 16, marginRight: 8}} />
               <Text style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
-                3:00 PM - 4:00 PM
+                03:00 PM - 04:00 PM
               </Text>
             </View>
           </View>

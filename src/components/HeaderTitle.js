@@ -22,6 +22,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: FONT_SIZE.L,
-    fontFamily: FONTS.BOLD,
+    fontFamily: FONTS.REGULAR,
   },
 });

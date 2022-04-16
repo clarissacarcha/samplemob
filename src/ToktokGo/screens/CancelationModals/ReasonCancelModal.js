@@ -208,7 +208,6 @@ const styles = StyleSheet.create({
     height: 69,
     textAlignVertical: 'top',
     borderColor: '#EAEAEA',
-    borderWidth: 1,
     marginVertical: 10,
     fontSize: 11,
     padding: 8,

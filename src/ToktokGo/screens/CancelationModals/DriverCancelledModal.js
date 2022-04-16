@@ -19,12 +19,12 @@ export const DriverCancelledModal = ({driverVisible, setType, setVisible, setDri
           <View style={styles.container}>
             <Image source={WarningIMG} resizeMode={'contain'} style={styles.imageDimensions} />
             <Text style={styles.modalTitle}>Driver Cancelled</Text>
-            <Text style={styles.modalSubTitle}>Cancellation Fee: ₱50.00</Text>
+            <Text style={styles.modalSubTitle}>No Show Fee: ₱50.00</Text>
             <Text style={styles.modalDescription}>
               Driver cancelled your booking after waiting for more than{' '}
               <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> at the pick up location. You will
               be charged{' '}
-              <Text style={{ontFamily: CONSTANTS.FONT_FAMILY.BOLD, color: CONSTANTS.COLOR.ORANGE}}>₱50.00</Text> to
+              <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD, color: CONSTANTS.COLOR.ORANGE}}>₱50.00</Text> to
               compensate the driver. Would you like to pay now?
             </Text>
             {true && (

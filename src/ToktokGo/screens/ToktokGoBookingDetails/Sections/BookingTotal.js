@@ -75,7 +75,7 @@ export const BookingTotal = ({delivery, dummyStatus}) => {
   return (
     <View style={styles.card}>
       <View style={styles.directionsBox}>
-        <View style={{borderBottomWidth: 1, borderColor: constants.COLOR.LIGHT}} />
+        <View style={{borderBottomWidth: 1, borderColor: constants.COLOR.LIGHT, marginBottom: 10}} />
         <View style={styles.directionDetail}>
           {/*-------------------- TOTAL INCOME --------------------*/}
           <View style={{flex: 1}}>
