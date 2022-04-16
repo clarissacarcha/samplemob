@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-export const GET_TRIP_BY_CONSUMER_USER_ID = gql`
-  query getTripByConsumerUserId($input: GetTripByConsumerUserIdInput) {
-    getTripByConsumerUserId(input: $input) {
+export const GET_TRIPS_CONSUMER = gql`
+  query getTripsConsumer($input: GetTripsConsumerInput!) {
+    getTripsConsumer(input: $input) {
       id
       status
       tag
@@ -34,6 +34,23 @@ export const GET_TRIP_BY_CONSUMER_USER_ID = gql`
         }
         duration {
           minute
+        }
+        bounds {
+          northeast {
+            latitude
+            longitude
+          }
+          southwest {
+            latitude
+            longitude
+          }
+        }
+        legs {
+          steps {
+            polyline {
+              points
+            }
+          }
         }
       }
     }

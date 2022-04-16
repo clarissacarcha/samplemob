@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import constants from '../../../common/res/constants';
 import toktokgoSplash from '../../../assets/toktokgo/toktokgo-splash.png';
-import {GET_TRIP} from '../../graphql/model/Trip';
+import {GET_TRIPS_CONSUMER} from '../../graphql/model/Trip';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -10,18 +10,19 @@ import {connect, useDispatch, useSelector} from 'react-redux';
 const ToktokGoLanding = ({navigation, session}) => {
   const dispatch = useDispatch();
   const {routeDetails} = useSelector(state => state.toktokGo);
-  const [getTripByConsumerUserId] = useLazyQuery(GET_TRIP_BY_CONSUMER_USER_ID, {
+  const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log('BOOKED DATA:', response.getTripByConsumerUserId.route.origin);
-      dispatchToSession(response.getTripByConsumerUserId);
+      if (response.getTripsConsumer.length > 0) {
+        dispatchToSession(response.getTripsConsumer[0]);
+      }
       setTimeout(() => {
-        if (response.getTripByConsumerUserId.status == 'BOOKED' && response.getTripByConsumerUserId.tag == 'ONGOING') {
+        if (response.getTripsConsumer[0]?.status == 'BOOKED' && response.getTripsConsumer[0]?.tag == 'ONGOING') {
           navigation.replace('ToktokGoFindingDriver', {
             popTo: 1,
             decodedPolyline: null,
-            bookedData: response.getTripByConsumerUserId,
+            bookedData: response.getTripsConsumer[0],
           });
         } else {
           navigation.replace('ToktokGoHealthCare');
@@ -42,12 +43,18 @@ const ToktokGoLanding = ({navigation, session}) => {
     });
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_ROUTE',
-      payload: {...routeDetails, distance: data.route.distance, duration: data.route.duration},
+      payload: {
+        ...routeDetails,
+        distance: data.route.distance,
+        duration: data.route.duration,
+        bounds: data.route.bounds,
+        legs: data.route.legs,
+      },
     });
   };
 
   const checkOngoingTrip = () => {
-    getTripByConsumerUserId({
+    getTripsConsumer({
       variables: {
         input: {
           consumerUserId: session.user.id,

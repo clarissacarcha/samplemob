@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux';
 import Car from '../../../../assets/images/Car.png';
 import constants from '../../../../common/res/constants';
 export const Map = ({decodedPolyline}) => {
-  const {origin, destination} = useSelector(state => state.toktokGo);
+  const {origin, destination, routeDetails} = useSelector(state => state.toktokGo);
 
   const mapRef = useRef();
   const INITIAL_REGION = {
@@ -29,18 +29,18 @@ export const Map = ({decodedPolyline}) => {
 
   useEffect(() => {
     setTimeout(() => {
-      mapRef.current.fitToCoordinates(
-        [ORIGIN, TO],
-        {
-          edgePadding: {
-            right: 100,
-            bottom: 100,
-            left: 100,
-            top: 100,
-          },
-        },
-        3000, // Animation duration in milliseconds.
-      );
+      // mapRef.current.fitToCoordinates(
+      //   [routeDetails.bounds],
+      //   {
+      //     edgePadding: {
+      //       right: 100,
+      //       bottom: 100,
+      //       left: 100,
+      //       top: 100,
+      //     },
+      //   },
+      //   3000, // Animation duration in milliseconds.
+      // );
     }, 1000);
   }, []);
   return (
@@ -67,11 +67,11 @@ export const Map = ({decodedPolyline}) => {
           <Image source={Car} style={{height: 36, width: 36}} resizeMode="contain" />
         </View>
       </Marker>
-      <Polyline
+      {/* <Polyline
         coordinates={decodedPolyline}
         strokeColor={CONSTANTS.COLOR.ORANGE} // fallback for when `strokeColors` is not supported by the map-provider
         strokeWidth={3}
-      />
+      /> */}
     </MapView>
   );
 };
