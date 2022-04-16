@@ -10,6 +10,7 @@ import {
   TextInput,
   ImageBackground,
   Dimensions,
+  StatusBar,
 } from 'react-native';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
 import CONSTANTS from '../../../common/res/constants';
@@ -22,6 +23,7 @@ import Feedback5 from '../../../assets/images/Feedback5.png';
 import Feedback6 from '../../../assets/images/Feedback6.png';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../res/constants';
 import {FeedbackModal} from './components';
+import ArrowLeft from '../../../assets/icons/arrow-left-icon.png';
 
 const Star = ({onPress, color, isLast}) => {
   return <FAIcon onPress={onPress} name="star" size={35} style={{marginRight: isLast ? 0 : 25}} color={color} />;
@@ -102,6 +104,13 @@ const RateDriver = ({navigation, route}) => {
   };
   return (
     <ScrollView style={styles.mainContainer}>
+      <TouchableOpacity onPress={() => navigation.pop()}>
+        <Image
+          style={{height: 15, width: 10, margin: 16, top: StatusBar.currentHeight - 10}}
+          source={ArrowLeft}
+          resizeMode={'contain'}
+        />
+      </TouchableOpacity>
       <View style={styles.containerTitle}>
         <Text style={styles.titleQuestion}>How was your driver?</Text>
         <Text style={styles.starStyle}>{starStatus()}</Text>
@@ -197,6 +206,7 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: '#F8F8F8',
     borderRadius: 5,
+    borderColor: '#F8F8F8',
     width: '100%',
   },
   btnConfirm: {
@@ -226,7 +236,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 30,
     borderWidth: 1,
-    borderColor: '#EAEAEA',
+    borderColor: '#F8F8F8',
   },
   textInputLength: {
     marginRight: 15,
@@ -263,7 +273,7 @@ const styles = StyleSheet.create({
   containerTitle: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 30,
+    paddingTop: '20%',
     flexDirection: 'column',
   },
   yourFeedbackText: {

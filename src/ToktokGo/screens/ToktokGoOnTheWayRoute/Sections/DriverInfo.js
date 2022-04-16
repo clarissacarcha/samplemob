@@ -20,7 +20,7 @@ export const DriverInfo = () => {
         />
       </View>
       <View style={{marginHorizontal: 20, marginBottom: 16}}>
-        <Text>Rick Sanchez</Text>
+        <Text style={{fontFamily: constants.FONT_FAMILY.BOLD}}>Rick Sanchez</Text>
         <Text>Honda Civic (White) · DA963000</Text>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text>5.0</Text>

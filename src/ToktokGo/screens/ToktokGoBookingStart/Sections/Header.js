@@ -3,15 +3,14 @@ import {Text, View, StatusBar, StyleSheet, Image, TouchableOpacity} from 'react-
 import ToktokgoIcon from '../../../../assets/images/ToktokgoLandingIcon.png';
 import CONSTANTS from '../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import ArrowLeft from '../../../../assets/icons/arrow-left-icon.png';
 
 export const Header = ({navigation}) => {
   return (
     <View style={styles.headerBox}>
-      <View style={{marginTop: StatusBar.currentHeight, flexDirection: 'row'}}>
-        <TouchableOpacity onPress={() => navigation.pop()}>
-          <Text>
-            <MIcon name={'keyboard-arrow-left'} size={25} color={CONSTANTS.COLOR.ORANGE} />
-          </Text>
+      <View style={{marginTop: StatusBar.currentHeight, flexDirection: 'row', alignItems: 'center'}}>
+        <TouchableOpacity style={{paddingLeft: 18}} onPress={() => navigation.pop()}>
+          <Image style={{height: 15, width: 10}} source={ArrowLeft} resizeMode={'contain'} />
         </TouchableOpacity>
         <View style={styles.greetingBox}>
           <Image source={ToktokgoIcon} resizeMode={'contain'} style={{height: 25, width: 87}} />
@@ -44,7 +43,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: CONSTANTS.SIZE.MARGIN,
     flexDirection: 'row',
-    marginLeft: '35%',
+    marginLeft: '30%',
   },
   greetingText: {
     color: CONSTANTS.COLOR.ORANGE,

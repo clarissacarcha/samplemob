@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import {Text, View, TouchableHighlight} from 'react-native';
+import {Text, View, TouchableHighlight, Image} from 'react-native';
 import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation} from './Sections';
 import CONSTANTS from '../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -10,6 +10,7 @@ import {throttle, debounce} from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
 import {useDebounce} from '../../helpers';
 import {ToktokgoBeta} from '../../components';
+import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 
 const ToktokGoSelectedLocations = ({navigation, route}) => {
   const {popTo} = route.params;
@@ -145,17 +146,22 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
         <View
           style={{
             paddingHorizontal: CONSTANTS.SIZE.MARGIN,
-            width: '100%',
             backgroundColor: 'white',
             justifyContent: 'center',
             alignItems: 'center',
             paddingVertical: 16,
-            borderTopColor: '#ECECEC',
-            borderTopWidth: 2,
+            shadowColor: '#000000',
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowRadius: 50,
+            shadowOpacity: 1.0,
+            elevation: 20,
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             {selectedInput == 'D' ? (
-              <FA5Icon name="map-marker-alt" size={15} color={CONSTANTS.COLOR.ORANGE} style={{marginRight: 10}} />
+              <Image source={DestinationIcon} style={{height: 20, width: 35, marginRight: 5}} resizeMode={'contain'} />
             ) : (
               <FA5Icon name="map-pin" size={15} color={CONSTANTS.COLOR.YELLOW} style={{marginRight: 10}} />
             )}

@@ -12,7 +12,7 @@ const ToktokGoLanding = ({navigation}) => {
 
   return (
     <View style={styles.content}>
-      <Image source={toktokgoSplash} style={{width: 200, height: 200}} />
+      <Image source={toktokgoSplash} style={{width: 200, height: 200}} resizeMode={'contain'} />
     </View>
   );
 };

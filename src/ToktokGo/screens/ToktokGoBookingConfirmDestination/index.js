@@ -11,6 +11,7 @@ import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import {MAP_DELTA_LOW} from '../../../res/constants';
 import {useDebounce} from '../../helpers';
 import {throttle} from 'lodash';
+import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 
 const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   const {destination, origin} = useSelector(state => state.toktokGo);
@@ -72,9 +73,21 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       </TouchableOpacity>
       <DestinationMap onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />
       <View style={styles.card}>
-        <View style={{flexDirection: 'row', textAlign: 'center'}}>
-          <FA5Icon name="map-marker-alt" size={20} color={constants.COLOR.ORANGE} style={{marginRight: 10}} />
-          <Text>{destination.place.formattedAddress}</Text>
+        <View
+          style={{
+            borderRadius: 5,
+            backgroundColor: constants.COLOR.LIGHT,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginHorizontal: 20,
+              marginVertical: 10,
+              textAlign: 'center',
+            }}>
+            <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
+            <Text>{destination.place.formattedAddress}</Text>
+          </View>
         </View>
         <ConfirmDestinationButton onConfirm={onConfirm} />
       </View>
@@ -88,7 +101,7 @@ const styles = StyleSheet.create({
   card: {
     right: -4.5,
     width: '102%',
-    borderWidth: 3,
+    borderWidth: 4,
     borderTopColor: constants.COLOR.ORANGE,
     borderLeftColor: constants.COLOR.ORANGE,
     borderRightColor: constants.COLOR.ORANGE,

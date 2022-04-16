@@ -17,7 +17,7 @@ export const FeedbackModal = ({showModal, showBookingReason, popTo, navigation})
             </View>
             <View style={styles.containerBtnFeedback}>
               <TouchableOpacity style={styles.btnOk} onPress={() => navigation.pop(popTo)}>
-                <Text style={styles.btnTextOk}>Ok</Text>
+                <Text style={styles.btnTextOk}>OK</Text>
               </TouchableOpacity>
             </View>
           </View>
