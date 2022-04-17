@@ -100,6 +100,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     tripBook({
       variables: {
         input: {
+          consumer: {
+            mobileNumber: session.user.username,
+            name: session.user.person.firstName + ' ' + session.user.person.lastName,
+            referralCode: session.user.consumer.referralCode,
+            resellerCode: session.user.consumer.resellerCode,
+          },
           userId: session.user.id,
           tripFareHash: details?.rate?.hash,
           routeHash: routeDetails?.hash,
