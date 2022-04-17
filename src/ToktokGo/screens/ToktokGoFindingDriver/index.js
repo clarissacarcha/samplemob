@@ -28,6 +28,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const {booking} = useSelector(state => state.toktokGo);
   const [showDriverFoundModal, setShowDriverFoundModal] = useState(false);
   const [waitingStatus, setWaitingStatus] = useState(1);
+  const [waitingText, setWaitingText] = useState(1);
   const [viewCancelBookingModal, setViewCancelBookingModal] = useState(false);
   const [viewCancelReasonModal, setViewCancelReasonModal] = useState(false);
   const [viewSuccessCancelBookingModal, setViewSuccessCancelBookingModal] = useState(false);
@@ -51,19 +52,27 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       if (response?.subscriptionData?.data?.onTripUpdate?.status == 'ACCEPTED') {
         setShowDriverFoundModal(true);
       }
+      if (response?.subscriptionData?.data?.onTripUpdate?.status == 'EXPIRED') {
+        setWaitingStatus(0);
+        setWaitingText(6);
+      }
     },
   });
-
+  console.log(booking.id);
   console.log(onTripUpdate);
 
   useEffect(() => {
-    if (waitingStatus < 6) {
+    if (waitingText < 5 && waitingStatus) {
       const interval = setTimeout(() => {
-        setWaitingStatus(waitingStatus + 1);
-      }, 30000);
+        setWaitingText(waitingText + 1);
+      }, 10000);
       return () => clearInterval(interval);
+    } else if (waitingText >= 5 && waitingStatus) {
+      setWaitingText(1);
+    } else {
+      setWaitingText(6);
     }
-  }, [waitingStatus]);
+  }, [waitingText]);
 
   const [getTripCancellationCheck] = useLazyQuery(GET_TRIP_CANCELLATION_CHECK, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -92,6 +101,15 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   });
 
   const goBackAfterCancellation = () => {
+    dispatch({
+      type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+    });
+    navigation.replace('ToktokGoBookingStart', {
+      popTo: popTo + 1,
+    });
+  };
+
+  const dismissBookingExpired = () => {
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
     });
@@ -185,7 +203,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         booking={booking}
       />
       <BackButton navigation={navigation} popTo={popTo} />
-      <FindingDriverStatus waitingStatus={waitingStatus} renderStatus={renderStatus} />
+      <FindingDriverStatus waitingStatus={waitingStatus} renderStatus={renderStatus} waitingText={waitingText} />
 
       <View style={styles.card}>
         <BookingDistanceTime booking={booking} />
@@ -193,8 +211,8 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         <TotalBreakdown booking={booking} />
         <CancelRetryButton
           waitingStatus={waitingStatus}
-          setWaitingStatus={setWaitingStatus}
           initiateCancel={initiateCancel}
+          dismissBookingExpired={dismissBookingExpired}
         />
       </View>
     </View>
