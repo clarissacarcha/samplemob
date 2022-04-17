@@ -3,21 +3,21 @@ import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-nati
 import CONSTANTS from '../../../../common/res/constants';
 import SuccessIMG from '../../../../assets/images/Sucess.png';
 
-export const DriverArrivedModal = ({modal, setmodal, action, openModal, openRateDriver}) => {
+export const DriverArrivedModal = ({modal, booking, openModal, openRateDriver}) => {
   return (
     <Modal animationType="fade" transparent={true} visible={modal} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
             <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
-            {action ? (
+            {booking.status == 'ARRIVED' ? (
               <Text style={styles.modalTitle}>Driver Arrived</Text>
             ) : (
               <Text style={styles.modalTitle}>You’ve Arrived</Text>
             )}
 
             <View style={{marginHorizontal: 10}}>
-              {action ? (
+              {booking.status == 'ARRIVED' ? (
                 <Text style={styles.modalDescription}>
                   Your driver has arrived. Please be in your pick up location within{' '}
                   <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> to avoid cancellation.
@@ -27,7 +27,7 @@ export const DriverArrivedModal = ({modal, setmodal, action, openModal, openRate
               )}
             </View>
 
-            {action ? (
+            {booking.status == 'ARRIVED' ? (
               <TouchableOpacity
                 style={styles.buttonContainer}
                 onPress={() => {

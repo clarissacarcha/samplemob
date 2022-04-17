@@ -108,7 +108,7 @@ const StatusBar = ({label, log, number}) => {
 
 const Status = ({booking}) => {
   const mappedLogs = _.mapKeys(booking.logs, 'status');
-
+  console.log(mappedLogs);
   return (
     /*-------------------- FOR FIDELITY --------------------*/
     // <View>
@@ -122,9 +122,9 @@ const Status = ({booking}) => {
     /*-------------------- ON GOING --------------------*/
     <View>
       <View style={{borderBottomWidth: 2, borderColor: constants.COLOR.LIGHT, width: '100%', marginVertical: 15}} />
-      <StatusBar number={1} label={'Arrived at Destination'} log={mappedLogs['9']} />
-      <StatusBar number={3} label={'Passenger picked up'} log={mappedLogs['5']} />
-      <StatusBar number={2} label={'Driver Arrived at pick-up location'} log={mappedLogs['4']} />
+      <StatusBar number={1} label={'Arrived at Destination'} log={mappedLogs['COMPLETED']} />
+      <StatusBar number={3} label={'Passenger picked up'} log={mappedLogs['PICKED_UP']} />
+      <StatusBar number={2} label={'Driver Arrived at pick-up location'} log={mappedLogs['ARRIVED']} />
       <StatusBar number={4} label={'Driver Accepted'} log={mappedLogs['ACCEPTED']} />
       <View style={{borderBottomWidth: 2, borderColor: constants.COLOR.LIGHT, width: '100%', marginVertical: 15}} />
     </View>

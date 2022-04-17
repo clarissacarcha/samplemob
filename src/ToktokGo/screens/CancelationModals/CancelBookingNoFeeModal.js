@@ -3,25 +3,14 @@ import {Text, StyleSheet, Image, View, Modal, TouchableOpacity, StatusBar} from 
 import CONSTANTS from '../../../common/res/constants';
 import WarningIMG from '../../../assets/images/warning.png';
 
-export const CancelBookingNoFeeModal = ({isVisible, setVisible, setNextModal, setDriverVisivle}) => {
+export const CancelBookingNoFeeModal = ({isVisible, setVisible, setNextModal, setDriverVisivle, chargeAmount}) => {
   const cancel = () => {
     setVisible(!isVisible);
     setNextModal(true);
   };
-  const driverFee = () => {
-    setVisible(false);
-    setDriverVisivle(true);
-  };
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
-        <TouchableOpacity
-          style={styles.displayRight}
-          onPress={() => {
-            driverFee();
-          }}>
-          <Text style={{color: 'red'}}>Cancellation Fee</Text>
-        </TouchableOpacity>
         <View style={styles.card}>
           <View style={styles.container}>
             <Image source={WarningIMG} resizeMode={'contain'} style={styles.imageDimensions} />

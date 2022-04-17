@@ -5,7 +5,7 @@ import CONSTANTS from '../../../../common/res/constants';
 
 export const BackButton = ({navigation, popTo}) => {
   return (
-    <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop(popTo)}>
+    <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
       <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
     </TouchableOpacity>
   );

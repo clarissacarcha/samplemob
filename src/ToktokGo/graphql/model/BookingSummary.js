@@ -71,39 +71,46 @@ export const TRIP_BOOK = gql`
     tripBook(input: $input) {
       message
       trip {
+        consumer {
+          mobileNumber
+          name
+        }
+        consumerUserId
+        dispatchHash
+        driver {
+          mobileNumber
+          name
+          rating
+          vehicle {
+            bodyColor
+            license
+            make
+            model
+            type {
+              id
+              name
+            }
+            year
+          }
+        }
+        driverUserId
+        fare {
+          amount
+          discount
+          durationFee
+          flatRate
+          mileageFee
+          total
+        }
         id
-        status
-        tag
+        logs {
+          createdAt
+          status
+        }
         notes
+        passengerCount
+        paymentMethod
         route {
-          destinations {
-            addressBreakdown {
-              city
-              province
-            }
-            formattedAddress
-            location {
-              latitude
-              longitude
-            }
-          }
-          origin {
-            addressBreakdown {
-              city
-              province
-            }
-            formattedAddress
-            location {
-              latitude
-              longitude
-            }
-          }
-          distance {
-            kilometer
-          }
-          duration {
-            minute
-          }
           bounds {
             northeast {
               latitude
@@ -114,6 +121,28 @@ export const TRIP_BOOK = gql`
               longitude
             }
           }
+          destinations {
+            addressBreakdown {
+              city
+              country
+              postal
+              province
+              region
+            }
+            formattedAddress
+            location {
+              latitude
+              longitude
+            }
+          }
+          distance {
+            kilometer
+            meter
+          }
+          duration {
+            minute
+            second
+          }
           legs {
             steps {
               polyline {
@@ -121,37 +150,23 @@ export const TRIP_BOOK = gql`
               }
             }
           }
-        }
-        driver {
-          name
-          mobileNumber
-          rating
-          vehicle {
-            license
-            make
-            model
-            year
-            bodyColor
-            type {
-              id
-              name
+          origin {
+            addressBreakdown {
+              city
+              country
+              postal
+              province
+              region
+            }
+            formattedAddress
+            location {
+              latitude
+              longitude
             }
           }
         }
-        fare {
-          amount
-          discount
-          durationFee
-          flatRate
-          mileageFee
-          total
-        }
-        logs {
-          createdAt
-          status
-        }
-        passengerCount
-        paymentMethod
+        status
+        tag
       }
     }
   }

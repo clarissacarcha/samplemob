@@ -15,9 +15,14 @@ import {
   DriverCancelled,
 } from '../CancelationModals';
 import DummyData from '../../components/DummyData';
-import {useSelector} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
+import {useSubscription} from '@apollo/client';
+import {ON_TRIP_UPDATE, TOKTOKGO_SUBSCRIPTION_CLIENT} from '../../graphql';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {GET_TRIP_CANCELLATION_CHECK, TRIP_CONSUMER_CANCEL} from '../../graphql/model/Trip';
+import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 
-const ToktokGoOnTheWayRoute = ({navigation, route}) => {
+const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const {popTo, decodedPolyline} = route.params;
 
   const [status, setStatus] = useState(5);
@@ -32,12 +37,106 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
   const [viewCancelBookingModal, setViewCancelBookingModal] = useState(false);
   const [viewCancelReasonModal, setViewCancelReasonModal] = useState(false);
   const [viewSuccessCancelBookingModal, setViewSuccessCancelBookingModal] = useState(false);
+  const [chargeAmount, setChargeAmount] = useState(0);
+  const [cancellationState, setCancellationState] = useState();
 
   const {driver, booking} = useSelector(state => state.toktokGo);
+  const dispatch = useDispatch();
+
+  const onTripUpdate = useSubscription(ON_TRIP_UPDATE, {
+    client: TOKTOKGO_SUBSCRIPTION_CLIENT,
+    variables: {
+      consumerUserId: session.user.id,
+    },
+    onSubscriptionData: response => {
+      const {id, status, cancellation} = response?.subscriptionData?.data?.onTripUpdate;
+      if (id && status != 'CANCELLED' && cancellation.initiatedBy == 'CONSUMER') {
+        dispatch({
+          type: 'SET_TOKTOKGO_BOOKING',
+          payload: response?.subscriptionData?.data?.onTripUpdate,
+        });
+      }
+      if (status == 'CANCELLED' && cancellation.initiatedBy == 'DRIVER') {
+        setCancellationState(cancellation);
+        if (cancellation.chargeAmount > 0) {
+          setCancellationFee(true);
+        } else {
+          onCancel(true);
+        }
+      }
+      if (status == 'ARRIVED') {
+        setmodal(true);
+      }
+      if (status == 'COMPLETED') {
+        setmodal(true);
+      }
+    },
+  });
+
+  const [getTripCancellationCheck] = useLazyQuery(GET_TRIP_CANCELLATION_CHECK, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      console.log(response);
+      setChargeAmount(response.getTripCancellationCheck.chargeAmount);
+      if (response.getTripCancellationCheck.chargeAmount > 0) {
+        setDriverCancel(true);
+      } else {
+        setViewCancelBookingModal(true);
+      }
+    },
+    onError: error => console.log('error', error),
+  });
+
+  const [tripConsumerCancel] = useMutation(TRIP_CONSUMER_CANCEL, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onError: err => {
+      console.log(err);
+    },
+    onCompleted: response => {
+      console.log(response);
+      setViewSuccessCancelBookingModal(true);
+    },
+  });
+
+  const goBackAfterCancellation = () => {
+    navigation.replace('ToktokGoBookingStart', {
+      popTo: popTo + 1,
+    });
+  };
+
+  const initiateCancel = () => {
+    getTripCancellationCheck({
+      variables: {
+        input: {
+          trip: {
+            id: booking.id,
+          },
+        },
+      },
+    });
+  };
+
+  const finalizeCancel = reason => {
+    tripConsumerCancel({
+      variables: {
+        input: {
+          cancellationCharge: {
+            amount: chargeAmount,
+          },
+          reason: reason,
+          trip: {
+            id: booking.id,
+          },
+        },
+      },
+    });
+  };
+
+  console.log(onTripUpdate);
 
   const openModal = () => {
     setmodal(false);
-    setAction(false);
   };
   const openRateDriver = () => {
     setmodal(false);
@@ -50,7 +149,6 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
   };
   const onCancelWithFee = () => {
     setCancel(false);
-    setCancellationFee(true);
     setActionSheetType(10);
   };
 
@@ -77,11 +175,13 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
         setNextModal={setViewSuccessCancelBookingModal}
         type={actionSheetType}
         setType={setActionSheetType}
+        finalizeCancel={finalizeCancel}
       />
       <SuccesCancelBookingModal
         visible={viewSuccessCancelBookingModal}
         setVisible={setViewSuccessCancelBookingModal}
         type={bookingCancelledType}
+        goBackAfterCancellation={goBackAfterCancellation}
       />
       <CancelBookingModal
         isVisible={driverCancel}
@@ -93,49 +193,44 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
         setDriverVisible={setCancellationFee}
         setVisible={setViewSuccessCancelBookingModal}
         setType={setBookingCancelledType}
+        cancellationState={cancellationState}
+      />
+      <DriverArrivedModal
+        modal={modal}
+        setmodal={setmodal}
+        action={action}
+        booking={booking}
+        openModal={openModal}
+        openRateDriver={openRateDriver}
+      />
+      <DriverCancelled
+        cancel={cancel}
+        onCancel={onCancel}
+        onCancelWithFee={onCancelWithFee}
+        cancellationState={cancellationState}
       />
       {/* <SuccesCancelBookingModal /> */}
       <CancelBookingActionSheet setVisible={setViewSuccessCancelBookingModal} />
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      <View>
-        <Map decodedPolyline={decodedPolyline} />
-        <TouchableOpacity
-          style={styles.displayRight}
-          onPress={() => {
-            setmodal(true);
-          }}>
-          <DriverArrivedModal
-            modal={modal}
-            setmodal={setmodal}
-            action={action}
-            openModal={openModal}
-            openRateDriver={openRateDriver}
-          />
-          <Text style={{color: 'red'}}>Driver Arrived</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.displayRight1}
-          onPress={() => {
-            setCancel(true), setBookingCancelledType(1);
-          }}>
-          <Text style={{color: 'red'}}>Driver Cancelled Booking</Text>
-          <DriverCancelled cancel={cancel} onCancel={onCancel} onCancelWithFee={onCancelWithFee} />
-        </TouchableOpacity>
-      </View>
-
+      <Map decodedPolyline={decodedPolyline} />
       <View style={styles.card}>
-        {action ? <DriverStatus status={status} /> : <DriverStatusDestination />}
+        {booking.status == 'ACCEPTED' ? (
+          <DriverStatus status={status} booking={booking} />
+        ) : (
+          <DriverStatusDestination booking={booking} />
+        )}
         <View style={styles.divider} />
         <DriverInfo booking={booking} />
-        {action && (
+        {['ARRIVED', 'ACCEPTED'].includes(booking.status) && (
           <Actions
             callStop={callStop}
             messageStop={messageStop}
             setVisible={setViewCancelBookingModal}
+            initiateCancel={initiateCancel}
             setType={setBookingCancelledType}
+            booking={booking}
           />
         )}
         <SeeBookingDetails item={DummyData.onGoing.getDeliveries[0]} navigation={navigation} />
@@ -144,7 +239,11 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
   );
 };
 
-export default ToktokGoOnTheWayRoute;
+const mapStateToProps = state => ({
+  session: state.session,
+});
+
+export default connect(mapStateToProps, null)(ToktokGoOnTheWayRoute);
 
 const styles = StyleSheet.create({
   card: {
