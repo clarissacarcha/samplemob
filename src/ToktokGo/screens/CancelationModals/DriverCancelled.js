@@ -3,17 +3,9 @@ import {Text, StyleSheet, Image, View, Modal, TouchableOpacity, StatusBar} from 
 import CONSTANTS from '../../../common/res/constants';
 import WarningIMG from '../../../common/assets/globalert/Warning.png';
 
-export const DriverCancelled = ({onCancel, cancel, onCancelWithFee, setVisible}) => {
+export const DriverCancelled = ({onCancel, cancel, onCancelWithFee, setVisible, cancellationState}) => {
   return (
     <Modal animationType="fade" transparent={true} visible={cancel} style={StyleSheet.absoluteFill}>
-      <TouchableOpacity
-        style={styles.displayRight}
-        onPress={() => {
-          onCancelWithFee();
-        }}>
-        <Text style={{color: 'red'}}>Cancellation Fee</Text>
-      </TouchableOpacity>
-
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
@@ -25,7 +17,7 @@ export const DriverCancelled = ({onCancel, cancel, onCancelWithFee, setVisible})
 
               <View style={{marginHorizontal: -25}}>
                 <Text style={{color: '#525252', fontSize: CONSTANTS.FONT_SIZE.S}}>Reason</Text>
-                <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, marginTop: 8}}>Route is traffic</Text>
+                <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, marginTop: 8}}>{cancellationState.reason}</Text>
               </View>
             </View>
 

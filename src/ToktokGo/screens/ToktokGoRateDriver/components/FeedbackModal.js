@@ -3,7 +3,7 @@ import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-nati
 import constants from '../../../../common/res/constants';
 import Warning from '../../../../common/assets/globalert/Success.png';
 
-export const FeedbackModal = ({showModal, showBookingReason, popTo, navigation}) => {
+export const FeedbackModal = ({showModal, showBookingReason, popTo, navigation, rateDriverDone}) => {
   return (
     <>
       <Modal animationType="fade" transparent={true} visible={showModal} style={StyleSheet.absoluteFill}>
@@ -16,7 +16,7 @@ export const FeedbackModal = ({showModal, showBookingReason, popTo, navigation})
               <Text style={styles.feedbackText}>Have a great day, ka-toktok!</Text>
             </View>
             <View style={styles.containerBtnFeedback}>
-              <TouchableOpacity style={styles.btnOk} onPress={() => navigation.pop(popTo)}>
+              <TouchableOpacity style={styles.btnOk} onPress={rateDriverDone}>
                 <Text style={styles.btnTextOk}>Ok</Text>
               </TouchableOpacity>
             </View>

@@ -31,7 +31,7 @@ const ToktokGoLanding = ({navigation, session}) => {
           });
         } else if (
           response.getTripsConsumer[0]?.tag == 'ONGOING' &&
-          response.getTripsConsumer[0]?.status == 'ACCEPTED'
+          ['ACCEPTED', 'ARRIVED', 'PICKED_UP'].includes(response.getTripsConsumer[0]?.status)
         ) {
           const decodedPolyline = decodeLegsPolyline(response.getTripsConsumer[0]?.route.legs);
           navigation.push('ToktokGoOnTheWayRoute', {

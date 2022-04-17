@@ -22,11 +22,11 @@ import Feedback5 from '../../../assets/images/Feedback5.png';
 import Feedback6 from '../../../assets/images/Feedback6.png';
 import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../res/constants';
 import {FeedbackModal} from './components';
+import {useDispatch} from 'react-redux';
 
 const Star = ({onPress, color, isLast}) => {
   return <FAIcon onPress={onPress} name="star" size={35} style={{marginRight: isLast ? 0 : 25}} color={color} />;
 };
-
 const StarRating = ({onChange}) => {
   const [rating, setRating] = useState(0);
 
@@ -64,6 +64,8 @@ const RateDriver = ({navigation, route}) => {
     text: '',
     textLength: 0,
   });
+
+  const dispatch = useDispatch();
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['', '']} />,
@@ -99,6 +101,11 @@ const RateDriver = ({navigation, route}) => {
         textLength: text.length,
         text: text,
       });
+  };
+
+  const rateDriverDone = () => {
+    dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
+    navigation.pop(popTo);
   };
   return (
     <ScrollView style={styles.mainContainer}>
@@ -181,6 +188,7 @@ const RateDriver = ({navigation, route}) => {
         showBookingReason={() => showBookingReason()}
         popTo={popTo}
         navigation={navigation}
+        rateDriverDone={rateDriverDone}
       />
     </ScrollView>
   );

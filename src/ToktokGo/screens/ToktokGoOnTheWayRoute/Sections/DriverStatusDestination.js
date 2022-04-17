@@ -2,8 +2,13 @@ import React from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import constants from '../../../../common/res/constants';
 import FIcon from 'react-native-vector-icons/Fontisto';
+import moment from 'moment';
 
-export const DriverStatusDestination = ({status}) => {
+export const DriverStatusDestination = ({status, booking}) => {
+  const minDuration = booking.route?.duration.minute;
+  const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
+  const minTime = moment().format('hh:mm A');
+
   return (
     <View>
       <View style={styles.Mins}>
@@ -14,7 +19,7 @@ export const DriverStatusDestination = ({status}) => {
             style={{color: constants.COLOR.YELLOW, paddingRight: 10}}
           />
           <Text style={{fontSize: constants.FONT_SIZE.M, fontFamily: constants.FONT_FAMILY.BOLD}}>
-            03:00 PM - 03:15 PM
+            {minTime} - {maxTime}
           </Text>
         </View>
         <Text style={{fontSize: constants.FONT_SIZE.S, color: '#525252'}}>Estimated Time of Drop Off</Text>

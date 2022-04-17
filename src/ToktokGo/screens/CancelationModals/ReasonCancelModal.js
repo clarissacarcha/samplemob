@@ -2,9 +2,10 @@ import React, {useState, useRef} from 'react';
 import {Text, StyleSheet, ScrollView, View, Modal, TouchableOpacity, TextInput} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
-export const ReasonCancelModal = ({isVisible, setVisible, setReason, setNextModal, type, setType}) => {
+export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
   const dropDownRef = useRef(null);
-  const [selectedReason, setSelectedReason] = useState();
+  const [selectedReason, setSelectedReason] = useState(null);
+  const [typedReason, setTypedReason] = useState('');
   const [data, setData] = useState([
     {
       label: 'Passenger no show',
@@ -26,12 +27,10 @@ export const ReasonCancelModal = ({isVisible, setVisible, setReason, setNextModa
 
   const confirm = () => {
     setVisible(!isVisible);
-
-    if (type) {
-      SheetManager.show('cancel_booking');
-      setType(null);
+    if (selectedReason == 4) {
+      finalizeCancel(typedReason);
     } else {
-      setNextModal(true);
+      finalizeCancel(selectedReason.label);
     }
   };
 
@@ -50,14 +49,16 @@ export const ReasonCancelModal = ({isVisible, setVisible, setReason, setNextModa
                 <View style={styles.radioButtonContainer} key={key}>
                   <TouchableOpacity
                     onPress={() => {
-                      setSelectedReason(text.value);
+                      setSelectedReason(text);
                     }}
                     style={styles.radioButton}>
-                    <View style={text.value == selectedReason ? styles.radioButtonIcon : styles.radioButtonIcon1} />
+                    <View
+                      style={text.value == selectedReason?.value ? styles.radioButtonIcon : styles.radioButtonIcon1}
+                    />
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      setSelectedReason(text.value);
+                      setSelectedReason(text);
                     }}>
                     <Text style={styles.radioButtonText}>{text.label}</Text>
                   </TouchableOpacity>
@@ -65,13 +66,13 @@ export const ReasonCancelModal = ({isVisible, setVisible, setReason, setNextModa
               );
             })}
           </ScrollView>
-          {selectedReason == '4' && (
+          {selectedReason?.value == '4' && (
             <TextInput
               ref={dropDownRef}
-              // value={description}
+              value={typedReason}
               placeholder="Enter your reason"
               keyboardType="default"
-              // onChangeText={(value) => setDescription(value)}
+              onChangeText={value => setTypedReason(value)}
               style={styles.Input}
               numberOfLines={5}
               multiline

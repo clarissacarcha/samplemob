@@ -7,7 +7,6 @@ import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 import App from './src/app/App';
 import {name as appName} from './app.json';
 import {COLOR, FONT, FONT_SIZE} from './src/res/variables';
-import 'react-native-get-random-values';
 
 const customTextProps = {
   allowFontScaling: false,

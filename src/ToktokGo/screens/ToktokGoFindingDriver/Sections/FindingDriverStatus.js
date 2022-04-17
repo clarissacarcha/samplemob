@@ -6,17 +6,17 @@ import CONSTANTS from '../../../../common/res/constants';
 
 const ImageDimension = (Dimensions.get('window').width - 130) / 2;
 
-export const FindingDriverStatus = ({waitingStatus, renderStatus}) => {
+export const FindingDriverStatus = ({waitingStatus, renderStatus, waitingText}) => {
   return (
     <View style={styles.container}>
       <Image
-        source={waitingStatus != 6 ? FindingDriver : NoFound}
+        source={waitingStatus ? FindingDriver : NoFound}
         resizeMode={'contain'}
         style={{width: ImageDimension, height: ImageDimension}}
       />
       {/*---todo: assign text based on status---*/}
-      <Text style={styles.titleStyle}>{waitingStatus != 6 ? 'Finding Driver' : 'No Driver Found'}</Text>
-      <Text style={{textAlign: 'center'}}>{renderStatus(waitingStatus)}</Text>
+      <Text style={styles.titleStyle}>{waitingStatus ? 'Finding Driver' : 'No Driver Found'}</Text>
+      <Text style={{textAlign: 'center'}}>{renderStatus(waitingText)}</Text>
     </View>
   );
 };

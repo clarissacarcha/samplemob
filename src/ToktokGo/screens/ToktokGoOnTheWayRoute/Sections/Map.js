@@ -30,7 +30,7 @@ export const Map = ({decodedPolyline}) => {
   useEffect(() => {
     setTimeout(() => {
       mapRef.current.fitToCoordinates(
-        [ORIGIN],
+        [['ARRIVED', 'ACCEPTED'].includes(booking.status) ? ORIGIN : TO],
         {
           edgePadding: {
             right: 100,

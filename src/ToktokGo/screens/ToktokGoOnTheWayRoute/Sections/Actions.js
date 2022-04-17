@@ -5,7 +5,7 @@ import Cancel from '../../../../assets/icons/Cancelled.png';
 import Message from '../../../../assets/images/messageIcon.png';
 import Phone from '../../../../assets/images/phoneIcon.png';
 import {TouchableHighlight} from 'react-native';
-export const Actions = ({callStop, messageStop, setVisible, setType}) => {
+export const Actions = ({callStop, messageStop, setVisible, initiateCancel, setType}) => {
   return (
     <View style={styles.Info}>
       <TouchableHighlight underlayColor={constants.COLOR.LIGHT} onPress={() => callStop()}>
@@ -42,11 +42,7 @@ export const Actions = ({callStop, messageStop, setVisible, setType}) => {
           <Text style={{color: constants.COLOR.ORANGE}}>Message</Text>
         </View>
       </TouchableHighlight>
-      <TouchableHighlight
-        underlayColor={constants.COLOR.LIGHT}
-        onPress={() => {
-          setVisible(true), setType(1);
-        }}>
+      <TouchableHighlight underlayColor={constants.COLOR.LIGHT} onPress={initiateCancel}>
         <View
           style={{
             borderColor: '#ED3A19',

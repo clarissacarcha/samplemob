@@ -2,10 +2,10 @@ import React from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import constants from '../../../../common/res/constants';
 
-export const DriverStatus = ({status}) => {
+export const DriverStatus = ({status, booking}) => {
   return (
     <View>
-      {status == 5 && (
+      {booking.status == 'ACCEPTED' && (
         <View style={styles.Mins}>
           <Text style={{fontFamily: constants.FONT_FAMILY.BOLD, fontSize: constants.FONT_SIZE.M}}>5 mins</Text>
           <Text style={{fontSize: constants.FONT_SIZE.S, color: '#525252'}}>Your driver is on the way</Text>
@@ -17,7 +17,7 @@ export const DriverStatus = ({status}) => {
           <Text style={{fontSize: constants.FONT_SIZE.S, color: '#525252'}}>Your driver is nearby</Text>
         </View>
       )}
-      {status == 0 && (
+      {booking.status == 'ARRIVED' && (
         <View style={styles.Mins}>
           <Text style={{fontFamily: constants.FONT_FAMILY.BOLD, fontSize: constants.FONT_SIZE.M}}>0 min</Text>
           <Text style={{fontSize: constants.FONT_SIZE.S, color: '#525252'}}>Your driver has arrived</Text>

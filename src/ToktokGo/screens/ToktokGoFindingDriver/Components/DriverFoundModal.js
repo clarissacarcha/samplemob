@@ -12,7 +12,7 @@ export const DriverFoundModal = ({booking, showDriverFoundModal, setShowDriverFo
 
   const navigateTo = () => {
     setShowDriverFoundModal(false);
-    navigation.push('ToktokGoOnTheWayRoute', {
+    navigation.replace('ToktokGoOnTheWayRoute', {
       popTo: popTo + 1,
       decodedPolyline,
     });
