@@ -108,7 +108,11 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
             openModal={openModal}
             openRateDriver={openRateDriver}
           />
-          <Text style={{color: 'red'}}>Driver Arrived</Text>
+          {action ? (
+            <Text style={{color: 'red'}}>Driver Arrived</Text>
+          ) : (
+            <Text style={{color: 'red'}}>You’ve Arrived</Text>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity
