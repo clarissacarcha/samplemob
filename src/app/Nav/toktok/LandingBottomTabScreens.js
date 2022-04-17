@@ -60,7 +60,7 @@ const ToktokLanding = () => (
     />
     <ToktokLandingBottomTab.Screen
       name="ToktokLandingDeliveries"
-      component={ActivitiesTopTab}
+      component={ToktokLandingDeliveries}
       options={{
         tabBarLabel: ({focused}) => <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Activities</Text>,
         tabBarIcon: ({color}) => (

@@ -245,8 +245,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: imageWidth - 70, 
-    width: imageWidth - 150 
+    height: imageWidth - 70,
+    width: imageWidth - 150,
+    alignSelf: 'center',
   },
   imageBox: {
     borderRadius: 10,
