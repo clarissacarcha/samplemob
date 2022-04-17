@@ -12,16 +12,33 @@ import {
 } from './Sections';
 import {DriverFoundModal} from './Components';
 import {ReasonCancelModal, CancelBookingNoFeeModal, SuccesCancelBookingModal} from '../CancelationModals';
+import {useSubscription} from '@apollo/react-hooks';
+import {ON_TRIP_UPDATE, TOKTOKGO_SUBSCRIPTION_CLIENT} from '../../graphql';
 
 const ToktokGoFindingDriver = ({navigation, route}) => {
-  const {bookedData, popTo} = route.params;
-  const {routeDetails, destination, origin} = useSelector(state => state.toktokGo);
+  const {popTo} = route.params;
+  const {booking} = useSelector(state => state.toktokGo);
   const [showDriverFoundModal, setShowDriverFoundModal] = useState(false);
   const [waitingStatus, setWaitingStatus] = useState(1);
   const [viewCancelBookingModal, setViewCancelBookingModal] = useState(false);
   const [viewCancelReasonModal, setViewCancelReasonModal] = useState(false);
   const [viewSuccessCancelBookingModal, setViewSuccessCancelBookingModal] = useState(false);
-  console.log('BOOKED DATA:', destination);
+
+  const onTripUpdate = useSubscription(ON_TRIP_UPDATE, {
+    client: TOKTOKGO_SUBSCRIPTION_CLIENT,
+    variables: {
+      driverUserId: session.user.id,
+    },
+    onSubscriptionData: response => {
+      if (response?.subscriptionData?.data?.onTripUpdate?.id) {
+        dispatch({
+          type: 'SET_TOKTOKGO_BOOKING',
+          payload: response?.subscriptionData?.data?.onTripUpdate,
+        });
+      }
+    },
+  });
+
   useEffect(() => {
     if (waitingStatus < 6) {
       const interval = setTimeout(() => {
@@ -76,6 +93,7 @@ const ToktokGoFindingDriver = ({navigation, route}) => {
         setShowDriverFoundModal={setShowDriverFoundModal}
         navigation={navigation}
         route={route}
+        booking={booking}
       />
       <BackButton navigation={navigation} popTo={popTo} />
       <TouchableOpacity
@@ -86,9 +104,9 @@ const ToktokGoFindingDriver = ({navigation, route}) => {
       <FindingDriverStatus waitingStatus={waitingStatus} renderStatus={renderStatus} />
 
       <View style={styles.card}>
-        <BookingDistanceTime routeDetails={routeDetails} />
-        <DistanceOriginAddress destination={destination} origin={origin} />
-        <TotalBreakdown />
+        <BookingDistanceTime booking={booking} />
+        <DistanceOriginAddress booking={booking} />
+        <TotalBreakdown booking={booking} />
         <CancelRetryButton
           waitingStatus={waitingStatus}
           setWaitingStatus={setWaitingStatus}

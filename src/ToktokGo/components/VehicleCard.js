@@ -12,14 +12,14 @@ const ImageWidth = (Dimensions.get('window').width - 230) / 2;
 export const VehicleCard = ({type, data, selectVehicle, loading, selectedVehicle}) => {
   const {details} = useSelector(state => state.toktokGo);
   const render_image = type => {
-    switch (type) {
-      case '1': {
+    switch (data.vehicleType?.imageClass) {
+      case 'SEDAN': {
         return SedanIMG;
       }
-      case '2': {
+      case 'SMPV': {
         return SmallMpvIMG;
       }
-      case '3': {
+      case 'LMPV': {
         return LargeMpvIMG;
       }
     }
@@ -77,7 +77,7 @@ export const VehicleCard = ({type, data, selectVehicle, loading, selectedVehicle
       {data?.vehicleType?.id == selectedVehicle?.vehicleType?.id &&
         type &&
         (loading ? (
-          <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+          <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{paddingVertical: 18}} />
         ) : (
           <View style={styles.priceDetails}>
             <View style={{flexDirection: 'row'}}>
@@ -88,6 +88,12 @@ export const VehicleCard = ({type, data, selectVehicle, loading, selectedVehicle
               <Text style={styles.kmText}>Per KM</Text>
               <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
                 ₱{numberFormat(details?.rate?.tripFare?.mileageFee)}
+              </Text>
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.durationText}>Per minute</Text>
+              <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
+                ₱{numberFormat(details?.rate?.tripFare?.durationFee)}
               </Text>
             </View>
           </View>
@@ -147,13 +153,19 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
-    marginRight: 30,
+    marginRight: 48,
+  },
+  durationText: {
+    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontSize: CONSTANTS.FONT_SIZE.S,
+    color: CONSTANTS.COLOR.ALMOST_BLACK,
+    marginRight: 28.5,
   },
   fareText: {
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
-    marginRight: 20,
+    marginRight: 36,
   },
   priceDetails: {
     borderRadius: 5,

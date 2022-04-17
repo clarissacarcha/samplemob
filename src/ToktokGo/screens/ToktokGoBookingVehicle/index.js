@@ -3,15 +3,27 @@ import {Text, View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import Data from '../../components/BookingDummyData';
 import CONSTANTS from '../../../common/res/constants';
 import {Header, VehicleCard} from '../../components';
+import {useSelector} from 'react-redux';
 
 const ToktokGoBookingVehicle = ({navigation, route}) => {
   const {data, selectVehicle, loading, selectedVehicle} = route.params;
   const [selectedVehicleType, setSelectedVehicle] = useState(selectedVehicle);
+  const [localLoading, setLocalLoading] = useState(loading);
+
+  const {details} = useSelector(state => state.toktokGo);
 
   const onSelectVehicle = data => {
+    setLocalLoading(true);
     setSelectedVehicle(data);
     selectVehicle(data);
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLocalLoading(false);
+    }, 1200);
+  }, [details]);
+
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
       <Header navigation={navigation} title={'Select Vehicle'} />
@@ -28,7 +40,7 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
                 data={item}
                 selectVehicle={onSelectVehicle}
                 selectedVehicle={selectedVehicleType}
-                loading={loading}
+                loading={localLoading}
                 lastItem={lastItem}
               />
             </View>

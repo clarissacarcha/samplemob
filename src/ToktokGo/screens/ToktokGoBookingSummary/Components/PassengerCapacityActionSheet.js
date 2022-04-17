@@ -5,7 +5,24 @@ import {useDispatch} from 'react-redux';
 import ProtectionIMG from '../../../../assets/images/Protection.png';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const PassengerCapacityActionSheet = ({confirmBooking}) => {
+export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
+  const seatsArray = ['Just me', 'Two of us', 'Three of us', 'Four of us', 'Five of us'];
+
+  const ShowSeats = () => {
+    const showSeatsArray = seatsArray.splice(0, details.vehicleType.availableSeats);
+
+    return showSeatsArray.map((value, index) => {
+      return (
+        <>
+          <View style={styles.divider} />
+          <TouchableOpacity onPress={() => confirmBooking(index + 1)} key={index}>
+            <Text>{value}</Text>
+          </TouchableOpacity>
+        </>
+      );
+    });
+  };
+
   return (
     <ActionSheet id="passenger_capacity" overlayColor="none">
       <View style={styles.container}>
@@ -15,14 +32,7 @@ export const PassengerCapacityActionSheet = ({confirmBooking}) => {
           To ensure social distancing, we are limiting the number of passengers on each vehicle.
         </Text>
         <Text style={styles.description}>How many of you are taking this ride?</Text>
-        <View style={styles.divider} />
-        <TouchableOpacity onPress={() => confirmBooking(1)}>
-          <Text>Just me</Text>
-        </TouchableOpacity>
-        <View style={styles.divider} />
-        <TouchableOpacity onPress={() => confirmBooking(2)}>
-          <Text style={{color: CONSTANTS.COLOR.DARK}}>2 of us</Text>
-        </TouchableOpacity>
+        {ShowSeats()}
       </View>
 
       <View style={{width: '100%', height: 10, backgroundColor: 'white', position: 'absolute', bottom: 0}} />

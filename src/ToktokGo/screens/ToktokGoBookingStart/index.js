@@ -1,32 +1,30 @@
 import React, {useCallback} from 'react';
 import {View, TouchableHighlight, Text} from 'react-native';
 import constants from '../../../common/res/constants';
-import {useDispatch, useSelector} from 'react-redux';
-import {Landing, SavedLocations, RecentDestinations, Header} from '../ToktokGoBookingStart/Sections';
-import BookingDummyData from '../../components/BookingDummyData';
+import {useDispatch} from 'react-redux';
+import {Landing, Header} from '../ToktokGoBookingStart/Sections';
 import {useFocusEffect} from '@react-navigation/native';
-import {GET_PLACE_BY_ID} from '../../graphql';
+import {GET_PLACE_BY_LOCATION} from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from '../../../graphql';
 import uuid from 'react-native-uuid';
 import {ToktokgoBeta} from '../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import {currentLocation} from '../../../helper';
 
 const ToktokGoBookingStart = ({navigation}) => {
   const dispatch = useDispatch();
-
-  const {origin, sessionToken} = useSelector(state => state.toktokGo);
 
   const setBookingInitialState = payload => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
     dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
   };
 
-  const [getPlaceById] = useLazyQuery(GET_PLACE_BY_ID, {
+  const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setBookingInitialState(response.getPlaceById);
+      setBookingInitialState(response.getPlaceByLocation);
     },
     onError: error => console.log('error', error),
   });
@@ -34,15 +32,20 @@ const ToktokGoBookingStart = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_SESSION_TOKEN', payload: uuid.v4()});
-      getPlaceById({
-        variables: {
-          input: {
-            sessionToken: sessionToken,
-            placeId: BookingDummyData.pickupLocation.placeId,
-            formattedAddress: BookingDummyData.pickupLocation.formattedAddress,
+      const setPlaceFunction = async () => {
+        const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
+        getPlaceByLocation({
+          variables: {
+            input: {
+              location: {
+                latitude: latitude,
+                longitude: longitude,
+              },
+            },
           },
-        },
-      });
+        });
+      };
+      setPlaceFunction();
     }, [navigation]),
   );
   return (

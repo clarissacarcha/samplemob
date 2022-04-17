@@ -6,6 +6,7 @@ export const GET_TRIPS_CONSUMER = gql`
       id
       status
       tag
+      notes
       route {
         destinations {
           addressBreakdown {
@@ -53,6 +54,36 @@ export const GET_TRIPS_CONSUMER = gql`
           }
         }
       }
+      driver {
+        name
+        mobileNumber
+        rating
+        vehicle {
+          license
+          make
+          model
+          year
+          bodyColor
+          type {
+            id
+            name
+          }
+        }
+      }
+      fare {
+        amount
+        discount
+        durationFee
+        flatRate
+        mileageFee
+        total
+      }
+      logs {
+        createdAt
+        status
+      }
+      passengerCount
+      paymentMethod
     }
   }
 `;

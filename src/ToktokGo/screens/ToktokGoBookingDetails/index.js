@@ -22,7 +22,7 @@ import Toast from 'react-native-simple-toast';
 import {useMutation} from '@apollo/react-hooks';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {SIZES, FONT_MEDIUM, COLORS, BUTTON_HEIGHT, NUMBERS} from '../../../res/constants';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import {onError} from '../../../../util/ErrorUtility';
 import OnGoingIcon from '../../../assets/icons/OnGoing.png';
@@ -38,6 +38,8 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Booking Details', '']} fontFamily={CONSTANTS.FONT_FAMILY.REGULAR} />,
   });
+
+  const {details, destination, origin, driver, routeDetails, booking} = useSelector(state => state.toktokGo);
 
   const dropDownRef = useRef(null);
 
@@ -96,28 +98,27 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1}}>
-      <BookingID delivery={delivery} />
-      {/* todo: replace condition if status is ongoing */}
-      {true && (
+      <BookingID delivery={delivery} booking={booking} />
+      {booking.tag == 'ONGOING' && (
         <>
-          <BookingDriverDetails stop={delivery.senderStop} />
+          <BookingDriverDetails booking={booking} />
           <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
         </>
       )}
 
-      <BookingInfo delivery={delivery} />
-      <BookingNote delivery={delivery} />
+      <BookingInfo delivery={delivery} booking={booking} />
+      {booking.notes && <BookingNote booking={booking} details={details} />}
 
       {/* todo: replace condition if status is completed */}
-      {true && <BookingMap delivery={delivery} />}
-      <BookingAddress delivery={delivery} />
-      <BookingTotal delivery={delivery} dummyStatus={session.dummyStatus} />
+      {booking.tag == 'COMPLETED' && <BookingMap booking={booking} />}
+      <BookingAddress booking={booking} />
+      <BookingTotal booking={booking} details={details} />
 
       <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
 
-      <BookingStatus logs={delivery.logs} delivery={delivery} session={session} />
+      <BookingStatus booking={booking} />
       {/* todo: replace condition if status is cancelled */}
-      {true && <BookingCancelledNote />}
+      {booking.tag == 'CANCELLED' && <BookingCancelledNote />}
     </ScrollView>
   );
 };

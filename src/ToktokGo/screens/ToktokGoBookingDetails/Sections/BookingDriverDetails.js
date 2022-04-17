@@ -10,32 +10,33 @@ import ProfileImagePlaceHolder from '../../../../assets/icons/ProfileIcon.png';
 import VaccinatedIcon from '../../../../assets/images/vaccinated.png';
 import StarIcon from '../../../../assets/images/star.png';
 
-export const BookingDriverDetails = ({stop}) => {
-  const navigateToStop = () => {
-    const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
-    const latLng = `${stop.latitude},${stop.longitude}`;
-    const label = stop.name;
-    const url = Platform.select({
-      ios: `${scheme}${label}@${latLng}`,
-      android: `${scheme}${latLng}(${label})`,
-    });
+export const BookingDriverDetails = ({booking}) => {
+  // const navigateToStop = () => {
+  //   const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
+  //   const latLng = `${stop.latitude},${stop.longitude}`;
+  //   const label = stop.name;
+  //   const url = Platform.select({
+  //     ios: `${scheme}${label}@${latLng}`,
+  //     android: `${scheme}${latLng}(${label})`,
+  //   });
 
-    Linking.openURL(url);
-  };
+  //   Linking.openURL(url);
+  // };
 
   const callStop = () => {
     // const link = Platform.OS === 'android' ? `tel:${stop.mobile}` : `telprompt:${stop.mobile}`;
-    const link = Platform.OS === 'android' ? `tel:+639151111111` : `telprompt:+639151111111`;
+    const link =
+      Platform.OS === 'android' ? `tel:${booking.driver.mobileNumber}` : `telprompt:${booking.driver.mobileNumber}`;
     Linking.openURL(link);
   };
 
   const messageStop = () => {
     // Linking.openURL(`sms:${stop.mobile}`);
-    Linking.openURL(`sms:+639151111111`);
+    Linking.openURL(`sms:${booking.driver.mobileNumber}`);
   };
 
   const imageRender = () => {
-    // to do: condition, driver image here
+    // to do: condition, 1driver image here
     return ProfileImagePlaceHolder;
   };
 
@@ -47,24 +48,28 @@ export const BookingDriverDetails = ({stop}) => {
           <Image source={imageRender()} resizeMode={'cover'} style={styles.middleImageContent} />
         </View>
         <View style={styles.detailsContainer}>
-          <Text style={styles.detailName}>Juan Dela Cruz</Text>
-          <Text style={styles.detailVehicle}>Honda Civic (White) · DA963000 </Text>
+          <Text style={styles.detailName}>{booking.driver.name}</Text>
+          <Text style={styles.detailVehicle}>
+            {booking.driver?.vehicle?.make} {booking.driver?.vehicle?.model}{' '}
+            {booking.driver?.vehicle?.bodyColor ? `(${booking.driver?.vehicle?.bodyColor})` : ''} ·{' '}
+            {booking.driver?.vehicle?.license}
+          </Text>
           <View style={styles.ratingContainer}>
-            <Text>5.0</Text>
+            <Text>{booking.driver?.rating}</Text>
             <Image source={StarIcon} resizeMode={'contain'} style={styles.starIconDetail} />
             <Image source={VaccinatedIcon} resizeMode={'contain'} style={styles.vaccinatedIconDetail} />
           </View>
         </View>
         <View style={styles.iconsContainer}>
-          <TouchableOpacity onPress={messageStop} style={styles.iconContainer}>
+          <TouchableOpacity onPress={messageStop} style={[styles.iconContainer, {marginRight: 8}]}>
             <Image source={MessageIcon} resizeMode={'contain'} style={styles.iconDimensions} />
           </TouchableOpacity>
           <TouchableOpacity onPress={callStop} style={styles.iconContainer}>
             <Image source={PhoneIcon} resizeMode={'contain'} style={styles.iconDimensions} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={navigateToStop} style={styles.iconContainer}>
+          {/* <TouchableOpacity onPress={navigateToStop} style={styles.iconContainer}>
             <Image source={NavigateIcon} resizeMode={'contain'} style={styles.iconDimensions} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </>
@@ -115,7 +120,7 @@ const styles = StyleSheet.create({
   },
   iconsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-end',
     width: '30%',
   },
   iconContainer: {

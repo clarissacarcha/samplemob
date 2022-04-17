@@ -37,6 +37,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         type: 'SET_TOKTOKGO_BOOKING_DETAILS',
         payload: {...details, rate: response.getTripFare},
       });
+      setLoading(false);
     },
     onError: error => console.log('error', error),
   });
@@ -47,11 +48,13 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       console.log(err);
     },
     onCompleted: response => {
-      console.log(response);
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING',
+        payload: response.tripBook.trip,
+      });
       navigation.replace('ToktokGoFindingDriver', {
         popTo: popTo + 1,
         decodedPolyline,
-        bookedData: response.tripBook.trip,
       });
     },
   });
@@ -78,7 +81,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       variables: {
         input: {
           vehicleTypeRateHash: selectedVehicle.hash,
-          voucherHash: selectedVouchers?.hash ? selectedVouchers?.hash : '',
+          voucherHash: selectedVouchers?.hash,
         },
       },
     });
@@ -92,10 +95,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     setSelectedVouchers(details.voucher);
   }, [details.voucher]);
 
-  useEffect(() => {
-    setLoading(false);
-  }, [details]);
-
   const confirmBooking = num => {
     SheetManager.hide('passenger_capacity');
     tripBook({
@@ -105,7 +104,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           tripFareHash: details?.rate?.hash,
           routeHash: routeDetails?.hash,
           passengerCount: num,
-          paymentMethod: paymentMethod,
+          paymentMethod: paymentMethod == 1 ? 'TOKTOKWALLET' : 'CASH',
           ...(details?.noteToDriver ? {notes: details?.noteToDriver} : {}),
         },
       },
@@ -119,7 +118,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
 
-      <PassengerCapacityActionSheet confirmBooking={confirmBooking} />
+      <PassengerCapacityActionSheet details={details} confirmBooking={confirmBooking} />
 
       <PaymentMethodModal
         viewSelectPaymentModal={viewSelectPaymentModal}
@@ -151,11 +150,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
             selectVehicle={selectVehicle}
             loading={loading}
           />
-          <BookingVoucher
+          {/* TODO: Vouchers will be added after launch of April 18 */}
+          {/* <BookingVoucher
             navigation={navigation}
             selectedVouchers={selectedVouchers}
             setSelectedVouchersNull={setSelectedVouchersNull}
-          />
+          /> */}
           <BookingSelectPaymentMethod
             viewPaymenetSucessModal={viewPaymenetSucessModal}
             setViewSelectPaymentModal={setViewSelectPaymentModal}

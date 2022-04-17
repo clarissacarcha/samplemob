@@ -4,7 +4,7 @@ import constants from '../../../../common/res/constants';
 import {AccordionBooking} from '../Components';
 import {numberFormat} from '../../../../helper';
 
-export const TotalBreakdown = ({}) => {
+export const TotalBreakdown = ({booking}) => {
   return (
     <View style={styles.card}>
       <View style={styles.directionsBox}>
@@ -13,10 +13,11 @@ export const TotalBreakdown = ({}) => {
           <View style={{flex: 1}}>
             <AccordionBooking
               titleText={'Total'}
-              titleAmount={'₱ ' + '380.00'}
+              titleAmount={'₱ ' + numberFormat(booking.fare.total)}
               subTexts={[
-                {amount: '₱300.00', text: 'Sedan', key: 1},
-                {amount: '₱80.00', text: 'Distance', key: 2},
+                {amount: `₱${numberFormat(booking.fare.flatRate)}`, text: 'Sedan', key: 1},
+                {amount: `₱${numberFormat(booking.fare.mileageFee)}`, text: 'Distance', key: 2},
+                {amount: `₱${numberFormat(booking.fare.durationFee)}`, text: 'Duration', key: 2},
               ]}
               dummyStatus={2}
             />

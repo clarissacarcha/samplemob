@@ -15,12 +15,12 @@ export const BookingSelectPaymentMethod = ({setViewSelectPaymentModal, viewPayme
           <Text style={styles.textStyle}>Payment Method</Text>
         </View>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.elementWrapper}
           onPress={() => setViewSelectPaymentModal(!viewPaymenetSucessModal)}>
           <Text style={styles.seeAlltextStyle}>See All</Text>
           <Image source={ArrowRightIcon} resizeMode={'contain'} style={styles.arrowIconStyle} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/*---Todo: add condition here---*/}

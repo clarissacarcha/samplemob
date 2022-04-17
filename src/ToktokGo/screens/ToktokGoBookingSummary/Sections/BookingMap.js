@@ -61,10 +61,10 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination, 
           coordinate={origin?.place?.location}>
           <View style={{alignItems: 'center'}}>
             <View style={styles.originLocation}>
-              <View style={{flexDirection: 'row'}}>
+              {/* <View style={{flexDirection: 'row'}}>
                 <Image source={OfficeIcon} resizeMode={'contain'} style={{height: 20, width: 15, marginRight: 5}} />
                 <Text style={{fontSize: CONSTANTS.FONT_SIZE.S, color: CONSTANTS.COLOR.ORANGE}}>Office</Text>
-              </View>
+              </View> */}
               <View
                 style={{
                   flexDirection: 'row',

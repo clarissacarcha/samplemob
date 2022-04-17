@@ -116,7 +116,7 @@ const setToktokGoGraphqlTokenLink = setContext(async (_, {headers}) => {
     return {
       headers: {
         ...headers,
-        'x-api-key': ENVIRONMENTS.X_API_KEY,
+        'x-api-key': ENVIRONMENTS.TOKTOKGO_X_API_KEY,
       },
     };
   } catch (error) {

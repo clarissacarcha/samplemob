@@ -6,6 +6,7 @@ import {GET_TRIPS_CONSUMER} from '../../graphql/model/Trip';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {connect, useDispatch, useSelector} from 'react-redux';
+import {decodeLegsPolyline} from '../../helpers';
 
 const ToktokGoLanding = ({navigation, session}) => {
   const dispatch = useDispatch();
@@ -18,11 +19,24 @@ const ToktokGoLanding = ({navigation, session}) => {
         dispatchToSession(response.getTripsConsumer[0]);
       }
       setTimeout(() => {
-        if (response.getTripsConsumer[0]?.status == 'BOOKED' && response.getTripsConsumer[0]?.tag == 'ONGOING') {
+        console.log('HERE:', response.getTripsConsumer[0]?.status);
+        if (
+          response.getTripsConsumer[0]?.tag == 'ONGOING' &&
+          ['BOOKED', 'DISPATCHED'].includes(response.getTripsConsumer[0]?.status)
+        ) {
+          const decodedPolyline = decodeLegsPolyline(response.getTripsConsumer[0]?.route.legs);
           navigation.replace('ToktokGoFindingDriver', {
             popTo: 1,
-            decodedPolyline: null,
-            bookedData: response.getTripsConsumer[0],
+            decodedPolyline,
+          });
+        } else if (
+          response.getTripsConsumer[0]?.tag == 'ONGOING' &&
+          response.getTripsConsumer[0]?.status == 'ACCEPTED'
+        ) {
+          const decodedPolyline = decodeLegsPolyline(response.getTripsConsumer[0]?.route.legs);
+          navigation.push('ToktokGoOnTheWayRoute', {
+            popTo: 1,
+            decodedPolyline,
           });
         } else {
           navigation.replace('ToktokGoHealthCare');
@@ -33,23 +47,10 @@ const ToktokGoLanding = ({navigation, session}) => {
   });
 
   const dispatchToSession = data => {
+    console.log(data);
     dispatch({
-      type: 'SET_TOKTOKGO_BOOKING_ORIGIN',
-      payload: {place: data.route.origin},
-    });
-    dispatch({
-      type: 'SET_TOKTOKGO_BOOKING_DESTINATION',
-      payload: {place: data.route.destinations[0]},
-    });
-    dispatch({
-      type: 'SET_TOKTOKGO_BOOKING_ROUTE',
-      payload: {
-        ...routeDetails,
-        distance: data.route.distance,
-        duration: data.route.duration,
-        bounds: data.route.bounds,
-        legs: data.route.legs,
-      },
+      type: 'SET_TOKTOKGO_BOOKING',
+      payload: data,
     });
   };
 

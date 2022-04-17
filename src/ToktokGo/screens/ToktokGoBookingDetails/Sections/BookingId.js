@@ -7,17 +7,17 @@ import OnGoingIcon from '../../../../assets/icons/OnGoing.png';
 import CompletedIcon from '../../../../assets/icons/Completed.png';
 import CancelledIcon from '../../../../assets/icons/Cancelled.png';
 
-export const BookingID = ({delivery}) => {
+export const BookingID = ({delivery, booking}) => {
   const getTextStatus = () => {
-    if (delivery.status == 1) return 'Ongoing';
-    else if (delivery.status == 6) return 'Completed';
-    else if (delivery.status == 7) return 'Cancelled';
+    if (booking.tag == 'ONGOING') return 'Ongoing';
+    else if (booking.tag == 'COMPLETED') return 'Completed';
+    else if (booking.tag == 'CANCELLED') return 'Cancelled';
   };
 
   const getIconStatus = () => {
-    if (delivery.status == 1) return OnGoingIcon;
-    else if (delivery.status == 6) return CompletedIcon;
-    else if (delivery.status == 7) return CancelledIcon;
+    if (booking.tag == 'ONGOING') return OnGoingIcon;
+    else if (booking.tag == 'COMPLETED') return CompletedIcon;
+    else if (booking.tag == 'CANCELLED') return CancelledIcon;
   };
 
   return (
@@ -33,7 +33,7 @@ export const BookingID = ({delivery}) => {
                 fontFamily: FONTS.REGULAR,
                 marginLeft: 10,
               }}>
-              {delivery.deliveryId}
+              {booking.id}
             </Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>

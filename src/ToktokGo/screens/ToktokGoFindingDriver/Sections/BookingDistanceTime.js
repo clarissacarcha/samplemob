@@ -4,8 +4,8 @@ import CONSTANTS from '../../../../common/res/constants';
 import FIcon from 'react-native-vector-icons/Fontisto';
 import moment from 'moment';
 
-export const BookingDistanceTime = ({routeDetails}) => {
-  const minDuration = routeDetails.duration.minute;
+export const BookingDistanceTime = ({booking}) => {
+  const minDuration = booking.route.duration.minute;
   const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
   const minTime = moment().format('hh:mm A');
 
@@ -15,7 +15,7 @@ export const BookingDistanceTime = ({routeDetails}) => {
         <View>
           <View style={styles.elementWrapper}>
             <FIcon name={'map'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
-            <Text style={styles.textStyle}>{routeDetails.distance.kilometer} km</Text>
+            <Text style={styles.textStyle}>{booking.route.distance.kilometer} km</Text>
           </View>
           <Text style={styles.bottomTextStyle}>Distance</Text>
         </View>

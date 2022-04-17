@@ -19,6 +19,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   const dispatch = useDispatch();
   const onConfirm = throttle(
     () => {
+      navigation.pop();
       navigation.push('ToktokGoBookingConfirmPickup', {
         popTo: popTo + 1,
       });

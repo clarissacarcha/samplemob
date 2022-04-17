@@ -7,8 +7,9 @@ import Star from '../../../../assets/images/star.png';
 
 const ImageWidth = (Dimensions.get('window').width - 190) / 2;
 
-export const DriverFoundModal = ({showDriverFoundModal, setShowDriverFoundModal, navigation, route}) => {
+export const DriverFoundModal = ({booking, showDriverFoundModal, setShowDriverFoundModal, navigation, route}) => {
   const {popTo, decodedPolyline} = route.params;
+
   const navigateTo = () => {
     setShowDriverFoundModal(false);
     navigation.push('ToktokGoOnTheWayRoute', {
@@ -24,13 +25,17 @@ export const DriverFoundModal = ({showDriverFoundModal, setShowDriverFoundModal,
           <View style={{alignItems: 'center'}}>
             <Text style={styles.modalTitle}>Driver Found</Text>
             <Image source={User} style={styles.profileImage} resizeMode="cover" />
-            <Text style={styles.profileName}>Rick Sanchez</Text>
+            <Text style={styles.profileName}>{booking.driver?.name}</Text>
             <View style={styles.iconContainer}>
-              <Text>5.0</Text>
+              <Text>{booking.driver?.rating}</Text>
               <Image source={Star} style={styles.starStyles} resizeMode="contain" />
               <Image source={Vaccinated} style={styles.vacineStyle} resizeMode="contain" />
             </View>
-            <Text>Honda Civic (White) · DA963000 </Text>
+            <Text>
+              {booking.driver?.vehicle?.make} {booking.driver?.vehicle?.model}{' '}
+              {booking.driver?.vehicle?.bodyColor ? `(${booking.driver?.vehicle?.bodyColor})` : ''} ·{' '}
+              {booking.driver?.vehicle?.license}
+            </Text>
             <TouchableOpacity onPress={navigateTo} style={styles.cancelContainer}>
               <Text style={styles.textStyle}>OK</Text>
             </TouchableOpacity>

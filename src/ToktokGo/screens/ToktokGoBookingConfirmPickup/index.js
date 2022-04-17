@@ -38,7 +38,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     onCompleted: response => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ROUTE', payload: response.getQuotation.quotation.route});
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, noteToDriver: note}});
-      navigation.push('ToktokGoBookingSummary', {
+      navigation.replace('ToktokGoBookingSummary', {
         popTo: popTo + 1,
         quotationDataResult: response.getQuotation.quotation,
         decodedPolyline: decodeLegsPolyline(response.getQuotation.quotation.route.legs),
@@ -81,7 +81,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   };
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop(popTo)}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
       {mapRegion.latitude && <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}

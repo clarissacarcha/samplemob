@@ -5,7 +5,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import EIcon from 'react-native-vector-icons/Entypo';
 import moment from 'moment';
 
-export const DistanceOriginAddress = ({destination, origin}) => {
+export const DistanceOriginAddress = ({booking}) => {
   return (
     <>
       <View style={styles.container}>
@@ -32,14 +32,14 @@ export const DistanceOriginAddress = ({destination, origin}) => {
                 marginBottom: 10,
               }}>
               <View style={styles.addressContainer}>
-                <Text style={styles.landmarkTextStyle}>{origin.place.addressBreakdown.city}</Text>
-                <Text style={{fontSize: 11, color: '#525252'}}>{origin.place.formattedAddress}</Text>
+                <Text style={styles.landmarkTextStyle}>{booking.route.origin.addressBreakdown.city}</Text>
+                <Text style={{fontSize: 11, color: '#525252'}}>{booking.route.origin.formattedAddress}</Text>
               </View>
             </View>
             {/*-------------------- DESTINATION DETAILS --------------------*/}
             <View style={styles.addressContainer}>
-              <Text style={styles.landmarkTextStyle}>{destination.place.addressBreakdown.city}</Text>
-              <Text style={styles.completeAddressTextStyle}>{destination.place.formattedAddress}</Text>
+              <Text style={styles.landmarkTextStyle}>{booking.route.destinations[0].addressBreakdown.city}</Text>
+              <Text style={styles.completeAddressTextStyle}>{booking.route.destinations[0].formattedAddress}</Text>
             </View>
           </View>
         </View>

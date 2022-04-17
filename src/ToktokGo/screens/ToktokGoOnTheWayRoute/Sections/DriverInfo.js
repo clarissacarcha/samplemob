@@ -4,7 +4,7 @@ import constants from '../../../../common/res/constants';
 import User from '../../../../assets/images/user-icon.png';
 import Vaccinated from '../../../../assets/images/vaccinated.png';
 import Star from '../../../../assets/images/star.png';
-export const DriverInfo = () => {
+export const DriverInfo = ({booking}) => {
   return (
     <View style={styles.Info}>
       <View
@@ -20,10 +20,14 @@ export const DriverInfo = () => {
         />
       </View>
       <View style={{marginHorizontal: 20, marginBottom: 16}}>
-        <Text>Rick Sanchez</Text>
-        <Text>Honda Civic (White) · DA963000</Text>
+        <Text>{booking.driver?.name}</Text>
+        <Text>
+          {booking.driver?.vehicle?.make} {booking.driver?.vehicle?.model}{' '}
+          {booking.driver?.vehicle?.bodyColor ? `(${booking.driver?.vehicle?.bodyColor})` : ''} ·{' '}
+          {booking.driver?.vehicle?.license}
+        </Text>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Text>5.0</Text>
+          <Text>{booking.driver?.rating}</Text>
           <Image
             source={Star}
             style={{height: 15, width: 15, borderRadius: 50, marginRight: 8, marginLeft: 2}}

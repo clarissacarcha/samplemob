@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux';
 import Car from '../../../../assets/images/Car.png';
 import constants from '../../../../common/res/constants';
 export const Map = ({decodedPolyline}) => {
-  const {origin, destination, routeDetails} = useSelector(state => state.toktokGo);
+  const {origin, destination, routeDetails, booking} = useSelector(state => state.toktokGo);
 
   const mapRef = useRef();
   const INITIAL_REGION = {
@@ -18,31 +18,32 @@ export const Map = ({decodedPolyline}) => {
   };
 
   const ORIGIN = {
-    latitude: origin.place.location.latitude,
-    longitude: origin.place.location.longitude,
+    latitude: booking.route.origin.location.latitude,
+    longitude: booking.route.origin.location.longitude,
   };
 
   const TO = {
-    latitude: destination.place.location.latitude,
-    longitude: destination.place.location.longitude,
+    latitude: booking.route.destinations[0].location.latitude,
+    longitude: booking.route.destinations[0].location.longitude,
   };
 
   useEffect(() => {
     setTimeout(() => {
-      // mapRef.current.fitToCoordinates(
-      //   [routeDetails.bounds],
-      //   {
-      //     edgePadding: {
-      //       right: 100,
-      //       bottom: 100,
-      //       left: 100,
-      //       top: 100,
-      //     },
-      //   },
-      //   3000, // Animation duration in milliseconds.
-      // );
+      mapRef.current.fitToCoordinates(
+        [ORIGIN],
+        {
+          edgePadding: {
+            right: 100,
+            bottom: 200,
+            left: 100,
+            top: 100,
+          },
+        },
+        3000, // Animation duration in milliseconds.
+      );
     }, 1000);
   }, []);
+
   return (
     <MapView
       ref={mapRef}
@@ -67,11 +68,6 @@ export const Map = ({decodedPolyline}) => {
           <Image source={Car} style={{height: 36, width: 36}} resizeMode="contain" />
         </View>
       </Marker>
-      {/* <Polyline
-        coordinates={decodedPolyline}
-        strokeColor={CONSTANTS.COLOR.ORANGE} // fallback for when `strokeColors` is not supported by the map-provider
-        strokeWidth={3}
-      /> */}
     </MapView>
   );
 };

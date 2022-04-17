@@ -36,11 +36,14 @@ export const GET_QUOTATION = gql`
             id
             name
             phrase
+            imageClass
+            availableSeats
           }
           rate {
             amount
             flatRate
             mileageFee
+            durationFee
           }
         }
       }
@@ -55,6 +58,7 @@ export const GET_TRIP_FARE = gql`
       tripFare {
         flatRate
         mileageFee
+        durationFee
         discount
         total
       }
@@ -68,11 +72,86 @@ export const TRIP_BOOK = gql`
       message
       trip {
         id
-        notes
-        passengerCount
-        paymentMethod
         status
         tag
+        notes
+        route {
+          destinations {
+            addressBreakdown {
+              city
+              province
+            }
+            formattedAddress
+            location {
+              latitude
+              longitude
+            }
+          }
+          origin {
+            addressBreakdown {
+              city
+              province
+            }
+            formattedAddress
+            location {
+              latitude
+              longitude
+            }
+          }
+          distance {
+            kilometer
+          }
+          duration {
+            minute
+          }
+          bounds {
+            northeast {
+              latitude
+              longitude
+            }
+            southwest {
+              latitude
+              longitude
+            }
+          }
+          legs {
+            steps {
+              polyline {
+                points
+              }
+            }
+          }
+        }
+        driver {
+          name
+          mobileNumber
+          rating
+          vehicle {
+            license
+            make
+            model
+            year
+            bodyColor
+            type {
+              id
+              name
+            }
+          }
+        }
+        fare {
+          amount
+          discount
+          durationFee
+          flatRate
+          mileageFee
+          total
+        }
+        logs {
+          createdAt
+          status
+        }
+        passengerCount
+        paymentMethod
       }
     }
   }

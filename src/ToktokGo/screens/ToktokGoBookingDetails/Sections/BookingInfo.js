@@ -16,26 +16,16 @@ import MapIcon from '../../../../assets/images/mapIcon.png';
 import ClockIcon from '../../../../assets/images/clockIcon.png';
 import PassengerIcon from '../../../../assets/images/Passenger.png';
 import ToktokWalletOutline from '../../../../assets/images/toktok-wallet-outline.png';
+import moment from 'moment';
 
-export const BookingInfo = ({delivery, orderDetails}) => {
-  const getDisplayAmount = () => {
-    if (APP_FLAVOR === 'D') {
-      if (delivery.discount == 0) {
-        return `PHP ${parseFloat(delivery.price)}.00`;
-      } else {
-        return `(${parseFloat(delivery.price)}+${parseFloat(delivery.discount)}) = PHP ${
-          parseFloat(delivery.price) + parseFloat(delivery.discount)
-        }.00`;
-      }
-    }
-
-    if (APP_FLAVOR === 'C') {
-      return `₱ ${parseFloat(delivery.price)}.00`;
-    }
-  };
+export const BookingInfo = ({delivery, booking}) => {
   const orangeFont = delivery.status == 7 ? constants.COLOR.DARK : constants.COLOR.ORANGE;
   const blackFont = delivery.status == 7 ? constants.COLOR.DARK : constants.COLOR.BLACK;
   // const cashImage = delivery.status == 7 ? CashGreyImage : CashImage;
+
+  const minDuration = booking.route.duration.minute;
+  const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
+  const minTime = moment().format('hh:mm A');
 
   return (
     <View style={styles.card}>
@@ -49,7 +39,7 @@ export const BookingInfo = ({delivery, orderDetails}) => {
               <View style={{flex: 1}}>
                 <Text style={{fontFamily: FONT.BOLD, fontSize: constants.FONT_SIZE.M}}>Booking Information</Text>
                 <Text style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
-                  Jan 7, 2021 02:40 PM
+                  {moment(booking.logs[0].createdAt).format('MMM D, YYYY hh:mm A')}
                   {/* ₱{(parseFloat(delivery.price) * parseFloat(delivery.comRate)).toFixed(2)} */}
                 </Text>
               </View>
@@ -81,7 +71,7 @@ export const BookingInfo = ({delivery, orderDetails}) => {
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={MapIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
               <Text style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
-                2.5 km
+                {booking.route.distance.kilometer} km
               </Text>
             </View>
           </View>
@@ -90,7 +80,7 @@ export const BookingInfo = ({delivery, orderDetails}) => {
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={ClockIcon} resizeMode="contain" style={{width: 12, height: 15, marginRight: 8}} />
               <Text style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
-                3:00 PM - 4:00 PM
+                {minTime} - {maxTime}
               </Text>
             </View>
           </View>
@@ -103,7 +93,7 @@ export const BookingInfo = ({delivery, orderDetails}) => {
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={PassengerIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
               <Text style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
-                2
+                {booking.passengerCount}
               </Text>
             </View>
           </View>

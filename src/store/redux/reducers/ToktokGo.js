@@ -39,14 +39,20 @@ const INITIAL_STATE = {
     },
   },
   details: {
+    id: null,
+    status: null,
+    tag: null,
     vehicleType: {
-      id: '1',
+      id: null,
       name: null,
       phrase: null,
+      imageClass: null,
+      availableSeats: null,
     },
     rate: {
       hash: null,
       tripFare: {
+        durationFee: null,
         flatRate: null,
         mileageFee: null,
         discount: null,
@@ -55,7 +61,7 @@ const INITIAL_STATE = {
     },
     voucher: null,
     noteToDriver: null,
-    paymentMethod: 1,
+    paymentMethod: 2,
     passengerCount: 1,
   },
   routeDetails: {
@@ -81,6 +87,76 @@ const INITIAL_STATE = {
     },
   },
   paymentMethod: 'CASH',
+  booking: {
+    id: null,
+    dispatchHash: null,
+    status: null,
+    tag: null,
+    notes: null,
+    route: {
+      destinations: [
+        {
+          addressBreakdown: {
+            city: null,
+            province: null,
+          },
+          formattedAddress: null,
+          location: {
+            latitude: null,
+            longitude: null,
+          },
+        },
+      ],
+      origin: {
+        addressBreakdown: {
+          city: null,
+          province: null,
+        },
+        formattedAddress: null,
+        location: {
+          latitude: null,
+          longitude: null,
+        },
+      },
+      distance: {
+        kilometer: null,
+      },
+      duration: {
+        minute: null,
+      },
+      bounds: {
+        northeast: {
+          latitude: null,
+          longitude: null,
+        },
+        southwest: {
+          latitude: null,
+          longitude: null,
+        },
+      },
+      legs: {
+        steps: {
+          polyline: {
+            points: null,
+          },
+        },
+      },
+    },
+    paymentMethod: 'CASH',
+    consumer: {
+      name: null,
+      mobileNumber: null,
+    },
+    fare: {
+      amount: null,
+      discount: null,
+      durationFee: null,
+      flatRate: null,
+      mileageFee: null,
+      total: null,
+    },
+    logs: [],
+  },
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -95,6 +171,8 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, details: action.payload};
     case 'SET_TOKTOKGO_BOOKING_ROUTE':
       return {...state, routeDetails: action.payload};
+    case 'SET_TOKTOKGO_BOOKING':
+      return {...state, booking: action.payload};
     case 'SET_TOKTOKGO_BOOKING_INITIAL_STATE':
       return INITIAL_STATE;
     default:

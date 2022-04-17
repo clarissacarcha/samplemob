@@ -70,10 +70,12 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
 
   const onPressLocation = () => {
     if (selectedInput == 'D') {
+      navigation.pop();
       navigation.push('ToktokGoBookingConfirmDestination', {
         popTo: popTo + 1,
       });
     } else {
+      navigation.pop();
       navigation.push('ToktokGoBookingConfirmPickup', {
         popTo: popTo + 1,
       });
@@ -133,10 +135,12 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
       <TouchableHighlight
         onPress={() => {
           if (selectedInput == 'D') {
+            navigation.pop();
             navigation.push('ToktokGoBookingConfirmDestination', {
               popTo: popTo + 1,
             });
           } else {
+            navigation.pop();
             navigation.push('ToktokGoBookingConfirmPickup', {
               popTop: 1,
             });

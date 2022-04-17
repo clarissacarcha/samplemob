@@ -10,11 +10,12 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote}) =
   return (
     <View>
       <TouchableOpacity
-        onPress={() =>
+        onPress={() => {
+          navigation.pop();
           navigation.push('ToktokGoBookingSelectLocations', {
             popTo: popTo + 1,
-          })
-        }
+          });
+        }}
         style={{
           backgroundColor: '#F8F8F8',
           flexDirection: 'row',

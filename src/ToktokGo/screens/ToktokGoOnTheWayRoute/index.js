@@ -15,6 +15,7 @@ import {
   DriverCancelled,
 } from '../CancelationModals';
 import DummyData from '../../components/DummyData';
+import {useSelector} from 'react-redux';
 
 const ToktokGoOnTheWayRoute = ({navigation, route}) => {
   const {popTo, decodedPolyline} = route.params;
@@ -31,6 +32,9 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
   const [viewCancelBookingModal, setViewCancelBookingModal] = useState(false);
   const [viewCancelReasonModal, setViewCancelReasonModal] = useState(false);
   const [viewSuccessCancelBookingModal, setViewSuccessCancelBookingModal] = useState(false);
+
+  const {driver, booking} = useSelector(state => state.toktokGo);
+
   const openModal = () => {
     setmodal(false);
     setAction(false);
@@ -51,11 +55,12 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
   };
 
   const callStop = () => {
-    const link = Platform.OS === 'android' ? `tel:09106350400` : `telprompt:09106350400`;
+    const link =
+      Platform.OS === 'android' ? `tel:${booking.driver?.mobileNumber}` : `telprompt:${booking.driver?.mobileNumber}`;
     Linking.openURL(link);
   };
   const messageStop = () => {
-    Linking.openURL(`sms:09106350400`);
+    Linking.openURL(`sms:${booking.driver?.mobileNumber}`);
   };
 
   return (
@@ -124,7 +129,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route}) => {
       <View style={styles.card}>
         {action ? <DriverStatus status={status} /> : <DriverStatusDestination />}
         <View style={styles.divider} />
-        <DriverInfo />
+        <DriverInfo booking={booking} />
         {action && (
           <Actions
             callStop={callStop}

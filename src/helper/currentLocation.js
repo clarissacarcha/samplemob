@@ -21,7 +21,11 @@ export const currentLocation = async ({showsReverseGeocode}) => {
       timeout: 3000,
     });
 
-    const {latitude, longitude, accuracy} = locRes;
+    // const {latitude, longitude, accuracy} = locRes;
+
+    const latitude = 14.818509430691329;
+    const longitude = 120.96382666665981;
+    const accuracy = 1;
 
     // If not asking for reverseGeocode, return an object with latitude and longitude
     if (!showsReverseGeocode) {
