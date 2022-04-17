@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import CustomStarRating from 'toktokfood/components/CustomStarRating';
@@ -17,21 +17,34 @@ const RestaurantItem = ({activeTab, item}) => {
   const navigation = useNavigation();
   const [validImg, setValidImg] = useState(true);
   const {id} = activeTab;
-  const {hasOpen, nextOperatingHrs, operatingHours} = item;
-  const {fromTime, day: nxtDay} = nextOperatingHrs;
+  const {hasOpen, nextOperatingHrs, operatingHours, dayLapsed, hasProduct} = item;
   const {fromTime: currFromTime} = operatingHours;
+  const [nextSched, setNextSched] = useState(null);
+
+  useEffect(() => {
+    if (nextOperatingHrs) {
+      setNextSched(nextOperatingHrs);
+    }
+  }, [nextOperatingHrs]);
 
   const displayNextOpeningHours = () => {
-    if (hasOpen) {
+    if (hasOpen && hasProduct) {
       return null;
     }
+    if (nextSched === null || !hasProduct) {
+      return <Text style={styles.overlayText}>Currently Unavailable</Text>;
+    }
     const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
-    if (isAboutToOpen) {
-      return <Text style={styles.overlayText}>Opens at {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}</Text>;
+    if (isAboutToOpen || dayLapsed === 0) {
+      return (
+        <Text style={styles.overlayText}>
+          Opens at {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('LT')}
+        </Text>
+      );
     }
     return (
       <Text style={styles.overlayText}>
-        Opens on {getWeekDay(nxtDay)} {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}
+        Opens on {getWeekDay(nextSched.day)} {moment(nextSched.fromTime, 'hh:mm:ss').format('LT')}
       </Text>
     );
   };
@@ -74,7 +87,7 @@ const RestaurantItem = ({activeTab, item}) => {
             resizeMode="cover"
             onError={() => setValidImg(false)}
           />
-          <View style={{...styles.overlay, opacity: hasOpen ? 0 : 0.6}} />
+          <View style={{...styles.overlay, opacity: hasOpen && hasProduct ? 0 : 0.6}} />
           {displayNextOpeningHours()}
         </View>
         {item.promotionVouchers.length > 0 && id === 2 && renderPromotionVouchers()}

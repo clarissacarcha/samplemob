@@ -230,7 +230,7 @@ export const TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT = new ApolloClient({
 });
 export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
-  link: toktokBillsLoadGraphqlLink,
+  link: toktokFoodGraphqlLink,
 });
 
 export const TOKTOK_QUOTATION_GRAPHQL_CLIENT = new ApolloClient({

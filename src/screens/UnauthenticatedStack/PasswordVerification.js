@@ -14,7 +14,7 @@ import {
 import SmsRetriever from 'react-native-sms-retriever';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
-import {useMutation} from '@apollo/react-hooks';
+import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
 import {getUniqueId} from 'react-native-device-info';
 
@@ -223,6 +223,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
 
 const mapDispatchToProps = dispatch => ({
   createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+  setAppServices: payload => dispatch({type: 'SET_APP_SERVICES', payload}),
 });
 
 export default connect(null, mapDispatchToProps)(PasswordVerification);

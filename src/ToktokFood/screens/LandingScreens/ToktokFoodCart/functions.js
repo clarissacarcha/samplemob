@@ -38,6 +38,17 @@ export const tokwaErrorBtnTitle = pinAttempt => {
   }
 };
 
+export const deleteKeys = data => {
+  data.map(promo => {
+    if (promo.items.length) {
+      promo.items.map(i => delete i.__typename);
+    }
+    delete promo.origAmount;
+    return delete promo.__typename;
+  });
+  return data;
+};
+
 export const getResellerDiscount = async (promotions, cartItems) => {
   let totalReseller = 0;
   const productIds = [];

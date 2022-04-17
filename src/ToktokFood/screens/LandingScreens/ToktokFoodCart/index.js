@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-// import _ from 'lodash';
+import _ from 'lodash';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -38,20 +38,21 @@ import {
   VerifyContext,
 } from './components';
 import {
-  getDeductedVoucher,
-  getResellerDiscount,
+  deleteKeys,
+  // getDeductedVoucher,
+  // getResellerDiscount,
   getTotalAmount,
   getTotalAmountOrder,
-  getTotalDiscountAmount,
+  // getTotalDiscountAmount,
   getPromotionVouchers,
   getShippingVoucher,
-  getTotalDeductedVoucher,
+  // getTotalDeductedVoucher,
   getTotalDeductedDeliveryFee,
-  getItemOrderType,
+  // getItemOrderType,
   getMobileNumberFormat,
   getOrderType,
-  handleAutoShippingVouchers,
-  handleShippingVouchers,
+  // handleAutoShippingVouchers,
+  // handleShippingVouchers,
   tokwaErrorBtnTitle,
   tokwaErrorMessage,
   tokwaErrorTitle,
@@ -60,6 +61,7 @@ import {
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {
   GET_AUTO_SHIPPING,
+  GET_PAYMENT_METHOD_VALIDATION,
   GET_SHIPPING_FEE,
   PATCH_PLACE_CUSTOMER_ORDER,
   DELETE_SHOP_TEMPORARY_CART,
@@ -93,7 +95,7 @@ const MainComponent = () => {
 
   const {shopname} = route.params;
   const dispatch = useDispatch();
-  const {location, customerInfo, customerFranchisee, promotionVoucher, receiver} = useSelector(
+  const {location, customerInfo, customerFranchisee, promotionVoucher, receiver, customerWallet} = useSelector(
     state => state.toktokFood,
   );
   const {user} = useSelector(state => state.session);
@@ -137,9 +139,10 @@ const MainComponent = () => {
     fetchPolicy: 'network-only',
     onError: error => console.log('getAutoShipping', error.response),
     onCompleted: ({getAutoShipping}) => {
-      console.log(getAutoShipping);
+      console.log('getAutoShipping', getAutoShipping);
       const {promotion, voucher} = getAutoShipping;
       const filterPromo = promotionVoucher.filter(promo => promo.type !== 'auto' && promo.type !== 'deal');
+
       if (getAutoShipping.success) {
         setAutoShippingVoucher(getAutoShipping);
         if (voucher && !promotion) {
@@ -157,6 +160,7 @@ const MainComponent = () => {
         }
       }
       setAutoShipping(getAutoShipping);
+      // console.log(shipping, promotions);
     },
   });
 
@@ -245,10 +249,11 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getShopStatus}) => {
-      setLoadingWallet(false);
       if (getShopStatus.status === 'open') {
+        // setLoadingWallet(false);
         placeCustomerOrder();
       } else {
+        setLoadingWallet(false);
         setShowCloseShop({visible: true, shopName: getShopStatus.shopname});
       }
     },
@@ -890,7 +895,7 @@ const MainComponent = () => {
             subtotal={totalAmount}
             deliveryFee={delivery.price}
             forDelivery={orderType === 'Delivery'}
-            oneCartTotal={v => setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
+            oneCartTotal={v => customerWallet?.status === 2 && setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
           />
         )}
         <Separator />
