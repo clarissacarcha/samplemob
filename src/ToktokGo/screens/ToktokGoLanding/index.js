@@ -41,7 +41,7 @@ const ToktokGoLanding = ({navigation, session}) => {
         } else {
           navigation.replace('ToktokGoHealthCare');
         }
-      }, 3000);
+      }, 1000);
     },
     onError: error => console.log('error', error),
   });

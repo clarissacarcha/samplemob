@@ -7,7 +7,7 @@ import OnGoingIcon from '../../../../assets/icons/OnGoing.png';
 import CompletedIcon from '../../../../assets/icons/Completed.png';
 import CancelledIcon from '../../../../assets/icons/Cancelled.png';
 
-export const BookingID = ({delivery, booking}) => {
+export const BookingID = ({booking}) => {
   const getTextStatus = () => {
     if (booking.tag == 'ONGOING') return 'Ongoing';
     else if (booking.tag == 'COMPLETED') return 'Completed';
@@ -42,7 +42,7 @@ export const BookingID = ({delivery, booking}) => {
               style={{
                 fontFamily: constants.FONT_FAMILY.BOLD,
                 fontSize: constants.FONT_SIZE.M,
-                color: delivery.status != 7 ? constants.COLOR.ORANGE : constants.COLOR.RED,
+                color: booking.tag != 'CANCELLED' ? constants.COLOR.ORANGE : constants.COLOR.RED,
               }}>
               {getTextStatus()}
             </Text>

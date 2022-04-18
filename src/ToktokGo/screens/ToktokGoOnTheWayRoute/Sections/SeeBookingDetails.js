@@ -2,12 +2,12 @@ import React from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const SeeBookingDetails = ({item, navigation}) => {
+export const SeeBookingDetails = ({booking, navigation}) => {
   return (
     <TouchableOpacity
       onPress={() => {
         navigation.push('SelectedBookingDetails', {
-          delivery: item,
+          booking: booking,
           label: ['Booking', 'Details'],
         });
       }}

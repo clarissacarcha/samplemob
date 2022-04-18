@@ -10,12 +10,14 @@ import {
   BookingConfirmButton,
   BookingMap,
   BookingVoucher,
+  BookingTotal,
 } from './Sections';
 import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet} from './Components';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import {GET_TRIP_FARE, TRIP_BOOK} from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {AlertOverlay} from '../../../components';
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const {popTo} = route.params;
@@ -24,10 +26,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
   const dispatch = useDispatch();
-  const [selectedVehicle, setSelectedVehicle] = useState(quotationDataResult.vehicleTypeRates?.[0]);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+
   const [selectedVouchers, setSelectedVouchers] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [expandBookingDetails, setExpandBookingDetails] = useState(true);
+  const [selectedSeatNum, setSelectedSeatNum] = useState(1);
 
   const [getTripFare, {called}] = useLazyQuery(GET_TRIP_FARE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -64,6 +68,11 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     setSelectedVehicle(data);
   };
 
+  useEffect(() => {
+    selectVehicle(quotationDataResult.vehicleTypeRates?.[0]);
+  }, []);
+
+  // TODO: This will be added once vouchers is added
   const setSelectedVouchersNull = () => {
     setSelectedVouchers(null);
     dispatch({
@@ -72,7 +81,9 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     });
   };
 
+  // TODO: This will be used on onSelectVoucher
   const dispatchRequest = async () => {
+    setLoading(true);
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
       payload: {...details, vehicleType: selectedVehicle.vehicleType},
@@ -90,10 +101,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   useEffect(() => {
     dispatchRequest();
   }, [selectedVehicle, selectedVouchers]);
-
-  useEffect(() => {
-    setSelectedVouchers(details.voucher);
-  }, [details.voucher]);
 
   const confirmBooking = num => {
     SheetManager.hide('passenger_capacity');
@@ -154,7 +161,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
             selectedVehicle={selectedVehicle}
             navigation={navigation}
             selectVehicle={selectVehicle}
-            loading={loading}
           />
           {/* TODO: Vouchers will be added after launch of April 18 */}
           {/* <BookingVoucher
@@ -162,6 +168,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
             selectedVouchers={selectedVouchers}
             setSelectedVouchersNull={setSelectedVouchersNull}
           /> */}
+          <BookingTotal loading={loading} details={details} />
           <BookingSelectPaymentMethod
             viewPaymenetSucessModal={viewPaymenetSucessModal}
             setViewSelectPaymentModal={setViewSelectPaymentModal}

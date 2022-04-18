@@ -100,7 +100,7 @@ const Activities = () => (
           },
         })}
       />
-      {/* <ActivitiesTopTab.Screen
+      <ActivitiesTopTab.Screen
         name="ToktokLoadActivities"
         component={ToktokLoadActivities}
         options={{
@@ -116,7 +116,7 @@ const Activities = () => (
             </Text>
           ),
         }}
-      /> */}
+      />
     </ActivitiesTopTab.Navigator>
   </>
 );

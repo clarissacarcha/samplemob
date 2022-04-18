@@ -9,7 +9,7 @@ import LargeMpvIMG from '../../assets/images/vehicleTypes/LargeMPV.png';
 
 const ImageWidth = (Dimensions.get('window').width - 230) / 2;
 
-export const VehicleCard = ({type, data, selectVehicle, loading, selectedVehicle}) => {
+export const VehicleCard = ({type, data, selectVehicle, selectedVehicle}) => {
   const {details} = useSelector(state => state.toktokGo);
   const render_image = type => {
     switch (data.vehicleType?.imageClass) {
@@ -24,6 +24,9 @@ export const VehicleCard = ({type, data, selectVehicle, loading, selectedVehicle
       }
     }
   };
+
+  console.log('selectedVehicle', details);
+  console.log('DATA', data);
 
   return (
     <View style={styles.card}>
@@ -44,60 +47,25 @@ export const VehicleCard = ({type, data, selectVehicle, loading, selectedVehicle
               <Text style={styles.descTextStlye}>{data?.vehicleType?.phrase}</Text>
             </View>
           </View>
-          {data?.vehicleType?.id == selectedVehicle?.vehicleType?.id ? (
-            <View style={styles.elementWrapper}>
-              {loading ? (
-                <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
-              ) : (
-                <View>
-                  <Text style={styles.priceTextStyle}>
-                    ₱{numberFormat(details?.rate?.tripFare?.total ? details?.rate?.tripFare?.total : 0)}
-                  </Text>
-                  {details?.rate?.tripFare?.total != data?.rate?.amount && (
-                    <Text
-                      style={{
-                        marginLeft: 10,
-                        textAlign: 'center',
-                        fontSize: CONSTANTS.FONT_SIZE.XS,
-                        color: CONSTANTS.COLOR.GRAY,
-                        textDecorationLine: 'line-through',
-                        textDecorationStyle: 'solid',
-                      }}>
-                      ₱{numberFormat(data?.rate?.amount)}
-                    </Text>
-                  )}
-                </View>
-              )}
-            </View>
-          ) : (
-            <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
-          )}
+          <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
         </View>
       </TouchableOpacity>
-      {data?.vehicleType?.id == selectedVehicle?.vehicleType?.id &&
-        type &&
-        (loading ? (
-          <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{paddingVertical: 18}} />
-        ) : (
-          <View style={styles.priceDetails}>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={styles.fareText}>Base fare</Text>
-              <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>₱{numberFormat(details?.rate?.tripFare?.flatRate)}</Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={styles.kmText}>Per KM</Text>
-              <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
-                ₱{numberFormat(details?.rate?.tripFare?.mileageFee)}
-              </Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={styles.durationText}>Per minute</Text>
-              <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
-                ₱{numberFormat(details?.rate?.tripFare?.durationFee)}
-              </Text>
-            </View>
+      {data?.vehicleType?.id == selectedVehicle?.vehicleType?.id && type && (
+        <View style={styles.priceDetails}>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.fareText}>Base fare</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>₱{numberFormat(details?.rate?.tripFare?.flatRate)}</Text>
           </View>
-        ))}
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.kmText}>Per KM</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>₱{numberFormat(details?.rate?.tripFare?.mileageFee)}</Text>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.durationText}>Per minute</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>₱{numberFormat(details?.rate?.tripFare?.durationFee)}</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };

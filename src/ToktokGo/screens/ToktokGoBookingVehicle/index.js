@@ -6,23 +6,7 @@ import {Header, VehicleCard} from '../../components';
 import {useSelector} from 'react-redux';
 
 const ToktokGoBookingVehicle = ({navigation, route}) => {
-  const {data, selectVehicle, loading, selectedVehicle} = route.params;
-  const [selectedVehicleType, setSelectedVehicle] = useState(selectedVehicle);
-  const [localLoading, setLocalLoading] = useState(loading);
-
-  const {details} = useSelector(state => state.toktokGo);
-
-  const onSelectVehicle = data => {
-    setLocalLoading(true);
-    setSelectedVehicle(data);
-    selectVehicle(data);
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLocalLoading(false);
-    }, 1200);
-  }, [details]);
+  const {data, selectVehicle, selectedVehicle} = route.params;
 
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
@@ -39,10 +23,8 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
               <VehicleCard
                 type={'isFromSeeAll'}
                 data={item}
-                selectVehicle={onSelectVehicle}
-                selectedVehicle={selectedVehicleType}
-                loading={localLoading}
-                lastItem={lastItem}
+                selectVehicle={selectVehicle}
+                selectedVehicle={selectedVehicle}
               />
             </View>
           );

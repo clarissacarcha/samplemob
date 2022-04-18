@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   BookingID,
   BookingDriverDetails,
@@ -16,13 +16,13 @@ import CONSTANTS from '../../../common/res/constants';
 import {connect, useSelector} from 'react-redux';
 
 const SelectedBookingDetails = ({navigation, session, createSession, route}) => {
-  const {delivery} = route.params;
+  const {delivery, booking} = route.params;
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Booking Details', '']} />,
   });
 
-  const {details, destination, origin, driver, routeDetails, booking} = useSelector(state => state.toktokGo);
+  // const {booking} = useSelector(state => state.toktokGo);
 
   const dropDownRef = useRef(null);
 
@@ -81,21 +81,21 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1}}>
-      <BookingID delivery={delivery} booking={booking} />
-      {booking.tag == 'ONGOING' && (
+      <BookingID booking={booking} />
+      {booking.tag == 'ONGOING' && booking.driver && (
         <>
           <BookingDriverDetails booking={booking} />
           <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
         </>
       )}
 
-      <BookingInfo delivery={delivery} booking={booking} />
-      {booking.notes && <BookingNote booking={booking} details={details} />}
+      <BookingInfo booking={booking} />
+      {booking.notes && <BookingNote booking={booking} />}
 
       {/* todo: replace condition if status is completed */}
       {booking.tag == 'COMPLETED' && <BookingMap booking={booking} />}
       <BookingAddress booking={booking} />
-      <BookingTotal booking={booking} details={details} />
+      <BookingTotal booking={booking} />
 
       <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
 

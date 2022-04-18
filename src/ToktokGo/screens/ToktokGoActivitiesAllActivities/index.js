@@ -5,64 +5,62 @@ import {connect} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {COLOR, MEDIUM} from '../../../res/constants';
 import {ActivitiesCard} from '../../components';
-import {GET_DELIVERIES} from '../../../graphql';
+import {GET_DELIVERIES, TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import NoData from '../../../assets/images/NoData.png';
 import DummyData from '../../components/DummyData';
+import {GET_TRIPS_CONSUMER} from '../../graphql';
 
 const imageWidth = Dimensions.get('window').width - 200;
 
 const AllActivities = ({navigation, session}) => {
-  // const {data, loading, error, refetch} = useQuery(GET_DELIVERIES, {
-  //   fetchPolicy: 'network-only',
-  //   variables: {
-  //     filter: {
-  //       tokDriverId: session.user.driver.id,
-  //       statusIn: [6],
-  //     },
-  //   },
-  //   onError: (e) => {
-  //     console.log(e);
-  //   },
-  // });
+  const {data, loading, error, refetch} = useQuery(GET_TRIPS_CONSUMER, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    variables: {
+      input: {
+        consumerUserId: session.user.id,
+        tag: 'ONGOING',
+      },
+    },
+    onError: error => console.log('error', error),
+  });
 
-  // useFocusEffect(() => {
-  // refetch();
-  // }, []);
+  useFocusEffect(() => {
+    // refetch();
+  }, []);
 
-  // if (loading) {
-  //   return (
-  //     <View style={styles.center}>
-  //       <ActivityIndicator size={24} color={COLOR} />
-  //     </View>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size={24} color={COLOR} />
+      </View>
+    );
+  }
 
-  // if (error) {
-  //   return <SomethingWentWrong />;
-  // }
+  if (error) {
+    return <SomethingWentWrong />;
+  }
 
-  // if (data.getDeliveries.length === 0) {
-  //   return (
-  //     <View style={styles.center}>
-  //       <Image source={NoData} style={styles.image} resizeMode={'contain'} />
-  //     </View>
-  //   );
-  // }
+  if (data.getTripsConsumer.length === 0) {
+    return (
+      <View style={styles.center}>
+        <Image source={NoData} style={styles.image} resizeMode={'contain'} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={DummyData.all.getDeliveries}
-        // data={data.getDeliveries}
+        data={data.getTripsConsumer}
         keyExtractor={item => item.id}
         refreshControl={<RefreshControl colors={[COLOR]} tintColor={COLOR} />}
         renderItem={({item, index}) => (
           <ActivitiesCard
-            delivery={item}
-            onPress={() => navigation.push('SelectedBookingDetails', {delivery: item})}
-            lastItem={DummyData.all.getDeliveries.length == index + 1 ? true : false}
-            // lastItem={data.getDeliveries.length == index + 1 ? true : false}
+            booking={item}
+            onPress={() => navigation.push('SelectedBookingDetails', {booking: item})}
+            lastItem={data.getTripsConsumer.length == index + 1 ? true : false}
           />
         )}
       />

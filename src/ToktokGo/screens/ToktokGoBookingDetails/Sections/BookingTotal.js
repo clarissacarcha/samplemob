@@ -8,7 +8,7 @@ import {FONT} from '../../../../res/variables';
 import {AccordionBooking} from '.';
 import {numberFormat} from '../../../../helper';
 
-export const BookingTotal = ({details, booking}) => {
+export const BookingTotal = ({booking}) => {
   return (
     <View style={styles.card}>
       <View style={styles.directionsBox}>
