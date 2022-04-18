@@ -180,3 +180,16 @@ export const GET_VOUCHER_CODE = gql`
     }
   }
 `;
+
+export const GET_PAYMENT_METHOD_VALIDATION = gql`
+  query getPaymentValidation($input: PaymentValidationInput) {
+    getPaymentValidation(input: $input) {
+      success
+      message
+      type
+      voucher {
+        ${voucherType}
+      }
+    }
+  }
+`;

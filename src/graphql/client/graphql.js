@@ -116,7 +116,7 @@ const setToktokGoGraphqlTokenLink = setContext(async (_, {headers}) => {
     return {
       headers: {
         ...headers,
-        'x-api-key': ENVIRONMENTS.TOKTOKGO_X_API_KEY,
+        'X-API-KEY': ENVIRONMENTS.TOKTOKGO_X_API_KEY,
       },
     };
   } catch (error) {
@@ -230,7 +230,7 @@ export const TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT = new ApolloClient({
 });
 export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
-  link: toktokBillsLoadGraphqlLink,
+  link: toktokFoodGraphqlLink,
 });
 
 export const TOKTOK_QUOTATION_GRAPHQL_CLIENT = new ApolloClient({

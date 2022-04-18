@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput, StatusBar, Image} from 'react-native';
 import {useSelector} from 'react-redux';
-import ToktokIcon from '../../../../../../../assets/images/ToktokHeader.png'
+import ToktokIcon from '../../../../../../../assets/images/ToktokHeader.png';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {Shadow} from '../../../../../../../revamp';
 import {ThrottledHighlight} from '../../../../../../../components_section';
@@ -17,9 +17,9 @@ export const Header = () => {
 
   return (
     <View style={styles.headerBox}>
-        <View style={styles.greetingBox}>
-          <Image source={ToktokIcon} resizeMode={'contain'} style={{height: 25, width: 87}} /> 
-        </View>
+      <View style={styles.greetingBox}>
+        <Image source={ToktokIcon} resizeMode={'contain'} style={{height: 25, width: 87}} />
+      </View>
     </View>
   );
 };
@@ -30,10 +30,10 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
     paddingVertical: 16,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
-        width: 0,
-        height: 2,
+      width: 0,
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -52,5 +52,5 @@ const styles = StyleSheet.create({
     color: COLOR.ORANGE,
     fontSize: FONT_SIZE.XL,
     fontFamily: FONT.BOLD,
-  }
+  },
 });

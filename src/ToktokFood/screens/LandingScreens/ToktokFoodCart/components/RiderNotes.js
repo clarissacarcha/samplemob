@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Text, View, TextInput} from 'react-native';
@@ -20,17 +21,39 @@ const RiderNotes = ({
   forDelivery = true,
   disableWalletCheckout = true,
   deliveryFee = 0,
+  orderType,
 }) => {
   const navigation = useNavigation();
   const {toktokWallet, temporaryCart, paymentMethod} = useContext(VerifyContext);
   const {customerWallet, promotionVoucher} = useSelector(state => state.toktokFood);
   const [totalAmount, setTotalAmount] = useState(temporaryCart?.totalAmount);
 
-  const isDisabled = paymentMethod === 'TOKTOKWALLET' ? totalAmount > toktokWallet?.balance : false;
+  // const isDisabled =
+  //   paymentMethod == 'TOKTOKWALLET'
+  //     ? forDelivery
+  //       ? totalAmount > toktokWallet?.balance
+  //       : false
+  //     : totalAmount - deliveryFee > toktokWallet?.balance;
+
+  const hasBalance = () => {
+    let disabled = false;
+    if (paymentMethod === 'TOKTOKWALLET') {
+      if (forDelivery) {
+        disabled = totalAmount > toktokWallet?.balance;
+      } else {
+        disabled = totalAmount - deliveryFee > toktokWallet?.balance;
+      }
+    } else {
+      disabled = false;
+    }
+    return disabled;
+  };
 
   // const onPlaceOrderNavigate = () => {
   //   navigation.replace('ToktokFoodDriver');
   // };
+
+  // console.log('disableWalletCheckout', disableWalletCheckout);
 
   const onValidateAmount = useCallback(() => {
     if (deliveryFee) {
@@ -90,7 +113,7 @@ const RiderNotes = ({
             }}
             label="Place Order"
             disabled={
-              isDisabled ||
+              hasBalance() ||
               (disableWalletCheckout && customerWallet?.status === 2) ||
               !customerWallet ||
               customerWallet?.status === 0

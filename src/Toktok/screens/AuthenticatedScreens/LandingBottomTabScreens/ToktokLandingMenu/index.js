@@ -5,7 +5,6 @@ import {VectorIcon, ICON_SET} from '../../../../../revamp/';
 import {AUTH_CLIENT, END_USER_SESSION} from '../../../../../graphql';
 import {onError} from '../../../../../util/ErrorUtility';
 import {AlertOverlay} from '../../../../../components';
-import CONSTANTS from '../../../../../common/res/constants';
 import {useMutation} from '@apollo/react-hooks';
 
 import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar, TouchableOpacity} from 'react-native';
@@ -132,7 +131,7 @@ export const ToktokLandingMenu = ({navigation}) => {
         <View style={{height: SIZE.MARGIN / 2, backgroundColor: COLOR.LIGHT}} />
 
         <View style={{flex: 1, backgroundColor: 'white'}}>
-          <Text style={{paddingLeft: 24, paddingTop: 20, fontFamily: FONT.BOLD, marginBottom: 12}}>Account</Text>
+          <Text style={{paddingLeft: 20, paddingTop: 20, fontFamily: FONT.BOLD}}> Accounts</Text>
           <ScrollView>
             {/*--------------- MY DELIVERIES ---------------*/}
             {/* <DrawerButton
@@ -160,7 +159,7 @@ export const ToktokLandingMenu = ({navigation}) => {
             {/*--------------- TALK TO US ---------------*/}
             <Text
               style={{
-                paddingLeft: 24,
+                paddingLeft: 20,
                 paddingTop: 20,
                 borderTopWidth: 5,
                 borderTopColor: '#F8F8F8',
@@ -168,17 +167,8 @@ export const ToktokLandingMenu = ({navigation}) => {
               }}>
               Help Centre
             </Text>
-            <View
-              style={{
-                borderBottomWidth: 1,
-                borderBottomColor: CONSTANTS.COLOR.LIGHT,
-                marginHorizontal: 24,
-                marginTop: 20,
-              }}
-            />
-
             <DrawerButton
-              label="Contact Us"
+              label="Help"
               style={{borderTopWidth: 1, borderTopColor: 'red', backgroundColor: 'red'}}
               onPress={() => {
                 navigation.push('TalkToUs');
