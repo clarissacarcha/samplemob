@@ -170,7 +170,7 @@ const AddressBookModal = props => {
     }
 
     onSelected({
-      name: name.replace(/[^a-z0-9]/gi, ''),
+      name: name.replace(/[^a-z0-9_ ]/gi, ''),
       number: mobileNumber,
     });
     onClose();
