@@ -8,6 +8,8 @@ import MapIcon from '../../../../assets/images/mapIcon.png';
 import ClockIcon from '../../../../assets/images/clockIcon.png';
 import PassengerIcon from '../../../../assets/images/Passenger.png';
 import ToktokWalletOutline from '../../../../assets/images/toktok-wallet-outline.png';
+import CashIcon from '../../../../assets/images/CashIcon.png';
+
 import moment from 'moment';
 
 export const BookingInfo = ({delivery, booking}) => {
@@ -36,21 +38,35 @@ export const BookingInfo = ({delivery, booking}) => {
                 </Text>
               </View>
 
-              <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                <Image
-                  source={ToktokWalletOutline}
-                  resizeMode="contain"
-                  style={{width: 17, height: 15, marginRight: 8}}
-                />
-                <Text
-                  style={{fontFamily: FONT.REGULAR, color: constants.COLOR.YELLOW, fontSize: constants.FONT_SIZE.M}}>
-                  toktok
+              {true ? (
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                  <Image source={CashIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
                   <Text
-                    style={{fontFamily: FONT.REGULAR, color: constants.COLOR.ORANGE, fontSize: constants.FONT_SIZE.M}}>
-                    wallet
+                    style={{fontFamily: FONT.REGULAR, color: constants.COLOR.YELLOW, fontSize: constants.FONT_SIZE.M}}>
+                    Cash
                   </Text>
-                </Text>
-              </View>
+                </View>
+              ) : (
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                  <Image
+                    source={ToktokWalletOutline}
+                    resizeMode="contain"
+                    style={{width: 17, height: 15, marginRight: 8}}
+                  />
+                  <Text
+                    style={{fontFamily: FONT.REGULAR, color: constants.COLOR.YELLOW, fontSize: constants.FONT_SIZE.M}}>
+                    toktok
+                    <Text
+                      style={{
+                        fontFamily: FONT.REGULAR,
+                        color: constants.COLOR.ORANGE,
+                        fontSize: constants.FONT_SIZE.M,
+                      }}>
+                      wallet
+                    </Text>
+                  </Text>
+                </View>
+              )}
               {/* )} */}
             </View>
           </View>
