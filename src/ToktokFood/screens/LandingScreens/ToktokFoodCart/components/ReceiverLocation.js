@@ -1,23 +1,30 @@
 import React, {useState} from 'react';
-import {Image, View, Text} from 'react-native';
+import {Image, View, Text, StyleSheet} from 'react-native';
 
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
-import {markerIcon} from 'toktokfood/assets/images';
+import {locationOutline, phoneBlack, user} from 'toktokfood/assets/images';
 import {verticalScale} from 'toktokfood/helper/scale';
 import DialogMessage from 'toktokfood/components/DialogMessage';
+
+import {getMobileNumberFormat} from '../../ToktokFoodCart/functions';
 
 import styles from '../styles';
 
 const ReceiverLocation = () => {
   const navigation = useNavigation();
 
-  const {location} = useSelector((state) => state.toktokFood);
+  const {location, receiver} = useSelector(state => state.toktokFood);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
+  const DELIVERY_RECEIVER =
+    receiver.contactPerson && receiver.contactPerson !== ''
+      ? receiver.contactPerson
+      : `${customerInfo.firstName} ${customerInfo.lastName}`;
+
   const onSetLocationDetails = () => {
-    navigation.navigate('ToktokFoodAddressDetails', { isCart: true });
+    navigation.navigate('ToktokFoodAddressDetails', {isCart: true});
   };
 
   return (
@@ -45,15 +52,45 @@ const ReceiverLocation = () => {
             <Text style={styles.actionText}>Change Address</Text>
           </View>
         </View>
-        <View style={styles.textAddressContainer}>
-          <Image style={styles.addressMarkerIcon} source={markerIcon} />
+        <View style={compStyle.textAddressContainer}>
+          <Image style={styles.addressMarkerIcon} source={locationOutline} />
           <Text style={styles.textAddress} numberOfLines={2}>
             {location ? location.address : ''}
+          </Text>
+        </View>
+        {receiver.landmark !== '' && (
+          <Text style={[styles.textAddress, {marginLeft: 20, color: '#525252'}]} numberOfLines={2}>
+            Landmark: {receiver.landmark}
+          </Text>
+        )}
+
+        <View style={[compStyle.textAddressContainer, {marginTop: 7}]}>
+          <Image style={styles.addressMarkerIcon} source={user} />
+          <Text style={styles.textAddress} numberOfLines={2}>
+            {DELIVERY_RECEIVER.replace(/[^a-z0-9_ ]/gi, '')}
+          </Text>
+        </View>
+
+        <View style={compStyle.textAddressContainer}>
+          <Image style={styles.addressMarkerIcon} source={phoneBlack} />
+          <Text style={styles.textAddress} numberOfLines={2}>
+            {receiver.contactPersonNumber && receiver.contactPersonNumber !== ''
+              ? getMobileNumberFormat({conno: receiver.contactPersonNumber})
+              : getMobileNumberFormat(customerInfo)}
           </Text>
         </View>
       </View>
     </>
   );
 };
+
+const compStyle = StyleSheet.create({
+  textAddressContainer: {
+    maxWidth: '90%',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginVertical: verticalScale(5),
+  },
+});
 
 export default ReceiverLocation;

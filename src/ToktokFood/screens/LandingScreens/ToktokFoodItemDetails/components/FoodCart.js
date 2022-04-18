@@ -217,7 +217,7 @@ export const FoodCart = ({loading, action}) => {
     return addons.sort();
   };
 
-  //PROCESS ADD TO CART
+  // PROCESS ADD TO CART
   const processAddToCart = async () => {
     let items = {
       userid: customerInfo.userId,
