@@ -427,8 +427,8 @@ export const Variations = ({data, productId}) => {
       <Variants />
       <Options />
       {specialInstructionsComponent()}
-      {orderInstructionComponent()}
-      {orderInstructionModalComponent()}
+      {/* {orderInstructionComponent()}
+      {orderInstructionModalComponent()} */}
     </>
   );
 };
