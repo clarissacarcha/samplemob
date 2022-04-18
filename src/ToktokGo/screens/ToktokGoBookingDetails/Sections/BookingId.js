@@ -37,7 +37,7 @@ export const BookingID = ({delivery, booking}) => {
             </Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image source={getIconStatus()} style={{height: 14, width: 16, marginRight: 10}} resizeMode={'contain'} />
+            <Image source={getIconStatus()} style={{height: 20, width: 20, marginRight: 10}} resizeMode={'contain'} />
             <Text
               style={{
                 fontFamily: constants.FONT_FAMILY.BOLD,

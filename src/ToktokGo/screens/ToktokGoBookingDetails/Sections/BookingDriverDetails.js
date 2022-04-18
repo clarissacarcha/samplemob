@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
   },
   detailVehicle: {
-    fontSize: CONSTANTS.FONT_SIZE.S,
+    fontSize: CONSTANTS.FONT_SIZE.M,
   },
   starIconDetail: {
     width: 15,
@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
   },
   vaccinatedIconDetail: {
+    marginLeft: 5,
     width: 54,
     height: 15,
   },

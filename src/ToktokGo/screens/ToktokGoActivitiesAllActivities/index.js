@@ -78,6 +78,7 @@ export default connect(mapStateToProps, null)(AllActivities);
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'white',
     flex: 1,
   },
   center: {

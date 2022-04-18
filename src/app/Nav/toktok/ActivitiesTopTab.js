@@ -21,63 +21,105 @@ const Activities = () => (
         backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.41,
+
+        elevation: 2,
       }}>
-      <Text style={{paddingVertical: 20}}>Activities</Text>
+      <Text style={{paddingVertical: 20, fontSize: FONT_SIZE.XL + 1}}>Activities</Text>
     </View>
     <ActivitiesTopTab.Navigator
+      swipeEnabled={false}
       tabBarOptions={{
-        indicatorStyle: {backgroundColor: COLOR.YELLOW},
+        allowFontScaling: false,
+        style: {
+          elevation: 0,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowOpacity: 0.22,
+          shadowRadius: 2.22,
+
+          elevation: 3,
+        },
+
+        indicatorStyle: {backgroundColor: COLOR.YELLOW, height: 3},
+
+        labelStyle: {
+          fontFamily: 'Rubik-Regular',
+          textTransform: 'none',
+          fontSize: 14,
+        },
       }}>
       <ActivitiesTopTab.Screen
         name="ToktokDeliveryActivities"
         component={ToktokLandingDeliveries}
-        options={{
-          tabBarLabel: ({focused}) => (
-            <Text
-              style={{
-                // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.Thin800,
-                fontSize: FONT_SIZE.M,
-                color: focused ? COLOR.ORANGE : COLOR.BLACK,
-                marginBottom: 5,
-              }}>
-              toktokdelivery
-            </Text>
-          ),
-        }}
+        options={() => ({
+          tabBarLabel: ({focused}) => {
+            return (
+              <View style={{width: 90}}>
+                <Text
+                  style={{
+                    fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
+                    fontSize: FONT_SIZE.M,
+                    color: focused ? COLOR.ORANGE : COLOR.BLACK,
+                    marginBottom: 5,
+                  }}>
+                  toktokdelivery
+                </Text>
+              </View>
+            );
+          },
+        })}
       />
       <ActivitiesTopTab.Screen
         name="ToktokGoActivities"
         component={ToktokGoActivities}
-        options={{
-          tabBarLabel: ({focused}) => (
-            <Text
-              style={{
-                // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.Thin800,
-                fontSize: FONT_SIZE.M,
-                color: focused ? COLOR.ORANGE : COLOR.BLACK,
-                marginBottom: 5,
-              }}>
-              toktokgo
-            </Text>
-          ),
-        }}
+        options={() => ({
+          tabBarLabel: ({focused}) => {
+            return (
+              <View style={{width: 90, alignItems: 'center'}}>
+                <Text
+                  style={{
+                    fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
+                    fontSize: FONT_SIZE.M,
+                    color: focused ? COLOR.ORANGE : COLOR.BLACK,
+                    marginBottom: 5,
+                  }}>
+                  toktokgo
+                </Text>
+              </View>
+            );
+          },
+        })}
       />
       <ActivitiesTopTab.Screen
         name="ToktokLoadActivities"
         component={ToktokLoadActivities}
-        options={{
-          tabBarLabel: ({focused}) => (
-            <Text
-              style={{
-                // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.Thin800,
-                fontSize: FONT_SIZE.M,
-                color: focused ? COLOR.ORANGE : COLOR.BLACK,
-                marginBottom: 5,
-              }}>
-              toktokload
-            </Text>
-          ),
-        }}
+        options={() => ({
+          tabBarLabel: ({focused}) => {
+            return (
+              <View style={{width: 90, alignItems: 'center'}}>
+                <Text
+                  style={{
+                    fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
+                    fontSize: FONT_SIZE.M,
+                    color: focused ? COLOR.ORANGE : COLOR.BLACK,
+                    marginBottom: 5,
+                  }}>
+                  toktokload
+                </Text>
+              </View>
+            );
+          },
+        })}
       />
     </ActivitiesTopTab.Navigator>
   </>
@@ -87,7 +129,7 @@ export const ToktokGoActivities = () => {
   return (
     <ToktokGoActivitiesTopTab.Navigator
       tabBarOptions={{
-        tabStyle: {width: 90},
+        tabStyle: {width: 90, left: 10},
         pressColor: 'transparent',
         indicatorStyle: {
           width: 0,
@@ -99,9 +141,8 @@ export const ToktokGoActivities = () => {
         name="AllActivities"
         component={AllActivities}
         options={{
-          tabStyle: {width: 10},
           tabBarLabel: ({focused}) => (
-            <View style={focused ? styles.viewFocused : styles.viewNotFocused}>
+            <View style={[focused ? styles.viewFocused : styles.viewNotFocused, {marginLeft: 0}]}>
               <Text style={focused ? styles.textFocused : styles.textNotFocused}>All</Text>
             </View>
           ),
@@ -113,7 +154,7 @@ export const ToktokGoActivities = () => {
         options={{
           tabBarLabel: ({focused}) => (
             <View style={focused ? styles.viewFocused : styles.viewNotFocused}>
-              <Text style={focused ? styles.textFocused : styles.textNotFocused}>OnGoing</Text>
+              <Text style={focused ? styles.textFocused : styles.textNotFocused}>Ongoing</Text>
             </View>
           ),
         }}
