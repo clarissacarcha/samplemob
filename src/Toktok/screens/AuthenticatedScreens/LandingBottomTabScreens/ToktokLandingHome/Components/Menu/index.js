@@ -22,7 +22,8 @@ import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/PabiliServ
 import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/FoodService.png';
 import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoService.png';
 import WalletIcon from '../../../../../../../assets/toktok/icons/menu/WalletService.png';
-// import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/ToktokMall.png';
+import LoadIcon from '../../../../../../../assets/toktok/icons/menu/LoadService.png';
+// import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/MallService.png';
 
 import ProfileIcon from '../../../../../../../assets/toktok/icons/menu/ProfileService.png';
 import HelpIcon from '../../../../../../../assets/toktok/icons/menu/HelpService.png';
@@ -88,13 +89,6 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => navigation.push('ToktokWalletLoginPage'),
     },
     {
-      identifier: 'foodComingSoon',
-      label: 'Food',
-      icon: ToktokfoodIcon,
-      onPress: () => navigation.push('TokTokFoodSplashScreen'),
-      isNew: true,
-    },
-    {
       identifier: 'food',
       label: 'Food',
       icon: ToktokfoodIcon,
@@ -102,12 +96,26 @@ export const Menu = ({setUserLocation, constants}) => {
       isNew: true,
     },
     {
-      identifier: 'goComingSoon',
+      identifier: 'goComingSoonA',
       label: 'Go',
       icon: ToktokGoIcon,
       onPress: () => navigation.push('ToktokgoComingSoon'),
       isNew: true,
     },
+    {
+      identifier: 'goA',
+      label: 'Go',
+      icon: ToktokGoIcon,
+      onPress: () => navigation.push('ToktokGoLanding'),
+      isNew: true,
+    },
+    // {
+    //   identifier: 'load',
+    //   label: 'Load',
+    //   icon: LoadIcon,
+    //   onPress: () => navigation.push('ToktokLoadHome'),
+    //   isNew: true,
+    // },
     // {
     //   identifier: 'mall',
     //   label: 'Mall',
@@ -195,8 +203,17 @@ export const Menu = ({setUserLocation, constants}) => {
 
 const styles = StyleSheet.create({
   menuBox: {
-    marginHorizontal: 8,
     backgroundColor: 'white',
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+
+    elevation: 9,
   },
   menuButton: {
     justifyContent: 'center',

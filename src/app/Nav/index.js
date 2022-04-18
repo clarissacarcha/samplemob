@@ -23,7 +23,10 @@ import SuperAppScreens from './superApp';
 import ToktokScreens from './toktok';
 import ToktokFoodScreens from './toktokfood';
 import ToktokWalletScreens from './toktokwallet';
+import ToktokLoadScreens from './toktokload';
 import ToktokMallScreens from './toktokmall';
+import ToktokBillScreens from './toktokbills';
+import ToktokGoScreens from './toktokgo';
 
 /*---------- CONSUMER SCREENS ----------*/
 
@@ -46,6 +49,7 @@ import SelectedDelivery from '../../screens/AuthenticatedStack/ConsumerScreens/D
 // import SenderDetails from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SenderDetails';
 // import AddLocation from '../../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/AddLocation';
 import ConsumerChangePassword from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerChangePassword';
+import EnterPassword from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/EnterPassword';
 
 // import ConsumerProfile from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerProfile';
 import DeliveryTracking from '../../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
@@ -82,6 +86,7 @@ import TalkToUs from '../../screens/AuthenticatedStack/CommonScreens/TalkToUs';
 import OrderCancellation from '../../screens/AuthenticatedStack/CommonScreens/OrderCancellation';
 // import Notifications from '../../screens/AuthenticatedStack/CommonScreens/Notifications';
 import DeliveryRating from '../../screens/AuthenticatedStack/CommonScreens/DeliveryRating';
+import RateDriver from '../../ToktokGo/screens/ToktokGoRateDriver';
 // import Announcements from '../../screens/AuthenticatedStack/CommonScreens/Announcement/Announcements';
 // import GCashAccount from '../../screens/AuthenticatedStack/CommonScreens/GCashAccount';
 
@@ -178,8 +183,12 @@ const UnauthenticatedStack = () => (
     />
     <Unauthenticated.Screen name="AccountBlocked" component={AccountBlocked} />
     <Unauthenticated.Screen name="ForgotPasswordRequest" component={ForgotPasswordRequest} />
-    <Unauthenticated.Screen name="ForgotPasswordVerification" component={ForgotPasswordVerification} />
-    <Unauthenticated.Screen name="ForgotPasswordReset" component={ForgotPasswordReset} />
+    <Unauthenticated.Screen
+      name="ForgotPasswordVerification"
+      component={ForgotPasswordVerification}
+      options={{headerShown: false}}
+    />
+    <Unauthenticated.Screen name="ForgotPasswordReset" component={ForgotPasswordReset} options={{headerShown: false}} />
   </Unauthenticated.Navigator>
 );
 
@@ -242,8 +251,11 @@ const AuthenticatedStack = () => (
   <Authenticated.Navigator>
     {ToktokScreens({Navigator: Authenticated})}
     {ToktokFoodScreens({Navigator: Authenticated})}
+    {ToktokLoadScreens({Navigator: Authenticated})}
     {ToktokMallScreens({Navigator: Authenticated})}
     {ToktokWalletScreens({Navigator: Authenticated})}
+    {ToktokBillScreens({Navigator: Authenticated})}
+    {ToktokGoScreens({Navigator: Authenticated})}
     {SuperAppScreens({Navigator: Authenticated})}
 
     <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
@@ -273,6 +285,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="DeliveryRating" component={DeliveryRating} />
     <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
     <Authenticated.Screen name="OrderCancellation" component={OrderCancellation} />
+    <Authenticated.Screen name="RateDriver" component={RateDriver} />
 
     {/********** Menu **********/}
     {/* <Authenticated.Screen name="SavedLocations" component={SavedLocations} />
@@ -318,6 +331,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="Order" component={Order} />
     <Authenticated.Screen name="SearchLocationFilter" component={SearchLocationFilter} />
     <Authenticated.Screen name="DriverDeliveriesTab" component={DriverDeliveriesTab} />
+    <Authenticated.Screen name="EnterPassword" component={EnterPassword} />
   </Authenticated.Navigator>
 );
 

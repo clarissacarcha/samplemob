@@ -6,8 +6,8 @@ const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 const { height, width } = Dimensions.get('window');
 
 const Circle = ({onPress, value , showPin , error }) => (
-    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5, ...(!error ? {} : {borderWidth: 1,borderRadius: 0, borderColor:COLOR.RED}) }}>
-      <View style={[styles.inputView, {...(value ? {backgroundColor:COLOR.ORANGE} : {})}]}>
+    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10,marginHorizontal: 5 }}>
+      <View style={[styles.inputView, {...(value ? {backgroundColor: error ? "#ED3A19" : COLOR.YELLOW} : {})}]}>
         {/* <Text style={{fontSize: 20, fontFamily: FONT.BOLD,}}>{value ? showPin ? value : "•" : ''}</Text> */}
       </View>
     </TouchableHighlight>

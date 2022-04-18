@@ -1,6 +1,6 @@
 import React , {useRef, useState , useContext , useEffect} from 'react';
 import {StyleSheet,View,Text,ActivityIndicator} from 'react-native';
-import {Separator,CheckIdleState,PepQuestionnaireModal} from 'toktokwallet/components';
+import {Separator,CheckIdleState} from 'toktokwallet/components';
 import { HeaderBack, HeaderTitle , VectorIcon , ICON_SET , YellowButton} from 'src/revamp';
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql';
 import { GET_ENTERPRISE_UPGRADE_REQUEST } from 'toktokwallet/graphql';
@@ -30,8 +30,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 const { COLOR , FONT_SIZE , FONT_FAMILY: FONT  } = CONSTANTS
 
 
-const MainComponent = ({navigation})=> {
-    const { setForms , validID1, validID2 , pepInfo , setPepInfo } = useContext(ContextEnterpriseApplication)
+const MainComponent = ()=> {
+    const { setForms , validID1, validID2 } = useContext(ContextEnterpriseApplication)
     const IDTypeRef = useRef()
     const [idIndex,setIDIndex] = useState(1)
     const alert = useAlert();
@@ -134,7 +134,7 @@ export const ToktokWalletEnterpriseApplication = ({navigation})=> {
     return (
         <>
             <ContextProvider>
-                <MainComponent navigation={navigation}/>
+                <MainComponent/>
             </ContextProvider>
         </>
     )

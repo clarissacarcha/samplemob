@@ -38,7 +38,7 @@ export const SearchContact = ({navigation, route}) => {
         }
 
         const mappedContacts = contacts
-          .filter((contact) => {
+          .filter(contact => {
             if (Platform.OS === 'android') {
               if (contact.phoneNumbers.length === 0 || !contact.displayName) {
                 return false;
@@ -53,14 +53,14 @@ export const SearchContact = ({navigation, route}) => {
               return true;
             }
           })
-          .map((contact) => {
+          .map(contact => {
             return {
               name: `${contact.givenName} ${contact.familyName}`,
               number: contact.phoneNumbers[0].number,
             };
           });
 
-        const sortedContacts = _.sortBy(mappedContacts, (contact) => contact.name);
+        const sortedContacts = _.sortBy(mappedContacts, contact => contact.name);
 
         setData(sortedContacts);
         setFilteredData(sortedContacts);
@@ -70,9 +70,9 @@ export const SearchContact = ({navigation, route}) => {
     }
   };
 
-  const onSearchChange = (value) => {
+  const onSearchChange = value => {
     setSearchString(value);
-    const filteredContacts = data.filter((contact) => contact.name.toLowerCase().includes(value.toLowerCase()));
+    const filteredContacts = data.filter(contact => contact.name.toLowerCase().includes(value.toLowerCase()));
     setFilteredData(filteredContacts);
   };
 
@@ -164,7 +164,8 @@ export const SearchContact = ({navigation, route}) => {
           return (
             <TouchableHighlight
               onPress={() => onSelectContact(item)}
-              underlayColor={COLOR.WHITE_UNDERLAY}
+              // underlayColor={COLOR.WHITE_UNDERLAY}
+              underlayColor={'rgba(256,186,28, 0.2)'}
               style={{borderRadius: 5}}>
               <View style={styles.contact}>
                 <Text style={{fontFamily: FONT.BOLD}}>{item.name}</Text>
