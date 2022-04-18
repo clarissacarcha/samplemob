@@ -4,3 +4,4 @@ export * from './BookingSelectPaymentMethod';
 export * from './BookingConfirmButton';
 export * from './BookingMap';
 export * from './BookingVoucher';
+export * from './BookingTotal';

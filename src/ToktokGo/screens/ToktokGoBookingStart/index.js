@@ -17,7 +17,6 @@ const ToktokGoBookingStart = ({navigation}) => {
   const dispatch = useDispatch();
 
   const setBookingInitialState = payload => {
-    dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
     dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
   };
 
@@ -30,22 +29,24 @@ const ToktokGoBookingStart = ({navigation}) => {
     onError: error => console.log('error', error),
   });
 
+  const setPlaceFunction = async () => {
+    const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
+    getPlaceByLocation({
+      variables: {
+        input: {
+          location: {
+            latitude: latitude,
+            longitude: longitude,
+          },
+        },
+      },
+    });
+  };
+
   useFocusEffect(
     useCallback(() => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_SESSION_TOKEN', payload: uuid.v4()});
-      const setPlaceFunction = async () => {
-        const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
-        getPlaceByLocation({
-          variables: {
-            input: {
-              location: {
-                latitude: latitude,
-                longitude: longitude,
-              },
-            },
-          },
-        });
-      };
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
       setPlaceFunction();
     }, [navigation]),
   );

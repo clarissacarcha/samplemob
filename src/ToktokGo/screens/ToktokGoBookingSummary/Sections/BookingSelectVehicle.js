@@ -5,7 +5,7 @@ import CONSTANTS from '../../../../common/res/constants';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 
-export const BookingSelectVehicle = ({navigation, data, selectVehicle, loading, selectedVehicle}) => {
+export const BookingSelectVehicle = ({navigation, data, selectVehicle, selectedVehicle}) => {
   return (
     <>
       <View style={styles.container}>
@@ -18,7 +18,6 @@ export const BookingSelectVehicle = ({navigation, data, selectVehicle, loading, 
             navigation.push('ToktokGoBookingVehicle', {
               data,
               selectVehicle,
-              loading,
               selectedVehicle,
             })
           }
@@ -28,18 +27,8 @@ export const BookingSelectVehicle = ({navigation, data, selectVehicle, loading, 
         </TouchableOpacity>
       </View>
 
-      <VehicleCard
-        data={data.vehicleTypeRates?.[0]}
-        selectVehicle={selectVehicle}
-        loading={loading}
-        selectedVehicle={selectedVehicle}
-      />
-      <VehicleCard
-        data={data.vehicleTypeRates?.[1]}
-        selectVehicle={selectVehicle}
-        loading={loading}
-        selectedVehicle={selectedVehicle}
-      />
+      <VehicleCard data={data.vehicleTypeRates?.[0]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
+      <VehicleCard data={data.vehicleTypeRates?.[1]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
 
       <View style={styles.divider} />
     </>

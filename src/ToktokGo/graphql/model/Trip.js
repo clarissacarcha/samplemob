@@ -99,6 +99,17 @@ status
 tag
 `;
 
+export const TRIP_BOOK = gql`
+  mutation tripBook($input: TripBookInput!) {
+    tripBook(input: $input) {
+      message
+      trip {
+        ${trip}
+      }
+    }
+  }
+`;
+
 export const GET_TRIPS_CONSUMER = gql`
   query getTripsConsumer($input: GetTripsConsumerInput!) {
     getTripsConsumer(input: $input) {

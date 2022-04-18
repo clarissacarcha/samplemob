@@ -3,7 +3,7 @@ import {Text, View, TouchableHighlight, Image} from 'react-native';
 import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation} from './Sections';
 import CONSTANTS from '../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID} from '../../graphql';
+import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION} from '../../graphql';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {throttle, debounce} from 'lodash';
@@ -11,6 +11,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useDebounce} from '../../helpers';
 import {ToktokgoBeta} from '../../components';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
+import {useFocusEffect} from '@react-navigation/native';
+import {currentLocation} from '../../../helper';
 
 const ToktokGoSelectedLocations = ({navigation, route}) => {
   const {popTo} = route.params;
@@ -21,7 +23,7 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
   const dispatch = useDispatch();
   const {origin, destination, sessionToken} = useSelector(state => state.toktokGo);
 
-  const [searchDestination, setSearchDestination] = useState(destination.place.formattedAddress);
+  const [searchDestination, setSearchDestination] = useState(null);
   const [searchOrigin, setSearchOrigin] = useState(origin.place.formattedAddress);
 
   const [getPlaceAutocomplete] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
@@ -47,6 +49,17 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
     onError: error => console.log('error', error),
   });
 
+  const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      const payload = response.getPlaceByLocation;
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
+      setSearchOrigin(payload?.place?.formattedAddress);
+    },
+    onError: error => console.log('error', error),
+  });
+
   const debouncedRequest = useDebounce(
     value =>
       getPlaceAutocomplete({
@@ -58,6 +71,28 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
         },
       }),
     1000,
+  );
+
+  const setPlaceFunction = async () => {
+    const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
+    getPlaceByLocation({
+      variables: {
+        input: {
+          location: {
+            latitude: latitude,
+            longitude: longitude,
+          },
+        },
+      },
+    });
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!origin?.place?.formattedAddress) {
+        return setPlaceFunction();
+      }
+    }, [navigation]),
   );
 
   const onChange = value => {

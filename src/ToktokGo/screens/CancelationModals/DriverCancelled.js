@@ -17,7 +17,7 @@ export const DriverCancelled = ({onCancel, cancel, onCancelWithFee, setVisible, 
 
               <View style={{marginHorizontal: -25}}>
                 <Text style={{color: '#525252', fontSize: CONSTANTS.FONT_SIZE.S}}>Reason</Text>
-                <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, marginTop: 8}}>{cancellationState.reason}</Text>
+                <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, marginTop: 8}}>{cancellationState?.reason}</Text>
               </View>
             </View>
 

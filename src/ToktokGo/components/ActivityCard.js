@@ -18,9 +18,12 @@ import CancelledIcon from '../../assets/icons/Cancelled.png';
 import ToktokWalletText from '../../assets/images/ToktokwalletText.png';
 import DestinationIcon from '../../assets/icons/DestinationIcon.png';
 import OriginIcon from '../../assets/icons/OriginIcon.png';
+import CashIcon from '../../assets/images/CashIcon.png';
+import Constants from '../../store/redux/reducers/Constants';
 
 const getDisplayAddress = ({stop}) => {
-  if (stop.addressBreakdown) {
+  console.log(stop);
+  if (stop?.addressBreakdown) {
     const {city, province} = stop.addressBreakdown;
     const {formattedAddress} = stop;
     if (province) {
@@ -34,41 +37,49 @@ const getDisplayAddress = ({stop}) => {
       );
     } else {
       return (
-        <View>
+        <View style={{flex: 1}}>
           <Text>{city}</Text>
           <Text style={{fontSize: 11, color: '#525252'}}>{formattedAddress}</Text>
         </View>
       );
     }
   } else {
-    return stop.formattedAddress;
+    return stop?.formattedAddress;
   }
 };
 
-export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
+export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
   const onPressThrottled = throttle(onPress, 1000, {trailing: false});
 
   const getTotalAmount = () => {
-    return `₱${parseFloat(delivery.price)}.00`;
+    return `₱${parseFloat(booking?.fare?.amount)}.00`;
+  };
+  const headerDesign = () => {
+    let design = styles.headerYellow;
+    if (['ONGOING', 'COMPLETED'].includes(booking?.tag)) {
+      design = styles.headerWhite;
+    }
+    if (booking?.tag == 'CANCELLED') {
+      design = styles.headerGrey;
+    }
+    return design;
   };
 
   const getTextStatus = () => {
     //to do: replace returned text based on status
-    if ([1, 2, 3, 4, 5].includes(delivery.status)) return 'Passenger picked up';
-    else if (delivery.status == 6) return 'Completed';
-    else if (delivery.status == 7) return 'Cancelled';
+    if (booking?.status == 'COMPLETED') return 'Passenger picked up';
+    else if (booking?.status == 'COMPLETED') return 'Completed';
+    else if (booking?.status == 'CANCELLED') return 'Cancelled';
   };
 
   const getIconStatus = () => {
-    if (delivery.status == 1) return OnGoingIcon;
-    else if (delivery.status == 6) return CompletedIcon;
-    else if (delivery.status == 7) return CancelledIcon;
+    if (booking?.status == 'COMPLETED') return OnGoingIcon;
+    else if (booking?.status == 'COMPLETED') return CompletedIcon;
+    else if (booking?.status == 'CANCELLED') return CancelledIcon;
   };
 
-  // const blackFont = status === 7 ? constants.COLOR.DARK : constants.COLOR.BLACK;
-  const conditionalFontFamily = [2, 3, 4, 5].includes(delivery.status)
-    ? constants.FONT_FAMILY.BOLD
-    : constants.COLOR.BLACK;
+  const blackFont = booking?.tag == 'CANCELLED' ? constants.COLOR.DARK : constants.COLOR.BLACK;
+  const conditionalFontFamily = booking?.tag == 'ONGOING' ? constants.FONT_FAMILY.BOLD : constants.COLOR.BLACK;
 
   return (
     <View style={{paddingHorizontal: 16, paddingTop: 16, marginBottom: lastItem ? 20 : 0}}>
@@ -76,7 +87,7 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
         <View style={styles.taskBox}>
           {/*-------------------- CARD HEADER --------------------*/}
           {/* {APP_FLAVOR === 'D' && ( */}
-          {true && (
+          {
             <View style={styles.headerWhite}>
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <View style={{width: 150}}>
@@ -89,11 +100,11 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
                         fontFamily: constants.FONT_FAMILY.BOLD,
                       }}>
                       {' '}
-                      FLKHD{delivery.id}
+                      {booking?.id}
                     </Text>
                   </Text>
                   <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.ALMOST_BLACK}}>
-                    Jan 7, 2022 10:00 AM
+                    {booking?.logs[0].createdAt}
                   </Text>
                 </View>
 
@@ -110,7 +121,7 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
                     style={{
                       fontFamily: constants.FONT_FAMILY.REGULAR,
                       fontSize: constants.FONT_SIZE.M,
-                      color: constants.COLOR.BLACK,
+                      color: booking?.status != 'COMPLETED' ? constants.COLOR.BLACK : constants.COLOR.RED,
                       paddingLeft: 10,
                       fontWeight: '400',
                     }}>
@@ -119,7 +130,7 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
                 </View>
               </View>
             </View>
-          )}
+          }
 
           {/*-------------------- SENDER RECIPIENT ADDRESS ROW --------------------*/}
           <View style={[styles.directionsBox, {marginTop: 5}]}>
@@ -168,20 +179,28 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
                         flex: 1,
                         marginBottom: 5,
                       }}>
-                      {/* <Text style={{ fontFamily: conditionalFontFamily, fontSize: constants.FONT_SIZE.S, color: blackFont, marginTop: 2 }}> */}
-                      {getDisplayAddress({stop: delivery.senderStop})}
-                      {/* </Text> */}
+                      <Text
+                        style={{
+                          fontFamily: conditionalFontFamily,
+                          fontSize: constants.FONT_SIZE.S,
+                          color: blackFont,
+                          marginTop: 2,
+                        }}>
+                        {getDisplayAddress({stop: booking?.route?.origin})}
+                      </Text>
                     </View>
 
                     {/*-------------------- RECIPIENT DETAILS --------------------*/}
                     <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 3}}>
-                      {delivery.recipientStop.name && (
-                        <>
-                          {/* <Text style={{ fontFamily: conditionalFontFamily, fontSize: constants.FONT_SIZE.S, color: blackFont }}> */}
-                          {getDisplayAddress({stop: delivery.recipientStop})}
-                          {/* </Text> */}
-                        </>
-                      )}
+                      <Text
+                        style={{
+                          fontFamily: conditionalFontFamily,
+                          fontSize: constants.FONT_SIZE.S,
+                          color: blackFont,
+                          marginTop: 2,
+                        }}>
+                        {getDisplayAddress({stop: booking?.route?.destinations[0]})}
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -192,8 +211,24 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
             <View style={{borderBottomWidth: 2, borderBottomColor: '#F7F7FA', width: '100%'}} />
             <View style={{paddingVertical: 20}}>
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <Image source={Wallet} style={{width: 22, height: 18, marginRight: 10}} />
-                <Image source={ToktokWalletText} resizeMode={'contain'} style={{width: '25%', height: 16}} />
+                {booking.paymentMethod == 'CASH' ? (
+                  <>
+                    <Image source={CashIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
+                    <Text
+                      style={{
+                        fontFamily: constants.FONT_FAMILY.REGULAR,
+                        color: constants.COLOR.YELLOW,
+                        fontSize: constants.FONT_SIZE.M,
+                      }}>
+                      Cash
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <Image source={Wallet} style={{width: 22, height: 18, marginRight: 10}} />
+                    <Image source={ToktokWalletText} resizeMode={'contain'} style={{width: '25%', height: 16}} />
+                  </>
+                )}
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
                   <Text
                     style={{
