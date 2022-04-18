@@ -292,7 +292,11 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="AddLocation" component={AddLocation} /> */}
     {/* <Authenticated.Screen name="Announcements" component={Announcements} />
     <Authenticated.Screen name="SelectedAnnouncement" component={SelectedAnnouncement} /> */}
-    <Authenticated.Screen name="ConsumerChangePassword" component={ConsumerChangePassword} />
+    <Authenticated.Screen
+      name="ConsumerChangePassword"
+      component={ConsumerChangePassword}
+      options={{headerShown: false}}
+    />
     <Authenticated.Screen name="TalkToUs" component={TalkToUs} />
 
     {/********** TO BE REMOVED **********/}
@@ -331,7 +335,7 @@ const AuthenticatedStack = () => (
     <Authenticated.Screen name="Order" component={Order} />
     <Authenticated.Screen name="SearchLocationFilter" component={SearchLocationFilter} />
     <Authenticated.Screen name="DriverDeliveriesTab" component={DriverDeliveriesTab} />
-    <Authenticated.Screen name="EnterPassword" component={EnterPassword} />
+    <Authenticated.Screen name="EnterPassword" component={EnterPassword} options={{headerShown: false}} />
   </Authenticated.Navigator>
 );
 

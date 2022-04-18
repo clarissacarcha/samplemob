@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {View, TouchableHighlight, Text} from 'react-native';
+import {View, TouchableHighlight, Text, Image} from 'react-native';
 import constants from '../../../common/res/constants';
 import {useDispatch} from 'react-redux';
 import {Landing, Header} from '../ToktokGoBookingStart/Sections';
@@ -11,6 +11,7 @@ import uuid from 'react-native-uuid';
 import {ToktokgoBeta} from '../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {currentLocation} from '../../../helper';
+import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 
 const ToktokGoBookingStart = ({navigation}) => {
   const dispatch = useDispatch();
@@ -67,16 +68,25 @@ const ToktokGoBookingStart = ({navigation}) => {
         <View
           style={{
             paddingHorizontal: constants.SIZE.MARGIN,
-            width: '100%',
             backgroundColor: 'white',
             justifyContent: 'center',
             alignItems: 'center',
             paddingVertical: 16,
             borderTopColor: '#ECECEC',
-            borderTopWidth: 2,
+            // borderTopWidth: 1,
+            shadowColor: '#000000',
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowRadius: 50,
+            shadowOpacity: 1.0,
+            elevation: 20,
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <FA5Icon name="map-marker-alt" size={15} color={constants.COLOR.ORANGE} style={{marginRight: 10}} />
+            {/* <FA5Icon name="map-marker-alt" size={15} color={constants.COLOR.ORANGE} style={{marginRight: 10}} /> */}
+            <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
+
             <Text
               style={{
                 color: constants.COLOR.ORANGE,
