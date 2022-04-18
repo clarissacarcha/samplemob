@@ -79,7 +79,7 @@ export default ({Navigator}) => (
     />
     <Navigator.Screen name="ToktokGoFindingDriver" component={ToktokGoFindingDriver} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokGoOnTheWayRoute" component={ToktokGoOnTheWayRoute} options={{headerShown: false}} />
-    <Navigator.Screen name="ToktokGoRateDriver" component={ToktokGoRateDriver} />
+    <Navigator.Screen name="ToktokGoRateDriver" component={ToktokGoRateDriver} options={{headerShown: false}} />
     <Navigator.Screen
       name="ToktokGoBookingVouchers"
       component={ToktokGoBookingVouchers}

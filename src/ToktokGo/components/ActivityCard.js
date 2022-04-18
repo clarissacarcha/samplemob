@@ -16,6 +16,8 @@ import OnGoingIcon from '../../assets/icons/OnGoing.png';
 import CompletedIcon from '../../assets/icons/Completed.png';
 import CancelledIcon from '../../assets/icons/Cancelled.png';
 import ToktokWalletText from '../../assets/images/ToktokwalletText.png';
+import DestinationIcon from '../../assets/icons/DestinationIcon.png';
+import OriginIcon from '../../assets/icons/OriginIcon.png';
 
 const getDisplayAddress = ({stop}) => {
   if (stop.addressBreakdown) {
@@ -49,16 +51,6 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
   const getTotalAmount = () => {
     return `₱${parseFloat(delivery.price)}.00`;
   };
-  const headerDesign = () => {
-    let design = styles.headerYellow;
-    if ([1, 6].includes(delivery.status)) {
-      design = styles.headerWhite;
-    }
-    if (delivery.status == 7) {
-      design = styles.headerGrey;
-    }
-    return design;
-  };
 
   const getTextStatus = () => {
     //to do: replace returned text based on status
@@ -85,11 +77,11 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
           {/*-------------------- CARD HEADER --------------------*/}
           {/* {APP_FLAVOR === 'D' && ( */}
           {true && (
-            <View style={headerDesign()}>
+            <View style={styles.headerWhite}>
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 <View style={{width: 150}}>
                   <Text style={{fontSize: constants.FONT_SIZE.M}}>
-                    Delivery ID
+                    Booking ID
                     <Text
                       style={{
                         color: constants.COLOR.YELLOW,
@@ -100,7 +92,9 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
                       FLKHD{delivery.id}
                     </Text>
                   </Text>
-                  <Text>Jan 07, 2022 10:00 AM</Text>
+                  <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.ALMOST_BLACK}}>
+                    Jan 7, 2022 10:00 AM
+                  </Text>
                 </View>
 
                 <View
@@ -116,7 +110,7 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
                     style={{
                       fontFamily: constants.FONT_FAMILY.REGULAR,
                       fontSize: constants.FONT_SIZE.M,
-                      color: delivery.status != 7 ? '#000000' : constants.COLOR.RED,
+                      color: constants.COLOR.BLACK,
                       paddingLeft: 10,
                       fontWeight: '400',
                     }}>
@@ -142,11 +136,10 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
                 <View style={{flexDirection: 'row', paddingVertical: 10}}>
                   {/*-------------------- ICONS --------------------*/}
                   <View style={{justifyContent: 'center', paddingRight: 8, paddingBottom: 10}}>
-                    <FA5Icon
-                      name="map-pin"
-                      size={15}
-                      color={constants.COLOR.YELLOW}
-                      style={{marginLeft: 2, marginBottom: 2}}
+                    <Image
+                      source={OriginIcon}
+                      resizeMode={'contain'}
+                      style={{width: 15, height: 15, marginLeft: -1, marginBottom: 5}}
                     />
                     <View style={{overflow: 'hidden'}}>
                       <EIcon
@@ -162,11 +155,10 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
                         style={{marginLeft: 1}}
                       />
                     </View>
-                    <FA5Icon
-                      name="map-marker-alt"
-                      size={15}
-                      color={constants.COLOR.ORANGE}
-                      style={{marginLeft: 1, paddingTop: 5}}
+                    <Image
+                      source={DestinationIcon}
+                      resizeMode={'contain'}
+                      style={{width: 15, height: 15, marginTop: 5}}
                     />
                   </View>
                   <View style={{flex: 1}}>
@@ -206,22 +198,18 @@ export const ActivitiesCard = ({delivery, onPress, lastItem = false}) => {
                   <Text
                     style={{
                       paddingLeft: 10,
-                      color: '#F6841F',
-                      fontWeight: '600',
+                      color: constants.COLOR.ORANGE,
                       fontSize: constants.FONT_SIZE.M,
-                      lineHeight: 16,
-                      fontStyle: 'normal',
+                      fontFamily: constants.FONT_FAMILY.BOLD,
                     }}>
                     Total
                   </Text>
                   <Text
                     style={{
+                      fontFamily: constants.FONT_FAMILY.BOLD,
                       paddingLeft: 10,
-                      color: '#F6841F',
-                      fontWeight: '600',
                       fontSize: constants.FONT_SIZE.M,
-                      lineHeight: 16,
-                      fontStyle: 'normal',
+                      color: constants.COLOR.ORANGE,
                     }}>
                     {getTotalAmount()}
                   </Text>

@@ -163,6 +163,19 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
 
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
+      <StatusBar
+        backgroundColor={
+          viewCancelBookingModal ||
+          viewCancelReasonModal ||
+          viewSuccessCancelBookingModal ||
+          driverCancel ||
+          cancellationFee ||
+          modal ||
+          cancel
+            ? 'rgba(0,0,0,0.6)'
+            : null
+        }
+      />
       <CancelBookingNoFeeModal
         isVisible={viewCancelBookingModal}
         setVisible={setViewCancelBookingModal}

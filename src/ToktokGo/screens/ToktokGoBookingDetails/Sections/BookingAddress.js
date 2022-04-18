@@ -10,6 +10,8 @@ import constants from '../../../../common/res/constants';
 import PhoneIcon from '../../../../assets/images/phoneIcon.png';
 import MessageIcon from '../../../../assets/images/messageIcon.png';
 import NavigateIcon from '../../../../assets/images/navigateIcon.png';
+import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
+import OriginIcon from '../../../../assets/icons/OriginIcon.png';
 
 const LocationDots = () => (
   <>
@@ -140,12 +142,7 @@ export const BookingAddress = ({booking}) => {
           {/*-------------------- SENDER DETAILS --------------------*/}
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
             <View>
-              <FA5Icon
-                name="map-pin"
-                size={18}
-                color={constants.COLOR.YELLOW}
-                style={{marginLeft: 5, marginRight: 15}}
-              />
+              <Image source={OriginIcon} resizeMode={'contain'} style={{height: 20, width: 20, marginRight: 15}} />
               <View
                 style={{
                   position: 'absolute',
@@ -163,11 +160,10 @@ export const BookingAddress = ({booking}) => {
           </View>
           {/* <View style={{borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: LIGHT}} /> */}
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flex: 1}}>
-            <FA5Icon
-              name="map-marker-alt"
-              size={18}
-              color={constants.COLOR.ORANGE}
-              style={{marginLeft: 4, marginRight: 15}}
+            <Image
+              source={DestinationIcon}
+              resizeMode={'contain'}
+              style={{height: 20, width: 20, marginRight: 15, marginLeft: 1}}
             />
             <DeliveryStop stop={booking.route.destinations[0]} booking={booking} />
           </View>

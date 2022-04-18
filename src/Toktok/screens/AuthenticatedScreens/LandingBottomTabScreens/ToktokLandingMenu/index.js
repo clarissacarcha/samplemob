@@ -5,7 +5,6 @@ import {VectorIcon, ICON_SET} from '../../../../../revamp/';
 import {AUTH_CLIENT, END_USER_SESSION} from '../../../../../graphql';
 import {onError} from '../../../../../util/ErrorUtility';
 import {AlertOverlay} from '../../../../../components';
-
 import {useMutation} from '@apollo/react-hooks';
 
 import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar, TouchableOpacity} from 'react-native';
@@ -141,7 +140,7 @@ export const ToktokLandingMenu = ({navigation}) => {
                 navigation.push('ToktokSavedLocations');
               }}
               restrict="C"
-            />
+            /> */}
             {/*--------------- CHANGE PASSWORD ---------------*/}
             <DrawerButton
               label="Change Password"
@@ -194,7 +193,7 @@ export const ToktokLandingMenu = ({navigation}) => {
 
 const styles = StyleSheet.create({
   submitBox: {
-    marginHorizontal: SIZE.MARGIN,
+    marginHorizontal: 16,
     borderRadius: 5,
     borderBottomWidth: 1,
     borderBottomColor: COLOR.LIGHT,

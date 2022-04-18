@@ -1,8 +1,9 @@
 import React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
+import {Text, StyleSheet, View, Image} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import EIcon from 'react-native-vector-icons/Entypo';
+import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
+import OriginIcon from '../../../../assets/icons/OriginIcon.png';
 import moment from 'moment';
 
 export const DistanceOriginAddress = ({booking}) => {
@@ -12,17 +13,12 @@ export const DistanceOriginAddress = ({booking}) => {
         <View style={{flexDirection: 'row'}}>
           {/*-------------------- ICONS --------------------*/}
           <View style={styles.iconsContainer}>
-            <FA5Icon name="map-pin" size={15} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 2, marginBottom: 2}} />
+            <Image source={OriginIcon} resizeMode={'contain'} style={{width: 15, height: 15, marginBottom: 5}} />
             <View style={{overflow: 'hidden'}}>
               <EIcon name="dots-three-vertical" size={11} color={CONSTANTS.COLOR.MEDIUM} style={{marginLeft: 1}} />
               <EIcon name="dots-three-vertical" size={11} color={CONSTANTS.COLOR.MEDIUM} style={{marginLeft: 1}} />
             </View>
-            <FA5Icon
-              name="map-marker-alt"
-              size={15}
-              color={CONSTANTS.COLOR.ORANGE}
-              style={{marginLeft: 1, paddingTop: 5}}
-            />
+            <Image source={DestinationIcon} resizeMode={'contain'} style={{width: 15, height: 15, marginTop: 5}} />
           </View>
           <View style={{flex: 1}}>
             {/*-------------------- ORIGIN DETAILS --------------------*/}

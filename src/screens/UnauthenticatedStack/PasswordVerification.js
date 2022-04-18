@@ -10,6 +10,8 @@ import {
   Platform,
   ImageBackground,
   Dimensions,
+  TouchableOpacity,
+  StatusBar,
 } from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -28,6 +30,9 @@ import {useAlert} from '../../hooks/useAlert';
 import Splash from '../../assets/images/LinearGradiant.png';
 import ToktokLogo from '../../assets/images/ToktokLogo.png';
 import Icon from 'react-native-vector-icons/Entypo';
+import ShowPassword from '../../assets/icons/ShowPassword.png';
+import HidePassword from '../../assets/icons/HidePassword.png';
+import ArrowLeft from '../../assets/icons/arrow-left-icon.png';
 
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
 
@@ -40,6 +45,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
   const alert = useAlert();
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [inCorrectPassword, setIncorrectPassword] = useState(false);
 
   const [verifyLogin, {loading}] = useMutation(VERIFY_LOGIN, {
     client: AUTH_CLIENT,
@@ -53,8 +59,11 @@ const PasswordVerification = ({navigation, route, createSession}) => {
       },
     },
     onError: error => {
-      console.log(error);
-      onErrorAlert({alert, error});
+      console.log(error.message);
+      // onErrorAlert({alert, error});
+      if (error.message === 'GraphQL error: Incorrect password.') {
+        setIncorrectPassword(true);
+      }
     },
 
     onCompleted: data => {
@@ -156,6 +165,13 @@ const PasswordVerification = ({navigation, route, createSession}) => {
       }}>
       {/* <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}> */}
       <AlertOverlay visible={loading} />
+      <TouchableOpacity onPress={() => navigation.pop()}>
+        <Image
+          style={{height: 15, width: 10, margin: 16, top: StatusBar.currentHeight - 10}}
+          source={ArrowLeft}
+          resizeMode={'contain'}
+        />
+      </TouchableOpacity>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: '20%'}}>
         {/*-------------------- BANNER --------------------*/}
         {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
@@ -174,13 +190,16 @@ const PasswordVerification = ({navigation, route, createSession}) => {
             autoCapitalize="none"
             onSubmitEditing={onSubmit}
           />
-          <Icon
-            name={!showPassword ? 'eye' : 'eye-with-line'}
-            size={15}
-            color={'#9E9E9E'}
-            onPress={() => setShowPassword(!showPassword)}
-            style={{padding: 10}}
-          />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <Image source={!showPassword ? HidePassword : ShowPassword} style={styles.showPassword} />
+          </TouchableOpacity>
+        </View>
+        <View style={{alignSelf: 'flex-start', marginHorizontal: 40}}>
+          {inCorrectPassword && (
+            <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED, top: -5}}>
+              Password is incorrect
+            </Text>
+          )}
         </View>
         {/*-------------------- SUBMIT INPUT --------------------*/}
         <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
@@ -281,5 +300,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 5,
+  },
+  showPassword: {
+    marginRight: 16,
+    height: 17,
+    width: 17,
   },
 });

@@ -4,6 +4,7 @@ import BackgroundLanding from '../../../../assets/images/BackGroundLanding.png';
 import CONSTANTS from '../../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
 
 export const Location = ({
   onChange,
@@ -44,7 +45,8 @@ export const Location = ({
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 19}}>
         <View style={selectedInput == 'D' ? styles.containerInput : styles.textContainerInput}>
-          <FA5Icon name="map-marker-alt" size={18} color={CONSTANTS.COLOR.ORANGE} style={{marginLeft: 16}} />
+          {/* <FA5Icon name="map-marker-alt" size={18} color={CONSTANTS.COLOR.ORANGE} style={{marginLeft: 16}} /> */}
+          <Image source={DestinationIcon} style={{height: 20, width: 20, marginLeft: 12}} resizeMode={'contain'} />
           {selectedInput == 'D' ? (
             <TextInput
               ref={inputRef}
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
   input: {
     marginLeft: 12,
     color: CONSTANTS.COLOR.DARK,
-    width: '100%',
+    width: '84%',
   },
   containerInput: {
     flex: 1,

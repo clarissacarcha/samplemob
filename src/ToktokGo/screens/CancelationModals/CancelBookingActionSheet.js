@@ -24,12 +24,16 @@ export const CancelBookingActionSheet = ({setVisible}) => {
     <ActionSheet id="cancel_booking" overlayColor="none">
       <View style={styles.container}>
         <View style={{}}>
-          <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>Reason for Cancellation</Text>
-          <Text>data here</Text>
+          <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD, color: CONSTANTS.COLOR.ALMOST_BLACK}}>
+            Reason for Cancellation
+          </Text>
+          <Text style={{color: CONSTANTS.COLOR.ALMOST_BLACK}}>data here</Text>
         </View>
         <View style={styles.divider} />
         <View>
-          <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD, marginBottom: 16}}>Select Payment</Text>
+          <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD, marginBottom: 16, color: CONSTANTS.COLOR.ALMOST_BLACK}}>
+            Select Payment
+          </Text>
 
           <View opacity={true ? 0.5 : 1}>
             <TouchableOpacity
@@ -44,7 +48,7 @@ export const CancelBookingActionSheet = ({setVisible}) => {
               <View style={{flexDirection: 'row'}}>
                 <Image source={tokWaIMG} style={styles.imageDimensions} resizeMode={'contain'} />
                 <Text style={styles.radioButtonText}>
-                  Pay via Toktok<Text style={{color: CONSTANTS.COLOR.ORANGE}}>wallet</Text>
+                  Pay via toktok<Text style={{color: CONSTANTS.COLOR.ORANGE}}>wallet</Text>
                 </Text>
               </View>
             </TouchableOpacity>
@@ -165,6 +169,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
+    fontSize: CONSTANTS.FONT_SIZE.L,
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
     color: CONSTANTS.COLOR.WHITE,
   },
