@@ -9,7 +9,7 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import { GET_CHECKOUT_DATA, POST_CHECKOUT, GET_HASH_AMOUNT } from '../../../../graphql/toktokmall/model';
+import { GET_CHECKOUT_DATA, POST_CHECKOUT, GET_HASH_AMOUNT, CHECK_ITEM_FROM_CHECKOUT } from '../../../../graphql/toktokmall/model';
 
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_WALLET, GET_MY_ACCOUNT, GET_USER_TOKTOK_WALLET_DATA } from 'toktokwallet/graphql'
@@ -66,12 +66,29 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [customerData, setCustomerData] = useState({})
   const [shippingDiscounts, setShippingDiscounts] = useState([])
   const [franchisee, setFranchisee] = useState({})
+  const [unavailable, setUnavailable] = useState([])
+  const [res, setRes] = useState(false)
 
   const dispatch = useDispatch()
 
   const setAlertTrue = () => {
     setAlertModal(true)
   }
+
+  const [checkItemFromCheckout] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: async (response) => {
+      console.log("route.params.data",)
+      const data = response.checkItemFromCheckout.filter(({status})=> status === false)
+      console.log("ToktokWalletRefreshAccountBalance data",data)
+      setUnavailable(data)
+      await postCheckoutSetting(data);
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
 
   const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -232,8 +249,26 @@ const Component = ({route, navigation, createMyCartSession}) => {
       getToktokWalletData()
     }
   })  
+  useEffect(() => {
+    // if(unavailable.length > 0 && paramsData && res){
+    //   let copy = [];
+    //   // unavailable.map(({id}) => {
+    //   //   copy = copy.map(({data, ...rest}) => ({
+    //   //     ...rest,
+    //   //     data: [data[0].filter(item => id !== item.id)],
+    //   //   }));
+    //   // });
+    //   // copy = copy.filter(({data}) => data[0].length !== 0);
+    //   console.log('ToktokWalletRefreshAccountBalance', copy, unavailable);
+    //   setParamsData(copy);
+    //   setRes(false);
+    // }
+    if(res){
+      setParamsData([]);
+    }
+  }, [res])
 
-  const postCheckoutSetting = async () => {
+  const postCheckoutSetting = async (data) => {
 
     setIsLoading(true)
 
@@ -255,6 +290,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       const req = await WalletApiCall("request_money", transactionPayload, true)
 
       if(req.responseData && req.responseData.success == 1){
+        setRes(true)
 
         const checkoutBody = await BuildPostCheckoutBody({
           walletRequest: req.responseData.data,
@@ -276,6 +312,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
         navigation.navigate("ToktokMallOTP", {
           transaction: "payment", 
           data: checkoutBody,
+          unavailable: data,
+          unavailableCallback: () => {
+          },
           onSuccess: async (result) => {
 
             console.log(paramsData)
@@ -554,6 +593,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   useEffect(() => {
 
+    console.log("Checkout body data", route?.params?.data)
     setParamsData(route?.params?.data)
     setNewCartData(route?.params.newCart)
 
@@ -674,10 +714,23 @@ const Component = ({route, navigation, createMyCartSession}) => {
           shipping={addressData}
           shippingRates={shippingRates}
           onPress={async () => {
-            if(!isLoading){
-              await postCheckoutSetting()              
-            }      
-          }} 
+            if (!isLoading) {
+              let ids = []
+              paramsData.map(({data}) => {
+               data[0].map(item => {
+                 ids.push(item.id)
+               });
+             })
+         
+             checkItemFromCheckout({
+               variables: {
+                 input: {
+                   productId: ids,
+                 },
+               },
+             });
+            }
+          }}
         />
       </View>
     </>

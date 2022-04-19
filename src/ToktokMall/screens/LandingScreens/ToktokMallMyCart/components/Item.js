@@ -104,10 +104,7 @@ export const Item = ({
     if(type == "disabled"){
       if(CartContextData.willDelete){
         return false
-      }else{
-        if(item.contSellingIsset === 0 && item.noOfStocks === 0){
-          return true
-        }else if(item.enabled == 1){
+      }else{if(item.enabled == 1){
           return false
         }else{
           return true
@@ -116,10 +113,7 @@ export const Item = ({
     }else if(type == "boxcolor"){
       if(CartContextData.willDelete){
         return "#F6841F"
-      }else{
-        if(item.contSellingIsset === 0 && item.noOfStocks === 0){
-          return "#ECECEC"
-        }else if(item.enabled == 1){
+      }else{if(item.enabled == 1){
           return "#F6841F"
         }else{
           return "#ECECEC"

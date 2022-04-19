@@ -285,3 +285,12 @@ export const SEARCH_PRODUCT_SUGGESTIONS = gql`
 		}
 	}
 `
+
+export const CHECK_ITEM_FROM_CHECKOUT = gql`
+	query checkItemFromCheckout($input: CheckItemFromCheckoutInput) {
+		checkItemFromCheckout(input: $input) {
+			id
+			status
+		}
+	}
+`
