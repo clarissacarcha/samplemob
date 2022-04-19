@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
+import {emptyPlaceOrder} from "../../../assets"
 import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy, getRefComAccountType} from "../../../helpers"
 
 import {CheckoutContext} from './ContextProvider';
@@ -662,16 +663,26 @@ const Component = ({route, navigation, createMyCartSession}) => {
               }
             })}
           />
-          <Shops 
-            address={addressData}
-            customer={customerData}
-            raw={paramsData}
-            retrieve={(data) => {
-              setShippingDiscounts(data.shippingDiscounts)
-            }}
-            shipping={addressData?.shippingSummary} 
-            shippingRates={shippingRates}      
-          />
+         {paramsData ? (
+           <Shops
+             address={addressData}
+             customer={customerData}
+             raw={paramsData}
+             retrieve={data => {
+               setShippingDiscounts(data.shippingDiscounts);
+             }}
+             shipping={addressData?.shippingSummary}
+             shippingRates={shippingRates}
+           />
+         ) : (
+            <View style={{flex: 1, backgroundColor: 'trasparent'}}>
+              <View style={{flex: 1, backgroundColor: 'white', marginTop: 8, alignItems: 'center', padding: 25}}>
+                <Image source={emptyPlaceOrder} />
+                <Text style={{color: '#F6841F', fontSize: 18, padding: 5}}>No Items</Text>
+                <Text>Hmm, there are no items to check out.</Text>
+              </View>
+            </View>
+          )}
           {/* <Vouchers 
             items={paramsData}
             navigation={navigation} 
