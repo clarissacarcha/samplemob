@@ -60,22 +60,22 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
     }, [])
   )
 
-  useEffect(() => {
-    if(route?.params.unavailable.length > 0){
-      dispatch({
-        type: 'TOKTOK_MALL_OPEN_MODAL_2',
-        payload: {
-          type: 'Warning',
-          title: 'Unable to Place Order',
-          message: 'We’re sorry but some items in your cart is currently unavailable. Please try again another time.',
-          onConfirm: () => {
-            route.params.unavailableCallback()
-            navigation.goBack();
-          },
-        },
-      });
-    }
-  },[route])
+  // useEffect(() => {
+  //   if(route?.params.unavailable.length > 0){
+  //     dispatch({
+  //       type: 'TOKTOK_MALL_OPEN_MODAL_2',
+  //       payload: {
+  //         type: 'Warning',
+  //         title: 'Unable to Place Order',
+  //         message: 'We’re sorry but some items in your cart is currently unavailable. Please try again another time.',
+  //         onConfirm: () => {
+  //           route.params.unavailableCallback()
+  //           navigation.goBack();
+  //         },
+  //       },
+  //     });
+  //   }
+  // },[route])
 
   const ValidatePin = async () => {
 
@@ -138,9 +138,12 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
       navigation.pop()
 
     }else if(req.responseError){
-      console.log(req.responseError)
+      // console.log(req.responseError)
       const regex = /(<([^>]+)>)/ig;
-      Toast.show(req.responseError.message.replace(regex, ""), Toast.LONG)
+      // Toast.show(req.responseError.message.replace(regex, ""), Toast.LONG)
+      route.params.onError(req, req.responseError)
+      navigation.pop()
+
     }else if(req.responseError == null && req.responseData == null){
       Toast.show("Something went wrong", Toast.LONG)
     }

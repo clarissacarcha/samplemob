@@ -1,11 +1,11 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert, EventEmitter } from 'react-native';
 import { COLOR, FONT } from '../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
 import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal, MessageModal } from './Components';
 import {connect, useDispatch} from 'react-redux'
 import { useSelector } from 'react-redux';
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, CommonActions} from '@react-navigation/native'
 
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
@@ -67,8 +67,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [customerData, setCustomerData] = useState({})
   const [shippingDiscounts, setShippingDiscounts] = useState([])
   const [franchisee, setFranchisee] = useState({})
-  const [unavailable, setUnavailable] = useState([])
-  const [res, setRes] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -80,11 +78,18 @@ const Component = ({route, navigation, createMyCartSession}) => {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: async (response) => {
-      console.log("route.params.data",)
       const data = response.checkItemFromCheckout.filter(({status})=> status === false)
-      console.log("ToktokWalletRefreshAccountBalance data",data)
-      setUnavailable(data)
+
+      //SCENARIO: While entering TPIN, the product got out of stock. We can simulate this by bypassing the current validation
       await postCheckoutSetting(data);
+      return
+
+      if(data.length > 0){
+        onProductUnavailable(data, "id")
+      }else{
+        await postCheckoutSetting(data);
+      }
+
     },
     onError: (err) => {
       console.log(err)
@@ -250,26 +255,61 @@ const Component = ({route, navigation, createMyCartSession}) => {
       getToktokWalletData()
     }
   })  
-  useEffect(() => {
-    // if(unavailable.length > 0 && paramsData && res){
-    //   let copy = [];
-    //   // unavailable.map(({id}) => {
-    //   //   copy = copy.map(({data, ...rest}) => ({
-    //   //     ...rest,
-    //   //     data: [data[0].filter(item => id !== item.id)],
-    //   //   }));
-    //   // });
-    //   // copy = copy.filter(({data}) => data[0].length !== 0);
-    //   console.log('ToktokWalletRefreshAccountBalance', copy, unavailable);
-    //   setParamsData(copy);
-    //   setRes(false);
-    // }
-    if(res){
-      setParamsData([]);
-    }
-  }, [res])
 
-  const postCheckoutSetting = async (data) => {
+  const onProductUnavailable = (items, selector) => {
+
+    setIsLoading(false)
+
+    let paramsDataCopy = ArrayCopy(route.params)
+
+    items.map(({id, name}) => {
+      route.params.data.map(({data, ...rest}, index) => {
+
+        let validItems = []
+        if(selector == "id"){
+          validItems = data[0].filter(item => id !== item.id)
+        }else if(selector == "name"){
+          validItems = data[0].filter(({product}) => name !== product.itemname || product.variant !== name)
+        }
+        
+        if(validItems.length > 0){
+          paramsDataCopy.data[index] = {
+            ...rest,
+            data: [validItems]
+          }
+        }else{
+          paramsDataCopy.data[index] = null
+        }          
+      })
+    })
+    
+    dispatch({
+      type: 'TOKTOK_MALL_OPEN_MODAL_2',
+      payload: {
+        type: 'Warning',
+        title: 'Unable to Place Order',
+        message: 'We’re sorry but some items in your cart is currently unavailable. Please try again another time.',
+        onConfirm: async () => {
+
+          let filtered = {
+            ...paramsDataCopy,
+            data: paramsDataCopy.data.filter((val) => val !== null)
+          }
+          console.log("PARAMS DATA COPY", JSON.stringify(paramsDataCopy))
+          console.log("FILTERED PARAMS DATA", JSON.stringify(filtered))
+
+          // return //used for debugging
+
+          navigation.replace("ToktokMallEmptyCheckout", {
+            ...route.params,
+            data: filtered
+          })
+        },
+      },
+    });
+  }
+
+  const postCheckoutSetting = async () => {
 
     setIsLoading(true)
 
@@ -291,7 +331,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
       const req = await WalletApiCall("request_money", transactionPayload, true)
 
       if(req.responseData && req.responseData.success == 1){
-        setRes(true)
 
         const checkoutBody = await BuildPostCheckoutBody({
           walletRequest: req.responseData.data,
@@ -313,8 +352,12 @@ const Component = ({route, navigation, createMyCartSession}) => {
         navigation.navigate("ToktokMallOTP", {
           transaction: "payment", 
           data: checkoutBody,
-          unavailable: data,
-          unavailableCallback: () => {
+          onError: (data, error) => {
+            console.log("ERROR", error, error?.items)
+            if(error?.items && error?.items.length > 0){
+              let formattedArr = error?.items.map((item) => {return {id: "", name: item}})
+              onProductUnavailable(formattedArr, "name")
+            }
           },
           onSuccess: async (result) => {
 
@@ -324,9 +367,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
             postOrderNotifications(result)
             EventRegister.emit("ToktokWalletRefreshAccountBalance")
 
-          },
-          onError: async (error) => {
-            console.log(error)
           }
         })
 
@@ -552,16 +592,35 @@ const Component = ({route, navigation, createMyCartSession}) => {
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
     }, [])
   )
-    
+
   useEffect(() => {
+
+    let isMounted = true;
+
     (async () => {
       // console.log(JSON.stringify(route.params.data))
       await init()
     })();
 
-    EventRegister.addEventListener("refreshCheckoutData", init)
-    EventRegister.addEventListener("ToktokMallWalletRefreshAccountStatus", () => setWalletAccountStatus())
+    if(isMounted){
+      EventRegister.addEventListener("refreshCheckoutData", init)
+      EventRegister.addEventListener("ToktokMallWalletRefreshAccountStatus", () => setWalletAccountStatus())
+    }
+
+    return () => {
+      isMounted = false;
+    }
+    
   }, [])
+
+  useEffect(() => {
+
+    console.log("Checkout body data", route?.params?.data)
+
+    setParamsData(route?.params?.data)
+    setNewCartData(route?.params.newCart)
+
+  }, [route.params])
 
   console.log("addressData", addressData)
 
@@ -592,39 +651,33 @@ const Component = ({route, navigation, createMyCartSession}) => {
   //   calculateGrandTotal()
   // }, [addressData, shippingRates])
 
-  useEffect(() => {
-
-    console.log("Checkout body data", route?.params?.data)
-    setParamsData(route?.params?.data)
-    setNewCartData(route?.params.newCart)
-
-  }, [route.params])
+  
 
   useEffect(() => {
     // console.log(grandTotal)
   }, [grandTotal])
 
-  useEffect(() => {
-    // dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL', payload: {
-    //   title: ["Unable to Checkout"],
-    //   message: "Sorry, you don’t have a toktokwallet yet. Please create an account and top up to proceed in checkout.",
-    //   action: {
-    //     onPress:() => {
-    //       navigation.navigate("ToktokMallHome")
-    //       dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
-    //     },
-    //     title: "Ok",
-    //     type: "fill"
-    //   },
-    //   link: {
-    //     onPress:() => {
-    //       navigation.navigate("ToktokMallHome")
-    //       dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
-    //     },
-    //     text: "Create toktokwallet account",
-    //   }
-    // }})
-  }, [])
+  // useEffect(() => {
+  //   // dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL', payload: {
+  //   //   title: ["Unable to Checkout"],
+  //   //   message: "Sorry, you don’t have a toktokwallet yet. Please create an account and top up to proceed in checkout.",
+  //   //   action: {
+  //   //     onPress:() => {
+  //   //       navigation.navigate("ToktokMallHome")
+  //   //       dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
+  //   //     },
+  //   //     title: "Ok",
+  //   //     type: "fill"
+  //   //   },
+  //   //   link: {
+  //   //     onPress:() => {
+  //   //       navigation.navigate("ToktokMallHome")
+  //   //       dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
+  //   //     },
+  //   //     text: "Create toktokwallet account",
+  //   //   }
+  //   // }})
+  // }, [])
 
   if(loading || initialLoading) {
     return <Loading state={loading || initialLoading} />
@@ -662,18 +715,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
                 init()
               }
             })}
-          />
-          <Shops
-             address={addressData}
-             customer={customerData}
-             raw={paramsData}
-             retrieve={data => {
-               setShippingDiscounts(data.shippingDiscounts);
-             }}
-             shipping={addressData?.shippingSummary}
-             shippingRates={shippingRates}
-           />
-         {/* {paramsData ? (
+          />          
+         {paramsData ? (
            <Shops
              address={addressData}
              customer={customerData}
@@ -692,7 +735,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
                 <Text>Hmm, there are no items to check out.</Text>
               </View>
             </View>
-          )} */}
+          )}
           {/* <Vouchers 
             items={paramsData}
             navigation={navigation} 
@@ -735,13 +778,17 @@ const Component = ({route, navigation, createMyCartSession}) => {
           shipping={addressData}
           shippingRates={shippingRates}
           onPress={async () => {
+
             if (!isLoading) {
+
               let ids = []
               paramsData.map(({data}) => {
                data[0].map(item => {
                  ids.push(item.id)
                });
              })
+
+             setIsLoading(true)
          
              checkItemFromCheckout({
                variables: {

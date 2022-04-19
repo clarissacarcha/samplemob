@@ -51,6 +51,6 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokMallStore" component={ToktokMallStore} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokMallStoreSearch" component={ToktokMallStoreSearch} options={{headerShown: false}} />    
     <Navigator.Screen name="ToktokMallVouchersClaim" component={ToktokMallVouchersClaim} />
-    <Navigator.Screen name="ToktokMallOTP" component={ToktokMallOTP} options={{headerShown: false}} />    
+    <Navigator.Screen name="ToktokMallOTP" component={ToktokMallOTP} options={{headerShown: false, animationEnabled: false}} />    
   </>
 );
