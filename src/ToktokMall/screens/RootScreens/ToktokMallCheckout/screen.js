@@ -663,7 +663,17 @@ const Component = ({route, navigation, createMyCartSession}) => {
               }
             })}
           />
-         {paramsData ? (
+          <Shops
+             address={addressData}
+             customer={customerData}
+             raw={paramsData}
+             retrieve={data => {
+               setShippingDiscounts(data.shippingDiscounts);
+             }}
+             shipping={addressData?.shippingSummary}
+             shippingRates={shippingRates}
+           />
+         {/* {paramsData ? (
            <Shops
              address={addressData}
              customer={customerData}
@@ -682,7 +692,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
                 <Text>Hmm, there are no items to check out.</Text>
               </View>
             </View>
-          )}
+          )} */}
           {/* <Vouchers 
             items={paramsData}
             navigation={navigation} 

@@ -33,12 +33,14 @@ import {
   ToktokMallOTP
 } from '../../../ToktokMall/screens';
 import { ToktokMallRateProductCamera } from '../../../ToktokMall/screens/RootScreens/ToktokMallRateProduct/Components';
+import { ToktokMallEmptyCheckout } from '../../../ToktokMall/screens/RootScreens/ToktokMallCheckout/empty';
 
 export default ({Navigator}) => (
   <>
     <Navigator.Screen name="ToktokMallAddressesForm" component={ToktokMallAddressesForm} />
     <Navigator.Screen name="ToktokMallAddressesMenu" component={ToktokMallAddressesMenu} />
     <Navigator.Screen name="ToktokMallCheckout" component={ToktokMallCheckout} />
+    <Navigator.Screen name="ToktokMallEmptyCheckout" component={ToktokMallEmptyCheckout} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokMallOrderDetails" component={ToktokMallOrderDetails} />    
     <Navigator.Screen name="ToktokMallPaymentWebview" component={ToktokMallPaymentWebview} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokMallProductDetails" component={ToktokMallProductDetails} options={{headerShown: false}}/>
@@ -49,6 +51,6 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokMallStore" component={ToktokMallStore} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokMallStoreSearch" component={ToktokMallStoreSearch} options={{headerShown: false}} />    
     <Navigator.Screen name="ToktokMallVouchersClaim" component={ToktokMallVouchersClaim} />
-    <Navigator.Screen name="ToktokMallOTP" component={ToktokMallOTP} options={{headerShown: false}} />
+    <Navigator.Screen name="ToktokMallOTP" component={ToktokMallOTP} options={{headerShown: false}} />    
   </>
 );
