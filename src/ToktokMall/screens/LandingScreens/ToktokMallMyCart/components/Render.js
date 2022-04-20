@@ -158,14 +158,13 @@ export const RenderDetails = forwardRef(({
 		if(item.data.length > 0){
 			for(var i in item.data){
 
-				if(item.data[i].product.enabled != 1){
+				if(item.data[i].product.enabled != 1 || item.data[i].product.contSellingIsset === 0 && item.data[i].product.noOfStocks === 0){
 					return true
 				}
 			}
 			return false
 	}
 }
-
 	return (
     <>
       <Store

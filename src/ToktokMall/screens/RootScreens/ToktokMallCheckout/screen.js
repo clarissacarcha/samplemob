@@ -81,8 +81,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
       const data = response.checkItemFromCheckout.filter(({status})=> status === false)
 
       //SCENARIO: While entering TPIN, the product got out of stock. We can simulate this by bypassing the current validation
-      await postCheckoutSetting(data);
-      return
+      // await postCheckoutSetting(data);
+      // return
 
       if(data.length > 0){
         onProductUnavailable(data, "id")
@@ -679,7 +679,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   //   // }})
   // }, [])
 
-  if(loading || initialLoading) {
+  if((loading || initialLoading) && paramsData.length > 0) {
     return <Loading state={loading || initialLoading} />
   }
 
@@ -716,7 +716,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
               }
             })}
           />          
-         {paramsData ? (
+         {paramsData.length > 0 ? (
            <Shops
              address={addressData}
              customer={customerData}
