@@ -27,18 +27,22 @@ export const Map = ({booking, decodedPolyline}) => {
 
   const onMapReady = async () => {
     setTimeout(() => {
-      mapRef.current.fitToCoordinates(
-        [['ARRIVED', 'ACCEPTED'].includes(booking.status) ? ORIGIN : TO],
-        {
-          edgePadding: {
-            right: 100,
-            bottom: 200,
-            left: 100,
-            top: 100,
+      try {
+        mapRef.current.fitToCoordinates(
+          [['ARRIVED', 'ACCEPTED'].includes(booking.status) ? ORIGIN : TO],
+          {
+            edgePadding: {
+              right: 100,
+              bottom: 200,
+              left: 100,
+              top: 100,
+            },
           },
-        },
-        3000, // Animation duration in milliseconds.
-      );
+          3000, // Animation duration in milliseconds.
+        );
+      } catch (err) {
+        console.log('fitToCoordinates error: ', err);
+      }
     }, 1000);
   };
 

@@ -33,18 +33,22 @@ export const BookingMap = ({booking}) => {
       },
     ];
     setTimeout(() => {
-      mapRef.current.fitToCoordinates(
-        coordinates,
-        {
-          edgePadding: {
-            right: 100,
-            bottom: 200,
-            left: 100,
-            top: 100,
+      try {
+        mapRef.current.fitToCoordinates(
+          coordinates,
+          {
+            edgePadding: {
+              right: 100,
+              bottom: 200,
+              left: 100,
+              top: 100,
+            },
           },
-        },
-        3000, // Animation duration in milliseconds.
-      );
+          3000, // Animation duration in milliseconds.
+        );
+      } catch (err) {
+        console.log('fitToCoordinates error: ', err);
+      }
     }, 1000);
   };
 
