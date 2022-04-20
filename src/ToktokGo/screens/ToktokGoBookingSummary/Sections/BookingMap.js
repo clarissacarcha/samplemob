@@ -32,7 +32,7 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination, 
       },
     ];
     setTimeout(() => {
-      if (northeast?.latitude) {
+      try {
         mapRef.current.fitToCoordinates(
           coordinates,
           {
@@ -45,6 +45,8 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination, 
           },
           3000, // Animation duration in milliseconds.
         );
+      } catch (err) {
+        console.log('fitToCoordinates error: ', err);
       }
     }, 1000);
   };
