@@ -286,7 +286,7 @@ export const Item = ({
                 </View>              
               }
 
-              {product?.contSellingIsset === 0 && product?.noOfStocks === 0 &&
+              {product?.enabled == 1 && product?.contSellingIsset === 0 && product?.noOfStocks === 0 &&
                 <View style={{paddingVertical: 15}}>
                   <View style={{borderWidth: 0.5, borderColor: '#F6841F', width: '35%', alignItems: 'center', borderRadius: 2}}>
                     <Text style={{fontSize: 11, color: "#F6841F"}}>Out of Stock</Text>
