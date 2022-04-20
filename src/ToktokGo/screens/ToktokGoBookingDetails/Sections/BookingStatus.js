@@ -126,7 +126,7 @@ const Status = ({booking}) => {
       <StatusBar number={3} label={'Passenger picked up'} log={mappedLogs['PICKED_UP']} />
       <StatusBar number={2} label={'Driver Arrived at pick-up location'} log={mappedLogs['ARRIVED']} />
       <StatusBar number={4} label={'Driver Accepted'} log={mappedLogs['ACCEPTED']} />
-      <View style={{borderBottomWidth: 2, borderColor: constants.COLOR.LIGHT, width: '100%', marginVertical: 15}} />
+      <View style={{borderBottomWidth: 2, borderColor: constants.COLOR.LIGHT, width: '100%', marginTop: 15}} />
     </View>
   );
 };
@@ -155,7 +155,7 @@ const Cancelled = () => {
           </Text>
         </View>
       </View>
-      <View style={{borderBottomWidth: 2, borderColor: constants.COLOR.LIGHT, width: '100%', marginVertical: 15}} />
+      <View style={{borderBottomWidth: 2, borderColor: constants.COLOR.LIGHT, width: '100%', marginTop: 15}} />
     </View>
   );
 };

@@ -94,7 +94,7 @@ const MyDeliveries = ({navigation, session}) => {
 
   return (
     <View style={styles.container}>
-      <View
+      {/* <View
         style={{
           backgroundColor: 'white',
           paddingTop: StatusBar.currentHeight,
@@ -103,9 +103,7 @@ const MyDeliveries = ({navigation, session}) => {
           height: Platform.select({android: 50 + StatusBar.currentHeight, ios: 50}),
           borderBottomWidth: 1,
           borderBottomColor: COLOR.LIGHT,
-        }}>
-        <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Deliveries</Text>
-      </View>
+        }}></View> */}
       <View style={{marginHorizontal: SIZE.MARGIN, flexDirection: 'row', paddingVertical: 8}}>
         <VectorIcon iconSet={ICON_SET.Entypo} name="arrow-long-down" color={COLOR.MEDIUM} />
         <Text style={{color: COLOR.MEDIUM, marginLeft: SIZE.MARGIN / 2}}>Swipe down to refresh</Text>
@@ -127,7 +125,7 @@ const MyDeliveries = ({navigation, session}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 

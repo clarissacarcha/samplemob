@@ -20,8 +20,10 @@ export const BookingMap = ({booking}) => {
 
   const decodedPolyline = booking.route.legs ? decodeLegsPolyline(booking.route.legs) : null;
 
-  useEffect(() => {
-    const {northeast, southwest} = booking.route.bounds;
+  const [bounds, setBounds] = useEffect(routeDetails.bounds);
+
+  const onMapReady = () => {
+    const {northeast, southwest} = bounds;
     const coordinates = [
       {
         ...northeast,
@@ -31,20 +33,24 @@ export const BookingMap = ({booking}) => {
       },
     ];
     setTimeout(() => {
-      mapRef.current.fitToCoordinates(
-        coordinates,
-        {
-          edgePadding: {
-            right: 10,
-            bottom: 30,
-            left: 10,
-            top: 30,
+      try {
+        mapRef.current.fitToCoordinates(
+          coordinates,
+          {
+            edgePadding: {
+              right: 100,
+              bottom: 200,
+              left: 100,
+              top: 100,
+            },
           },
-        },
-        3000, // Animation duration in milliseconds.
-      );
+          3000, // Animation duration in milliseconds.
+        );
+      } catch (err) {
+        console.log('fitToCoordinates error: ', err);
+      }
     }, 1000);
-  }, []);
+  };
 
   return (
     <View style={styles.contentCard}>
@@ -52,7 +58,8 @@ export const BookingMap = ({booking}) => {
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{width: '100%', height: 200}}
-        initialRegion={INITIAL_REGION}>
+        initialRegion={INITIAL_REGION}
+        onMapReady={onMapReady}>
         <Marker
           key={key => {
             1;

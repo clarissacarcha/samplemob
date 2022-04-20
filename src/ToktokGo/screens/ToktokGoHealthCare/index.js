@@ -94,15 +94,14 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 15,
     paddingHorizontal: 32,
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: {
-      width: -150,
-      height: -150,
+      width: 0,
+      height: 0,
     },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-
-    elevation: 24,
+    shadowRadius: 50,
+    shadowOpacity: 1.0,
+    elevation: 20,
   },
   fab: {
     backgroundColor: constants.COLOR.ORANGE,

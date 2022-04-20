@@ -20,7 +20,7 @@ export const DriverInfo = ({booking}) => {
         />
       </View>
       <View style={{marginHorizontal: 20, marginBottom: 16}}>
-        <Text>{booking.driver?.name}</Text>
+        <Text style={{fontFamily: constants.FONT_FAMILY.BOLD}}>{booking.driver?.name}</Text>
         <Text>
           {booking.driver?.vehicle?.make} {booking.driver?.vehicle?.model}{' '}
           {booking.driver?.vehicle?.bodyColor ? `(${booking.driver?.vehicle?.bodyColor})` : ''} ·{' '}

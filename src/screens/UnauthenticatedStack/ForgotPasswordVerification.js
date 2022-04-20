@@ -47,7 +47,7 @@ const NumberBoxes = ({verificationCode, onNumPress, borderError}) => {
     numberBoxes.push(<NumberBox onPress={onNumPress} value={verificationCode[i]} borderError={borderError} />);
   }
   return (
-    <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginBottom: 20}}>
+    <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 40, marginBottom: 20}}>
       {numberBoxes}
     </View>
   );
@@ -82,6 +82,13 @@ const Verification = ({navigation, route, createSession}) => {
 
   const [forgotPasswordVerification, {loading}] = useMutation(FORGOT_PASSWORD_VERIFICATION, {
     client: AUTH_CLIENT,
+    variables: {
+      input: {
+        accountType: ACCOUNT_TYPE,
+        mobile: `+63${mobile}`,
+        verificationCode: verificationCode,
+      },
+    },
     onError: error => {
       setVerificationCodeError(error.message);
       setBorderError(true);
@@ -151,16 +158,8 @@ const Verification = ({navigation, route, createSession}) => {
     }, 10);
   };
 
-  const onSubmit = value => {
-    forgotPasswordVerification({
-      variables: {
-        input: {
-          accountType: ACCOUNT_TYPE,
-          mobile: `+63${mobile}`,
-          verificationCode: value,
-        },
-      },
-    });
+  const onSubmit = () => {
+    forgotPasswordVerification();
   };
 
   const [forgotPassword] = useMutation(FORGOT_PASSWORD, {
@@ -241,7 +240,7 @@ const Verification = ({navigation, route, createSession}) => {
         {/*---------------------------------------- HIDDEN TEXT INPUT ----------------------------------------*/}
 
         {/*---------------------------------------- ENTERED MOBILE NUMBER ----------------------------------------*/}
-        <View style={{alignItems: 'center', marginTop: 57, marginHorizontal: 90}}>
+        <View style={{alignItems: 'center', marginTop: 120, marginHorizontal: 90}}>
           {/* <Text>Enter the 6-digit code sent to</Text>
           <Text style={{fontFamily: 'Rubik-Medium'}}>{`+63 ${mobile}`}</Text> */}
           <Image source={ToktokGoIcon} style={{height: 85, width: 100}} resizeMode="contain" />
@@ -258,20 +257,15 @@ const Verification = ({navigation, route, createSession}) => {
             caretHidden
             value={verificationCode}
             ref={inputRef}
-            style={{
-              height: '100%',
-              width: '100%',
-              position: 'absolute',
-              color: 'transparent',
+            style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
+            keyboardType="number-pad"
+            returnKeyType="done"
+            onChangeText={value => {
+              if (value.length <= 6) {
+                setVerificationCode(value);
+              }
             }}
-            blurOnSubmit={false}
-            editable={false}
-            // onChangeText={value => {
-            //   if (value.length <= 6) {
-            //     setVerificationCode(value);
-            //   }
-            // }}
-            // onSubmitEditing={onSubmit}
+            onSubmitEditing={onSubmit}
           />
           {verificationCodeError == 'GraphQL error: Invalid verification code.' && (
             <View style={{alignItems: 'center', marginHorizontal: 60, top: -15}}>
@@ -297,6 +291,32 @@ const Verification = ({navigation, route, createSession}) => {
           {verificationCodeError == '' && <View style={{alignItems: 'center', marginHorizontal: 60, height: 30}} />}
 
           <MaxAttempsModal isVisible={maxAttemps} setVisible={setMaxAttemps} />
+          <View style={{justifyContent: 'center', flexDirection: 'row', marginTop: 60, alignItems: 'center'}}>
+            <Text style={{color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M, marginRight: 3}}>
+              Didn’t receive OTP code?
+            </Text>
+            <TouchableOpacity
+              disabled={resend}
+              onPress={() => {
+                resendOTP();
+              }}>
+              {resend ? (
+                <Text style={{color: constants.COLOR.DARK, fontFamily: constants.FONT_FAMILY.BOLD}}>
+                  Resend ({countdown} secs)
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: constants.COLOR.ORANGE,
+                    fontFamily: constants.FONT_FAMILY.BOLD,
+                    textDecorationLine: 'underline',
+                  }}>
+                  {' '}
+                  Resend
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/*---------------------------------------- RESEND CODE ----------------------------------------*/}
@@ -310,33 +330,6 @@ const Verification = ({navigation, route, createSession}) => {
           <Text style={{color: COLOR, fontSize: 20}}>Continue</Text>
         </View>
       </TouchableHighlight> */}
-      <View style={{justifyContent: 'center', flexDirection: 'row', marginTop: 90, alignItems: 'center'}}>
-        <Text style={{color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M, marginRight: 3}}>
-          Didn’t receive OTP code?
-        </Text>
-        <TouchableOpacity
-          disabled={resend}
-          onPress={() => {
-            resendOTP();
-          }}>
-          {resend ? (
-            <Text style={{color: constants.COLOR.DARK, fontFamily: constants.FONT_FAMILY.BOLD}}>
-              Resend ({countdown} secs)
-            </Text>
-          ) : (
-            <Text
-              style={{
-                color: constants.COLOR.ORANGE,
-                fontFamily: constants.FONT_FAMILY.BOLD,
-                textDecorationLine: 'underline',
-              }}>
-              {' '}
-              Resend
-            </Text>
-          )}
-        </TouchableOpacity>
-      </View>
-      <Keyboard setVerificationCode={setVerificationCode} verificationCode={verificationCode} onSubmit={onSubmit} />
     </ImageBackground>
   );
 };
@@ -349,14 +342,14 @@ export default connect(null, mapDispatchToProps)(Verification);
 
 const styles = StyleSheet.create({
   inputView: borderError => ({
-    backgroundColor: 'white',
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 5,
-    height: 50,
-    width: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: borderError ? 'red' : '#F8F8F8',
+    backgroundColor: '#F7F7FA',
+    height: 48,
+    width: 40,
   }),
   input: {
     flex: 1,

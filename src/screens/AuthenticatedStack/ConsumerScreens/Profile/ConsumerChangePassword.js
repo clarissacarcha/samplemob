@@ -19,6 +19,9 @@ import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import TokGoIcon from '../../../../assets/images/ToktokGoIcon.png';
 import {ChangePasswordSuccessModal} from './ChangePasswordSucessModal';
 import {ChangePasswordConfirmationModal} from './ChangePasswordConfirmationModal';
+import {Header} from './Components';
+import ShowPassword from '../../../../assets/icons/ShowPassword.png';
+import HidePassword from '../../../../assets/icons/HidePassword.png';
 
 const PasswordValidationIcon = ({errorList, validation_number}) => {
   return errorList.includes(validation_number) ? (
@@ -173,6 +176,8 @@ const ChangePassword = ({navigation, session, route}) => {
 
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <Header navigation={navigation} />
+
       <AlertOverlay visible={loading} />
       <ChangePasswordSuccessModal
         navigation={navigation}
@@ -224,14 +229,9 @@ const ChangePassword = ({navigation, session, route}) => {
                   confirmInputRef.current.focus();
                 }}
               />
-              <MCIcons
-                name={!secureNewPassword ? 'eye' : 'eye-off-outline'}
-                size={15}
-                color={CONSTANTS.COLOR.DARK}
-                onPress={() => {
-                  setSecureNewPassword(!secureNewPassword);
-                }}
-              />
+              <TouchableOpacity onPress={() => setSecureNewPassword(!secureNewPassword)}>
+                <Image source={!secureNewPassword ? ShowPassword : HidePassword} style={styles.showPassword} />
+              </TouchableOpacity>
             </View>
             {invalidPassword.length > 0 && (
               <View>
@@ -292,14 +292,10 @@ const ChangePassword = ({navigation, session, route}) => {
                   setOnFocusConfirmPassword(false);
                 }}
               />
-              <MCIcons
-                name={!secureConfirmPassword ? 'eye' : 'eye-off-outline'}
-                size={15}
-                color={CONSTANTS.COLOR.DARK}
-                onPress={() => {
-                  setSecureConfirmPassword(!secureConfirmPassword);
-                }}
-              />
+
+              <TouchableOpacity onPress={() => setSecureConfirmPassword(!secureConfirmPassword)}>
+                <Image source={!secureConfirmPassword ? ShowPassword : HidePassword} style={styles.showPassword} />
+              </TouchableOpacity>
             </View>
             {!passwordMatch && (
               <Text style={{color: CONSTANTS.COLOR.RED, fontSize: CONSTANTS.FONT_SIZE.S}}>Passwords do not match</Text>
@@ -342,6 +338,10 @@ const styles = StyleSheet.create({
     fontSize: CONSTANTS.FONT_SIZE.XL,
     color: CONSTANTS.COLOR.BLACK,
     marginBottom: 16,
+  },
+  showPassword: {
+    height: 17,
+    width: 17,
   },
   textInput: {
     width: 300,

@@ -163,6 +163,19 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
 
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
+      <StatusBar
+        backgroundColor={
+          viewCancelBookingModal ||
+          viewCancelReasonModal ||
+          viewSuccessCancelBookingModal ||
+          driverCancel ||
+          cancellationFee ||
+          modal ||
+          cancel
+            ? 'rgba(0,0,0,0.6)'
+            : null
+        }
+      />
       <CancelBookingNoFeeModal
         isVisible={viewCancelBookingModal}
         setVisible={setViewCancelBookingModal}
@@ -214,7 +227,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      <Map decodedPolyline={decodedPolyline} />
+      <Map booking={booking} decodedPolyline={decodedPolyline} />
       <View style={styles.card}>
         {booking.status == 'ACCEPTED' ? (
           <DriverStatus status={status} booking={booking} />
@@ -233,7 +246,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             booking={booking}
           />
         )}
-        <SeeBookingDetails item={DummyData.onGoing.getDeliveries[0]} navigation={navigation} />
+        <SeeBookingDetails booking={booking} navigation={navigation} />
       </View>
     </View>
   );

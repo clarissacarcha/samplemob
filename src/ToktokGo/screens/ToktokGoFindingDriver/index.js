@@ -58,7 +58,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       }
     },
   });
-  console.log(booking.id);
+  console.log(booking);
   console.log(onTripUpdate);
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import CONSTANTS from '../../../../common/res/constants';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {ThrottledHighlight} from '../../../../components_section';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-
+import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
 export const Landing = ({navigation}) => {
   return (
     <View>
@@ -27,8 +27,12 @@ export const Landing = ({navigation}) => {
           style={styles.searchBox}>
           <View style={styles.inputBox}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <FA5Icon name="map-marker-alt" size={20} color={CONSTANTS.COLOR.ORANGE} style={{marginLeft: 1}} />
-              <View style={{flex: 1, marginLeft: 20}}>
+              <View style={{flex: 1, marginLeft: 5, flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={DestinationIcon}
+                  style={{height: 20, width: 20, marginRight: 5}}
+                  resizeMode={'contain'}
+                />
                 <Text style={{color: CONSTANTS.COLOR.DARK}}>Where to?</Text>
               </View>
             </View>

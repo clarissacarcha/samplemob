@@ -15,10 +15,9 @@ export const SuccesCancelBookingModal = ({visible, setVisible, type, chargeAmoun
               <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>
             ) : (
               <Text style={styles.modalDescription}>
-                Your booking has been cancelled. Cancellation fee will be charged in your next booking. You may read
-                more about our
+                Your booking has been cancelled. No show fee will be charged in your next booking. You may read more
+                about our{' '}
                 <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>
-                  {' '}
                   Cancellation Policies
                 </Text>
                 .

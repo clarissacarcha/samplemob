@@ -1,8 +1,8 @@
 import React, {useRef, useEffect, useCallback} from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
-
+import BackIcon from '../assets/icons/arrow-left-icon.png';
 import {DARK, COLOR} from '../res/constants';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
@@ -38,7 +38,7 @@ export const HeaderBack = ({onBack}) => {
 
   return (
     <TouchableOpacity onPress={onPressThrottled} style={styles.box}>
-      <EntypoIcon name="chevron-thin-left" size={20} color={COLOR} />
+      <Image source={BackIcon} resizeMode={'contain'} style={{width: 15, height: 15}} />
     </TouchableOpacity>
   );
 };

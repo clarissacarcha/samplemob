@@ -18,15 +18,22 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote}) =
         }}
         style={{
           backgroundColor: '#F8F8F8',
-          flexDirection: 'row',
-          textAlign: 'center',
           paddingHorizontal: 10,
           paddingVertical: 10,
+          borderRadius: 5,
         }}>
-        <FA5Icon name="map-pin" size={18} color={constants.COLOR.YELLOW} style={{marginRight: 10}} />
-        <Text>{origin.place.formattedAddress}</Text>
+        <View style={{flexDirection: 'row', textAlign: 'center', marginHorizontal: 5}}>
+          <FA5Icon name="map-pin" size={18} color={constants.COLOR.YELLOW} style={{marginRight: 10}} />
+          <Text>{origin.place.formattedAddress}</Text>
+        </View>
       </TouchableOpacity>
-      <Text style={{fontSize: constants.FONT_SIZE.M, fontFamily: constants.FONT_FAMILY.BOLD, paddingVertical: 10}}>
+      <Text
+        style={{
+          color: '#525252',
+          fontSize: constants.FONT_SIZE.M,
+          fontFamily: constants.FONT_FAMILY.BOLD,
+          paddingVertical: 10,
+        }}>
         Notes to Driver
       </Text>
       <TextInput
@@ -46,7 +53,7 @@ const styles = StyleSheet.create({
   Input: {
     height: 69,
     textAlignVertical: 'top',
-    borderColor: '#EAEAEA',
+    borderColor: '#F8F8F8',
     borderWidth: 1,
     fontSize: 11,
     padding: 8,

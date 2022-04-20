@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {View, StyleSheet, Image, Text, TouchableWithoutFeedback, Dimensions} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
 import _ from 'lodash';
@@ -19,9 +19,10 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination, 
     longitude: 121.97818368673325,
     longitudeDelta: 10.145791545510278,
   };
+  const [bounds, setBounds] = useState(routeDetails.bounds);
 
-  useEffect(() => {
-    const {northeast, southwest} = routeDetails.bounds;
+  const onMapReady = async () => {
+    const {northeast, southwest} = bounds;
     const coordinates = [
       {
         ...northeast,
@@ -31,20 +32,24 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination, 
       },
     ];
     setTimeout(() => {
-      mapRef.current.fitToCoordinates(
-        coordinates,
-        {
-          edgePadding: {
-            right: 100,
-            bottom: 200,
-            left: 100,
-            top: 100,
+      try {
+        mapRef.current.fitToCoordinates(
+          coordinates,
+          {
+            edgePadding: {
+              right: 100,
+              bottom: 200,
+              left: 100,
+              top: 100,
+            },
           },
-        },
-        3000, // Animation duration in milliseconds.
-      );
+          3000, // Animation duration in milliseconds.
+        );
+      } catch (err) {
+        console.log('fitToCoordinates error: ', err);
+      }
     }, 1000);
-  }, []);
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => setExpandBookingDetails(false)}>
@@ -52,7 +57,8 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination, 
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{height: MAP_HEIGHT, width: '100%'}}
-        initialRegion={INITIAL_REGION}>
+        initialRegion={INITIAL_REGION}
+        onMapReady={onMapReady}>
         <Marker
           // tracksViewChanges={false}
           key={key => {
@@ -71,9 +77,9 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination, 
                   alignItems: 'center',
                 }}>
                 <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}} numberOfLines={1}>
-                  {origin?.place?.formattedAddress.length < 20
+                  {origin?.place?.formattedAddress?.length < 20
                     ? `${origin?.place?.formattedAddress}...`
-                    : `${origin?.place?.formattedAddress.substring(0, 20)}...`}
+                    : `${origin?.place?.formattedAddress?.substring(0, 20)}...`}
                 </Text>
                 <Image source={ArrowRightIcon} resizeMode={'contain'} style={{height: 10, width: 10}} />
               </View>
@@ -91,9 +97,9 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination, 
           <View style={{flexDirection: 'column', alignItems: 'center'}}>
             <View style={styles.pinLocation}>
               <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}} numberOfLines={1}>
-                {destination?.place?.formattedAddress.length < 20
+                {destination?.place?.formattedAddress?.length < 20
                   ? `${destination?.place?.formattedAddress}...`
-                  : `${destination?.place?.formattedAddress.substring(0, 20)}...`}
+                  : `${destination?.place?.formattedAddress?.substring(0, 20)}...`}
               </Text>
               <Image source={ArrowRightIcon} resizeMode={'contain'} style={{height: 10, width: 10}} />
             </View>

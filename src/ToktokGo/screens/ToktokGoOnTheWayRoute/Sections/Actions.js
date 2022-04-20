@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, StyleSheet, View, Image, TouchableOpacity} from 'react-native';
 import constants from '../../../../common/res/constants';
-import Cancel from '../../../../assets/icons/Cancelled.png';
+import Cancel from '../../../../assets/icons/CancelIcon.png';
 import Message from '../../../../assets/images/messageIcon.png';
 import Phone from '../../../../assets/images/phoneIcon.png';
 import {TouchableHighlight} from 'react-native';

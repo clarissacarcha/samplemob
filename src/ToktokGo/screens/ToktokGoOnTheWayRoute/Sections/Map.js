@@ -6,9 +6,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
 import Car from '../../../../assets/images/Car.png';
 import constants from '../../../../common/res/constants';
-export const Map = ({decodedPolyline}) => {
-  const {origin, destination, routeDetails, booking} = useSelector(state => state.toktokGo);
-
+export const Map = ({booking, decodedPolyline}) => {
   const mapRef = useRef();
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
@@ -27,29 +25,34 @@ export const Map = ({decodedPolyline}) => {
     longitude: booking.route.destinations[0].location.longitude,
   };
 
-  useEffect(() => {
+  const onMapReady = async () => {
     setTimeout(() => {
-      mapRef.current.fitToCoordinates(
-        [['ARRIVED', 'ACCEPTED'].includes(booking.status) ? ORIGIN : TO],
-        {
-          edgePadding: {
-            right: 100,
-            bottom: 200,
-            left: 100,
-            top: 100,
+      try {
+        mapRef.current.fitToCoordinates(
+          [['ARRIVED', 'ACCEPTED'].includes(booking.status) ? ORIGIN : TO],
+          {
+            edgePadding: {
+              right: 100,
+              bottom: 200,
+              left: 100,
+              top: 100,
+            },
           },
-        },
-        3000, // Animation duration in milliseconds.
-      );
+          3000, // Animation duration in milliseconds.
+        );
+      } catch (err) {
+        console.log('fitToCoordinates error: ', err);
+      }
     }, 1000);
-  }, []);
+  };
 
   return (
     <MapView
       ref={mapRef}
       provider={PROVIDER_GOOGLE}
       style={{height: '90%', width: '100%'}}
-      initialRegion={INITIAL_REGION}>
+      initialRegion={INITIAL_REGION}
+      onMapReady={onMapReady}>
       <Marker
         key={key => {
           1;

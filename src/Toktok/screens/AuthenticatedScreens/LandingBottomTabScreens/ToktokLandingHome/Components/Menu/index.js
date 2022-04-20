@@ -20,7 +20,7 @@ import {Shadow} from '../../../../../../../revamp';
 import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/DeliveryService.png';
 import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/PabiliService.png';
 import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/FoodService.png';
-import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoService.png';
+import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoServiceBeta.png';
 import WalletIcon from '../../../../../../../assets/toktok/icons/menu/WalletService.png';
 import LoadIcon from '../../../../../../../assets/toktok/icons/menu/LoadService.png';
 // import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/MallService.png';
@@ -206,14 +206,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 5,
     shadowColor: '#000',
+
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 2,
     },
-    shadowOpacity: 0.32,
-    shadowRadius: 5.46,
-
-    elevation: 9,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   menuButton: {
     justifyContent: 'center',
