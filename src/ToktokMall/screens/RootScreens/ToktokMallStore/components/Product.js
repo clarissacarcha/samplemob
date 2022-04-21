@@ -97,7 +97,9 @@ const RenderItem = ({item}) => {
                 item.discountRate && item.discountRate != "" || 
                 item.refComDiscountRate && item.refComDiscountRate != "" ?  
                 <View style={{flex: 2, justifyContent: 'center'}}>
-              <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}><Price amount={item?.compareAtPrice} /></Text>
+              <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}>
+                {item.compareAtPrice == "" ? null : <Price amount={item.compareAtPrice} />}
+              </Text>
             </View> : <></>}       
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
               <Text style={{fontSize: 8}}>{item?.soldCount || 0} sold</Text>
