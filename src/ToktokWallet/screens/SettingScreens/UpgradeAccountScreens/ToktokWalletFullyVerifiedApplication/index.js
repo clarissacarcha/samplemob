@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState , useCallback } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { Separator , CheckIdleState} from 'toktokwallet/components'
 import { HeaderBack, HeaderTitle , VectorIcon , ICON_SET , YellowButton} from 'src/revamp'
 import CONSTANTS from 'common/res/constants'
-import {useSelector} from 'react-redux'
 import { NotFinishRequirement, FinishRequirement } from './components'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_CHECK_FULLY_VERIFIED_UPGRADE_REQUEST, GET_CHECK_PENDING_DISBURSEMENT_ACCOUNT } from 'toktokwallet/graphql'
 import { useQuery, useLazyQuery } from '@apollo/react-hooks'
 import { onErrorAlert } from 'src/util/ErrorUtility'
 import { useAlert } from 'src/hooks'
-import {SomethingWentWrong} from 'src/components'
-import { SuccessfulModal } from "../../../../components";
-import { useDispatch } from 'react-redux'
+import {SomethingWentWrong,AlertOverlay} from 'src/components'
+import { SuccessfulModal } from "toktokwallet/components";
+import { useAccount } from 'toktokwallet/hooks';
+import { useDispatch } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native'
 
 const { COLOR , FONT_SIZE , FONT_FAMILY: FONT, SHADOW  } = CONSTANTS
 
@@ -45,7 +46,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
         isPendingVcs: false
     })
     const [isLinked, setIsLinked] = useState(false)
-    const tokwaAccount = useSelector(state=>state.toktokWallet)
+    const { tokwaAccount , getMyAccountLoading , getMyAccount }  = useAccount();
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const dispatch = useDispatch()
 
@@ -76,13 +77,18 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
         tokwaAccount.isLinked ? setIsLinkedBankAccount(true) : getCheckPendingDisbursementAccount()
     }
 
-    useEffect(() => {
+    useEffect(()=>{
+        getMyAccount()
         checkHasLinkBankAccount()
         checkHasVcs()
         if(route.params){
             setShowSuccessModal(route.params.doneVcs)
         }
-    }, [])
+    },[])
+
+    useEffect(()=> {
+        checkHasLinkBankAccount()
+    },[tokwaAccount])
 
     const redirectLinking = ()=> {
         dispatch({
@@ -109,6 +115,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route})=> {
 
     return (
         <CheckIdleState>
+        <AlertOverlay visible={getMyAccountLoading}/>
         <SuccessfulModal
             visible={showSuccessModal}
             title="Success!"
