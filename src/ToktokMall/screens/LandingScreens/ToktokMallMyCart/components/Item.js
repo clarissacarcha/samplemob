@@ -26,7 +26,8 @@ export const Item = ({
   willDelete,
   heldItem,
   setHeldItem,
-  recenter
+  recenter,
+  preSelectedItems
 }) => {
 
   const CartContextData = useContext(CartContext)
@@ -44,8 +45,16 @@ export const Item = ({
     getRealtimeItemQuantity()
     setQty(data.quantity)
     setShopId(data.shopid)
-    setproduct(data.product)    
+    setproduct(data.product)   
   },[data])
+
+  // Here we are just checking the selected items from buy again.
+  useEffect(() => {
+    const checker = preSelectedItems?.includes(data.product.Id);
+    if(checker) {
+      setSelected(true);
+    }
+  }, [data, preSelectedItems])
 
   useEffect(() => {
     setSelected((data.product.enabled === 1 &&  data.product.noOfStocks !== 0)? state : false)

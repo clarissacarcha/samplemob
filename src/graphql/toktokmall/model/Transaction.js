@@ -1,5 +1,49 @@
 import gql from 'graphql-tag'
 
+export const GET_TRANSACTIONS = gql`
+  query getActvities($input: getActivitiesInput) {
+    getActivities(input: $input) {
+      id
+      referenceNum
+      dateOrdered
+      totalAmount
+      orderStatus
+      orderType
+      orderIds
+      shopIds
+      status
+      orders {
+        orderId
+        shopId
+        shopName
+        totalItems
+        items {
+          productId
+          quantity
+          data {
+            sysShop
+            itemname
+            name
+            price
+            variant
+          }
+        }
+      }
+      history
+    }
+  }
+`
+
+export const GET_BUY_AGAIN = gql`
+  query getBuyAgain($input: getBuyAgainInput) {
+    getBuyAgain(input: $input) {
+      invalidItems
+      toaddItems
+      toupdateItems
+    }
+  }
+`
+
 export const GET_CONFIRMED_TRANSACTIONS = gql`
 	query getConfirmedTransactions($input: GetOrdersInput){
     getConfirmedTransactions(input: $input){

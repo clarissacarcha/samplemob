@@ -213,27 +213,43 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
               <Text style={{fontFamily: FONT.BOLD, fontSize: 14}}>My Orders</Text>
             </View>
             <View style={{flexDirection: 'row', paddingVertical: 10}}>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 0})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
-                {/* <CustomIcon.FeIcon name="box" size={30} color={COLOR.ORANGE} /> */}
+              {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 0})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="comment-check-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Confirmed</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.FeIcon name="truck" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>To Ship</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 2})} style={{flex: 2,  alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 2})} style={{flex: 2,  alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.FeIcon name="package" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>To Receive</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 3})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 3})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="check-all" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Completed</Text>
               </TouchableOpacity>
-              {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 3})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyOrders", {tab: 3})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="comment-remove-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Cancelled</Text>
               </TouchableOpacity> */}
+
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+                <CustomIcon.MCIcon name="comment-check-outline" size={30} color={COLOR.ORANGE} />
+                <Text style={{fontSize: 12}}>Confirmed</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 2})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+                <CustomIcon.FeIcon name="truck" size={30} color={COLOR.ORANGE} />
+                <Text style={{fontSize: 12}}>To Ship</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 3})} style={{flex: 2,  alignItems: 'center' , justifyContent: 'center'}}>
+                <CustomIcon.FeIcon name="package" size={30} color={COLOR.ORANGE} />
+                <Text style={{fontSize: 12}}>To Receive</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 4})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+                <CustomIcon.MCIcon name="check-all" size={30} color={COLOR.ORANGE} />
+                <Text style={{fontSize: 12}}>Completed</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Card>

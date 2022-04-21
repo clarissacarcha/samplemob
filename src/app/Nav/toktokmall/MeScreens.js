@@ -8,7 +8,8 @@ import {
   ToktokMallHelp,
   ToktokMallSecurity,
   ToktokMallTermsAndConditions,
-  ToktokMallContactUs
+  ToktokMallContactUs,
+  ToktokMallActivities
 } from '../../../ToktokMall/screens';
 
 export default ({Navigator}) => (
@@ -23,5 +24,6 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokMallTermsAndConditions" component={ToktokMallTermsAndConditions} />
     <Navigator.Screen name="ToktokMallContactUs" component={ToktokMallContactUs} />
 
+    <Navigator.Screen name="ToktokMallActivities" component={ToktokMallActivities} options={{headerShown: false}} />
   </>
 );

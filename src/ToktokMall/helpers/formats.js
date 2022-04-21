@@ -1,6 +1,10 @@
 import React from 'react';
 import moment from 'moment'
 
+export const DisplayDateAndTime = (value) => {
+  return `${moment(value).format('MMM D, YYYY')} ${moment(value).format('hh:MM A')}`
+}
+
 export const Price = ({amount}) => {
   // return (
   //   <>
