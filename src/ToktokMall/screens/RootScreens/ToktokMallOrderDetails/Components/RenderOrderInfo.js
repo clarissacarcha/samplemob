@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16
     },
     date: {
-        color: "#9E9E9E", 
+        color: "#525252", 
         fontSize: 11
     },
     imgView2: {

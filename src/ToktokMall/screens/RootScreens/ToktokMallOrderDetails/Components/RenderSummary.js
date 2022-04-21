@@ -24,7 +24,7 @@ export const RenderSummary = ({data}) => {
             </Text>
           </View>
           <View styl={{flex: 1}}>
-            <Text style={{fontSize: 13}}><Price amount={data?.payments?.shippingFee} /></Text>
+            <Text style={{fontSize: 13, textAlign:'right'}}><Price amount={data?.payments?.shippingFee} /></Text>
             <Text style={{color: "#F6841F", fontSize: 13, fontFamily: FONT.BOLD}}><Price amount={data?.totalAmount} /></Text>
           </View>
         </View>
@@ -90,25 +90,25 @@ export const RenderSummary = ({data}) => {
               <Text style={{fontSize: 13,paddingTop:8}}>Merchandise Subtotal: </Text>
             </View>
             <View styl={{flex: 1}}>
-              <Text style={{fontSize: 13}}><Price amount={data?.payments?.shippingFee} /></Text>
-              <Text style={{color: "#F6841F", fontSize: 13, fontFamily: FONT.BOLD,paddingTop:8}}><Price amount={data?.payments.subTotal} /></Text>
+              <Text style={{fontSize: 13, textAlign:'right'}}><Price amount={data?.payments?.shippingFee} /></Text>
+              <Text style={{fontSize: 13, paddingTop:8}}><Price amount={data?.payments.subTotal} /></Text>
             </View>
           </View>
         }
-  
-        <View style={{flexDirection: 'row', alignItems:'center', paddingVertical: 10, paddingHorizontal: 15}}>
-          <View style={{flex: 1}}>
-            <Text style={{fontSize: 13, fontFamily: FONT.BOLD, color: "#F6841F"}}>Total</Text>
+
+        <TouchableOpacity onPress={()=>setBolean(!bolean)}>
+          <View style={{flexDirection: 'row', alignItems:'center', paddingVertical: 10, paddingHorizontal: 15}}>
+            <View style={{flex: 1}}>
+              <Text style={{fontSize: 13, fontFamily: FONT.BOLD, color: "#F6841F"}}>Total</Text>
+            </View>
+            <View styl={{flex: 1 }}>
+              <Text style={{color: "#F6841F", fontSize: 13, fontFamily: FONT.BOLD, paddingHorizontal: 5}}><Price amount={grandTotal} /></Text>
+            </View>
+            <View styl={{flex: 1}}>
+                <AIcons name={bolean ? 'up' : 'down'} size={17} color={COLOR.ORANGE}/>
+            </View>
           </View>
-          <View styl={{flex: 1 }}>
-            <Text style={{color: "#F6841F", fontSize: 13, fontFamily: FONT.BOLD, paddingHorizontal: 5}}><Price amount={grandTotal} /></Text>
-          </View>
-          <View styl={{flex: 1}}>
-            <TouchableOpacity onPress={()=>setBolean(!bolean)}>
-              <AIcons name={bolean ? 'up' : 'down'} size={17} color={COLOR.ORANGE}/>
-            </TouchableOpacity>
-          </View>
-        </View>
+        </TouchableOpacity>
         <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
       </>
     )
