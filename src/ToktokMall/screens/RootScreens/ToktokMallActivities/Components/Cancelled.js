@@ -54,7 +54,6 @@ export const CancelledItem = ({fulldata, onPressBuy: parentBuyOnpress}) => {
               const req = await ApiCall("insert_cart", variables, true);
               if(req) {
                 if(index === toaddItems.length - 1 && toupdateItems.length === 0) {
-                  console.log("asdzxczxc: " + itemsToBeSelected) 
                   parentBuyOnpress();
                   navigation.navigate("ToktokMallMyCart", {items: itemsToBeSelected});
                   EventRegister.emit('refreshToktokmallShoppingCart');

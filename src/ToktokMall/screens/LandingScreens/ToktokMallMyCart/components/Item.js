@@ -51,7 +51,7 @@ export const Item = ({
   // Here we are just checking the selected items from buy again.
   useEffect(() => {
     const checker = preSelectedItems?.includes(data.product.Id);
-    if(checker) {
+    if(checker && data?.product?.noOfStocks !== 0) {
       setSelected(true);
     }
   }, [data, preSelectedItems])

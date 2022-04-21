@@ -35,50 +35,52 @@ export const RenderItem = (props) => {
     const date = DisplayDateAndTime(status.date);
 
     return (
-        <TouchableOpacity
-            onPress={onPressCard}
-            style={styles.renderItemButtonContainer}
-        >
-            <View style={styles.renderItemContainer}>
-                <View style={styles.renderItemSubContainer}>
-                    <View style={styles.renderItemFirstContainer}>
-                        <View style={styles.renderItemFCRight}>
-                            <View style={styles.renderItemIDContainer}>
-                            <Text style={styles.renderItemIDText}>
-                                Oder ID
-                            </Text>
-                            <Text style={styles.renderItemID}>{referenceNum}</Text>
+        <View style={styles.renderItemContainer}>
+            <View style={styles.shadowContainer}>
+                <TouchableOpacity
+                    onPress={onPressCard}
+                    style={styles.renderItemButtonContainer}
+                >
+                    <View style={styles.renderItemSubContainer}>
+                        <View style={styles.renderItemFirstContainer}>
+                            <View style={styles.renderItemFCRight}>
+                                <View style={styles.renderItemIDContainer}>
+                                <Text style={styles.renderItemIDText}>
+                                    Oder ID
+                                </Text>
+                                <Text style={styles.renderItemID}>{referenceNum}</Text>
+                                </View>
+                                
+                                <Text style={styles.renderItemPlaced}>{date}</Text>
                             </View>
-                            
-                            <Text style={styles.renderItemPlaced}>{date}</Text>
-                        </View>
-                        <View style={styles.renderItemFCLeft}>
-                            <View style={styles.iconContainer}>
-                                {
-                                    status.status === 5 ?
-                                    <CustomIcon.MCIcon name="check-all" size={15} color={"#F6841F"} />
-                                    :
-                                    <Image style={styles.renderItemFCLeftIcon} source={cancelled ? cancelledIcon : carIcon}/>
-                                }
+                            <View style={styles.renderItemFCLeft}>
+                                <View style={styles.iconContainer}>
+                                    {
+                                        status.status === 5 ?
+                                        <CustomIcon.MCIcon name="check-all" size={15} color={"#F6841F"} />
+                                        :
+                                        <Image style={styles.renderItemFCLeftIcon} source={cancelled ? cancelledIcon : carIcon}/>
+                                    }
+                                </View>
+                                <Text style={styles.renderItemFCLeftText}>{status.description}</Text>
                             </View>
-                            <Text style={styles.renderItemFCLeftText}>{status.description}</Text>
                         </View>
+
+                        <RenderStore data={orders} />
+
+                        <View style={styles.hairLineContainer}>
+                            <Hairline />
+                        </View>
+
+                        <RenderSummary data={fulldata}/>
+
+                        { onPressBuy && <TouchableOpacity style={styles.buyAgainButton} onPress={onPressBuy} >
+                            <Text style={styles.buyAgainText}>Buy Again</Text>
+                        </TouchableOpacity> }
                     </View>
-
-                    <RenderStore data={orders} />
-
-                    <View style={styles.hairLineContainer}>
-                        <Hairline />
-                    </View>
-
-                    <RenderSummary data={fulldata}/>
-
-                    { onPressBuy && <TouchableOpacity style={styles.buyAgainButton} onPress={onPressBuy} >
-                        <Text style={styles.buyAgainText}>Buy Again</Text>
-                    </TouchableOpacity> }
-                </View>
+                </TouchableOpacity>
             </View>
-        </TouchableOpacity>
+        </View>
     )
 }
 
@@ -87,9 +89,9 @@ const styles = StyleSheet.create({
         marginRight: 9.2
     },
     renderItemButtonContainer: {
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
-        renderItemContainer: {
+    renderItemContainer: {
         paddingHorizontal: 16, 
         paddingVertical: 8, 
         flex: 1
@@ -97,11 +99,6 @@ const styles = StyleSheet.create({
     renderItemSubContainer: {
         flex: 1, 
         borderRadius: 5,
-        backgroundColor: 'white',
-        shadowColor: '#470000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        elevation: 2,
     },
     renderItemFirstContainer: {
         height: 64,
@@ -167,5 +164,12 @@ const styles = StyleSheet.create({
         color: "#fff", 
         fontSize: 13,
         fontWeight: "600"
+    },
+    shadowContainer: {
+        backgroundColor: 'white',
+        shadowColor: '#470000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        elevation: 2,
     }
 })
