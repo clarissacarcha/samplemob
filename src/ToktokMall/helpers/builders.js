@@ -56,7 +56,7 @@ export const BuildPostCheckoutBody = async ({
 			hash_amount: hashAmount,
 			reference_num: referenceNum,
 			orderRefNum: referenceNum,
-			discounted_totalamount: orderType == 4 ? parseFloat(subTotal) : null			
+			discounted_totalamount: orderType == 3 ? parseFloat(subTotal) : null			
 		}
 			
 	}else{
@@ -98,7 +98,7 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 				srp_amount: item.product.price,
 				srp_totalamount: total,
 				total_amount: total,
-				order_type: orderType,
+				order_type: GetItemOrderType(orderType, promo),
 				...promo
 			})
 		})
@@ -166,5 +166,15 @@ export const GetOrderType = (referral) => {
 	}else{
 		//regular
 		return 2
+	}
+}
+
+export const GetItemOrderType = (orderType, promotion) => {
+	if(promotion?.promo_type) return 4
+	switch(orderType) {
+		case 1: return 1
+		case 2: return 1
+		case 3: return 2
+		case 4: return 3
 	}
 }
