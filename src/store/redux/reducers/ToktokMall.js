@@ -25,6 +25,9 @@ const INITIAL_STATE = {
     title: "Your order has been placed!",
     message: "Your order has been placed successfully. Please visit My Orders to check the progress and other details."
   },
+  modal: {
+    visible: false,
+  },
   customMessageModal: {
     visible: false,
     title: ["We're sorry but this product is ", "SOLD OUT."],
@@ -45,6 +48,10 @@ export default (state = INITIAL_STATE, action) => {
     return {...state, customModal: {visible: true, ...action.payload}};
     case 'TOKTOK_MALL_CLOSE_MODAL':
     return {...state, customModal: {visible: false}};
+    case 'TOKTOK_MALL_OPEN_MODAL_2':
+    return {...state, modal: {...state.modal, visible: true, ...action.payload}};
+    case 'TOKTOK_MALL_CLOSE_MODAL_2':
+    return {...state, modal: {visible: false}};
     case 'TOKTOK_MALL_OPEN_CONFIRM_MODAL':
     return {...state, customConfirmModal: { ...state.customConfirmModal, visible: true, ...action.payload}};
     case 'TOKTOK_MALL_CLOSE_CONFIRM_MODAL':

@@ -108,7 +108,7 @@ export const RenderDetails = forwardRef(({
 		if(CartContext.willDelete){
 			if(item.data.length > 0){
 				for(var i in item.data){
-					if(item.data[i].product.enabled != 1 || item.data[i].product.contSellingIsset === 0 && item.data[i].product.noOfStocks === 0){
+					if(item.data[i].product.enabled != 1){
 						return false
 					}
 				}
@@ -165,7 +165,6 @@ export const RenderDetails = forwardRef(({
 			return false
 	}
 }
-
 	return (
     <>
       <Store

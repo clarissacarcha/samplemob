@@ -1,15 +1,15 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert, EventEmitter } from 'react-native';
 import { COLOR, FONT } from '../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
 import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal, MessageModal } from './Components';
 import {connect, useDispatch} from 'react-redux'
 import { useSelector } from 'react-redux';
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, CommonActions} from '@react-navigation/native'
 
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
-import { GET_CHECKOUT_DATA, POST_CHECKOUT, GET_HASH_AMOUNT } from '../../../../graphql/toktokmall/model';
+import { GET_CHECKOUT_DATA, POST_CHECKOUT, GET_HASH_AMOUNT, CHECK_ITEM_FROM_CHECKOUT } from '../../../../graphql/toktokmall/model';
 
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_WALLET, GET_MY_ACCOUNT, GET_USER_TOKTOK_WALLET_DATA } from 'toktokwallet/graphql'
@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
+import {emptyPlaceOrder} from "../../../assets"
 import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy, getRefComAccountType} from "../../../helpers"
 
 import {CheckoutContext} from './ContextProvider';
@@ -72,6 +73,28 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const setAlertTrue = () => {
     setAlertModal(true)
   }
+
+  const [checkItemFromCheckout] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: async (response) => {
+      const data = response.checkItemFromCheckout.filter(({status})=> status === false)
+
+      //SCENARIO: While entering TPIN, the product got out of stock. We can simulate this by bypassing the current validation
+      // await postCheckoutSetting(data);
+      // return
+
+      if(data.length > 0){
+        onProductUnavailable(data, "id")
+      }else{
+        await postCheckoutSetting(data);
+      }
+
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
 
   const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -233,6 +256,59 @@ const Component = ({route, navigation, createMyCartSession}) => {
     }
   })  
 
+  const onProductUnavailable = (items, selector) => {
+
+    setIsLoading(false)
+
+    let paramsDataCopy = ArrayCopy(route.params)
+
+    items.map(({id, name}) => {
+      route.params.data.map(({data, ...rest}, index) => {
+
+        let validItems = []
+        if(selector == "id"){
+          validItems = data[0].filter(item => id !== item.id)
+        }else if(selector == "name"){
+          validItems = data[0].filter(({product}) => name !== product.itemname || product.variant !== name)
+        }
+        
+        if(validItems.length > 0){
+          paramsDataCopy.data[index] = {
+            ...rest,
+            data: [validItems]
+          }
+        }else{
+          paramsDataCopy.data[index] = null
+        }          
+      })
+    })
+    
+    dispatch({
+      type: 'TOKTOK_MALL_OPEN_MODAL_2',
+      payload: {
+        type: 'Warning',
+        title: 'Unable to Place Order',
+        message: 'We’re sorry but some items in your cart is currently unavailable. Please try again another time.',
+        onConfirm: async () => {
+
+          let filtered = {
+            ...paramsDataCopy,
+            data: paramsDataCopy.data.filter((val) => val !== null)
+          }
+          console.log("PARAMS DATA COPY", JSON.stringify(paramsDataCopy))
+          console.log("FILTERED PARAMS DATA", JSON.stringify(filtered))
+
+          // return //used for debugging
+
+          navigation.replace("ToktokMallEmptyCheckout", {
+            ...route.params,
+            data: filtered
+          })
+        },
+      },
+    });
+  }
+
   const postCheckoutSetting = async () => {
 
     setIsLoading(true)
@@ -276,6 +352,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
         navigation.navigate("ToktokMallOTP", {
           transaction: "payment", 
           data: checkoutBody,
+          onError: (data, error) => {
+            console.log("ERROR", error, error?.items)
+            if(error?.items && error?.items.length > 0){
+              let formattedArr = error?.items.map((item) => {return {id: "", name: item}})
+              onProductUnavailable(formattedArr, "name")
+            }
+          },
           onSuccess: async (result) => {
 
             console.log(paramsData)
@@ -284,9 +367,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
             postOrderNotifications(result)
             EventRegister.emit("ToktokWalletRefreshAccountBalance")
 
-          },
-          onError: async (error) => {
-            console.log(error)
           }
         })
 
@@ -512,16 +592,35 @@ const Component = ({route, navigation, createMyCartSession}) => {
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
     }, [])
   )
-    
+
   useEffect(() => {
+
+    let isMounted = true;
+
     (async () => {
       // console.log(JSON.stringify(route.params.data))
       await init()
     })();
 
-    EventRegister.addEventListener("refreshCheckoutData", init)
-    EventRegister.addEventListener("ToktokMallWalletRefreshAccountStatus", () => setWalletAccountStatus())
+    if(isMounted){
+      EventRegister.addEventListener("refreshCheckoutData", init)
+      EventRegister.addEventListener("ToktokMallWalletRefreshAccountStatus", () => setWalletAccountStatus())
+    }
+
+    return () => {
+      isMounted = false;
+    }
+    
   }, [])
+
+  useEffect(() => {
+
+    console.log("Checkout body data", route?.params?.data)
+
+    setParamsData(route?.params?.data)
+    setNewCartData(route?.params.newCart)
+
+  }, [route.params])
 
   console.log("addressData", addressData)
 
@@ -552,40 +651,35 @@ const Component = ({route, navigation, createMyCartSession}) => {
   //   calculateGrandTotal()
   // }, [addressData, shippingRates])
 
-  useEffect(() => {
-
-    setParamsData(route?.params?.data)
-    setNewCartData(route?.params.newCart)
-
-  }, [route.params])
+  
 
   useEffect(() => {
     // console.log(grandTotal)
   }, [grandTotal])
 
-  useEffect(() => {
-    // dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL', payload: {
-    //   title: ["Unable to Checkout"],
-    //   message: "Sorry, you don’t have a toktokwallet yet. Please create an account and top up to proceed in checkout.",
-    //   action: {
-    //     onPress:() => {
-    //       navigation.navigate("ToktokMallHome")
-    //       dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
-    //     },
-    //     title: "Ok",
-    //     type: "fill"
-    //   },
-    //   link: {
-    //     onPress:() => {
-    //       navigation.navigate("ToktokMallHome")
-    //       dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
-    //     },
-    //     text: "Create toktokwallet account",
-    //   }
-    // }})
-  }, [])
+  // useEffect(() => {
+  //   // dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL', payload: {
+  //   //   title: ["Unable to Checkout"],
+  //   //   message: "Sorry, you don’t have a toktokwallet yet. Please create an account and top up to proceed in checkout.",
+  //   //   action: {
+  //   //     onPress:() => {
+  //   //       navigation.navigate("ToktokMallHome")
+  //   //       dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
+  //   //     },
+  //   //     title: "Ok",
+  //   //     type: "fill"
+  //   //   },
+  //   //   link: {
+  //   //     onPress:() => {
+  //   //       navigation.navigate("ToktokMallHome")
+  //   //       dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
+  //   //     },
+  //   //     text: "Create toktokwallet account",
+  //   //   }
+  //   // }})
+  // }, [])
 
-  if(loading || initialLoading) {
+  if((loading || initialLoading) && paramsData.length > 0) {
     return <Loading state={loading || initialLoading} />
   }
 
@@ -621,17 +715,27 @@ const Component = ({route, navigation, createMyCartSession}) => {
                 init()
               }
             })}
-          />
-          <Shops 
-            address={addressData}
-            customer={customerData}
-            raw={paramsData}
-            retrieve={(data) => {
-              setShippingDiscounts(data.shippingDiscounts)
-            }}
-            shipping={addressData?.shippingSummary} 
-            shippingRates={shippingRates}      
-          />
+          />          
+         {paramsData.length > 0 ? (
+           <Shops
+             address={addressData}
+             customer={customerData}
+             raw={paramsData}
+             retrieve={data => {
+               setShippingDiscounts(data.shippingDiscounts);
+             }}
+             shipping={addressData?.shippingSummary}
+             shippingRates={shippingRates}
+           />
+         ) : (
+            <View style={{flex: 1, backgroundColor: 'trasparent'}}>
+              <View style={{flex: 1, backgroundColor: 'white', marginTop: 8, alignItems: 'center', padding: 25}}>
+                <Image source={emptyPlaceOrder} />
+                <Text style={{color: '#F6841F', fontSize: 18, padding: 5}}>No Items</Text>
+                <Text>Hmm, there are no items to check out.</Text>
+              </View>
+            </View>
+          )}
           {/* <Vouchers 
             items={paramsData}
             navigation={navigation} 
@@ -674,10 +778,27 @@ const Component = ({route, navigation, createMyCartSession}) => {
           shipping={addressData}
           shippingRates={shippingRates}
           onPress={async () => {
-            if(!isLoading){
-              await postCheckoutSetting()              
-            }      
-          }} 
+
+            if (!isLoading) {
+
+              let ids = []
+              paramsData.map(({data}) => {
+               data[0].map(item => {
+                 ids.push(item.id)
+               });
+             })
+
+             setIsLoading(true)
+         
+             checkItemFromCheckout({
+               variables: {
+                 input: {
+                   productId: ids,
+                 },
+               },
+             });
+            }
+          }}
         />
       </View>
     </>
