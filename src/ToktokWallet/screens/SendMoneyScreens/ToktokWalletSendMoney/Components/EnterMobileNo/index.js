@@ -121,12 +121,12 @@ export const EnterMobileNo = ({
         }
     },[mobileNo])
 
-    // useEffect(()=>{
-    //    if(recipientDetails.id){
-    //        const result = favoritesRef.current.checkIfFavorites(recipientDetails.id)
-    //        setIsFavorite(result)
-    //    }
-    // },[recipientDetails,favorites])
+    useEffect(()=>{
+       if(recipientDetails.id){
+           const result = favoritesRef.current.checkIfFavorites(recipientDetails.id)
+           setIsFavorite(result)
+       }
+    },[recipientDetails,favorites])
 
     useEffect(()=>{
         setGetAccountLoading(walletLoading)
@@ -161,12 +161,12 @@ export const EnterMobileNo = ({
                        {errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:COLOR.RED,marginTop: -5}}>{errorMessage}</Text>}
                      </View>
                 </TouchableOpacity>
-                {/* {
+                {
                     recipientDetails.id && errorMessage == "" &&
                     <TouchableOpacity onPress={()=>favoritesRef.current.addFavorites(recipientDetails.id)} style={styles.addFavorites}>
                         <Image resizeMode="contain" style={styles.heart} source={isFavorite ? heartFill : heart}/>
                     </TouchableOpacity>
-                } */}
+                }
             
                 <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
                     <View style={styles.addressbtn}>

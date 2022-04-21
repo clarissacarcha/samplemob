@@ -123,6 +123,16 @@ export const Submit = ()=> {
             secondIdentificationCardId: +validID2.IDType,
             secondGovtIdFront: validID2.frontFile,
             secondGovtIdBack: validID2.backFile,
+            pepQuestionnaire:{
+                isPep: pepInfo.questionnaire.isPep,
+                pepPosition: pepInfo.questionnaire.pepPosition,
+                isFamilyPep: pepInfo.questionnaire.isFamilyPep,
+                familyPepPosition: pepInfo.questionnaire.familyPepPosition,
+                sourceOfIncomeId: JSON.stringify(pepInfo.questionnaire.sourceOfIncomeId),
+                sourceOfIncome: pepInfo.questionnaire.sourceOfIncome,
+                sourceOfWealthId: JSON.stringify(pepInfo.questionnaire.sourceOfWealthId),
+                sourceOfWealth: pepInfo.questionnaire.sourceOfWealth
+            }
         }
         if(noError){
             postEnterpriseUpgradeRequest({

@@ -103,7 +103,8 @@ export const ToktokWalletCreatePin = ({navigation,route})=> {
         variables: {
           input: {
             pinCode: pinCode,
-            oldTPIN: oldTPIN
+            oldTPIN: oldTPIN,
+            deviceType: Platform.OS === "ios" ? "IOS" : "Android"
           }
         }
       })
