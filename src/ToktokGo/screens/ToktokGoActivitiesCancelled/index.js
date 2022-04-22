@@ -4,11 +4,12 @@ import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {COLOR, MEDIUM} from '../../../res/constants';
-import {ActivitiesCard,SomethingWentWrong} from '../../components';
+import {ActivitiesCard} from '../../components';
 import {GET_DELIVERIES, TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import NoData from '../../../assets/images/NoData.png';
 import DummyData from '../../components/DummyData';
 import {GET_TRIPS_CONSUMER} from '../../graphql';
+import { SomethingWentWrong } from 'src/components';
 
 const imageWidth = Dimensions.get('window').width - 200;
 
