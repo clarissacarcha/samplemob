@@ -51,7 +51,7 @@ export const Modal = () => {
                 paddingVertical: 15,
                 borderRadius: 5,
               }}>
-              <Text style={{fontSize: 13, color: '#fff'}}>Confirm</Text>
+              <Text style={{fontSize: 13, color: '#fff'}}>{modal.btnTitle || "Confirm"}</Text>
             </TouchableOpacity>
           </View>
         </View>
