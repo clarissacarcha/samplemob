@@ -18,6 +18,7 @@ import {GET_TRIP_FARE, TRIP_BOOK} from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {AlertOverlay} from '../../../components';
+import {onError} from '../../../util/ErrorUtility';
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const {popTo} = route.params;
@@ -48,9 +49,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
   const [tripBook] = useMutation(TRIP_BOOK, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
-    onError: err => {
-      console.log(err);
-    },
+    onError,
     onCompleted: response => {
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING',
@@ -64,7 +63,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   });
 
   const selectVehicle = data => {
-    setLoading(true);
     setSelectedVehicle(data);
   };
 
@@ -99,6 +97,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     dispatchRequest();
   }, [selectedVehicle, selectedVouchers]);
 
