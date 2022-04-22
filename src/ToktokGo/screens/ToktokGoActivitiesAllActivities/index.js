@@ -9,6 +9,7 @@ import {GET_DELIVERIES, TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import NoData from '../../../assets/images/NoData.png';
 import DummyData from '../../components/DummyData';
 import {GET_TRIPS_CONSUMER} from '../../graphql';
+import { SomethingWentWrong } from 'src/components';
 
 const imageWidth = Dimensions.get('window').width - 200;
 

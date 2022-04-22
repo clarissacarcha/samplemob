@@ -109,13 +109,13 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => navigation.push('ToktokGoLanding'),
       isNew: true,
     },
-    // {
-    //   identifier: 'load',
-    //   label: 'Load',
-    //   icon: LoadIcon,
-    //   onPress: () => navigation.push('ToktokLoadHome'),
-    //   isNew: true,
-    // },
+    {
+      identifier: 'load',
+      label: 'Load',
+      icon: LoadIcon,
+      onPress: () => navigation.push('ToktokLoadHome'),
+      isNew: true,
+    },
     // {
     //   identifier: 'mall',
     //   label: 'Mall',
