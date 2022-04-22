@@ -114,6 +114,7 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
       navigation.pop();
       navigation.push('ToktokGoBookingConfirmPickup', {
         popTo: popTo + 1,
+        source: 'searchLocation',
       });
     }
   };

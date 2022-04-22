@@ -25,9 +25,6 @@ export const VehicleCard = ({type, data, selectVehicle, selectedVehicle}) => {
     }
   };
 
-  console.log('selectedVehicle', details);
-  console.log('DATA', data);
-
   return (
     <View style={styles.card}>
       <TouchableOpacity

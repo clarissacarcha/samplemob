@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react';
-import {View, StyleSheet, Image, Text, TouchableWithoutFeedback, Dimensions} from 'react-native';
+import {View, StyleSheet, Image, Text, TouchableWithoutFeedback, Dimensions, ActivityIndicator} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
 import _ from 'lodash';
 import CONSTANTS from '../../../../common/res/constants';
@@ -50,6 +50,10 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination, 
       }
     }, 1000);
   };
+
+  if (!destination?.place?.location?.latitude) {
+    return <ActivityIndicator color={CONSTANTS.COLOR.YELLOW} />;
+  }
 
   return (
     <TouchableWithoutFeedback onPress={() => setExpandBookingDetails(false)}>
