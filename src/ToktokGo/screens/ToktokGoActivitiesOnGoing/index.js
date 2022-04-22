@@ -4,7 +4,7 @@ import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {COLOR, MEDIUM} from '../../../res/constants';
-import {ActivitiesCard} from '../../components';
+import {ActivitiesCard,SomethingWentWrong} from '../../components';
 import {GET_DELIVERIES, TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import NoData from '../../../assets/images/NoData.png';
 import DummyData from '../../components/DummyData';
