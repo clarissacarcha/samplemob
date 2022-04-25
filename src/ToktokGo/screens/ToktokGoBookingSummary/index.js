@@ -27,7 +27,9 @@ const SNAP_ARR = [FULLSCREEN_HEIGHT - StatusBar.currentHeight * 2, FULLSCREEN_HE
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const {popTo} = route.params;
-  const {details, routeDetails, origin, destination, paymentMethod} = useSelector(state => state.toktokGo);
+  const {details, routeDetails, origin, destination, paymentMethod, tempVehicleArr} = useSelector(
+    state => state.toktokGo,
+  );
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
@@ -71,7 +73,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   };
 
   useEffect(() => {
-    selectVehicle(quotationDataResult.vehicleTypeRates?.[0]);
+    selectVehicle(tempVehicleArr[0]);
   }, []);
 
   // TODO: This will be added once vouchers is added
@@ -130,6 +132,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const renderContent = () => (
     <View style={styles.card}>
       <BookingDistanceTime quotationData={quotationDataResult} />
+      {/* {console.log('temp', tempVehicleArr)} */}
       <BookingSelectVehicle
         data={quotationDataResult}
         selectedVehicle={selectedVehicle}

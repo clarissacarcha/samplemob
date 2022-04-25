@@ -6,11 +6,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import SedanIMG from '../../assets/images/vehicleTypes/Sedan.png';
 import SmallMpvIMG from '../../assets/images/vehicleTypes/SmallMPV.png';
 import LargeMpvIMG from '../../assets/images/vehicleTypes/LargeMPV.png';
+import {set} from 'lodash';
 
 const ImageWidth = (Dimensions.get('window').width - 230) / 2;
 
-export const VehicleCard = ({type, data, selectVehicle, selectedVehicle}) => {
-  const {details} = useSelector(state => state.toktokGo);
+export const VehicleCard = ({type, data, selectVehicle, setDataVehicle}) => {
+  const dispatch = useDispatch();
+  const {details, tempVehicleArr} = useSelector(state => state.toktokGo);
   const render_image = type => {
     switch (data.vehicleType?.imageClass) {
       case 'SEDAN': {
@@ -25,13 +27,24 @@ export const VehicleCard = ({type, data, selectVehicle, selectedVehicle}) => {
     }
   };
 
+  const setVehicle = () => {
+    selectVehicle(data);
+    if (data?.vehicleType?.id != details?.vehicleType?.id) {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+        payload: {...details, vehicleType: details.vehicleType, rate: data.rate},
+      });
+      if (type) {
+        setDataVehicle(data);
+      }
+    }
+  };
+
   return (
     <View style={styles.card}>
       <TouchableOpacity
-        onPress={() => {
-          selectVehicle(data);
-        }}
-        style={data?.vehicleType?.id == selectedVehicle?.vehicleType?.id ? styles.selected : {paddingHorizontal: 16}}>
+        onPress={setVehicle}
+        style={data?.vehicleType?.id == details?.vehicleType?.id ? styles.selected : {paddingHorizontal: 16}}>
         <View style={styles.container}>
           <View style={styles.elementWrapper}>
             <Image
@@ -47,7 +60,7 @@ export const VehicleCard = ({type, data, selectVehicle, selectedVehicle}) => {
           <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
         </View>
       </TouchableOpacity>
-      {data?.vehicleType?.id == selectedVehicle?.vehicleType?.id && type && (
+      {data?.vehicleType?.id == details?.vehicleType?.id && type && (
         <View style={styles.priceDetails}>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.fareText}>Base fare</Text>
