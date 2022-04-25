@@ -7,6 +7,8 @@ import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import {decodeLegsPolyline} from '../../helpers';
+import AsyncStorage from '@react-native-community/async-storage';
+import moment from 'moment';
 
 const ToktokGoLanding = ({navigation, session}) => {
   const dispatch = useDispatch();
@@ -39,12 +41,21 @@ const ToktokGoLanding = ({navigation, session}) => {
             decodedPolyline,
           });
         } else {
-          navigation.replace('ToktokGoHealthCare');
+          healthCareAccept();
         }
       }, 1000);
     },
     onError: error => console.log('error', error),
   });
+
+  const healthCareAccept = async () => {
+    const date = await AsyncStorage.getItem('ToktokGoHealthCare');
+    if (date === moment(new Date()).format('MMM D, YYYY')) {
+      navigation.replace('ToktokGoBookingStart');
+    } else {
+      navigation.replace('ToktokGoHealthCare');
+    }
+  };
 
   const dispatchToSession = data => {
     console.log(data);
