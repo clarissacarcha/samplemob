@@ -31,7 +31,7 @@ const { COLOR , FONT_SIZE , FONT_FAMILY: FONT  } = CONSTANTS
 
 
 const MainComponent = ()=> {
-    const { setForms , validID1, validID2 } = useContext(ContextEnterpriseApplication)
+    const { setForms , validID1, validID2 , pepInfo , setPepInfo } = useContext(ContextEnterpriseApplication)
     const IDTypeRef = useRef()
     const [idIndex,setIDIndex] = useState(1)
     const alert = useAlert();
