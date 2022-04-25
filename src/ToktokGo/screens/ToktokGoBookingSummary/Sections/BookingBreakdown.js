@@ -2,14 +2,14 @@ import React from 'react';
 import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import InfoIcon from '../../../../assets/icons/InfoIcon.png';
+import {numberFormat} from '../../../../helper';
 
 export const BookingBreakdown = ({selectedVehicle}) => {
-  console.log('breakdown', selectedVehicle);
   return (
     <View style={styles.container}>
       <View style={styles.rowContainer}>
         <Text style={styles.title}>Ride Fare</Text>
-        <Text>₱ {selectedVehicle?.rate?.amount}</Text>
+        <Text>₱ {numberFormat(selectedVehicle?.rate?.amount ? selectedVehicle?.rate?.amount : 0)}</Text>
       </View>
 
       {/* todo: Condition here */}

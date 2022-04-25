@@ -61,6 +61,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         type: 'SET_TOKTOKGO_BOOKING',
         payload: response.tripBook.trip,
       });
+      navigation.pop();
       navigation.replace('ToktokGoFindingDriver', {
         popTo: popTo + 1,
         decodedPolyline,
