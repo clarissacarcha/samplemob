@@ -73,6 +73,7 @@ const StickyView = () => {
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'cache and network',
+    nextFetchPolicy: 'network-only',
   });
 
   const sample = [
@@ -164,18 +165,21 @@ const StickyView = () => {
     }
   };
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
     setPage(0);
     setTempCategories([]);
-    refetch({
-      variables: {
-        input: {
-          page: 0,
-          ...variableInput,
-        },
-      },
-    }).then(() => {
+    await refetch().then(() => {
+      // {
+      //   variables: {
+      //     input: {
+      //       page: 0,
+      //       ...variableInput,
+      //     },
+      //   },
+      //   fetchPolicy: 'network-only',
+      // },
+      // {fetchPolicy: 'network-only'},
       setRefreshing(false);
     });
   };

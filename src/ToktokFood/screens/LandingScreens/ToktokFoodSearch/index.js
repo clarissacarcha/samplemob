@@ -163,7 +163,7 @@ const ToktokFoodSearch = ({route}) => {
           </View>
           {!item.hasOpen && (
             <View style={styles.closedTag}>
-              <Text style={styles.closedText}>Closed</Text>
+              <Text style={styles.closedText}>Currently Closed</Text>
             </View>
           )}
         </View>
