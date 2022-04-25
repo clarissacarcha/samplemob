@@ -27,6 +27,10 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     onCompleted: response => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ROUTE', payload: response.getQuotation.quotation.route});
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, noteToDriver: note}});
+      dispatch({
+        type: 'SET_TOKTOKGO_TEMP_VEHICLE_LIST',
+        payload: response.getQuotation.quotation.vehicleTypeRates.slice(0, 2),
+      });
       navigation.replace('ToktokGoBookingSummary', {
         popTo: popTo + 1,
         quotationDataResult: response.getQuotation.quotation,

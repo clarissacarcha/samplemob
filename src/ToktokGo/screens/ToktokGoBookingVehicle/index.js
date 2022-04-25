@@ -1,12 +1,27 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {Text, View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
-import Data from '../../components/BookingDummyData';
 import CONSTANTS from '../../../common/res/constants';
+import {useSelector, useDispatch} from 'react-redux';
 import {Header, VehicleCard} from '../../components';
-import {useSelector} from 'react-redux';
 
 const ToktokGoBookingVehicle = ({navigation, route}) => {
+  const dispatch = useDispatch();
+  const {tempVehicleArr} = useSelector(state => state.toktokGo);
   const {data, selectVehicle, selectedVehicle} = route.params;
+  const [dataVehicle, setDataVehicle] = useState();
+
+  const handleSelect = () => {
+    navigation.pop();
+    let check = tempVehicleArr.includes(dataVehicle);
+    if (dataVehicle && !check) {
+      tempVehicleArr.unshift(dataVehicle);
+      tempVehicleArr.pop();
+      dispatch({
+        type: 'SET_TOKTOKGO_TEMP_VEHICLE_LIST',
+        payload: tempVehicleArr,
+      });
+    }
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
@@ -25,13 +40,14 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
                 data={item}
                 selectVehicle={selectVehicle}
                 selectedVehicle={selectedVehicle}
+                setDataVehicle={setDataVehicle}
               />
             </View>
           );
         }}
       />
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => navigation.pop()} style={styles.buttonStyle}>
+        <TouchableOpacity onPress={handleSelect} style={styles.buttonStyle}>
           <Text style={styles.textStyle}>Select Vehicle</Text>
         </TouchableOpacity>
       </View>

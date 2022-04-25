@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions, ActivityIndicator} from 'react-native';
 import CONSTANTS from '../../common/res/constants';
 import {numberFormat} from '../../helper';
@@ -9,10 +9,11 @@ import LargeMpvIMG from '../../assets/images/vehicleTypes/LargeMPV.png';
 
 const ImageWidth = (Dimensions.get('window').width - 230) / 2;
 
-export const VehicleCard = ({type, data, selectVehicle, selectedVehicle}) => {
+export const VehicleCard = ({type, data, selectVehicle, setDataVehicle, selectedVehicle}) => {
+  const dispatch = useDispatch();
   const {details} = useSelector(state => state.toktokGo);
-  const render_image = type => {
-    switch (data.vehicleType?.imageClass) {
+  const render_image = () => {
+    switch (data?.vehicleType?.imageClass) {
       case 'SEDAN': {
         return SedanIMG;
       }
@@ -25,13 +26,24 @@ export const VehicleCard = ({type, data, selectVehicle, selectedVehicle}) => {
     }
   };
 
+  const setVehicle = () => {
+    selectVehicle(data);
+    if (data?.vehicleType?.id != details?.vehicleType?.id) {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+        payload: {...details, vehicleType: details.vehicleType, rate: data.rate},
+      });
+      if (type) {
+        setDataVehicle(data);
+      }
+    }
+  };
+
   return (
     <View style={styles.card}>
       <TouchableOpacity
-        onPress={() => {
-          selectVehicle(data);
-        }}
-        style={data?.vehicleType?.id == selectedVehicle?.vehicleType?.id ? styles.selected : {paddingHorizontal: 16}}>
+        onPress={setVehicle}
+        style={data?.vehicleType?.id == details?.vehicleType?.id ? styles.selected : {paddingHorizontal: 16}}>
         <View style={styles.container}>
           <View style={styles.elementWrapper}>
             <Image
@@ -47,19 +59,29 @@ export const VehicleCard = ({type, data, selectVehicle, selectedVehicle}) => {
           <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
         </View>
       </TouchableOpacity>
-      {data?.vehicleType?.id == selectedVehicle?.vehicleType?.id && type && (
+      {data?.vehicleType?.id == details?.vehicleType?.id && type && (
         <View style={styles.priceDetails}>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.fareText}>Base fare</Text>
-            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>₱{numberFormat(details?.rate?.tripFare?.flatRate)}</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
+              {details?.rate?.tripFare?.flatRate ? '₱ ' + numberFormat(details?.rate?.tripFare?.flatRate) : ''}
+            </Text>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.kmText}>Per KM</Text>
-            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>₱{numberFormat(details?.rate?.tripFare?.mileageFee)}</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
+              {details?.rate?.tripFare?.mileageFee ? (
+                '₱ ' + numberFormat(details?.rate?.tripFare?.mileageFee)
+              ) : (
+                <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+              )}
+            </Text>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.durationText}>Per minute</Text>
-            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>₱{numberFormat(details?.rate?.tripFare?.durationFee)}</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
+              {details?.rate?.tripFare?.durationFee ? '₱ ' + numberFormat(details?.rate?.tripFare?.durationFee) : ''}
+            </Text>
           </View>
         </View>
       )}
