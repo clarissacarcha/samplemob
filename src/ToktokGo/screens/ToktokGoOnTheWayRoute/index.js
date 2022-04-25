@@ -39,6 +39,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [viewSuccessCancelBookingModal, setViewSuccessCancelBookingModal] = useState(false);
   const [chargeAmount, setChargeAmount] = useState(0);
   const [cancellationState, setCancellationState] = useState();
+  const [originData, setOriginData] = useState(false);
 
   const {driver, booking} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
@@ -50,24 +51,32 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     },
     onSubscriptionData: response => {
       const {id, status, cancellation} = response?.subscriptionData?.data?.onTripUpdate;
-      if (id && status != 'CANCELLED' && cancellation.initiatedBy == 'CONSUMER') {
+      if (id && status != 'CANCELLED' && cancellation?.initiatedBy == 'CONSUMER') {
         dispatch({
           type: 'SET_TOKTOKGO_BOOKING',
           payload: response?.subscriptionData?.data?.onTripUpdate,
         });
       }
-      if (status == 'CANCELLED' && cancellation.initiatedBy == 'DRIVER') {
+      if (status == 'CANCELLED' && cancellation?.initiatedBy == 'DRIVER') {
         setCancellationState(cancellation);
         if (cancellation.chargeAmount > 0) {
           setCancellationFee(true);
         } else {
-          onCancel(true);
+          onCancel();
         }
       }
       if (status == 'ARRIVED') {
+        dispatch({
+          type: 'SET_TOKTOKGO_BOOKING',
+          payload: response?.subscriptionData?.data?.onTripUpdate,
+        });
         setmodal(true);
       }
       if (status == 'COMPLETED') {
+        dispatch({
+          type: 'SET_TOKTOKGO_BOOKING',
+          payload: response?.subscriptionData?.data?.onTripUpdate,
+        });
         setmodal(true);
       }
     },
@@ -100,6 +109,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   });
 
   const goBackAfterCancellation = () => {
+    setOriginData(true);
     navigation.replace('ToktokGoBookingStart', {
       popTo: popTo + 1,
     });
@@ -145,7 +155,17 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     });
   };
   const onCancel = () => {
-    setCancel(false);
+    setCancel(true);
+  };
+  const onConsumerAcceptDriverCancelled = () => {
+    setOriginData(true);
+    dispatch({
+      type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+    });
+    navigation.replace('ToktokGoBookingStart', {
+      popTo: popTo + 1,
+    });
+    setmodal(false);
   };
   const onCancelWithFee = () => {
     setCancel(false);
@@ -218,7 +238,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       />
       <DriverCancelled
         cancel={cancel}
-        onCancel={onCancel}
+        onDriverCancelled={onConsumerAcceptDriverCancelled}
         onCancelWithFee={onCancelWithFee}
         cancellationState={cancellationState}
       />
@@ -227,7 +247,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      <Map booking={booking} decodedPolyline={decodedPolyline} />
+      <Map booking={booking} decodedPolyline={decodedPolyline} originData={originData} />
       <View style={styles.card}>
         {booking.status == 'ACCEPTED' ? (
           <DriverStatus status={status} booking={booking} />
