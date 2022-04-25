@@ -17,12 +17,11 @@ const mapKeyValueToObject = keyValueArray => {
     return result;
 };
 
-export const useAccount = ()=> {
+export const useAccount = (options)=> {
     const alert = useAlert()
     const dispatch = useDispatch()
     const navigation = useNavigation();
     const tokwaAccount = useSelector(state=>state.toktokWallet)
-
 
     const refreshWallet = async ()=> {
         const walletData = await WalletUtility.RefreshWallet()
@@ -50,7 +49,7 @@ export const useAccount = ()=> {
         onError: (error)=> onErrorAlert({alert,error})
     })
 
-    const [getMyAccount , {loading}] = useLazyQuery(GET_MY_ACCOUNT , {
+    const [getMyAccount , {loading, error}] = useLazyQuery(GET_MY_ACCOUNT , {
         fetchPolicy:"network-only",
         client:TOKTOK_WALLET_GRAPHQL_CLIENT,
         onCompleted: async ({getMyAccount})=> {
@@ -69,12 +68,15 @@ export const useAccount = ()=> {
             })
         },
         onError: (error)=> {
-            onErrorAlert({alert,error})
+            if(options?.isOnErrorAlert || options?.isOnErrorAlert == undefined){
+                onErrorAlert({alert,error});
+            }
         }
     })
 
     const checkIfTpinIsSet = ()=> {
         const status = tokwaAccount.pinCode
+        console.log(status , "PINCODE IS ")
         if(!status){
             navigation.navigate("ToktokWalletRestricted" , {component: "noPin"})
             return false
@@ -91,6 +93,7 @@ export const useAccount = ()=> {
         checkIfTpinIsSet,
         getMyAccountLoading: loading,
         getGlobalSettings,
-        getGlobalSettingsLoading
+        getGlobalSettingsLoading,
+        getMyAccountError: error,
     }
 }

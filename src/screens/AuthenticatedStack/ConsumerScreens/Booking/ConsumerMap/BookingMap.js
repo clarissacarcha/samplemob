@@ -1094,7 +1094,7 @@ const BookingMap = ({bookingData}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
   constants: state.constants,
 });

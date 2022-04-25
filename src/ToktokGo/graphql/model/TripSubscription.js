@@ -1,0 +1,114 @@
+import gql from 'graphql-tag';
+
+const trip = `
+    consumer{
+      mobileNumber
+      name
+    }
+    consumerUserId
+    dispatchHash
+    driver{
+      mobileNumber
+      name
+      rating
+      vehicle{
+        bodyColor
+        license
+        make
+        model
+        type {
+          id
+          name
+        }
+        year
+      }
+    }
+    driverUserId
+    fare{
+      amount
+      discount
+      durationFee
+      flatRate
+      mileageFee
+      total
+    }
+    id
+    logs{
+      createdAt
+      status
+    }
+    notes
+    passengerCount
+    paymentMethod
+    route{
+      bounds{
+        northeast{
+          latitude
+          longitude
+        }
+        southwest{
+          latitude
+          longitude
+        }
+      }
+      destinations{
+        addressBreakdown{
+          city
+          country
+          postal
+          province
+          region
+        }
+        formattedAddress
+        location{
+          latitude
+          longitude
+        }
+      }
+      distance{
+        kilometer
+        meter
+      }
+      duration{
+        minute
+        second
+      }
+      legs{
+        steps{
+          polyline{
+            points
+          }
+        }
+      }
+      origin{
+        addressBreakdown{
+          city
+          country
+          postal
+          province
+          region
+        }
+        formattedAddress
+        location{
+          latitude
+          longitude
+        }
+      }
+    }
+    status
+    tag
+    cancellation {
+      chargeAmount
+      chargeType
+      initiatedBy
+      reason
+    }
+`;
+
+export const ON_TRIP_UPDATE = gql`
+subscription onTripUpdate ($consumerUserId: ID) {
+  onTripUpdate(consumerUserId: $consumerUserId) {
+      ${trip}
+    }
+  }
+`;

@@ -27,7 +27,8 @@ const Log = ({
         details,
         amount,
         sourceWalletId,
-        createdAt
+        createdAt,
+        note
     } = transaction
 
     const [openModal,setOpenModal] = useState(false);
@@ -45,6 +46,7 @@ const Log = ({
             amount: `${tokwaAccount.wallet.currency.code} ${numberFormat(amount)}`,
             refNo,
             refDate: referenceDate,
+            note
         })
         setOpenModal(true)
     }

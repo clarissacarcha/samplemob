@@ -5,10 +5,9 @@ import {VectorIcon, ICON_SET} from '../../../../../revamp/';
 import {AUTH_CLIENT, END_USER_SESSION} from '../../../../../graphql';
 import {onError} from '../../../../../util/ErrorUtility';
 import {AlertOverlay} from '../../../../../components';
-
 import {useMutation} from '@apollo/react-hooks';
 
-import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar} from 'react-native';
+import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar, TouchableOpacity} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import RNFS from 'react-native-fs';
 
@@ -42,7 +41,7 @@ export const ToktokLandingMenu = ({navigation}) => {
   const session = useSelector(state => state.session);
   const constants = useSelector(state => state.constants);
   const dispatch = useDispatch();
-
+  const userName = session.user.username;
   const [endUserSession, {loading}] = useMutation(END_USER_SESSION, {
     client: AUTH_CLIENT,
     onError: onError,
@@ -80,23 +79,33 @@ export const ToktokLandingMenu = ({navigation}) => {
       <AlertOverlay visible={loading} />
       <View style={{flex: 1}}>
         <Header>
-          <View style={{marginTop: StatusBar.currentHeight, margin: SIZE.MARGIN}}>
+          <View style={{margin: SIZE.MARGIN}}>
             {/*--------------- AVATAR ---------------*/}
             {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
               <View
                 style={{
                   height: 80,
                   borderRadius: 5,
-                  // justifyContent: 'flex-start',
-                  // alignItems: 'center',
-                  flexDirection: 'row',
+                  alignItems: 'center',
+                  flexDirection: 'column',
                 }}>
                 <Image
                   source={{uri: session.user.person.avatarThumbnail}}
                   resizeMode={'cover'}
-                  style={{width: 80, height: 80, backgroundColor: 'black', borderRadius: 5}}
+                  style={{width: 80, height: 80, backgroundColor: 'black', borderRadius: 50}}
                 />
-                <Text style={{marginLeft: 8, fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD}}>{fullName}</Text>
+                <Text style={{fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, paddingTop: 5}}>{fullName}</Text>
+                <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, paddingTop: 3}}>
+                  {session.user.username}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.push('ToktokProfile');
+                  }}>
+                  <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, color: COLOR.ORANGE, paddingTop: 5}}>
+                    View Profile
+                  </Text>
+                </TouchableOpacity>
               </View>
             ) : (
               <View
@@ -122,6 +131,7 @@ export const ToktokLandingMenu = ({navigation}) => {
         <View style={{height: SIZE.MARGIN / 2, backgroundColor: COLOR.LIGHT}} />
 
         <View style={{flex: 1, backgroundColor: 'white'}}>
+          <Text style={{paddingLeft: 20, paddingTop: 20, fontFamily: FONT.BOLD}}> Accounts</Text>
           <ScrollView>
             {/*--------------- MY DELIVERIES ---------------*/}
             {/* <DrawerButton
@@ -131,6 +141,13 @@ export const ToktokLandingMenu = ({navigation}) => {
               }}
               restrict="C"
             /> */}
+            {/*--------------- CHANGE PASSWORD ---------------*/}
+            <DrawerButton
+              label="Change Password"
+              onPress={() => {
+                navigation.push('EnterPassword', {userName});
+              }}
+            />
 
             {/*--------------- ANNOUNCEMENTS ---------------*/}
             <DrawerButton
@@ -139,25 +156,33 @@ export const ToktokLandingMenu = ({navigation}) => {
                 navigation.push('ToktokAnnouncements');
               }}
             />
-
             {/*--------------- TALK TO US ---------------*/}
+            <Text
+              style={{
+                paddingLeft: 20,
+                paddingTop: 20,
+                borderTopWidth: 5,
+                borderTopColor: '#F8F8F8',
+                fontFamily: FONT.BOLD,
+              }}>
+              Help Centre
+            </Text>
             <DrawerButton
               label="Help"
+              style={{borderTopWidth: 1, borderTopColor: 'red', backgroundColor: 'red'}}
               onPress={() => {
                 navigation.push('TalkToUs');
               }}
             />
 
             {/*--------------- CHANGE PASSWORD ---------------*/}
-            <DrawerButton
-              label="Change Password"
-              onPress={() => {
-                navigation.push('ConsumerChangePassword');
-              }}
-            />
-
-            {/*--------------- CHANGE PASSWORD ---------------*/}
-            <DrawerButton label="Sign Out" onPress={endUserSession} />
+            <Text
+              style={{
+                borderTopWidth: 5,
+                borderTopColor: '#F8F8F8',
+                fontFamily: FONT.BOLD,
+              }}></Text>
+            <DrawerButton label="Log Out" onPress={endUserSession} />
           </ScrollView>
         </View>
       </View>
@@ -168,7 +193,7 @@ export const ToktokLandingMenu = ({navigation}) => {
 
 const styles = StyleSheet.create({
   submitBox: {
-    marginHorizontal: SIZE.MARGIN,
+    marginHorizontal: 16,
     borderRadius: 5,
     borderBottomWidth: 1,
     borderBottomColor: COLOR.LIGHT,
@@ -184,6 +209,8 @@ const styles = StyleSheet.create({
   },
 
   headerText: {
-    // fontFamily: FONT.BOLD,
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.M,
+    lineHeight: FONT_SIZE.L,
   },
 });

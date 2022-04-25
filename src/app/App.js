@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
+import 'react-native-get-random-values';
 import React from 'react';
-import {StyleSheet, StatusBar, View} from 'react-native';
+import {StatusBar, LogBox} from 'react-native';
 import Splash from './Splash';
 
 import {
@@ -14,7 +15,7 @@ import {
 } from '../provider';
 import AlertProvider from '../provider/AlertProvider';
 
-console.disableYellowBox = true;
+LogBox.ignoreAllLogs();
 
 const App = () => {
   return (

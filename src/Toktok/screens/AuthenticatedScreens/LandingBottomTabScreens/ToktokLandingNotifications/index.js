@@ -90,10 +90,10 @@ const NotificationCard = ({message, lastItem}) => {
 };
 
 const Notifications = ({navigation, route, session, createSession}) => {
-  navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Notifications', '']} />,
-  });
+  // navigation.setOptions({
+  //   headerLeft: () => <HeaderBack />,
+  //   headerTitle: () => <HeaderTitle label={['Notifications', '']} />,
+  // });
 
   const {data, loading, error, refetch} = useQuery(GET_NOTIFICATIONS, {
     fetchPolicy: 'network-only',

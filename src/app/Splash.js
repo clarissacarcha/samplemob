@@ -18,10 +18,10 @@ import {APP_FLAVOR, APP_VERSION, MEDIUM, COLOR, DARK} from '../res/constants';
 import {AUTH_CLIENT, GET_APP_VERSION_STATUS, GET_GLOBAL_SETTINGS, GET_APP_SERVICES} from '../graphql';
 
 import Nav from './Nav';
-import SplashImage from '../assets/images/Splash.png';
+import SplashImage from '../assets/images/LinearGradiant.png';
 import Maintenance from '../assets/images/Maintenance.png';
 import NoNetworkConnection from '../assets/images/NoNetworkConnection.png';
-import ToktokSuperApp from '../assets/images/ToktokSuperApp.png';
+import ToktokSuperApp from '../assets/images/ToktokLogo.png';
 import ServerDown from '../assets/images/ServerDown.png';
 
 const imageWidth = Dimensions.get('window').width - 80;
@@ -245,8 +245,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: imageWidth - 40,
-    width: imageWidth - 40,
+    height: imageWidth - 70,
+    width: imageWidth - 150,
+    alignSelf: 'center',
   },
   imageBox: {
     borderRadius: 10,

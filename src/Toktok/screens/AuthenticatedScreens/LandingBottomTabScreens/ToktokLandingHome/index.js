@@ -7,7 +7,7 @@ import { useNavigation , useFocusEffect  , useRoute} from '@react-navigation/nat
 import {COLOR} from '../../../../../res/variables';
 
 //SELF IMPORTS
-import {Header, Menu, Advertisements} from './Components';
+import {Header, HeaderSearchField, Menu, Advertisements} from './Components';
 
 const Screen = ({navigation, constants}) => {
   // const userLocation = {
@@ -32,6 +32,19 @@ const Screen = ({navigation, constants}) => {
         return;
       }
 
+      if (notification.additionalData.classification === 'toktokbills') {
+        setTimeout(() => {
+          navigation.navigate('ToktokBillsNotifications');
+        }, 10);
+        return;
+      }
+
+      if (notification.additionalData.classification === 'toktokload') {
+        setTimeout(() => {
+          navigation.navigate('ToktokLandingNotifications', {screen: 'ToktokLoadNotifications'});
+        }, 10);
+        return;
+      }
       const type = notification.additionalData.type;
 
       if (type) {
@@ -80,7 +93,7 @@ const Screen = ({navigation, constants}) => {
         > */}
         {/* <Header /> */}
         {/* <Menu setUserLocation={setUserLocation} constants={constants} /> */}
-        <Advertisements Header={Header} Menu={Menu} setUserLocation={setUserLocation} constants={constants} />
+        <Advertisements Header={Header}  HeaderSearchField={HeaderSearchField} Menu={Menu} setUserLocation={setUserLocation} constants={constants} />
         {/* </ScrollView> */}
       </View>
     </>

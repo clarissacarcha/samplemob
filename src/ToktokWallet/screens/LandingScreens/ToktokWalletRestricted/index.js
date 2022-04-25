@@ -23,7 +23,7 @@ export const ToktokWalletRestricted = ({navigation,route})=> {
 
     const data = route.params.data ? route.params.data : null
     const amount = route?.params?.amount ? route.params.amount : null
-    const onCashIn = route?.params?.onCashIn ? route.params.onCashIn : null
+    const onCashIn = route?.params.onCashIn ? route.params.onCashIn : null
     const setUpTpinCallBack = route?.params?.setUpTpinCallBack ? route.params.setUpTpinCallBack : null
     const showPrompt = route?.params?.showPrompt ? true : null
 
