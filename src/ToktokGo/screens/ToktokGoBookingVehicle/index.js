@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Text, View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
-import Data from '../../components/BookingDummyData';
 import CONSTANTS from '../../../common/res/constants';
 import {useSelector, useDispatch} from 'react-redux';
 import {Header, VehicleCard} from '../../components';
@@ -13,16 +12,19 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
 
   const handleSelect = () => {
     navigation.pop();
-    tempVehicleArr.unshift(dataVehicle);
-    dispatch({
-      type: 'SET_TOKTOKGO_TEMP_VEHICLE_LIST',
-      payload: tempVehicleArr,
-    });
+    let check = tempVehicleArr.includes(dataVehicle);
+    if (dataVehicle && !check) {
+      tempVehicleArr.unshift(dataVehicle);
+      tempVehicleArr.pop();
+      dispatch({
+        type: 'SET_TOKTOKGO_TEMP_VEHICLE_LIST',
+        payload: tempVehicleArr,
+      });
+    }
   };
 
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
-      {console.log('selected', dataVehicle)}
       <Header navigation={navigation} title={'Select Vehicle'} />
       <FlatList
         style={{marginTop: 24}}

@@ -132,7 +132,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const renderContent = () => (
     <View style={styles.card}>
       <BookingDistanceTime quotationData={quotationDataResult} />
-      {/* {console.log('temp', tempVehicleArr)} */}
+
       <BookingSelectVehicle
         data={quotationDataResult}
         selectedVehicle={selectedVehicle}

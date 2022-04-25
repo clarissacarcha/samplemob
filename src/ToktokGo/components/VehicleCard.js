@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions, ActivityIndicator} from 'react-native';
 import CONSTANTS from '../../common/res/constants';
 import {numberFormat} from '../../helper';
@@ -6,15 +6,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import SedanIMG from '../../assets/images/vehicleTypes/Sedan.png';
 import SmallMpvIMG from '../../assets/images/vehicleTypes/SmallMPV.png';
 import LargeMpvIMG from '../../assets/images/vehicleTypes/LargeMPV.png';
-import {set} from 'lodash';
 
 const ImageWidth = (Dimensions.get('window').width - 230) / 2;
 
-export const VehicleCard = ({type, data, selectVehicle, setDataVehicle}) => {
+export const VehicleCard = ({type, data, selectVehicle, setDataVehicle, selectedVehicle}) => {
   const dispatch = useDispatch();
-  const {details, tempVehicleArr} = useSelector(state => state.toktokGo);
-  const render_image = type => {
-    switch (data.vehicleType?.imageClass) {
+  const {details} = useSelector(state => state.toktokGo);
+  const render_image = () => {
+    switch (data?.vehicleType?.imageClass) {
       case 'SEDAN': {
         return SedanIMG;
       }
@@ -64,15 +63,25 @@ export const VehicleCard = ({type, data, selectVehicle, setDataVehicle}) => {
         <View style={styles.priceDetails}>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.fareText}>Base fare</Text>
-            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>₱{numberFormat(details?.rate?.tripFare?.flatRate)}</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
+              {details?.rate?.tripFare?.flatRate ? '₱ ' + numberFormat(details?.rate?.tripFare?.flatRate) : ''}
+            </Text>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.kmText}>Per KM</Text>
-            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>₱{numberFormat(details?.rate?.tripFare?.mileageFee)}</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
+              {details?.rate?.tripFare?.mileageFee ? (
+                '₱ ' + numberFormat(details?.rate?.tripFare?.mileageFee)
+              ) : (
+                <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+              )}
+            </Text>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.durationText}>Per minute</Text>
-            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>₱{numberFormat(details?.rate?.tripFare?.durationFee)}</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
+              {details?.rate?.tripFare?.durationFee ? '₱ ' + numberFormat(details?.rate?.tripFare?.durationFee) : ''}
+            </Text>
           </View>
         </View>
       )}
