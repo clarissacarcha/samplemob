@@ -90,10 +90,13 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (!origin?.place?.formattedAddress) {
-        return setPlaceFunction();
+      const setPlace = async () => {
+        await setPlaceFunction();
       }
-    }, [navigation]),
+      if (!origin?.place?.formattedAddress) {
+        setPlace()
+      }
+    }, [navigation])
   );
 
   const onChange = value => {
