@@ -1,19 +1,18 @@
 import React, {useCallback} from 'react';
 import {View, TouchableHighlight, Text, Image} from 'react-native';
-import constants from '../../../common/res/constants';
-import {useDispatch} from 'react-redux';
-import {Landing, Header} from '../ToktokGoBookingStart/Sections';
+import CONSTANTS from '../../../common/res/constants';
+import {connect, useDispatch} from 'react-redux';
+import {Landing, Header} from './Sections';
 import {useFocusEffect} from '@react-navigation/native';
 import {GET_PLACE_BY_LOCATION} from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from '../../../graphql';
-import uuid from 'react-native-uuid';
-import {ToktokgoBeta} from '../../components';
+import {ToktokgoBeta, EmptyRecent} from '../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {currentLocation} from '../../../helper';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 
-const ToktokGoBookingStart = ({navigation}) => {
+const ToktokGoBookingStart = ({navigation, constants}) => {
   const dispatch = useDispatch();
 
   const setBookingInitialState = payload => {
@@ -45,20 +44,18 @@ const ToktokGoBookingStart = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_SESSION_TOKEN', payload: uuid.v4()});
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
       setPlaceFunction();
     }, [navigation]),
   );
   return (
-    <View style={{flex: 1, backgroundColor: constants.COLOR.WHITE, justifyContent: 'space-between'}}>
+    <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
       <View>
-        <Header navigation={navigation} />
+        <Header navigation={navigation} constants={constants} />
         <Landing navigation={navigation} />
         {/* <RecentDestinations navigation={navigation} />
-        <View style={{borderBottomWidth: 6, borderBottomColor: constants.COLOR.LIGHT}} />
+        <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
         <SavedLocations /> */}
-        <ToktokgoBeta />
+        {constants.iosVersionDisableBeta && Platform.OS == 'ios' ? <EmptyRecent /> : <ToktokgoBeta />}
       </View>
       <TouchableHighlight
         onPress={() => {
@@ -68,7 +65,7 @@ const ToktokGoBookingStart = ({navigation}) => {
         }}>
         <View
           style={{
-            paddingHorizontal: constants.SIZE.MARGIN,
+            paddingHorizontal: CONSTANTS.SIZE.MARGIN,
             backgroundColor: 'white',
             justifyContent: 'center',
             alignItems: 'center',
@@ -85,14 +82,14 @@ const ToktokGoBookingStart = ({navigation}) => {
             elevation: 20,
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            {/* <FA5Icon name="map-marker-alt" size={15} color={constants.COLOR.ORANGE} style={{marginRight: 10}} /> */}
+            {/* <FA5Icon name="map-marker-alt" size={15} color={CONSTANTS.COLOR.ORANGE} style={{marginRight: 10}} /> */}
             <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
 
             <Text
               style={{
-                color: constants.COLOR.ORANGE,
-                fontFamily: constants.FONT_FAMILY.BOLD,
-                fontSize: constants.FONT_SIZE.M,
+                color: CONSTANTS.COLOR.ORANGE,
+                fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                fontSize: CONSTANTS.FONT_SIZE.M,
               }}>
               Select via Map
             </Text>
@@ -103,4 +100,8 @@ const ToktokGoBookingStart = ({navigation}) => {
   );
 };
 
-export default ToktokGoBookingStart;
+const mapStateToProps = state => ({
+  constants: state.constants,
+});
+
+export default connect(mapStateToProps, null)(ToktokGoBookingStart);

@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import constants from '../../../common/res/constants';
-import toktokgoSplash from '../../../assets/toktokgo/toktokgo-splash.png';
+import {Image, StyleSheet, Text, View, Platform} from 'react-native';
+import CONSTANTS from '../../../common/res/constants';
+import toktokgoSplashBeta from '../../../assets/toktokgo/toktokgo-splash.png';
+import toktokgoSplash from '../../../assets/toktokgo/toktokgo-splash-improved.png';
 import {GET_TRIPS_CONSUMER} from '../../graphql/model/Trip';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -10,7 +11,7 @@ import {decodeLegsPolyline} from '../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 
-const ToktokGoLanding = ({navigation, session}) => {
+const ToktokGoLanding = ({navigation, session, constants}) => {
   const dispatch = useDispatch();
   const {routeDetails} = useSelector(state => state.toktokGo);
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
@@ -83,13 +84,18 @@ const ToktokGoLanding = ({navigation, session}) => {
 
   return (
     <View style={styles.content}>
-      <Image source={toktokgoSplash} style={{width: 200, height: 200}} resizeMode={'contain'} />
+      <Image
+        source={constants.iosVersionDisableBeta && Platform.OS == 'ios' ? toktokgoSplash : toktokgoSplashBeta}
+        style={{width: 200, height: 200}}
+        resizeMode={'contain'}
+      />
     </View>
   );
 };
 
 const mapStateToProps = state => ({
   session: state.session,
+  constants: state.constants,
 });
 
 export default connect(mapStateToProps, null)(ToktokGoLanding);
@@ -97,7 +103,7 @@ export default connect(mapStateToProps, null)(ToktokGoLanding);
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    backgroundColor: constants.COLOR.BACKGROUND_YELLOW,
+    backgroundColor: CONSTANTS.COLOR.BACKGROUND_YELLOW,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -12,7 +12,7 @@ const ImageWidth = (Dimensions.get('window').width - 230) / 2;
 export const VehicleCard = ({type, data, selectVehicle, selectedVehicle}) => {
   const {details} = useSelector(state => state.toktokGo);
   const render_image = type => {
-    switch (data.vehicleType?.imageClass) {
+    switch (data?.vehicleType?.imageClass) {
       case 'SEDAN': {
         return SedanIMG;
       }
