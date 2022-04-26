@@ -3,9 +3,9 @@ import React , {createContext , useState , useEffect} from 'react'
 export const ContextChannelForm = createContext(null)
 const { Provider } = ContextChannelForm
 import {useLazyQuery,useMutation} from '@apollo/react-hooks'
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import { GET_CALL_CHANNELS } from 'toktokwallet/graphql/model'
-import { onErrorAlert } from 'src/util/ErrorUtility'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from '../../../../../../../graphql'
+import { GET_CALL_CHANNELS } from '../../../../../../graphql/model'
+import { onErrorAlert } from '../../../../../../../util/ErrorUtility'
 import { useAlert } from 'src/hooks'
 import { useNavigation } from '@react-navigation/native'
 export const ContextProvider = ({ children })=> {

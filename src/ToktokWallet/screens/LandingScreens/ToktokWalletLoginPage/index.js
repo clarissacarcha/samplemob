@@ -38,8 +38,8 @@ const RenderRestricted = ({
     return null
 }
 
-const RenderAccessComponent = ({kycStatus})=> (
-    <CheckTokwaKYCRegistration kycStatus={kycStatus}>
+const RenderAccessComponent = ({kycPep,kycStatus})=> (
+    <CheckTokwaKYCRegistration kycPep={kycPep} kycStatus={kycStatus}>
         
         <CheckWalletAccountRestriction>
         <LoginPage/>
@@ -106,7 +106,6 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
             // if( getUserToktokWalletData.accountToken ) {
             //     await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
             // }
-  
             if(getUserToktokWalletData.toktokWalletAccountId && !session.user.toktokWalletAccountId){
                 // UPDATE SESSION HERE
                 dispatch({
@@ -122,6 +121,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
     })
 
     const kycStatus = useMemo(()=> data?.getUserToktokWalletData?.kycStatus, [data])
+    const kycPep = useMemo(()=> data?.getUserToktokWalletData?.pepId, [data])
 
     if (loading) {
         return (
@@ -145,8 +145,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
                         pinSet={pinSet}
                         isPinCodeCheckingEnabled={tokwaAccount.constants.isPinCodeCheckingEnabled }
                   />
-                : <RenderAccessComponent kycStatus={kycStatus}/>
-                
+                : <RenderAccessComponent kycPep={kycPep} kycStatus={kycStatus}/>     
             }
             
         </FlagSecureScreen>

@@ -10,9 +10,9 @@ import {onError} from '../util/ErrorUtility';
 
 const imageWidth = Dimensions.get('window').width - 80;
 
-import SplashImage from '../assets/images/Splash.png';
+import SplashImage from '../assets/images/LinearGradiant.png';
 import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
-import ToktokSuperApp from '../assets/images/ToktokSuperApp.png';
+import ToktokSuperApp from '../assets/images/ToktokLogo.png';
 
 const Landing = ({createSession, destroySession, setAppServices, navigation}) => {
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
@@ -58,6 +58,7 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
           });
           return;
         }
+        getUserSession.dummyStatus = 1;
 
         createSession(getUserSession);
 
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: imageWidth - 40,
-    width: imageWidth - 40,
+    height: imageWidth - 70, 
+    width: imageWidth - 150 
   },
 });
