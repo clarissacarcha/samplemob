@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useCallback, useState} from 'react';
 import _ from 'lodash';
 import {useSelector} from 'react-redux';
-import {View, Text, StyleSheet, TouchableOpacity, Image, Share, FlatList, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image, Share, FlatList, Dimensions, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
@@ -20,7 +20,8 @@ import {Shadow} from '../../../../../../../revamp';
 import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/DeliveryService.png';
 import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/PabiliService.png';
 import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/FoodService.png';
-import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoServiceBeta.png';
+import ToktokGoIconBeta from '../../../../../../../assets/toktok/icons/menu/GoServiceBeta.png';
+import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoService.png';
 import WalletIcon from '../../../../../../../assets/toktok/icons/menu/WalletService.png';
 import LoadIcon from '../../../../../../../assets/toktok/icons/menu/LoadService.png';
 // import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/MallService.png';
@@ -105,7 +106,7 @@ export const Menu = ({setUserLocation, constants}) => {
     {
       identifier: 'goA',
       label: 'Go',
-      icon: ToktokGoIcon,
+      icon: constants.iosVersionDisableBeta && Platform.OS == 'ios' ? ToktokGoIcon : ToktokGoIconBeta,
       onPress: () => navigation.push('ToktokGoLanding'),
       isNew: true,
     },

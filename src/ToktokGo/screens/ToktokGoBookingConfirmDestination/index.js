@@ -21,6 +21,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   const onConfirm = throttle(
     () => {
       navigation.pop();
+      navigation.pop();
       navigation.push('ToktokGoBookingConfirmPickup', {
         popTo: popTo + 1,
       });
@@ -72,7 +73,9 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      {mapRegion.latitude && <DestinationMap onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
+      {destination?.place?.location?.latitude && (
+        <DestinationMap onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />
+      )}
       <View style={styles.card}>
         <View
           style={{

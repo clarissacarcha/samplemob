@@ -3,7 +3,7 @@ import {Text, StyleSheet, Image, View, Modal, TouchableOpacity, StatusBar} from 
 import CONSTANTS from '../../../common/res/constants';
 import WarningIMG from '../../../common/assets/globalert/Warning.png';
 
-export const DriverCancelled = ({onCancel, cancel, onCancelWithFee, setVisible, cancellationState}) => {
+export const DriverCancelled = ({onDriverCancelled, cancel, onCancelWithFee, setVisible, cancellationState}) => {
   return (
     <Modal animationType="fade" transparent={true} visible={cancel} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
@@ -21,7 +21,7 @@ export const DriverCancelled = ({onCancel, cancel, onCancelWithFee, setVisible, 
               </View>
             </View>
 
-            <TouchableOpacity style={styles.buttonContainer} onPress={onCancel}>
+            <TouchableOpacity style={styles.buttonContainer} onPress={onDriverCancelled}>
               <Text style={styles.buttonText}>OK</Text>
             </TouchableOpacity>
           </View>

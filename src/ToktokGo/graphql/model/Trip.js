@@ -97,6 +97,12 @@ route {
 }
 status
 tag
+cancellation {
+  chargeAmount
+  chargeType
+  initiatedBy
+  reason
+}
 `;
 
 export const TRIP_BOOK = gql`
