@@ -324,7 +324,7 @@ export const StickyView = ({onCheckShop}) => {
       return (
         <Text style={styles.closeText}>
           Restaurant is currently closed. {'\n'}Please come back at{' '}
-          {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('LT')}
+          {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('HH:mm A')}
         </Text>
       );
     }
