@@ -23,10 +23,10 @@ export const TransactionModal = ({
         >
              <View style={styles.content}>  
                     <View style={{
-                        width: width * 0.9,
+                        width: width * 0.7,
                         backgroundColor:"white",
                         borderRadius: 5,
-                        padding: 16,
+                        padding: 25,
                     }}>
                         {children}
                         <View style={{justifyContent:"flex-end", width: "50%",alignSelf:"center",marginTop: 16}}>

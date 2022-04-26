@@ -42,6 +42,7 @@ export const GET_MY_ACCOUNT = gql`
             mpinCode
             mpindCodeAttempts
             isLinked
+            isPep
             person {
                 id
                 firstName

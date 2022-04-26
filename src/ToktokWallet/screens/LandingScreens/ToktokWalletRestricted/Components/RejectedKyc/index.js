@@ -10,12 +10,15 @@ const  { COLOR , FONT_SIZE , FONT_FAMILY: FONT } = CONSTANTS
 const {height,width} = Dimensions.get("window")
 
 
-export const RejectedKyc = ()=> {
+export const RejectedKyc = ({isPep})=> {
     const navigation = useNavigation()
 
     navigation.setOptions({
         headerShown:false,
     })
+
+    const subMessage = isPep ? "Please check your email for further details." : 'Please check your email for further details or click "Verify Now" to try again.'
+    
     return (
         <>
         <View style={styles.container}>
@@ -28,7 +31,7 @@ export const RejectedKyc = ()=> {
             <View style={styles.content}>
                 <View style={{alignItems:"center",marginTop: 10,}}>
                 <Text style={styles.verifyWalletText}><Text style={{ ...styles.verifyWalletText , color: COLOR.YELLOW}}>toktok</Text><Text style={{...styles.verifyWalletText, color: COLOR.ORANGE}}>wallet</Text> application has been rejected.</Text>
-                <Text style={styles.clickVerifyText}>Please check your email for further details or click "Verify Now" to try again.</Text>
+                <Text style={styles.clickVerifyText}>{subMessage}</Text>
                 <View style={{marginTop: 20,justifyContent:'center'}}>
         
                         
@@ -68,9 +71,12 @@ export const RejectedKyc = ()=> {
             </View>
 
             <View style={{height: 70,padding: 16,justifyContent:'flex-end'}}>
-                <YellowButton label="Verify now" onPress={()=> {
-                    navigation.navigate("ToktokWalletVerification")
-                }}/>
+                {
+                    !isPep &&
+                    <YellowButton label="Verify now" onPress={()=> {
+                        navigation.navigate("ToktokWalletVerification")
+                    }}/>
+                }
             </View>
         
         </View>

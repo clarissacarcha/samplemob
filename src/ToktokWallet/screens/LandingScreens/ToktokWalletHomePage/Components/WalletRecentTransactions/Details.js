@@ -40,6 +40,7 @@ const Details = ({
         amount,
         refNo,
         refDate,
+        note
     } = transaction
 
 
@@ -57,6 +58,7 @@ const Details = ({
                     <Text style={styles.labelText}>Amount: {amount}</Text>
                     <Text style={styles.labelText}>Ref No: {refNo}</Text>
                     <Text style={styles.labelText}>Date & Time: {refDate}</Text>
+                    { note && <Text style={styles.labelText}>Note: {note}</Text>}
                 </View>
             </View>
         </TransactionModal>

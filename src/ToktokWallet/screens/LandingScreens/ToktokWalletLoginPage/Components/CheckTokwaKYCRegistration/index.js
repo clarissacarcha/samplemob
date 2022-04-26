@@ -8,13 +8,13 @@ import {
     RejectedKyc
 } from "toktokwallet/screens/LandingScreens/ToktokWalletRestricted/Components"
 
-export const CheckTokwaKYCRegistration = ({children, kycStatus})=>{
+export const CheckTokwaKYCRegistration = ({children, kycStatus , kycPep})=>{
 
     const navigation = useNavigation()
 
      // If KYC status is Rejected
      if(kycStatus == 0){
-        return <RejectedKyc/>
+        return <RejectedKyc isPep={kycPep}/>
     }
 
      // If have pending KYC record and status is Pending

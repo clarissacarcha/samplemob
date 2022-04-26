@@ -12,7 +12,7 @@ import {useNavigation} from '@react-navigation/native'
 import moment from 'moment'
 import {connect} from 'react-redux'
 import { YellowButton } from 'src/revamp'
-import { DisabledButton, Separator } from 'toktokwallet/components'
+import { DisabledButton } from 'toktokwallet/components'
 import CheckBox from 'react-native-check-box'
 import AsyncStorage from '@react-native-community/async-storage';
 import RNFS from 'react-native-fs'
@@ -142,31 +142,6 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         })
         : null
 
-        // if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath).then(()=>{
-        //     console.log("Deleted")
-        // }).catch(err=>console.log(err))
-        // RNFS.unlink(RNFS.TemporaryDirectoryPath)
-
-        // RNFS.readDir(RNFS.CachesDirectoryPath)
-        // .then(arr => RNFS.readDir(arr[0].path)) // The Camera directory
-        //     .then(arr => arr.forEach(item => {
-        //        console.log(item.path)
-        //         // Linking.canOpenURL(contentURI)
-        //         // .then(able => able ? Linking.openURL(contentURI) : console.log('No application available'))
-        //         // .catch(console.log)
-        //     }))
-        // return;
-   
-    //    setCacheImages({
-    //     rnSelfieFile,
-    //     rnSelfieFileWithID,
-    //     rnFrontIDFile,
-    //     rnBackIDFile,
-    //    })
-
-        // removing / delete cache files
-       //removeCacheImages({VerifyUserData})
-
         const input = {
             // userId: session.user.id,
             userId: await AsyncStorage.getItem('accessToken'),
@@ -210,14 +185,14 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                     pepPosition: VerifyUserData.pepInfo.questionnaire.pepPosition,
                     isFamilyPep: VerifyUserData.pepInfo.questionnaire.isFamilyPep,
                     familyPepPosition: VerifyUserData.pepInfo.questionnaire.familyPepPosition,
-                    sourceOfIncomeId:  VerifyUserData.pepInfo.questionnaire.sourceOfIncomeId,
+                    sourceOfIncomeId:  JSON.stringify(VerifyUserData.pepInfo.questionnaire.sourceOfIncomeId),
                     sourceOfIncome: VerifyUserData.pepInfo.questionnaire.sourceOfIncome,
-                    sourceOfWealthId: VerifyUserData.pepInfo.questionnaire.sourceOfWealthId,
+                    sourceOfWealthId: JSON.stringify(VerifyUserData.pepInfo.questionnaire.sourceOfWealthId),
                     sourceOfWealth: VerifyUserData.pepInfo.questionnaire.sourceOfWealth,
                 }
             }
         }
-        
+
         postKYCRegister({
             variables: {
                 input: input
@@ -233,7 +208,6 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                 <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
                         <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Review Information</Text>
                         <Text style={{fontFamily: FONT.REGULAR,marginBottom: 10,fontSize: FONT_SIZE.M,color:"#929191"}}>Make sure your details are all correct.</Text>  
-                        <Separator/>
                         <UserInfo label="Mobile Number" value={VerifyUserData.contactInfo.mobile_number}/>
                         <UserInfo label="Email Address" value={VerifyUserData.contactInfo.email}/>
                         <UserInfo label="First Name" value={VerifyUserData.person.firstName}/>
@@ -252,7 +226,6 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                         <UserInfo label="Occupation" value={VerifyUserData.incomeInfo.occupation}/>
                         <UserInfo label="ID Type" value={VerifyUserData.verifyID.idType}/>
                         <UserInfo label="ID number" value={VerifyUserData.verifyID.idNumber}/>
-                <Separator/>
                 </ScrollView>
 
                 <View style={styles.proceedBtn}>
