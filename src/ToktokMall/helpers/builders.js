@@ -160,7 +160,8 @@ export const CheckShippingVouchers = (data) => {
 }
 
 export const GetOrderType = (referral) => {
-	if(referral && referral?.referralCode != null){
+	if(referral && referral?.referralCode != null
+		|| referral && referral?.franchiseeCode != null){
 		//referral
 		return 3
 	}else{
