@@ -38,7 +38,7 @@ const RestaurantItem = ({activeTab, item}) => {
     if (isAboutToOpen || dayLapsed === 0) {
       return (
         <Text style={styles.overlayText}>
-          Opens at {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('LT')}
+          Opens at {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('HH:mm A')}
         </Text>
       );
     }
