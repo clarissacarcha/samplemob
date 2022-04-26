@@ -19,6 +19,8 @@ export const CheckoutContextProvider = ({children})=> {
 
 	const [autoShippingPayload, setAutoShippingPayload] = useState({})
 
+	const [unavailableItems, setUnavailableItems] = useState([])
+
 	const [getShippingHashDeliveryAmount, {data}] = useLazyQuery(GET_HASH_AMOUNT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
@@ -54,7 +56,10 @@ export const CheckoutContextProvider = ({children})=> {
 				hashDeliveryData: data,
 
 				voucherErrors,
-				setVoucherErrors
+				setVoucherErrors,
+
+				unavailableItems,
+				setUnavailableItems
 			}}
 		>
 			{children}

@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput, ScrollView, BackHandler} from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, Header, LoadingOverlay} from '../../../Components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import {otpicon, otpbg, otpicon2} from '../../../assets';
@@ -14,7 +14,7 @@ import {
   WalletApiCall,
   ToktokWalletRawApiCall
 } from "../../../helpers";
-import { connect, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from '../../../../graphql';
@@ -23,6 +23,7 @@ import { POST_VERIFY_TOKTOKWALLET_PIN } from '../../../../graphql/toktokmall/vir
 import {OTP, TPIN, ValidatorMaxRequest} from './Components'
 import { TPINOTPContext } from './ContextProvider';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Component = ({navigation, route, otpAttempts, setAttempts}) => {
 
@@ -30,6 +31,8 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
 	const Context = useContext(TPINOTPContext)
 	const [validating, setValidating] = useState(false)
 	const [processing, setProcessing] = useState(false)
+  const {modal} = useSelector(state => state.toktokMall)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if(route?.params.error && route.params.errorCode == "VALIDATORMAXREQUEST"){
@@ -43,6 +46,36 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
     }
 
   }, [route])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        if(modal.visible){
+          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
+          return true
+        }
+      }
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }, [])
+  )
+
+  // useEffect(() => {
+  //   if(route?.params.unavailable.length > 0){
+  //     dispatch({
+  //       type: 'TOKTOK_MALL_OPEN_MODAL_2',
+  //       payload: {
+  //         type: 'Warning',
+  //         title: 'Unable to Place Order',
+  //         message: 'We’re sorry but some items in your cart is currently unavailable. Please try again another time.',
+  //         onConfirm: () => {
+  //           route.params.unavailableCallback()
+  //           navigation.goBack();
+  //         },
+  //       },
+  //     });
+  //   }
+  // },[route])
 
   const ValidatePin = async () => {
 
@@ -86,13 +119,13 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
       Toast.show("Something went wrong", Toast.LONG)
     }
   }
+  console.log("Checkout body", route.params.data)
 
   const ProcessPayment = async () => {
 
     let checkoutBody = route.params.data
     checkoutBody.pin = Context.value
 
-    console.log("Checkout body", JSON.stringify(checkoutBody))
     
     setValidating(false)
     setProcessing(true)
@@ -105,9 +138,12 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
       navigation.pop()
 
     }else if(req.responseError){
-      console.log(req.responseError)
+      // console.log(req.responseError)
       const regex = /(<([^>]+)>)/ig;
-      Toast.show(req.responseError.message.replace(regex, ""), Toast.LONG)
+      // Toast.show(req.responseError.message.replace(regex, ""), Toast.LONG)
+      route.params.onError(req, req.responseError)
+      navigation.pop()
+
     }else if(req.responseError == null && req.responseData == null){
       Toast.show("Something went wrong", Toast.LONG)
     }
