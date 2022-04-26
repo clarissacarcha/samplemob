@@ -43,6 +43,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [initializePaymentMethod, setInitializePaymentMethod] = useState('');
   const [showHeader, setshowHeader] = useState(false);
   const [tripBookError, setTripBookError] = useState(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(paymentMethod);
 
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
@@ -173,8 +174,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           tripFareHash: details?.rate?.hash,
           routeHash: routeDetails?.hash,
           passengerCount: selectedSeatNum,
-          paymentMethod: paymentMethod,
-          ...(paymentMethod == 'TOKTOKWALLET'
+          paymentMethod: selectedPaymentMethod,
+          ...(selectedPaymentMethod == 'TOKTOKWALLET'
             ? {
                 initializedPayment: {
                   hash: initializePaymentMethod,
@@ -191,8 +192,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const confirmBooking = num => {
     setSelectedSeatNum(num);
     SheetManager.hide('passenger_capacity');
-    if (paymentMethod == 'CASH') {
-      tripBooking();
+    if (selectedPaymentMethod == 'CASH') {
+      tripBooking({pinCode: null});
     } else {
       tripInitializePayment({
         variables: {
@@ -221,7 +222,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         selectedVouchers={selectedVouchers}
         setSelectedVouchersNull={setSelectedVouchersNull}
       /> */}
-      <BookingBreakdown selectedVehicle={selectedVehicle} />
+      <BookingBreakdown selectedVehicle={selectedVehicle} loading={loading} />
       <BookingTotal loading={loading} details={details} />
       <BookingSelectPaymentMethod
         viewPaymenetSucessModal={viewPaymenetSucessModal}
@@ -272,6 +273,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       <PaymentMethodModal
         viewSelectPaymentModal={viewSelectPaymentModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
+        setSelectedPaymentMethod={setSelectedPaymentMethod}
         details={details}
       />
 
