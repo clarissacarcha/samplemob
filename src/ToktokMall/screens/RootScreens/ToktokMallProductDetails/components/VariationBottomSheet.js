@@ -299,7 +299,7 @@ export const VariationBottomSheet = forwardRef(({
                   <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={itemprice * qty} /></Text>
                   <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11, marginTop: 2.5, marginLeft: 8}}>{originalPrice == 0 ? "" : <Price amount={originalPrice*qty} />}</Text>                
                 </View>
-                <Text style={{color: "#9E9E9E", fontSize: 12, marginTop: 5}}>Stock: {isContinueSelling ? "pre-order" : stock}</Text>
+                <Text style={{color: "#9E9E9E", fontSize: 12, marginTop: 5}}>Stock: {isContinueSelling == 1 && stock <= 0 ? "pre-order" : stock}</Text>
               </View>
               <View style={{flex: 6, justifyContent: 'center'}}>
                 <Text style={{marginTop: 8}}></Text>
