@@ -2,15 +2,17 @@ import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const BookingCancelledNote = ({}) => {
+export const BookingCancelledNote = ({booking}) => {
   return (
     <View style={styles.contentCard}>
-      {true && (
+      {booking.cancellation.initiatedBy == 'DRIVER' && (
         <Text style={styles.cancelledText}>
           Booking was cancelled by<Text style={styles.bold}> Driver</Text>
         </Text>
       )}
-      {false && <Text style={styles.cancelledText}>You cancelled this booking</Text>}
+      {booking.cancellation.initiatedBy == 'CONSUMER' && (
+        <Text style={styles.cancelledText}>You cancelled this booking</Text>
+      )}
       {false && (
         <Text style={styles.cancelledText}>
           Booking was cancelled by<Text style={styles.bold}> Toktok Operations</Text>

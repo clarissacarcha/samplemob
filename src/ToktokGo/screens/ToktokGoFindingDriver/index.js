@@ -58,8 +58,6 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       }
     },
   });
-  console.log(booking);
-  console.log(onTripUpdate);
 
   useEffect(() => {
     if (waitingText < 5 && waitingStatus) {

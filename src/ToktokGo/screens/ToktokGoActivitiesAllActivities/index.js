@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, ActivityIndicator, FlatList, RefreshControl, Image, StyleSheet, Dimensions} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
@@ -26,9 +26,9 @@ const AllActivities = ({navigation, session}) => {
     onError: error => console.log('error', error),
   });
 
-  useFocusEffect(() => {
-    // refetch();
-  }, []);
+  useFocusEffect(useCallback(() => {
+    refetch()
+  }, []));
 
   if (loading) {
     return (

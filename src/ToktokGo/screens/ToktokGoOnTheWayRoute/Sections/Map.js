@@ -6,7 +6,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
 import Car from '../../../../assets/images/Car.png';
 import constants from '../../../../common/res/constants';
-export const Map = ({booking, decodedPolyline}) => {
+export const Map = ({booking, decodedPolyline, originData}) => {
   const mapRef = useRef();
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
@@ -57,7 +57,7 @@ export const Map = ({booking, decodedPolyline}) => {
         key={key => {
           1;
         }}
-        coordinate={ORIGIN}>
+        coordinate={originData ? INITIAL_REGION : ORIGIN}>
         <View style={{alignItems: 'center'}}>
           <FA5Icon name="map-pin" size={18} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 2}} />
         </View>
@@ -66,7 +66,7 @@ export const Map = ({booking, decodedPolyline}) => {
         key={key => {
           2;
         }}
-        coordinate={TO}>
+        coordinate={originData ? INITIAL_REGION : TO}>
         <View style={{alignItems: 'center'}}>
           <Image source={Car} style={{height: 36, width: 36}} resizeMode="contain" />
         </View>
