@@ -51,10 +51,16 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
 
   const healthCareAccept = async () => {
     const date = await AsyncStorage.getItem('ToktokGoHealthCare');
-    if (date === moment(new Date()).format('MMM D, YYYY')) {
-      navigation.replace('ToktokGoBookingStart');
+    const data = await AsyncStorage.getItem('ToktokGoOnBoardingBeta');
+
+    if (data) {
+      if (date === moment(new Date()).format('MMM D, YYYY')) {
+        navigation.replace('ToktokGoBookingStart');
+      } else {
+        navigation.replace('ToktokGoHealthCare');
+      }
     } else {
-      navigation.replace('ToktokGoHealthCare');
+      navigation.replace('ToktokGoOnBoardingBeta');
     }
   };
 
