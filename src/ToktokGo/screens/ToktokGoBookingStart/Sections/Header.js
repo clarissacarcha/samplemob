@@ -1,11 +1,11 @@
 import React from 'react';
-import {Text, View, StatusBar, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {Text, View, StatusBar, StyleSheet, Image, TouchableOpacity, Platform} from 'react-native';
 import ToktokgoIcon from '../../../../assets/images/ToktokgoLandingIcon.png';
 import CONSTANTS from '../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import ArrowLeft from '../../../../assets/icons/arrow-left-icon.png';
 
-export const Header = ({navigation}) => {
+export const Header = ({navigation, constants}) => {
   return (
     <View style={styles.headerBox}>
       <View style={{marginTop: StatusBar.currentHeight, flexDirection: 'row', alignItems: 'center'}}>
@@ -15,7 +15,11 @@ export const Header = ({navigation}) => {
         <View style={styles.greetingBox}>
           <Image source={ToktokgoIcon} resizeMode={'contain'} style={{height: 25, width: 87}} />
         </View>
-        <Text style={{fontSize: CONSTANTS.FONT_SIZE.XS - 1, color: CONSTANTS.COLOR.ORANGE}}>BETA</Text>
+        {constants.iosVersionDisableBeta && Platform.OS == 'ios' ? (
+          <></>
+        ) : (
+          <Text style={{fontSize: CONSTANTS.FONT_SIZE.XS - 1, color: CONSTANTS.COLOR.ORANGE}}>BETA</Text>
+        )}
       </View>
     </View>
   );

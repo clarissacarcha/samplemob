@@ -156,7 +156,14 @@ const INITIAL_STATE = {
       total: null,
     },
     logs: [],
+    cancellation: {
+      chargeAmount: null,
+      chargeType: null,
+      initiatedBy: null,
+      reason: null,
+    },
   },
+  tempVehicleArr: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -173,6 +180,8 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, routeDetails: action.payload};
     case 'SET_TOKTOKGO_BOOKING':
       return {...state, booking: action.payload};
+    case 'SET_TOKTOKGO_TEMP_VEHICLE_LIST':
+      return {...state, tempVehicleArr: action.payload};
     case 'SET_TOKTOKGO_BOOKING_INITIAL_STATE':
       return INITIAL_STATE;
     default:

@@ -2,10 +2,12 @@ import React from 'react';
 import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import {VehicleCard} from '../../../components';
 import CONSTANTS from '../../../../common/res/constants';
+import {useSelector} from 'react-redux';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 
 export const BookingSelectVehicle = ({navigation, data, selectVehicle, selectedVehicle}) => {
+  const {tempVehicleArr} = useSelector(state => state.toktokGo);
   return (
     <>
       <View style={styles.container}>
@@ -27,8 +29,8 @@ export const BookingSelectVehicle = ({navigation, data, selectVehicle, selectedV
         </TouchableOpacity>
       </View>
 
-      <VehicleCard data={data.vehicleTypeRates?.[0]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
-      <VehicleCard data={data.vehicleTypeRates?.[1]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
+      <VehicleCard data={tempVehicleArr[0]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
+      <VehicleCard data={tempVehicleArr[1]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
 
       <View style={styles.divider} />
     </>
