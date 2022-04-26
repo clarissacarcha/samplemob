@@ -1,5 +1,6 @@
 import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage'
+import environments from '../../common/res/environments'
 
 export const env = "staging" // staging | production
 export const paypanda_env = env == "staging" ? "sandbox" : "production"
@@ -211,8 +212,8 @@ export const WalletApiCall = async (endpoint, body, debug = false) => {
 		//CHECK IF SESSION IS VALID
 		if(session.walletSignature){
 			
-			// formData.append("signature", session.walletSignature)
-			formData.append("signature", "aUN0S0Z5clNNaFlCbHBlRWFLRkorMWtXeWJ4WUk1VkdISmlDT0Z1NStNdHFWREVWZzIrR01DcnduaEt5dU03OQ==")
+			formData.append("signature", session.walletSignature)
+			// formData.append("signature", "aUN0S0Z5clNNaFlCbHBlRWFLRkorMWtXeWJ4WUk1VkdISmlDT0Z1NStNdHFWREVWZzIrR01DcnduaEt5dU03OQ==")
 			formData.append("data", JSON.stringify(body))
 
 			await axios.post(`${toktokwallet_api_url[env]}${endpoint}`, formData).then((response) => {
