@@ -105,7 +105,7 @@ export const Item = ({
       if(CartContextData.willDelete){
         return false
       }else{
-        if(item.contSellingIsset === 0 && item.noOfStocks === 0){
+        if(item.contSellingIsset === 0 && item.noOfStocks <= 0){
           return true
         }else if(item.enabled == 1){
           return false
@@ -117,7 +117,7 @@ export const Item = ({
       if(CartContextData.willDelete){
         return "#F6841F"
       }else{
-        if(item.contSellingIsset === 0 && item.noOfStocks === 0){
+        if(item.contSellingIsset === 0 && item.noOfStocks <= 0){
           return "#ECECEC"
         }else if(item.enabled == 1){
           return "#F6841F"
@@ -285,7 +285,7 @@ export const Item = ({
                 </View>              
               }
 
-              {product?.enabled == 1 && product?.contSellingIsset === 0 && product?.noOfStocks === 0 &&
+              {product?.enabled == 1 && product?.contSellingIsset === 0 && product?.noOfStocks <= 0 &&
                 <View style={{paddingVertical: 15}}>
                   <View style={{borderWidth: 0.5, borderColor: '#F6841F', width: '35%', alignItems: 'center', borderRadius: 2}}>
                     <Text style={{fontSize: 11, color: "#F6841F"}}>Out of Stock</Text>

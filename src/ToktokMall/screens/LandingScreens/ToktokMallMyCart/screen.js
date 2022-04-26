@@ -65,7 +65,7 @@ const Component = ({
           data.map(item => {
             if(item.product.enabled === 1 && item.product.noOfStocks !== 0){
               count+=item.quantity
-            }else if(item.product.enabled === 1 && item.product.contSellingIsset === 1){
+            }else if(item.product.enabled === 1 && item.product.noOfStocks <= 0 && item.product.contSellingIsset === 1){
               count+=item.quantity
             }
           })
@@ -78,7 +78,7 @@ const Component = ({
           data.map(item => {
             if(item.product.enabled === 1 && item.product.noOfStocks !== 0){
               total++
-            }else if(item.product.enabled === 1 && item.product.contSellingIsset === 1){
+            }else if(item.product.enabled === 1 && item.product.noOfStocks <= 0 && item.product.contSellingIsset === 1){
               total++
             }
           })
