@@ -5,3 +5,4 @@ export * from './BookingConfirmButton';
 export * from './BookingMap';
 export * from './BookingVoucher';
 export * from './BookingTotal';
+export * from './BookingBreakdown';

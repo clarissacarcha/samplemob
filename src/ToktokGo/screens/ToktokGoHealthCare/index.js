@@ -4,8 +4,14 @@ import GradientBackground from '../../../assets/toktokgo/toktokgo-gradient-backg
 import Graphics from '../../../assets/toktokgo/toktokgo-health-care-graphics.png';
 import constants from '../../../common/res/constants';
 import FAIcons from 'react-native-vector-icons/FontAwesome';
-
+import AsyncStorage from '@react-native-community/async-storage';
+import moment from 'moment';
 const ToktokGoHealthCare = ({navigation}) => {
+  const onPress = () => {
+    const date = moment(new Date()).format('MMM D, YYYY');
+    AsyncStorage.setItem('ToktokGoHealthCare', date);
+    navigation.replace('ToktokGoBookingStart');
+  };
   return (
     <ImageBackground source={GradientBackground} style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -52,7 +58,7 @@ const ToktokGoHealthCare = ({navigation}) => {
         </View>
       </ScrollView>
       <View style={styles.fabcontainer}>
-        <TouchableOpacity style={styles.fab} onPress={() => navigation.replace('ToktokGoBookingStart')}>
+        <TouchableOpacity style={styles.fab} onPress={onPress}>
           <Text style={styles.fabtext}>Accept</Text>
         </TouchableOpacity>
       </View>

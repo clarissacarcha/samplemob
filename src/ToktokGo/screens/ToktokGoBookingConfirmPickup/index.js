@@ -14,7 +14,7 @@ import {MAP_DELTA_LOW} from '../../../res/constants';
 import {throttle} from 'lodash';
 
 const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
-  const {popTo} = route.params;
+  const {popTo, source} = route.params;
   const dispatch = useDispatch();
   const dropDownRef = useRef(null);
   const {details, destination, origin} = useSelector(state => state.toktokGo);
@@ -24,20 +24,13 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const [getQuotation] = useLazyQuery(GET_QUOTATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        service: 'GO',
-        origin: {
-          placeHash: origin.hash,
-        },
-        destinations: {
-          placeHash: destination.hash,
-        },
-      },
-    },
     onCompleted: response => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ROUTE', payload: response.getQuotation.quotation.route});
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, noteToDriver: note}});
+      dispatch({
+        type: 'SET_TOKTOKGO_TEMP_VEHICLE_LIST',
+        payload: response.getQuotation.quotation.vehicleTypeRates.slice(0, 2),
+      });
       navigation.replace('ToktokGoBookingSummary', {
         popTo: popTo + 1,
         quotationDataResult: response.getQuotation.quotation,
@@ -47,7 +40,32 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     onError: error => console.log('error', error),
   });
 
-  const onConfirm = throttle(getQuotation, 1000, {trailing: false});
+  const onConfirm = throttle(
+    () => {
+      if (source == 'searchLocation') {
+        navigation.pop();
+        navigation.push('ToktokGoBookingSelectLocations', {
+          popTo: 1,
+        });
+      } else {
+        getQuotation({
+          variables: {
+            input: {
+              service: 'GO',
+              origin: {
+                placeHash: origin.hash,
+              },
+              destinations: {
+                placeHash: destination.hash,
+              },
+            },
+          },
+        });
+      }
+    },
+    1000,
+    {trailing: false},
+  );
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -84,7 +102,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      {mapRegion.latitude && <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
+      {origin?.place?.location?.latitude && <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
       <View style={styles.card}>
         <NotesToDriver dropDownRef={dropDownRef} navigation={navigation} popTo={popTo} note={note} setNote={setNote} />
         <ConfirmPickupButton onConfirm={onConfirm} />
