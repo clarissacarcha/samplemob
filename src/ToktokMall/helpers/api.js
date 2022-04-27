@@ -2,26 +2,6 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage'
 import environments from '../../common/res/environments'
 
-export const env = "staging" // staging | production
-export const paypanda_env = env == "staging" ? "sandbox" : "production"
-
-export const server_staging = "http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com"
-export const server_production = ""
-
-export const api_entry = "toktokmall"
-
-export const api_url = {
-	'staging': `${server_staging}/${api_entry}/`,
-	'production': `${server_production}/${api_entry}`
-}
-export const toktokwallet_api_url = {
-	'staging': `${server_staging}/toktokwallet/`,
-	'production': ''
-}
-export const paypanda_api_url = {
-	'sandbox': 'https://sandbox.paypanda.ph/api/payment/transaction_entry',
-	'production': ''
-}
 
 export const ApiCall = async (endpoint, body, debug = false, datatype = "json") => {	
 
@@ -49,11 +29,11 @@ export const ApiCall = async (endpoint, body, debug = false, datatype = "json") 
 
 			if(debug){
 				console.log("Session", session)
-				// console.log("Endpoint: ", `${api_url[env]}${endpoint}`)
+				// console.log("Endpoint: ", `${environments.TOKTOKMALL_API_URL}${endpoint}`)
 				console.log("Data", formData)
 			}
 
-			await axios.post(`${api_url[env]}${endpoint}`, formData).then((response) => {
+			await axios.post(`${environments.TOKTOKMALL_API_URL}/toktokmall/${endpoint}`, formData).then((response) => {
 				if(debug){
 					console.log("Response data", body, response.data)
 				}
@@ -121,7 +101,7 @@ export const DynamicApiCall = async (endpoint, signature, body, _options) => {
 				console.log("Data", formData)
 			}
 
-			await axios.post(`${api_url[env]}${endpoint}`, formData).then((response) => {
+			await axios.post(`${environments.TOKTOKMALL_API_URL}/toktokmall/${endpoint}`, formData).then((response) => {
 				if(options.debug){
 					console.log("Response data", body, response.data)
 				}
@@ -170,7 +150,7 @@ export const ShippingApiCall = async (endpoint, body, debug = false) => {
 
 		// console.log(formData)
 
-		await axios.post(`${api_url[env]}${endpoint}`, formData).then((response) => {
+		await axios.post(`${environments.TOKTOKMALL_API_URL}/toktokmall/${endpoint}`, formData).then((response) => {
 			if(debug){
 				console.log("Response data", response.data)
 			}
@@ -216,7 +196,7 @@ export const WalletApiCall = async (endpoint, body, debug = false) => {
 			// formData.append("signature", "aUN0S0Z5clNNaFlCbHBlRWFLRkorMWtXeWJ4WUk1VkdISmlDT0Z1NStNdHFWREVWZzIrR01DcnduaEt5dU03OQ==")
 			formData.append("data", JSON.stringify(body))
 
-			await axios.post(`${toktokwallet_api_url[env]}${endpoint}`, formData).then((response) => {
+			await axios.post(`${environments.TOKTOKMALL_API_URL}/toktokwallet/${endpoint}`, formData).then((response) => {
 				if(debug){
 					console.log("Response data", response.data)
 				}

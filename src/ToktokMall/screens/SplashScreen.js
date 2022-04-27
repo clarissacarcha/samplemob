@@ -168,11 +168,7 @@ const Splash = ({
 
     if(req.responseData && req.responseData.success == 1){
       setRegisterRetries(1)
-      authUser({variables: {
-        input: {
-          toktokId: parseInt(response.data.user_id)
-        }
-      }})
+      authUser()
     }else if(req.responseError && req.responseError.success == 0){
       setFailed(true)
       Toast.show(req.responseError.message, Toast.LONG)

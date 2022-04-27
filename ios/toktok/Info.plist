@@ -43,6 +43,11 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>54.248.55.236</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<string></string>
+			</dict>
 			<key>ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
