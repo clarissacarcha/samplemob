@@ -162,9 +162,6 @@ export const Item = ({
 
     const {enabled, contSellingIsset, noOfStocks} = product
 
-    if(enabled === 0) return null
-    else if(enabled === 1 && contSellingIsset == 0 && noOfStocks == 0) return null
-
     return (
       <>
         <View style={{flexDirection: 'row', marginTop: 7, alignItems: 'center', height: 40}}>
