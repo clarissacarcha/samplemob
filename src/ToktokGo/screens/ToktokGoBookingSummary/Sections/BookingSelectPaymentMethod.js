@@ -1,13 +1,22 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, Image, View, TouchableOpacity, ActivityIndicator} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 import WalletIcon from '../../../../assets/images/Wallet.png';
 import CashIcon from '../../../../assets/images/CashIcon.png';
 import WarningIcon from '../../../../assets/icons/Warning.png';
+import {numberFormat} from '../../../../helper';
 
-export const BookingSelectPaymentMethod = ({setViewSelectPaymentModal, viewPaymenetSucessModal, details}) => {
+export const BookingSelectPaymentMethod = ({
+  navigation,
+  setViewSelectPaymentModal,
+  viewPaymenetSucessModal,
+  details,
+  tokwaAccount,
+  getMyAccountLoading,
+}) => {
+  const {wallet, id} = tokwaAccount;
   return (
     <>
       <View style={styles.container}>
@@ -15,16 +24,16 @@ export const BookingSelectPaymentMethod = ({setViewSelectPaymentModal, viewPayme
           <Text style={styles.textStyle}>Payment Method</Text>
         </View>
 
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={styles.elementWrapper}
           onPress={() => setViewSelectPaymentModal(!viewPaymenetSucessModal)}>
           <Text style={styles.seeAlltextStyle}>See All</Text>
           <Image source={ArrowRightIcon} resizeMode={'contain'} style={styles.arrowIconStyle} />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
 
       {/*---Todo: add condition here---*/}
-      {details.paymentMethod == 1 && (
+      {details.paymentMethod == 'TOKTOKWALLET' && (
         <>
           <View style={styles.container}>
             <View style={styles.elementWrapper}>
@@ -33,38 +42,51 @@ export const BookingSelectPaymentMethod = ({setViewSelectPaymentModal, viewPayme
                 <Text style={{color: CONSTANTS.COLOR.YELLOW}}>
                   toktok<Text style={{color: CONSTANTS.COLOR.ORANGE}}>wallet</Text>
                 </Text>
-                <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>Balance: ₱400.00</Text>
+                {getMyAccountLoading ? (
+                  <ActivityIndicator color={CONSTANTS.COLOR.YELLOW} />
+                ) : (
+                  <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>Balance: ₱{numberFormat(wallet.balance)}</Text>
+                )}
               </View>
             </View>
 
             {/*---Todo: add condition here---*/}
-            {true && (
-              <TouchableOpacity style={styles.cashInWrapper}>
+            {id && (
+              <TouchableOpacity
+                style={styles.cashInWrapper}
+                onPress={() => {
+                  navigation.navigate('ToktokWalletLoginPage');
+                }}>
                 <Text style={styles.cashIntextStyle}>Cash In</Text>
               </TouchableOpacity>
             )}
 
-            {/*---Todo: add condition here---*/}
-            {false && (
-              <TouchableOpacity>
+            {!id && (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('ToktokWalletLoginPage');
+                }}>
                 <Text style={styles.noTokWa}>Create your toktokwallet</Text>
                 <Text style={styles.noTokWa}>account now!</Text>
               </TouchableOpacity>
             )}
           </View>
 
-          {/*---Todo: add condition here---*/}
-          {false && (
-            <View style={styles.warningWrapper}>
-              <Image source={WarningIcon} resizeMode={'contain'} style={styles.warningIconStyle} />
-              <Text style={styles.warningText}>Insufficient Balance</Text>
-            </View>
+          {id ? (
+            wallet.balance < details?.rate?.tripFare?.total && (
+              <View style={styles.warningWrapper}>
+                <Image source={WarningIcon} resizeMode={'contain'} style={styles.warningIconStyle} />
+                <Text style={styles.warningText}>Insufficient Balance</Text>
+              </View>
+            )
+          ) : (
+            <></>
           )}
         </>
       )}
 
       {/*---Todo: add condition here---*/}
-      {details.paymentMethod == 2 && (
+      {details.paymentMethod == 'CASH' && (
         <View style={styles.container}>
           <View style={styles.elementWrapper}>
             <Image source={CashIcon} resizeMode={'contain'} style={styles.walletIconStyle} />

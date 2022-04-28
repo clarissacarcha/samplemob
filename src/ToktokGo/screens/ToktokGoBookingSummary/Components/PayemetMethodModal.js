@@ -5,11 +5,17 @@ import CONSTANTS from '../../../../common/res/constants';
 import CashIcon from '../../../../assets/images/CashIcon.png';
 import WalletIcon from '../../../../assets/images/Wallet.png';
 
-export const PaymentMethodModal = ({viewSelectPaymentModal, setViewSelectPaymentModal, details}) => {
+export const PaymentMethodModal = ({
+  viewSelectPaymentModal,
+  setViewSelectPaymentModal,
+  details,
+  setSelectedPaymentMethod,
+}) => {
   const dispatch = useDispatch();
 
-  const setSelected = num => {
-    dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, paymentMethod: num}});
+  const setSelected = paymentMethod => {
+    dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, paymentMethod: paymentMethod}});
+    setSelectedPaymentMethod(paymentMethod);
     setViewSelectPaymentModal(false);
   };
 
@@ -18,7 +24,7 @@ export const PaymentMethodModal = ({viewSelectPaymentModal, setViewSelectPayment
       <TouchableWithoutFeedback onPress={() => setViewSelectPaymentModal(false)}>
         <View style={styles.transparent}>
           <View style={styles.card}>
-            <TouchableOpacity onPress={() => setSelected(1)}>
+            <TouchableOpacity onPress={() => setSelected('TOKTOKWALLET')}>
               <View style={styles.container}>
                 <View style={styles.elementWrapper}>
                   <Image source={WalletIcon} resizeMode={'contain'} style={styles.walletIconStyle} />
@@ -38,7 +44,7 @@ export const PaymentMethodModal = ({viewSelectPaymentModal, setViewSelectPayment
 
             <View style={styles.divider} />
 
-            <TouchableOpacity onPress={() => setSelected(2)}>
+            <TouchableOpacity onPress={() => setSelected('CASH')}>
               <View style={styles.container}>
                 <View style={styles.elementWrapper}>
                   <Image source={CashIcon} resizeMode={'contain'} style={styles.walletIconStyle} />
