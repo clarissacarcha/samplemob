@@ -180,6 +180,7 @@ const MainComponent = () => {
         },
       });
     }
+    console.log('temporaryCart', temporaryCart);
   }, [temporaryCart, location, isFocus]);
 
   useEffect(() => {
@@ -404,6 +405,7 @@ const MainComponent = () => {
       daystoship: 0,
       daystoship_to: 0,
       items: await fixItems(),
+
     };
     return [orderLogs];
   };
@@ -425,6 +427,7 @@ const MainComponent = () => {
           order_type: 1,
           notes: item.notes,
           addons: await fixAddOns(item.addonsDetails),
+          order_instructions: item.orderInstructions,
         };
         items.push(data);
       }),
@@ -660,7 +663,7 @@ const MainComponent = () => {
       discounted_totalamount: parsedAmount,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, []);
-    console.log('DATA', data);
+    // console.log('DATA', data);
     postCustomerOrder({
       variables: {
         input: data,

@@ -23,7 +23,7 @@ export const VerifyContextProvider = ({children}) => {
   const [hasTemporaryCart, setHasTemporaryCart] = useState(false);
   const [selectedVariants, setSelectedVariants] = useState({});
   const [basePrice, setBasePrice] = useState(0);
-  const [orderInstructions, setOrderInstructions] = useState('Select one');
+  const [orderInstructions, setOrderInstructions] = useState('Remove or edit unavailable item');
 
   return (
     <Provider

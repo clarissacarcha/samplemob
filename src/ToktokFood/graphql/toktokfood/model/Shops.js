@@ -130,6 +130,8 @@ export const GET_SHOP_DETAILS = gql`
         dayStatus
       }
       dayLapsed
+      orderOnOff
+      customerReqOpt
     }
   }
 `;
