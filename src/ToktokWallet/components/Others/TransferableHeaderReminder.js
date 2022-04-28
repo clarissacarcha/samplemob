@@ -16,7 +16,7 @@ export const TransferableHeaderReminder = ()=> {
                 <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.XL} />  
                 <Text style={{fontFamily:FONT.BOLD,fontSize: FONT_SIZE.M,marginLeft: 3}}>Transferable and Non-transferable amount?</Text> 
             </View>
-            <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M}}>
+            <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M,textAlign:"left"}}>
                 Click here to read more about transferable and non-transferable amount.
             </Text>
 
