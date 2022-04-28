@@ -125,7 +125,7 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                         recipientDetails={recipientDetails}
                         tokwaAccount={tokwaAccount}
                         setGetAccountLoading={setGetAccountLoading}
-                        // favoritesRef={favoritesRef}
+                        favoritesRef={favoritesRef}
                 />
                 <TransferableHeaderReminder/>
 
@@ -165,10 +165,10 @@ export const ToktokWalletSendMoney = ({navigation,route})=> {
                         : null
                     }
 
-                    {/* <Favorites 
+                    <Favorites 
                         ref={favoritesRef}
                         setMobileNo={setMobileNo}
-                    />   */}
+                    />  
 
                     <View style={{flex: 1, height: SIZE.FORM_HEIGHT,marginTop: 50,justifyContent:"flex-end"}}>
                        

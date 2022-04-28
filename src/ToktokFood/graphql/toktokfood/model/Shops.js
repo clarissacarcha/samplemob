@@ -157,6 +157,7 @@ export const GET_SEARCH_FOOD = gql`
       estimatedDistance
       estimatedDeliveryTime
       hasOpen
+      hasProduct
       nextOperatingHrs {
         id
         shopId
@@ -191,6 +192,7 @@ export const GET_SHOP_BY_CATEGORY = gql`
       estimatedDistance
       estimatedDeliveryTime
       hasOpen
+      hasProduct
       nextOperatingHrs {
         id
         shopId

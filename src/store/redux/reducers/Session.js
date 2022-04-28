@@ -30,6 +30,9 @@ export default (state = INITIAL_STATE, action) => {
     case 'DESTROY_SESSION':
       AsyncStorage.removeItem('userId');
       AsyncStorage.removeItem('accessToken');
+      AsyncStorage.removeItem('SEARCH_HISTORY');
+      AsyncStorage.removeItem('NEW_INSTALL');
+      AsyncStorage.removeItem('CART_LOCATION');
       // return INITIAL_STATE;
       return state;
     default:

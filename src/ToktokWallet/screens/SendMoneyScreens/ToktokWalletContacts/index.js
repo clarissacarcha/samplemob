@@ -1,12 +1,13 @@
 import React , {useState , useEffect} from 'react'
 import {View,Text,StyleSheet,TextInput,TouchableOpacity,Platform,FlatList,ActivityIndicator,Image} from 'react-native'
 import {check,request,PERMISSIONS,RESULTS} from 'react-native-permissions'
-import { CheckIdleState } from 'toktokwallet/components'
+import { CheckIdleState, FlagSecureScreen } from 'toktokwallet/components'
 import {useSelector} from 'react-redux'
 import Contacts from 'react-native-contacts'
 import {sortBy} from 'lodash'
 import {Separator} from 'toktokwallet/components'
 import { HeaderBack , HeaderTitle , ICON_SET, VectorIcon } from 'src/revamp'
+import { useContacts } from 'toktokwallet/hooks';
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE , MARGIN } = CONSTANTS
@@ -22,155 +23,35 @@ export const ToktokWalletContacts = ({navigation,route})=> {
     })
 
     const session = useSelector(state=>state.session)
+    const { contacts } = useContacts();
 
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
     const [fetchError, setFetchError] = useState(false);
-    const [filteredData, setFilteredData] = useState(null);
+    const [filteredData, setFilteredData] = useState([]);
     const [searchString,setSearchString] = useState("");
-
-    const getContacts = async ()=>{
-        try {
-            Contacts.getAllWithoutPhotos((error, contacts) => {
-              if (error) {
-                setFetchError(true);
-              }
-      
-              const mappedContacts = contacts
-                .filter((contact) => {
-                  if (Platform.OS === 'android') {
-                    if (contact.phoneNumbers.length === 0 || !contact.displayName) {
-                      return false;
-                    }
-                    return true;
-                  }
-      
-                  if (Platform.OS === 'ios') {
-                    if (contact.phoneNumbers.length === 0 || !contact.givenName) {
-                      return false;
-                    }
-                    return true;
-                  }
-                })
-                .map((contact) => {
-                  return {
-                    name: `${contact.givenName} ${contact.familyName}`,
-                    number: contact.phoneNumbers[0].number,
-                  };
-                });
-      
-              const sortedContacts = sortBy(mappedContacts, (contact) => contact.name);
-      
-              setData(sortedContacts);
-              setFilteredData(sortedContacts);
-            });
-          } catch (error) {
-            console.log(error);
-          }
-    }
-
-
-    const goToContacts = async ()=> {
-        const checkAndRequest = Platform.select({
-            android: async () => {
-              const checkResult = await check(PERMISSIONS.ANDROID.READ_CONTACTS);
-      
-              if (checkResult === RESULTS.GRANTED) {
-                return true;
-              }
-      
-              if (checkResult === RESULTS.BLOCKED) {
-                Alert.alert(
-                  '',
-                  "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
-                );
-                return false;
-              }
-      
-              if (checkResult === RESULTS.UNAVAILABLE) {
-                Alert.alert('', 'Access to contacts is unavailable.');
-                return false;
-              }
-      
-              if (checkResult === RESULTS.DENIED) {
-                const requestResult = await request(PERMISSIONS.ANDROID.READ_CONTACTS);
-      
-                if (requestResult === RESULTS.GRANTED) {
-                  return true;
-                }
-      
-                if (requestResult === RESULTS.BLOCKED) {
-                  Alert.alert(
-                    '',
-                    "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
-                  );
-                  return false;
-                }
-      
-                if (requestResult === RESULTS.DENIED) {
-                  Alert.alert('', "Sorry, we can't access your contacts without sufficient permission.");
-                  return false;
-                }
-              }
-            },
-            ios: async () => {
-              const checkResult = await check(PERMISSIONS.IOS.CONTACTS);
-      
-              if (checkResult === RESULTS.GRANTED) {
-                return true;
-              }
-      
-              if (checkResult === RESULTS.BLOCKED) {
-                Alert.alert(
-                  '',
-                  "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
-                );
-                return false;
-              }
-      
-              if (checkResult === RESULTS.UNAVAILABLE) {
-                Alert.alert('', 'Access to contacts is unavailable.');
-                return false;
-              }
-      
-              if (checkResult === RESULTS.DENIED) {
-                const requestResult = await request(PERMISSIONS.IOS.CONTACTS);
-                if (requestResult === RESULTS.GRANTED) {
-                  return true;
-                }
-      
-                if (requestResult === RESULTS.BLOCKED) {
-                  Alert.alert(
-                    '',
-                    "Contacts access have been blocked. Please allow toktok to access your contacts in your phone's settings.",
-                  );
-                  return false;
-                }
-              }
-            },
-          });
-      
-          const result = await checkAndRequest();
-          if(result) getContacts()
-    }
 
 
     const filterSearch = (value)=> {
         setSearchString(value)
         const filteredContacts = data.filter((contact) => {
-          return contact.name.toLowerCase().includes(value.toLowerCase()) || contact.number.toLowerCase().includes(value.toLowerCase())
+          return contact.name.toLowerCase().includes(value.toLowerCase())
         });
+        console.log(JSON.stringify(filteredContacts))
         setFilteredData(filteredContacts);
     }
 
     const setRecipient = (recipient) => {
       route.params.setRecipientInfo(recipient)
-      return navigation.pop()
+      return navigation.navigate("ToktokWalletSendMoney")
     }
 
 
     useEffect(()=>{
-        goToContacts()
-    },[])
+      if(contacts){
+        setData(contacts);
+        setFilteredData(contacts);
+      }
+    },[contacts])
 
     
     if (!filteredData) {
@@ -192,6 +73,7 @@ export const ToktokWalletContacts = ({navigation,route})=> {
 
 
     return (
+      <FlagSecureScreen>
       <CheckIdleState>
       <Separator />
       <View style={styles.container}>
@@ -213,9 +95,10 @@ export const ToktokWalletContacts = ({navigation,route})=> {
           <View style={styles.contactlist}>
                    <FlatList
                           showsVerticalScrollIndicator={false}
-                          data={filteredData}
-                          keyExtractor={(item)=>item.number}
+                          data={searchString ? filteredData : data}
+                          keyExtractor={(item,index)=>index}
                           style={{flex: 1}}
+                          contentContainerStyle={{ flexGrow: 1 }}
                           renderItem={({item,index})=>{
                             return <ContactInfoRender item={item} index={index} setSearchString={setSearchString} checkAccount={setRecipient}/>
                           }}
@@ -223,6 +106,7 @@ export const ToktokWalletContacts = ({navigation,route})=> {
           </View>
       </View>
       </CheckIdleState>
+      </FlagSecureScreen>
     )
 }
 
@@ -255,3 +139,4 @@ const styles = StyleSheet.create({
       fontFamily: FONT.REGULAR
     },
 })
+

@@ -1,0 +1,233 @@
+import React, {useState, useEffect, useRef, useCallback} from 'react';
+import {Text, View, TouchableHighlight, Image} from 'react-native';
+import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation} from './Sections';
+import CONSTANTS from '../../../common/res/constants';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION} from '../../graphql';
+import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
+import {useMutation, useLazyQuery} from '@apollo/react-hooks';
+import {throttle, debounce} from 'lodash';
+import {connect, useDispatch, useSelector} from 'react-redux';
+import {useDebounce} from '../../helpers';
+import {EmptyRecent, ToktokgoBeta} from '../../components';
+import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
+import {useFocusEffect} from '@react-navigation/native';
+import {currentLocation} from '../../../helper';
+
+const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
+  const {popTo} = route.params;
+  const [selectedInput, setSelectedInput] = useState('D');
+  const [searchResponse, setSearchResponse] = useState([]);
+
+  const inputRef = useRef();
+  const dispatch = useDispatch();
+  const {origin, destination, sessionToken} = useSelector(state => state.toktokGo);
+
+  const [searchDestination, setSearchDestination] = useState(null);
+  const [searchOrigin, setSearchOrigin] = useState(origin.place.formattedAddress);
+
+  const [getPlaceAutocomplete] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      console.log('COMPLETED');
+      setSearchResponse(response.getPlaceAutocomplete);
+    },
+    onError: error => console.log('getPlaceAutocomplete', error),
+  });
+
+  const [getPlaceById] = useLazyQuery(GET_PLACE_BY_ID, {
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      if (selectedInput == 'D') {
+        dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: response.getPlaceById});
+      } else {
+        dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: response.getPlaceById});
+      }
+      onPressLocation();
+    },
+    onError: error => console.log('error', error),
+  });
+
+  const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      const payload = response.getPlaceByLocation;
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
+      setSearchOrigin(payload?.place?.formattedAddress);
+    },
+    onError: error => console.log('error', error),
+  });
+
+  const debouncedRequest = useDebounce(
+    value =>
+      getPlaceAutocomplete({
+        variables: {
+          input: {
+            searchString: value,
+            sessionToken: sessionToken,
+          },
+        },
+      }),
+    1000,
+  );
+
+  const setPlaceFunction = async () => {
+    const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
+    getPlaceByLocation({
+      variables: {
+        input: {
+          location: {
+            latitude: latitude,
+            longitude: longitude,
+          },
+        },
+      },
+    });
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const setPlace = async () => {
+        await setPlaceFunction();
+      }
+      if (!origin?.place?.formattedAddress) {
+        setPlace()
+      }
+    }, [navigation])
+  );
+
+  const onChange = value => {
+    setSearchDestination(value);
+    debouncedRequest(value);
+  };
+  const onChangeOrigin = value => {
+    setSearchOrigin(value);
+    debouncedRequest(value);
+  };
+
+  const onPressLocation = () => {
+    if (selectedInput == 'D') {
+      navigation.push('ToktokGoBookingConfirmDestination', {
+        popTo: popTo + 1,
+      });
+    } else {
+      navigation.pop();
+      navigation.push('ToktokGoBookingConfirmPickup', {
+        popTo: popTo + 1,
+        source: 'searchLocation',
+      });
+    }
+  };
+
+  const onSelectPlace = value => {
+    if (selectedInput == 'D') {
+      setSearchDestination(value.formattedAddress);
+    } else {
+      setSearchOrigin(value.formattedAddress);
+    }
+    getPlaceById({
+      variables: {
+        input: {
+          sessionToken: sessionToken,
+          placeId: value.placeId,
+          formattedAddress: value.formattedAddress,
+        },
+      },
+    });
+  };
+
+  const onChangeSelectedInput = value => {
+    setSelectedInput(value);
+    if (value == 'D') {
+      debouncedRequest(searchDestination);
+    } else {
+      debouncedRequest(searchOrigin);
+    }
+  };
+
+  return (
+    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
+      <View>
+        <Header navigation={navigation} />
+        <Location
+          onChangeOrigin={onChangeOrigin}
+          onChange={onChange}
+          inputRef={inputRef}
+          selectedInput={selectedInput}
+          onChangeSelectedInput={onChangeSelectedInput}
+          titleOrigin={searchOrigin}
+          title={searchDestination}
+        />
+        {searchResponse?.length == 0 ? (
+          // <View>
+          //   <FrequentlyUsed navigation={navigation} popTo={popTo} />
+          //   <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+          //   <SavedLocations />
+          // </View>
+          constants.iosVersionDisableBeta && Platform.OS == 'ios' ? (
+            <EmptyRecent />
+          ) : (
+            <ToktokgoBeta />
+          )
+        ) : (
+          <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />
+        )}
+      </View>
+      <TouchableHighlight
+        onPress={() => {
+          if (selectedInput == 'D') {
+            navigation.push('ToktokGoBookingConfirmDestination', {
+              popTo: popTo + 1,
+            });
+          } else {
+            navigation.push('ToktokGoBookingConfirmPickup', {
+              popTop: 1,
+            });
+          }
+        }}>
+        <View
+          style={{
+            paddingHorizontal: CONSTANTS.SIZE.MARGIN,
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 16,
+            shadowColor: '#000000',
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowRadius: 50,
+            shadowOpacity: 1.0,
+            elevation: 20,
+          }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {selectedInput == 'D' ? (
+              <Image source={DestinationIcon} style={{height: 20, width: 35, marginRight: 5}} resizeMode={'contain'} />
+            ) : (
+              <FA5Icon name="map-pin" size={15} color={CONSTANTS.COLOR.YELLOW} style={{marginRight: 10}} />
+            )}
+
+            <Text
+              style={{
+                color: selectedInput == 'D' ? CONSTANTS.COLOR.ORANGE : CONSTANTS.COLOR.YELLOW,
+                fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                fontSize: CONSTANTS.FONT_SIZE.M,
+              }}>
+              Select via Map
+            </Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+    </View>
+  );
+};
+
+const mapStateToProps = state => ({
+  constants: state.constants,
+});
+
+export default connect(mapStateToProps, null)(ToktokGoSelectedLocations);

@@ -313,7 +313,7 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation,route})=> {
                     }}>
                     <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
                         <View style={styles.inCapture}>
-                            <EIcon name="camera" color={COLOR.YELLOW} size={40} />
+                         
                         </View>
                     </TouchableOpacity>
                 </View> */}

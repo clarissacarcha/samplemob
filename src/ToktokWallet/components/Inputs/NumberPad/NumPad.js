@@ -1,8 +1,10 @@
 import React from "react";
-import { View , StyleSheet , TouchableHighlight, TouchableOpacity , Dimensions , Text } from "react-native";
+import { View , StyleSheet , TouchableHighlight, TouchableOpacity , Dimensions , Text, Image } from "react-native";
 import { verticalScale,moderateScale } from 'toktokwallet/helper'
 import CONSTANTS from 'common/res/constants'
-import FIcon from 'react-native-vector-icons/Feather';
+import FIcon from 'react-native-vector-icons/Entypo';
+import EraseIcon from 'toktokwallet/assets/icons/erase.png';
+
 
 const { COLOR, FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
 const { height, width } = Dimensions.get('window');
@@ -33,7 +35,7 @@ const RowPad = ({
                 </>
             </TouchableHighlight>
 
-            <TouchableHighlight underlayColor={COLOR.ORANGE} onPress={()=>onPress(third.value)} disabled={!third.enableButton} style={[styles.button, {...(!third.enableButton ? {backgroundColor:"transparent"} : {})}]}>
+            {/* <TouchableHighlight underlayColor={COLOR.ORANGE} onPress={()=>onPress(third.value)} disabled={!third.enableButton} style={[styles.button, {...(!third.enableButton ? {backgroundColor:"transparent"} : {})}]}>
                <>
                {
                    third.value == "remove"
@@ -41,7 +43,16 @@ const RowPad = ({
                    :  <Text style={styles.textBtn}>{third.value}</Text>
                }
                </>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
+            { third.value == "remove" && pinCode.length > 0 ? (
+                <TouchableHighlight underlayColor={"transparent"} onPress={()=>onPress(third.value)} disabled={!third.enableButton} style={[styles.button, {backgroundColor:"transparent"}]}>
+                    <Image source={EraseIcon} style={styles.eraseIcon} />
+                </TouchableHighlight>
+            ) : (
+                <TouchableHighlight underlayColor={COLOR.ORANGE} onPress={()=>onPress(third.value)} disabled={!third.enableButton} style={[styles.button, {...(!third.enableButton ? {backgroundColor:"transparent"} : {})}]}>
+                    <Text style={styles.textBtn}>{third.value != "remove" ? third.value : ""}</Text>
+                </TouchableHighlight>
+            )}
         </View>
     )
 }
@@ -153,5 +164,10 @@ const styles = StyleSheet.create({
         fontFamily: FONT.BOLD,
         color: "white",
         fontSize: moderateScale(FONT_SIZE.XL)
+    },
+    eraseIcon: {
+        width: moderateScale(50),
+        height: moderateScale(50),
+        resizeMode: "contain"
     }
 })

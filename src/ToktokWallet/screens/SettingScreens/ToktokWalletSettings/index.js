@@ -17,6 +17,7 @@ const SettingHeaderTitle = ({title})=> {
     )
 }
 
+
 export const ToktokWalletSettings = ({navigation , route })=> {
     navigation.setOptions({
         headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
@@ -53,9 +54,12 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>
             <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>
             {
-                +tokwaAccount.person.accountType.level < 3 &&
-                <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
-            }
+                ( !tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3  ) 
+                ? <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
+                :  ( tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2  ) 
+                    ? <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
+                    : null
+            }       
             <Separator/>
             <SettingHeaderTitle title="Help Centre"/>
             <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy"/>
@@ -65,10 +69,15 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             <SettingHeaderTitle title="Logs"/>
             <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
             <SettingOption route="ToktokWalletCashOutLogs" title="Fund Transfer"/>
-            <SettingOption route="ToktokWalletSendMoneyLogs" title="Send Money"/>
             {/* <SettingOption route="ToktokWalletRequestMoneyLogs" title="Request Money"/> */}
-            {/* <SettingOption route="ToktokWalletCashInLogs" title="Bills"/>
-            <SettingOption route="ToktokWalletCashOutLogs" title="Load"/> */}
+            <SettingOption route="ToktokWalletSendMoneyLogs" title="Send Money"/>
+            {/* <SettingOption route="ToktokWalletBillsLogs" title="Bills"/> */}
+            <SettingOption route="ToktokWalletPabiliDeliveryLogs" title="Delivery"/>
+            <SettingOption route="ToktokWalletFoodLogs" title="Food"/>
+            {/* <SettingOption route="ToktokWalletLoadLogs" title="Load"/> */}
+            {/* <SettingOption route="ToktokWalletMartLogs" title="Mart"/>
+            <SettingOption route="ToktokWalletMallLogs" title="Mall"/> */}
+        
             <Separator/>
             <SettingHeaderTitle title="Account Recovery"/>
             <SettingOption route="ToktokWalletAccountRecoverySetup" title="Account Recovery Setup"/>

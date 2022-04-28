@@ -33,7 +33,7 @@ const BannerAds = ({ads}) => {
   if (!ads || ads.length === 0) return <View style={{height: SIZE.MARGIN / 2}} />;
 
   return (
-    <>
+    <View style={{ paddingHorizontal: 10}}>
       <TouchableHighlight onPress={onPressThrottled} style={styles.touchable}>
         <Image
           style={{height: BANNER_HEIGHT, width: BANNER_WIDTH, borderRadius: 5}}
@@ -48,7 +48,7 @@ const BannerAds = ({ads}) => {
           {ads[0].title}
         </Text>
       </View>
-    </>
+    </View>
   );
 };
 

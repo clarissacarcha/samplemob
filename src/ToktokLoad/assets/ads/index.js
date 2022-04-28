@@ -1,0 +1,1 @@
+export const blank = require("./blank.png")

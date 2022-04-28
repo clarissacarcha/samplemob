@@ -53,11 +53,11 @@ const RecentRecords = ()=> (
             <VectorIcon 
               iconSet={ICON_SET.Entypo}
               name="chevron-thin-right"
-              size={FONT_SIZE.M-3}
+              size={10}
               color={COLOR.ORANGE}
               style={{
                 alignSelf:"center",
-                marginLeft: 5
+                marginLeft: 10
               }}
             />
           </TouchableOpacity>

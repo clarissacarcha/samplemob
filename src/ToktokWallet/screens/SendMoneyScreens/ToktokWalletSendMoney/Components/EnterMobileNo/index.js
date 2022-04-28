@@ -26,6 +26,7 @@ export const EnterMobileNo = ({
     setGetAccountLoading,
     favoritesRef
 })=> {
+
     const { favorites } = useContext(FavoritesContext)
     const [errorMessage,setErrorMessage] = useState("")
     const [suggestContact,setSuggestContact] = useState("")
@@ -33,7 +34,6 @@ export const EnterMobileNo = ({
     const inputMobileRef = useRef()
     const { contacts } = useContacts();
 
-    
     const [getAccount, {data: walletData,error: walletError,loading: walletLoading}] = useLazyQuery(GET_ACCOUNT , {
         client: TOKTOK_WALLET_GRAPHQL_CLIENT,
         fetchPolicy: "network-only",
@@ -150,32 +150,28 @@ export const EnterMobileNo = ({
         }
     },[mobileNo])
 
-    // useEffect(()=>{
-    //    if(recipientDetails.id){
-    //        const result = favoritesRef.current.checkIfFavorites(recipientDetails.id)
-    //        setIsFavorite(result)
-    //    }
-    // },[recipientDetails,favorites])
+    useEffect(()=>{
+       if(recipientDetails.id){
+           const result = favoritesRef.current.checkIfFavorites(recipientDetails.id)
+           setIsFavorite(result)
+       }
+    },[recipientDetails,favorites])
 
     useEffect(()=>{
         setGetAccountLoading(walletLoading)
     },[walletLoading])
 
+
+
+
     return (
         <>
-         
-       <View style={styles.container}>
-            <ContactSuggestion
-                contactInfo={suggestContact}
-                setContactInfo={setSuggestContact}
-                onPress={setRecipientMobileNo}
-            />
-            <View style={styles.content}>
-            <TouchableOpacity onPress={()=>{
-                    return inputMobileRef.current.focus()
-                }} style={{flex: 1,justifyContent:"center",paddingHorizontal: 10, height:50,position:"relative"}}>
-                
-                    <View style={{flex: 1,position:"relative"}}>
+          <View style={styles.container}>
+              <View style={styles.content}>
+                    <TouchableOpacity onPress={()=>{
+                            return inputMobileRef.current.focus()
+                        }} style={{flex: 1,justifyContent:"center",paddingHorizontal: 10, height:50,position:"relative"}}>
+                             <View style={{flex: 1,position:"relative"}}>
                      { recipientDetails.id && proceed && <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,position:"absolute",marginTop:5}}>{recipientDetails.person}</Text>}
                         <TextInput
                             ref={inputMobileRef}
@@ -196,24 +192,25 @@ export const EnterMobileNo = ({
                           
                        {errorMessage != "" && <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.XS,color:COLOR.RED,marginTop: -5}}>{errorMessage}</Text>}
                      </View>
-                </TouchableOpacity>
-                {/* {
-                    recipientDetails.id && errorMessage == "" &&
-                    <TouchableOpacity onPress={()=>favoritesRef.current.addFavorites(recipientDetails.id)} style={styles.addFavorites}>
-                        <Image resizeMode="contain" style={styles.heart} source={isFavorite ? heartFill : heart}/>
                     </TouchableOpacity>
-                } */}
-            
-                <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
-                    <View style={styles.addressbtn}>
-                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS,color: COLOR.YELLOW}}>Address Book</Text>
-                    </View>
-                </TouchableOpacity>
 
-               
-            </View>
-       </View>
-       </>
+                    {
+                        recipientDetails.id && errorMessage == "" &&
+                        <TouchableOpacity onPress={()=>favoritesRef.current.addFavorites(recipientDetails.id)} style={styles.addFavorites}>
+                            <Image resizeMode="contain" style={styles.heart} source={isFavorite ? heartFill : heart}/>
+                        </TouchableOpacity>
+                    }
+
+
+                    <TouchableOpacity onPress={()=>navigation.navigate("ToktokWalletContacts", {setRecipientInfo: setRecipientMobileNo})} style={styles.contactAddress}>
+                        <View style={styles.addressbtn}>
+                                <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.XS,color: COLOR.YELLOW}}>Address Book</Text>
+                        </View>
+                    </TouchableOpacity>
+
+              </View>
+          </View>
+        </>
     )
 }
 
