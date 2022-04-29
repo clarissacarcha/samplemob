@@ -139,3 +139,11 @@ mutation tripConsumerCancel ($input: TripConsumerCancelInput!){
   }
 }
 `;
+export const TRIP_INITIALIZE_PAYMENT = gql`
+  mutation tripInitializePayment($input: TripInitializePaymentInput) {
+    tripInitializePayment(input: $input) {
+      hash
+      validator
+    }
+  }
+`;

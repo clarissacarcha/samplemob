@@ -143,3 +143,9 @@ export const POST_GENERATE_ACCOUNT_QR_CODE = gql`
     }
 `
 
+export const POST_VERIFY_ACCOUNT_TPIN = gql`
+    mutation postVerifyAccountTPIN($input:PostVerifyAccountTPINInput){
+        postVerifyAccountTPIN(input:$input)
+    }
+`
+
