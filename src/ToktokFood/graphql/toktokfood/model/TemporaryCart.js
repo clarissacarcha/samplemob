@@ -25,6 +25,7 @@ const tempCart = `
     parentProductName
     resellerDiscount
     shopName
+    orderInstructions
     addonsDetails {
       id
       optionName

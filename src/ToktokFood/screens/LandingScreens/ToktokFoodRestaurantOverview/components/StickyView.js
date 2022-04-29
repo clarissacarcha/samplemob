@@ -304,6 +304,7 @@ export const StickyView = ({onCheckShop}) => {
         productsLoading={productsLoading}
         showMore={showMore}
         tagsLoading={loading}
+        shopDetails={shopDetails}
       />
     );
   }, [id, activeTab, categoryProducts, loading, productsLoading, showMore]);

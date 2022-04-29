@@ -24,8 +24,17 @@ import {useAlert} from 'src/hooks';
 const MainComponent = () => {
   const routes = useRoute();
   const alert = useAlert();
-  const {Id, parentProductId, selectedItemId, selectedAddons, selectedPrice, selectedQty, selectedNotes, action} =
-    routes.params;
+  const {
+    Id,
+    parentProductId,
+    selectedItemId,
+    selectedAddons,
+    selectedPrice,
+    selectedQty,
+    selectedNotes,
+    action,
+    shopDetails,
+  } = routes.params;
   const {customerInfo} = useSelector(state => state.toktokFood);
 
   const {
