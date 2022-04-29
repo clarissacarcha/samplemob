@@ -112,12 +112,12 @@ const RiderNotes = ({
               onPlaceOrder();
             }}
             label="Place Order"
-            // disabled={
-            //   hasBalance() ||
-            //   (disableWalletCheckout && customerWallet?.status === 2) ||
-            //   !customerWallet ||
-            //   customerWallet?.status === 0
-            // }
+            disabled={
+              hasBalance() ||
+              (disableWalletCheckout && customerWallet?.status === 2) ||
+              !customerWallet ||
+              customerWallet?.status === 0
+            }
           />
         </View>
       </View>
