@@ -33,6 +33,7 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showContacts, setShowContacts] = useState(false);
   const [showInvalidMobile, setShowInvalidMobile] = useState(false);
+  const [showInvalidContactName, setShowInvalidContactName] = useState(false);
 
   const {receiver, customerInfo} = useSelector(state => state.toktokFood);
 
@@ -93,15 +94,19 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
   };
 
   const onConfirmAddress = () => {
-    const mobileNumber = state.contactPersonNumber.replace(/\s/g, '').replace(/[()]/g, '');
-    if (mobileNumber.length !== 0) {
-      if (mobileNumber.length !== 10 || mobileNumber[0] !== '9') {
-        setShowInvalidMobile(true);
+    if (state.contactPerson.length === 0) {
+      setShowInvalidContactName(true);
+    } else {
+      const mobileNumber = state.contactPersonNumber.replace(/\s/g, '').replace(/[()]/g, '');
+      if (mobileNumber.length !== 0) {
+        if (mobileNumber.length !== 10 || mobileNumber[0] !== '9') {
+          setShowInvalidMobile(true);
+        } else {
+          proceedChangeAddress();
+        }
       } else {
         proceedChangeAddress();
       }
-    } else {
-      proceedChangeAddress();
     }
   };
 
@@ -141,6 +146,16 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
         btn1Title="OK"
         onCloseModal={() => {
           setShowInvalidMobile(false);
+        }}
+      />
+      <DialogMessage
+        visibility={showInvalidContactName}
+        title="Invalid Contact Name"
+        messages="Kindly provide valid contact name"
+        type="warning"
+        btn1Title="OK"
+        onCloseModal={() => {
+          setShowInvalidContactName(false);
         }}
       />
       <View style={[styles.proto, styles.cartBorder, {bottom: keyboardHeight - 35}]}>
