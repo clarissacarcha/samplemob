@@ -93,20 +93,25 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
     clearShopHistory();
   };
 
-  const onConfirmAddress = () => {
-    if (state.contactPerson.length === 0) {
+  const validateContactName = () => {
+    const name = state.contactPerson;
+    if (name.length === 0) {
       setShowInvalidContactName(true);
     } else {
-      const mobileNumber = state.contactPersonNumber.replace(/\s/g, '').replace(/[()]/g, '');
-      if (mobileNumber.length !== 0) {
-        if (mobileNumber.length !== 10 || mobileNumber[0] !== '9') {
-          setShowInvalidMobile(true);
-        } else {
-          proceedChangeAddress();
-        }
+      proceedChangeAddress();
+    }
+  };
+
+  const onConfirmAddress = () => {
+    const mobileNumber = state.contactPersonNumber.replace(/\s/g, '').replace(/[()]/g, '');
+    if (mobileNumber.length !== 0) {
+      if (mobileNumber.length !== 10 || mobileNumber[0] !== '9') {
+        setShowInvalidMobile(true);
       } else {
-        proceedChangeAddress();
+        validateContactName();
       }
+    } else {
+      validateContactName();
     }
   };
 
