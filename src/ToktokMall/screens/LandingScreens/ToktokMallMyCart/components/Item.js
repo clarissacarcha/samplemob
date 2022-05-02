@@ -176,7 +176,7 @@ export const Item = ({
               borderWidth: 1,
               borderColor: '#F8F8F8',
             }}
-            disabled={qty == 1}
+            disabled={qty == 1 || product.enabled != 1 || (contSellingIsset === 0 && product.noOfStocks === 0)}
             onPress={() => {
               // if(selected){
               onChangeQuantity(qty - 1, product?.Id);
@@ -185,7 +185,15 @@ export const Item = ({
               debounce(() => updateItemQuantityOnCart(qty - 1), 500)();
               // }
             }}>
-            <AIcons name={'minus'} size={18} color={qty == 1 ? '#D7D7D7' : COLOR.ORANGE} />
+            <AIcons
+              name={'minus'}
+              size={18}
+              color={
+                qty == 1 || product.enabled != 1 || (contSellingIsset === 0 && product.noOfStocks === 0)
+                  ? '#D7D7D7'
+                  : COLOR.ORANGE
+              }
+            />
           </TouchableOpacity>
           <View
             style={{
@@ -209,7 +217,12 @@ export const Item = ({
               borderWidth: 1,
               borderColor: '#F8F8F8',
             }}
-            disabled={product.noOfStocks === qty || qty === 200 || (contSellingIsset === 0 && product.noOfStocks === 0)}
+            disabled={
+              product.noOfStocks === qty ||
+              qty === 200 ||
+              product.enabled != 1 ||
+              (contSellingIsset === 0 && product.noOfStocks === 0)
+            }
             onPress={() => {
               // if(selected){
               onChangeQuantity(qty + 1, product?.Id);
@@ -222,7 +235,10 @@ export const Item = ({
               name={'plus'}
               size={15}
               color={
-                qty == product.noOfStocks || qty === 200 || (contSellingIsset === 0 && product.noOfStocks === 0)
+                qty == product.noOfStocks ||
+                qty === 200 ||
+                product.enabled != 1 ||
+                (contSellingIsset === 0 && product.noOfStocks === 0)
                   ? '#D7D7D7'
                   : COLOR.ORANGE
               }
