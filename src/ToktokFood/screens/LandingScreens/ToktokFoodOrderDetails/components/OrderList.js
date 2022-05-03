@@ -131,9 +131,8 @@ const OrderList = ({orderDetails}) => {
                 )}
                 {!!parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} itemStatus={status} />}
                 {!!item.notes && (
-                  <Text style={[styles.notes, {color: status === 0 ? '#9E9E9E' : '#000000'}]}>{`Note: ${JSON.parse(
-                    item.notes,
-                  )}`}</Text>
+                  <Text
+                    style={[styles.notes, {color: status === 0 ? '#9E9E9E' : '#000000'}]}>{`Note: ${item.notes}`}</Text>
                 )}
               </View>
             </View>
