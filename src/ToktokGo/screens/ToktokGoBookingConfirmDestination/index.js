@@ -89,7 +89,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
           <View
             style={{
               flexDirection: 'row',
-              marginHorizontal: 20,
+              marginHorizontal: 10,
               marginVertical: 10,
               textAlign: 'center',
             }}>
