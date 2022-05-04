@@ -68,7 +68,7 @@ const OrderList = ({orderDetails}) => {
     [data],
   );
 
-  const FoodItemImage = ({item, itemStatus}) => {
+  const FoodItemImage = ({item, itemStatus, isEdited}) => {
     return (
       <View style={styles.foodItemImageWrapper}>
         <ProgressiveImage
@@ -76,16 +76,16 @@ const OrderList = ({orderDetails}) => {
           source={item.productDetails.filename}
           placeholder={food_placeholder}
         />
-        {itemStatus === 0 && (
+        {itemStatus === 0 && !isEdited && (
           <View style={{...styles.modifiedFlag, backgroundColor: '#ED3A19'}}>
             <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>Removed</Text>
           </View>
         )}
-        {/* {itemStatus === 0 && (
-          <View style={{...styles.modifiedFlag, backgroundColor: itemStatus === 0 ? '#ED3A19' : '#F5841F'}}>
-            <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>{itemStatus === 0 ? 'Removed' : 'Edited'}</Text>
+        {isEdited && (
+          <View style={{...styles.modifiedFlag, backgroundColor: '#F5841F'}}>
+            <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>Edited</Text>
           </View>
-        )} */}
+        )}
       </View>
     );
   };
@@ -94,6 +94,7 @@ const OrderList = ({orderDetails}) => {
     () =>
       ({item}) => {
         const {status} = item;
+        const {isModified} = item;
         let {parentProductId, itemname, parentProductName} = item.productDetails;
         let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
         let productName = parentProductId ? parentProductName : itemname;
@@ -102,7 +103,7 @@ const OrderList = ({orderDetails}) => {
         return (
           <View style={styles.listContainer}>
             <View style={styles.progressiveImageContainer}>
-              {item.productDetails.filename && <FoodItemImage item={item} itemStatus={status} />}
+              {item.productDetails.filename && <FoodItemImage item={item} itemStatus={status} isEdited={isModified} />}
             </View>
 
             <View style={styles.list}>

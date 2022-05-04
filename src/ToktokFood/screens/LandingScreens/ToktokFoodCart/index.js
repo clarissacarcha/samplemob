@@ -879,7 +879,7 @@ const MainComponent = () => {
           />
         )}
         <Separator />
-        {orderType === 'Delivery' && <ReceiverLocation />}
+        {orderType === 'Delivery' && <ReceiverLocation cart={temporaryCart} />}
         <Separator />
 
         <MyOrderList />
