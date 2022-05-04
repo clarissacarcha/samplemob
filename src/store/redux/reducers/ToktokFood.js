@@ -11,6 +11,8 @@ const INITIAL_STATE = {
   shopLocation: {
     latitude: 0.0,
     longitude: 0.0,
+    shopName: null,
+    shopAddress: null,
   },
   cart: [],
   totalAmount: {},
