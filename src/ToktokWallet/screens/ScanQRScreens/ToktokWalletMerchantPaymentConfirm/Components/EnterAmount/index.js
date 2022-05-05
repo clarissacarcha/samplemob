@@ -5,7 +5,7 @@ import { InputAmount } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 const { COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE } = CONSTANTS
 
-export const EnterAmount = ({amount , setAmount , setSwipeEnabled  , tokwaAccount,errorMessage,setErrorMessage})=> {
+export const EnterAmount = ({amount , setAmount , setSwipeEnabled  , tokwaAccount,errorMessage,setErrorMessage,serviceFee})=> {
 
     const changeAmount = (value)=>{
         const num = value.replace(/[^0-9.]/g, '')
@@ -32,9 +32,9 @@ export const EnterAmount = ({amount , setAmount , setSwipeEnabled  , tokwaAccoun
         // checkSenderWalletLimitation(num * 0.01)
         // checkRecipientWalletLimitation(num * 0.01)
 
-        if(num > tokwaAccount.wallet.balance){
+        if((num + +serviceFee) > tokwaAccount.wallet.balance){
             setSwipeEnabled(false)
-            return setErrorMessage("You do not have enough balance")
+            return setErrorMessage("Insufficient wallet balance.")
         }
 
     }
