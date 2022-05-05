@@ -92,11 +92,11 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     useCallback(() => {
       const setPlace = async () => {
         await setPlaceFunction();
-      }
+      };
       if (!origin?.place?.formattedAddress) {
-        setPlace()
+        setPlace();
       }
-    }, [navigation])
+    }, [navigation]),
   );
 
   const onChange = value => {
@@ -160,6 +160,8 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           onChangeSelectedInput={onChangeSelectedInput}
           titleOrigin={searchOrigin}
           title={searchDestination}
+          setSearchDestination={setSearchDestination}
+          setSearchOrigin={setSearchOrigin}
         />
         {searchResponse?.length == 0 ? (
           // <View>
