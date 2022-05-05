@@ -23,16 +23,5 @@ const styles = StyleSheet.create({
     top: StatusBar.currentHeight + 23,
     left: 16,
     padding: 6,
-    borderRadius: 5,
-
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-
-    elevation: 2,
   },
 });
