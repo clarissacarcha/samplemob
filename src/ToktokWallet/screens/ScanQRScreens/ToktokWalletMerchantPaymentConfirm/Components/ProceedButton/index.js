@@ -100,7 +100,7 @@ export const ProceedButton = ({
             isSwipe: true,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            swipeTitle: `Swipe to Pay PHP ${amount != "" ? numberFormat(amount + serviceFee) : "0"}`,
+            swipeTitle: `Swipe to Pay ₱${amount != "" ? numberFormat(+amount + +serviceFee) : "0.00"}`,
             data: {
                 amount,
                 serviceFee,
