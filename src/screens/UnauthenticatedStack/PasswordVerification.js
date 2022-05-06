@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingLeft: 16,
     height: 50,
-    color: COLOR.DARK,
+    color: constants.COLOR.BLACK,
     width: '100%',
     borderRightColor: '#F8F8F8',
     borderLeftColor: '#F8F8F8',
