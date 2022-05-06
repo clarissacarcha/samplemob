@@ -79,7 +79,7 @@ const StatusBar = ({label, log, number}) => {
             style={{
               fontFamily: constants.FONT_FAMILY.REGULAR,
               fontSize: constants.FONT_SIZE.M,
-              color: constants.COLOR.FADE,
+              color: constants.COLOR.GRAY,
               marginTop: 2,
             }}>
             {ts}
@@ -172,7 +172,9 @@ export const BookingStatus = ({logs, delivery, booking, session, details}) => {
             </View>
           </View>
         </View>
-        {booking.tag == 'ONGOING' && <Status booking={booking} details={details} logs={logs} session={session} />}
+        {['ONGOING', 'COMPLETED'].includes(booking.tag) && (
+          <Status booking={booking} details={details} logs={logs} session={session} />
+        )}
         {booking.tag == 'CANCELLED' && <Cancelled />}
       </View>
     </View>

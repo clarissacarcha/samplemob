@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useState, useRef} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import CONSTANTS from '../../../../common/res/constants';
@@ -14,15 +14,15 @@ const INITIAL_REGION = {
   longitudeDelta: 10.145791545510278,
 };
 
-export const BookingMap = ({booking}) => {
+export const BookingMap = ({booking, routeDetails}) => {
   //   const SECOND_LOCATION = {latitude: delivery.senderStop.latitude, longitude: delivery.senderStop.latitude};
   const mapRef = useRef();
 
   const decodedPolyline = booking.route.legs ? decodeLegsPolyline(booking.route.legs) : null;
 
-  const [bounds, setBounds] = useEffect(routeDetails.bounds);
+  const [bounds, setBounds] = useState(routeDetails.bounds);
 
-  const onMapReady = () => {
+  const onMapReady = async () => {
     const {northeast, southwest} = bounds;
     const coordinates = [
       {
