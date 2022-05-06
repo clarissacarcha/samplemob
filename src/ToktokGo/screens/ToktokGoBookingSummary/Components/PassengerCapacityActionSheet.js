@@ -1,11 +1,12 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, Image, View, TouchableOpacity, ScrollView, Dimensions} from 'react-native';
 import ActionSheet, {SheetManager} from 'react-native-actions-sheet';
 import {useDispatch} from 'react-redux';
 import ProtectionIMG from '../../../../assets/images/Protection.png';
 import CONSTANTS from '../../../../common/res/constants';
 import {ThrottledOpacity} from '../../../../components_section';
 
+const FULLSCREEN_HEIGHT = Dimensions.get('window').height;
 export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
   const seatsArray = ['Just me', 'Two of us', 'Three of us', 'Four of us', 'Five of us'];
 
@@ -13,13 +14,15 @@ export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
     const showSeatsArray = seatsArray.splice(0, details.vehicleType.availableSeats);
 
     return showSeatsArray.map((value, index) => {
+      const lastItem = index == showSeatsArray.length - 1 ? true : false;
       return (
-        <>
+        <View style={{alignItems: 'center'}}>
           <View style={styles.divider} />
           <ThrottledOpacity delay={500} onPress={() => confirmBooking(index + 1)} key={index}>
             <Text>{value}</Text>
           </ThrottledOpacity>
-        </>
+          {lastItem && <View style={styles.divider} />}+{' '}
+        </View>
       );
     });
   };
@@ -33,7 +36,9 @@ export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
           To ensure social distancing, we are limiting the number of passengers on each vehicle.
         </Text>
         <Text style={styles.description}>How many of you are taking this ride?</Text>
-        {ShowSeats()}
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollContainer}>
+          {ShowSeats()}
+        </ScrollView>
       </View>
 
       <View style={{width: '100%', height: 10, backgroundColor: 'white', position: 'absolute', bottom: 0}} />
@@ -43,6 +48,7 @@ export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
 
 const styles = StyleSheet.create({
   container: {
+    height: FULLSCREEN_HEIGHT * 0.52,
     right: 4,
     width: '102%',
     borderWidth: 3,
@@ -70,6 +76,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: CONSTANTS.FONT_SIZE.M,
     marginBottom: 20,
+  },
+  scrollContainer: {
+    alignSelf: 'stretch',
   },
   divider: {
     borderBottomWidth: 2,
