@@ -120,6 +120,7 @@ const Splash = ({setConstants, setAppServices}) => {
       });
 
       const {isCurrent, enabled} = result.data.getAppVersionStatus;
+      console.log(result.data.getAppVersionStatus)
 
       if (isCurrent && enabled) {
         setcheckPoint('A');

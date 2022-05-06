@@ -15,6 +15,7 @@ import OneSignal from 'react-native-onesignal';
 import ToktokWashed from '../../../../../assets/images/ToktokWashed.png';
 
 import {Header} from './Components';
+import { ToktokMallSession } from '../../../../../ToktokMall/util/session';
 
 const DrawerButton = ({label, onPress, restrict}) => {
   if (restrict && restrict != APP_FLAVOR) {
@@ -69,6 +70,7 @@ export const ToktokLandingMenu = ({navigation}) => {
     if (RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
     OneSignal.deleteTag('userId');
     dispatch({type: 'DESTROY_SESSION'});
+    ToktokMallSession.destroy();
     navigation.replace('UnauthenticatedStack', {
       screen: 'Login',
     });

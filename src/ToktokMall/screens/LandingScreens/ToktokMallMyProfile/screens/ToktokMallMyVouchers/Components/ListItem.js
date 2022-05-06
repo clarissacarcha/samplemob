@@ -14,7 +14,7 @@ export const ListItem = (props) => {
         <>
             <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
                 <View style={{flex: 0, width: 60, height: 60, backgroundColor: state ? '#FCC442' : "#DADADA", alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={{textAlign: 'center', fontSize: 12, padding: 4, fontFamily: FONT.BOLD, color: "#fff"}}>FREE SHIPPING</Text>
+                    <Text style={{textAlign: 'center', fontSize: 11, padding: 4, fontFamily: FONT.BOLD, color: "#fff"}}>FREE SHIPPING</Text>
                 </View>
                 <View style={{flex: 9, alignItems: 'flex-start', justifyContent: 'center', paddingHorizontal: 10}}>
                     <Text style={{fontSize: 14, fontFamily: FONT.REGULAR, color: state ? "#222222" : "#9E9E9E"}}>Free Shipping Voucher</Text>

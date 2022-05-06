@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity} from 'react-native'
+import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, TextInput} from 'react-native'
 import { HeaderBack, HeaderTitle, HeaderRight, Card } from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
 import { AlertOverlay} from '../../../../../../components';
@@ -30,6 +30,15 @@ export const ToktokMallMyVouchers = ({navigation})=> {
                         setActiveTabIndex(index)
                     }}
                 />
+
+								<View style={{flexDirection: 'row'}}>
+									<View style={{flex: 0}}>
+										<CustomIcon.FA5Icon name="search" />
+									</View>
+									<View style={{flex: 3}}>
+										<TextInput placeholder="search" />
+									</View>
+								</View>
 
                 {activeTabIndex == 0 && 
                 <View>
