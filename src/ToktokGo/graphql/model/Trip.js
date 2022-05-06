@@ -147,3 +147,23 @@ export const TRIP_INITIALIZE_PAYMENT = gql`
     }
   }
 `;
+
+export const TRIP_REBOOK = gql`
+  mutation tripRebook($input: TripRebookInput!) {
+    tripRebook(input: $input) {
+      message
+      trip{
+        ${trip}
+      }
+    }
+  }
+`;
+
+export const TRIP_REBOOK_INITIALIZE_PAYMENT = gql`
+  mutation tripRebookInitializePayment($input: TripRebookInitializePaymentInput!) {
+    tripRebookInitializePayment(input: $input) {
+      hash
+      validator
+    }
+  }
+`;

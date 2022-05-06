@@ -17,10 +17,16 @@ import {
 import DummyData from '../../components/DummyData';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import {useSubscription} from '@apollo/client';
-import {ON_TRIP_UPDATE, TOKTOKGO_SUBSCRIPTION_CLIENT} from '../../graphql';
+import {
+  ON_TRIP_UPDATE,
+  TOKTOKGO_SUBSCRIPTION_CLIENT,
+  TRIP_REBOOK,
+  TRIP_CONSUMER_CANCEL,
+  GET_TRIP_CANCELLATION_CHECK,
+} from '../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {GET_TRIP_CANCELLATION_CHECK, TRIP_CONSUMER_CANCEL} from '../../graphql/model/Trip';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
+import {onErrorAppSync} from '../../util';
 
 const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const {popTo, decodedPolyline} = route.params;
@@ -94,19 +100,39 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         setViewCancelBookingModal(true);
       }
     },
-    onError: error => console.log('error', error),
+    onError: onErrorAppSync,
   });
 
   const [tripConsumerCancel] = useMutation(TRIP_CONSUMER_CANCEL, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
-    onError: err => {
-      console.log(err);
-    },
+    onError: onErrorAppSync,
     onCompleted: response => {
       console.log(response);
       setViewSuccessCancelBookingModal(true);
     },
   });
+
+  const [tripRebook] = useMutation(TRIP_REBOOK, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onError: onErrorAppSync,
+    onCompleted: response => {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING',
+        payload: response.tripRebook.trip,
+      });
+    },
+  });
+
+  const tripRebookFunc = () => {
+    tripRebook({
+      variables: {
+        input: {
+          userId: session.user.id,
+          tripId: booking.id,
+        },
+      },
+    });
+  };
 
   const goBackAfterCancellation = () => {
     setOriginData(true);
@@ -241,6 +267,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         onDriverCancelled={onConsumerAcceptDriverCancelled}
         onCancelWithFee={onCancelWithFee}
         cancellationState={cancellationState}
+        tripRebookFunc={tripRebookFunc}
       />
       {/* <SuccesCancelBookingModal /> */}
       <CancelBookingActionSheet setVisible={setViewSuccessCancelBookingModal} />

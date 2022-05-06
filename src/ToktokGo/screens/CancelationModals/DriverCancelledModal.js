@@ -6,6 +6,7 @@ import TokWaIMG from '../../../assets/images/wallet-whiteOutline.png';
 import TokGoWhiteIMG from '../../../assets/images/tokGo-whiteOutline.png';
 import TokGoIMG from '../../../assets/images/tokGo.png';
 import {numberFormat} from '../../../helper';
+import {ThrottledOpacity} from '../../../components_section';
 
 export const DriverCancelledModal = ({driverVisible, setType, setVisible, setDriverVisible, cancellationState}) => {
   const submit = () => {
@@ -31,25 +32,26 @@ export const DriverCancelledModal = ({driverVisible, setType, setVisible, setDri
               to compensate the driver. Would you like to pay now?
             </Text>
             {true && (
-              <TouchableOpacity
+              <ThrottledOpacity
+                delay={500}
                 style={styles.buttonContainer}
                 onPress={() => {
                   submit();
                 }}>
                 <Image source={TokGoWhiteIMG} style={styles.buttonImg} resizeMode={'contain'} />
                 <Text style={styles.buttonText}>Pay in Next Booking</Text>
-              </TouchableOpacity>
+              </ThrottledOpacity>
             )}
             {false && (
               <>
-                <TouchableOpacity style={styles.buttonContainer} onPress={() => {}}>
+                <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={() => {}}>
                   <Image source={TokWaIMG} style={styles.buttonImg} resizeMode={'contain'} />
                   <Text style={styles.buttonText}>Pay via toktokwallet</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.whiteButtonContainer} onPress={() => {}}>
+                </ThrottledOpacity>
+                <ThrottledOpacity delay={500} style={styles.whiteButtonContainer} onPress={() => {}}>
                   <Image source={TokGoIMG} style={styles.buttonImg} resizeMode={'contain'} />
                   <Text style={styles.whiteButtonText}>Pay in Next Booking</Text>
-                </TouchableOpacity>
+                </ThrottledOpacity>
               </>
             )}
           </View>
