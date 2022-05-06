@@ -23,6 +23,7 @@ import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import BottomSheet from 'reanimated-bottom-sheet';
 import {AlertOverlay} from '../../../components';
 import {useAccount} from 'toktokwallet/hooks';
+import {AppSyncOnError, onErrorAppSync} from '../../util';
 import {onError} from '../../../util/ErrorUtility';
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
@@ -42,7 +43,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [selectedVouchers, setSelectedVouchers] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedSeatNum, setSelectedSeatNum] = useState(1);
-  const [initializePaymentMethod, setInitializePaymentMethod] = useState('');
   const [showHeader, setshowHeader] = useState(false);
   const [tripBookError, setTripBookError] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(paymentMethod);
@@ -63,27 +63,33 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       });
       setLoading(false);
     },
-    onError: error => console.log('error', error),
+    onError: onErrorAppSync,
   });
 
-  const [tripBook] = useMutation(TRIP_BOOK, {
+  const [tripBook, {loading: TBLoading}] = useMutation(TRIP_BOOK, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onError: error => {
       const {graphQLErrors, networkError} = error;
-
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
-        graphQLErrors.map(({message, locations, path, code}) => {
-          if (code === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', 'Something went wrong.');
-          } else if (code === 'USER_INPUT_ERROR') {
-            console.log('USERINPUT_ERROR:', message);
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          console.log('ERROR TYPE:', errorType, 'MESSAGE:', message);
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
             setTripBookError(message);
-          } else if (code === 'BAD_USER_INPUT') {
             Alert.alert('', message);
-          } else if (code === 'AUTHENTICATION_ERROR') {
+          } else if (errorType === 'BAD_USER_INPUT') {
+            setTripBookError(message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
+            setTripBookError(JSON.parse(message).message);
+            Alert.alert('', JSON.parse(message).message);
+          } else if (errorType === 'WALLET_INVALID_PIN_CODE') {
+            setTripBookError(JSON.parse(message).remainingAttempts);
+            Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
           } else {
             console.log('ELSE ERROR:', error);
             Alert.alert('', 'Something went wrong...');
@@ -104,16 +110,40 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     },
   });
 
-  const [tripInitializePayment] = useMutation(TRIP_INITIALIZE_PAYMENT, {
+  const [tripInitializePayment, {loading: TIPLoading}] = useMutation(TRIP_INITIALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
-    onError,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message.message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
+            setTripBookError(JSON.parse(message).message);
+            Alert.alert('', JSON.parse(message).message);
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
     onCompleted: response => {
-      setInitializePaymentMethod(response?.tripInitializePayment?.hash);
       if (response?.tripInitializePayment?.validator == 'TPIN') {
         navigation.navigate('ToktokWalletTPINValidator', {
           callBackFunc: tripBooking,
-          data: null,
-          error: tripBookError,
+          data: {
+            paymentHaash: response?.tripInitializePayment?.hash,
+          },
+          errorMessage: tripBookError,
         });
       } else {
         Alert.alert('', 'something went wrong');
@@ -162,7 +192,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     }
   }, [selectedVehicle, selectedVouchers]);
 
-  const tripBooking = ({pinCode}) => {
+  const tripBooking = ({pinCode, data}) => {
     tripBook({
       variables: {
         input: {
@@ -180,7 +210,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           ...(selectedPaymentMethod == 'TOKTOKWALLET'
             ? {
                 initializedPayment: {
-                  hash: initializePaymentMethod,
+                  hash: data.paymentHaash,
                   pinCode: pinCode,
                 },
               }
@@ -194,18 +224,20 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const confirmBooking = num => {
     setSelectedSeatNum(num);
     SheetManager.hide('passenger_capacity');
-    if (selectedPaymentMethod == 'CASH') {
-      tripBooking({pinCode: null});
-    } else {
-      tripInitializePayment({
-        variables: {
-          input: {
-            tripFareHash: details?.rate?.hash,
-            userId: session.user.id,
+    setTimeout(() => {
+      if (selectedPaymentMethod == 'CASH') {
+        tripBooking({pinCode: null});
+      } else {
+        tripInitializePayment({
+          variables: {
+            input: {
+              tripFareHash: details?.rate?.hash,
+              userId: session.user.id,
+            },
           },
-        },
-      });
-    }
+        });
+      }
+    }, 500);
   };
 
   const renderContent = () => (
@@ -311,12 +343,14 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       />
 
       <PassengerCapacityActionSheet details={details} confirmBooking={confirmBooking} />
-
+      <AlertOverlay visible={TIPLoading || TBLoading} />
       <PaymentMethodModal
         viewSelectPaymentModal={viewSelectPaymentModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
         setSelectedPaymentMethod={setSelectedPaymentMethod}
         details={details}
+        tokwaAccount={tokwaAccount}
+        getMyAccountLoading={getMyAccountLoading}
       />
 
       <PaymentSuccesModal

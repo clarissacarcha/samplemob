@@ -11,6 +11,7 @@ import {ToktokgoBeta, EmptyRecent} from '../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {currentLocation} from '../../../helper';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
+import {ThrottledHighlight} from '../../../components_section';
 
 const ToktokGoBookingStart = ({navigation, constants}) => {
   const dispatch = useDispatch();
@@ -57,7 +58,8 @@ const ToktokGoBookingStart = ({navigation, constants}) => {
         <SavedLocations /> */}
         {constants.iosVersionDisableBeta && Platform.OS == 'ios' ? <EmptyRecent /> : <ToktokgoBeta />}
       </View>
-      <TouchableHighlight
+      <ThrottledHighlight
+        delay={500}
         onPress={() => {
           navigation.push('ToktokGoBookingConfirmDestination', {
             popTo: 1,
@@ -95,7 +97,7 @@ const ToktokGoBookingStart = ({navigation, constants}) => {
             </Text>
           </View>
         </View>
-      </TouchableHighlight>
+      </ThrottledHighlight>
     </View>
   );
 };

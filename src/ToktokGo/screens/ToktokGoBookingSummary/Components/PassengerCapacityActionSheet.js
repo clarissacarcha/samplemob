@@ -4,6 +4,7 @@ import ActionSheet, {SheetManager} from 'react-native-actions-sheet';
 import {useDispatch} from 'react-redux';
 import ProtectionIMG from '../../../../assets/images/Protection.png';
 import CONSTANTS from '../../../../common/res/constants';
+import {ThrottledOpacity} from '../../../../components_section';
 
 export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
   const seatsArray = ['Just me', 'Two of us', 'Three of us', 'Four of us', 'Five of us'];
@@ -15,9 +16,9 @@ export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
       return (
         <>
           <View style={styles.divider} />
-          <TouchableOpacity onPress={() => confirmBooking(index + 1)} key={index}>
+          <ThrottledOpacity delay={500} onPress={() => confirmBooking(index + 1)} key={index}>
             <Text>{value}</Text>
-          </TouchableOpacity>
+          </ThrottledOpacity>
         </>
       );
     });

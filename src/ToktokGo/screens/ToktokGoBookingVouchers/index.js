@@ -11,6 +11,7 @@ import {TextInput} from 'react-native-gesture-handler';
 import {throttle} from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
 import NoVouchers from '../../../assets/toktokgo/no-vouchers.png';
+import {onErrorAppSync} from '../../util';
 
 const ToktokGoBookingVouchers = ({navigation}) => {
   const {details} = useSelector(state => state.toktokGo);
@@ -19,7 +20,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
   const {data = {getVouchers: {}}, loading} = useQuery(GET_VOUCHERS, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onError: error => console.log('error', error),
+    onError: onErrorAppSync,
   });
 
   const onApply = throttle(

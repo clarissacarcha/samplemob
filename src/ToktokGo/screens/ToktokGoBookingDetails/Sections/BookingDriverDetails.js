@@ -9,6 +9,7 @@ import NavigateIcon from '../../../../assets/images/navigateIcon.png';
 import ProfileImagePlaceHolder from '../../../../assets/icons/ProfileIcon.png';
 import VaccinatedIcon from '../../../../assets/images/vaccinated.png';
 import StarIcon from '../../../../assets/images/star.png';
+import {ThrottledOpacity} from '../../../../components_section';
 
 export const BookingDriverDetails = ({booking}) => {
   // const navigateToStop = () => {
@@ -61,12 +62,12 @@ export const BookingDriverDetails = ({booking}) => {
           </View>
         </View>
         <View style={styles.iconsContainer}>
-          <TouchableOpacity onPress={messageStop} style={[styles.iconContainer, {marginRight: 8}]}>
+          <ThrottledOpacity delay={500} onPress={messageStop} style={[styles.iconContainer, {marginRight: 8}]}>
             <Image source={MessageIcon} resizeMode={'contain'} style={styles.iconDimensions} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={callStop} style={styles.iconContainer}>
+          </ThrottledOpacity>
+          <ThrottledOpacity delay={500} onPress={callStop} style={styles.iconContainer}>
             <Image source={PhoneIcon} resizeMode={'contain'} style={styles.iconDimensions} />
-          </TouchableOpacity>
+          </ThrottledOpacity>
           {/* <TouchableOpacity onPress={navigateToStop} style={styles.iconContainer}>
             <Image source={NavigateIcon} resizeMode={'contain'} style={styles.iconDimensions} />
           </TouchableOpacity> */}
