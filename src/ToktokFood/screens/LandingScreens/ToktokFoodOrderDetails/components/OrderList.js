@@ -12,11 +12,15 @@ import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 // Data
 // import {foodData} from 'toktokfood/helper/strings';
 
-const DisplayAddons = ({addOns}) => {
+const DisplayAddons = ({addOns, itemStatus}) => {
   let addOnsList = addOns.map(item => item.addon_name).join(', ');
   let label = addOns.length > 1 ? 'Add-ons:' : 'Add-on:';
 
-  return <Text style={styles.notes}>{`${label} ${addOnsList}`}</Text>;
+  if (itemStatus === 0) {
+    return <Text style={[styles.notes, {color: '#9E9E9E'}]}>{`${label} ${addOnsList}`}</Text>;
+  } else {
+    return <Text style={styles.notes}>{`${label} ${addOnsList}`}</Text>;
+  }
 };
 
 const OrderList = ({orderDetails}) => {
@@ -41,6 +45,8 @@ const OrderList = ({orderDetails}) => {
   const ResellerDiscountBadge = useMemo(
     () =>
       ({item}) => {
+        const {status} = item;
+        const {isModified} = item;
         const {amount, basePrice, srpAmount, totalAmountWithAddons, resellerDiscount, resellerRate} = item;
         const percentage = (100 * (Number(basePrice) - resellerDiscount)) / srpAmount;
         const finalPercentage = roundedPercentage(percentage, 1);
@@ -55,18 +61,54 @@ const OrderList = ({orderDetails}) => {
               </ImageBackground>
             )}
 
-            <Text style={{...styles.seeAll, position: 'absolute', bottom: moderateScale(-20)}}>
-              PHP {totalAmountWithAddons.toFixed(2)}
-            </Text>
+            {isModified ? (
+              <Text
+                style={{
+                  ...styles.seeAll,
+                  position: 'absolute',
+                  bottom: moderateScale(-20),
+                  color: status === 0 ? '#9E9E9E' : '#FF6200',
+                }}>
+                PHP {totalAmountWithAddons.toFixed(2)}
+              </Text>
+            ) : (
+              <Text style={{...styles.seeAll, position: 'absolute', bottom: moderateScale(-20)}}>
+                PHP {totalAmountWithAddons.toFixed(2)}
+              </Text>
+            )}
           </View>
         );
       },
     [data],
   );
 
+  const FoodItemImage = ({item, itemStatus, isEdited}) => {
+    return (
+      <View style={styles.foodItemImageWrapper}>
+        <ProgressiveImage
+          style={styles.foodItemImage}
+          source={item.productDetails.filename}
+          placeholder={food_placeholder}
+        />
+        {itemStatus === 0 && isEdited && (
+          <View style={{...styles.modifiedFlag, backgroundColor: '#ED3A19'}}>
+            <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>Removed</Text>
+          </View>
+        )}
+        {itemStatus === 1 && isEdited && (
+          <View style={{...styles.modifiedFlag, backgroundColor: '#F5841F'}}>
+            <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>Edited</Text>
+          </View>
+        )}
+      </View>
+    );
+  };
+
   const Item = useMemo(
     () =>
       ({item}) => {
+        const {status} = item;
+        const {isModified} = item;
         let {parentProductId, itemname, parentProductName} = item.productDetails;
         let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
         let productName = parentProductId ? parentProductName : itemname;
@@ -75,37 +117,38 @@ const OrderList = ({orderDetails}) => {
         return (
           <View style={styles.listContainer}>
             <View style={styles.progressiveImageContainer}>
-              {item.productDetails.filename && (
-                <ProgressiveImage
-                  style={styles.foodItemImage}
-                  source={item.productDetails.filename}
-                  placeholder={food_placeholder}
-                />
-              )}
+              {item.productDetails.filename && <FoodItemImage item={item} itemStatus={status} isEdited={isModified} />}
             </View>
-            {/* {item.productDetails.filename && (
-          <Image
-            style={styles.foodItemImage}
-            source={validImg ? {uri: item.productDetails.filename} : food_placeholder}
-            onError={() => setValidImg(false)}
-          />
-        )} */}
+
             <View style={styles.list}>
               <View style={styles.listInfo}>
-                <Text numberOfLines={1} style={styles.listName}>
+                <Text numberOfLines={1} style={[styles.listName, {color: status === 0 ? '#9E9E9E' : '#000000'}]}>
                   {productName}
                 </Text>
                 {resellerDiscount > 0 ? (
                   <ResellerDiscountBadge item={item} />
                 ) : (
-                  <Text style={styles.seeAll}>{`PHP ${item.totalAmountWithAddons.toFixed(2)}`}</Text>
+                  <Text
+                    style={[
+                      styles.seeAll,
+                      {color: status === 0 ? '#9E9E9E' : '#FF6200'},
+                    ]}>{`PHP ${item.totalAmountWithAddons.toFixed(2)}`}</Text>
                 )}
               </View>
               <View>
-                <Text style={styles.notes}>x{item.quantity}</Text>
-                {parentProductId && <Text style={styles.notes}>{`Variation: ${itemname}`}</Text>}
-                {!!parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} />}
-                {!!item.notes && <Text style={styles.notes}>{`Note: ${JSON.parse(item.notes)}`}</Text>}
+                <Text style={[styles.notes, {color: status === 0 ? '#9E9E9E' : '#000000'}]}>x{item.quantity}</Text>
+                {parentProductId && (
+                  <Text
+                    style={[
+                      styles.notes,
+                      {color: status === 0 ? '#9E9E9E' : '#000000'},
+                    ]}>{`Variation: ${itemname}`}</Text>
+                )}
+                {!!parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} itemStatus={status} />}
+                {!!item.notes && (
+                  <Text
+                    style={[styles.notes, {color: status === 0 ? '#9E9E9E' : '#000000'}]}>{`Note: ${item.notes}`}</Text>
+                )}
               </View>
             </View>
           </View>
@@ -221,5 +264,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F7FA',
     borderRadius: 10,
     marginRight: moderateScale(10),
+  },
+  foodItemImageWrapper: {
+    width: '100%',
+    borderBottomStartRadius: 10,
+    borderBottomEndRadius: 10,
+  },
+  modifiedFlag: {
+    width: '100%',
+    height: 25,
+    position: 'absolute',
+    bottom: 0,
+    borderBottomStartRadius: 10,
+    borderBottomEndRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

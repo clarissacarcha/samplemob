@@ -5,6 +5,11 @@ import { AlertOverlay } from 'src/components';
 import { CheckIdleState  , DisabledButton , NumberBoxes, HeaderCancel, CircleIndicator , NumPad } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
 import { BuildingBottom } from '../../../components';
+import { TransactionUtility } from 'toktokwallet/util'
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
+import { POST_VERIFY_ACCOUNT_TPIN } from 'toktokwallet/graphql'
+import {useMutation} from '@apollo/react-hooks'
+import {useAlert, usePrompt} from 'src/hooks'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import tokwaLogo from 'toktokwallet/assets/images/tokwa2.png';
 
@@ -28,6 +33,8 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
     const [pinCode,setPinCode] = useState("")
     const inputRef = useRef();
     const [showPin,setShowPin] = useState(false)
+    const prompt = usePrompt()
+    const alert = useAlert()
 
     const onNumPress = () => {
         setTimeout(() => {
@@ -35,8 +42,30 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
         }, 10);
     };
 
+    const [postVerifyAccountTPIN , {loading}] = useMutation(POST_VERIFY_ACCOUNT_TPIN, {
+        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({postVerifyAccountTPIN})=> {
+            return callBackFunc({pinCode , data})
+        },
+        onError: (error)=> {
+            TransactionUtility.StandardErrorHandling({
+                error,
+                navigation,
+                prompt,
+                alert      
+            })
+        }
+    })
+
     useEffect(()=>{
         if(pinCode.length == 6){
+            // postVerifyAccountTPIN({
+            //    variables: {
+            //        input: {
+            //          tpin: pinCode
+            //        }
+            //    }
+            // })
             callBackFunc({pinCode , data})
         }
     },[pinCode])
@@ -50,6 +79,7 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
 
     return(
         <CheckIdleState>
+            <AlertOverlay visible={loading}/>
             <View
                 style={styles.container}
             >
