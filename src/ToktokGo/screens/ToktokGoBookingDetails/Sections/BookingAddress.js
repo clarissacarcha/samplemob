@@ -37,12 +37,35 @@ const DeliveryStop = ({booking, stop}) => {
       const {city, province} = stop.addressBreakdown;
       if (city) {
         if (province) {
-          return `${city}, ${province}`;
+          return (
+            <View style={{width: 340}}>
+              <Text>
+                {city}, {province}
+              </Text>
+              <Text style={{color: constants.COLOR.ALMOST_BLACK, fontSize: constants.FONT_SIZE.S}}>
+                {stop.formattedAddress}
+              </Text>
+            </View>
+          );
         } else {
-          return city;
+          return (
+            <View style={{width: 340}}>
+              <Text>{city}</Text>
+              <Text style={{color: constants.COLOR.ALMOST_BLACK, fontSize: constants.FONT_SIZE.S}}>
+                {stop.formattedAddress}
+              </Text>
+            </View>
+          );
         }
       } else {
-        return province;
+        return (
+          <View style={{width: 340}}>
+            <Text>{province}</Text>
+            <Text style={{color: constants.COLOR.ALMOST_BLACK, fontSize: constants.FONT_SIZE.S}}>
+              {stop.formattedAddress}
+            </Text>
+          </View>
+        );
       }
     } else {
       return stop.formattedAddress;
@@ -142,7 +165,7 @@ export const BookingAddress = ({booking}) => {
           {/*-------------------- SENDER DETAILS --------------------*/}
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
             <View>
-              <Image source={OriginIcon} resizeMode={'contain'} style={{height: 20, width: 20, marginRight: 15}} />
+              <Image source={OriginIcon} resizeMode={'contain'} style={{height: 20, width: 20, marginRight: 10}} />
               <View
                 style={{
                   position: 'absolute',
@@ -163,7 +186,7 @@ export const BookingAddress = ({booking}) => {
             <Image
               source={DestinationIcon}
               resizeMode={'contain'}
-              style={{height: 20, width: 20, marginRight: 15, marginLeft: 1}}
+              style={{height: 20, width: 20, marginRight: 10, marginLeft: 1}}
             />
             <DeliveryStop stop={booking.route.destinations[0]} booking={booking} />
           </View>

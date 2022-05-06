@@ -10,7 +10,7 @@ export const Header = ({children}) => {
     <View>
       <View style={styles.headerBox}>
         <View style={styles.greetingBox}>
-          <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.XL + 1, marginBottom: 16}}>Menu</Text>
+          <Text style={{fontFamily: FONT.REGULAR, paddingVertical: 10, fontSize: FONT_SIZE.XL + 4}}>Menu</Text>
         </View>
       </View>
       <View></View>
