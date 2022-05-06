@@ -12,7 +12,7 @@ export const BookingBreakdown = ({selectedVehicle, loading}) => {
         {loading ? (
           <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
         ) : (
-          <Text>₱ {numberFormat(selectedVehicle?.rate?.amount ? selectedVehicle?.rate?.amount : 0)}</Text>
+          <Text>₱{numberFormat(selectedVehicle?.rate?.amount ? selectedVehicle?.rate?.amount : 0)}</Text>
         )}
       </View>
 

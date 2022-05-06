@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     borderTopColor: constants.COLOR.ORANGE,
     borderLeftColor: constants.COLOR.ORANGE,
     borderRightColor: constants.COLOR.ORANGE,
-
+    borderRightColor: constants.COLOR.WHITE,
     position: 'absolute',
     paddingTop: 13,
     paddingHorizontal: 16,
