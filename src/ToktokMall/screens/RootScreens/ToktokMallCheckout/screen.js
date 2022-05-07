@@ -471,7 +471,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   }
 
   const init = async () => {
-    
+        
     await getMyAccount()
 
     const savedUser = await AsyncStorage.getItem("ToktokMallUser")
@@ -639,6 +639,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
   useEffect(() => {
     calculateGrandTotal()
   }, [CheckoutContextData])
+
+  useEffect(() => {
+    alert("Shipping voucher has detected")
+  }, [CheckoutContextData?.shippingVouchers])
 
   // useEffect(() => {
   //   if(movedScreens){

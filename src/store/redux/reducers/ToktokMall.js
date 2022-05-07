@@ -28,6 +28,11 @@ const INITIAL_STATE = {
   modal: {
     visible: false,
   },
+  popupmodal: {
+    visible: false,
+    type: '',
+    label: ''
+  },  
   customMessageModal: {
     visible: false,
     title: ["We're sorry but this product is ", "SOLD OUT."],
@@ -52,6 +57,12 @@ export default (state = INITIAL_STATE, action) => {
     return {...state, modal: {...state.modal, visible: true, ...action.payload}};
     case 'TOKTOK_MALL_CLOSE_MODAL_2':
     return {...state, modal: {visible: false}};
+
+    case 'TOKTOK_MALL_OPEN_POPUP':
+      return {...state, popupmodal: {...state.popupmodal, visible: true, ...action.payload}};
+    case 'TOKTOK_MALL_CLOSE_POPUP':
+    return {...state, popupmodal: {visible: false}};
+
     case 'TOKTOK_MALL_OPEN_CONFIRM_MODAL':
     return {...state, customConfirmModal: { ...state.customConfirmModal, visible: true, ...action.payload}};
     case 'TOKTOK_MALL_CLOSE_CONFIRM_MODAL':

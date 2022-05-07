@@ -123,7 +123,6 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
     //   }
     // })
 
-
   }, [])
 
   useFocusEffect(
