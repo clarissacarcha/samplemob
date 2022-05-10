@@ -6,8 +6,9 @@ import moment from 'moment';
 
 export const DriverStatusDestination = ({status, booking}) => {
   const minDuration = booking.route?.duration.minute;
-  const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
-  const minTime = moment().format('hh:mm A');
+  const [createdAtTime, setCreatedAtTime] = useState(booking?.logs[0]?.createdAt);
+  const maxTime = moment(createdAtTime).add(minDuration, 'minutes').format('hh:mm A');
+  const minTime = moment(createdAtTime).format('hh:mm A');
 
   return (
     <View>

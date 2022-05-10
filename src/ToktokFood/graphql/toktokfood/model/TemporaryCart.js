@@ -24,7 +24,6 @@ const tempCart = `
     parentProductId
     parentProductName
     resellerDiscount
-    shopAddress
     shopName
     orderInstructions
     isDisabled
@@ -66,7 +65,6 @@ const voucherType = `
   requirement
   set_end_date
   no_of_stocks
-
   voucher_id
   voucher_type
   voucher_code
@@ -84,7 +82,6 @@ const voucherType = `
   product_id
   regions
   type
-
   items {
     product_id
     amount

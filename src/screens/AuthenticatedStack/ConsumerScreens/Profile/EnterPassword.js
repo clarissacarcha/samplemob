@@ -17,6 +17,7 @@ import {connect} from 'react-redux';
 import {Header} from './Components';
 import ShowPassword from '../../../../assets/icons/ShowPassword.png';
 import HidePassword from '../../../../assets/icons/HidePassword.png';
+import constants from '../../../../common/res/constants';
 
 const EnterPassword = ({navigation, route, session}) => {
   const {userName} = route.params;
@@ -132,6 +133,7 @@ const EnterPassword = ({navigation, route, session}) => {
                 value={currentPassword}
                 onChangeText={value => handleValue(value)}
                 placeholder="Enter Current Password"
+                placeholderTextColor={constants.COLOR.DARK}
                 secureTextEntry={secureNewPassword}
                 autoCapitalize="none"
                 onFocus={() => {

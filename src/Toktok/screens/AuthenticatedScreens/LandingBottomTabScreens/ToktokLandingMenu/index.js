@@ -13,8 +13,10 @@ import RNFS from 'react-native-fs';
 
 import OneSignal from 'react-native-onesignal';
 import ToktokWashed from '../../../../../assets/images/ToktokWashed.png';
+import RightArrow from '../../../../../assets/icons/profileMenu-arrow-rightIcon.png';
 
 import {Header} from './Components';
+import { ToktokMallSession } from '../../../../../ToktokMall/util/session';
 
 const DrawerButton = ({label, onPress, restrict}) => {
   if (restrict && restrict != APP_FLAVOR) {
@@ -25,13 +27,14 @@ const DrawerButton = ({label, onPress, restrict}) => {
     <TouchableHighlight onPress={onPress} underlayColor={COLOR.WHITE_UNDERLAY} style={styles.submitBox}>
       <View style={styles.submit}>
         <Text style={styles.headerText}>{label}</Text>
-        <VectorIcon
+        {/* <VectorIcon
           iconSet={ICON_SET.Entypo}
           name="chevron-thin-right"
           color={COLOR.BLACK}
           size={16}
           style={{marginRight: 2}}
-        />
+        /> */}
+        <Image source={RightArrow} style={{color: 'red', height: 12, width: 15}} resizeMode={'contain'} />
       </View>
     </TouchableHighlight>
   );
@@ -69,6 +72,7 @@ export const ToktokLandingMenu = ({navigation}) => {
     if (RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
     OneSignal.deleteTag('userId');
     dispatch({type: 'DESTROY_SESSION'});
+    ToktokMallSession.destroy();
     navigation.replace('UnauthenticatedStack', {
       screen: 'Login',
     });
@@ -131,11 +135,11 @@ export const ToktokLandingMenu = ({navigation}) => {
         <View style={{height: SIZE.MARGIN / 2, backgroundColor: COLOR.LIGHT}} />
 
         <View style={{flex: 1, backgroundColor: 'white'}}>
-          <Text style={{paddingLeft: 20, paddingTop: 20, fontFamily: FONT.BOLD}}> Accounts</Text>
+          <Text style={{paddingLeft: 20, paddingTop: 20, paddingBottom: 15, fontFamily: FONT.BOLD}}> Account</Text>
           <ScrollView>
             {/*--------------- MY DELIVERIES ---------------*/}
             {/* <DrawerButton
-              label="My Saved Locations"
+              label="Saved Addresses"
               onPress={() => {
                 navigation.push('ToktokSavedLocations');
               }}
@@ -163,25 +167,26 @@ export const ToktokLandingMenu = ({navigation}) => {
                 paddingTop: 20,
                 borderTopWidth: 5,
                 borderTopColor: '#F8F8F8',
+                paddingBottom: 15,
                 fontFamily: FONT.BOLD,
               }}>
               Help Centre
             </Text>
+
             <DrawerButton
-              label="Help"
-              style={{borderTopWidth: 1, borderTopColor: 'red', backgroundColor: 'red'}}
+              label="Contact Us"
               onPress={() => {
                 navigation.push('TalkToUs');
               }}
             />
 
             {/*--------------- CHANGE PASSWORD ---------------*/}
-            <Text
+            <View
               style={{
                 borderTopWidth: 5,
                 borderTopColor: '#F8F8F8',
                 fontFamily: FONT.BOLD,
-              }}></Text>
+              }}></View>
             <DrawerButton label="Log Out" onPress={endUserSession} />
           </ScrollView>
         </View>
@@ -193,14 +198,15 @@ export const ToktokLandingMenu = ({navigation}) => {
 
 const styles = StyleSheet.create({
   submitBox: {
-    marginHorizontal: 16,
+    marginHorizontal: 13,
     borderRadius: 5,
     borderBottomWidth: 1,
     borderBottomColor: COLOR.LIGHT,
   },
   submit: {
     backgroundColor: COLOR.WHITE,
-    height: 50,
+    // height: 50,
+    paddingVertical: 20,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'space-between',

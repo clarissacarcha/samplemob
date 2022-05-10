@@ -13,6 +13,7 @@ import {EmptyRecent, ToktokgoBeta} from '../../components';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import {useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../helper';
+import {ThrottledHighlight} from '../../../components_section';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const {popTo} = route.params;
@@ -92,11 +93,11 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     useCallback(() => {
       const setPlace = async () => {
         await setPlaceFunction();
-      }
+      };
       if (!origin?.place?.formattedAddress) {
-        setPlace()
+        setPlace();
       }
-    }, [navigation])
+    }, [navigation]),
   );
 
   const onChange = value => {
@@ -160,6 +161,8 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           onChangeSelectedInput={onChangeSelectedInput}
           titleOrigin={searchOrigin}
           title={searchDestination}
+          setSearchDestination={setSearchDestination}
+          setSearchOrigin={setSearchOrigin}
         />
         {searchResponse?.length == 0 ? (
           // <View>
@@ -176,7 +179,8 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />
         )}
       </View>
-      <TouchableHighlight
+      <ThrottledHighlight
+        delay={500}
         onPress={() => {
           if (selectedInput == 'D') {
             navigation.push('ToktokGoBookingConfirmDestination', {
@@ -221,7 +225,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
             </Text>
           </View>
         </View>
-      </TouchableHighlight>
+      </ThrottledHighlight>
     </View>
   );
 };

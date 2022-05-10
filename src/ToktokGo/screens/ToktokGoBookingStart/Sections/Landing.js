@@ -29,7 +29,7 @@ export const Landing = ({navigation}) => {
               popTo: 1,
             });
           }}
-          delay={100}
+          delay={500}
           style={styles.searchBox}>
           <View style={styles.inputBox}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>

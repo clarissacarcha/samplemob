@@ -11,7 +11,6 @@ import {
     CashInDragonPay,
     CashOut,
     CashOutOtherBank,
-    MerchantPayment,
     SendMoney
 } from "./Components"
 
@@ -103,7 +102,7 @@ const RenderFundTransferReminder = ({
     )
 }
 
-const RenderOtherServiceReminder = ({
+const RenderOtherServieReminder = ({
     event
 })=> {
 
@@ -120,17 +119,6 @@ const RenderOtherServiceReminder = ({
             Transaction cannot be reversed once confirmed and submitted.
             </Text> 
             </>
-        )
-    }
-
-    if(event == "merchantPayment"){
-        return (
-            <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start",marginTop:5}}>
-                    <VectorIcon iconSet={ICON_SET.Feather} name="info" color={COLOR.YELLOW} size={FONT_SIZE.XL} />  
-                    <Text style={{fontFamily:FONT.REGULAR,fontSize: FONT_SIZE.M,marginLeft: 3,marginTop: -2,marginRight: 16}}>
-                    Please ensure that all information is correct and validated before proceeding with this transaction.
-                    </Text> 
-            </View>
         )
     }
 
@@ -178,8 +166,6 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                 return <SendMoney data={data}/>
             case "Fund Transfer":
                 return <CashOutOtherBank data={data}/>
-            case "merchantPayment":
-                return <MerchantPayment data={data}/>
             default:
                 return
         }
@@ -197,7 +183,7 @@ export const ToktokWalletReviewAndConfirm = ({navigation,route})=> {
                         fundTransferType={data.fundTransferType}
                         event={event}
                     />
-                   : <RenderOtherServiceReminder
+                   : <RenderOtherServieReminder
                         event={event}
                    /> 
               }

@@ -14,8 +14,9 @@ import moment from 'moment';
 
 export const BookingInfo = ({booking}) => {
   const minDuration = booking.route.duration.minute;
-  const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
-  const minTime = moment().format('hh:mm A');
+  const [createdAtTime, setCreatedAtTime] = useState(booking?.logs[0]?.createdAt);
+  const maxTime = moment(createdAtTime).add(minDuration, 'minutes').format('hh:mm A');
+  const minTime = moment(createdAtTime).format('hh:mm A');
 
   return (
     <View style={styles.card}>
@@ -25,55 +26,51 @@ export const BookingInfo = ({booking}) => {
           <View style={{flex: 1}}>
             <View style={{flexDirection: 'row'}}>
               {/*-------------------- CREDIT COST --------------------*/}
-              {['ONGOING'].includes(booking.tag) && (
-                <>
-                  <View style={{flex: 1}}>
-                    <Text style={{fontFamily: FONT.BOLD, fontSize: constants.FONT_SIZE.M}}>Booking Information</Text>
-                    <Text
-                      style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
-                      {moment(booking.logs[0].createdAt).format('MMM D, YYYY hh:mm A')}
-                      {/* {(parseFloat(delivery.price) * parseFloat(delivery.comRate)).toFixed(2)} */}
-                    </Text>
-                  </View>
 
-                  {booking.paymentMethod == 'CASH' ? (
-                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                      <Image source={CashIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
-                      <Text
-                        style={{
-                          fontFamily: FONT.REGULAR,
-                          color: constants.COLOR.YELLOW,
-                          fontSize: constants.FONT_SIZE.M,
-                        }}>
-                        Cash
-                      </Text>
-                    </View>
-                  ) : (
-                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-                      <Image
-                        source={ToktokWalletOutline}
-                        resizeMode="contain"
-                        style={{width: 17, height: 15, marginRight: 8}}
-                      />
-                      <Text
-                        style={{
-                          fontFamily: FONT.REGULAR,
-                          color: constants.COLOR.YELLOW,
-                          fontSize: constants.FONT_SIZE.M,
-                        }}>
-                        toktok
-                        <Text
-                          style={{
-                            fontFamily: FONT.REGULAR,
-                            color: constants.COLOR.ORANGE,
-                            fontSize: constants.FONT_SIZE.M,
-                          }}>
-                          wallet
-                        </Text>
-                      </Text>
-                    </View>
-                  )}
-                </>
+              <View style={{flex: 1}}>
+                <Text style={{fontFamily: FONT.BOLD, fontSize: constants.FONT_SIZE.M}}>Booking Information</Text>
+                <Text style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
+                  {moment(createdAtTime).format('MMM D, YYYY hh:mm A')}
+                  {/* {(parseFloat(delivery.price) * parseFloat(delivery.comRate)).toFixed(2)} */}
+                </Text>
+              </View>
+
+              {booking.paymentMethod == 'CASH' ? (
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                  <Image source={CashIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
+                  <Text
+                    style={{
+                      fontFamily: FONT.REGULAR,
+                      color: constants.COLOR.YELLOW,
+                      fontSize: constants.FONT_SIZE.M,
+                    }}>
+                    Cash
+                  </Text>
+                </View>
+              ) : (
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                  <Image
+                    source={ToktokWalletOutline}
+                    resizeMode="contain"
+                    style={{width: 17, height: 15, marginRight: 8}}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: FONT.REGULAR,
+                      color: constants.COLOR.YELLOW,
+                      fontSize: constants.FONT_SIZE.M,
+                    }}>
+                    toktok
+                    <Text
+                      style={{
+                        fontFamily: FONT.REGULAR,
+                        color: constants.COLOR.ORANGE,
+                        fontSize: constants.FONT_SIZE.M,
+                      }}>
+                      wallet
+                    </Text>
+                  </Text>
+                </View>
               )}
             </View>
           </View>

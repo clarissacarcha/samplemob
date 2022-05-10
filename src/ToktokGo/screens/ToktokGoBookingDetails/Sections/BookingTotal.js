@@ -18,7 +18,7 @@ export const BookingTotal = ({booking}) => {
           <View style={{flex: 1}}>
             <AccordionBooking
               titleText={'Total'}
-              titleAmount={'₱ ' + numberFormat(booking.fare.total)}
+              titleAmount={'₱' + numberFormat(booking.fare.total)}
               subTexts={[
                 {amount: `₱${numberFormat(booking.fare.flatRate)}`, text: 'Sedan', key: 1},
                 {amount: `₱${numberFormat(booking.fare.mileageFee)}`, text: 'Distance', key: 2},
