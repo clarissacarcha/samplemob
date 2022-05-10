@@ -27,6 +27,7 @@ const tempCart = `
     shopAddress
     shopName
     orderInstructions
+    isDisabled
     addonsDetails {
       id
       optionName

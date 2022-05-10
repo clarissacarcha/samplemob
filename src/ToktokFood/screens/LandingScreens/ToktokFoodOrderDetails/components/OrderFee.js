@@ -41,7 +41,7 @@ const OrderFee = ({data, forDelivery}) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text>Subtotal</Text>
-        <Text style={styles.subtotal}>{`PHP ${srpTotal.toFixed(2)}`}</Text>
+        <Text style={styles.subtotal}>{`PHP ${srpTotalamount.toFixed(2)}`}</Text>
       </View>
 
       {promoDiscounts > 0 && (
