@@ -25,7 +25,7 @@ import {reseller_badge, empty_search_2, food_placeholder} from 'toktokfood/asset
 import {TOKFOODCOLOR} from 'res/variables';
 
 export const FoodList = props => {
-  const {activeTab, id, data, productsLoading, showMore, tagsLoading, shopDetails} = props;
+  const {activeTab, id, data, productsLoading, showMore, tagsLoading} = props;
   const navigation = useNavigation();
   const [listData, setListData] = useState([]);
   const {searchProduct, setSearchProduct, temporaryCart, foodCartHeight, navBartHeight} = useContext(VerifyContext);
@@ -126,7 +126,7 @@ export const FoodList = props => {
   }, [searchProduct]);
 
   const onNavigateToFoodItemDetails = Id => {
-    navigation.navigate('ToktokFoodItemDetails', {Id, temporaryCart: temporaryCart.items, shopDetails});
+    navigation.navigate('ToktokFoodItemDetails', {Id, temporaryCart: temporaryCart.items});
   };
 
   const ItemSepartor = () => <View style={styles.separtor} />;

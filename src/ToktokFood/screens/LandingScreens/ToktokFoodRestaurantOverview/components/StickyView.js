@@ -91,11 +91,11 @@ export const StickyView = ({onCheckShop}) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
-      let {address, shopname, latitude, longitude, hasOpen, nextOperatingHrs, hasProduct} = getShopDetails;
+      let {latitude, longitude, hasOpen, nextOperatingHrs, hasProduct} = getShopDetails;
       if (nextOperatingHrs) {
         setNextSched(nextOperatingHrs);
       }
-      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude, shopName: shopname, shopAddress: address}});
+      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       setShopDetails(getShopDetails);
       onCheckShop(hasOpen && hasProduct);
     },
@@ -304,7 +304,6 @@ export const StickyView = ({onCheckShop}) => {
         productsLoading={productsLoading}
         showMore={showMore}
         tagsLoading={loading}
-        shopDetails={shopDetails}
       />
     );
   }, [id, activeTab, categoryProducts, loading, productsLoading, showMore]);
