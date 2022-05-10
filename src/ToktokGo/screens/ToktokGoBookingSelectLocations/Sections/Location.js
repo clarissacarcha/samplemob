@@ -1,11 +1,11 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {Text, View, TextInput, StyleSheet, Image} from 'react-native';
-import BackgroundLanding from '../../../../assets/images/BackGroundLanding.png';
+import ClearTextInput from '../../../../assets/icons/EraseTextInput.png';
 import CONSTANTS from '../../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
-
+import {isEmpty} from 'lodash';
 export const Location = ({
   onChange,
   inputRef,
@@ -14,6 +14,8 @@ export const Location = ({
   titleOrigin,
   title,
   onChangeOrigin,
+  setSearchDestination,
+  setSearchOrigin,
 }) => {
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, paddingHorizontal: 16, marginBottom: 15}}>
@@ -39,6 +41,14 @@ export const Location = ({
                 }}>
                 {titleOrigin}
               </Text>
+            </TouchableOpacity>
+          )}
+          {!isEmpty(titleOrigin) && selectedInput == 'P' && (
+            <TouchableOpacity
+              onPress={() => {
+                setSearchOrigin(null);
+              }}>
+              <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
             </TouchableOpacity>
           )}
         </View>
@@ -68,6 +78,14 @@ export const Location = ({
               </Text>
             </TouchableOpacity>
           )}
+          {!isEmpty(title) && selectedInput == 'D' && (
+            <TouchableOpacity
+              onPress={() => {
+                setSearchDestination(null);
+              }}>
+              <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>
@@ -77,7 +95,7 @@ const styles = StyleSheet.create({
   input: {
     marginLeft: 12,
     color: CONSTANTS.COLOR.DARK,
-    width: '84%',
+    width: '80%',
   },
   containerInput: {
     flex: 1,

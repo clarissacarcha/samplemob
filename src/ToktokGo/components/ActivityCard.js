@@ -20,6 +20,7 @@ import DestinationIcon from '../../assets/icons/DestinationIcon.png';
 import OriginIcon from '../../assets/icons/OriginIcon.png';
 import CashIcon from '../../assets/images/CashIcon.png';
 import Constants from '../../store/redux/reducers/Constants';
+import {numberFormat} from '../../helper';
 
 const getDisplayAddress = ({stop}) => {
   console.log(stop);
@@ -28,7 +29,7 @@ const getDisplayAddress = ({stop}) => {
     const {formattedAddress} = stop;
     if (province) {
       return (
-        <View>
+        <View style={{width: 320}}>
           <Text>
             {city}, {province}
           </Text>
@@ -37,7 +38,7 @@ const getDisplayAddress = ({stop}) => {
       );
     } else {
       return (
-        <View style={{flex: 1}}>
+        <View style={{width: 320}}>
           <Text>{city}</Text>
           <Text style={{fontSize: 11, color: '#525252'}}>{formattedAddress}</Text>
         </View>
@@ -52,7 +53,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
   const onPressThrottled = throttle(onPress, 1000, {trailing: false});
 
   const getTotalAmount = () => {
-    return `₱${parseFloat(booking?.fare?.amount)}.00`;
+    return `₱${numberFormat(booking?.fare?.total)}`;
   };
   const headerDesign = () => {
     let design = styles.headerYellow;
@@ -90,7 +91,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
           {
             <View style={styles.headerWhite}>
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <View style={{width: 150}}>
+                <View style={{flex: 1}}>
                   <Text style={{fontSize: constants.FONT_SIZE.M}}>
                     Booking ID
                     <Text
@@ -237,7 +238,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                       fontSize: constants.FONT_SIZE.M,
                       fontFamily: constants.FONT_FAMILY.BOLD,
                     }}>
-                    Total
+                    Total:
                   </Text>
                   <Text
                     style={{
