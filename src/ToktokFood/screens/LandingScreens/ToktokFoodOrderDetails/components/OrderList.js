@@ -45,8 +45,6 @@ const OrderList = ({orderDetails}) => {
   const ResellerDiscountBadge = useMemo(
     () =>
       ({item}) => {
-        const {status} = item;
-        const {isModified} = item;
         const {amount, basePrice, srpAmount, totalAmountWithAddons, resellerDiscount, resellerRate} = item;
         const percentage = (100 * (Number(basePrice) - resellerDiscount)) / srpAmount;
         const finalPercentage = roundedPercentage(percentage, 1);
@@ -61,21 +59,9 @@ const OrderList = ({orderDetails}) => {
               </ImageBackground>
             )}
 
-            {isModified ? (
-              <Text
-                style={{
-                  ...styles.seeAll,
-                  position: 'absolute',
-                  bottom: moderateScale(-20),
-                  color: status === 0 ? '#9E9E9E' : '#FF6200',
-                }}>
-                PHP {totalAmountWithAddons.toFixed(2)}
-              </Text>
-            ) : (
-              <Text style={{...styles.seeAll, position: 'absolute', bottom: moderateScale(-20)}}>
-                PHP {totalAmountWithAddons.toFixed(2)}
-              </Text>
-            )}
+            <Text style={{...styles.seeAll, position: 'absolute', bottom: moderateScale(-20)}}>
+              PHP {totalAmountWithAddons.toFixed(2)}
+            </Text>
           </View>
         );
       },
@@ -90,12 +76,12 @@ const OrderList = ({orderDetails}) => {
           source={item.productDetails.filename}
           placeholder={food_placeholder}
         />
-        {itemStatus === 0 && isEdited && (
+        {itemStatus === 0 && !isEdited && (
           <View style={{...styles.modifiedFlag, backgroundColor: '#ED3A19'}}>
             <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>Removed</Text>
           </View>
         )}
-        {itemStatus === 1 && isEdited && (
+        {isEdited && (
           <View style={{...styles.modifiedFlag, backgroundColor: '#F5841F'}}>
             <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>Edited</Text>
           </View>

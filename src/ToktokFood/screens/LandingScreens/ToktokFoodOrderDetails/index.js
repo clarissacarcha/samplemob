@@ -392,8 +392,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
 
   const isItemModified = () => {
     const orderDetailsItems = transaction?.orderDetails;
-    const evalEditResult = orderDetailsItems.filter(items => items.isModified === true); // true means order item modified (quantity etc.)
-    const evalRemovedResult = orderDetailsItems.filter(items => items.status === 0); // zero means order item removed/deleted
+    const evalEditResult = orderDetailsItems.filter(items => items.isModified === true); // zero means removed
+    const evalRemovedResult = orderDetailsItems.filter(items => items.status === 0); // zero means removed
 
     return evalRemovedResult.length > 0 || evalEditResult.length > 0;
   };
