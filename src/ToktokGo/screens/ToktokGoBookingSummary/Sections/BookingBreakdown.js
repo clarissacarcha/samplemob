@@ -9,7 +9,11 @@ export const BookingBreakdown = ({selectedVehicle}) => {
     <View style={styles.container}>
       <View style={styles.rowContainer}>
         <Text style={styles.title}>Ride Fare</Text>
-        <Text>₱ {numberFormat(selectedVehicle?.rate?.amount ? selectedVehicle?.rate?.amount : 0)}</Text>
+        {loading ? (
+          <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+        ) : (
+          <Text>₱{numberFormat(selectedVehicle?.rate?.amount ? selectedVehicle?.rate?.amount : 0)}</Text>
+        )}
       </View>
 
       {/* todo: Condition here */}

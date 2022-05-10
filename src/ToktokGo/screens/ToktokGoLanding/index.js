@@ -10,6 +10,7 @@ import {connect, useDispatch, useSelector} from 'react-redux';
 import {decodeLegsPolyline} from '../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
+import {onErrorAppSync} from '../../util';
 
 const ToktokGoLanding = ({navigation, session, constants}) => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
         }
       }, 1000);
     },
-    onError: error => console.log('error', error),
+    onError: onErrorAppSync,
   });
 
   const healthCareAccept = async () => {

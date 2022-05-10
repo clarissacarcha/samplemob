@@ -12,6 +12,7 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import {decodeLegsPolyline, useDebounce} from '../../helpers';
 import {MAP_DELTA_LOW} from '../../../res/constants';
 import {throttle} from 'lodash';
+import {ThrottledOpacity} from '../../../components_section';
 
 const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const {popTo, source} = route.params;
@@ -99,9 +100,9 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   };
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
+      <ThrottledOpacity delay={500} style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
-      </TouchableOpacity>
+      </ThrottledOpacity>
       {origin?.place?.location?.latitude && <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
       <View style={styles.card}>
         <NotesToDriver dropDownRef={dropDownRef} navigation={navigation} popTo={popTo} note={note} setNote={setNote} />

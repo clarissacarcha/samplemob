@@ -31,7 +31,7 @@ const Activities = () => (
 
         elevation: 2,
       }}>
-      <Text style={{paddingVertical: 20, fontSize: FONT_SIZE.XL + 1}}>Activities</Text>
+      <Text style={{paddingVertical: 20, fontSize: FONT_SIZE.XL + 3}}>Activities</Text>
     </View>
     <ActivitiesTopTab.Navigator
       swipeEnabled={false}
