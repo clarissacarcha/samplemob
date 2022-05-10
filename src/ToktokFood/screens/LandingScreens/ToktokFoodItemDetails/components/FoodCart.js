@@ -226,7 +226,7 @@ export const FoodCart = ({loading, action}) => {
       productid: productDetails.variants.length > 0 ? selectedVariants?.Id : productDetails.Id,
       quantity: count.quantity,
       addons: extractAddons(),
-      notes: notes,
+      notes: notes.replace(/[^a-z0-9_ ]/gi, ''),
       // order_instructions: orderInstructions === 'Select one' ? '' : orderInstructions,
     };
 
