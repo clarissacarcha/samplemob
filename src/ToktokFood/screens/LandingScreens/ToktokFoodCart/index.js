@@ -69,6 +69,7 @@ import {
   REQUEST_TAKE_MONEY,
   VERIFY_PIN,
   GET_SHOP_STATUS,
+  GET_ALL_TEMPORARY_CART,
 } from 'toktokfood/graphql/toktokfood';
 
 import moment from 'moment';
@@ -81,6 +82,7 @@ import {FONT, FONT_SIZE} from '../../../../res/variables';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 import {parseAmountComputation} from './functions';
+import {useQuery} from '@apollo/client';
 
 /*
   This variable is used for identifier whether the user is able to checkout or not 
@@ -124,6 +126,7 @@ const MainComponent = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [loadingWallet, setLoadingWallet] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showItemDisabled, setShowItemDisabled] = useState(false);
   const [closeShop, setShowCloseShop] = useState({visible: false, shopName: ''});
   const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
   const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({error: {}, visible: false});
@@ -185,13 +188,6 @@ const MainComponent = () => {
   useEffect(() => {
     onGetAutoApply();
   }, [paymentMethod]);
-
-  const checkShopOpenStatus = () => {
-    setLoadingWallet(true);
-    if (temporaryCart && temporaryCart.items.length > 0) {
-      getShopStatus({variables: {input: {shopId: temporaryCart.items[0]?.shopid}}});
-    }
-  };
 
   const [getDeliverFee] = useLazyQuery(GET_SHIPPING_FEE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -620,7 +616,7 @@ const MainComponent = () => {
       receiver.contactPerson && receiver.contactPerson !== ''
         ? receiver.contactPerson
         : `${customerInfo.firstName} ${customerInfo.lastName}`;
-    
+
     const LAND_MARK = receiver.landmark && receiver.landmark !== '' ? receiver.landmark : '';
 
     const replaceName = DELIVERY_RECEIVER.replace(/[^a-z0-9_ ]/gi, '');
@@ -689,6 +685,23 @@ const MainComponent = () => {
     });
   };
 
+  const [getAllTemporaryCart, {loading, error}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getAllTemporaryCart}) => {
+      const {items} = getAllTemporaryCart;
+      const evalDisabledResult = items.filter(item => item.isDisabled === true);
+      if (evalDisabledResult) {
+        setLoadingWallet(false);
+        setShowItemDisabled(true);
+      } else {
+        if (temporaryCart && temporaryCart.items.length > 0) {
+          getShopStatus({variables: {input: {shopId: temporaryCart.items[0]?.shopid}}});
+        }
+      }
+    },
+  });
+
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
       <HeaderImageBackground searchBox={false}>
@@ -707,9 +720,27 @@ const MainComponent = () => {
         }}
         onCloseBtn2={() => {
           setShowConfirmation(false);
-          checkShopOpenStatus();
+          setLoadingWallet(true);
+          getAllTemporaryCart({
+            variables: {
+              input: {
+                userId: customerInfo.userId,
+              },
+            },
+          });
         }}
         hasTwoButtons
+      />
+
+      <DialogMessage
+        visibility={showItemDisabled}
+        title="Currently Unavailable"
+        messages={`Some items in your cart is currently unavailable. Please try again another time.\nThank you!`}
+        type="warning"
+        btn1Title="OK"
+        onCloseModal={() => {
+          setShowItemDisabled(false);
+        }}
       />
 
       <DialogMessage
