@@ -180,7 +180,6 @@ const MainComponent = () => {
         },
       });
     }
-    console.log('temporaryCart', temporaryCart);
   }, [temporaryCart, location, isFocus]);
 
   useEffect(() => {
@@ -405,7 +404,6 @@ const MainComponent = () => {
       daystoship: 0,
       daystoship_to: 0,
       items: await fixItems(),
-
     };
     return [orderLogs];
   };
@@ -427,7 +425,6 @@ const MainComponent = () => {
           order_type: 1,
           notes: item.notes.replace(/[^a-z0-9_ ]/gi, ''),
           addons: await fixAddOns(item.addonsDetails),
-          order_instructions: item.orderInstructions,
         };
         items.push(data);
       }),
@@ -666,7 +663,7 @@ const MainComponent = () => {
       discounted_totalamount: parsedAmount,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, []);
-    // console.log('DATA', data);
+    console.log('DATA', data);
     postCustomerOrder({
       variables: {
         input: data,
@@ -879,7 +876,7 @@ const MainComponent = () => {
           />
         )}
         <Separator />
-        {orderType === 'Delivery' && <ReceiverLocation cart={temporaryCart} />}
+        {orderType === 'Delivery' && <ReceiverLocation />}
         <Separator />
 
         <MyOrderList />

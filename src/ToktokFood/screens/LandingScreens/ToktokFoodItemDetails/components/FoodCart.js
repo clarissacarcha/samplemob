@@ -227,7 +227,7 @@ export const FoodCart = ({loading, action}) => {
       quantity: count.quantity,
       addons: extractAddons(),
       notes: notes,
-      order_instructions: orderInstructions,
+      // order_instructions: orderInstructions === 'Select one' ? '' : orderInstructions,
     };
 
     let filterItemByProductId = await temporaryCart.items.filter(item => {
@@ -339,7 +339,6 @@ export const FoodCart = ({loading, action}) => {
   const addToCart = items => {
     postTemporaryCart({variables: {input: items}}).then(({data}) => {
       let {status, message} = data.postTemporaryCart;
-      // console.log('postTemporaryCart', data);
       if (status == 200) {
         setTimeout(() => {
           setLoader(false);
