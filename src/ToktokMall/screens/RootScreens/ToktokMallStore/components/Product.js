@@ -121,7 +121,7 @@ export const Product = ({data}) => {
   const [offset, setOffset] = useState(0)
   const [products, setProducts] = useState(data)
 
-  const LoadMore = () => {    
+  const LoadMore = () => {   
     setloading(true)
     setTimeout(() => {
       setOffset(offset + 10)
@@ -138,38 +138,40 @@ export const Product = ({data}) => {
   return (
     <>
       <View style={styles.container}>
-            
         <FlatList
           data={data.slice(0, offset + 10)}
           numColumns={2}
           style={{paddingHorizontal: 5}}
           renderItem={({item, index}) => {
-            const isEven = products?.length % 2 === 0
-            if(!isEven){
+            const isEven = products?.length % 2 === 0;
+            if (!isEven) {
               //ODD
-              if(index == products?.length - 1){
+              if (index == products?.length - 1) {
                 return (
-                  <>
+                  <View style={{flex: 1 / 2}}>
                     <RenderItem item={item} />
                     <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}></View>
-                  </>
-                )
-              }                  
+                  </View>
+                );
+              }
             }
-            return <RenderItem item={item} />
+            return (
+              <View style={{flex: 1 / 2}}>
+                <RenderItem item={item} />
+              </View>
+            );
           }}
           keyExtractor={(item, index) => item + index}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={
-            <SwipeReloader state={loading} onSwipeUp={LoadMore} />
-          }
+          onEndReached={LoadMore}
+          onEndReachedThreshold={0.2}
+          ListFooterComponent={<SwipeReloader state={loading} />}
         />
-            
       </View>
       <View style={{height: 15}}></View>
       {/* <View style={styles.separator} /> */}
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
