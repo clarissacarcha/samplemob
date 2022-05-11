@@ -1,19 +1,26 @@
-import React, {useCallback} from 'react';
-import {View, TouchableHighlight, Text, Image} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {View, TouchableHighlight, Text, Image, Alert} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {connect, useDispatch} from 'react-redux';
 import {Landing, Header, OutstandingFee} from './Sections';
 import {useFocusEffect} from '@react-navigation/native';
-import {GET_PLACE_BY_LOCATION} from '../../graphql';
+import {
+  GET_PLACE_BY_LOCATION,
+  GET_TRIPS_CONSUMER,
+  TRIP_CHARGE_FINALIZE_PAYMENT,
+  TRIP_CHARGE_INITIALIZE_PAYMENT,
+} from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from '../../../graphql';
+import {TOKTOK_GO_GRAPHQL_CLIENT, TOKTOK_QUOTATION_GRAPHQL_CLIENT} from '../../../graphql';
 import {ToktokgoBeta, EmptyRecent} from '../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {currentLocation} from '../../../helper';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import {ThrottledHighlight} from '../../../components_section';
+import {useMutation} from '@apollo/client';
 
-const ToktokGoBookingStart = ({navigation, constants}) => {
+const ToktokGoBookingStart = ({navigation, constants, session}) => {
+  const [tripConsumerPending, setTripConsumerPending] = useState([]);
   const dispatch = useDispatch();
 
   const setBookingInitialState = payload => {
@@ -28,6 +35,63 @@ const ToktokGoBookingStart = ({navigation, constants}) => {
     },
     onError: error => console.log('error', error),
   });
+
+  const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setTripConsumerPending(response.getTripsConsumer);
+    },
+  });
+
+  const [tripChargeFinalizePayment] = useMutation(TRIP_CHARGE_FINALIZE_PAYMENT, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onCompleted: response => {
+      Alert.alert('', 'Paid!');
+      navigation.pop();
+    },
+  });
+
+  const tripChargeFinalizePaymentFunction = ({pinCode, data}) => {
+    tripChargeFinalizePayment({
+      variables: {
+        input: {
+          initializedPayment: {
+            hash: data.hash,
+            pinCode,
+          },
+        },
+      },
+    });
+  };
+
+  const [tripChargeInitializePayment] = useMutation(TRIP_CHARGE_INITIALIZE_PAYMENT, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onCompleted: response => {
+      const data = response.tripChargeInitializePayment;
+      console.log('DATA', data.hash);
+      if (data.validator == 'TPIN') {
+        navigation.navigate('ToktokWalletTPINValidator', {
+          callBackFunc: tripChargeFinalizePaymentFunction,
+          data: {
+            hash: data?.hash,
+          },
+        });
+      } else {
+        Alert.alert('', 'Something went wrong...');
+      }
+    },
+  });
+
+  const tripChargeInitializePaymentFunction = () => {
+    tripChargeInitializePayment({
+      variables: {
+        input: {
+          tripId: tripConsumerPending[0].id,
+        },
+      },
+    });
+  };
 
   const setPlaceFunction = async () => {
     const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
@@ -46,6 +110,14 @@ const ToktokGoBookingStart = ({navigation, constants}) => {
   useFocusEffect(
     useCallback(() => {
       setPlaceFunction();
+      getTripsConsumer({
+        variables: {
+          input: {
+            tag: 'PENDING',
+            cancellationChargeStatus: 'PENDING',
+          },
+        },
+      });
     }, [navigation]),
   );
   return (
@@ -56,7 +128,13 @@ const ToktokGoBookingStart = ({navigation, constants}) => {
         {/* <RecentDestinations navigation={navigation} />
         <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
         <SavedLocations /> */}
-        {/* <OutstandingFee /> */}
+        {tripConsumerPending.length > 0 && (
+          <OutstandingFee
+            navigation={navigation}
+            tripChargeInitializePaymentFunction={tripChargeInitializePaymentFunction}
+            tripConsumerPending={tripConsumerPending}
+          />
+        )}
         {constants.iosVersionDisableBeta && Platform.OS == 'ios' ? <EmptyRecent /> : <ToktokgoBeta />}
       </View>
       <ThrottledHighlight
@@ -105,6 +183,7 @@ const ToktokGoBookingStart = ({navigation, constants}) => {
 
 const mapStateToProps = state => ({
   constants: state.constants,
+  session: state.session,
 });
 
 export default connect(mapStateToProps, null)(ToktokGoBookingStart);

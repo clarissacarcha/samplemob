@@ -20,7 +20,6 @@ const AllActivities = ({navigation, session}) => {
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        consumerUserId: session.user.id,
         tag: 'ONGOING',
       },
     },

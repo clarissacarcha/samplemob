@@ -20,7 +20,6 @@ const CompletedActivities = ({navigation, session}) => {
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        consumerUserId: session.user.id,
         tag: 'COMPLETED',
       },
     },

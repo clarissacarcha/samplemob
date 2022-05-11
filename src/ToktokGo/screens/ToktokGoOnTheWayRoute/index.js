@@ -1,5 +1,5 @@
 import React, {useRef, useCallback, useState} from 'react';
-import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, Linking, Platform} from 'react-native';
+import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, Linking, Platform, Alert} from 'react-native';
 import {Map, SeeBookingDetails, DriverStatus, DriverInfo, Actions, DriverStatusDestination} from './Sections';
 import {DriverArrivedModal} from './Components';
 import constants from '../../../common/res/constants';
@@ -22,7 +22,7 @@ import {
   TOKTOKGO_SUBSCRIPTION_CLIENT,
   TRIP_REBOOK,
   TRIP_CONSUMER_CANCEL,
-  GET_TRIP_CANCELLATION_CHECK,
+  GET_TRIP_CANCELLATION_CHARGE,
 } from '../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
@@ -46,6 +46,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [chargeAmount, setChargeAmount] = useState(0);
   const [cancellationState, setCancellationState] = useState();
   const [originData, setOriginData] = useState(false);
+  const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
 
   const {driver, booking} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
@@ -88,14 +89,14 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     },
   });
 
-  const [getTripCancellationCheck] = useLazyQuery(GET_TRIP_CANCELLATION_CHECK, {
+  const [getTripCancellationCharge] = useLazyQuery(GET_TRIP_CANCELLATION_CHARGE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log(response);
-      setChargeAmount(response.getTripCancellationCheck.chargeAmount);
-      if (response.getTripCancellationCheck.chargeAmount > 0) {
+      setChargeAmount(response.getTripCancellationCharge?.amount);
+      if (response.getTripCancellationCharge?.amount > 0) {
         setDriverCancel(true);
+        setCancellationChargeResponse(response.getTripCancellationCharge);
       } else {
         setViewCancelBookingModal(true);
       }
@@ -105,7 +106,30 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
 
   const [tripConsumerCancel] = useMutation(TRIP_CONSUMER_CANCEL, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
-    onError: onErrorAppSync,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else if (errorType === 'CANCELLATION_CHARGE_UNACKNOWLEDGED') {
+            Alert.alert('', message);
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
     onCompleted: response => {
       console.log(response);
       setViewSuccessCancelBookingModal(true);
@@ -142,12 +166,10 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   };
 
   const initiateCancel = () => {
-    getTripCancellationCheck({
+    getTripCancellationCharge({
       variables: {
         input: {
-          trip: {
-            id: booking.id,
-          },
+          tripId: booking.id,
         },
       },
     });
@@ -157,19 +179,13 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     tripConsumerCancel({
       variables: {
         input: {
-          cancellationCharge: {
-            amount: chargeAmount,
-          },
+          cancellationChargeHash: cancellationChargeResponse?.hash,
           reason: reason,
-          trip: {
-            id: booking.id,
-          },
+          tripId: booking.id,
         },
       },
     });
   };
-
-  console.log(onTripUpdate);
 
   const openModal = () => {
     setmodal(false);

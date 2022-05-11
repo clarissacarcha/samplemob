@@ -98,10 +98,12 @@ const trip = `
     status
     tag
     cancellation {
-      chargeAmount
-      chargeType
       initiatedBy
       reason
+      charge {
+        amount
+        type
+      }
     }
 `;
 

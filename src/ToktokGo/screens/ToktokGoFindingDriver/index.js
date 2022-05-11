@@ -22,7 +22,7 @@ import {
   ON_TRIP_UPDATE,
   TOKTOKGO_SUBSCRIPTION_CLIENT,
   TRIP_REBOOK,
-  GET_TRIP_CANCELLATION_CHECK,
+  GET_TRIP_CANCELLATION_CHARGE,
   TRIP_CONSUMER_CANCEL,
   TRIP_REBOOK_INITIALIZE_PAYMENT,
 } from '../../graphql';
@@ -80,13 +80,13 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     }
   }, [waitingText]);
 
-  const [getTripCancellationCheck, {loading: GTCCLoading}] = useLazyQuery(GET_TRIP_CANCELLATION_CHECK, {
+  const [getTripCancellationCharge, {loading: GTCCLoading}] = useLazyQuery(GET_TRIP_CANCELLATION_CHARGE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
       console.log(response);
-      setChargeAmount(response.getTripCancellationCheck.chargeAmount);
-      if (response.getTripCancellationCheck.chargeAmount > 0) {
+      setChargeAmount(response.getTripCancellationCharge.amount);
+      if (response.getTripCancellationCharge.amount > 0) {
         setViewCancelBookingWithCharge(true);
       } else {
         setViewCancelBookingModal(true);
@@ -178,7 +178,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         navigation.navigate('ToktokWalletTPINValidator', {
           callBackFunc: tripRebookMutation,
           data: {
-            paymentHaash: response?.tripRebookInitializePayment?.hash,
+            paymentHash: response?.tripRebookInitializePayment?.hash,
           },
         });
       } else {
@@ -191,12 +191,11 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     tripRebook({
       variables: {
         input: {
-          userId: session.user.id,
           tripId: booking.id,
           ...(booking.paymentMethod == 'TOKTOKWALLET'
             ? {
                 initializedPayment: {
-                  hash: data.paymentHaash,
+                  hash: data.paymentHash,
                   pinCode: pinCode,
                 },
               }
@@ -213,7 +212,6 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       tripRebookInitializePayment({
         variables: {
           input: {
-            userId: session.user.id,
             tripId: booking.id,
           },
         },
@@ -240,12 +238,10 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   };
 
   const initiateCancel = () => {
-    getTripCancellationCheck({
+    getTripCancellationCharge({
       variables: {
         input: {
-          trip: {
-            id: booking.id,
-          },
+          tripId: booking.id,
         },
       },
     });
@@ -259,9 +255,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
             amount: chargeAmount,
           },
           reason: reason,
-          trip: {
-            id: booking.id,
-          },
+          tripId: booking.id,
         },
       },
     });

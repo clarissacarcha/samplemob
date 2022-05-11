@@ -85,7 +85,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
             setTripBookError(JSON.parse(message).message);
             Alert.alert('', JSON.parse(message).message);
-          } else if (errorType === 'WALLET_INVALID_PIN_CODE') {
+          } else if (errorType === 'WALLET_PIN_CODE_INVALID') {
             setTripBookError(JSON.parse(message).remainingAttempts);
             Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
           } else if (errorType === 'ExecutionTimeout') {
@@ -141,7 +141,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         navigation.navigate('ToktokWalletTPINValidator', {
           callBackFunc: tripBooking,
           data: {
-            paymentHaash: response?.tripInitializePayment?.hash,
+            paymentHash: response?.tripInitializePayment?.hash,
           },
           errorMessage: tripBookError,
         });
@@ -202,7 +202,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
             referralCode: session.user.consumer.referralCode,
             resellerCode: session.user.consumer.resellerCode,
           },
-          userId: session.user.id,
           tripFareHash: details?.rate?.hash,
           routeHash: routeDetails?.hash,
           passengerCount: selectedSeatNum,
@@ -210,7 +209,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           ...(selectedPaymentMethod == 'TOKTOKWALLET'
             ? {
                 initializedPayment: {
-                  hash: data.paymentHaash,
+                  hash: data.paymentHash,
                   pinCode: pinCode,
                 },
               }
@@ -232,7 +231,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           variables: {
             input: {
               tripFareHash: details?.rate?.hash,
-              userId: session.user.id,
             },
           },
         });

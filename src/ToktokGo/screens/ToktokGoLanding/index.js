@@ -77,7 +77,6 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
     getTripsConsumer({
       variables: {
         input: {
-          consumerUserId: session.user.id,
           tag: 'ONGOING',
         },
       },
