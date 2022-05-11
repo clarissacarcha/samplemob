@@ -10,6 +10,7 @@ import {connect, useDispatch, useSelector} from 'react-redux';
 import {decodeLegsPolyline} from '../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
+import {onErrorAppSync} from '../../util';
 
 const ToktokGoLanding = ({navigation, session, constants}) => {
   const dispatch = useDispatch();
@@ -46,21 +47,15 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
         }
       }, 1000);
     },
-    onError: error => console.log('error', error),
+    onError: onErrorAppSync,
   });
 
   const healthCareAccept = async () => {
     const date = await AsyncStorage.getItem('ToktokGoHealthCare');
-    const data = await AsyncStorage.getItem('ToktokGoOnBoardingBeta');
-
-    if (data) {
-      if (date === moment(new Date()).format('MMM D, YYYY')) {
-        navigation.replace('ToktokGoBookingStart');
-      } else {
-        navigation.replace('ToktokGoHealthCare');
-      }
+    if (date === moment(new Date()).format('MMM D, YYYY')) {
+      navigation.replace('ToktokGoBookingStart');
     } else {
-      navigation.replace('ToktokGoOnBoardingBeta');
+      navigation.replace('ToktokGoHealthCare');
     }
   };
 

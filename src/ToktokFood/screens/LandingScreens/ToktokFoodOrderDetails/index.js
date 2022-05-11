@@ -385,15 +385,15 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
       <Image resizeMode="stretch" source={info_ic} style={styles.modifiedIcon} />
       <Text style={styles.modifiedText}>
         This order has been modified by merchant. Total refund amount for updated order should be credited to your
-        toktokwallet account.
+        toktokwallet account. 
       </Text>
     </View>
   );
 
   const isItemModified = () => {
     const orderDetailsItems = transaction?.orderDetails;
-    const evalEditResult = orderDetailsItems.filter(items => items.isModified === true); // zero means removed
-    const evalRemovedResult = orderDetailsItems.filter(items => items.status === 0); // zero means removed
+    const evalEditResult = orderDetailsItems.filter(items => items.isModified === true);
+    const evalRemovedResult = orderDetailsItems.filter(items => items.status === 0);
 
     return evalRemovedResult.length > 0 || evalEditResult.length > 0;
   };

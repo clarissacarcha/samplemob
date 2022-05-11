@@ -192,7 +192,6 @@ const transactionRef = `
       parentProductId
       parentProductName
     }
-    isModified
   }
   promoDetails {
     id

@@ -20,6 +20,5 @@ export * from "./FullyVerifiedUpgradeRequest";
 export * from "./GlobalSetting";
 export * from "./IdentificationCard";
 export * from "./Pep";
-export * from "./Merchant";
 export * from "./Transaction";
 export * from "./Wallet";

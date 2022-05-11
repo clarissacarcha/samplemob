@@ -69,14 +69,16 @@ export const Actions = ({onUploadSuccess, tokwaAccount , setErrMessage})=> {
             <View style={styles.actionBtnContainer}>
                 <TouchableOpacity onPress={handleSelectFile} style={styles.actionBtn}
                 >
+                        {/* <FIcon color={COLOR} size={20} style={{marginBottom: 5}} name="upload" /> */}
                         <Text style={styles.actionBtnText}>Upload QR Code</Text>
                 </TouchableOpacity>
             </View>
-            {/* <View style={styles.actionBtnContainer}>
+            <View style={styles.actionBtnContainer}>
                 <TouchableOpacity onPress={()=>setMyqrVisible(true)} style={styles.actionBtn}>
+                        {/* <FIcon color={COLOR} size={20} style={{marginBottom: 5}} name="qrcode" /> */}
                         <Text style={styles.actionBtnText}>My QR Code</Text>
                 </TouchableOpacity>
-            </View> */}
+            </View>
         </View>
         </>
     )

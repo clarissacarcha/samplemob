@@ -1,23 +1,24 @@
 import React from 'react';
 import {Text, StyleSheet, TouchableOpacity, View} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
+import {ThrottledOpacity} from '../../../../components_section';
 
-export const CancelRetryButton = ({waitingStatus, initiateCancel, dismissBookingExpired}) => {
+export const CancelRetryButton = ({waitingStatus, initiateCancel, dismissBookingExpired, tripRebookFunc}) => {
   return (
     <>
       {waitingStatus ? (
-        <TouchableOpacity style={styles.cancelContainer} onPress={initiateCancel}>
+        <ThrottledOpacity delay={500} style={styles.cancelContainer} onPress={initiateCancel}>
           <Text style={styles.textStyle}>Cancel</Text>
-        </TouchableOpacity>
+        </ThrottledOpacity>
       ) : (
         <View style={styles.retryContainer}>
-          <TouchableOpacity style={styles.cancelButtonContainer} onPress={dismissBookingExpired}>
+          <ThrottledOpacity delay={500} style={styles.cancelButtonContainer} onPress={dismissBookingExpired}>
             <Text style={styles.textStyle}>Cancel</Text>
-          </TouchableOpacity>
+          </ThrottledOpacity>
 
-          {/* <TouchableOpacity style={styles.retryButtonContainer} onPress={() => setWaitingStatus(1)}>
+          <ThrottledOpacity delay={500} style={styles.retryButtonContainer} onPress={tripRebookFunc}>
             <Text style={styles.cancelTextStyle}>Retry</Text>
-          </TouchableOpacity> */}
+          </ThrottledOpacity>
         </View>
       )}
     </>

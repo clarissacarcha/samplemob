@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import SuccessIMG from '../../../assets/images/Sucess.png';
+import {ThrottledOpacity} from '../../../components_section';
 
 export const SuccesCancelBookingModal = ({visible, setVisible, type, chargeAmount, goBackAfterCancellation}) => {
   return (
@@ -24,9 +25,9 @@ export const SuccesCancelBookingModal = ({visible, setVisible, type, chargeAmoun
               </Text>
             )}
 
-            <TouchableOpacity style={styles.buttonContainer} onPress={goBackAfterCancellation}>
+            <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={goBackAfterCancellation}>
               <Text style={styles.buttonText}>OK</Text>
-            </TouchableOpacity>
+            </ThrottledOpacity>
           </View>
         </View>
       </View>

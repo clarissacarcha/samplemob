@@ -1,18 +1,30 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  Image,
+  View,
+  Modal,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
+} from 'react-native';
 import {useDispatch} from 'react-redux';
 import CONSTANTS from '../../../../common/res/constants';
 import CashIcon from '../../../../assets/images/CashIcon.png';
 import WalletIcon from '../../../../assets/images/Wallet.png';
+import {numberFormat} from '../../../../helper';
 
 export const PaymentMethodModal = ({
   viewSelectPaymentModal,
   setViewSelectPaymentModal,
   details,
   setSelectedPaymentMethod,
+  tokwaAccount,
+  getMyAccountLoading,
 }) => {
   const dispatch = useDispatch();
-
+  const {wallet, id} = tokwaAccount;
   const setSelected = paymentMethod => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, paymentMethod: paymentMethod}});
     setSelectedPaymentMethod(paymentMethod);
@@ -24,7 +36,7 @@ export const PaymentMethodModal = ({
       <TouchableWithoutFeedback onPress={() => setViewSelectPaymentModal(false)}>
         <View style={styles.transparent}>
           <View style={styles.card}>
-            <TouchableOpacity onPress={() => setSelected('TOKTOKWALLET')}>
+            <TouchableOpacity onPress={() => setSelected(1)}>
               <View style={styles.container}>
                 <View style={styles.elementWrapper}>
                   <Image source={WalletIcon} resizeMode={'contain'} style={styles.walletIconStyle} />
@@ -32,7 +44,11 @@ export const PaymentMethodModal = ({
                     <Text style={{color: CONSTANTS.COLOR.YELLOW}}>
                       toktok<Text style={{color: CONSTANTS.COLOR.ORANGE}}>wallet</Text>
                     </Text>
-                    <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>Balance: ₱400.00</Text>
+                    {getMyAccountLoading ? (
+                      <ActivityIndicator color={CONSTANTS.COLOR.YELLOW} />
+                    ) : (
+                      <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>Balance: ₱{numberFormat(wallet.balance)}</Text>
+                    )}
                   </View>
                 </View>
 
@@ -44,7 +60,7 @@ export const PaymentMethodModal = ({
 
             <View style={styles.divider} />
 
-            <TouchableOpacity onPress={() => setSelected('CASH')}>
+            <TouchableOpacity onPress={() => setSelected(2)}>
               <View style={styles.container}>
                 <View style={styles.elementWrapper}>
                   <Image source={CashIcon} resizeMode={'contain'} style={styles.walletIconStyle} />

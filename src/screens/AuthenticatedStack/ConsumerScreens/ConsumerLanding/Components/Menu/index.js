@@ -8,7 +8,7 @@ import DeliveryIcon from '../../../../../../assets/toktok/icons/menu/Toktok.png'
 import WalletIcon from '../../../../../../assets/toktok/icons/menu/ToktokWallet.png';
 import PabiliIcon from '../../../../../../assets/toktok/icons/menu/Pabili.png';
 import ProfileIcon from '../../../../../../assets/icons/ProfileIcon.png';
-import ToktokMallIcon from '../../../../../../assets/toktokmall-assets/icons/toktokmall-logo.png';
+import ToktokMallIcon from '../../../../../../ToktokMall/assets/icons/toktokmall-logo.png';
 import OthersIcon from '../../../../../../assets/icons/OthersIcon.png';
 
 const MenuIcon = ({label, icon, onPress}) => {
@@ -73,7 +73,7 @@ export const Menu = ({setUserLocation}) => {
         label={'toktokmall'}
         icon={ToktokMallIcon}
         onPress={() => {
-          navigation.push('ToktokMallLanding');
+          navigation.push('ToktokMallSplashScreen');
         }}
       />
     </View>
