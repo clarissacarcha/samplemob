@@ -21,7 +21,8 @@ export const Header = ({navigation}) => {
           </Text>
         </TouchableOpacity>
         <View style={styles.greetingBox}>
-          <Text style={{fontSize: CONSTANTS.FONT_SIZE.XL + 1, fontFamily: CONSTANTS.FONT_FAMILY.BOLD, lineHeight: 21}}>
+          <Text
+            style={{fontSize: CONSTANTS.FONT_SIZE.XL + 1, fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD, lineHeight: 21}}>
             {' '}
             Change Password
           </Text>

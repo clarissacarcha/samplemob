@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
-import {Image, Text, View, StatusBar} from 'react-native';
+import {Image, Text, View, StatusBar, Dimensions} from 'react-native';
 import constants from '../../../../common/res/constants';
 import ToktokgoIcon from '../../../../assets/images/ToktokgoIconBeta.png';
 import EnjoyYourRides from '../../../../assets/images/EnjoyYourRideImage.png';
+
+const ImageDimension = Dimensions.get('screen').height / 2.5;
 
 export const EnjoyYourRide = () => {
   return (
@@ -10,14 +12,18 @@ export const EnjoyYourRide = () => {
       <View style={{marginTop: StatusBar.currentHeight + 40}}>
         <Image source={ToktokgoIcon} resizeMode={'contain'} style={{height: 45, width: 190}} />
       </View>
-      <Image source={EnjoyYourRides} resizeMode={'contain'} style={{height: 255, width: 300, marginTop: 55}} />
+      <Image
+        source={EnjoyYourRides}
+        resizeMode={'contain'}
+        style={{height: ImageDimension, width: ImageDimension, marginTop: 20}}
+      />
       <View style={{alignItems: 'center', marginHorizontal: 50}}>
         <Text
           style={{
             color: constants.COLOR.ORANGE,
             fontFamily: constants.FONT_FAMILY.BOLD,
             fontSize: constants.FONT_SIZE.XL + 13,
-            marginTop: 48,
+            marginTop: 35,
           }}>
           Enjoy Your Ride
         </Text>
