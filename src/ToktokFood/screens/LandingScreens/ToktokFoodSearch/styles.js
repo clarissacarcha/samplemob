@@ -208,7 +208,9 @@ export default styles = StyleSheet.create({
     paddingVertical: 1,
     alignItems: 'center',
     marginTop: 8,
-    width: 120
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    // width: 120
   },
   closedText: {
     color: COLOR.ORANGE,
