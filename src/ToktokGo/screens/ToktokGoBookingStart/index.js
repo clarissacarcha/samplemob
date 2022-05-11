@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import {View, TouchableHighlight, Text, Image} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {connect, useDispatch} from 'react-redux';
-import {Landing, Header} from './Sections';
+import {Landing, Header, OutstandingFee} from './Sections';
 import {useFocusEffect} from '@react-navigation/native';
 import {GET_PLACE_BY_LOCATION} from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -56,6 +56,7 @@ const ToktokGoBookingStart = ({navigation, constants}) => {
         {/* <RecentDestinations navigation={navigation} />
         <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
         <SavedLocations /> */}
+        {/* <OutstandingFee /> */}
         {constants.iosVersionDisableBeta && Platform.OS == 'ios' ? <EmptyRecent /> : <ToktokgoBeta />}
       </View>
       <ThrottledHighlight
