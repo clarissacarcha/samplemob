@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Image, Platform} from 'react-native';
+import {Text, View, Image} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import InfoIcon from '../../../../assets/icons/InfoIcon.png';
 import CarFee from '../../../../assets/images/CarFee.png';
@@ -32,7 +32,9 @@ export const OutstandingFee = ({navigation}) => {
           }}>
           Outstanding Fee
         </Text>
-        <Image source={InfoIcon} resizeMode="contain" style={{height: 12, width: 12, marginLeft: 10}} />
+        <ThrottledOpacity delay={500} onPress={() => {}}>
+          <Image source={InfoIcon} resizeMode="contain" style={{height: 12, width: 12, marginLeft: 10}} />
+        </ThrottledOpacity>
       </View>
       <Card
         containerStyle={{
@@ -46,7 +48,11 @@ export const OutstandingFee = ({navigation}) => {
             <Image source={CarFee} resizeMode="contain" style={{height: 45, width: 45}} />
             <View style={{marginHorizontal: 8}}>
               <Text style={{fontSize: CONSTANTS.FONT_SIZE.M}}>Cancellation Fee last Jan 7, 2022</Text>
-              <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, color: CONSTANTS.COLOR.ORANGE}}>See Booking Details</Text>
+              <ThrottledOpacity delay={500} onPress={() => {}}>
+                <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, color: CONSTANTS.COLOR.ORANGE}}>
+                  See Booking Details
+                </Text>
+              </ThrottledOpacity>
             </View>
           </View>
           <Text
