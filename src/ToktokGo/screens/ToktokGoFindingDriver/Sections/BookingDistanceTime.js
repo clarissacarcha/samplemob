@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import FIcon from 'react-native-vector-icons/Fontisto';
@@ -6,8 +6,9 @@ import moment from 'moment';
 
 export const BookingDistanceTime = ({booking}) => {
   const minDuration = booking.route.duration.minute;
-  const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
-  const minTime = moment().format('hh:mm A');
+  const [createdAtTime, setCreatedAtTime] = useState(booking?.logs ? booking?.logs[0]?.createdAt : moment());
+  const maxTime = moment(createdAtTime).add(minDuration, 'minutes').format('hh:mm A');
+  const minTime = moment(createdAtTime).format('hh:mm A');
 
   return (
     <>

@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import WarningIMG from '../../../assets/images/warning.png';
+import {ThrottledOpacity} from '../../../components_section';
 
 export const CancelBookingModal = ({isVisible, setVisible, setViewCancelReasonModal}) => {
   return (
@@ -18,22 +19,24 @@ export const CancelBookingModal = ({isVisible, setVisible, setViewCancelReasonMo
             </Text>
 
             <View style={styles.retryContainer}>
-              <TouchableOpacity
+              <ThrottledOpacity
+                delay={500}
                 style={styles.cancelButtonContainer}
                 onPress={() => {
                   setVisible(false);
                 }}>
                 <Text style={styles.textStyle}>No</Text>
-              </TouchableOpacity>
+              </ThrottledOpacity>
 
-              <TouchableOpacity
+              <ThrottledOpacity
+                delay={500}
                 style={styles.retryButtonContainer}
                 underlayColor={CONSTANTS.COLOR.LIGHT}
                 onPress={() => {
                   setVisible(false), setViewCancelReasonModal(true);
                 }}>
                 <Text style={styles.cancelTextStyle}>Yes</Text>
-              </TouchableOpacity>
+              </ThrottledOpacity>
             </View>
           </View>
         </View>

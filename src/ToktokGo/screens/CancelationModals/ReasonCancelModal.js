@@ -2,21 +2,22 @@ import React, {useState, useRef} from 'react';
 import {Text, StyleSheet, ScrollView, View, Modal, TouchableOpacity, TextInput} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
+import {ThrottledOpacity} from '../../../components_section';
 export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
   const dropDownRef = useRef(null);
   const [selectedReason, setSelectedReason] = useState(null);
   const [typedReason, setTypedReason] = useState('');
   const [data, setData] = useState([
     {
-      label: 'Passenger no show',
+      label: 'Waited too long',
       value: '0',
     },
     {
-      label: 'Passenger rude',
+      label: 'Driver asked to cancel',
       value: '1',
     },
     {
-      label: 'Passenger is with a pets',
+      label: 'Driver is rude',
       value: '2',
     },
     {
@@ -47,7 +48,8 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
             {data.map((text, key) => {
               return (
                 <View style={styles.radioButtonContainer} key={key}>
-                  <TouchableOpacity
+                  <ThrottledOpacity
+                    delay={500}
                     onPress={() => {
                       setSelectedReason(text);
                     }}
@@ -55,13 +57,14 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
                     <View
                       style={text.value == selectedReason?.value ? styles.radioButtonIcon : styles.radioButtonIcon1}
                     />
-                  </TouchableOpacity>
-                  <TouchableOpacity
+                  </ThrottledOpacity>
+                  <ThrottledOpacity
+                    delay={500}
                     onPress={() => {
                       setSelectedReason(text);
                     }}>
                     <Text style={styles.radioButtonText}>{text.label}</Text>
-                  </TouchableOpacity>
+                  </ThrottledOpacity>
                 </View>
               );
             })}
@@ -86,7 +89,8 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               paddingHorizontal: 25,
               paddingTop: 20,
             }}>
-            <TouchableOpacity
+            <ThrottledOpacity
+              delay={500}
               onPress={() => setVisible(!isVisible)}
               style={{
                 flex: 1,
@@ -106,8 +110,9 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
                 }}>
                 Cancel
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </ThrottledOpacity>
+            <ThrottledOpacity
+              delay={500}
               onPress={() => confirm()}
               style={{
                 flex: 1,
@@ -126,7 +131,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
                 }}>
                 Confirm
               </Text>
-            </TouchableOpacity>
+            </ThrottledOpacity>
           </View>
         </View>
       </View>
