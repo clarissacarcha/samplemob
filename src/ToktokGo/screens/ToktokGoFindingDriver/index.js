@@ -209,7 +209,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
 
   const tripRebookFunc = () => {
     if (booking.paymentMethod == 'CASH') {
-      tripRebookMutation();
+      tripRebookMutation({pinCode: null, data: null});
     } else {
       tripRebookInitializePayment({
         variables: {

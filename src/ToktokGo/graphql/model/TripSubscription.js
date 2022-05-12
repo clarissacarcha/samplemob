@@ -13,14 +13,9 @@ const trip = `
       rating
       vehicle{
         bodyColor
-        license
+        plateNumber
         make
         model
-        type {
-          id
-          name
-        }
-        year
       }
     }
     driverUserId
