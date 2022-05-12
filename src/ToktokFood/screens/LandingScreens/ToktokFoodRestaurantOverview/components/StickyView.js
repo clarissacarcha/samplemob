@@ -91,11 +91,11 @@ export const StickyView = ({onCheckShop}) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
-      let {latitude, longitude, hasOpen, nextOperatingHrs, hasProduct} = getShopDetails;
+      let {address, shopname, latitude, longitude, hasOpen, nextOperatingHrs, hasProduct} = getShopDetails;
       if (nextOperatingHrs) {
         setNextSched(nextOperatingHrs);
       }
-      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
+      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude, shopName: shopname, shopAddress: address}});
       setShopDetails(getShopDetails);
       onCheckShop(hasOpen && hasProduct);
     },
@@ -304,6 +304,7 @@ export const StickyView = ({onCheckShop}) => {
         productsLoading={productsLoading}
         showMore={showMore}
         tagsLoading={loading}
+        shopDetails={shopDetails}
       />
     );
   }, [id, activeTab, categoryProducts, loading, productsLoading, showMore]);
@@ -324,7 +325,7 @@ export const StickyView = ({onCheckShop}) => {
       return (
         <Text style={styles.closeText}>
           Restaurant is currently closed. {'\n'}Please come back at{' '}
-          {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('LT')}
+          {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('hh:mm A')}
         </Text>
       );
     }

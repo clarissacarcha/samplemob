@@ -11,10 +11,13 @@ import {VerifyContext} from './VerifyContextProvider';
 import Separator from 'toktokfood/components/Separator';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import Modal from 'react-native-modal';
+import {useRoute} from '@react-navigation/native';
 
 const ORDER_INSTRUCTIONS_OPTIONS = ['Remove or edit unavailable item', 'Cancel my order'];
 
 export const Variations = ({data, productId}) => {
+  const routes = useRoute();
+  const {shopDetails} = routes.params;
   const {
     // totalPrice,
     // productDetails,
@@ -39,6 +42,12 @@ export const Variations = ({data, productId}) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [dataOptions, setDataOptions] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (data?.orderOnOff < 1 && shopDetails?.orderOnOff < 1) {
+      setOrderInstructions('');
+    }
+  }, []);
 
   useEffect(() => {
     const variants = filterVariants();
@@ -427,8 +436,8 @@ export const Variations = ({data, productId}) => {
       <Variants />
       <Options />
       {specialInstructionsComponent()}
-      {/* {orderInstructionComponent()}
-      {orderInstructionModalComponent()} */}
+      {(data?.orderOnOff > 0 || shopDetails?.orderOnOff > 0) && orderInstructionComponent()}
+      {orderInstructionModalComponent()}
     </>
   );
 };
@@ -479,18 +488,18 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
   },
   input: {
-    // height: moderateScale(90),
-    // borderWidth: 1,
-    // borderRadius: 10,
+    height: moderateScale(90),
+    borderWidth: 1,
+    borderRadius: 10,
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.REGULAR,
     borderColor: COLOR.MEDIUM,
     marginTop: scale(5),
-    // textAlignVertical: 'top',
-    // marginVertical: scale(6),
-    // paddingTop: 15,
-    // paddingHorizontal: scale(15),
+    textAlignVertical: 'top',
+    marginVertical: scale(6),
+    paddingTop: 15,
+    paddingHorizontal: scale(15),
   },
   flexCenter: {
     flexDirection: 'row',
