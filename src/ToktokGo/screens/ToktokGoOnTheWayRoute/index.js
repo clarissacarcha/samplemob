@@ -66,7 +66,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       }
       if (status == 'CANCELLED' && cancellation?.initiatedBy == 'DRIVER') {
         setCancellationState(cancellation);
-        if (cancellation.chargeAmount > 0) {
+        if (cancellation.charge?.amount > 0) {
           setCancellationFee(true);
         } else {
           onCancel();
