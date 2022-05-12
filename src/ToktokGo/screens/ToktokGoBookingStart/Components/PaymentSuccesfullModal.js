@@ -13,9 +13,8 @@ export const PaymentSuccesfullModal = ({
   setPaymentSuccessfull,
   tripConsumerPending,
 }) => {
-  console.log('yow', visible, chargeAmount);
   return (
-    <Modal animationType="fade" transparent={true} visible={visible} style={StyleSheet.absoluteFill}>
+    <Modal animationType="fade" transparent={true} visible={paymentSuccessfull} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
@@ -29,7 +28,12 @@ export const PaymentSuccesfullModal = ({
               </Text>{' '}
               using toktokwallet. Your e-receipt is sent to your registered email address
             </Text>
-            <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={setPaymentSuccessfull(false)}>
+            <ThrottledOpacity
+              delay={500}
+              style={styles.buttonContainer}
+              onPress={() => {
+                console.log('here');
+              }}>
               <Text style={styles.buttonText}>OK</Text>
             </ThrottledOpacity>
           </View>
