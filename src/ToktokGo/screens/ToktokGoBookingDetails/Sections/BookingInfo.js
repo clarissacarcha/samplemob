@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, StyleSheet, Image, View} from 'react-native';
 import constants from '../../../../common/res/constants';
 import {APP_FLAVOR, MEDIUM} from '../../../../res/constants';

@@ -19,10 +19,7 @@ const AllActivities = ({navigation, session}) => {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
-      input: {
-        consumerUserId: session.user.id,
-        tag: 'ONGOING',
-      },
+      input: null,
     },
     onError: onErrorAppSync,
   });

@@ -21,7 +21,7 @@ export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
           <ThrottledOpacity delay={500} onPress={() => confirmBooking(index + 1)} key={index}>
             <Text>{value}</Text>
           </ThrottledOpacity>
-          {lastItem && <View style={styles.divider} />}+{' '}
+          {lastItem && <View style={styles.divider} />}
         </View>
       );
     });

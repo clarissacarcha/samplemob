@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     fontFamily: constants.FONT_FAMILY.REGULAR,
     fontSize: constants.FONT_SIZE.M,
     lineHeight: constants.FONT_SIZE.L,
-    fontWeight: '400',
   },
   feedbackText: {
     marginTop: -17,
@@ -63,7 +62,6 @@ const styles = StyleSheet.create({
     fontFamily: constants.FONT_FAMILY.REGULAR,
     fontSize: constants.FONT_SIZE.M,
     lineHeight: constants.FONT_SIZE.L,
-    fontWeight: '00',
   },
   containerBtnFeedback: {
     flexDirection: 'row',
