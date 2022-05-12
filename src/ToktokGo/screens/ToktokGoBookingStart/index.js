@@ -19,10 +19,11 @@ import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import {ThrottledHighlight} from '../../../components_section';
 import {useMutation} from '@apollo/client';
 import {onErrorAppSync} from '../../util';
+import {PaymentSuccesfullModal} from './Components';
 const ToktokGoBookingStart = ({navigation, constants, session}) => {
   const [tripConsumerPending, setTripConsumerPending] = useState([]);
-  const [paymentSuccessfull, setPaymentSuccessfull] = useState(false);
-
+  const [paymentSuccessful, setPaymentSuccessful] = useState(false);
+  const [showPaymentSuccesful, setShowPaymentSuccessful] = useState(false);
   const dispatch = useDispatch();
 
   const setBookingInitialState = payload => {
@@ -50,7 +51,7 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
       navigation.pop();
-      setPaymentSuccessfull(true);
+      setPaymentSuccessful(true);
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -147,11 +148,19 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
           },
         },
       });
+      if (paymentSuccessful) {
+        setShowPaymentSuccessful(true);
+      }
     }, [navigation]),
   );
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
       <View>
+        <PaymentSuccesfullModal
+          showPaymentSuccesful={showPaymentSuccesful}
+          setPaymentSuccessful={setPaymentSuccessful}
+          tripConsumerPending={tripConsumerPending}
+        />
         <Header navigation={navigation} constants={constants} />
         <Landing navigation={navigation} />
         {/* <RecentDestinations navigation={navigation} />
@@ -162,8 +171,6 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
             navigation={navigation}
             tripChargeInitializePaymentFunction={tripChargeInitializePaymentFunction}
             tripConsumerPending={tripConsumerPending}
-            paymentSuccessfull={paymentSuccessfull}
-            setPaymentSuccessfull={setPaymentSuccessfull}
           />
         )}
         {constants.iosVersionDisableBeta && Platform.OS == 'ios' ? <EmptyRecent /> : <ToktokgoBeta />}

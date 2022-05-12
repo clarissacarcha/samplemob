@@ -8,14 +8,8 @@ import {ThrottledOpacity} from '../../../../components_section';
 import {Card} from './Card';
 import {numberFormat} from '../../../../helper';
 import moment from 'moment';
-import {UnpaidModal, PaymentSuccesfullModal} from '../Components';
-export const OutstandingFee = ({
-  navigation,
-  tripChargeInitializePaymentFunction,
-  tripConsumerPending,
-  paymentSuccessfull,
-  setPaymentSuccessfull,
-}) => {
+import {UnpaidModal} from '../Components';
+export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction, tripConsumerPending}) => {
   const [unpaid, setUnpaid] = useState(false);
 
   const onPressLocation = () => {
@@ -23,7 +17,6 @@ export const OutstandingFee = ({
       popTo: 1,
     });
   };
-  console.log('yow1', paymentSuccessfull);
   const getDate = () => {
     const {logs} = tripConsumerPending[0];
     const lastItem = logs[logs.length - 1];
@@ -33,12 +26,7 @@ export const OutstandingFee = ({
 
   return (
     <View>
-      <UnpaidModal visible={unpaid} visible={unpaid} setVisible={setUnpaid} />
-      <PaymentSuccesfullModal
-        paymentSuccessfull={paymentSuccessfull}
-        setPaymentSuccessfull={setPaymentSuccessfull}
-        tripConsumerPending={tripConsumerPending}
-      />
+      <UnpaidModal visible={unpaid} setVisible={setUnpaid} />
       <View
         style={{
           flexDirection: 'row',
