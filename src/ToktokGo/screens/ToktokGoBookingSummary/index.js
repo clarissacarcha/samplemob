@@ -80,6 +80,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
             Alert.alert('', message);
           } else if (errorType === 'BAD_USER_INPUT') {
             setTripBookError(message);
+            Alert.alert('', message);
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
