@@ -40,7 +40,7 @@ export const ToktokWalletMerchantPaymentConfirm = ({
 
     useEffect(()=>{
         if(merchant.paymentType === 1){
-            const serviceFee = amount * (branch.serviceFee / 100);
+            const serviceFee = +amount * (+branch.serviceFee / 100);
             setServiceFee(serviceFee);
         }
     },[amount,merchant])
@@ -92,7 +92,7 @@ export const ToktokWalletMerchantPaymentConfirm = ({
                                         </TouchableOpacity> */}
                                        {
                                            merchant.paymentType === 1 &&
-                                           <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,marginBottom: 20}}>*An additional {branch.serviceFee}% service fee will be charged for this transaction.</Text>
+                                           <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,marginBottom: 10}}>*An additional {branch.serviceFee}% service fee will be charged for this transaction.</Text>
                                        }
 
 

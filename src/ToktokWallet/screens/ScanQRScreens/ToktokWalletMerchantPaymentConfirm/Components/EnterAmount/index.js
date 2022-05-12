@@ -16,7 +16,7 @@ export const EnterAmount = ({amount , setAmount , setSwipeEnabled  , tokwaAccoun
         if(num[0] == ".") return setAmount("0.")
         setAmount(num)
 
-        if(num >= 1 && num <= tokwaAccount.wallet.balance){
+        if(+num >= 1 && (+num + +serviceFee ) <= tokwaAccount.wallet.balance){
             setSwipeEnabled(true)
             setErrorMessage("")
         }else if(num < 1 && num != ""){
@@ -32,7 +32,7 @@ export const EnterAmount = ({amount , setAmount , setSwipeEnabled  , tokwaAccoun
         // checkSenderWalletLimitation(num * 0.01)
         // checkRecipientWalletLimitation(num * 0.01)
 
-        if((num + +serviceFee) > tokwaAccount.wallet.balance){
+        if((+num + +serviceFee) > tokwaAccount.wallet.balance){
             setSwipeEnabled(false)
             return setErrorMessage("Insufficient wallet balance.")
         }

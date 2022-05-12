@@ -82,17 +82,17 @@ export const ProceedButton = ({
     const reviewAndConfirm = async ()=> {
 
 
-        const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
-            amount,
-            setErrorMessage: (value)=> {
-                if(errorMessage == ""){
-                    setErrorMessage(value)
-                    if(value != "") setSwipeEnabled(false)
-                }
-            }
-        })
+        // const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+        //     amount: (+amount + +serviceFee),
+        //     setErrorMessage: (value)=> {
+        //         if(errorMessage == ""){
+        //             setErrorMessage(value)
+        //             if(value != "") setSwipeEnabled(false)
+        //         }
+        //     }
+        // })
 
-        if(!checkLimit) return;
+        // if(!checkLimit) return;
         
         return navigation.navigate("ToktokWalletReviewAndConfirm", {
             label: "Pay QR",
