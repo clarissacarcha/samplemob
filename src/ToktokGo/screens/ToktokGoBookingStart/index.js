@@ -18,6 +18,7 @@ import {currentLocation} from '../../../helper';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import {ThrottledHighlight} from '../../../components_section';
 import {useMutation} from '@apollo/client';
+import {onErrorAppSync} from '../../util';
 
 const ToktokGoBookingStart = ({navigation, constants, session}) => {
   const [tripConsumerPending, setTripConsumerPending] = useState([]);
@@ -50,6 +51,32 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
       Alert.alert('', 'Paid!');
       navigation.pop();
     },
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
+            Alert.alert('', JSON.parse(message).message);
+          } else if (errorType === 'WALLET_PIN_CODE_INVALID') {
+            Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
   });
 
   const tripChargeFinalizePaymentFunction = ({pinCode, data}) => {
@@ -81,6 +108,7 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
         Alert.alert('', 'Something went wrong...');
       }
     },
+    onError: onErrorAppSync,
   });
 
   const tripChargeInitializePaymentFunction = () => {
