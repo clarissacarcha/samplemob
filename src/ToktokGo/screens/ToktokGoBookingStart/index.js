@@ -19,9 +19,10 @@ import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import {ThrottledHighlight} from '../../../components_section';
 import {useMutation} from '@apollo/client';
 import {onErrorAppSync} from '../../util';
-
 const ToktokGoBookingStart = ({navigation, constants, session}) => {
   const [tripConsumerPending, setTripConsumerPending] = useState([]);
+  const [paymentSuccessfull, setPaymentSuccessfull] = useState(false);
+
   const dispatch = useDispatch();
 
   const setBookingInitialState = payload => {
@@ -48,8 +49,8 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
   const [tripChargeFinalizePayment] = useMutation(TRIP_CHARGE_FINALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
-      Alert.alert('', 'Paid!');
       navigation.pop();
+      setPaymentSuccessfull(true);
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -161,6 +162,8 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
             navigation={navigation}
             tripChargeInitializePaymentFunction={tripChargeInitializePaymentFunction}
             tripConsumerPending={tripConsumerPending}
+            paymentSuccessfull={paymentSuccessfull}
+            setPaymentSuccessfull={setPaymentSuccessfull}
           />
         )}
         {constants.iosVersionDisableBeta && Platform.OS == 'ios' ? <EmptyRecent /> : <ToktokgoBeta />}
