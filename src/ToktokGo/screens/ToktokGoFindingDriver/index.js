@@ -85,8 +85,8 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     fetchPolicy: 'network-only',
     onCompleted: response => {
       console.log(response);
-      setChargeAmount(response.getTripCancellationCharge.amount);
-      if (response.getTripCancellationCharge.amount > 0) {
+      setChargeAmount(response.getTripCancellationCharge?.amount);
+      if (response.getTripCancellationCharge?.amount > 0) {
         setViewCancelBookingWithCharge(true);
       } else {
         setViewCancelBookingModal(true);
