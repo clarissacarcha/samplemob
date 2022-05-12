@@ -217,6 +217,7 @@ const ChangePassword = ({navigation, session, route}) => {
                 value={newPassword}
                 onChangeText={password => passwordVerifyValidity(password)}
                 placeholder="Enter New Password"
+                placeholderTextColor={CONSTANTS.COLOR.DARK}
                 secureTextEntry={secureNewPassword}
                 autoCapitalize={false}
                 onFocus={() => {
@@ -282,6 +283,7 @@ const ChangePassword = ({navigation, session, route}) => {
                   setConfirmPassword(value);
                 }}
                 placeholder="Confirm Password"
+                placeholderTextColor={CONSTANTS.COLOR.DARK}
                 secureTextEntry={secureConfirmPassword}
                 autoCapitalize={false}
                 editable={confirmPasswordEditable}

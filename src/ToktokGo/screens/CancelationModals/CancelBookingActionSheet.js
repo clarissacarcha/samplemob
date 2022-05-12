@@ -4,6 +4,7 @@ import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-nati
 import CONSTANTS from '../../../common/res/constants';
 import tokGoIMG from '../../../assets/images/tokGo.png';
 import tokWaIMG from '../../../assets/images/Wallet.png';
+import {ThrottledOpacity} from '../../../components_section';
 
 export const CancelBookingActionSheet = ({setVisible}) => {
   const [selectedPayment, setSelectedPayment] = useState();
@@ -36,7 +37,8 @@ export const CancelBookingActionSheet = ({setVisible}) => {
           </Text>
 
           <View opacity={true ? 0.5 : 1}>
-            <TouchableOpacity
+            <ThrottledOpacity
+              delay={500}
               disabled={true}
               onPress={() => {
                 setSelectedPayment(1);
@@ -51,7 +53,7 @@ export const CancelBookingActionSheet = ({setVisible}) => {
                   Pay via toktok<Text style={{color: CONSTANTS.COLOR.ORANGE}}>wallet</Text>
                 </Text>
               </View>
-            </TouchableOpacity>
+            </ThrottledOpacity>
           </View>
           <View style={styles.radioDivider} />
           <TouchableOpacity

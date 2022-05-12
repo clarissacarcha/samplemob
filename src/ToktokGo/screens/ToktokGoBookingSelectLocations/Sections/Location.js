@@ -6,6 +6,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
 import {isEmpty} from 'lodash';
+import {ThrottledOpacity} from '../../../../components_section';
 export const Location = ({
   onChange,
   inputRef,
@@ -31,7 +32,7 @@ export const Location = ({
               value={titleOrigin}
             />
           ) : (
-            <TouchableOpacity onPress={() => onChangeSelectedInput('P')}>
+            <ThrottledOpacity delay={500} onPress={() => onChangeSelectedInput('P')}>
               <Text
                 numberOfLines={1}
                 style={{
@@ -41,15 +42,16 @@ export const Location = ({
                 }}>
                 {titleOrigin}
               </Text>
-            </TouchableOpacity>
+            </ThrottledOpacity>
           )}
           {!isEmpty(titleOrigin) && selectedInput == 'P' && (
-            <TouchableOpacity
+            <ThrottledOpacity
+              delay={500}
               onPress={() => {
                 setSearchOrigin(null);
               }}>
               <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
-            </TouchableOpacity>
+            </ThrottledOpacity>
           )}
         </View>
       </View>
@@ -66,7 +68,7 @@ export const Location = ({
               value={title}
             />
           ) : (
-            <TouchableOpacity onPress={() => onChangeSelectedInput('D')}>
+            <ThrottledOpacity delay={500} onPress={() => onChangeSelectedInput('D')}>
               <Text
                 numberOfLines={1}
                 style={{
@@ -76,15 +78,16 @@ export const Location = ({
                 }}>
                 {!title ? 'Where to?' : title}
               </Text>
-            </TouchableOpacity>
+            </ThrottledOpacity>
           )}
           {!isEmpty(title) && selectedInput == 'D' && (
-            <TouchableOpacity
+            <ThrottledOpacity
+              delay={500}
               onPress={() => {
                 setSearchDestination(null);
               }}>
               <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
-            </TouchableOpacity>
+            </ThrottledOpacity>
           )}
         </View>
       </View>

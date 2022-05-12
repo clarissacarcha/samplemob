@@ -14,8 +14,9 @@ import moment from 'moment';
 
 export const BookingInfo = ({booking}) => {
   const minDuration = booking.route.duration.minute;
-  const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
-  const minTime = moment().format('hh:mm A');
+  const [createdAtTime, setCreatedAtTime] = useState(booking?.logs[0]?.createdAt);
+  const maxTime = moment(createdAtTime).add(minDuration, 'minutes').format('hh:mm A');
+  const minTime = moment(createdAtTime).format('hh:mm A');
 
   return (
     <View style={styles.card}>
@@ -29,7 +30,7 @@ export const BookingInfo = ({booking}) => {
               <View style={{flex: 1}}>
                 <Text style={{fontFamily: FONT.BOLD, fontSize: constants.FONT_SIZE.M}}>Booking Information</Text>
                 <Text style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
-                  {moment(booking.logs[0].createdAt).format('MMM D, YYYY hh:mm A')}
+                  {moment(createdAtTime).format('MMM D, YYYY hh:mm A')}
                   {/* {(parseFloat(delivery.price) * parseFloat(delivery.comRate)).toFixed(2)} */}
                 </Text>
               </View>

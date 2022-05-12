@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import {View, TouchableHighlight, Text, Image} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {connect, useDispatch} from 'react-redux';
-import {Landing, Header} from './Sections';
+import {Landing, Header, OutstandingFee} from './Sections';
 import {useFocusEffect} from '@react-navigation/native';
 import {GET_PLACE_BY_LOCATION} from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -11,6 +11,7 @@ import {ToktokgoBeta, EmptyRecent} from '../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {currentLocation} from '../../../helper';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
+import {ThrottledHighlight} from '../../../components_section';
 
 const ToktokGoBookingStart = ({navigation, constants}) => {
   const dispatch = useDispatch();
@@ -55,9 +56,11 @@ const ToktokGoBookingStart = ({navigation, constants}) => {
         {/* <RecentDestinations navigation={navigation} />
         <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
         <SavedLocations /> */}
+        {/* <OutstandingFee /> */}
         {constants.iosVersionDisableBeta && Platform.OS == 'ios' ? <EmptyRecent /> : <ToktokgoBeta />}
       </View>
-      <TouchableHighlight
+      <ThrottledHighlight
+        delay={500}
         onPress={() => {
           navigation.push('ToktokGoBookingConfirmDestination', {
             popTo: 1,
@@ -95,7 +98,7 @@ const ToktokGoBookingStart = ({navigation, constants}) => {
             </Text>
           </View>
         </View>
-      </TouchableHighlight>
+      </ThrottledHighlight>
     </View>
   );
 };
