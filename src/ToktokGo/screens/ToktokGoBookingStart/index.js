@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, TouchableHighlight, Text, Image, Alert} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {connect, useDispatch} from 'react-redux';
@@ -19,9 +19,10 @@ import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import {ThrottledHighlight} from '../../../components_section';
 import {useMutation} from '@apollo/client';
 import {onErrorAppSync} from '../../util';
-
+import {PaymentSuccesfullModal} from './Components';
 const ToktokGoBookingStart = ({navigation, constants, session}) => {
   const [tripConsumerPending, setTripConsumerPending] = useState([]);
+  const [showPaymentSuccesful, setShowPaymentSuccessful] = useState(false);
   const dispatch = useDispatch();
 
   const setBookingInitialState = payload => {
@@ -48,8 +49,8 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
   const [tripChargeFinalizePayment] = useMutation(TRIP_CHARGE_FINALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
-      Alert.alert('', 'Paid!');
       navigation.pop();
+      setShowPaymentSuccessful(true);
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -151,6 +152,11 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
       <View>
+        <PaymentSuccesfullModal
+          showPaymentSuccesful={showPaymentSuccesful}
+          setShowPaymentSuccessful={setShowPaymentSuccessful}
+          tripConsumerPending={tripConsumerPending}
+        />
         <Header navigation={navigation} constants={constants} />
         <Landing navigation={navigation} />
         {/* <RecentDestinations navigation={navigation} />

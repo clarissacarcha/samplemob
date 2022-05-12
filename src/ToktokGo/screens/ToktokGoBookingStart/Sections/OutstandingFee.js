@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, View, Image} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import InfoIcon from '../../../../assets/icons/InfoIcon.png';
@@ -8,13 +8,15 @@ import {ThrottledOpacity} from '../../../../components_section';
 import {Card} from './Card';
 import {numberFormat} from '../../../../helper';
 import moment from 'moment';
+import {UnpaidModal} from '../Components';
 export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction, tripConsumerPending}) => {
+  const [unpaid, setUnpaid] = useState(false);
+
   const onPressLocation = () => {
     navigation.push('ToktokGoBookingConfirmPickup', {
       popTo: 1,
     });
   };
-
   const getDate = () => {
     const {logs} = tripConsumerPending[0];
     const lastItem = logs[logs.length - 1];
@@ -24,6 +26,7 @@ export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction,
 
   return (
     <View>
+      <UnpaidModal visible={unpaid} setVisible={setUnpaid} />
       <View
         style={{
           flexDirection: 'row',
@@ -41,7 +44,11 @@ export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction,
           }}>
           Outstanding Fee
         </Text>
-        <ThrottledOpacity delay={500} onPress={() => {}}>
+        <ThrottledOpacity
+          delay={500}
+          onPress={() => {
+            setUnpaid(true);
+          }}>
           <Image source={InfoIcon} resizeMode="contain" style={{height: 12, width: 12, marginLeft: 10}} />
         </ThrottledOpacity>
       </View>
