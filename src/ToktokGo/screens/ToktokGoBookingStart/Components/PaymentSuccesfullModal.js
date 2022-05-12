@@ -5,7 +5,7 @@ import SuccessIMG from '../../../../assets/images/Sucess.png';
 import {ThrottledOpacity} from '../../../../components_section';
 import {numberFormat} from '../../../../helper';
 
-export const PaymentSuccesfullModal = ({showPaymentSuccesful, setPaymentSuccessful, tripConsumerPending}) => {
+export const PaymentSuccesfullModal = ({showPaymentSuccesful, setShowPaymentSuccessful, tripConsumerPending}) => {
   return (
     <Modal animationType="fade" transparent={true} visible={showPaymentSuccesful} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
@@ -15,13 +15,15 @@ export const PaymentSuccesfullModal = ({showPaymentSuccesful, setPaymentSuccessf
             <Text style={styles.modalTitle}>Payment Successful</Text>
             <Text style={styles.modalDescription}>
               You have successfully paid the cancelation fee of{' '}
-              <Text style={{color: CONSTANTS.COLOR.ORANGE}}>
-                {' '}
-                ₱{numberFormat(tripConsumerPending[0]?.cancellation.charge.amount)}
-              </Text>{' '}
-              using toktokwallet. Your e-receipt is sent to your registered email address
+              <Text style={{color: CONSTANTS.COLOR.ORANGE}}> ₱50.00</Text> using toktokwallet. Your e-receipt is sent to
+              your registered email address
             </Text>
-            <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={setPaymentSuccessful(false)}>
+            <ThrottledOpacity
+              delay={500}
+              style={styles.buttonContainer}
+              onPress={() => {
+                setShowPaymentSuccessful(false);
+              }}>
               <Text style={styles.buttonText}>OK</Text>
             </ThrottledOpacity>
           </View>

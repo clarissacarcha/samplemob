@@ -194,6 +194,9 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   }, [selectedVehicle, selectedVouchers]);
 
   const tripBooking = ({pinCode, data}) => {
+    if (!session.userHash) {
+      return Alert.alert('', 'Please restart your application!');
+    }
     tripBook({
       variables: {
         input: {

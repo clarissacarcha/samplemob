@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, TouchableHighlight, Text, Image, Alert} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {connect, useDispatch} from 'react-redux';
@@ -22,7 +22,6 @@ import {onErrorAppSync} from '../../util';
 import {PaymentSuccesfullModal} from './Components';
 const ToktokGoBookingStart = ({navigation, constants, session}) => {
   const [tripConsumerPending, setTripConsumerPending] = useState([]);
-  const [paymentSuccessful, setPaymentSuccessful] = useState(false);
   const [showPaymentSuccesful, setShowPaymentSuccessful] = useState(false);
   const dispatch = useDispatch();
 
@@ -51,7 +50,7 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
       navigation.pop();
-      setPaymentSuccessful(true);
+      setShowPaymentSuccessful(true);
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -148,9 +147,6 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
           },
         },
       });
-      if (paymentSuccessful) {
-        setShowPaymentSuccessful(true);
-      }
     }, [navigation]),
   );
   return (
@@ -158,7 +154,7 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
       <View>
         <PaymentSuccesfullModal
           showPaymentSuccesful={showPaymentSuccesful}
-          setPaymentSuccessful={setPaymentSuccessful}
+          setShowPaymentSuccessful={setShowPaymentSuccessful}
           tripConsumerPending={tripConsumerPending}
         />
         <Header navigation={navigation} constants={constants} />
