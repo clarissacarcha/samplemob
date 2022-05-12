@@ -119,7 +119,7 @@ export const TRIP_BOOK = gql`
 `;
 
 export const GET_TRIPS_CONSUMER = gql`
-  query getTripsConsumer($input: GetTripsConsumerInput!) {
+  query getTripsConsumer($input: GetTripsConsumerInput) {
     getTripsConsumer(input: $input) {
       ${trip}
     }
