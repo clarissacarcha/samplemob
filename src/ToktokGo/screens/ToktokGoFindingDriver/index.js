@@ -43,6 +43,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const dispatch = useDispatch();
   const [chargeAmount, setChargeAmount] = useState(0);
   const [viewCancelBookingWithCharge, setViewCancelBookingWithCharge] = useState(false);
+  const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
 
   const {data, loading} = useSubscription(ON_TRIP_UPDATE, {
     client: TOKTOKGO_SUBSCRIPTION_CLIENT,
@@ -88,6 +89,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       setChargeAmount(response.getTripCancellationCharge?.amount);
       if (response.getTripCancellationCharge?.amount > 0) {
         setViewCancelBookingWithCharge(true);
+        setCancellationChargeResponse(response.getTripCancellationCharge);
       } else {
         setViewCancelBookingModal(true);
       }
@@ -251,9 +253,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     tripConsumerCancel({
       variables: {
         input: {
-          cancellationCharge: {
-            amount: chargeAmount,
-          },
+          cancellationChargeHash: cancellationChargeResponse?.hash,
           reason: reason,
           tripId: booking.id,
         },
