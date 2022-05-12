@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Image, Platform, TouchableOpacity} from 'react-native';
+import {Text, View, Image} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import InfoIcon from '../../../../assets/icons/InfoIcon.png';
 import CarFee from '../../../../assets/images/CarFee.png';
@@ -41,7 +41,9 @@ export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction,
           }}>
           Outstanding Fee
         </Text>
-        <Image source={InfoIcon} resizeMode="contain" style={{height: 12, width: 12, marginLeft: 10}} />
+        <ThrottledOpacity delay={500} onPress={() => {}}>
+          <Image source={InfoIcon} resizeMode="contain" style={{height: 12, width: 12, marginLeft: 10}} />
+        </ThrottledOpacity>
       </View>
       <Card
         containerStyle={{
@@ -56,6 +58,7 @@ export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction,
             <View style={{marginHorizontal: 8}}>
               <Text style={{fontSize: CONSTANTS.FONT_SIZE.M}}>Cancellation Fee last {getDate()}</Text>
               <ThrottledOpacity
+                delay={500}
                 onPress={() => {
                   navigation.push('SelectedBookingDetails', {booking: tripConsumerPending[0]});
                 }}>
