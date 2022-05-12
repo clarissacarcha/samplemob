@@ -178,7 +178,10 @@ export const TRIP_CHARGE_INITIALIZE_PAYMENT = gql`
 export const TRIP_CHARGE_FINALIZE_PAYMENT = gql`
   mutation tripChargeFinalizePayment($input: TripChargeFinalizePaymentInput!) {
     tripChargeFinalizePayment(input: $input) {
-      ${trip}
+      message
+      trip {
+        ${trip}
+      }
     }
   }
 `;
