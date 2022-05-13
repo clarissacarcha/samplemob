@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import _ from 'lodash';
+// import _ from 'lodash';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -22,7 +22,7 @@ import OrderTypeSelection from 'toktokfood/components/OrderTypeSelection';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import Separator from 'toktokfood/components/Separator';
 import DialogMessage from 'toktokfood/components/DialogMessage';
-import AlertModal from 'toktokfood/components/AlertModal';
+// import AlertModal from 'toktokfood/components/AlertModal';
 
 import styles from './styles';
 import {COLOR} from 'res/variables';
