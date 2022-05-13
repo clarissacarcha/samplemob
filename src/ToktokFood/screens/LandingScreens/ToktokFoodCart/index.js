@@ -423,7 +423,7 @@ const MainComponent = () => {
           total_amount: Number(totalAmount.toFixed(2)),
           quantity: item.quantity,
           order_type: 1,
-          notes: item.notes,
+          notes: item.notes.replace(/[^a-z0-9_ ]/gi, ''),
           addons: await fixAddOns(item.addonsDetails),
         };
         items.push(data);
@@ -616,12 +616,22 @@ const MainComponent = () => {
     // console.log(temporaryCart?.totalAmount);
     // console.log(amount, parsedAmount, totalPrice);
 
+    const DELIVERY_RECEIVER =
+      receiver.contactPerson && receiver.contactPerson !== ''
+        ? receiver.contactPerson
+        : `${customerInfo.firstName} ${customerInfo.lastName}`;
+    
+    const LAND_MARK = receiver.landmark && receiver.landmark !== '' ? receiver.landmark : '';
+
+    const replaceName = DELIVERY_RECEIVER.replace(/[^a-z0-9_ ]/gi, '');
+    const replaceLandMark = LAND_MARK.replace(/[^a-z0-9_ ]/gi, '');
+
     const ORDER = {
       // total_amount: temporaryCart.totalAmount,
       // srp_totalamount: temporaryCart.totalAmount,
       total_amount: parsedAmount,
       srp_totalamount: temporaryCart?.srpTotalAmount,
-      notes: riderNotes,
+      notes: riderNotes.replace(/[^a-z0-9_ ]/gi, ''),
       order_isfor: orderType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       // order_type: 2,
       order_type: await getOrderType(customerFranchisee),
@@ -631,15 +641,12 @@ const MainComponent = () => {
     const CUSTOMER = {
       shopid: temporaryCart?.items[0].shopid,
       company_id: String(temporaryCart?.items[0]?.companyId),
-      name:
-        receiver.contactPerson && receiver.contactPerson !== ''
-          ? receiver.contactPerson
-          : `${customerInfo.firstName} ${customerInfo.lastName}`,
+      name: replaceName,
       contactnumber:
         receiver.contactPersonNumber && receiver.contactPersonNumber !== ''
           ? getMobileNumberFormat({conno: receiver.contactPersonNumber})
           : getMobileNumberFormat(customerInfo),
-      landmark: receiver.landmark && receiver.landmark !== '' ? receiver.landmark : '',
+      landmark: replaceLandMark,
       email: customerInfo.email,
       address: location.address,
       user_id: Number(customerInfo.userId),
@@ -869,7 +876,7 @@ const MainComponent = () => {
           />
         )}
         <Separator />
-        {orderType === 'Delivery' && <ReceiverLocation />}
+        {orderType === 'Delivery' && <ReceiverLocation cart={temporaryCart} />}
         <Separator />
 
         <MyOrderList />

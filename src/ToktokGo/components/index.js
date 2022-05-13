@@ -6,3 +6,4 @@ export * from './LocationCard';
 export * from './Header';
 export * from './SearchDisplayCard';
 export * from './ToktokgoBeta';
+export * from './EmptyRecent';

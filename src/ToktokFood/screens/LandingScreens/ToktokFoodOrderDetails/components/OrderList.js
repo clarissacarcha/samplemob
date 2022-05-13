@@ -16,7 +16,8 @@ const DisplayAddons = ({addOns}) => {
   let addOnsList = addOns.map(item => item.addon_name).join(', ');
   let label = addOns.length > 1 ? 'Add-ons:' : 'Add-on:';
 
-  return <Text style={styles.notes}>{`${label} ${addOnsList}`}</Text>;
+   {/*#9E9E9E - REMOVED TEXT COLOR*/}
+  return <Text style={[styles.notes, {color: '#000'}]}>{`${label} ${addOnsList}`}</Text>;
 };
 
 const OrderList = ({orderDetails}) => {
@@ -64,6 +65,23 @@ const OrderList = ({orderDetails}) => {
     [data],
   );
 
+  const FoodItemImage = ({item, forEdit}) => {
+    return (
+      <View style={styles.foodItemImageWrapper}>
+        <ProgressiveImage
+          style={styles.foodItemImage}
+          source={item.productDetails.filename}
+          placeholder={food_placeholder}
+        />
+        {forEdit !== undefined && (
+          <View style={{...styles.modifiedFlag, backgroundColor: forEdit === true ? '#F5841F' : '#ED3A19'}}>
+            <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>{forEdit ? 'Edited' : 'Removed'}</Text>
+          </View>
+        )}
+      </View>
+    );
+  };
+
   const Item = useMemo(
     () =>
       ({item}) => {
@@ -75,37 +93,28 @@ const OrderList = ({orderDetails}) => {
         return (
           <View style={styles.listContainer}>
             <View style={styles.progressiveImageContainer}>
-              {item.productDetails.filename && (
-                <ProgressiveImage
-                  style={styles.foodItemImage}
-                  source={item.productDetails.filename}
-                  placeholder={food_placeholder}
-                />
-              )}
+              {item.productDetails.filename && <FoodItemImage item={item} />}
             </View>
-            {/* {item.productDetails.filename && (
-          <Image
-            style={styles.foodItemImage}
-            source={validImg ? {uri: item.productDetails.filename} : food_placeholder}
-            onError={() => setValidImg(false)}
-          />
-        )} */}
+
             <View style={styles.list}>
               <View style={styles.listInfo}>
-                <Text numberOfLines={1} style={styles.listName}>
+                <Text numberOfLines={1} style={[styles.listName, {color: '#000'}]}>
                   {productName}
                 </Text>
                 {resellerDiscount > 0 ? (
                   <ResellerDiscountBadge item={item} />
                 ) : (
-                  <Text style={styles.seeAll}>{`PHP ${item.totalAmountWithAddons.toFixed(2)}`}</Text>
+                  <Text style={[styles.seeAll]}>{`PHP ${item.totalAmountWithAddons.toFixed(2)}`}</Text>
                 )}
               </View>
+              {/*#9E9E9E - REMOVED TEXT COLOR */}
               <View>
-                <Text style={styles.notes}>x{item.quantity}</Text>
-                {parentProductId && <Text style={styles.notes}>{`Variation: ${itemname}`}</Text>}
+                <Text style={[styles.notes, {color: '#000'}]}>x{item.quantity}</Text>
+                {parentProductId && <Text style={[styles.notes, {color: '#000'}]}>{`Variation: ${itemname}`}</Text>}
                 {!!parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} />}
-                {!!item.notes && <Text style={styles.notes}>{`Note: ${JSON.parse(item.notes)}`}</Text>}
+                {!!item.notes && (
+                  <Text style={[styles.notes, {color: '#000'}]}>{`Note: ${JSON.parse(item.notes)}`}</Text>
+                )}
               </View>
             </View>
           </View>
@@ -221,5 +230,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F7FA',
     borderRadius: 10,
     marginRight: moderateScale(10),
+  },
+  foodItemImageWrapper: {
+    width: '100%',
+    borderBottomStartRadius: 10,
+    borderBottomEndRadius: 10,
+  },
+  modifiedFlag: {
+    width: '100%',
+    height: 25,
+    position: 'absolute',
+    bottom: 0,
+    borderBottomStartRadius: 10,
+    borderBottomEndRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

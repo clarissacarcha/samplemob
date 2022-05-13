@@ -101,6 +101,7 @@ export const ToktokWalletMPINCreate = ({navigation,route})=> {
           input: {
             pinCode: pinCode,
             oldMPIN: oldMPIN,
+            deviceType: Platform.OS === "ios" ? "IOS" : "Android"
           }
         }
       })

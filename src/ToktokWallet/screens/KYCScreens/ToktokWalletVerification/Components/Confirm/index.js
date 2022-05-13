@@ -142,31 +142,6 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         })
         : null
 
-        // if(RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath).then(()=>{
-        //     console.log("Deleted")
-        // }).catch(err=>console.log(err))
-        // RNFS.unlink(RNFS.TemporaryDirectoryPath)
-
-        // RNFS.readDir(RNFS.CachesDirectoryPath)
-        // .then(arr => RNFS.readDir(arr[0].path)) // The Camera directory
-        //     .then(arr => arr.forEach(item => {
-        //        console.log(item.path)
-        //         // Linking.canOpenURL(contentURI)
-        //         // .then(able => able ? Linking.openURL(contentURI) : console.log('No application available'))
-        //         // .catch(console.log)
-        //     }))
-        // return;
-   
-    //    setCacheImages({
-    //     rnSelfieFile,
-    //     rnSelfieFileWithID,
-    //     rnFrontIDFile,
-    //     rnBackIDFile,
-    //    })
-
-        // removing / delete cache files
-       //removeCacheImages({VerifyUserData})
-
         const input = {
             // userId: session.user.id,
             userId: await AsyncStorage.getItem('accessToken'),
@@ -210,9 +185,9 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
                     pepPosition: VerifyUserData.pepInfo.questionnaire.pepPosition,
                     isFamilyPep: VerifyUserData.pepInfo.questionnaire.isFamilyPep,
                     familyPepPosition: VerifyUserData.pepInfo.questionnaire.familyPepPosition,
-                    sourceOfIncomeId:  VerifyUserData.pepInfo.questionnaire.sourceOfIncomeId,
+                    sourceOfIncomeId:  JSON.stringify(VerifyUserData.pepInfo.questionnaire.sourceOfIncomeId),
                     sourceOfIncome: VerifyUserData.pepInfo.questionnaire.sourceOfIncome,
-                    sourceOfWealthId: VerifyUserData.pepInfo.questionnaire.sourceOfWealthId,
+                    sourceOfWealthId: JSON.stringify(VerifyUserData.pepInfo.questionnaire.sourceOfWealthId),
                     sourceOfWealth: VerifyUserData.pepInfo.questionnaire.sourceOfWealth,
                 }
             }

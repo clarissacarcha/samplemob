@@ -1,12 +1,13 @@
 import React from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
+import {ThrottledOpacity} from '../../../../components_section';
 
 export const ConfirmPickupButton = ({onConfirm}) => {
   return (
-    <TouchableOpacity onPress={onConfirm} style={styles.buttonWrapper}>
+    <ThrottledOpacity delay={500} onPress={onConfirm} style={styles.buttonWrapper}>
       <Text style={styles.confirmText}>Confirm Pick-Up</Text>
-    </TouchableOpacity>
+    </ThrottledOpacity>
   );
 };
 

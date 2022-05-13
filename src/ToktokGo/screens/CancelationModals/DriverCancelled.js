@@ -2,8 +2,9 @@ import React from 'react';
 import {Text, StyleSheet, Image, View, Modal, TouchableOpacity, StatusBar} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import WarningIMG from '../../../common/assets/globalert/Warning.png';
+import {ThrottledOpacity} from '../../../components_section';
 
-export const DriverCancelled = ({onCancel, cancel, onCancelWithFee, setVisible, cancellationState}) => {
+export const DriverCancelled = ({onDriverCancelled, cancel, cancellationState, tripRebookFunc}) => {
   return (
     <Modal animationType="fade" transparent={true} visible={cancel} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
@@ -21,9 +22,9 @@ export const DriverCancelled = ({onCancel, cancel, onCancelWithFee, setVisible, 
               </View>
             </View>
 
-            <TouchableOpacity style={styles.buttonContainer} onPress={onCancel}>
+            <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={onDriverCancelled}>
               <Text style={styles.buttonText}>OK</Text>
-            </TouchableOpacity>
+            </ThrottledOpacity>
           </View>
         </View>
       </View>

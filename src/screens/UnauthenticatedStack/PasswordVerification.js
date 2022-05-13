@@ -172,7 +172,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
           resizeMode={'contain'}
         />
       </TouchableOpacity>
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: '20%'}}>
+      <View style={{flex: 1, alignItems: 'center', marginTop: '30%'}}>
         {/*-------------------- BANNER --------------------*/}
         {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
         <Image source={ToktokLogo} style={{height: imageWidth - 120, width: imageWidth - 170}} resizeMode="contain" />
@@ -185,6 +185,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
             onChangeText={value => setPassword(value)}
             style={styles.input}
             placeholder="Password"
+            placeholderTextColor={constants.COLOR.DARK}
             secureTextEntry={!showPassword}
             returnKeyType="done"
             autoCapitalize="none"
@@ -208,7 +209,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
               style={{
                 color: COLORS.WHITE,
                 fontSize: FONT_SIZE.M,
-                paddingHorizontal: '40%',
+                paddingHorizontal: '37%',
                 fontFamily: constants.FONT_FAMILY.BOLD,
                 lineHeight: SIZES.L,
                 fontWeight: '600',
@@ -285,7 +286,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingLeft: 16,
     height: 50,
-    color: COLOR.DARK,
+    color: constants.COLOR.BLACK,
     width: '100%',
     borderRightColor: '#F8F8F8',
     borderLeftColor: '#F8F8F8',
@@ -293,7 +294,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#F8F8F8',
   },
   containerInput: {
-    marginHorizontal: '14%',
+    marginHorizontal: '16%',
     backgroundColor: '#F8F8F8',
     marginVertical: 2,
     flexDirection: 'row',

@@ -138,3 +138,9 @@ export const GET_APP_SERVICES = gql`
     }
   }
 `;
+
+export const GET_USER_HASH = gql`
+  query getUserHash {
+    getUserHash
+  }
+`;

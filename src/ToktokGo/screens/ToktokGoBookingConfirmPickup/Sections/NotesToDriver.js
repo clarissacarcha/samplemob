@@ -3,13 +3,15 @@ import {Text, StyleSheet, View, TextInput, TouchableOpacity} from 'react-native'
 import constants from '../../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
+import {ThrottledOpacity} from '../../../../components_section';
 
 export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote}) => {
   const {origin} = useSelector(state => state.toktokGo);
 
   return (
     <View>
-      <TouchableOpacity
+      <ThrottledOpacity
+        delay={500}
         onPress={() => {
           navigation.pop();
           navigation.push('ToktokGoBookingSelectLocations', {
@@ -26,7 +28,7 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote}) =
           <FA5Icon name="map-pin" size={18} color={constants.COLOR.YELLOW} style={{marginRight: 10}} />
           <Text>{origin.place.formattedAddress}</Text>
         </View>
-      </TouchableOpacity>
+      </ThrottledOpacity>
       <Text
         style={{
           color: '#525252',

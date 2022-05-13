@@ -80,29 +80,31 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1}}>
-      <BookingID booking={booking} />
-      {booking.tag == 'ONGOING' && booking.driver && (
-        <>
-          <BookingDriverDetails booking={booking} />
-          <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
-        </>
-      )}
+    <View style={{flex: 1}}>
+      <ScrollView style={styles.container}>
+        <BookingID booking={booking} />
+        {booking.tag == 'ONGOING' && booking.driver && (
+          <>
+            <BookingDriverDetails booking={booking} />
+            <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+          </>
+        )}
 
-      <BookingInfo booking={booking} />
-      {booking.notes && <BookingNote booking={booking} />}
+        <BookingInfo booking={booking} />
+        {booking.notes && <BookingNote booking={booking} />}
 
-      {/* todo: replace condition if status is completed */}
-      {booking.tag == 'COMPLETED' && <BookingMap booking={booking} />}
-      <BookingAddress booking={booking} />
-      <BookingTotal booking={booking} />
+        {/* todo: replace condition if status is completed */}
+        {booking.tag == 'COMPLETED' && <BookingMap booking={booking} routeDetails={booking.route} />}
+        <BookingAddress booking={booking} />
+        <BookingTotal booking={booking} />
 
-      <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+        <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
 
-      <BookingStatus booking={booking} />
-      {/* todo: replace condition if status is cancelled */}
-      {booking.tag == 'CANCELLED' && <BookingCancelledNote />}
-    </ScrollView>
+        <BookingStatus booking={booking} />
+        {/* todo: replace condition if status is cancelled */}
+        {booking.tag == 'CANCELLED' && <BookingCancelledNote booking={booking} />}
+      </ScrollView>
+    </View>
   );
 };
 

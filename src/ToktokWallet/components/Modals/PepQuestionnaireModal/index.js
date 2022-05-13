@@ -6,8 +6,11 @@ import { YellowButton , VectorIcon , ICON_SET } from 'src/revamp';
 import CONSTANTS from 'common/res/constants'
 
 //SELF IMPORTS
-import BottomSheetSourceOfIncome from 'toktokwallet/screens/KYCScreens/ToktokWalletVerification/Components/VerifyFullname/BottomSheetSourceOfIncome'
-import BottomSheetSourceOfWealth from 'toktokwallet/screens/KYCScreens/ToktokWalletVerification/Components/VerifyFullname/BottomSheetSourceOfWealth'
+import {
+    SourceOfIncome,
+    SourceOfWealth
+} from "./Components"
+
 const {COLOR, FONT_FAMILY: FONT ,SIZE,FONT_SIZE} = CONSTANTS
 
 const Question = ({question,errorMessage,setErrorMessage,index,chooseAnswer,pepInfoAnswer})=> {
@@ -69,6 +72,7 @@ const Question = ({question,errorMessage,setErrorMessage,index,chooseAnswer,pepI
                         onChangeText={onChangeText} 
                         style={styles.input}
                         placeholder="Specify position"
+                        maxLength={50}
                     />
                         {/* {
                             errorMessage[index] != "" &&
@@ -79,67 +83,6 @@ const Question = ({question,errorMessage,setErrorMessage,index,chooseAnswer,pepI
             }
 
           
-        </View>
-    )
-}
-
-const DropDownQuestion = ({question , sourceRef, pepInfoAnswer, index ,setPepInfo})=> {
-
-    const openBottomSheet = ()=> {
-        sourceRef.current.expand()
-    }
-
-    const onChangeText = (value)=>{
-        if(index == 0){
-            setPepInfo(state=>{
-                return {
-                    ...state,
-                    questionnaire: {
-                        ...state.questionnaire,
-                        sourceOfIncome: value,
-                    }
-                }
-            })
-        }
-
-        if(index == 1){
-            setPepInfo(state=>{
-                return {
-                    ...state,
-                    questionnaire: {
-                        ...state.questionnaire,
-                        sourceOfWealth: value,
-                    }
-                }
-            })
-        }
-    }
-
-    return (
-        <View style={{marginTop: 10}}>
-             <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{question}</Text>
-            <TouchableOpacity onPress={openBottomSheet} style={[styles.input , {flexDirection:"row", justifyContent:"flex-start",alignItems:"center"}]}>
-                <Text
-                    style={pepInfoAnswer.des != "" 
-                        ? {flex: 1,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR} 
-                        : {flex: 1,color: COLOR.DARK,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}
-                    }
-                >
-                    {pepInfoAnswer.des != "" ? pepInfoAnswer.des : "- Select -"}
-                </Text>
-                <VectorIcon iconSet={ICON_SET.Feather} name="chevron-right"/>
-            </TouchableOpacity>
-            {
-                pepInfoAnswer.value == "0" &&
-                <View style={{marginTop: 10,}}>
-                    <TextInput 
-                        placeholder={`Specify source of ${index == 0 ? "income" : "wealth"}`}
-                        style={styles.input}
-                        value={pepInfoAnswer.others}
-                        onChangeText={onChangeText}
-                    />
-                </View>
-            }
         </View>
     )
 }
@@ -157,9 +100,6 @@ export const PepQuestionnaireModal = ({
         "","","",""
     ])
     const [agree,setAgree] = useState(false)
-   
-    const SourceOfIncomeRef = useRef(null)
-    const SourceOfWealthRef = useRef(null)
 
     const closeModal = ()=> {
         onRequestClose();
@@ -238,7 +178,7 @@ export const PepQuestionnaireModal = ({
                     style={styles.headings}
                 >
                     <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,textAlign:"center"}}>Politically Exposed Person (PEP) Questionnaire</Text>
-                    <Text style={{textAlign:"center",fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop:20}}>
+                    <Text style={{textAlign:"left",fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M,marginTop:20,fontStyle: "italic"}}>
                     A “politically exposed person” or PEP is a current or former
                     senior official in the executive, legislative, administrative,
                     military or judicial branch of a foreign government, elected
@@ -253,8 +193,8 @@ export const PepQuestionnaireModal = ({
                     </Text>
                     <View style={styles.questions}>
                         <Question
-                            question="1) Have you been categorized as PEP (Political Exposed Person)
-                            by a bank, brokerage firm or any financial institution?"
+                            question="1) Have you ever been categorized as PEP (Political Exposed Person)
+                            by a bank, brokerage firm, or any financial institution?"
                             errorMessage={errorMessage}
                             setErrorMessage={setErrorMessage}
                             chooseAnswer={chooseAnswer}
@@ -278,10 +218,7 @@ export const PepQuestionnaireModal = ({
                             index={1}
                         />
 
-                        <DropDownQuestion
-                            question="3) Source of Income"
-                            index={0}
-                            sourceRef={SourceOfIncomeRef}
+                        <SourceOfIncome
                             pepInfoAnswer={{
                                 value: pepInfo.questionnaire.sourceOfIncomeId,
                                 des: pepInfo.questionnaire.sourceOfIncomeDes,
@@ -290,10 +227,7 @@ export const PepQuestionnaireModal = ({
                             setPepInfo={setPepInfo}
                         />
 
-                        <DropDownQuestion
-                            question="4) Source of Wealth"
-                            index={1}
-                            sourceRef={SourceOfWealthRef}
+                        <SourceOfWealth
                             pepInfoAnswer={{
                                 value: pepInfo.questionnaire.sourceOfWealthId,
                                 des: pepInfo.questionnaire.sourceOfWealthDes,
@@ -301,11 +235,15 @@ export const PepQuestionnaireModal = ({
                             }}
                             setPepInfo={setPepInfo}
                         />
+
                     </View>
 
                     <View style={{flexDirection:"row",marginTop :50,alignItems:"center"}}>
-                            <TouchableOpacity onPress={()=>setAgree(!agree)} style={[styles.answerbox, {height: 20, backgroundColor: agree ? COLOR.YELLOW : "transparent"}]}/>
-                            <Text style={{paddingRight: 16, fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.S, textAlign:"left"}}>I hereby certify that the above infomation provided is true and correct to the best of my knowledege</Text>
+                            <TouchableOpacity hitSlop={styles.hitSlop} onPress={()=>setAgree(!agree)} style={[styles.answerbox, {height: 20, backgroundColor: agree ? COLOR.YELLOW : "transparent"}]}/>
+                            <Text style={{paddingRight: 16, fontFamily: FONT.REGULAR,fontSize:FONT_SIZE.M, textAlign:"left"}}>
+                            <Text style={{fontFamily: FONT.BOLD,fontSize:FONT_SIZE.M, textAlign:"left"}}>I HEREBY CERTIFY </Text>
+                             that the above information is complete, true, and correct as to the best of my knowledge.
+                             </Text>
                     </View>
                     
                     <View style={{flexGrow: 1,justifyContent:"flex-end",marginBottom: 16,marginTop: 100}}>
@@ -325,26 +263,22 @@ export const PepQuestionnaireModal = ({
                                 : pepInfo.questionnaire.familyPepPosition == ""
                             )
                             && (
-                                pepInfo.questionnaire.sourceOfIncomeId == "0"
+                                pepInfo.questionnaire.sourceOfIncomeId.includes("0")
                                 ? pepInfo.questionnaire.sourceOfIncome != ""
                                 : pepInfo.questionnaire.sourceOfIncome == ""
                             )
                             && (
-                                pepInfo.questionnaire.sourceOfWealthId == "0"
+                                pepInfo.questionnaire.sourceOfWealthId.includes("0")
                                 ? pepInfo.questionnaire.sourceOfWealth != ""
                                 : pepInfo.questionnaire.sourceOfWealth == ""
                             )
                             && agree
-                            ? <YellowButton label="Proceed" onPress={onPress}/>
-                            : <DisabledButton label="Proceed"/>
+                            ? <YellowButton label="Save" onPress={onPress}/>
+                            : <DisabledButton label="Save"/>
                         }
                       
                     </View>
                 </ScrollView>
-             
-                    <BottomSheetSourceOfIncome ref={SourceOfIncomeRef} changeIncomeInfo={changeIncomeInfo}/>
-                    <BottomSheetSourceOfWealth ref={SourceOfWealthRef} changeWealthInfo={changeWealthInfo}/>
-               
                 <BuildingBottom/>
                 
               
@@ -380,5 +314,11 @@ const styles =  StyleSheet.create({
         fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.M,
         paddingHorizontal: 10,
+    },
+    hitSlop: {
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 20
     }
 })

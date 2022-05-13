@@ -12,7 +12,7 @@ export const BookingTotal = ({loading, details}) => {
     <>
       <View style={styles.container}>
         <View style={styles.elementWrapper}>
-          <Text style={styles.textStyle}>TOTAL</Text>
+          <Text style={styles.textStyle}>Total</Text>
         </View>
         <View style={styles.elementWrapper}>
           {loading ? (

@@ -1,29 +1,23 @@
 import React, {useRef, useEffect, useCallback, useState} from 'react';
 import _ from 'lodash';
 import {useSelector} from 'react-redux';
-import {View, Text, StyleSheet, TouchableOpacity, Image, Share, FlatList, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image, Share, FlatList, Dimensions, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
-import {Shadow} from '../../../../../../../revamp';
+import {APP_VERSION} from '../../../../../../../res/constants';
 
-// import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/Toktok.png';
-// import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/Pabili.png';
-// import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/ToktokfoodMenu.png';
-// import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/ToktokGo.png';
-// import WalletIcon from '../../../../../../../assets/toktok/icons/menu/ToktokWallet.png';
-// import ProfileIcon from '../../../../../../../assets/toktok/icons/menu/Profile.png';
-// import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/ToktokMall.png';
 // import TalkToUsIcon from '../../../../../../../assets/toktok/icons/menu/TalkToUs.png';
 // import WhatsNewIcon from '../../../../../../../assets/toktok/icons/menu/WhatsNew.png';
 
 import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/DeliveryService.png';
 import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/PabiliService.png';
 import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/FoodService.png';
-import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoServiceBeta.png';
+import ToktokGoIconBeta from '../../../../../../../assets/toktok/icons/menu/GoServiceBeta.png';
+import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoService.png';
 import WalletIcon from '../../../../../../../assets/toktok/icons/menu/WalletService.png';
 import LoadIcon from '../../../../../../../assets/toktok/icons/menu/LoadService.png';
-// import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/MallService.png';
+import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/MallService.png';
 
 import ProfileIcon from '../../../../../../../assets/toktok/icons/menu/ProfileService.png';
 import HelpIcon from '../../../../../../../assets/toktok/icons/menu/HelpService.png';
@@ -96,34 +90,40 @@ export const Menu = ({setUserLocation, constants}) => {
       isNew: true,
     },
     {
-      identifier: 'goComingSoonA',
+      identifier:
+        constants.iosVersionDisableBeta == APP_VERSION && Platform.OS == 'ios'
+          ? 'HideForVersion-GoComingSoon' // Just change identifier to hide
+          : `${Platform.OS}GoComingSoon`,
       label: 'Go',
       icon: ToktokGoIcon,
       onPress: () => navigation.push('ToktokgoComingSoon'),
       isNew: true,
     },
     {
-      identifier: 'goA',
+      identifier:
+        constants.iosVersionDisableBeta == APP_VERSION && Platform.OS == 'ios'
+          ? 'HideForVersion-Go' // Just change identifier to hide
+          : `${Platform.OS}Go`,
       label: 'Go',
-      icon: ToktokGoIcon,
+      icon: ToktokGoIconBeta,
       onPress: () => navigation.push('ToktokGoLanding'),
       isNew: true,
     },
-    // {
-    //   identifier: 'load',
-    //   label: 'Load',
-    //   icon: LoadIcon,
-    //   onPress: () => navigation.push('ToktokLoadHome'),
-    //   isNew: true,
-    // },
-    // {
-    //   identifier: 'mall',
-    //   label: 'Mall',
-    //   icon: ToktokMallIcon,
-    //   onPress: () => navigation.push('ToktokMallLanding'),
-    // },
     {
-      identifier: 'promos',
+      identifier: `${Platform.OS}Load`,
+      label: 'Load',
+      icon: LoadIcon,
+      onPress: () => navigation.push('ToktokLoadHome'),
+      isNew: true,
+    },
+    {
+      identifier: `${Platform.OS}Mall`,
+      label: 'Mall',
+      icon: ToktokMallIcon,
+      onPress: () => navigation.push('ToktokMallLanding'),
+    },
+    {
+      identifier: `${Platform.OS}Promos`,
       label: 'Promos',
       icon: PromosIcon,
       onPress: () => navigation.push('SuperAppPromos'),

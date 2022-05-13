@@ -22,6 +22,7 @@ const COLOR = {
 const FONT_FAMILY = {
   REGULAR: 'FiraSans-Regular',
   BOLD: 'FiraSans-Bold',
+  SEMI_BOLD: 'FiraSans-SemiBold',
   Thin800: 'FiraSans-Thin-800',
 };
 

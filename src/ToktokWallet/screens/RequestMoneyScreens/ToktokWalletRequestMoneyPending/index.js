@@ -70,7 +70,6 @@ export const ToktokWalletRequestMoneyPending = ({navigation,route})=> {
     return (
         <CheckIdleState>
             <Separator/>
-            <SwipeDownToRefresh/>
             <FlatList
                 ListHeaderComponent={() => {
                     if(data.getRequestMoneyPendingReceived.length > 0) return null

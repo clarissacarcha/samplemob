@@ -40,6 +40,21 @@ export const ContextProvider = ({children}) => {
         isBackRequired: 1,
     })
 
+    const [pepInfo,setPepInfo] = useState({
+        questionnaire: {
+            isPep: "",
+            pepPosition: "",
+            isFamilyPep: "",
+            familyPepPosition: "",
+            sourceOfIncomeId: "",
+            sourceOfIncomeDes: "",
+            sourceOfIncome: "",
+            sourceOfWealthId: "",
+            sourceOfWealthDes: "",
+            sourceOfWealth: ""
+        },
+    })
+
     const setFileUpload = (index,value)=> {
         const rnFile = new ReactNativeFile({
             ...value,
@@ -74,7 +89,9 @@ export const ContextProvider = ({children}) => {
                 validID1,
                 setValidID1,
                 validID2,
-                setValidID2
+                setValidID2,
+                pepInfo,
+                setPepInfo,
             }}
         >
             {children}

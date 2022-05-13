@@ -7,14 +7,15 @@ import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION} from '..
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {throttle, debounce} from 'lodash';
-import {useDispatch, useSelector} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import {useDebounce} from '../../helpers';
-import {ToktokgoBeta} from '../../components';
+import {EmptyRecent, ToktokgoBeta} from '../../components';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import {useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../helper';
+import {ThrottledHighlight} from '../../../components_section';
 
-const ToktokGoSelectedLocations = ({navigation, route}) => {
+const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const {popTo} = route.params;
   const [selectedInput, setSelectedInput] = useState('D');
   const [searchResponse, setSearchResponse] = useState([]);
@@ -30,6 +31,7 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
+      console.log('COMPLETED');
       setSearchResponse(response.getPlaceAutocomplete);
     },
     onError: error => console.log('getPlaceAutocomplete', error),
@@ -89,8 +91,11 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
 
   useFocusEffect(
     useCallback(() => {
+      const setPlace = async () => {
+        await setPlaceFunction();
+      };
       if (!origin?.place?.formattedAddress) {
-        return setPlaceFunction();
+        setPlace();
       }
     }, [navigation]),
   );
@@ -106,7 +111,6 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
 
   const onPressLocation = () => {
     if (selectedInput == 'D') {
-      navigation.pop();
       navigation.push('ToktokGoBookingConfirmDestination', {
         popTo: popTo + 1,
       });
@@ -114,6 +118,7 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
       navigation.pop();
       navigation.push('ToktokGoBookingConfirmPickup', {
         popTo: popTo + 1,
+        source: 'searchLocation',
       });
     }
   };
@@ -156,6 +161,8 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
           onChangeSelectedInput={onChangeSelectedInput}
           titleOrigin={searchOrigin}
           title={searchDestination}
+          setSearchDestination={setSearchDestination}
+          setSearchOrigin={setSearchOrigin}
         />
         {searchResponse?.length == 0 ? (
           // <View>
@@ -168,15 +175,14 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
           <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />
         )}
       </View>
-      <TouchableHighlight
+      <ThrottledHighlight
+        delay={500}
         onPress={() => {
           if (selectedInput == 'D') {
-            navigation.pop();
             navigation.push('ToktokGoBookingConfirmDestination', {
               popTo: popTo + 1,
             });
           } else {
-            navigation.pop();
             navigation.push('ToktokGoBookingConfirmPickup', {
               popTop: 1,
             });
@@ -215,9 +221,13 @@ const ToktokGoSelectedLocations = ({navigation, route}) => {
             </Text>
           </View>
         </View>
-      </TouchableHighlight>
+      </ThrottledHighlight>
     </View>
   );
 };
 
-export default ToktokGoSelectedLocations;
+const mapStateToProps = state => ({
+  constants: state.constants,
+});
+
+export default connect(mapStateToProps, null)(ToktokGoSelectedLocations);

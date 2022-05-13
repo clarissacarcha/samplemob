@@ -6,7 +6,11 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import {ThrottledHighlight} from '../../../../components_section';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
+import uuid from 'react-native-uuid';
+import {useDispatch} from 'react-redux';
+
 export const Landing = ({navigation}) => {
+  const dispatch = useDispatch();
   return (
     <View>
       <ImageBackground source={BackgroundLanding} resizeMode={'cover'} style={{height: 112}}>
@@ -19,11 +23,13 @@ export const Landing = ({navigation}) => {
         <ThrottledHighlight
           underlayColor={CONSTANTS.COLOR.WHITE_UNDERLAY}
           onPress={() => {
+            dispatch({type: 'SET_TOKTOKGO_BOOKING_SESSION_TOKEN', payload: uuid.v4()});
+            dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
             navigation.push('ToktokGoBookingSelectLocations', {
               popTo: 1,
             });
           }}
-          delay={100}
+          delay={500}
           style={styles.searchBox}>
           <View style={styles.inputBox}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>

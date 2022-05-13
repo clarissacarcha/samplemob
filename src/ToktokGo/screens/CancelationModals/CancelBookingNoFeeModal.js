@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, StyleSheet, Image, View, Modal, TouchableOpacity, StatusBar} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import WarningIMG from '../../../assets/images/warning.png';
+import {ThrottledOpacity} from '../../../components_section';
 
 export const CancelBookingNoFeeModal = ({isVisible, setVisible, setNextModal, setDriverVisivle, chargeAmount}) => {
   const cancel = () => {
@@ -18,13 +19,13 @@ export const CancelBookingNoFeeModal = ({isVisible, setVisible, setNextModal, se
             <Text style={styles.modalDescription}>Are you sure you want to cancel this booking?</Text>
 
             <View style={styles.retryContainer}>
-              <TouchableOpacity style={styles.cancelButtonContainer} onPress={() => setVisible(!isVisible)}>
+              <ThrottledOpacity delay={500} style={styles.cancelButtonContainer} onPress={() => setVisible(!isVisible)}>
                 <Text style={styles.textStyle}>No</Text>
-              </TouchableOpacity>
+              </ThrottledOpacity>
 
-              <TouchableOpacity style={styles.retryButtonContainer} onPress={() => cancel()}>
+              <ThrottledOpacity delay={500} style={styles.retryButtonContainer} onPress={() => cancel()}>
                 <Text style={styles.cancelTextStyle}>Yes</Text>
-              </TouchableOpacity>
+              </ThrottledOpacity>
             </View>
           </View>
         </View>
