@@ -384,8 +384,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     <View style={styles.modifiedWrapper}>
       <Image resizeMode="stretch" source={info_ic} style={styles.modifiedIcon} />
       <Text style={styles.modifiedText}>
-        This order has been modified by merchant. Total refund amount for updated order should be credited to your
-        toktokwallet account. 
+        This order has been modified by merchant. You will be receiving refund amount upon completion of delivery.
       </Text>
     </View>
   );
