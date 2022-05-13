@@ -169,7 +169,7 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
             tripConsumerPending={tripConsumerPending}
           />
         )}
-        {constants.iosVersionDisableBeta && Platform.OS == 'ios' ? <EmptyRecent /> : <ToktokgoBeta />}
+        {<ToktokgoBeta />}
       </View>
       <ThrottledHighlight
         delay={500}

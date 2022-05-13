@@ -90,11 +90,7 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
 
   return (
     <View style={styles.content}>
-      <Image
-        source={constants.iosVersionDisableBeta && Platform.OS == 'ios' ? toktokgoSplash : toktokgoSplashBeta}
-        style={{width: 200, height: 200}}
-        resizeMode={'contain'}
-      />
+      <Image source={toktokgoSplashBeta} style={{width: 200, height: 200}} resizeMode={'contain'} />
     </View>
   );
 };
