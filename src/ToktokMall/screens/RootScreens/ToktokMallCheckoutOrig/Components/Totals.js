@@ -4,9 +4,6 @@ import {
   View,
   Text,
 } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { FONT } from '../../../../../res/variables';
-import Icons from '../../../../Components/Icons';
 import  {FormatToText} from '../../../../helpers/formats';
 
 import {CheckoutContext} from '../ContextProvider';
@@ -19,8 +16,6 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
   const [merchandiseTotal, setMerchandiseTotal] = useState(0);
   const [shippingFeeTotal, setShippingFeeTotal] = useState(0);
   const [shippingDiscountTotal, setShippingDiscountTotal] = useState(0);
-  const [toggleVouchers, setToggleVouchers] = useState(false);
-  const [numOfVouchers, setOfNumVouchers] = useState(0)
 
   useEffect(() => {
     setData(raw);
@@ -88,8 +83,6 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
     if (CheckoutContextData) {
       computeShippingTotal();
       computeShippingDiscount();
-      const numvouchers = CheckoutContextData.shippingVouchers.filter((a) => a.valid != undefined || a.voucher_id != undefined)
-      setOfNumVouchers(numvouchers.length)
     }
   }, [CheckoutContextData]);
 
@@ -117,52 +110,14 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
     }
   }, [merchandiseTotal, shippingFeeTotal, shippingDiscountTotal]);
 
-  const RenderVouchersBreakdown = () => {
-
-    let vouchers = toggleVouchers ? CheckoutContextData.shippingVouchers.slice(0,2) : CheckoutContextData.shippingVouchers
-    let totalDeduction = 0
-    totalDeduction = CheckoutContextData.shippingVouchers.map((a) => a.deduction ? totalDeduction += a.deduction : totalDeduction += a.discountedAmount)
-
-    return (
-      <>
-        <View style={styles.textContainer}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 13}}>Vouchers</Text>
-            <TouchableOpacity onPress={() => setToggleVouchers(!toggleVouchers)} style={{flex: 1, marginLeft: 8, alignItems: 'center', justifyContent: 'center'}}>
-              <Icons.AIcon name={toggleVouchers ? 'down' : 'up'} size={14} />
-            </TouchableOpacity>
-          </View>        
-          <Text style={{color: "#ED3A19"}}>- {FormatToText.currency(totalDeduction)}</Text>
-        </View>        
-        <View>          
-          {
-            vouchers
-              .filter((a) => {                
-                return a.voucher_id != undefined || a.valid != undefined
-              }).map((item) => {
-
-                let deduction = item.deduction ? item.deduction : item.discountedAmount
-
-                return (
-                  <>
-                    <View style={styles.textContainer}>
-                      <Text style={{fontSize: 13, color: "#525252"}}>{item.vname || item.voucher_name}</Text>
-                      <Text style={{color: "#ED3A19"}}>- {FormatToText.currency(deduction)}</Text>
-                    </View>
-                  </>
-                )
-
-              })
-          }
-        </View>
-      </>
-    )
-  }
-
   return (
     <>
-      <View style={styles.container}>        
-        {/* <View style={styles.textContainer}>
+      <View style={styles.container}>
+        <View style={styles.textContainer}>
+          <Text style={{fontSize: 13}}>Merchandise SubTotal:</Text>
+          <Text>{FormatToText.currency(merchandiseTotal)}</Text>
+        </View>
+        <View style={styles.textContainer}>
           <Text>Shipping Total:</Text>
           <View style={{flexDirection: 'row'}}>
 
@@ -177,22 +132,9 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
             </View>
             <View style={{flex: 0}}>{getDiscount('shipping') ? <Text> {FormatToText.currency(shippingDiscountTotal)}</Text> : null}</View>
           </View>
-        </View> */}
-        <View style={styles.textContainer}>
-          <Text style={{fontSize: 13}}>Shipping Total:</Text>
-          <Text>{FormatToText.currency(shippingFeeTotal)}</Text>
         </View>
         <View style={styles.textContainer}>
-          <Text style={{fontSize: 13}}>Merchandise SubTotal:</Text>
-          <Text>{FormatToText.currency(merchandiseTotal)}</Text>
-        </View>
-        
-        {numOfVouchers > 0 && <RenderVouchersBreakdown />}
-
-        <View style={{height: 1, marginTop: 10, backgroundColor: "#F7F7FA"}} />
-
-        <View style={styles.textContainer}>
-          <Text style={{fontFamily: FONT.BOLD, color: "#F6841F"}}>Total:</Text>
+          <Text style={{fontWeight: 'bold'}}>Total Payment:</Text>
           {
             getDiscount('shipping') ? 
             <Text style={{color: '#F6841F'}}>

@@ -603,7 +603,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     })();
 
     if(isMounted){
-      EventRegister.addEventListener("ToktokMallrefreshCheckoutData", init)
+      EventRegister.addEventListener("refreshCheckoutData", init)
       EventRegister.addEventListener("ToktokMallWalletRefreshAccountStatus", () => setWalletAccountStatus())
     }
 
@@ -641,7 +641,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   }, [CheckoutContextData])
 
   useEffect(() => {
-    // alert("Shipping voucher has detected")
+    alert("Shipping voucher has detected")
   }, [CheckoutContextData?.shippingVouchers])
 
   // useEffect(() => {

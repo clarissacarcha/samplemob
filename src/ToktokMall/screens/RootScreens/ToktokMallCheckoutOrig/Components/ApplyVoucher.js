@@ -37,8 +37,6 @@ export const ApplyVoucherForm = (address, customer, payload) => {
     onCompleted: (response) => {
       if(response.getHashDeliveryAmount){
         CheckoutContextData.setShippingVouchers(response.getHashDeliveryAmount.data)
-        setSucceeded(false)
-        setvcode("")
       }
     },
     onError: (err) => {
@@ -52,8 +50,6 @@ export const ApplyVoucherForm = (address, customer, payload) => {
     onCompleted: (response) => {
       if(response.getHashDeliveryAmount){
         CheckoutContextData.setDefaultVouchers(response.getHashDeliveryAmount.data)
-        setSucceeded(false)
-        setvcode("")
       }
     },
     onError: (err) => {
@@ -61,43 +57,16 @@ export const ApplyVoucherForm = (address, customer, payload) => {
     }
   })
 
-  const validate = async () => {
+  const validatex = async () => {
       
-    const orders = item.data[0].map((data) => {
-      return {
-        product_id: data.id,
-        amount: data.amount,
-        total_amount: data.amount * data.qty,
-        srp_amount: data.product.price,
-        srp_totalamount: data.product.price * data.qty,
-        quantity: data.qty
-      }
-    })
-
     let payload = {
       shop: item.shop.id,
-      branch: 0,
       code: vcode,
       region: address.regionId,
       email: customer.email,
       subtotal: subTotal,
       promo_count: 0,
-      payment_method: "TOKTOKWALLET",
-      orders: orders
-    }
-
-    if(vcode == "MAGIC"){
-      payload = {
-        "branch": 23,
-        "shop": item.shop.id,
-        "code": "BRYANFREE",
-        "region": "03",
-        "email": "vdomingo@cloudpanda.ph",
-        "subtotal": subTotal,
-        "promoCount": 0,
-        "is_mystery": 0,
-        "orders":[]
-      }
+      is_mystery: 0
     }
 
 		console.log("Voucher Payload", JSON.stringify(payload))
@@ -110,25 +79,19 @@ export const ApplyVoucherForm = (address, customer, payload) => {
     CheckoutContextData.setVoucherErrors(prevState => prevState.filter(id => item.shop.id !== id))
 
     console.log("Voucher", JSON.stringify(req))
-    setloading(false)
 
     if(req.responseData && req.responseData.success){
-
-      setSucceeded(true)
 
       if(req.responseData.type == "shipping"){
           
         let items = ArrayCopy(CheckoutContextData.shippingVouchers)
 
         if(req.responseData.voucher.amount == 0 && req.responseData.voucher.is_percentage == 0){
-          
-          let fee = parseFloat(CheckoutContextData.shippingFeeRates[index].shippingfee)
-
+            
           //FREE SHIPPING
           items[index] = req.responseData.voucher
           items[index].discountedAmount = 0
           items[index].discount = 0
-          items[index].deduction = fee
 
           getShippingHashDeliveryAmount({variables: {
             input: {
@@ -169,16 +132,6 @@ export const ApplyVoucherForm = (address, customer, payload) => {
           }})
           
         }
-
-      }else if(req.responseData.type == "promotion"){
-
-        let items = ArrayCopy(CheckoutContextData.shippingVouchers)
-        items.push(req.responseData.voucher)
-        getShippingHashDeliveryAmount({variables: {
-          input: {
-            items: items
-          }
-        }})
 
       }else{
 
@@ -223,8 +176,8 @@ export const ApplyVoucherForm = (address, customer, payload) => {
         }
           
       }else{
-        seterrormessage("Invalid voucher code. Please check your voucher code.")
-				// seterrormessage("Subtotal for this shop does not meet the minimum required price for this voucher.")
+        // seterrormessage("Invalid voucher code. Please check your voucher code.")
+				seterrormessage("Subtotal for this shop does not meet the minimum required price for this voucher.")
       }
 
     }
@@ -232,9 +185,46 @@ export const ApplyVoucherForm = (address, customer, payload) => {
   }
 
   const displaySuccess = () => {
+    setSucceeded(true)
     setTimeout(() => {
       setSucceeded(false)
     }, 1300)
+  }
+
+  const validate = async () => {
+    setloading(true)
+
+    setTimeout(() => {
+      setloading(false)
+
+      let temp = ArrayCopy(CheckoutContextData.shippingVouchers) 
+      temp.push({
+        "shopid": 68,
+        "requirement": "1",
+        "region": "000",
+        "vcode": "3RDREGTESTSF",
+        "vname": "KYLE TEST SF 1",
+        "key": "3RDREGTESTSF",
+        "amount": 0,
+        "valid": true,
+        "valid_until": "04.15.2022",
+        "minimum": "50",
+        "minimum_price": "50",
+        "is_subsidize": "1",
+        "sf_discount": "0",
+        "on_top": "1",
+        "code_required": "0",
+        "limit_perCustomer": "1",
+        "percentage_subsidize": "0",
+        "is_percentage": "0",
+        "id": "57",
+        "handle_shipping_promo": "0"
+      })
+      CheckoutContextData.setShippingVouchers(temp)
+      console.log("VVVVVVOUUHCHERSRSRSRS", CheckoutContextData.shippingVouchers)
+      displaySuccess()
+    }, 3000)
+    
   }
 
   // console.log("test", CheckoutContextData.voucherErrors)
@@ -286,7 +276,26 @@ export const ApplyVoucherForm = (address, customer, payload) => {
                     setvcode(val);
                     setVoucherIsValid(0);
                   }}
-                />                
+                />
+                <View style={{flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    {loading && (
+                      <Spinner
+                        isVisible={loading}
+                        // isVisible={true}
+                        type={'FadingCircleAlt'}
+                        color={'#F6841F'}
+                        size={15}
+                      />
+                    )}
+                    {!loading && voucherIsValid == 2 && (
+                      <CustomIcon.FeIcon name="check-circle" size={15} color="#06A44E" />
+                    )}
+                    {!loading && voucherIsValid == -1 && (
+                      <CustomIcon.FA5Icon name="times-circle" size={15} color="#F6841F" />
+                    )}
+                  </View>
+                </View>
               </View>
               <TouchableOpacity
                 disabled={vcode == ''}
