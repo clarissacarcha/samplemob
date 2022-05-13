@@ -7,13 +7,6 @@ import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
 import {APP_VERSION} from '../../../../../../../res/constants';
 
-// import DeliveryIcon from '../../../../../../../assets/toktok/icons/menu/Toktok.png';
-// import PabiliIcon from '../../../../../../../assets/toktok/icons/menu/Pabili.png';
-// import ToktokfoodIcon from '../../../../../../../assets/toktok/icons/menu/ToktokfoodMenu.png';
-// import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/ToktokGo.png';
-// import WalletIcon from '../../../../../../../assets/toktok/icons/menu/ToktokWallet.png';
-// import ProfileIcon from '../../../../../../../assets/toktok/icons/menu/Profile.png';
-// import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/ToktokMall.png';
 // import TalkToUsIcon from '../../../../../../../assets/toktok/icons/menu/TalkToUs.png';
 // import WhatsNewIcon from '../../../../../../../assets/toktok/icons/menu/WhatsNew.png';
 
@@ -24,7 +17,7 @@ import ToktokGoIconBeta from '../../../../../../../assets/toktok/icons/menu/GoSe
 import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoService.png';
 import WalletIcon from '../../../../../../../assets/toktok/icons/menu/WalletService.png';
 import LoadIcon from '../../../../../../../assets/toktok/icons/menu/LoadService.png';
-// import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/MallService.png';
+import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/MallService.png';
 
 import ProfileIcon from '../../../../../../../assets/toktok/icons/menu/ProfileService.png';
 import HelpIcon from '../../../../../../../assets/toktok/icons/menu/HelpService.png';
@@ -123,12 +116,12 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => navigation.push('ToktokLoadHome'),
       isNew: true,
     },
-    // {
-    //   identifier: 'mall',
-    //   label: 'Mall',
-    //   icon: ToktokMallIcon,
-    //   onPress: () => navigation.push('ToktokMallLanding'),
-    // },
+    {
+      identifier: `${Platform.OS}Mall`,
+      label: 'Mall',
+      icon: ToktokMallIcon,
+      onPress: () => navigation.push('ToktokMallLanding'),
+    },
     {
       identifier: `${Platform.OS}Promos`,
       label: 'Promos',
