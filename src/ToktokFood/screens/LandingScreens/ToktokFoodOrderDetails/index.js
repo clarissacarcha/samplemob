@@ -471,7 +471,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           <Separator />
           <OrderNote
             title="Payment Method"
-            label={transaction.paymentMethod == 'COD' ? 'Cash-On-Delivery' : transaction.paymentMethod}
+            label={transaction.paymentMethod == 'COD' ? 'Cash On Delivery' : transaction.paymentMethod}
           />
           <Separator />
           <OrderLogs transaction={transaction} riderDetails={riderDetails} />
