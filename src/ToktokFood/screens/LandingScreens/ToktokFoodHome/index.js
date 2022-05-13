@@ -8,8 +8,10 @@ import {StyleSheet, View, StatusBar} from 'react-native';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
+
 // Hooks
 import {useUserLocation} from 'toktokfood/hooks';
+
 // Components
 import {StickyView} from './components';
 
