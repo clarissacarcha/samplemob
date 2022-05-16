@@ -613,7 +613,7 @@ const MainComponent = () => {
     // console.log(amount, parsedAmount, totalPrice);
 
     const DELIVERY_RECEIVER =
-      receiver.contactPerson && receiver.contactPerson !== ''
+      (receiver.contactPerson && receiver.contactPerson != null) && receiver.contactPerson !== ''
         ? receiver.contactPerson
         : `${customerInfo.firstName} ${customerInfo.lastName}`;
 
@@ -691,7 +691,7 @@ const MainComponent = () => {
     onCompleted: ({getAllTemporaryCart}) => {
       const {items} = getAllTemporaryCart;
       const evalDisabledResult = items.filter(item => item.isDisabled === true);
-      if (evalDisabledResult) {
+      if (evalDisabledResult.length > 0) {
         setLoadingWallet(false);
         setShowItemDisabled(true);
       } else {
