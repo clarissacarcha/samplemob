@@ -11,10 +11,13 @@ import {VerifyContext} from './VerifyContextProvider';
 import Separator from 'toktokfood/components/Separator';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import Modal from 'react-native-modal';
+import {useRoute} from '@react-navigation/native';
 
 const ORDER_INSTRUCTIONS_OPTIONS = ['Remove or edit unavailable item', 'Cancel my order'];
 
 export const Variations = ({data, productId}) => {
+  const routes = useRoute();
+  const {shopDetails, hasOrderInstruction} = routes.params;
   const {
     // totalPrice,
     // productDetails,
@@ -39,6 +42,16 @@ export const Variations = ({data, productId}) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [dataOptions, setDataOptions] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (data?.orderOnOff < 1 && shopDetails?.orderOnOff < 1) {
+      setOrderInstructions('');
+    } else {
+      if (hasOrderInstruction) {
+        setOrderInstructions(hasOrderInstruction);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const variants = filterVariants();
@@ -389,7 +402,7 @@ export const Variations = ({data, productId}) => {
         <Text style={{color: '#525252'}}>If this item is unavailable</Text>
         <TouchableOpacity activeOpacity={0.9} onPress={() => setIsModalVisible(true)}>
           <View style={styles.orderInstructionContainer}>
-            <Text style={{color: orderInstructions === 'Select one' ? '#9E9E9E' : '#000'}}>{orderInstructions}</Text>
+          <Text>{orderInstructions}</Text>
             <FA5Icon name={'chevron-down'} size={12} color={'#FFA700'} />
           </View>
         </TouchableOpacity>
@@ -427,8 +440,8 @@ export const Variations = ({data, productId}) => {
       <Variants />
       <Options />
       {specialInstructionsComponent()}
-      {/* {orderInstructionComponent()}
-      {orderInstructionModalComponent()} */}
+      {orderInstructionComponent()}
+      {orderInstructionModalComponent()}
     </>
   );
 };
