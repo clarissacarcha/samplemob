@@ -381,19 +381,21 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
   }, [transaction?.orderStatus]);
 
   const ModifiedAlert = (
-    <View style={styles.modifiedWrapper}>
-      <Image resizeMode="stretch" source={info_ic} style={styles.modifiedIcon} />
+    <View
+      style={[styles.modifiedWrapper, {justifyContent: transaction?.paymentMethod === 'COD' ? 'center' : 'flex-start'}]}>
+      <Image resizeMode="center" source={info_ic} style={styles.modifiedIcon} />
       <Text style={styles.modifiedText}>
-        This order has been modified by merchant. Total refund amount for updated order should be credited to your
-        toktokwallet account.
+        {transaction.paymentMethod === 'COD'
+          ? `Total amount for this order has been updated.`
+          : `This order has been modified by merchant. You will be receiving refund amount upon completion of delivery.`}
       </Text>
     </View>
   );
 
   const isItemModified = () => {
     const orderDetailsItems = transaction?.orderDetails;
-    const evalEditResult = orderDetailsItems.filter(items => items.isModified === true); // zero means removed
-    const evalRemovedResult = orderDetailsItems.filter(items => items.status === 0); // zero means removed
+    const evalEditResult = orderDetailsItems.filter(items => items.isModified === true);
+    const evalRemovedResult = orderDetailsItems.filter(items => items.status === 0);
 
     return evalRemovedResult.length > 0 || evalEditResult.length > 0;
   };
@@ -467,11 +469,15 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
               <Separator />
             </>
           )}
-          <OrderFee data={transaction} forDelivery={transaction.orderIsfor === 1} />
+          <OrderFee
+            data={transaction}
+            forDelivery={transaction.orderIsfor === 1}
+            showRefund={isItemModified() && transaction?.paymentMethod === 'TOKTOKWALLET'}
+          />
           <Separator />
           <OrderNote
             title="Payment Method"
-            label={transaction.paymentMethod == 'COD' ? 'Cash-On-Delivery' : transaction.paymentMethod}
+            label={transaction.paymentMethod == 'COD' ? 'Cash' : transaction.paymentMethod}
           />
           <Separator />
           <OrderLogs transaction={transaction} riderDetails={riderDetails} />
@@ -491,7 +497,7 @@ const styles = StyleSheet.create({
     height: 80,
     paddingHorizontal: 12,
   },
-  modifiedIcon: {height: 16, width: 16, marginRight: 8, marginLeft: 5},
+  modifiedIcon: {height: 20, width: 20, marginRight: 8, marginLeft: 5},
   modifiedText: {fontSize: 12, color: '#F6841F', maxWidth: '95%'},
 });
 

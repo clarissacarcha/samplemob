@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, StatusBar, Text, Dimensions, Alert} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image, StatusBar, Text, Dimensions} from 'react-native';
 import constants from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -17,7 +17,7 @@ import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet} fr
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-import {GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT} from '../../graphql';
+import {GET_TRIP_FARE, TRIP_BOOK} from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import BottomSheet from 'reanimated-bottom-sheet';
@@ -34,7 +34,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const {details, routeDetails, origin, destination, paymentMethod, tempVehicleArr} = useSelector(
     state => state.toktokGo,
   );
-  const {tokwaAccount, getMyAccount, getMyAccountLoading, getMyAccountError} = useAccount();
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
@@ -44,14 +43,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [loading, setLoading] = useState(false);
   const [selectedSeatNum, setSelectedSeatNum] = useState(1);
   const [showHeader, setshowHeader] = useState(false);
-  const [tripBookError, setTripBookError] = useState(null);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(paymentMethod);
-
-  useEffect(() => {
-    if (session.user.toktokWalletAccountId) {
-      getMyAccount();
-    }
-  }, []);
 
   const [getTripFare, {called}] = useLazyQuery(GET_TRIP_FARE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -187,9 +178,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
   useEffect(() => {
     setLoading(true);
-    if (selectedVehicle) {
-      dispatchRequest();
-    }
+    dispatchRequest();
   }, [selectedVehicle, selectedVouchers]);
 
   const tripBooking = ({pinCode, data}) => {
@@ -256,15 +245,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         selectedVouchers={selectedVouchers}
         setSelectedVouchersNull={setSelectedVouchersNull}
       /> */}
-      <BookingBreakdown selectedVehicle={selectedVehicle} loading={loading} />
+      <BookingBreakdown selectedVehicle={selectedVehicle} />
       <BookingTotal loading={loading} details={details} />
       <BookingSelectPaymentMethod
         viewPaymenetSucessModal={viewPaymenetSucessModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
         details={details}
-        tokwaAccount={tokwaAccount}
-        getMyAccountLoading={getMyAccountLoading}
-        navigation={navigation}
       />
     </View>
   );
@@ -347,7 +333,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       <PaymentMethodModal
         viewSelectPaymentModal={viewSelectPaymentModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
-        setSelectedPaymentMethod={setSelectedPaymentMethod}
         details={details}
         tokwaAccount={tokwaAccount}
         getMyAccountLoading={getMyAccountLoading}

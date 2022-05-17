@@ -105,6 +105,7 @@ const transaction = `
   }
 `;
 
+// Add this once back end merge - refundTotal
 const transactionRef = `
   id
   sysShop
@@ -154,6 +155,7 @@ const transactionRef = `
   promoDiscounts
   srpTotal
   resellerDiscountTotal
+  refundTotal
   shopDetails {
     id
     shopname
@@ -185,6 +187,7 @@ const transactionRef = `
     totalAmountWithAddons
     resellerDiscount
     resellerRate
+    isModified
     productDetails {
       Id
       itemname
@@ -192,7 +195,6 @@ const transactionRef = `
       parentProductId
       parentProductName
     }
-    isModified
   }
   promoDetails {
     id
