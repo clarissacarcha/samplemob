@@ -34,6 +34,7 @@ const OrderFee = ({data, forDelivery, showRefund}) => {
     srpTotal,
     totalAmount,
     totalAmountWithAddons,
+    refundTotal
   } = data;
   let deliveryFee = deliveryAmount ? deliveryAmount : 0;
   const promotionDiscount = promoDiscounts || 0;
@@ -88,9 +89,9 @@ const OrderFee = ({data, forDelivery, showRefund}) => {
       {showRefund && (
         <View style={styles.header}>
           <Text style={styles.total}>Total Refund Amount</Text>
-          <Text style={styles.totalPrice}>{`PHP ${(totalAmount - 285).toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${refundTotal.toFixed(2)}`}</Text>
         </View>
-      )}  
+      )}
     </View>
   );
 };
