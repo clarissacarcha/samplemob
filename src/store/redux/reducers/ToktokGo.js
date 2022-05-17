@@ -61,7 +61,7 @@ const INITIAL_STATE = {
     },
     voucher: null,
     noteToDriver: null,
-    paymentMethod: "TOKTOKWALLET",
+    paymentMethod: 'TOKTOKWALLET',
     passengerCount: 1,
   },
   routeDetails: {
@@ -157,8 +157,10 @@ const INITIAL_STATE = {
     },
     logs: [],
     cancellation: {
-      chargeAmount: null,
-      chargeType: null,
+      charge: {
+        amount: null,
+        type: null,
+      },
       initiatedBy: null,
       reason: null,
     },

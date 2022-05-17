@@ -13,14 +13,9 @@ const trip = `
       rating
       vehicle{
         bodyColor
-        license
+        plateNumber
         make
         model
-        type {
-          id
-          name
-        }
-        year
       }
     }
     driverUserId
@@ -98,10 +93,12 @@ const trip = `
     status
     tag
     cancellation {
-      chargeAmount
-      chargeType
       initiatedBy
       reason
+      charge {
+        amount
+        type
+      }
     }
 `;
 

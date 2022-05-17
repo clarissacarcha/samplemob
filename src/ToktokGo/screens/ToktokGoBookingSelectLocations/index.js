@@ -170,11 +170,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           //   <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
           //   <SavedLocations />
           // </View>
-          constants.iosVersionDisableBeta && Platform.OS == 'ios' ? (
-            <EmptyRecent />
-          ) : (
-            <ToktokgoBeta />
-          )
+          <ToktokgoBeta />
         ) : (
           <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />
         )}

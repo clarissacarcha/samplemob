@@ -7,6 +7,7 @@ import {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native';
 import {DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR, FONT_COLOR} from '../../res/constants';
 import {constant, throttle} from 'lodash';
 import 'moment-timezone';
+import moment from 'moment';
 
 import EIcon from 'react-native-vector-icons/Entypo';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -68,15 +69,15 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
 
   const getTextStatus = () => {
     //to do: replace returned text based on status
-    if (booking?.status == 'COMPLETED') return 'Passenger picked up';
-    else if (booking?.status == 'COMPLETED') return 'Completed';
-    else if (booking?.status == 'CANCELLED') return 'Cancelled';
+    if (booking?.status == 'PICKED_UP') return 'Passenger picked up';
+    else if (booking?.tag == 'COMPLETED') return 'Completed';
+    else if (booking?.tag == 'CANCELLED') return 'Cancelled';
   };
 
   const getIconStatus = () => {
-    if (booking?.status == 'COMPLETED') return OnGoingIcon;
-    else if (booking?.status == 'COMPLETED') return CompletedIcon;
-    else if (booking?.status == 'CANCELLED') return CancelledIcon;
+    if (booking?.tag == 'ONGOING') return OnGoingIcon;
+    else if (booking?.tag == 'COMPLETED') return CompletedIcon;
+    else if (booking?.tag == 'CANCELLED') return CancelledIcon;
   };
 
   const blackFont = booking?.tag == 'CANCELLED' ? constants.COLOR.DARK : constants.COLOR.BLACK;
@@ -105,7 +106,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                     </Text>
                   </Text>
                   <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.ALMOST_BLACK}}>
-                    {booking?.logs[0].createdAt}
+                    {moment(booking?.logs[0].createdAt).format('MMM D, YYYY hh:mm A')}
                   </Text>
                 </View>
 

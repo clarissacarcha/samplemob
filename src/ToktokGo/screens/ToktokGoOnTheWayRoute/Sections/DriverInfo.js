@@ -24,7 +24,7 @@ export const DriverInfo = ({booking}) => {
         <Text>
           {booking.driver?.vehicle?.make} {booking.driver?.vehicle?.model}{' '}
           {booking.driver?.vehicle?.bodyColor ? `(${booking.driver?.vehicle?.bodyColor})` : ''} ·{' '}
-          {booking.driver?.vehicle?.license}
+          {booking.driver?.vehicle?.plateNumber}
         </Text>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text>{booking.driver?.rating}</Text>
