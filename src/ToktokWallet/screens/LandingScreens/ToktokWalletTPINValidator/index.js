@@ -59,14 +59,14 @@ export const ToktokWalletTPINValidator = ({navigation,route})=> {
 
     useEffect(()=>{
         if(pinCode.length == 6){
-            // postVerifyAccountTPIN({
-            //    variables: {
-            //        input: {
-            //          tpin: pinCode
-            //        }
-            //    }
-            // })
-            callBackFunc({pinCode , data})
+            postVerifyAccountTPIN({
+               variables: {
+                   input: {
+                     tpin: pinCode
+                   }
+               }
+            })
+            // callBackFunc({pinCode , data})
         }
     },[pinCode])
 
