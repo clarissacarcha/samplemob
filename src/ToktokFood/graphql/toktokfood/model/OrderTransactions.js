@@ -155,6 +155,7 @@ const transactionRef = `
   promoDiscounts
   srpTotal
   resellerDiscountTotal
+  refundTotal
   shopDetails {
     id
     shopname
