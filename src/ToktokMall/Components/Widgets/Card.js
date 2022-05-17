@@ -1,11 +1,12 @@
+import { rest } from 'lodash';
 import React from 'react';
-import {View, StyleSheet, TouchableHighlight} from 'react-native';
+import {View, StyleSheet, TouchableHighlight, Platform} from 'react-native';
 import {COLOR} from '../../../res/constants';
 
-export const Card = ({onPress, children}) => {
+export const Card = ({onPress, children, containerStyle, ...rest}) => {
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.touchable}>
-      <View style={styles.cardShadow}>{children}</View>
+    <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={styles.touchable} {...rest}>
+      <View style={[styles.cardShadow, containerStyle]}>{children}</View>
     </TouchableHighlight>
   );
 };
@@ -25,6 +26,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 4,
-    overflow: 'hidden',    
+    overflow: Platform.OS === "ios" ? 'visible' : 'hidden',    
   },
 });

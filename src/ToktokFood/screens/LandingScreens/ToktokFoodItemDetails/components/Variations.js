@@ -440,7 +440,7 @@ export const Variations = ({data, productId}) => {
       <Variants />
       <Options />
       {specialInstructionsComponent()}
-      {(data?.orderOnOff > 0 || shopDetails?.orderOnOff > 0) && orderInstructionComponent()}
+      {orderInstructionComponent()}
       {orderInstructionModalComponent()}
     </>
   );

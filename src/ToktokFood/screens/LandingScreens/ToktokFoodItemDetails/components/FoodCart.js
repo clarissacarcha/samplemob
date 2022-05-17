@@ -339,7 +339,6 @@ export const FoodCart = ({loading, action}) => {
   const addToCart = items => {
     postTemporaryCart({variables: {input: items}}).then(({data}) => {
       let {status, message} = data.postTemporaryCart;
-      // console.log('postTemporaryCart', data);
       if (status == 200) {
         setTimeout(() => {
           setLoader(false);
