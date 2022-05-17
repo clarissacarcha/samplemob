@@ -202,14 +202,17 @@ export default styles = StyleSheet.create({
     height: verticalScale(40),
   },
   closedTag: {
-    backgroundColor: COLOR.ORANGE,
-    width: 60,
-    borderRadius: 10,
-    paddingVertical: 3,
+    borderColor: COLOR.ORANGE,
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingVertical: 1,
     alignItems: 'center',
     marginTop: 8,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    // width: 120
   },
   closedText: {
-    color: '#fff',
+    color: COLOR.ORANGE,
   },
 });

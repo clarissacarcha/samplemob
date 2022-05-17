@@ -10,6 +10,7 @@ import {
   Alert,
   Appearance,
   SafeAreaView,
+  TextInput,
 } from 'react-native';
 
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
@@ -27,6 +28,7 @@ const AddressBookModal = props => {
   const {visibility, onClose, onSelected} = props;
 
   const [contacts, setContacts] = useState([]);
+  const [searchString, setSearchString] = useState('');
 
   const goToContacts = async () => {
     const checkAndRequest = Platform.select({
@@ -168,10 +170,11 @@ const AddressBookModal = props => {
     }
 
     onSelected({
-      name: name,
+      name: name.replace(/[^a-z0-9_ ]/gi, ''),
       number: mobileNumber,
     });
     onClose();
+    setSearchString('');
   };
 
   const ContactItem = ({item}) => (
@@ -181,8 +184,19 @@ const AddressBookModal = props => {
     </TouchableOpacity>
   );
 
+  const onSearchChange = value => {
+    setSearchString(value);
+    if (value !== '') {
+      const filteredContacts = contacts.filter(contact => contact.name.toLowerCase().includes(value.toLowerCase()));
+      setContacts(filteredContacts);
+    } else {
+      goToContacts();
+    }
+  };
+
   useEffect(() => {
     goToContacts();
+    setSearchString('');
   }, []);
 
   return (
@@ -195,12 +209,28 @@ const AddressBookModal = props => {
         style={styles.modal}>
         <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
           <View style={styles.contactWrapper}>
-            <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center'}} onPress={() => onClose()}>
+            <TouchableOpacity style={styles.closeButton} onPress={() => onClose()}>
               <FIcon name="chevron-down" size={30} color={Appearance.getColorScheme() === 'dark' ? '#000' : '#000'} />
             </TouchableOpacity>
             <View style={styles.header}>
               <Text style={styles.headerLabel}>Contact List</Text>
             </View>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                value={searchString}
+                onChangeText={search => onSearchChange(search)}
+                style={styles.input}
+                placeholder="Search Address Book"
+                placeholderTextColor="#D3D3D3"
+                returnKeyType="done"
+              />
+            </View>
+
+            {contacts.length === 0 && (
+              <View style={styles.noMatchingWrapper}>
+                <Text style={styles.noMatchingText}>No matching contact found.</Text>
+              </View>
+            )}
             <ScrollView style={{flex: 1}}>
               {contacts.map(v => (
                 <ContactItem item={v} />
@@ -222,13 +252,11 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   header: {
-    justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 5,
     paddingHorizontal: 20,
+    justifyContent: 'center',
+    height: verticalScale(45),
     borderBottomColor: COLORS.TRANSPARENT_GRAY,
-    height: verticalScale(50),
-    marginBottom: 8,
   },
   headerLabel: {
     color: COLORS.DARK,
@@ -237,10 +265,10 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.XL,
   },
   contactItem: {
-    paddingVertical: 8,
-    paddingHorizontal: 14,
     width: '100%',
+    paddingVertical: 8,
     borderBottomWidth: 1,
+    paddingHorizontal: 14,
     borderBottomColor: COLORS.LIGHT,
   },
   contactName: {
@@ -251,9 +279,35 @@ const styles = StyleSheet.create({
   },
   contactNumber: {
     fontSize: 13,
+    marginBottom: 2,
     color: COLORS.MEDIUM,
     fontFamily: FONTS.BOLD,
-    marginBottom: 2,
+  },
+  inputWrapper: {
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+  input: {
+    height: 50,
+    borderRadius: 5,
+    paddingLeft: 16,
+    color: '#222222',
+    backgroundColor: '#F7F7FA',
+  },
+  closeButton: {
+    marginTop: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noMatchingWrapper: {
+    height: '75%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noMatchingText: {
+    color: '#222222',
+    fontSize: 14,
+    fontFamily: FONTS.REGULAR,
   },
 });
 

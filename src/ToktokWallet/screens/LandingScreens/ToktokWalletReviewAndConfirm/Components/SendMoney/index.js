@@ -45,17 +45,14 @@ export const SendMoney = ({data})=>{
                         <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{tokwaAccount.wallet.currency.code} {numberFormat(data.amount)}</Text>
                     </View>
             </View>
-            {
-                data.note != "" &&
-                <View style={styles.information}>
-                        <View style={{flex:1,alignItems:"flex-start"}}>
-                            <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Note</Text>  
-                        </View>
-                        <View style={{flex:1,alignItems:"flex-end"}}>
-                            <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{data.note}</Text>
-                        </View>
-                </View>
-            }
+            <View style={styles.information}>
+                    <View style={{flex:1,alignItems:"flex-start"}}>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Note</Text>  
+                    </View>
+                    <View style={{flex:1,alignItems:"flex-end"}}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>{data.note}</Text>
+                    </View>
+            </View>
        </View>
     )
 }

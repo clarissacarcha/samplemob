@@ -24,6 +24,7 @@ const tempCart = `
     parentProductId
     parentProductName
     resellerDiscount
+    shopAddress
     shopName
     addonsDetails {
       id
@@ -171,6 +172,19 @@ export const GET_AUTO_SHIPPING = gql`
 export const GET_VOUCHER_CODE = gql`
   query getVoucherCode($input: VoucherInput) {
     getVoucherCode(input: $input) {
+      success
+      message
+      type
+      voucher {
+        ${voucherType}
+      }
+    }
+  }
+`;
+
+export const GET_PAYMENT_METHOD_VALIDATION = gql`
+  query getPaymentValidation($input: PaymentValidationInput) {
+    getPaymentValidation(input: $input) {
       success
       message
       type

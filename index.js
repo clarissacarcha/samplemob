@@ -2,7 +2,7 @@
  * @format
  */
 
-import {AppRegistry} from 'react-native';
+import {AppRegistry, LogBox} from 'react-native';
 import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 import App from './src/app/App';
 import {name as appName} from './app.json';
@@ -20,5 +20,7 @@ const customTextProps = {
 
 setCustomText(customTextProps);
 setCustomTextInput(customTextProps);
+
+LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 AppRegistry.registerComponent(appName, () => App);

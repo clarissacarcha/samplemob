@@ -37,6 +37,7 @@ export const delete_ic = require('./images/delete.png');
 export const arrow_right = require('./images/arrow-right.png');
 export const cart_ic = require('./images/cart.png');
 export const down_arrow_ic = require('./images/down-arrow.png');
+export const info_ic = require('./images/info.png');
 
 // Notifications
 export const empty_notification = require('./images/empty_icons/empty-notification.png');
@@ -104,6 +105,9 @@ export const terms_and_conditions_ic = require('./images/me_icons/terms-and-cond
 export const email_ic = require('./images/me_icons/email.png');
 export const call_ic = require('./images/me_icons/call.png');
 export const wallet_ic = require('./images/me_icons/wallet.png');
+export const order_type_icon = require('./images/ordertype_icon.png');
+export const cart_map_pin_icon = require('./images/cart_map_pin.png');
+
 
 // Reseller
 export const reseller_badge = require('./images/reseller-badge.png');

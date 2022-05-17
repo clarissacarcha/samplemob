@@ -5,7 +5,6 @@ import CashOutScreens from "./CashOutScreens";
 import GlobalScreens from "./GlobalScreens";
 import KYCScreens from './KYCScreens';
 import LandingScreens from './LandingScreens';
-import RequestMoneyScreens from './RequestMoneyScreens';
 import ScanQRScreens from './ScanQRScreens';
 import SendMoneyScreens from './SendMoneyScreens';
 import SettingScreens from './SettingScreens';
@@ -19,7 +18,6 @@ export default ({Navigator}) => {
         {GlobalScreens({Navigator})}
         {KYCScreens({Navigator})}
         {LandingScreens({Navigator})}
-        {RequestMoneyScreens({Navigator})}
         {ScanQRScreens({Navigator})}
         {SendMoneyScreens({Navigator})}
         {SettingScreens({Navigator})}

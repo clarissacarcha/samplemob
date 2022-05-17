@@ -454,6 +454,8 @@ PODS:
     - React
   - react-native-geolocation-service (5.3.0-beta.3):
     - React
+  - react-native-get-random-values (1.7.2):
+    - React-Core
   - react-native-google-maps (0.27.1):
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 3.5.0)
@@ -655,6 +657,7 @@ DEPENDENCIES:
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
+  - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - "react-native-image-editor (from `../node_modules/@react-native-community/image-editor`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
@@ -802,6 +805,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-document-picker"
   react-native-geolocation-service:
     :path: "../node_modules/react-native-geolocation-service"
+  react-native-get-random-values:
+    :path: "../node_modules/react-native-get-random-values"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-image-editor:
@@ -950,6 +955,7 @@ SPEC CHECKSUMS:
   react-native-date-picker: 201b481c94dcb7678f4712477ad026dd7793305b
   react-native-document-picker: c5752781fbc0c126c627c1549b037c139444a4cf
   react-native-geolocation-service: 32e50a2e4e4518b51b829fdfe137562a672d95d2
+  react-native-get-random-values: 30b3f74ca34e30e2e480de48e4add2706a40ac8f
   react-native-google-maps: 0a989abda71059db2caa98b9dacca7a8f38a47d0
   react-native-image-editor: bd67912f38a8e7a895bf6eb8f445acdcefd8fd0c
   react-native-image-picker: 5a7dd93d4f9dd0d910da5dde3707fd96f70d03b3

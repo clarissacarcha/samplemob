@@ -117,8 +117,6 @@ const MainSetupComponent = () => {
         return <VerifyFullname />;
       case 1:
         return <VerifyAddress />;
-      // case 2:
-      //     return <VerifySourceOfIncome/>
       case 2:
         return <VerifyID />;
       case 3:

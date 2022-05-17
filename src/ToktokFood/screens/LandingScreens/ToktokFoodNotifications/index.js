@@ -69,13 +69,17 @@ const ToktokFoodNotifications = () => {
           desc: `Order ${referenceNum} has been picked up successfully. Thank you for ordering using toktokfood!`,
         };
       case 's':
+        // console.log(status, orderIsfor, referenceNum);
         if (orderIsfor === 1) {
           return {
-            title: 'Delivered',
+            title: 'Delivery Completed',
             desc: `Order ${referenceNum} has been delivered successfully. Thank you for ordering using toktokfood!`,
           };
         }
-        return {title: 'Completed Order', desc: `Order ${referenceNum} has been delivered`};
+        return {
+          title: 'Order Completed',
+          desc: `Order ${referenceNum} has been picked up successfully. Thank you for ordering using toktokfood!`,
+        };
     }
   };
 
@@ -96,7 +100,7 @@ const ToktokFoodNotifications = () => {
       <View style={styles.infoWrapper}>
         <View style={styles.notificationInfo}>
           <Text numberOfLines={2} style={styles.notificationTitle}>
-            {getStatus(item.orderStatus, item.referenceNum).title}
+            {getStatus(item.orderStatus, item.referenceNum, item.orderIsfor).title}
           </Text>
           <Text numberOfLines={2} style={styles.notificationContent}>
             {getStatus(item.orderStatus, item.referenceNum, item.orderIsfor).desc}

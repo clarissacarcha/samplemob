@@ -7,6 +7,7 @@ export const GET_USER_TOKTOK_WALLET_DATA = gql`
             accountToken
             toktokWalletAccountId
             kycStatus   
+            pepId
         }
     }
 `

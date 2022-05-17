@@ -23,6 +23,7 @@ export const VerifyContextProvider = ({children}) => {
   const [hasTemporaryCart, setHasTemporaryCart] = useState(false);
   const [selectedVariants, setSelectedVariants] = useState({});
   const [basePrice, setBasePrice] = useState(0);
+  const [orderInstructions, setOrderInstructions] = useState('Select one');
 
   return (
     <Provider
@@ -48,7 +49,9 @@ export const VerifyContextProvider = ({children}) => {
         selectedVariants,
         setSelectedVariants,
         basePrice,
-        setBasePrice
+        setBasePrice,
+        orderInstructions,
+        setOrderInstructions,
       }}
     >
       {children}

@@ -6,6 +6,8 @@ import {
   ToktokFoodSearch,
   ToktokFoodMapSearch,
   ToktokFoodCategories,
+  ToktokFoodCategoriesScreen,
+  ToktokFoodShopCategories,
   ToktokFoodItemDetails,
   TokTokFoodSplashScreen,
   ToktokFoodOrderDetails,
@@ -15,7 +17,7 @@ import {
   ToktokFoodTermsAndConditions,
   ToktokFoodPrivacyPolicy,
   ToktokFoodContactUs,
-  ToktokFoodEmptyCart
+  ToktokFoodEmptyCart,
 } from 'toktokfood/screens';
 
 export default ({Navigator}) => (
@@ -26,6 +28,16 @@ export default ({Navigator}) => (
     <Navigator.Screen options={{headerShown: false}} name="ToktokRiderRating" component={ToktokRiderRating} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodMapSearch" component={ToktokFoodMapSearch} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodCategories" component={ToktokFoodCategories} />
+    <Navigator.Screen
+      options={{headerShown: false}}
+      name="ToktokFoodCategoriesScreen"
+      component={ToktokFoodCategoriesScreen}
+    />
+    <Navigator.Screen
+      options={{headerShown: false}}
+      name="ToktokFoodShopCategories"
+      component={ToktokFoodShopCategories}
+    />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodItemDetails" component={ToktokFoodItemDetails} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodOrderDetails" component={ToktokFoodOrderDetails} />
     <Navigator.Screen options={{headerShown: false}} name="TokTokFoodSplashScreen" component={TokTokFoodSplashScreen} />
@@ -49,15 +61,7 @@ export default ({Navigator}) => (
       name="ToktokFoodPrivacyPolicy"
       component={ToktokFoodPrivacyPolicy}
     />
-     <Navigator.Screen
-      options={{headerShown: false}}
-      name="ToktokFoodContactUs"
-      component={ToktokFoodContactUs}
-    />
-    <Navigator.Screen
-      options={{headerShown: false}}
-      name="ToktokFoodEmptyCart"
-      component={ToktokFoodEmptyCart}
-    />
+    <Navigator.Screen options={{headerShown: false}} name="ToktokFoodContactUs" component={ToktokFoodContactUs} />
+    <Navigator.Screen options={{headerShown: false}} name="ToktokFoodEmptyCart" component={ToktokFoodEmptyCart} />
   </>
 );

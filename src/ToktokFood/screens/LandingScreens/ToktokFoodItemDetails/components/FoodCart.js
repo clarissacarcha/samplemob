@@ -48,6 +48,7 @@ export const FoodCart = ({loading, action}) => {
     temporaryCart,
     selectedVariants,
     basePrice,
+    orderInstructions,
   } = useContext(VerifyContext);
   const {customerInfo} = useSelector(state => state.toktokFood);
   const [showDialogMessage, setShowDialogMessage] = useState({show: false, items: []});
@@ -216,7 +217,7 @@ export const FoodCart = ({loading, action}) => {
     return addons.sort();
   };
 
-  //PROCESS ADD TO CART
+  // PROCESS ADD TO CART
   const processAddToCart = async () => {
     let items = {
       userid: customerInfo.userId,
@@ -225,7 +226,8 @@ export const FoodCart = ({loading, action}) => {
       productid: productDetails.variants.length > 0 ? selectedVariants?.Id : productDetails.Id,
       quantity: count.quantity,
       addons: extractAddons(),
-      notes: notes,
+      notes: notes.replace(/[^a-z0-9_ ]/gi, ''),
+      // order_instructions: orderInstructions === 'Select one' ? '' : orderInstructions,
     };
 
     let filterItemByProductId = await temporaryCart.items.filter(item => {
