@@ -23,7 +23,8 @@ import {moderateScale} from 'toktokfood/helper/scale';
 import {reseller_badge, food_placeholder} from 'toktokfood/assets/images';
 import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
-const MyOrderList = () => {
+const MyOrderList = (props) => {
+  const {shopDetails} = props;
   // const route = useRoute();
   const dispatch = useDispatch();
   // const { cart } = route.params;
@@ -77,6 +78,7 @@ const MyOrderList = () => {
     selectedPrice,
     selectedQty,
     selectedNotes,
+    hasOrderInstruction,
   ) => {
     navigation.navigate('ToktokFoodItemDetails', {
       Id,
@@ -87,6 +89,8 @@ const MyOrderList = () => {
       selectedQty,
       selectedNotes,
       action: 'edit',
+      shopDetails,
+      hasOrderInstruction,
     });
   };
 
@@ -130,6 +134,7 @@ const MyOrderList = () => {
       notes,
       parentProductName,
       resellerDiscount,
+      orderInstructions,
     } = item;
     const addons = arrangeAddons(addonsDetails);
     const totalAmountWithAddons = parseFloat(addonsTotalAmount) + parseFloat(basePrice);
@@ -162,7 +167,7 @@ const MyOrderList = () => {
           <View style={styles.priceWrapper}>
             <Text
               onPress={() => {
-                onPressEdit(productid, parentProductId, addons, id, totalAmountWithAddons, quantity, notes);
+                onPressEdit(productid, parentProductId, addons, id, totalAmountWithAddons, quantity, notes, orderInstructions);
               }}
               style={styles.actionText}>
               Edit

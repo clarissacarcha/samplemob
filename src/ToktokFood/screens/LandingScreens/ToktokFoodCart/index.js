@@ -69,6 +69,8 @@ import {
   REQUEST_TAKE_MONEY,
   VERIFY_PIN,
   GET_SHOP_STATUS,
+  GET_ALL_TEMPORARY_CART,
+  GET_SHOP_DETAILS,
 } from 'toktokfood/graphql/toktokfood';
 
 import moment from 'moment';
@@ -119,6 +121,7 @@ const MainComponent = () => {
   const [orderType, setOrderType] = useState('Delivery');
   const [refreshing, setRefreshing] = useState(false);
   const [checkShop, setCheckShop] = useState(null);
+  const [shopDetails, setShopDetails] = useState(null);
   const [showEnterPinCode, setShowEnterPinCode] = useState(false);
   const [toktokWalletCredit, setToktokWalletCredit] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
@@ -133,6 +136,15 @@ const MainComponent = () => {
   const [closeInfo, setCloseInfo] = useState({visible: false, shopName: ''});
 
   const [diablePlaceOrder, setDisablePlaceOrder] = useState(true);
+
+  const [getShopDetails, {error: shopDetailsError, loading: shopDetailsLoading}] = useLazyQuery(GET_SHOP_DETAILS, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getShopDetails}) => {
+      setShopDetails(getShopDetails);
+    },
+    onError: error => console.log('getShopDetails', error),
+  });
 
   const [getAutoShipping, {loading: loadingShipping}] = useLazyQuery(GET_AUTO_SHIPPING, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -179,8 +191,16 @@ const MainComponent = () => {
           },
         },
       });
+      getShopDetails({
+        variables: {
+          input: {
+            shopId: temporaryCart.items[0]?.shopid.toString(),
+            userLongitude: location?.longitude,
+            userLatitude: location?.latitude,
+          },
+        },
+      });
     }
-    console.log('temporaryCart', temporaryCart);
   }, [temporaryCart, location, isFocus]);
 
   useEffect(() => {
@@ -882,7 +902,7 @@ const MainComponent = () => {
         {orderType === 'Delivery' && <ReceiverLocation cart={temporaryCart} />}
         <Separator />
 
-        <MyOrderList />
+        <MyOrderList shopDetails={shopDetails} />
         <Separator />
 
         {/*  {orderType === 'Delivery' && (
