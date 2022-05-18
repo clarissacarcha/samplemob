@@ -39,6 +39,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
         CheckoutContextData.setShippingVouchers(response.getHashDeliveryAmount.data)
         setSucceeded(false)
         setvcode("")
+        console.log("NEW SHIPPING DATA", JSON.stringify(response.getHashDeliveryAmount.data))
       }
     },
     onError: (err) => {
@@ -62,6 +63,8 @@ export const ApplyVoucherForm = (address, customer, payload) => {
   })
 
   const validate = async () => {
+
+    const shopProducts = item.data[0]
       
     const orders = item.data[0].map((data) => {
       return {
@@ -102,7 +105,17 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
 		console.log("Voucher Payload", JSON.stringify(payload))
 
-    let index = CheckoutContextData.shippingVouchers.findIndex(a => a.shopid == item.shop.id)
+    // let index = CheckoutContextData.shippingVouchers.findIndex(a => {      
+    //   if(a.autoApply){
+    //     let findItem = shopProducts.filter((product) => a.product_id.includes(product.id))
+    //     return findItem[0]?.shopId && findItem[0]?.shopId == item.shop.id
+    //   }else{
+    //     return a.shopid == item.shop.id || a.shop_id == item.shop.id
+    //   }
+    // })
+
+    // console.log("VOUCHER INDEXXXXX", index)
+    // return
 
     setloading(true)
       
@@ -110,6 +123,8 @@ export const ApplyVoucherForm = (address, customer, payload) => {
     CheckoutContextData.setVoucherErrors(prevState => prevState.filter(id => item.shop.id !== id))
 
     console.log("Voucher", JSON.stringify(req))
+    console.log("Shipping Fee", JSON.stringify(CheckoutContextData.shippingFeeRates))
+
     setloading(false)
 
     if(req.responseData && req.responseData.success){
@@ -122,13 +137,22 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
         if(req.responseData.voucher.amount == 0 && req.responseData.voucher.is_percentage == 0){
           
-          let fee = parseFloat(CheckoutContextData.shippingFeeRates[index].shippingfee)
+          // let fee = parseFloat(CheckoutContextData.shippingFeeRates[index].shippingfee)
+          let fee = CheckoutContextData.getShippingFeeByShopId(item.shop.id)
 
           //FREE SHIPPING
-          items[index] = req.responseData.voucher
-          items[index].discountedAmount = 0
-          items[index].discount = 0
-          items[index].deduction = fee
+          // items[index] = req.responseData.voucher
+          // items[index].discountedAmount = 0
+          // items[index].discount = 0
+          // items[index].deduction = fee
+
+          items.push({
+            ...req.responseData.voucher, 
+            discountedAmount: 0, 
+            discount: 0, 
+            deduction: fee,
+            voucherCodeType: req.responseData.type
+          })
 
           getShippingHashDeliveryAmount({variables: {
             input: {
@@ -138,14 +162,22 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
         }else if(req.responseData.voucher.is_percentage == 1){
 
-          let fee = parseFloat(CheckoutContextData.shippingFeeRates[index].shippingfee)
+          // let fee = parseFloat(CheckoutContextData.shippingFeeRates[index].shippingfee)
+          let fee = CheckoutContextData.getShippingFeeByShopId(item.shop.id)
           let pct = (parseFloat(req.responseData.voucher.amount) * 0.01)
           let pctvalue = fee * pct
           let calculatedDiscount = fee - pctvalue
 
-          items[index] = req.responseData.voucher
-          items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
-          items[index].discount = calculatedDiscount < 0 ? 0 : calculatedDiscount
+          // items[index] = req.responseData.voucher
+          // items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
+          // items[index].discount = calculatedDiscount < 0 ? 0 : calculatedDiscount
+
+          items.push({
+            ...req.responseData.voucher, 
+            discountedAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount, 
+            discount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
+            voucherCodeType: req.responseData.type
+          })
 
           getShippingHashDeliveryAmount({variables: {
             input: {
@@ -155,12 +187,20 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
         }else{
 
-            //
-          let calculatedDiscount = parseFloat(CheckoutContextData.shippingFeeRates[index].shippingfee) - req.responseData.voucher.amount            
+          //
+          let fee = CheckoutContextData.getShippingFeeByShopId(item.shop.id)
+          let calculatedDiscount = parseFloat(fee) - req.responseData.voucher.amount            
 
-          items[index] = req.responseData.voucher
-          items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
-          items[index].discount = calculatedDiscount < 0 ? 0 : calculatedDiscount
+          // items[index] = req.responseData.voucher
+          // items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
+          // items[index].discount = calculatedDiscount < 0 ? 0 : calculatedDiscount
+
+          items.push({
+            ...req.responseData.voucher, 
+            discountedAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount, 
+            discount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
+            voucherCodeType: req.responseData.type
+          })
 
           getShippingHashDeliveryAmount({variables: {
             input: {
@@ -173,7 +213,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
       }else if(req.responseData.type == "promotion"){
 
         let items = ArrayCopy(CheckoutContextData.shippingVouchers)
-        items.push(req.responseData.voucher)
+        items.push({...req.responseData.voucher, voucherCodeType: req.responseData.type})
         getShippingHashDeliveryAmount({variables: {
           input: {
             items: items
@@ -184,9 +224,16 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
         //DEFAULT
         let items = ArrayCopy(CheckoutContextData.defaultVouchers)
-        items[index] = req.responseData.voucher
-        items[index].discountedAmount = req.responseData.voucher.amount
-        items[index].discount = req.responseData.voucher.amount
+        // items[index] = req.responseData.voucher
+        // items[index].discountedAmount = req.responseData.voucher.amount
+        // items[index].discount = req.responseData.voucher.amount
+
+        items.push({
+          ...req.responseData.voucher, 
+          discountedAmount: req.responseData.voucher.amount, 
+          discount: req.responseData.voucher.amount,
+          voucherCodeType: req.responseData.type
+        })
 
         getDefaultHashDeliveryAmount({variables: {
           input: {
@@ -203,12 +250,12 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
       setVoucherIsValid(-1)
         
-      let items1 = ArrayCopy(CheckoutContextData.shippingVouchers)
-      let items2 = ArrayCopy(CheckoutContextData.defaultVouchers)
-      items1.splice(index, 1)
-      items2.splice(index, 1)
-      CheckoutContextData.setShippingVouchers(items1)
-      CheckoutContextData.setDefaultVouchers(items2)
+      // let items1 = ArrayCopy(CheckoutContextData.shippingVouchers)
+      // let items2 = ArrayCopy(CheckoutContextData.defaultVouchers)
+      // items1.splice(index, 1)
+      // items2.splice(index, 1)
+      // CheckoutContextData.setShippingVouchers(items1)
+      // CheckoutContextData.setDefaultVouchers(items2)
       CheckoutContextData.setVoucherErrors(prevState => [...prevState, item.shop.id])
 
       console.log("asdasdasdasdasd")
@@ -277,10 +324,11 @@ export const ApplyVoucherForm = (address, customer, payload) => {
                   borderColor: voucherIsValid == -1 ? '#ED3A19' : ''
                 }}>
                 <TextInput
+                  autoCapitalize="characters"
                   value={vcode.toUpperCase()}
                   style={{marginLeft: 10, flex: 1}}
                   placeholder="Enter voucher code (optional)"
-                  placeholderTextColor="gray"      
+                  placeholderTextColor="gray"    
                   onChangeText={(val) => {
                     CheckoutContextData.setVoucherErrors(prevState => prevState.filter(id => item.shop.id !== id))
                     setvcode(val);

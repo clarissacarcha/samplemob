@@ -109,8 +109,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
         if(shippingrates.length > 0){
           data.autoShippingPayload.cartitems = shippingrates          
           await getAutoShipping(data.autoShippingPayload)
-        }
-        
+          await getAutoApplyVouchers(data.promotionVoucherPayload)
+        }        
       }
       setInitialLoading(false)
     },
@@ -161,13 +161,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const getAutoShipping = async (payload) => {
 
     //setup empty vouchers list
-    let initialShippingVouchers = []
-    payload?.cartitems.map((item) => {
-      initialShippingVouchers.push({
-        shopid: item.shopid
-      })
-    })
-    CheckoutContextData.setShippingVouchers(initialShippingVouchers)
+    // let initialShippingVouchers = []
+    // payload.cartitems.map((item) => {
+    //   initialShippingVouchers.push({
+    //     shopid: item.shopid
+    //   })
+    // })
+    // await CheckoutContextData.setShippingVouchers(initialShippingVouchers)
 
     setInitialLoading(true)
     console.log("Auto Shipping Payload", JSON.stringify(payload))
@@ -175,22 +175,25 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     if(res.responseData && res.responseData.success){
 
-      let items = ArrayCopy(initialShippingVouchers)
+      // let items = ArrayCopy(initialShippingVouchers)
+      let items = ArrayCopy(CheckoutContextData.shippingVouchers)
 
       if(res.responseData.type == "shipping"){
 
         res.responseData.voucher.map((item, indexx) => {
 
-          let shopvoucherIndex = items.findIndex(a => a.shopid == item.shopid)
+          // let shopvoucherIndex = items.findIndex(a => a.shopid == item.shopid)
          
           if(item.type == "shipping"){
             item.vouchers.map(async (voucher, index) => {
 
-              if(shopvoucherIndex > -1 && voucher.amount == 0){
-
-                items[shopvoucherIndex] = voucher
-                items[shopvoucherIndex].discountedAmount = 0
-                items[shopvoucherIndex].discount = 0
+              if(voucher.amount == 0){
+                        
+                items.push({...voucher, autoShipping: true})
+                
+                // items[shopvoucherIndex] = voucher
+                // items[shopvoucherIndex].discountedAmount = 0
+                // items[shopvoucherIndex].discount = 0
                 
               }
               
@@ -210,8 +213,23 @@ const Component = ({route, navigation, createMyCartSession}) => {
       // Toast.show(res.responseError.message)
     }
 
-    setInitialLoading(false)
+  }
 
+  const getAutoApplyVouchers = async (payload) => {
+    const res = await ApiCall("validate_autoapply_promotion", {shop_array: payload}, true)
+    if(res.responseData && res.responseData.success){
+      if(res.responseData.type == "promotion"){
+        let items = ArrayCopy(CheckoutContextData.shippingVouchers)        
+        const {voucher} = res.responseData
+        items.push({...voucher, autoApply: true, voucherCodeType: res.responseData.type})
+        getShippingHashDeliveryAmount({variables: {
+          input: {
+            items: items
+          }
+        }})
+      }
+    }
+    setInitialLoading(false)
   }
 
   const  [getToktokWalletData] = useLazyQuery(GET_USER_TOKTOK_WALLET_DATA , {

@@ -14,6 +14,7 @@ export const CheckoutContextProvider = ({children})=> {
 	const [unserviceableShipping, setUnserviceableShipping] = useState([])
 
 	const [shippingVouchers, setShippingVouchers] = useState([])
+	
 	const [defaultVouchers, setDefaultVouchers] = useState([])
 	const [voucherErrors, setVoucherErrors] = useState([])
 
@@ -35,6 +36,38 @@ export const CheckoutContextProvider = ({children})=> {
       console.log(err)
     }
   })
+
+	const getShippingFeeByShopId = (shopid) => {
+		let res = null
+		shippingFeeRates.map((a) => a.shopid == shopid ? res = a.shippingfee : null)
+		return parseFloat(res)
+	}
+
+	const getTotalVoucherDeduction = () => {
+    let totalDeduction = 0
+    shippingVouchers
+    .filter((a) => {                
+      return a.voucher_id != undefined || a.valid != undefined
+    })
+    .map((a) => {
+			// a.deduction ? totalDeduction += a.deduction : totalDeduction += a.discount_totalamount 
+			if(a.deduction){
+				totalDeduction += a.deduction
+			}else if(a.discount_totalamount){
+				totalDeduction += a.discount_totalamount
+			}else if(a.discount){
+				totalDeduction += a.discount
+			}
+		})
+    return totalDeduction
+  }
+
+	const getVoucherDeduction = (voucher) => {
+		// if(voucher.deduction) return voucher.deduction
+		// else if(voucher.discount_totalamount) return voucher.discount_totalamount
+		// else if(voucher.discount) return voucher.discount
+		return voucher?.deduction || voucher?.discount_totalamount || voucher?.discount
+	}
 
 	return (
 		<Provider 
@@ -59,7 +92,12 @@ export const CheckoutContextProvider = ({children})=> {
 				setVoucherErrors,
 
 				unavailableItems,
-				setUnavailableItems
+				setUnavailableItems,
+
+				getTotalVoucherDeduction,
+				getVoucherDeduction,
+
+				getShippingFeeByShopId
 			}}
 		>
 			{children}

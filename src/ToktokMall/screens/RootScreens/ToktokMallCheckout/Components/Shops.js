@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Platform } from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Platform, Dimensions } from 'react-native';
 
 import { FONT } from '../../../../../res/variables';
 import {placeholder, voucherIcon} from '../../../../assets';
@@ -270,6 +270,8 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
       const ListVouchers = ({type}) => {
 
+        const shopProducts = item.data[0]
+
         const onDeleteVoucher = (voucher) => {          
           let items = ArrayCopy(CheckoutContextData.shippingVouchers)          
           let newitems = []
@@ -287,27 +289,45 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
         return (
           <>
-            <View style={{flexDirection: 'row', padding: 15}}>
+            <View style={styles.voucherContainer}>
               {CheckoutContextData.shippingVouchers
+              .filter((a) => a.voucherCodeType == type)
               .filter((a) => {
-                if(type == "promotion"){
-                  return a.voucher_id != undefined
-                }else if(type == "shipping"){
-                  return a.valid != undefined
-                }
+                if(a.shopid == shop.id || a.shop_id == shop.id){
+                  if(type == "promotion"){
+                    return a.voucher_id != undefined
+                  }else if(type == "shipping"){
+                    return a.valid != undefined
+                  }
+                }else if(a.autoApply){
+                  //CHECK AUTO APPLIED VOUCHERS SHOP BY FINDING DISCOUNTED PRODUCTS 
+                  let findItem = shopProducts.filter((product) => a.product_id.includes(product.id))
+                  return findItem[0]?.shopId && findItem[0]?.shopId == shop.id
+                }else{
+                  return false
+                }                
               }).map((item) => {
 
-                return (
-                  <>
-                    <View style={{flexDirection: 'row', backgroundColor: '#F6841F', paddingVertical: 4, paddingHorizontal: 8}}>
-                      <Text style={{color: '#fff', fontSize: 11, fontFamily: FONT.BOLD}}>{item?.voucher_name || item?.vname}</Text>
-                      <TouchableOpacity onPress={() => onDeleteVoucher(item)} style={{marginLeft: 5, justifyContent: 'center'}}>
-                        <Icons.AIcon name='close' size={12} color="#fff" />
-                      </TouchableOpacity>
-                    </View> 
-                  </>
-                )
-
+                if(item?.autoApply && item?.voucherCodeType == type){
+                  return (
+                    <>
+                      <View style={{...styles.voucherBody, backgroundColor: '#FDBA1C'}}>
+                        <Text ellipsizeMode='tail' style={styles.voucherText}>{item?.voucher_name || item?.vname}</Text>                        
+                      </View> 
+                    </>
+                  )
+                }else{
+                  return (
+                    <>
+                      <View style={{...styles.voucherBody,  backgroundColor: '#F6841F'}}>
+                        <Text ellipsizeMode='tail' style={styles.voucherText}>{item?.voucher_name || item?.vname}</Text>
+                        <TouchableOpacity onPress={() => onDeleteVoucher(item)} style={{marginLeft: 5, justifyContent: 'center'}}>
+                          <Icons.AIcon name='close' size={12} color="#fff" />
+                        </TouchableOpacity>
+                      </View> 
+                    </>
+                  )
+                }
               })}   
             </View>
           </>
@@ -323,7 +343,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
               <Image source={voucherIcon} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
               <Text style = {{marginLeft: 10, fontFamily: FONT.REGULAR, fontSize: 13}}>Shop Vouchers</Text>
             </View>            
-            <ListVouchers type="promotion" />
+            <ListVouchers type="promotion" origin={"promotions"} autoapplied={true} />
           </View>
           </>
         )
@@ -385,5 +405,14 @@ const styles = StyleSheet.create({
   itemImage: {flex: 0.3, height: 100, width: 100},
   itemprice: {color: '#F6841F', marginRight: 10},
   itemSaleOff: {textDecorationLine: 'line-through', color: '#9E9E9E', fontSize: 11, marginTop: 2},
-  deliveryfeeContainer: {borderWidth: 1, borderColor: '#FDDC8C', marginLeft: 15, marginRight: 15, padding: 10, borderRadius: 5, marginBottom: 15,}
+  deliveryfeeContainer: {borderWidth: 1, borderColor: '#FDDC8C', marginLeft: 15, marginRight: 15, padding: 10, borderRadius: 5, marginBottom: 15},
+  voucherContainer: {
+    flexDirection: 'row', padding: 15, flexWrap: 'wrap'
+  },
+  voucherBody: {
+    flexDirection: 'row', alignSelf: 'flex-start', paddingVertical: 4, paddingHorizontal: 8, marginVertical: 4, borderRadius: 2
+  },
+  voucherText: {
+    color: '#fff', fontSize: 11, fontFamily: FONT.BOLD
+  }
 })

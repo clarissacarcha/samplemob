@@ -74,6 +74,17 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
     setShippingFeeTotal(total);
   };
 
+  // const getTotalVoucherDeduction = () => {
+  //   let totalDeduction = 0
+  //   CheckoutContextData.shippingVouchers
+  //   .filter((a) => {                
+  //     return a.voucher_id != undefined || a.valid != undefined
+  //   })
+  //   .map((a) => a.deduction ? totalDeduction += a.deduction : totalDeduction += a.discount_totalamount)
+  //   setShippingDiscountTotal(totalDeduction)
+  //   return totalDeduction
+  // }
+
   const getDiscount = (type) => {
     if (type == 'shipping') {
       if(CheckoutContextData.shippingVouchers.length > 0){
@@ -87,7 +98,8 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
   useEffect(() => {
     if (CheckoutContextData) {
       computeShippingTotal();
-      computeShippingDiscount();
+      // computeShippingDiscount();
+      setShippingDiscountTotal(CheckoutContextData.getTotalVoucherDeduction())
       const numvouchers = CheckoutContextData.shippingVouchers.filter((a) => a.valid != undefined || a.voucher_id != undefined)
       setOfNumVouchers(numvouchers.length)
     }
@@ -109,19 +121,19 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
 
   useEffect(() => {
     if (merchandiseTotal && shippingFeeTotal) {
-      if(getDiscount("shipping")){
-        setGrandTotal(merchandiseTotal + shippingDiscountTotal);
-      }else{
-        setGrandTotal(merchandiseTotal + shippingFeeTotal);
-      }
+      // if(getDiscount("shipping")){
+      //   setGrandTotal(merchandiseTotal + shippingDiscountTotal);
+      // }else{
+      //   setGrandTotal(merchandiseTotal + shippingFeeTotal);
+      // }
+      setGrandTotal(merchandiseTotal + shippingFeeTotal - shippingDiscountTotal)
     }
   }, [merchandiseTotal, shippingFeeTotal, shippingDiscountTotal]);
 
   const RenderVouchersBreakdown = () => {
 
     let vouchers = toggleVouchers ? CheckoutContextData.shippingVouchers.slice(0,2) : CheckoutContextData.shippingVouchers
-    let totalDeduction = 0
-    totalDeduction = CheckoutContextData.shippingVouchers.map((a) => a.deduction ? totalDeduction += a.deduction : totalDeduction += a.discountedAmount)
+    let totalDeduction = CheckoutContextData.getTotalVoucherDeduction()
 
     return (
       <>
@@ -141,7 +153,7 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
                 return a.voucher_id != undefined || a.valid != undefined
               }).map((item) => {
 
-                let deduction = item.deduction ? item.deduction : item.discountedAmount
+                let deduction = CheckoutContextData.getVoucherDeduction(item)
 
                 return (
                   <>
@@ -193,7 +205,7 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
 
         <View style={styles.textContainer}>
           <Text style={{fontFamily: FONT.BOLD, color: "#F6841F"}}>Total:</Text>
-          {
+          {/* {
             getDiscount('shipping') ? 
             <Text style={{color: '#F6841F'}}>
             {FormatToText.currency((shippingDiscountTotal || 0) + (merchandiseTotal || 0))}
@@ -202,7 +214,11 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
             <Text style={{color: '#F6841F'}}>
             {FormatToText.currency((shippingFeeTotal || 0) + (merchandiseTotal || 0))}
             </Text>
-          }
+          } */}
+
+            <Text style={{color: '#F6841F'}}>
+            {FormatToText.currency((merchandiseTotal || 0) + (shippingFeeTotal || 0) - (shippingDiscountTotal || 0))}
+            </Text>
           
         </View>
       </View>
