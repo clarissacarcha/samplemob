@@ -192,7 +192,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   };
   const openRateDriver = () => {
     setmodal(false);
-    navigation.push('ToktokGoRateDriver', {
+    navigation.replace('ToktokGoRateDriver', {
       popTo: popTo + 1,
     });
   };
