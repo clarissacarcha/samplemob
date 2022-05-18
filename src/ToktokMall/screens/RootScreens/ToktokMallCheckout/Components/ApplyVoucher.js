@@ -31,6 +31,10 @@ export const ApplyVoucherForm = (address, customer, payload) => {
   const [succeeded, setSucceeded] = useState(false)
   const [errormessage, seterrormessage] = useState("*Invalid voucher code. Please check your voucher code.")
 
+  useEffect(() => {
+    setloading(CheckoutContextData.voucherReloading)
+  }, [CheckoutContextData?.voucherReloading])
+
   const [getShippingHashDeliveryAmount, {error, loading2}] = useLazyQuery(GET_HASH_AMOUNT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    

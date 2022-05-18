@@ -275,16 +275,25 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         const onDeleteVoucher = (voucher) => {          
           let items = ArrayCopy(CheckoutContextData.shippingVouchers)          
           let newitems = []
+
+          console.log("DELETE VOUCHER", items)
+          console.log("DELETE VOUCHER REFERENCE", voucher)
+
+          newitems = items.filter((a) => a.voucher_id != voucher.voucher_id)
+          
+          console.log("DELETE VOUCHER RESULT", newitems)
+
+          return
           items.map((a, index) => {
             if(a.vcode == voucher.vcode || a.voucher_id == voucher.voucher_id){
               //skip to remove
-              newitems.push({shopid: a.shopid})
+              // newitems.push({shopid: a.shopid})
             }else{
               newitems.push(a)
             }
-          })          
+          })
           CheckoutContextData.setShippingVouchers(newitems)
-          EventRegister.emit("ToktokMallrefreshCheckoutData")
+          // EventRegister.emit("ToktokMallrefreshCheckoutData")
         }
 
         return (
@@ -292,13 +301,17 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             <View style={styles.voucherContainer}>
               {CheckoutContextData.shippingVouchers
               .filter((a) => a.voucherCodeType == type)
-              .filter((a) => {
+              .filter((a) => {         
+                  
                 if(a.shopid == shop.id || a.shop_id == shop.id){
                   if(type == "promotion"){
                     return a.voucher_id != undefined
                   }else if(type == "shipping"){
                     return a.valid != undefined
                   }
+                }else if(a?.shop_id == "0" || a?.shopid == "0"){
+                  let findItem = shopProducts.filter((product) => a.product_id.includes(product.id))
+                  return findItem[0]?.shopId && findItem[0]?.shopId == shop.id
                 }else if(a.autoApply){
                   //CHECK AUTO APPLIED VOUCHERS SHOP BY FINDING DISCOUNTED PRODUCTS 
                   let findItem = shopProducts.filter((product) => a.product_id.includes(product.id))
@@ -308,7 +321,10 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
                 }                
               }).map((item) => {
 
-                if(item?.autoApply && item?.voucherCodeType == type){
+                if(
+                  item?.autoApply && item?.voucherCodeType == type || 
+                  item?.autoShipping && item?.voucherCodeType == type
+                ){
                   return (
                     <>
                       <View style={{...styles.voucherBody, backgroundColor: '#FDBA1C'}}>
@@ -321,7 +337,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
                     <>
                       <View style={{...styles.voucherBody,  backgroundColor: '#F6841F'}}>
                         <Text ellipsizeMode='tail' style={styles.voucherText}>{item?.voucher_name || item?.vname}</Text>
-                        <TouchableOpacity onPress={() => onDeleteVoucher(item)} style={{marginLeft: 5, justifyContent: 'center'}}>
+                        <TouchableOpacity onPress={() => CheckoutContextData.deleteVoucher(item)} style={{marginLeft: 5, justifyContent: 'center'}}>
                           <Icons.AIcon name='close' size={12} color="#fff" />
                         </TouchableOpacity>
                       </View> 

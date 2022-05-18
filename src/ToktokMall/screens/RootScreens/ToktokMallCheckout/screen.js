@@ -170,8 +170,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
     // await CheckoutContextData.setShippingVouchers(initialShippingVouchers)
 
     setInitialLoading(true)
-    console.log("Auto Shipping Payload", JSON.stringify(payload))
+    // console.log("Auto Shipping Payload", JSON.stringify(payload))
     const res = await ApiCall("get_autoshipping_discount", payload, true)
+
+    // console.log("AUTO SHIPPING RESULT", JSON.stringify(res))
 
     if(res.responseData && res.responseData.success){
 
@@ -180,21 +182,41 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
       if(res.responseData.type == "shipping"){
 
-        res.responseData.voucher.map((item, indexx) => {
+        await res.responseData.voucher.map(async (item, indexx) => {
 
           // let shopvoucherIndex = items.findIndex(a => a.shopid == item.shopid)
          
           if(item.type == "shipping"){
-            item.vouchers.map(async (voucher, index) => {
-
+            await item.vouchers.map(async (voucher, index) => {
+              
               if(voucher.amount == 0){
+
+                let fee = null
+		            payload.cartitems.map((a) => a.shopid == item.shopid ? fee = a.shippingfee : null)
                         
-                items.push({...voucher, autoShipping: true})
-                
+                items.push({
+                  ...voucher, 
+                  autoShipping: true,
+                  discountedAmount: 0,
+                  discount: 0,
+                  deduction: fee,
+                  voucherCodeType: res.responseData.type
+                })
+
+                // console.log("FREESHIP MAPPING", JSON.stringify(CheckoutContextData.shippingFeeRates))
+                // console.log("AUTO SHIPPING FREESHIP MAPPING", fee, item?.shopid)
+                              
                 // items[shopvoucherIndex] = voucher
                 // items[shopvoucherIndex].discountedAmount = 0
                 // items[shopvoucherIndex].discount = 0
                 
+              }else{
+                items.push({
+                  ...voucher, 
+                  autoShipping: true,
+                  deduction: voucher.amount,
+                  voucherCodeType: res.responseData.type
+                })
               }
               
             })  

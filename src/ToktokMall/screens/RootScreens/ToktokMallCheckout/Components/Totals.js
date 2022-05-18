@@ -157,8 +157,8 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
 
                 return (
                   <>
-                    <View style={styles.textContainer}>
-                      <Text style={{fontSize: 13, color: "#525252"}}>{item.vname || item.voucher_name}</Text>
+                    <View style={{...styles.textContainer}}>
+                      <Text ellipsizeMode='tail' style={{flex: 1, fontSize: 13, color: "#525252"}}>{item.vname || item.voucher_name}</Text>
                       <Text style={{color: "#ED3A19"}}>- {FormatToText.currency(deduction)}</Text>
                     </View>
                   </>

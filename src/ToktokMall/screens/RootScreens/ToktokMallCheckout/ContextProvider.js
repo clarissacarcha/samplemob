@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux'
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks'
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql'
 import { GET_HASH_AMOUNT } from '../../../../graphql/toktokmall/model'
+import { ArrayCopy } from '../../../helpers'
 
 export const CheckoutContext = createContext()
 const {Provider} = CheckoutContext
@@ -21,6 +22,8 @@ export const CheckoutContextProvider = ({children})=> {
 	const [autoShippingPayload, setAutoShippingPayload] = useState({})
 
 	const [unavailableItems, setUnavailableItems] = useState([])
+
+	const [voucherReloading, setVoucherReloading] = useState(false)
 
 	const [getShippingHashDeliveryAmount, {data}] = useLazyQuery(GET_HASH_AMOUNT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -52,11 +55,11 @@ export const CheckoutContextProvider = ({children})=> {
     .map((a) => {
 			// a.deduction ? totalDeduction += a.deduction : totalDeduction += a.discount_totalamount 
 			if(a.deduction){
-				totalDeduction += a.deduction
+				totalDeduction += parseFloat(a.deduction)
 			}else if(a.discount_totalamount){
-				totalDeduction += a.discount_totalamount
+				totalDeduction += parseFloat(a.discount_totalamount)
 			}else if(a.discount){
-				totalDeduction += a.discount
+				totalDeduction += parseFloat(a.discount)
 			}
 		})
     return totalDeduction
@@ -67,6 +70,16 @@ export const CheckoutContextProvider = ({children})=> {
 		// else if(voucher.discount_totalamount) return voucher.discount_totalamount
 		// else if(voucher.discount) return voucher.discount
 		return voucher?.deduction || voucher?.discount_totalamount || voucher?.discount
+	}
+
+	const deleteVoucher = (voucher) => {
+		setVoucherReloading(true)
+		let items = ArrayCopy(shippingVouchers)
+		let newitems = items.filter((a) => a.voucher_id != voucher.voucher_id) //if match, remove from array
+		setShippingVouchers(newitems)
+		setTimeout(() => {
+			setVoucherReloading(false)
+		}, 700)
 	}
 
 	return (
@@ -97,7 +110,11 @@ export const CheckoutContextProvider = ({children})=> {
 				getTotalVoucherDeduction,
 				getVoucherDeduction,
 
-				getShippingFeeByShopId
+				getShippingFeeByShopId,
+
+				voucherReloading,
+				setVoucherReloading,
+				deleteVoucher
 			}}
 		>
 			{children}
