@@ -7,6 +7,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
 import {isEmpty} from 'lodash';
 import {ThrottledOpacity} from '../../../../components_section';
+import {useDispatch} from 'react-redux';
 export const Location = ({
   onChange,
   inputRef,
@@ -18,6 +19,8 @@ export const Location = ({
   setSearchDestination,
   setSearchOrigin,
 }) => {
+  const dispatch = useDispatch();
+
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, paddingHorizontal: 16, marginBottom: 15}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -49,6 +52,7 @@ export const Location = ({
               delay={500}
               onPress={() => {
                 setSearchOrigin(null);
+                dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: null});
               }}>
               <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
             </ThrottledOpacity>
@@ -85,6 +89,7 @@ export const Location = ({
               delay={500}
               onPress={() => {
                 setSearchDestination(null);
+                dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: null});
               }}>
               <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
             </ThrottledOpacity>

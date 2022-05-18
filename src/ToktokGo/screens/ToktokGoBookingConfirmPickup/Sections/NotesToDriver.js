@@ -16,6 +16,7 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote}) =
           navigation.pop();
           navigation.push('ToktokGoBookingSelectLocations', {
             popTo: popTo + 1,
+            selectInput: 'P',
           });
         }}
         style={{

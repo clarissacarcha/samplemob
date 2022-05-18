@@ -43,7 +43,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
 
   const onConfirm = throttle(
     () => {
-      if (source == 'searchLocation') {
+      if (!destination?.place?.formattedAddress) {
         navigation.pop();
         navigation.push('ToktokGoBookingSelectLocations', {
           popTo: 1,
