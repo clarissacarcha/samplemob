@@ -8,6 +8,7 @@ const phoneDimensions = Dimensions.get('window');
 
 import {StickyView} from './components';
 import {FoodCart, VerifyContextProvider} from './components';
+import Header from 'toktokfood/components/Header';
 
 import {GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
 import {COLOR, FONT, FONT_SIZE, SIZE} from 'res/variables';
@@ -21,77 +22,14 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 const ToktokFoodRestaurantOverview = ({route}) => {
   const [showCart, setShowCart] = useState(false);
 
-  // const {item} = route.params;
-
-  // const navigation = useNavigation();
-
-  // const {hasOpen, hasProduct, nextOperatingHrs, operatingHours} = item;
-  // const {fromTime, day: nxtDay} = nextOperatingHrs;
-  // const {fromTime: currFromTime} = operatingHours;
-
-  // const [showOverlay, setShowOverlay] = useState(hasOpen === false);
-  // const [showProductOverlay, setShowProductOverlay] = useState(hasProduct === false);
-
-  // const displayNextOpeningHours = () => {
-  //   const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
-  //   if (isAboutToOpen) {
-  //     return (
-  //       <Text style={styles.closeText}>
-  //         Restaurant is currently closed. {'\n'}Please comeback at {moment(fromTime, 'hh:mm:ss').format('LT')}
-  //       </Text>
-  //     );
-  //   }
-  //   return (
-  //     <Text style={styles.closeText}>
-  //       Restaurant is currently closed. {'\n'}Please comeback on {getWeekDay(nxtDay, true)},{' '}
-  //       {moment(fromTime, 'hh:mm:ss').add(1, 'day').format('MMMM DD')} at{' '}
-  //       {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
-  //     </Text>
-  //   );
-  // };
-
-  // const onNavigate = () => {
-  //   setShowOverlay(false);
-  //   navigation.goBack();
-  // };
-
-  // const CloseOverlay = () => (
-  //   <Modal visible={showOverlay} transparent={true} animationType="fade" presentationStyle="overFullScreen">
-  //     <View style={styles.content}>
-  //       <View style={[styles.wrapper, styles.sheetBorder]}>
-  //         <View style={styles.sheet}>
-  //           {displayNextOpeningHours()}
-  //           <TouchableOpacity style={styles.closeButton} onPress={() => onNavigate()}>
-  //             <Text style={styles.buttonText}>OK</Text>
-  //           </TouchableOpacity>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   </Modal>
-  // );
-
-  // const ProductOverlay = (
-  //   <Modal visible={showProductOverlay} transparent={true} animationType="fade" presentationStyle="overFullScreen">
-  //     <View style={styles.content}>
-  //       <View style={[styles.wrapper, styles.sheetBorder]}>
-  //         <View style={styles.sheet}>
-  //           {displayNextOpeningHours()}
-  //           <TouchableOpacity style={styles.closeButton} onPress={() => onNavigate()}>
-  //             <Text style={styles.buttonText}>OK</Text>
-  //           </TouchableOpacity>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   </Modal>
-  // );
-
   return (
     <>
       <VerifyContextProvider>
         {/* <CloseOverlay /> */}
         {/* <ProductOverlay /> */}
         <View style={styles.container}>
-          <StickyView onCheckShop={v => setShowCart(v)} />
+          <Header hasBack />
+          {/* <StickyView onCheckShop={v => setShowCart(v)} /> */}
           {showCart && <FoodCart />}
         </View>
       </VerifyContextProvider>

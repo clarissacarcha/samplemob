@@ -12,7 +12,13 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
+import {ThemeProvider} from 'styled-components/native';
+
 import {navigationRef} from './RootNavigation';
+
+/*--------------- THEME ----------------------*/
+import {LIGHT_THEME} from 'toktokfood/util/theme';
+
 /*-------------------- IMPORT SCREENS START--------------------*/
 
 import DrawerContent from '../Drawer';
@@ -248,60 +254,61 @@ const DriverHomeBottomTab = ({navigation}) => (
 );
 
 const AuthenticatedStack = () => (
-  <Authenticated.Navigator>
-    {ToktokScreens({Navigator: Authenticated})}
-    {ToktokFoodScreens({Navigator: Authenticated})}
-    {ToktokLoadScreens({Navigator: Authenticated})}
-    {ToktokMallScreens({Navigator: Authenticated})}
-    {ToktokWalletScreens({Navigator: Authenticated})}
-    {ToktokBillScreens({Navigator: Authenticated})}
-    {ToktokGoScreens({Navigator: Authenticated})}
-    {SuperAppScreens({Navigator: Authenticated})}
+  <ThemeProvider theme={LIGHT_THEME}>
+    <Authenticated.Navigator>
+      {ToktokScreens({Navigator: Authenticated})}
+      {ToktokFoodScreens({Navigator: Authenticated})}
+      {ToktokLoadScreens({Navigator: Authenticated})}
+      {ToktokMallScreens({Navigator: Authenticated})}
+      {ToktokWalletScreens({Navigator: Authenticated})}
+      {ToktokBillScreens({Navigator: Authenticated})}
+      {ToktokGoScreens({Navigator: Authenticated})}
+      {SuperAppScreens({Navigator: Authenticated})}
 
-    <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
+      <Authenticated.Screen name="PostRegistration" component={PostRegistration} />
 
-    {/********** Delivery **********/}
-    {/* <Authenticated.Screen name="ToktokDelivery" component={ToktokDelivery} options={{headerShown: false}} /> */}
-    {/* <Authenticated.Screen name="StopDetails" component={StopDetails} options={{headerShown: false}} /> */}
-    {/* <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} /> */}
-    {/* <Authenticated.Screen name="DeliverySummary" component={DeliverySummary} /> */}
-    {/* <Authenticated.Screen name="SearchMap" component={SearchMap} /> */}
-    {/* <Authenticated.Screen name="SearchContact" component={SearchContact} /> */}
+      {/********** Delivery **********/}
+      {/* <Authenticated.Screen name="ToktokDelivery" component={ToktokDelivery} options={{headerShown: false}} /> */}
+      {/* <Authenticated.Screen name="StopDetails" component={StopDetails} options={{headerShown: false}} /> */}
+      {/* <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} /> */}
+      {/* <Authenticated.Screen name="DeliverySummary" component={DeliverySummary} /> */}
+      {/* <Authenticated.Screen name="SearchMap" component={SearchMap} /> */}
+      {/* <Authenticated.Screen name="SearchContact" component={SearchContact} /> */}
 
-    {/********** Pabili **********/}
-    <Authenticated.Screen name="Pabili" component={Pabili} options={{headerShown: false}} />
-    <Authenticated.Screen name="PabiliSearchAddress" component={PabiliSearchAddress} options={{headerShown: false}} />
-    <Authenticated.Screen name="PabiliDetails" component={PabiliDetails} />
-    <Authenticated.Screen name="NearbyStores" component={NearbyStores} />
-    <Authenticated.Screen name="PartnerBranches" component={PartnerBranches} />
-    <Authenticated.Screen name="SelectedAdvertisement" component={SelectedAdvertisement} />
+      {/********** Pabili **********/}
+      <Authenticated.Screen name="Pabili" component={Pabili} options={{headerShown: false}} />
+      <Authenticated.Screen name="PabiliSearchAddress" component={PabiliSearchAddress} options={{headerShown: false}} />
+      <Authenticated.Screen name="PabiliDetails" component={PabiliDetails} />
+      <Authenticated.Screen name="NearbyStores" component={NearbyStores} />
+      <Authenticated.Screen name="PartnerBranches" component={PartnerBranches} />
+      <Authenticated.Screen name="SelectedAdvertisement" component={SelectedAdvertisement} />
 
-    {/********** Profile **********/}
-    {/* <Authenticated.Screen name="ConsumerProfile" component={ConsumerProfile} /> */}
+      {/********** Profile **********/}
+      {/* <Authenticated.Screen name="ConsumerProfile" component={ConsumerProfile} /> */}
 
-    {/********** Deliveries **********/}
-    <Authenticated.Screen name="SelectedDeliveries" component={SelectedDeliveries} />
-    <Authenticated.Screen name="SelectedDelivery" component={SelectedDelivery} />
-    <Authenticated.Screen name="DeliveryRating" component={DeliveryRating} />
-    <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
-    <Authenticated.Screen name="OrderCancellation" component={OrderCancellation} />
-    <Authenticated.Screen name="RateDriver" component={RateDriver} />
+      {/********** Deliveries **********/}
+      <Authenticated.Screen name="SelectedDeliveries" component={SelectedDeliveries} />
+      <Authenticated.Screen name="SelectedDelivery" component={SelectedDelivery} />
+      <Authenticated.Screen name="DeliveryRating" component={DeliveryRating} />
+      <Authenticated.Screen name="DeliveryTracking" component={DeliveryTracking} />
+      <Authenticated.Screen name="OrderCancellation" component={OrderCancellation} />
+      <Authenticated.Screen name="RateDriver" component={RateDriver} />
 
-    {/********** Menu **********/}
-    {/* <Authenticated.Screen name="SavedLocations" component={SavedLocations} />
+      {/********** Menu **********/}
+      {/* <Authenticated.Screen name="SavedLocations" component={SavedLocations} />
     <Authenticated.Screen name="AddLocation" component={AddLocation} /> */}
-    {/* <Authenticated.Screen name="Announcements" component={Announcements} />
+      {/* <Authenticated.Screen name="Announcements" component={Announcements} />
     <Authenticated.Screen name="SelectedAnnouncement" component={SelectedAnnouncement} /> */}
-    <Authenticated.Screen
-      name="ConsumerChangePassword"
-      component={ConsumerChangePassword}
-      options={{headerShown: false}}
-    />
-    <Authenticated.Screen name="TalkToUs" component={TalkToUs} />
+      <Authenticated.Screen
+        name="ConsumerChangePassword"
+        component={ConsumerChangePassword}
+        options={{headerShown: false}}
+      />
+      <Authenticated.Screen name="TalkToUs" component={TalkToUs} />
 
-    {/********** TO BE REMOVED **********/}
-    {/* <Authenticated.Screen name="ConsumerMenu" component={ConsumerMenu} /> */}
-    {/* <Authenticated.Screen
+      {/********** TO BE REMOVED **********/}
+      {/* <Authenticated.Screen name="ConsumerMenu" component={ConsumerMenu} /> */}
+      {/* <Authenticated.Screen
       name="CheckConsumerLocation"
       component={CheckConsumerLocation}
       options={{headerShown: false, animationEnabled: false}}
@@ -311,32 +318,33 @@ const AuthenticatedStack = () => (
       component={ConsumerMap}
       options={{headerShown: false, animationEnabled: false}}
     /> */}
-    {/* <Authenticated.Screen name="SearchPlaces" component={SearchPlaces} /> */}
-    {/* <Authenticated.Screen name="SenderDetails" component={SenderDetails} />
+      {/* <Authenticated.Screen name="SearchPlaces" component={SearchPlaces} /> */}
+      {/* <Authenticated.Screen name="SenderDetails" component={SenderDetails} />
     <Authenticated.Screen name="RecipientDetails" component={RecipientDetails} /> */}
-    {/* <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} /> */}
-    {/* <Authenticated.Screen name="StopDetails" component={StopDetails} /> */}
-    {/* <Authenticated.Screen name="GCashAccount" component={GCashAccount} /> */}
-    {/* <Authenticated.Screen name="Notifications" component={Notifications} /> */}
-    {/* <Authenticated.Screen name="CustomerDeliveries" component={CustomerDeliveries} /> */}
+      {/* <Authenticated.Screen name="DeliveryDetails" component={DeliveryDetails} /> */}
+      {/* <Authenticated.Screen name="StopDetails" component={StopDetails} /> */}
+      {/* <Authenticated.Screen name="GCashAccount" component={GCashAccount} /> */}
+      {/* <Authenticated.Screen name="Notifications" component={Notifications} /> */}
+      {/* <Authenticated.Screen name="CustomerDeliveries" component={CustomerDeliveries} /> */}
 
-    {/*---------- DRIVER SCREENS ----------*/}
-    <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />
+      {/*---------- DRIVER SCREENS ----------*/}
+      <Authenticated.Screen name="DriverHomeBottomTab" component={DriverHomeBottomTab} options={{headerShown: false}} />
 
-    <Authenticated.Screen name="DriverMap" component={DriverMap} />
-    <Authenticated.Screen name="SelectedDriverDelivery" component={SelectedDriverDelivery} />
-    <Authenticated.Screen name="ItemCamera" component={ItemCamera} />
-    <Authenticated.Screen name="DriverProfile" component={DriverProfile} />
-    <Authenticated.Screen name="ProfileCamera" component={ProfileCamera} />
-    <Authenticated.Screen name="ChangeProfilePicture" component={ChangeProfilePicture} />
-    <Authenticated.Screen name="DriverWallet" component={DriverWallet} />
-    <Authenticated.Screen name="DriverWalletLog" component={DriverWalletLog} />
-    <Authenticated.Screen name="ToktokWalletHistory" component={ToktokWalletHistory} />
-    <Authenticated.Screen name="Order" component={Order} />
-    <Authenticated.Screen name="SearchLocationFilter" component={SearchLocationFilter} />
-    <Authenticated.Screen name="DriverDeliveriesTab" component={DriverDeliveriesTab} />
-    <Authenticated.Screen name="EnterPassword" component={EnterPassword} options={{headerShown: false}} />
-  </Authenticated.Navigator>
+      <Authenticated.Screen name="DriverMap" component={DriverMap} />
+      <Authenticated.Screen name="SelectedDriverDelivery" component={SelectedDriverDelivery} />
+      <Authenticated.Screen name="ItemCamera" component={ItemCamera} />
+      <Authenticated.Screen name="DriverProfile" component={DriverProfile} />
+      <Authenticated.Screen name="ProfileCamera" component={ProfileCamera} />
+      <Authenticated.Screen name="ChangeProfilePicture" component={ChangeProfilePicture} />
+      <Authenticated.Screen name="DriverWallet" component={DriverWallet} />
+      <Authenticated.Screen name="DriverWalletLog" component={DriverWalletLog} />
+      <Authenticated.Screen name="ToktokWalletHistory" component={ToktokWalletHistory} />
+      <Authenticated.Screen name="Order" component={Order} />
+      <Authenticated.Screen name="SearchLocationFilter" component={SearchLocationFilter} />
+      <Authenticated.Screen name="DriverDeliveriesTab" component={DriverDeliveriesTab} />
+      <Authenticated.Screen name="EnterPassword" component={EnterPassword} options={{headerShown: false}} />
+    </Authenticated.Navigator>
+  </ThemeProvider>
 );
 
 const mapStateToProps = state => ({
