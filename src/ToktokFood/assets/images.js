@@ -77,6 +77,7 @@ export const banner_1 = require('./images/sample_banners/banner_1.png');
 export const burger_king = require('./images/sample_banners/burger_king.jpeg');
 export const splash = require('./images/splash.png');
 export const splash_new = require('./images/splash_new.png');
+export const starbucks_banner = require('./images/starbucks_banner.png');
 
 // Test Rider
 export const rider1 = require('./images/riders/rider1.png');
@@ -107,7 +108,6 @@ export const call_ic = require('./images/me_icons/call.png');
 export const wallet_ic = require('./images/me_icons/wallet.png');
 export const order_type_icon = require('./images/ordertype_icon.png');
 export const cart_map_pin_icon = require('./images/cart_map_pin.png');
-
 
 // Reseller
 export const reseller_badge = require('./images/reseller-badge.png');

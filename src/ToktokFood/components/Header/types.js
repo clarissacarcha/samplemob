@@ -15,8 +15,9 @@ export type PropsType = {
   LeftComponent?: ComponentType<any>,
   RightComponent?: ComponentType<any>,
   hasBack?: boolean,
-  backButtonFn?: (() => any) | null,
   barStyle?: 'light-content' | 'dark-content',
+  backButtonFn?: (() => any) | null,
   backButtonColor?: string,
+  backgroundColor?: string,
   icon?: string,
 };

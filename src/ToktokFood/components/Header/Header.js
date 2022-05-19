@@ -22,9 +22,10 @@ const Header = (props: PropsType): React$Node => {
     RightComponent,
     LeftComponent,
     hasBack,
-    backButtonFn,
     barStyle = 'default',
+    backButtonFn,
     backButtonColor,
+    backgroundColor,
     icon,
   } = props;
   const navigation = useNavigation();
@@ -65,6 +66,7 @@ const Header = (props: PropsType): React$Node => {
 
   return (
     <NHeader
+      backgroundColor={backgroundColor}
       containerStyle={containerStyle}
       leftComponent={renderLeftComponent()}
       centerComponent={renderCenterComponent()}

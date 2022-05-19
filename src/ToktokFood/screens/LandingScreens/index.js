@@ -10,6 +10,7 @@ export ToktokFoodItemDetails from './ToktokFoodItemDetails';
 export ToktokFoodFavorites from './ToktokFoodFavorites';
 export ToktokFoodNotifications from './ToktokFoodNotifications';
 export ToktokFoodRestaurantOverview from './ToktokFoodRestaurantOverview';
+export ToktokFoodShopOverview from './ToktokFoodShopOverview';
 export ToktokFoodOrderDetails from './ToktokFoodOrderDetails';
 export ToktokFoodOrderTransactions from './ToktokFoodOrderTransactions';
 export ToktokFoodAddressDetails from './ToktokFoodAddressDetails';

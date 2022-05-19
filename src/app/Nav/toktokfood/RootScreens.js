@@ -13,6 +13,7 @@ import {
   ToktokFoodOrderDetails,
   ToktokFoodAddressDetails,
   ToktokFoodRestaurantOverview,
+  ToktokFoodShopOverview,
   ToktokRiderRating,
   ToktokFoodTermsAndConditions,
   ToktokFoodPrivacyPolicy,
@@ -46,6 +47,8 @@ export default ({Navigator}) => (
       name="ToktokFoodRestaurantOverview"
       component={ToktokFoodRestaurantOverview}
     />
+    <Navigator.Screen options={{headerShown: false}} name="ToktokFoodShopOverview" component={ToktokFoodShopOverview} />
+
     <Navigator.Screen
       options={{headerShown: false}}
       name="ToktokFoodAddressDetails"
