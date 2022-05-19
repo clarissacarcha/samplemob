@@ -105,16 +105,20 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 
 		let shippingfeeindex = shippingRates.findIndex((e) => e.shopid == val.shop.id)
 		let vdiscountindex = shippingVouchers.findIndex((e) => e.shopid == val.shop.id)
+		let shippingFee = shippingRates[shippingfeeindex]
+		let voucherDiscount = shippingVouchers[vdiscountindex]
 
 		logs.push({
 			sys_shop: val.shop.id,
-			branchid: shippingRates[shippingfeeindex].branchid,
+			branchid: shippingFee.branchid,
 			// delivery_amount: shipping.rateAmount,
-			delivery_amount: shippingVouchers[vdiscountindex] && shippingVouchers[vdiscountindex]?.discountedAmount != undefined ? shippingVouchers[vdiscountindex].discountedAmount : parseFloat(shippingRates[shippingfeeindex].shippingfee),
-			original_shipping_fee: parseFloat(shippingRates[shippingfeeindex].original_shipping),
+			// delivery_amount: shippingVouchers[vdiscountindex] && shippingVouchers[vdiscountindex]?.discountedAmount != undefined ? shippingVouchers[vdiscountindex].discountedAmount : parseFloat(shippingRates[shippingfeeindex].shippingfee),
+			delivery_amount: voucherDiscount && voucherDiscount?.discountedAmount != undefined ? voucherDiscount?.discountedAmount : parseFloat(shippingFee.shippingfee),
+			original_shipping_fee: parseFloat(shippingFee.original_shipping),
 			handle_shipping_promo: 1,
-			hash: shippingRates[shippingfeeindex].hash,
-			hash_delivery_amount:  shippingVouchers[vdiscountindex] && shippingVouchers[vdiscountindex]?.hash_delivery_amount != undefined ? shippingVouchers[vdiscountindex].hash_delivery_amount : shippingRates[shippingfeeindex].hash_price,
+			hash: shippingFee.hash,
+			// hash_delivery_amount:  shippingVouchers[vdiscountindex] && shippingVouchers[vdiscountindex]?.hash_delivery_amount != undefined ? shippingVouchers[vdiscountindex].hash_delivery_amount : shippingRates[shippingfeeindex].hash_price,
+			hash_delivery_amount: voucherDiscount && voucherDiscount?.hash_delivery_amount != undefined ? voucherDiscount?.hash_delivery_amount : shippingFee.hash_price,
 			daystoship: shipping.fromDay,
 			daystoship_to: shipping.toDay,
 			items: items

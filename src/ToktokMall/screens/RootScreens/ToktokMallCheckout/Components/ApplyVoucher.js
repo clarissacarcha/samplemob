@@ -273,8 +273,11 @@ export const ApplyVoucherForm = (address, customer, payload) => {
           seterrormessage(req.responseError.field_errors[`shop_${item.shop.id}_vcode`])
         }
           
+      }else if(req.responseError && req.responseError.message){
+        seterrormessage(req.responseError.message)
       }else{
         seterrormessage("Invalid voucher code. Please check your voucher code.")
+        // seterrormessage("Invalid voucher code. Please check your voucher code.")
 				// seterrormessage("Subtotal for this shop does not meet the minimum required price for this voucher.")
       }
 

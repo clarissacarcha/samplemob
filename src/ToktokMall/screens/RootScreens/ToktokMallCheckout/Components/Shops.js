@@ -272,30 +272,6 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
         const shopProducts = item.data[0]
 
-        const onDeleteVoucher = (voucher) => {          
-          let items = ArrayCopy(CheckoutContextData.shippingVouchers)          
-          let newitems = []
-
-          console.log("DELETE VOUCHER", items)
-          console.log("DELETE VOUCHER REFERENCE", voucher)
-
-          newitems = items.filter((a) => a.voucher_id != voucher.voucher_id)
-          
-          console.log("DELETE VOUCHER RESULT", newitems)
-
-          return
-          items.map((a, index) => {
-            if(a.vcode == voucher.vcode || a.voucher_id == voucher.voucher_id){
-              //skip to remove
-              // newitems.push({shopid: a.shopid})
-            }else{
-              newitems.push(a)
-            }
-          })
-          CheckoutContextData.setShippingVouchers(newitems)
-          // EventRegister.emit("ToktokMallrefreshCheckoutData")
-        }
-
         return (
           <>
             <View style={styles.voucherContainer}>

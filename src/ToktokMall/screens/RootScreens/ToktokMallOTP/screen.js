@@ -119,13 +119,14 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
       Toast.show("Something went wrong", Toast.LONG)
     }
   }
-  console.log("Checkout body", route.params.data)
+  // console.log("Checkout body", route.params.data)
 
   const ProcessPayment = async () => {
 
     let checkoutBody = route.params.data
     checkoutBody.pin = Context.value
 
+    console.log("CHECKOUT BODY JSON", JSON.stringify(checkoutBody))
     
     setValidating(false)
     setProcessing(true)

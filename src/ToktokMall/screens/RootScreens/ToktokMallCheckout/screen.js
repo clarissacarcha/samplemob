@@ -189,7 +189,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           if(item.type == "shipping"){
             await item.vouchers.map(async (voucher, index) => {
               
-              if(voucher.amount == 0){
+              if(parseFloat(voucher.amount) == 0){
 
                 let fee = null
 		            payload.cartitems.map((a) => a.shopid == item.shopid ? fee = a.shippingfee : null)
@@ -211,10 +211,16 @@ const Component = ({route, navigation, createMyCartSession}) => {
                 // items[shopvoucherIndex].discount = 0
                 
               }else{
+
+                let fee = null
+		            payload.cartitems.map((a) => a.shopid == item.shopid ? fee = a.shippingfee : null)
+                let discount = parseFloat(fee) - parseFloat(voucher.amount)
                 items.push({
                   ...voucher, 
                   autoShipping: true,
-                  deduction: voucher.amount,
+                  deduction: parseFloat(voucher.amount),
+                  discount: discount,
+                  discountedAmount: discount,
                   voucherCodeType: res.responseData.type
                 })
               }
@@ -372,6 +378,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
       if(req.responseData && req.responseData.success == 1){
 
+        let shippingVouchers = CheckoutContextData.shippingVouchers.filter((a) => a.voucherCodeType == "shipping")
+        let promotionVouchers = CheckoutContextData.shippingVouchers.filter((a) => a.voucherCodeType == "promotion")
+        
         const checkoutBody = await BuildPostCheckoutBody({
           walletRequest: req.responseData.data,
           pin: "",
@@ -380,13 +389,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
           subTotal: subTotal,
           grandTotal: grandTotal, 
           srpTotal: srpTotal,
-          vouchers: voucher, 
-          shippingVouchers: CheckoutContextData.shippingVouchers,
+          vouchers: promotionVouchers, 
+          shippingVouchers: shippingVouchers,
           shippingRates: CheckoutContextData.shippingFeeRates,
           paymentMethod: "TOKTOKWALLET",
           hashAmount: req.responseData.hash_amount,
           referenceNum: req.responseData.orderRefNum,
-          referral: franchisee
+          referral: franchisee      
         })
 
         navigation.navigate("ToktokMallOTP", {
@@ -565,29 +574,31 @@ const Component = ({route, navigation, createMyCartSession}) => {
       if(shippingfeeIndex > -1){
 
         let shippingfee = CheckoutContextData.shippingFeeRates[shippingfeeIndex]?.shippingfee
-          
-        if(voucherAmountIndex > -1){
-            
-          let voucheramount = CheckoutContextData.shippingVouchers[voucherAmountIndex]?.discountedAmount            
-          //deduct voucher discount to shipping fee
-          if(shippingfee - voucheramount < 0){
-            shippingFeeSrp += 0     
-          }else{
-            shippingFeeSrp += parseFloat(voucheramount)            
-          }
-
-        }else{
-          //no discount
-          shippingFeeSrp += parseFloat(shippingfee)
-        }
-
+        shippingFeeSrp += parseFloat(shippingfee)
         originalShippingFeeTotal += parseFloat(shippingfee)
+
+        // if(voucherAmountIndex > -1){
+            
+        //   let voucheramount = CheckoutContextData.shippingVouchers[voucherAmountIndex]?.discountedAmount            
+        //   //deduct voucher discount to shipping fee
+        //   if(shippingfee - voucheramount < 0){
+        //     shippingFeeSrp += 0     
+        //   }else{
+        //     shippingFeeSrp += parseFloat(voucheramount)            
+        //   }
+
+        // }else{
+        //   //no discount
+        //   shippingFeeSrp += parseFloat(shippingfee)
+        // }        
+
       }
 
     }
 
-    let _subTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp)
-    let srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp)
+    let discounts = CheckoutContextData.getTotalVoucherDeduction()
+    let _subTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
+    let srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
 
     setSubTotal(orderTotal)
     setSrpTotal(orderTotal)
