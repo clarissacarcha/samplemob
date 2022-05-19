@@ -16,7 +16,7 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
   const scrollY = new Animated.Value(0);
   const bgColor = scrollY.interpolate({
     inputRange: [0, 500],
-    outputRange: ['rgba(0,0,0,0.0)', 'white'],
+    outputRange: ['transparent', 'white'],
     extrapolate: 'clamp',
     useNativeDriver: true,
   });

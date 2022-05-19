@@ -10,6 +10,8 @@ node_modules/react-native/Libraries/polyfills/.*
 
 ; Ignore pager view
 .*/node_modules/react-native-pager-view/lib/typescript/.*
+.*/node_modules/react-native/Libraries/Animated/.*
+
 
 ; Ignore fbjs
 .*/node_modules/fbjs/.*
