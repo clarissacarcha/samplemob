@@ -1,7 +1,6 @@
 module.exports = {
   presets: ['module:metro-react-native-babel-preset', '@babel/preset-flow'],
   plugins: [
-    '@emotion',
     [
       'babel-plugin-root-import',
       {
