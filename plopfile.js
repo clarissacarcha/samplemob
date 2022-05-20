@@ -32,6 +32,10 @@ module.exports = function (plop) {
         choices: [
           'components',
           'compositions',
+          'compositions/Cart',
+          'compositions/OrderDetails',
+          'compositions/OrderStatus',
+          'compositions/ShopOverview',
           'screens/LandingScreens',
           'screens/RootScreens',
         ],
