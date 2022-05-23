@@ -124,10 +124,10 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => navigation.push('ToktokMallLanding'),
     },
     {
-      identifier: `bills`,
+      identifier: `${Platform.OS}Bills`,
       label: 'Bills',
       icon: BillsIcon,
-      onPress: () => navigation.push('ToktokBillsLanding'),
+      onPress: () => navigation.push('ToktokBillsHome'),
       isNew: true,
     },
     {
