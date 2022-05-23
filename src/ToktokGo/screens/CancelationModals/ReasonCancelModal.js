@@ -113,6 +113,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
             </ThrottledOpacity>
             <ThrottledOpacity
               delay={500}
+              disabled={selectedReason ? false : true}
               onPress={() => confirm()}
               style={{
                 flex: 1,
