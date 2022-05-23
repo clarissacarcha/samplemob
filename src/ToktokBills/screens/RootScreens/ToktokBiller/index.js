@@ -18,8 +18,8 @@ import {
   Separator,
   SearchInput,
   LoadingIndicator,
-  SomethingWentWrong,
   EmptyList,
+  SomethingWentWrong,
 } from 'toktokbills/components';
 import {Biller} from './Components';
 
@@ -34,6 +34,7 @@ import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_BILL_ITEMS, GET_SEARCH_BILL_ITEMS} from 'toktokbills/graphql/model';
 import {usePrompt, useThrottle} from 'src/hooks';
+import {useDebounce} from 'toktokwallet/hooks';
 
 //FONTS & COLORS
 import CONSTANTS from 'common/res/constants';
@@ -52,59 +53,63 @@ export const ToktokBiller = ({navigation, route}) => {
   const [filteredData, setFilteredData] = useState('');
   const [billItems, setBillItems] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [pageInfo, setPageInfo] = useState({});
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  const [getBillItems, {loading: billItemsLoading, error: billItemsError, refetch: billItemsRefetch}] = useLazyQuery(
-    GET_BILL_ITEMS,
-    {
+  const [getBillItems, {loading: billItemsLoading, error: billItemsError}] = useLazyQuery(GET_BILL_ITEMS, {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: () => {
+      setRefreshing(false);
+      setBillItems([]);
+    },
+    onCompleted: ({getBillItemsPaginate}) => {
+      let data = refreshing ? getBillItemsPaginate.edges : [...billItems, ...getBillItemsPaginate.edges];
+      setBillItems(data);
+      setPageInfo(getBillItemsPaginate.pageInfo);
+      setRefreshing(false);
+    },
+  });
+
+  const [getSearchBillItems, {loading: getSearchLoading, error: searchError}] = useLazyQuery(GET_SEARCH_BILL_ITEMS, {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: () => {
+      setRefreshing(false);
+      setSearchLoading(false);
+    },
+    onCompleted: ({getSearchBillItemsPaginate}) => {
+      let data = refreshing ? getSearchBillItemsPaginate.edges : [...filteredData, ...getSearchBillItemsPaginate.edges];
+
+      setFilteredData(data);
+      setPageInfo(getSearchBillItemsPaginate.pageInfo);
+      setRefreshing(false);
+      setSearchLoading(false);
+    },
+  });
+
+  useEffect(() => {
+    setIsMounted(true);
+    handleGetBillItems();
+  }, []);
+
+  const handleGetBillItems = () => {
+    getBillItems({
       variables: {
         input: {
           billTypeId: billType.id,
+          afterCursorId: null,
+          afterCursorName: null,
         },
       },
-      fetchPolicy: 'cache-and-network',
-      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-      onError: () => {
-        setRefreshing(false);
-        setBillItems([]);
-      },
-      onCompleted: ({getBillItems}) => {
-        console.log(getBillItems);
-        setBillItems(getBillItems);
-      },
-    },
-  );
-
-  const [getSearchBillItems, {loading: searchLoading, error: searchError, refetch: searchRefetch}] = useLazyQuery(
-    GET_SEARCH_BILL_ITEMS,
-    {
-      fetchPolicy: 'cache-and-network',
-      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-      onError: () => {
-        setRefreshing(false);
-      },
-      onCompleted: ({getSearchBillItems}) => {
-        setTimeout(() => setFilteredData(getSearchBillItems), 0);
-      },
-    },
-  );
+    });
+  };
 
   useEffect(() => {
-    getBillItems();
-  }, []);
-
-  useEffect(() => {
-    if (search) {
-      getSearchBillItems({
-        variables: {
-          input: {
-            billTypeId: billType.id,
-            searchKey: search,
-          },
-        },
-      });
-    } else {
-      setFilteredData([]);
-      getBillItems();
+    if (!search) {
+      handleGetBillItems();
+      setBillItems([]);
     }
   }, [search]);
 
@@ -113,6 +118,68 @@ export const ToktokBiller = ({navigation, route}) => {
       return filteredData.length > 0 ? filteredData : [];
     }
     return billItems;
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    search ? processSearch(search) : handleGetBillItems();
+  };
+
+  const fetchMoreData = () => {
+    if (pageInfo.hasNextPage) {
+      if (search) {
+        getSearchBillItems({
+          variables: {
+            input: {
+              billTypeId: billType.id,
+              afterCursorId: pageInfo.endCursorId,
+              afterCursorName: pageInfo.endCursorName,
+              search,
+            },
+          },
+        });
+      } else {
+        getBillItems({
+          variables: {
+            input: {
+              billTypeId: billType.id,
+              afterCursorId: pageInfo.endCursorId,
+              afterCursorName: pageInfo.endCursorName,
+            },
+          },
+        });
+      }
+    }
+  };
+
+  const onSearchChange = value => {
+    setFilteredData([]);
+    setSearchLoading(value.length > 0);
+    setSearch(value);
+    debounceProcessSearch(value);
+  };
+
+  const debounceProcessSearch = useDebounce(value => processSearch(value), 1000);
+
+  const processSearch = value => {
+    getSearchBillItems({
+      variables: {
+        input: {
+          billTypeId: billType.id,
+          afterCursorId: null,
+          afterCursorName: null,
+          search: value,
+        },
+      },
+    });
+  };
+
+  const ListFooterComponent = () => {
+    return (
+      <View style={{marginTop: moderateScale(15)}}>
+        <LoadingIndicator isLoading={pageInfo.hasNextPage} size="small" />
+      </View>
+    );
   };
 
   const ListEmptyComponent = () => {
@@ -125,17 +192,6 @@ export const ToktokBiller = ({navigation, route}) => {
     return <EmptyList imageSrc={emptyImage} label={emptyLabel} message={emptyText} />;
   };
 
-  const onRefresh = () => {
-    search ? searchRefetch() : billItemsRefetch();
-  };
-
-  if (billItemsLoading && billItems.length === 0) {
-    return (
-      <View style={styles.container}>
-        <LoadingIndicator isLoading={true} isFlex />
-      </View>
-    );
-  }
   if (billItemsError || searchError) {
     return (
       <View style={styles.container}>
@@ -146,13 +202,19 @@ export const ToktokBiller = ({navigation, route}) => {
   return (
     <>
       <View style={styles.container}>
-        {billItems != 0 && search == '' && (
-          <View style={styles.searchContainer}>
-            <SearchInput search={search} setSearch={setSearch} placeholder="Look for your biller here" />
-          </View>
-        )}
-
-        {searchLoading && filteredData.length === 0 ? (
+        <View style={styles.searchContainer}>
+          {isMounted && (billItems.length != 0 || billItemsLoading) && (
+            <SearchInput
+              search={search}
+              onChangeText={onSearchChange}
+              onClear={() => {
+                setSearch('');
+              }}
+              placeholder="What bill do you have to pay?"
+            />
+          )}
+        </View>
+        {(searchLoading && filteredData.length === 0) || (billItemsLoading && billItems.length === 0 && !refreshing) ? (
           <LoadingIndicator isLoading={true} isFlex />
         ) : (
           <FlatList
@@ -163,6 +225,9 @@ export const ToktokBiller = ({navigation, route}) => {
             extraData={{filteredData, billItems}}
             ListEmptyComponent={ListEmptyComponent}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            onEndReachedThreshold={0.2}
+            onEndReached={fetchMoreData}
+            ListFooterComponent={ListFooterComponent}
           />
         )}
       </View>
