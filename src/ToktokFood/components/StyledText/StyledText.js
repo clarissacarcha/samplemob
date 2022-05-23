@@ -11,7 +11,7 @@ import type {PropsType} from './types';
 import {moderateScale} from 'toktokfood/helper/scale';
 
 const StyledText = (props: PropsType): React$Node => {
-  const {children, mode = 'regular', isItalic, style, fontSize = 15, textProps} = props;
+  const {children, color = 'black', mode = 'regular', isItalic, style, fontSize = 13, textProps} = props;
 
   const scaledFontSize = moderateScale(fontSize);
 
@@ -62,6 +62,7 @@ const StyledText = (props: PropsType): React$Node => {
         {
           fontFamily: fontResolver(),
           fontSize: scaledFontSize,
+          color,
         },
         style,
         getExtraStyle(),

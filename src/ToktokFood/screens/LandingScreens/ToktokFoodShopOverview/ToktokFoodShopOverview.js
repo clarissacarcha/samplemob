@@ -1,114 +1,68 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @format
  * @flow
  */
 
-import React from 'react';
+import React, {useMemo, useRef} from 'react';
 import {Animated} from 'react-native';
+import {useRoute} from '@react-navigation/native';
 
 import type {PropsType} from './types';
-import {AnimatedHeader, Container, ImageBg, ScrollContainer} from './Styled';
+import {AnimatedHeader, AnimatedImageHeader, Container, ImageBg} from './Styled';
 
 import Header from 'toktokfood/components/Header';
-import StyledText from 'toktokfood/components/StyledText';
+// import StyledText from 'toktokfood/components/StyledText';
+import ShopInfo from 'toktokfood/compositions/ShopOverview/ShopInfo';
+import ShopTabView from 'toktokfood/compositions/ShopOverview/ShopTabView';
 
 const ToktokFoodShopOverview = (props: PropsType): React$Node => {
-  const scrollY = new Animated.Value(0);
-  const bgColor = scrollY.interpolate({
-    inputRange: [0, 500],
-    outputRange: ['transparent', 'white'],
-    extrapolate: 'clamp',
-    useNativeDriver: true,
-  });
+  const route = useRoute();
+  const {item} = route.params;
 
-  const DATA = [
-    {
-      id: 1,
-      title: 'The Hunger Games',
-    },
-    {
-      id: 2,
-      title: 'Harry Potter and the Order of the Phoenix',
-    },
-    {
-      id: 3,
-      title: 'To Kill a Mockingbird',
-    },
-    {
-      id: 4,
-      title: 'Pride and Prejudice',
-    },
-    {
-      id: 5,
-      title: 'Twilight',
-    },
-    {
-      id: 6,
-      title: 'The Book Thief',
-    },
-    {
-      id: 7,
-      title: 'The Chronicles of Narnia',
-    },
-    {
-      id: 8,
-      title: 'Animal Farm',
-    },
-    {
-      id: 9,
-      title: 'Gone with the Wind',
-    },
-    {
-      id: 10,
-      title: 'The Shadow of the Wind',
-    },
-    {
-      id: 11,
-      title: 'The Fault in Our Stars',
-    },
-    {
-      id: 12,
-      title: "The Hitchhiker's Guide to the Galaxy",
-    },
-    {
-      id: 13,
-      title: 'The Giving Tree',
-    },
-    {
-      id: 14,
-      title: 'Wuthering Heights',
-    },
-    {
-      id: 15,
-      title: 'The Da Vinci Code',
-    },
-  ];
+  // Ref for scrolling animation
+  let isListGliding = useRef(false);
+  let listRefArr = useRef([]);
+  let listOffset = useRef({});
+  const scrollY = new Animated.Value(0);
+
+  const AnimatedHeaderTitle = useMemo(() => {
+    // interpolate image and shopinfo
+    const translateY = scrollY.interpolate({
+      inputRange: [0, 350],
+      outputRange: [0, -350],
+      extrapolateRight: 'clamp',
+    });
+    // interpolate bgcolor for header
+    const backgroundColor = scrollY.interpolate({
+      inputRange: [0, 300],
+      outputRange: ['transparent', 'white'],
+      extrapolate: 'clamp',
+      // useNativeDriver: true,
+    });
+    return (
+      <React.Fragment>
+        <AnimatedHeader style={{backgroundColor}}>
+          <Header hasBack backgroundColor="transparent" />
+        </AnimatedHeader>
+        <AnimatedImageHeader style={{transform: [{translateY}]}}>
+          <ImageBg source={item?.banner} />
+          <ShopInfo shopInfo={item} />
+        </AnimatedImageHeader>
+      </React.Fragment>
+    );
+  });
 
   return (
     <Container>
-      <ImageBg />
-
-      <AnimatedHeader style={{backgroundColor: bgColor}}>
-        <Header hasBack backgroundColor="transparent" />
-      </AnimatedHeader>
-
-      <ScrollContainer
-        onScroll={Animated.event(
-          [
-            {
-              nativeEvent: {contentOffset: {y: scrollY}},
-            },
-          ],
-          {
-            listener: event => {},
-            useNativeDriver: false,
-          },
-        )}
-        scrollEventThrottle={16}>
-        {DATA.map(() => (
-          <StyledText fontSize={80}>Test Scroll lakjdklsajdlkasjdklsjkdajskd</StyledText>
-        ))}
-      </ScrollContainer>
+      <ShopTabView
+        shopId={item.id}
+        isListGliding={isListGliding}
+        listRefArr={listRefArr}
+        listOffset={listOffset}
+        scrollY={scrollY}
+      />
+      {AnimatedHeaderTitle}
     </Container>
   );
 };

@@ -22,7 +22,6 @@ export const BackButton: ComponentType<any> = styled(Icon).attrs(props => ({
   type: 'ionicon',
   color: props.color || props.theme.color.orange,
   size: 30,
-  //   ...props,
 }))``;
 
 // export const NotifIcon: ComponentType<any> = styled(Icon).attrs(props => ({

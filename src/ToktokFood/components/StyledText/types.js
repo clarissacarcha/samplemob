@@ -10,4 +10,5 @@ export type PropsType = {
   style?: Object,
   fontSize?: number,
   textProps?: Object,
+  color?: string,
 };
