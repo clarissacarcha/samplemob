@@ -16,12 +16,13 @@ import {
 } from '../../../../../assets';
 import { Hairline } from '../../../../../../components/widgets';
 import { DisplayDateAndTime } from '../../../../../helpers';
+import { RenderBuyAgain } from './RenderBuyAgain';
 import CustomIcon from './.../../../../../../../Components/Icons';
 
 export const RenderItem = (props) => {
     const { 
         onPressCard,
-        onPressBuy,
+        renderBuyAgain,
         fulldata,
     } = props;
 
@@ -74,12 +75,11 @@ export const RenderItem = (props) => {
 
                         <RenderSummary data={fulldata}/>
 
-                        { onPressBuy && <TouchableOpacity style={styles.buyAgainButton} onPress={onPressBuy} >
-                            <Text style={styles.buyAgainText}>Buy Again</Text>
-                        </TouchableOpacity> }
+                        { renderBuyAgain && <RenderBuyAgain data={fulldata}/> }
                     </View>
                 </TouchableOpacity>
             </View>
+
         </View>
     )
 }

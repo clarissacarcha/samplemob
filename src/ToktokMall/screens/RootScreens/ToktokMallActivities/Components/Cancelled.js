@@ -27,96 +27,16 @@ const getAccessToken = async () => {
   return accessToken
 };
 
-export const CancelledItem = ({fulldata, onPressBuy: parentBuyOnpress}) => {
+export const CancelledItem = ({fulldata}) => {
   const navigation = useNavigation();
-
-  const [getBuyAgain] = useLazyQuery(GET_BUY_AGAIN, {
-    client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    context: { headers: { authorization: "Bearer: " + getAccessToken() }},  
-    onCompleted: (response) => {
-      if(response.getBuyAgain) {
-        const itemsToBeSelected = [];
-        const { toaddItems, toupdateItems } = response.getBuyAgain;
-        if(toaddItems.length > 0) {
-          toaddItems.map(async (item, index) => {
-            
-            try {
-              let variables = {
-                userid: item.userid,
-                shopid: item.shopid,
-                branchid: item.branchid,
-                productid: item.productid,
-                quantity: item.quantity
-              }
-
-              itemsToBeSelected.push(item.productid);
-
-              const req = await ApiCall("insert_cart", variables, true);
-              if(req) {
-                if(index === toaddItems.length - 1 && toupdateItems.length === 0) {
-                  parentBuyOnpress();
-                  navigation.navigate("ToktokMallMyCart", {items: itemsToBeSelected});
-                  EventRegister.emit('refreshToktokmallShoppingCart');
-                }
-              }
-            } catch (err) {
-              console.log(err)
-            } 
-          })
-        }
-
-        if(toupdateItems.length > 0) {
-          toupdateItems.map(async (item, index) => {
-            try {
-              let variables = {
-                userid: item.userid,
-                shopid: item.shopid,
-                branchid: item.branchid,
-                productid: item.productid,
-                quantity: item.quantity
-              }
-
-              itemsToBeSelected.push(item.productid)
-
-              const req = await ApiCall("update_cart", variables, true);
-              if(req) {
-                if(index === toupdateItems.length - 1) {
-                  parentBuyOnpress();
-                  navigation.navigate("ToktokMallMyCart", {items: itemsToBeSelected});
-                  EventRegister.emit('refreshToktokmallShoppingCart');                  
-                }
-              }
-            } catch (err) {
-              console.log(err)
-            } 
-          })
-        }
-      } 
-    },
-    onError: (err) => {
-      console.log(err)
-    }
-  });
 
   onPressCard = () => {
     navigation.navigate("ToktokMallOrderDetails", {...fulldata, orderId: fulldata.id})
   }
 
-  onPressBuy = () => {
-    parentBuyOnpress();
-
-    const { items } = fulldata.orders;
-
-    getBuyAgain({variables: {
-      input: {
-        items: items
-      }
-    }})
-  }
-
   return <RenderItem 
     onPressCard={onPressCard}
-    onPressBuy={onPressBuy}
+    renderBuyAgain={true}
     fulldata={fulldata}
   />
 }
