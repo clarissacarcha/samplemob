@@ -72,6 +72,23 @@ export const ToktokBiller = ({navigation, route}) => {
     },
   });
 
+  const [getSearchBillItems, {loading: getSearchLoading, error: searchError}] = useLazyQuery(GET_SEARCH_BILL_ITEMS, {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: () => {
+      setRefreshing(false);
+      setSearchLoading(false);
+    },
+    onCompleted: ({getSearchBillItemsPaginate}) => {
+      let data = refreshing ? getSearchBillItemsPaginate.edges : [...filteredData, ...getSearchBillItemsPaginate.edges];
+
+      setFilteredData(data);
+      setPageInfo(getSearchBillItemsPaginate.pageInfo);
+      setRefreshing(false);
+      setSearchLoading(false);
+    },
+  });
+
   useEffect(() => {
     setIsMounted(true);
     handleGetBillItems();
@@ -89,23 +106,72 @@ export const ToktokBiller = ({navigation, route}) => {
     });
   };
 
+  useEffect(() => {
+    if (!search) {
+      handleGetBillItems();
+      setBillItems([]);
+    }
+  }, [search]);
+
+  const getData = () => {
+    if (search) {
+      return filteredData.length > 0 ? filteredData : [];
+    }
+    return billItems;
+  };
+
   const onRefresh = () => {
     setRefreshing(true);
-    handleGetBillItems();
+    search ? processSearch(search) : handleGetBillItems();
   };
 
   const fetchMoreData = () => {
     if (pageInfo.hasNextPage) {
-      getBillItems({
-        variables: {
-          input: {
-            billTypeId: billType.id,
-            afterCursorId: pageInfo.endCursorId,
-            afterCursorName: pageInfo.endCursorName,
+      if (search) {
+        getSearchBillItems({
+          variables: {
+            input: {
+              billTypeId: billType.id,
+              afterCursorId: pageInfo.endCursorId,
+              afterCursorName: pageInfo.endCursorName,
+              search,
+            },
           },
-        },
-      });
+        });
+      } else {
+        getBillItems({
+          variables: {
+            input: {
+              billTypeId: billType.id,
+              afterCursorId: pageInfo.endCursorId,
+              afterCursorName: pageInfo.endCursorName,
+            },
+          },
+        });
+      }
     }
+  };
+
+  const onSearchChange = value => {
+    setFilteredData([]);
+    setSearchLoading(value.length > 0);
+    setSearch(value);
+    debounceProcessSearch(value);
+  };
+
+  const debounceProcessSearch = useDebounce(value => processSearch(value), 1000);
+
+  const processSearch = value => {
+    getSearchBillItems({
+      variables: {
+        input: {
+          billTypeId: billType.id,
+          afterCursorId: null,
+          afterCursorName: null,
+          search: value,
+        },
+      },
+    });
   };
 
   const ListFooterComponent = () => {
@@ -126,10 +192,10 @@ export const ToktokBiller = ({navigation, route}) => {
     return <EmptyList imageSrc={emptyImage} label={emptyLabel} message={emptyText} />;
   };
 
-  if (billItemsError) {
+  if (billItemsError || searchError) {
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} error={billItemsError} />
+        <SomethingWentWrong onRefetch={onRefresh} error={billItemsError ?? searchError} />
       </View>
     );
   }
@@ -138,14 +204,21 @@ export const ToktokBiller = ({navigation, route}) => {
       <View style={styles.container}>
         <View style={styles.searchContainer}>
           {isMounted && (billItems.length != 0 || billItemsLoading) && (
-            <SearchInput search={search} placeholder="What bill do you have to pay?" />
+            <SearchInput
+              search={search}
+              onChangeText={onSearchChange}
+              onClear={() => {
+                setSearch('');
+              }}
+              placeholder="What bill do you have to pay?"
+            />
           )}
         </View>
-        {billItemsLoading && billItems.length === 0 && !refreshing ? (
+        {(searchLoading && filteredData.length === 0) || (billItemsLoading && billItems.length === 0 && !refreshing) ? (
           <LoadingIndicator isLoading={true} isFlex />
         ) : (
           <FlatList
-            data={billItems}
+            data={getData()}
             renderItem={({item, index}) => <Biller item={item} index={index} />}
             contentContainerStyle={styles.listContainer}
             keyExtractor={(item, index) => index.toString()}
