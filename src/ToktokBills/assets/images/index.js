@@ -10,9 +10,10 @@ export const bayan_img = require('./bayan.png');
 export const pldt_img = require('./pldt.png');
 
 //empty images
-export const empty_activities = require('./empty-activities.png');
-export const empty_notifications = require('./empty-notifications.png');
-export const empty_search = require('./empty-search.png');
+export const empty_activities = require('./empty-screens/empty-activities.png');
+export const empty_list = require('./empty-screens/empty-list.png');
+export const empty_notifications = require('./empty-screens/empty-notifications.png');
+export const empty_search = require('./empty-screens/empty-search.png');
 
 //onboarding images
 // export const onboarding_1 = require('./onboarding/onboarding-1.png');
