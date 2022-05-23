@@ -6,7 +6,6 @@ const trip = `
       name
     }
     consumerUserId
-    dispatchHash
     driver{
       mobileNumber
       name

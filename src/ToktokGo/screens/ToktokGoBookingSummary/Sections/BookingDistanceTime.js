@@ -1,31 +1,29 @@
 import React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
+import {Text, StyleSheet, View, ActivityIndicator} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import FIcon from 'react-native-vector-icons/Fontisto';
 import moment from 'moment';
+import {useSelector} from 'react-redux';
 
-export const BookingDistanceTime = ({quotationData}) => {
+export const BookingDistanceTime = ({quotationData, loading}) => {
   const minDuration = quotationData.route?.duration.minute;
   const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
   const minTime = moment().format('hh:mm A');
 
+  const {details} = useSelector(state => state.toktokGo);
   return (
     <>
       <View style={styles.container}>
         <View>
           <View style={styles.elementWrapper}>
-            <FIcon name={'map'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
-            <Text style={styles.textStyle}>{quotationData.route?.distance.kilometer} km</Text>
-          </View>
-          <Text style={styles.bottomTextStyle}>Distance</Text>
-        </View>
-
-        <View>
-          <View style={styles.elementWrapper}>
-            <FIcon name={'clock'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
-            <Text style={styles.textStyle}>
-              {minTime} - {maxTime}
-            </Text>
+            {loading ? (
+              <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+            ) : (
+              <>
+                <FIcon name={'clock'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
+                <Text style={styles.textStyle}>{details?.rate?.initialTripCompletionEstimate}</Text>
+              </>
+            )}
           </View>
           <Text style={styles.bottomTextStyle}>Estimated Time of Drop-off</Text>
         </View>

@@ -38,12 +38,17 @@ export const GET_QUOTATION = gql`
             phrase
             imageClass
             availableSeats
+            flatRate
+            perKm
+            perMin
+            maxSurgeCharge
           }
           rate {
             amount
             flatRate
             mileageFee
             durationFee
+            surgeCharge
           }
         }
       }
@@ -54,14 +59,21 @@ export const GET_QUOTATION = gql`
 export const GET_TRIP_FARE = gql`
   query getTripFare($input: GetTripFareInput!) {
     getTripFare(input: $input) {
+      charge {
+        amount
+        type
+      }
       hash
       tripFare {
+        amount
+        discount
+        durationFee
         flatRate
         mileageFee
-        durationFee
-        discount
+        surgeCharge
         total
       }
+      initialTripCompletionEstimate
     }
   }
 `;

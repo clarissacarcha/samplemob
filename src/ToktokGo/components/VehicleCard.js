@@ -64,14 +64,14 @@ export const VehicleCard = ({type, data, selectVehicle, setDataVehicle, selected
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.fareText}>Base fare</Text>
             <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
-              {details?.rate?.tripFare?.flatRate ? '₱ ' + numberFormat(details?.rate?.tripFare?.flatRate) : ''}
+              {data?.vehicleType?.flatRate ? '₱ ' + numberFormat(data?.vehicleType?.flatRate) : ''}
             </Text>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.kmText}>Per KM</Text>
             <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
-              {details?.rate?.tripFare?.mileageFee ? (
-                '₱ ' + numberFormat(details?.rate?.tripFare?.mileageFee)
+              {data?.vehicleType?.perKm ? (
+                '₱ ' + numberFormat(data?.vehicleType?.perKm)
               ) : (
                 <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
               )}
@@ -80,8 +80,12 @@ export const VehicleCard = ({type, data, selectVehicle, setDataVehicle, selected
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.durationText}>Per minute</Text>
             <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>
-              {details?.rate?.tripFare?.durationFee ? '₱ ' + numberFormat(details?.rate?.tripFare?.durationFee) : ''}
+              {data?.vehicleType?.perMin ? '₱ ' + numberFormat(data?.vehicleType?.perMin) : ''}
             </Text>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.surgeText}>Max Surge Charge</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>{'2.0'}</Text>
           </View>
         </View>
       )}
@@ -140,9 +144,15 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
-    marginRight: 48,
+    marginRight: 84,
   },
   durationText: {
+    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontSize: CONSTANTS.FONT_SIZE.S,
+    color: CONSTANTS.COLOR.ALMOST_BLACK,
+    marginRight: 63.5,
+  },
+  surgeText: {
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
@@ -152,7 +162,7 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
-    marginRight: 36,
+    marginRight: 72,
   },
   priceDetails: {
     borderRadius: 5,

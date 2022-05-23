@@ -6,7 +6,6 @@ consumer {
   name
 }
 consumerUserId
-dispatchHash
 driver {
   mobileNumber
   name
