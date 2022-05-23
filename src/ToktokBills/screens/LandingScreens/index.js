@@ -1,3 +1,2 @@
-export * from "./ToktokBillsActivities";
-export * from "./ToktokBillsHome";
-export * from "./ToktokBillsNotifications";
+export * from './ToktokBillsActivities';
+export * from './ToktokBillsNotifications';
