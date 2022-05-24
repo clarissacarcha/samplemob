@@ -55,6 +55,13 @@ export const GET_TRANSACTIONS_BY_STATUS = gql`
     }
   }
 `
+export const GET_BILL_TRANSACTIONS = gql`
+  query getTransactions($input: GetTransactionsInput!) {
+    getTransactions(input: $input) {
+      ${transaction}
+    }
+  }
+`
 export const POST_TOKTOKWALLET_REQUEST_MONEY = gql`
   mutation postToktokWalletRequestMoney($input: PostToktokWalletRequestMoneyInput!) {
     postToktokWalletRequestMoney(input: $input) {

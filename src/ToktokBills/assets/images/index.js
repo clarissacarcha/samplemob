@@ -4,7 +4,7 @@ export const screen_bg = require('./screen-bg.png');
 export const toktok_logo = require('./toktok-logo.png');
 export const toktokbills_sq_logo = require('./toktokbills_sq_logo.png');
 export const toktokbills = require('./toktokbills.png');
-
+export const toktokwallet_logo = require('./toktokwallet-logo.png');
 export const wallet_img = require('./wallet.png');
 
 // sample images
