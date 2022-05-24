@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { FONT } from '../../../../../res/variables';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import { GET_MY_CART, GET_BUY_AGAIN } from '../../../../../graphql/toktokmall/model';
+import { GET_MY_CART, GET_BUY_AGAIN, CHECK_ITEM_FROM_CART  } from '../../../../../graphql/toktokmall/model';
 import { ApiCall, getRefComAccountType} from '../../../../helpers';
 import { EventRegister } from 'react-native-event-listeners';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -55,10 +55,11 @@ export const RenderBuyAgain = ({ navigation, data, onPressBuy: parentBuyOnpress 
                 shopid: data?.orders?.shopId,
                 branchid: item.branchid,
                 productid: item.productid,
-                quantity: qty + item.quantity
+                quantity: item.quantity
               }
               itemsToBeSelected.push(item.productid);
               const req = await ApiCall("insert_cart", variables, true);
+              // console.log("GAGAGAG",req)
               if(req) {
                 if(index === toaddItems?.length - 1 && toupdateItems?.length === 0) {
                   parentBuyOnpress();
@@ -75,15 +76,19 @@ export const RenderBuyAgain = ({ navigation, data, onPressBuy: parentBuyOnpress 
         if(toupdateItems?.length > 0) {
           toupdateItems?.map(async (item, index) => {
             try {
+              const quantity = await getQuantity(item);
+
               let variables = {
                 userid: item.userid,
                 shopid: data?.orders?.shopId,
                 branchid: item.branchid,
                 productid: item.productid,
-                quantity: qty + item.quantity
+                quantity: quantity
               }
               itemsToBeSelected.push(item.productid);
               const req = await ApiCall("update_cart", variables, true);
+
+              // console.log("GAGAGAG",req)
               if(req) {
                 if(index === toupdateItems?.length - 1) {
                   parentBuyOnpress();
@@ -113,6 +118,24 @@ export const RenderBuyAgain = ({ navigation, data, onPressBuy: parentBuyOnpress 
       }
     }) 
   },[])
+
+  
+  const getQuantity = async (item) => {
+    const { userid, productid, quantity } = item;
+    const { data: { checkItemFromCart } } = await TOKTOK_MALL_GRAPHQL_CLIENT.query({
+        query: CHECK_ITEM_FROM_CART,
+        variables: {
+          input: {
+            userId: userid,
+            productId: productid
+          }
+        }
+    })
+
+    const { quantity: itemQuantity } = checkItemFromCart;
+    const newQuantity = parseInt(itemQuantity) + parseInt(quantity);
+    return newQuantity;
+  }
 
   onPressBuy = () => {
     parentBuyOnpress();

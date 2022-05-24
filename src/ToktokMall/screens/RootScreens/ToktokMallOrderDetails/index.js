@@ -95,7 +95,10 @@ const Component = ({navigation, route, notificationCountSession, notifications})
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <RenderOrderInfo data={data} />
-        <RenderStore data={data} />
+        <RenderStore 
+          data={data} 
+          navigation={navigation}
+        />
         <RenderSummary data={data} />
         <RenderDeliveryLog data={data} />
         <RenderBuyAgain 
