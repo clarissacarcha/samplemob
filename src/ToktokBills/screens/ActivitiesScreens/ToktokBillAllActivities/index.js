@@ -51,7 +51,6 @@ export const ToktokBillAllActivities = ({ navigation }) => {
   }, [])
 
   const onPressActivityCard = (item) => {
-    console.log("item", item)
     navigation.navigate("ToktokBillsActivityDetails", { activityDetails: item })
   }
 

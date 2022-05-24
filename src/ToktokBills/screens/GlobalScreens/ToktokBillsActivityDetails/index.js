@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import FIcon5 from "react-native-vector-icons/FontAwesome5";
-import {Platform, StyleSheet, View, Text, TouchableOpacity, ScrollView, Image} from "react-native";
+import {Platform, StyleSheet, View, Text, Image} from "react-native";
 import moment from "moment";
 
 // Components
@@ -8,13 +7,12 @@ import { HeaderBack, HeaderTitle, Separator } from "toktokbills/components";
 import {VectorIcon, ICON_SET} from 'src/revamp';
 
 // Helpers
-import {moderateScale, verticalScale, numberFormat} from "toktokload/helper";
+import {moderateScale, currencyCode, numberFormat} from "toktokbills/helper";
 
 // Fonts & Colors
 import {COLOR, FONT, FONT_SIZE} from "res/variables";
 import {paper_airplane_icon} from 'toktokbills/assets/icons';
-import { toktokwallet_logo } from "toktokload/assets/images";
-import { check_fill_icon } from "toktokload/assets/icons";
+import { toktokwallet_logo } from "toktokbills/assets/images";
 
 const getStatus = (status) => {
   //	1 = successful; 2 = pending; 3 = failed
@@ -35,9 +33,10 @@ export const ToktokBillsActivityDetails = ({ navigation, route }) => {
     headerTitle: () => <HeaderTitle label={"Bill Details"} />,
   });
 
-  const { amount, convenienceFee, systemServiceFee, createdAt, destinationNumber, destinationIdentifier, senderMobileNumber, billerDetails, referenceNumber, status, toktokwalletReturnRefNo } = route.params?.activityDetails;
+  const { amount, providerServiceFee, systemServiceFee, createdAt, destinationNumber, destinationIdentifier, senderMobileNumber, billerDetails, referenceNumber, status, toktokwalletReturnRefNo } = route.params?.activityDetails;
   const transactionDateTime = moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
-  const totalAmount = `₱${numberFormat(parseFloat(amount) + parseFloat(convenienceFee) + parseFloat(systemServiceFee))}`;
+  const convenienceFee = `${providerServiceFee + systemServiceFee}`;
+  const totalAmount = `${currencyCode}${numberFormat(parseFloat(amount) + parseFloat(convenienceFee))}`;
   const statusData = getStatus(status);
 
   return (
@@ -46,12 +45,12 @@ export const ToktokBillsActivityDetails = ({ navigation, route }) => {
            <View style={styles.headerContainer}>
              <Text>
                <Text style={{fontFamily: FONT.BOLD}}>Service Reference Number{' '}</Text>
-               <Text style={{color: '#FDBA1C', fontFamily: FONT.BOLD}}>{referenceNumber}</Text>
+               <Text style={styles.referenceNumber}>{referenceNumber}</Text>
              </Text>
            </View>
            <View style={styles.rowAlignItemsCenter}>
              { statusData.text == 'Success' ? (
-               <Image source={paper_airplane_icon} style={{ resizeMode: "contain", height: moderateScale(15), width: moderateScale(15) }} />
+               <Image source={paper_airplane_icon} style={styles.successIcon} />
              ) : (
                <VectorIcon size={moderateScale(15)} iconSet={ICON_SET.Ionicon} color={statusData.color} name={statusData.iconName} />
              )}
@@ -82,31 +81,26 @@ export const ToktokBillsActivityDetails = ({ navigation, route }) => {
           <Image source={toktokwallet_logo} style={styles.walletLogo} />
         </View>
         <View style={styles.separator} />
-        <View style={styles.networkDetails}>
           <View style={styles.networkContainer}>
             <Image source={{ uri: billerDetails?.logo }} style={styles.networkIcon} />
-            <View style={{ paddingLeft: moderateScale(10), flexShrink: 1 }}>
+            <View style={styles.billerDetails}>
               <Text style={styles.network}>{billerDetails?.descriptions}</Text>
             </View>
           </View>
-          {/* <View>
-            <Text style={styles.mediumBoldOrange}>₱{numberFormat(amount)}</Text>
-          </View> */}
-        </View>
         <View style={styles.separator} />
         <View style={{ paddingVertical: moderateScale(16) }}>
             <View style={{ marginBottom: moderateScale(10) }}>
               <View style={styles.breakdownContainer}>
                 <Text>Payment Amount</Text>
-                <Text>₱{numberFormat(amount)}</Text>
+                <Text>{currencyCode}{numberFormat(amount)}</Text>
               </View>
               <View style={styles.breakdownContainer}>
                 <Text>Convenience Fee</Text>
-                <Text>₱{numberFormat(convenienceFee)}</Text>
+                <Text>{currencyCode}{numberFormat(providerServiceFee)}</Text>
               </View>
               <View style={styles.breakdownContainer}>
                 <Text>Toktok Service Fee</Text>
-                <Text>₱{numberFormat(systemServiceFee)}</Text>
+                <Text>{currencyCode}{numberFormat(systemServiceFee)}</Text>
               </View>
             </View>
           <View style={styles.breakdownContainer}>
@@ -165,12 +159,6 @@ const styles = StyleSheet.create({
     height: moderateScale(40),
     resizeMode: "contain"
   },
-  networkDetails: {
-    paddingVertical: moderateScale(16),
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
   mediumBoldOrange: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
@@ -199,9 +187,9 @@ const styles = StyleSheet.create({
     resizeMode: "contain"
   },
   networkContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1
+    padding: moderateScale(16),
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerContainer: {
     flexShrink: 1,
@@ -218,4 +206,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center"
   },
+  successIcon: {
+    resizeMode: "contain", 
+    height: moderateScale(15), 
+    width: moderateScale(15)
+  },
+  referenceNumber: {
+    color: '#FDBA1C', 
+    fontFamily: FONT.BOLD
+  },
+  billerDetails: {
+    paddingLeft: moderateScale(10), 
+    flexShrink: 1 
+  }
 });

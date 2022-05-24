@@ -1,19 +1,15 @@
  import React from 'react';
  import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
  import CONSTANTS from '../../../common/res/constants';
- import {constant, throttle} from 'lodash';
  import {VectorIcon, ICON_SET} from 'src/revamp';
  
  //HELPER
- import {moderateScale, numberFormat} from 'toktokbills/helper';
+ import {moderateScale, numberFormat, currencyCode} from 'toktokbills/helper';
  import moment from 'moment';
  
  //IMAGES & COLOR
  import {toktokwallet_logo} from 'toktokbills/assets/images';
  import {paper_airplane_icon} from 'toktokbills/assets/icons';
- import Wallet from '../../../assets/images/Wallet.png';
- import OnGoing from '../../../assets/icons/OnGoing.png';
- import ToktokWalletText from '../../../assets/images/ToktokwalletText.png';
  
  const {COLOR, FONT_SIZE, FONT_FAMILY} = CONSTANTS;
  
@@ -34,13 +30,12 @@
      amount,
      convenienceFee,
      createdAt,
-     destinationNumber,
-     loadDetails,
      billerDetails,
      referenceNumber,
+     destinationIdentifier,
      status,
-     toktokwalletReturnRefNo,
    } = item;
+   console.log("item", item)
    let transactionDateTime = moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
    let totalAmount = numberFormat(parseFloat(amount) + parseFloat(convenienceFee));
    const statusData = getStatus(status);
@@ -73,13 +68,13 @@
            <Image source={{uri: billerDetails?.logo}} style={styles.networkIcon} />
            <View style={{paddingLeft: moderateScale(10), flexShrink: 1}}>
              <Text>{billerDetails?.descriptions}</Text>
-             <Text style={styles.subText}>{destinationNumber}</Text>
+             <Text style={styles.subText}>{destinationIdentifier}</Text>
            </View>
          </View>
          <View style={styles.divider} />
          <View style={styles.detailThreeContainer}>
            <Image source={toktokwallet_logo} style={styles.toktokwalletLogo} />
-           <Text style={styles.totalAmount}>Total: ₱{totalAmount}</Text>
+           <Text style={styles.totalAmount}>Total: {currencyCode}{totalAmount}</Text>
          </View>
        </View>
      </TouchableOpacity>
@@ -122,7 +117,7 @@
    detailOneContainer: {
      paddingVertical: moderateScale(10),
      paddingHorizontal: moderateScale(16),
-     backgroundColor: '#FBFAE3',
+     backgroundColor: '#FFFCF4',
      borderTopRightRadius: 5,
      borderTopLeftRadius: 5,
      flexDirection: "row",
