@@ -24,6 +24,7 @@ const trip = `
       durationFee
       flatRate
       mileageFee
+      surgeCharge
       total
     }
     id
@@ -98,6 +99,14 @@ const trip = `
         amount
         type
       }
+    }
+    estimates{
+      dropOffTimeFrame
+      pickUpAt
+    }
+    vehicleType {
+      imageClass
+      name
     }
 `;
 

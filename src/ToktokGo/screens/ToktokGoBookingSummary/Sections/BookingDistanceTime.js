@@ -21,7 +21,7 @@ export const BookingDistanceTime = ({quotationData, loading}) => {
             ) : (
               <>
                 <FIcon name={'clock'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
-                <Text style={styles.textStyle}>{details?.rate?.initialTripCompletionEstimate}</Text>
+                <Text style={styles.textStyle}>{details?.rate?.initialDropOffTimeFrame}</Text>
               </>
             )}
           </View>

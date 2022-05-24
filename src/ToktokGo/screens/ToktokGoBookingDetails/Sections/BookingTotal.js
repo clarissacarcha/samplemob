@@ -8,7 +8,7 @@ import {FONT} from '../../../../res/variables';
 import {AccordionBooking} from '.';
 import {numberFormat} from '../../../../helper';
 
-export const BookingTotal = ({booking}) => {
+export const BookingTotal = ({booking, navigation}) => {
   return (
     <View style={styles.card}>
       <View style={styles.directionsBox}>
@@ -17,6 +17,7 @@ export const BookingTotal = ({booking}) => {
           {/*-------------------- TOTAL INCOME --------------------*/}
           <View style={{flex: 1}}>
             <AccordionBooking
+              navigation={navigation}
               titleText={'Total'}
               titleAmount={'₱' + numberFormat(booking.fare.total)}
               subTexts={[

@@ -73,7 +73,7 @@ export const GET_TRIP_FARE = gql`
         surgeCharge
         total
       }
-      initialTripCompletionEstimate
+      initialDropOffTimeFrame
     }
   }
 `;

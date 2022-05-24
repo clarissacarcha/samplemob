@@ -24,6 +24,7 @@ fare {
   durationFee
   flatRate
   mileageFee
+  surgeCharge
   total
 }
 id
@@ -98,6 +99,14 @@ cancellation {
     amount
     type
   }
+}
+estimates{
+  dropOffTimeFrame
+  pickUpAt
+}
+vehicleType {
+  imageClass
+  name
 }
 `;
 
