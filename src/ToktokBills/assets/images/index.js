@@ -1,4 +1,5 @@
 export const toktok_logo = require('./toktok-logo.png');
+export const toktokwallet_logo = require("./toktokwallet-logo.png");
 export const wallet_img = require('./wallet.png');
 export const bills_logo = require('./bills-logo.png');
 export const toktokbills_sq_logo = require('./toktokbills_sq_logo.png');

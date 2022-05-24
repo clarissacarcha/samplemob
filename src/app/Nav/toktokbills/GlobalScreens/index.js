@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ToktokBillsActivityDetails,
   ToktokBillsEnterPinCode,
   ToktokBillsReceipt,
   ToktokBillsTermsAndConditions,
@@ -11,6 +12,24 @@ import { moderateScale } from "toktokbills/helper";
 export default ({Navigator}) => {
   return (
     <>   
+      <Navigator.Screen 
+        name="ToktokBillsActivityDetails" 
+        component={ToktokBillsActivityDetails}
+        options={{
+          headerTitleAlign: "center",
+          headerStyle: {
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 3,
+            elevation: 5,
+            // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          },
+        }}
+      />
       <Navigator.Screen 
         name="ToktokBillsEnterPinCode" 
         component={ToktokBillsEnterPinCode}
