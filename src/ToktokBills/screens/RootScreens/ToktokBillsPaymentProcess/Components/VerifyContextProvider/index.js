@@ -5,34 +5,37 @@ export const VerifyContext = createContext();
 const {Provider} = VerifyContext;
 
 export const VerifyContextProvider = ({children}) => {
-  const [firstField, setFirstField] = useState('');
-  const [firstFieldError, setFirstFieldError] = useState('');
-  const [secondField, setSecondField] = useState('');
-  const [secondFieldError, setSecondFieldError] = useState('');
   const [amount, setAmount] = useState('');
+  const [amountError, setAmountError] = useState('');
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [amountError, setAmountError] = useState('');
+  const [firstField, setFirstField] = useState('');
+  const [firstFieldError, setFirstFieldError] = useState('');
+  const [isInsufficientBalance, setIsInsufficientBalance] = useState(false);
+  const [secondField, setSecondField] = useState('');
+  const [secondFieldError, setSecondFieldError] = useState('');
 
   return (
     <Provider
       value={{
-        firstField,
-        setFirstField,
-        firstFieldError,
-        setFirstFieldError,
-        secondField,
-        setSecondField,
-        secondFieldError,
-        setSecondFieldError,
         amount,
         setAmount,
+        amountError,
+        setAmountError,
         email,
         setEmail,
         emailError,
         setEmailError,
-        amountError,
-        setAmountError,
+        firstField,
+        setFirstField,
+        firstFieldError,
+        setFirstFieldError,
+        isInsufficientBalance,
+        setIsInsufficientBalance,
+        secondField,
+        setSecondField,
+        secondFieldError,
+        setSecondFieldError,
       }}>
       {children}
     </Provider>

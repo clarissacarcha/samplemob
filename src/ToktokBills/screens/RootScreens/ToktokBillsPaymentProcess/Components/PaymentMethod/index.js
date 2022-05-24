@@ -18,10 +18,10 @@ import {useAccount} from 'toktokwallet/hooks';
 import {useSelector} from 'react-redux';
 
 export const PaymentMethod = ({loadDetails, onCashIn}) => {
-  const {amount} = useContext(VerifyContext);
+  const {amount, isInsufficientBalance} = useContext(VerifyContext);
   const {user} = useSelector(state => state.session);
   const navigation = useNavigation();
-  const {tokwaAccount} = useAccount({isOnError: false});
+  const {tokwaAccount} = useAccount({isOnErrorAlert: false});
   // const { amount, commissionRateDetails }  = loadDetails;
   const totalAmount = parseFloat(amount) + parseFloat(0);
   const tokwaBalance = user.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : '0.00';
@@ -73,7 +73,7 @@ export const PaymentMethod = ({loadDetails, onCashIn}) => {
         </View>
         {user.toktokWalletAccountId ? displayCashIn() : displayNoToktokWalletAccount()}
       </View>
-      {user.toktokWalletAccountId && parseFloat(totalAmount) > parseFloat(tokwaBalance) && (
+      {user.toktokWalletAccountId && isInsufficientBalance && (
         <View style={styles.insufficientContainer}>
           <Image style={styles.warningIcon} source={warning_icon} />
           <Text style={styles.insufficientText}>Insufficient balance</Text>

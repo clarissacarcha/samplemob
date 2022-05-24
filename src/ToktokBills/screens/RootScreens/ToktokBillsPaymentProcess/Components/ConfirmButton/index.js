@@ -1,10 +1,21 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useCallback} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 //UTIL
-import {moderateScale, numberFormat} from 'toktokbills/helper';
+//HELPER
+import {
+  moderateScale,
+  formatAmount,
+  numberFormat,
+  numericRegex,
+  alphanumericRegex,
+  maxLengthRegex,
+  minLengthRegex,
+  currencyCode,
+} from 'toktokbills/helper';
 import {ErrorUtility} from 'toktokbills/util';
+import validator from 'validator';
 
 //COMPONENTS
 import {OrangeButton} from 'toktokbills/components';
@@ -19,17 +30,69 @@ import {useMutation} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
 import {POST_BILLS_VALIDATE_TRANSACTION} from 'toktokbills/graphql/model';
 import {useAccount} from 'toktokwallet/hooks';
-import {usePrompt} from 'src/hooks';
+import {usePrompt, useThrottle} from 'src/hooks';
 import {onErrorAlert} from 'src/util/ErrorUtility';
-import {useAlert} from 'src/hooks';
 import {useSelector} from 'react-redux';
 
-export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance = 0}) => {
+const processErrorMessage = (fieldValue, fieldName, fieldWidth, fieldType, minWidth) => {
+  // 0 = min | 1 = exact | 2 = max
+
+  if (fieldValue.length < minWidth) {
+    return `${fieldName} must be minimum of ${minWidth} characters.`;
+  }
+  switch (fieldType) {
+    case 0:
+      return fieldValue.length < fieldWidth ? `${fieldName} must be minimum of ${fieldWidth} characters.` : '';
+    case 1:
+      return fieldValue.length < fieldWidth ? `${fieldName} must be ${fieldWidth} characters in length.` : '';
+    case 2:
+      return fieldValue.length > fieldWidth ? `${fieldName} length must be ${fieldWidth} characters or less.` : '';
+
+    default:
+      return '';
+  }
+};
+
+export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) => {
   const prompt = usePrompt();
   const navigation = useNavigation();
-  const {firstField, firstFieldError, secondField, secondFieldError, amount, email, emailError, amountError} =
-    useContext(VerifyContext);
-  const {commissionRateDetails, itemDocumentDetails, providerId} = billItemSettings;
+  const {
+    amount,
+    setAmount,
+    amountError,
+    setAmountError,
+    email,
+    setEmail,
+    emailError,
+    setEmailError,
+    firstField,
+    setFirstField,
+    firstFieldError,
+    setFirstFieldError,
+    isInsufficientBalance,
+    setIsInsufficientBalance,
+    secondField,
+    setSecondField,
+    secondFieldError,
+    setSecondFieldError,
+  } = useContext(VerifyContext);
+  const {
+    firstFieldName,
+    firstFieldFormat,
+    firstFieldWidth,
+    firstFieldWidthType,
+    firstFieldMinWidth,
+    secondFieldName,
+    secondFieldFormat,
+    secondFieldWidth,
+    secondFieldWidthType,
+    secondFieldMinWidth,
+    commissionRateDetails,
+    itemDocumentDetails,
+    providerId,
+  } = billItemSettings;
+
+  const {user} = useSelector(state => state.session);
   const {termsAndConditions, paymentPolicy1, paymentPolicy2} = itemDocumentDetails;
 
   //CONVENIENCE FEE
@@ -43,7 +106,7 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance = 0
         error,
         navigation,
         prompt,
-        title: '',
+        title: 'Invalid Data',
       });
     },
     onCompleted: ({postBillsValidateTransaction}) => {
@@ -62,32 +125,93 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance = 0
     },
   });
 
+  const checkFirstField = () => {
+    const errorMessage = processErrorMessage(
+      (fieldValue = firstField),
+      firstFieldName,
+      firstFieldWidth,
+      firstFieldWidthType,
+      firstFieldMinWidth,
+    );
+    firstField ? setFirstFieldError(errorMessage) : setFirstFieldError('This is a required field.');
+  };
+
+  const checkSecondField = () => {
+    const errorMessage = processErrorMessage(
+      (fieldValue = secondField),
+      firstFieldName,
+      firstFieldWidth,
+      firstFieldWidthType,
+      firstFieldMinWidth,
+    );
+    secondField ? setSecondFieldError(errorMessage) : setSecondFieldError('This is a required field.');
+  };
+
+  const checkEmail = () => {
+    if (email != '' && !validator.isEmail(email, {ignore_whitespace: true})) {
+      setEmailError('Invalid email format.o');
+      return false;
+    } else {
+      setEmailError('');
+      return true;
+    }
+  };
+
+  const checkAmount = () => {
+    if (amount == '') {
+      setAmountError('This is a required field.');
+    } else {
+      setAmountError('');
+    }
+  };
+
+  const checkInsufficientBalance = () => {
+    const totalAmount = parseFloat(convenienceFee) + parseFloat(amount);
+    setIsInsufficientBalance(parseFloat(totalAmount) > parseFloat(tokwaBalance));
+  };
+
   const onPressConfirm = () => {
-    postBillsValidateTransaction({
-      variables: {
-        input: {
-          name: billItemSettings.name,
-          destinationNumber: firstField,
-          destinationIdentifier: secondField,
-          amount: parseFloat(amount),
-          providerId,
+    checkFirstField();
+    checkSecondField();
+    checkAmount();
+    checkInsufficientBalance();
+
+    const isValidEmail = checkEmail();
+    const isProceed = checkProceed();
+
+    if (isProceed && isValidEmail) {
+      postBillsValidateTransaction({
+        variables: {
+          input: {
+            name: billItemSettings.name,
+            destinationNumber: firstField,
+            destinationIdentifier: secondField,
+            amount: parseFloat(amount),
+            providerId,
+          },
         },
-      },
-    });
+      });
+    }
   };
 
-  const checkIsDisabled = () => {
-    return !firstField || !secondField || firstFieldError || secondFieldError || emailError || !amount || amountError;
-  };
-
-  const onPressTermsAndContidions = () => {
-    navigation.navigate('ToktokBillsTermsAndConditions', {termsAndConditions});
+  const checkProceed = () => {
+    return (
+      user.toktokWalletAccountId &&
+      !isInsufficientBalance &&
+      !firstFieldError &&
+      firstField &&
+      !secondFieldError &&
+      secondField &&
+      !amountError &&
+      amount &&
+      !emailError
+    );
   };
 
   return (
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
-      <OrangeButton onPress={onPressConfirm} disabled={checkIsDisabled()} label="Confirm" />
+      <OrangeButton onPress={onPressConfirm} label="Confirm" />
     </View>
   );
 };

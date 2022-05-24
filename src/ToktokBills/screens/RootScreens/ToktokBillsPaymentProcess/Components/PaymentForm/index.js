@@ -67,10 +67,10 @@ export const PaymentForm = ({billItemSettings}) => {
   //CONVENIENCE FEE
   const convenienceFee = `${numberFormat(parseFloat(commissionRateDetails?.providerServiceFee))}`;
   const toktokSeviceFee = `${numberFormat(parseFloat(commissionRateDetails?.systemServiceFee))}`;
-  console.log(convenienceFee);
+
   const convenienceFeeText =
     convenienceFee > 0 || toktokSeviceFee > 0
-      ? `Additional ${currencyCode}${convenienceFee} convenience fee and ${currencyCode}${toktokSeviceFee} will be charged in this transaction.`
+      ? `Additional ${currencyCode}${convenienceFee} convenience fee and ${currencyCode}${toktokSeviceFee} toktok service fee will be charged in this transaction.`
       : 'Convenience fee is waived for this transaction';
 
   const navigation = useNavigation();
@@ -91,63 +91,40 @@ export const PaymentForm = ({billItemSettings}) => {
     setEmailError,
     amountError,
     setAmountError,
+    setIsInsufficientBalance,
   } = useContext(VerifyContext);
   const accountNameRef = useRef(null);
   const amountRef = useRef(null);
   const emailRef = useRef(null);
 
   const changeFirstField = value => {
+    setFirstFieldError('');
     const fieldFormatValue = firstFieldFormat === 1 ? numericRegex(value) : alphanumericRegex(value);
     const fieldValue = processFieldValue(fieldFormatValue, firstFieldWidth, firstFieldWidthType);
     setFirstField(fieldValue);
-
-    //error
-    const errorMessage = processErrorMessage(
-      fieldValue,
-      firstFieldName,
-      firstFieldWidth,
-      firstFieldWidthType,
-      firstFieldMinWidth,
-    );
-    fieldValue ? setFirstFieldError(errorMessage) : setFirstFieldError(`${firstFieldName} is required.`);
   };
 
   const changeSecondField = value => {
+    setSecondFieldError('');
     const fieldFormatValue = secondFieldFormat === 1 ? numericRegex(value) : alphanumericRegex(value);
     const fieldValue = processFieldValue(fieldFormatValue, secondFieldWidth, secondFieldWidthType);
     setSecondField(fieldValue);
-
-    //error
-    const errorMessage = processErrorMessage(
-      fieldValue,
-      secondFieldName,
-      secondFieldWidth,
-      secondFieldWidthType,
-      secondFieldMinWidth,
-    );
-    fieldValue ? setSecondFieldError(errorMessage) : setSecondFieldError(`${secondFieldName} is required.`);
   };
 
   const changeEmail = value => {
-    if (value != '' && !validator.isEmail(value, {ignore_whitespace: true})) {
-      setEmailError('Email format is invalid.');
-    } else {
-      setEmailError('');
-    }
+    setEmailError('');
     setEmail(value);
   };
 
   const changeAmount = value => {
-    let pattern = /^\d+(\.\d{2})?$/;
-    let num = value.replace(/[^0-9.]/g, '');
-
-    if (num[0] == '0') return;
-    if (num[0] == '.') return;
-
-    num
-      ? setAmountError(!pattern.test(num) ? 'Payment Amount format is invalid.' : '')
-      : setAmountError(`Payment Amount is required.`);
-
+    setIsInsufficientBalance(false);
+    setAmountError('');
+    const num = value.replace(/[^0-9.]/g, '');
+    const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
+    if (!checkFormat) return;
+    let decimalValueArray = num.split('.');
+    if (decimalValueArray[0].length > 6) return;
+    if (num[0] == '.') return setAmount('0.');
     setAmount(num);
   };
 
@@ -156,8 +133,8 @@ export const PaymentForm = ({billItemSettings}) => {
       <View style={[{marginBottom: moderateScale(20)}]}>
         <Text style={styles.label}>{firstFieldName}</Text>
         <TextInput
-          style={styles.input}
-          placeholder={`Enter ${firstFieldName.toLowerCase()}`}
+          style={[styles.input, !!firstFieldError && styles.errorBorder]}
+          // placeholder={`Enter ${firstFieldName.toLowerCase()}`}
           onChangeText={changeFirstField}
           value={firstField}
           keyboardType={firstFieldFormat == 1 ? 'numeric' : 'default'}
@@ -173,8 +150,8 @@ export const PaymentForm = ({billItemSettings}) => {
       <View style={[{marginBottom: moderateScale(20)}]}>
         <Text style={styles.label}>{secondFieldName}</Text>
         <TextInput
-          style={styles.input}
-          placeholder={`Enter ${secondFieldName.toLowerCase()}`}
+          style={[styles.input, !!secondFieldError && styles.errorBorder]}
+          // placeholder={`Enter ${secondFieldName.toLowerCase()}`}
           onChangeText={changeSecondField}
           value={secondField}
           keyboardType={secondFieldFormat == 1 ? 'numeric' : 'default'}
@@ -193,8 +170,8 @@ export const PaymentForm = ({billItemSettings}) => {
       <View style={[{marginBottom: moderateScale(20)}]}>
         <Text style={styles.label}>Email Address (optional)</Text>
         <TextInput
-          style={styles.input}
-          placeholder="Enter email address"
+          style={[styles.input, !!emailError && styles.errorBorder]}
+          // placeholder="Enter email address"
           onChangeText={changeEmail}
           value={email}
           ref={input => {
@@ -221,7 +198,7 @@ export const PaymentForm = ({billItemSettings}) => {
           }}
           blurOnSubmit={false}
         /> */}
-        <InputAmount amount={amount} changeAmount={changeAmount} />
+        <InputAmount errorMessage={amountError} amount={amount} changeAmount={changeAmount} />
         {!!amountError && <Text style={styles.error}>{amountError}</Text>}
         <Text style={{fontSize: FONT_SIZE.S, marginTop: 5}}>{convenienceFeeText}</Text>
       </View>
@@ -256,5 +233,9 @@ const styles = StyleSheet.create({
   label: {
     fontSize: FONT_SIZE.M,
     marginBottom: moderateScale(5),
+  },
+  errorBorder: {
+    borderColor: COLOR.RED,
+    borderWidth: 1,
   },
 });
