@@ -21,7 +21,7 @@ export const TextInput: ComponentType<any> = styled.TextInput.attrs(props => ({
 export const Container: ComponentType<any> = styled.View.attrs(props => ({
   ...props,
 }))`
-  padding: 12px;
+  /* padding: 12px; */
   background-color: ${props => props.theme.textInput.container};
   flex-direction: row;
   align-items: center;
@@ -36,6 +36,17 @@ export const SearchIcon: ComponentType<any> = styled(IconFA).attrs(props => ({
 }))`
   margin-right: 10px;
   color: ${props => props.color || props.theme.searchBox.iconColor};
+  padding: 12px;
+`;
+
+export const CloseIcon: ComponentType<any> = styled(IconFA).attrs(props => ({
+  ...props,
+  name: 'times',
+  size: 18,
+}))`
+  /* margin-right: 10px; */
+  padding: 12px;
+  color: ${props => props.color || props.theme.color.lightgray};
 `;
 
 export const PressableContainer: ComponentType<any> = styled.Pressable.attrs(props => ({

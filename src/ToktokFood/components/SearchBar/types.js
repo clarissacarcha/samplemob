@@ -10,6 +10,8 @@ export type PropsType = {
   textColor?: string,
   value?: string,
   onValueChange: string => any | null,
+  onClose?: string => any | null,
   style?: Object,
   onPress?: () => void,
+  hasClose?: boolean,
 };

@@ -30,10 +30,11 @@ export const Row: ComponentType<any> = styled.View`
   flex: 1;
 `;
 
-export const ItemContainer: ComponentType<any> = styled.View`
+export const ItemContainer: ComponentType<any> = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: space-between;
   padding-vertical: 15px;
+  padding-horizontal: 15px;
   width: 100%;
 `;
 
@@ -56,6 +57,7 @@ export const TagContainer: ComponentType<any> = styled.View`
 
 export const TitleContainer: ComponentType<any> = styled.View`
   padding-vertical: 10px;
+  padding-horizontal: 15px;
   padding-top: 15px;
 `;
 
@@ -83,7 +85,7 @@ export const AnimatedList: ComponentType<any> = styled(Animated.FlatList).attrs(
   contentContainerStyle: {
     backgroundColor: props.theme.color.white,
     paddingTop: 350 + 50,
-    paddingHorizontal: 15,
+    // paddingHorizontal: 15,
     minHeight: getDeviceHeight + 300,
     // minHeight: getDeviceHeight + (props.totalItems < 9 ? 300 : 400),
   },
@@ -150,14 +152,3 @@ export const ContentLoading: ComponentType<any> = styled(ContentLoader).attrs(pr
 }))`
   padding-top: 400px;
 `;
-// <ContentLoader
-//               active
-//               pRows={4}
-//               pWidth={['40%', '80%', '30%', '60%']}
-//               title={false}
-//               primaryColor="#FFFFFF"
-//               secondaryColor="rgba(256,186,28,0.4)"
-//               aShape="square"
-//               aSize="large"
-//               avatar
-//             />

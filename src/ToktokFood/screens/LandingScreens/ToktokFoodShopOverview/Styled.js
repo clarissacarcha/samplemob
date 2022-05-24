@@ -3,8 +3,9 @@
  */
 
 import type {ComponentType} from 'react';
-import {Animated, ImageBackground} from 'react-native';
+import {Animated, ImageBackground, View} from 'react-native';
 import styled from 'styled-components/native';
+import PagerView from 'react-native-pager-view';
 
 import SearchBar from 'toktokfood/components/SearchBar';
 
@@ -44,6 +45,26 @@ export const SearchBox: ComponentType<any> = styled(SearchBar).attrs(props => ({
   /* flex: 10; */
 `;
 
+// Pager
+export const Pager: ComponentType<any> = styled(PagerView).attrs(props => ({
+  ...props,
+  initialPage: 0,
+  orientation: 'vertical',
+  scrollEnabled: false,
+}))`
+  flex: 1;
+`;
+
+export const PageView: ComponentType<any> = styled(View).attrs(props => ({
+  ...props,
+  // collapsable: Platform.OS === 'ios' ? true : false,
+}))`
+  flex: 1;
+  /* border-width: 1px; */
+  /* padding-top: 100px; */
+`;
+
+// Animated
 export const AnimatedHeader: ComponentType<any> = styled(Animated.View).attrs(props => ({
   ...props,
 }))`

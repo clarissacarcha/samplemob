@@ -30,7 +30,10 @@ import {
   TitleContainer,
 } from './Styled';
 
+import EmptyList from 'toktokfood/components/EmptyList/EmptyList';
 import StyledText from 'toktokfood/components/StyledText';
+
+import {empty_search_2} from 'toktokfood/assets/images';
 
 // Queries
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -119,7 +122,9 @@ const ShopItemList = (props: PropsType): React$Node => {
   );
 
   const renderItem = ({item}) => {
-    const {filename, itemname, price, promoVoucher, summary} = item;
+    const {filename, itemname, price, promoVoucher, resellerDiscount, summary} = item;
+    const {discRatetype, referralDiscount} = resellerDiscount;
+    const discountText = discRatetype === 'p' ? `${referralDiscount * 100}%` : referralDiscount;
     return (
       <ItemContainer>
         <Avatar
@@ -144,9 +149,11 @@ const ShopItemList = (props: PropsType): React$Node => {
               </PromoTag>
             )}
 
-            <ResellerTag>
-              <PromoText>Reseller -1.75%</PromoText>
-            </ResellerTag>
+            {resellerDiscount?.referralShopRate > 0 && (
+              <ResellerTag>
+                <PromoText>`Reseller ${discountText}`</PromoText>
+              </ResellerTag>
+            )}
           </TagContainer>
         </Column>
 
@@ -184,7 +191,14 @@ const ShopItemList = (props: PropsType): React$Node => {
       onMomentumScrollEnd={onMomentumScrollEnd}
       // ItemSeparatorComponent={() => <View style={{height: 10}} />}
       ListHeaderComponent={renderListHeader}
-      ListEmptyComponent={() => <ContentLoading />}
+      ListEmptyComponent={() => {
+        if (data) {
+          return (
+            <EmptyList image={empty_search_2} subtitle="Try to search something similar." title="No Results Found" />
+          );
+        }
+        return <ContentLoading />;
+      }}
       ListFooterComponent={renderFooter}
     />
   );

@@ -4,27 +4,45 @@
  * @flow
  */
 
-import React, {useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Animated} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 
 import type {PropsType} from './types';
-import {AnimatedHeader, AnimatedImageHeader, Container, ImageBg, SearchBox} from './Styled';
+import {AnimatedHeader, AnimatedImageHeader, Container, ImageBg, Pager, PageView, SearchBox} from './Styled';
 
 import Header from 'toktokfood/components/Header';
-// import StyledText from 'toktokfood/components/StyledText';
 import ShopInfo from 'toktokfood/compositions/ShopOverview/ShopInfo';
 import ShopTabView from 'toktokfood/compositions/ShopOverview/ShopTabView';
+import ShopSearchItemList from 'toktokfood/compositions/ShopOverview/ShopSearchItemList';
+
+import {useDebounce} from 'toktokfood/util/debounce';
+// import StyledText from '../../../components/StyledText/StyledText';
 
 const ToktokFoodShopOverview = (props: PropsType): React$Node => {
   const route = useRoute();
   const {item} = route.params;
 
+  // State
+  const [search, setSearch] = useState('');
+
   // Ref for scrolling animation
   let isListGliding = useRef(false);
   let listRefArr = useRef([]);
   let listOffset = useRef({});
+  let pagerViewRef: any = useRef({});
   const scrollY = new Animated.Value(0);
+
+  // Debounce
+  const debounceText = useDebounce(search, 1000);
+
+  useEffect(() => {
+    if (debounceText) {
+      pagerViewRef?.current.setPage(1);
+    } else {
+      pagerViewRef?.current.setPage(0);
+    }
+  }, [debounceText]);
 
   const SearchComponent = () => {
     const opacity = scrollY.interpolate({
@@ -37,7 +55,12 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
     };
     return (
       <Animated.View style={style}>
-        <SearchBox onValueChange={() => {}} />
+        <SearchBox
+          hasClose={search || false}
+          onClose={() => setSearch('')}
+          onValueChange={text => setSearch(text)}
+          value={search}
+        />
       </Animated.View>
     );
   };
@@ -84,13 +107,21 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
 
   return (
     <Container>
-      <ShopTabView
-        shopId={item.id}
-        isListGliding={isListGliding}
-        listRefArr={listRefArr}
-        listOffset={listOffset}
-        scrollY={scrollY}
-      />
+      <Pager ref={pagerViewRef}>
+        <PageView key="1">
+          <ShopTabView
+            shopId={item.id}
+            isListGliding={isListGliding}
+            listRefArr={listRefArr}
+            listOffset={listOffset}
+            scrollY={scrollY}
+          />
+        </PageView>
+        <PageView key="2">
+          <ShopSearchItemList search={debounceText} shopId={item?.id} />
+        </PageView>
+      </Pager>
+
       {AnimatedHeaderTitle}
     </Container>
   );
