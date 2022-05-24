@@ -279,7 +279,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         return "Let's wait for your driver to arrive!";
       }
       case 6: {
-        return 'We’re sorry ka-toktok, but we couldn’t find a driver near your area.';
+        return 'We’re sorry ka-toktok, our drivers are busy at the moment. Please retry.';
       }
     }
   };

@@ -10,7 +10,7 @@ export const DriverStatus = ({status, booking}) => {
       {booking.status == 'ACCEPTED' && (
         <View style={styles.Mins}>
           <Text style={{fontFamily: constants.FONT_FAMILY.BOLD, fontSize: constants.FONT_SIZE.M}}>
-            {moment().diff(booking.estimates.pickUpAt, 'minutes', false)} mins
+            {Math.abs(moment().diff(moment(booking.estimates.pickUpAt), 'minutes', false))} mins
           </Text>
           <Text style={{fontSize: constants.FONT_SIZE.S, color: '#525252'}}>Your driver is on the way</Text>
         </View>
