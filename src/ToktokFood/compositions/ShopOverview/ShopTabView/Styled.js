@@ -3,11 +3,13 @@
  */
 
 import type {ComponentType} from 'react';
-import {Animated, ActivityIndicator} from 'react-native';
+import {Animated, ActivityIndicator, Platform, NativeModules} from 'react-native';
 import styled from 'styled-components/native';
 import {TabBar} from 'react-native-tab-view';
 
 import StyledText from 'toktokfood/components/StyledText';
+
+const {StatusBarManager} = NativeModules;
 
 export const LoaderContainer: ComponentType<any> = styled.View`
   background-color: ${props => props.theme.color.white};
@@ -25,7 +27,7 @@ export const Loader: ComponentType<any> = styled(ActivityIndicator).attrs(props 
 export const AnimatedTabBar: ComponentType<any> = styled(Animated.View).attrs(props => ({
   ...props,
 }))`
-  top: 50;
+  top: ${Platform.OS === 'ios' ? 50 : StatusBarManager.HEIGHT + 50};
   z-index: 1;
   position: absolute;
   width: 100%;

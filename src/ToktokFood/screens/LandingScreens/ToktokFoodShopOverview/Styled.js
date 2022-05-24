@@ -86,7 +86,7 @@ export const AnimatedImageHeader: ComponentType<any> = styled(Animated.View).att
 export const ImageBg: ComponentType<any> = styled(ImageBackground).attrs(props => ({
   ...props,
   source: props.source ? {uri: props.source} : starbucks_banner,
-  resizeMethod: 'cover',
+  // resizeMethod: 'cover',
 }))`
   height: 320px;
 `;

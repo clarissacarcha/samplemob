@@ -3,7 +3,7 @@
  */
 
 import type {ComponentType} from 'react';
-import {ActivityIndicator, Animated, ImageBackground} from 'react-native';
+import {ActivityIndicator, Animated, ImageBackground, NativeModules, Platform} from 'react-native';
 import ContentLoader from 'react-native-easy-content-loader';
 // import {Avatar} from 'react-native-elements';
 import styled from 'styled-components/native';
@@ -12,6 +12,9 @@ import StyledText from 'toktokfood/components/StyledText';
 
 import {getDeviceHeight} from 'toktokfood/helper/scale';
 import {reseller_badge} from 'toktokfood/assets/images';
+
+const {StatusBarManager} = NativeModules;
+const headerHeight = Platform.OS === 'ios' ? 50 : 50 + StatusBarManager.HEIGHT;
 
 export const Column: ComponentType<any> = styled.View`
   flex: ${props => props.flex || 1};
@@ -84,7 +87,7 @@ export const AnimatedList: ComponentType<any> = styled(Animated.FlatList).attrs(
   scrollEventThrottle: 16,
   contentContainerStyle: {
     backgroundColor: props.theme.color.white,
-    paddingTop: 350 + 50,
+    paddingTop: 350 + headerHeight,
     // paddingHorizontal: 15,
     minHeight: getDeviceHeight + 300,
     // minHeight: getDeviceHeight + (props.totalItems < 9 ? 300 : 400),
