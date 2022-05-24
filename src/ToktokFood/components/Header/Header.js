@@ -16,6 +16,8 @@ const Header = (props: PropsType): React$Node => {
   // const context = useContext(GlobalContext);
   const {
     containerStyle,
+    centerContainerStyle,
+    leftContainerStyle,
     title = '',
     titleStyle,
     CenterComponent,
@@ -68,6 +70,8 @@ const Header = (props: PropsType): React$Node => {
     <NHeader
       backgroundColor={backgroundColor}
       containerStyle={containerStyle}
+      centerContainerStyle={centerContainerStyle}
+      leftContainerStyle={leftContainerStyle}
       leftComponent={renderLeftComponent()}
       centerComponent={renderCenterComponent()}
       rightComponent={renderRightComponent()}

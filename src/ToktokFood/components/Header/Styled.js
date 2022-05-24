@@ -18,6 +18,7 @@ export const NHeader: ComponentType<any> = styled(Header).attrs(props => ({
 }))``;
 
 export const BackButton: ComponentType<any> = styled(Icon).attrs(props => ({
+  ...props,
   name: props.icon || 'chevron-back-outline',
   type: 'ionicon',
   color: props.color || props.theme.color.orange,

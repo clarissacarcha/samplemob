@@ -3,7 +3,8 @@
  */
 
 import type {ComponentType} from 'react';
-import {Animated, ImageBackground} from 'react-native';
+import {ActivityIndicator, Animated, ImageBackground} from 'react-native';
+import ContentLoader from 'react-native-easy-content-loader';
 // import {Avatar} from 'react-native-elements';
 import styled from 'styled-components/native';
 
@@ -15,6 +16,13 @@ import {reseller_badge} from 'toktokfood/assets/images';
 export const Column: ComponentType<any> = styled.View`
   flex: ${props => props.flex || 1};
   padding-horizontal: 7px;
+`;
+
+export const ContentContainer: ComponentType<any> = styled.View`
+  background-color: ${props => props.theme.color.white};
+  flex: 1;
+  padding-horizontal: 10px;
+  padding-top: 420px;
 `;
 
 export const Row: ComponentType<any> = styled.View`
@@ -48,9 +56,25 @@ export const TagContainer: ComponentType<any> = styled.View`
 
 export const TitleContainer: ComponentType<any> = styled.View`
   padding-vertical: 10px;
-  padding-top: 20px;
+  padding-top: 15px;
 `;
 
+// Loader
+export const LoaderContainer: ComponentType<any> = styled.View`
+  flex: 1;
+  padding-vertical: 20;
+  /* height: 30px; */
+`;
+
+export const Loader: ComponentType<any> = styled(ActivityIndicator).attrs(props => ({
+  ...props,
+  color: props.theme.color.orange,
+  size: 'large',
+}))`
+  /* padding-top: 450px; */
+`;
+
+// Animated FlatList
 export const AnimatedList: ComponentType<any> = styled(Animated.FlatList).attrs(props => ({
   ...props,
   showsVerticalScrollIndicator: false,
@@ -60,8 +84,10 @@ export const AnimatedList: ComponentType<any> = styled(Animated.FlatList).attrs(
     backgroundColor: props.theme.color.white,
     paddingTop: 350 + 50,
     paddingHorizontal: 15,
-    minHeight: getDeviceHeight + (props.totalItems < 9 ? 300 : 400),
+    minHeight: getDeviceHeight + 300,
+    // minHeight: getDeviceHeight + (props.totalItems < 9 ? 300 : 400),
   },
+  onEndReachedThreshold: 0.2,
 }))``;
 
 // Custom Image
@@ -105,3 +131,33 @@ export const Description: ComponentType<any> = styled(StyledText).attrs(props =>
 }))`
   margin-top: 5px;
 `;
+
+// Loader
+export const ContentLoading: ComponentType<any> = styled(ContentLoader).attrs(props => ({
+  ...props,
+  active: true,
+  title: false,
+  pRows: 3,
+  pHeight: [10, 10, 15],
+  pWidth: ['40%', '80%', '30%'],
+  // primaryColor: props.theme.color.yellow,
+  // secondaryColor: 'rgba(256,186,28,0.4)',
+  aShape: 'square',
+  aSize: 'large',
+  avatar: true,
+  listSize: 5,
+  // loading: false,
+}))`
+  padding-top: 400px;
+`;
+// <ContentLoader
+//               active
+//               pRows={4}
+//               pWidth={['40%', '80%', '30%', '60%']}
+//               title={false}
+//               primaryColor="#FFFFFF"
+//               secondaryColor="rgba(256,186,28,0.4)"
+//               aShape="square"
+//               aSize="large"
+//               avatar
+//             />

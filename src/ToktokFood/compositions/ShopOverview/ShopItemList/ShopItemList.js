@@ -4,18 +4,23 @@
  * @flow
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Animated} from 'react-native';
 import {Avatar} from 'react-native-elements';
-// import {useTheme} from 'styled-components/native';
 import {useLazyQuery} from '@apollo/react-hooks';
+// import {useTheme} from 'styled-components/native';
+import _ from 'lodash';
 
 import type {PropsType} from './types';
 import {
   AnimatedList,
   Column,
+  ContentLoading,
+  // ContentContainer,
   Description,
   ItemContainer,
+  Loader,
+  LoaderContainer,
   Pricetext,
   TagContainer,
   PromoTag,
@@ -35,11 +40,15 @@ const ShopItemList = (props: PropsType): React$Node => {
   const {onGetRef, onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag, route, shopId, scrollY} = props;
   // const theme = useTheme();
 
+  const [hasMorePage, setHasMorePage] = useState(true);
+  const [showMore, setShowMore] = useState(false);
+  const [page, setPage] = useState(0);
+
   const avatarStyle = {borderRadius: 10};
   const containerStyle = {height: 70, width: 70};
   const textProps = {numberOfLines: 1};
 
-  const [getProductsByShopCategory, {data}] = useLazyQuery(GET_PRODUCTS_BY_SHOP_CATEGORY, {
+  const [getProductsByShopCategory, {data, fetchMore}] = useLazyQuery(GET_PRODUCTS_BY_SHOP_CATEGORY, {
     variables: {
       input: {
         id: shopId,
@@ -55,11 +64,45 @@ const ShopItemList = (props: PropsType): React$Node => {
     //   filterProducts(products);
     // },
   });
-  // console.log(data);
 
   useEffect(() => {
     getProductsByShopCategory();
   }, [shopId, route]);
+
+  const onLoadMore = () => {
+    if (!showMore && hasMorePage) {
+      setShowMore(true);
+      fetchMore({
+        variables: {
+          input: {
+            id: shopId,
+            catId: route?.id,
+            page: page + 1,
+          },
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          setPage(page + 1);
+          setShowMore(false);
+
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          if (!fetchMoreResult?.getProductsByShopCategory.length) {
+            setHasMorePage(false);
+          }
+          const mergeData = _.unionBy(
+            previousResult.getProductsByShopCategory,
+            fetchMoreResult.getProductsByShopCategory,
+            'Id',
+          );
+
+          return {
+            getProductsByShopCategory: mergeData,
+          };
+        },
+      });
+    }
+  };
 
   const renderListHeader = () => (
     <TitleContainer>
@@ -67,6 +110,12 @@ const ShopItemList = (props: PropsType): React$Node => {
         {route.title}
       </StyledText>
     </TitleContainer>
+  );
+
+  const renderFooter = () => (
+    <LoaderContainer>
+      <Loader animating={showMore} />
+    </LoaderContainer>
   );
 
   const renderItem = ({item}) => {
@@ -111,10 +160,6 @@ const ShopItemList = (props: PropsType): React$Node => {
     );
   };
 
-  // if (route.key !== activeRoute.key) {
-  //   return null;
-  // }
-
   return (
     <AnimatedList
       data={data?.getProductsByShopCategory || []}
@@ -122,6 +167,7 @@ const ShopItemList = (props: PropsType): React$Node => {
       ref={onGetRef}
       renderItem={renderItem}
       keyExtractor={(item, index) => index.toString()}
+      onEndReached={onLoadMore}
       onScroll={Animated.event(
         [
           {
@@ -138,6 +184,8 @@ const ShopItemList = (props: PropsType): React$Node => {
       onMomentumScrollEnd={onMomentumScrollEnd}
       // ItemSeparatorComponent={() => <View style={{height: 10}} />}
       ListHeaderComponent={renderListHeader}
+      ListEmptyComponent={() => <ContentLoading />}
+      ListFooterComponent={renderFooter}
     />
   );
 };

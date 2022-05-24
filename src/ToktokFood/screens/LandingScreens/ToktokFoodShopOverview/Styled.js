@@ -6,6 +6,8 @@ import type {ComponentType} from 'react';
 import {Animated, ImageBackground} from 'react-native';
 import styled from 'styled-components/native';
 
+import SearchBar from 'toktokfood/components/SearchBar';
+
 // Assets
 import {starbucks_banner} from 'toktokfood/assets/images';
 
@@ -30,6 +32,16 @@ export const ScrollContainer: ComponentType<any> = styled(Animated.ScrollView).a
   height: 100%;
   /* flex: 1; */
   /* padding-top: 250px; */
+`;
+
+// Searchbar
+export const SearchBox: ComponentType<any> = styled(SearchBar).attrs(props => ({
+  ...props,
+  color: props.theme.color.orange,
+}))`
+  /* margin-bottom: 20px; */
+  /* width: 300; */
+  /* flex: 10; */
 `;
 
 export const AnimatedHeader: ComponentType<any> = styled(Animated.View).attrs(props => ({

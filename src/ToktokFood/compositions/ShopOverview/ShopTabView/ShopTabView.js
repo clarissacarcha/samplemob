@@ -4,7 +4,7 @@
  * @flow
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useWindowDimensions} from 'react-native';
 import {TabView} from 'react-native-tab-view';
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -13,19 +13,20 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import ShopItemList from 'toktokfood/compositions/ShopOverview/ShopItemList';
 
 import type {PropsType} from './types';
-import {AnimatedTabBar, ShopTabBar, TabBarTitle} from './Styled';
+import {AnimatedTabBar, Loader, LoaderContainer, ShopTabBar, TabBarTitle} from './Styled';
 
 // Query
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_PRODUCT_CATEGORIES} from 'toktokfood/graphql/toktokfood';
 
 const ShopTabView = (props: PropsType): React$Node => {
-  const {scrollY, shopId, listOffset, listRefArr, isListGliding} = props;
+  const {scrollY, shopId, listRefArr, isListGliding} = props;
+  let listOffset = useRef({});
 
   const layout = useWindowDimensions();
 
   // data fetching for product categories/tabs
-  const [getProductCategories, {}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
+  const [getProductCategories, {loading}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
     variables: {
       input: {
         id: shopId,
@@ -77,10 +78,10 @@ const ShopTabView = (props: PropsType): React$Node => {
           if (listOffset.current[item.key] < 350 || listOffset.current[item.key] == null) {
             if (item.value) {
               item.value.scrollToOffset({
-                offset: 350,
+                offset: 300,
                 animated: false,
               });
-              listOffset.current[item.key] = 350;
+              listOffset.current[item.key] = 300;
             }
           }
         }
@@ -155,6 +156,14 @@ const ShopTabView = (props: PropsType): React$Node => {
       </AnimatedTabBar>
     );
   };
+
+  if (loading) {
+    return (
+      <LoaderContainer>
+        <Loader animating />
+      </LoaderContainer>
+    );
+  }
 
   return (
     <TabView

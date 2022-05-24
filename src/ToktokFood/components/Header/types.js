@@ -9,6 +9,8 @@ export type PropsType = {
   accessibilityLabel?: string,
   theme?: Object,
   containerStyle?: Object,
+  centerContainerStyle?: Object,
+  leftContainerStyle?: Object,
   title?: string,
   titleStyle?: Object,
   CenterComponent?: ComponentType<any>,

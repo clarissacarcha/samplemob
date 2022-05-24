@@ -9,7 +9,7 @@ import {Animated} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 
 import type {PropsType} from './types';
-import {AnimatedHeader, AnimatedImageHeader, Container, ImageBg} from './Styled';
+import {AnimatedHeader, AnimatedImageHeader, Container, ImageBg, SearchBox} from './Styled';
 
 import Header from 'toktokfood/components/Header';
 // import StyledText from 'toktokfood/components/StyledText';
@@ -26,7 +26,30 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
   let listOffset = useRef({});
   const scrollY = new Animated.Value(0);
 
+  const SearchComponent = () => {
+    const opacity = scrollY.interpolate({
+      inputRange: [0, 300],
+      outputRange: [0, 1],
+    });
+    const style = {
+      opacity,
+      width: '100%',
+    };
+    return (
+      <Animated.View style={style}>
+        <SearchBox onValueChange={() => {}} />
+      </Animated.View>
+    );
+  };
+
   const AnimatedHeaderTitle = useMemo(() => {
+    const centerContainerStyle = {
+      flex: 15,
+    };
+    const leftContainerStyle = {
+      flex: 2,
+      paddingTop: 3,
+    };
     // interpolate image and shopinfo
     const translateY = scrollY.interpolate({
       inputRange: [0, 350],
@@ -43,7 +66,13 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
     return (
       <React.Fragment>
         <AnimatedHeader style={{backgroundColor}}>
-          <Header hasBack backgroundColor="transparent" />
+          <Header
+            hasBack
+            backgroundColor="transparent"
+            leftContainerStyle={leftContainerStyle}
+            centerContainerStyle={centerContainerStyle}
+            CenterComponent={SearchComponent}
+          />
         </AnimatedHeader>
         <AnimatedImageHeader style={{transform: [{translateY}]}}>
           <ImageBg source={item?.banner} />
