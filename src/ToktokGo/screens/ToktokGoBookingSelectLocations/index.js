@@ -25,7 +25,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const {origin, destination, sessionToken} = useSelector(state => state.toktokGo);
 
   const [searchDestination, setSearchDestination] = useState(destination?.place?.formattedAddress);
-  const [searchOrigin, setSearchOrigin] = useState(origin.place.formattedAddress);
+  const [searchOrigin, setSearchOrigin] = useState(origin?.place?.formattedAddress);
 
   const [getPlaceAutocomplete] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
