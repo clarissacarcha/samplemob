@@ -1,21 +1,17 @@
 import React from 'react';
 import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
-import {useSelector} from 'react-redux';
 import CONSTANTS from '../../../common/res/constants';
 import {HeaderBack, HeaderTitle} from '../../../components';
 import {numberFormat} from '../../../helper';
 import CashIcon from '../../../assets/images/CashIcon.png';
 import ToktokWalletOutline from '../../../assets/images/toktok-wallet-outline.png';
 
-const ToktokGoPaymentDetails = ({navigation}) => {
+const ToktokGoPaymentDetails = ({navigation, route}) => {
+  const {booking} = route.params;
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Payment Details', '']} />,
   });
-
-  const {booking} = useSelector(state => state.toktokGo);
-
-  console.log(booking.fare);
 
   return (
     <View style={styles.container}>
@@ -55,26 +51,34 @@ const ToktokGoPaymentDetails = ({navigation}) => {
           </View>
         )}
       </View>
-      <View style={styles.elementWrapper}>
-        <Text style={styles.textStyle}>Base Fare</Text>
-        <Text style={styles.textStyle}>₱{numberFormat(booking.fare.flatRate)}</Text>
-      </View>
-      <View style={styles.elementWrapper}>
-        <Text style={styles.textStyle}>Distance</Text>
-        <Text style={styles.textStyle}>₱{numberFormat(booking.fare.mileageFee)}</Text>
-      </View>
-      <View style={styles.elementWrapper}>
-        <Text style={styles.textStyle}>Time</Text>
-        <Text style={styles.textStyle}>₱{numberFormat(booking.fare.durationFee)}</Text>
-      </View>
-      <View style={styles.elementWrapper}>
-        <Text style={styles.textStyle}>Surge Charge</Text>
-        <Text style={styles.textStyle}>₱{numberFormat(booking.fare.surgeCharge)}</Text>
-      </View>
+      {booking.tag != 'CANCELLED' ? (
+        <View>
+          <View style={styles.elementWrapper}>
+            <Text style={styles.textStyle}>Base Fare</Text>
+            <Text style={styles.textStyle}>₱{numberFormat(booking.fare.flatRate)}</Text>
+          </View>
+          <View style={styles.elementWrapper}>
+            <Text style={styles.textStyle}>Distance</Text>
+            <Text style={styles.textStyle}>₱{numberFormat(booking.fare.mileageFee)}</Text>
+          </View>
+          <View style={styles.elementWrapper}>
+            <Text style={styles.textStyle}>Time</Text>
+            <Text style={styles.textStyle}>₱{numberFormat(booking.fare.durationFee)}</Text>
+          </View>
+          <View style={styles.elementWrapper}>
+            <Text style={styles.textStyle}>Surge Charge</Text>
+            <Text style={styles.textStyle}>₱{numberFormat(booking.fare.surgeCharge)}</Text>
+          </View>
+        </View>
+      ) : (
+        <></>
+      )}
       <View style={styles.divider} />
       <View style={styles.elementWrapper}>
         <Text style={styles.bottomTextStyle}>Total</Text>
-        <Text style={styles.bottomTextStyle}>₱{numberFormat(booking.fare.amount)}</Text>
+        <Text style={styles.bottomTextStyle}>
+          ₱{booking.tag == 'CANCELLED' ? '0.00' : numberFormat(booking.fare.amount)}
+        </Text>
       </View>
       <View style={styles.divider} />
     </View>

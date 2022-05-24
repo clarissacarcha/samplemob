@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummyStatus, navigation}) => {
+export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummyStatus, navigation, booking}) => {
   const [open, setOpen] = useState(false);
   return (
     <View>
@@ -28,7 +28,9 @@ export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummySt
       <TouchableOpacity
         style={styles.row}
         onPress={() => {
-          navigation.push('ToktokGoPaymentDetails');
+          navigation.push('ToktokGoPaymentDetails', {
+            booking: booking,
+          });
         }}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text

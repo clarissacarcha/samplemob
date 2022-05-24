@@ -20,10 +20,6 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
       label: 'Driver is rude',
       value: '2',
     },
-    {
-      label: 'Others',
-      value: '4',
-    },
   ]);
 
   const confirm = () => {
