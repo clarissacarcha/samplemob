@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, StatusBar, Text, Dimensions, Alert} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image, StatusBar, Text, Dimensions, Alert, Platform} from 'react-native';
 import constants from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -25,6 +25,7 @@ import {AlertOverlay} from '../../../components';
 import {useAccount} from 'toktokwallet/hooks';
 import {AppSyncOnError, onErrorAppSync} from '../../util';
 import {onError} from '../../../util/ErrorUtility';
+import {PricesNoteModal} from './Components/PricesNoteModal';
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const FULLSCREEN_HEIGHT = Dimensions.get('window').height;
@@ -46,6 +47,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [showHeader, setshowHeader] = useState(false);
   const [tripBookError, setTripBookError] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(paymentMethod);
+  const [viewPriceNote, setViewPriceNote] = useState(false);
+  const hasNotch = StatusBar.currentHeight > 24;
 
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
@@ -239,13 +242,14 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
   const renderContent = () => (
     <View style={styles.card}>
-      <BookingDistanceTime quotationData={quotationDataResult} />
+      <BookingDistanceTime quotationData={quotationDataResult} loading={loading} />
 
       <BookingSelectVehicle
         data={quotationDataResult}
         selectedVehicle={selectedVehicle}
         navigation={navigation}
         selectVehicle={selectVehicle}
+        setViewPriceNote={setViewPriceNote}
       />
       {/*  TODO: Vouchers will be added after launch of April 18 */}
       {/* <BookingVoucher
@@ -270,8 +274,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     <View
       style={{
         flex: 1,
-        // marginTop: DeviceInfo.hasNotch() ? 0 : 16,
-        paddingTop: 23,
+        marginTop: hasNotch ? 0 : StatusBar.currentHeight,
+        paddingTop: Platform.OS === 'ios' && !DeviceInfo.hasNotch() ? 36 : 23,
         paddingBottom: 16,
         backgroundColor: 'white',
         shadowBottomColor: '#000',
@@ -342,6 +346,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       <PassengerCapacityActionSheet details={details} confirmBooking={confirmBooking} />
       <AlertOverlay visible={TIPLoading || TBLoading} />
       <PaymentMethodModal
+        navigation={navigation}
         viewSelectPaymentModal={viewSelectPaymentModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
         setSelectedPaymentMethod={setSelectedPaymentMethod}
@@ -354,6 +359,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         viewPaymenetSucessModal={viewPaymenetSucessModal}
         setViewPaymenetSucessModal={setViewPaymenetSucessModal}
       />
+      <PricesNoteModal viewPriceNote={viewPriceNote} setViewPriceNote={setViewPriceNote} />
 
       {/* {showHeader && (
         <View style={styles.elementWrapper}>
