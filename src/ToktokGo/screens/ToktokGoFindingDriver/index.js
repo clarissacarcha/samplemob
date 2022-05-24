@@ -94,15 +94,71 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         setViewCancelBookingModal(true);
       }
     },
-    onError: onErrorAppSync,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else if (errorType === 'TRIP_EXPIRED') {
+            dispatch({
+              type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+            });
+            navigation.replace('ToktokGoBookingStart', {
+              popTo: popTo + 1,
+            });
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
   });
 
   const [tripConsumerCancel, {loading: TCCLoading}] = useMutation(TRIP_CONSUMER_CANCEL, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
-    onError: onErrorAppSync,
     onCompleted: response => {
       console.log(response);
       setViewSuccessCancelBookingModal(true);
+    },
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else if (errorType === 'TRIP_EXPIRED') {
+            dispatch({
+              type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+            });
+            navigation.replace('ToktokGoBookingStart', {
+              popTo: popTo + 1,
+            });
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
     },
   });
 
