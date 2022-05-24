@@ -69,12 +69,12 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   });
 
   useEffect(() => {
-    if (waitingText < 5 && waitingStatus) {
+    if (waitingText <= 5 && waitingStatus) {
       const interval = setTimeout(() => {
         setWaitingText(waitingText + 1);
       }, 10000);
       return () => clearInterval(interval);
-    } else if (waitingText >= 5 && waitingStatus) {
+    } else if (waitingText > 5 && waitingStatus) {
       setWaitingText(1);
     } else {
       setWaitingText(6);
@@ -308,7 +308,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         visible={viewSuccessCancelBookingModal}
         setVisible={setViewSuccessCancelBookingModal}
         type={1}
-        chargeAmount={chargeAmount}
+        chargeAmount={0}
         goBackAfterCancellation={goBackAfterCancellation}
       />
       <DriverFoundModal

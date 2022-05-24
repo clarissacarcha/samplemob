@@ -346,6 +346,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       <PassengerCapacityActionSheet details={details} confirmBooking={confirmBooking} />
       <AlertOverlay visible={TIPLoading || TBLoading} />
       <PaymentMethodModal
+        navigation={navigation}
         viewSelectPaymentModal={viewSelectPaymentModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
         setSelectedPaymentMethod={setSelectedPaymentMethod}
