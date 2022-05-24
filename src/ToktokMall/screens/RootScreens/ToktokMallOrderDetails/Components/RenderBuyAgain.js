@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { FONT } from '../../../../../res/variables';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import { GET_BUY_AGAIN } from '../../../../../graphql/toktokmall/model';
-import { ApiCall } from '../../../../helpers';
+import { GET_MY_CART, GET_BUY_AGAIN } from '../../../../../graphql/toktokmall/model';
+import { ApiCall, getRefComAccountType} from '../../../../helpers';
 import { EventRegister } from 'react-native-event-listeners';
 import AsyncStorage from '@react-native-community/async-storage';
+import {useSelector} from 'react-redux';
 
 const getAccessToken = async () => { 
   const accessToken = await AsyncStorage.getItem('accessToken');
@@ -15,10 +16,34 @@ const getAccessToken = async () => {
 
 export const RenderBuyAgain = ({ navigation, data, onPressBuy: parentBuyOnpress }) => {
 
+  const session = useSelector(state=>state.session)
+  const [qty, setQty] = useState(0)
+
+  const [getMyCartData, {loading, error}] = useLazyQuery(GET_MY_CART, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: (response) => {
+      // console.log('response', response.getMyCart.parsed)
+      response.getMyCart.parsed.map(order => {
+        order.data.map(item => {
+          if(data?.orders?.items[0]?.productId === item?.product?.Id) {
+            // console.log("DAAATAAA",item.quantity)
+            setQty(item.quantity)
+          }
+            
+        })
+      }) 
+    },
+    onError: (err) => {
+      console.log("lOG",err)
+    }
+  })
+
   const [getBuyAgain] = useLazyQuery(GET_BUY_AGAIN, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     context: { headers: { authorization: "Bearer: " + getAccessToken() }},  
     onCompleted: (response) => {
+      // console.log("response.getBuyAgain",response.getBuyAgain)
       if(response.getBuyAgain) { 
         const itemsToBeSelected = [];
         const { toaddItems, toupdateItems } = response.getBuyAgain;
@@ -30,7 +55,7 @@ export const RenderBuyAgain = ({ navigation, data, onPressBuy: parentBuyOnpress 
                 shopid: data?.orders?.shopId,
                 branchid: item.branchid,
                 productid: item.productid,
-                quantity: item.quantity
+                quantity: qty + item.quantity
               }
               itemsToBeSelected.push(item.productid);
               const req = await ApiCall("insert_cart", variables, true);
@@ -55,7 +80,7 @@ export const RenderBuyAgain = ({ navigation, data, onPressBuy: parentBuyOnpress 
                 shopid: data?.orders?.shopId,
                 branchid: item.branchid,
                 productid: item.productid,
-                quantity: item.quantity
+                quantity: qty + item.quantity
               }
               itemsToBeSelected.push(item.productid);
               const req = await ApiCall("update_cart", variables, true);
@@ -77,6 +102,17 @@ export const RenderBuyAgain = ({ navigation, data, onPressBuy: parentBuyOnpress 
       console.log(err)
     }
   });
+
+  useEffect(() => {
+    // console.log("datadatadatadata",data?.orders?.items[0]?.productId)
+    getMyCartData({
+      variables: {
+        input: {
+          refCom: getRefComAccountType({session})
+        }
+      }
+    }) 
+  },[])
 
   onPressBuy = () => {
     parentBuyOnpress();
