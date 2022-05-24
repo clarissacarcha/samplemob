@@ -4,10 +4,7 @@ import {
   StyleSheet, 
   BackHandler
 } from 'react-native';
-import { 
-  HeaderTab,
-  LoadingOverlay
-} from '../../../Components';
+import { HeaderTab } from '../../../Components';
 import {
   Processing, 
   ToShip, 
@@ -59,11 +56,10 @@ export const ToktokMallActivities = ({navigation, route}) => {
 
       {activeTab == 3 && <ToRecieve />}
 
-      {activeTab == 4 && <Completed onPressBuy={onPressBuy} />}
+      {activeTab == 4 && <Completed />}
 
-      {activeTab == 5 && <Cancelled onPressBuy={onPressBuy} />}
+      {activeTab == 5 && <Cancelled />}
       
-      {apiloader && <LoadingOverlay isVisible={apiloader} />}
     </View>
   );
 };

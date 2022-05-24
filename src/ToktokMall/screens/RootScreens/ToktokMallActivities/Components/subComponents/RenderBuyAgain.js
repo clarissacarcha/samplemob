@@ -31,9 +31,7 @@ export const RenderBuyAgain = ({data}) => {
         onCompleted: (response) => {
             if(response.getBuyAgain) { 
                 const itemsToBeSelected = [];
-                const { toaddItems, toupdateItems } = response.getBuyAgain;
-                console.log("toaddItems:" + JSON.stringify(toaddItems));
-                console.log("toupdateItems:" + JSON.stringify(toupdateItems));
+                const { invalidItems, toaddItems, toupdateItems } = response.getBuyAgain;
 
                 if(toaddItems.length > 0) {
                     toaddItems.map(async (item, index) => {
@@ -43,12 +41,13 @@ export const RenderBuyAgain = ({data}) => {
                                 shopid: item.shopid,
                                 branchid: item.branchid,
                                 productid: item.productid,
-                                quantity: item.quantity
+                                quantity: item.quantity || 1
                             }
 
                             itemsToBeSelected.push(item.productid);
                                 
                             const req = await ApiCall("insert_cart", variables, true);
+
                             if(req) {
                                 if(index === toaddItems.length - 1 && toupdateItems.length === 0) {
                                     setIsVisible(false);
@@ -65,19 +64,20 @@ export const RenderBuyAgain = ({data}) => {
                 if(toupdateItems.length > 0) {
                     toupdateItems.map(async (item, index) => {
                         try {
-                            const quantity = await getQuantity(item);
+                            const newItem = await getExistingItem(item);
 
                             let variables = {
                                 userid: item.userid,
                                 shopid: item.shopid,
                                 branchid: item.branchid,
                                 productid: item.productid,
-                                quantity: quantity
+                                quantity: newItem || 1
                             }
 
                             itemsToBeSelected.push(item.productid);
 
                             const req = await ApiCall("update_cart", variables, true);
+
                             if(req) {
                                 if(index === toupdateItems.length - 1) {
                                     setIsVisible(false);
@@ -86,7 +86,7 @@ export const RenderBuyAgain = ({data}) => {
                                 }
                             }
                         } catch (err) {
-                            console.log(err)
+                            console.log("the ultimate error: " + JSON.stringify(err))
                         } 
                     })
                 }
@@ -97,7 +97,7 @@ export const RenderBuyAgain = ({data}) => {
         }
     });
 
-    const getQuantity = async (item) => {
+    const getExistingItem = async (item) => {
         const { userid, productid, quantity } = item;
 
         const { data: { checkItemFromCart } } = await TOKTOK_MALL_GRAPHQL_CLIENT.query({
@@ -111,8 +111,9 @@ export const RenderBuyAgain = ({data}) => {
         })
 
         const { quantity: itemQuantity } = checkItemFromCart;
+        
         const newQuantity = parseInt(itemQuantity) + parseInt(quantity);
-        console.log("itemQuantity: " + newQuantity);
+
         return newQuantity;
     }
 
