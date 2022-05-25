@@ -299,6 +299,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           console.log("FILTERED PARAMS DATA", JSON.stringify(filtered))
 
           // return //used for debugging
+          EventRegister.emit("refreshToktokmallShoppingCart")
 
           navigation.replace("ToktokMallEmptyCheckout", {
             ...route.params,
@@ -466,7 +467,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const onGoToOrders = () =>{
     setIsVisible(false)
     EventRegister.emit('refreshToktokmallShoppingCart')
-    navigation.replace("ToktokMallMyOrders", { tab: 0})
+    navigation.replace("ToktokMallActivities")
     // BackHandler.removeEventListener("hardwareBackPress", backAction)
   }
 

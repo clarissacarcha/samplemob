@@ -17,7 +17,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 export const ToktokMallActivities = ({navigation, route}) => {
 
-  const [activeTab, setActiveTab] = useState(route.params.tab || 0);
+  const [activeTab, setActiveTab] = useState(route?.params?.tab || 0);
   const [apiloader, setapiloader] = useState(false)
 
   useFocusEffect(
