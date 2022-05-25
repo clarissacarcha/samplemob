@@ -60,7 +60,7 @@ export const PaymentDetails = ({paymentData}) => {
       </ImageBackground>
       <View style={styles.note}>
         <Image source={InfoIcon} style={styles.noteLogo} />
-        <Text style={styles.noteText}>Payments made beyond 8:00 PM will be posted the next day.</Text>
+        <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy1}</Text>
       </View>
       <View></View>
       <View style={styles.detailsContainer}>
