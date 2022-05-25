@@ -1,1 +1,1 @@
-export const currencyCode = "PHP";
+export const currencyCode = '₱';
