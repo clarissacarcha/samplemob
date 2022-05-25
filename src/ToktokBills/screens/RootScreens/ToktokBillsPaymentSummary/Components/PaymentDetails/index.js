@@ -85,28 +85,32 @@ export const PaymentDetails = ({paymentData}) => {
       <View style={[styles.detailsContainer]}>
         <Text style={styles.label}>Payment Amount </Text>
         <Text style={styles.description}>
-          {currencyCode} {numberFormat(amount)}
+          {currencyCode}
+          {numberFormat(amount)}
         </Text>
       </View>
-      {convenienceFee > 0 && (
-        <View style={styles.detailsContainer}>
-          <Text style={styles.label}>Convenience Fee </Text>
-          <Text style={styles.description}>
-            {currencyCode} {numberFormat(billItemSettings?.commissionRateDetails?.providerServiceFee)}
-          </Text>
-        </View>
-      )}
+
+      <View style={styles.detailsContainer}>
+        <Text style={styles.label}>Convenience Fee </Text>
+        <Text style={styles.description}>
+          {currencyCode}
+          {numberFormat(billItemSettings?.commissionRateDetails?.providerServiceFee)}
+        </Text>
+      </View>
+
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Toktok Service Fee</Text>
         <Text style={styles.description}>
-          {currencyCode} {numberFormat(billItemSettings?.commissionRateDetails?.systemServiceFee)}
+          {currencyCode}
+          {numberFormat(billItemSettings?.commissionRateDetails?.systemServiceFee)}
         </Text>
       </View>
       <View style={styles.totalSeparator} />
       <View style={styles.detailsContainer}>
         <Text style={styles.totalLabel}>Total </Text>
         <Text style={styles.totalLabel}>
-          {currencyCode} {numberFormat(totalAmount)}
+          {currencyCode}
+          {numberFormat(totalAmount)}
         </Text>
       </View>
       <View style={styles.totalSeparator} />
