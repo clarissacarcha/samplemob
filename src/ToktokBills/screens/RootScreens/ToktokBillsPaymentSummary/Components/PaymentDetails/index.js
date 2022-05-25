@@ -61,13 +61,24 @@ export const PaymentDetails = ({paymentData}) => {
           <Text style={styles.billerName}>{billItemSettings?.descriptions}</Text>
         </View>
       </ImageBackground>
-      <View style={styles.note}>
-        <Image source={InfoIcon} style={styles.noteLogo} />
-        <View>
-          <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy1}</Text>
-          <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy2}</Text>
+      {(billItemSettings?.itemDocumentDetails?.paymentPolicy1 ||
+        billItemSettings?.itemDocumentDetails?.paymentPolicy2) && (
+        <View style={styles.note}>
+          <Image
+            source={InfoIcon}
+            style={[!billItemSettings?.itemDocumentDetails?.paymentPolicy2 ? styles.noteLogoPolicy1 : styles.noteLogo]}
+          />
+          {!billItemSettings?.itemDocumentDetails?.paymentPolicy2 ? (
+            <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy1}</Text>
+          ) : (
+            <View>
+              <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy1}</Text>
+              <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy2}</Text>
+            </View>
+          )}
         </View>
-      </View>
+      )}
+
       <View></View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>{billItemSettings.firstFieldName} </Text>
@@ -134,7 +145,14 @@ const styles = StyleSheet.create({
     height: 13,
     width: 13,
     marginRight: 8,
+    marginTop: -16,
   },
+  noteLogoPolicy1: {
+    height: 13,
+    width: 13,
+    marginRight: 8,
+  },
+
   detailsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
