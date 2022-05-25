@@ -6,6 +6,7 @@ export ToktokFoodCart from './ToktokFoodCart';
 export ToktokFoodHome from './ToktokFoodHome';
 export ToktokFoodSearch from './ToktokFoodSearch';
 export ToktokFoodDriver from './ToktokFoodDriver';
+export ToktokFoodOrder from './ToktokFoodOrder';
 export ToktokFoodItemDetails from './ToktokFoodItemDetails';
 export ToktokFoodFavorites from './ToktokFoodFavorites';
 export ToktokFoodNotifications from './ToktokFoodNotifications';

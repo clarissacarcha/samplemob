@@ -33,6 +33,7 @@ module.exports = function (plop) {
           'components',
           'compositions',
           'compositions/Cart',
+          'compositions/Order',
           'compositions/OrderDetails',
           'compositions/OrderStatus',
           'compositions/ShopOverview',
