@@ -10,7 +10,7 @@ import {ErrorUtility} from 'toktokbills/util';
 import {useAccount} from 'toktokbills/hooks';
 import {useMutation} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {POST_TOKTOKWALLET_REQUEST_MONEY} from 'toktokbills/graphql/model';
+import {POST_BILLS_TRANSACTION, POST_TOKTOKWALLET_REQUEST_MONEY} from 'toktokbills/graphql/model';
 import {usePrompt} from 'src/hooks';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert, useThrottle} from 'src/hooks';
@@ -38,6 +38,7 @@ export const ConfirmButton = ({paymentData}) => {
   const [postToktokWalletRequestMoney, {loading, error}] = useMutation(POST_TOKTOKWALLET_REQUEST_MONEY, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: error => {
+      console.log(error.graphQLErrors);
       ErrorUtility.StandardErrorHandling({
         error,
         navigation,
@@ -45,15 +46,68 @@ export const ConfirmButton = ({paymentData}) => {
       });
     },
     onCompleted: ({postToktokWalletRequestMoney}) => {
-      let paymentSummary = {
+      let data = {
         paymentData,
         totalAmount,
         tokwaBalance,
         requestMoneyDetails: postToktokWalletRequestMoney.data,
       };
-      navigation.navigate('ToktokBillsEnterPinCode', {paymentSummary});
+      // navigation.navigate('ToktokBillsEnterPinCode', {paymentSummary});
+      return navigation.navigate('ToktokWalletTPINValidator', {
+        callBackFunc: handleProcessProceed,
+        screenPopNo: 4,
+        enableIdle: false,
+        data,
+      });
     },
   });
+
+  const [postBillsTransaction, {loading: postBillsTransactionLoading}] = useMutation(POST_BILLS_TRANSACTION, {
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: error => {
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        isPop: true,
+      });
+    },
+    onCompleted: ({postBillsTransaction}) => {
+      navigation.navigate('ToktokBillsReceipt', {receipt: postBillsTransaction.data, paymentData});
+    },
+  });
+
+  const handleProcessProceed = ({pinCode, data}) => {
+    let {totalAmount, requestMoneyDetails, paymentData} = data;
+    let {firstName, lastName} = user.person;
+    let formattedMobile = user.username.substring(1, user.username.length);
+    let input = {
+      requestMoneyDetails: {
+        requestTakeMoneyId: requestMoneyDetails.requestTakeMoneyId,
+        TPIN: requestMoneyDetails.validator === 'TPIN' ? pinCode : '',
+        OTP: requestMoneyDetails.validator === 'OTP' ? pinCode : '',
+      },
+      referenceNumber: requestMoneyDetails.referenceNumber,
+      senderName: `${firstName} ${lastName}`,
+      senderMobileNumber: formattedMobile,
+      destinationNumber: paymentData.firstField,
+      destinationIdentifier: paymentData.secondField,
+      billItemId: paymentData.billItemSettings.id,
+      senderWalletBalance: parseFloat(data.tokwaBalance),
+      amount: parseFloat(paymentData.amount),
+      senderWalletEndingBalance: parseFloat(data.tokwaBalance) - parseFloat(totalAmount),
+      convenienceFee: parseFloat(paymentData.convenienceFee),
+      discount: 0,
+      comRateId: paymentData.billItemSettings.commissionRateDetails.id,
+      email: paymentData.email.toLowerCase(),
+      referralCode: user.consumer.referralCode,
+    };
+    postBillsTransaction({
+      variables: {
+        input,
+      },
+    });
+  };
 
   const onPressConfirm = () => {
     postToktokWalletRequestMoney({
@@ -86,14 +140,14 @@ export const ConfirmButton = ({paymentData}) => {
 
   return (
     <>
-      <AlertOverlay visible={loading} />
+      <AlertOverlay visible={loading || postBillsTransactionLoading} />
       <View style={styles.container}>
         <Text style={styles.terms}>
-          <Text>Please review the accuracy of the details provided and read our </Text>
-          <Text style={styles.tnc} onPress={onPressTermsAndContidions}>
+          <Text style={styles.footerText}>Please review the accuracy of the details provided and read our </Text>
+          <Text style={[styles.tnc, styles.footerText]} onPress={onPressTermsAndContidions}>
             Terms and Conditions{' '}
           </Text>
-          <Text>before you proceed with your transaction.</Text>
+          <Text style={styles.footerText}>before you proceed with your transaction.</Text>
         </Text>
       </View>
       <View style={styles.buttonContainer}>
@@ -108,12 +162,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     backgroundColor: 'white',
     paddingHorizontal: moderateScale(16),
-    paddingVertical: moderateScale(20),
-    marginBottom: moderateScale(60),
+    paddingTop: moderateScale(10),
   },
   terms: {
     textAlign: 'left',
     marginBottom: moderateScale(15),
+    fontSize: FONT_SIZE.S,
   },
   tnc: {
     color: '#F6841F',
@@ -133,19 +187,19 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingHorizontal: moderateScale(32),
     paddingVertical: moderateScale(16),
-    width: '100%',
-    flex: 1,
-    position: 'absolute',
-    zIndex: 999,
-    bottom: 0,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 12,
+      height: 2,
     },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-    elevation: 24,
+    shadowOpacity: 0.2,
+    shadowRadius: 3.84,
+    elevation: 5,
     backgroundColor: COLOR.WHITE,
+    borderTopColor: '#F8F8F8',
+    borderTopWidth: 2,
+  },
+  footerText: {
+    fontSize: FONT_SIZE.S,
   },
 });

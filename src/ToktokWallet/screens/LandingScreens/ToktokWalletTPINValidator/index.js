@@ -1,166 +1,203 @@
-import React, { useState , useRef ,useEffect } from 'react';
-import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput,Dimensions,StatusBar,Image} from 'react-native';
-import { ICON_SET, VectorIcon, YellowButton , HeaderBack , HeaderTitle } from 'src/revamp'
-import { AlertOverlay } from 'src/components';
-import { CheckIdleState  , DisabledButton , NumberBoxes, HeaderCancel, CircleIndicator , NumPad } from 'toktokwallet/components'
-import CONSTANTS from 'common/res/constants'
-import { BuildingBottom } from '../../../components';
-import { TransactionUtility } from 'toktokwallet/util'
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import { POST_VERIFY_ACCOUNT_TPIN } from 'toktokwallet/graphql'
-import {useMutation} from '@apollo/react-hooks'
-import {useAlert, usePrompt} from 'src/hooks'
+import React, {useState, useRef, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  Dimensions,
+  StatusBar,
+  Image,
+} from 'react-native';
+import {ICON_SET, VectorIcon, YellowButton, HeaderBack, HeaderTitle} from 'src/revamp';
+import {AlertOverlay} from 'src/components';
+import {
+  CheckIdleState,
+  DisabledButton,
+  NumberBoxes,
+  HeaderCancel,
+  CircleIndicator,
+  NumPad,
+} from 'toktokwallet/components';
+import CONSTANTS from 'common/res/constants';
+import {BuildingBottom} from '../../../components';
+import {TransactionUtility} from 'toktokwallet/util';
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+import {POST_VERIFY_ACCOUNT_TPIN} from 'toktokwallet/graphql';
+import {useMutation} from '@apollo/react-hooks';
+import {useAlert, usePrompt} from 'src/hooks';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import tokwaLogo from 'toktokwallet/assets/images/tokwa2.png';
+import {moderateScale} from 'toktokwallet/helper';
 
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
+const {width, height} = Dimensions.get('window');
 
-const {COLOR , FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS
-const { width , height } = Dimensions.get("window")
+export const MainComponent = ({navigation, route}) => {
+  const callBackFunc = route?.params?.callBackFunc ? route.params.callBackFunc : null;
+  // const errorMessage = route?.params?.errorMessage ? route.params.errorMessage : null;
+  const data = route?.params?.data ? route.params.data : null;
+  const btnLabel = route?.params?.btnLabel ? route.params.btnLabel : 'Proceed';
+  const screenPopNo = route?.params?.screenPopNo ? route.params.screenPopNo : 4;
 
-export const ToktokWalletTPINValidator = ({navigation,route})=> {
+  navigation.setOptions({
+    headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
+    headerTitle: () => <HeaderTitle label={['']} />,
+    headerRight: () =>
+      btnLabel == 'Cash In' || (screenPopNo && <HeaderCancel navigation={navigation} screenPopNo={screenPopNo} />),
+    headerStyle: {
+      elevation: 0,
+      shadowColor: '#fff',
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0,
+      shadowRadius: 0,
+    },
+  });
 
-    const callBackFunc = route?.params?.callBackFunc ? route.params.callBackFunc : null
-    const errorMessage = route?.params?.errorMessage ? route.params.errorMessage : null
-    const data = route?.params?.data ? route.params.data : null
-    const btnLabel = route?.params?.btnLabel ? route.params.btnLabel : "Proceed"
+  const [pinCode, setPinCode] = useState('');
+  const inputRef = useRef();
+  const [showPin, setShowPin] = useState(false);
+  const prompt = usePrompt();
+  const alert = useAlert();
+  const [errorMessage, setErrorMessage] = useState('');
 
-    navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={[""]}/>,
-        headerRight: ()=> btnLabel == "Cash In" && <HeaderCancel navigation={navigation} screenPopNo={4} />
-    })
+  const onNumPress = () => {
+    setTimeout(() => {
+      inputRef.current.focus();
+    }, 10);
+  };
 
-    const [pinCode,setPinCode] = useState("")
-    const inputRef = useRef();
-    const [showPin,setShowPin] = useState(false)
-    const prompt = usePrompt()
-    const alert = useAlert()
+  const [postVerifyAccountTPIN, {loading}] = useMutation(POST_VERIFY_ACCOUNT_TPIN, {
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onCompleted: ({postVerifyAccountTPIN}) => {
+      return callBackFunc({pinCode, data});
+    },
+    onError: error => {
+      TransactionUtility.StandardErrorHandling({
+        error,
+        setErrorMessage,
+        navigation,
+        prompt,
+        alert,
+      });
+    },
+  });
 
-    const onNumPress = () => {
-        setTimeout(() => {
-          inputRef.current.focus();
-        }, 10);
-    };
-
-    const [postVerifyAccountTPIN , {loading}] = useMutation(POST_VERIFY_ACCOUNT_TPIN, {
-        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onCompleted: ({postVerifyAccountTPIN})=> {
-            return callBackFunc({pinCode , data})
+  useEffect(() => {
+    if (pinCode.length > 0) {
+      setErrorMessage('');
+    }
+    if (pinCode.length == 6) {
+      postVerifyAccountTPIN({
+        variables: {
+          input: {
+            tpin: pinCode,
+          },
         },
-        onError: (error)=> {
-            TransactionUtility.StandardErrorHandling({
-                error,
-                navigation,
-                prompt,
-                alert      
-            })
-        }
-    })
+      });
+      // callBackFunc({pinCode , data})
+    }
+  }, [pinCode]);
 
-    useEffect(()=>{
-        if(pinCode.length == 6){
-            postVerifyAccountTPIN({
-               variables: {
-                   input: {
-                     tpin: pinCode
-                   }
-               }
-            })
-            // callBackFunc({pinCode , data})
-        }
-    },[pinCode])
+  // useEffect(() => {
+  //   if (errorMessage != '') {
+  //     setPinCode('');
+  //   }
+  // }, [errorMessage]);
 
-    useEffect(()=>{
-        if(errorMessage != ""){
-            setPinCode("")
-        }
-    },[errorMessage])
+  const onPressForgotTPIN = () => {
+    navigation.navigate('ToktokWalletRecoveryMethods', {type: 'TPIN', event: 'enterprise'});
+  };
 
+  return (
+    <CheckIdleState>
+      <View style={styles.subContainer}>
+        <AlertOverlay visible={loading} />
+        <View style={styles.inputContainer}>
+          <Image source={tokwaLogo} style={styles.tokwaLogo} />
+          <Text style={styles.otpText}>Enter TPIN</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: moderateScale(20)}}>
+            <VectorIcon iconSet={ICON_SET.AntDesign} name="exclamationcircle" size={15} color={COLOR.YELLOW} />
+            <Text style={styles.otpMessage}>Do not share your TPIN with anyone.</Text>
+          </View>
+          <CircleIndicator pinCode={pinCode} showPin={showPin} error={!!errorMessage} />
+          {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+          <View style={{paddingBottom: moderateScale(10)}}>
+            <NumPad setPinCode={setPinCode} pinCode={pinCode} />
+          </View>
+          <TouchableOpacity onPress={onPressForgotTPIN} style={{marginVertical: moderateScale(20)}}>
+            <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
+          </TouchableOpacity>
+        </View>
+        <BuildingBottom />
+      </View>
+    </CheckIdleState>
+  );
+};
 
-    return(
-        <CheckIdleState>
-            <AlertOverlay visible={loading}/>
-            <View
-                style={styles.container}
-            >
-                 <View style={styles.content}>
+export const ToktokWalletTPINValidator = ({navigation, route}) => {
+  const enableIdle = route?.params?.enableIdle != undefined ? route?.params.enableIdle : true;
 
-                    <Image
-                        style={styles.tokwaLogo}
-                        source={tokwaLogo}
-                        resizeMode="contain"
-                    />
-
-                    <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.BOLD,alignSelf:"center",marginTop: 20}}>Enter TPIN</Text>
-                    <View style={{flexDirection:"row", justifyContent:"center",alignItems:"center"}}>
-                            <View style={{backgroundColor:COLOR.YELLOW, marginRight: 5, justifyContent:"center",alignItems:"center", height: FONT_SIZE.M,width: FONT_SIZE.M,borderRadius:  FONT_SIZE.M}}>
-                                <AntDesign name="exclamation" size={FONT_SIZE.XS} color="white"/>
-                            </View>
-                            <Text style={{ fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Do not share your TPIN with anyone.</Text>
-                    </View>
-                    <View style={{position: 'relative',height: 20,marginTop: 20,justifyContent:"center",alignItems:"center"}}>
-                        <CircleIndicator pinCode={pinCode} showPin={showPin} numberOfBox={6}/>
-                    </View>
-                
-                    {
-                        errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>{errorMessage}</Text>
-                    }
-                    <NumPad
-                        setPinCode={setPinCode}
-                        pinCode={pinCode}
-                    />
-            
-                    <View style={{justifyContent:"center", alignItems: "center",flex: 1}}>
-                        <TouchableOpacity
-                                style={{}}
-                                onPress={()=>navigation.navigate("ToktokWalletRecoveryMethods", {type: "TPIN", event: "enterprise"})}
-                        >
-                                <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Forgot TPIN?</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <BuildingBottom/>
-            </View>
-        </CheckIdleState>
-    )
-}
+  if (enableIdle) {
+    return (
+      <CheckIdleState>
+        <MainComponent navigation={navigation} route={route} />
+      </CheckIdleState>
+    );
+  } else {
+    return <MainComponent navigation={navigation} route={route} />;
+  }
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor:"white"
-    },
-    content: {
-        flex: 1,
-        justifyContent:"flex-start",
-        alignItems:"center",
-        textAlign:"center",
-    },
-    tpinBody: {
-        flex: 1,
-        alignItems:"center",
-        justifyContent: "center",
-    },
-    backBtn: {
-        backgroundColor:"#F7F7FA",
-        top: Platform.OS == "ios" ? 40 : 10, 
-        left: 16,
-        position:"absolute",
-        zIndex: 1,
-        justifyContent:"center",
-        alignItems:"center",
-        borderRadius: 100,
-        height: 35,
-        width: 35,
-    },
-    proceedBtn: {
-        height: 70,
-        width: "100%",
-        justifyContent:"flex-end"
-    },
-    tokwaLogo: {
-        height: 80,
-        width: 200,
-        marginTop: 20,
-    },
-})
+  container: {
+    flex: 1,
+  },
+  subContainer: {
+    flex: 1,
+    padding: moderateScale(16),
+    backgroundColor: 'white',
+  },
+  inputContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  otpText: {
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.L,
+    marginBottom: moderateScale(5),
+  },
+  input: {
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    color: 'transparent',
+  },
+  errorText: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.M,
+    color: '#ED3A19',
+    marginHorizontal: moderateScale(16),
+    textAlign: 'center',
+    marginTop: moderateScale(10),
+  },
+  forgotTPIN: {
+    color: COLOR.ORANGE,
+    fontSize: FONT_SIZE.M,
+  },
+  otpMessage: {
+    fontSize: FONT_SIZE.M,
+    marginLeft: moderateScale(5),
+  },
+  tokwaLogo: {
+    width: moderateScale(200),
+    height: moderateScale(80),
+    resizeMode: 'contain',
+  },
+});

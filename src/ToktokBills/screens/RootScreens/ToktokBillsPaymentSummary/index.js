@@ -67,7 +67,6 @@ export const ToktokBillsPaymentSummary = ({navigation, route}) => {
 
   return (
     <>
-      {console.log('HERE', paymentData)}
       <View style={styles.container}>
         <ScrollView keyboardShouldPersistTaps="handled">
           <PaymentDetails paymentData={paymentData} />
