@@ -1,85 +1,71 @@
-import React, { useState } from 'react';
-import { View, Text, Dimensions, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React from "react";
+import { Text , View, StyleSheet } from 'react-native';
 import moment from 'moment';
-
-// HELPER & UTIL
-import { moderateScale, numberFormat } from 'toktokbills/helper';
-import { useThrottle } from 'src/hooks';
-
-//COMPONENTS
-import { Details } from './Details';
-
 import CONSTANTS from 'common/res/constants';
-const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW} = CONSTANTS;
+import { useNavigation } from '@react-navigation/native';
+import { moderateScale } from 'toktokbills/helper';
 
-const {width,height} = Dimensions.get("window");
+const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
 
-export const NotificationItem = ({ item, index })=> {
-
-  const navigation = useNavigation();
-
-  return (
-    <>
-      <TouchableOpacity
-        style={styles.container}
-        activeOpacity={.8}
-      >
-        <View style={styles.item}>
-          <View style={styles.contentContainer}>
-            <Text style={styles.itemName}>Bills Payment</Text>
-            <Text style={styles.dateTime}>{moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}</Text>
-          </View>
-          <View style={styles.contentContainer}>
-            <Text style={styles.name}>{item.body}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    </>
+const getStatus = (status) => {
+  switch(status){
+    case 1:
+      return { text: "Success"}
+    case 3:
+      return { text: "Failed"}
     
-  )
+    default: 
+      return { text: "Pending"}
+  }
+}
+
+export const NotificationItem = ({
+    item,
+})=> {
+    const navigation = useNavigation();
+    const statusData = getStatus(item.status)
+    const dateCreated = moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY')
+    const timeCreated = moment(item.createdAt).tz('Asia/Manila').format('hh:mm A')
+
+    return (
+        <View style={styles.container}> 
+            <View style={{flex:1,marginRight: 16}}>
+                    <Text style={styles.title}>{statusData.text}</Text>
+                    <Text style={styles.message}>{item.body}</Text>
+            </View>
+            <View style={styles.date}>
+                <Text numberOfLines={1} style={styles.datetime}>{dateCreated}</Text>
+                <Text numberOfLines={1} style={styles.datetime}>{timeCreated}</Text>
+            </View>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent:"center",
-    borderBottomColor: "#F6841F",
-    borderBottomWidth: 0.5,
-    paddingHorizontal: moderateScale(15),
-    paddingVertical: moderateScale(5)
-  },
-  item: {
-    flex: 1,
-    // alignItems: "center",
-    margin: 5,
-    backgroundColor: "white",
-    borderRadius: 5,
-    padding: moderateScale(10)
-  },
-  itemLogo: {
-    height: moderateScale(50),
-    width: moderateScale(50)
-  },
-  itemName: {
-    fontFamily: FONT.BOLD,
-    fontSize: moderateScale(FONT_SIZE.M),
-    color: "#F6841F",
-    flexShrink: 1,
-  },
-  dateTime: {
-    fontSize: moderateScale(FONT_SIZE.S),
-    color: "#929191"
-  },
-  amount: {
-    fontSize: moderateScale(FONT_SIZE.M),
-    color: "#EC4A4E"
-  },
-  name: {
-    fontSize: moderateScale(FONT_SIZE.M),
-  },
-  contentContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  }
+    container: {
+        paddingHorizontal: moderateScale(15),
+        paddingVertical: moderateScale(8),
+        flexDirection:"row",
+        borderBottomColor: COLOR.LIGHT,
+        borderBottomWidth: 2,
+    },
+    title: {
+        fontFamily: FONT.BOLD,
+        fontSize: FONT_SIZE.M
+    },
+    message: {
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.S,
+        color: COLOR.ALMOST_BLACK
+    },
+    date:{
+        alignItems:"flex-end",
+        flexBasis: "auto",
+        justifyContent:"center"
+    },
+    datetime: {
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.S,
+        color: COLOR.GRAY,
+    }
 })
