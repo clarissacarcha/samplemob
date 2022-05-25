@@ -87,6 +87,9 @@ export const CHECK_ITEM_FROM_CART = gql`
 		checkItemFromCart(input: $input) {
 			id
 			quantity
+			product {
+				noOfStocks
+			  }
 		}
 	}
 `

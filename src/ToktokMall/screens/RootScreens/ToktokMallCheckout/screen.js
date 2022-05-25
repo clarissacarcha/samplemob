@@ -346,6 +346,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           console.log("FILTERED PARAMS DATA", JSON.stringify(filtered))
 
           // return //used for debugging
+          EventRegister.emit("refreshToktokmallShoppingCart")
 
           navigation.replace("ToktokMallEmptyCheckout", {
             ...route.params,
@@ -604,7 +605,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const onGoToOrders = () =>{
     setIsVisible(false)
     EventRegister.emit('refreshToktokmallShoppingCart')
-    navigation.replace("ToktokMallMyOrders", { tab: 0})
+    navigation.replace("ToktokMallActivities")
     // BackHandler.removeEventListener("hardwareBackPress", backAction)
   }
 
@@ -828,7 +829,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
   }
 
   return (
-    
     <>
       <ScrollView 
         showsVerticalScrollIndicator={false}
@@ -848,12 +848,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
           setIsVisible={setIsVisible} 
           goToOrders = {onGoToOrders}
         />
-        <MessageModal 
-          navigation={navigation} 
-          isVisible={walletmodal} 
-          setIsVisible={setwalletmodal} 
-        />
-        <View style ={{paddingBottom: 30}}>
+        <MessageModal navigation={navigation} isVisible={walletmodal} setIsVisible={setwalletmodal} />
+        <View style={{paddingBottom: 30}}>
           <AddressForm
             data={addressData}
             onEdit={() => navigation.push("ToktokMallAddressesMenu", {
@@ -897,8 +893,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
               setVoucher(temp)
             }}
           /> */}
-          <Payment 
-            payment={payment} 
+          <Payment
+            payment={payment}
             total={grandTotal}
             list={paymentList}
             currentBalance={toktokMall.toktokWalletBalance}
@@ -908,7 +904,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             // status={walletAccountStatus}
             status={walletAccountStatus}
           />
-          <Totals 
+          <Totals
             raw={paramsData}
             setGrandTotal={setGrandTotal}
             shipping={addressData?.shippingSummary}
@@ -919,7 +915,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <Button 
+        <Button
           enabled={!loading}
           loading={isLoading}
           balance={currentBalance}
@@ -951,7 +947,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
         />
       </View>
     </>
-    
   );
 };
 

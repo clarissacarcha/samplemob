@@ -26,7 +26,8 @@ export const Item = ({
   willDelete,
   heldItem,
   setHeldItem,
-  recenter
+  recenter,
+  preSelectedItems
 }) => {
 
   const CartContextData = useContext(CartContext)
@@ -44,8 +45,21 @@ export const Item = ({
     getRealtimeItemQuantity()
     setQty(data.quantity)
     setShopId(data.shopid)
-    setproduct(data.product)    
+    setproduct(data.product)   
   },[data])
+
+  // Here we are just checking the selected items from buy again.
+  useEffect(() => {
+    const checker = preSelectedItems?.includes(data.product.Id);
+
+    if(checker && data?.product?.noOfStocks !== 0 && product?.enabled === 1) {
+      if(product?.contSellingIsset === 0 && product?.noOfStocks > 0) {
+        return setSelected(true);
+      } else if(product?.contSellingIsset === 1){
+        setSelected(true);
+      }
+    }
+  }, [data, preSelectedItems, product])
 
   useEffect(() => {
     setSelected((data.product.enabled === 1 &&  data.product.noOfStocks !== 0)? state : false)
@@ -149,60 +163,95 @@ export const Item = ({
     }
   }
 
-  const RenderQuantity = (product) => {
+  const RenderQuantity = () => {
 
     const {enabled, contSellingIsset, noOfStocks} = product
-
-    if(enabled === 0) return null
-    else if(enabled === 1 && contSellingIsset == 0 && noOfStocks == 0) return null
 
     return (
       <>
         <View style={{flexDirection: 'row', marginTop: 7, alignItems: 'center', height: 40}}>
-          <Text style = {{fontFamily: FONT.REGULAR, fontSize: 12}}>Qty</Text>
-            <TouchableOpacity 
-              style = {{marginLeft: 10,  alignItems: 'center', justifyContent: 'center',  height: 25,width: 25, borderWidth: 1, borderColor: '#F8F8F8'}}
-              disabled = {qty == 1}
-              onPress = {() => {
+          <Text style={{fontFamily: FONT.REGULAR, fontSize: 12}}>Qty</Text>
+          <TouchableOpacity
+            style={{
+              marginLeft: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: 25,
+              width: 25,
+              borderWidth: 1,
+              borderColor: '#F8F8F8',
+            }}
+            disabled={qty == 1 || product.enabled != 1 || (contSellingIsset === 0 && product.noOfStocks === 0)}
+            onPress={() => {
               // if(selected){
-                onChangeQuantity(qty - 1, product?.Id)
-                setQty(qty - 1)
-                updateRealtimeItemQuantity(qty - 1)
-                debounce(() => updateItemQuantityOnCart(qty - 1), 500)();
+              onChangeQuantity(qty - 1, product?.Id);
+              setQty(qty - 1);
+              updateRealtimeItemQuantity(qty - 1);
+              debounce(() => updateItemQuantityOnCart(qty - 1), 500)();
               // }
-              }}
-            >
-              <AIcons
-                name = {'minus'}
-                size = {18}
-                color = {qty == 1 ? '#D7D7D7':  COLOR.ORANGE}
-              />
-            </TouchableOpacity>
-            <View 
-              style = {{backgroundColor: '#F8F8F8', padding: 2, height: 25,width: 35, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#F8F8F8'}}>
-              <Text style={{fontSize: 12}}>{qty}</Text>
-            </View>
-            <TouchableOpacity
-              style = {{alignItems: 'center', justifyContent: 'center',  height: 25,width: 25, borderWidth: 1, borderColor: '#F8F8F8'}}
-              disabled={product.noOfStocks === qty || qty === 200}
-              onPress = {() => {
-                // if(selected){
-                onChangeQuantity(qty + 1, product?.Id)
-                setQty(qty + 1)
-                updateRealtimeItemQuantity(qty + 1)
-                debounce(() => updateItemQuantityOnCart(qty + 1), 500)();
-                // }
-              }}
-            >
+            }}>
             <AIcons
-              name = {'plus'}
-              size = {15}
-              color = {qty == product.noOfStocks || qty === 200 ? '#D7D7D7':  COLOR.ORANGE}
+              name={'minus'}
+              size={18}
+              color={
+                qty == 1 || product.enabled != 1 || (contSellingIsset === 0 && product.noOfStocks === 0)
+                  ? '#D7D7D7'
+                  : COLOR.ORANGE
+              }
+            />
+          </TouchableOpacity>
+          <View
+            style={{
+              backgroundColor: '#F8F8F8',
+              padding: 2,
+              height: 25,
+              width: 35,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 1,
+              borderColor: '#F8F8F8',
+            }}>
+            <Text style={{fontSize: 12}}>{qty}</Text>
+          </View>
+          <TouchableOpacity
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: 25,
+              width: 25,
+              borderWidth: 1,
+              borderColor: '#F8F8F8',
+            }}
+            disabled={
+              product.noOfStocks === qty ||
+              qty === 200 ||
+              product.enabled != 1 ||
+              (contSellingIsset === 0 && product.noOfStocks === 0)
+            }
+            onPress={() => {
+              // if(selected){
+              onChangeQuantity(qty + 1, product?.Id);
+              setQty(qty + 1);
+              updateRealtimeItemQuantity(qty + 1);
+              debounce(() => updateItemQuantityOnCart(qty + 1), 500)();
+              // }
+            }}>
+            <AIcons
+              name={'plus'}
+              size={15}
+              color={
+                qty == product.noOfStocks ||
+                qty === 200 ||
+                product.enabled != 1 ||
+                (contSellingIsset === 0 && product.noOfStocks === 0)
+                  ? '#D7D7D7'
+                  : COLOR.ORANGE
+              }
             />
           </TouchableOpacity>
         </View>
       </>
-    )
+    );
   }
   
   return (
@@ -276,7 +325,7 @@ export const Item = ({
               {product.enabled == 1 && product.contSellingIsset === 1 &&
                 <RenderQuantity />
               } */}
-              <RenderQuantity product={product} />
+              <RenderQuantity />
 
               {product?.enabled != 1 &&
                 <View style={{paddingVertical: 15}}>

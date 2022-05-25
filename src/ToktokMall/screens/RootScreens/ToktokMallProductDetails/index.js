@@ -62,6 +62,7 @@ const Component =  ({
   const [cartexceeded, setcartexceeded] = useState(false)
 
   const [isOutOfStock, setisOutOfStock] = useState(false)
+  const [productUnavailable, setProductUnavailable] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isFetching, setIsFetching] = useState(false)
 
@@ -145,6 +146,7 @@ const Component =  ({
         if(customModal.visible || customMessageModal.visible){
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
           dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
+          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
           setMessageModalShown(false)
           return true
         }
@@ -152,6 +154,7 @@ const Component =  ({
           // alert('not true')
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
           dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
+          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
           setMessageModalShown(false)
           return false
         }
@@ -179,6 +182,19 @@ const Component =  ({
         setRelevantProducts(response.getProductDetails.relevantProducts)
         setPromotions(response.getProductDetails.promotions)
         setIsFetching(false)
+        if(response.getProductDetails.enabled === 2){
+          dispatch({
+            type: 'TOKTOK_MALL_OPEN_MODAL_2',
+            payload: {
+              type: 'Warning',
+              title: 'Product not Available',
+              message:
+                'We’re sorry but this product is no longer available. This product will be deleted upon refresh.',
+              btnTitle: 'OK',
+              onConfirm: () => navigation.goBack(),
+            },
+          });
+        }
         if(response.getProductDetails.noOfStocks <= 0 &&
           response.getProductDetails.contSellingIsset == 0) {
           setisOutOfStock(true)

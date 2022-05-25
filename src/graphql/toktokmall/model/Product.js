@@ -171,6 +171,7 @@ export const GET_PRODUCT_DETAILS = gql`
     	summary
     	tags
     	noOfStocks
+		enabled
     	price
     	compareAtPrice
 			discountRate
