@@ -17,7 +17,14 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import {moderateScale, numberFormat} from 'toktokbills/helper';
 
 //COMPONENTS
-import {HeaderBack, HeaderTitle, Separator, LoadingIndicator, SomethingWentWrong} from 'toktokbills/components';
+import {
+  HeaderBack,
+  HeaderTitle,
+  Separator,
+  LoadingIndicator,
+  SomethingWentWrong,
+  HeaderRight,
+} from 'toktokbills/components';
 import {ConfirmButton, Header, PaymentForm, PaymentMethod, VerifyContextProvider, VerifyContext} from './Components';
 
 // FONTS AND COLORS
@@ -31,9 +38,17 @@ import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_BILL_ITEM_SETTINGS} from 'toktokbills/graphql/model';
 import {useAccount} from 'toktokwallet/hooks';
 import {useSelector} from 'react-redux';
+import {checkFirstField, checkSecondField} from './Functions';
 
 const MainComponent = ({navigation, route}) => {
   const {billItemId, billType} = route.params;
+
+  navigation.setOptions({
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitle label={billType.name} />,
+    headerRight: () => <HeaderRight onPress={onPressFavorite} />,
+  });
+
   const [refreshing, setRefreshing] = useState(false);
   const {user} = useSelector(state => state.session);
   const {getMyAccountLoading, getMyAccount, getMyAccountError, tokwaAccount} = useAccount({isOnErrorAlert: false});
@@ -52,6 +67,27 @@ const MainComponent = ({navigation, route}) => {
     fetchPolicy: 'cache-and-network',
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
   });
+
+  const {
+    amount,
+    setAmount,
+    amountError,
+    setAmountError,
+    email,
+    setEmail,
+    emailError,
+    setEmailError,
+    firstField,
+    setFirstField,
+    firstFieldError,
+    setFirstFieldError,
+    isInsufficientBalance,
+    setIsInsufficientBalance,
+    secondField,
+    setSecondField,
+    secondFieldError,
+    setSecondFieldError,
+  } = useContext(VerifyContext);
 
   useEffect(() => {
     if (user.toktokWalletAccountId) {
@@ -74,6 +110,42 @@ const MainComponent = ({navigation, route}) => {
   const onCashIn = ({balance}) => {
     console.log(balance);
     getMyAccount();
+  };
+
+  const onPressFavorite = () => {
+    const {
+      firstFieldName,
+      firstFieldFormat,
+      firstFieldWidth,
+      firstFieldWidthType,
+      firstFieldMinWidth,
+      secondFieldName,
+      secondFieldFormat,
+      secondFieldWidth,
+      secondFieldWidthType,
+      secondFieldMinWidth,
+    } = billItemSettings?.getBillItemSettings;
+
+    const isFirstFieldValid = checkFirstField(
+      firstField,
+      firstFieldName,
+      firstFieldWidth,
+      firstFieldWidthType,
+      firstFieldMinWidth,
+      setFirstFieldError,
+    );
+    const isSecondFieldValid = checkSecondField(
+      secondField,
+      secondFieldName,
+      secondFieldWidth,
+      secondFieldWidthType,
+      secondFieldMinWidth,
+      setSecondFieldError,
+    );
+
+    // if(isFirstFieldValid && isSecondFieldValid){
+
+    // }
   };
 
   if (loading || (getMyAccountLoading && !refreshing)) {
@@ -114,13 +186,6 @@ const MainComponent = ({navigation, route}) => {
   );
 };
 export const ToktokBillsPaymentProcess = ({navigation, route}) => {
-  const {billType} = route.params;
-
-  navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={billType.name} />,
-  });
-
   return (
     <VerifyContextProvider>
       <MainComponent navigation={navigation} route={route} />
