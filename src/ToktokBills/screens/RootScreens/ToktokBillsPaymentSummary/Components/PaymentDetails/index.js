@@ -19,7 +19,10 @@ const {width, height} = Dimensions.get('window');
 export const PaymentDetails = ({paymentData}) => {
   const navigation = useNavigation();
   const {firstField, secondField, amount, email, billType, convenienceFee, billItemSettings} = paymentData;
-  const totalAmount = parseInt(amount) + convenienceFee;
+  const totalAmount =
+    parseInt(amount) +
+    billItemSettings?.commissionRateDetails?.providerServiceFee +
+    billItemSettings?.commissionRateDetails?.systemServiceFee;
   const [logo, setLogo] = useState({height: 0, width: 0});
   const [imageLoading, setImageLoading] = useState(true);
 
@@ -86,14 +89,14 @@ export const PaymentDetails = ({paymentData}) => {
         <View style={styles.detailsContainer}>
           <Text style={styles.label}>Convenience Fee </Text>
           <Text style={styles.description}>
-            {currencyCode} {numberFormat(convenienceFee)}
+            {currencyCode} {numberFormat(billItemSettings?.commissionRateDetails?.providerServiceFee)}
           </Text>
         </View>
       )}
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>Toktok Service Fee</Text>
         <Text style={styles.description}>
-          {currencyCode} {numberFormat(convenienceFee)}
+          {currencyCode} {numberFormat(billItemSettings?.commissionRateDetails?.systemServiceFee)}
         </Text>
       </View>
       <View style={styles.totalSeparator} />
