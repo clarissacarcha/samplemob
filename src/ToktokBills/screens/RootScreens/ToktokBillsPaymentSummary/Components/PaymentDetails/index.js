@@ -63,15 +63,18 @@ export const PaymentDetails = ({paymentData}) => {
       </ImageBackground>
       <View style={styles.note}>
         <Image source={InfoIcon} style={styles.noteLogo} />
-        <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy1}</Text>
+        <View>
+          <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy1}</Text>
+          <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy2}</Text>
+        </View>
       </View>
       <View></View>
       <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Account number </Text>
+        <Text style={styles.label}>{billItemSettings.firstFieldName} </Text>
         <Text style={styles.description}>{firstField}</Text>
       </View>
       <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Account name </Text>
+        <Text style={styles.label}>{billItemSettings.secondFieldName} </Text>
         <Text style={styles.description}>{secondField}</Text>
       </View>
       <View style={styles.line} />
