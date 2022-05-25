@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.BOLD,
     color: COLOR.ORANGE,
+    marginVertical: moderateScale(8),
   },
   label: {
     fontSize: FONT_SIZE.M,
