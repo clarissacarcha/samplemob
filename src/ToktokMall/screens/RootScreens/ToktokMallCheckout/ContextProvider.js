@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux'
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks'
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql'
 import { GET_HASH_AMOUNT } from '../../../../graphql/toktokmall/model'
+import { ArrayCopy } from '../../../helpers'
 
 export const CheckoutContext = createContext()
 const {Provider} = CheckoutContext
@@ -14,12 +15,15 @@ export const CheckoutContextProvider = ({children})=> {
 	const [unserviceableShipping, setUnserviceableShipping] = useState([])
 
 	const [shippingVouchers, setShippingVouchers] = useState([])
+	
 	const [defaultVouchers, setDefaultVouchers] = useState([])
 	const [voucherErrors, setVoucherErrors] = useState([])
 
 	const [autoShippingPayload, setAutoShippingPayload] = useState({})
 
 	const [unavailableItems, setUnavailableItems] = useState([])
+
+	const [voucherReloading, setVoucherReloading] = useState(false)
 
 	const [getShippingHashDeliveryAmount, {data}] = useLazyQuery(GET_HASH_AMOUNT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -35,6 +39,70 @@ export const CheckoutContextProvider = ({children})=> {
       console.log(err)
     }
   })
+
+	const getShippingFeeByShopId = (shopid) => {
+		let res = null
+		shippingFeeRates.map((a) => a.shopid == shopid ? res = a.shippingfee : null)
+		return parseFloat(res)
+	}
+
+	const getShopShippingDiscount = (shopid) => {
+		let discount = null
+		shippingVouchers.filter((a) => a.voucherCodeType == "shipping").map((a) => {
+			if(a.shopid == shopid){
+				discount = a
+			}
+		})
+		if(discount && discount?.valid) return discount.discountedAmount
+		else return null
+	}
+
+	const getShopItemDiscount = (shopid) => {
+		let discount = null
+		shippingVouchers.fill((a) => a.voucherCodeType == "promotion").map((a) => {
+			if(a?.shopid == shopid || a?.shop_id == shopid) discount = a
+		})
+		return discount
+	}
+
+	const getTotalVoucherDeduction = () => {
+    let totalDeduction = 0
+    shippingVouchers
+    .filter((a) => {                
+      return a.voucher_id != undefined || a.valid != undefined
+    })
+    .map((a) => {
+			// a.deduction ? totalDeduction += a.deduction : totalDeduction += a.discount_totalamount 
+			if(a.deduction){
+				totalDeduction += parseFloat(a.deduction)
+			}else if(a.discount_totalamount){
+				totalDeduction += parseFloat(a.discount_totalamount)
+			}else if(a.discount){
+				totalDeduction += parseFloat(a.discount)
+			}
+		})
+    return totalDeduction
+  }
+
+	const getVoucherDeduction = (voucher) => {
+		// if(voucher.deduction) return voucher.deduction
+		// else if(voucher.discount_totalamount) return voucher.discount_totalamount
+		// else if(voucher.discount) return voucher.discount
+		return voucher?.deduction || voucher?.discount_totalamount || voucher?.discount
+	}
+
+	const deleteVoucher = (voucher) => {
+		setVoucherReloading(true)
+		let items = ArrayCopy(shippingVouchers)
+		// console.log("DELETEION OF VOUCHERS REF", voucher)
+		// console.log("DELETION OF VOUCHERS BEFORE", JSON.stringify(items))
+		let newitems = items.filter((a) => !a?.autoShipping || !a?.autoAppy).filter((a) => a.voucher_code != voucher.voucher_code || a.vcode != voucher.vcode) //if match, remove from array
+		// console.log("DELETION OF VOUCHERS AFTER", JSON.stringify(newitems))
+		setShippingVouchers(newitems)
+		setTimeout(() => {
+			setVoucherReloading(false)
+		}, 700)
+	}
 
 	return (
 		<Provider 
@@ -59,7 +127,18 @@ export const CheckoutContextProvider = ({children})=> {
 				setVoucherErrors,
 
 				unavailableItems,
-				setUnavailableItems
+				setUnavailableItems,
+
+				getTotalVoucherDeduction,
+				getVoucherDeduction,
+
+				getShippingFeeByShopId,
+				getShopShippingDiscount,
+				getShopItemDiscount,
+
+				voucherReloading,
+				setVoucherReloading,
+				deleteVoucher
 			}}
 		>
 			{children}

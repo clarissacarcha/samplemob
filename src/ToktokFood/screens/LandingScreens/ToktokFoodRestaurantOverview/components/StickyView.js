@@ -19,6 +19,7 @@ import moment from 'moment';
 import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import _ from 'lodash';
 
 import {FONT_SIZE, FONT, COLOR, SIZE} from 'res/variables';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
@@ -31,7 +32,7 @@ import ContentLoader from 'react-native-easy-content-loader';
 // import {RestaurantList} from '../../ToktokFoodHome/components';
 // import HeaderTabs from 'toktokfood/components/HeaderTabs';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
-import {GET_PRODUCT_CATEGORIES, CHECK_SHOP_VALIDATIONS, GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
+import {GET_PRODUCT_CATEGORIES, GET_PRODUCTS_BY_SHOP_CATEGORY, GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
 // Utils
 import {
   getDeviceWidth,
@@ -54,12 +55,17 @@ export const StickyView = ({onCheckShop}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState(0);
   const [activeTab, setActiveTab] = useState({});
   const [productCategories, setProductCategories] = useState([]);
   const [shopDetails, setShopDetails] = useState(null);
   const [showOverlay, setShowOverlay] = useState(false);
   const [showProductOverlay, setShowProductOverlay] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+  const [hasMorePage, setHasMorePage] = useState(true);
+  // const [loadMore, setLoadMore] = useState(false);
+
+  const [nextSched, setNextSched] = useState(null);
 
   const {setNavBarHeight} = useContext(VerifyContext);
   const {customerInfo, location} = useSelector(state => state.toktokFood);
@@ -71,7 +77,7 @@ export const StickyView = ({onCheckShop}) => {
   const isFocus = useIsFocused();
 
   // data fetching for product tags/tabs
-  const [getProductCategories, {data, error, loading}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
+  const [getProductCategories, {data, loading}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
     variables: {
       input: {
         id: id,
@@ -85,13 +91,35 @@ export const StickyView = ({onCheckShop}) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
-      let {latitude, longitude, hasOpen} = getShopDetails;
-
-      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
+      let {address, shopname, latitude, longitude, hasOpen, nextOperatingHrs, hasProduct} = getShopDetails;
+      if (nextOperatingHrs) {
+        setNextSched(nextOperatingHrs);
+      }
+      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude, shopName: shopname, shopAddress: address}});
       setShopDetails(getShopDetails);
-      onCheckShop(hasOpen);
+      onCheckShop(hasOpen && hasProduct);
     },
   });
+
+  const [getProductsByShopCategory, {data: categoryProducts, loading: productsLoading, fetchMore}] = useLazyQuery(
+    GET_PRODUCTS_BY_SHOP_CATEGORY,
+    {
+      variables: {
+        input: {
+          id: id,
+          catId: activeTab?.id,
+          page: 0,
+          // key: searchProduct,
+        },
+      },
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'cache and network',
+      // onCompleted: ({getProductsByShopCategory}) => {
+      //   const products = getProductsByShopCategory;
+      //   filterProducts(products);
+      // },
+    },
+  );
 
   // const [checkShopValidations, {data: checkShop, loading: shopValidationLoading, error: shopValidationError}] =
   //   useLazyQuery(CHECK_SHOP_VALIDATIONS, {
@@ -103,6 +131,7 @@ export const StickyView = ({onCheckShop}) => {
     // checkShopValidations({ variables: { input: { shopId: id } }})
     if (isFocus && location) {
       getProductCategories();
+      getProductsByShopCategory();
       // console.log(
       //   JSON.stringify({
       //     input: {
@@ -140,6 +169,46 @@ export const StickyView = ({onCheckShop}) => {
   const getNavBarHeight = event => {
     let height = event.nativeEvent.layout.height;
     setNavBarHeight(height);
+  };
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 220;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+  };
+
+  const onLoadMore = () => {
+    if (!showMore && hasMorePage) {
+      setShowMore(true);
+      fetchMore({
+        variables: {
+          input: {
+            id: id,
+            catId: activeTab?.id,
+            page: page + 1,
+          },
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          setPage(page + 1);
+          setShowMore(false);
+
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          if (!fetchMoreResult?.getProductsByShopCategory.length) {
+            setHasMorePage(false);
+          }
+          const mergeData = _.unionBy(
+            previousResult.getProductsByShopCategory,
+            fetchMoreResult.getProductsByShopCategory,
+            'Id',
+          );
+
+          return {
+            getProductsByShopCategory: mergeData,
+          };
+        },
+      });
+    }
   };
 
   const renderNavBar = useMemo(() => {
@@ -227,26 +296,43 @@ export const StickyView = ({onCheckShop}) => {
   }, [shopDetails, shopDetailsLoading, productCategories, activeTab, loading]);
 
   const renderContent = useMemo(() => {
-    return <FoodList id={id} activeTab={activeTab} tagsLoading={loading} />;
-  }, [id, activeTab, loading]);
+    return (
+      <FoodList
+        id={id}
+        activeTab={activeTab}
+        data={categoryProducts}
+        productsLoading={productsLoading}
+        showMore={showMore}
+        tagsLoading={loading}
+      />
+    );
+  }, [id, activeTab, categoryProducts, loading, productsLoading, showMore]);
 
   const OperatingHours = () => {
-    const {nextOperatingHrs, operatingHours} = shopDetails;
-    const {fromTime, day: nxtDay} = nextOperatingHrs;
+    const {operatingHours, dayLapsed, hasProduct} = shopDetails;
     const {fromTime: currFromTime} = operatingHours;
     const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
-    if (isAboutToOpen) {
+
+    if (nextSched === null || !hasProduct) {
       return (
         <Text style={styles.closeText}>
-          Restaurant is currently closed. {'\n'}Please come back at {moment(fromTime, 'hh:mm:ss').format('LT')}
+          Restaurant is currently unavailable. {'\n'}Please come back at a later time.
+        </Text>
+      );
+    }
+    if (isAboutToOpen || dayLapsed === 0) {
+      return (
+        <Text style={styles.closeText}>
+          Restaurant is currently closed. {'\n'}Please come back at{' '}
+          {moment(dayLapsed === 0 ? nextSched.fromTime : currFromTime, 'hh:mm:ss').format('hh:mm A')}
         </Text>
       );
     }
     return (
       <Text style={styles.closeText}>
-        Restaurant is currently closed. {'\n'}Please come back on {getWeekDay(nxtDay, true)},{' '}
-        {moment(fromTime, 'hh:mm:ss').add(1, 'day').format('MMMM DD')} at{' '}
-        {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
+        Restaurant is currently closed. {'\n'}Please come back on {getWeekDay(nextSched.day, true)},{' '}
+        {moment(nextSched.fromTime, 'hh:mm:ss').add(dayLapsed, 'day').format('MMMM DD')} at{' '}
+        {moment(nextSched.fromTime, 'hh:mm:ss').format('hh:mm A')}.
       </Text>
     );
   };
@@ -298,7 +384,7 @@ export const StickyView = ({onCheckShop}) => {
   return (
     <>
       {shopDetails && !shopDetails?.hasOpen && shopDetails?.hasProduct && CloseOverlay}
-      {shopDetails && !shopDetails?.hasProduct && !shopDetails?.hasOpen && ProductOverlay}
+      {shopDetails && !shopDetails?.hasProduct && ProductOverlay}
       <ReactNativeParallaxHeader
         alwaysShowNavBar={false}
         alwaysShowTitle={false}
@@ -317,8 +403,13 @@ export const StickyView = ({onCheckShop}) => {
         containerStyle={styles.container}
         contentContainerStyle={styles.contentContainer}
         scrollViewProps={{
-          onScrollEndDrag: event => setOffset(event.nativeEvent.contentOffset.y),
-          onMomentumScrollEnd: event => setOffset(event.nativeEvent.contentOffset.y),
+          onScrollEndDrag: ({nativeEvent}) => {
+            if (isCloseToBottom(nativeEvent)) {
+              onLoadMore();
+            }
+          },
+          // onScrollEndDrag: event => setOffset(event.nativeEvent.contentOffset.y),
+          // onMomentumScrollEnd: event => setOffset(event.nativeEvent.contentOffset.y),
         }}
       />
     </>

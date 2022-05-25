@@ -1,12 +1,21 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {Text, View, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import EIcon from 'react-native-vector-icons/Entypo';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
-import {COLOR} from 'src/res/variables';
+import HomeFill from '../../../assets/images/CustomerAppBottomTabIcons/Home-fill.png';
+import HomeNoFill from '../../../assets/images/CustomerAppBottomTabIcons/Home-nofill.png';
+import ActivitiesFill from '../../../assets/images/CustomerAppBottomTabIcons/Activities-fill.png';
+import ActivitiesNoFill from '../../../assets/images/CustomerAppBottomTabIcons/Activities-nofill.png';
+import NotifFill from '../../../assets/images/CustomerAppBottomTabIcons/Notif-fill.png';
+import NotifNoFill from '../../../assets/images/CustomerAppBottomTabIcons/Notif-nofill.png';
+import MenuFill from '../../../assets/images/CustomerAppBottomTabIcons/Menu-fill.png';
+import MenuNoFill from '../../../assets/images/CustomerAppBottomTabIcons/Menu-nofill.png';
+
+import {COLOR, FONT_SIZE} from 'src/res/variables';
 
 import {
   ToktokLandingHome,
@@ -15,56 +24,83 @@ import {
   ToktokLandingMenu,
 } from 'toktok/screens';
 
+import ActivitiesTopTab from './ActivitiesTopTab';
+import NotificationsTopTab from './NotificationsTopTab';
+
 const ToktokLandingBottomTab = createBottomTabNavigator();
 
 const ToktokLanding = () => (
   <ToktokLandingBottomTab.Navigator
     tabBarOptions={{
-      activeTintColor: COLOR.YELLOW,
-      inactiveTintColor: COLOR.MEDIUM,
+      activeTintColor: COLOR.ORANGE,
+      inactiveTintColor: COLOR.DARK,
 
       labelStyle: {
         fontSize: 9,
+      },
+
+      style: {
+        paddingVertical: 10,
+        height: 55,
       },
     }}>
     <ToktokLandingBottomTab.Screen
       name="ToktokLandingHome"
       component={ToktokLandingHome}
       options={{
-        tabBarLabel: ({focused}) => (
-          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Home</Text>
+        tabBarLabel: ({focused}) => <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Home</Text>,
+        tabBarIcon: ({color}) => (
+          <Image
+            source={color == COLOR.ORANGE ? HomeFill : HomeNoFill}
+            resizeMode={'contain'}
+            style={{height: 25, width: 25}}
+          />
         ),
-        tabBarIcon: ({color}) => <MIcon name="home" color={color} size={30} />,
       }}
     />
     <ToktokLandingBottomTab.Screen
       name="ToktokLandingDeliveries"
-      component={ToktokLandingDeliveries}
+      component={ActivitiesTopTab}
       options={{
-        tabBarLabel: ({focused}) => (
-          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Deliveries</Text>
+        tabBarLabel: ({focused}) => <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Activities</Text>,
+        tabBarIcon: ({color}) => (
+          <Image
+            source={color == COLOR.ORANGE ? ActivitiesFill : ActivitiesNoFill}
+            resizeMode={'contain'}
+            style={{height: 25, width: 25}}
+          />
         ),
-        tabBarIcon: ({color}) => <FA5Icon name="clipboard-list" color={color} size={26} />,
       }}
     />
     <ToktokLandingBottomTab.Screen
       name="ToktokLandingNotifications"
       component={ToktokLandingNotifications}
+      // component={NotificationsTopTab}
       options={{
         tabBarLabel: ({focused}) => (
-          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Notifications</Text>
+          <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Notifications</Text>
         ),
-        tabBarIcon: ({color}) => <MIcon name="notifications" color={color} size={26} />,
+        tabBarIcon: ({color}) => (
+          <Image
+            source={color == COLOR.ORANGE ? NotifFill : NotifNoFill}
+            resizeMode={'contain'}
+            style={{height: 25, width: 25}}
+          />
+        ),
       }}
     />
     <ToktokLandingBottomTab.Screen
       name="ToktokLandingMenu"
       component={ToktokLandingMenu}
       options={{
-        tabBarLabel: ({focused}) => (
-          <Text style={{fontSize: 10, color: focused ? COLOR.BLACK : COLOR.MEDIUM}}>Menu</Text>
+        tabBarLabel: ({focused}) => <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Menu</Text>,
+        tabBarIcon: ({color}) => (
+          <Image
+            source={color == COLOR.ORANGE ? MenuFill : MenuNoFill}
+            resizeMode={'contain'}
+            style={{height: 25, width: 25}}
+          />
         ),
-        tabBarIcon: ({color}) => <EIcon name="menu" color={color} size={30} />,
       }}
     />
   </ToktokLandingBottomTab.Navigator>

@@ -148,7 +148,7 @@ const ToktokFoodDriver = ({route, navigation}) => {
         dispatch({type: 'SET_TOKTOKFOOD_EXHAUST', payload});
       }, 60000);
     }
-    console.log('taena', minutes);
+    console.log('Waiting Duration', minutes);
     if (minutes === 0 && transaction?.orderStatus === 'p') {
       setShowDialogMessage({
         title: 'No Response from Merchant',

@@ -42,6 +42,7 @@ export const GET_MY_ACCOUNT = gql`
             mpinCode
             mpindCodeAttempts
             isLinked
+            isPep
             person {
                 id
                 firstName
@@ -139,6 +140,12 @@ export const POST_GENERATE_ACCOUNT_QR_CODE = gql`
         postGenerateAccountQrCode {
             encryptedQRToken
         }
+    }
+`
+
+export const POST_VERIFY_ACCOUNT_TPIN = gql`
+    mutation postVerifyAccountTPIN($input:PostVerifyAccountTPINInput){
+        postVerifyAccountTPIN(input:$input)
     }
 `
 

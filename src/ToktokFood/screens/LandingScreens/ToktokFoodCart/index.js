@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-// import _ from 'lodash';
+import _ from 'lodash';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -38,20 +38,21 @@ import {
   VerifyContext,
 } from './components';
 import {
-  getDeductedVoucher,
-  getResellerDiscount,
+  deleteKeys,
+  // getDeductedVoucher,
+  // getResellerDiscount,
   getTotalAmount,
   getTotalAmountOrder,
-  getTotalDiscountAmount,
+  // getTotalDiscountAmount,
   getPromotionVouchers,
   getShippingVoucher,
-  getTotalDeductedVoucher,
+  // getTotalDeductedVoucher,
   getTotalDeductedDeliveryFee,
-  getItemOrderType,
+  // getItemOrderType,
   getMobileNumberFormat,
   getOrderType,
-  handleAutoShippingVouchers,
-  handleShippingVouchers,
+  // handleAutoShippingVouchers,
+  // handleShippingVouchers,
   tokwaErrorBtnTitle,
   tokwaErrorMessage,
   tokwaErrorTitle,
@@ -60,6 +61,7 @@ import {
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {
   GET_AUTO_SHIPPING,
+  GET_PAYMENT_METHOD_VALIDATION,
   GET_SHIPPING_FEE,
   PATCH_PLACE_CUSTOMER_ORDER,
   DELETE_SHOP_TEMPORARY_CART,
@@ -93,7 +95,7 @@ const MainComponent = () => {
 
   const {shopname} = route.params;
   const dispatch = useDispatch();
-  const {location, customerInfo, customerFranchisee, promotionVoucher, receiver} = useSelector(
+  const {location, customerInfo, customerFranchisee, promotionVoucher, receiver, customerWallet} = useSelector(
     state => state.toktokFood,
   );
   const {user} = useSelector(state => state.session);
@@ -137,9 +139,10 @@ const MainComponent = () => {
     fetchPolicy: 'network-only',
     onError: error => console.log('getAutoShipping', error.response),
     onCompleted: ({getAutoShipping}) => {
-      console.log(getAutoShipping);
+      console.log('getAutoShipping', getAutoShipping);
       const {promotion, voucher} = getAutoShipping;
       const filterPromo = promotionVoucher.filter(promo => promo.type !== 'auto' && promo.type !== 'deal');
+
       if (getAutoShipping.success) {
         setAutoShippingVoucher(getAutoShipping);
         if (voucher && !promotion) {
@@ -157,6 +160,7 @@ const MainComponent = () => {
         }
       }
       setAutoShipping(getAutoShipping);
+      // console.log(shipping, promotions);
     },
   });
 
@@ -245,10 +249,11 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getShopStatus}) => {
-      setLoadingWallet(false);
       if (getShopStatus.status === 'open') {
+        // setLoadingWallet(false);
         placeCustomerOrder();
       } else {
+        setLoadingWallet(false);
         setShowCloseShop({visible: true, shopName: getShopStatus.shopname});
       }
     },
@@ -418,7 +423,7 @@ const MainComponent = () => {
           total_amount: Number(totalAmount.toFixed(2)),
           quantity: item.quantity,
           order_type: 1,
-          notes: item.notes,
+          notes: item.notes.replace(/[^a-z0-9_ ]/gi, ''),
           addons: await fixAddOns(item.addonsDetails),
         };
         items.push(data);
@@ -611,12 +616,22 @@ const MainComponent = () => {
     // console.log(temporaryCart?.totalAmount);
     // console.log(amount, parsedAmount, totalPrice);
 
+    const DELIVERY_RECEIVER =
+      receiver.contactPerson && receiver.contactPerson !== ''
+        ? receiver.contactPerson
+        : `${customerInfo.firstName} ${customerInfo.lastName}`;
+    
+    const LAND_MARK = receiver.landmark && receiver.landmark !== '' ? receiver.landmark : '';
+
+    const replaceName = DELIVERY_RECEIVER.replace(/[^a-z0-9_ ]/gi, '');
+    const replaceLandMark = LAND_MARK.replace(/[^a-z0-9_ ]/gi, '');
+
     const ORDER = {
       // total_amount: temporaryCart.totalAmount,
       // srp_totalamount: temporaryCart.totalAmount,
       total_amount: parsedAmount,
       srp_totalamount: temporaryCart?.srpTotalAmount,
-      notes: riderNotes,
+      notes: riderNotes.replace(/[^a-z0-9_ ]/gi, ''),
       order_isfor: orderType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       // order_type: 2,
       order_type: await getOrderType(customerFranchisee),
@@ -626,15 +641,12 @@ const MainComponent = () => {
     const CUSTOMER = {
       shopid: temporaryCart?.items[0].shopid,
       company_id: String(temporaryCart?.items[0]?.companyId),
-      name:
-        receiver.contactPerson && receiver.contactPerson !== ''
-          ? receiver.contactPerson
-          : `${customerInfo.firstName} ${customerInfo.lastName}`,
+      name: replaceName,
       contactnumber:
         receiver.contactPersonNumber && receiver.contactPersonNumber !== ''
           ? getMobileNumberFormat({conno: receiver.contactPersonNumber})
           : getMobileNumberFormat(customerInfo),
-      landmark: receiver.landmark && receiver.landmark !== '' ? receiver.landmark : '',
+      landmark: replaceLandMark,
       email: customerInfo.email,
       address: location.address,
       user_id: Number(customerInfo.userId),
@@ -864,7 +876,7 @@ const MainComponent = () => {
           />
         )}
         <Separator />
-        {orderType === 'Delivery' && <ReceiverLocation />}
+        {orderType === 'Delivery' && <ReceiverLocation cart={temporaryCart} />}
         <Separator />
 
         <MyOrderList />
@@ -890,7 +902,7 @@ const MainComponent = () => {
             subtotal={totalAmount}
             deliveryFee={delivery.price}
             forDelivery={orderType === 'Delivery'}
-            oneCartTotal={v => setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
+            oneCartTotal={v => customerWallet?.status === 2 && setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
           />
         )}
         <Separator />

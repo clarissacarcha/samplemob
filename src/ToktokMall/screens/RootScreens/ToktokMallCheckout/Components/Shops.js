@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Platform } from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Platform, Dimensions } from 'react-native';
 
 import { FONT } from '../../../../../res/variables';
-import {placeholder} from '../../../../assets';
+import {placeholder, voucherIcon} from '../../../../assets';
 import { Price, FormatToText } from '../../../../helpers/formats';
 
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
@@ -14,47 +14,52 @@ import CustomIcon from '../../../../Components/Icons';
 import Spinner from 'react-native-spinkit';
 
 import {CheckoutContext} from '../ContextProvider';
+import { useDispatch } from 'react-redux';
+import { ApplyVoucherForm } from './ApplyVoucher';
+import Icons from '../../../../Components/Icons';
+import { EventRegister } from 'react-native-event-listeners';
 
-export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve}) => {
+export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve, referral}) => {
+
+  const dispatch = useDispatch()
 
   const CheckoutContextData = useContext(CheckoutContext)
 
   const [data, setData] = useState(raw || [])
-
-  const [getShippingHashDeliveryAmount, {error, loading2}] = useLazyQuery(GET_HASH_AMOUNT, {
-    client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',    
-    onCompleted: (response) => {
-      if(response.getHashDeliveryAmount){
-        CheckoutContextData.setShippingVouchers(response.getHashDeliveryAmount.data)
-      }
-    },
-    onError: (err) => {
-      console.log(err)
-    }
-  })
-
-  const [getDefaultHashDeliveryAmount, {error2, loading3}] = useLazyQuery(GET_HASH_AMOUNT, {
-    client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',    
-    onCompleted: (response) => {
-      if(response.getHashDeliveryAmount){
-        CheckoutContextData.setDefaultVouchers(response.getHashDeliveryAmount.data)
-      }
-    },
-    onError: (err) => {
-      console.log(err)
-    }
-  })
-
+  const [shippingFeeRates, setShippingFeeRates] = useState(CheckoutContextData.shippingFeeRates)
+  const [shippingVouchers, setShippingVouchers] = useState(CheckoutContextData.shippingVouchers)
+  const [numAppliedShippingVouchers, setNumAppliedShippingVouchers] = useState(0)
+  const [numAppliedPromoVouchers, setNumAppliedPromoVouchers] = useState(0)
+  
   useEffect(() => {
     setData(raw)
   }, [raw])  
 
+  useEffect(() => {
+    
+    setShippingFeeRates(CheckoutContextData.shippingFeeRates)
+    setShippingVouchers(CheckoutContextData.shippingVouchers)
+
+    const numOfShipVouchers = CheckoutContextData.shippingVouchers.filter((a) => a.valid != undefined)
+    const numOfPromoVouchers = CheckoutContextData.shippingVouchers.filter((a) => a.voucher_id != undefined)
+    setNumAppliedShippingVouchers(numOfShipVouchers.length)
+    setNumAppliedPromoVouchers(numOfPromoVouchers.length)
+
+  }, [CheckoutContextData])
+
   const computeTotal = (item, raw = false) => {
     let total = 0
     for (let i = 0; i < item.length; i++){
-      total = total + parseFloat(item[i].amount)
+      if(i == 0 && referral && referral?.referralCode != null || referral && referral?.franchiseeCode != null){
+        let shopDiscount = CheckoutContextData.getShopItemDiscount(item[i].shopId)
+        if(shopDiscount){
+          total = total + parseFloat(item[i].product.compareAtPrice)
+        }else{
+          total = total + parseFloat(item[i].product.price)
+        }        
+      }else{
+        total = total + parseFloat(item[i].amount)
+      }      
     }
     if(raw){
       return total == NaN ? 0 : total
@@ -107,229 +112,6 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       })
   }  
 
-  const renderVoucherForm = (i, item, subTotal) => {
-
-    const [voucherIsValid, setVoucherIsValid] = useState(0)
-    const [vcode, setvcode] = useState("")
-    const [loading, setloading] = useState(false)
-    const [errormessage, seterrormessage] = useState("*Invalid voucher code. Please check your voucher code.")
-
-    const validate = async () => {
-      
-      let payload = {
-        shop: item.shop.id,
-        code: vcode,
-        region: address.regionId,
-        email: customer.email,
-        subtotal: subTotal,
-        promo_count: 1,
-        is_mystery: 0
-      }
-
-      let index = CheckoutContextData.shippingVouchers.findIndex(a => a.shopid == item.shop.id)
-
-      setloading(true)
-      const req = await ApiCall("validate_voucher", payload, false)
-      CheckoutContextData.setVoucherErrors(prevState => prevState.filter(id => item.shop.id !== id))
-
-      console.log("Voucher", JSON.stringify(req))
-
-      if(req.responseData && req.responseData.success){
-
-        if(req.responseData.type == "shipping"){
-          
-          let items = ArrayCopy(CheckoutContextData.shippingVouchers)
-
-          if(req.responseData.voucher.amount == 0 && req.responseData.voucher.is_percentage == 0){
-            
-            //FREE SHIPPING
-            items[index] = req.responseData.voucher
-            items[index].discountedAmount = 0
-            items[index].discount = 0
-
-            getShippingHashDeliveryAmount({variables: {
-              input: {
-                items: items
-              }
-            }})
-
-          }else if(req.responseData.voucher.is_percentage == 1){
-
-            let fee = parseFloat(CheckoutContextData.shippingFeeRates[index].shippingfee)
-            let pct = (parseFloat(req.responseData.voucher.amount) * 0.01)
-            let pctvalue = fee * pct
-            let calculatedDiscount = fee - pctvalue
-
-            items[index] = req.responseData.voucher
-            items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
-            items[index].discount = calculatedDiscount < 0 ? 0 : calculatedDiscount
-
-            getShippingHashDeliveryAmount({variables: {
-              input: {
-                items: items
-              }
-            }})
-
-          }else{
-
-            //
-            let calculatedDiscount = parseFloat(CheckoutContextData.shippingFeeRates[index].shippingfee) - req.responseData.voucher.amount            
-
-            items[index] = req.responseData.voucher
-            items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
-            items[index].discount = calculatedDiscount < 0 ? 0 : calculatedDiscount
-
-            getShippingHashDeliveryAmount({variables: {
-              input: {
-                items: items
-              }
-            }})
-          
-          }
-
-        }else{
-
-          //DEFAULT
-          let items = ArrayCopy(CheckoutContextData.defaultVouchers)
-          items[index] = req.responseData.voucher
-          items[index].discountedAmount = req.responseData.voucher.amount
-          items[index].discount = req.responseData.voucher.amount
-
-          getDefaultHashDeliveryAmount({variables: {
-            input: {
-              items: items
-            }
-          }})
-        }
-
-        setVoucherIsValid(2)
-        console.log(req.responseData)
-        CheckoutContextData.setVoucherErrors(prevState => prevState.filter(id => item.shop.id !== id))
-
-      }else{
-
-        setVoucherIsValid(-1)
-        
-        let items1 = ArrayCopy(CheckoutContextData.shippingVouchers)
-        let items2 = ArrayCopy(CheckoutContextData.defaultVouchers)
-        items1.splice(index, 1)
-        items2.splice(index, 1)
-        CheckoutContextData.setShippingVouchers(items1)
-        CheckoutContextData.setDefaultVouchers(items2)
-        CheckoutContextData.setVoucherErrors(prevState => [...prevState, item.shop.id])
-
-        console.log("asdasdasdasdasd")
-        console.log(req.responseError)
-
-        if(req.responseError && req.responseError.field_errors){
-          let message = req.responseError.field_errors[`shop_${item.shop.id}_vcode`]
-          if(message.includes("not valid")){
-            seterrormessage("Invalid voucher code. Please check your voucher code.")
-          }else{
-            seterrormessage(req.responseError.field_errors[`shop_${item.shop.id}_vcode`])
-          }
-          
-        }else{
-          seterrormessage("Invalid voucher code. Please check your voucher code.")
-        }
-
-      }
-      setloading(false)
-    }
-
-    // console.log("test", CheckoutContextData.voucherErrors)
-    return (
-      <>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              borderBottomWidth: 1,
-              paddingHorizontal: 5,
-              paddingVertical: 15,
-              borderBottomColor: '#F7F7FA',
-            }}>
-            <Text style={{marginLeft: 10, fontFamily: FONT.BOLD}}>{item.shop.shopname} vouchers</Text>
-          </View>
-
-          <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
-            {!loading && voucherIsValid == -1 && (
-              <View style={{backgroundColor: '#FFFCF4', padding: 10}}>
-                <Text style={{color: '#F6841F', fontSize: 12}}>
-                  {errormessage}
-                </Text>
-              </View>
-            )}
-
-            <View style={{flexDirection: 'row'}}>
-              <View
-                style={{
-                  flex: 1,
-                  padding: Platform.OS === 'ios' ? 10 : 0,
-                  backgroundColor: '#F8F8F8',
-                  marginTop: voucherIsValid == -1 ? 10 : 0,
-                  borderRadius: 5,
-                  flexDirection: 'row',
-                }}>
-                <TextInput
-                  value={vcode}
-                  style={{marginLeft: 10, flex: 1}}
-                  placeholder="Input voucher (optional)"
-                  placeholderTextColor="gray"
-                  onChangeText={(val) => {
-                    CheckoutContextData.setVoucherErrors(prevState => prevState.filter(id => item.shop.id !== id))
-                    setvcode(val);
-                    setVoucherIsValid(0);
-                  }}
-                />
-                <View style={{flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
-                  <View style={{flex: 1, justifyContent: 'center'}}>
-                    {loading && (
-                      <Spinner
-                        isVisible={loading}
-                        // isVisible={true}
-                        type={'FadingCircleAlt'}
-                        color={'#F6841F'}
-                        size={15}
-                      />
-                    )}
-                    {!loading && voucherIsValid == 2 && (
-                      <CustomIcon.FeIcon name="check-circle" size={15} color="#06A44E" />
-                    )}
-                    {!loading && voucherIsValid == -1 && (
-                      <CustomIcon.FA5Icon name="times-circle" size={15} color="#F6841F" />
-                    )}
-                  </View>
-                </View>
-              </View>
-              <TouchableOpacity
-                disabled={vcode == ''}
-                onPress={() => {
-                  if (vcode == '') return;
-                  // validateShopVoucher({variables: {
-                  //   input: {
-                  //     vcode: vcode,
-                  //     shopId: item.shop.id
-                  //   }
-                  // }})
-                  validate();
-                }}
-                style={{
-                  flex: 0,
-                  paddingVertical: 15,
-                  paddingHorizontal: 15,
-                  backgroundColor: 'white',
-                }}>
-                <Text style={{color: vcode == '' ? '#9E9E9E' : '#F6841F', marginTop: 5}}>Apply</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </>
-    );
-  }
-
   const renderShops = () => {
 
     return data.map((item, i) => {
@@ -345,30 +127,53 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       const getDeliveryFee = (id) => {
 
         let discount = null
-        let shippingIndex = CheckoutContextData.shippingFeeRates.findIndex((e) => e.shopid == id)
-        let voucherIndex = CheckoutContextData.shippingVouchers.findIndex((e) => e != null && e.shopid == id)
+        let shippingIndex = shippingFeeRates.findIndex((e) => e.shopid == id)
+        let voucherIndex = shippingVouchers.findIndex((e) => e != null && e.shopid == id)
 
         // console.log("Get Discount", shippingIndex, voucherIndex)
         if(shippingIndex > -1 && voucherIndex > -1){
           
-          let shippingfee = CheckoutContextData.shippingFeeRates[shippingIndex]?.shippingfee
-          let voucheramount = CheckoutContextData.shippingVouchers[voucherIndex]?.amount
+          let shippingfee = shippingFeeRates[shippingIndex]?.shippingfee
+          let voucheramount = shippingVouchers[voucherIndex]?.amount
   
           if(shippingfee && voucheramount && shippingfee - voucheramount < 0){
             discount = 0
           }else{
-            discount = CheckoutContextData.shippingVouchers[voucherIndex]?.discount
+            discount = shippingVouchers[voucherIndex]?.discount
           }
         }
+
+        return (
+          <>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flex: 0}}>
+                <Text>Shipping Fee: </Text>
+              </View>
+              <View style={{flex: 1, alignItems: 'flex-end'}}>
+                <Text 
+                  style={{
+                    textDecorationLine: "none",  
+                    color: '#000'
+                  }}
+                >
+                  {FormatToText.currency(getOriginalShippingFee(id))}
+                </Text>
+              </View>
+              <View style={{flex: 0}}>
+                <Text></Text>
+              </View>
+            </View>
+          </>
+        )
 
         if(discount == null){
           return (
             <>
               <View style={{flexDirection: 'row'}}>
                 <View style={{flex: 0}}>
-                  <Text>Delivery Fee: </Text>
+                  <Text>Shipping Fee: </Text>
                 </View>
-                <View style={{flex: 0}}>
+                <View style={{flex: 1, alignItems: 'flex-end'}}>
                   <Text 
                     style={{
                       textDecorationLine: "none",  
@@ -391,7 +196,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
                 <View style={{flex: 0}}>
                   <Text>Shipping Fee: </Text>
                 </View>
-                <View style={{flex: 0}}>
+                <View style={{flex: 1, alignItems: 'flex-end'}}>
                   <Text 
                     style={{
                       textDecorationLine: "line-through",  
@@ -411,11 +216,11 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       }
 
       const getOriginalShippingFee = (id) => {
-        if(CheckoutContextData.shippingFeeRates.length > 0){
-          let index = CheckoutContextData.shippingFeeRates.findIndex((e) => e.shopid == id)
+        if(shippingFeeRates.length > 0){
+          let index = shippingFeeRates.findIndex((e) => e.shopid == id)
 
           if(index > -1){
-            let rates = CheckoutContextData.shippingFeeRates[index]
+            let rates = shippingFeeRates[index]
             // console.log("Rates shopid: " + shop.id, rates)
             return rates.original_shipping
           }else{
@@ -448,8 +253,15 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           <>            
             {getDeliveryFee(shopid)}
             <View>
-              <Text>Order total ({countItems(item.data[0]) || 0} {countItems(item.data[0]) > 1 ? `items` : 'item'}): {computeTotal(item.data[0]) || 0} </Text>
-              <Text style = {{marginTop: 7, color: '#929191'}}>Receive by: {shipping?.deliveryDate || "Add address to calculate"} </Text>
+              <Text style = {{marginBottom: 7, color: '#929191'}}>Receive by {shipping?.deliveryDate || "Add address to calculate"} </Text>
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flex: 0}}>
+                <Text>Order total ({countItems(item.data[0]) || 0} {countItems(item.data[0]) > 1 ? `items` : 'item'}): </Text>
+              </View>              
+              <View style={{flex: 1, alignItems: 'flex-end'}}>
+                <Text style={{fontSize: 14, fontFamily: FONT.BOLD, color: "#F6841F"}}>{computeTotal(item.data[0]) || 0}</Text>
+              </View>
             </View>
           </>
         )
@@ -464,6 +276,79 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           </>
         )
       }
+
+      const ListVouchers = ({type}) => {
+
+        const shopProducts = item.data[0]
+
+        return (
+          <>
+            <View style={styles.voucherContainer}>
+              {CheckoutContextData.shippingVouchers
+              .filter((a) => a.voucherCodeType == type)
+              .filter((a) => {         
+                  
+                if(a.shopid == shop.id || a.shop_id == shop.id){
+                  if(type == "promotion"){
+                    return a.voucher_id != undefined
+                  }else if(type == "shipping"){
+                    return a.valid != undefined
+                  }
+                }else if(a?.shop_id == "0" || a?.shopid == "0"){
+                  let findItem = shopProducts.filter((product) => a.product_id.includes(product.id))
+                  return findItem[0]?.shopId && findItem[0]?.shopId == shop.id
+                }else if(a.autoApply){
+                  //CHECK AUTO APPLIED VOUCHERS SHOP BY FINDING DISCOUNTED PRODUCTS 
+                  let findItem = shopProducts.filter((product) => a.product_id.includes(product.id))
+                  return findItem[0]?.shopId && findItem[0]?.shopId == shop.id
+                }else{
+                  return false
+                }                
+              }).map((item) => {
+
+                if(
+                  item?.autoApply && item?.voucherCodeType == type || 
+                  item?.autoShipping && item?.voucherCodeType == type
+                ){
+                  return (
+                    <>
+                      <View style={{...styles.voucherBody, backgroundColor: '#FDBA1C'}}>
+                        <Text ellipsizeMode='tail' style={styles.voucherText}>{item?.voucher_name || item?.vname}</Text>                        
+                      </View>
+                    </>
+                  )
+                }else{
+                  return (
+                    <>
+                      <View style={{...styles.voucherBody,  backgroundColor: '#F6841F'}}>
+                        <Text ellipsizeMode='tail' style={styles.voucherText}>{item?.voucher_name || item?.vname}</Text>
+                        <TouchableOpacity onPress={() => CheckoutContextData.deleteVoucher(item)} style={{marginLeft: 5, justifyContent: 'center'}}>
+                          <Icons.AIcon name='close' size={12} color="#fff" />
+                        </TouchableOpacity>
+                      </View> 
+                    </>
+                  )
+                }
+              })}   
+            </View>
+          </>
+        )
+      }
+
+      const RenderShopVouchers = () => {
+
+        return (
+          <>
+          <View>
+            <View style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA'}}>
+              <Image source={voucherIcon} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
+              <Text style = {{marginLeft: 10, fontFamily: FONT.REGULAR, fontSize: 13}}>Shop Vouchers</Text>
+            </View>            
+            <ListVouchers type="promotion" origin={"promotions"} autoapplied={true} />
+          </View>
+          </>
+        )
+      }
       
       return(
         <>
@@ -475,13 +360,28 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           <View style={{padding: 15}}>
             {renderItems(item.data[0])}
           </View>
+
+          <View style={{height: 1, marginTop: 10, backgroundColor: "#F7F7FA"}} />
+
+          {numAppliedPromoVouchers > 0 && <RenderShopVouchers />}
+                    
           <TouchableOpacity style={styles.deliveryfeeContainer} >
 
             {getIsShippingServiceAreaInvalid(shop.id) ? renderInvalidShipping() : renderValidShipping(i, shipping, item, shop.id)}
 
           </TouchableOpacity>
 
-          {renderVoucherForm(i, item, computeTotal(item.data[0], true))}
+          <View style={{height: 8, marginTop: 5, backgroundColor: "#F7F7FA"}} />
+
+          {numAppliedShippingVouchers > 0 && 
+          <View>
+            <ListVouchers type="shipping" />
+          </View>}
+
+          {ApplyVoucherForm(address, customer, {
+            index: i,
+            item: item,
+            subTotal: computeTotal(item.data[0], true)})}
 
         </View>
         </>
@@ -506,5 +406,14 @@ const styles = StyleSheet.create({
   itemImage: {flex: 0.3, height: 100, width: 100},
   itemprice: {color: '#F6841F', marginRight: 10},
   itemSaleOff: {textDecorationLine: 'line-through', color: '#9E9E9E', fontSize: 11, marginTop: 2},
-  deliveryfeeContainer: {borderWidth: 1, borderColor: '#FDDC8C', marginLeft: 15, marginRight: 15, padding: 10, borderRadius: 5, marginBottom: 15,}
+  deliveryfeeContainer: {borderWidth: 1, borderColor: '#FDDC8C', marginLeft: 15, marginRight: 15, padding: 10, borderRadius: 5, marginBottom: 15},
+  voucherContainer: {
+    flexDirection: 'row', padding: 15, flexWrap: 'wrap'
+  },
+  voucherBody: {
+    flexDirection: 'row', alignSelf: 'flex-start', paddingVertical: 4, paddingHorizontal: 8, marginVertical: 4, borderRadius: 2, marginRight: 5
+  },
+  voucherText: {
+    color: '#fff', fontSize: 11, fontFamily: FONT.BOLD
+  }
 })

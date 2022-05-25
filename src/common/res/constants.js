@@ -3,19 +3,26 @@ const COLOR = {
   LIGHT: '#F7F7FA', // Form backgroundColor and item separator
   MEDIUM: '#D3D3D3', // Placeholder Color
   DARK: '#808080', // Text and Icons
+  ALMOST_BLACK: '#525252',
+  MEDIUM_DARK: '#F8F8F8',
   BLACK: '#222222', // Text and Icons
   YELLOW: '#FDBA1C',
+  LIGHT_YELLOW: '#FFFCF4',
   ORANGE: '#F5841F',
   YELLOW_UNDERLAY: '#96641e', //TouchableHightlight underlayColor for YELLOW background
   WHITE_UNDERLAY: '#FDBA1C', //TouchableHightlight underlayColor for WHITE background
   TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.15)',
   TRANSPARENT_ORANGE: 'rgba(245,132,31, 0.15)',
   RED: '#F93154',
+  GREEN: '#198754',
+  BACKGROUND_YELLOW: '#FBFAE3',
+  GRAY: '#9E9E9E',
 };
 
 const FONT_FAMILY = {
   REGULAR: 'FiraSans-Regular',
   BOLD: 'FiraSans-Bold',
+  SEMI_BOLD: 'FiraSans-SemiBold',
   Thin800: 'FiraSans-Thin-800',
 };
 
