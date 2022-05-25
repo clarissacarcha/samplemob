@@ -106,7 +106,8 @@ export const ToktokBillsNotifications = ({navigation,route})=> {
 
   return (
     <View style={styles.container}>
-      <Header label="Notifications" onBack={() => { navigation.navigate("ToktokBillsHome") }} />
+      <View style={styles.seperator}></View>
+      {/* <Header label="Notifications" onBack={() => { navigation.navigate("ToktokBillsHome") }} /> */}
       { display() }
     </View>
   )
@@ -116,6 +117,10 @@ const styles = StyleSheet.create({
   container : {
     flex: 1,
     backgroundColor:"white",
+  },
+  seperator:{
+    borderBottomWidth: 3, 
+    borderBottomColor: COLOR.MEDIUM_DARK
   },
   flatlistContainer: {
     flexGrow: 1

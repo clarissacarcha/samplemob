@@ -5,6 +5,7 @@ import {COLOR, FONT_SIZE} from '../../../res/variables'
 import CONSTANTS from '../../../common/res/constants'
 import { ToktokLandingNotifications } from 'toktok/screens';
 import { ToktokLoadNotifications } from 'toktokload/screens';
+import { ToktokBillsNotifications } from 'toktokbills/screens';
 
 const NotificationsTopTab = createMaterialTopTabNavigator();
 
@@ -46,6 +47,18 @@ const Notifications = () => (
             fontSize: FONT_SIZE.M, 
             color: focused ? COLOR.ORANGE : COLOR.BLACK, 
             marginBottom: 5}}>toktokload</Text>
+        }}
+      />
+      <NotificationsTopTab.Screen
+        name="ToktokBillsNotifications"
+        component={ToktokBillsNotifications}
+        options={{
+          tabBarLabel: ({focused}) => 
+          <Text style={{
+            // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.Thin800,
+            fontSize: FONT_SIZE.M, 
+            color: focused ? COLOR.ORANGE : COLOR.BLACK, 
+            marginBottom: 5}}>Bills</Text>
         }}
       />
     </NotificationsTopTab.Navigator>
