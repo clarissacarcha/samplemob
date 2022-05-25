@@ -43,7 +43,6 @@ export const ToktokBillsPaymentSummary = ({navigation, route}) => {
   const isFocused = useIsFocused();
   const {paymentData} = route.params;
   const {user} = useSelector(state => state.session);
-  const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount({isOnErrorAlert: false});
   const [refreshing, setRefreshing] = useState(false);
   const [kycStatus, setKycStatus] = useState(null);
 
@@ -66,42 +65,12 @@ export const ToktokBillsPaymentSummary = ({navigation, route}) => {
     }
   }, [isFocused]);
 
-  useEffect(() => {
-    if (user?.toktokWalletAccountId) {
-      getMyAccount();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    setRefreshing(getMyAccountLoading);
-  }, [getMyAccountLoading]);
-
-  const onRefresh = () => {
-    getMyAccount();
-  };
-
-  if (getMyAccountLoading || loading) {
-    return (
-      <View style={styles.container}>
-        <LoadingIndicator isLoading={true} isFlex />
-      </View>
-    );
-  }
-  if (getMyAccountError || error) {
-    return (
-      <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} error={getMyAccountError ?? error} />
-      </View>
-    );
-  }
   return (
     <>
+      {console.log('HERE', paymentData)}
       <View style={styles.container}>
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        <ScrollView keyboardShouldPersistTaps="handled">
           <PaymentDetails paymentData={paymentData} />
-          {/* <PaymentMethod paymentData={paymentData} kycStatus={kycStatus} /> */}
         </ScrollView>
         <ConfirmButton paymentData={paymentData} />
       </View>
