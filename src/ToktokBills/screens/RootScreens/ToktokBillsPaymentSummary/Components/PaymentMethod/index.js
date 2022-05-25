@@ -1,31 +1,30 @@
-import React, {useContext, useEffect, useState} from "react";
-import {View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from "react-native";
+import React, {useContext, useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 //HELPER
-import { moderateScale, numberFormat } from 'toktokbills/helper';
+import {moderateScale, numberFormat} from 'toktokbills/helper';
 
 //COMPONENTS
-import { LoadingIndicator } from "src/ToktokBills/components";
+import {LoadingIndicator} from 'src/ToktokBills/components';
 
 //FONTS & COLORS & IMAGES
-import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
-import { wallet_img } from "src/ToktokBills/assets/images";
+import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
+import {wallet_img} from 'src/ToktokBills/assets/images';
 
 //HOOKS
-import { useAccount } from 'toktokbills/hooks';
-import { useSelector } from 'react-redux';
+import {useAccount} from 'toktokbills/hooks';
+import {useSelector} from 'react-redux';
 
-export const PaymentMethod = ({ paymentData, kycStatus }) => {
-
-  const { user } = useSelector((state) => state.session);
-	const navigation = useNavigation();
-  const { tokwaAccount, getMyAccount } = useAccount();
-  const { amount, convenienceFee } = paymentData;
+export const PaymentMethod = ({paymentData, kycStatus}) => {
+  const {user} = useSelector(state => state.session);
+  const navigation = useNavigation();
+  const {tokwaAccount, getMyAccount} = useAccount();
+  const {amount, convenienceFee} = paymentData;
   const totalAmount = parseInt(amount) + convenienceFee;
-  const tokwaBalance = user?.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : "0.00";
+  const tokwaBalance = user?.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : '0.00';
 
-	const onCashIn = ({balance}) => {
+  const onCashIn = ({balance}) => {
     console.log(balance);
     getMyAccount();
   };
@@ -39,38 +38,36 @@ export const PaymentMethod = ({ paymentData, kycStatus }) => {
 
   const onPressCreateAccount = () => {
     navigation.navigate('ToktokWalletLoginPage');
-  }
+  };
 
   const displayInsufficientBalance = () => {
-    if(parseFloat(totalAmount) > parseFloat(tokwaBalance)) {
+    if (parseFloat(totalAmount) > parseFloat(tokwaBalance)) {
       return (
         <View style={styles.errorContainer}>
           <TouchableOpacity onPress={onPressTopUp}>
-            <Text style={styles.errorText}>
-              {`Insufficient balance.\nPlease click here to cash in.`}
-            </Text>
+            <Text style={styles.errorText}>{`Insufficient balance.\nPlease click here to cash in.`}</Text>
           </TouchableOpacity>
         </View>
-      )
+      );
     }
-    return
-  }
+    return;
+  };
 
   const displayNoToktokWalletAccount = () => {
-    if(kycStatus == 2){
+    if (kycStatus == 2) {
       return (
         <>
-          <View style={{ paddingHorizontal: moderateScale(30) }}>
+          <View style={{paddingHorizontal: moderateScale(30)}}>
             <Text style={styles.pendingMessage}>
               We are currently assessing your application for toktokwallet. Kindly wait for confirmation.
             </Text>
           </View>
         </>
-      )
+      );
     } else {
       return (
         <>
-          <View style={{ paddingHorizontal: moderateScale(30) }}>
+          <View style={{paddingHorizontal: moderateScale(30)}}>
             <Text style={styles.noTokWaMessage}>
               Sorry, you don’t have a toktokwallet yet. Please create an account to proceed with payment.
             </Text>
@@ -79,14 +76,14 @@ export const PaymentMethod = ({ paymentData, kycStatus }) => {
             Create toktokwallet account
           </Text>
         </>
-      )
+      );
     }
-  }
+  };
 
   return (
     <>
-    	<View style={styles.container}>
-        <View style={[ styles.bodyContainer, { alignItems: "center" } ]}>
+      <View style={styles.container}>
+        <View style={[styles.bodyContainer, {alignItems: 'center'}]}>
           <Text style={styles.title}>Payment Method</Text>
           <View style={styles.shadow}>
             <View style={user.toktokWalletAccountId ? styles.tokwaButtonWithAccount : styles.tokwaButtonWithoutAccount}>
@@ -97,18 +94,16 @@ export const PaymentMethod = ({ paymentData, kycStatus }) => {
                     <Text style={styles.toktokText}>toktok</Text>
                     <Text style={styles.walletText}>wallet</Text>
                   </View>
-                  { user.toktokWalletAccountId && (
-                    <Text style={styles.balance}>
-                      Balance: PHP {numberFormat(tokwaBalance)}
-                    </Text>
+                  {user.toktokWalletAccountId && (
+                    <Text style={styles.balance}>Balance: PHP {numberFormat(tokwaBalance)}</Text>
                   )}
                 </View>
               </View>
             </View>
           </View>
         </View>
-		  </View>
-      { user.toktokWalletAccountId ? displayInsufficientBalance() : displayNoToktokWalletAccount() }
+      </View>
+      {user.toktokWalletAccountId ? displayInsufficientBalance() : displayNoToktokWalletAccount()}
     </>
   );
 };
@@ -116,46 +111,46 @@ export const PaymentMethod = ({ paymentData, kycStatus }) => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: moderateScale(30),
-    paddingVertical: moderateScale(20)
+    paddingVertical: moderateScale(20),
   },
   title: {
-    color: "#F6841F",
+    color: '#F6841F',
     fontFamily: FONT.BOLD,
-    fontSize: FONT_SIZE.M
+    fontSize: FONT_SIZE.M,
   },
   description: {
-    color: "#707070",
+    color: '#707070',
     fontSize: FONT_SIZE.M,
   },
   bodyContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   marginBottom15: {
-    marginBottom: moderateScale(15)
+    marginBottom: moderateScale(15),
   },
   walletIcon: {
-    resizeMode: "contain",
+    resizeMode: 'contain',
     width: moderateScale(35),
-    height: moderateScale(35)
+    height: moderateScale(35),
   },
   tokwaButtonWithAccount: {
     borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: moderateScale(10),
     backgroundColor: COLOR.WHITE,
   },
   tokwaButtonWithoutAccount: {
     borderRadius: 10,
-    flexDirection: "row",
+    flexDirection: 'row',
     padding: moderateScale(10),
     backgroundColor: COLOR.WHITE,
-    opacity: 0.5
+    opacity: 0.5,
   },
   tokwaButtonTextWrapper: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   toktokText: {
     color: COLOR.YELLOW,
@@ -168,9 +163,9 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
   },
   shadow: {
-    backgroundColor:"white",
+    backgroundColor: 'white',
     borderRadius: 5,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -180,43 +175,43 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   pmContainer: {
-    flexDirection: "row"
+    flexDirection: 'row',
   },
   pmWrapper: {
-    paddingLeft: moderateScale(10)
+    paddingLeft: moderateScale(10),
   },
   balance: {
-    color: "#707070",
-    fontSize: FONT_SIZE.XS
+    color: '#707070',
+    fontSize: FONT_SIZE.XS,
   },
   errorContainer: {
     flex: 1,
-    justifyContent: "flex-end",
-    flexDirection: "row",
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
     paddingHorizontal: moderateScale(30),
-    marginBottom: moderateScale(20)
+    marginBottom: moderateScale(20),
   },
   errorText: {
-    color: "#F6841F",
+    color: '#F6841F',
     fontSize: FONT_SIZE.S,
-    textAlign: "center"
+    textAlign: 'center',
   },
   createAccount: {
-    color: "#F6841F",
-    textAlign: "center",
+    color: '#F6841F',
+    textAlign: 'center',
     fontSize: FONT_SIZE.L,
-    textDecorationLine: "underline",
+    textDecorationLine: 'underline',
     marginTop: moderateScale(10),
-    marginBottom: moderateScale(30)
+    marginBottom: moderateScale(30),
   },
   noTokWaMessage: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: FONT_SIZE.M,
     marginBottom: moderateScale(15),
   },
   pendingMessage: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: FONT_SIZE.M,
     marginBottom: moderateScale(25),
-  }
-})
+  },
+});
