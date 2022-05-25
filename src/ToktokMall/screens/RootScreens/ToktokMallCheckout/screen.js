@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert, EventEmitter } from 'react-native';
 import { COLOR, FONT } from '../../../../res/variables';
-import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, PopupModalComponent} from '../../../Components';
 import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal, MessageModal } from './Components';
 import {connect, useDispatch} from 'react-redux'
 import { useSelector } from 'react-redux';
@@ -67,6 +67,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [customerData, setCustomerData] = useState({})
   const [shippingDiscounts, setShippingDiscounts] = useState([])
   const [franchisee, setFranchisee] = useState({})
+
+  const [processingCheckout, setProcessingCheckout] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -137,11 +139,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
   })
 
   const getShippingRates = async (payload, raw) => {
-    // console.log(JSON.stringify(payload))
+    console.log("SHIPPING RATES PAYLOAD", JSON.stringify(payload))
     // console.log(JSON.stringify(raw))
     // console.log(JSON.stringify(payload.cart)) 
     let result = []
-    const res = await ShippingApiCall("get_shipping_rate", payload, false)
+    const res = await ShippingApiCall("get_shipping_rate", payload, true)
     console.log("SHipping Rates", JSON.stringify(res.responseData))
     if(res.responseData && res.responseData.success == 1){
       result = res.responseData.newCart
@@ -170,7 +172,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     // await CheckoutContextData.setShippingVouchers(initialShippingVouchers)
 
     setInitialLoading(true)
-    // console.log("Auto Shipping Payload", JSON.stringify(payload))
+    console.log("Auto Shipping Payload", JSON.stringify(payload))
     const res = await ApiCall("get_autoshipping_discount", payload, true)
 
     // console.log("AUTO SHIPPING RESULT", JSON.stringify(res))
@@ -334,9 +336,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
       payload: {
         type: 'Warning',
         title: 'Unable to Place Order',
-        message: 'We’re sorry but some items in your cart is currently unavailable. Please try again another time.',
+        message: 'We’re sorry but some items in your cart is currently unavailable. Please try again another time.',        
         onConfirm: async () => {
-
           let filtered = {
             ...paramsDataCopy,
             data: paramsDataCopy.data.filter((val) => val !== null)
@@ -351,6 +352,34 @@ const Component = ({route, navigation, createMyCartSession}) => {
             data: filtered
           })
         },
+      },
+    });
+  }
+
+  const onVoucherInvalid = (data) => {
+    dispatch({
+      type: 'TOKTOK_MALL_OPEN_MODAL_2',
+      payload: {
+        type: 'Warning',
+        title: 'Voucher Removed',
+        message: 'We`re sorry but the voucher you used has already expired. Would you like to proceed and remove voucher?',
+        buttons: [
+          {
+            title: 'No',
+            type: 'transparent',
+            onPress: () => {
+              dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+            }
+          },
+          {
+            title: 'Yes',
+            type: 'filled',
+            onPress: () => {
+              dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+              
+            }
+          }
+        ],
       },
     });
   }
@@ -398,27 +427,17 @@ const Component = ({route, navigation, createMyCartSession}) => {
           referral: franchisee      
         })
 
-        navigation.navigate("ToktokMallOTP", {
+        console.log("VOUCHERS", CheckoutContextData.shippingVouchers)
+        console.log("SHIPPING VOUCHERS", shippingVouchers)
+        console.log("CHECKOUT BODY FFFFF", JSON.stringify(checkoutBody))
+
+        navigation.push("ToktokMallOTP", {
           transaction: "payment", 
-          data: checkoutBody,
-          onError: (data, error) => {
-            console.log("ERROR", error, error?.items)
-            if(error?.items && error?.items.length > 0){
-              let formattedArr = error?.items.map((item) => {return {id: "", name: item}})
-              onProductUnavailable(formattedArr, "name")
-            }
-          },
-          onSuccess: async (result) => {
-
-            console.log(paramsData)
-            console.log(result)
-            // setIsVisible(true)
-            postOrderNotifications(result)
-            EventRegister.emit("ToktokWalletRefreshAccountBalance")
-
+          data: checkoutBody,          
+          onSuccess: async (pin) => {
+            await ProcessCheckout({...checkoutBody, pin})
           }
         })
-
 
       }else if(req.responseData && req.responseData.success == 0){
 
@@ -466,11 +485,81 @@ const Component = ({route, navigation, createMyCartSession}) => {
         // Toast.show("Something went wrong", Toast.LONG)
       }
 
-
     }
 
     return
 
+  }
+
+  const ProcessCheckout = async (checkoutBody) => {
+
+    setProcessingCheckout(true)
+
+    console.log("CHECKOUT BODY JSON", JSON.stringify(checkoutBody))
+    
+    const req = await ApiCall("checkout", checkoutBody, false)
+    
+    setProcessingCheckout(false)
+
+    if(req.responseData && req.responseData.success == 1){
+
+      console.log(paramsData)
+      console.log(req.responseData)
+
+      if(req.responseData.order_status == "Paid"){
+        postOrderNotifications(req.responseData)
+        EventRegister.emit("ToktokWalletRefreshAccountBalance")
+      }else if(req.responseData.order_status == "Waiting for payment"){
+        //HANDLE REQUEST MONEY ID HAS EXPIRED
+        dispatch({
+          type: 'TOKTOK_MALL_OPEN_MODAL_2',
+          payload: {
+            type: 'Warning',
+            title: 'Unable to Place Order',
+            message: ' Oops! Sorry, but this transaction was unsuccesful! Kindly try again to proceed.',
+            buttons: [
+              {
+                title: 'Cancel',
+                type: 'transparent',
+                onPress: () => {
+                  dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+                }
+              },
+              {
+                title: 'Try Again',
+                type: 'filled',
+                onPress: () => {
+                  dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+                  checkItemFromCheckout({
+                    variables: {
+                      input: {
+                        productId: ids,
+                      },
+                    },
+                  });
+                }
+              }
+            ],
+          },
+        });
+      }
+
+    }else if(req.responseError){
+
+      let error = req.responseError
+      
+      console.log("ERROR", error, error?.items)
+      if(error?.items && error?.items.length > 0){
+        let formattedArr = error?.items.map((item) => {return {id: "", name: item}})
+        onProductUnavailable(formattedArr, "name")
+      }else if(error?.message && error?.message.includes("Invalid voucher")){
+        alert("Pre merong invalid na vouchers. Na scam ka pre")
+        onVoucherInvalid(error)
+      }
+
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }    
   }
 
   const postOrderNotifications = async (payload) => {
@@ -745,6 +834,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
         showsVerticalScrollIndicator={false}
         removeClippedSubviews={true}
       >
+        {/* LOADING POPUP */}
+        <PopupModalComponent isVisible={processingCheckout} type="Loading" label='Placing Order' />
+
         <AlertModal
           navigation = {navigation}
           isVisible = {alertModal}
@@ -781,6 +873,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
              }}
              shipping={addressData?.shippingSummary}
              shippingRates={shippingRates}
+             referral={franchisee}
            />
          ) : (
             <View style={{flex: 1, backgroundColor: 'trasparent'}}>
@@ -821,6 +914,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             shipping={addressData?.shippingSummary}
             shippingRates={shippingRates}
             shippingDiscounts={shippingDiscounts}
+            referral={franchisee}
           />
         </View>
       </ScrollView>

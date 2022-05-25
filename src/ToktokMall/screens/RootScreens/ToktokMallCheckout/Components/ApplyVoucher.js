@@ -133,9 +133,19 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
     if(req.responseData && req.responseData.success){
 
-      setSucceeded(true)
-
       if(req.responseData.type == "shipping"){
+
+        let currentDiscount = CheckoutContextData.getShopShippingDiscount(item.shop.id)
+        if(currentDiscount <= 0){
+          setVoucherIsValid(-1)
+          CheckoutContextData.setVoucherErrors(prevState => [...prevState, item.shop.id])
+          seterrormessage("This voucher is not applicable when you have another voucher.")
+          setloading(false)
+          setSucceeded(false)
+          return
+        }
+
+        setSucceeded(true)
           
         let items = ArrayCopy(CheckoutContextData.shippingVouchers)
 
@@ -216,6 +226,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
       }else if(req.responseData.type == "promotion"){
 
+        setSucceeded(true)
         let items = ArrayCopy(CheckoutContextData.shippingVouchers)
         items.push({...req.responseData.voucher, voucherCodeType: req.responseData.type})
         getShippingHashDeliveryAmount({variables: {
@@ -226,6 +237,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
       }else{
 
+        setSucceeded(true)
         //DEFAULT
         let items = ArrayCopy(CheckoutContextData.defaultVouchers)
         // items[index] = req.responseData.voucher

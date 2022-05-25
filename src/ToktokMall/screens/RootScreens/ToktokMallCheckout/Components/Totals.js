@@ -11,7 +11,7 @@ import  {FormatToText} from '../../../../helpers/formats';
 
 import {CheckoutContext} from '../ContextProvider';
 
-export const Totals = ({raw, shipping, setGrandTotal}) => {
+export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
   
   const CheckoutContextData = useContext(CheckoutContext);
 
@@ -112,7 +112,20 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
         data?.map((item, i) => {
           console.log(item.data);
           for (let i = 0; i < item.data[0].length; i++) {
-            total = total + parseFloat(item.data[0][i].amount);
+            let item2 = item.data[0][i]
+            if(i == 0 && referral && referral?.referralCode != null || referral && referral?.franchiseeCode != null){
+
+              let shopDiscount = CheckoutContextData.getShopItemDiscount(item2.shopId)
+              if(shopDiscount){
+                total = total + parseFloat(item2.product.compareAtPrice)
+              }else{
+                total = total + parseFloat(item2.product.price)
+              }
+              
+            }else{
+              total = total + parseFloat(item2.amount)
+            }
+            // total = total + parseFloat(item.data[0][i].amount);
           }
         });
       setMerchandiseTotal(total);

@@ -153,7 +153,7 @@ export const BuildTransactionPayload = async ({method, notes, total, toktokid}) 
 
 export const CheckShippingVouchers = (data) => {
 	if(data.length > 0){
-		if(data[0].amount){
+		if(data[0].valid){
 			return data
 		}else{
 			return []

@@ -19,7 +19,7 @@ import { ApplyVoucherForm } from './ApplyVoucher';
 import Icons from '../../../../Components/Icons';
 import { EventRegister } from 'react-native-event-listeners';
 
-export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve}) => {
+export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve, referral}) => {
 
   const dispatch = useDispatch()
 
@@ -50,7 +50,16 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
   const computeTotal = (item, raw = false) => {
     let total = 0
     for (let i = 0; i < item.length; i++){
-      total = total + parseFloat(item[i].amount)
+      if(i == 0 && referral && referral?.referralCode != null || referral && referral?.franchiseeCode != null){
+        let shopDiscount = CheckoutContextData.getShopItemDiscount(item[i].shopId)
+        if(shopDiscount){
+          total = total + parseFloat(item[i].product.compareAtPrice)
+        }else{
+          total = total + parseFloat(item[i].product.price)
+        }        
+      }else{
+        total = total + parseFloat(item[i].amount)
+      }      
     }
     if(raw){
       return total == NaN ? 0 : total
@@ -305,7 +314,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
                     <>
                       <View style={{...styles.voucherBody, backgroundColor: '#FDBA1C'}}>
                         <Text ellipsizeMode='tail' style={styles.voucherText}>{item?.voucher_name || item?.vname}</Text>                        
-                      </View> 
+                      </View>
                     </>
                   )
                 }else{
@@ -402,7 +411,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', padding: 15, flexWrap: 'wrap'
   },
   voucherBody: {
-    flexDirection: 'row', alignSelf: 'flex-start', paddingVertical: 4, paddingHorizontal: 8, marginVertical: 4, borderRadius: 2
+    flexDirection: 'row', alignSelf: 'flex-start', paddingVertical: 4, paddingHorizontal: 8, marginVertical: 4, borderRadius: 2, marginRight: 5
   },
   voucherText: {
     color: '#fff', fontSize: 11, fontFamily: FONT.BOLD

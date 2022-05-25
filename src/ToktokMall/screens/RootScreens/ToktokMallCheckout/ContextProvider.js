@@ -46,6 +46,25 @@ export const CheckoutContextProvider = ({children})=> {
 		return parseFloat(res)
 	}
 
+	const getShopShippingDiscount = (shopid) => {
+		let discount = null
+		shippingVouchers.filter((a) => a.voucherCodeType == "shipping").map((a) => {
+			if(a.shopid == shopid){
+				discount = a
+			}
+		})
+		if(discount && discount?.valid) return discount.discountedAmount
+		else return null
+	}
+
+	const getShopItemDiscount = (shopid) => {
+		let discount = null
+		shippingVouchers.fill((a) => a.voucherCodeType == "promotion").map((a) => {
+			if(a?.shopid == shopid || a?.shop_id == shopid) discount = a
+		})
+		return discount
+	}
+
 	const getTotalVoucherDeduction = () => {
     let totalDeduction = 0
     shippingVouchers
@@ -75,7 +94,10 @@ export const CheckoutContextProvider = ({children})=> {
 	const deleteVoucher = (voucher) => {
 		setVoucherReloading(true)
 		let items = ArrayCopy(shippingVouchers)
-		let newitems = items.filter((a) => a.voucher_id != voucher.voucher_id) //if match, remove from array
+		// console.log("DELETEION OF VOUCHERS REF", voucher)
+		// console.log("DELETION OF VOUCHERS BEFORE", JSON.stringify(items))
+		let newitems = items.filter((a) => !a?.autoShipping || !a?.autoAppy).filter((a) => a.voucher_code != voucher.voucher_code || a.vcode != voucher.vcode) //if match, remove from array
+		// console.log("DELETION OF VOUCHERS AFTER", JSON.stringify(newitems))
 		setShippingVouchers(newitems)
 		setTimeout(() => {
 			setVoucherReloading(false)
@@ -111,6 +133,8 @@ export const CheckoutContextProvider = ({children})=> {
 				getVoucherDeduction,
 
 				getShippingFeeByShopId,
+				getShopShippingDiscount,
+				getShopItemDiscount,
 
 				voucherReloading,
 				setVoucherReloading,
