@@ -105,6 +105,7 @@ const Component = ({navigation, route, notificationCountSession, notifications})
           data={data} 
           onPressBuy={onPressBuy}
           navigation={navigation}
+          status={route.params.cancelled}
         />
         {apiloader && <LoadingOverlay isVisible={apiloader} />}
       </ScrollView>

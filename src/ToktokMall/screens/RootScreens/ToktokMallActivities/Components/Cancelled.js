@@ -31,7 +31,7 @@ export const CancelledItem = ({fulldata}) => {
   const navigation = useNavigation();
 
   onPressCard = () => {
-    navigation.navigate("ToktokMallOrderDetails", {...fulldata, orderId: fulldata.id})
+    navigation.navigate("ToktokMallOrderDetails", {...fulldata, orderId: fulldata.id, cancelled: true})
   }
 
   return <RenderItem 
