@@ -36,7 +36,12 @@ export const ToktokBillsSplashScreen = ({navigation, route}) => {
   }, [person, showSplash]);
 
   const showOnboarding = async () => {
-    navigation.replace('ToktokBillsHome');
+    let isViewOnboarding = await checkViewOnboarding(person.id);
+    if (!isViewOnboarding) {
+      navigation.replace('ToktokBillsOnboarding');
+    } else {
+      navigation.replace('ToktokBillsHome');
+    }
   };
 
   return (
