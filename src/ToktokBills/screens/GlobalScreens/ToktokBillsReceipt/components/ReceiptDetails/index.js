@@ -30,7 +30,7 @@ export const ReceiptDetails = ({route}) => {
     systemServiceFee,
   } = receipt;
   const {firstFieldName, secondFieldName} = paymentData.billItemSettings;
-  const totalAmount = parseInt(amount) + convenienceFee + systemServiceFee;
+  const totalAmount = parseInt(amount) + convenienceFee;
   const [logo, setLogo] = useState({height: 0, width: 0});
   const [imageLoading, setImageLoading] = useState(true);
 
@@ -54,27 +54,27 @@ export const ReceiptDetails = ({route}) => {
       <View style={styles.line} />
       <View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Service Reference Number: </Text>
+          <Text style={styles.title}>Service Reference Number </Text>
           <Text style={[styles.description, {color: COLOR.ORANGE, fontFamily: FONT.BOLD}]}>{referenceNumber}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Transaction Date and Time: </Text>
+          <Text style={styles.title}>Transaction Date and Time </Text>
           <Text style={styles.description}>{moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>{firstFieldName}: </Text>
+          <Text style={styles.title}>{firstFieldName} </Text>
           <Text style={styles.description}>{destinationNumber}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>{secondFieldName}: </Text>
+          <Text style={styles.title}>{secondFieldName} </Text>
           <Text style={styles.description}>{destinationIdentifier}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Toktokwallet Account Number: </Text>
+          <Text style={styles.title}>Toktokwallet Account Number </Text>
           <Text style={styles.description}>+{senderMobileNumber}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Payment amount: </Text>
+          <Text style={styles.title}>Payment amount </Text>
           <Text style={styles.description}>
             {currencyCode}
             {numberFormat(amount)}
@@ -82,7 +82,7 @@ export const ReceiptDetails = ({route}) => {
         </View>
 
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Convenience Fee: </Text>
+          <Text style={styles.title}>Convenience Fee </Text>
           <Text style={styles.description}>
             {currencyCode}
             {numberFormat(providerServiceFee)}
@@ -90,7 +90,7 @@ export const ReceiptDetails = ({route}) => {
         </View>
 
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Toktok Service Fee: </Text>
+          <Text style={styles.title}>Toktok Service Fee </Text>
           <Text style={styles.description}>
             {currencyCode}
             {numberFormat(systemServiceFee)}

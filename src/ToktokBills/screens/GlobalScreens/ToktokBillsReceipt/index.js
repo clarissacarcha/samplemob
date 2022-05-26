@@ -28,9 +28,10 @@ import {Header, ReceiptDetails} from './components';
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
-//IMAGE
 import LinearGradient from '../../../assets/images/screen-bg.png';
+
+//HELPER
+import {usePrompt} from 'src/hooks';
 
 const MainComponent = ({navigation, route, viewRef, onCapturingScreen}) => {
   return (
@@ -38,7 +39,9 @@ const MainComponent = ({navigation, route, viewRef, onCapturingScreen}) => {
       <ImageBackground
         source={LinearGradient}
         resizeMode="cover"
-        style={{paddingTop: onCapturingScreen ? moderateScale(50) : moderateScale(20)}}>
+        style={{
+          paddingTop: moderateScale(20),
+        }}>
         <View
           style={{
             margin: 16,
@@ -67,6 +70,7 @@ const MainComponent = ({navigation, route, viewRef, onCapturingScreen}) => {
 export const ToktokBillsReceipt = ({navigation, route}) => {
   const [onCapturingScreen, setOnCapturingScreen] = useState(false);
   const viewshotRef = useRef();
+  const prompt = usePrompt();
   const headerHeight = useHeaderHeight();
   const imageHeight = height - headerHeight - (Platform.OS == 'ios' ? getStatusbarHeight : 0);
 
@@ -78,6 +82,12 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
         viewshotRef={viewshotRef}
         refNo={route.params.receipt.referenceNumber}
         onPressDownloadReceipt={val => {
+          prompt({
+            type: 'success',
+            title: 'Receipt Downloaded',
+            message: 'Your transaction receipt has been saved to your gallery.',
+            event: 'TOKTOKBILLSLOAD',
+          });
           setOnCapturingScreen(val);
         }}
       />
@@ -98,7 +108,10 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
     <>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <ScrollView style={styles.container}>
-        <ViewShot style={styles.container} ref={viewshotRef} options={{format: 'jpg', quality: 0.9, result: 'tmpfile'}}>
+        <ViewShot
+          style={[styles.container]}
+          ref={viewshotRef}
+          options={{format: 'jpg', quality: 0.9, result: 'tmpfile'}}>
           <MainComponent navigation={navigation} route={route} onCapturingScreen={onCapturingScreen} />
         </ViewShot>
       </ScrollView>
