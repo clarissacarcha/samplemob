@@ -47,12 +47,10 @@ export const ReceiptDetails = ({route}) => {
         setLogo({width: 50, height: 50});
       }
     });
-    console.log('HERE', receipt);
   }, []);
 
   return (
     <>
-      {console.log('HERE', receipt)}
       <View style={styles.line} />
       <View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
