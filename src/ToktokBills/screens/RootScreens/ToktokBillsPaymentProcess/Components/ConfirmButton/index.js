@@ -33,25 +33,7 @@ import {useAccount} from 'toktokwallet/hooks';
 import {usePrompt, useThrottle} from 'src/hooks';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useSelector} from 'react-redux';
-
-const processErrorMessage = (fieldValue, fieldName, fieldWidth, fieldType, minWidth) => {
-  // 0 = min | 1 = exact | 2 = max
-
-  if (fieldValue.length < minWidth) {
-    return `${fieldName} must be minimum of ${minWidth} characters.`;
-  }
-  switch (fieldType) {
-    case 0:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be minimum of ${fieldWidth} characters.` : '';
-    case 1:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be ${fieldWidth} characters in length.` : '';
-    case 2:
-      return fieldValue.length > fieldWidth ? `${fieldName} length must be ${fieldWidth} characters or less.` : '';
-
-    default:
-      return '';
-  }
-};
+import {checkFirstField, checkSecondField} from '../../Functions';
 
 export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) => {
   const prompt = usePrompt();
@@ -125,31 +107,9 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
     },
   });
 
-  const checkFirstField = () => {
-    const errorMessage = processErrorMessage(
-      (fieldValue = firstField),
-      firstFieldName,
-      firstFieldWidth,
-      firstFieldWidthType,
-      firstFieldMinWidth,
-    );
-    firstField ? setFirstFieldError(errorMessage) : setFirstFieldError('This is a required field.');
-  };
-
-  const checkSecondField = () => {
-    const errorMessage = processErrorMessage(
-      (fieldValue = secondField),
-      firstFieldName,
-      firstFieldWidth,
-      firstFieldWidthType,
-      firstFieldMinWidth,
-    );
-    secondField ? setSecondFieldError(errorMessage) : setSecondFieldError('This is a required field.');
-  };
-
   const checkEmail = () => {
     if (email != '' && !validator.isEmail(email, {ignore_whitespace: true})) {
-      setEmailError('Invalid email format.o');
+      setEmailError('Invalid email format');
       return false;
     } else {
       setEmailError('');
@@ -158,11 +118,7 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
   };
 
   const checkAmount = () => {
-    if (amount == '') {
-      setAmountError('This is a required field.');
-    } else {
-      setAmountError('');
-    }
+    setAmountError(amount == '' ? 'This is a required field.' : '');
   };
 
   const checkInsufficientBalance = () => {
@@ -171,8 +127,22 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
   };
 
   const onPressConfirm = () => {
-    checkFirstField();
-    checkSecondField();
+    checkFirstField(
+      firstField,
+      firstFieldName,
+      firstFieldWidth,
+      firstFieldWidthType,
+      firstFieldMinWidth,
+      setFirstFieldError,
+    );
+    checkSecondField(
+      secondField,
+      secondFieldName,
+      secondFieldWidth,
+      secondFieldWidthType,
+      secondFieldMinWidth,
+      setSecondFieldError,
+    );
     checkAmount();
     checkInsufficientBalance();
 
@@ -211,7 +181,7 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
   return (
     <View style={styles.container}>
       <AlertOverlay visible={loading} />
-      <OrangeButton onPress={onPressConfirm} label="Confirm" />
+      <OrangeButton onPress={onPressConfirm} label="Next" />
     </View>
   );
 };
@@ -220,7 +190,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-end',
     backgroundColor: 'white',
-    paddingHorizontal: moderateScale(16),
+    paddingHorizontal: moderateScale(32),
     paddingVertical: moderateScale(20),
     shadowColor: '#000',
     shadowOffset: {
@@ -230,6 +200,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3.84,
     elevation: 5,
+    borderTopColor: '#F8F8F8',
+    borderTopWidth: 2,
   },
   terms: {
     textAlign: 'center',
