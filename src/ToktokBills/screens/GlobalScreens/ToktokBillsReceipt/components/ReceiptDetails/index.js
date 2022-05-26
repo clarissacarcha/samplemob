@@ -54,7 +54,7 @@ export const ReceiptDetails = ({route}) => {
       <View style={styles.line} />
       <View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Service Reference Number: </Text>
+          <Text style={styles.title}>Service Reference Number </Text>
           <Text style={[styles.description, {color: COLOR.ORANGE, fontFamily: FONT.BOLD}]}>{referenceNumber}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
