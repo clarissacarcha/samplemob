@@ -26,9 +26,11 @@ export const ReceiptDetails = ({route}) => {
     referenceNumber,
     createdAt,
     toktokServiceCommission,
+    providerServiceFee,
+    systemServiceFee,
   } = receipt;
   const {firstFieldName, secondFieldName} = paymentData.billItemSettings;
-  const totalAmount = parseInt(amount) + convenienceFee + toktokServiceCommission;
+  const totalAmount = parseInt(amount) + convenienceFee + systemServiceFee;
   const [logo, setLogo] = useState({height: 0, width: 0});
   const [imageLoading, setImageLoading] = useState(true);
 
@@ -50,6 +52,7 @@ export const ReceiptDetails = ({route}) => {
 
   return (
     <>
+      {console.log('HERE', receipt)}
       <View style={styles.line} />
       <View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
@@ -79,20 +82,20 @@ export const ReceiptDetails = ({route}) => {
             {numberFormat(amount)}
           </Text>
         </View>
-        {convenienceFee > 0 && (
-          <View style={[styles.bodyContainer, styles.marginBottom15]}>
-            <Text style={styles.title}>Convenience Fee: </Text>
-            <Text style={styles.description}>
-              {currencyCode}
-              {numberFormat(convenienceFee)}
-            </Text>
-          </View>
-        )}
+
+        <View style={[styles.bodyContainer, styles.marginBottom15]}>
+          <Text style={styles.title}>Convenience Fee: </Text>
+          <Text style={styles.description}>
+            {currencyCode}
+            {numberFormat(providerServiceFee)}
+          </Text>
+        </View>
+
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Toktok Service Fee: </Text>
           <Text style={styles.description}>
             {currencyCode}
-            {numberFormat(toktokServiceCommission)}
+            {numberFormat(systemServiceFee)}
           </Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
