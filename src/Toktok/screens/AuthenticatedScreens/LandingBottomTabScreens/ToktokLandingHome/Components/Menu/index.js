@@ -127,7 +127,7 @@ export const Menu = ({setUserLocation, constants}) => {
       identifier: `${Platform.OS}Bills`,
       label: 'Bills',
       icon: BillsIcon,
-      onPress: () => navigation.push('ToktokBillsHome'),
+      onPress: () => navigation.push('ToktokBillsSplashScreen'),
       isNew: true,
     },
     {
