@@ -290,7 +290,8 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       <SuccesCancelBookingModal
         visible={viewSuccessCancelBookingModal}
         setVisible={setViewSuccessCancelBookingModal}
-        type={bookingCancelledType}
+        chargeAmount={chargeAmount}
+        type={false}
         goBackAfterCancellation={goBackAfterCancellation}
       />
       <CancelBookingModal

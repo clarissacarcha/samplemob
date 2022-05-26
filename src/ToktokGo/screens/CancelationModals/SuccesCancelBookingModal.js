@@ -5,6 +5,30 @@ import SuccessIMG from '../../../assets/images/Sucess.png';
 import {ThrottledOpacity} from '../../../components_section';
 
 export const SuccesCancelBookingModal = ({visible, setVisible, type, chargeAmount, goBackAfterCancellation}) => {
+  const getDescription = () => {
+    if (!type) {
+      if (chargeAmount > 0) {
+        return (
+          <Text style={styles.modalDescription}>
+            Your booking has been cancelled. Cancellation fee will be charged in your next booking. You may read more
+            about our{' '}
+            <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>Cancellation Policies</Text>.
+          </Text>
+        );
+      } else {
+        return (
+          <Text style={styles.modalDescription}>
+            Your booking has been cancelled. No show fee will be charged in your next booking. You may read more about
+            our{' '}
+            <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>Cancellation Policies</Text>.
+          </Text>
+        );
+      }
+    } else {
+      return <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>;
+    }
+  };
+
   return (
     <Modal animationType="fade" transparent={true} visible={visible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
@@ -12,19 +36,7 @@ export const SuccesCancelBookingModal = ({visible, setVisible, type, chargeAmoun
           <View style={styles.container}>
             <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
             <Text style={styles.modalTitle}>Booking Cancelled</Text>
-            {chargeAmount == 0 ? (
-              <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>
-            ) : (
-              <Text style={styles.modalDescription}>
-                Your booking has been cancelled. No show fee will be charged in your next booking. You may read more
-                about our{' '}
-                <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>
-                  Cancellation Policies
-                </Text>
-                .
-              </Text>
-            )}
-
+            {getDescription()}
             <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={goBackAfterCancellation}>
               <Text style={styles.buttonText}>OK</Text>
             </ThrottledOpacity>
