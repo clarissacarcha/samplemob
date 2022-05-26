@@ -13,8 +13,9 @@ import {
 } from 'react-native';
 import {useHeaderHeight} from '@react-navigation/stack';
 
-//HELPER
+//HELPER & UTIL
 import {moderateScale, numberFormat} from 'toktokbills/helper';
+import {ErrorUtility} from 'toktokbills/util';
 
 //COMPONENTS
 import {
@@ -24,8 +25,10 @@ import {
   LoadingIndicator,
   SomethingWentWrong,
   HeaderRight,
+  ToastModal,
 } from 'toktokbills/components';
 import {ConfirmButton, Header, PaymentForm, PaymentMethod, VerifyContextProvider, VerifyContext} from './Components';
+import {AlertOverlay} from 'src/components';
 
 // FONTS AND COLORS
 import CONSTANTS from 'common/res/constants';
@@ -35,10 +38,11 @@ const {width, height} = Dimensions.get('window');
 //GRAPHQL & HOOKS
 import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_BILL_ITEM_SETTINGS} from 'toktokbills/graphql/model';
+import {GET_BILL_ITEM_SETTINGS, POST_FAVORITE_BILL} from 'toktokbills/graphql/model';
 import {useAccount} from 'toktokwallet/hooks';
 import {useSelector} from 'react-redux';
 import {checkFirstField, checkSecondField} from './Functions';
+import {usePrompt} from 'src/hooks';
 
 const MainComponent = ({navigation, route}) => {
   const {billItemId, billType} = route.params;
@@ -50,9 +54,20 @@ const MainComponent = ({navigation, route}) => {
   });
 
   const [refreshing, setRefreshing] = useState(false);
+  const [favoriteBillId, setFavoriteBillId] = useState(0);
+  const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
+
+  navigation.setOptions({
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitle label={billType.name} />,
+    headerRight: () => <HeaderRight onPress={onPressFavorite} isFavorite={favoriteBillId} />,
+  });
+
   const {user} = useSelector(state => state.session);
   const {getMyAccountLoading, getMyAccount, getMyAccountError, tokwaAccount} = useAccount({isOnErrorAlert: false});
+  const prompt = usePrompt();
 
+  // GET BILL ITEM SETTINGS
   const {
     data: billItemSettings,
     loading,
@@ -66,6 +81,24 @@ const MainComponent = ({navigation, route}) => {
     },
     fetchPolicy: 'cache-and-network',
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+  });
+
+  // POST FAVORITE BILL
+  const [postFavoriteBill, {loading: postFavoriteBillLoading}] = useMutation(POST_FAVORITE_BILL, {
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: error => {
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        title: 'Duplicate Favorites',
+      });
+    },
+    onCompleted: ({postFavoriteBill}) => {
+      console.log(postFavoriteBill);
+      setFavoriteBillId(postFavoriteBill.favoriteBill.id);
+      setFavoriteModal({show: true, message: 'Added to your Favorites'});
+    },
   });
 
   const {
@@ -142,10 +175,20 @@ const MainComponent = ({navigation, route}) => {
       secondFieldMinWidth,
       setSecondFieldError,
     );
+    setAmountError('');
+    setEmailError('');
 
-    // if(isFirstFieldValid && isSecondFieldValid){
-
-    // }
+    if (isFirstFieldValid && isSecondFieldValid) {
+      postFavoriteBill({
+        variables: {
+          input: {
+            billItemId,
+            firstFieldValue: firstField,
+            secondFieldValue: secondField,
+          },
+        },
+      });
+    }
   };
 
   if (loading || (getMyAccountLoading && !refreshing)) {
@@ -164,6 +207,8 @@ const MainComponent = ({navigation, route}) => {
   }
   return (
     <>
+      <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} message={favoriteModal.message} />
+      <AlertOverlay visible={postFavoriteBillLoading} />
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
