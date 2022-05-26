@@ -18,8 +18,8 @@ export const empty_notifications = require('./empty-screens/empty-notifications.
 export const empty_search = require('./empty-screens/empty-search.png');
 
 //onboarding images
-// export const onboarding_1 = require('./onboarding/onboarding-1.png');
-// export const onboarding_2 = require('./onboarding/onboarding-2.png');
-// export const onboarding_3 = require('./onboarding/onboarding-3.png');
-// export const onboarding_4 = require('./onboarding/onboarding-4.png');
-// export const onboarding_toktokbills = require('./onboarding/onboarding-toktokbills.png');
+export const onboarding_1 = require('./onboarding/onboarding-1.png');
+export const onboarding_2 = require('./onboarding/onboarding-2.png');
+export const onboarding_3 = require('./onboarding/onboarding-3.png');
+export const onboarding_4 = require('./onboarding/onboarding-4.png');
+export const onboarding_toktokbills = require('./onboarding/onboarding-toktokbills.png');
