@@ -38,7 +38,7 @@ const {width, height} = Dimensions.get('window');
 //GRAPHQL & HOOKS
 import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_BILL_ITEM_SETTINGS, POST_FAVORITE_BILL} from 'toktokbills/graphql/model';
+import {GET_BILL_ITEM_SETTINGS, PATCH_REMOVE_FAVORITE_BILL, POST_FAVORITE_BILL} from 'toktokbills/graphql/model';
 import {useAccount} from 'toktokwallet/hooks';
 import {useSelector} from 'react-redux';
 import {checkFirstField, checkSecondField} from './Functions';
@@ -46,15 +46,10 @@ import {usePrompt} from 'src/hooks';
 
 const MainComponent = ({navigation, route}) => {
   const {billItemId, billType} = route.params;
-
-  navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={billType.name} />,
-    headerRight: () => <HeaderRight onPress={onPressFavorite} />,
-  });
+  const favoriteDetails = route?.params?.favoriteDetails ? route.params.favoriteDetails : null;
 
   const [refreshing, setRefreshing] = useState(false);
-  const [favoriteBillId, setFavoriteBillId] = useState(0);
+  const [favoriteBillId, setFavoriteBillId] = useState(favoriteDetails ? favoriteDetails.id : 0);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
 
   navigation.setOptions({
@@ -83,6 +78,23 @@ const MainComponent = ({navigation, route}) => {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
   });
 
+  // PATCH REMOVE FAVORITE BILL
+  const [patchRemoveFavoriteBill, {loading: patchFavoriteBillLoading}] = useMutation(PATCH_REMOVE_FAVORITE_BILL, {
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: error => {
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        title: 'Duplicate Favorites',
+      });
+    },
+    onCompleted: ({patchRemoveFavoriteBill}) => {
+      setFavoriteBillId(0);
+      setFavoriteModal({show: true, message: 'Removed from your Favorites'});
+    },
+  });
+
   // POST FAVORITE BILL
   const [postFavoriteBill, {loading: postFavoriteBillLoading}] = useMutation(POST_FAVORITE_BILL, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
@@ -95,7 +107,6 @@ const MainComponent = ({navigation, route}) => {
       });
     },
     onCompleted: ({postFavoriteBill}) => {
-      console.log(postFavoriteBill);
       setFavoriteBillId(postFavoriteBill.favoriteBill.id);
       setFavoriteModal({show: true, message: 'Added to your Favorites'});
     },
@@ -141,11 +152,19 @@ const MainComponent = ({navigation, route}) => {
   };
 
   const onCashIn = ({balance}) => {
-    console.log(balance);
     getMyAccount();
   };
 
   const onPressFavorite = () => {
+    if (favoriteBillId) {
+      return patchRemoveFavoriteBill({
+        variables: {
+          input: {
+            id: favoriteBillId,
+          },
+        },
+      });
+    }
     const {
       firstFieldName,
       firstFieldFormat,
@@ -208,7 +227,7 @@ const MainComponent = ({navigation, route}) => {
   return (
     <>
       <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} message={favoriteModal.message} />
-      <AlertOverlay visible={postFavoriteBillLoading} />
+      <AlertOverlay visible={postFavoriteBillLoading || patchFavoriteBillLoading} />
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
