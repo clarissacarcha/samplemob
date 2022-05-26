@@ -2,10 +2,10 @@ import React from 'react';
 import {
   ToktokBiller,
   ToktokBillsHome,
-  // ToktokBillsOnboarding,
+  ToktokBillsOnboarding,
   ToktokBillsPaymentProcess,
   ToktokBillsPaymentSummary,
-  // ToktokBillsSplashScreen,
+  ToktokBillsSplashScreen,
 } from 'toktokbills/screens';
 import {Platform} from 'react-native';
 import {moderateScale} from 'toktokbills/helper';
@@ -49,7 +49,7 @@ export default ({Navigator}) => {
           },
         }}
       />
-      {/* <Navigator.Screen
+      <Navigator.Screen
         name="ToktokBillsOnboarding"
         component={ToktokBillsOnboarding}
         options={{
@@ -66,7 +66,7 @@ export default ({Navigator}) => {
             // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
           },
         }}
-      /> */}
+      />
       <Navigator.Screen
         name="ToktokBillsPaymentProcess"
         component={ToktokBillsPaymentProcess}
@@ -103,7 +103,7 @@ export default ({Navigator}) => {
           },
         }}
       />
-      {/* <Navigator.Screen
+      <Navigator.Screen
         name="ToktokBillsSplashScreen"
         component={ToktokBillsSplashScreen}
         options={{
@@ -120,7 +120,7 @@ export default ({Navigator}) => {
             // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
           },
         }}
-      /> */}
+      />
     </>
   );
 };
