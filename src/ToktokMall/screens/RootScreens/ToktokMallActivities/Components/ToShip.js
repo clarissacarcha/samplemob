@@ -91,7 +91,7 @@ export const ToShip = ({id, email}) => {
           <Image source={emptyorders} style={styles.noDataImage} />
           <View style={styles.noDataTextContainer}>
             <Text style={styles.noDataTitle}>No Orders</Text>
-    				<Text style={styles.noDataBody}>Go browse and checkout something you like</Text>
+    				<Text style={styles.noDataBody}>Go browse and checkout something you like!</Text>
 		    	</View>
         </View>
       </>

@@ -134,7 +134,7 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
           </View>
         </View>
         <View style={styles.textContainer}>
-          <Text style={{fontWeight: 'bold'}}>Total Payment:</Text>
+          <Text style={{fontWeight: 'bold'}}>Totala:</Text>
           {
             getDiscount('shipping') ? 
             <Text style={{color: '#F6841F'}}>

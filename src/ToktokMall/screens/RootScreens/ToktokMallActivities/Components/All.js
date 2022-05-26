@@ -104,7 +104,7 @@ export const All = () => {
           <View style={{height: 8}} />
           <View style={{alignItems: 'center'}}>
     				<Text style={{fontSize: 18, fontWeight: "600", color: "#F6841F", marginBottom: 8}}>No Orders</Text>
-    				<Text style={{fontSize: 13, fontWeight: "400", color: "#000000"}}>Go browse and checkout something you like</Text>
+    				<Text style={{fontSize: 13, fontWeight: "400", color: "#000000"}}>Go browse and checkout something you like!</Text>
 		    	</View>
         </View>
         <View style={{flex: 0.2}} />

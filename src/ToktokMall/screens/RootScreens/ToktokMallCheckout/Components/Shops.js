@@ -97,7 +97,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             source = {getImageSource(product?.img?.filename)} 
             style ={styles.itemImage}/>
             <View style = {{ marginLeft: 15, flex: 1}}>
-              <Text>{product?.name ? product?.name : product?.itemname}</Text>
+              <Text>{product?.name ? product?.name.trim() : product?.itemname.trim()}</Text>
               <View style = {{flexDirection: 'row'}}>
                 <Text style ={styles.itemprice}>{FormatToText.currency(product?.price)}</Text>
                 <Text style ={styles.itemSaleOff}>{parseFloat(product?.compareAtPrice) != "0.00" ? FormatToText.currency(product?.compareAtPrice) : ""}</Text>
