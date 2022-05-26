@@ -148,9 +148,10 @@ const styles = StyleSheet.create({
     marginVertical: moderateScale(16),
   },
   brokenLine: {
-    borderBottomWidth: 2,
-    borderBottomColor: COLOR.ORANGE,
+    borderRadius: 5,
     borderStyle: 'dashed',
+    borderWidth: 1,
+    borderColor: COLOR.ORANGE,
     margin: moderateScale(16),
   },
   logo: {
