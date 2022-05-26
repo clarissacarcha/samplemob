@@ -1,12 +1,74 @@
-import React, {useState} from 'react';
-import {Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View, StatusBar} from 'react-native';
-import GradientBackground from '../../../assets/toktokgo/BackGroundBeta.png';
+import React, {useState, useRef} from 'react';
+import {
+  SafeAreaView,
+  Image,
+  StyleSheet,
+  FlatList,
+  View,
+  Text,
+  StatusBar,
+  TouchableOpacity,
+  Dimensions,
+  ImageBackground,
+} from 'react-native';
 import constants from '../../../common/res/constants';
+import GradientBackground from '../../../assets/toktokgo/BackGroundBeta.png';
+import ToktokgoIcon from '../../../assets/images/ToktokgoIconBeta.png';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
-import {EnjoyYourRide, FindDriver, StartBooking} from './Section';
+
+const {width} = Dimensions.get('screen');
+
+const ImageDimension = Dimensions.get('screen').height / 2.5;
+
+const slides = [
+  {
+    id: '1',
+    image: require('../../../assets/images/StartBookingImages.png'),
+    title: 'Start Booking',
+    subtitle: 'Select your pick-up\nand destination.',
+  },
+  {
+    id: '2',
+    image: require('../../../assets/images/FindDriverImage.png'),
+    title: 'Find a Driver',
+    subtitle: 'We will automatically find you the\nnearest available driver.',
+  },
+  {
+    id: '3',
+    image: require('../../../assets/images/EnjoyYourRideImage.png'),
+    title: 'Enjoy Your Ride',
+    subtitle: 'Sit back and relax while we bring\nyou to your destination.',
+  },
+];
+
+const Slide = ({item}) => {
+  return (
+    <View style={{alignItems: 'center'}}>
+      <View style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', width}}>
+        <Image
+          source={item?.image}
+          style={{height: ImageDimension, width: width - 80, resizeMode: 'contain', marginTop: 20}}
+        />
+      </View>
+      <View style={{flexGrow: 1, alignItems: 'center'}}>
+        <Text style={styles.title}>{item?.title}</Text>
+
+        <Text style={[styles.subtitle, {width: 300}]}> {item?.subtitle}</Text>
+      </View>
+    </View>
+  );
+};
+
 const ToktokGoOnBoardingBeta = ({navigation}) => {
-  const [screen, setsSreen] = useState(1);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const ref = useRef();
+  const updateCurrentSlideIndex = e => {
+    const contentOffsetX = e.nativeEvent.contentOffset.x;
+    const currentIndex = Math.round(contentOffsetX / width);
+    setCurrentSlideIndex(currentIndex);
+  };
+
   const onPress = async () => {
     const data = moment(new Date()).format('MMM D, YYYY');
     const date = await AsyncStorage.getItem('ToktokGoHealthCare');
@@ -18,47 +80,112 @@ const ToktokGoOnBoardingBeta = ({navigation}) => {
       navigation.replace('ToktokGoHealthCare');
     }
   };
+
+  const Footer = () => {
+    return (
+      <View style={{marginTop: 42}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}>
+          {slides.map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.indicator,
+                currentSlideIndex == index && {
+                  backgroundColor: constants.COLOR.ORANGE,
+                  width: 25,
+                },
+              ]}
+            />
+          ))}
+        </View>
+
+        {/* Render buttons */}
+        <View style={{marginBottom: 20}}>
+          {currentSlideIndex == slides.length - 1 && (
+            <TouchableOpacity
+              style={{
+                backgroundColor: constants.COLOR.ORANGE,
+                marginHorizontal: 80,
+                paddingVertical: 10,
+                borderRadius: 5,
+                marginTop: 32,
+              }}
+              onPress={onPress}>
+              <Text
+                style={{
+                  color: constants.COLOR.WHITE,
+                  fontSize: constants.FONT_SIZE.XL - 1,
+                  fontFamily: constants.FONT_FAMILY.BOLD,
+                  textAlign: 'center',
+                }}>
+                Get Started
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    );
+  };
+
   return (
     <ImageBackground source={GradientBackground} style={styles.container}>
-      {screen === 1 && <StartBooking />}
-      {screen === 2 && <FindDriver />}
-      {screen === 3 && <EnjoyYourRide />}
-      {screen === 3 ? (
-        <TouchableOpacity
-          style={{
-            backgroundColor: constants.COLOR.ORANGE,
-            marginHorizontal: 80,
-            paddingVertical: 10,
-            borderRadius: 5,
-            marginTop: 32,
-          }}
-          onPress={onPress}>
-          <Text
-            style={{
-              color: constants.COLOR.WHITE,
-              fontSize: constants.FONT_SIZE.XL - 1,
-              fontFamily: constants.FONT_FAMILY.BOLD,
-              textAlign: 'center',
-            }}>
-            Get Started
-          </Text>
-        </TouchableOpacity>
-      ) : (
-        <View style={{marginHorizontal: 45, marginTop: 53, alignItems: 'flex-end'}}>
-          <TouchableOpacity onPress={() => setsSreen(screen + 1)}>
-            <Text
-              style={{
-                color: constants.COLOR.ORANGE,
-                fontSize: constants.FONT_SIZE.XL - 1,
-                fontFamily: constants.FONT_FAMILY.BOLD,
-              }}>
-              Next
-            </Text>
-          </TouchableOpacity>
+      <View style={{alignItems: 'center'}}>
+        <View style={{marginTop: StatusBar.currentHeight + 40}}>
+          <Image source={ToktokgoIcon} resizeMode={'contain'} style={{height: 45, width: 190}} />
         </View>
-      )}
+        <FlatList
+          ref={ref}
+          onMomentumScrollEnd={updateCurrentSlideIndex}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={slides}
+          pagingEnabled
+          renderItem={({item}) => <Slide item={item} />}
+        />
+      </View>
+      <Footer />
     </ImageBackground>
   );
 };
 
+const styles = StyleSheet.create({
+  subtitle: {
+    color: constants.COLOR.BLACK,
+    fontSize: constants.FONT_SIZE.XL + 1,
+    marginTop: 10,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  title: {
+    color: constants.COLOR.ORANGE,
+    fontSize: constants.FONT_SIZE.XL + 13,
+    fontFamily: constants.FONT_FAMILY.BOLD,
+    marginTop: 20,
+    textAlign: 'center',
+  },
+  image: {
+    height: '100%',
+    width: '100%',
+    resizeMode: 'contain',
+  },
+  indicator: {
+    width: 10,
+    height: 10,
+    backgroundColor: '#FBCEA6',
+    marginHorizontal: 3,
+    borderRadius: 10,
+  },
+  btn: {
+    flex: 1,
+    height: 50,
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 export default ToktokGoOnBoardingBeta;
