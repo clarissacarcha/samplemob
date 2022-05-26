@@ -8,7 +8,8 @@ export type PropsType = {
   theme?: Object,
   type?: 'primary' | 'secondary',
   height?: number,
-  children: string,
+  // children: string,
+  buttonText: string,
   onPress: () => void,
   style?: Object,
 };

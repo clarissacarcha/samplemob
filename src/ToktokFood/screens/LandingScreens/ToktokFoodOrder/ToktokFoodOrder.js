@@ -82,9 +82,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           {/* Buttons for order details and cancel order */}
           <ButtonContainer>
             <Button onPress={() => console.log('hey')}>See Order Details</Button>
-            <StyledButton type="secondary" onPress={() => console.log('cancel')}>
-              Cancel
-            </StyledButton>
+            <StyledButton buttonText="Cancel" type="secondary" onPress={() => console.log('cancel')} />
           </ButtonContainer>
         </BottomContainer>
       </Container>

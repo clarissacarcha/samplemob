@@ -15,14 +15,14 @@ import Header from 'toktokfood/components/Header';
 import ShopInfo from 'toktokfood/compositions/ShopOverview/ShopInfo';
 import ShopTabView from 'toktokfood/compositions/ShopOverview/ShopTabView';
 import ShopSearchItemList from 'toktokfood/compositions/ShopOverview/ShopSearchItemList';
+import ShopViewCart from 'toktokfood/compositions/ShopOverview/ShopViewCart/ShopViewCart';
 
 import {useDebounce} from 'toktokfood/util/debounce';
-// import StyledText from '../../../components/StyledText/StyledText';
 
 const ToktokFoodShopOverview = (props: PropsType): React$Node => {
   const route = useRoute();
   const {item} = route.params;
-
+  console.log(item);
   // State
   const [search, setSearch] = useState('');
 
@@ -45,6 +45,7 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
   }, [debounceText]);
 
   const SearchComponent = () => {
+    // opacity animation for search bar
     const opacity = scrollY.interpolate({
       inputRange: [0, 300],
       outputRange: [0, 1],
@@ -123,6 +124,8 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
       </Pager>
 
       {AnimatedHeaderTitle}
+
+      <ShopViewCart shopId={item?.id} />
     </Container>
   );
 };
