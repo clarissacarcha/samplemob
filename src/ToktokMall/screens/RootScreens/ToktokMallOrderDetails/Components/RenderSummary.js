@@ -16,7 +16,7 @@ export const RenderSummary = ({data}) => {
         <View style={{flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 15}}>
           <View style={{flex: 1}}>
             <Text style={{fontSize: 13}}>Shipping Fee:</Text>
-            <Text style={{fontSize: 13}}>
+            <Text style={{fontSize: 13, paddingTop: 8}}>
               Order Total (
                 {data?.orders?.totalItems}{' '}
                 {data?.orders?.totalItems > 1 ? "items" : "item"}
@@ -24,7 +24,7 @@ export const RenderSummary = ({data}) => {
             </Text>
           </View>
           <View styl={{flex: 1}}>
-            <Text style={{fontSize: 13, textAlign:'right'}}><Price amount={data?.payments?.shippingFee} /></Text>
+            <Text style={{fontSize: 13, textAlign:'right', paddingBottom: 8}}><Price amount={data?.payments?.shippingFee} /></Text>
             <Text style={{color: "#F6841F", fontSize: 13, fontFamily: FONT.BOLD}}><Price amount={data?.totalAmount} /></Text>
           </View>
         </View>

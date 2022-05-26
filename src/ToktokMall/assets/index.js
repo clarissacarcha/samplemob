@@ -25,6 +25,7 @@ export const otpbg = require("../assets/images/otp-bg.png")
 export const emptyorders = require("../assets/images/empty-orders.png")
 export const emptynotification = require("../assets/images/empty-notification.png")
 export const emptysearch = require("../assets/images/empty-search.png")
+export const noHistoryFound = require("../assets/images/noHistoryFound.png")
 export const contactus = require("../assets/images/contact-us.png");
 export const walletIcon = require("../assets/images/tokwaicon.png");
 export const emptyPlaceOrder = require("../assets/images/empty_place_order.png");

@@ -65,10 +65,10 @@ export const RenderItem = ({data, navigation}) => {
   
               <View style={{flexDirection: 'row', paddingVertical: 5}}>
                 <View style={{flex: 1}}>
-                  <Text style={{color: "#525252", fontSize: 11}}>{product?.variant || 'None'}</Text>
+                  <Text style={{color: "#525252", fontSize: 11}}>{product?.variant}</Text>
                 </View>
                 <View style={{flex: 1, flexDirection: 'row-reverse'}}>
-                  <Text style={{ fontSize: 13, fontWeight: '100'}}>
+                  <Text style={{ fontSize: 13, fontWeight: '100', color:'#525252'}}>
                     Qty: {data?.quantity}
                   </Text>
                 </View>
