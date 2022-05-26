@@ -30,7 +30,7 @@ export const ReceiptDetails = ({route}) => {
     systemServiceFee,
   } = receipt;
   const {firstFieldName, secondFieldName} = paymentData.billItemSettings;
-  const totalAmount = parseInt(amount) + convenienceFee + systemServiceFee;
+  const totalAmount = parseInt(amount) + convenienceFee;
   const [logo, setLogo] = useState({height: 0, width: 0});
   const [imageLoading, setImageLoading] = useState(true);
 
