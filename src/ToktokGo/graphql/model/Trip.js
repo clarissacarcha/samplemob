@@ -6,7 +6,6 @@ consumer {
   name
 }
 consumerUserId
-dispatchHash
 driver {
   mobileNumber
   name
@@ -25,6 +24,7 @@ fare {
   durationFee
   flatRate
   mileageFee
+  surgeCharge
   total
 }
 id
@@ -99,6 +99,14 @@ cancellation {
     amount
     type
   }
+}
+estimates{
+  dropOffTimeFrame
+  pickUpAt
+}
+vehicleType {
+  imageClass
+  name
 }
 `;
 
