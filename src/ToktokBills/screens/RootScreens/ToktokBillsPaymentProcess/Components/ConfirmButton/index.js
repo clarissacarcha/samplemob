@@ -109,7 +109,7 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
 
   const checkEmail = () => {
     if (email != '' && !validator.isEmail(email, {ignore_whitespace: true})) {
-      setEmailError('Invalid email format');
+      setEmailError('Invalid email address format.');
       return false;
     } else {
       setEmailError('');

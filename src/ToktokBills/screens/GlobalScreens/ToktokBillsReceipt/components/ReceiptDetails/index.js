@@ -12,6 +12,7 @@ import {ReceiptSeparator} from '../../../../../components/Ui';
 import toktokBillsLogo from '../../../../../../ToktokBills/assets/images/toktokbills.png';
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
 import moment from 'moment';
+import DashedLine from 'react-native-dashed-line';
 
 export const ReceiptDetails = ({route}) => {
   const {receipt, paymentData} = route.params;
@@ -20,7 +21,6 @@ export const ReceiptDetails = ({route}) => {
     destinationNumber,
     destinationIdentifier,
     amount,
-    email,
     billerDetails,
     convenienceFee,
     referenceNumber,
@@ -29,10 +29,12 @@ export const ReceiptDetails = ({route}) => {
     providerServiceFee,
     systemServiceFee,
   } = receipt;
-  const {firstFieldName, secondFieldName} = paymentData.billItemSettings;
+  const {email, billItemSettings} = paymentData;
+  const {firstFieldName, secondFieldName} = billItemSettings;
   const totalAmount = parseInt(amount) + convenienceFee;
   const [logo, setLogo] = useState({height: 0, width: 0});
   const [imageLoading, setImageLoading] = useState(true);
+  const [footerHeight, setFooterHeight] = useState(80);
 
   useEffect(() => {
     Image.getSize(billerDetails.logo, (width, height) => {
@@ -73,6 +75,12 @@ export const ReceiptDetails = ({route}) => {
           <Text style={styles.title}>Toktokwallet Account Number </Text>
           <Text style={styles.description}>+{senderMobileNumber}</Text>
         </View>
+        {!!email && (
+          <View style={[styles.bodyContainer, styles.marginBottom15]}>
+            <Text style={styles.title}>Email Address </Text>
+            <Text style={styles.description}>{email}</Text>
+          </View>
+        )}
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Payment amount </Text>
           <Text style={styles.description}>
@@ -80,7 +88,6 @@ export const ReceiptDetails = ({route}) => {
             {numberFormat(amount)}
           </Text>
         </View>
-
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Convenience Fee </Text>
           <Text style={styles.description}>
@@ -88,7 +95,6 @@ export const ReceiptDetails = ({route}) => {
             {numberFormat(providerServiceFee)}
           </Text>
         </View>
-
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Toktok Service Fee </Text>
           <Text style={styles.description}>
@@ -103,10 +109,19 @@ export const ReceiptDetails = ({route}) => {
             {numberFormat(totalAmount)}
           </Text>
         </View>
-        <ReceiptSeparator />
-        <View style={styles.brokenLine} />
-        <View style={{alignItems: 'center'}}>
-          <Text style={styles.description}>A copy of this receipt will be delivered on the email provided.</Text>
+        <ReceiptSeparator bottomHeight={footerHeight} />
+        <View style={styles.brokenLine}>
+          <DashedLine dashColor={COLOR.ORANGE} dashThickness={1} />
+        </View>
+        <View
+          style={{alignItems: 'center'}}
+          onLayout={event => {
+            let {x, y, width, height} = event.nativeEvent.layout;
+            setFooterHeight(height);
+          }}>
+          <Text style={[styles.description, {marginHorizontal: moderateScale(16)}]}>
+            A copy of this receipt will be delivered on the email provided.
+          </Text>
           <Image source={toktokBillsLogo} style={styles.logo} />
         </View>
       </View>
@@ -129,7 +144,7 @@ const styles = StyleSheet.create({
   },
   description: {
     color: 'black',
-    fontSize: FONT_SIZE.M,
+    fontSize: FONT_SIZE.S,
     flexShrink: 1,
     textAlign: 'center',
   },
@@ -148,11 +163,8 @@ const styles = StyleSheet.create({
     marginVertical: moderateScale(16),
   },
   brokenLine: {
-    borderRadius: 5,
-    borderStyle: 'dashed',
-    borderWidth: 1,
-    borderColor: COLOR.ORANGE,
-    margin: moderateScale(16),
+    marginVertical: moderateScale(20),
+    marginHorizontal: moderateScale(16),
   },
   logo: {
     width: moderateScale(80),

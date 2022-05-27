@@ -12,7 +12,6 @@ export const Header = ({route}) => {
   const {receipt} = route.params;
   const {billerDetails} = receipt;
 
-  console.log(billerDetails);
   return (
     <View style={{alignItems: 'center'}}>
       <Image source={{uri: billerDetails.logo}} style={styles.logo} />
