@@ -40,25 +40,9 @@ const MainComponent = ({navigation, route, viewRef, onCapturingScreen}) => {
         source={LinearGradient}
         resizeMode="cover"
         style={{
-          paddingTop: moderateScale(20),
+          marginTop: moderateScale(10),
         }}>
-        <View
-          style={{
-            margin: 16,
-            marginBottom: moderateScale(100),
-            paddingHorizontal: 16,
-            paddingVertical: 20,
-            backgroundColor: COLOR.WHITE,
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 1,
-            },
-            shadowOpacity: 0.22,
-            shadowRadius: 2.22,
-
-            elevation: 3,
-          }}>
+        <View style={styles.receiptContainer}>
           <Header route={route} />
           <ReceiptDetails route={route} />
         </View>
@@ -144,19 +128,16 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingHorizontal: moderateScale(32),
     paddingVertical: moderateScale(16),
-    width: '100%',
-    flex: 1,
-    position: 'absolute',
-    zIndex: 999,
-    bottom: 0,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 12,
+      height: 2,
     },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-    elevation: 24,
+    shadowOpacity: 0.2,
+    shadowRadius: 3.84,
+    elevation: 5,
+    borderTopColor: '#F8F8F8',
+    borderTopWidth: 2,
     backgroundColor: COLOR.WHITE,
   },
   emailText: {
@@ -164,5 +145,19 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     marginBottom: moderateScale(30),
     marginTop: moderateScale(10),
+  },
+  receiptContainer: {
+    margin: moderateScale(16),
+    paddingHorizontal: moderateScale(16),
+    paddingVertical: moderateScale(20),
+    backgroundColor: COLOR.WHITE,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
 });

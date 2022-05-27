@@ -78,8 +78,6 @@ export const PaymentDetails = ({paymentData}) => {
           )}
         </View>
       )}
-
-      <View></View>
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>{billItemSettings.firstFieldName} </Text>
         <Text style={styles.description}>{firstField}</Text>
@@ -88,6 +86,12 @@ export const PaymentDetails = ({paymentData}) => {
         <Text style={styles.label}>{billItemSettings.secondFieldName} </Text>
         <Text style={styles.description}>{secondField}</Text>
       </View>
+      {!!email && (
+        <View style={styles.detailsContainer}>
+          <Text style={styles.label}>Email Address </Text>
+          <Text style={styles.description}>{email}</Text>
+        </View>
+      )}
       <View style={styles.line} />
       <View style={[styles.detailsContainer, {marginBottom: moderateScale(-2)}]}>
         <Text style={styles.label}>Payment Method </Text>
