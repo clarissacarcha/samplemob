@@ -11,16 +11,17 @@ import {
   ImageBackground,
 } from 'react-native';
 import {moderateScale, getStatusbarHeight} from 'toktokbills/helper';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useRoute} from '@react-navigation/native';
 
 //SELF IMPORTS
 import {BillerType} from './Components';
+import {FavoriteBillerType} from './Components';
 import {HeaderBack, HeaderTitle, LoadingIndicator, Separator, SomethingWentWrong} from 'toktokbills/components';
 
 //GRAPHQL & HOOKS
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_BILL_TYPES} from 'toktokbills/graphql/model';
+import {GET_BILL_TYPES, GET_FAVORITE_BILLS} from 'toktokbills/graphql/model';
 import {useAccount} from 'toktokwallet/hooks';
 
 //IMAGE, FONT & COLOR
@@ -38,6 +39,8 @@ export const ToktokBillsHome = ({navigation, route}) => {
 
   const isFocused = useIsFocused();
   const [billTypes, setBillTypes] = useState([]);
+  const [favoriteBills, setFavoriteBills] = useState([]);
+  const [allfavoriteBills, setAllFavoriteBills] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const [getBillTypes, {loading, error, refetch}] = useLazyQuery(GET_BILL_TYPES, {
@@ -53,8 +56,26 @@ export const ToktokBillsHome = ({navigation, route}) => {
     },
   });
 
+  const [getFavoriteBills, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(
+    GET_FAVORITE_BILLS,
+    {
+      fetchPolicy: 'cache-and-network',
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onError: () => {
+        setRefreshing(false);
+        setFavoriteBills([]);
+      },
+      onCompleted: ({getFavoriteBills}) => {
+        setRefreshing(false);
+        setAllFavoriteBills(getFavoriteBills);
+        setFavoriteBills(getFavoriteBills.splice(0, 3));
+      },
+    },
+  );
+
   useEffect(() => {
     getBillTypes();
+    getFavoriteBills();
   }, []);
 
   const onRefresh = () => {
@@ -79,6 +100,29 @@ export const ToktokBillsHome = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <ImageBackground source={screen_bg} style={{flex: 1}} resizeMode="cover">
+        <View style={styles.shadowContainer}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignContent: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={[styles.title]}>Favorite Billers</Text>
+
+            {allfavoriteBills.length > 3 && (
+              <Text style={[styles.title, {fontFamily: FONT.REGULAR}]}>{`See All >`}</Text>
+            )}
+          </View>
+          <FlatList
+            contentContainerStyle={styles.flatlistContainer}
+            showsVerticalScrollIndicator={false}
+            numColumns={1}
+            data={favoriteBills}
+            keyExtractor={item => item.id}
+            renderItem={({item, index}) => <FavoriteBillerType item={item} index={index} billTypes={billTypes} />}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          />
+        </View>
         <View style={styles.shadowContainer}>
           <Text style={[styles.title, styles.lineSeperator]}>Select Biller Type</Text>
           <FlatList
