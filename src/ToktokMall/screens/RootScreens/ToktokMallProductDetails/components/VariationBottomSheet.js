@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, forwardRef, useState, useContext} from 'react';
 import {useSelector} from 'react-redux';
-import {View, StyleSheet, Text, TextInput, FlatList, TouchableOpacity, Image} from 'react-native';
+import {View, StyleSheet, Text, TextInput, FlatList, TouchableOpacity, Image, Platform} from 'react-native';
 import BottomSheet, {BottomSheetBackdrop, BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {LIGHT, ORANGE, MEDIUM, FONTS, SIZES, INPUT_HEIGHT, COLORS} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables';
@@ -296,10 +296,10 @@ export const VariationBottomSheet = forwardRef(({
               <View style={{flex: 1.5}}></View>
               <View style={{flex: 6}}>
                 <View style={{flexDirection:'row'}}>
-                  <Text style={{color: "#F6841F", fontSize: 14}}><Price amount={itemprice * qty} /></Text>
-                  <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11, marginTop: 2.5, marginLeft: 8}}>{originalPrice == 0 ? "" : <Price amount={originalPrice*qty} />}</Text>                
+                  <Text style={{color: "#F6841F", fontSize: 14, paddingLeft: Platform.OS != "ios" ? 0 : 20}}><Price amount={itemprice * qty} /></Text>
+                  <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 11, marginTop: 2.5, marginLeft: 8, paddingLeft: Platform.OS != "ios" ? 0 : 20}}>{originalPrice == 0 ? "" : <Price amount={originalPrice*qty} />}</Text>                
                 </View>
-                <Text style={{color: "#9E9E9E", fontSize: 12, marginTop: 5}}>Stock: {isContinueSelling == 1 && stock <= 0 ? "pre-order" : stock}</Text>
+                <Text style={{color: "#9E9E9E", fontSize: 12, marginTop: 5, paddingLeft: Platform.OS != "ios" ? 0 : 20}}>Stock: {isContinueSelling == 1 && stock <= 0 ? "pre-order" : stock}</Text>
               </View>
               <View style={{flex: 6, justifyContent: 'center'}}>
                 <Text style={{marginTop: 8}}></Text>
