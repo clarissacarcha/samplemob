@@ -8,10 +8,11 @@ import {
   Image,
   ActivityIndicator
 } from 'react-native';
-import Spinner from 'react-native-spinkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { FONT, FONT_SIZE } from '../../../res/variables';
-import {success2} from '../../assets'
+import { success2, loadingLottie } from '../../assets';
+import Spinner from 'react-native-spinkit';
+import LottieView from 'lottie-react-native';
 
 export const PopupModal = ({isVisible, label = "Loading"}) => {
 
@@ -67,7 +68,7 @@ export const PopupModal = ({isVisible, label = "Loading"}) => {
 
 };
 
-export const PopupModalComponent = ({isVisible, type, label = "Loading"}) => {
+export const PopupModalComponent = ({isVisible, type, label = "Loading", useLottie}) => {
 
   if(type == "Loading"){
     return (
@@ -82,8 +83,17 @@ export const PopupModalComponent = ({isVisible, type, label = "Loading"}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>            
-            <ActivityIndicator size={80} color="#F6841F" style={{borderRadius: 15}} />
-            <View style={{marginTop: 20}}>
+            {
+              useLottie ? 
+                <LottieView
+                  autoPlay={true}
+                  source={loadingLottie}
+                  style={{top: -10}}
+                />
+                :
+                <ActivityIndicator size={80} color="#F6841F" style={{borderRadius: 15}} />
+            }
+            <View style={{marginTop: 80}}>
               <Text style={{color: "#F6841F", fontFamily: FONT.BOLD}} >
                 {label}
               </Text>

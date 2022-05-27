@@ -52,3 +52,6 @@ export const origin = require("../assets/icons/origin.png");
 export const cancelledIcon = require("./icons/cancelled.png")
 export const deliveredIcon = require("../assets/icons/double-check.png");
 export const paypandalogo = require("./icons/paypandalogo.png")
+
+//LOTIE
+export const loadingLottie = require("./lottie/loading.json");

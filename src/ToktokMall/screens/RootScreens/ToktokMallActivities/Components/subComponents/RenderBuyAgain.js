@@ -31,17 +31,21 @@ export const RenderBuyAgain = ({data}) => {
         onCompleted: (response) => {
             if(response.getBuyAgain) { 
                 const itemsToBeSelected = [];
-                const { invalidItems, toaddItems, toupdateItems } = response.getBuyAgain;
+                const { toaddItems, toupdateItems } = response.getBuyAgain;
+
+                console.log("toupdateItems" + JSON.stringify(toupdateItems));
 
                 if(toaddItems.length > 0) {
                     toaddItems.map(async (item, index) => {
                         try {
+                            const newItem = await getExistingItem(item);
+
                             let variables = {
                                 userid: item.userid,
                                 shopid: item.shopid,
                                 branchid: item.branchid,
                                 productid: item.productid,
-                                quantity: item.quantity || 1
+                                quantity: newItem || 1
                             }
 
                             itemsToBeSelected.push(item.productid);
@@ -111,7 +115,10 @@ export const RenderBuyAgain = ({data}) => {
         })
 
         const { quantity: itemQuantity } = checkItemFromCart;
-        
+
+        console.log("the itemssss: " + quantity);
+        console.log("the itemsssxzs: " + itemQuantity);
+
         const newQuantity = parseInt(itemQuantity) + parseInt(quantity);
 
         return newQuantity;
@@ -119,6 +126,8 @@ export const RenderBuyAgain = ({data}) => {
 
     const onPressBuy = () => {
         const { items } = data.orders;
+
+        console.log("the itemssssdsczxc: " + JSON.stringify(items))
 
         setIsVisible(true);
         getBuyAgain({variables: {

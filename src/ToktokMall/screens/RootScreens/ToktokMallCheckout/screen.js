@@ -835,7 +835,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         removeClippedSubviews={true}
       >
         {/* LOADING POPUP */}
-        <PopupModalComponent isVisible={processingCheckout} type="Loading" label='Placing Order' />
+        <PopupModalComponent isVisible={processingCheckout} type="Loading" label='Placing Order' useLottie={true} />
 
         <AlertModal
           navigation = {navigation}
