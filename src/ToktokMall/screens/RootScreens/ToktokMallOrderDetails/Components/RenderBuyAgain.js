@@ -29,12 +29,14 @@ export const RenderBuyAgain = ({ navigation, data, status, onPressBuy: parentBuy
         if(toaddItems?.length > 0) {
           toaddItems?.map(async (item, index) => {
             try {
+              const newItem = await getExistingItem(item);
+
               let variables = {
                 userid: item.userid,
                 shopid: data?.orders?.shopId,
                 branchid: item.branchid,
                 productid: item.productid,
-                quantity: item.quantity || 1
+                quantity: newItem || 1
               }
               itemsToBeSelected.push(item.productid);
               const req = await ApiCall("insert_cart", variables, true);
@@ -100,17 +102,21 @@ export const RenderBuyAgain = ({ navigation, data, status, onPressBuy: parentBuy
         }
     })
 
-    const { quantity: itemQuantity } = checkItemFromCart;
-    
-    const newQuantity = parseInt(itemQuantity) + parseInt(quantity);
+    if(checkItemFromCart && checkItemFromCart.quantity >= 0) {
+      const { quantity: itemQuantity } = checkItemFromCart;
+      
+      const newQuantity = parseInt(itemQuantity) + parseInt(quantity);
 
-    return newQuantity;
+      return newQuantity;
+    }
+
+    return quantity;
   }
 
   onPressBuy = () => {
     const { items } = data?.orders;
 
-    setIsVisible(false);
+    setIsVisible(true);
     getBuyAgain({variables: {
       input: {
         items: items

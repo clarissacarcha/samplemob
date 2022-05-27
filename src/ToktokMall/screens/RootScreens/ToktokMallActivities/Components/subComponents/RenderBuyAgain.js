@@ -33,8 +33,6 @@ export const RenderBuyAgain = ({data}) => {
                 const itemsToBeSelected = [];
                 const { toaddItems, toupdateItems } = response.getBuyAgain;
 
-                console.log("toupdateItems" + JSON.stringify(toupdateItems));
-
                 if(toaddItems.length > 0) {
                     toaddItems.map(async (item, index) => {
                         try {
@@ -90,7 +88,7 @@ export const RenderBuyAgain = ({data}) => {
                                 }
                             }
                         } catch (err) {
-                            console.log("the ultimate error: " + JSON.stringify(err))
+                            console.log(err)
                         } 
                     })
                 }
@@ -114,20 +112,19 @@ export const RenderBuyAgain = ({data}) => {
             }
         })
 
-        const { quantity: itemQuantity } = checkItemFromCart;
+        if(checkItemFromCart && checkItemFromCart.quantity >= 0) {
+            const { quantity: itemQuantity } = checkItemFromCart;
 
-        console.log("the itemssss: " + quantity);
-        console.log("the itemsssxzs: " + itemQuantity);
+            const newQuantity = parseInt(itemQuantity) + parseInt(quantity);
 
-        const newQuantity = parseInt(itemQuantity) + parseInt(quantity);
+            return newQuantity;
+        }
 
-        return newQuantity;
+        return quantity
     }
 
     const onPressBuy = () => {
         const { items } = data.orders;
-
-        console.log("the itemssssdsczxc: " + JSON.stringify(items))
 
         setIsVisible(true);
         getBuyAgain({variables: {
