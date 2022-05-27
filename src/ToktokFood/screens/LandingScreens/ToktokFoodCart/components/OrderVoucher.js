@@ -18,11 +18,11 @@ import {FONT_SIZE} from 'res/variables';
 
 // Utils
 import {moderateScale} from 'toktokfood/helper/scale';
-import {parseAmountComputation} from '../functions';
+import {deleteKeys, parseAmountComputation} from '../functions';
 
 // Queries
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_VOUCHER_CODE} from 'toktokfood/graphql/toktokfood';
+import {GET_PAYMENT_METHOD_VALIDATION, GET_VOUCHER_CODE} from 'toktokfood/graphql/toktokfood';
 
 const OrderVoucher = ({autoShipping, deliveryFee}) => {
   const dispatch = useDispatch();
@@ -67,7 +67,6 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
         const filterPromo = promotionVoucher.filter(promo => promo.id !== voucher.id);
         const {amount, is_percentage} = voucher;
         let totalDeliveryFee = 0;
-
         if (amount > 0) {
           const pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
           const totalFee = pAmount > deliveryFee ? deliveryFee : pAmount;
@@ -101,6 +100,22 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
     },
   });
 
+  const [getVoucherPaymentMethod, {loading: loadingVoucher}] = useLazyQuery(GET_PAYMENT_METHOD_VALIDATION, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: error => console.log('getAutoShipping', error.response),
+    onCompleted: ({getPaymentValidation}) => {
+      console.log('getPaymentValidation', getPaymentValidation);
+      const {message, voucher} = getPaymentValidation;
+      if (message) {
+        setVoucherError(`${message}`);
+        setShowInlineError(true);
+        setShowError(true);
+      }
+      dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: voucher});
+    },
+  });
+
   const onApplyVoucher = async () => {
     const {cartItemsLength, items} = temporaryCart;
     const promoCount = 0;
@@ -109,12 +124,13 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
       const orders = await parseAmountComputation(temporaryCart?.items);
       // console.log({
       //   input: {
+      //     userId: Number(customerInfo.userId),
       //     brandId: items[0].companyId,
       //     shopid: items[0]?.shopid,
       //     code: voucher,
       //     region: items[0]?.shopRegion,
       //     subtotal: temporaryCart.totalAmount,
-      //     paymentMethod: paymentMethod === 'COD' ? 'CASH' : paymentMethod,
+      //     paymentMethod: paymentMethod,
       //     promoCount,
       //     orders,
       //   },
@@ -163,9 +179,22 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
   }, [autoShipping, onShowError]);
 
   useEffect(() => {
+    let shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
+    let promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+
     if (!autoShipping?.success && voucher) {
       onApplyVoucher();
     }
+
+    getVoucherPaymentMethod({
+      variables: {
+        input: {
+          paymentMethod,
+          shippingvouchers: deleteKeys(shipping),
+          vouchers: deleteKeys(promotions),
+        },
+      },
+    });
   }, [paymentMethod]);
 
   const onChangeText = value => {

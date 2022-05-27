@@ -97,7 +97,8 @@ const styles = StyleSheet.create({
     },
     date: {
         color: "#525252", 
-        fontSize: 11
+        fontSize: 11,
+        paddingTop: 8
     },
     imgView2: {
         flexDirection: 'row', 

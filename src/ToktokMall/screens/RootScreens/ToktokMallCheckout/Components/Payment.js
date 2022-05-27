@@ -23,7 +23,7 @@ import {FONT} from '../../../../../res/variables';
 import { useDispatch, useSelector } from 'react-redux';
 import { EventRegister } from 'react-native-event-listeners';
 
-const walletIcon = require('../../../../assets/icons/wallet.png')
+const walletIcon = require('../../../../assets/icons/wallet1.png')
 
 const testData = [
   {
@@ -148,33 +148,38 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
           // style ={{...styles.item, backgroundColor: payment == 'toktokwallet' ? '#FFEBBC' : 'white' }}
           style={{
             ...styles.item,
-            backgroundColor: parseFloat(currentBalance) < parseFloat(total) ? 'white' : 'rgba(255, 235, 188, 0.25)',
+            // backgroundColor: parseFloat(currentBalance) < parseFloat(total) ? 'white' : 'rgba(255, 235, 188, 0.25)',
+            backgroundColor: '#fff'
           }}
           onPress={() => {
             setPaymentMethod('toktokwallet');
           }}>
-          <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
+          <View style={{flexDirection: 'row', alignItems: 'center', flex: 2}}>
             {/* <View style ={{height: 18, width: 18, backgroundColor: '#F6841F', }} /> */}
             <Image
               source={walletIcon}
-              style={{width: 25, height: 25, resizeMode: 'stretch'}}
+              style={{width: 32, height: 28, resizeMode: 'stretch'}}
             />
             <View>
-              <Text style={{marginLeft: 8, fontSize: 14, color: '#FFA700'}}>totok
-              <Text style={{fontSize: 14, color: "#F6841F"}}>wallet</Text></Text>              
+              <Text style={{marginLeft: 8, fontSize: 16, color: '#FFA700'}}>toktok
+              <Text style={{fontSize: 16, color: "#F6841F"}}>wallet</Text></Text>              
+              <Text style={{marginLeft: 10, fontWeight: 'normal', color: '#929191', fontSize: 13}}>
+                Balance: {FormatToText.currency(toktokMall.toktokWalletBalance || 0)}
+              </Text>
             </View>
           </View>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignContent: 'flex-start',
-              flex: 2.5,
+              alignItems: 'flex-end',
+              flex: 1,
             }}>
-            <Text style={{marginLeft: 15, fontWeight: 'normal', color: '#929191', fontSize: 13}}>
+            {/* <Text style={{marginLeft: 15, fontWeight: 'normal', color: '#929191', fontSize: 13}}>
               (Balance {FormatToText.currency(toktokMall.toktokWalletBalance || 0)})
-            </Text>
+            </Text> */}
             <TouchableOpacity
+              style={{flex: 1}}
               onPress={() => {
                 navigation.navigate('ToktokWalletPaymentOptions', {
                   amount: 0,
@@ -187,7 +192,7 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
                   },
                 });
               }}>
-              <Text style={{alignSelf: 'flex-end', color: '#F6841F'}}>Top up</Text>
+              <Text style={{alignSelf: 'flex-end', fontSize: 11, fontFamily: FONT.BOLD, color: '#F6841F', paddingVertical: 4, paddingHorizontal: 8, borderWidth: 1, borderRadius: 5, borderColor: '#F6841F'}}>Cash In</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>

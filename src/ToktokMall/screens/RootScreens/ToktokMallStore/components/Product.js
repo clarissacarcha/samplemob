@@ -55,7 +55,7 @@ const RenderItem = ({item}) => {
             item.promotions && item.promotions != null && 
             <PromotionBanner label={item.promotions.name} content={item.promotions.duration} />
           }
-          {item?.noOfStocks <= 0 &&
+          {item?.noOfStocks <= 0  && item?.contSellingIsset === 0&&
             <ImageBackground 
               source={getImageSource(item?.images || [])} 
               imageStyle={{resizeMode: 'contain'}} 
@@ -68,7 +68,7 @@ const RenderItem = ({item}) => {
               </View>
             </ImageBackground>
           }
-          {item?.noOfStocks > 0 &&
+          {item?.noOfStocks > 0 || item?.contSellingIsset === 1 &&
             <Image 
               source={getImageSource(item?.images || [])} 
               style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 

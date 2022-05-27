@@ -57,7 +57,7 @@ export const RenderItem = (props) => {
                             <View style={styles.renderItemFCLeft}>
                                 <View style={styles.iconContainer}>
                                     {
-                                        status.status === 5 ?
+                                        (status.status !== 5 && status.status !== 4)  ?
                                         <CustomIcon.MCIcon name="check-all" size={15} color={"#F6841F"} />
                                         :
                                         <Image style={styles.renderItemFCLeftIcon} source={cancelled ? cancelledIcon : carIcon}/>

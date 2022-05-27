@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 export const GET_TRANSACTIONS = gql`
-  query getActvities($input: getActivitiesInput) {
+  query getActivities($input: getActivitiesInput) {
     getActivities(input: $input) {
       id
       referenceNum

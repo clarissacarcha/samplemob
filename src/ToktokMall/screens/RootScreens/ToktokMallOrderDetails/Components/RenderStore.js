@@ -5,7 +5,7 @@ import { COLOR } from '../../../../../res/variables';
 import {storeIcon} from '../../../../assets';
 import {RenderItem} from './RenderItem'
 
-export const RenderStore = ({data}) => {
+export const RenderStore = ({data , navigation}) => {
     const [bolean,setBolean] = useState(true);
     
     return (
@@ -36,6 +36,7 @@ export const RenderStore = ({data}) => {
                         <RenderItem 
                             key={index}
                             data={item}
+                            navigation={navigation}
                         />
                     )}
                  />

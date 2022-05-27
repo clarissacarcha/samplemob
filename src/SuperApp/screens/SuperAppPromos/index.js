@@ -161,7 +161,6 @@ const styles = StyleSheet.create({
   },
   morePromosImage: {
     height: 160,
-    borderWidth: 1,
     width: 160,
     alignSelf: 'center',
   },

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert, EventEmitter } from 'react-native';
 import { COLOR, FONT } from '../../../../res/variables';
-import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, PopupModalComponent} from '../../../Components';
 import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal, MessageModal } from './Components';
 import {connect, useDispatch} from 'react-redux'
 import { useSelector } from 'react-redux';
@@ -68,6 +68,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [shippingDiscounts, setShippingDiscounts] = useState([])
   const [franchisee, setFranchisee] = useState({})
 
+  const [processingCheckout, setProcessingCheckout] = useState(false)
+
   const dispatch = useDispatch()
 
   const setAlertTrue = () => {
@@ -109,8 +111,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
         if(shippingrates.length > 0){
           data.autoShippingPayload.cartitems = shippingrates          
           await getAutoShipping(data.autoShippingPayload)
-        }
-        
+          await getAutoApplyVouchers(data.promotionVoucherPayload)
+        }        
       }
       setInitialLoading(false)
     },
@@ -137,11 +139,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
   })
 
   const getShippingRates = async (payload, raw) => {
-    // console.log(JSON.stringify(payload))
+    console.log("SHIPPING RATES PAYLOAD", JSON.stringify(payload))
     // console.log(JSON.stringify(raw))
     // console.log(JSON.stringify(payload.cart)) 
     let result = []
-    const res = await ShippingApiCall("get_shipping_rate", payload, false)
+    const res = await ShippingApiCall("get_shipping_rate", payload, true)
     console.log("SHipping Rates", JSON.stringify(res.responseData))
     if(res.responseData && res.responseData.success == 1){
       result = res.responseData.newCart
@@ -161,37 +163,68 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const getAutoShipping = async (payload) => {
 
     //setup empty vouchers list
-    let initialShippingVouchers = []
-    payload?.cartitems.map((item) => {
-      initialShippingVouchers.push({
-        shopid: item.shopid
-      })
-    })
-    CheckoutContextData.setShippingVouchers(initialShippingVouchers)
+    // let initialShippingVouchers = []
+    // payload.cartitems.map((item) => {
+    //   initialShippingVouchers.push({
+    //     shopid: item.shopid
+    //   })
+    // })
+    // await CheckoutContextData.setShippingVouchers(initialShippingVouchers)
 
     setInitialLoading(true)
     console.log("Auto Shipping Payload", JSON.stringify(payload))
     const res = await ApiCall("get_autoshipping_discount", payload, true)
 
+    // console.log("AUTO SHIPPING RESULT", JSON.stringify(res))
+
     if(res.responseData && res.responseData.success){
 
-      let items = ArrayCopy(initialShippingVouchers)
+      // let items = ArrayCopy(initialShippingVouchers)
+      let items = ArrayCopy(CheckoutContextData.shippingVouchers)
 
       if(res.responseData.type == "shipping"){
 
-        res.responseData.voucher.map((item, indexx) => {
+        await res.responseData.voucher.map(async (item, indexx) => {
 
-          let shopvoucherIndex = items.findIndex(a => a.shopid == item.shopid)
+          // let shopvoucherIndex = items.findIndex(a => a.shopid == item.shopid)
          
           if(item.type == "shipping"){
-            item.vouchers.map(async (voucher, index) => {
+            await item.vouchers.map(async (voucher, index) => {
+              
+              if(parseFloat(voucher.amount) == 0){
 
-              if(shopvoucherIndex > -1 && voucher.amount == 0){
+                let fee = null
+		            payload.cartitems.map((a) => a.shopid == item.shopid ? fee = a.shippingfee : null)
+                        
+                items.push({
+                  ...voucher, 
+                  autoShipping: true,
+                  discountedAmount: 0,
+                  discount: 0,
+                  deduction: fee,
+                  voucherCodeType: res.responseData.type
+                })
 
-                items[shopvoucherIndex] = voucher
-                items[shopvoucherIndex].discountedAmount = 0
-                items[shopvoucherIndex].discount = 0
+                // console.log("FREESHIP MAPPING", JSON.stringify(CheckoutContextData.shippingFeeRates))
+                // console.log("AUTO SHIPPING FREESHIP MAPPING", fee, item?.shopid)
+                              
+                // items[shopvoucherIndex] = voucher
+                // items[shopvoucherIndex].discountedAmount = 0
+                // items[shopvoucherIndex].discount = 0
                 
+              }else{
+
+                let fee = null
+		            payload.cartitems.map((a) => a.shopid == item.shopid ? fee = a.shippingfee : null)
+                let discount = parseFloat(fee) - parseFloat(voucher.amount)
+                items.push({
+                  ...voucher, 
+                  autoShipping: true,
+                  deduction: parseFloat(voucher.amount),
+                  discount: discount,
+                  discountedAmount: discount,
+                  voucherCodeType: res.responseData.type
+                })
               }
               
             })  
@@ -210,8 +243,23 @@ const Component = ({route, navigation, createMyCartSession}) => {
       // Toast.show(res.responseError.message)
     }
 
-    setInitialLoading(false)
+  }
 
+  const getAutoApplyVouchers = async (payload) => {
+    const res = await ApiCall("validate_autoapply_promotion", {shop_array: payload}, true)
+    if(res.responseData && res.responseData.success){
+      if(res.responseData.type == "promotion"){
+        let items = ArrayCopy(CheckoutContextData.shippingVouchers)        
+        const {voucher} = res.responseData
+        items.push({...voucher, autoApply: true, voucherCodeType: res.responseData.type})
+        getShippingHashDeliveryAmount({variables: {
+          input: {
+            items: items
+          }
+        }})
+      }
+    }
+    setInitialLoading(false)
   }
 
   const  [getToktokWalletData] = useLazyQuery(GET_USER_TOKTOK_WALLET_DATA , {
@@ -288,9 +336,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
       payload: {
         type: 'Warning',
         title: 'Unable to Place Order',
-        message: 'We’re sorry but some items in your cart is currently unavailable. Please try again another time.',
+        message: 'We’re sorry but some items in your cart is currently unavailable. Please try again another time.',        
         onConfirm: async () => {
-
           let filtered = {
             ...paramsDataCopy,
             data: paramsDataCopy.data.filter((val) => val !== null)
@@ -299,12 +346,41 @@ const Component = ({route, navigation, createMyCartSession}) => {
           console.log("FILTERED PARAMS DATA", JSON.stringify(filtered))
 
           // return //used for debugging
+          EventRegister.emit("refreshToktokmallShoppingCart")
 
           navigation.replace("ToktokMallEmptyCheckout", {
             ...route.params,
             data: filtered
           })
         },
+      },
+    });
+  }
+
+  const onVoucherInvalid = (data) => {
+    dispatch({
+      type: 'TOKTOK_MALL_OPEN_MODAL_2',
+      payload: {
+        type: 'Warning',
+        title: 'Voucher Removed',
+        message: 'We`re sorry but the voucher you used has already expired. Would you like to proceed and remove voucher?',
+        buttons: [
+          {
+            title: 'No',
+            type: 'transparent',
+            onPress: () => {
+              dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+            }
+          },
+          {
+            title: 'Yes',
+            type: 'filled',
+            onPress: () => {
+              dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+              
+            }
+          }
+        ],
       },
     });
   }
@@ -332,6 +408,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
       if(req.responseData && req.responseData.success == 1){
 
+        let shippingVouchers = CheckoutContextData.shippingVouchers.filter((a) => a.voucherCodeType == "shipping")
+        let promotionVouchers = CheckoutContextData.shippingVouchers.filter((a) => a.voucherCodeType == "promotion")
+        
         const checkoutBody = await BuildPostCheckoutBody({
           walletRequest: req.responseData.data,
           pin: "",
@@ -340,36 +419,26 @@ const Component = ({route, navigation, createMyCartSession}) => {
           subTotal: subTotal,
           grandTotal: grandTotal, 
           srpTotal: srpTotal,
-          vouchers: voucher, 
-          shippingVouchers: CheckoutContextData.shippingVouchers,
+          vouchers: promotionVouchers, 
+          shippingVouchers: shippingVouchers,
           shippingRates: CheckoutContextData.shippingFeeRates,
           paymentMethod: "TOKTOKWALLET",
           hashAmount: req.responseData.hash_amount,
           referenceNum: req.responseData.orderRefNum,
-          referral: franchisee
+          referral: franchisee      
         })
 
-        navigation.navigate("ToktokMallOTP", {
+        console.log("VOUCHERS", CheckoutContextData.shippingVouchers)
+        console.log("SHIPPING VOUCHERS", shippingVouchers)
+        console.log("CHECKOUT BODY FFFFF", JSON.stringify(checkoutBody))
+
+        navigation.push("ToktokMallOTP", {
           transaction: "payment", 
-          data: checkoutBody,
-          onError: (data, error) => {
-            console.log("ERROR", error, error?.items)
-            if(error?.items && error?.items.length > 0){
-              let formattedArr = error?.items.map((item) => {return {id: "", name: item}})
-              onProductUnavailable(formattedArr, "name")
-            }
-          },
-          onSuccess: async (result) => {
-
-            console.log(paramsData)
-            console.log(result)
-            // setIsVisible(true)
-            postOrderNotifications(result)
-            EventRegister.emit("ToktokWalletRefreshAccountBalance")
-
+          data: checkoutBody,          
+          onSuccess: async (pin) => {
+            await ProcessCheckout({...checkoutBody, pin})
           }
         })
-
 
       }else if(req.responseData && req.responseData.success == 0){
 
@@ -417,11 +486,81 @@ const Component = ({route, navigation, createMyCartSession}) => {
         // Toast.show("Something went wrong", Toast.LONG)
       }
 
-
     }
 
     return
 
+  }
+
+  const ProcessCheckout = async (checkoutBody) => {
+
+    setProcessingCheckout(true)
+
+    console.log("CHECKOUT BODY JSON", JSON.stringify(checkoutBody))
+    
+    const req = await ApiCall("checkout", checkoutBody, false)
+    
+    setProcessingCheckout(false)
+
+    if(req.responseData && req.responseData.success == 1){
+
+      console.log(paramsData)
+      console.log(req.responseData)
+
+      if(req.responseData.order_status == "Paid"){
+        postOrderNotifications(req.responseData)
+        EventRegister.emit("ToktokWalletRefreshAccountBalance")
+      }else if(req.responseData.order_status == "Waiting for payment"){
+        //HANDLE REQUEST MONEY ID HAS EXPIRED
+        dispatch({
+          type: 'TOKTOK_MALL_OPEN_MODAL_2',
+          payload: {
+            type: 'Warning',
+            title: 'Unable to Place Order',
+            message: ' Oops! Sorry, but this transaction was unsuccesful! Kindly try again to proceed.',
+            buttons: [
+              {
+                title: 'Cancel',
+                type: 'transparent',
+                onPress: () => {
+                  dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+                }
+              },
+              {
+                title: 'Try Again',
+                type: 'filled',
+                onPress: () => {
+                  dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+                  checkItemFromCheckout({
+                    variables: {
+                      input: {
+                        productId: ids,
+                      },
+                    },
+                  });
+                }
+              }
+            ],
+          },
+        });
+      }
+
+    }else if(req.responseError){
+
+      let error = req.responseError
+      
+      console.log("ERROR", error, error?.items)
+      if(error?.items && error?.items.length > 0){
+        let formattedArr = error?.items.map((item) => {return {id: "", name: item}})
+        onProductUnavailable(formattedArr, "name")
+      }else if(error?.message && error?.message.includes("Invalid voucher")){
+        alert("Pre merong invalid na vouchers. Na scam ka pre")
+        onVoucherInvalid(error)
+      }
+
+    }else if(req.responseError == null && req.responseData == null){
+      Toast.show("Something went wrong", Toast.LONG)
+    }    
   }
 
   const postOrderNotifications = async (payload) => {
@@ -466,12 +605,12 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const onGoToOrders = () =>{
     setIsVisible(false)
     EventRegister.emit('refreshToktokmallShoppingCart')
-    navigation.replace("ToktokMallMyOrders", { tab: 0})
+    navigation.replace("ToktokMallActivities")
     // BackHandler.removeEventListener("hardwareBackPress", backAction)
   }
 
   const init = async () => {
-    
+        
     await getMyAccount()
 
     const savedUser = await AsyncStorage.getItem("ToktokMallUser")
@@ -525,29 +664,31 @@ const Component = ({route, navigation, createMyCartSession}) => {
       if(shippingfeeIndex > -1){
 
         let shippingfee = CheckoutContextData.shippingFeeRates[shippingfeeIndex]?.shippingfee
-          
-        if(voucherAmountIndex > -1){
-            
-          let voucheramount = CheckoutContextData.shippingVouchers[voucherAmountIndex]?.discountedAmount            
-          //deduct voucher discount to shipping fee
-          if(shippingfee - voucheramount < 0){
-            shippingFeeSrp += 0     
-          }else{
-            shippingFeeSrp += parseFloat(voucheramount)            
-          }
-
-        }else{
-          //no discount
-          shippingFeeSrp += parseFloat(shippingfee)
-        }
-
+        shippingFeeSrp += parseFloat(shippingfee)
         originalShippingFeeTotal += parseFloat(shippingfee)
+
+        // if(voucherAmountIndex > -1){
+            
+        //   let voucheramount = CheckoutContextData.shippingVouchers[voucherAmountIndex]?.discountedAmount            
+        //   //deduct voucher discount to shipping fee
+        //   if(shippingfee - voucheramount < 0){
+        //     shippingFeeSrp += 0     
+        //   }else{
+        //     shippingFeeSrp += parseFloat(voucheramount)            
+        //   }
+
+        // }else{
+        //   //no discount
+        //   shippingFeeSrp += parseFloat(shippingfee)
+        // }        
+
       }
 
     }
 
-    let _subTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp)
-    let srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp)
+    let discounts = CheckoutContextData.getTotalVoucherDeduction()
+    let _subTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
+    let srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
 
     setSubTotal(orderTotal)
     setSrpTotal(orderTotal)
@@ -603,7 +744,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     })();
 
     if(isMounted){
-      EventRegister.addEventListener("refreshCheckoutData", init)
+      EventRegister.addEventListener("ToktokMallrefreshCheckoutData", init)
       EventRegister.addEventListener("ToktokMallWalletRefreshAccountStatus", () => setWalletAccountStatus())
     }
 
@@ -639,6 +780,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
   useEffect(() => {
     calculateGrandTotal()
   }, [CheckoutContextData])
+
+  useEffect(() => {
+    // alert("Shipping voucher has detected")
+  }, [CheckoutContextData?.shippingVouchers])
 
   // useEffect(() => {
   //   if(movedScreens){
@@ -685,13 +830,23 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   return (
     <>
-      <ScrollView showsVerticalScrollIndicator={false} removeClippedSubviews={true}>
-        <AlertModal navigation={navigation} isVisible={alertModal} setIsVisible={setAlertModal} />
-        <CheckoutModal
-          navigation={navigation}
-          isVisible={isVisible}
-          setIsVisible={setIsVisible}
-          goToOrders={onGoToOrders}
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        removeClippedSubviews={true}
+      >
+        {/* LOADING POPUP */}
+        <PopupModalComponent isVisible={processingCheckout} type="Loading" label='Placing Order' />
+
+        <AlertModal
+          navigation = {navigation}
+          isVisible = {alertModal}
+          setIsVisible = {setAlertModal}
+        />
+        <CheckoutModal 
+          navigation={navigation} 
+          isVisible={isVisible} 
+          setIsVisible={setIsVisible} 
+          goToOrders = {onGoToOrders}
         />
         <MessageModal navigation={navigation} isVisible={walletmodal} setIsVisible={setwalletmodal} />
         <View style={{paddingBottom: 30}}>
@@ -714,6 +869,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
              }}
              shipping={addressData?.shippingSummary}
              shippingRates={shippingRates}
+             referral={franchisee}
            />
          ) : (
             <View style={{flex: 1, backgroundColor: 'trasparent'}}>
@@ -754,6 +910,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             shipping={addressData?.shippingSummary}
             shippingRates={shippingRates}
             shippingDiscounts={shippingDiscounts}
+            referral={franchisee}
           />
         </View>
       </ScrollView>

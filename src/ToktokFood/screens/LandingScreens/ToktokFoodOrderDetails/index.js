@@ -1,9 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useRef, useMemo} from 'react';
-import {ScrollView, StyleSheet, View, Alert, Text} from 'react-native';
+import {ScrollView, StyleSheet, View, Alert, Text, Image} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import BackgroundTimer from 'react-native-background-timer';
+
+import {info_ic} from 'toktokfood/assets/images';
 
 // Components
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
@@ -378,6 +380,16 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     return <OrderList orderDetails={transaction.orderDetails} />;
   }, [transaction?.orderStatus]);
 
+  const modifiedAlert = (
+    <View style={styles.modifiedWrapper}>
+      <Image resizeMode="stretch" source={info_ic} style={styles.modifiedIcon} />
+      <Text style={styles.modifiedText}>
+        This order has been modified by merchant. Total refund amount for updated order should be credited to your
+        toktokwallet account. 
+      </Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <DialogMessage
@@ -438,6 +450,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
             </>
           )}
           {/* <OrderList orderDetails={transaction.orderDetails} /> */}
+          {/* {modifiedAlert} */}
           {OrderListComponent}
           <Separator />
           {transaction?.promoDetails && transaction?.orderIsfor === 1 && (
@@ -463,6 +476,15 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#FFFF'},
   scrollView: {paddingBottom: 10},
+  modifiedWrapper: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#FFFCF4',
+    height: 80,
+    paddingHorizontal: 12,
+  },
+  modifiedIcon: {height: 16, width: 16, marginRight: 8, marginLeft: 5},
+  modifiedText: {fontSize: 12, color: '#F6841F', maxWidth: '95%'},
 });
 
 export default ToktokFoodOrderDetails;

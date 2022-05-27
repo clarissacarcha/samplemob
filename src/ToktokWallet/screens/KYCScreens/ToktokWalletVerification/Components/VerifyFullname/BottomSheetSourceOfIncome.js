@@ -69,7 +69,7 @@ const BottomSheetSourceOfIncome = forwardRef(({changeIncomeInfo} , ref)=> {
                 ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />}
                 renderItem={({item, index}) => (
                     <TouchableOpacity onPress={()=>selectSourceOfIncome(index)} style={[styles.validID]}>
-                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.description.toLowerCase()}</Text>
+                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.description}</Text>
                     </TouchableOpacity>     
                 )}
             />

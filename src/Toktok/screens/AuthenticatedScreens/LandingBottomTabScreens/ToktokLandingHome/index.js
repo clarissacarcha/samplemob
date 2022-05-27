@@ -1,25 +1,30 @@
-import React, {useState, useEffect,useCallback} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {connect} from 'react-redux';
-import {View, StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl , Platform} from 'react-native';
+import {View, StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl, Platform} from 'react-native';
 import OneSignal from 'react-native-onesignal';
 import FlagSecure from 'react-native-flag-secure-android';
-import { useNavigation , useFocusEffect  , useRoute} from '@react-navigation/native';
+import {useNavigation, useFocusEffect, useRoute} from '@react-navigation/native';
 import {COLOR} from '../../../../../res/variables';
 
 //SELF IMPORTS
-import {Header, Menu, Advertisements} from './Components';
+import {Header, HeaderSearchField, Menu, Advertisements} from './Components';
+import {GET_USER_HASH} from '../../../../../graphql';
+import {onError} from '../../../../../util/ErrorUtility';
+import {useLazyQuery} from '@apollo/react-hooks';
 
-const Screen = ({navigation, constants}) => {
+const Screen = ({navigation, constants, session, createSession}) => {
   // const userLocation = {
   //   latitude,
   //   longitude,
   //   formattedAddress,
   //   formattedAddressHash
   // }
-  useFocusEffect(useCallback(()=>{
-    if(Platform.OS == "android")  FlagSecure.deactivate();   
-  },[]))
- 
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS == 'android') FlagSecure.deactivate();
+    }, []),
+  );
+
   const [userLocation, setUserLocation] = useState(null);
 
   const onNotificationOpened = ({notification}) => {
@@ -40,6 +45,19 @@ const Screen = ({navigation, constants}) => {
         return;
       }
 
+      if (notification.additionalData.classification === 'toktokbills') {
+        setTimeout(() => {
+          navigation.navigate('ToktokBillsNotifications');
+        }, 10);
+        return;
+      }
+
+      if (notification.additionalData.classification === 'toktokload') {
+        setTimeout(() => {
+          navigation.navigate('ToktokLandingNotifications', {screen: 'ToktokLoadNotifications'});
+        }, 10);
+        return;
+      }
       const type = notification.additionalData.type;
 
       if (type) {
@@ -61,7 +79,7 @@ const Screen = ({navigation, constants}) => {
 
   useEffect(() => {
     OneSignal.setNotificationOpenedHandler(onNotificationOpened);
-
+    getUserHash();
     // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
     //   return true;
     // });
@@ -69,6 +87,15 @@ const Screen = ({navigation, constants}) => {
       // backHandler.remove();
     };
   }, []);
+
+  const [getUserHash] = useLazyQuery(GET_USER_HASH, {
+    onError,
+    onCompleted: response => {
+      const newSession = {...session};
+      newSession.userHash = response.getUserHash;
+      createSession(newSession);
+    },
+  });
 
   return (
     <>
@@ -88,7 +115,13 @@ const Screen = ({navigation, constants}) => {
         > */}
         {/* <Header /> */}
         {/* <Menu setUserLocation={setUserLocation} constants={constants} /> */}
-        <Advertisements Header={Header} Menu={Menu} setUserLocation={setUserLocation} constants={constants} />
+        <Advertisements
+          Header={Header}
+          HeaderSearchField={HeaderSearchField}
+          Menu={Menu}
+          setUserLocation={setUserLocation}
+          constants={constants}
+        />
         {/* </ScrollView> */}
       </View>
     </>

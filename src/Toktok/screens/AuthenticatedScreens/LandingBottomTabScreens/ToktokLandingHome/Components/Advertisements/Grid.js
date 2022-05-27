@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useCallback} from 'react';
-import {View, Text, StyleSheet, Dimensions, Image, TouchableHighlight, FlatList} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Image, TouchableHighlight, FlatList, ImageBackground, StatusBar} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import BannerHome from '../../.../../../../../../../assets/images/BannerHome.png'
 import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
 import {Header} from '../../../../../../../../../../../Source Code/Toktok/toktok-mobile/src/screens/AuthenticatedStack/ConsumerScreens/ConsumerLanding/Components/Header/index';
@@ -57,26 +58,31 @@ const GridAd = ({ad, index}) => {
   );
 };
 
-const GridAds = ({ads, Header, Menu, Banner, setUserLocation, constants}) => {
+const GridAds = ({ads, Header, HeaderSearchField, Menu, Banner, setUserLocation, constants}) => {
   return (
-    <View>
-      <FlatList
-        data={ads}
-        renderItem={({item, index}) => <GridAd ad={item} index={index} />}
-        showsVerticalScrollIndicator={false}
-        numColumns={2}
-        ListHeaderComponent={
-          <>
-            <Header />
-            <View style={styles.box}>
-              <Menu setUserLocation={setUserLocation} constants={constants} />
-              <Banner />
-              <View style={styles.separator} />
-            </View>
-          </>
-        }
-      />
-    </View>
+   
+      <View>
+        <Header/>
+        <FlatList
+          style={{ marginTop: StatusBar.currentHeight+50 ,}}
+          data={ads}
+          renderItem={({item, index}) => <GridAd ad={item} index={index} />}
+          showsVerticalScrollIndicator={false}
+          numColumns={2}
+          ListHeaderComponent={
+            <>
+            <ImageBackground resizeMode="cover" source={BannerHome}>
+              <HeaderSearchField/>
+              <View style={styles.box}>
+                <Menu setUserLocation={setUserLocation} constants={constants} />
+               </View>  
+            </ImageBackground>
+            <View style={styles.separator} />
+            <Banner />
+            </>
+          }
+        />
+      </View>
   );
 };
 
@@ -84,7 +90,10 @@ export default GridAds;
 
 const styles = StyleSheet.create({
   box: {
-    paddingHorizontal: SIZE.MARGIN / 2,
+    paddingHorizontal: SIZE.MARGIN / 1.6,
+    paddingTop: 14,
+    paddingHorizontal: 16,
+    paddingBottom: 22,
   },
   touchable: {
     borderRadius: SIZE.BORDER_RADIUS,

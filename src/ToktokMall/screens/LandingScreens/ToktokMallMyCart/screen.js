@@ -175,7 +175,7 @@ const Component = ({
 
   // Read changes in route params and myCartData. This will trigger our way of selecting items from buy again function.
   useEffect(() => {
-    getPreITems();
+    getPreItems();
   }, [route.params, myCartData])
 
   useEffect(() => {
@@ -213,13 +213,20 @@ const Component = ({
   )
 
   // Function that will select our items from buy again function.
-  const getPreITems = () => {
+  const getPreItems = () => {
     if(route.params?.items && rawitems.length > 0) {
       setPreSelectedItems(route.params.items);
       const allitems = route.params.items.map(item => {
         const order = rawitems.find(raw => raw.productid === item);
         
+        //Order is already in cart.
         if(!order) return;
+
+        //Stocks and cont selling checker.
+        if(order.product.contSellingIsset === 0 && order.product.noOfStocks <= 0) return;
+
+        // //Checker if product is enabled.
+        if(order.product.enabled !== 1) return;
 
         const orderIndex = rawitems.findIndex(raw => raw.productid === item);
         const data = {};

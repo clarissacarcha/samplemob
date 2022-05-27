@@ -31,7 +31,7 @@ export const CancelledItem = ({fulldata}) => {
   const navigation = useNavigation();
 
   onPressCard = () => {
-    navigation.navigate("ToktokMallOrderDetails", {...fulldata, orderId: fulldata.id})
+    navigation.navigate("ToktokMallOrderDetails", {...fulldata, orderId: fulldata.id, cancelled: true})
   }
 
   return <RenderItem 
@@ -91,7 +91,7 @@ export const Cancelled = (props) => {
           <Image source={emptyorders} style={styles.noDataImage} />
           <View style={styles.noDataTextContainer}>
             <Text style={styles.noDataTitle}>No Orders</Text>
-    				<Text style={styles.noDataBody}>Go browse and checkout something you like</Text>
+    				<Text style={styles.noDataBody}>Go browse and checkout something you like!</Text>
 		    	</View>
         </View>
       </>

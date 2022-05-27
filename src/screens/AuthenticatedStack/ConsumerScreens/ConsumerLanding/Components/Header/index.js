@@ -58,7 +58,7 @@ const SearchInput = () => {
 };
 
 export const Header = () => {
-  const session = useSelector((state) => state.session);
+  const session = useSelector(state => state.session);
 
   return (
     <View style={{height: 160, backgroundColor: 'white'}}>
