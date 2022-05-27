@@ -1,5 +1,22 @@
 import gql from 'graphql-tag';
 
+export const GET_FAVORITE_BILLS = gql`
+  query {
+    getFavoriteBills {
+      id
+      billItemId
+      firstFieldValue
+      secondFieldValue
+      billItem {
+        id
+        logo
+        descriptions
+        billTypeId
+      }
+    }
+  }
+`;
+
 export const PATCH_REMOVE_FAVORITE_BILL = gql`
   mutation patchRemoveFavoriteBill($input: PatchRemoveFavoriteBillInput) {
     patchRemoveFavoriteBill(input: $input) {
