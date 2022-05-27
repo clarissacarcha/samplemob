@@ -1,10 +1,10 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import InfoIcon from '../../../../assets/icons/InfoIcon.png';
 import {numberFormat} from '../../../../helper';
 
-export const BookingBreakdown = ({selectedVehicle, loading}) => {
+export const BookingBreakdown = ({selectedVehicle}) => {
   return (
     <View style={styles.container}>
       <View style={styles.rowContainer}>
