@@ -93,7 +93,13 @@ const Component = ({navigation, route, notificationCountSession, notifications})
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        style={{
+          marginBottom: route.params.cancelled || 
+          data?.status?.status === 4 ? 70 : 10
+        }}
+      >
         <RenderOrderInfo data={data} />
         <RenderStore 
           data={data} 
@@ -101,14 +107,14 @@ const Component = ({navigation, route, notificationCountSession, notifications})
         />
         <RenderSummary data={data} />
         <RenderDeliveryLog data={data} />
-        <RenderBuyAgain 
-          data={data} 
-          onPressBuy={onPressBuy}
-          navigation={navigation}
-          status={route.params.cancelled}
-        />
-        {apiloader && <LoadingOverlay isVisible={apiloader} />}
       </ScrollView>
+      <RenderBuyAgain 
+        data={data} 
+        onPressBuy={onPressBuy}
+        navigation={navigation}
+        status={route.params.cancelled}
+      />
+      {apiloader && <LoadingOverlay isVisible={apiloader} />}
     </View>
   );
 };

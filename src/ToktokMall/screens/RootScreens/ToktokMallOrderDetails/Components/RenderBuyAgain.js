@@ -119,17 +119,27 @@ export const RenderBuyAgain = ({ navigation, data, status, onPressBuy: parentBuy
   }
   
   return data?.status?.status === 4 || status ?
-    <View style={styles.container}> 
+    <View style={styles.footer}>
+      <View style={styles.container}> 
         <TouchableOpacity style={styles.buyAgainButton} onPress={onPressBuy} >
             <Text style={styles.buyAgainText}>Buy Again</Text>
         </TouchableOpacity>
 
         <LoadingOverlay isVisible={isVisible} />
+      </View>
     </View>
   : <></>
 }
 
 const styles = StyleSheet.create({
+    footer: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: 'white',
+      zIndex: 1,
+    },
     container: {
         borderTopWidth:.50,
         borderTopColor:'rgba(0, 0, 0, 0.25)',
