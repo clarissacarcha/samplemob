@@ -148,26 +148,26 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     }
   };
 
-  // const onSearchChange = value => {
-  //   setFilteredData([]);
-  //   setSearchLoading(value.length > 0);
-  //   setSearch(value);
-  //   debounceProcessSearch(value);
-  // };
+  const onSearchChange = value => {
+    setFilteredData([]);
+    setSearchLoading(value.length > 0);
+    setSearch(value);
+    debounceProcessSearch(value);
+  };
 
-  // const debounceProcessSearch = useDebounce(value => processSearch(value), 1000);
+  const debounceProcessSearch = useDebounce(value => processSearch(value), 1000);
 
-  // const processSearch = value => {
-  //   getSearchFavoriteBills({
-  //     variables: {
-  //       input: {
-  //         search: value,
-  //         afterCursorId: null,
-  //         afterCursorName: null,
-  //       },
-  //     },
-  //   });
-  // };
+  const processSearch = value => {
+    getSearchFavoriteBills({
+      variables: {
+        input: {
+          search: value,
+          afterCursorId: null,
+          afterCursorName: null,
+        },
+      },
+    });
+  };
 
   const ListFooterComponent = () => {
     return (
@@ -177,15 +177,15 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     );
   };
 
-  // const ListEmptyComponent = () => {
-  //   const emptyImage = search ? empty_search : empty_fave;
-  //   const emptyText = search
-  //     ? "Try to search something similar"
-  //     : 'Check our products and add them to your favorites!';
-  //   const emptyLabel = search ? 'No Results Found' : "You don't have favorites yet";
+  const ListEmptyComponent = () => {
+    const emptyImage = search ? empty_search : empty_fave;
+    const emptyText = search
+      ? "Try to search something similar"
+      : 'Check our products and add them to your favorites!';
+    const emptyLabel = search ? 'No Results Found' : "You don't have favorites yet";
 
-  //   return <EmptyList imageSrc={emptyImage} label={emptyLabel} message={emptyText} />;
-  // };
+    return <EmptyList imageSrc={emptyImage} label={emptyLabel} message={emptyText} />;
+  };
 
   if (getFavoritesError || getSearchError ) {
     return (
@@ -198,14 +198,14 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     <>
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-          {/* <SearchInput
+          <SearchInput
               search={search}
               onChangeText={onSearchChange}
               onClear={() => {
                 setSearch('');
               }}
               placeholder="Search Favorites"
-          /> */}
+          />
         </View>
         {(searchLoading && filteredData.length === 0) || (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (
           <LoadingIndicator isLoading={true} isFlex />
@@ -216,7 +216,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
             contentContainerStyle={styles.listContainer}
             keyExtractor={(item, index) => index.toString()}
             extraData={{filteredData, favorites}}
-            // ListEmptyComponent={ListEmptyComponent}
+            ListEmptyComponent={ListEmptyComponent}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             onEndReachedThreshold={0.2}
             onEndReached={fetchMoreData}
