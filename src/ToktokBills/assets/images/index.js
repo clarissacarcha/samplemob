@@ -16,6 +16,7 @@ export const empty_activities = require('./empty-screens/empty-activities.png');
 export const empty_list = require('./empty-screens/empty-list.png');
 export const empty_notifications = require('./empty-screens/empty-notifications.png');
 export const empty_search = require('./empty-screens/empty-search.png');
+export const empty_fave = require('./empty-screens/empty-fave.png');
 
 //onboarding images
 export const onboarding_1 = require('./onboarding/onboarding-1.png');
