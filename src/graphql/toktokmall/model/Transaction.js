@@ -5,6 +5,7 @@ export const GET_TRANSACTIONS = gql`
     getActivities(input: $input) {
       id
       referenceNum
+      paymentMethod
       dateOrdered
       totalAmount
       orderStatus

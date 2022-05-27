@@ -14,10 +14,10 @@ export const RenderSummary = ({data}) => {
   return (
     <View style={styles.summaryContainer}>
         <View style={styles.summarySubContainer}>
-          {data.payment_method == "" && data.requestmoney_id == null ?
-            <Image source={paypandalogo} style={styles.summaryWalletIcon} />
-            :
+          {data.paymentMethod == "TOKTOKWALLET" ?
             <Image source={walletIcon} style={styles.summaryWalletIcon} />
+            :
+            <Image source={paypandalogo} style={styles.summaryWalletIcon} />
           }
         </View>
         <View style={{...styles.summarySubContainer, alignItems: 'flex-end'}}>
