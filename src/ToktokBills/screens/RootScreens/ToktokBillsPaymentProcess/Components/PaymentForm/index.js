@@ -93,9 +93,6 @@ export const PaymentForm = ({billItemSettings}) => {
     setAmountError,
     setIsInsufficientBalance,
   } = useContext(VerifyContext);
-  const accountNameRef = useRef(null);
-  const amountRef = useRef(null);
-  const emailRef = useRef(null);
 
   const changeFirstField = value => {
     setFirstFieldError('');
@@ -139,11 +136,7 @@ export const PaymentForm = ({billItemSettings}) => {
           value={firstField}
           keyboardType={firstFieldFormat == 1 ? 'numeric' : 'default'}
           maxLength={firstFieldWidthType == 1 || firstFieldWidthType == 2 ? firstFieldWidth : null}
-          returnKeyType="next"
-          onSubmitEditing={() => {
-            accountNameRef.current.focus();
-          }}
-          blurOnSubmit={false}
+          returnKeyType="done"
         />
         {!!firstFieldError && <Text style={styles.error}>{firstFieldError}</Text>}
       </View>
@@ -156,14 +149,7 @@ export const PaymentForm = ({billItemSettings}) => {
           value={secondField}
           keyboardType={secondFieldFormat == 1 ? 'numeric' : 'default'}
           maxLength={secondFieldWidthType == 1 || secondFieldWidthType == 2 ? secondFieldWidth : null}
-          returnKeyType="next"
-          ref={input => {
-            accountNameRef.current = input;
-          }}
-          onSubmitEditing={() => {
-            amountRef.current.focus();
-          }}
-          blurOnSubmit={false}
+          returnKeyType="done"
         />
         {!!secondFieldError && <Text style={styles.error}>{secondFieldError}</Text>}
       </View>
@@ -171,33 +157,14 @@ export const PaymentForm = ({billItemSettings}) => {
         <Text style={styles.label}>Email Address (optional)</Text>
         <TextInput
           style={[styles.input, !!emailError && styles.errorBorder]}
-          // placeholder="Enter email address"
           onChangeText={changeEmail}
           value={email}
-          ref={input => {
-            emailRef.current = input;
-          }}
           returnKeyType="done"
         />
         {!!emailError && <Text style={styles.error}>{emailError}</Text>}
       </View>
       <View>
         <Text style={styles.label}>Payment Amount</Text>
-        {/* <TextInput
-          style={styles.input}
-          placeholder="Enter payment amount"
-          onChangeText={changeAmount}
-          value={amount}
-          keyboardType="numeric"
-          returnKeyType="next"
-          ref={input => {
-            amountRef.current = input;
-          }}
-          onSubmitEditing={() => {
-            emailRef.current.focus();
-          }}
-          blurOnSubmit={false}
-        /> */}
         <InputAmount errorMessage={amountError} amount={amount} changeAmount={changeAmount} />
         {!!amountError && <Text style={styles.error}>{amountError}</Text>}
         <Text style={{fontSize: FONT_SIZE.S, marginTop: 5}}>{convenienceFeeText}</Text>
