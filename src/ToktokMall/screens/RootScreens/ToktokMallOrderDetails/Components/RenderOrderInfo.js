@@ -11,7 +11,7 @@ import {
 
 export const RenderOrderInfo = ({ data }) => {
     const status = ['All', 'Confirmed', 'To Ship', 'To Receive', 'Delivered', 'Cancelled']
-
+    
     return (
         <>
             <View style={styles.line} />
@@ -49,7 +49,7 @@ export const RenderOrderInfo = ({ data }) => {
                             data.paymentMethod == "TOKTOKWALLET" ? walletIcon : paypandalogo
                         }
                     />
-                    <Text style={[styles.subText, { color: "#F6841F" } ]}>Waiting for payment</Text>
+                    {/* <Text style={[styles.subText, { color: "#F6841F" } ]}>Waiting for payment</Text> */}
                 </View>
             </View>
             <View style={[ styles.line, { marginHorizontal:16 } ]} />
