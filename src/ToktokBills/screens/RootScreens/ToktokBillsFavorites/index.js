@@ -20,6 +20,7 @@ import {
   LoadingIndicator,
   EmptyList,
   SomethingWentWrong,
+  ToastModal
 } from 'toktokbills/components';
 import {FavoriteDetails} from './Components';
 
@@ -32,7 +33,7 @@ import {moderateScale} from 'toktokbills/helper';
 //GRAPHQL & HOOKS
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_SEARCH_FAVORITE_BILLS, GET_FAVORITES_BILLS_ITEMS} from 'toktokbills/graphql/model';
+import {GET_SEARCH_FAVORITE_BILLS, GET_FAVORITES_BILLS_ITEMS, PATCH_REMOVE_FAVORITE_BILL} from 'toktokbills/graphql/model';
 import {usePrompt, useThrottle} from 'src/hooks';
 import {useDebounce} from 'toktokwallet/hooks';
 
@@ -41,7 +42,6 @@ import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
 
 export const ToktokBillsFavorites = ({navigation, route}) => {
-  const {billType} = route.params;
   const prompt = usePrompt();
 
   navigation.setOptions({
@@ -52,9 +52,11 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState('');
   const [favorites, setFavorites] = useState([]);
+  const [billFavorite, setBillFavorite] = useState(null)
   const [refreshing, setRefreshing] = useState(false);
   const [pageInfo, setPageInfo] = useState({});
   const [searchLoading, setSearchLoading] = useState(false);
+  const [favoriteModal, setFavoriteModal] = useState({ show: false, message: "" });
   const [isMounted, setIsMounted] = useState(false);
 
   const [getFavoriteBillsPaginate, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(GET_FAVORITES_BILLS_ITEMS, {
@@ -88,6 +90,27 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     },
   });
 
+    // PATCH REMOVE FAVORITE BILL
+  const [patchRemoveFavoriteBill, {loading: patchFavoriteLoading, error: patchFavoriteError}] = useMutation(PATCH_REMOVE_FAVORITE_BILL, {
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: error => {
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt
+      });
+    },
+    onCompleted: ({patchRemoveFavoriteBill}) => {
+      if (search) {
+        processFavorite();
+      } else {
+        handleGetFavoriteBills();
+      }
+      setRefreshing(true);
+      setFavoriteModal({show: true, message: 'Removed from your Favorites'});
+    },
+  });
+  
   useEffect(() => {
     setIsMounted(true);
     handleGetFavoriteBills();
@@ -169,6 +192,23 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     });
   };
 
+  const onPressFavorite = (item, index) => {
+    setBillFavorite({ item, index });
+    patchRemoveFavoriteBill({
+      variables: {
+        input: {
+          id: item.node.id,
+        },
+      },
+    })
+  }
+
+  const processFavorite = () => {
+    filteredData.splice(billFavorite.index, 1)
+    setFilteredData(filteredData)
+    setRefreshing(false);
+  }
+
   const ListFooterComponent = () => {
     return (
       <View style={{marginTop: moderateScale(15)}}>
@@ -198,6 +238,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     <>
       <View style={styles.container}>
         <View style={styles.searchContainer}>
+        <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
           <SearchInput
               search={search}
               onChangeText={onSearchChange}
@@ -212,7 +253,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
         ) : (
           <FlatList
             data={getData()}
-            renderItem={({item, index}) => <FavoriteDetails item={item} index={index} />}
+            renderItem={({item, index}) => <FavoriteDetails item={item} index={index}  onPressFavorite={() => onPressFavorite(item, index)} />}
             contentContainerStyle={styles.listContainer}
             keyExtractor={(item, index) => index.toString()}
             extraData={{filteredData, favorites}}
