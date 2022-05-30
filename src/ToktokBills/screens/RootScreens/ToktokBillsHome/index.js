@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {moderateScale, getStatusbarHeight} from 'toktokbills/helper';
 import {useIsFocused, useRoute} from '@react-navigation/native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 //SELF IMPORTS
 import {BillerType} from './Components';
@@ -83,6 +84,10 @@ export const ToktokBillsHome = ({navigation, route}) => {
     refetch();
   };
 
+  const onPressSeeAll = () => {
+    navigation.navigate('ToktokBillsFavorites', {billTypes});
+  };
+
   if (loading && billTypes.length === 0) {
     return (
       <ImageBackground source={screen_bg} style={styles.loadingContainer} resizeMode="cover">
@@ -110,7 +115,9 @@ export const ToktokBillsHome = ({navigation, route}) => {
             <Text style={[styles.title]}>Favorite Billers</Text>
 
             {allfavoriteBills.length > 3 && (
-              <Text style={[styles.title, {fontFamily: FONT.REGULAR}]}>{`See All >`}</Text>
+              <TouchableOpacity onPress={onPressSeeAll}>
+                <Text style={[styles.title, {fontFamily: FONT.REGULAR}]}>{`See All >`}</Text>
+              </TouchableOpacity>
             )}
           </View>
           <FlatList
