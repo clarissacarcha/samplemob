@@ -50,7 +50,8 @@ export const Cancelled = (props) => {
     fetchPolicy: 'network-only',
     onCompleted: (response) => {
       if(response.getActivities){
-        setData(response.getActivities)
+        const newActivities = [...response.getActivities.filter(activity => activity.status.status === 5)];
+        setData(newActivities)
       }
     },
     onError: (err) => {

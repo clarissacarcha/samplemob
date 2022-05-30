@@ -217,7 +217,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
         <View style={{height: 1, marginTop: 10, backgroundColor: "#F7F7FA"}} />
 
         <View style={styles.textContainer}>
-          <Text style={{fontFamily: FONT.BOLD, color: "#F6841F"}}>Total:</Text>
+          <Text style={{fontFamily: FONT.BOLD, color: "#F6841F"}}>Total</Text>
           {/* {
             getDiscount('shipping') ? 
             <Text style={{color: '#F6841F'}}>

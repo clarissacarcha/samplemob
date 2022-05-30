@@ -44,7 +44,8 @@ export const ToShip = ({id, email}) => {
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getActivities){
-        setData(response.getActivities)
+        const newActivities = [...response.getActivities.filter(activity => activity.status.status === 2)];
+        setData(newActivities)
       }
     },
     onError: (err) => {

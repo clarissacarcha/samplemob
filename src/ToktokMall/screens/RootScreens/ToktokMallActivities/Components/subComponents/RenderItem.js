@@ -35,6 +35,28 @@ export const RenderItem = (props) => {
 
     const date = DisplayDateAndTime(status.date);
 
+    //Return icon for the tabs.
+    const returnIcon = () => {
+        if(status.status !== 5 && status.status !== 4) {
+            return <Image style={styles.renderItemFCLeftIcon} source={carIcon}/>
+        }
+
+        if(cancelled) {
+            return <Image style={styles.renderItemFCLeftIcon} source={cancelledIcon}/>
+        }
+
+        return <CustomIcon.MCIcon name="check-all" size={15} color={"#F6841F"} />
+    }
+    
+    //Checker for description.
+    const descriptionChecker = () => {
+        if(status.description === "Delivered") {
+            return "Order delivered"
+        }
+
+        return status.description
+    }
+
     return (
         <View style={styles.renderItemContainer}>
             <View style={styles.shadowContainer}>
@@ -56,14 +78,9 @@ export const RenderItem = (props) => {
                             </View>
                             <View style={styles.renderItemFCLeft}>
                                 <View style={styles.iconContainer}>
-                                    {
-                                        (status.status !== 5 && status.status !== 4)  ?
-                                        <CustomIcon.MCIcon name="check-all" size={15} color={"#F6841F"} />
-                                        :
-                                        <Image style={styles.renderItemFCLeftIcon} source={cancelled ? cancelledIcon : carIcon}/>
-                                    }
+                                    {returnIcon()}
                                 </View>
-                                <Text style={styles.renderItemFCLeftText}>{status.description}</Text>
+                                <Text style={styles.renderItemFCLeftText}>{descriptionChecker()}</Text>
                             </View>
                         </View>
 

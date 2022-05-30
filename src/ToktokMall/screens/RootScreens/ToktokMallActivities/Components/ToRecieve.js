@@ -44,7 +44,8 @@ export const ToRecieve = () => {
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getActivities){
-        setData(response.getActivities)
+        const newActivities = [...response.getActivities.filter(activity => activity.status.status === 3)];
+        setData(newActivities)
       }
     },
     onError: (err) => {

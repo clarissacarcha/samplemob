@@ -45,7 +45,8 @@ export const Completed = (props) => {
     fetchPolicy: 'network-only',
     onCompleted: (response) => {
       if(response.getActivities){
-        setData(response.getActivities)
+        const newActivities = [...response.getActivities.filter(activity => activity.status.status === 4)];
+        setData(newActivities)
       }
     },
     onError: (err) => {
