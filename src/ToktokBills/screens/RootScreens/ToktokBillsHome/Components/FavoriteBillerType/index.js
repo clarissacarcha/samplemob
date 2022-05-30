@@ -13,27 +13,35 @@ export const FavoriteBillerType = ({item, index, billTypes}) => {
   const navigation = useNavigation();
   const route = useRoute();
   const [imageLoading, setImageLoading] = useState(true);
+  const {billItemId, billItem, id, firstFieldValue, secondFieldValue} = item.node;
+  const {descriptions, logo, billType} = billItem;
 
   const onPress = () => {
     navigation.navigate('ToktokBillsPaymentProcess', {
-      billItemId: item.billItem.id,
-      billType: billTypes,
+      billItemId: billItemId,
+      billType: billItem.billType,
+      favoriteDetails: {
+        id: id,
+        firstFieldValue: firstFieldValue,
+        secondFieldValue: secondFieldValue,
+      },
     });
   };
 
   const onThrottledPress = useThrottle(onPress, 2000);
+
   return (
     <>
       <TouchableOpacity onPress={onThrottledPress} style={styles.container}>
         <View style={styles.item}>
           <View style={{justifyContent: 'center'}}>
             {imageLoading && (
-              <View style={{position: 'absolute', right: 0, left: 0}}>
+              <View style={styles.loadingContainer}>
                 <LoadingIndicator isLoading={true} size="small" />
               </View>
             )}
             <Image
-              source={{uri: item.billItem.logo}}
+              source={{uri: billItem.logo}}
               style={styles.itemLogo}
               onLoadStart={() => setImageLoading(true)}
               onLoadEnd={() => setImageLoading(false)}
@@ -42,10 +50,10 @@ export const FavoriteBillerType = ({item, index, billTypes}) => {
           <View style={styles.detailTwoContainer}>
             <View>
               <Text numberOfLines={1} ellipsizeMode="tail" style={styles.descriptions}>
-                {item.billItem.descriptions}
+                {billItem.descriptions}
               </Text>
-              <Text style={styles.subText}>{item.firstFieldValue}</Text>
-              <Text style={styles.subText}>{item.secondFieldValue}</Text>
+              <Text style={styles.subText}>{secondFieldValue}</Text>
+              <Text style={styles.subText}>{firstFieldValue}</Text>
             </View>
           </View>
         </View>
@@ -56,7 +64,7 @@ export const FavoriteBillerType = ({item, index, billTypes}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    marginVertical: moderateScale(5),
   },
   detailTwoContainer: {
     marginLeft: moderateScale(18),
@@ -87,5 +95,10 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(FONT_SIZE.M),
     flexShrink: 1,
     marginLeft: moderateScale(15),
+  },
+  loadingContainer: {
+    position: 'absolute',
+    right: 0,
+    left: 0,
   },
 });

@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
   RefreshControl,
 } from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
 
 //COMPONENTS
 import {
@@ -41,13 +42,14 @@ import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
 
 export const ToktokBillsFavorites = ({navigation, route}) => {
-  const {billType} = route.params;
   const prompt = usePrompt();
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={"Favorites"} />,
+    headerTitle: () => <HeaderTitle label={'Favorites'} />,
   });
+
+  const isFocused = useIsFocused();
 
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState('');
@@ -57,36 +59,44 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  const [getFavoriteBillsPaginate, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(GET_FAVORITES_BILLS_ITEMS, {
-    fetchPolicy: "network-only",
-    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: () => {
-      setRefreshing(false);
-      setFavorites([]);
+  const [getFavoriteBillsPaginate, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(
+    GET_FAVORITES_BILLS_ITEMS,
+    {
+      fetchPolicy: 'network-only',
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onError: () => {
+        setRefreshing(false);
+        setFavorites([]);
+      },
+      onCompleted: ({getFavoriteBillsPaginate}) => {
+        let data = refreshing ? getFavoriteBillsPaginate.edges : [...favorites, ...getFavoriteBillsPaginate.edges];
+        setFavorites(data);
+        setPageInfo(getFavoriteBillsPaginate.pageInfo);
+        setRefreshing(false);
+      },
     },
-    onCompleted: ({ getFavoriteBillsPaginate }) => {
-      let data = refreshing ? getFavoriteBillsPaginate.edges : [...favorites, ...getFavoriteBillsPaginate.edges];
-      setFavorites(data);
-      setPageInfo(getFavoriteBillsPaginate.pageInfo);
-      setRefreshing(false);
-    }
-  });
+  );
 
-  const [getSearchFavoriteBillsPaginate, {loading: getSearchBills, error: getSearchError}] = useLazyQuery(GET_SEARCH_FAVORITE_BILLS, {
-    fetchPolicy: 'network-only',
-    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: () => {
-      setRefreshing(false);
-      setSearchLoading(false);
+  const [getSearchFavoriteBillsPaginate, {loading: getSearchBills, error: getSearchError}] = useLazyQuery(
+    GET_SEARCH_FAVORITE_BILLS,
+    {
+      fetchPolicy: 'network-only',
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onError: () => {
+        setRefreshing(false);
+        setSearchLoading(false);
+      },
+      onCompleted: ({getSearchFavoriteBillsPaginate}) => {
+        let data = refreshing
+          ? getSearchFavoriteBillsPaginate.edges
+          : [...filteredData, ...getSearchFavoriteBillsPaginate.edges];
+        setFilteredData(data);
+        setPageInfo(getSearchFavoriteBillsPaginate.pageInfo);
+        setRefreshing(false);
+        setSearchLoading(false);
+      },
     },
-    onCompleted: ({getSearchFavoriteBillsPaginate}) => {
-      let data = refreshing ? getSearchFavoriteBillsPaginate.edges : [...filteredData, ...getSearchFavoriteBillsPaginate.edges];
-      setFilteredData(data);
-      setPageInfo(getSearchFavoriteBillsPaginate.pageInfo);
-      setRefreshing(false);
-      setSearchLoading(false);
-    },
-  });
+  );
 
   useEffect(() => {
     setIsMounted(true);
@@ -118,7 +128,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     return favorites;
   };
 
-  const onRefresh = () => {
+  const onRefreshFavorite = () => {
     setRefreshing(true);
     search ? processSearch(search) : handleGetFavoriteBills();
   };
@@ -179,18 +189,16 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
 
   const ListEmptyComponent = () => {
     const emptyImage = search ? empty_search : empty_fave;
-    const emptyText = search
-      ? "Try to search something similar"
-      : 'Check our products and add them to your favorites!';
+    const emptyText = search ? 'Try to search something similar' : 'Check our products and add them to your favorites!';
     const emptyLabel = search ? 'No Results Found' : "You don't have favorites yet";
-
+    if (searchLoading || getFavoritesLoading) return null;
     return <EmptyList imageSrc={emptyImage} label={emptyLabel} message={emptyText} />;
   };
 
-  if (getFavoritesError || getSearchError ) {
+  if (getFavoritesError || getSearchError) {
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} error={getFavoritesError ?? getSearchError } />
+        <SomethingWentWrong onRefetch={onRefreshFavorite} error={getFavoritesError ?? getSearchError} />
       </View>
     );
   }
@@ -199,25 +207,28 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
       <View style={styles.container}>
         <View style={styles.searchContainer}>
           <SearchInput
-              search={search}
-              onChangeText={onSearchChange}
-              onClear={() => {
-                setSearch('');
-              }}
-              placeholder="Search Favorites"
+            search={search}
+            onChangeText={onSearchChange}
+            onClear={() => {
+              setSearch('');
+            }}
+            placeholder="Search Favorites"
           />
         </View>
-        {(searchLoading && filteredData.length === 0) || (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (
+        {(searchLoading && filteredData.length === 0) ||
+        (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (
           <LoadingIndicator isLoading={true} isFlex />
         ) : (
           <FlatList
             data={getData()}
-            renderItem={({item, index}) => <FavoriteDetails item={item} index={index} />}
+            renderItem={({item, index}) => (
+              <FavoriteDetails item={item} index={index} onRefreshFavorite={onRefreshFavorite} />
+            )}
             contentContainerStyle={styles.listContainer}
             keyExtractor={(item, index) => index.toString()}
             extraData={{filteredData, favorites}}
             ListEmptyComponent={ListEmptyComponent}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
             onEndReachedThreshold={0.2}
             onEndReached={fetchMoreData}
             ListFooterComponent={ListFooterComponent}
@@ -239,7 +250,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingHorizontal: moderateScale(5),
-    paddingVertical:  moderateScale(5),
+    paddingVertical: moderateScale(5),
     flexGrow: 1,
   },
   emptyContainer: {

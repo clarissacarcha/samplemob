@@ -47,6 +47,7 @@ import {usePrompt} from 'src/hooks';
 const MainComponent = ({navigation, route}) => {
   const {billItemId, billType} = route.params;
   const favoriteDetails = route?.params?.favoriteDetails ? route.params.favoriteDetails : null;
+  const onRefreshFavorite = route?.params?.favoriteDetails ? route.params.onRefreshFavorite : null;
 
   const [refreshing, setRefreshing] = useState(false);
   const [favoriteBillId, setFavoriteBillId] = useState(favoriteDetails ? favoriteDetails.id : 0);
@@ -92,6 +93,9 @@ const MainComponent = ({navigation, route}) => {
     onCompleted: ({patchRemoveFavoriteBill}) => {
       setFavoriteBillId(0);
       setFavoriteModal({show: true, message: 'Removed from your Favorites'});
+      if (onRefreshFavorite) {
+        onRefreshFavorite();
+      }
     },
   });
 
@@ -109,6 +113,9 @@ const MainComponent = ({navigation, route}) => {
     onCompleted: ({postFavoriteBill}) => {
       setFavoriteBillId(postFavoriteBill.favoriteBill.id);
       setFavoriteModal({show: true, message: 'Added to your Favorites'});
+      if (onRefreshFavorite) {
+        onRefreshFavorite();
+      }
     },
   });
 
