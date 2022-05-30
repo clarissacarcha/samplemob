@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment'
 
 export const DisplayDateAndTime = (value) => {
-  return `${moment(value).format('MMM D, YYYY')} ${moment(value).format('hh:MM A')}`
+  return `${moment(value).format('MMM D, YYYY')} ${moment(value).format('hh:mm A')}`
 }
 
 export const Price = ({amount}) => {
