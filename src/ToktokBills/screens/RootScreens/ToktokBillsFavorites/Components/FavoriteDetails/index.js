@@ -19,6 +19,11 @@ export const FavoriteDetails = ({item, index}) => {
     navigation.navigate('ToktokBillsPaymentProcess', {
       billItemId: item.node.billItemId,
       billType: route.params.billTypes,
+      favoriteDetails: {
+        id: item.node.id,
+        firstFieldValue: item.node.firstFieldValue,
+        secondFieldValue: item.node.secondFieldValue,
+      },
     });
   };
 

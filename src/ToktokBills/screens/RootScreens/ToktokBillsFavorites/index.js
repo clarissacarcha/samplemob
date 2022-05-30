@@ -57,7 +57,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  const [getFavoriteBills, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(GET_FAVORITES_BILLS_ITEMS, {
+  const [getFavoriteBillsPaginate, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(GET_FAVORITES_BILLS_ITEMS, {
     fetchPolicy: "network-only",
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: () => {
@@ -72,7 +72,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     }
   });
 
-  const [getSearchFavoriteBills, {loading: getSearchBills, error: getSearchError}] = useLazyQuery(GET_SEARCH_FAVORITE_BILLS, {
+  const [getSearchFavoriteBillsPaginate, {loading: getSearchBills, error: getSearchError}] = useLazyQuery(GET_SEARCH_FAVORITE_BILLS, {
     fetchPolicy: 'network-only',
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: () => {
@@ -94,7 +94,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   }, []);
 
   const handleGetFavoriteBills = () => {
-    getFavoriteBills({
+    getFavoriteBillsPaginate({
       variables: {
         input: {
           afterCursorId: null,
@@ -126,7 +126,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   const fetchMoreData = () => {
     if (pageInfo.hasNextPage) {
       if (search) {
-        getSearchFavoriteBills({
+        getSearchFavoriteBillsPaginate({
           variables: {
             input: {
               search,
@@ -136,7 +136,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
           },
         });
       } else {
-        getFavoriteBills({
+        getFavoriteBillsPaginate({
           variables: {
             input: {
               afterCursorId: pageInfo.endCursorId,
@@ -158,7 +158,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   const debounceProcessSearch = useDebounce(value => processSearch(value), 1000);
 
   const processSearch = value => {
-    getSearchFavoriteBills({
+    getSearchFavoriteBillsPaginate({
       variables: {
         input: {
           search: value,
