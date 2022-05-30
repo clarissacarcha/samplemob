@@ -16,6 +16,30 @@ import { GET_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
 import { Loading } from '../../../../Components';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
+import moment from 'moment';
+
+const removeDuplicateOrders = (data) => {
+  let paidorders = data.filter((a) => a.id != null)
+  let unpaidorders = data.filter((b) => b.id == null)
+  let result = []
+  for(var x=0;x<paidorders.length;x++){
+    let existenceIndex = unpaidorders.findIndex((unpaidOrder) => unpaidOrder.referenceNum == paidorders[x].referenceNum)
+    if(existenceIndex > -1) unpaidorders.splice(existenceIndex, 1)
+  }
+  return paidorders.concat(unpaidorders)
+}
+
+const removeDuplicateOrders2 = (data) => {
+  let paidorders = data.filter((a) => a.id != null)
+  let unpaidorders = data.filter((b) => b.id == null)    
+  let filtered = unpaidorders.filter((unpaidOrder) => {
+    let checkExistence = paidorders.findIndex((paidOrder) => paidOrder.referenceNum == unpaidOrder.referenceNum)
+    return checkExistence == -1
+  })
+  let orders = paidorders.concat(filtered)
+  let sorted = orders.sort((a, b) => moment(b.dateOrdered).format("X") - moment(a.dateOrdered).format("X"))
+  return sorted
+}
 
 export const ProcessingItem = ({fulldata}) => {
   const navigation = useNavigation();
@@ -40,11 +64,15 @@ export const Processing = ({id, email}) => {
 
   const [getOrders, {loading, error}] = useLazyQuery(GET_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    context: { headers: { authorization: "Bearer: " + getAccessToken() }},
+    // context: { headers: { authorization: "Bearer: " + getAccessToken() }},
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
-      if(response.getActivities){
+      if(response.getActivities){       
+        let orders = removeDuplicateOrders(response.getActivities)
+        // setData(orders)
         setData(response.getActivities)
+        console.log("RAW ORDERS", JSON.stringify(response.getActivities))
+        console.log("CONFIRMED ORDERS", JSON.stringify(orders))
       }
     },
     onError: (err) => {

@@ -5,12 +5,13 @@ import {
     carIcon, 
     cancelledIcon, 
     deliveredIcon, 
-    walletIcon
+    walletIcon,
+		paypandalogo
 } from './../../../../assets';
 
 export const RenderOrderInfo = ({ data }) => {
   
-    const status = ['All', 'Confirmed', 'To Ship', 'To Receive', 'Delivered', 'Cancelled']
+    const status = ['To Pay', 'Confirmed', 'To Ship', 'To Receive', 'Delivered', 'Cancelled']
 
     return (
         <>
@@ -32,7 +33,7 @@ export const RenderOrderInfo = ({ data }) => {
                         }
                     />
                 <Text style={styles.status} >
-                    {status[data?.status?.status]}
+									{status[data?.status?.status]}
                 </Text>
                 </View>
             </View>
@@ -45,7 +46,7 @@ export const RenderOrderInfo = ({ data }) => {
                 <View style={styles.imgView2}>
                     <Image 
                         style={styles.img2}
-                        source={walletIcon}
+                        source={data?.paymentMethod == "TOKTOKWALLET" ? walletIcon : paypandalogo}
                     />
                 </View>
             </View>

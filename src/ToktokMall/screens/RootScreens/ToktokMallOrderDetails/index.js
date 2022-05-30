@@ -74,13 +74,29 @@ const Component = ({navigation, route, notificationCountSession, notifications})
     })
   }, [])
 
-  useEffect(() => {    
-    getOrderDetails({variables: {
-      input: {
-        orderId: route.params.orderId,
-        refCom: getRefComAccountType({session})
-      }
-    }})
+  useEffect(() => {  
+    console.log(route.params.referenceNum)
+    if(route.params?.unpaidOrder == 1){
+      //UNPAID ORDER
+      getOrderDetails({variables: {
+        input: {
+          orderId: -1,
+          referenceNum: route.params.referenceNum,
+          refCom: getRefComAccountType({session})
+        }
+      }})
+
+    }else{
+      //PAID ORDER
+      getOrderDetails({variables: {
+        input: {
+          orderId: route.params.id,
+          referenceNum: "",
+          refCom: getRefComAccountType({session})
+        }
+      }})
+    }
+    
   }, [])
 
   const onPressBuy = () => {

@@ -28,6 +28,7 @@ export const RenderItem = (props) => {
 
     const {
         referenceNum,
+				unpaidOrder,
         status,
         orders
     } = fulldata;
@@ -47,21 +48,21 @@ export const RenderItem = (props) => {
                             <View style={styles.renderItemFCRight}>
                                 <View style={styles.renderItemIDContainer}>
                                 <Text style={styles.renderItemIDText}>
-                                    Oder ID
+                                    Order ID
                                 </Text>
                                 <Text style={styles.renderItemID}>{referenceNum}</Text>
                                 </View>
                                 
-                                <Text style={styles.renderItemPlaced}>{date}</Text>
+                                <Text style={styles.renderItemPlaced}>{status.date}</Text>
                             </View>
                             <View style={styles.renderItemFCLeft}>
                                 <View style={styles.iconContainer}>
-                                    {
-                                        (status.status !== 5 && status.status !== 4)  ?
-                                        <CustomIcon.MCIcon name="check-all" size={15} color={"#F6841F"} />
-                                        :
-                                        <Image style={styles.renderItemFCLeftIcon} source={cancelled ? cancelledIcon : carIcon}/>
-                                    }
+																	{
+                                    (status.status !== 5 && status.status !== 4 && status.status !== 0) ?
+                                    <CustomIcon.MCIcon name="check-all" size={15} color={"#F6841F"} />
+                                      :
+                                    <Image style={styles.renderItemFCLeftIcon} source={cancelled ? cancelledIcon : carIcon}/>
+                                  }                               
                                 </View>
                                 <Text style={styles.renderItemFCLeftText}>{status.description}</Text>
                             </View>
