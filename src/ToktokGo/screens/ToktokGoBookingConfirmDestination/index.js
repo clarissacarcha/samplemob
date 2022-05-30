@@ -88,7 +88,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
               textAlign: 'center',
             }}>
             <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
-            <Text>
+            <Text style={{paddingRight: 10}}>
               {destination?.place?.formattedAddress
                 ? destination.place.formattedAddress
                 : origin.place.formattedAddress}

@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
 import CONSTANTS from '../../../../common/res/constants';
+import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 
 export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummyStatus, navigation, booking}) => {
   const [open, setOpen] = useState(false);
@@ -25,6 +26,7 @@ export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummySt
             </View>
           );
         })}
+
       <TouchableOpacity
         style={styles.row}
         onPress={() => {
@@ -32,48 +34,51 @@ export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummySt
             booking: booking,
           });
         }}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
           <Text
             style={{
-              fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+              fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
               fontSize: CONSTANTS.FONT_SIZE.M,
               color: CONSTANTS.COLOR.ORANGE,
+              marginHorizontal: 5,
             }}>
-            {titleText}
+            Show Details{' '}
           </Text>
+          {/* <MIcons
+            name={'keyboard-arrow-right'}
+            style={{
+              fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+              fontSize: CONSTANTS.FONT_SIZE.XL + 3,
+              color: CONSTANTS.COLOR.ORANGE,
+            }}
+          /> */}
+          <Image source={ArrowRightIcon} resizeMode={'contain'} style={{height: 8, width: 7, alignItems: 'center'}} />
         </View>
-        <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
               style={{
-                fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+                fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
                 fontSize: CONSTANTS.FONT_SIZE.M,
                 color: CONSTANTS.COLOR.ORANGE,
               }}>
-              Show Details{' '}
+              {titleText}
             </Text>
-            <MIcons
-              name={'keyboard-arrow-right'}
+          </View>
+          <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
+            <Text
               style={{
                 fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
-                fontSize: CONSTANTS.FONT_SIZE.XL + 3,
+                fontSize: CONSTANTS.FONT_SIZE.M,
                 color: CONSTANTS.COLOR.ORANGE,
-              }}
-            />
-          </View>
-
-          <Text
-            style={{
-              fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
-              fontSize: CONSTANTS.FONT_SIZE.M,
-              color: CONSTANTS.COLOR.ORANGE,
-            }}>
-            {titleAmount}
-          </Text>
-          {/* {
+              }}>
+              {titleAmount}
+            </Text>
+            {/* {
                         (dummyStatus > 1) &&
                         <MIcons name={!open ? "keyboard-arrow-down" : "keyboard-arrow-up"} style={{ fontFamily: CONSTANTS.FONT_FAMILY.BOLD, fontSize: CONSTANTS.FONT_SIZE.XL + 8,color:CONSTANTS.COLOR.ORANGE ,paddingTop:4}} />
                     } */}
+          </View>
         </View>
       </TouchableOpacity>
     </View>
@@ -82,9 +87,6 @@ export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummySt
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     paddingVertical: 5,
-    alignItems: 'center',
   },
 });

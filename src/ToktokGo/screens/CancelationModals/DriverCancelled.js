@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
   },
   modalTitle: {
-    color: CONSTANTS.COLOR.ORANGE,
+    color: CONSTANTS.COLOR.YELLOW,
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 3,
     marginVertical: 20,

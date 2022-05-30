@@ -32,7 +32,7 @@ export const Location = ({
               ref={inputRef}
               onChangeText={value => onChangeOrigin(value)}
               style={styles.input}
-              // placeholder={titleOrigin ? titleOrigin : pickUpValue}
+              placeholder={!titleOrigin ? 'Type your pick-up location' : titleOrigin}
               value={titleOrigin}
             />
           ) : (
@@ -44,7 +44,7 @@ export const Location = ({
                   fontSize: CONSTANTS.FONT_SIZE.M,
                   paddingHorizontal: 10,
                 }}>
-                {titleOrigin}
+                {!titleOrigin ? 'Type your pick-up location' : titleOrigin}
               </Text>
             </ThrottledOpacity>
           )}

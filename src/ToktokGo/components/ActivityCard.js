@@ -123,7 +123,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                     style={{
                       fontFamily: constants.FONT_FAMILY.REGULAR,
                       fontSize: constants.FONT_SIZE.M,
-                      color: booking?.status != 'COMPLETED' ? constants.COLOR.BLACK : constants.COLOR.RED,
+                      color: constants.COLOR.BLACK,
                       paddingLeft: 10,
                       fontWeight: '400',
                     }}>
@@ -215,7 +215,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 {booking.paymentMethod == 'CASH' ? (
                   <>
-                    <Image source={CashIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
+                    <Image source={CashIcon} resizeMode="contain" style={{width: 30, height: 16, marginRight: 8}} />
                     <Text
                       style={{
                         fontFamily: constants.FONT_FAMILY.REGULAR,
@@ -239,7 +239,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                       fontSize: constants.FONT_SIZE.M,
                       fontFamily: constants.FONT_FAMILY.BOLD,
                     }}>
-                    Total:
+                    {booking.tag == 'ONGOING' ? 'Total:' : 'Total Paid:'}
                   </Text>
                   <Text
                     style={{
