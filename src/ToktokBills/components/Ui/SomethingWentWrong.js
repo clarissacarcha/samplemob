@@ -27,7 +27,7 @@ export const SomethingWentWrong = ({onRefetch, error}) => {
     );
   } else {
     return (
-      <View>
+      <View style={styles.container}>
         <Image source={SomethingWrong} style={styles.image} resizeMode={'contain'} />
         <Text style={styles.text2}>Oops! Something went wrong...</Text>
         <Text style={styles.text2}>{graphQLErrors[0].message}</Text>
