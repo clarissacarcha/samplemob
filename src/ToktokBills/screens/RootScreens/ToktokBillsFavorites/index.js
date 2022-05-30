@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
   RefreshControl,
 } from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
 
 //COMPONENTS
 import {
@@ -20,7 +21,7 @@ import {
   LoadingIndicator,
   EmptyList,
   SomethingWentWrong,
-  ToastModal
+  ToastModal,
 } from 'toktokbills/components';
 import {FavoriteDetails} from './Components';
 
@@ -33,7 +34,11 @@ import {moderateScale} from 'toktokbills/helper';
 //GRAPHQL & HOOKS
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_SEARCH_FAVORITE_BILLS, GET_FAVORITES_BILLS_ITEMS, PATCH_REMOVE_FAVORITE_BILL} from 'toktokbills/graphql/model';
+import {
+  GET_SEARCH_FAVORITE_BILLS,
+  GET_FAVORITES_BILLS_ITEMS,
+  PATCH_REMOVE_FAVORITE_BILL,
+} from 'toktokbills/graphql/model';
 import {usePrompt, useThrottle} from 'src/hooks';
 import {useDebounce} from 'toktokwallet/hooks';
 
@@ -46,71 +51,84 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={"Favorites"} />,
+    headerTitle: () => <HeaderTitle label={'Favorites'} />,
   });
+
+  const isFocused = useIsFocused();
 
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState('');
   const [favorites, setFavorites] = useState([]);
-  const [billFavorite, setBillFavorite] = useState(null)
+  const [billFavorite, setBillFavorite] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [pageInfo, setPageInfo] = useState({});
   const [searchLoading, setSearchLoading] = useState(false);
-  const [favoriteModal, setFavoriteModal] = useState({ show: false, message: "" });
+  const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
   const [isMounted, setIsMounted] = useState(false);
 
-  const [getFavoriteBillsPaginate, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(GET_FAVORITES_BILLS_ITEMS, {
-    fetchPolicy: "network-only",
-    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: () => {
-      setRefreshing(false);
-      setFavorites([]);
+  const [getFavoriteBillsPaginate, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(
+    GET_FAVORITES_BILLS_ITEMS,
+    {
+      fetchPolicy: 'network-only',
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onError: () => {
+        setRefreshing(false);
+        setFavorites([]);
+      },
+      onCompleted: ({getFavoriteBillsPaginate}) => {
+        let data = refreshing ? getFavoriteBillsPaginate.edges : [...favorites, ...getFavoriteBillsPaginate.edges];
+        setFavorites(data);
+        setPageInfo(getFavoriteBillsPaginate.pageInfo);
+        setRefreshing(false);
+      },
     },
-    onCompleted: ({ getFavoriteBillsPaginate }) => {
-      let data = refreshing ? getFavoriteBillsPaginate.edges : [...favorites, ...getFavoriteBillsPaginate.edges];
-      setFavorites(data);
-      setPageInfo(getFavoriteBillsPaginate.pageInfo);
-      setRefreshing(false);
-    }
-  });
+  );
 
-  const [getSearchFavoriteBillsPaginate, {loading: getSearchBills, error: getSearchError}] = useLazyQuery(GET_SEARCH_FAVORITE_BILLS, {
-    fetchPolicy: 'network-only',
-    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: () => {
-      setRefreshing(false);
-      setSearchLoading(false);
+  const [getSearchFavoriteBillsPaginate, {loading: getSearchBills, error: getSearchError}] = useLazyQuery(
+    GET_SEARCH_FAVORITE_BILLS,
+    {
+      fetchPolicy: 'network-only',
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onError: () => {
+        setRefreshing(false);
+        setSearchLoading(false);
+      },
+      onCompleted: ({getSearchFavoriteBillsPaginate}) => {
+        let data = refreshing
+          ? getSearchFavoriteBillsPaginate.edges
+          : [...filteredData, ...getSearchFavoriteBillsPaginate.edges];
+        setFilteredData(data);
+        setPageInfo(getSearchFavoriteBillsPaginate.pageInfo);
+        setRefreshing(false);
+        setSearchLoading(false);
+      },
     },
-    onCompleted: ({getSearchFavoriteBillsPaginate}) => {
-      let data = refreshing ? getSearchFavoriteBillsPaginate.edges : [...filteredData, ...getSearchFavoriteBillsPaginate.edges];
-      setFilteredData(data);
-      setPageInfo(getSearchFavoriteBillsPaginate.pageInfo);
-      setRefreshing(false);
-      setSearchLoading(false);
-    },
-  });
+  );
 
-    // PATCH REMOVE FAVORITE BILL
-  const [patchRemoveFavoriteBill, {loading: patchFavoriteLoading, error: patchFavoriteError}] = useMutation(PATCH_REMOVE_FAVORITE_BILL, {
-    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: error => {
-      ErrorUtility.StandardErrorHandling({
-        error,
-        navigation,
-        prompt
-      });
+  // PATCH REMOVE FAVORITE BILL
+  const [patchRemoveFavoriteBill, {loading: patchFavoriteLoading, error: patchFavoriteError}] = useMutation(
+    PATCH_REMOVE_FAVORITE_BILL,
+    {
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onError: error => {
+        ErrorUtility.StandardErrorHandling({
+          error,
+          navigation,
+          prompt,
+        });
+      },
+      onCompleted: ({patchRemoveFavoriteBill}) => {
+        if (search) {
+          processFavorite();
+        } else {
+          handleGetFavoriteBills();
+        }
+        setRefreshing(true);
+        setFavoriteModal({show: true, message: 'Removed from your Favorites'});
+      },
     },
-    onCompleted: ({patchRemoveFavoriteBill}) => {
-      if (search) {
-        processFavorite();
-      } else {
-        handleGetFavoriteBills();
-      }
-      setRefreshing(true);
-      setFavoriteModal({show: true, message: 'Removed from your Favorites'});
-    },
-  });
-  
+  );
+
   useEffect(() => {
     setIsMounted(true);
     handleGetFavoriteBills();
@@ -141,7 +159,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     return favorites;
   };
 
-  const onRefresh = () => {
+  const onRefreshFavorite = () => {
     setRefreshing(true);
     search ? processSearch(search) : handleGetFavoriteBills();
   };
@@ -193,21 +211,21 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   };
 
   const onPressFavorite = (item, index) => {
-    setBillFavorite({ item, index });
+    setBillFavorite({item, index});
     patchRemoveFavoriteBill({
       variables: {
         input: {
           id: item.node.id,
         },
       },
-    })
-  }
+    });
+  };
 
   const processFavorite = () => {
-    filteredData.splice(billFavorite.index, 1)
-    setFilteredData(filteredData)
+    filteredData.splice(billFavorite.index, 1);
+    setFilteredData(filteredData);
     setRefreshing(false);
-  }
+  };
 
   const ListFooterComponent = () => {
     return (
@@ -219,18 +237,16 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
 
   const ListEmptyComponent = () => {
     const emptyImage = search ? empty_search : empty_fave;
-    const emptyText = search
-      ? "Try to search something similar"
-      : 'Check our products and add them to your favorites!';
+    const emptyText = search ? 'Try to search something similar' : 'Check our products and add them to your favorites!';
     const emptyLabel = search ? 'No Results Found' : "You don't have favorites yet";
-
+    if (searchLoading || getFavoritesLoading) return null;
     return <EmptyList imageSrc={emptyImage} label={emptyLabel} message={emptyText} />;
   };
 
-  if (getFavoritesError || getSearchError ) {
+  if (getFavoritesError || getSearchError) {
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} error={getFavoritesError ?? getSearchError } />
+        <SomethingWentWrong onRefetch={onRefreshFavorite} error={getFavoritesError ?? getSearchError} />
       </View>
     );
   }
@@ -238,27 +254,35 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     <>
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-        <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
+          <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
           <SearchInput
-              search={search}
-              onChangeText={onSearchChange}
-              onClear={() => {
-                setSearch('');
-              }}
-              placeholder="Search Favorites"
+            search={search}
+            onChangeText={onSearchChange}
+            onClear={() => {
+              setSearch('');
+            }}
+            placeholder="Search Favorites"
           />
         </View>
-        {(searchLoading && filteredData.length === 0) || (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (
+        {(searchLoading && filteredData.length === 0) ||
+        (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (
           <LoadingIndicator isLoading={true} isFlex />
         ) : (
           <FlatList
             data={getData()}
-            renderItem={({item, index}) => <FavoriteDetails item={item} index={index}  onPressFavorite={() => onPressFavorite(item, index)} />}
+            renderItem={({item, index}) => (
+              <FavoriteDetails
+                item={item}
+                index={index}
+                onRefreshFavorite={onRefreshFavorite}
+                onPressFavorite={() => onPressFavorite(item, index)}
+              />
+            )}
             contentContainerStyle={styles.listContainer}
             keyExtractor={(item, index) => index.toString()}
             extraData={{filteredData, favorites}}
             ListEmptyComponent={ListEmptyComponent}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
             onEndReachedThreshold={0.2}
             onEndReached={fetchMoreData}
             ListFooterComponent={ListFooterComponent}
@@ -280,7 +304,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingHorizontal: moderateScale(5),
-    paddingVertical:  moderateScale(5),
+    paddingVertical: moderateScale(5),
     flexGrow: 1,
   },
   emptyContainer: {

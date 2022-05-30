@@ -25,14 +25,13 @@ export const BillerType = ({item, index}) => {
       <View style={styles.item}>
         <View style={{justifyContent: 'center'}}>
           {imageLoading && (
-            <View style={{position: 'absolute', right: 0, left: 0}}>
+            <View style={styles.loadingContainer}>
               <LoadingIndicator isLoading={true} size="small" />
             </View>
           )}
           <Image
             source={{uri: item.icon}}
             style={styles.itemLogo}
-            // onProgress={progress => console.log( Math.abs(progress.nativeEvent.loaded / progress.nativeEvent.total))}
             onLoadStart={() => setImageLoading(true)}
             onLoadEnd={() => setImageLoading(false)}
           />
@@ -45,8 +44,8 @@ export const BillerType = ({item, index}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: width / 4 - moderateScale(8),
-    width: width / 4 - moderateScale(8),
+    height: width / 4,
+    width: width / 4 - moderateScale(10),
     justifyContent: 'center',
   },
   item: {
@@ -61,6 +60,12 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
     fontSize: moderateScale(FONT_SIZE.M),
     textAlign: 'center',
-    margin: moderateScale(5),
+    marginTop: moderateScale(5),
+    marginHorizontal: moderateScale(7),
+  },
+  loadingContainer: {
+    position: 'absolute',
+    right: 0,
+    left: 0,
   },
 });
