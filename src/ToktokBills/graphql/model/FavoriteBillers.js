@@ -7,11 +7,67 @@ export const GET_FAVORITE_BILLS = gql`
       billItemId
       firstFieldValue
       secondFieldValue
-      billItem {
-        id
-        logo
-        descriptions
-        billTypeId
+    }
+  }
+`;
+
+export const GET_FAVORITES_BILLS_ITEMS = gql`
+  query getFavoriteBillsPaginate($input: GetFavoriteBillsPaginateInput) {
+    getFavoriteBillsPaginate(input: $input) {
+      edges {
+        node {
+          id
+          billItemId
+          billItem {
+            id
+            name
+            descriptions
+            logo
+            firstFieldName
+            secondFieldName
+          }
+          firstFieldValue
+          secondFieldValue
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        startCursorUpdatedAt
+        endCursorUpdatedAt
+        hasNextPage
+      }
+    }
+  }
+`;
+
+export const GET_SEARCH_FAVORITE_BILLS = gql`
+  query getSearchFavoriteBillsPaginate($input: GetSearchFavoriteBillsPaginateInput) {
+    getSearchFavoriteBillsPaginate(input: $input) {
+      edges {
+        node {
+          id
+          billItemId
+          billItem {
+            id
+            name
+            descriptions
+            logo
+            firstFieldName
+            secondFieldName
+          }
+          firstFieldValue
+          secondFieldValue
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        startCursorName
+        endCursorName
+        startCursorUpdatedAt
+        endCursorUpdatedAt
+        hasNextPage
       }
     }
   }
