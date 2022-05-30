@@ -97,14 +97,14 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             source = {getImageSource(product?.img?.filename)} 
             style ={styles.itemImage}/>
             <View style = {{ marginLeft: 15, flex: 1}}>
-              <Text>{product?.name ? product?.name.trim() : product?.itemname.trim()}</Text>
-              <View style = {{flexDirection: 'row'}}>
-                <Text style ={styles.itemprice}>{FormatToText.currency(product?.price)}</Text>
-                <Text style ={styles.itemSaleOff}>{parseFloat(product?.compareAtPrice) != "0.00" ? FormatToText.currency(product?.compareAtPrice) : ""}</Text>
-              </View>
-              <View style = {{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
-                <Text style ={{ color: '#9E9E9E', flex: 4.7 }}>Variation: {product.variant || "None"}</Text>
-                <Text style ={{ color: '#9E9E9E', flex: 1.2}}>Qty: {item.qty}</Text>
+              <Text style={{fontSize:13, fontWeight:'400'}}>{product?.name ? product?.name.trim() : product?.itemname.trim()}</Text>
+              <Text style ={{ color: '#525252', fontSize: 11, paddingVertical:3}}>Variation: {product.variant || 'None'}</Text>
+              <View style = {{flexDirection: 'row', justifyContent:'space-between'}}>
+                <View style = {{flexDirection: 'row'}}>
+                  <Text style ={styles.itemprice}>{FormatToText.currency(product?.price)}</Text>
+                  <Text style ={styles.itemSaleOff}>{parseFloat(product?.compareAtPrice) != "0.00" ? FormatToText.currency(product?.compareAtPrice) : ""}</Text>
+                </View>
+                <Text style ={{ color: '#525252', fontSize:13}}>Qty: {item.qty}</Text>
               </View>
             </View>
           </View>
@@ -403,9 +403,9 @@ const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA', },
   container: {padding: 0, backgroundColor: 'white', marginTop: 8,  },
   itemContainer: {flexDirection: 'row', justifyContent: 'flex-start'},
-  itemImage: {flex: 0.3, height: 100, width: 100},
-  itemprice: {color: '#F6841F', marginRight: 10},
-  itemSaleOff: {textDecorationLine: 'line-through', color: '#9E9E9E', fontSize: 11, marginTop: 2},
+  itemImage: {flex: 0.3, height: 65, width: 50, borderRadius:5},
+  itemprice: {color: '#F6841F', marginRight: 10, fontSize:13},
+  itemSaleOff: {textDecorationLine: 'line-through', color: '#9E9E9E', fontSize: 11},
   deliveryfeeContainer: {borderWidth: 1, borderColor: '#FDDC8C', marginLeft: 15, marginRight: 15, padding: 10, borderRadius: 5, marginBottom: 15},
   voucherContainer: {
     flexDirection: 'row', padding: 15, flexWrap: 'wrap'

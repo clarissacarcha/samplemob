@@ -22,6 +22,7 @@ import {useNavigation} from '@react-navigation/core';
 import {FONT} from '../../../../../res/variables';
 import { useDispatch, useSelector } from 'react-redux';
 import { EventRegister } from 'react-native-event-listeners';
+import AIcons from 'react-native-vector-icons/dist/AntDesign';
 
 const walletIcon = require('../../../../assets/icons/wallet1.png')
 
@@ -129,27 +130,17 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
   return (
     <>
       <View style={styles.container}>
-        <Text style={{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Payment Method</Text>
-        <View style={{paddingTop: 15}} />
-        <View>
-          {parseFloat(currentBalance) < parseFloat(total) ? (
-            <View style={{backgroundColor: '#FFFCF4', padding: 10}}>
-              <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>
-                *insufficient funds! Kindly top up to add funds in your toktokwallet.
-              </Text>
-            </View>
-          ) : (
-            <View style={{height: 8}} />
-          )}
-        </View>
+        <Text style={{marginHorizontal: 15, marginVertical: 15, fontSize: 14, fontFamily: FONT.REGULAR}}>Payment Method</Text>
+        {/* <View style={{paddingTop: 15}} /> */}
         
-        <View style={{height: 8}} />
+        {/* <View style={{height: 8}} /> */}
         <TouchableOpacity
           // style ={{...styles.item, backgroundColor: payment == 'toktokwallet' ? '#FFEBBC' : 'white' }}
           style={{
             ...styles.item,
             // backgroundColor: parseFloat(currentBalance) < parseFloat(total) ? 'white' : 'rgba(255, 235, 188, 0.25)',
-            backgroundColor: '#fff'
+            backgroundColor: '#fff',
+            borderBottomWidth: 0
           }}
           onPress={() => {
             setPaymentMethod('toktokwallet');
@@ -163,7 +154,7 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
             <View>
               <Text style={{marginLeft: 8, fontSize: 16, color: '#FFA700'}}>toktok
               <Text style={{fontSize: 16, color: "#F6841F"}}>wallet</Text></Text>              
-              <Text style={{marginLeft: 10, fontWeight: 'normal', color: '#929191', fontSize: 13}}>
+              <Text style={{marginLeft: 10, fontWeight: 'normal', color: '#929191', fontSize: 11}}>
                 Balance: {FormatToText.currency(toktokMall.toktokWalletBalance || 0)}
               </Text>
             </View>
@@ -196,6 +187,18 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
+        
+        {parseFloat(currentBalance) < parseFloat(total) ? (
+            <View style={{flexDirection:'row', alignItems:'center', alignContent:'center', paddingHorizontal:16, paddingBottom:10}}>
+              <AIcons name={'exclamationcircle'} size={13} color={'#ED3A19'}/>
+              <Text style={{color: '#ED3A19', fontSize: 11, textAlign: 'center', marginLeft:8}}>
+                Insufficient balance
+              </Text>
+            </View>
+          ) : (
+            <></>
+          )}
+
         {/* <TouchableOpacity 
           style ={{...styles.item, backgroundColor: payment == 'paypanda' ? '#FFEBBC' : 'white' }}
           onPress = {() => {setPaymentMethod("paypanda")}}
@@ -222,7 +225,7 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
           )
         })} */}
 
-        <View style={{height: 30}} />
+        {/* <View style={{height: 30}} /> */}
       </View>
     </>
   );
@@ -230,7 +233,7 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
 
 const styles = StyleSheet.create({
   body: {flex: 1, backgroundColor: '#F7F7FA'},
-  container: {padding: 0, backgroundColor: 'white', marginTop: 8},
+  container: {padding: 0, backgroundColor: 'white', marginTop: 8,paddingBottom:8},
   itemContainer: {flexDirection: 'row', justifyContent: 'flex-start'},
   itemImage: {flex: 0.3, height: 100, width: 100},
   itemprice: {color: '#F6841F', marginRight: 10},
@@ -247,7 +250,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    padding: 15,
+    // padding: 15,
+    paddingHorizontal:16,
+    paddingBottom:8,
     borderBottomColor: '#F7F7FA',
   },
 });

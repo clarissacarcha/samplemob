@@ -612,7 +612,7 @@ const Component = ({
                     isChecked={CartContextData.selectAll || selectedItemsArr.length == totalitems}
                     // isChecked = {CartContext.sele}
                     rightText="Select All"
-                    rightTextStyle={{fontSize: 14, fontWeight: '500'}}
+                    rightTextStyle={{fontSize: 14, fontWeight: '500', fontFamily:FONT.BOLD}}
                     checkedCheckBoxColor="#F6841F"
                     uncheckedCheckBoxColor="#F6841F"
                     onClick={() => {
