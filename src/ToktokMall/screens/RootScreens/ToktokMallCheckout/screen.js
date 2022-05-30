@@ -80,14 +80,36 @@ const Component = ({route, navigation, createMyCartSession}) => {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: async (response) => {
-      const data = response.checkItemFromCheckout.filter(({status})=> status === false)
+      const data = response.checkItemFromCheckout
+
+      const newData = []
+
+      for(var item of data){
+        const cartQty = 0
+        route.params.data.map(({data}) => {
+          data[0].map(({id, qty}) => {
+
+      console.log("onProductUnavailable 1", id === item.id, item.id, id)
+            if(id === item.id){
+              cartQty = qty
+            }
+          })
+        })
+         newData.push({
+          ...item,
+          cartQty
+        })
+      }
+
+      console.log("onProductUnavailable", newData)
 
       //SCENARIO: While entering TPIN, the product got out of stock. We can simulate this by bypassing the current validation
       // await postCheckoutSetting(data);
       // return
+      const temp= newData.filter(({status, cartQty, noOfStocks})=> status === false || cartQty !== noOfStocks)
 
-      if(data.length > 0){
-        onProductUnavailable(data, "id")
+      if(temp.length > 0){
+        onProductUnavailable(temp, "id")
       }else{
         await postCheckoutSetting(data);
       }
@@ -310,7 +332,33 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     let paramsDataCopy = ArrayCopy(route.params)
 
-    items.map(({id, name}) => {
+    items.map(({id, name, cartQty, noOfStocks}) => {
+      console.log(noOfStocks < cartQty, noOfStocks ,cartQty, "noOfStocks < cartQty")
+      
+      if(noOfStocks < cartQty){
+
+      route.params.data.map(({data, ...rest}, index) => {
+
+        let validItems = []
+        validItems = data[0].map(item => {
+          if(item.id === id){
+            return {
+              ...item,
+              qty: noOfStocks
+            }
+          }
+        })
+        if(validItems.length > 0){
+          paramsDataCopy.data[index] = {
+            ...rest,
+            data: [validItems]
+          }
+        }else{
+          paramsDataCopy.data[index] = null
+        }   
+      })
+      }else {
+
       route.params.data.map(({data, ...rest}, index) => {
 
         let validItems = []
@@ -329,6 +377,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
           paramsDataCopy.data[index] = null
         }          
       })
+      }
+
     })
     
     dispatch({

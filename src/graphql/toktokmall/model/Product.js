@@ -292,6 +292,7 @@ export const CHECK_ITEM_FROM_CHECKOUT = gql`
 		checkItemFromCheckout(input: $input) {
 			id
 			status
+			noOfStocks
 		}
 	}
 `
