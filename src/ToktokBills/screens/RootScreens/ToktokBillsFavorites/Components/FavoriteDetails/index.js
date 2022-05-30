@@ -21,8 +21,8 @@ export const FavoriteDetails = ({item, index}) => {
       billType: route.params.billTypes,
       favoriteDetails: {
         id: item.node.id,
-        firstFieldValue: item.node.firstFieldValue,
-        secondFieldValue: item.node.secondFieldValue,
+        firstFieldValue: item.node.secondFieldValue,
+        secondFieldValue: item.node.firstFieldValue,
       },
     });
   };
