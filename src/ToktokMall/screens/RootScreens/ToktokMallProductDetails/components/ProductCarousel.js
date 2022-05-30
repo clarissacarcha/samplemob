@@ -34,12 +34,12 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
 
     return (
       <View style={{width: Dimensions.get("screen").width, height: HEIGHT}}>
-        {isOutOfStock && 
+        {/* {isOutOfStock && 
         <View style={{position: "absolute", zIndex: 1, top: 60, left: (Dimensions.get("screen").width-150)/2}}>
           <View style={{width: 150, height: 150, borderRadius: 150/2, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
           </View>
-        </View>}
+        </View>} */}
 
         {
           promotion && promotion != null && 

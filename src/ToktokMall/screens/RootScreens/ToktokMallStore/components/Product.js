@@ -61,11 +61,11 @@ const RenderItem = ({item}) => {
               imageStyle={{resizeMode: 'contain'}} 
               style={{width: '100%', height: 120, borderRadius: 5}}
             >
-              <View style={{backgroundColor: 'transparent', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+              {/* <View style={{backgroundColor: 'transparent', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
                 <View style={{width: 90, height: 90, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 45, justifyContent: 'center', alignItems: 'center'}}>
                   <Text style={{color: '#f2f2f2', fontSize: 12}}>OUT OF STOCK</Text>
                 </View>
-              </View>
+              </View> */}
             </ImageBackground>
           }
           {item?.noOfStocks > 0 || item?.contSellingIsset === 1 &&
