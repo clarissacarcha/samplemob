@@ -10,7 +10,7 @@ import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
 
-export const FavoriteDetails = ({item, index, billTypes, onRefreshFavorite}) => {
+export const FavoriteDetails = ({item, index, onPressFavorite, onRefreshFavorite}) => {
   const navigation = useNavigation();
   const route = useRoute();
   const [imageLoading, setImageLoading] = useState(true);
@@ -33,37 +33,37 @@ export const FavoriteDetails = ({item, index, billTypes, onRefreshFavorite}) => 
   const onThrottledPress = useThrottle(onPress, 2000);
 
   return (
-    <>
-      <TouchableOpacity onPress={onThrottledPress} style={styles.container}>
-        <View style={styles.item}>
-          <View style={{justifyContent: 'center'}}>
-            {imageLoading && (
-              <View style={styles.loadingContainer}>
-                <LoadingIndicator isLoading={true} size="small" />
-              </View>
-            )}
-            <Image
-              source={{uri: billItem.logo}}
-              style={styles.itemLogo}
-              onLoadStart={() => setImageLoading(true)}
-              onLoadEnd={() => setImageLoading(false)}
-            />
-          </View>
-          <View style={styles.detailTwoContainer}>
-            <View>
-              <Text numberOfLines={1} ellipsizeMode="tail" style={styles.descriptions}>
-                {billItem.descriptions}
-              </Text>
-              <Text style={styles.subText}>{secondFieldValue}</Text>
-              <Text style={styles.subText}>{firstFieldValue}</Text>
+    <TouchableOpacity onPress={onThrottledPress} style={styles.container}>
+      <View style={styles.item}>
+        <View style={{justifyContent: 'center'}}>
+          {imageLoading && (
+            <View style={styles.loadingContainer}>
+              <LoadingIndicator isLoading={true} size="small" />
             </View>
+          )}
+          <Image
+            source={{uri: billItem.logo}}
+            style={styles.itemLogo}
+            onLoadStart={() => setImageLoading(true)}
+            onLoadEnd={() => setImageLoading(false)}
+          />
+        </View>
+        <View style={styles.detailTwoContainer}>
+          <View>
+            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.descriptions}>
+              {billItem.descriptions}
+            </Text>
+            <Text style={styles.subText}>{secondFieldValue}</Text>
+            <Text style={styles.subText}>{firstFieldValue}</Text>
           </View>
+        </View>
+        <TouchableOpacity onPress={onPressFavorite}>
           <View style={styles.detailTwoContainer}>
             <Image source={heart_fill_icon} style={styles.heartIcon} />
           </View>
-        </View>
-      </TouchableOpacity>
-    </>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
   );
 };
 
