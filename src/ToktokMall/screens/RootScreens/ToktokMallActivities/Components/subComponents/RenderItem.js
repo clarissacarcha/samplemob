@@ -50,7 +50,7 @@ export const RenderItem = (props) => {
     
     //Checker for description.
     const descriptionChecker = () => {
-        if(status.description === "Delivered") {
+        if(status.status === 4) {
             return "Order delivered"
         }
 
