@@ -48,8 +48,8 @@ export const FavoriteDetails = ({item, index}) => {
         <View style={styles.detailTwoContainer}>
            <View>
             <Text numberOfLines={1} ellipsizeMode='tail' style={styles.descriptions}>{item.node.billItem.descriptions}</Text>
-             <Text style={styles.subText}>{item.node.firstFieldValue}</Text>
              <Text style={styles.subText}>{item.node.secondFieldValue}</Text>
+             <Text style={styles.subText}>{item.node.firstFieldValue}</Text>
            </View>
         </View>
         <View style={styles.detailTwoContainer}>
