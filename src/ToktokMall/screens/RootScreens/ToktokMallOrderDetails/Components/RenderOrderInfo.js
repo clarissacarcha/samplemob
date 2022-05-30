@@ -8,10 +8,13 @@ import {
     walletIcon,
     paypandalogo
 } from './../../../../assets';
+import { DisplayDateAndTime } from '../../../../helpers';
 
 export const RenderOrderInfo = ({ data }) => {
     const status = ['All', 'Confirmed', 'To Ship', 'To Receive', 'Delivered', 'Cancelled']
     
+    const date = DisplayDateAndTime(data?.status?.date);
+
     return (
         <>
             <View style={styles.line} />
@@ -40,7 +43,7 @@ export const RenderOrderInfo = ({ data }) => {
             <View style={styles.delivery}>
                 <View style={{flex: 1.5, flexDirection: 'column'}}>
                     <Text style={styles.orderInfo}>Delivery Information</Text>
-                    <Text style={[styles.subText, { color: "#525252" } ]}>{data?.status?.date}</Text>
+                    <Text style={[styles.subText, { color: "#525252" } ]}>{date}</Text>
                 </View>
                 <View style={styles.imgView2}>
                     <Image 
