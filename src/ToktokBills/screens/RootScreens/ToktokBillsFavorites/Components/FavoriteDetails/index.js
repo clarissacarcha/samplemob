@@ -10,7 +10,7 @@ import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
 
-export const FavoriteDetails = ({item, index}) => {
+export const FavoriteDetails = ({item, index, onPressFavorite,}) => {
   const navigation = useNavigation();
   const route = useRoute();
   const [imageLoading, setImageLoading] = useState(true);
@@ -52,9 +52,11 @@ export const FavoriteDetails = ({item, index}) => {
              <Text style={styles.subText}>{item.node.firstFieldValue}</Text>
            </View>
         </View>
-        <View style={styles.detailTwoContainer}>
-          <Image source={heart_fill_icon} style={styles.heartIcon} />
-        </View>
+        <TouchableOpacity onPress={onPressFavorite}>
+          <View style={styles.detailTwoContainer}>
+            <Image source={heart_fill_icon} style={styles.heartIcon} />
+          </View>
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
