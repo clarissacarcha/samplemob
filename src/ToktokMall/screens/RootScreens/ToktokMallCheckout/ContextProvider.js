@@ -59,10 +59,17 @@ export const CheckoutContextProvider = ({children})=> {
 
 	const getShopItemDiscount = (shopid) => {
 		let discount = null
-		shippingVouchers.fill((a) => a.voucherCodeType == "promotion").map((a) => {
+		shippingVouchers.filter((a) => a.voucherCodeType == "promotion").map((a) => {
 			if(a?.shopid == shopid || a?.shop_id == shopid) discount = a
 		})
 		return discount
+	}
+
+	const getShopDiscountCount = (shopid) => {
+		let v = shippingVouchers.filter((a) => a.voucherCodeType == "promotion").map((a) => {
+			if(a?.shopid == shopid || a?.shop_id == shopid) discount = a
+		})
+		return v.length
 	}
 
 	const getTotalVoucherDeduction = () => {
@@ -135,6 +142,7 @@ export const CheckoutContextProvider = ({children})=> {
 				getShippingFeeByShopId,
 				getShopShippingDiscount,
 				getShopItemDiscount,
+				getShopDiscountCount,
 
 				voucherReloading,
 				setVoucherReloading,

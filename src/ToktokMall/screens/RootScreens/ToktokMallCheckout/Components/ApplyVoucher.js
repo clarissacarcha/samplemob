@@ -88,7 +88,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
       region: address.regionId,
       email: customer.email,
       subtotal: subTotal,
-      promo_count: 0,
+      promo_count: CheckoutContextData.getShopDiscountCount(item.shop.id),
       payment_method: "TOKTOKWALLET",
       orders: orders
     }
@@ -101,7 +101,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
         "region": "03",
         "email": "vdomingo@cloudpanda.ph",
         "subtotal": subTotal,
-        "promoCount": 0,
+        "promoCount": CheckoutContextData.shippingVouchers.length,
         "is_mystery": 0,
         "orders":[]
       }

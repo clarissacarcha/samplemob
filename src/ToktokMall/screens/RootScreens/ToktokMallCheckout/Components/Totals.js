@@ -19,7 +19,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
   const [merchandiseTotal, setMerchandiseTotal] = useState(0);
   const [shippingFeeTotal, setShippingFeeTotal] = useState(0);
   const [shippingDiscountTotal, setShippingDiscountTotal] = useState(0);
-  const [toggleVouchers, setToggleVouchers] = useState(false);
+  const [toggleVouchers, setToggleVouchers] = useState(true);
   const [numOfVouchers, setOfNumVouchers] = useState(0)
 
   useEffect(() => {
@@ -145,7 +145,8 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
 
   const RenderVouchersBreakdown = () => {
 
-    let vouchers = toggleVouchers ? CheckoutContextData.shippingVouchers.slice(0,2) : CheckoutContextData.shippingVouchers
+    // let vouchers = toggleVouchers ? CheckoutContextData.shippingVouchers.slice(0,2) : CheckoutContextData.shippingVouchers
+    let vouchers = toggleVouchers ? [] : CheckoutContextData.shippingVouchers
     let totalDeduction = CheckoutContextData.getTotalVoucherDeduction()
 
     return (
