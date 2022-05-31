@@ -7,30 +7,30 @@ import { moderateScale } from 'toktokbills/helper';
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
 
-const getStatus = (status) => {
-  switch(status){
-    case 1:
-      return { text: "Success"}
-    case 3:
-      return { text: "Failed"}
-    
-    default: 
-      return { text: "Pending"}
-  }
-}
-
 export const NotificationItem = ({
     item,
 })=> {
-    const navigation = useNavigation();
-    const statusData = getStatus(item.status)
+    
+    let status = "Pending"
+    switch(item.type){
+        case "postPayBillsSuccessful":
+            status = "Success";
+            break;
+        case "postPayBillsFailed":
+            status = "Failed";
+            break;
+        default: 
+            status = "Pending";
+            break;
+    }
+    
     const dateCreated = moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY')
     const timeCreated = moment(item.createdAt).tz('Asia/Manila').format('hh:mm A')
 
     return (
         <View style={styles.container}> 
             <View style={{flex:1,marginRight: 16}}>
-                    <Text style={styles.title}>{statusData.text}</Text>
+                    <Text style={styles.title}>{status}</Text>
                     <Text style={styles.message}>{item.body}</Text>
             </View>
             <View style={styles.date}>
