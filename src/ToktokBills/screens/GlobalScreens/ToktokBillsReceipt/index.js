@@ -66,7 +66,6 @@ const MainComponent = ({navigation, route, viewRef, onCapturingScreen}) => {
 export const ToktokBillsReceipt = ({navigation, route}) => {
   const [onCapturingScreen, setOnCapturingScreen] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [favoriteBills, setFavoriteBills] = useState([]);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
   const [favoriteBillId, setFavoriteBillId] = useState(favoriteDetails ? favoriteDetails.id : 0);
   const [favoriteExisting, setFavoriteExisting] = useState(false);
@@ -96,7 +95,6 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
   });
 
   useEffect(() => {
-    getFavoriteBills();
     postCheckIfFavoriteExist({
       variables: {
         input: {
@@ -148,21 +146,6 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
     },
   );
 
-  //GET FAVORITE BILLS
-  const [getFavoriteBills, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(
-    GET_FAVORITE_BILLS,
-    {
-      fetchPolicy: 'cache-and-network',
-      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-      onError: () => {
-        setFavoriteBills([]);
-      },
-      onCompleted: ({getFavoriteBills}) => {
-        setFavoriteBills(getFavoriteBills);
-      },
-    },
-  );
-
   const onPressFavorite = () => {
     postFavoriteBill({
       variables: {
@@ -194,7 +177,7 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
           <MainComponent navigation={navigation} route={route} onCapturingScreen={onCapturingScreen} />
         </ViewShot>
       </ScrollView>
-      {console.log('EXIST', favoriteExisting)}
+
       {!onCapturingScreen &&
         (favoriteExisting.result ? (
           <View style={styles.buttonContainer}>
