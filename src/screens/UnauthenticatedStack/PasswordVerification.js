@@ -72,14 +72,6 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         } else if (graphQLErrors.length > 0) {
           graphQLErrors.map(({message, locations, path, code}) => {
             // temporary added for toktokwallet deactivated account
-            if (code === 'FORBIDDEN' && message === 'toktokwallet account not active') {
-              //alert({message: 'toktokwallet account has been deactivated.'});
-              // navigation.navigate("ToktokWalletLoginPage")
-              // navigation.replace("ToktokWalletLoginPage")
-              navigation.navigate('ToktokLandingHome');
-              navigation.push('ToktokWalletLoginPage');
-              return;
-            }
             if (code === 'INTERNAL_SERVER_ERROR') {
               alert({message: 'Something went wrong.'});
             } else if (code === 'USER_INPUT_ERROR') {
