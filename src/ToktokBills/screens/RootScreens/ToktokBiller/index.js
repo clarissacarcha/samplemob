@@ -62,7 +62,6 @@ export const ToktokBiller = ({navigation, route}) => {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: () => {
       setRefreshing(false);
-      setBillItems([]);
     },
     onCompleted: ({getBillItemsPaginate}) => {
       let data = refreshing ? getBillItemsPaginate.edges : [...billItems, ...getBillItemsPaginate.edges];

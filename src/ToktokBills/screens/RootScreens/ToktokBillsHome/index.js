@@ -40,25 +40,24 @@ export const ToktokBillsHome = ({navigation, route}) => {
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['toktokbills']} isLogo />,
   });
-
   const isFocused = useIsFocused();
   const [billTypes, setBillTypes] = useState([]);
   const [favoriteBills, setFavoriteBills] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const [getBillTypes, {loading, error}] = useLazyQuery(GET_BILL_TYPES, {
     fetchPolicy: 'network-only',
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: () => {
       setRefreshing(false);
-      setBillTypes([]);
     },
     onCompleted: ({getBillTypes}) => {
-      setRefreshing(false);
       const res = _.isEqual(getBillTypes, billTypes);
       if (!res) {
         setBillTypes(getBillTypes);
       }
+      setRefreshing(false);
     },
   });
 
@@ -69,21 +68,33 @@ export const ToktokBillsHome = ({navigation, route}) => {
       client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
       onError: () => {
         setRefreshing(false);
-        setFavoriteBills([]);
       },
       onCompleted: ({getFavoriteBillsPaginate}) => {
-        setRefreshing(false);
         const isEqual = _.isEqual(getFavoriteBillsPaginate, favoriteBills);
         if (!isEqual) {
           setFavoriteBills(getFavoriteBillsPaginate.edges);
         }
+        setRefreshing(false);
       },
     },
   );
 
   useEffect(() => {
-    if (isFocused) {
-      handleGetData();
+    setIsMounted(true);
+    handleGetData();
+  }, []);
+
+  useEffect(() => {
+    if (isFocused && isMounted) {
+      setRefreshing(true);
+      getFavoriteBillsPaginate({
+        variables: {
+          input: {
+            afterCursorId: null,
+            afterCursorUpdatedAt: null,
+          },
+        },
+      });
     }
   }, [isFocused]);
 
@@ -108,7 +119,7 @@ export const ToktokBillsHome = ({navigation, route}) => {
     navigation.navigate('ToktokBillsFavorites', {billTypes});
   };
 
-  if (((loading && billTypes.length === 0) || getFavoritesLoading) && !refreshing) {
+  if (((loading && billTypes.length === 0) || (getFavoritesLoading && favoriteBills.length === 0)) && !refreshing) {
     return (
       <ImageBackground source={screen_bg} style={styles.loadingContainer} resizeMode="cover">
         <LoadingIndicator isLoading={true} />
@@ -148,14 +159,16 @@ export const ToktokBillsHome = ({navigation, route}) => {
             </View>
           )}
           {/* DISPLAY BILLER TYPE */}
-          <View style={styles.shadowContainer}>
-            <Text style={[styles.title, styles.lineSeperator]}>Select Biller Type</Text>
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', marginTop: moderateScale(20)}}>
-              {billTypes.map((item, index) => (
-                <BillerType item={item} index={index} />
-              ))}
+          {favoriteBills.length > 0 && (
+            <View style={styles.shadowContainer}>
+              <Text style={[styles.title, styles.lineSeperator]}>Select Biller Type</Text>
+              <View style={styles.billerTypesContainer}>
+                {billTypes.map((item, index) => (
+                  <BillerType item={item} index={index} />
+                ))}
+              </View>
             </View>
-          </View>
+          )}
         </ScrollView>
       </ImageBackground>
     </View>
@@ -212,5 +225,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'space-between',
+  },
+  billerTypesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: moderateScale(20),
   },
 });
