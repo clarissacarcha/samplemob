@@ -57,17 +57,17 @@ export const Item = ({
         return setSelected(true);
       } else if(product?.contSellingIsset === 1){
         setSelected(true);
-      }
+      } 
     }
   }, [data, preSelectedItems, product])
 
   useEffect(() => {
-    setSelected((data.product.enabled === 1 &&  data.product.noOfStocks !== 0)? state : false)
-  }, [state])
+    setSelected(data.product?.enabled === 1 && (data.product?.contSellingIsset === 1 ? true : data.product?.noOfStocks > 0));
+  }, [state]) 
 
-  // useEffect(() => {
-  //   if(forceSelect && data.product.enabled !== 1 ) setSelected(true)
-  // }, [forceSelect])
+  useEffect(() => {
+    if(forceSelect && data.product.enabled !== 1 ) setSelected(true)
+  }, [forceSelect])
 
   useEffect(() => {
     if(forceSelectToZero ) setSelected(false)
