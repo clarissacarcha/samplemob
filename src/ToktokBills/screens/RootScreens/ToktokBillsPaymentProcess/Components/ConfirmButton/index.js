@@ -118,16 +118,19 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
   };
 
   const checkAmount = () => {
-    setAmountError(amount == '' ? 'This is a required field.' : '');
+    let error = amount == '' ? 'This is a required field.' : '';
+    setAmountError(error);
+    return !error;
   };
 
   const checkInsufficientBalance = () => {
     const totalAmount = parseFloat(convenienceFee) + parseFloat(amount);
     setIsInsufficientBalance(parseFloat(totalAmount) > parseFloat(tokwaBalance));
+    return parseFloat(totalAmount) > parseFloat(tokwaBalance);
   };
 
   const onPressConfirm = () => {
-    checkFirstField(
+    const isFirstFieldValid = checkFirstField(
       firstField,
       firstFieldName,
       firstFieldWidth,
@@ -135,7 +138,7 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
       firstFieldMinWidth,
       setFirstFieldError,
     );
-    checkSecondField(
+    const isSecondFieldValid = checkSecondField(
       secondField,
       secondFieldName,
       secondFieldWidth,
@@ -143,13 +146,18 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
       secondFieldMinWidth,
       setSecondFieldError,
     );
-    checkAmount();
-    checkInsufficientBalance();
-
+    const isAmountValid = checkAmount();
+    const isInsufficientBalance = checkInsufficientBalance();
     const isValidEmail = checkEmail();
-    const isProceed = checkProceed();
 
-    if (isProceed && isValidEmail) {
+    if (
+      user.toktokWalletAccountId &&
+      isFirstFieldValid &&
+      isSecondFieldValid &&
+      isAmountValid &&
+      !isInsufficientBalance &&
+      isValidEmail
+    ) {
       postBillsValidateTransaction({
         variables: {
           input: {
@@ -162,20 +170,6 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
         },
       });
     }
-  };
-
-  const checkProceed = () => {
-    return (
-      user.toktokWalletAccountId &&
-      !isInsufficientBalance &&
-      !firstFieldError &&
-      firstField &&
-      !secondFieldError &&
-      secondField &&
-      !amountError &&
-      amount &&
-      !emailError
-    );
   };
 
   return (
