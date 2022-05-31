@@ -106,7 +106,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
       //SCENARIO: While entering TPIN, the product got out of stock. We can simulate this by bypassing the current validation
       // await postCheckoutSetting(data);
       // return
-      const temp= newData.filter(({status, cartQty, noOfStocks})=> status === false || cartQty !== noOfStocks)
+      console.log(
+        'onProductUnavailable',
+        newData.filter(({status, cartQty, noOfStocks}) => status === false || (status === true && cartQty > noOfStocks)),
+      );
+      const temp= newData.filter(({status, cartQty, noOfStocks})=> status === false || (status === true && cartQty > noOfStocks))
 
       if(temp.length > 0){
         onProductUnavailable(temp, "id")
