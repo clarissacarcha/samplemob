@@ -12,10 +12,11 @@ import { RenderItem } from './subComponents';
 import { emptyorders } from '../../../../assets';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import { GET_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
+import { GET_TRANSACTIONS, GET_UNPAID_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
 import { Loading } from '../../../../Components';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
+import moment from 'moment';
 
 export const ProcessingItem = ({fulldata}) => {
   const navigation = useNavigation();
@@ -40,12 +41,11 @@ export const Processing = ({id, email}) => {
 
   const [getOrders, {loading, error}] = useLazyQuery(GET_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    context: { headers: { authorization: "Bearer: " + getAccessToken() }},
-    fetchPolicy: 'network-only',    
+    fetchPolicy: 'no-cache',    
     onCompleted: (response) => {
-      if(response.getActivities){
-        const newActivities = [...response.getActivities.filter(activity => activity.status.status === 1)];
-        setData(newActivities)
+      if(response.getActivities){       
+        setData(response.getActivities)
+        // console.log("RAW ORDERS", JSON.stringify(response.getActivities))
       }
     },
     onError: (err) => {

@@ -28,6 +28,7 @@ export const RenderItem = (props) => {
 
     const {
         referenceNum,
+				unpaidOrder,
         status,
         orders
     } = fulldata;
@@ -37,7 +38,7 @@ export const RenderItem = (props) => {
 
     //Return icon for the tabs.
     const returnIcon = () => {
-        if(status.status !== 5 && status.status !== 4) {
+        if(status.status !== 5 && status.status !== 4 && status.status !== 0) {
             return <Image style={styles.renderItemFCLeftIcon} source={carIcon}/>
         }
 
@@ -69,12 +70,12 @@ export const RenderItem = (props) => {
                             <View style={styles.renderItemFCRight}>
                                 <View style={styles.renderItemIDContainer}>
                                 <Text style={styles.renderItemIDText}>
-                                    Oder ID
+                                    Order ID
                                 </Text>
                                 <Text style={styles.renderItemID}>{referenceNum}</Text>
                                 </View>
                                 
-                                <Text style={styles.renderItemPlaced}>{date}</Text>
+                                <Text style={styles.renderItemPlaced}>{status.date}</Text>
                             </View>
                             <View style={styles.renderItemFCLeft}>
                                 <View style={styles.iconContainer}>

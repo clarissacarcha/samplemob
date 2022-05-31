@@ -20,6 +20,7 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { GET_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
 import { emptyorders} from '../../../../assets';
 import AsyncStorage from '@react-native-community/async-storage';
+import moment from 'moment';
 
 export const All = () => {
   const [data, setData] = useState([]);
@@ -31,11 +32,10 @@ export const All = () => {
   
   const [getOrders, {loading, error}] = useLazyQuery(GET_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    context: { headers: { authorization: "Bearer: " + getAccessToken() }},
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
     onCompleted: (response) => {
       if(response.getActivities) {
-        setData(response.getActivities);
+        setData(response.getActivities)
       }
     },
     onError: (err) => {

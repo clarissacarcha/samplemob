@@ -11,9 +11,8 @@ import {
 import { DisplayDateAndTime } from '../../../../helpers';
 
 export const RenderOrderInfo = ({ data }) => {
-    const status = ['All', 'Confirmed', 'To Ship', 'To Receive', 'Delivered', 'Cancelled']
-    
-    const date = DisplayDateAndTime(data?.status?.date);
+  
+    const status = ['To Pay', 'Confirmed', 'To Ship', 'To Receive', 'Delivered', 'Cancelled']
 
     return (
         <>
@@ -35,7 +34,7 @@ export const RenderOrderInfo = ({ data }) => {
                         }
                     />
                 <Text style={styles.status} >
-                    {status[data?.status?.status]}
+									{status[data?.status?.status]}
                 </Text>
                 </View>
             </View>
@@ -48,9 +47,7 @@ export const RenderOrderInfo = ({ data }) => {
                 <View style={styles.imgView2}>
                     <Image 
                         style={styles.img2}
-                        source={
-                            data.paymentMethod == "TOKTOKWALLET" ? walletIcon : paypandalogo
-                        }
+                        source={data?.paymentMethod == "TOKTOKWALLET" ? walletIcon : paypandalogo}
                     />
                     {/* <Text style={[styles.subText, { color: "#F6841F" } ]}>Waiting for payment</Text> */}
                 </View>

@@ -8,6 +8,7 @@ export const GET_TRANSACTIONS = gql`
       paymentMethod
       dateOrdered
       totalAmount
+      unpaidOrder
       orderStatus
       orderType
       orderIds
