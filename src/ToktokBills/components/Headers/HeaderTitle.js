@@ -21,16 +21,21 @@ export const HeaderTitle = ({
   return (
     <View style={[styles.header, headerStyle]}>
       {isLogo ? (
-        <Image
-          resizeMode="contain"
-          style={{height: moderateScale(23), width: moderateScale(130)}}
-          source={toktokbills}
-        />
+        <Image resizeMode="contain" style={styles.logo} source={toktokbills} />
       ) : (
-        <Text style={{fontSize: moderateScale(FONT_SIZE.L), fontFamily: FONT.BOLD, color: labelColor}}>{label}</Text>
+        <Text style={[styles.title, {color: labelColor}]}>{label}</Text>
       )}
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  logo: {
+    height: moderateScale(23),
+    width: moderateScale(130),
+  },
+  title: {
+    fontSize: moderateScale(FONT_SIZE.L),
+    fontFamily: FONT.REGULAR,
+  },
+});
