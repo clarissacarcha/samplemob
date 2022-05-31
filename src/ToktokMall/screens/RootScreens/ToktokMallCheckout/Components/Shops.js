@@ -341,7 +341,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           <>
           <View>
             <View style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA'}}>
-              <Image source={voucherIcon} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
+              <Image source={voucherIcon} style={{width: 20, height: 20, resizeMode: 'stretch'}} /> 
               <Text style = {{marginLeft: 10, fontFamily: FONT.REGULAR, fontSize: 13}}>Shop Vouchers</Text>
             </View>            
             <ListVouchers type="promotion" origin={"promotions"} autoapplied={true} />
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', padding: 15, flexWrap: 'wrap'
   },
   voucherBody: {
-    flexDirection: 'row', alignSelf: 'flex-start', paddingVertical: 4, paddingHorizontal: 8, marginVertical: 4, borderRadius: 2, marginRight: 5
+    flexDirection: 'row', alignSelf: 'flex-start', paddingVertical: 3, paddingHorizontal: 8, marginVertical: 4, borderRadius: 2, marginRight: 15
   },
   voucherText: {
     color: '#fff', fontSize: 11, fontFamily: FONT.BOLD

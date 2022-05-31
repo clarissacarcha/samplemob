@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Image, FlatList, ScrollView} from 'react-native';
+import {View, ScrollView, RefreshControl } from 'react-native';
 import { useLazyQuery } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
 import {HeaderBack, HeaderTitle, HeaderRight, Loading, LoadingOverlay} from '../../../Components';
@@ -45,7 +45,6 @@ const Component = ({navigation, route, notificationCountSession, notifications})
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getActivityOrderDetails){
-        // console.log('order details',response.getActivityOrderDetails)
         setData(response.getActivityOrderDetails)
       }
     },
@@ -62,11 +61,9 @@ const Component = ({navigation, route, notificationCountSession, notifications})
   }
 
   useEffect(() => {
-    // console.log(route.params)
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw)
       if(data.userId){
-        console.log(route.params.id)
         if(route.params.id){
           readNotification({id: route.params.id, userid: data.userId})
         }
@@ -74,8 +71,7 @@ const Component = ({navigation, route, notificationCountSession, notifications})
     })
   }, [])
 
-  useEffect(() => {  
-    console.log(route.params.referenceNum)
+  const Fetch = async () => {
     if(route.params?.unpaidOrder == 1){
       //UNPAID ORDER
       getOrderDetails({variables: {
@@ -96,8 +92,11 @@ const Component = ({navigation, route, notificationCountSession, notifications})
         }
       }})
     }
-    
-  }, [])
+  }
+
+  useEffect(() => {  
+    Fetch()
+  },[])
 
   const onPressBuy = () => {
     setapiloader(!apiloader);
@@ -115,6 +114,14 @@ const Component = ({navigation, route, notificationCountSession, notifications})
           marginBottom: route.params.cancelled || 
           data?.status?.status === 4 ? 70 : 10
         }}
+        refreshControl={
+          <RefreshControl 
+            refreshing={loading}
+            onRefresh={() => {
+              Fetch()
+            }}
+          />
+        }
       >
         <RenderOrderInfo data={data} />
         <RenderStore 
