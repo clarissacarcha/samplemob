@@ -104,7 +104,7 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
             containerStyle={{
               position: 'absolute',
               backgroundColor: 'transparent',
-              bottom: -40,
+              bottom: -55,
               alignItems: 'center',
               justifyContent: 'center'
             }}        
