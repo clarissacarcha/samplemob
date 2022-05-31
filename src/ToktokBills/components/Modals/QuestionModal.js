@@ -9,7 +9,7 @@ const {width, height} = Dimensions.get('window');
 //ICONS
 import {question_ic} from 'toktokbills/assets';
 
-export const AddFaveModal = ({
+export const QuestionModal = ({
   visible,
   setVisible,
   onPressYes,

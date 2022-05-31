@@ -30,7 +30,7 @@ import {
 } from 'toktokbills/components';
 import {AlertOverlay} from 'src/components';
 import {Header, ReceiptDetails} from './components';
-import {AddFaveModal} from '../../../components/Modals';
+import {QuestionModal} from '../../../components/Modals';
 
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
@@ -160,7 +160,7 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
 
   return (
     <>
-      <AddFaveModal
+      <QuestionModal
         visible={visible}
         setVisible={setVisible}
         onPressNo={() => navigation.navigate('ToktokBillsHome')}
