@@ -180,7 +180,7 @@ const Component = ({
         ></ContentLoader> */}
           <Animated.View style={{flexDirection: 'row', opacity: opacity}}>
             <View style={{flex: 9}}>
-              <Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}]} numberOfLines={2} ellipsizeMode="tail">{data.itemname.trim()}</Text>
+              <Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}]} numberOfLines={2} ellipsizeMode="tail">{data?.itemname?.trim()}</Text>
             </View>         
             <View style={{flex: 0}}>
               {data?.discountRate != "" && 
