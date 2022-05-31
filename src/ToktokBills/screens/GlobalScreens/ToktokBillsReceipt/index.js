@@ -128,7 +128,7 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
       setFavoriteModal({show: true, message: 'Added to your Favorites'});
       setTimeout(() => {
         navigation.navigate('ToktokBillsHome');
-      }, 1500);
+      }, 1000);
     },
   });
 
