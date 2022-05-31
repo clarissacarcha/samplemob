@@ -69,8 +69,9 @@ export const NumPad = ({setPinCode, pinCode, buttonColor = null, textColor = nul
       setPinCode(oldstate => oldstate.slice(0, -1));
       return;
     }
-
-    setPinCode(oldstate => oldstate + value);
+    if (pinCode.length != 6) {
+      setPinCode(oldstate => oldstate + value);
+    }
   };
   return (
     <View style={styles.container}>
