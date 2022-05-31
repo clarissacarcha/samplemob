@@ -14,8 +14,9 @@ import {COLOR, FONT} from 'src/res/variables';
 import {download_icon} from 'toktokload/assets/icons';
 
 //HELPER
-import {moderateScale} from 'toktokload/helper';
+import {moderateScale} from 'toktokbills/helper';
 import moment from 'moment';
+import {usePrompt} from 'src/hooks';
 
 export const HeaderDownloadReceipt = ({
   onPress,
@@ -26,6 +27,7 @@ export const HeaderDownloadReceipt = ({
   onPressDownloadReceipt,
 }) => {
   const navigation = useNavigation();
+  const prompt = usePrompt();
 
   const checkAndRequest = Platform.select({
     android: async () => {
@@ -101,6 +103,7 @@ export const HeaderDownloadReceipt = ({
 
   const downloadReceipt = async () => {
     const result = await checkAndRequest();
+
     const pathCache = RNFS.CachesDirectoryPath;
     console.log(pathCache);
     onPressDownloadReceipt(true);
@@ -114,7 +117,13 @@ export const HeaderDownloadReceipt = ({
 
       await CameraRoll.save(newFileUri, {type: 'photo', album: 'toktok'});
 
-      // Toast.show(`Receipt ${filename} has been downloaded.`, Toast.LONG);
+      // Toast.show(`Receipt ${filename} has been downloaded.` , Toast.LONG);
+      prompt({
+        type: 'success',
+        title: 'Receipt Downloaded',
+        message: 'Your transaction receipt has been saved to your gallery.',
+        event: 'TOKTOKBILLSLOAD',
+      });
       onPressDownloadReceipt(false);
     });
   };
