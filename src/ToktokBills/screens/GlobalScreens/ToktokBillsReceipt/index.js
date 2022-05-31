@@ -82,12 +82,6 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
         viewshotRef={viewshotRef}
         refNo={route.params.receipt.referenceNumber}
         onPressDownloadReceipt={val => {
-          prompt({
-            type: 'success',
-            title: 'Receipt Downloaded',
-            message: 'Your transaction receipt has been saved to your gallery.',
-            event: 'TOKTOKBILLSLOAD',
-          });
           setOnCapturingScreen(val);
         }}
       />
