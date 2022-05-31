@@ -25,6 +25,8 @@ const favoriteBills = `
     endCursorId
     startCursorUpdatedAt
     endCursorUpdatedAt
+    startCursorName
+    endCursorName
     hasNextPage
   }
 `;
