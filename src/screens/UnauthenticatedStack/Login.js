@@ -30,6 +30,7 @@ const imageWidth = Dimensions.get('window').width - 80;
 const Login = ({navigation, session}) => {
   const [mobile, setMobile] = useState('');
   const [delay, setDelay] = useState(true);
+  const [validNumber, setValidNumber] = useState(false);
 
   const alert = useAlert();
 
@@ -118,7 +119,8 @@ const Login = ({navigation, session}) => {
 
   const onSubmit = phoneNumber => {
     if (phoneNumber.length !== 10) {
-      Alert.alert('', 'Please enter a valid mobile number.');
+      // Alert.alert('', 'Please enter a valid mobile number.');
+      setValidNumber(true);
       return;
     }
     loginRegister();
@@ -177,6 +179,11 @@ const Login = ({navigation, session}) => {
             placeholderTextColor={MEDIUM}
           />
         </View>
+        {validNumber && (
+          <View style={{marginHorizontal: '10%', alignSelf: 'flex-start'}}>
+            <Text style={{color: constants.COLOR.RED, fontSize: FONT_SIZE.S}}>Invalid mobile number</Text>
+          </View>
+        )}
 
         <TouchableHighlight onPress={() => onSubmit(mobile)} underlayColor={COLOR.ORANGE} style={styles.submitBox}>
           <View style={styles.submit}>

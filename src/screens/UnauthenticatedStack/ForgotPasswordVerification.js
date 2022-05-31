@@ -242,7 +242,7 @@ const Verification = ({navigation, route, createSession}) => {
           <Image source={ToktokGoIcon} style={{height: 85, width: 100}} resizeMode="contain" />
           <Text style={{fontSize: constants.FONT_SIZE.XL + 1, marginTop: 40}}>Enter OTP</Text>
           <Text style={{textAlign: 'center', marginTop: 8, marginBottom: 24}}>
-            We have sent an OTP code to your mobile number ending with 001.
+            We have sent an OTP code to your mobile number ending with {mobile.slice(-3)}.
           </Text>
         </View>
 

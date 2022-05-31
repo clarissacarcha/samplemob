@@ -19,7 +19,7 @@ const ToktokGoPaymentDetails = ({navigation, route}) => {
         <Text style={styles.textStyle}>Payment Method</Text>
         {booking.paymentMethod == 'CASH' ? (
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-            <Image source={CashIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
+            <Image source={CashIcon} resizeMode="contain" style={{width: 30, height: 16, marginRight: 8}} />
             <Text
               style={{
                 fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
@@ -74,7 +74,7 @@ const ToktokGoPaymentDetails = ({navigation, route}) => {
         <></>
       )}
       <View style={styles.divider} />
-      <View style={styles.elementWrapper}>
+      <View style={styles.elementTotal}>
         <Text style={styles.bottomTextStyle}>Total</Text>
         <Text style={styles.bottomTextStyle}>
           ₱{booking.tag == 'CANCELLED' ? '0.00' : numberFormat(booking.fare.amount)}
@@ -90,7 +90,7 @@ export default ToktokGoPaymentDetails;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     paddingVertical: 30,
     backgroundColor: CONSTANTS.COLOR.WHITE,
   },
@@ -113,7 +113,12 @@ const styles = StyleSheet.create({
   divider: {
     borderBottomWidth: 2,
     borderBottomColor: CONSTANTS.COLOR.LIGHT,
+    // marginVertical: 16,
+  },
+  elementTotal: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
     marginVertical: 16,
-    marginHorizontal: -16,
   },
 });
