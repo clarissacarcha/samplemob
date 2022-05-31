@@ -81,3 +81,12 @@ export const POST_FAVORITE_BILL = gql`
     }
   }
 `;
+
+export const POST_CHECK_IF_FAVORITE_EXIST = gql`
+  mutation postCheckIfFavoriteExist($input: PostCheckIfFavoriteExistInput) {
+    postCheckIfFavoriteExist(input: $input) {
+      result
+      message
+    }
+  }
+`;
