@@ -178,21 +178,12 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
         </ViewShot>
       </ScrollView>
 
-      {!onCapturingScreen &&
-        (favoriteExisting.result ? (
-          <View style={styles.buttonContainer}>
-            <OrangeButton label="OK" onPress={() => navigation.navigate('ToktokBillsHome')} />
-          </View>
-        ) : (
-          <View style={styles.buttonContainer}>
-            <OrangeButton
-              label="OK"
-              onPress={() => {
-                setVisible(true);
-              }}
-            />
-          </View>
-        ))}
+      <View style={styles.buttonContainer}>
+        <OrangeButton
+          label="OK"
+          onPress={() => (favoriteExisting.result ? navigation.navigate('ToktokBillsHome') : setVisible(true))}
+        />
+      </View>
     </>
   );
 };
