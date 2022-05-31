@@ -136,7 +136,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
       if(req.responseData.type == "shipping"){
 
         let currentDiscount = CheckoutContextData.getShopShippingDiscount(item.shop.id)
-        if(currentDiscount <= 0){
+        if(currentDiscount != null && currentDiscount <= 0){
           setVoucherIsValid(-1)
           CheckoutContextData.setVoucherErrors(prevState => [...prevState, item.shop.id])
           seterrormessage("This voucher is not applicable when you have another voucher.")
