@@ -7,7 +7,7 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
 
 //ICONS
-const TOKBILLS_QUESTION_ICON = require('../../../ToktokBills/assets/icons/question.png');
+import {question_ic} from 'toktokbills/assets';
 
 export const AddFaveModal = ({
   visible,
@@ -23,7 +23,7 @@ export const AddFaveModal = ({
       <Modal visible={visible} onRequestClose={() => setVisible(false)} style={styles.container} transparent={true}>
         <View style={styles.content}>
           <View style={styles.closePrompt}>
-            <Image source={TOKBILLS_QUESTION_ICON} style={styles.largeIcon} />
+            <Image source={question_ic} style={styles.largeIcon} />
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.message}>{message}</Text>
             <View style={styles.actions}>
