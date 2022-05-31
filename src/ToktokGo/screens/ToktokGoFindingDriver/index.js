@@ -364,7 +364,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         visible={viewSuccessCancelBookingModal}
         setVisible={setViewSuccessCancelBookingModal}
         type={1}
-        chargeAmount={0}
+        chargeAmount={chargeAmount}
         goBackAfterCancellation={goBackAfterCancellation}
       />
       <DriverFoundModal

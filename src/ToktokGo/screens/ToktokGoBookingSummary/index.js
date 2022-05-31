@@ -361,15 +361,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       />
       <PricesNoteModal viewPriceNote={viewPriceNote} setViewPriceNote={setViewPriceNote} />
 
-      {/* {showHeader && (
-        <View style={styles.elementWrapper}>
-          <TouchableOpacity style={styles.backButtonHeader} onPress={() => sheetRef.current.snapTo(1)}>
-            <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
-          </TouchableOpacity>
-          <Text style={styles.textStyle}>Booking Summary</Text>
-        </View>
-      )} */}
-
       <BookingMap
         decodedPolyline={decodedPolyline}
         routeDetails={routeDetails}
@@ -377,27 +368,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         destination={destination}
       />
 
-      {/* <View style={styles.card}>
-        <BookingDistanceTime quotationData={quotationDataResult} />
-        <BookingSelectVehicle
-          data={quotationDataResult}
-          selectedVehicle={selectedVehicle}
-          navigation={navigation}
-          selectVehicle={selectVehicle}
-        />
-        TODO: Vouchers will be added after launch of April 18
-        <BookingVoucher
-            navigation={navigation}
-            selectedVouchers={selectedVouchers}
-            setSelectedVouchersNull={setSelectedVouchersNull}
-          />
-        <BookingTotal loading={loading} details={details} />
-        <BookingSelectPaymentMethod
-          viewPaymenetSucessModal={viewPaymenetSucessModal}
-          setViewSelectPaymentModal={setViewSelectPaymentModal}
-          details={details}
-        />
-      </View> */}
       <View style={styles.buttonContainer}>
         <BookingConfirmButton SheetManager={SheetManager} />
       </View>
@@ -416,7 +386,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: constants.COLOR.WHITE,
     paddingTop: 3,
-    paddingBottom: 10,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     borderTopWidth: 3,
@@ -433,7 +402,7 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 50,
     backgroundColor: '#FFE1C7',
-    marginVertical: 3,
+    marginTop: 3,
   },
   card: {
     paddingTop: 20,

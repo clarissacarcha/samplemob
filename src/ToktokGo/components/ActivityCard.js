@@ -68,9 +68,18 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
   };
 
   const getTextStatus = () => {
-    //to do: replace returned text based on status
-    if (booking?.status == 'PICKED_UP') return 'Passenger picked up';
-    else if (booking?.tag == 'COMPLETED') return 'Completed';
+    if (booking?.tag == 'ONGOING') {
+      switch (booking.status) {
+        case 'ACCEPTED':
+          return 'Driver accepted';
+        case 'ARRIVED':
+          return 'Driver arrived at Pick-up location';
+        case 'PICKED_UP':
+          return 'Passenger picked up';
+        default:
+          return '';
+      }
+    } else if (booking?.tag == 'COMPLETED') return 'Completed';
     else if (booking?.tag == 'CANCELLED') return 'Cancelled';
   };
 
@@ -114,7 +123,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                   style={{
                     marginLeft: 10,
                     justifyContent: 'flex-end',
-                    flex: 1,
+                    flex: 0.8,
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
