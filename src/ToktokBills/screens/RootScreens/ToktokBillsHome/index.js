@@ -159,7 +159,7 @@ export const ToktokBillsHome = ({navigation, route}) => {
             </View>
           )}
           {/* DISPLAY BILLER TYPE */}
-          {favoriteBills.length > 0 && (
+          {billTypes.length > 0 && (
             <View style={styles.shadowContainer}>
               <Text style={[styles.title, styles.lineSeperator]}>Select Biller Type</Text>
               <View style={styles.billerTypesContainer}>
