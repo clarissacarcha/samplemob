@@ -73,7 +73,7 @@ export const ReceiptDetails = ({route}) => {
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Toktokwallet Account Number </Text>
-          <Text style={styles.description}>+{senderMobileNumber}</Text>
+          <Text style={styles.description}>{senderMobileNumber}</Text>
         </View>
         {!!email && (
           <View style={[styles.bodyContainer, styles.marginBottom15]}>

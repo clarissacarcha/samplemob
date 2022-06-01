@@ -80,7 +80,7 @@ export const ConfirmButton = ({paymentData}) => {
   const handleProcessProceed = ({pinCode, data}) => {
     let {totalAmount, requestMoneyDetails, paymentData} = data;
     let {firstName, lastName} = user.person;
-    let formattedMobile = user.username.substring(1, user.username.length);
+
     let input = {
       requestMoneyDetails: {
         requestTakeMoneyId: requestMoneyDetails.requestTakeMoneyId,
@@ -89,7 +89,7 @@ export const ConfirmButton = ({paymentData}) => {
       },
       referenceNumber: requestMoneyDetails.referenceNumber,
       senderName: `${firstName} ${lastName}`,
-      senderMobileNumber: formattedMobile,
+      senderMobileNumber: user.username,
       destinationNumber: paymentData.firstField,
       destinationIdentifier: paymentData.secondField,
       billItemId: paymentData.billItemSettings.id,
