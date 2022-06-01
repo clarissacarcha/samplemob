@@ -35,7 +35,7 @@ import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useSelector} from 'react-redux';
 import {checkFirstField, checkSecondField} from '../../Functions';
 
-export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) => {
+export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance, scrollRef = {}}) => {
   const prompt = usePrompt();
   const navigation = useNavigation();
   const {
@@ -109,7 +109,7 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
 
   const checkEmail = () => {
     if (email != '' && !validator.isEmail(email, {ignore_whitespace: true})) {
-      setEmailError('Invalid email address format.');
+      setEmailError('Invalid email address format');
       return false;
     } else {
       setEmailError('');
@@ -118,7 +118,7 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
   };
 
   const checkAmount = () => {
-    let error = amount == '' ? 'This is a required field.' : '';
+    let error = amount == '' ? 'This is a required field' : '';
     setAmountError(error);
     return !error;
   };
@@ -149,6 +149,10 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance}) =
     const isAmountValid = checkAmount();
     const isInsufficientBalance = checkInsufficientBalance();
     const isValidEmail = checkEmail();
+
+    if (isInsufficientBalance && isFirstFieldValid && isSecondFieldValid) {
+      scrollRef.current.scrollToEnd({animated: true});
+    }
 
     if (
       user.toktokWalletAccountId &&

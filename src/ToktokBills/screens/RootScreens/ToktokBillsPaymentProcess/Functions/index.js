@@ -2,15 +2,15 @@ const processErrorMessage = (fieldValue, fieldName, fieldWidth, fieldType, minWi
   // 0 = min | 1 = exact | 2 = max
 
   if (fieldValue.length < minWidth) {
-    return `${fieldName} must be minimum of ${minWidth} characters.`;
+    return `${fieldName} must be minimum of ${minWidth} characters`;
   }
   switch (fieldType) {
     case 0:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be minimum of ${fieldWidth} characters.` : '';
+      return fieldValue.length < fieldWidth ? `${fieldName} must be minimum of ${fieldWidth} characters` : '';
     case 1:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be ${fieldWidth} characters in length.` : '';
+      return fieldValue.length < fieldWidth ? `${fieldName} must be ${fieldWidth} characters in length` : '';
     case 2:
-      return fieldValue.length > fieldWidth ? `${fieldName} length must be ${fieldWidth} characters or less.` : '';
+      return fieldValue.length > fieldWidth ? `${fieldName} length must be ${fieldWidth} characters or less` : '';
 
     default:
       return '';
@@ -32,7 +32,7 @@ export const checkFirstField = (
     firstFieldWidthType,
     firstFieldMinWidth,
   );
-  firstField ? setFirstFieldError(errorMessage) : setFirstFieldError('This is a required field.');
+  firstField ? setFirstFieldError(errorMessage) : setFirstFieldError('This is a required field');
   return firstField ? !errorMessage : false;
 };
 
@@ -51,6 +51,6 @@ export const checkSecondField = (
     secondFieldWidthType,
     secondFieldMinWidth,
   );
-  secondField ? setSecondFieldError(errorMessage) : setSecondFieldError('This is a required field.');
+  secondField ? setSecondFieldError(errorMessage) : setSecondFieldError('This is a required field');
   return secondField ? !errorMessage : false;
 };

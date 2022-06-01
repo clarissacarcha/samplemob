@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -48,6 +48,7 @@ const MainComponent = ({navigation, route}) => {
   const {billItemId, billType} = route.params;
   const favoriteDetails = route?.params?.favoriteDetails ? route.params.favoriteDetails : null;
   const onRefreshFavorite = route?.params?.favoriteDetails ? route.params.onRefreshFavorite : null;
+  const scrollRef = useRef({});
 
   const [refreshing, setRefreshing] = useState(false);
   const [favoriteBillId, setFavoriteBillId] = useState(favoriteDetails ? favoriteDetails.id : 0);
@@ -241,18 +242,20 @@ const MainComponent = ({navigation, route}) => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? moderateScale(65) : moderateScale(-100)}>
         <ScrollView
           keyboardShouldPersistTaps="handled"
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          ref={scrollRef}>
           <Header billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />
           <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
           <Separator />
           <PaymentMethod onCashIn={onCashIn} getMyAccount={getMyAccount} />
-          <ConfirmButton
-            billItemSettings={billItemSettings?.getBillItemSettings}
-            billType={billType}
-            tokwaBalance={user.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : '0.00'}
-          />
         </ScrollView>
       </KeyboardAvoidingView>
+      <ConfirmButton
+        billItemSettings={billItemSettings?.getBillItemSettings}
+        billType={billType}
+        tokwaBalance={user.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : '0.00'}
+        scrollRef={scrollRef}
+      />
     </>
   );
 };
@@ -268,6 +271,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    paddingBottom: moderateScale(20),
   },
   headerContainer: {
     alignItems: 'center',
