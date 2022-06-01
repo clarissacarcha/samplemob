@@ -11,6 +11,8 @@ export const GET_TOKTOKFOOD_NOTIFICATIONS = gql`
       orderIsfor
       referenceNum
       status
+      shopname
+      refundTotal
     }
   }
 `;
