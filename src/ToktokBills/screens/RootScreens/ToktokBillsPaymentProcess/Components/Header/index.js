@@ -8,7 +8,7 @@ import {ErrorUtility} from 'toktokbills/util';
 
 //COMPONENTS
 import {OrangeButton, LoadingIndicator} from 'toktokbills/components';
-import {AlertOverlay} from 'src/components';
+import { AlertOverlay } from 'toktokbills/components';
 
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';

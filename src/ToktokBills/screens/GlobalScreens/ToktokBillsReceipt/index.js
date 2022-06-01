@@ -28,7 +28,7 @@ import {
   HeaderDownloadReceipt,
   ToastModal,
 } from 'toktokbills/components';
-import {AlertOverlay} from 'src/components';
+import { AlertOverlay } from 'toktokbills/components';
 import {Header, ReceiptDetails} from './components';
 import {QuestionModal} from '../../../components/Modals';
 

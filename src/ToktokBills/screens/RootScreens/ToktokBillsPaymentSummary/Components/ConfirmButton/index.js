@@ -18,7 +18,7 @@ import {useSelector} from 'react-redux';
 
 //COMPONENTS
 import {OrangeButton, SplashLoading} from 'toktokbills/components';
-import {AlertOverlay} from 'src/components';
+import { AlertOverlay } from 'toktokbills/components';
 
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
