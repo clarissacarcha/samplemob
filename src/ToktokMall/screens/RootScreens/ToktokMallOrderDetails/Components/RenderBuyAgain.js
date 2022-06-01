@@ -26,17 +26,16 @@ export const RenderBuyAgain = ({ navigation, data, status, onPressBuy: parentBuy
         const itemsToBeSelected = [];
         const { toaddItems, toupdateItems } = response.getBuyAgain;
         
+        console.log("getBuyAgain", toaddItems, toupdateItems)
         if(toaddItems?.length > 0) {
           toaddItems?.map(async (item, index) => {
             try {
-              const newItem = await getExistingItem(item);
-
               let variables = {
                 userid: item.userid,
                 shopid: data?.orders?.shopId,
                 branchid: item.branchid,
                 productid: item.productid,
-                quantity: newItem || 1
+                quantity: item.quantity
               }
               itemsToBeSelected.push(item.productid);
               const req = await ApiCall("insert_cart", variables, true);
@@ -46,35 +45,6 @@ export const RenderBuyAgain = ({ navigation, data, status, onPressBuy: parentBuy
                   setIsVisible(false);
                   navigation.navigate("ToktokMallMyCart", {items: itemsToBeSelected});
                   EventRegister.emit('refreshToktokmallShoppingCart');
-                }
-              }
-            } catch (err) {
-              console.log(err)
-            } 
-          })
-        }
-
-        if(toupdateItems?.length > 0) {
-          toupdateItems?.map(async (item, index) => {
-            try {
-              const newItem = await getExistingItem(item);
-
-              let variables = {
-                userid: item.userid,
-                shopid: data?.orders?.shopId,
-                branchid: item.branchid,
-                productid: item.productid,
-                quantity: newItem || 1
-              }
-              itemsToBeSelected.push(item.productid);
-              const req = await ApiCall("update_cart", variables, true);
-
-              
-              if(req) {
-                if(index === toupdateItems?.length - 1) {
-                  setIsVisible(false);
-                  navigation.navigate("ToktokMallMyCart", {items: itemsToBeSelected});
-                  EventRegister.emit('refreshToktokmallShoppingCart');                  
                 }
               }
             } catch (err) {
@@ -116,6 +86,7 @@ export const RenderBuyAgain = ({ navigation, data, status, onPressBuy: parentBuy
   onPressBuy = () => {
     const { items } = data?.orders;
 
+    console.log("onPressBuy, getBuyAgain", JSON.stringify(items))
     setIsVisible(true);
     getBuyAgain({variables: {
       input: {

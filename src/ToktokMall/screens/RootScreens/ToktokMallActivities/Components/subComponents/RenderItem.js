@@ -16,7 +16,7 @@ import {
 } from '../../../../../assets';
 import { Hairline } from '../../../../../../components/widgets';
 import { DisplayDateAndTime } from '../../../../../helpers';
-import { RenderBuyAgain } from './RenderBuyAgain';
+import { RenderBuyAgain } from '../../../ToktokMallOrderDetails/Components';
 import CustomIcon from './.../../../../../../../Components/Icons';
 
 export const RenderItem = (props) => {
