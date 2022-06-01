@@ -47,8 +47,8 @@ const ToktokFoodNotifications = () => {
     }
   }, [isFocus]);
 
-  const getStatus = ({status, referenceNum, orderIsfor, shopname}) => {
-    switch (status) {
+  const getStatus = ({orderStatus, status, referenceNum, orderIsfor, shopname}) => {
+    switch (orderStatus) {
       case 'c':
         return {title: 'Cancelled Order', desc: `Order ${referenceNum} has been cancelled`};
       case 'p':
@@ -90,8 +90,6 @@ const ToktokFoodNotifications = () => {
           title: 'Edited Order',
           desc: `Heads-up, ka-toktok! Your order ${referenceNum} from ${shopname} has been modified.`,
         };
-//         Heads-up, ka-toktok! Your order (Order ID) from
-// (Restaurant’s name) has been modified.
     }
   };
 
