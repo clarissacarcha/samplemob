@@ -26,21 +26,15 @@ import {InputAmount} from 'toktokbills/components';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
 
-const processErrorMessage = (fieldValue, fieldName, fieldWidth, fieldType, minWidth) => {
-  // 0 = min | 1 = exact | 2 = max
-  if (fieldValue.length < minWidth) {
-    return `${fieldName} must be minimum of ${minWidth} characters.`;
-  }
-  switch (fieldType) {
-    case 0:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be minimum of ${fieldWidth} characters.` : '';
-    case 1:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be ${fieldWidth} characters in length.` : '';
-    case 2:
-      return fieldValue.length > fieldWidth ? `${fieldName} length must be ${fieldWidth} characters or less.` : '';
-
-    default:
-      return '';
+const getConvenienceFeeText = ({convenienceFee, toktokSeviceFee}) => {
+  if (convenienceFee > 0 && toktokSeviceFee > 0) {
+    return `Additional ${currencyCode}${convenienceFee} convenience fee and ${currencyCode}${toktokSeviceFee} toktok service fee will be charge in this transaction.`;
+  } else if (convenienceFee > 0) {
+    return `Additional ${currencyCode}${convenienceFee} convenience fee will be charge in this transaction.`;
+  } else if (toktokSeviceFee > 0) {
+    return `Additional ${currencyCode}${toktokSeviceFee} toktok service fee will be charge in this transaction.`;
+  } else {
+    return 'Convenience Fee is waived for this transaction.';
   }
 };
 
@@ -68,10 +62,7 @@ export const PaymentForm = ({billItemSettings}) => {
   const convenienceFee = `${numberFormat(parseFloat(commissionRateDetails?.providerServiceFee))}`;
   const toktokSeviceFee = `${numberFormat(parseFloat(commissionRateDetails?.systemServiceFee))}`;
 
-  const convenienceFeeText =
-    convenienceFee > 0 || toktokSeviceFee > 0
-      ? `Additional ${currencyCode}${convenienceFee} convenience fee and ${currencyCode}${toktokSeviceFee} toktok service fee will be charged in this transaction.`
-      : 'Convenience fee is waived for this transaction';
+  const convenienceFeeText = getConvenienceFeeText({convenienceFee, toktokSeviceFee});
 
   const navigation = useNavigation();
   const {
