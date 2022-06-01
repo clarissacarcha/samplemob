@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import constants from '../../../../common/res/constants';
 import FIcon from 'react-native-vector-icons/Fontisto';

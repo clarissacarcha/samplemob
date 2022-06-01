@@ -53,7 +53,7 @@ export const BookingDriverDetails = ({booking}) => {
           <Text style={styles.detailVehicle}>
             {booking.driver?.vehicle?.make} {booking.driver?.vehicle?.model}{' '}
             {booking.driver?.vehicle?.bodyColor ? `(${booking.driver?.vehicle?.bodyColor})` : ''} ·{' '}
-            {booking.driver?.vehicle?.license}
+            {booking.driver?.vehicle?.plateNumber}
           </Text>
           <View style={styles.ratingContainer}>
             <Text>{booking.driver?.rating}</Text>

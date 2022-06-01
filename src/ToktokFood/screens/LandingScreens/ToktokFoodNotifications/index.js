@@ -47,8 +47,8 @@ const ToktokFoodNotifications = () => {
     }
   }, [isFocus]);
 
-  const getStatus = (status, referenceNum, orderIsfor) => {
-    switch (status) {
+  const getStatus = ({orderStatus, status, referenceNum, orderIsfor, shopname}) => {
+    switch (orderStatus) {
       case 'c':
         return {title: 'Cancelled Order', desc: `Order ${referenceNum} has been cancelled`};
       case 'p':
@@ -69,7 +69,6 @@ const ToktokFoodNotifications = () => {
           desc: `Order ${referenceNum} has been picked up successfully. Thank you for ordering using toktokfood!`,
         };
       case 's':
-        // console.log(status, orderIsfor, referenceNum);
         if (orderIsfor === 1) {
           return {
             title: 'Delivery Completed',
@@ -79,6 +78,17 @@ const ToktokFoodNotifications = () => {
         return {
           title: 'Order Completed',
           desc: `Order ${referenceNum} has been picked up successfully. Thank you for ordering using toktokfood!`,
+        };
+      case 'sm':
+        // if (orderIsfor === 1) {
+        //   return {
+        //     title: 'Item picked up',
+        //     desc: `Almost there! Your order ${referenceNum} has been picked up by Rider and is on the way to you.`,
+        //   };
+        // }
+        return {
+          title: 'Edited Order',
+          desc: `Heads-up, ka-toktok! Your order ${referenceNum} from ${shopname} has been modified.`,
         };
     }
   };
@@ -100,10 +110,10 @@ const ToktokFoodNotifications = () => {
       <View style={styles.infoWrapper}>
         <View style={styles.notificationInfo}>
           <Text numberOfLines={2} style={styles.notificationTitle}>
-            {getStatus(item.orderStatus, item.referenceNum, item.orderIsfor).title}
+            {getStatus(item).title}
           </Text>
           <Text numberOfLines={2} style={styles.notificationContent}>
-            {getStatus(item.orderStatus, item.referenceNum, item.orderIsfor).desc}
+            {getStatus(item).desc}
           </Text>
         </View>
       </View>

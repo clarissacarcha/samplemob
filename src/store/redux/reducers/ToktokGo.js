@@ -157,8 +157,10 @@ const INITIAL_STATE = {
     },
     logs: [],
     cancellation: {
-      chargeAmount: null,
-      chargeType: null,
+      charge: {
+        amount: null,
+        type: null,
+      },
       initiatedBy: null,
       reason: null,
     },

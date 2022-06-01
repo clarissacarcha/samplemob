@@ -15,11 +15,7 @@ export const Header = ({navigation, constants}) => {
         <View style={styles.greetingBox}>
           <Image source={ToktokgoIcon} resizeMode={'contain'} style={{height: 25, width: 87}} />
         </View>
-        {constants.iosVersionDisableBeta && Platform.OS == 'ios' ? (
-          <></>
-        ) : (
-          <Text style={{fontSize: CONSTANTS.FONT_SIZE.XS - 1, color: CONSTANTS.COLOR.ORANGE}}>BETA</Text>
-        )}
+        {<Text style={{fontSize: CONSTANTS.FONT_SIZE.XS - 1, color: CONSTANTS.COLOR.ORANGE}}>BETA</Text>}
       </View>
     </View>
   );
