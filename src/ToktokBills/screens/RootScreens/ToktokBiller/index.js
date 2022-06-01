@@ -57,21 +57,27 @@ export const ToktokBiller = ({navigation, route}) => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  const [getBillItems, {loading: billItemsLoading, error: billItemsError}] = useLazyQuery(GET_BILL_ITEMS, {
+  const [
+    getBillItemsPaginate,
+    {loading: billItemsLoading, error: billItemsError, fetchMore: fetchMoreBillItemsPaginate},
+  ] = useLazyQuery(GET_BILL_ITEMS, {
     fetchPolicy: 'network-only',
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: () => {
       setRefreshing(false);
     },
     onCompleted: ({getBillItemsPaginate}) => {
-      let data = refreshing ? getBillItemsPaginate.edges : [...billItems, ...getBillItemsPaginate.edges];
-      setBillItems(data);
+      // let data = refreshing ? getBillItemsPaginate.edges : [...billItems, ...getBillItemsPaginate.edges];
+      setBillItems(getBillItemsPaginate.edges);
       setPageInfo(getBillItemsPaginate.pageInfo);
       setRefreshing(false);
     },
   });
 
-  const [getSearchBillItems, {loading: getSearchLoading, error: searchError}] = useLazyQuery(GET_SEARCH_BILL_ITEMS, {
+  const [
+    getSearchBillItemsPaginate,
+    {loading: getSearchLoading, error: searchError, fetchMore: fetchMoreSearchBillItemsPaginate},
+  ] = useLazyQuery(GET_SEARCH_BILL_ITEMS, {
     fetchPolicy: 'network-only',
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: () => {
@@ -79,9 +85,7 @@ export const ToktokBiller = ({navigation, route}) => {
       setSearchLoading(false);
     },
     onCompleted: ({getSearchBillItemsPaginate}) => {
-      let data = refreshing ? getSearchBillItemsPaginate.edges : [...filteredData, ...getSearchBillItemsPaginate.edges];
-
-      setFilteredData(data);
+      setFilteredData(getSearchBillItemsPaginate.edges);
       setPageInfo(getSearchBillItemsPaginate.pageInfo);
       setRefreshing(false);
       setSearchLoading(false);
@@ -94,7 +98,7 @@ export const ToktokBiller = ({navigation, route}) => {
   }, []);
 
   const handleGetBillItems = () => {
-    getBillItems({
+    getBillItemsPaginate({
       variables: {
         input: {
           billTypeId: billType.id,
@@ -124,21 +128,34 @@ export const ToktokBiller = ({navigation, route}) => {
     search ? processSearch(search) : handleGetBillItems();
   };
 
-  const fetchMoreData = () => {
+  const fetchMoreData = async () => {
     if (pageInfo.hasNextPage) {
       if (search) {
-        getSearchBillItems({
+        await fetchMoreSearchBillItemsPaginate({
           variables: {
             input: {
-              billTypeId: billType.id,
+              search,
               afterCursorId: pageInfo.endCursorId,
               afterCursorName: pageInfo.endCursorName,
-              search,
+              billTypeId: billType.id,
             },
           },
+          updateQuery: (previousResult, {fetchMoreResult}) => {
+            if (!fetchMoreResult) {
+              return previousResult;
+            }
+            fetchMoreResult.getSearchBillItemsPaginate.edges = [
+              ...previousResult.getSearchBillItemsPaginate.edges,
+              ...fetchMoreResult.getSearchBillItemsPaginate.edges,
+            ];
+            return fetchMoreResult;
+          },
+        }).then(({data}) => {
+          setPageInfo(data.getSearchBillItemsPaginate.pageInfo);
+          setFilteredData(data.getSearchBillItemsPaginate.edges);
         });
       } else {
-        getBillItems({
+        await fetchMoreBillItemsPaginate({
           variables: {
             input: {
               billTypeId: billType.id,
@@ -146,6 +163,19 @@ export const ToktokBiller = ({navigation, route}) => {
               afterCursorName: pageInfo.endCursorName,
             },
           },
+          updateQuery: (previousResult, {fetchMoreResult}) => {
+            if (!fetchMoreResult) {
+              return previousResult;
+            }
+            fetchMoreResult.getBillItemsPaginate.edges = [
+              ...previousResult.getBillItemsPaginate.edges,
+              ...fetchMoreResult.getBillItemsPaginate.edges,
+            ];
+            return fetchMoreResult;
+          },
+        }).then(({data}) => {
+          setPageInfo(data.getBillItemsPaginate.pageInfo);
+          setBillItems(data.getBillItemsPaginate.edges);
         });
       }
     }
@@ -161,7 +191,7 @@ export const ToktokBiller = ({navigation, route}) => {
   const debounceProcessSearch = useDebounce(value => processSearch(value), 1000);
 
   const processSearch = value => {
-    getSearchBillItems({
+    getSearchBillItemsPaginate({
       variables: {
         input: {
           billTypeId: billType.id,
@@ -224,7 +254,7 @@ export const ToktokBiller = ({navigation, route}) => {
             extraData={{filteredData, billItems}}
             ListEmptyComponent={ListEmptyComponent}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-            onEndReachedThreshold={0.2}
+            onEndReachedThreshold={0.01}
             onEndReached={fetchMoreData}
             ListFooterComponent={ListFooterComponent}
           />
