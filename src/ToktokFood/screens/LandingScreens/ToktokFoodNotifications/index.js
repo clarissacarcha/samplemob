@@ -47,7 +47,8 @@ const ToktokFoodNotifications = () => {
     }
   }, [isFocus]);
 
-  const getStatus = ({orderStatus, status, referenceNum, orderIsfor, shopname}) => {
+  const getStatus = ({orderStatus, orderIsfor, referenceNum, shopname, refundTotal}) => {
+    // return {title: 'null', desc: 'test'};
     switch (orderStatus) {
       case 'c':
         return {title: 'Cancelled Order', desc: `Order ${referenceNum} has been cancelled`};
@@ -79,17 +80,19 @@ const ToktokFoodNotifications = () => {
           title: 'Order Completed',
           desc: `Order ${referenceNum} has been picked up successfully. Thank you for ordering using toktokfood!`,
         };
+      case 'r':
+        return {
+          title: 'toktokfood Refund',
+          desc: `Your payment for toktokfood through toktokwallet amounting to PHP ${refundTotal} has been succesfully refunded.`,
+        };
       case 'sm':
-        // if (orderIsfor === 1) {
-        //   return {
-        //     title: 'Item picked up',
-        //     desc: `Almost there! Your order ${referenceNum} has been picked up by Rider and is on the way to you.`,
-        //   };
-        // }
         return {
           title: 'Edited Order',
           desc: `Heads-up, ka-toktok! Your order ${referenceNum} from ${shopname} has been modified.`,
         };
+      default: 
+        return {title: '', desc: ''}
+ 
     }
   };
 
