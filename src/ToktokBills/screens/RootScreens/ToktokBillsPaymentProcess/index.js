@@ -26,9 +26,9 @@ import {
   SomethingWentWrong,
   HeaderRight,
   ToastModal,
+  AlertOverlay
 } from 'toktokbills/components';
 import {ConfirmButton, Header, PaymentForm, PaymentMethod, VerifyContextProvider, VerifyContext} from './Components';
-import { AlertOverlay } from 'toktokbills/components';
 
 // FONTS AND COLORS
 import CONSTANTS from 'common/res/constants';

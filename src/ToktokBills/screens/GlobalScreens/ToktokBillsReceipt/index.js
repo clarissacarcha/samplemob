@@ -27,8 +27,8 @@ import {
   LoadingIndicator,
   HeaderDownloadReceipt,
   ToastModal,
+  AlertOverlay
 } from 'toktokbills/components';
-import { AlertOverlay } from 'toktokbills/components';
 import {Header, ReceiptDetails} from './components';
 import {QuestionModal} from '../../../components/Modals';
 
