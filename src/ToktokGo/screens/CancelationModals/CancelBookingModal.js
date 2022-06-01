@@ -15,7 +15,7 @@ export const CancelBookingModal = ({isVisible, setVisible, setViewCancelReasonMo
             <Text style={styles.modalSubTitle}>Cancellation Fee: ₱50.00</Text>
             <Text style={styles.modalDescription}>
               You are cancelling <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> after getting a
-              driver. Cancellation fee will be charged on you to compensate the driver. Are you sure you want to cancel?
+              driver. Cancellation Fee will be charged on you to compensate the driver. Are you sure you want to cancel?
             </Text>
 
             <View style={styles.retryContainer}>
