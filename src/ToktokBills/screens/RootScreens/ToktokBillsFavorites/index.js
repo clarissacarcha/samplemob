@@ -66,44 +66,40 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
   const [isMounted, setIsMounted] = useState(false);
 
-  const [getFavoriteBillsPaginate, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(
-    GET_FAVORITES_BILLS_ITEMS,
-    {
-      fetchPolicy: 'network-only',
-      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-      onError: () => {
-        setRefreshing(false);
-        setFavorites([]);
-      },
-      onCompleted: ({getFavoriteBillsPaginate}) => {
-        let data = refreshing ? getFavoriteBillsPaginate.edges : [...favorites, ...getFavoriteBillsPaginate.edges];
-        setFavorites(data);
-        setPageInfo(getFavoriteBillsPaginate.pageInfo);
-        setRefreshing(false);
-      },
+  const [
+    getFavoriteBillsPaginate,
+    {loading: getFavoritesLoading, error: getFavoritesError, fetchMore: fetchMoreFavoriteBillsPaginate},
+  ] = useLazyQuery(GET_FAVORITES_BILLS_ITEMS, {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: () => {
+      setRefreshing(false);
+      setFavorites([]);
     },
-  );
+    onCompleted: ({getFavoriteBillsPaginate}) => {
+      setFavorites(getFavoriteBillsPaginate.edges);
+      setPageInfo(getFavoriteBillsPaginate.pageInfo);
+      setRefreshing(false);
+    },
+  });
 
-  const [getSearchFavoriteBillsPaginate, {loading: getSearchBills, error: getSearchError}] = useLazyQuery(
-    GET_SEARCH_FAVORITE_BILLS,
-    {
-      fetchPolicy: 'network-only',
-      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-      onError: () => {
-        setRefreshing(false);
-        setSearchLoading(false);
-      },
-      onCompleted: ({getSearchFavoriteBillsPaginate}) => {
-        let data = refreshing
-          ? getSearchFavoriteBillsPaginate.edges
-          : [...filteredData, ...getSearchFavoriteBillsPaginate.edges];
-        setFilteredData(data);
-        setPageInfo(getSearchFavoriteBillsPaginate.pageInfo);
-        setRefreshing(false);
-        setSearchLoading(false);
-      },
+  const [
+    getSearchFavoriteBillsPaginate,
+    {loading: getSearchBills, error: getSearchError, fetchMore: fetchMoreSearchFavoriteBillsPaginate},
+  ] = useLazyQuery(GET_SEARCH_FAVORITE_BILLS, {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: () => {
+      setRefreshing(false);
+      setSearchLoading(false);
     },
-  );
+    onCompleted: ({getSearchFavoriteBillsPaginate}) => {
+      setFilteredData(getSearchFavoriteBillsPaginate.edges);
+      setPageInfo(getSearchFavoriteBillsPaginate.pageInfo);
+      setRefreshing(false);
+      setSearchLoading(false);
+    },
+  });
 
   // PATCH REMOVE FAVORITE BILL
   const [patchRemoveFavoriteBill, {loading: patchFavoriteLoading, error: patchFavoriteError}] = useMutation(
@@ -164,10 +160,10 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     search ? processSearch(search) : handleGetFavoriteBills();
   };
 
-  const fetchMoreData = () => {
+  const fetchMoreData = async () => {
     if (pageInfo.hasNextPage) {
       if (search) {
-        getSearchFavoriteBillsPaginate({
+        await fetchMoreSearchFavoriteBillsPaginate({
           variables: {
             input: {
               search,
@@ -175,15 +171,41 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
               afterCursorName: pageInfo.endCursorName,
             },
           },
+          updateQuery: (previousResult, {fetchMoreResult}) => {
+            if (!fetchMoreResult) {
+              return previousResult;
+            }
+            fetchMoreResult.getSearchFavoriteBillsPaginate.edges = [
+              ...previousResult.getSearchFavoriteBillsPaginate.edges,
+              ...fetchMoreResult.getSearchFavoriteBillsPaginate.edges,
+            ];
+            return fetchMoreResult;
+          },
+        }).then(({data}) => {
+          setPageInfo(data.getSearchFavoriteBillsPaginate.pageInfo);
+          setFilteredData(data.getSearchFavoriteBillsPaginate.edges);
         });
       } else {
-        getFavoriteBillsPaginate({
+        await fetchMoreFavoriteBillsPaginate({
           variables: {
             input: {
               afterCursorId: pageInfo.endCursorId,
               afterCursorUpdatedAt: pageInfo.endCursorUpdatedAt,
             },
           },
+          updateQuery: (previousResult, {fetchMoreResult}) => {
+            if (!fetchMoreResult) {
+              return previousResult;
+            }
+            fetchMoreResult.getFavoriteBillsPaginate.edges = [
+              ...previousResult.getFavoriteBillsPaginate.edges,
+              ...fetchMoreResult.getFavoriteBillsPaginate.edges,
+            ];
+            return fetchMoreResult;
+          },
+        }).then(({data}) => {
+          setPageInfo(data.getFavoriteBillsPaginate.pageInfo);
+          setFavorites(data.getFavoriteBillsPaginate.edges);
         });
       }
     }
@@ -283,7 +305,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
             extraData={{filteredData, favorites}}
             ListEmptyComponent={ListEmptyComponent}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-            onEndReachedThreshold={0.2}
+            onEndReachedThreshold={0}
             onEndReached={fetchMoreData}
             ListFooterComponent={ListFooterComponent}
           />

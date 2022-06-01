@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: moderateScale(15),
+    paddingRight: moderateScale(15),
     paddingVertical: moderateScale(10),
   },
   itemLogo: {

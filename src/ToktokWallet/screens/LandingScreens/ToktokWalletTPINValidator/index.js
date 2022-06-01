@@ -12,7 +12,7 @@ import {
   Image,
 } from 'react-native';
 import {ICON_SET, VectorIcon, YellowButton, HeaderBack, HeaderTitle} from 'src/revamp';
-import {AlertOverlay} from 'src/components';
+import {AlertOverlay} from 'toktokbills/components';
 import {
   CheckIdleState,
   DisabledButton,
