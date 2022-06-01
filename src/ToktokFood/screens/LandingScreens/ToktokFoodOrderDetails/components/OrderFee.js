@@ -22,7 +22,7 @@ const getShippingDiscount = (promoDetails, deliveryFee) => {
   }
 };
 
-const OrderFee = ({data, forDelivery, showRefund}) => {
+const OrderFee = ({data, forDelivery, showRefund, forWallet}) => {
   let {
     originalShippingFee,
     // actualTotalamount,
@@ -92,7 +92,7 @@ const OrderFee = ({data, forDelivery, showRefund}) => {
           <Text style={styles.totalPrice}>{`PHP ${(showRefund ? srpTotal : totalAmount).toFixed(2)}`}</Text>
         )}
       </View>
-      {showRefund && (
+      {forWallet && showRefund && (
         <View style={styles.header}>
           <Text style={styles.total}>Total Refund Amount</Text>
           <Text style={styles.totalPrice}>{`PHP ${refundTotal.toFixed(2)}`}</Text>
