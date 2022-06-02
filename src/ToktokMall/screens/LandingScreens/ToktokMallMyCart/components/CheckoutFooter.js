@@ -14,7 +14,7 @@ export const CheckoutFooter = ({subtotal, onSubmit}) => {
             >
                 <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
                     <View style={{flex: 1, justifyContent: 'center'}}>
-                        <Text style={{fontSize: 14, fontFamily: FONT.REGULAR, fontWeight: '500'}}>Subtotal </Text>
+                        <Text style={{fontSize: 14, fontFamily: FONT.SEMI_BOLD}}>Subtotal </Text>
                         <Text style={{fontSize: 18, color: "#F6841F"}}><Price amount={subtotal} /></Text>
                     </View>
                     <View style={{justifyContent: 'center'}}>

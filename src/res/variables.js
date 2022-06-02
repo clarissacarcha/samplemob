@@ -36,6 +36,7 @@ export const TOKFOODCOLOR = {
 export const FONT = {
   REGULAR: 'FiraSans-Regular',
   BOLD: 'FiraSans-Bold',
+  SEMI_BOLD: 'FiraSans-SemiBold',
 };
 
 export const FONT_SIZE = {

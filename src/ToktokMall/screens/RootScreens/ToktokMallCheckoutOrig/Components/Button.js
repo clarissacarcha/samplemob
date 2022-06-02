@@ -41,9 +41,9 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
     <>
         {/* <View style={styles.footer}> */}
           <View style = {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 15}}>
-            <View>
-              <Text style = {{fontWeight: 'bold'}}>Total Payment</Text>
-              <Text style = {{fontWeight: 'bold', color: isDisabled() ?'#D7D7D7' :'#F6841F'  }}>{
+            <View style= {{flexDirection: 'row'}}>
+              <Text style = {{fontSize: 18, fontFamily: FONT.BOLD, marginRight: 5, color: '#F6841F'}}>Total</Text>
+              <Text style = {{fontSize: 18, fontFamily: FONT.BOLD, color: '#F6841F' }}>{
                 !total ? FormatToText.currency(0) : FormatToText.currency(total)
               }</Text>
             </View>
