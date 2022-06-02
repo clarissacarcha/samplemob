@@ -1,5 +1,5 @@
 import React, {useRef, useCallback, useState} from 'react';
-import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, Linking, Platform} from 'react-native';
+import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, Linking, Platform, Alert} from 'react-native';
 import {Map, SeeBookingDetails, DriverStatus, DriverInfo, Actions, DriverStatusDestination} from './Sections';
 import {DriverArrivedModal} from './Components';
 import constants from '../../../common/res/constants';
@@ -17,10 +17,16 @@ import {
 import DummyData from '../../components/DummyData';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import {useSubscription} from '@apollo/client';
-import {ON_TRIP_UPDATE, TOKTOKGO_SUBSCRIPTION_CLIENT} from '../../graphql';
+import {
+  ON_TRIP_UPDATE,
+  TOKTOKGO_SUBSCRIPTION_CLIENT,
+  TRIP_REBOOK,
+  TRIP_CONSUMER_CANCEL,
+  GET_TRIP_CANCELLATION_CHARGE,
+} from '../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {GET_TRIP_CANCELLATION_CHECK, TRIP_CONSUMER_CANCEL} from '../../graphql/model/Trip';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
+import {onErrorAppSync} from '../../util';
 
 const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const {popTo, decodedPolyline} = route.params;
@@ -40,6 +46,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [chargeAmount, setChargeAmount] = useState(0);
   const [cancellationState, setCancellationState] = useState();
   const [originData, setOriginData] = useState(false);
+  const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
 
   const {driver, booking} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
@@ -59,7 +66,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       }
       if (status == 'CANCELLED' && cancellation?.initiatedBy == 'DRIVER') {
         setCancellationState(cancellation);
-        if (cancellation.chargeAmount > 0) {
+        if (cancellation.charge?.amount > 0) {
           setCancellationFee(true);
         } else {
           onCancel();
@@ -82,31 +89,109 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     },
   });
 
-  const [getTripCancellationCheck] = useLazyQuery(GET_TRIP_CANCELLATION_CHECK, {
+  const [getTripCancellationCharge] = useLazyQuery(GET_TRIP_CANCELLATION_CHARGE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log(response);
-      setChargeAmount(response.getTripCancellationCheck.chargeAmount);
-      if (response.getTripCancellationCheck.chargeAmount > 0) {
+      setChargeAmount(response.getTripCancellationCharge?.amount);
+      if (response.getTripCancellationCharge?.amount > 0) {
         setDriverCancel(true);
+        setCancellationChargeResponse(response.getTripCancellationCharge);
       } else {
         setViewCancelBookingModal(true);
       }
     },
-    onError: error => console.log('error', error),
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else if (errorType === 'TRIP_EXPIRED') {
+            dispatch({
+              type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+            });
+            navigation.replace('ToktokGoBookingStart', {
+              popTo: popTo + 1,
+            });
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
   });
 
   const [tripConsumerCancel] = useMutation(TRIP_CONSUMER_CANCEL, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
-    onError: err => {
-      console.log(err);
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else if (errorType === 'CANCELLATION_CHARGE_UNACKNOWLEDGED') {
+            Alert.alert('', message);
+          } else if (errorType === 'TRIP_EXPIRED') {
+            dispatch({
+              type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+            });
+            navigation.replace('ToktokGoBookingStart', {
+              popTo: popTo + 1,
+            });
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
     },
     onCompleted: response => {
       console.log(response);
       setViewSuccessCancelBookingModal(true);
     },
   });
+
+  const [tripRebook] = useMutation(TRIP_REBOOK, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onError: onErrorAppSync,
+    onCompleted: response => {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING',
+        payload: response.tripRebook.trip,
+      });
+    },
+  });
+
+  const tripRebookFunc = () => {
+    tripRebook({
+      variables: {
+        input: {
+          userId: session.user.id,
+          tripId: booking.id,
+        },
+      },
+    });
+  };
 
   const goBackAfterCancellation = () => {
     setOriginData(true);
@@ -116,12 +201,10 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   };
 
   const initiateCancel = () => {
-    getTripCancellationCheck({
+    getTripCancellationCharge({
       variables: {
         input: {
-          trip: {
-            id: booking.id,
-          },
+          tripId: booking.id,
         },
       },
     });
@@ -131,26 +214,20 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     tripConsumerCancel({
       variables: {
         input: {
-          cancellationCharge: {
-            amount: chargeAmount,
-          },
+          cancellationChargeHash: cancellationChargeResponse?.hash,
           reason: reason,
-          trip: {
-            id: booking.id,
-          },
+          tripId: booking.id,
         },
       },
     });
   };
-
-  console.log(onTripUpdate);
 
   const openModal = () => {
     setmodal(false);
   };
   const openRateDriver = () => {
     setmodal(false);
-    navigation.push('ToktokGoRateDriver', {
+    navigation.replace('ToktokGoRateDriver', {
       popTo: popTo + 1,
     });
   };
@@ -241,6 +318,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         onDriverCancelled={onConsumerAcceptDriverCancelled}
         onCancelWithFee={onCancelWithFee}
         cancellationState={cancellationState}
+        tripRebookFunc={tripRebookFunc}
       />
       {/* <SuccesCancelBookingModal /> */}
       <CancelBookingActionSheet setVisible={setViewSuccessCancelBookingModal} />

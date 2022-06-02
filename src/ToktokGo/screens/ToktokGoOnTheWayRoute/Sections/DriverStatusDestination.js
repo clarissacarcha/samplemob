@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import constants from '../../../../common/res/constants';
 import FIcon from 'react-native-vector-icons/Fontisto';
@@ -6,8 +6,9 @@ import moment from 'moment';
 
 export const DriverStatusDestination = ({status, booking}) => {
   const minDuration = booking.route?.duration.minute;
-  const maxTime = moment().add(minDuration, 'minutes').format('hh:mm A');
-  const minTime = moment().format('hh:mm A');
+  const [createdAtTime, setCreatedAtTime] = useState(booking?.logs[0]?.createdAt);
+  const maxTime = moment(createdAtTime).add(minDuration, 'minutes').format('hh:mm A');
+  const minTime = moment(createdAtTime).format('hh:mm A');
 
   return (
     <View>
@@ -19,7 +20,7 @@ export const DriverStatusDestination = ({status, booking}) => {
             style={{color: constants.COLOR.YELLOW, paddingRight: 10}}
           />
           <Text style={{fontSize: constants.FONT_SIZE.M, fontFamily: constants.FONT_FAMILY.BOLD}}>
-            {minTime} - {maxTime}
+            {booking.estimates.dropOffTimeFrame}
           </Text>
         </View>
         <Text style={{fontSize: constants.FONT_SIZE.S, color: '#525252'}}>Estimated Time of Drop Off</Text>

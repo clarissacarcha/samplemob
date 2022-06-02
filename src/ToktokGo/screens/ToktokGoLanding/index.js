@@ -10,6 +10,7 @@ import {connect, useDispatch, useSelector} from 'react-redux';
 import {decodeLegsPolyline} from '../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
+import {onErrorAppSync} from '../../util';
 
 const ToktokGoLanding = ({navigation, session, constants}) => {
   const dispatch = useDispatch();
@@ -37,7 +38,7 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
           ['ACCEPTED', 'ARRIVED', 'PICKED_UP'].includes(response.getTripsConsumer[0]?.status)
         ) {
           const decodedPolyline = decodeLegsPolyline(response.getTripsConsumer[0]?.route.legs);
-          navigation.push('ToktokGoOnTheWayRoute', {
+          navigation.replace('ToktokGoOnTheWayRoute', {
             popTo: 1,
             decodedPolyline,
           });
@@ -46,7 +47,7 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
         }
       }, 1000);
     },
-    onError: error => console.log('error', error),
+    onError: onErrorAppSync,
   });
 
   const healthCareAccept = async () => {
@@ -76,7 +77,6 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
     getTripsConsumer({
       variables: {
         input: {
-          consumerUserId: session.user.id,
           tag: 'ONGOING',
         },
       },
@@ -90,11 +90,7 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
 
   return (
     <View style={styles.content}>
-      <Image
-        source={constants.iosVersionDisableBeta && Platform.OS == 'ios' ? toktokgoSplash : toktokgoSplashBeta}
-        style={{width: 200, height: 200}}
-        resizeMode={'contain'}
-      />
+      <Image source={toktokgoSplashBeta} style={{width: 200, height: 200}} resizeMode={'contain'} />
     </View>
   );
 };

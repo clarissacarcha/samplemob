@@ -6,6 +6,7 @@ import TokWaIMG from '../../../assets/images/wallet-whiteOutline.png';
 import TokGoWhiteIMG from '../../../assets/images/tokGo-whiteOutline.png';
 import TokGoIMG from '../../../assets/images/tokGo.png';
 import {numberFormat} from '../../../helper';
+import {ThrottledOpacity} from '../../../components_section';
 
 export const DriverCancelledModal = ({driverVisible, setType, setVisible, setDriverVisible, cancellationState}) => {
   const submit = () => {
@@ -20,36 +21,37 @@ export const DriverCancelledModal = ({driverVisible, setType, setVisible, setDri
           <View style={styles.container}>
             <Image source={WarningIMG} resizeMode={'contain'} style={styles.imageDimensions} />
             <Text style={styles.modalTitle}>Driver Cancelled</Text>
-            <Text style={styles.modalSubTitle}>No Show Fee: ₱{numberFormat(cancellationState?.chargeAmount)}</Text>
+            <Text style={styles.modalSubTitle}>No Show Fee: ₱{numberFormat(cancellationState?.charge?.amount)}</Text>
             <Text style={styles.modalDescription}>
               Driver cancelled your booking after waiting for more than{' '}
               <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> at the pick up location. You will
               be charged{' '}
               <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD, color: CONSTANTS.COLOR.ORANGE}}>
-                ₱{numberFormat(cancellationState?.chargeAmount)}
+                ₱{numberFormat(cancellationState?.charge?.amount)}
               </Text>{' '}
               to compensate the driver. Would you like to pay now?
             </Text>
             {true && (
-              <TouchableOpacity
+              <ThrottledOpacity
+                delay={500}
                 style={styles.buttonContainer}
                 onPress={() => {
                   submit();
                 }}>
                 <Image source={TokGoWhiteIMG} style={styles.buttonImg} resizeMode={'contain'} />
                 <Text style={styles.buttonText}>Pay in Next Booking</Text>
-              </TouchableOpacity>
+              </ThrottledOpacity>
             )}
             {false && (
               <>
-                <TouchableOpacity style={styles.buttonContainer} onPress={() => {}}>
+                <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={() => {}}>
                   <Image source={TokWaIMG} style={styles.buttonImg} resizeMode={'contain'} />
                   <Text style={styles.buttonText}>Pay via toktokwallet</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.whiteButtonContainer} onPress={() => {}}>
+                </ThrottledOpacity>
+                <ThrottledOpacity delay={500} style={styles.whiteButtonContainer} onPress={() => {}}>
                   <Image source={TokGoIMG} style={styles.buttonImg} resizeMode={'contain'} />
                   <Text style={styles.whiteButtonText}>Pay in Next Booking</Text>
-                </TouchableOpacity>
+                </ThrottledOpacity>
               </>
             )}
           </View>

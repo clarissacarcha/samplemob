@@ -35,7 +35,7 @@ const VerificationBanner = require('../../assets/images/VerificationBanner.png')
 const NumberBox = ({onPress, value, borderError}) => (
   <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10}}>
     <View style={styles.inputView(borderError)}>
-      <Text style={{fontSize: 25}}>{value ? value : '_'}</Text>
+      <Text style={{fontSize: 25}}>{value}</Text>
     </View>
   </TouchableHighlight>
 );
@@ -46,11 +46,7 @@ const NumberBoxes = ({verificationCode, onNumPress, borderError}) => {
   for (i = 0; i <= 5; i++) {
     numberBoxes.push(<NumberBox onPress={onNumPress} value={verificationCode[i]} borderError={borderError} />);
   }
-  return (
-    <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 40, marginBottom: 20}}>
-      {numberBoxes}
-    </View>
-  );
+  return <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 20}}>{numberBoxes}</View>;
 };
 
 const Verification = ({navigation, route, createSession}) => {
@@ -350,6 +346,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F7FA',
     height: 48,
     width: 40,
+    marginHorizontal: 4,
   }),
   input: {
     flex: 1,

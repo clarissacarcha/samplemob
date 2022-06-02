@@ -13,9 +13,10 @@ import {EmptyRecent, ToktokgoBeta} from '../../components';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import {useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../helper';
+import {ThrottledHighlight} from '../../../components_section';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
-  const {popTo} = route.params;
+  const {popTo, selectInput} = route.params;
   const [selectedInput, setSelectedInput] = useState('D');
   const [searchResponse, setSearchResponse] = useState([]);
 
@@ -23,10 +24,10 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const dispatch = useDispatch();
   const {origin, destination, sessionToken} = useSelector(state => state.toktokGo);
 
-  const [searchDestination, setSearchDestination] = useState(null);
-  const [searchOrigin, setSearchOrigin] = useState(origin.place.formattedAddress);
+  const [searchDestination, setSearchDestination] = useState(destination?.place?.formattedAddress);
+  const [searchOrigin, setSearchOrigin] = useState(origin?.place?.formattedAddress);
 
-  const [getPlaceAutocomplete] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
+  const [getPlaceAutocomplete, {loading}] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
@@ -92,11 +93,15 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     useCallback(() => {
       const setPlace = async () => {
         await setPlaceFunction();
-      }
+      };
       if (!origin?.place?.formattedAddress) {
-        setPlace()
+        setPlace();
       }
-    }, [navigation])
+
+      if (selectInput) {
+        onChangeSelectedInput(selectInput);
+      }
+    }, [navigation]),
   );
 
   const onChange = value => {
@@ -160,6 +165,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           onChangeSelectedInput={onChangeSelectedInput}
           titleOrigin={searchOrigin}
           title={searchDestination}
+          setSearchDestination={setSearchDestination}
+          setSearchOrigin={setSearchOrigin}
+          loading={loading}
         />
         {searchResponse?.length == 0 ? (
           // <View>
@@ -167,16 +175,13 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           //   <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
           //   <SavedLocations />
           // </View>
-          constants.iosVersionDisableBeta && Platform.OS == 'ios' ? (
-            <EmptyRecent />
-          ) : (
-            <ToktokgoBeta />
-          )
+          <ToktokgoBeta />
         ) : (
           <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />
         )}
       </View>
-      <TouchableHighlight
+      <ThrottledHighlight
+        delay={500}
         onPress={() => {
           if (selectedInput == 'D') {
             navigation.push('ToktokGoBookingConfirmDestination', {
@@ -221,7 +226,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
             </Text>
           </View>
         </View>
-      </TouchableHighlight>
+      </ThrottledHighlight>
     </View>
   );
 };

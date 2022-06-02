@@ -7,6 +7,7 @@ import {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native';
 import {DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR, FONT_COLOR} from '../../res/constants';
 import {constant, throttle} from 'lodash';
 import 'moment-timezone';
+import moment from 'moment';
 
 import EIcon from 'react-native-vector-icons/Entypo';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -20,6 +21,7 @@ import DestinationIcon from '../../assets/icons/DestinationIcon.png';
 import OriginIcon from '../../assets/icons/OriginIcon.png';
 import CashIcon from '../../assets/images/CashIcon.png';
 import Constants from '../../store/redux/reducers/Constants';
+import {numberFormat} from '../../helper';
 
 const getDisplayAddress = ({stop}) => {
   console.log(stop);
@@ -28,7 +30,7 @@ const getDisplayAddress = ({stop}) => {
     const {formattedAddress} = stop;
     if (province) {
       return (
-        <View>
+        <View style={{width: 320}}>
           <Text>
             {city}, {province}
           </Text>
@@ -37,7 +39,7 @@ const getDisplayAddress = ({stop}) => {
       );
     } else {
       return (
-        <View style={{flex: 1}}>
+        <View style={{width: 320}}>
           <Text>{city}</Text>
           <Text style={{fontSize: 11, color: '#525252'}}>{formattedAddress}</Text>
         </View>
@@ -52,7 +54,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
   const onPressThrottled = throttle(onPress, 1000, {trailing: false});
 
   const getTotalAmount = () => {
-    return `₱${parseFloat(booking?.fare?.amount)}.00`;
+    return `₱${numberFormat(booking?.fare?.total)}`;
   };
   const headerDesign = () => {
     let design = styles.headerYellow;
@@ -67,15 +69,15 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
 
   const getTextStatus = () => {
     //to do: replace returned text based on status
-    if (booking?.status == 'COMPLETED') return 'Passenger picked up';
-    else if (booking?.status == 'COMPLETED') return 'Completed';
-    else if (booking?.status == 'CANCELLED') return 'Cancelled';
+    if (booking?.status == 'PICKED_UP') return 'Passenger picked up';
+    else if (booking?.tag == 'COMPLETED') return 'Completed';
+    else if (booking?.tag == 'CANCELLED') return 'Cancelled';
   };
 
   const getIconStatus = () => {
-    if (booking?.status == 'COMPLETED') return OnGoingIcon;
-    else if (booking?.status == 'COMPLETED') return CompletedIcon;
-    else if (booking?.status == 'CANCELLED') return CancelledIcon;
+    if (booking?.tag == 'ONGOING') return OnGoingIcon;
+    else if (booking?.tag == 'COMPLETED') return CompletedIcon;
+    else if (booking?.tag == 'CANCELLED') return CancelledIcon;
   };
 
   const blackFont = booking?.tag == 'CANCELLED' ? constants.COLOR.DARK : constants.COLOR.BLACK;
@@ -90,7 +92,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
           {
             <View style={styles.headerWhite}>
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <View style={{width: 150}}>
+                <View style={{flex: 1}}>
                   <Text style={{fontSize: constants.FONT_SIZE.M}}>
                     Booking ID
                     <Text
@@ -104,7 +106,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                     </Text>
                   </Text>
                   <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.ALMOST_BLACK}}>
-                    {booking?.logs[0].createdAt}
+                    {moment(booking?.logs[0].createdAt).format('MMM D, YYYY hh:mm A')}
                   </Text>
                 </View>
 
@@ -237,7 +239,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                       fontSize: constants.FONT_SIZE.M,
                       fontFamily: constants.FONT_FAMILY.BOLD,
                     }}>
-                    Total
+                    Total:
                   </Text>
                   <Text
                     style={{

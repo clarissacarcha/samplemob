@@ -1,18 +1,31 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  Image,
+  View,
+  Modal,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
+} from 'react-native';
 import {useDispatch} from 'react-redux';
 import CONSTANTS from '../../../../common/res/constants';
 import CashIcon from '../../../../assets/images/CashIcon.png';
 import WalletIcon from '../../../../assets/images/Wallet.png';
+import {numberFormat} from '../../../../helper';
 
 export const PaymentMethodModal = ({
+  navigation,
   viewSelectPaymentModal,
   setViewSelectPaymentModal,
   details,
   setSelectedPaymentMethod,
+  tokwaAccount,
+  getMyAccountLoading,
 }) => {
   const dispatch = useDispatch();
-
+  const {wallet, id} = tokwaAccount;
   const setSelected = paymentMethod => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, paymentMethod: paymentMethod}});
     setSelectedPaymentMethod(paymentMethod);
@@ -32,11 +45,19 @@ export const PaymentMethodModal = ({
                     <Text style={{color: CONSTANTS.COLOR.YELLOW}}>
                       toktok<Text style={{color: CONSTANTS.COLOR.ORANGE}}>wallet</Text>
                     </Text>
-                    <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>Balance: ₱400.00</Text>
+                    {getMyAccountLoading ? (
+                      <ActivityIndicator color={CONSTANTS.COLOR.YELLOW} />
+                    ) : (
+                      <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>Balance: ₱{numberFormat(wallet.balance)}</Text>
+                    )}
                   </View>
                 </View>
 
-                <TouchableOpacity style={styles.cashInWrapper}>
+                <TouchableOpacity
+                  style={styles.cashInWrapper}
+                  onPress={() => {
+                    navigation.navigate('ToktokWalletLoginPage');
+                  }}>
                   <Text style={styles.cashIntextStyle}>Cash In</Text>
                 </TouchableOpacity>
               </View>

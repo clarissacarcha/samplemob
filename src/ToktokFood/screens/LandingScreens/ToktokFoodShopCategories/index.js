@@ -8,6 +8,7 @@ import {useIsFocused} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import FastImage from 'react-native-fast-image';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import _ from 'lodash';
 
 import styles from './styles';
 
@@ -80,15 +81,19 @@ const ToktokFoodShopCategories = () => {
         updateQuery: (previousResult, {fetchMoreResult}) => {
           setPage(prev => prev + 1);
           setLoadMore(false);
-
           if (!fetchMoreResult) {
             return previousResult;
           }
           if (!fetchMoreResult?.getShopByCategory.length) {
             setHasMorePage(false);
           }
+          const mergeData = _.unionBy(
+            previousResult.getShopByCategory,
+            fetchMoreResult.getShopByCategory,
+            'id',
+          );
           return {
-            getShopByCategory: [...previousResult.getShopByCategory, ...fetchMoreResult.getShopByCategory],
+            getShopByCategory: mergeData,
           };
         },
       });
@@ -102,9 +107,26 @@ const ToktokFoodShopCategories = () => {
   const onSetLocationDetails = () => {
     navigation.navigate('ToktokFoodAddressDetails');
   };
+  const renderStatusTag = ({hasOpen, hasProduct}) => {
+    if (hasOpen && hasProduct) {
+      return null;
+    }
+    if (!hasProduct) {
+      return (
+        <View style={styles.closedTag}>
+          <Text style={styles.closedText}>Currently Unavailable</Text>
+        </View>
+      );
+    }
+    return (
+      <View style={styles.closedTag}>
+        <Text style={styles.closedText}>Currently Closed</Text>
+      </View>
+    );
+  };
 
   const renderItem = ({item}) => {
-    const image = item.banner ? {uri: item.banner} : fastfood;
+    const image = item.logo ? {uri: item.logo} : fastfood;
     return (
       <TouchableOpacity style={styles.itemContainer} onPress={() => onShopNavigate(item)}>
         {/* <Image style={styles.img} resizeMode="cover" source={image} /> */}
@@ -122,11 +144,13 @@ const ToktokFoodShopCategories = () => {
             <Text style={styles.subInfoText}>{item.estimatedDistance} KM</Text>
           </View>
 
-          {!item.hasOpen && (
+          {renderStatusTag(item)}
+
+          {/* {!item.hasOpen && (
             <View style={styles.closedTag}>
               <Text style={styles.closedText}>Currently Closed</Text>
             </View>
-          )}
+          )} */}
         </View>
       </TouchableOpacity>
     );
@@ -175,7 +199,7 @@ const ToktokFoodShopCategories = () => {
           //       //   onRefresh={onRefresh}
           //     />
           //   }
-          onEndReachedThreshold={1}
+          onEndReachedThreshold={0.2}
           onEndReached={() => onLoadMore()}
           ListFooterComponent={() => <LoadingIndicator isFlex isLoading={loadMore} />}
           ListEmptyComponent={renderEmpty}

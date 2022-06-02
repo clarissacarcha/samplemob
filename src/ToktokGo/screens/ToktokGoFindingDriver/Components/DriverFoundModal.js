@@ -34,7 +34,7 @@ export const DriverFoundModal = ({booking, showDriverFoundModal, setShowDriverFo
             <Text>
               {booking.driver?.vehicle?.make} {booking.driver?.vehicle?.model}{' '}
               {booking.driver?.vehicle?.bodyColor ? `(${booking.driver?.vehicle?.bodyColor})` : ''} ·{' '}
-              {booking.driver?.vehicle?.license}
+              {booking.driver?.vehicle?.plateNumber}
             </Text>
             <TouchableOpacity onPress={navigateTo} style={styles.cancelContainer}>
               <Text style={styles.textStyle}>OK</Text>

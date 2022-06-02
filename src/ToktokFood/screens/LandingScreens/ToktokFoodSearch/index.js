@@ -142,6 +142,24 @@ const ToktokFoodSearch = ({route}) => {
     }
   };
 
+  const renderStatusTag = ({hasOpen, hasProduct}) => {
+    if (hasOpen && hasProduct) {
+      return null;
+    }
+    if (!hasProduct) {
+      return (
+        <View style={styles.closedTag}>
+          <Text style={styles.closedText}>Currently Unavailable</Text>
+        </View>
+      );
+    }
+    return (
+      <View style={styles.closedTag}>
+        <Text style={styles.closedText}>Currently Closed</Text>
+      </View>
+    );
+  };
+
   const renderItem = ({item}) => (
     <TouchableWithoutFeedback onPress={() => updateHistoryList(item)}>
       <View style={styles.itemContainer}>
@@ -161,11 +179,12 @@ const ToktokFoodSearch = ({route}) => {
             <MCIcon name="map-marker-outline" color="#868686" size={13} />
             <Text style={styles.subInfoText}>{item.estimatedDistance} KM</Text>
           </View>
-          {!item.hasOpen && (
+          {renderStatusTag(item)}
+          {/* {!item.hasOpen && (
             <View style={styles.closedTag}>
               <Text style={styles.closedText}>Currently Closed</Text>
             </View>
-          )}
+          )} */}
         </View>
       </View>
     </TouchableWithoutFeedback>

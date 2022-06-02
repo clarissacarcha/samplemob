@@ -105,6 +105,9 @@ export const terms_and_conditions_ic = require('./images/me_icons/terms-and-cond
 export const email_ic = require('./images/me_icons/email.png');
 export const call_ic = require('./images/me_icons/call.png');
 export const wallet_ic = require('./images/me_icons/wallet.png');
+export const order_type_icon = require('./images/ordertype_icon.png');
+export const cart_map_pin_icon = require('./images/cart_map_pin.png');
+
 
 // Reseller
 export const reseller_badge = require('./images/reseller-badge.png');

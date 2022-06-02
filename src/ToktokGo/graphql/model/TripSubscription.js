@@ -6,21 +6,15 @@ const trip = `
       name
     }
     consumerUserId
-    dispatchHash
     driver{
       mobileNumber
       name
       rating
       vehicle{
         bodyColor
-        license
+        plateNumber
         make
         model
-        type {
-          id
-          name
-        }
-        year
       }
     }
     driverUserId
@@ -30,6 +24,7 @@ const trip = `
       durationFee
       flatRate
       mileageFee
+      surgeCharge
       total
     }
     id
@@ -98,10 +93,20 @@ const trip = `
     status
     tag
     cancellation {
-      chargeAmount
-      chargeType
       initiatedBy
       reason
+      charge {
+        amount
+        type
+      }
+    }
+    estimates{
+      dropOffTimeFrame
+      pickUpAt
+    }
+    vehicleType {
+      imageClass
+      name
     }
 `;
 

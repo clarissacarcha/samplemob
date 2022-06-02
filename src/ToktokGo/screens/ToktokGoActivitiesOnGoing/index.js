@@ -9,7 +9,8 @@ import {GET_DELIVERIES, TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import NoData from '../../../assets/images/NoData.png';
 import DummyData from '../../components/DummyData';
 import {GET_TRIPS_CONSUMER} from '../../graphql';
-import { SomethingWentWrong } from 'src/components';
+import {SomethingWentWrong} from 'src/components';
+import {onErrorAppSync} from '../../util';
 
 const imageWidth = Dimensions.get('window').width - 200;
 
@@ -19,16 +20,17 @@ const OnGoingActivities = ({navigation, session}) => {
     fetchPolicy: 'network-only',
     variables: {
       input: {
-        consumerUserId: session.user.id,
         tag: 'ONGOING',
       },
     },
-    onError: error => console.log('error', error),
+    onError: onErrorAppSync,
   });
 
-  useFocusEffect(useCallback(() => {
-    refetch()
-  }, []));
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, []),
+  );
 
   if (loading) {
     return (
