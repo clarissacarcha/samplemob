@@ -1,10 +1,5 @@
 export const alphanumericRegex = input => {
-  const regex = /^(?!\s)(?![\s\S]*\s$)[a-zA-Z\s0-9-]+$/g;
-  const result = regex.test(input);
-  const replaceValue = input.length > 1 ? input : input.substring(0, input.length - 1);
-  const finalInput = !result ? replaceValue : input;
-
-  return finalInput;
+  return input.replace(/[^A-Za-z0-9 ]/g, '');
 };
 export const numericRegex = input => {
   return input.replace(/[^0-9]/g, '');
