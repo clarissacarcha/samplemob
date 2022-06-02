@@ -184,7 +184,7 @@ export const Item = ({
             disabled={qty == 1 || product.enabled != 1 || (contSellingIsset === 0 && product.noOfStocks === 0)}
             onPress={() => {
               // if(selected){
-              onChangeQuantity(qty - 1, product?.Id);
+              onChangeQuantity(product?.Id, qty - 1, shopId);
               setQty(qty - 1);
               updateRealtimeItemQuantity(qty - 1);
               debounce(() => updateItemQuantityOnCart(qty - 1), 500)();
@@ -230,7 +230,7 @@ export const Item = ({
             }
             onPress={() => {
               // if(selected){
-              onChangeQuantity(qty + 1, product?.Id);
+              onChangeQuantity(product?.Id, qty + 1, shopId);
               setQty(qty + 1);
               updateRealtimeItemQuantity(qty + 1);
               debounce(() => updateItemQuantityOnCart(qty + 1), 500)();

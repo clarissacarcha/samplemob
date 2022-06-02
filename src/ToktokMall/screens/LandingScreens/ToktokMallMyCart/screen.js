@@ -170,7 +170,7 @@ const Component = ({
 
   useEffect(() => {
     init()
-    EventRegister.addEventListener('refreshToktokmallShoppingCart', init) 
+    EventRegister.addEventListener('refreshToktokmallShoppingCart', init)
   }, [])
 
   // Read changes in route params and myCartData. This will trigger our way of selecting items from buy again function.
@@ -251,7 +251,19 @@ const Component = ({
     }
   }
 
-  const onChangeQuantity = (id, qty) => {
+  const onChangeQuantity = (id, qty, shopId) => {
+    let cartItems = ArrayCopy(myCartData);
+    let cartItemIndex = cartItems.findIndex(i => i.shop.id === shopId);
+    let shopData = cartItems.filter(item => item.shop.id === shopId)[0];
+    let itemsData = shopData.data;
+    let itemIndex = itemsData.findIndex(i => i.product.Id === id);
+    let data = itemsData[itemIndex];
+
+    data.quantity = qty;
+    cartItems[cartItemIndex].data === data
+
+    setMyCartData(cartItems);
+
     // let items = ArrayCopy(itemsToCheckoutArr)
     let items = ArrayCopy(selectedItemsArr)
     let updatedItems = items.map(item => {
@@ -561,8 +573,6 @@ const Component = ({
     }
   }
 
-  
-
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -699,9 +709,7 @@ const Component = ({
                                 },
                               });
                         }}
-                        onChangeQuantity={(qty, id) => {
-                          onChangeQuantity(id, qty);
-                        }}
+                        onChangeQuantity={onChangeQuantity}
                       />
                       <View style={{height: 6, backgroundColor: '#F7F7FA'}} />
                     </>
