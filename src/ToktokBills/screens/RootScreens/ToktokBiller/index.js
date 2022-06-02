@@ -213,9 +213,7 @@ export const ToktokBiller = ({navigation, route}) => {
 
   const ListEmptyComponent = () => {
     const emptyImage = search ? empty_search : empty_list;
-    const emptyText = search
-      ? "We can't find any biller matching your search"
-      : 'There is no assigned biller at the moment.';
+    const emptyText = search ? 'Try to search something similar.' : 'There is no assigned biller at the moment.';
     const emptyLabel = search ? 'No Results Found' : 'No Biller Found';
 
     return <EmptyList imageSrc={emptyImage} label={emptyLabel} message={emptyText} />;
