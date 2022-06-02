@@ -294,8 +294,12 @@ export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
         fields: {
           getShops: {
             merge(existing = [], incoming) {
-              console.log(existing, incoming);
               return [...existing, ...incoming];
+            },
+          },
+          getProductsByShopCategory: {
+            merge(existing = [], incoming) {
+              return incoming;
             },
           },
         },
