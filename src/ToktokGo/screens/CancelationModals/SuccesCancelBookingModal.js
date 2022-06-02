@@ -1,18 +1,33 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, Image, View, Modal, TouchableOpacity, Linking} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import SuccessIMG from '../../../assets/images/Sucess.png';
 import {ThrottledOpacity} from '../../../components_section';
 
-export const SuccesCancelBookingModal = ({visible, setVisible, type, chargeAmount, goBackAfterCancellation}) => {
+export const SuccesCancelBookingModal = ({visible, cancellationState, chargeAmount, goBackAfterCancellation}) => {
   const getDescription = () => {
-    if (!type) {
-      if (chargeAmount > 0) {
+    if (chargeAmount) {
+      if (cancellationState?.initiatedBy == 'CONSUMER') {
         return (
           <Text style={styles.modalDescription}>
             Your booking has been cancelled. Cancellation fee will be charged in your next booking. You may read more
             about our{' '}
-            <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>Cancellation Policies</Text>.
+            <ThrottledOpacity
+              onPress={() =>
+                Linking.openURL(
+                  'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
+                )
+              }>
+              <Text
+                style={{
+                  color: CONSTANTS.COLOR.ORANGE,
+                  textDecorationLine: 'underline',
+                  textAlign: 'center',
+                }}>
+                Cancellation Policies
+              </Text>
+            </ThrottledOpacity>
+            .
           </Text>
         );
       } else {
@@ -20,7 +35,17 @@ export const SuccesCancelBookingModal = ({visible, setVisible, type, chargeAmoun
           <Text style={styles.modalDescription}>
             Your booking has been cancelled. No show fee will be charged in your next booking. You may read more about
             our{' '}
-            <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>Cancellation Policies</Text>.
+            <ThrottledOpacity
+              onPress={() =>
+                Linking.openURL(
+                  'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
+                )
+              }>
+              <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>
+                Cancellation Policies
+              </Text>
+            </ThrottledOpacity>
+            .
           </Text>
         );
       }

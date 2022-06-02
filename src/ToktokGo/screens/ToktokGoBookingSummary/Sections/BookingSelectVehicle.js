@@ -37,8 +37,14 @@ export const BookingSelectVehicle = ({navigation, data, selectVehicle, selectedV
         </ThrottledOpacity>
       </View>
 
-      <VehicleCard data={tempVehicleArr[0]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
-      <VehicleCard data={tempVehicleArr[1]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
+      {!tempVehicleArr ? (
+        <></>
+      ) : (
+        <>
+          <VehicleCard data={tempVehicleArr[0]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
+          <VehicleCard data={tempVehicleArr[1]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
+        </>
+      )}
 
       <View style={styles.divider} />
     </>
