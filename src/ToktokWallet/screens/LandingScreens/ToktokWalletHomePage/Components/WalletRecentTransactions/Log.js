@@ -24,7 +24,7 @@ const Log = ({
         refNo,
         name,
         phrase,
-        details,
+        displayInfo,
         amount,
         sourceWalletId,
         createdAt,
@@ -42,7 +42,7 @@ const Log = ({
         setTransactionInfo({
             name,
             phrase,
-            details,
+            displayInfo,
             amount: `${tokwaAccount.wallet.currency.code} ${numberFormat(amount)}`,
             refNo,
             refDate: referenceDate,

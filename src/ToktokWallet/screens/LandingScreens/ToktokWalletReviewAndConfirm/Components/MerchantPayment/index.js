@@ -8,7 +8,7 @@ import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
 export const MerchantPayment = ({data})=>{
-    const { tokwaAccount , note , amount  , merchant , branch , terminal } = data
+    const { tokwaAccount , note , amount , serviceFee, merchant , branch , terminal } = data
 
     return(
        <View style={styles.container}>
@@ -48,10 +48,28 @@ export const MerchantPayment = ({data})=>{
 
             <View style={styles.information}>
                     <View style={{flex:1,alignItems:"flex-start"}}>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Amount</Text>  
+                    </View>
+                    <View style={{flex:1,alignItems:"flex-end"}}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>₱{numberFormat(amount)}</Text>
+                    </View>
+            </View>
+
+            <View style={styles.information}>
+                    <View style={{flex:1,alignItems:"flex-start"}}>
+                        <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Service Fee</Text>  
+                    </View>
+                    <View style={{flex:1,alignItems:"flex-end"}}>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>₱{numberFormat(serviceFee)}</Text>
+                    </View>
+            </View>
+
+            <View style={styles.information}>
+                    <View style={{flex:1,alignItems:"flex-start"}}>
                         <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Total Amount</Text>  
                     </View>
                     <View style={{flex:1,alignItems:"flex-end"}}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>PHP {numberFormat(amount)}</Text>
+                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M,textAlign: 'right'}}>₱{numberFormat(+amount + +serviceFee)}</Text>
                     </View>
             </View>
       
