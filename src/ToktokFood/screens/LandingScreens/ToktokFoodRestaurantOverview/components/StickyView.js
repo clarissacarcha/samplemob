@@ -101,7 +101,7 @@ export const StickyView = ({onCheckShop}) => {
     },
   });
 
-  const [getProductsByShopCategory, {data: categoryProducts, loading: productsLoading, fetchMore}] = useLazyQuery(
+  const [getProductsByShopCategory, {data: categoryProducts, loading: productsLoading, fetchMore, refetch}] = useLazyQuery(
     GET_PRODUCTS_BY_SHOP_CATEGORY,
     {
       variables: {
@@ -132,15 +132,6 @@ export const StickyView = ({onCheckShop}) => {
     if (isFocus && location) {
       getProductCategories();
       getProductsByShopCategory();
-      // console.log(
-      //   JSON.stringify({
-      //     input: {
-      //       shopId: id,
-      //       userLongitude: location?.longitude,
-      //       userLatitude: location?.latitude,
-      //     },
-      //   }),
-      // );
       getShopDetails({
         variables: {
           input: {
@@ -152,6 +143,13 @@ export const StickyView = ({onCheckShop}) => {
       });
     }
   }, [isFocus, location]);
+
+  useEffect(() => {
+    const onRefresh = async () => {
+      await refetch();
+    };
+    onRefresh();
+  }, [activeTab]);
 
   useEffect(() => {
     if (data) {
