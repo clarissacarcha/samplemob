@@ -490,6 +490,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
           transaction: "payment", 
           data: checkoutBody,          
           onSuccess: async (pin) => {
+            // setTimeout(async () => {
+            //   await ProcessCheckout({...checkoutBody, pin})
+            // }, (60000 * 30))
             await ProcessCheckout({...checkoutBody, pin})
           }
         })
@@ -741,10 +744,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
     }
 
     let discounts = CheckoutContextData.getTotalVoucherDeduction()
-    let _subTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
+    let _subTotal = parseFloat(orderTotal) - parseFloat(discounts)
     let srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
 
-    setSubTotal(orderTotal)
+    setSubTotal(_subTotal)
     setSrpTotal(orderTotal)
     setGrandTotal(srpGrandTotal)
   }

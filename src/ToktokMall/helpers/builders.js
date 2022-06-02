@@ -39,7 +39,7 @@ export const BuildPostCheckoutBody = async ({
 			total_amount: parseFloat(subTotal),
 			srp_totalamount: parseFloat(srpTotal),
 			order_type: orderType,
-			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates, shippingVouchers, orderType}),
+			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates, shippingVouchers, orderType, vouchers}),
 			//Optional values
 			user_id: session.userId,
 			notes: addressData.landmark || "",
@@ -65,7 +65,7 @@ export const BuildPostCheckoutBody = async ({
 	
 }
 
-export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouchers, orderType}) => {
+export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouchers, orderType, vouchers}) => {
 
 	let logs = []
 	data.map((val, index) => {
@@ -73,8 +73,23 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 		let items = []
 		if(val.data.length == 0 || val.data == undefined) return
 		val.data[0].map((item, i) => {
+
+			//HANDLE ITEM DISCOUNTS
+			let discount = null
+			vouchers.map((promo) => {
+				promo?.items.map((itemwithpromo) => {
+					if(itemwithpromo.product_id == item.product.Id){
+						discount = itemwithpromo
+					}
+				})
+			})
+
+			console.log("ITEM DISCOUNT HANDLER", discount)
 			
-			let total = parseFloat(item.product.price) * item.qty
+			let amount = discount ? discount.discounted_amount : item.product?.price
+
+			let itemssubtotal = parseFloat(amount) * item.qty
+			let itemssrptotal = parseFloat(item.product.price) * item.qty
 
 			//PROMOTIONS
 			let promo = {}
@@ -94,10 +109,11 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 				quantity: item.qty,
 				// amount: parseFloat(item.amount),
 				// srp_amount: parseFloat(item.amount),
-				amount: item.product.price,
+				// amount: item.product.price,
+				amount: amount,
 				srp_amount: item.product.price,
-				srp_totalamount: total,
-				total_amount: total,
+				srp_totalamount: itemssrptotal,
+				total_amount: itemssubtotal,
 				order_type: GetItemOrderType(orderType, promo),
 				...promo
 			})
