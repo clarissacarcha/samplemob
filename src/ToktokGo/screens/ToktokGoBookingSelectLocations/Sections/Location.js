@@ -113,7 +113,7 @@ export const Location = ({
 const styles = StyleSheet.create({
   input: {
     marginLeft: 12,
-    color: CONSTANTS.COLOR.DARK,
+    color: CONSTANTS.COLOR.BLACK,
     width: '80%',
   },
   containerInput: {
