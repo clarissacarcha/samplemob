@@ -187,7 +187,7 @@ export const RenderDetails = forwardRef(({
 		disabled={storeCheckboxIsDisabled()}
         onSelect={(raw) => {
           	toggleCheckBox(raw.checked);
-          	onStoreSelect(raw, CartContext.willDelete ? item.data : item.data.filter(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0)));
+          	onStoreSelect(raw, CartContext.willDelete ? item.data : item.data.filter(item => (item.product.enabled === 1 && (item.product.contSellingIsset === 1 ? true : item.product.noOfStocks > 0))));
 					CartContextData.setSelectAll(false);
 					CartContextData.setSelectedFrom('store')
         }}

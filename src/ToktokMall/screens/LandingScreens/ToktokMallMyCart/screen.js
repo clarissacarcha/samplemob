@@ -379,7 +379,7 @@ const Component = ({
     })
     setSelectedItemsArr(items)
     // if(!willDelete){
-      getSubTotal(items)
+    getSubTotal(items)
     // }
     CartContextData.setSelectedFrom('store')
   }
@@ -464,9 +464,9 @@ const Component = ({
       }).filter(Boolean)
       // setItemsToCheckoutArr(allitems)
       // getSubTotal(allitems)
-      setSelectedItemsArr(allitems.filter(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0)))
+      setSelectedItemsArr(allitems.filter(item => (item.product.enabled === 1 && (item.product.contSellingIsset === 1 ? true : item.product.noOfStocks > 0))))
       // if(!willDelete){
-        getSubTotal(allitems.filter(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0)))
+        getSubTotal(allitems.filter(item => (item.product.enabled === 1 && (item.product.contSellingIsset === 1 ? true : item.product.noOfStocks > 0))))
       // }
     // }
 
