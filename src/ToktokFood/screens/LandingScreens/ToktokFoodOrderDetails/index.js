@@ -382,7 +382,10 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
 
   const ModifiedAlert = (
     <View
-      style={[styles.modifiedWrapper, {justifyContent: transaction?.paymentMethod === 'COD' ? 'center' : 'flex-start'}]}>
+      style={[
+        styles.modifiedWrapper,
+        {justifyContent: transaction?.paymentMethod === 'COD' ? 'center' : 'flex-start'},
+      ]}>
       <Image resizeMode="center" source={info_ic} style={styles.modifiedIcon} />
       <Text style={styles.modifiedText}>
         {transaction.paymentMethod === 'COD'
@@ -396,7 +399,6 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
     const orderDetailsItems = transaction?.orderDetails;
     const evalEditResult = orderDetailsItems.filter(items => items.isModified === true);
     const evalRemovedResult = orderDetailsItems.filter(items => items.status === 0);
-
     return evalRemovedResult.length > 0 || evalEditResult.length > 0;
   };
 
@@ -472,7 +474,8 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
           <OrderFee
             data={transaction}
             forDelivery={transaction.orderIsfor === 1}
-            showRefund={isItemModified() && transaction?.paymentMethod === 'TOKTOKWALLET'}
+            showRefund={isItemModified()}
+            forWallet={transaction?.paymentMethod === 'TOKTOKWALLET'}
           />
           <Separator />
           <OrderNote

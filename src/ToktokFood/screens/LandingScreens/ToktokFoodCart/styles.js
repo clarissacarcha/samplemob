@@ -312,6 +312,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: moderateScale(10),
   },
+  cartItemWrapper: {
+    borderWidth: 1,
+    borderColor: '#FF6200',
+    height: 20,
+    position: 'absolute',
+    marginLeft: 95,
+    bottom: 0,
+    paddingHorizontal: 8,
+  },
+  unavailableText: {
+    color: '#FF6200',
+  },
 });
 
 export default styles;
