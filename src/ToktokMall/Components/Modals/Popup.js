@@ -6,7 +6,8 @@ import {
   Dimensions,
   Modal,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { FONT, FONT_SIZE } from '../../../res/variables';
@@ -84,7 +85,7 @@ export const PopupModalComponent = ({isVisible, type, label = "Loading", useLott
               alignItems: 'center',
             }}>            
             {
-              useLottie ? 
+              Platform.OS == "ios" ? 
                 <LottieView
                   autoPlay={true}
                   source={loadingLottie}
@@ -93,7 +94,7 @@ export const PopupModalComponent = ({isVisible, type, label = "Loading", useLott
                 :
                 <ActivityIndicator size={80} color="#F6841F" style={{borderRadius: 15}} />
             }
-            <View style={{marginTop: 80}}>
+            <View style={{marginTop: Platform.OS == "ios" ? 80 : 16}}>
               <Text style={{color: "#F6841F", fontFamily: FONT.BOLD}} >
                 {label}
               </Text>
