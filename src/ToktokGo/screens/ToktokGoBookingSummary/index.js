@@ -271,6 +271,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const closeOutstandingFeeModal = () => {
     setViewOutstandingFeeModal(false);
     // navigation.replace('ToktokGoBookingStart', {
+
     //   popTo: popTo + 1,
     // });
     navigation.pop(2);
