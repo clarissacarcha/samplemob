@@ -17,7 +17,8 @@ import {useAlert, useThrottle} from 'src/hooks';
 import {useSelector} from 'react-redux';
 
 //COMPONENTS
-import {OrangeButton, SplashLoading, AlertOverlay} from 'toktokbills/components';
+import {OrangeButton, SplashLoading} from 'toktokbills/components';
+import {AlertOverlay} from 'src/components';
 
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';

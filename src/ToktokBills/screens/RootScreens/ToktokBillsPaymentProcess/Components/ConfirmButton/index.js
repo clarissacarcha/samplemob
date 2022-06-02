@@ -18,7 +18,8 @@ import {ErrorUtility} from 'toktokbills/util';
 import validator from 'validator';
 
 //COMPONENTS
-import {OrangeButton, AlertOverlay} from 'toktokbills/components';
+import {OrangeButton} from 'toktokbills/components';
+import {AlertOverlay} from 'src/components';
 
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';

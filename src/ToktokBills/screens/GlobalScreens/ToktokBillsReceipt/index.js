@@ -27,14 +27,14 @@ import {
   LoadingIndicator,
   HeaderDownloadReceipt,
   ToastModal,
-  AlertOverlay
 } from 'toktokbills/components';
 import {Header, ReceiptDetails} from './components';
-import {QuestionModal} from '../../../components/Modals';
+import {QuestionModal} from 'toktokbills/components/Modals';
+import {AlertOverlay} from 'src/components';
 
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
-import LinearGradient from '../../../assets/images/screen-bg.png';
+import LinearGradient from 'toktokbills/assets/images/screen-bg.png';
 
 //HELPER
 import {usePrompt} from 'src/hooks';
