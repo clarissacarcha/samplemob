@@ -8,16 +8,18 @@ import {
 } from 'react-native'
 import { 
     RenderStore,
-    RenderSummary
+    RenderSummary,
+    RenderBuyAgain
 } from './';
 import { 
     carIcon,
-    cancelledIcon
+    cancelledIcon,
+    deliveredIcon
 } from '../../../../../assets';
 import { Hairline } from '../../../../../../components/widgets';
 import { DisplayDateAndTime } from '../../../../../helpers';
-import { RenderBuyAgain } from '../../../ToktokMallOrderDetails/Components';
 import CustomIcon from './.../../../../../../../Components/Icons';
+import { BuyAgainButton } from '../../../../../Components';
 
 export const RenderItem = (props) => {
     const { 
@@ -46,7 +48,7 @@ export const RenderItem = (props) => {
             return <Image style={styles.renderItemFCLeftIcon} source={cancelledIcon}/>
         }
 
-        return <CustomIcon.MCIcon name="check-all" size={15} color={"#F6841F"} />
+        return <Image style={styles.renderItemFCLeftIcon} source={cancelledIcon}/>
     }
     
     //Checker for description.
@@ -93,7 +95,7 @@ export const RenderItem = (props) => {
 
                         <RenderSummary data={fulldata}/>
 
-                        { renderBuyAgain && <RenderBuyAgain data={fulldata}/> }
+                        { renderBuyAgain && <BuyAgainButton data={fulldata}/> }
                     </View>
                 </TouchableOpacity>
             </View>

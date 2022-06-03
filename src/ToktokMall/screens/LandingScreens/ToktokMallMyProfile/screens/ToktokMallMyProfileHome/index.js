@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
 import {Card} from '../../../../../Components'
 import CustomIcon from './.../../../../../../../Components/Icons';
-import {banner, userIcon, placeholder} from '../../../../../assets';
+import {banner, userIcon, placeholder, deliveredIcon} from '../../../../../assets';
 import AsyncStorage from '@react-native-community/async-storage';
 import {FormatToText} from '../../../../../helpers';
 
@@ -246,7 +246,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 <Text style={{fontSize: 12}}>To Receive</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 4})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
-                <CustomIcon.MCIcon name="check-all" size={30} color={COLOR.ORANGE} />
+                <Image style={{height: 30, width: 30, resizeMode: 'contain'}} source={deliveredIcon} />
                 <Text style={{fontSize: 12}}>Completed</Text>
               </TouchableOpacity>
             </View>

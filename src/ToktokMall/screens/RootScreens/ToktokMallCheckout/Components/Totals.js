@@ -7,9 +7,8 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FONT } from '../../../../../res/variables';
 import Icons from '../../../../Components/Icons';
-import  {FormatToText} from '../../../../helpers/formats';
-
-import {CheckoutContext} from '../ContextProvider';
+import { FormatToText } from '../../../../helpers/formats';
+import { CheckoutContext } from '../ContextProvider';
 
 export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
   
@@ -230,7 +229,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
             </Text>
           } */}
 
-            <Text style={{color: '#F6841F'}}>
+            <Text style={{color: '#F6841F', fontFamily: FONT.SEMI_BOLD}}>
             {FormatToText.currency((merchandiseTotal || 0) + (shippingFeeTotal || 0) - (shippingDiscountTotal || 0))}
             </Text>
           

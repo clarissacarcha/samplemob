@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {View, ScrollView, RefreshControl } from 'react-native';
+import {View, ScrollView, RefreshControl, StyleSheet } from 'react-native';
 import { useLazyQuery } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
-import {HeaderBack, HeaderTitle, HeaderRight, Loading, LoadingOverlay} from '../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, Loading, LoadingOverlay, BuyAgainButton} from '../../../Components';
 import {Renderer} from './Components';
 import { ApiCall } from '../../../helpers';
 import {connect, useSelector} from "react-redux"
@@ -131,12 +131,13 @@ const Component = ({navigation, route, notificationCountSession, notifications})
         <RenderSummary data={data} />
         <RenderDeliveryLog data={data} />
       </ScrollView>
-      <RenderBuyAgain 
-        data={data} 
-        onPressBuy={onPressBuy}
-        navigation={navigation}
-        status={route.params.cancelled}
-      />
+      
+      { data?.status?.status === 4 || data?.status?.status === 5 ?
+        <View style={styles.footer}>
+          <BuyAgainButton data={data} />
+        </View> : <></>
+      }
+      
       {apiloader && <LoadingOverlay isVisible={apiloader} />}
     </View>
   );
@@ -151,3 +152,20 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export const ToktokMallOrderDetails = connect(mapStateToProps, mapDispatchToProps)(Component);
+
+
+const styles = StyleSheet.create({
+  footer: {
+      borderTopWidth:.50,
+      borderTopColor:'rgba(0, 0, 0, 0.25)',
+      // paddingVertical: 15,
+      paddingHorizontal: 16,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: 'white',
+      zIndex: 1,
+
+  }
+}) 
