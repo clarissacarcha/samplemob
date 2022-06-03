@@ -45,7 +45,7 @@ export const BillerType = ({item, index}) => {
 const styles = StyleSheet.create({
   container: {
     height: width / 4,
-    width: width / 4 - moderateScale(8),
+    width: width / 4 - moderateScale(10),
     justifyContent: 'center',
   },
   item: {
