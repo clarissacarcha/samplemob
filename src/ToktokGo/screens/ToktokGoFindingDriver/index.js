@@ -363,7 +363,6 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       <SuccesCancelBookingModal
         visible={viewSuccessCancelBookingModal}
         setVisible={setViewSuccessCancelBookingModal}
-        type={1}
         chargeAmount={chargeAmount}
         goBackAfterCancellation={goBackAfterCancellation}
       />
@@ -406,7 +405,7 @@ const styles = StyleSheet.create({
     borderTopColor: constants.COLOR.ORANGE,
     borderLeftColor: constants.COLOR.ORANGE,
     borderRightColor: constants.COLOR.ORANGE,
-    borderRightColor: constants.COLOR.WHITE,
+    borderBottomColor: constants.COLOR.WHITE,
     position: 'absolute',
     paddingTop: 13,
     paddingHorizontal: 16,

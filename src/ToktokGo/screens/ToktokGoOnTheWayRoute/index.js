@@ -66,6 +66,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       }
       if (status == 'CANCELLED' && cancellation?.initiatedBy == 'DRIVER') {
         setCancellationState(cancellation);
+        setChargeAmount(cancellation.charge?.amount);
         if (cancellation.charge?.amount > 0) {
           setCancellationFee(true);
         } else {
@@ -166,7 +167,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       }
     },
     onCompleted: response => {
-      console.log(response);
+      setCancellationState(response.tripConsumerCancel.cancellation);
       setViewSuccessCancelBookingModal(true);
     },
   });
@@ -195,6 +196,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
 
   const goBackAfterCancellation = () => {
     setOriginData(true);
+    setViewCancelBookingModal(false);
     navigation.replace('ToktokGoBookingStart', {
       popTo: popTo + 1,
     });
@@ -258,6 +260,11 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     Linking.openURL(`sms:${booking.driver?.mobileNumber}`);
   };
 
+  const noShowFeeSubmit = () => {
+    setCancellationFee(false);
+    setViewSuccessCancelBookingModal(true);
+  };
+
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
       <StatusBar
@@ -291,7 +298,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         visible={viewSuccessCancelBookingModal}
         setVisible={setViewSuccessCancelBookingModal}
         chargeAmount={chargeAmount}
-        type={false}
+        cancellationState={cancellationState}
         goBackAfterCancellation={goBackAfterCancellation}
       />
       <CancelBookingModal
@@ -300,10 +307,8 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         setViewCancelReasonModal={setViewCancelReasonModal}
       />
       <DriverCancelledModal
-        driverVisible={cancellationFee}
-        setDriverVisible={setCancellationFee}
-        setVisible={setViewSuccessCancelBookingModal}
-        setType={setBookingCancelledType}
+        cancellationFee={cancellationFee}
+        noShowFeeSubmit={noShowFeeSubmit}
         cancellationState={cancellationState}
       />
       <DriverArrivedModal

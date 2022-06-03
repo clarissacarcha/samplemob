@@ -8,14 +8,9 @@ import TokGoIMG from '../../../assets/images/tokGo.png';
 import {numberFormat} from '../../../helper';
 import {ThrottledOpacity} from '../../../components_section';
 
-export const DriverCancelledModal = ({driverVisible, setType, setVisible, setDriverVisible, cancellationState}) => {
-  const submit = () => {
-    setType(2);
-    setVisible(true);
-    setDriverVisible(false);
-  };
+export const DriverCancelledModal = ({cancellationFee, cancellationState, noShowFeeSubmit}) => {
   return (
-    <Modal animationType="fade" transparent={true} visible={driverVisible} style={StyleSheet.absoluteFill}>
+    <Modal animationType="fade" transparent={true} visible={cancellationFee} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
@@ -32,12 +27,7 @@ export const DriverCancelledModal = ({driverVisible, setType, setVisible, setDri
               to compensate the driver. Would you like to pay now?
             </Text>
             {true && (
-              <ThrottledOpacity
-                delay={500}
-                style={styles.buttonContainer}
-                onPress={() => {
-                  submit();
-                }}>
+              <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={noShowFeeSubmit}>
                 <Image source={TokGoWhiteIMG} style={styles.buttonImg} resizeMode={'contain'} />
                 <Text style={styles.buttonText}>Pay in Next Booking</Text>
               </ThrottledOpacity>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {View, StyleSheet, TouchableOpacity, Image, StatusBar, Text, Dimensions, Alert, Platform} from 'react-native';
 import constants from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
@@ -13,11 +13,12 @@ import {
   BookingBreakdown,
   BookingTotal,
 } from './Sections';
-import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet} from './Components';
+import {useFocusEffect} from '@react-navigation/native';
+import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet, OutstandingFeeModal} from './Components';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-import {GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT} from '../../graphql';
+import {GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT, GET_TRIPS_CONSUMER} from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import BottomSheet from 'reanimated-bottom-sheet';
@@ -39,6 +40,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
+  const [viewOutstandingFeeModal, setViewOutstandingFeeModal] = useState(false);
   const dispatch = useDispatch();
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [selectedVouchers, setSelectedVouchers] = useState(null);
@@ -48,6 +50,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [tripBookError, setTripBookError] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(paymentMethod);
   const [viewPriceNote, setViewPriceNote] = useState(false);
+  const [outstandingFee, setOutstandingFee] = useState();
   const hasNotch = StatusBar.currentHeight > 24;
 
   useEffect(() => {
@@ -94,6 +97,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
             Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
           } else if (errorType === 'ExecutionTimeout') {
             Alert.alert('', message);
+          } else if (errorType === 'CANCELLATION_CHARGE_OUTSTANDING') {
+            setViewOutstandingFeeModal(true);
           } else {
             console.log('ELSE ERROR:', error);
             Alert.alert('', 'Something went wrong...');
@@ -240,6 +245,38 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     }, 500);
   };
 
+  const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      if (response) {
+        setOutstandingFee(response?.getTripsConsumer[0]?.cancellation);
+      }
+    },
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      getTripsConsumer({
+        variables: {
+          input: {
+            tag: 'PENDING',
+            cancellationChargeStatus: 'PENDING',
+          },
+        },
+      });
+    }, []),
+  );
+
+  const closeOutstandingFeeModal = () => {
+    setViewOutstandingFeeModal(false);
+    // navigation.replace('ToktokGoBookingStart', {
+
+    //   popTo: popTo + 1,
+    // });
+    navigation.pop(2);
+  };
+
   const renderContent = () => (
     <View style={styles.card}>
       <BookingDistanceTime quotationData={quotationDataResult} loading={loading} />
@@ -294,9 +331,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           onPress={() => {
             sheetRef.current.snapTo(1), setshowHeader(false);
           }}>
-          <Text>
-            <MIcon name={'keyboard-arrow-left'} size={25} color={constants.COLOR.ORANGE} />
-          </Text>
+          <Image source={ArrowLeftIcon} resizeMode={'contain'} style={[styles.iconDimensions, {marginLeft: 16}]} />
         </TouchableOpacity>
         <View style={{flex: 1, alignItems: 'center', marginRight: 30}}>
           <Text style={styles.greetingText}>Booking Summary</Text>
@@ -345,6 +380,11 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
       <PassengerCapacityActionSheet details={details} confirmBooking={confirmBooking} />
       <AlertOverlay visible={TIPLoading || TBLoading} />
+      <OutstandingFeeModal
+        closeOutstandingFeeModal={closeOutstandingFeeModal}
+        viewOutstandingFeeModal={viewOutstandingFeeModal}
+        outstandingFee={outstandingFee}
+      />
       <PaymentMethodModal
         navigation={navigation}
         viewSelectPaymentModal={viewSelectPaymentModal}

@@ -127,7 +127,11 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
-                  <Image source={getIconStatus()} style={{height: 14, width: 16}} resizeMode={'contain'} />
+                  <Image
+                    source={getIconStatus()}
+                    style={booking?.tag == 'ONGOING' ? {height: 16, width: 18} : {height: 14, width: 16}}
+                    resizeMode={'contain'}
+                  />
                   <Text
                     style={{
                       fontFamily: constants.FONT_FAMILY.REGULAR,
