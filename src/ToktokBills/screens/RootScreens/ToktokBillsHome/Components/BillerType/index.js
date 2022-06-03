@@ -45,7 +45,7 @@ export const BillerType = ({item, index}) => {
 const styles = StyleSheet.create({
   container: {
     height: width / 4,
-    width: width / 4 - moderateScale(10),
+    width: width / 4 - moderateScale(8),
     justifyContent: 'center',
   },
   item: {
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(FONT_SIZE.M),
     textAlign: 'center',
     marginTop: moderateScale(5),
-    marginHorizontal: moderateScale(7),
+    marginHorizontal: moderateScale(5),
   },
   loadingContainer: {
     position: 'absolute',

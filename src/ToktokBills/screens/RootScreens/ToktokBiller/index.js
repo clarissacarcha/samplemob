@@ -67,7 +67,6 @@ export const ToktokBiller = ({navigation, route}) => {
       setRefreshing(false);
     },
     onCompleted: ({getBillItemsPaginate}) => {
-      // let data = refreshing ? getBillItemsPaginate.edges : [...billItems, ...getBillItemsPaginate.edges];
       setBillItems(getBillItemsPaginate.edges);
       setPageInfo(getBillItemsPaginate.pageInfo);
       setRefreshing(false);
@@ -93,8 +92,8 @@ export const ToktokBiller = ({navigation, route}) => {
   });
 
   useEffect(() => {
-    setIsMounted(true);
     handleGetBillItems();
+    setIsMounted(true);
   }, []);
 
   const handleGetBillItems = () => {
@@ -226,11 +225,12 @@ export const ToktokBiller = ({navigation, route}) => {
       </View>
     );
   }
+
   return (
     <>
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-          {isMounted && (billItems.length != 0 || billItemsLoading) && (
+          {isMounted && billItems.length != 0 && (
             <SearchInput
               search={search}
               onChangeText={onSearchChange}
@@ -252,7 +252,7 @@ export const ToktokBiller = ({navigation, route}) => {
             extraData={{filteredData, billItems}}
             ListEmptyComponent={ListEmptyComponent}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-            onEndReachedThreshold={0.01}
+            onEndReachedThreshold={0.02}
             onEndReached={fetchMoreData}
             ListFooterComponent={ListFooterComponent}
           />
