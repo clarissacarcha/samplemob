@@ -50,7 +50,9 @@ const RestaurantItem = ({activeTab, item}) => {
   };
 
   const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodShopOverview', {item});
+    // Revamp for Restaurant Overview
+    // navigation.navigate('ToktokFoodShopOverview', {item});
+    navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
 
   const renderPromos = ({item}) => (

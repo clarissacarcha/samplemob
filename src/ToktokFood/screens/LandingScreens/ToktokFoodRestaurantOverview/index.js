@@ -104,29 +104,8 @@ const ToktokFoodRestaurantOverview = ({route}) => {
     <>
       <VerifyContextProvider>
         <View style={styles.container}>
-          <Animated.View style={{backgroundColor: bgColor}}>
-            <Header hasBack backgroundColor="transparent" />
-          </Animated.View>
-
-          <Animated.ScrollView
-            onScroll={Animated.event(
-              [
-                {
-                  nativeEvent: {contentOffset: {y: scrollY}},
-                },
-              ],
-              {
-                listener: event => {},
-                useNativeDriver: false,
-              },
-            )}
-            scrollEventThrottle={16}>
-            {DATA.map(() => (
-              <StyledText fontSize={80}>Test Scroll</StyledText>
-            ))}
-          </Animated.ScrollView>
-          {/* <StickyView onCheckShop={v => setShowCart(v)} /> */}
-          {/* {showCart && <FoodCart />} */}
+          <StickyView onCheckShop={v => setShowCart(v)} />
+          {showCart && <FoodCart />}
         </View>
       </VerifyContextProvider>
     </>
