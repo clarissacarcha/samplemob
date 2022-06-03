@@ -9,7 +9,6 @@ import {
 import { 
     RenderStore,
     RenderSummary,
-    RenderBuyAgain
 } from './';
 import { 
     carIcon,
@@ -18,7 +17,6 @@ import {
 } from '../../../../../assets';
 import { Hairline } from '../../../../../../components/widgets';
 import { DisplayDateAndTime } from '../../../../../helpers';
-import CustomIcon from './.../../../../../../../Components/Icons';
 import { BuyAgainButton } from '../../../../../Components';
 
 export const RenderItem = (props) => {

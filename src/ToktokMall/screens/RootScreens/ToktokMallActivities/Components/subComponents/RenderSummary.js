@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     paddingHorizontal: 16, 
     alignItems: 'center', 
-    marginBottom: 16
   },
   summarySubContainer: {
     flex: 1
