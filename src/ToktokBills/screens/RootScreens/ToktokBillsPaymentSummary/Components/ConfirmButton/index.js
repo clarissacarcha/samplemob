@@ -55,7 +55,7 @@ export const ConfirmButton = ({paymentData}) => {
       // navigation.navigate('ToktokBillsEnterPinCode', {paymentSummary});
       return navigation.navigate('ToktokWalletTPINValidator', {
         callBackFunc: handleProcessProceed,
-        screenPopNo: 4,
+        screenPopNo: 3,
         enableIdle: false,
         data,
       });
