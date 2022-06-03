@@ -220,7 +220,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
               if(parseFloat(voucher.amount) == 0){
 
                 let fee = null
-		            payload.cartitems.map((a) => a.shopid == item.shopid ? fee = a.shippingfee : null)
+		            payload.cartitems.map((a) => a.shop_id == item.shopid ? fee = a.shippingfee : null)
                         
                 items.push({
                   ...voucher, 
@@ -554,6 +554,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
     setProcessingCheckout(true)
 
     console.log("CHECKOUT BODY JSON", JSON.stringify(checkoutBody))
+
+    //FOR TESTING OF FAILED TRANSACTION
+    // checkoutBody = {"name":"Old Levi","request_id":"1654136111782","pin":"123456","pin_type":"TPIN","contactnumber":"09753351699","email":"lfeudo@cloudpanda.ph","address":"Camba Street Metro Manil","regCode":"13","provCode":"1339","citymunCode":"133902","total_amount":250,"srp_totalamount":300,"order_type":2,"order_logs":[{"sys_shop":3,"branchid":"11","delivery_amount":150,"original_shipping_fee":150,"handle_shipping_promo":1,"hash":"","hash_delivery_amount":"cWxWNHl0MElPY1VwZ2ZGRzBpVU05UT09","daystoship":5,"daystoship_to":7,"items":[{"sys_shop":3,"product_id":"121aa4c6b3264625b7dca29f9804d4e3","itemname":"Gyoza to-go","quantity":1,"amount":250,"srp_amount":"300.00","srp_totalamount":300,"total_amount":250,"order_type":1}]}],"user_id":8834,"notes":"Yes","latitude":"","longitude":"","postalcode":"","account_type":0,"disrate":[],"vouchers":[{"voucher_id":"23","voucher_type":"2","voucher_code":"","voucher_name":"TEST ONLY SCENARIO 1","discounted_totalamount":250,"discount_totalamount":50,"shouldered_by":"2","start_date":"2022-06-01 10:49:00","end_date":"2022-06-02 10:49:00","shop_id":"0","product_id":"ced50626f3764dadb8e4e28278ceb679,121aa4c6b3264625b7dca29f9804d4e3,3fe8ef03ab0c437f9874f8b7744f5af0,7122e1dcb7814e2499ecae17a7ed719c,5aa12e1f96004c668d211890282dc722","regions":"13","payment_method":"0","discount_type":"1","discount_amount":"50","discount_cap":"","minimum_purchase":"100","on_top":null,"vcode_isset":"0","items":[{"product_id":"121aa4c6b3264625b7dca29f9804d4e3","amount":"300.00","total_amount":300,"srp_amount":"300.00","srp_totalamount":300,"quantity":1,"discounted_amount":250,"discounted_totalamount":250,"discount_amount":50,"discount_totalamount":50}],"autoApply":true,"voucherCodeType":"promotion","hash_delivery_amount":"dFg4RXhKb3htN01naW9QOFk1YWw0QT09"}],"shippingvouchers":[],"referral_code":"","referral_account_type":"","payment_method":"TOKTOKWALLET","hash_amount":"efd7df5ea029797ee9c693f863236444","reference_num":"TOK62981D2F71D61","orderRefNum":"TOK62981D2F71D61","discounted_totalamount":null}
     
     const req = await ApiCall("checkout", checkoutBody, false)
     
@@ -567,7 +570,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       if(req.responseData.order_status == "Paid"){
         postOrderNotifications(req.responseData)
         EventRegister.emit("ToktokWalletRefreshAccountBalance")
-      }else if(req.responseData.order_status == "Waiting for payment"){
+      }else if(req.responseData.order_status == "Waiting for Payment"){
         //HANDLE REQUEST MONEY ID HAS EXPIRED
         dispatch({
           type: 'TOKTOK_MALL_OPEN_MODAL_2',
@@ -587,6 +590,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
                 title: 'Try Again',
                 type: 'filled',
                 onPress: () => {
+
+                  let ids = []
+                  paramsData.map(({data}) => {
+                    data[0].map(item => {
+                      ids.push(item.id)
+                    });
+                  })
                   dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
                   checkItemFromCheckout({
                     variables: {
@@ -744,7 +754,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
     }
 
     let discounts = CheckoutContextData.getTotalVoucherDeduction()
-    let _subTotal = parseFloat(orderTotal) - parseFloat(discounts)
+    let itemDiscounts = CheckoutContextData.getTotalItemDiscount()
+    let _subTotal = parseFloat(orderTotal) - parseFloat(itemDiscounts)
     let srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
 
     setSubTotal(_subTotal)
