@@ -128,7 +128,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
         let discount = null
         let shippingIndex = shippingFeeRates.findIndex((e) => e.shopid == id)
-        let voucherIndex = shippingVouchers.findIndex((e) => e != null && e.shopid == id)
+        let voucherIndex = shippingVouchers.findIndex((e) => e != null && e.shop_id == id)
 
         // console.log("Get Discount", shippingIndex, voucherIndex)
         if(shippingIndex > -1 && voucherIndex > -1){

@@ -20,6 +20,7 @@ export const RenderBuyAgain = ({ navigation, data, status, onPressBuy: parentBuy
 
   const [getBuyAgain] = useLazyQuery(GET_BUY_AGAIN, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
     context: { headers: { authorization: "Bearer: " + getAccessToken() }},  
     onCompleted: (response) => {
       if(response.getBuyAgain) { 
