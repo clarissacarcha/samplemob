@@ -47,7 +47,7 @@ export const RenderItem = (props) => {
             return <Image style={styles.renderItemFCLeftIcon} source={cancelledIcon}/>
         }
 
-        return <Image style={styles.renderItemFCLeftIcon} source={cancelledIcon}/>
+        return <Image style={styles.renderItemFCLeftIcon} source={deliveredIcon}/>
     }
     
     //Checker for description.
@@ -157,8 +157,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     renderItemFCLeftIcon: {
-        height: 15, 
-        width: 15,
+        height: 20, 
+        width: 20,
         resizeMode: 'contain',
     },
     renderItemFCLeftText: {

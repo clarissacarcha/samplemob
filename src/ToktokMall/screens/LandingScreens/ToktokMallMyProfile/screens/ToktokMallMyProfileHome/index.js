@@ -246,7 +246,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 <Text style={{fontSize: 12}}>To Receive</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 4})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
-                <Image style={{height: 30, width: 30, resizeMode: 'contain'}} source={deliveredIcon} />
+                <Image style={{height: 35, width: 35}} source={deliveredIcon} />
                 <Text style={{fontSize: 12}}>Completed</Text>
               </TouchableOpacity>
             </View>
