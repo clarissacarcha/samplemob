@@ -22,11 +22,23 @@ const testdata = [{
   status: 1
 }]
 
-const Item = ({data}) => {
+
+const onPress = (params, data, navigation) => {
+  let sampleArr = []
+  sampleArr = params.vouchers
+  sampleArr.push(data)
+  // let newAddressData =  sampleArr.push(data)
+  // alert(JSON.stringify(sampleArr))
+  params.setVouchers(sampleArr)
+  // alert(JSON.stringify(sampleArr))
+  navigation.navigate('ToktokMallCheckout', {vouchers: sampleArr} )
+}
+
+const Item = ({data, params, navigation}) => {
   return (
       <>
         <View style={{flex: 0.5, height: 2, backgroundColor: '#F7F7FA'}} />  
-        <View style={{paddingVertical: 15, paddingHorizontal: 15, flexDirection: 'row'}}>
+        <TouchableOpacity style={{paddingVertical: 15, paddingHorizontal: 15, flexDirection: 'row'}} onPress = {() => { data.status == 1 ? null : onPress(params, data, navigation)  }}>
           <View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
             <View style={{height: 50, width: 50, backgroundColor: '#FCC442', alignItems: 'center', justifyContent: 'center', paddingVertical: 5, paddingHorizontal: 5}}>
              <Text style={{textAlign: 'center', fontSize: 9, fontWeight: '600', color: "#fff", textTransform: 'uppercase'}}>{data.type}</Text> 
@@ -41,13 +53,13 @@ const Item = ({data}) => {
               <Text style={{fontSize: 12, color: data.status == 1 ? "#F6841F" : "#FFF"}}>{data.status == 1 ? "Claimed" : "Claim"}</Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </>
   )
 }
 
 
-export const ToktokMallVouchersClaim = ({navigation}) => {
+export const ToktokMallVouchersClaim = ({route, navigation}) => {
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -60,7 +72,7 @@ export const ToktokMallVouchersClaim = ({navigation}) => {
       
       <FlatList 
         data={testdata}
-        renderItem={({item}) => <Item data={item} />}
+        renderItem={({item}) => <Item data={item} params = {route.params} navigation = {navigation} />}
       />
       <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
       <View style={{height: 15}}></View>

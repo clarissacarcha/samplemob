@@ -23,7 +23,8 @@ import {moderateScale} from 'toktokfood/helper/scale';
 import {reseller_badge, food_placeholder} from 'toktokfood/assets/images';
 import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
-const MyOrderList = () => {
+const MyOrderList = props => {
+  const {shopDetails} = props;
   // const route = useRoute();
   const dispatch = useDispatch();
   // const { cart } = route.params;
@@ -77,6 +78,7 @@ const MyOrderList = () => {
     selectedPrice,
     selectedQty,
     selectedNotes,
+    hasOrderInstruction,
   ) => {
     navigation.navigate('ToktokFoodItemDetails', {
       Id,
@@ -87,6 +89,8 @@ const MyOrderList = () => {
       selectedQty,
       selectedNotes,
       action: 'edit',
+      shopDetails,
+      hasOrderInstruction,
     });
   };
 
@@ -130,6 +134,8 @@ const MyOrderList = () => {
       notes,
       parentProductName,
       resellerDiscount,
+      orderInstructions,
+      isDisabled,
     } = item;
     const addons = arrangeAddons(addonsDetails);
     const totalAmountWithAddons = parseFloat(addonsTotalAmount) + parseFloat(basePrice);
@@ -146,11 +152,11 @@ const MyOrderList = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.orderItemContainer}>
-          <View style={styles.progressiveImageContainer}>
+          <View style={[styles.progressiveImageContainer, {opacity: isDisabled ? 0.5 : 1}]}>
             <ProgressiveImage style={styles.foodItemImage} source={productLogo} placeholder={food_placeholder} />
           </View>
           {/* {productLogo && <Image style={styles.foodItemImage} source={{uri: productLogo}} />} */}
-          <View style={styles.orderInfoWrapper}>
+          <View style={[styles.orderInfoWrapper, {opacity: isDisabled ? 0.5 : 1}]}>
             <Text style={(styles.orderText, {fontFamily: FONT.BOLD, fontSize: FONT_SIZE.L})}>
               {parentProductId ? parentProductName : productName}
             </Text>
@@ -159,13 +165,22 @@ const MyOrderList = () => {
             {addonsDetails.length > 0 && displayAddOns(addons)}
             {!!notes && <Text style={styles.orderText}>{`Note: ${notes}`}</Text>}
           </View>
-          <View style={styles.priceWrapper}>
+          <View style={[styles.priceWrapper, {opacity: isDisabled ? 0.5 : 1}]}>
             <Text
               onPress={() => {
-                onPressEdit(productid, parentProductId, addons, id, totalAmountWithAddons, quantity, notes);
+                onPressEdit(
+                  productid,
+                  parentProductId,
+                  addons,
+                  id,
+                  totalAmountWithAddons,
+                  quantity,
+                  notes,
+                  orderInstructions,
+                );
               }}
               style={styles.actionText}>
-              Edit
+              {!isDisabled ? 'Edit' : ''}
             </Text>
             {resellerDiscount > 0 ? (
               <ResellerDiscountBadge
@@ -174,10 +189,17 @@ const MyOrderList = () => {
                 totalAmount={totalAmountWithAddons}
               />
             ) : (
-              <Text style={styles.foodPrice}>PHP {totalAmountWithAddons.toFixed(2)}</Text>
+              <Text style={[styles.foodPrice, {color: isDisabled ? '#000' : '#FF6200'}]}>
+                PHP {totalAmountWithAddons.toFixed(2)}
+              </Text>
             )}
           </View>
           <View style={{borderTopWidth: 1, borderTopColor: '#E6E6E6'}} />
+          {isDisabled && (
+            <View style={styles.cartItemWrapper}>
+              <Text style={styles.unavailableText}>Currently Unavailable</Text>
+            </View>
+          )}
         </View>
       </SwipeRow>
     );

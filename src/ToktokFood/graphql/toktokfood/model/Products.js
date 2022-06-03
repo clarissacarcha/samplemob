@@ -17,8 +17,6 @@ const products = `
   filename
   sysShop
   maxQtyIsset
-  orderOnOff
-  customerReqOpt
   productImages  {
     filename
   }

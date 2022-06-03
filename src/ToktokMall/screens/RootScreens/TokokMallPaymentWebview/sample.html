@@ -1,0 +1,466 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Paypanda - Automate Your Payment With Us!</title>
+	<meta name="description"
+		content="Select from our list of Merchants to conveniently settle your payments through our secure and reliable online payment portal.">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+		integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://sandbox.paypanda.ph/assets/admin/css/bootstrap.min.css">
+	<link href="https://sandbox.paypanda.ph/assets/css/lux.bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://sandbox.paypanda.ph/assets/css/mdb-4.6.1.min.css">
+	<link rel="shortcut icon" type="image/png" href="https://sandbox.paypanda.ph/assets/img/logo-panda.png" />
+	<link rel="stylesheet" href="https://sandbox.paypanda.ph/assets/css/jquery.toast.css">
+
+	<link rel="stylesheet" type="text/css" href="https://sandbox.paypanda.ph/assets/css/web/style.css">
+	<link rel="stylesheet" type="text/css" href="https://sandbox.paypanda.ph/assets/css/style.css">
+	<link rel="stylesheet" type="text/css" href="https://sandbox.paypanda.ph/assets/css/app/app.css">
+
+
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://sandbox.paypanda.ph/">
+	<meta property="og:title" content="Paypanda - Automate Your Payment With Us!">
+	<meta property="og:image" content="https://sandbox.paypanda.ph/assets/img/fb-og-banner.png">
+	<meta property="og:description"
+		content="Select from our list of Merchants to conveniently settle your payments through our secure and reliable online payment portal.">
+	<meta property="og:site_name" content="Paypanda">
+	<meta property="og:locale" content="en_US">
+
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<style type="text/css">
+		@media only screen and (max-width: 767px) {
+			.page-container.home {
+				margin-top: -50px !important;
+			}
+		}
+
+		@media only screen and (min-width: 768px) {
+			.page-container.home {
+				margin-top: 0px !important;
+			}
+		}
+	</style>
+</head>
+
+<body data-base_url="https://sandbox.paypanda.ph/">
+	<!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
+	<div id="transparent-cover">
+		<div class="cover-inside">
+			<label>
+<img src="https://sandbox.paypanda.ph/assets/img/loading.gif">
+</label>
+			<label id="current-activity">Loading...</label>
+		</div>
+	</div>
+
+
+
+	<main>
+		<input class="hidden" type="password" id="payment_invoke_type" value="3">
+		<input class="hidden" type="password" id="ua" value="bmVlVGg2UVZNRElBMHVUM1luOWxFbzdGSVErVCtSUlZsdkM3aHVCT0thOD0=">
+		<input class="hidden" type="password" id="uref" value="QlNZVjNORDZES3Q1a0g0SkE5cGRkQT09">
+		<input class="hidden" type="password" id="sn" value="UGltNGRIV3JDU1dTczNhc3JBM2pXY3BhR0VIU2xPMXV3bXhiLzRROHFrYz0=">
+		<input class="hidden" type="password" id="saddr" value="QUtOMlJWOHlydzlnbUJGZnM2b2UwZz09">
+		<input class="hidden" type="password" id="sraddr" value="OW94WDhYQmJiVGtGTWFqaURVenEwZz09">
+		<input class="hidden" type="password" id="ret_url_override" value="">
+		<input class="hidden" type="password" id="online_processing_fee" value="">
+		<input class="hidden" type="password" id="pit4_merchant_name" value="Toktok Mall">
+		<div class="">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<div class="page-container col-12 home z-depth-1">
+							<a href="https://sandbox.paypanda.ph/">
+								<div class="logo text-center col-lg-4 col-6">
+									<img class="w-100" src="https://sandbox.paypanda.ph/assets/img/logo-2.png">
+</div>
+							</a>
+							<div class="row">
+								<div class="col-12">
+									<div class="col-12" id="stepper_div">
+										<div class="col-12">
+											<div class="stepper_line"></div>
+											<div class="row steps-container">
+												<div class="col-4 col-sm-4 text-center bottom-40">
+													<label class="active payment-step" id="step-1">1</label><br />
+													<small>Merchant Selection</small>
+												</div>
+												<div class="col-4 col-sm-4 text-center bottom-40">
+													<label class="payment-step" id="step-2">2</label><br />
+													<small>Payment Details</small>
+												</div>
+												<div class="col-4 col-sm-4 text-center bottom-40">
+													<label class="payment-step" id="step-3">3</label><br />
+													<small>Payment Options</small>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 " id="i_note">
+										<div class="alert alert-warning">
+											Good day! Welcome to Paypanda payment portal for <b id="i_merchant_name">
+Toktok Mall
+</b>. Please carefully fill out the form with complete and accurate information. Please take note that successful
+											payment may take up to 24 hours to reflect in our system.
+										</div>
+									</div>
+									<div class="col-12" id="merchants_panel">
+
+										<div class="row">
+											<div class="col-lg-6 col-12 content-container left">
+												<form action="https://sandbox.paypanda.ph/app/merchant/get_merchants"
+													id="merchant_search_form" method="post" accept-charset="utf-8">
+													<div class="input-group">
+														<input type="text" name="search_text" class="form-control" placeholder="Search Merchant">
+														<div class="input-group-append">
+															<button class="btn btn-primary" type="submit">
+<i class="fa fa-search"></i>
+</button>
+														</div>
+													</div>
+												</form>
+											</div>
+											<div class="col-12" id="merchants_panel_merchants">
+											</div>
+										</div>
+									</div>
+									<div class="col-12 hidden" id="reference_panel">
+
+										<div class="row">
+											<div class="col-12" id="reference_reference">
+												<div class="row">
+													<div class="col-12 content-container">
+														<form
+															action="https://sandbox.paypanda.ph/app/payment/validate_manual_form"
+															id="manual_reference_form" method="post"
+															accept-charset="utf-8">
+															<div class="row">
+																<div class="form-group col-12 col-sm-6">
+																	<label id="ref_label">Reference Number</label><span class="text-red"> * </span>
+																	<input type="text" name="m_reference_text" id="m_reference_text" class="form-control" placeholder="Reference Number">
+</div>
+																	<div class="form-group col-12 col-sm-6">
+																		<label>Amount</label><span class="text-red"> * </span>
+																		<input type="text" name="m_amount" id="m_amount" class="form-control" placeholder="Amount">
+</div>
+																	</div>
+																	<div class="row">
+																		<div class="form-group col-12 col-sm-6">
+																			<label>Email</label><span class="text-red"> * </span>
+																			<input type="text" name="m_email_address" id="m_email_address" class="form-control" placeholder="Email">
+</div>
+																			<div class="form-group col-12 col-sm-6">
+																				<label id="name_label">Name</label><span class="text-red"> * </span>
+																				<input type="text" name="m_name" id="m_name" class="form-control" placeholder="Name">
+</div>
+																			</div>
+																			<div class="row">
+																				<div class="form-group col-12 col-sm-6">
+																					<label>Mobile Number</label><span class="text-red"></span>
+																					<input maxlength="11" type="text" name="m_mobile_number" id="m_mobile_number" class="form-control" placeholder="11-digit Mobile Number">
+</div>
+																				</div>
+																				<div class="row">
+																					<div class="form-group col-12">
+																						<label>Remarks</label>
+																						<input type="text" name="m_remarks" id="m_remarks" class="form-control" placeholder="Remarks">
+</div>
+																					</div>
+																					<div class="form-group">
+																						<button type="submit" class="btn btn-primary btn-block">Submit</button>
+																					</div>
+														</form>
+													</div>
+												</div>
+											</div>
+											<div class="col-12 hidden" id="reference_services">
+											</div>
+										</div>
+									</div>
+									<div class="col-12 hidden" id="checkout_panel">
+										<h3 class="title text-center">Transaction Review</h3>
+										<div class="row">
+											<div class="col-12">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row hidden" id="second_half">
+								<div class="col-12 col-sm-6">
+									<div class="col-12" id="payment_options_panel">
+
+										<div class="row">
+											<div class="col-12">
+												<div class="row payment-method">
+
+													<div class="col-12" data-value="3">
+
+													</div>
+													<div class="col-12 text-center">
+														<br />
+														<h3 style="color: black; font-weight: 600;">Select Payment
+															Method</h3>
+														<br />
+</div>
+														<div class="col-12" id="payment-service-list">
+														</div>
+														<div class="col-12" id="payment-processor_list">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 col-sm-6 content-container right">
+										<div class="col-12">
+											<table class="table">
+												<tbody>
+													<tr>
+														<th class="table-label">Pay To</th>
+														<td><label id="pp_partner"></label></td>
+													</tr>
+													<tr>
+														<th id="ref_label_summary" class="table-label">Ref #</th>
+														<td><label id="pp_refno"></label></td>
+													</tr>
+													<tr>
+														<th class="table-label">Amount to pay</th>
+														<td>
+															<label id="pp_currency"></label><label id="pp_amount"></label><br />
+															<small><em id="pp_proc_fee_note" style="color: #888;"></em></small>
+														</td>
+													</tr>
+													<tr>
+														<th id="name_label_summary" class="table-label">Name</th>
+														<td><label id="pp_name"></label></td>
+													</tr>
+													<tr>
+														<th class="table-label">Email</th>
+														<td><label id="pp_email"></label></td>
+													</tr>
+													<tr>
+														<th class="table-label">Mobile Number</th>
+														<td><label id="pp_mobile_number"></label></td>
+													</tr>
+													<tr>
+														<th class="table-label">Remarks</th>
+														<td><label id="pp_remarks"></label></td>
+													</tr>
+
+												</tbody>
+											</table>
+										</div>
+										<div class="col-12" id="pp_certification">
+											<div class="conditions alert alert-warning">
+												<p>Some payment collectors may add transaction charge. Please read
+													payment instructions carefully.</p>
+											</div>
+											<div class="conditions alert alert-warning">
+												<p>I hereby confirm that all details are correctly entered. Furthermore,
+													I have read and agreed with the <a
+														href="https://sandbox.paypanda.ph/terms_and_conditions"
+														target="_blank">terms and conditions</a> of this service.</p>
+												<fieldset>
+													<div class="form-group">
+														<div class="custom-control custom-checkbox">
+															<input type="checkbox" class="custom-control-input" id="customCheck1">
+															<label class="custom-control-label" for="customCheck1">I Agree</label>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+											<button type="button" id="init_payment" class="btn btn-primary btn-block">Proceed</button>
+											<br /><br />
+											<p style="color: black;">
+												If your friend/family will be the one paying for this, please copy <a
+													style="color: blue;" id="payment_link">this link</a> and send it to
+												them
+											</p>
+										</div>
+
+
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="hidden">
+				<input type="text" name="ppp_merchant_id" id="ppp_merchant_id" value="TKTKML">
+				<input type="text" name="ppp_reference_number" id="ppp_reference_number" value="TOK61230C7502C02">
+				<input type="text" name="ppp_payer_email" id="ppp_payer_email" value="bpaltezo@cloudpanda.ph">
+				<input type="text" name="ppp_payer_name" id="ppp_payer_name" value="Bryan Paulo Altezo">
+				<input type="text" name="ppp_amount_to_pay" id="ppp_amount_to_pay" value="1250">
+				<input type="text" name="ppp_currency" id="ppp_currency" value="PHP">
+				<input type="text" name="ppp_remarks" id="ppp_remarks" value="">
+				<input type="text" name="ppp_mobile_number" id="ppp_mobile_number" value="09101738451">
+				<input type="text" name="ppp_signature" id="ppp_signature" value="MWJjYmJiNjVhOTU4YTEzMjkyMTczY2ZkMmM4MDA2ODM1MDYwZjUyZWI4M2ZhNjNkMmQ0MGVlMTM0ZmYwNzExNg==">
+</div>
+
+				<div id="pendingMessageModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+					class="modal fade text-left">
+					<div role="document" class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<div class="col-md-12">
+									<h4 id="exampleModalLabel" class="modal-title">NOTICE</h4>
+								</div>
+							</div>
+							<div class="modal-body">
+								<form action="https://sandbox.paypanda.ph/app/payment/resend_instructions"
+									id="instruction_resend_form" method="post" enctype="multipart/form-data"
+									accept-charset="utf-8">
+									<div class="col-12">
+										<div class="row">
+											<div class="form-group col-12">
+												We've already sent payment instructions to
+												<b id="email_receiver_rec"></b>.
+											</div>
+											<div class="form-group col-12">
+												<button type="button" id="resend1" class="btn btn-primary btn-sm">Resend Instructions</button>
+											</div>
+											<div class="form-group col-12">
+												or send to a different email address. <br /><br />
+												<b>NOTE: </b> All succeeding emails regarding transaction updates will
+												be sent to this address.
+											</div>
+											<div class="form-group col-12">
+												<input type="text" name="newemail" id="newemail" placeholder="Type new email address here" class="form-control">
+</div>
+												<div class="form-group col-12">
+													<button type="button" id="resend2" class="btn btn-primary btn-sm">Send</button>
+												</div>
+											</div>
+										</div>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<div class="col-md-12 text-right">
+									<button type="button" class="btn btn-default cancelBtn waves-effect waves-light btn-sm" data-dismiss="modal" aria-label="Close">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="qrcode_validity_prompt" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+					class="modal fade text-left">
+					<div role="document" class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-body">
+								<h4 style="font-weight:800;">NOTE</h4>
+								<p style="color: black;">Upon proceeding, a QR code will be displayed on the next page.
+									It will only be valid for 2 minutes. If the code expires, please create another
+									transaction.</p>
+								<div class="col-md-12 text-right">
+									<button type="button" class="btn btn-success waves-effect waves-light btn-sm" id="qrcode_validity_prompt_accept">I Understand</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="additional_charge_prompt" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+					class="modal fade text-left">
+					<div role="document" class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-body">
+								<h4 style="font-weight:800;">NOTE</h4>
+								<p style="color: black;">Some payment collectors may add transaction charge. Please read
+									payment instructions carefully.</p>
+								<br />
+								<div class="col-md-12 text-right">
+									<button type="button" class="btn btn-success waves-effect waves-light btn-sm" id="additional_charge_prompt_accept">I Understand</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="paypal_note_prompt" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+					class="modal fade text-left">
+					<div role="document" class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-body">
+								<h4 style="font-weight:800;">NOTE</h4>
+								<p style="color: black;">Upon proceeding, you will be redirected to paypal for payment
+									details. You may use either credit card or
+									paypal funds to pay. To pay using credit card, choose "PAY WITH A CREDIT CARD"
+									option.</p>
+								<div class="col-md-12 text-right">
+									<button type="button" class="btn btn-success waves-effect waves-light btn-sm" id="paypal_note_prompt_accept">I Understand</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="jcwallet_prompt" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+					class="modal fade text-left">
+					<div role="document" class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-body">
+								<h4 style="font-weight:800;">Thank you for using JC Wallet</h4>
+								<p style="color: black;">Before we can process your payment, we need your JC wallet
+									username and password.</p>
+								<div class="col-12 col-md-8 offset-md-2">
+									<div class="form-group">
+										<label>Username</label>
+										<input type="text" name="jcwallet_username" id="jcwallet_username" class="form-control">
+</div>
+										<div class="form-group">
+											<label>Password</label>
+											<input type="password" name="jcwallet_password" id="jcwallet_password" class="form-control">
+</div>
+										</div>
+										<div class="col-12 col-md-8 offset-md-2 text-right">
+											<button type="button" class="btn btn-success waves-effect waves-light btn-sm" id="jcwallet_prompt_submit">Process Payment</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="payment_link_modal" role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true" class="modal fade text-left">
+							<div role="document" class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-body">
+										<label>Send email to:</label>
+										<input type="text" name="payment_link_email" class="form-control" placeholder="email address" id="payment_link_email">
+										<br />
+
+										<button type="button" class="btn btn-primary btn-xs pull-right" id="btn_copy_link">Send</button>
+									</div>
+								</div>
+							</div>
+						</div>
+	</main>
+
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-migrate-3.0.1.min.js"
+		integrity="sha256-F0O1TmEa4I8N24nY0bya59eP6svWcshqX1uzwaWC4F4=" crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+	</script>
+	<script src="https://sandbox.paypanda.ph/assets/js/bootstrap.min.js"></script>
+	<script src="https://sandbox.paypanda.ph/assets/admin/js/mdb.min.js"></script>
+	<script src="https://sandbox.paypanda.ph/assets/js/jquery.toast.js"></script>
+	<script src="https://sandbox.paypanda.ph/assets/js/public1.js"></script>
+	<script src="https://sandbox.paypanda.ph/assets/js/web/global.js"></script>
+	<script type="text/javascript"
+		src="https://sandbox.paypanda.ph/assets/js/app/payment_new8.js?0.89222400 1629687289"></script>
+</body>
+
+</html>

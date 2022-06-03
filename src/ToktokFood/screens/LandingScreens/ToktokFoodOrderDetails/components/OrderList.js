@@ -76,12 +76,12 @@ const OrderList = ({orderDetails}) => {
           source={item.productDetails.filename}
           placeholder={food_placeholder}
         />
-        {itemStatus === 0 && !isEdited && (
+        {itemStatus === 0 && isEdited && (
           <View style={{...styles.modifiedFlag, backgroundColor: '#ED3A19'}}>
             <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>Removed</Text>
           </View>
         )}
-        {isEdited && (
+        {itemStatus === 1 && isEdited && (
           <View style={{...styles.modifiedFlag, backgroundColor: '#F5841F'}}>
             <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>Edited</Text>
           </View>

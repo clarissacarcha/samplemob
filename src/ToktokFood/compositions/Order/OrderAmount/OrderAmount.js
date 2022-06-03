@@ -37,7 +37,7 @@ const OrderAmount = (props: PropsType): React$Node => {
     if (showAmountBreakdown) {
       return (
         <AmountBreakdownContainer>
-          {amountComponent('Subtotal', state?.srpTotalamount)}
+          {amountComponent('Subtotal', state?.srpTotal)}
           {state?.resellerDiscountTotal > 0 &&
             amountComponent('Discount (Reseller)', state?.resellerDiscountTotal, '-')}
           {state?.promoDiscounts > 0 && amountComponent('Discount (Voucher)', state?.promoDiscounts, '-')}

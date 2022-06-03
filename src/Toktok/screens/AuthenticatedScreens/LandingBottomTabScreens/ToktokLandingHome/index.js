@@ -29,10 +29,18 @@ const Screen = ({navigation, constants, session, createSession}) => {
 
   const onNotificationOpened = ({notification}) => {
     try {
+
+      console.log("Notification", JSON.stringify(notification))
+
       if (notification.additionalData.classification === 'toktokwallet') {
         setTimeout(() => {
           // navigation.navigate('ToktokWalletHomePage');
           // navigation.replace('ToktokWalletHomePage');
+        }, 10);
+        return;
+      }else if (notification.additionalData.classification === 'toktokmall') {
+        setTimeout(() => {
+          navigation.navigate('ToktokMallSplashScreen');
         }, 10);
         return;
       }

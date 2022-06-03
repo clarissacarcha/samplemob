@@ -17,7 +17,7 @@ const ORDER_INSTRUCTIONS_OPTIONS = ['Remove or edit unavailable item', 'Cancel m
 
 export const Variations = ({data, productId}) => {
   const routes = useRoute();
-  const {shopDetails} = routes.params;
+  const {shopDetails, hasOrderInstruction} = routes.params;
   const {
     // totalPrice,
     // productDetails,
@@ -46,6 +46,10 @@ export const Variations = ({data, productId}) => {
   useEffect(() => {
     if (data?.orderOnOff < 1 && shopDetails?.orderOnOff < 1) {
       setOrderInstructions('');
+    } else {
+      if (hasOrderInstruction) {
+        setOrderInstructions(hasOrderInstruction);
+      }
     }
   }, []);
 
@@ -398,7 +402,7 @@ export const Variations = ({data, productId}) => {
         <Text style={{color: '#525252'}}>If this item is unavailable</Text>
         <TouchableOpacity activeOpacity={0.9} onPress={() => setIsModalVisible(true)}>
           <View style={styles.orderInstructionContainer}>
-            <Text style={{color: orderInstructions === 'Select one' ? '#9E9E9E' : '#000'}}>{orderInstructions}</Text>
+          <Text>{orderInstructions}</Text>
             <FA5Icon name={'chevron-down'} size={12} color={'#FFA700'} />
           </View>
         </TouchableOpacity>
@@ -436,7 +440,7 @@ export const Variations = ({data, productId}) => {
       <Variants />
       <Options />
       {specialInstructionsComponent()}
-      {(data?.orderOnOff > 0 || shopDetails?.orderOnOff > 0) && orderInstructionComponent()}
+      {orderInstructionComponent()}
       {orderInstructionModalComponent()}
     </>
   );
