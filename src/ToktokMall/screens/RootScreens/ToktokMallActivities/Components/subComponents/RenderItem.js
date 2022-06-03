@@ -19,6 +19,7 @@ import {
 import { Hairline } from '../../../../../../components/widgets';
 import { DisplayDateAndTime } from '../../../../../helpers';
 import CustomIcon from './.../../../../../../../Components/Icons';
+import { BuyAgainButton } from '../../../../../Components';
 
 export const RenderItem = (props) => {
     const { 
@@ -94,7 +95,7 @@ export const RenderItem = (props) => {
 
                         <RenderSummary data={fulldata}/>
 
-                        { renderBuyAgain && <RenderBuyAgain data={fulldata}/> }
+                        { renderBuyAgain && <BuyAgainButton data={fulldata}/> }
                     </View>
                 </TouchableOpacity>
             </View>

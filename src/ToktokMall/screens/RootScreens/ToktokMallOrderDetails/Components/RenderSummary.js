@@ -86,12 +86,14 @@ export const RenderSummary = ({data}) => {
         {bolean && 
           <View style={{flexDirection: 'row', paddingVertical: 16, paddingHorizontal: 16}}>
             <View style={{flex: 1}}>
-              <Text style={{fontSize: 13}}>Shipping Total:</Text>
-              <Text style={{fontSize: 13,paddingTop:8}}>Merchandise Subtotal: </Text>
+              <Text style={{fontSize: 13}}>Shipping Total</Text>
+              <Text style={{fontSize: 13,paddingTop:8}}>Merchandise Subtotal </Text>
+              <Text style={{fontSize: 13,paddingTop:8}}>Discount </Text>
             </View>
             <View styl={{flex: 1}}>
               <Text style={{fontSize: 13, textAlign:'right'}}><Price amount={data?.payments?.shippingFee} /></Text>
-              <Text style={{fontSize: 13, paddingTop:8}}><Price amount={data?.payments.subTotal} /></Text>
+              <Text style={{fontSize: 13, paddingTop:8}}><Price amount={data?.srpTotalamount} /></Text>
+              <Text style={{fontSize: 13, paddingTop:8, color: "#ED3A19"}}>- <Price amount={data?.discounts?.totalDiscount} /></Text>
             </View>
           </View>
         }
