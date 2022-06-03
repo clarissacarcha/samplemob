@@ -40,7 +40,7 @@ export const RenderDots = ({scrollX, data, sliderRef, dotPosition, setCurrentInd
 
           const dotColor = dotPosition.interpolate({
             inputRange: [index - 1, index, index + 1],
-            outputRange: ['#898C95', COLOR.ORANGE, '#898C95'],
+            outputRange: ['#F6841F', COLOR.ORANGE, '#F6841F'],
             extrapolate: 'clamp',
           });
 
@@ -56,7 +56,7 @@ export const RenderDots = ({scrollX, data, sliderRef, dotPosition, setCurrentInd
       </View>
       {!(currentIndex < data.length - 1) && (
         <TouchableOpacity style={styles.btnContainer} onPress={onPressGotIt}>
-          <Text style={styles.btnText}>Got It!</Text>
+          <Text style={styles.btnText}>Got it!</Text>
         </TouchableOpacity>
       )}
     </View>
