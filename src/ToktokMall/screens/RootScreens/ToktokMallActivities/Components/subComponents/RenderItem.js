@@ -8,15 +8,16 @@ import {
 } from 'react-native'
 import { 
     RenderStore,
-    RenderSummary
+    RenderSummary,
+    RenderBuyAgain
 } from './';
 import { 
     carIcon,
-    cancelledIcon
+    cancelledIcon,
+    deliveredIcon
 } from '../../../../../assets';
 import { Hairline } from '../../../../../../components/widgets';
 import { DisplayDateAndTime } from '../../../../../helpers';
-import { RenderBuyAgain } from '../../../ToktokMallOrderDetails/Components';
 import CustomIcon from './.../../../../../../../Components/Icons';
 
 export const RenderItem = (props) => {
@@ -46,7 +47,7 @@ export const RenderItem = (props) => {
             return <Image style={styles.renderItemFCLeftIcon} source={cancelledIcon}/>
         }
 
-        return <CustomIcon.MCIcon name="check-all" size={15} color={"#F6841F"} />
+        return <Image style={styles.renderItemFCLeftIcon} source={cancelledIcon}/>
     }
     
     //Checker for description.
