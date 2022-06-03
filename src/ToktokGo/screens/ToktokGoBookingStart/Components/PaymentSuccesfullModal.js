@@ -17,7 +17,7 @@ export const PaymentSuccesfullModal = ({showPaymentSuccesful, setShowPaymentSucc
               You have successfully paid the{' '}
               {tripConsumerPending[0]?.cancellation?.initiatedBy == 'CONSUMER' ? 'cancelation fee' : 'no show fee'} of{' '}
               <Text style={{color: CONSTANTS.COLOR.ORANGE}}> ₱50.00</Text> using toktokwallet. Your e-receipt was sent
-              to your registered email address
+              to your registered email.
             </Text>
             <ThrottledOpacity
               delay={500}

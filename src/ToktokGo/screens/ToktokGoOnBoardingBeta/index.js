@@ -37,7 +37,7 @@ const slides = [
   {
     id: '3',
     image: require('../../../assets/images/EnjoyYourRideImage.png'),
-    title: 'Enjoy Your Ride',
+    title: 'Enjoy the Ride',
     subtitle: 'Sit back and relax while we bring\nyou to your destination.',
   },
 ];
