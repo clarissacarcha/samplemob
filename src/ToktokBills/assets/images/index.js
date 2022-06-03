@@ -23,4 +23,5 @@ export const onboarding_1 = require('./onboarding/onboarding-1.png');
 export const onboarding_2 = require('./onboarding/onboarding-2.png');
 export const onboarding_3 = require('./onboarding/onboarding-3.png');
 export const onboarding_4 = require('./onboarding/onboarding-4.png');
+export const onboarding_bg = require('./onboarding/onboarding-bg.png');
 export const onboarding_toktokbills = require('./onboarding/onboarding-toktokbills.png');
