@@ -199,6 +199,9 @@ export const GET_ACTIVIY_ORDER_DETAILS = gql`
 			referenceNum
 			paymentMethod
 			totalAmount
+			srpTotalamount
+			actualTotalamount
+			accountType
 			payments
 			location
 			logs
@@ -222,6 +225,7 @@ export const GET_ACTIVIY_ORDER_DETAILS = gql`
 				}
 			  }
 			}
+			discounts
     	}
   	}
 `
