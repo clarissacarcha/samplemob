@@ -15,13 +15,15 @@ const OrderAmount = (props: PropsType): React$Node => {
   const [showAmountBreakdown, setShowAmountBreakdown] = useState(false);
   const theme = useTheme();
 
-  const amountComponent = (title, amount, icon) => {
+  const amountComponent = (title, amount, sign = '', icon) => {
     return (
       <AmountContainer>
         <AmountText total={title === 'Total'}>{title}</AmountText>
         {state && Object.keys(state).length > 0 ? (
           <AmountContainer>
-            <AmountText total={title === 'Total'}>&#x20B1;{parseFloat(amount).toFixed(2)}</AmountText>
+            <AmountText total={title === 'Total'} sign={sign}>
+              {sign} &#x20B1;{parseFloat(amount).toFixed(2)}
+            </AmountText>
             {icon && <FeatherIcon name={icon} color={theme.color.orange} size={18} />}
           </AmountContainer>
         ) : (
@@ -31,18 +33,31 @@ const OrderAmount = (props: PropsType): React$Node => {
     );
   };
 
-  return (
-    <Container>
-      {showAmountBreakdown && (
+  const renderAmountBreakdownComponent = () => {
+    if (showAmountBreakdown) {
+      return (
         <AmountBreakdownContainer>
           {amountComponent('Subtotal', state?.srpTotalamount)}
+          {state?.resellerDiscountTotal > 0 &&
+            amountComponent('Discount (Reseller)', state?.resellerDiscountTotal, '-')}
+          {state?.promoDiscounts > 0 && amountComponent('Discount (Voucher)', state?.promoDiscounts, '-')}
+          {state?.promoDetails > 0 && amountComponent('Discount (Delivery)', state?.promoDetails, '-')}
           {state?.orderIsfor === 1 && amountComponent('Delivery Fee', state?.originalShippingFee)}
+          {state?.refundTotal > 0 && amountComponent('Refund Amount', state?.refundTotal, '+')}
         </AmountBreakdownContainer>
-      )}
+      );
+    }
+    return null;
+  };
+
+  return (
+    <Container>
+      {renderAmountBreakdownComponent()}
       <TouchableOpacity activeOpacity={0.9} onPress={() => setShowAmountBreakdown(!showAmountBreakdown)}>
         {amountComponent(
           'Total',
           state?.totalAmount + state?.originalShippingFee,
+          '',
           showAmountBreakdown ? 'chevron-down' : 'chevron-up',
         )}
       </TouchableOpacity>

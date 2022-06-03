@@ -117,3 +117,19 @@ export const new_empty_shop_icon = require('./images/empty_icons/empty_result.pn
 
 //json animations
 export const restaurant_confirmation = require('./images/animations/restaurant-confirmation.gif');
+export const driver_on_the_way = require('./images/animations/driver-on-the-way.gif');
+export const ready_for_pick_up = require('./images/animations/ready-for-pickup.gif');
+export const preparing_order = require('./images/animations/preparing-order.gif');
+
+//order detail icons
+export const carbon_delivery = require('./images/carbon-delivery.png');
+export const carbon_check = require('./images/carbon-check.png');
+export const carbon_x = require('./images/carbon-x.png');
+export const cash_ic = require('./images/cash-ic.png');
+export const toktokwallet_ic = require('./images/toktokwallet-ic.png');
+export const calendar_ic = require('./images/calendar-ic.png');
+export const map_ic = require('./images/map-ic.png');
+
+//alert images
+export const success_image = require('./images/prompts_icons/success.png');
+export const warning_image = require('./images/prompts_icons/warning.png');

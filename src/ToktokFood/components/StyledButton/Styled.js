@@ -5,6 +5,7 @@
 import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
 import StyledText from 'toktokfood/components/StyledText';
+import {TouchableOpacity} from 'react-native';
 
 export const Container: ComponentType<any> = styled.View`
   width: 100%;
@@ -15,6 +16,13 @@ export const Container: ComponentType<any> = styled.View`
   height: ${props => props.height};
   align-items: center;
   justify-content: center;
+`;
+
+export const Button: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
+  ...props,
+  activeOpacity: 0.9,
+}))`
+  width: 100%;
 `;
 
 export const ButtonText: ComponentType<any> = styled(StyledText).attrs(props => ({

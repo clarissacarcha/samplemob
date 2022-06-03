@@ -6,7 +6,11 @@ import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
 import StyledText from 'toktokfood/components/StyledText';
 import StyledButton from 'toktokfood/components/StyledButton';
+import Header from 'toktokfood/components/Header';
 import {moderateScale} from 'toktokfood/helper/scale';
+import {Modal} from 'toktokfood/components/Modal';
+import {ScrollView} from 'react-native';
+import FIcon from 'react-native-vector-icons/Feather';
 
 export const Container: ComponentType<any> = styled.View`
   flex: 1;
@@ -27,6 +31,12 @@ export const AnimationText: ComponentType<any> = styled(StyledText).attrs(props 
 }))`
   margin-bottom: ${props => (props.title ? moderateScale(10) : 0)};
 `;
+
+export const ModifiedText: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
+  fontSize: 11,
+  color: props.theme.color.orange,
+}))``;
 
 export const BottomContainer: ComponentType<any> = styled.View`
   background-color: #ffffff;
@@ -51,8 +61,55 @@ export const AmountContainer: ComponentType<any> = styled.View`
   padding-top: 20px;
 `;
 
+export const ModifiedContainer: ComponentType<any> = styled.View`
+  flex-direction: row;
+  align-items: center;
+  background-color: ${props => props.theme.color.lightYellow};
+  padding-horizontal: 20px;
+  padding-vertical: 15px;
+  margin-top: ${props => (props.adjustSpacing ? -20 : 0)};
+  margin-bottom: ${props => (props.adjustSpacing ? 20 : 0)};
+`;
+
 export const Button: ComponentType<any> = styled(StyledButton).attrs(props => ({
   ...props,
 }))`
-  margin-bottom: 15px;
+  margin-bottom: ${props => (props.orderStatus && props.orderStatus === 'p' ? 15 : 0)};
 `;
+
+export const Icon: ComponentType<any> = styled(FIcon).attrs(props => ({
+  ...props,
+}))`
+  margin-right: 10px;
+`;
+
+export const CustomModal: ComponentType<any> = styled(Modal).attrs(props => ({
+  ...props,
+  backdropOpacity: 1,
+  propagateSwipe: true,
+}))`
+  margin: 0px;
+`;
+
+export const HeaderContainer: ComponentType<any> = styled.View`
+  border-bottom-width: 1;
+  border-bottom-color: rgba(0, 0, 0, 0.05);
+`;
+
+export const OrderDetailsHeader: ComponentType<any> = styled(Header).attrs(props => ({
+  ...props,
+  title: 'Order Details',
+  titleStyle: {
+    fontSize: 18,
+    top: 5,
+  },
+}))``;
+
+export const Scroll: ComponentType<any> = styled(ScrollView).attrs(props => ({
+  ...props,
+  contentContainerStyle: {
+    flexGrow: 1,
+    paddingBottom: 30,
+  },
+  showsVerticalScrollIndicator: false,
+}))``;

@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /**
  * @flow
  */
@@ -28,7 +29,14 @@ export const AmountText: ComponentType<any> = styled(StyledText).attrs(props => 
   fontSize: props.total ? 17 : 13,
 }))`
   margin-right: ${props => (props.total ? '10' : 0)};
-  color: ${props => (props.total ? props.theme.color.orange : props.theme.color.black)};
+  color: ${props =>
+    props.total
+      ? props.theme.color.orange
+      : props.sign === '-'
+      ? props.theme.color.red
+      : props.sign === '+'
+      ? props.theme.color.green
+      : props.theme.color.black};
   margin-bottom: 5px;
 `;
 
