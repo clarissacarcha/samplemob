@@ -16,7 +16,7 @@ export const PageFour = ({scale}) => {
     <Animated.View style={{...styles.container, transform: [{scale: scale}]}}>
       <Image resizeMode="contain" style={styles.logo} source={onboarding_toktokbills} />
       <Image resizeMode="contain" style={styles.welcomeImage} source={onboarding_4} />
-      <Text style={styles.title}>Recieved Receipt</Text>
+      <Text style={styles.title}>Received Receipt</Text>
       <Text style={styles.message}>
         There will be a downloable receipt, which will also be sent to your email account.
       </Text>
