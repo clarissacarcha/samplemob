@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(FONT_SIZE.M),
     textAlign: 'center',
     marginTop: moderateScale(5),
-    marginHorizontal: moderateScale(7),
+    marginHorizontal: moderateScale(5),
   },
   loadingContainer: {
     position: 'absolute',

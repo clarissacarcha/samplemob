@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
   ImageBackground,
   Platform,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -57,7 +57,7 @@ export const ToktokBillsOnboarding = () => {
 
   return (
     <ImageBackground style={styles.container} source={onboarding_bg} resizeMode={'cover'}>
-      <View style={{top: moderateScale(Platform.OS == 'android' ? 20 : 0), flex: 1}}>
+      <View style={styles.subContainer}>
         <Animated.FlatList
           ref={slider}
           showsHorizontalScrollIndicator={false}
@@ -67,7 +67,6 @@ export const ToktokBillsOnboarding = () => {
           scrollEventThrottle={16}
           snapToAlignment="center"
           pagingEnabled
-          // contentContainerStyle={{flexGrow: 1}}
           onScroll={Animated.event([{nativeEvent: {contentOffset: {x: scrollX}}}], {
             useNativeDriver: false,
             listener: event => {
@@ -113,6 +112,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  subContainer: {
+    flex: 1,
+    marginTop: moderateScale(Platform.OS == 'android' ? StatusBar.currentHeight : 0),
+    marginBottom: moderateScale(Platform.OS == 'android' ? 10 : 0),
   },
   headings: {
     height: 92,
