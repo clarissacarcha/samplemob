@@ -36,7 +36,7 @@ export const FavoriteDetails = ({item, index, onPressFavorite, onRefreshFavorite
     <TouchableOpacity onPress={onThrottledPress} style={styles.container}>
       <View style={styles.item}>
         <View style={{justifyContent: 'center'}}>
-          {imageLoading && (
+          {(imageLoading && billItem.logo)&& (
             <View style={styles.loadingContainer}>
               <LoadingIndicator isLoading={true} size="small" />
             </View>
