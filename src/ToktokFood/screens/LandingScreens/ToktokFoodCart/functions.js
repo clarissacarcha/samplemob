@@ -40,7 +40,7 @@ export const tokwaErrorBtnTitle = pinAttempt => {
 
 export const deleteKeys = data => {
   data.map(promo => {
-    if (promo.items.length) {
+    if (promo?.items && promo.items.length) {
       promo.items.map(i => delete i.__typename);
     }
     delete promo.origAmount;
