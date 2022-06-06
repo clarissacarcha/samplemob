@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     color: COLOR.ORANGE,
   },
   btnContainer: {
-    marginTop: moderateScale(20),
+    marginTop: moderateScale(30),
     marginHorizontal: moderateScale(75),
     backgroundColor: COLOR.ORANGE,
     paddingVertical: moderateScale(10),
