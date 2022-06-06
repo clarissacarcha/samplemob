@@ -35,7 +35,7 @@ import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useSelector} from 'react-redux';
 import {checkFirstField, checkSecondField} from '../../Functions';
 
-export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance, scrollRef = {}}) => {
+export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance, scrollRef = {}, getMyAccount}) => {
   const prompt = usePrompt();
   const navigation = useNavigation();
   const {
@@ -70,12 +70,10 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance, sc
     secondFieldWidthType,
     secondFieldMinWidth,
     commissionRateDetails,
-    itemDocumentDetails,
     providerId,
   } = billItemSettings;
 
   const {user} = useSelector(state => state.session);
-  // const {termsAndConditions, paymentPolicy1, paymentPolicy2} = itemDocumentDetails;
 
   //CONVENIENCE FEE
   const convenienceFee =
@@ -130,6 +128,8 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance, sc
   };
 
   const onPressConfirm = () => {
+    // setRefreshing(true)
+    getMyAccount();
     const isFirstFieldValid = checkFirstField(
       firstField,
       firstFieldName,
@@ -200,24 +200,5 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderTopColor: '#F8F8F8',
     borderTopWidth: 2,
-  },
-  terms: {
-    textAlign: 'center',
-    marginBottom: moderateScale(15),
-  },
-  tnc: {
-    color: '#F6841F',
-  },
-  paymentPolicy1: {
-    color: '#F6841F',
-    fontSize: FONT_SIZE.S,
-    textAlign: 'center',
-    marginBottom: moderateScale(15),
-  },
-  paymentPolicy2: {
-    color: '#F6841F',
-    fontSize: FONT_SIZE.S,
-    textAlign: 'center',
-    marginBottom: moderateScale(20),
   },
 });

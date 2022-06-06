@@ -111,7 +111,6 @@ export const ToktokBiller = ({navigation, route}) => {
   useEffect(() => {
     if (!search) {
       handleGetBillItems();
-      setBillItems([]);
     }
   }, [search]);
 
