@@ -40,30 +40,7 @@ export const ToktokBillsPaymentSummary = ({navigation, route}) => {
     headerTitle: () => <HeaderTitle label={'Payment Summary'} />,
   });
 
-  const isFocused = useIsFocused();
   const {paymentData} = route.params;
-  const {user} = useSelector(state => state.session);
-  const [refreshing, setRefreshing] = useState(false);
-  const [kycStatus, setKycStatus] = useState(null);
-
-  const [getUserToktokWalletData, {error, loading}] = useLazyQuery(GET_USER_TOKTOK_WALLET_DATA, {
-    fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        userId: user.id,
-      },
-    },
-    onCompleted: async ({getUserToktokWalletData}) => {
-      //0 - Rejected 1 - Approved 2 - Pending 3 - Linked 4 -For Further Verification
-      setKycStatus(getUserToktokWalletData.kycStatus);
-    },
-  });
-
-  useEffect(() => {
-    if (isFocused) {
-      getUserToktokWalletData();
-    }
-  }, [isFocused]);
 
   return (
     <>

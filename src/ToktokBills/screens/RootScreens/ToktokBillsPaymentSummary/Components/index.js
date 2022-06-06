@@ -1,3 +1,2 @@
-export * from "./ConfirmButton";
-export * from "./PaymentDetails";
-export * from "./PaymentMethod";
+export * from './ConfirmButton';
+export * from './PaymentDetails';

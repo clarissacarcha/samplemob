@@ -3,6 +3,7 @@ import {View, Text, Dimensions, StyleSheet, Image, TouchableOpacity} from 'react
 import {moderateScale} from 'toktokbills/helper';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useThrottle} from 'src/hooks';
+import FastImage from 'react-native-fast-image';
 
 import {LoadingIndicator} from 'toktokbills/components';
 
@@ -35,14 +36,15 @@ export const FavoriteBillerType = ({item, index, billTypes}) => {
       <TouchableOpacity onPress={onThrottledPress} style={styles.container}>
         <View style={styles.item}>
           <View style={{justifyContent: 'center'}}>
-            {(imageLoading && billItem.logo) && (
+            {imageLoading && billItem.logo && (
               <View style={styles.loadingContainer}>
                 <LoadingIndicator isLoading={true} size="small" />
               </View>
             )}
-            <Image
+            <FastImage
               source={{uri: billItem.logo}}
               style={styles.itemLogo}
+              resizeMode={FastImage.resizeMode.contain}
               onLoadStart={() => setImageLoading(true)}
               onLoadEnd={() => setImageLoading(false)}
             />

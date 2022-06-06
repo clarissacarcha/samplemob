@@ -222,7 +222,7 @@ const MainComponent = ({navigation, route}) => {
       </View>
     );
   }
-  if (error || getMyAccountError) {
+  if (error || (getMyAccountError && !getMyAccountError?.networkError)) {
     return (
       <View style={styles.container}>
         <SomethingWentWrong onRefetch={onRefresh} error={error ?? getMyAccountError} />

@@ -54,7 +54,6 @@ export const ToktokBillsHome = ({navigation, route}) => {
     },
     onCompleted: ({getBillTypes}) => {
       const res = _.isEqual(getBillTypes.sort(), billTypes.sort());
-      console.log(res);
       if (!res) {
         setBillTypes(getBillTypes);
       }
@@ -71,7 +70,7 @@ export const ToktokBillsHome = ({navigation, route}) => {
         setRefreshing(false);
       },
       onCompleted: ({getFavoriteBillsPaginate}) => {
-        const isEqual = _.isEqual(getFavoriteBillsPaginate, favoriteBills);
+        const isEqual = _.isEqual(getFavoriteBillsPaginate.edges, favoriteBills);
         if (!isEqual) {
           setFavoriteBills(getFavoriteBillsPaginate.edges);
         }
