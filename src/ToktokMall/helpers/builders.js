@@ -120,7 +120,7 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 		})
 
 		let shippingfeeindex = shippingRates.findIndex((e) => e.shopid == val.shop.id)
-		let vdiscountindex = shippingVouchers.findIndex((e) => e.shopid == val.shop.id)
+		let vdiscountindex = shippingVouchers.findIndex((e) => e.shop_id == val.shop.id)
 		let shippingFee = shippingRates[shippingfeeindex]
 		let voucherDiscount = shippingVouchers[vdiscountindex]
 

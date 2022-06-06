@@ -620,8 +620,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       if(error?.items && error?.items.length > 0){
         let formattedArr = error?.items.map((item) => {return {id: "", name: item}})
         onProductUnavailable(formattedArr, "name")
-      }else if(error?.message && error?.message.includes("Invalid voucher")){
-        alert("Pre merong invalid na vouchers. Na scam ka pre")
+      }else if(error?.message && error?.message.includes("Invalid voucher") || error?.voucher_data){
         onVoucherInvalid(error)
       }
 
