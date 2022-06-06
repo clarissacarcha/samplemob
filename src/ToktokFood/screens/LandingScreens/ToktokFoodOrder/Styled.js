@@ -32,6 +32,23 @@ export const AnimationText: ComponentType<any> = styled(StyledText).attrs(props 
   margin-bottom: ${props => (props.title ? moderateScale(10) : 0)};
 `;
 
+export const CancelledText: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
+}))`
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+export const ReasonText: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
+  fontSize: props.label ? 11 : 13,
+  color: props.label ? props.theme.color.darkgray : props.theme.color.black,
+}))`
+  margin-vertical: ${props => (props.label ? 20 : 0)};
+  margin-bottom: ${props => (props.label ? 10 : 20)};
+  align-self: flex-start;
+`;
+
 export const ModifiedText: ComponentType<any> = styled(StyledText).attrs(props => ({
   ...props,
   fontSize: 11,
@@ -55,6 +72,7 @@ export const BottomContainer: ComponentType<any> = styled.View`
 
 export const ButtonContainer: ComponentType<any> = styled.View`
   padding: 20px;
+  padding-bottom: 0;
 `;
 
 export const AmountContainer: ComponentType<any> = styled.View`
@@ -90,6 +108,10 @@ export const CustomModal: ComponentType<any> = styled(Modal).attrs(props => ({
 }))`
   margin: 0px;
 `;
+
+export const CancelModal: ComponentType<any> = styled(Modal).attrs(props => ({
+  ...props,
+}))``;
 
 export const HeaderContainer: ComponentType<any> = styled.View`
   border-bottom-width: 1;

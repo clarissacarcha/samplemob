@@ -6,10 +6,11 @@
 import React from 'react';
 
 import type {PropsType} from './types';
-import {} from './Styled';
+import {Container} from './Styled';
 
 const ModalHeader = (props: PropsType): React$Node => {
-  return <></>;
+  const {children} = props;
+  return <Container>{children}</Container>;
 };
 
 export default ModalHeader;

@@ -8,6 +8,8 @@ import OrderInformation from './OrderInformation';
 import OrderSummary from './OrderSummary';
 import OrderNote from './OrderNote';
 import OrderDeliveryLogs from './OrderDeliveryLogs';
+import OrderExhaustTimer from './OrderExhaustTimer';
+import OrderCancellationModal from './OrderCancellationModal';
 
 export {
   OrderAnimatedImage,
@@ -20,4 +22,6 @@ export {
   OrderSummary,
   OrderNote,
   OrderDeliveryLogs,
+  OrderExhaustTimer,
+  OrderCancellationModal,
 };

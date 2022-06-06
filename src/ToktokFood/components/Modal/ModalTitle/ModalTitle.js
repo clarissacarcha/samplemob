@@ -9,8 +9,12 @@ import type {PropsType} from './types';
 import {Title} from './Styled';
 
 const ModalTitle = (props: PropsType): React$Node => {
-  const {children} = props;
-  return <Title>{children}</Title>;
+  const {children, color, align, size} = props;
+  return (
+    <Title color={color} align={align} size={size}>
+      {children}
+    </Title>
+  );
 };
 
 export default ModalTitle;

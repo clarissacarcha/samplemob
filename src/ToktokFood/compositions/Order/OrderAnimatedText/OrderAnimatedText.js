@@ -25,7 +25,7 @@ const OrderAnimatedText = (props: PropsType): React$Node => {
         subtitle = 'Give restaurant some time to accept your order.';
         break;
       case 'po':
-        if (state?.orderIsfor === 2 || (state?.orderIsfor === 1 && state?.riderDetails?.driver)) {
+        if (state?.orderIsfor === 2 || (state?.orderIsfor === 1 && (state?.riderDetails?.driver || state?.rebooked))) {
           title = 'Preparing Order';
           subtitle = 'Give restaurant some time to prepare your order.';
         } else {
@@ -34,20 +34,35 @@ const OrderAnimatedText = (props: PropsType): React$Node => {
         }
         break;
       case 'rp':
-        if (state?.orderIsfor === 1 && state?.riderDetails?.driver && state?.deliveryLogs[3]?.createdAt) {
-          title = 'Order has been picked-up';
-          subtitle = 'Rider has picked-up the order';
-        } else if (state?.orderIsfor === 2) {
+        if (state?.orderIsfor === 1) {
+          title = 'Preparing Order';
+          subtitle = 'Give restaurant some time to prepare your order.';
+        } else {
           title = 'Order is ready for pick up';
           subtitle = 'Yay! Your food is good to go.';
         }
         break;
       case 'f':
+        if (state?.orderIsfor === 1 && state?.riderDetails?.driver) {
+          if (state?.deliveryLogs[4]?.createdAt) {
+            title = 'Driver is on the way';
+            subtitle = 'The driver is on the way to deliver your order.';
+          } else {
+            title = 'Order has been picked-up';
+            subtitle = 'Rider has picked-up the order';
+          }
+        } else if (state?.orderIsfor === 2) {
+          title = 'Order is ready for pick up';
+          subtitle = 'Yay! Your food is good to go.';
+        }
+        break;
       case 's':
         title = 'Driver is on the way';
         subtitle = 'The driver is on the way to deliver your order.';
         break;
       default:
+        title = title;
+        subtitle = subtitle;
         break;
     }
 

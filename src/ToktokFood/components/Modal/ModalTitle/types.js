@@ -7,4 +7,7 @@ export type PropsType = {
   accessibilityLabel?: string,
   theme?: Object,
   children: string,
+  color?: string,
+  align?: string,
+  size?: number,
 };

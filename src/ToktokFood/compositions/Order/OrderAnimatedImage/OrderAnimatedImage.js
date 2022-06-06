@@ -26,27 +26,35 @@ const OrderAnimatedImage = (props: PropsType): React$Node => {
         source = restaurant_confirmation;
         break;
       case 'po':
-        if (state?.orderIsFor === 2 || (state?.orderIsfor === 1 && state?.riderDetails?.driver)) {
+        if (state?.orderIsfor === 2 || (state?.orderIsfor === 1 && (state?.riderDetails?.driver || state?.rebooked))) {
           source = preparing_order;
         } else {
           source = driver_on_the_way;
         }
         break;
       case 'rp':
-        if (
-          state?.orderIsFor === 2 ||
-          (state?.orderIsfor === 1 && state?.riderDetails?.driver && state?.deliveryLogs[3]?.createdAt)
-        ) {
+        if (state?.orderIsfor === 2) {
           source = ready_for_pick_up;
         } else {
           source = preparing_order;
         }
         break;
       case 'f':
+        if (state?.orderIsfor === 1 && state?.riderDetails?.driver) {
+          if (state?.deliveryLogs[4]?.createdAt) {
+            source = driver_on_the_way;
+          } else {
+            source = ready_for_pick_up;
+          }
+        } else {
+          source = preparing_order;
+        }
+        break;
       case 's':
         source = driver_on_the_way;
         break;
       default:
+        source = source;
         break;
     }
     return <AnimatedImage source={source} />;

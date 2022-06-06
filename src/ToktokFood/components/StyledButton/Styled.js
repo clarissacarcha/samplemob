@@ -22,7 +22,7 @@ export const Button: ComponentType<any> = styled(TouchableOpacity).attrs(props =
   ...props,
   activeOpacity: 0.9,
 }))`
-  width: 100%;
+  /* flex: 1; */
 `;
 
 export const ButtonText: ComponentType<any> = styled(StyledText).attrs(props => ({

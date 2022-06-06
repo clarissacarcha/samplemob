@@ -130,3 +130,4 @@ export const map_ic = require('./images/map-ic.png');
 //alert images
 export const success_image = require('./images/prompts_icons/success.png');
 export const warning_image = require('./images/prompts_icons/warning.png');
+export const question_image = require('./images/prompts_icons/question_ic.png');

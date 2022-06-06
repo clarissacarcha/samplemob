@@ -343,7 +343,8 @@ const MainComponent = () => {
             dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
             setTimeout(() => {
               setShowLoader(false);
-              navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
+              // navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
+              navigation.replace('ToktokFoodOrder', {referenceNum: checkoutOrder.referenceNum, orderStatus: 'p'});
             }, 5000);
           })
           .catch(() => {
