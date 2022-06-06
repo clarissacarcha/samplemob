@@ -81,9 +81,14 @@ const OrderFee = ({data, forDelivery, showRefund, forWallet}) => {
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${(deliveryFee + srpTotal).toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(
+            deliveryFee + (resellerDiscountTotal > 0 ? srpTotal - resellerDiscountTotal : srpTotal)
+          ).toFixed(2)}`}</Text>
         ) : (
-          <Text style={styles.totalPrice}>{`PHP ${srpTotal.toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(resellerDiscountTotal > 0
+            ? srpTotal - resellerDiscountTotal
+            : srpTotal
+          ).toFixed(2)}`}</Text>
         )}
       </View>
       {forWallet && showRefund && (
