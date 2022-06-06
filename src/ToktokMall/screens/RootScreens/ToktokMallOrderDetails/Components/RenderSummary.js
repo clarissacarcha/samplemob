@@ -7,8 +7,9 @@ import AIcons from 'react-native-vector-icons/dist/AntDesign';
 import { RenderDot } from './SubComponents';
 
 export const RenderSummary = ({data}) => {
-    const grandTotal = parseFloat(data?.payments?.shippingFee) + parseFloat(data?.totalAmount)
-  
+
+    // const grandTotal = parseFloat(data?.payments?.shippingFee) + parseFloat(data?.totalAmount) - parseFloat(data?.discounts?.totalDiscount)
+    const grandTotal = data?.payments?.grandTotal
     const [bolean,setBolean] = useState(false);
     
     return (
