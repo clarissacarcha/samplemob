@@ -28,7 +28,7 @@ export const Biller = ({item, index}) => {
     <TouchableOpacity onPress={onThrottledPress} style={styles.container}>
       <View style={styles.item}>
         <View style={{justifyContent: 'center'}}>
-          {imageLoading && (
+          {(imageLoading && item.node.logo)  && (
             <View style={{position: 'absolute', right: 0, left: 0}}>
               <LoadingIndicator isLoading={true} size="small" />
             </View>
