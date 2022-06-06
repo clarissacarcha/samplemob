@@ -60,7 +60,7 @@ export const RenderItem = (props) => {
 
     return (
         <View style={styles.renderItemContainer}>
-            <View style={styles.shadowContainer}>
+            <View style={styles.shadowContainer(renderBuyAgain)}>
                 <TouchableOpacity
                     onPress={onPressCard}
                     style={styles.renderItemButtonContainer}
@@ -183,11 +183,14 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "600"
     },
-    shadowContainer: {
-        backgroundColor: 'white',
-        shadowColor: '#470000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        elevation: 2,
+    shadowContainer: (renderBuyAgain) => {
+        return {
+            backgroundColor: 'white',
+            shadowColor: '#470000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.2,
+            elevation: 2,
+            paddingBottom: renderBuyAgain ? 0 : 16
+        }
     }
 })
