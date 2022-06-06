@@ -53,7 +53,8 @@ export const ToktokBillsHome = ({navigation, route}) => {
       setRefreshing(false);
     },
     onCompleted: ({getBillTypes}) => {
-      const res = _.isEqual(getBillTypes, billTypes);
+      const res = _.isEqual(getBillTypes.sort(), billTypes.sort());
+      console.log(res);
       if (!res) {
         setBillTypes(getBillTypes);
       }
@@ -119,13 +120,6 @@ export const ToktokBillsHome = ({navigation, route}) => {
     navigation.navigate('ToktokBillsFavorites', {billTypes});
   };
 
-  if (((loading && billTypes.length === 0) || (getFavoritesLoading && favoriteBills.length === 0)) && !refreshing) {
-    return (
-      <ImageBackground source={screen_bg} style={styles.loadingContainer} resizeMode="cover">
-        <LoadingIndicator isLoading={true} />
-      </ImageBackground>
-    );
-  }
   if (error || getFavoritesError) {
     return (
       <View style={styles.container}>
@@ -136,40 +130,44 @@ export const ToktokBillsHome = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <ImageBackground source={screen_bg} style={{flex: 1}} resizeMode="cover">
-        <ScrollView
-          contentContainerStyle={{padding: moderateScale(16)}}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-          {/* DISPLAY FAVORITES */}
-          {favoriteBills.length > 0 && (
-            <View style={styles.shadowContainer}>
-              <View style={[styles.favoriteContainer, styles.lineSeperator]}>
-                <Text style={[styles.title]}>Favorite Billers</Text>
-                {favoriteBills.length > 3 && (
-                  <TouchableOpacity style={styles.seeAllContainer} onPress={onPressSeeAll}>
-                    <Text style={styles.seeAllText}>See All</Text>
-                    <VectorIcon color={COLOR.ORANGE} size={15} iconSet={ICON_SET.Entypo} name="chevron-right" />
-                  </TouchableOpacity>
-                )}
+        {((loading && billTypes.length === 0) || (getFavoritesLoading && favoriteBills.length === 0)) && !refreshing ? (
+          <LoadingIndicator isLoading={true} isFlex />
+        ) : (
+          <ScrollView
+            contentContainerStyle={{padding: moderateScale(16)}}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            {/* DISPLAY FAVORITES */}
+            {favoriteBills.length > 0 && (
+              <View style={styles.shadowContainer}>
+                <View style={[styles.favoriteContainer, styles.lineSeperator]}>
+                  <Text style={[styles.title]}>Favorite Billers</Text>
+                  {favoriteBills.length > 3 && (
+                    <TouchableOpacity style={styles.seeAllContainer} onPress={onPressSeeAll}>
+                      <Text style={styles.seeAllText}>See All</Text>
+                      <VectorIcon color={COLOR.ORANGE} size={15} iconSet={ICON_SET.Entypo} name="chevron-right" />
+                    </TouchableOpacity>
+                  )}
+                </View>
+                <View style={{marginVertical: moderateScale(16)}}>
+                  {favoriteBills.slice(0, 3).map((item, index) => (
+                    <FavoriteBillerType item={item} index={index} billTypes={billTypes} />
+                  ))}
+                </View>
               </View>
-              <View style={{marginVertical: moderateScale(16)}}>
-                {favoriteBills.slice(0, 3).map((item, index) => (
-                  <FavoriteBillerType item={item} index={index} billTypes={billTypes} />
-                ))}
+            )}
+            {/* DISPLAY BILLER TYPE */}
+            {billTypes.length > 0 && (
+              <View style={styles.shadowContainer}>
+                <Text style={[styles.title, styles.lineSeperator]}>Select Biller Type</Text>
+                <View style={styles.billerTypesContainer}>
+                  {billTypes.map((item, index) => (
+                    <BillerType item={item} index={index} />
+                  ))}
+                </View>
               </View>
-            </View>
-          )}
-          {/* DISPLAY BILLER TYPE */}
-          {billTypes.length > 0 && (
-            <View style={styles.shadowContainer}>
-              <Text style={[styles.title, styles.lineSeperator]}>Select Biller Type</Text>
-              <View style={styles.billerTypesContainer}>
-                {billTypes.map((item, index) => (
-                  <BillerType item={item} index={index} />
-                ))}
-              </View>
-            </View>
-          )}
-        </ScrollView>
+            )}
+          </ScrollView>
+        )}
       </ImageBackground>
     </View>
   );

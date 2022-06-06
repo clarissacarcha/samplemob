@@ -50,7 +50,7 @@ const MainComponent = ({navigation, route}) => {
   const onRefreshFavorite = route?.params?.favoriteDetails ? route.params.onRefreshFavorite : null;
   const scrollRef = useRef({});
 
-  const [refreshing, setRefreshing] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [favoriteBillId, setFavoriteBillId] = useState(favoriteDetails ? favoriteDetails.id : 0);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
 
@@ -147,15 +147,12 @@ const MainComponent = ({navigation, route}) => {
     }
   }, [user]);
 
-  const onRefetch = () => {
-    refetch();
-  };
-
   useEffect(() => {
-    setRefreshing(getMyAccountLoading);
-  }, [getMyAccountLoading]);
+    setIsMounted(true);
+  }, []);
 
   const onRefresh = () => {
+    refetch();
     getMyAccount();
   };
 
@@ -218,7 +215,7 @@ const MainComponent = ({navigation, route}) => {
     }
   };
 
-  if (loading || (getMyAccountLoading && !refreshing)) {
+  if (loading || (getMyAccountLoading && !isMounted)) {
     return (
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
@@ -228,7 +225,7 @@ const MainComponent = ({navigation, route}) => {
   if (error || getMyAccountError) {
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefetch} error={error ?? getMyAccountError} />
+        <SomethingWentWrong onRefetch={onRefresh} error={error ?? getMyAccountError} />
       </View>
     );
   }
@@ -240,10 +237,7 @@ const MainComponent = ({navigation, route}) => {
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? moderateScale(65) : moderateScale(-100)}>
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          ref={scrollRef}>
+        <ScrollView keyboardShouldPersistTaps="handled" ref={scrollRef}>
           <Header billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />
           <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
           <Separator />
@@ -255,6 +249,7 @@ const MainComponent = ({navigation, route}) => {
         billType={billType}
         tokwaBalance={user.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : '0.00'}
         scrollRef={scrollRef}
+        getMyAccount={getMyAccount}
       />
     </>
   );
