@@ -75,7 +75,7 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance, sc
   } = billItemSettings;
 
   const {user} = useSelector(state => state.session);
-  const {termsAndConditions, paymentPolicy1, paymentPolicy2} = itemDocumentDetails;
+  // const {termsAndConditions, paymentPolicy1, paymentPolicy2} = itemDocumentDetails;
 
   //CONVENIENCE FEE
   const convenienceFee =

@@ -14,7 +14,9 @@ export const Header = ({route}) => {
 
   return (
     <View style={{alignItems: 'center'}}>
-      <Image source={{uri: billerDetails.logo}} style={styles.logo} />
+      {billerDetails?.logo && (
+       <Image source={{uri: billerDetails.logo}} style={styles.logo} />
+      )}
       <View style={styles.logoTextContainer}>
         <Text>
           <Text style={styles.headerText}>{billerDetails.descriptions}</Text>
