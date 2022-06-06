@@ -22,17 +22,18 @@ export const Header = ({billType, billItemSettings = {}, tokwaBalance = 0}) => {
     <ImageBackground source={banner_bg} resizeMode="cover">
       <View style={styles.headerContainer}>
         <View style={{justifyContent: 'center'}}>
-          {imageLoading && (
+          {(imageLoading && billItemSettings?.logo) && (
             <View style={{position: 'absolute', right: 0, left: 0}}>
               <LoadingIndicator isLoading={true} size="small" />
             </View>
           )}
+          {billItemSettings?.logo && (
           <Image
             source={{uri: billItemSettings?.logo}}
             style={styles.logo}
             onLoadStart={() => setImageLoading(true)}
             onLoadEnd={() => setImageLoading(false)}
-          />
+          /> )}
         </View>
         <Text style={styles.billerName}>{billItemSettings?.descriptions}</Text>
       </View>
