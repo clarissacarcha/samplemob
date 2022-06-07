@@ -14,7 +14,6 @@ const {width, height} = Dimensions.get('window');
 export const PageOne = ({scale}) => {
   return (
     <Animated.View style={{...styles.container, transform: [{scale: scale}]}}>
-      <Image resizeMode="contain" style={styles.logo} source={onboarding_toktokbills} />
       <Image resizeMode="contain" style={styles.welcomeImage} source={onboarding_1} />
       <Text style={styles.title}>Select a Biller</Text>
       <Text style={styles.message}>

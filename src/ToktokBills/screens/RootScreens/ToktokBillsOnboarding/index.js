@@ -18,7 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import {getStatusbarHeight, moderateScale} from 'toktokbills/helper';
 
 //IMAGE
-import {onboarding_bg} from 'toktokbills/assets';
+import {onboarding_bg, onboarding_toktokbills} from 'toktokbills/assets';
 
 //HOOKS
 import {useThrottle} from 'src/hooks';
@@ -58,6 +58,7 @@ export const ToktokBillsOnboarding = () => {
   return (
     <ImageBackground style={styles.container} source={onboarding_bg} resizeMode={'cover'}>
       <View style={styles.subContainer}>
+      <Image resizeMode="contain" style={styles.logo} source={onboarding_toktokbills} />
         <Animated.FlatList
           ref={slider}
           showsHorizontalScrollIndicator={false}
@@ -155,6 +156,13 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
     marginBottom: 5,
     fontSize: FONT_SIZE.S,
+  },
+  logo: {
+    marginTop: moderateScale(50),
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: moderateScale(42),
+    width: width,
   },
   dots: {
     height: 30,
