@@ -6,6 +6,7 @@ import {useThrottle} from 'src/hooks';
 
 import {LoadingIndicator} from 'toktokbills/components';
 
+import {SIZE} from 'src/res/variables';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
@@ -44,9 +45,10 @@ export const BillerType = ({item, index}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: width / 4,
-    width: width / 4 - moderateScale(10),
+    width: '25%',
     justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: SIZE.MARGIN / 2,
   },
   item: {
     flex: 1,

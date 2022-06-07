@@ -226,6 +226,6 @@ const styles = StyleSheet.create({
   billerTypesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: moderateScale(20),
+    marginVertical: moderateScale(20),
   },
 });
