@@ -82,7 +82,7 @@ export const ReceiptDetails = ({route}) => {
           </View>
         )}
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Payment amount </Text>
+          <Text style={styles.title}>Payment Amount </Text>
           <Text style={styles.description}>
             {currencyCode}
             {numberFormat(amount)}
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   description: {
     color: 'black',
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.M,
     flexShrink: 1,
     textAlign: 'center',
   },
