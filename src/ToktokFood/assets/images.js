@@ -106,9 +106,6 @@ export const terms_and_conditions_ic = require('./images/me_icons/terms-and-cond
 export const email_ic = require('./images/me_icons/email.png');
 export const call_ic = require('./images/me_icons/call.png');
 export const wallet_ic = require('./images/me_icons/wallet.png');
-export const order_type_icon = require('./images/ordertype_icon.png');
-export const cart_map_pin_icon = require('./images/cart_map_pin.png');
-
 // Reseller
 export const reseller_badge = require('./images/reseller-badge.png');
 
@@ -117,3 +114,20 @@ export const new_empty_shop_icon = require('./images/empty_icons/empty_result.pn
 
 //json animations
 export const restaurant_confirmation = require('./images/animations/restaurant-confirmation.gif');
+export const driver_on_the_way = require('./images/animations/driver-on-the-way.gif');
+export const ready_for_pick_up = require('./images/animations/ready-for-pickup.gif');
+export const preparing_order = require('./images/animations/preparing-order.gif');
+
+//order detail icons
+export const carbon_delivery = require('./images/carbon-delivery.png');
+export const carbon_check = require('./images/carbon-check.png');
+export const carbon_x = require('./images/carbon-x.png');
+export const cash_ic = require('./images/cash-ic.png');
+export const toktokwallet_ic = require('./images/toktokwallet-ic.png');
+export const calendar_ic = require('./images/calendar-ic.png');
+export const map_ic = require('./images/map-ic.png');
+
+//alert images
+export const success_image = require('./images/prompts_icons/success.png');
+export const warning_image = require('./images/prompts_icons/warning.png');
+export const question_image = require('./images/prompts_icons/question_ic.png');

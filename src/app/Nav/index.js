@@ -33,6 +33,8 @@ import ToktokLoadScreens from './toktokload';
 import ToktokMallScreens from './toktokmall';
 import ToktokBillScreens from './toktokbills';
 import ToktokGoScreens from './toktokgo';
+/*---------- TOKTOKMALL DEEP LINKING  ----------*/
+import linking from '../../ToktokMall/util/linking'
 
 /*---------- CONSUMER SCREENS ----------*/
 
@@ -381,7 +383,7 @@ const SwitchStack = () => {
 
 const Nav = ({initialRoute}) => {
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer linking = {linking} ref={navigationRef}>
       <SwitchStack initialRoute={initialRoute} />
     </NavigationContainer>
   );

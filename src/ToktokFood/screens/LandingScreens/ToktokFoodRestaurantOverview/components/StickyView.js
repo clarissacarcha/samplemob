@@ -91,17 +91,17 @@ export const StickyView = ({onCheckShop}) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'cache-and-network',
     onCompleted: ({getShopDetails}) => {
-      let {address, shopname, latitude, longitude, hasOpen, nextOperatingHrs, hasProduct} = getShopDetails;
+      let {latitude, longitude, hasOpen, nextOperatingHrs, hasProduct} = getShopDetails;
       if (nextOperatingHrs) {
         setNextSched(nextOperatingHrs);
       }
-      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude, shopName: shopname, shopAddress: address}});
+      dispatch({type: 'SET_TOKTOKFOOD_SHOP_COORDINATES', payload: {latitude, longitude}});
       setShopDetails(getShopDetails);
       onCheckShop(hasOpen && hasProduct);
     },
   });
 
-  const [getProductsByShopCategory, {data: categoryProducts, loading: productsLoading, fetchMore}] = useLazyQuery(
+  const [getProductsByShopCategory, {data: categoryProducts, loading: productsLoading, fetchMore, refetch}] = useLazyQuery(
     GET_PRODUCTS_BY_SHOP_CATEGORY,
     {
       variables: {
@@ -132,15 +132,6 @@ export const StickyView = ({onCheckShop}) => {
     if (isFocus && location) {
       getProductCategories();
       getProductsByShopCategory();
-      // console.log(
-      //   JSON.stringify({
-      //     input: {
-      //       shopId: id,
-      //       userLongitude: location?.longitude,
-      //       userLatitude: location?.latitude,
-      //     },
-      //   }),
-      // );
       getShopDetails({
         variables: {
           input: {
@@ -152,6 +143,13 @@ export const StickyView = ({onCheckShop}) => {
       });
     }
   }, [isFocus, location]);
+
+  useEffect(() => {
+    const onRefresh = async () => {
+      await refetch();
+    };
+    onRefresh();
+  }, [activeTab]);
 
   useEffect(() => {
     if (data) {
@@ -304,7 +302,6 @@ export const StickyView = ({onCheckShop}) => {
         productsLoading={productsLoading}
         showMore={showMore}
         tagsLoading={loading}
-        shopDetails={shopDetails}
       />
     );
   }, [id, activeTab, categoryProducts, loading, productsLoading, showMore]);

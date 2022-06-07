@@ -25,6 +25,7 @@ export const LIGHT_THEME = {
     green: '#198754',
     red: '#ED3A19',
     orange: '#F6841F',
+    lightYellow: '#FFFCF4',
     orangedisabled: '#F6841F', // opacity 50%
     yellow: '#FDBA1C',
   },

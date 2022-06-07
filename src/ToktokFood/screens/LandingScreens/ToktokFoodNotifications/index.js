@@ -47,8 +47,9 @@ const ToktokFoodNotifications = () => {
     }
   }, [isFocus]);
 
-  const getStatus = (status, referenceNum, orderIsfor) => {
-    switch (status) {
+  const getStatus = ({orderStatus, orderIsfor, referenceNum, shopname, refundTotal}) => {
+    // return {title: 'null', desc: 'test'};
+    switch (orderStatus) {
       case 'c':
         return {title: 'Cancelled Order', desc: `Order ${referenceNum} has been cancelled`};
       case 'p':
@@ -69,7 +70,6 @@ const ToktokFoodNotifications = () => {
           desc: `Order ${referenceNum} has been picked up successfully. Thank you for ordering using toktokfood!`,
         };
       case 's':
-        // console.log(status, orderIsfor, referenceNum);
         if (orderIsfor === 1) {
           return {
             title: 'Delivery Completed',
@@ -80,6 +80,19 @@ const ToktokFoodNotifications = () => {
           title: 'Order Completed',
           desc: `Order ${referenceNum} has been picked up successfully. Thank you for ordering using toktokfood!`,
         };
+      case 'r':
+        return {
+          title: 'toktokfood Refund',
+          desc: `Your payment for toktokfood through toktokwallet amounting to PHP ${refundTotal} has been succesfully refunded.`,
+        };
+      case 'sm':
+        return {
+          title: 'Edited Order',
+          desc: `Heads-up, ka-toktok! Your order ${referenceNum} from ${shopname} has been modified.`,
+        };
+      default: 
+        return {title: '', desc: ''}
+ 
     }
   };
 
@@ -100,10 +113,10 @@ const ToktokFoodNotifications = () => {
       <View style={styles.infoWrapper}>
         <View style={styles.notificationInfo}>
           <Text numberOfLines={2} style={styles.notificationTitle}>
-            {getStatus(item.orderStatus, item.referenceNum, item.orderIsfor).title}
+            {getStatus(item).title}
           </Text>
           <Text numberOfLines={2} style={styles.notificationContent}>
-            {getStatus(item.orderStatus, item.referenceNum, item.orderIsfor).desc}
+            {getStatus(item).desc}
           </Text>
         </View>
       </View>

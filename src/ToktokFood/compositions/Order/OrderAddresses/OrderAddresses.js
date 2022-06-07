@@ -46,8 +46,12 @@ const OrderAddresses = (props: PropsType): React$Node => {
     return (
       <IconContainer>
         <Icon name="map-pin" color={theme.color.yellow} size={22} />
-        {dashComponent()}
-        <Icon name="map-marker-alt" color={theme.color.orange} size={17} />
+        {state?.orderIsfor === 1 && (
+          <React.Fragment>
+            {dashComponent()}
+            <Icon name="map-marker-alt" color={theme.color.orange} size={17} />
+          </React.Fragment>
+        )}
       </IconContainer>
     );
   };
@@ -57,7 +61,7 @@ const OrderAddresses = (props: PropsType): React$Node => {
       {iconComponent()}
       <AddressContainer>
         {addressComponent(state?.shopDetails?.shopname, state?.shopDetails?.address)}
-        {addressComponent(state?.address, '', state?.landmark)}
+        {state?.orderIsfor === 1 && addressComponent(state?.address, '', state?.landmark)}
       </AddressContainer>
     </Container>
   );
