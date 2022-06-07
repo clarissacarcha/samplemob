@@ -52,7 +52,8 @@ const MainComponent = ({navigation, route, viewRef, onCapturingScreen}) => {
         source={LinearGradient}
         resizeMode="cover"
         style={{
-          marginTop: moderateScale(10),
+          padding: moderateScale(16),
+          flex: 1,
         }}>
         <View style={styles.receiptContainer}>
           <Header route={route} />
@@ -222,7 +223,6 @@ const styles = StyleSheet.create({
   },
   receiptContainer: {
     margin: moderateScale(16),
-    marginBottom: Platform.OS === 'ios' ? moderateScale(100) : 0,
     paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(20),
     backgroundColor: COLOR.WHITE,

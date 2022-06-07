@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   description: {
     color: 'black',
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.M,
     flexShrink: 1,
     textAlign: 'center',
   },
