@@ -52,7 +52,8 @@ const MainComponent = ({navigation, route, viewRef, onCapturingScreen}) => {
         source={LinearGradient}
         resizeMode="cover"
         style={{
-          marginTop: moderateScale(10),
+          padding: moderateScale(16),
+          flex: 1,
         }}>
         <View style={styles.receiptContainer}>
           <Header route={route} />
