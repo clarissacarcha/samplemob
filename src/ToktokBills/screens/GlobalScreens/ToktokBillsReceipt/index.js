@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
   },
   receiptContainer: {
     margin: moderateScale(16),
+    marginBottom: Platform.OS === 'ios' ? moderateScale(100) : 0,
     paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(20),
     backgroundColor: COLOR.WHITE,
