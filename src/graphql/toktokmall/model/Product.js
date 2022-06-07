@@ -293,6 +293,7 @@ export const CHECK_ITEM_FROM_CHECKOUT = gql`
 			id
 			status
 			noOfStocks
+			contSellingIsset
 		}
 	}
 `

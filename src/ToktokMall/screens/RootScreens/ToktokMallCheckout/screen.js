@@ -110,7 +110,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         'onProductUnavailable',
         newData.filter(({status, cartQty, noOfStocks}) => status === false || (status === true && cartQty > noOfStocks)),
       );
-      const temp= newData.filter(({status, cartQty, noOfStocks})=> status === false || (status === true && cartQty > noOfStocks))
+      const temp= newData.filter(({status, cartQty, noOfStocks, contSellingIsset}) => status ? !contSellingIsset && cartQty > noOfStocks : true);
 
       if(temp.length > 0){
         onProductUnavailable(temp, "id")
