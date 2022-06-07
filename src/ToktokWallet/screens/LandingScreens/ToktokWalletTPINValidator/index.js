@@ -41,12 +41,16 @@ export const MainComponent = ({navigation, route}) => {
   const data = route?.params?.data ? route.params.data : null;
   const btnLabel = route?.params?.btnLabel ? route.params.btnLabel : 'Proceed';
   const screenPopNo = route?.params?.screenPopNo ? route.params.screenPopNo : 4;
+  const onPressCancelYes = route?.params?.onPressCancelYes ? route.params.onPressCancelYes : null;
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
     headerTitle: () => <HeaderTitle label={['']} />,
     headerRight: () =>
-      btnLabel == 'Cash In' || (screenPopNo && <HeaderCancel navigation={navigation} screenPopNo={screenPopNo} />),
+      btnLabel == 'Cash In' ||
+      (screenPopNo && (
+        <HeaderCancel navigation={navigation} screenPopNo={screenPopNo} onPressCancelYes={onPressCancelYes} />
+      )),
     headerStyle: {
       elevation: 0,
       shadowColor: '#fff',

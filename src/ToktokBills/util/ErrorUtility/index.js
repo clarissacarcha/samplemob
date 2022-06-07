@@ -18,6 +18,7 @@ export class ErrorUtility {
     prompt,
     title = 'Transaction Failed',
     isPop = false,
+    onPress,
   }) => {
     const {graphQLErrors, networkError} = error;
 
@@ -88,6 +89,7 @@ export class ErrorUtility {
       title: maxAttempt ? 'Max Attempt Reached' : title,
       message: graphQLErrors[0]?.message,
       event: 'TOKTOKBILLSLOAD',
+      onPress: onPress,
     });
 
     if (isPop) {

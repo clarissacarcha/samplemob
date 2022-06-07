@@ -222,7 +222,6 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(10),
   },
   receiptContainer: {
-    margin: moderateScale(16),
     paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(20),
     backgroundColor: COLOR.WHITE,
