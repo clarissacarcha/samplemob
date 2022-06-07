@@ -14,7 +14,6 @@ const {width, height} = Dimensions.get('window');
 export const PageThree = ({scale}) => {
   return (
     <Animated.View style={{...styles.container, transform: [{scale: scale}]}}>
-      <Image resizeMode="contain" style={styles.logo} source={onboarding_toktokbills} />
       <Image resizeMode="contain" style={styles.welcomeImage} source={onboarding_3} />
       <Text style={styles.title}>Review and Confirm</Text>
       <Text style={styles.message}>
@@ -34,14 +33,17 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: moderateScale(20),
     fontFamily: FONT.BOLD,
-    fontSize: moderateScale(20),
+    fontSize: moderateScale(30),
     color: COLOR.ORANGE,
     textAlign: 'center',
   },
   welcomeImage: {
-    height: width * 0.8,
-    width: width * 0.8,
+    height: width * 0.7,
+    width: width * 0.7,
     marginVertical: 10,
+    flex: 1,
+    justifyContent: 'center', 
+    alignItems: 'center',
   },
   logo: {
     height: moderateScale(50),
@@ -50,7 +52,7 @@ const styles = StyleSheet.create({
   },
   message: {
     fontFamily: FONT.REGULAR,
-    fontSize: FONT_SIZE.L,
+    fontSize: moderateScale(18),
     textAlign: 'center',
     marginHorizontal: moderateScale(20),
   },
