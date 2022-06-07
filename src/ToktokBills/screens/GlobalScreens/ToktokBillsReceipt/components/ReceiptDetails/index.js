@@ -82,7 +82,7 @@ export const ReceiptDetails = ({route}) => {
           </View>
         )}
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Payment amount </Text>
+          <Text style={styles.title}>Payment Amount </Text>
           <Text style={styles.description}>
             {currencyCode}
             {numberFormat(amount)}
