@@ -235,13 +235,19 @@ const MainComponent = ({navigation, route}) => {
       <AlertOverlay visible={postFavoriteBillLoading || patchFavoriteBillLoading} />
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={Platform.OS === 'ios' ? moderateScale(65) : moderateScale(-100)}>
-        <ScrollView keyboardShouldPersistTaps="handled" ref={scrollRef}>
-          <Header billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />
-          <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
-          <Separator />
-          <PaymentMethod onCashIn={onCashIn} getMyAccount={getMyAccount} />
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          ref={scrollRef}
+          style={{flex: 1}}
+          contentContainerStyle={{flexGrow: 1}}>
+          <View style={{flex: 1}}>
+            <Header billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />
+            <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
+            <Separator />
+            <PaymentMethod onCashIn={onCashIn} getMyAccount={getMyAccount} />
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
       <ConfirmButton
