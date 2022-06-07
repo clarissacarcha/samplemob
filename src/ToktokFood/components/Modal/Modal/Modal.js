@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-
 import type {PropsType} from './types';
 import {Container, SafeArea} from './Styled';
 import {default as ModalComponent} from 'react-native-modal';

@@ -41,7 +41,7 @@ const Alert = (props: PropsType): React$Node => {
   const hasSecondButton = buttonText2.length > 0;
 
   return (
-    <Modal isVisible={isVisible} borderRadius={10} flex={0}>
+    <Modal isVisible={isVisible} borderRadius={15} flex={0}>
       <ModalBody>
         <Container>
           {image && <ModalImage source={image} size={130} />}

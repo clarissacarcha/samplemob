@@ -21,7 +21,6 @@ import {
   ModifiedText,
   CancelledText,
   ReasonText,
-  CancelModal,
 } from './Styled';
 import {useIsFocused, useRoute} from '@react-navigation/native';
 import {
@@ -36,7 +35,6 @@ import Alert from 'toktokfood/components/Alert';
 import Divider from 'toktokfood/components/Divider';
 import StyledButton from 'toktokfood/components/StyledButton';
 import StyledText from 'toktokfood/components/StyledText';
-import {ModalHeader, ModalTitle, ModalBody} from 'toktokfood/components/Modal';
 import {
   OrderAnimatedImage,
   OrderAnimatedText,
@@ -205,7 +203,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         buttonText = 'No';
         onPress = () => {
           setIsAlertVisible(false);
-          setTimeout(() => setToCancelOrder(false), 1000);
+          setToCancelOrder(false);
         };
         buttonText2 = 'Yes';
         onPress2 = () => {
