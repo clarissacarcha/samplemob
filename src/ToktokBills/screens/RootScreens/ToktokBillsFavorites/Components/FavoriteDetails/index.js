@@ -70,13 +70,13 @@ export const FavoriteDetails = ({item, index, onPressFavorite, onRefreshFavorite
 const styles = StyleSheet.create({
   container: {
     marginVertical: moderateScale(5),
+    paddingLeft: moderateScale(3),
   },
   detailTwoContainer: {
     marginLeft: moderateScale(18),
     paddingVertical: moderateScale(4),
   },
   heartIcon: {
-    width: moderateScale(18),
     height: moderateScale(16),
     resizeMode: 'contain',
   },
@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: moderateScale(20),
   },
   itemLogo: {
     height: moderateScale(60),
