@@ -34,8 +34,6 @@ export const RenderItem = (props) => {
     } = fulldata;
     const cancelled = status.status === 5;
 
-    const date = DisplayDateAndTime(status.date);
-
     //Return icon for the tabs.
     const returnIcon = () => {
         if(status.status !== 5 && status.status !== 4 && status.status !== 0) {
@@ -75,7 +73,7 @@ export const RenderItem = (props) => {
                                 <Text style={styles.renderItemID}>{referenceNum}</Text>
                                 </View>
                                 
-                                <Text style={styles.renderItemPlaced}>{status.date}</Text>
+                                <Text style={styles.renderItemPlaced}>{DisplayDateAndTime(status.date)}</Text>
                             </View>
                             <View style={styles.renderItemFCLeft}>
                                 <View style={styles.iconContainer}>

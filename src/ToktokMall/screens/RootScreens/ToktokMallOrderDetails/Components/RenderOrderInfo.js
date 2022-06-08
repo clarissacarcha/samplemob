@@ -42,7 +42,7 @@ export const RenderOrderInfo = ({ data }) => {
             <View style={styles.delivery}>
                 <View style={{flex: 1.5, flexDirection: 'column'}}>
                     <Text style={styles.orderInfo}>Delivery Information</Text>
-                    <Text style={[styles.subText, { color: "#525252" } ]}>{data?.status?.date}</Text>
+                    <Text style={[styles.subText, { color: "#525252" } ]}>{DisplayDateAndTime(data?.status?.date)}</Text>
                 </View>
                 <View style={styles.imgView2}>
                     <Image 

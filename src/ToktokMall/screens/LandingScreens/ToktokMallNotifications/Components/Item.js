@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, FlatList} from 'react-native'
 import CustomIcon from '../../../../Components/Icons'
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
+import { DisplayDate } from '../../../../helpers';
 import {placeholder} from '../../../../assets';
 import {useNavigation} from "@react-navigation/native";
 import {NewTouchableOpacity} from '../../../../Components/Widgets'
@@ -75,7 +76,7 @@ export const Item = ({active, data, onSelect}) => {
         </View>
         <View style={{flex: 2.5, paddingVertical: 20, paddingHorizontal: 15}}>
           <View style={{alignItems: 'center'}}>
-            <Text style={{color: "#9E9E9E", fontSize: 10}}>{orderStatus?.content?.formatDate}</Text>
+            <Text style={{color: "#9E9E9E", fontSize: 10}}>{DisplayDate(orderStatus?.content?.formatDate)}</Text>
           </View>
           <View style={{alignItems: 'center'}}>
             <Text style={{color: "#9E9E9E", fontSize: 10}}>{orderStatus?.content?.formatTime}</Text>
