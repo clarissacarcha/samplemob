@@ -7,7 +7,8 @@ import {
 } from 'react-native';
 
 export const RefComDiscountRate = ({value, w = '50%'}) => {
-
+  if(value === "Reseller - 0%") return null;
+  
   return (
     <>
       <View style={{width: w, marginTop: 5}}>
