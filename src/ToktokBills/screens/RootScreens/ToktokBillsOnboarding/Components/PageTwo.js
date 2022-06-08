@@ -32,6 +32,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     width: width,
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center', 
   },
   title: {
     marginBottom: moderateScale(20),
@@ -48,12 +50,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   welcomeImage: {
-    height: width * 0.8,
+    height: null,
+    aspectRatio: 1.2,
     width: width * 0.8,
     marginVertical: 10,
-    flex: 1,
-    justifyContent: 'center', 
-    alignItems: 'center',
   },
   logo: {
     height: moderateScale(50),
