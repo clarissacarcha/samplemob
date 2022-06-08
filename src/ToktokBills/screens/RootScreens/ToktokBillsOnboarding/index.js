@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.S,
   },
   logo: {
-    marginTop: moderateScale(50),
+    marginVertical: moderateScale(50),
     justifyContent: 'center',
     alignItems: 'center',
     height: moderateScale(42),
