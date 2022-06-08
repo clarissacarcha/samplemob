@@ -43,11 +43,7 @@ const OrderFee = ({data, forDelivery, showRefund, forWallet}) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text>Subtotal</Text>
-        {showRefund ? (
-          <Text style={styles.subtotal}>{`PHP ${srpTotal.toFixed(2)}`}</Text>
-        ) : (
-          <Text style={styles.subtotal}>{`PHP ${totalAmount.toFixed(2)}`}</Text>
-        )}
+        <Text style={styles.subtotal}>{`PHP ${srpTotal.toFixed(2)}`}</Text>
       </View>
 
       {promoDiscounts > 0 && (
@@ -85,11 +81,14 @@ const OrderFee = ({data, forDelivery, showRefund, forWallet}) => {
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${(deliveryFee + (showRefund ? srpTotal : totalAmount)).toFixed(
-            2,
-          )}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(
+            deliveryFee + (resellerDiscountTotal > 0 ? srpTotal - resellerDiscountTotal : srpTotal)
+          ).toFixed(2)}`}</Text>
         ) : (
-          <Text style={styles.totalPrice}>{`PHP ${(showRefund ? srpTotal : totalAmount).toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(resellerDiscountTotal > 0
+            ? srpTotal - resellerDiscountTotal
+            : srpTotal
+          ).toFixed(2)}`}</Text>
         )}
       </View>
       {forWallet && showRefund && (
