@@ -45,14 +45,14 @@ import {useThrottle} from 'src/hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
 import {POST_FAVORITE_BILL, GET_FAVORITE_BILLS, POST_CHECK_IF_FAVORITE_EXIST} from 'toktokbills/graphql/model';
 
-const MainComponent = ({navigation, route, viewRef, onCapturingScreen}) => {
+const MainComponent = ({route}) => {
   return (
     <>
       <ImageBackground
         source={LinearGradient}
         resizeMode="cover"
         style={{
-          padding: moderateScale(16),
+          padding: moderateScale(35),
           flex: 1,
         }}>
         <View style={styles.receiptContainer}>
@@ -165,10 +165,7 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
       <AlertOverlay visible={postFavoriteBillLoading} />
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <ScrollView style={styles.container}>
-        <ViewShot
-          style={[styles.container]}
-          ref={viewshotRef}
-          options={{format: 'jpg', quality: 0.9, result: 'tmpfile'}}>
+        <ViewShot ref={viewshotRef} options={{format: 'jpg', quality: 0.9, result: 'tmpfile'}}>
           <MainComponent navigation={navigation} route={route} onCapturingScreen={onCapturingScreen} />
         </ViewShot>
       </ScrollView>
@@ -187,9 +184,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  headerContainer: {
-    paddingTop: moderateScale(30),
   },
   headerText: {
     color: '#F6841F',
@@ -214,12 +208,6 @@ const styles = StyleSheet.create({
     borderTopColor: '#F8F8F8',
     borderTopWidth: 2,
     backgroundColor: COLOR.WHITE,
-  },
-  emailText: {
-    textAlign: 'center',
-    fontSize: FONT_SIZE.M,
-    marginBottom: moderateScale(30),
-    marginTop: moderateScale(10),
   },
   receiptContainer: {
     paddingHorizontal: moderateScale(16),
