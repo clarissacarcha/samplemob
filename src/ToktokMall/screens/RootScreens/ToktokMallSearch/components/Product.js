@@ -83,7 +83,7 @@ const RenderItem = ({navigation, item}) => {
               <Text style={{fontSize: 9}}>{item.weeklySold || item.soldCount || 0} sold</Text>
             </View>
           </View>
-          {item.refComDiscountRate && item.refComDiscountRate != "" ? <RefComDiscountRate value={item.refComDiscountRate} /> : null}
+          {item.refComDiscountRate && item.refComDiscountRate != "" && item.refComDiscountRate != "Reseller - 0%" ? <RefComDiscountRate value={item.refComDiscountRate} /> : null}
         </TouchableOpacity>
       </View>
     </>
