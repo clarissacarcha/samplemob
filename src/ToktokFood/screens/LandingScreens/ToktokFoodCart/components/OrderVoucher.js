@@ -47,7 +47,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
     onCompleted: ({getVoucherCode}) => {
       const {success, message} = getVoucherCode;
       // setShowInlineError(true);
-      // console.log(getVoucherCode);
+      console.log(getVoucherCode);
 
       if (!success) {
         setShowError(true);
@@ -65,25 +65,36 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
       } else {
         const {voucher} = getVoucherCode;
         const filterPromo = promotionVoucher.filter(promo => promo.id !== voucher.id);
-        const {amount, is_percentage} = voucher;
+        const {amount, is_percentage, on_top} = voucher;
         let totalDeliveryFee = 0;
-        if (amount > 0) {
-          const pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
-          const totalFee = pAmount > deliveryFee ? deliveryFee : pAmount;
-          // let totalSF = deliveryFee - pAmount;
-          // totalSF = totalSF > 0 ? totalSF : 0;
-          totalDeliveryFee = totalFee;
+        const filterDeal = promotionVoucher.filter(promo => promo.type === 'deal');
+        // console.log(filterDeal)
+        if ((on_top && !filterDeal.length) || (on_top && filterDeal[0].on_top > 0)) {
+          if (amount > 0) {
+            const pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
+            const totalFee = pAmount > deliveryFee ? deliveryFee : pAmount;
+            // let totalSF = deliveryFee - pAmount;
+            // totalSF = totalSF > 0 ? totalSF : 0;
+            totalDeliveryFee = totalFee;
+          } else {
+            totalDeliveryFee = deliveryFee;
+          }
+
+          const voucherObj = [...filterPromo, {...voucher, origAmount: amount, amount: totalDeliveryFee}];
+          dispatch({
+            type: 'SET_TOKTOKFOOD_PROMOTIONS',
+            payload: voucherObj,
+          });
+          setShowError(false);
+          setShowInlineError(true);
         } else {
-          totalDeliveryFee = deliveryFee;
+          setShowError(true);
+          setVoucherError(
+            '* Oops! Voucher not applied for this order. Please review details of voucher and try again.',
+          );
+          setShowInlineError(true);
         }
 
-        const voucherObj = [...filterPromo, {...voucher, origAmount: amount, amount: totalDeliveryFee}];
-        dispatch({
-          type: 'SET_TOKTOKFOOD_PROMOTIONS',
-          payload: voucherObj,
-        });
-        setShowError(false);
-        setShowInlineError(true);
         // setShowError(!showError);
         // setVoucherError(null);
         // if (type !== 'shipping') {

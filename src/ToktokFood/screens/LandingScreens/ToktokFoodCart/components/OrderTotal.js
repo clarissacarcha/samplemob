@@ -62,23 +62,24 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       setTotalReseller(temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount);
     }
 
-    if (promotions.length > 0) {
+    if (promotions.length > 0 || deal.length > 0) {
       // setTotalPromotions(promotions[0].discount_totalamount);
       const promotion = promotionVoucher.filter(promo => promo.type === 'promotion');
-      const totalResellerDisc = await getResellerDiscount(promotion, temporaryCart.items);
+      const deals = promotionVoucher.filter(promo => promo.type === 'deal');
+      const totalResellerDisc = await getResellerDiscount(promotion, deals, temporaryCart.items);
       setTotalPromotions(totalResellerDisc);
     } else {
       setTotalPromotions(0);
     }
-    if (deal.length > 0) {
-      // setTotalDeal(deal[0].discount_totalamount);
-      const deals = promotionVoucher.filter(promo => promo.type === 'deal');
-      const totalResellerDisc = await getResellerDiscount(deals, temporaryCart.items);
-      // console.log(totalResellerDisc)
-      setTotalDeal(totalResellerDisc);
-    } else {
-      setTotalDeal(0);
-    }
+    // if (deal.length > 0) {
+    //   // setTotalDeal(deal[0].discount_totalamount);
+    //   const deals = promotionVoucher.filter(promo => promo.type === 'deal');
+    //   const totalResellerDisc = await getResellerDiscount(deals, temporaryCart.items);
+    //   // console.log(totalResellerDisc)
+    //   setTotalDeal(totalResellerDisc);
+    // } else {
+    //   setTotalDeal(0);
+    // }
     if (shipping.length > 0) {
       setTotalDelivery(shipping[0].amount);
     } else {
