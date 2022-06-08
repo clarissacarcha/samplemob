@@ -74,11 +74,11 @@ export const Item = ({active, data, onSelect}) => {
           <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>{orderStatus?.content?.title}</Text>
           {getDescription(orderStatus?.content?.description || "")}
         </View>
-        <View style={{flex: 2.5, paddingVertical: 20, paddingHorizontal: 15}}>
-          <View style={{alignItems: 'center'}}>
-            <Text style={{color: "#9E9E9E", fontSize: 10}}>{DisplayDate(orderStatus?.content?.formatDate)}</Text>
+        <View style={{flex: 2.5, flexDirection:'column', alignItems:'flex-end', paddingVertical: 20, paddingHorizontal: 15}}>
+          <View>
+            <Text style={{color: "#9E9E9E", fontSize: 10}}>{orderStatus?.content?.formatDate}</Text>
           </View>
-          <View style={{alignItems: 'center'}}>
+          <View>
             <Text style={{color: "#9E9E9E", fontSize: 10}}>{orderStatus?.content?.formatTime}</Text>
           </View>
           {/* <TouchableOpacity onPress={() => {
