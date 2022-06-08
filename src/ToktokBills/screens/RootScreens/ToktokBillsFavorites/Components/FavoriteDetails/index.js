@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
   },
   itemLogo: {
     height: moderateScale(60),
