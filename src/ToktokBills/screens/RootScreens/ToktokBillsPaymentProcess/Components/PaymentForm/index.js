@@ -189,8 +189,10 @@ const styles = StyleSheet.create({
     color: COLOR.RED,
   },
   label: {
-    fontSize: FONT_SIZE.M,
+    fontSize: FONT_SIZE.S,
     marginBottom: moderateScale(5),
+    fontFamily: FONT.SEMI_BOLD,
+    color: '#525252',
   },
   errorBorder: {
     borderColor: COLOR.RED,

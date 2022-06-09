@@ -10,8 +10,9 @@ import {LoadingIndicator} from 'src/ToktokLoad/components';
 import {VerifyContext} from '../VerifyContextProvider';
 
 //FONTS & COLORS & IMAGES
-import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
 import {wallet_icon, warning_icon} from 'src/ToktokLoad/assets/icons';
+import CONSTANTS from 'common/res/constants';
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 
 //GRAPHQL & HOOKS
 import {useAccount} from 'toktokwallet/hooks';
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#525252',
-    fontFamily: FONT.BOLD,
+    fontFamily: FONT.SEMI_BOLD,
     fontSize: FONT_SIZE.M,
   },
   description: {
