@@ -68,10 +68,8 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
             const {discounted_totalamount, voucher_code} = item;
             const deductedDiscount =
               item?.discount_type === '3' ? items?.basePrice - discounted_totalamount : item?.discount_totalamount;
-
+            // console.log(deductedDiscount);
             totalReseller += deductedDiscount;
-            totalAmount += discounted_totalamount;
-            // console.log(items?.basePrice, 'baseprice 1')
             deductedProducts.push({id: items.productid, amount: totalReseller, code: voucher_code});
             // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
           } else {
@@ -83,6 +81,8 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
     }),
   ).then(async () => {
     await deals.map(item => {
+      // console.log(item);
+
       const filteredId = item.product_id.split(',');
       productIds.push(...filteredId);
       if (item?.on_top) {
@@ -107,12 +107,10 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
               item?.discount_type === '3' ? basePrice - discounted_totalamount : discount_totalamount;
             const totalDiscount = deductedDiscount + filteredDeductedProd[0].amount;
             const discountVoucher = vcode !== filteredDeductedProd[0].code ? 0 : totalDiscount;
+            // console.log(deductedDiscount, discounted_totalamount, '2');
+
+            // console.log(deductedDiscount, totalDiscount);
             totalReseller += discountVoucher > productTotalAmount ? discounted_totalamount : discountVoucher;
-            totalAmount += discounted_totalamount;
-            // console.log(items?.basePrice, 'baseprice 3')
-          } else {
-            totalAmount += items?.resellerDiscount;
-            // console.log(items?.basePrice, 'resellerDiscount 2')
           }
         });
       }
@@ -124,6 +122,7 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
 export const getTotalAmountOrder = async (promotions, cartItems) => {
   let totalAmount = 0;
   const productIds = [];
+  // console.log(cartItems);
   return Promise.all(
     promotions.map(item => {
       const filteredId = item.product_id.split(',');
@@ -133,11 +132,10 @@ export const getTotalAmountOrder = async (promotions, cartItems) => {
       cartItems.map(items => {
         const filteredProd = _.includes(productIds, items.productid);
         // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
-
         if (filteredProd) {
           const deductedDiscount = item?.discount_type === '3' ? 1 : items?.basePrice - item?.discount_totalamount;
           const resellerDiscount = (items.quantity - 1) * (items?.resellerDiscount || items?.basePrice);
-
+          // console.log(deductedDiscount, resellerDiscount, items);
           if (totalReseller === 0) {
             totalAmount += deductedDiscount + resellerDiscount;
           } else {
@@ -147,7 +145,10 @@ export const getTotalAmountOrder = async (promotions, cartItems) => {
           // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
         } else {
           const resellerDiscount = items.quantity * (items?.resellerDiscount || items?.basePrice);
-          totalAmount += resellerDiscount;
+          const deductedDiscount =
+            item?.discount_type === '3' ? item.discounted_totalamount : resellerDiscount;
+          // console.log(resellerDiscount);
+          totalAmount += deductedDiscount;
         }
       });
     }),
@@ -191,7 +192,6 @@ export const getTotalAmount = async (promos, deliveryFee) => {
   let deals = promos.filter(promo => promo.type === 'deal');
   let promotions = promos.filter(promo => promo.type === 'promotion');
   let totalAmount = 0;
-
   await autoApply.map(async promo => {
     const deductedAmount = await getDeductedVoucher(promo, deliveryFee);
     totalAmount += deductedAmount;

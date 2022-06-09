@@ -51,7 +51,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       const deal = promotionVoucher.filter(promo => promo.type === 'deal');
       const totalBasketAmount = await getCartTotalAmountOrder([...promotions, ...deal], temporaryCart.items);
       // console.log(promotions, deal, totalBasketAmount, totalReseller);
-      setTotalBasket(totalBasketAmount);
+      // setTotalBasket(totalBasketAmount);
       setTotalReseller(0);
       // setTotalBasket(temporaryCart.totalAmountWithAddons);
     } else {
