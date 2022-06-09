@@ -135,7 +135,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         await setPaymentList(data.paymentMethods)
         let shippingrates = await getShippingRates(data.shippingRatePayload, data.cartrawdata)
         if(shippingrates.length > 0){
-          data.autoShippingPayload.cartitems = shippingrates          
+          data.autoShippingPayload.cartitems = shippingrates    
           await getAutoShipping(data.autoShippingPayload)
           await getAutoApplyVouchers(data.promotionVoucherPayload)
         }        
@@ -197,6 +197,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
     // })
     // await CheckoutContextData.setShippingVouchers(initialShippingVouchers)
 
+    //MANAGE BRANCH
+    let stotal = payload.subtotal
+    payload.cartitems.map((cartitem, index) => {
+      stotal[index].branchid = cartitem.branchid
+    })
+    payload.subtotal = stotal
+
     setInitialLoading(true)
     console.log("Auto Shipping Payload", JSON.stringify(payload))
     const res = await ApiCall("get_autoshipping_discount", payload, true)
@@ -220,7 +227,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
               if(parseFloat(voucher.amount) == 0){
 
                 let fee = null
-		            payload.cartitems.map((a) => a.shop_id == item.shopid ? fee = a.shippingfee : null)
+		            payload.cartitems.map((a) => a.shopid == voucher.shop_id ? fee = a.shippingfee : null)
                         
                 items.push({
                   ...voucher, 
@@ -231,24 +238,18 @@ const Component = ({route, navigation, createMyCartSession}) => {
                   voucherCodeType: res.responseData.type
                 })
 
-                // console.log("FREESHIP MAPPING", JSON.stringify(CheckoutContextData.shippingFeeRates))
-                // console.log("AUTO SHIPPING FREESHIP MAPPING", fee, item?.shopid)
-                              
-                // items[shopvoucherIndex] = voucher
-                // items[shopvoucherIndex].discountedAmount = 0
-                // items[shopvoucherIndex].discount = 0
-                
               }else{
 
                 let fee = null
-		            payload.cartitems.map((a) => a.shopid == item.shopid ? fee = a.shippingfee : null)
+		            payload.cartitems.map((a) => a.shopid == voucher.shop_id ? fee = a.shippingfee : null)
                 let discount = parseFloat(fee) - parseFloat(voucher.amount)
+
                 items.push({
                   ...voucher, 
                   autoShipping: true,
-                  deduction: parseFloat(voucher.amount),
-                  discount: discount,
-                  discountedAmount: discount,
+                  deduction: discount < 0 ? fee : parseFloat(voucher.amount),
+                  discount: discount < 0 ? 0 : discount,
+                  discountedAmount: discount < 0 ? 0 : discount,
                   voucherCodeType: res.responseData.type
                 })
               }

@@ -83,7 +83,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
     let payload = {
       shop: item.shop.id,
-      branch: 0,
+      branch: CheckoutContextData.getShopBranchId(item.shop.id),
       code: vcode,
       region: address.regionId,
       email: customer.email,
@@ -188,6 +188,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
           items.push({
             ...req.responseData.voucher, 
+            deduction: calculatedDiscount < 0 ? fee : calculatedDiscount,
             discountedAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount, 
             discount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
             voucherCodeType: req.responseData.type
@@ -203,7 +204,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
           //
           let fee = CheckoutContextData.getShippingFeeByShopId(item.shop.id)
-          let calculatedDiscount = parseFloat(fee) - req.responseData.voucher.amount            
+          let calculatedDiscount = parseFloat(fee) - parseFloat(req.responseData.voucher.amount)
 
           // items[index] = req.responseData.voucher
           // items[index].discountedAmount = calculatedDiscount < 0 ? 0 : calculatedDiscount
@@ -211,6 +212,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
           items.push({
             ...req.responseData.voucher, 
+            deduction: calculatedDiscount < 0 ? fee : calculatedDiscount,
             discountedAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount, 
             discount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
             voucherCodeType: req.responseData.type
