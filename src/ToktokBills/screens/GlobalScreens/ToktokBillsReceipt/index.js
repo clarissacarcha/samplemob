@@ -52,7 +52,7 @@ const MainComponent = ({route}) => {
         source={LinearGradient}
         resizeMode="cover"
         style={{
-          padding: moderateScale(35),
+          padding: moderateScale(16),
           flex: 1,
         }}>
         <View style={styles.receiptContainer}>

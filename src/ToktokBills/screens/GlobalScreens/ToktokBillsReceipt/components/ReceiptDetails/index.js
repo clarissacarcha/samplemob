@@ -9,7 +9,7 @@ import {moderateScale, numberFormat, currencyCode} from 'toktokbills/helper';
 import {ReceiptSeparator} from '../../../../../components/Ui';
 
 //FONTS & COLORS & IMAGES
-import toktokBillsLogo from 'toktokbills/assets/images/toktokbills-logo.png';
+import {onboarding_toktokbills} from 'toktokbills/assets';
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
 import moment from 'moment';
 import DashedLine from 'react-native-dashed-line';
@@ -123,7 +123,7 @@ export const ReceiptDetails = ({route}) => {
             style={[styles.description, {marginHorizontal: moderateScale(16), color: COLOR.GRAY, textAlign: 'center'}]}>
             A copy of this receipt will be delivered on the email provided.
           </Text>
-          <Image source={toktokBillsLogo} style={styles.logo} />
+          <Image source={onboarding_toktokbills} style={styles.logo} />
         </View>
       </View>
     </>
