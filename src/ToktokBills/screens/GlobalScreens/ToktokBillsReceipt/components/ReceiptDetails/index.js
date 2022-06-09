@@ -119,10 +119,7 @@ export const ReceiptDetails = ({route}) => {
             let {x, y, width, height} = event.nativeEvent.layout;
             setFooterHeight(height);
           }}>
-          <Text
-            style={[styles.description, {marginHorizontal: moderateScale(16), color: COLOR.GRAY, textAlign: 'center'}]}>
-            A copy of this receipt will be delivered on the email provided.
-          </Text>
+          <Text style={[styles.receiptNote]}>A copy of this receipt will be delivered on the email provided.</Text>
           <Image source={onboarding_toktokbills} style={styles.logo} />
         </View>
       </View>
@@ -137,6 +134,13 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     width: '50%',
   },
+  receiptNote: {
+    marginHorizontal: moderateScale(16),
+    color: COLOR.GRAY,
+    textAlign: 'center',
+    fontSize: FONT_SIZE.S,
+  },
+
   logo: {
     marginTop: moderateScale(16),
     alignSelf: 'center',
