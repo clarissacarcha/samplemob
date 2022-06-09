@@ -336,10 +336,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     let paramsDataCopy = ArrayCopy(route.params)
 
-    items.map(({id, name, cartQty, noOfStocks}) => {
+    items.map(({id, name, cartQty, noOfStocks, status}) => {
       console.log(noOfStocks < cartQty, noOfStocks ,cartQty, "noOfStocks < cartQty")
       
-      if(noOfStocks < cartQty){
+      if(status && noOfStocks != 0 && noOfStocks < cartQty){
 
       route.params.data.map(({data, ...rest}, index) => {
 
@@ -351,6 +351,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
               qty: noOfStocks
             }
           }
+          return item
         })
         if(validItems.length > 0){
           paramsDataCopy.data[index] = {
@@ -385,6 +386,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     })
     
+    console.log("TOKTOK_MALL_OPEN_MODAL_2", paramsDataCopy.data.filter((val) => val !== null))
     dispatch({
       type: 'TOKTOK_MALL_OPEN_MODAL_2',
       payload: {
