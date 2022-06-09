@@ -1,32 +1,22 @@
 import React from 'react';
 import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
-import SuccessIMG from '../../../../assets/images/Sucess.png';
-import {ThrottledOpacity} from '../../../../components_section';
-import {numberFormat} from '../../../../helper';
+import SucessIMG from '../../../../assets/images/Sucess.png';
+import WalletIcon from '../../../../assets/images/Wallet.png';
 
-export const PaymentSuccesfullModal = ({showPaymentSuccesful, setShowPaymentSuccessful, tripConsumerPending}) => {
+export const PricesNoteModal = ({viewPriceNote, setViewPriceNote}) => {
   return (
-    <Modal animationType="fade" transparent={true} visible={showPaymentSuccesful} style={StyleSheet.absoluteFill}>
+    <Modal animationType="fade" transparent={true} visible={viewPriceNote} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
-            <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
-            <Text style={styles.modalTitle}>Payment Successful</Text>
             <Text style={styles.modalDescription}>
-              You have successfully paid the{' '}
-              {tripConsumerPending[0]?.cancellation?.initiatedBy == 'CONSUMER' ? 'cancelation fee' : 'no show fee'} of{' '}
-              <Text style={{color: CONSTANTS.COLOR.ORANGE}}> ₱50.00</Text> using toktokwallet. Your e-receipt was sent
-              to your registered email.
+              Prices may vary depending on traffic condition. Subject to prevailing IATF guideline.
             </Text>
-            <ThrottledOpacity
-              delay={500}
-              style={styles.buttonContainer}
-              onPress={() => {
-                setShowPaymentSuccessful(false);
-              }}>
+
+            <TouchableOpacity style={styles.buttonContainer} onPress={() => setViewPriceNote(false)}>
               <Text style={styles.buttonText}>OK</Text>
-            </ThrottledOpacity>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -59,7 +49,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   modalDescription: {
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: CONSTANTS.FONT_SIZE.M,
     color: CONSTANTS.COLOR.BLACK,
   },

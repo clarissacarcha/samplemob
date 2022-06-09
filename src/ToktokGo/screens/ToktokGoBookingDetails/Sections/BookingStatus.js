@@ -122,11 +122,11 @@ const Status = ({booking}) => {
     /*-------------------- ON GOING --------------------*/
     <View>
       <View style={{borderBottomWidth: 2, borderColor: constants.COLOR.LIGHT, width: '100%', marginVertical: 15}} />
-      <StatusBar number={1} label={'Arrived at Destination'} log={mappedLogs['COMPLETED']} />
+      <StatusBar number={1} label={'Arrived at destination'} log={mappedLogs['COMPLETED']} />
       <StatusBar number={3} label={'Passenger picked up'} log={mappedLogs['PICKED_UP']} />
-      <StatusBar number={2} label={'Driver Arrived at pick-up location'} log={mappedLogs['ARRIVED']} />
-      <StatusBar number={4} label={'Driver Accepted'} log={mappedLogs['ACCEPTED']} />
-      <View style={{borderBottomWidth: 2, borderColor: constants.COLOR.LIGHT, width: '100%', marginTop: 15}} />
+      <StatusBar number={2} label={'Driver arrived at pick-up location'} log={mappedLogs['ARRIVED']} />
+      <StatusBar number={4} label={'Driver accepted'} log={mappedLogs['ACCEPTED']} />
+      {/* <View style={{borderBottomWidth: 2, borderColor: constants.COLOR.LIGHT, width: '100%', marginTop: 15}} /> */}
     </View>
   );
 };

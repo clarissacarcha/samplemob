@@ -15,7 +15,7 @@ export const FindingDriverStatus = ({waitingStatus, renderStatus, waitingText}) 
         style={{width: ImageDimension, height: ImageDimension}}
       />
       {/*---todo: assign text based on status---*/}
-      <Text style={styles.titleStyle}>{waitingStatus ? 'Finding Driver' : 'No Driver Found'}</Text>
+      <Text style={styles.titleStyle}>{waitingStatus ? 'Finding Driver' : 'Find Driver Again'}</Text>
       <Text style={{textAlign: 'center'}}>{renderStatus(waitingText)}</Text>
     </View>
   );
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 48,
     flex: 0.7,
+    marginHorizontal: 15,
   },
   titleStyle: {
     color: CONSTANTS.COLOR.ORANGE,

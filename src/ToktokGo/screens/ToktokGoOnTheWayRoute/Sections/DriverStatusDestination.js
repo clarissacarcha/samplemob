@@ -20,7 +20,7 @@ export const DriverStatusDestination = ({status, booking}) => {
             style={{color: constants.COLOR.YELLOW, paddingRight: 10}}
           />
           <Text style={{fontSize: constants.FONT_SIZE.M, fontFamily: constants.FONT_FAMILY.BOLD}}>
-            {minTime} - {maxTime}
+            {booking?.estimates?.dropOffTimeFrame}
           </Text>
         </View>
         <Text style={{fontSize: constants.FONT_SIZE.S, color: '#525252'}}>Estimated Time of Drop Off</Text>

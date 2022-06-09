@@ -28,9 +28,9 @@ export const BookingID = ({booking}) => {
             <Text style={{color: DARK, fontFamily: FONTS.BOLD, fontSize: constants.FONT_SIZE.M}}>Booking ID</Text>
             <Text
               style={{
-                color: constants.COLOR.ORANGE,
+                color: constants.COLOR.YELLOW,
                 fontSize: constants.FONT_SIZE.M,
-                fontFamily: FONTS.REGULAR,
+                fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
                 marginLeft: 10,
               }}>
               {booking.id}
@@ -42,7 +42,7 @@ export const BookingID = ({booking}) => {
               style={{
                 fontFamily: constants.FONT_FAMILY.BOLD,
                 fontSize: constants.FONT_SIZE.M,
-                color: booking.tag != 'CANCELLED' ? constants.COLOR.ORANGE : constants.COLOR.RED,
+                color: constants.COLOR.BLACK,
               }}>
               {getTextStatus()}
             </Text>
