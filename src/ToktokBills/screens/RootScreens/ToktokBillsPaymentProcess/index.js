@@ -12,6 +12,8 @@ import {
   RefreshControl,
 } from 'react-native';
 import {useHeaderHeight} from '@react-navigation/stack';
+import InputScrollView from 'react-native-input-scroll-view';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
 
 //HELPER & UTIL
 import {moderateScale, numberFormat} from 'toktokbills/helper';
@@ -49,6 +51,7 @@ const MainComponent = ({navigation, route}) => {
   const favoriteDetails = route?.params?.favoriteDetails ? route.params.favoriteDetails : null;
   const onRefreshFavorite = route?.params?.favoriteDetails ? route.params.onRefreshFavorite : null;
   const scrollRef = useRef({});
+  const headerHeight = useHeaderHeight();
 
   const [isMounted, setIsMounted] = useState(false);
   const [favoriteBillId, setFavoriteBillId] = useState(favoriteDetails ? favoriteDetails.id : 0);
@@ -233,23 +236,17 @@ const MainComponent = ({navigation, route}) => {
     <>
       <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} message={favoriteModal.message} />
       <AlertOverlay visible={postFavoriteBillLoading || patchFavoriteBillLoading} />
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? moderateScale(65) : moderateScale(-100)}>
-        <ScrollView
+      <View style={styles.container}>
+        <InputScrollView
           keyboardShouldPersistTaps="handled"
           ref={scrollRef}
-          style={{flex: 1}}
-          contentContainerStyle={{flexGrow: 1}}>
-          <View style={{flex: 1}}>
-            <Header billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />
-            <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
-            <Separator />
-            <PaymentMethod onCashIn={onCashIn} getMyAccount={getMyAccount} />
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          keyboardOffset={Platform.OS === 'ios' && moderateScale(headerHeight + getStatusBarHeight())}>
+          <Header billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />
+          <PaymentForm billItemSettings={billItemSettings?.getBillItemSettings} />
+          <Separator />
+          <PaymentMethod onCashIn={onCashIn} getMyAccount={getMyAccount} />
+        </InputScrollView>
+      </View>
       <ConfirmButton
         billItemSettings={billItemSettings?.getBillItemSettings}
         billType={billType}
