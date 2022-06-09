@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   },
   receiptNote: {
     marginHorizontal: moderateScale(16),
-    color: COLOR.GRAY,
+    color: '#525252',
     textAlign: 'center',
     fontSize: FONT_SIZE.S,
   },

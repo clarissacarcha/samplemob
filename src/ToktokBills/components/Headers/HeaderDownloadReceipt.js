@@ -102,30 +102,31 @@ export const HeaderDownloadReceipt = ({
   });
 
   const downloadReceipt = async () => {
+    onPressDownloadReceipt(true);
+
     const result = await checkAndRequest();
 
     const pathCache = RNFS.CachesDirectoryPath;
     console.log(pathCache);
-    onPressDownloadReceipt(true);
+    setTimeout(() => {
+      viewshotRef.current.capture().then(async uri => {
+        const timestamp = +moment();
+        const filename = `${timestamp.toString()}_${refNo}.${format ? format : 'jpg'}`;
 
-    viewshotRef.current.capture().then(async uri => {
-      const timestamp = +moment();
-      const filename = `${timestamp.toString()}_${refNo}.${format ? format : 'jpg'}`;
+        RNFS.moveFile(uri, pathCache + `/${filename}`);
+        const newFileUri = `${pathCache}/${filename}`;
 
-      RNFS.moveFile(uri, pathCache + `/${filename}`);
-      const newFileUri = `${pathCache}/${filename}`;
+        await CameraRoll.save(newFileUri, {type: 'photo', album: 'toktok'});
 
-      await CameraRoll.save(newFileUri, {type: 'photo', album: 'toktok'});
-
-      // Toast.show(`Receipt ${filename} has been downloaded.` , Toast.LONG);
-      prompt({
-        type: 'success',
-        title: 'Receipt Downloaded',
-        message: 'Your transaction receipt has been saved to your gallery.',
-        event: 'TOKTOKBILLSLOAD',
+        prompt({
+          type: 'success',
+          title: 'Receipt Downloaded',
+          message: 'Your transaction receipt has been saved to your gallery.',
+          event: 'TOKTOKBILLSLOAD',
+        });
+        onPressDownloadReceipt(false);
       });
-      onPressDownloadReceipt(false);
-    });
+    }, 1000);
   };
 
   return (
