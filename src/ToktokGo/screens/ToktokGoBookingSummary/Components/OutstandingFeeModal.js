@@ -1,30 +1,22 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, Image, View, Modal} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
-import SuccessIMG from '../../../../assets/images/Sucess.png';
+import Warning from '../../../../assets/images/warning.png';
 import {ThrottledOpacity} from '../../../../components_section';
-import {numberFormat} from '../../../../helper';
 
-export const PaymentSuccesfullModal = ({showPaymentSuccesful, setShowPaymentSuccessful, tripConsumerPending}) => {
+export const OutstandingFeeModal = ({viewOutstandingFeeModal, outstandingFee, closeOutstandingFeeModal}) => {
   return (
-    <Modal animationType="fade" transparent={true} visible={showPaymentSuccesful} style={StyleSheet.absoluteFill}>
+    <Modal animationType="fade" transparent={true} visible={viewOutstandingFeeModal} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
-            <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
-            <Text style={styles.modalTitle}>Payment Successful</Text>
+            <Image source={Warning} resizeMode={'contain'} style={styles.imageDimensions} />
+            <Text style={styles.modalTitle}>Outstanding Fee</Text>
             <Text style={styles.modalDescription}>
-              You have successfully paid the{' '}
-              {tripConsumerPending[0]?.cancellation?.initiatedBy == 'CONSUMER' ? 'cancelation fee' : 'no show fee'} of{' '}
-              <Text style={{color: CONSTANTS.COLOR.ORANGE}}> ₱50.00</Text> using toktokwallet. Your e-receipt was sent
-              to your registered email.
+              Please settle {outstandingFee?.initiatedBy == 'DRIVER' ? 'No Show Fee' : 'Cancellation Fee'} to proceed
+              with the booking.
             </Text>
-            <ThrottledOpacity
-              delay={500}
-              style={styles.buttonContainer}
-              onPress={() => {
-                setShowPaymentSuccessful(false);
-              }}>
+            <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={closeOutstandingFeeModal}>
               <Text style={styles.buttonText}>OK</Text>
             </ThrottledOpacity>
           </View>

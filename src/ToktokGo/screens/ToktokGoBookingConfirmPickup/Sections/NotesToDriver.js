@@ -5,7 +5,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
 import {ThrottledOpacity} from '../../../../components_section';
 
-export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote}) => {
+export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote, notesToDriver, notes}) => {
   const {origin} = useSelector(state => state.toktokGo);
 
   return (
@@ -16,6 +16,7 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote}) =
           navigation.pop();
           navigation.push('ToktokGoBookingSelectLocations', {
             popTo: popTo + 1,
+            selectInput: 'P',
           });
         }}
         style={{
@@ -26,7 +27,7 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote}) =
         }}>
         <View style={{flexDirection: 'row', textAlign: 'center', marginHorizontal: 5}}>
           <FA5Icon name="map-pin" size={18} color={constants.COLOR.YELLOW} style={{marginRight: 10}} />
-          <Text>{origin.place.formattedAddress}</Text>
+          <Text style={{paddingRight: 20}}>{origin.place.formattedAddress}</Text>
         </View>
       </ThrottledOpacity>
       <Text
@@ -38,16 +39,22 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote}) =
         }}>
         Notes to Driver
       </Text>
-      <TextInput
-        ref={dropDownRef}
-        value={note}
-        placeholder="e.g. I have two luggage"
-        keyboardType="default"
-        onChangeText={value => setNote(value)}
-        style={styles.Input}
-        numberOfLines={5}
-        multiline
-      />
+      <View style={styles.containerTextInput}>
+        <TextInput
+          ref={dropDownRef}
+          // value={note}
+          placeholder="e.g. I have two luggage"
+          keyboardType="default"
+          onChangeText={value => notesToDriver(value)}
+          style={styles.Input}
+          numberOfLines={5}
+          maxLength={320}
+          multiline
+        />
+        <View style={{alignItems: 'flex-end'}}>
+          <Text style={styles.textInputLength}>{notes.textLength}/320</Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -62,5 +69,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
     borderRadius: 5,
     width: '100%',
+  },
+  containerTextInput: {
+    backgroundColor: '#F8F8F8',
+    borderColor: 'red',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#F8F8F8',
+  },
+  textInputLength: {
+    marginRight: 15,
+    marginBottom: 10,
+    color: '#9E9E9E',
+    fontFamily: constants.FONT_FAMILY.REGULAR,
+    fontSize: constants.FONT_SIZE.S,
   },
 });

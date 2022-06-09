@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, StatusBar, Text, Dimensions, Alert} from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {View, StyleSheet, TouchableOpacity, Image, StatusBar, Text, Dimensions, Alert, Platform} from 'react-native';
 import constants from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -13,11 +13,12 @@ import {
   BookingBreakdown,
   BookingTotal,
 } from './Sections';
-import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet} from './Components';
+import {useFocusEffect} from '@react-navigation/native';
+import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet, OutstandingFeeModal} from './Components';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-import {GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT} from '../../graphql';
+import {GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT, GET_TRIPS_CONSUMER} from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import BottomSheet from 'reanimated-bottom-sheet';
@@ -25,6 +26,7 @@ import {AlertOverlay} from '../../../components';
 import {useAccount} from 'toktokwallet/hooks';
 import {AppSyncOnError, onErrorAppSync} from '../../util';
 import {onError} from '../../../util/ErrorUtility';
+import {PricesNoteModal} from './Components/PricesNoteModal';
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const FULLSCREEN_HEIGHT = Dimensions.get('window').height;
@@ -38,6 +40,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
+  const [viewOutstandingFeeModal, setViewOutstandingFeeModal] = useState(false);
   const dispatch = useDispatch();
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [selectedVouchers, setSelectedVouchers] = useState(null);
@@ -46,6 +49,9 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [showHeader, setshowHeader] = useState(false);
   const [tripBookError, setTripBookError] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(paymentMethod);
+  const [viewPriceNote, setViewPriceNote] = useState(false);
+  const [outstandingFee, setOutstandingFee] = useState();
+  const hasNotch = StatusBar.currentHeight > 24;
 
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
@@ -91,6 +97,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
             Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
           } else if (errorType === 'ExecutionTimeout') {
             Alert.alert('', message);
+          } else if (errorType === 'CANCELLATION_CHARGE_OUTSTANDING') {
+            setViewOutstandingFeeModal(true);
           } else {
             console.log('ELSE ERROR:', error);
             Alert.alert('', 'Something went wrong...');
@@ -237,15 +245,48 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     }, 500);
   };
 
+  const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      if (response) {
+        setOutstandingFee(response?.getTripsConsumer[0]?.cancellation);
+      }
+    },
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      getTripsConsumer({
+        variables: {
+          input: {
+            tag: 'PENDING',
+            cancellationChargeStatus: 'PENDING',
+          },
+        },
+      });
+    }, []),
+  );
+
+  const closeOutstandingFeeModal = () => {
+    setViewOutstandingFeeModal(false);
+    // navigation.replace('ToktokGoBookingStart', {
+
+    //   popTo: popTo + 1,
+    // });
+    navigation.pop(2);
+  };
+
   const renderContent = () => (
     <View style={styles.card}>
-      <BookingDistanceTime quotationData={quotationDataResult} />
+      <BookingDistanceTime quotationData={quotationDataResult} loading={loading} />
 
       <BookingSelectVehicle
         data={quotationDataResult}
         selectedVehicle={selectedVehicle}
         navigation={navigation}
         selectVehicle={selectVehicle}
+        setViewPriceNote={setViewPriceNote}
       />
       {/*  TODO: Vouchers will be added after launch of April 18 */}
       {/* <BookingVoucher
@@ -270,8 +311,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     <View
       style={{
         flex: 1,
-        // marginTop: DeviceInfo.hasNotch() ? 0 : 16,
-        paddingTop: 23,
+        marginTop: hasNotch ? 0 : StatusBar.currentHeight,
+        paddingTop: Platform.OS === 'ios' && !DeviceInfo.hasNotch() ? 36 : 23,
         paddingBottom: 16,
         backgroundColor: 'white',
         shadowBottomColor: '#000',
@@ -290,9 +331,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           onPress={() => {
             sheetRef.current.snapTo(1), setshowHeader(false);
           }}>
-          <Text>
-            <MIcon name={'keyboard-arrow-left'} size={25} color={constants.COLOR.ORANGE} />
-          </Text>
+          <Image source={ArrowLeftIcon} resizeMode={'contain'} style={[styles.iconDimensions, {marginLeft: 16}]} />
         </TouchableOpacity>
         <View style={{flex: 1, alignItems: 'center', marginRight: 30}}>
           <Text style={styles.greetingText}>Booking Summary</Text>
@@ -341,7 +380,13 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
       <PassengerCapacityActionSheet details={details} confirmBooking={confirmBooking} />
       <AlertOverlay visible={TIPLoading || TBLoading} />
+      <OutstandingFeeModal
+        closeOutstandingFeeModal={closeOutstandingFeeModal}
+        viewOutstandingFeeModal={viewOutstandingFeeModal}
+        outstandingFee={outstandingFee}
+      />
       <PaymentMethodModal
+        navigation={navigation}
         viewSelectPaymentModal={viewSelectPaymentModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
         setSelectedPaymentMethod={setSelectedPaymentMethod}
@@ -354,15 +399,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         viewPaymenetSucessModal={viewPaymenetSucessModal}
         setViewPaymenetSucessModal={setViewPaymenetSucessModal}
       />
-
-      {/* {showHeader && (
-        <View style={styles.elementWrapper}>
-          <TouchableOpacity style={styles.backButtonHeader} onPress={() => sheetRef.current.snapTo(1)}>
-            <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
-          </TouchableOpacity>
-          <Text style={styles.textStyle}>Booking Summary</Text>
-        </View>
-      )} */}
+      <PricesNoteModal viewPriceNote={viewPriceNote} setViewPriceNote={setViewPriceNote} />
 
       <BookingMap
         decodedPolyline={decodedPolyline}
@@ -371,27 +408,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         destination={destination}
       />
 
-      {/* <View style={styles.card}>
-        <BookingDistanceTime quotationData={quotationDataResult} />
-        <BookingSelectVehicle
-          data={quotationDataResult}
-          selectedVehicle={selectedVehicle}
-          navigation={navigation}
-          selectVehicle={selectVehicle}
-        />
-        TODO: Vouchers will be added after launch of April 18
-        <BookingVoucher
-            navigation={navigation}
-            selectedVouchers={selectedVouchers}
-            setSelectedVouchersNull={setSelectedVouchersNull}
-          />
-        <BookingTotal loading={loading} details={details} />
-        <BookingSelectPaymentMethod
-          viewPaymenetSucessModal={viewPaymenetSucessModal}
-          setViewSelectPaymentModal={setViewSelectPaymentModal}
-          details={details}
-        />
-      </View> */}
       <View style={styles.buttonContainer}>
         <BookingConfirmButton SheetManager={SheetManager} />
       </View>
@@ -410,7 +426,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: constants.COLOR.WHITE,
     paddingTop: 3,
-    paddingBottom: 10,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     borderTopWidth: 3,
@@ -427,7 +442,7 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 50,
     backgroundColor: '#FFE1C7',
-    marginVertical: 3,
+    marginTop: 3,
   },
   card: {
     paddingTop: 20,
