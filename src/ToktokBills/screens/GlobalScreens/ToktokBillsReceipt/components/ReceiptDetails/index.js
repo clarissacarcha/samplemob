@@ -9,7 +9,7 @@ import {moderateScale, numberFormat, currencyCode} from 'toktokbills/helper';
 import {ReceiptSeparator} from '../../../../../components/Ui';
 
 //FONTS & COLORS & IMAGES
-import toktokBillsLogo from '../../../../../../ToktokBills/assets/images/toktokbills.png';
+import {onboarding_toktokbills} from 'toktokbills/assets';
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
 import moment from 'moment';
 import DashedLine from 'react-native-dashed-line';
@@ -119,10 +119,8 @@ export const ReceiptDetails = ({route}) => {
             let {x, y, width, height} = event.nativeEvent.layout;
             setFooterHeight(height);
           }}>
-          <Text style={[styles.description, {marginHorizontal: moderateScale(16)}]}>
-            A copy of this receipt will be delivered on the email provided.
-          </Text>
-          <Image source={toktokBillsLogo} style={styles.logo} />
+          <Text style={[styles.receiptNote]}>A copy of this receipt will be delivered on the email provided.</Text>
+          <Image source={onboarding_toktokbills} style={styles.logo} />
         </View>
       </View>
     </>
@@ -136,6 +134,13 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     width: '50%',
   },
+  receiptNote: {
+    marginHorizontal: moderateScale(16),
+    color: '#525252',
+    textAlign: 'center',
+    fontSize: FONT_SIZE.S,
+  },
+
   logo: {
     marginTop: moderateScale(16),
     alignSelf: 'center',
@@ -143,10 +148,10 @@ const styles = StyleSheet.create({
     height: moderateScale(23),
   },
   description: {
-    color: 'black',
+    color: COLOR.BLACK,
     fontSize: FONT_SIZE.M,
     flexShrink: 1,
-    textAlign: 'center',
+    textAlign: 'right',
   },
   bodyContainer: {
     flexDirection: 'row',

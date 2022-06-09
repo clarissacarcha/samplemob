@@ -10,6 +10,7 @@ import {
   StatusBar,
   BackHandler,
   ImageBackground,
+  Platform,
 } from 'react-native';
 import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
 import ViewShot, {captureScreen, releaseCapture} from 'react-native-view-shot';
@@ -45,22 +46,27 @@ import {useThrottle} from 'src/hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
 import {POST_FAVORITE_BILL, GET_FAVORITE_BILLS, POST_CHECK_IF_FAVORITE_EXIST} from 'toktokbills/graphql/model';
 
-const MainComponent = ({navigation, route, viewRef, onCapturingScreen}) => {
+const MainComponent = ({route}) => {
   return (
-    <>
-      <ImageBackground
-        source={LinearGradient}
-        resizeMode="cover"
+    <View style={styles.receiptContainer}>
+      <Header route={route} />
+      <ReceiptDetails route={route} />
+    </View>
+  );
+};
+
+const ReceiptDownload = ({route, onCapturingScreen}) => {
+  return (
+    <ImageBackground source={LinearGradient} resizeMode="cover" style={{padding: moderateScale(16), flex: 1}}>
+      <View
         style={{
-          padding: moderateScale(16),
-          flex: 1,
+          ...styles.receiptContainer,
+          ...(onCapturingScreen && Platform.OS === 'android' ? styles.receiptBorder : {}),
         }}>
-        <View style={styles.receiptContainer}>
-          <Header route={route} />
-          <ReceiptDetails route={route} />
-        </View>
-      </ImageBackground>
-    </>
+        <Header route={route} />
+        <ReceiptDetails route={route} />
+      </View>
+    </ImageBackground>
   );
 };
 
@@ -162,17 +168,19 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
         onPressYes={onPressFavorite}
       />
       <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} message={favoriteModal.message} />
-      <AlertOverlay visible={postFavoriteBillLoading} />
+      <AlertOverlay visible={postFavoriteBillLoading || onCapturingScreen} />
       <StatusBar barStyle="dark-content" backgroundColor="white" />
-      <ScrollView style={styles.container}>
-        <ViewShot
-          style={[styles.container]}
-          ref={viewshotRef}
-          options={{format: 'jpg', quality: 0.9, result: 'tmpfile'}}>
-          <MainComponent navigation={navigation} route={route} onCapturingScreen={onCapturingScreen} />
-        </ViewShot>
-      </ScrollView>
-
+      <ImageBackground source={LinearGradient} resizeMode="cover" style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1, padding: onCapturingScreen ? 0 : 16}}>
+          <ViewShot ref={viewshotRef} options={{format: 'jpg', quality: 0.9, result: 'tmpfile'}}>
+            {onCapturingScreen ? (
+              <ReceiptDownload route={route} onCapturingScreen={onCapturingScreen} />
+            ) : (
+              <MainComponent navigation={navigation} route={route} onCapturingScreen={onCapturingScreen} />
+            )}
+          </ViewShot>
+        </ScrollView>
+      </ImageBackground>
       <View style={styles.buttonContainer}>
         <OrangeButton
           label="OK"
@@ -186,10 +194,6 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-  },
-  headerContainer: {
-    paddingTop: moderateScale(30),
   },
   headerText: {
     color: '#F6841F',
@@ -215,12 +219,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     backgroundColor: COLOR.WHITE,
   },
-  emailText: {
-    textAlign: 'center',
-    fontSize: FONT_SIZE.M,
-    marginBottom: moderateScale(30),
-    marginTop: moderateScale(10),
-  },
   receiptContainer: {
     paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(20),
@@ -233,5 +231,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 3,
+  },
+  receiptBorder: {
+    borderColor: '#F8F8F8',
+    borderWidth: 2,
   },
 });
