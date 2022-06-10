@@ -73,7 +73,8 @@ export const ToktokBillsHome = ({navigation, route}) => {
         setRefreshing(false);
       },
       onCompleted: ({getFavoriteBillsPaginate}) => {
-        let result = getFavoriteBillsPaginate.edges.filter(o1 => !favoriteBills.some(o2 => o1.id === o2.id));
+        let result = getFavoriteBillsPaginate.edges.filter(o1 => !favoriteBills.some(o2 => o1.node.id === o2.node.id));
+
         if (result.length > 0 || getFavoriteBillsPaginate.edges.length != favoriteBills.length) {
           setFavoriteBills(getFavoriteBillsPaginate.edges);
         }
