@@ -28,6 +28,7 @@ export const GET_TRANSACTIONS = gql`
             name
             price
             variant
+            enabled
           }
         }
       }

@@ -215,6 +215,7 @@ export const GET_ACTIVIY_ORDER_DETAILS = gql`
 				productId
 				quantity
 				data {
+				  enabled
 				  itemname
 				  name
 				  price

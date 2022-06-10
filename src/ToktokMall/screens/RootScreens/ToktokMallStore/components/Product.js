@@ -55,7 +55,7 @@ const RenderItem = ({item}) => {
             item.promotions && item.promotions != null && 
             <PromotionBanner label={item.promotions.name} content={item.promotions.duration} />
           }
-          {item?.noOfStocks <= 0  && item?.contSellingIsset === 0&&
+          {item?.noOfStocks <= 0  && item?.contSellingIsset === 0 &&
             <ImageBackground 
               source={getImageSource(item?.images || [])} 
               imageStyle={{resizeMode: 'contain'}} 
@@ -66,7 +66,7 @@ const RenderItem = ({item}) => {
                   <Text style={{color: '#f2f2f2', fontSize: 12}}>OUT OF STOCK</Text>
                 </View>
               </View> */}
-            </ImageBackground>
+            </ImageBackground> 
           }
           {item?.noOfStocks > 0 || item?.contSellingIsset === 1 &&
             <Image 

@@ -63,19 +63,32 @@ export const BuyAgainButton = ({ data }) => {
 
   onPressBuy = () => {
     const { items } = data?.orders;
+    console.log('itemsssssss', items)
+    // console.log("onPressBuy, getBuyAgain", JSON.stringify(items))
+    // setIsVisible(true);
+    // getBuyAgain({variables: {
+    //   input: {
+    //     items: items
+    //   }
+    // }})
+  }
 
-    console.log("onPressBuy, getBuyAgain", JSON.stringify(items))
-    setIsVisible(true);
-    getBuyAgain({variables: {
-      input: {
-        items: items
+  const isDisabled = () => {
+    const {items} = data?.orders
+    let disabled = false
+    items.map((item, i) => {
+      if(item.data.enabled === 2){
+        disabled = true
+      }else{
+        disabled = false
       }
-    }})
+    })
+    return disabled
   }
   
   return (
         <>
-          <TouchableOpacity style={styles.buyAgainButton} onPress={onPressBuy} >
+          <TouchableOpacity style={isDisabled() ? styles.disabled :styles.buyAgainButton} onPress={onPressBuy} disabled = {isDisabled()} >
               <Text style={styles.buyAgainText}>Buy Again</Text>
           </TouchableOpacity>
           <LoadingOverlay isVisible={isVisible} />
@@ -100,4 +113,13 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
     lineHeight:16
   },
+  disabled: {
+    marginHorizontal: 16,
+    marginVertical: 16,
+    height: 40,
+    backgroundColor: "#9E9E9E",
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 }) 
