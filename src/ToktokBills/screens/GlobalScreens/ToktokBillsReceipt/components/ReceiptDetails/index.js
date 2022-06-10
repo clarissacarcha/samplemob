@@ -64,7 +64,7 @@ export const ReceiptDetails = ({route}) => {
           <Text style={styles.description}>{moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>{firstFieldName} </Text>
+          <Text style={styles.title}>{firstFieldName}</Text>
           <Text style={styles.description}>{destinationNumber}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
@@ -132,7 +132,6 @@ const styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
-    width: '50%',
   },
   receiptNote: {
     marginHorizontal: moderateScale(16),
@@ -150,8 +149,8 @@ const styles = StyleSheet.create({
   description: {
     color: COLOR.BLACK,
     fontSize: FONT_SIZE.M,
-    flexShrink: 1,
     textAlign: 'right',
+    flexShrink: 1,
   },
   bodyContainer: {
     flexDirection: 'row',
@@ -172,8 +171,8 @@ const styles = StyleSheet.create({
     marginHorizontal: moderateScale(16),
   },
   logo: {
-    width: moderateScale(80),
-    height: moderateScale(50),
+    width: moderateScale(110),
+    height: moderateScale(80),
     resizeMode: 'contain',
   },
 });
