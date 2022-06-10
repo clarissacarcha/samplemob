@@ -3,6 +3,7 @@ import {View, Text, Dimensions, StyleSheet, Image, TouchableOpacity} from 'react
 import {moderateScale} from 'toktokbills/helper';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useThrottle} from 'src/hooks';
+import FIcon5 from 'react-native-vector-icons/FontAwesome';
 
 import {LoadingIndicator} from 'toktokbills/components';
 import {heart_fill_icon, heart_selected_fill_icon} from 'src/ToktokLoad/assets/icons';
@@ -34,33 +35,31 @@ export const FavoriteDetails = ({item, index, onPressFavorite, onRefreshFavorite
 
   return (
     <TouchableOpacity onPress={onThrottledPress} style={styles.container}>
-      <View style={styles.item}>
-        <View style={{justifyContent: 'center'}}>
-          {(imageLoading && billItem.logo)&& (
-            <View style={styles.loadingContainer}>
-              <LoadingIndicator isLoading={true} size="small" />
-            </View>
-          )}
-          <Image
-            source={{uri: billItem.logo}}
-            style={styles.itemLogo}
-            onLoadStart={() => setImageLoading(true)}
-            onLoadEnd={() => setImageLoading(false)}
-          />
-        </View>
-        <View style={styles.detailTwoContainer}>
-          <View>
-            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.descriptions}>
-              {billItem.descriptions}
-            </Text>
-            <Text style={styles.subText}>{secondFieldValue}</Text>
-            <Text style={styles.subText}>{firstFieldValue}</Text>
+      <View style={{justifyContent: 'center'}}>
+        {imageLoading && billItem.logo && (
+          <View style={styles.loadingContainer}>
+            <LoadingIndicator isLoading={true} size="small" />
           </View>
+        )}
+        <Image
+          source={{uri: billItem.logo}}
+          style={styles.itemLogo}
+          onLoadStart={() => setImageLoading(true)}
+          onLoadEnd={() => setImageLoading(false)}
+        />
+      </View>
+      <View style={styles.detailTwoContainer}>
+        <View>
+          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.descriptions}>
+            {billItem.descriptions}
+          </Text>
+          <Text style={styles.subText}>{secondFieldValue}</Text>
+          <Text style={styles.subText}>{firstFieldValue}</Text>
         </View>
+      </View>
+      <View style={{alignItems: 'flex-end'}}>
         <TouchableOpacity onPress={onPressFavorite}>
-          <View style={styles.detailTwoContainer}>
-            <Image source={heart_fill_icon} style={styles.heartIcon} />
-          </View>
+          <FIcon5 name={'heart'} color={COLOR.ORANGE} size={moderateScale(17)} />
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -69,16 +68,16 @@ export const FavoriteDetails = ({item, index, onPressFavorite, onRefreshFavorite
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: moderateScale(5),
-    paddingLeft: moderateScale(3),
+    paddingHorizontal: moderateScale(18),
+    paddingVertical: moderateScale(5),
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   detailTwoContainer: {
     marginLeft: moderateScale(18),
     paddingVertical: moderateScale(4),
-  },
-  heartIcon: {
-    height: moderateScale(16),
-    resizeMode: 'contain',
+    flexShrink: 1,
+    flex: 1,
   },
   subText: {
     color: '#525252',
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
   },
   itemLogo: {
     height: moderateScale(60),
-    width: moderateScale(80),
+    width: moderateScale(60),
     resizeMode: 'contain',
   },
   itemName: {
@@ -109,5 +108,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     left: 0,
+  },
+  detailsContainer: {
+    flexDirection: 'row',
   },
 });

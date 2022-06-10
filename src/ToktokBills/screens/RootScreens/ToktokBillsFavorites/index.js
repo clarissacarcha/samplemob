@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
+import {useHeaderHeight} from '@react-navigation/stack';
 
 //COMPONENTS
 import {
@@ -29,7 +30,7 @@ import {FavoriteDetails} from './Components';
 import {empty_search, empty_list, empty_fave} from 'toktokbills/assets/images';
 
 //HELPER
-import {moderateScale} from 'toktokbills/helper';
+import {moderateScale, getStatusbarHeight} from 'toktokbills/helper';
 
 //GRAPHQL & HOOKS
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
@@ -45,6 +46,7 @@ import {useDebounce} from 'toktokwallet/hooks';
 //FONTS & COLORS
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
+const {height} = Dimensions.get('screen');
 
 export const ToktokBillsFavorites = ({navigation, route}) => {
   const prompt = usePrompt();
@@ -65,6 +67,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
   const [isMounted, setIsMounted] = useState(false);
+  const headerHeight = useHeaderHeight();
 
   const [
     getFavoriteBillsPaginate,
@@ -160,10 +163,11 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     search ? processSearch(search) : handleGetFavoriteBills();
   };
 
-  const fetchMoreData = async () => {
+  const fetchMoreData = () => {
+    console.log('sample');
     if (pageInfo.hasNextPage) {
       if (search) {
-        await fetchMoreSearchFavoriteBillsPaginate({
+        fetchMoreSearchFavoriteBillsPaginate({
           variables: {
             input: {
               search,
@@ -186,7 +190,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
           setFilteredData(data.getSearchFavoriteBillsPaginate.edges);
         });
       } else {
-        await fetchMoreFavoriteBillsPaginate({
+        fetchMoreFavoriteBillsPaginate({
           variables: {
             input: {
               afterCursorId: pageInfo.endCursorId,
@@ -251,7 +255,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
 
   const ListFooterComponent = () => {
     return (
-      <View style={{marginTop: moderateScale(15)}}>
+      <View style={{marginVertical: moderateScale(15)}}>
         <LoadingIndicator isLoading={pageInfo.hasNextPage} size="small" />
       </View>
     );
@@ -273,45 +277,49 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     );
   }
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.searchContainer}>
-          <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
-          <SearchInput
-            search={search}
-            onChangeText={onSearchChange}
-            onClear={() => {
-              setSearch('');
-            }}
-            placeholder="Search Favorites"
-          />
-        </View>
-        {(searchLoading && filteredData.length === 0) ||
-        (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (
-          <LoadingIndicator isLoading={true} isFlex />
-        ) : (
-          <FlatList
-            data={getData()}
-            renderItem={({item, index}) => (
-              <FavoriteDetails
-                item={item}
-                index={index}
-                onRefreshFavorite={onRefreshFavorite}
-                onPressFavorite={() => onPressFavorite(item, index)}
-              />
-            )}
-            contentContainerStyle={styles.listContainer}
-            keyExtractor={(item, index) => index.toString()}
-            extraData={{filteredData, favorites}}
-            ListEmptyComponent={ListEmptyComponent}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-            onEndReachedThreshold={0}
-            onEndReached={fetchMoreData}
-            ListFooterComponent={ListFooterComponent}
-          />
-        )}
+    <View style={styles.container}>
+      <View style={styles.searchContainer}>
+        <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
+        <SearchInput
+          search={search}
+          onChangeText={onSearchChange}
+          onClear={() => {
+            setSearch('');
+          }}
+          placeholder="Search Favorites"
+        />
       </View>
-    </>
+      {(searchLoading && filteredData.length === 0) ||
+      (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (
+        <LoadingIndicator isLoading={true} isFlex />
+      ) : (
+        <FlatList
+          data={getData()}
+          renderItem={({item, index}) => (
+            <FavoriteDetails
+              item={item}
+              index={index}
+              onRefreshFavorite={onRefreshFavorite}
+              onPressFavorite={() => onPressFavorite(item, index)}
+            />
+          )}
+          contentContainerStyle={getData().length === 0 ? styles.listContainer : {}}
+          style={{flex: 1}}
+          keyExtractor={(item, index) => index.toString()}
+          extraData={[filteredData, favorites, pageInfo]}
+          ListEmptyComponent={ListEmptyComponent}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
+          onEndReachedThreshold={0.02}
+          onEndReached={() => fetchMoreData()}
+          ListFooterComponent={ListFooterComponent}
+          getItemLayout={(data, index) => ({
+            length: data.length,
+            offset: data.length * index,
+            index,
+          })}
+        />
+      )}
+    </View>
   );
 };
 
@@ -325,8 +333,6 @@ const styles = StyleSheet.create({
     padding: moderateScale(16),
   },
   listContainer: {
-    paddingHorizontal: moderateScale(5),
-    paddingVertical: moderateScale(5),
     flexGrow: 1,
   },
   emptyContainer: {

@@ -85,11 +85,11 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: moderateScale(20),
+    marginHorizontal: moderateScale(25),
   },
   itemLogo: {
     height: moderateScale(60),
-    width: moderateScale(80),
+    width: moderateScale(60),
     resizeMode: 'contain',
   },
   itemName: {

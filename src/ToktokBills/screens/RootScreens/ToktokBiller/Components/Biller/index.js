@@ -28,7 +28,7 @@ export const Biller = ({item, index}) => {
     <TouchableOpacity onPress={onThrottledPress} style={styles.container}>
       <View style={styles.item}>
         <View style={{justifyContent: 'center'}}>
-          {(imageLoading && item.node.logo)  && (
+          {imageLoading && item.node.logo && (
             <View style={{position: 'absolute', right: 0, left: 0}}>
               <LoadingIndicator isLoading={true} size="small" />
             </View>
@@ -52,16 +52,17 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderBottomColor: '#F8F8F8',
     borderBottomWidth: 1,
+    marginHorizontal: moderateScale(16),
   },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: moderateScale(15),
+    paddingHorizontal: moderateScale(5),
     paddingVertical: moderateScale(10),
   },
   itemLogo: {
-    height: moderateScale(50),
-    width: moderateScale(70),
+    height: moderateScale(60),
+    width: moderateScale(60),
     resizeMode: 'contain',
   },
   itemName: {
