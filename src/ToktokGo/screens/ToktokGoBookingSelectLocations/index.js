@@ -219,7 +219,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
             <Text
               style={{
                 color: selectedInput == 'D' ? CONSTANTS.COLOR.ORANGE : CONSTANTS.COLOR.YELLOW,
-                fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
                 fontSize: CONSTANTS.FONT_SIZE.M,
               }}>
               Select via Map

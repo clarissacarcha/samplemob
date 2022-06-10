@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   confirmText: {
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.WHITE,
   },
 });

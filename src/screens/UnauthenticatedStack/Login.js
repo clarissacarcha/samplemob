@@ -194,7 +194,7 @@ const Login = ({navigation, session}) => {
                 paddingHorizontal: '36%',
                 fontWeight: '600',
                 lineHeight: SIZES.L,
-                fontFamily: constants.FONT_FAMILY.BOLD,
+                fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
               }}>
               Continue
             </Text>

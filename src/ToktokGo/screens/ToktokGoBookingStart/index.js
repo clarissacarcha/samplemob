@@ -203,7 +203,7 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
             <Text
               style={{
                 color: CONSTANTS.COLOR.ORANGE,
-                fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
                 fontSize: CONSTANTS.FONT_SIZE.M,
               }}>
               Select via Map
