@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    width: '50%',
   },
   receiptNote: {
     marginHorizontal: moderateScale(16),
