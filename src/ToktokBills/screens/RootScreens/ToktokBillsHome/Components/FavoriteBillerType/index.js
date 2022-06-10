@@ -10,7 +10,7 @@ import {LoadingIndicator} from 'toktokbills/components';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
 
-export const FavoriteBillerType = React.memo(({item, index, billTypes}) => {
+export const FavoriteBillerType = React.memo(({item}) => {
   const navigation = useNavigation();
   const route = useRoute();
   const [imageLoading, setImageLoading] = useState(true);
