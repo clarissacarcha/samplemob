@@ -188,15 +188,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   const getAutoShipping = async (payload) => {
 
-    //setup empty vouchers list
-    // let initialShippingVouchers = []
-    // payload.cartitems.map((item) => {
-    //   initialShippingVouchers.push({
-    //     shopid: item.shopid
-    //   })
-    // })
-    // await CheckoutContextData.setShippingVouchers(initialShippingVouchers)
-
     //MANAGE BRANCH
     let stotal = payload.subtotal
     payload.cartitems.map((cartitem, index) => {
@@ -223,7 +214,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
          
           if(item.type == "shipping"){
             await item.vouchers.map(async (voucher, index) => {
-              
+  
               if(parseFloat(voucher.amount) == 0){
 
                 let fee = null
@@ -911,6 +902,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
           navigation = {navigation}
           isVisible = {alertModal}
           setIsVisible = {setAlertModal}
+          onPress={() => {
+            //SAVE APPLIED VOUCHERS
+            CheckoutContextData.saveAppliedVouchers()
+          }}
         />
         <CheckoutModal 
           navigation={navigation} 

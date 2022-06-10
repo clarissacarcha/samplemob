@@ -188,9 +188,9 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
           items.push({
             ...req.responseData.voucher, 
-            deduction: calculatedDiscount < 0 ? fee : calculatedDiscount,
-            discountedAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount, 
-            discount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
+            deduction: calculatedDiscount < 0 ? fee : pctvalue,
+            discountedAmount: calculatedDiscount < 0 ? 0 : pctvalue, 
+            discount: calculatedDiscount < 0 ? 0 : pctvalue,
             voucherCodeType: req.responseData.type
           })
 
@@ -279,20 +279,23 @@ export const ApplyVoucherForm = (address, customer, payload) => {
       console.log("asdasdasdasdasd")
       console.log(req.responseError)
 
-      if(req.responseError && req.responseError.field_errors){
+      if(req.responseError && req.responseError.field_errors){        
         let message = req.responseError.field_errors[`shop_${item.shop.id}_vcode`]
         if(message.includes("not valid")){
-          seterrormessage("Invalid voucher code. Please check your voucher code.")
+          seterrormessage("Invalid voucher code.")
         }else{
-          seterrormessage(req.responseError.field_errors[`shop_${item.shop.id}_vcode`])
+          if(req.responseError.error_code == "004"){
+            seterrormessage(CheckoutContextData.getErrorMessageByCode(req.responseError.error_code))
+          }else{
+            seterrormessage(req.responseError.field_errors[`shop_${item.shop.id}_vcode`])
+          }          
         }
-          
+      }else if(req.responseError && req.responseError.error_code){
+       // 
       }else if(req.responseError && req.responseError.message){
         seterrormessage(req.responseError.message)
       }else{
-        seterrormessage("Invalid voucher code. Please check your voucher code.")
-        // seterrormessage("Invalid voucher code. Please check your voucher code.")
-				// seterrormessage("Subtotal for this shop does not meet the minimum required price for this voucher.")
+        seterrormessage("Invalid voucher code.")
       }
 
     }
