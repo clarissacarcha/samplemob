@@ -470,9 +470,9 @@ const MainComponent = () => {
     const deliveryPrice = orderType === 'Delivery' ? delivery?.price : 0;
     const totalPrice =
       promotions.length > 0 || deals.length > 0
-        ? (await getResellerDiscount(promotions, deals, temporaryCart.items))
+        ? (await getResellerDiscount(promotions, deals, temporaryCart.items, true))
         : temporaryCart?.totalAmountWithAddons;
-    const deductedPrice = promotions.length > 0 || deals.length > 0 ? temporaryCart?.srpTotalAmount - totalPrice : temporaryCart?.totalAmountWithAddons;
+    const deductedPrice = promotions.length > 0 || deals.length > 0 ? totalPrice : temporaryCart?.totalAmountWithAddons;
     // const totalPrice =
     //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;
     // const totalResellerDiscount =
@@ -483,7 +483,7 @@ const MainComponent = () => {
     //   : await handleShippingVouchers(shippingVoucher);
     const amount = await getTotalAmount(promotionVoucher, delivery?.price);
     const parseAmount = Number(((deliveryPrice + deductedPrice + temporaryCart.addonsTotalAmount) - amount).toFixed(2));
-    console.log(deductedPrice, parseAmount, totalPrice);
+    // console.log(deductedPrice, temporaryCart?.addonsTotalAmount, deliveryPrice, amount);
 
     // if (orderType === 'Delivery') {
     //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
@@ -624,18 +624,15 @@ const MainComponent = () => {
     // const mergeShipping = _.merge(autoApply, shipping);
     const totalPrice =
       promotions.length > 0 || deals.length > 0
-        ? await getResellerDiscount(promotions, deals, temporaryCart.items)
+        ? await getResellerDiscount(promotions, deals, temporaryCart.items, true)
         : temporaryCart?.totalAmount;
-    const deductedPrice =
-      promotions.length > 0 || deals.length > 0
-        ? temporaryCart?.srpTotalAmount - totalPrice
-        : temporaryCart?.totalAmount;
+    const deductedPrice = promotions.length > 0 || deals.length > 0 ? totalPrice : temporaryCart?.totalAmount;
     // const totalResellerDiscount =
     //   promotions.length > 0 ? (await getResellerDiscount(promotions, temporaryCart.items)).toFixed(2) : 0;
 
     const amount = await getTotalAmount(promotionVoucher, 0);
     const parsedAmount = Number((deductedPrice - amount).toFixed(2));
-    console.log(amount, parsedAmount, deductedPrice);
+    // console.log(amount, parsedAmount, deductedPrice, temporaryCart);
 
     const DELIVERY_RECEIVER =
       receiver.contactPerson && receiver.contactPerson != null && receiver.contactPerson !== ''
