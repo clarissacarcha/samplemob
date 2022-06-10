@@ -246,7 +246,8 @@ export const ToktokBiller = ({navigation, route}) => {
           <FlatList
             data={getData()}
             renderItem={({item, index}) => <Biller item={item} index={index} />}
-            contentContainerStyle={styles.listContainer}
+            contentContainerStyle={getData().length === 0 ? {flexGrow: 1} : {}}
+            style={{flex: 1}}
             keyExtractor={(item, index) => index.toString()}
             extraData={{filteredData, billItems}}
             ListEmptyComponent={ListEmptyComponent}
@@ -254,6 +255,11 @@ export const ToktokBiller = ({navigation, route}) => {
             onEndReachedThreshold={0.02}
             onEndReached={fetchMoreData}
             ListFooterComponent={ListFooterComponent}
+            getItemLayout={(data, index) => ({
+              length: data.length,
+              offset: data.length * index,
+              index,
+            })}
           />
         )}
       </View>
@@ -268,11 +274,6 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     padding: moderateScale(16),
-  },
-  listContainer: {
-    paddingHorizontal: moderateScale(16),
-    paddingBottom: moderateScale(16),
-    flexGrow: 1,
   },
   emptyContainer: {
     flex: 1,

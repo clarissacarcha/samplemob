@@ -128,8 +128,9 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance, sc
   };
 
   const onPressConfirm = () => {
-    // setRefreshing(true)
-    getMyAccount();
+    if (user.toktokWalletAccountId) {
+      getMyAccount();
+    }
     const isFirstFieldValid = checkFirstField(
       firstField,
       firstFieldName,
