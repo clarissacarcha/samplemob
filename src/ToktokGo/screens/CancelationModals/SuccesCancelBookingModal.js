@@ -10,7 +10,7 @@ export const SuccesCancelBookingModal = ({visible, cancellationState, chargeAmou
       if (cancellationState?.initiatedBy == 'CONSUMER') {
         return (
           <Text style={styles.modalDescription}>
-            Your booking has been cancelled. Cancellation fee will be charged in your next booking. You may read more
+            Your booking has been cancelled. Cancellation Fee will be charged in your next booking. You may read more
             about our{' '}
             <ThrottledOpacity
               onPress={() =>
@@ -33,7 +33,7 @@ export const SuccesCancelBookingModal = ({visible, cancellationState, chargeAmou
       } else {
         return (
           <Text style={styles.modalDescription}>
-            Your booking has been cancelled. No show fee will be charged in your next booking. You may read more about
+            Your booking has been cancelled. No Show Fee will be charged in your next booking. You may read more about
             our{' '}
             <ThrottledOpacity
               onPress={() =>
