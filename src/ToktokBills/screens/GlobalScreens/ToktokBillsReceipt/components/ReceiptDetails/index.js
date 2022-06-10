@@ -171,8 +171,8 @@ const styles = StyleSheet.create({
     marginHorizontal: moderateScale(16),
   },
   logo: {
-    width: moderateScale(80),
-    height: moderateScale(50),
+    width: moderateScale(110),
+    height: moderateScale(80),
     resizeMode: 'contain',
   },
 });
