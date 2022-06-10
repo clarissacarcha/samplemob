@@ -132,6 +132,8 @@ const styles = StyleSheet.create({
     color: COLOR.BLACK,
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    width: '50%',
+    paddingRight: moderateScale(10),
   },
   receiptNote: {
     marginHorizontal: moderateScale(16),
