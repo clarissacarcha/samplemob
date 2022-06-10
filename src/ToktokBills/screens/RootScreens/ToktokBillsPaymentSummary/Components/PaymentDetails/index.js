@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     width: '50%',
+    paddingRight: moderateScale(10),
   },
   description: {
     textAlign: 'right',
