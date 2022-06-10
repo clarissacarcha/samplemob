@@ -44,7 +44,7 @@ export const BuyAgainButton = ({ data }) => {
               
               if(req) {
                 if(index === toaddItems?.length - 1 && toupdateItems?.length === 0) {
-                  setIsVisible(false);
+                  // setIsVisible(false);
                   navigation.navigate("ToktokMallMyCart", {items: itemsToBeSelected});
                   EventRegister.emit('refreshToktokmallShoppingCart');
                 }
@@ -61,34 +61,19 @@ export const BuyAgainButton = ({ data }) => {
     }
   });
 
-  onPressBuy = () => {
+  const onPressBuy = () => {
     const { items } = data?.orders;
-    console.log('itemsssssss', items)
-    // console.log("onPressBuy, getBuyAgain", JSON.stringify(items))
     // setIsVisible(true);
-    // getBuyAgain({variables: {
-    //   input: {
-    //     items: items
-    //   }
-    // }})
-  }
-
-  const isDisabled = () => {
-    const {items} = data?.orders
-    let disabled = false
-    items.map((item, i) => {
-      if(item.data.enabled === 2){
-        disabled = true
-      }else{
-        disabled = false
+    getBuyAgain({variables: {
+      input: {
+        items: items
       }
-    })
-    return disabled
+    }})
   }
   
   return (
         <>
-          <TouchableOpacity style={isDisabled() ? styles.disabled :styles.buyAgainButton} onPress={onPressBuy} disabled = {isDisabled()} >
+          <TouchableOpacity style={styles.buyAgainButton} onPress={onPressBuy} >
               <Text style={styles.buyAgainText}>Buy Again</Text>
           </TouchableOpacity>
           <LoadingOverlay isVisible={isVisible} />
