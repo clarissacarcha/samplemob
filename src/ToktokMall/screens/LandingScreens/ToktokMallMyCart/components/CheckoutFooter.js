@@ -14,12 +14,12 @@ export const CheckoutFooter = ({subtotal, onSubmit}) => {
             >
                 <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
                     <View style={{flex: 1, justifyContent: 'center'}}>
-                        <Text style={{fontSize: 14, fontFamily: FONT.SEMI_BOLD}}>Subtotal </Text>
-                        <Text style={{fontSize: 18, color: "#F6841F"}}><Price amount={subtotal} /></Text>
+                        <Text style={{fontSize: 14, fontFamily: FONT.SEMI_BOLD, color: "#000000"}}>Subtotal </Text>
+                        <Text style={{fontSize: 18, fontFamily: FONT.SEMI_BOLD, color: "#F6841F"}}><Price amount={subtotal} /></Text>
                     </View>
                     <View style={{justifyContent: 'center'}}>
                         <TouchableOpacity onPress={onSubmit} style={{backgroundColor: '#F6841F', paddingVertical: 15, paddingHorizontal: 40, borderRadius: 5}}>
-                            <Text style={{fontSize: 14, color: '#fff'}}>Checkout</Text>
+                            <Text style={{fontSize: 14, color: '#fff', fontFamily: FONT.SEMI_BOLD}}>Checkout</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
