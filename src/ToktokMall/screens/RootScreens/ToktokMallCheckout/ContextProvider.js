@@ -40,6 +40,12 @@ export const CheckoutContextProvider = ({children})=> {
     }
   })
 
+	const getShopBranchId = (shopid) => {
+		let res = 0
+		shippingFeeRates.map((a) => a.shopid == shopid ? res = a.branchid : 0)
+		return parseFloat(res)
+	}
+
 	const getShippingFeeByShopId = (shopid) => {
 		let res = null
 		shippingFeeRates.map((a) => a.shopid == shopid ? res = a.shippingfee : null)
@@ -160,6 +166,7 @@ export const CheckoutContextProvider = ({children})=> {
 				getTotalVoucherDeduction,
 				getVoucherDeduction,
 
+				getShopBranchId,
 				getShippingFeeByShopId,
 				getShopShippingDiscount,
 				getShopItemDiscount,
