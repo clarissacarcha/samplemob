@@ -8,20 +8,22 @@ const loading = require('src/assets/animations/loading.json');
 
 export const AlertOverlay = ({visible}) => {
   return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      useNativeDriver={true}
-      style={styles.container}
-      animationIn={'fadeIn'}
-      animationOut={'fadeOut'}>
-      <View style={styles.modalBody}>
-        <View style={styles.content}>
-          <LottieView source={loading} autoPlay loop style={styles.loading} />
-          <Text style={styles.processing}>Processing</Text>
+    <>
+      <Modal
+        visible={visible}
+        transparent={true}
+        useNativeDriver={true}
+        style={styles.container}
+        animationIn={'fadeIn'}
+        animationOut={'fadeOut'}>
+        <View style={styles.modalBody}>
+          <View style={styles.content}>
+            <LottieView source={loading} autoPlay loop style={styles.loading} resizeMode="cover" />
+            <Text style={styles.processing}>Processing</Text>
+          </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+    </>
   );
 };
 
@@ -38,18 +40,17 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: 'white',
     borderRadius: moderateScale(10),
-    paddingVertical: moderateScale(20),
     alignItems: 'center',
-    paddingHorizontal: moderateScale(35),
   },
   processing: {
     color: COLOR.ORANGE,
     fontFamily: FONT.BOLD,
-    marginTop: moderateScale(10),
     fontSize: FONT_SIZE.M,
+    paddingBottom: moderateScale(20),
   },
   loading: {
-    height: moderateScale(80),
-    width: moderateScale(80),
+    height: undefined,
+    width: moderateScale(170),
+    aspectRatio: 1.5,
   },
 });

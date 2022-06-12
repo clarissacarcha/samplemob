@@ -69,12 +69,12 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   });
 
   useEffect(() => {
-    if (waitingText < 5 && waitingStatus) {
+    if (waitingText <= 5 && waitingStatus) {
       const interval = setTimeout(() => {
         setWaitingText(waitingText + 1);
       }, 10000);
       return () => clearInterval(interval);
-    } else if (waitingText >= 5 && waitingStatus) {
+    } else if (waitingText > 5 && waitingStatus) {
       setWaitingText(1);
     } else {
       setWaitingText(6);
@@ -94,15 +94,71 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         setViewCancelBookingModal(true);
       }
     },
-    onError: onErrorAppSync,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else if (errorType === 'TRIP_EXPIRED') {
+            dispatch({
+              type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+            });
+            navigation.replace('ToktokGoBookingStart', {
+              popTo: popTo + 1,
+            });
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
   });
 
   const [tripConsumerCancel, {loading: TCCLoading}] = useMutation(TRIP_CONSUMER_CANCEL, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
-    onError: onErrorAppSync,
     onCompleted: response => {
       console.log(response);
       setViewSuccessCancelBookingModal(true);
+    },
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else if (errorType === 'TRIP_EXPIRED') {
+            dispatch({
+              type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+            });
+            navigation.replace('ToktokGoBookingStart', {
+              popTo: popTo + 1,
+            });
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
     },
   });
 
@@ -279,7 +335,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         return "Let's wait for your driver to arrive!";
       }
       case 6: {
-        return 'We’re sorry ka-toktok, but we couldn’t find a driver near your area.';
+        return 'We’re sorry ka-toktok, our drivers are busy at the moment. Please retry.';
       }
     }
   };
@@ -307,7 +363,6 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       <SuccesCancelBookingModal
         visible={viewSuccessCancelBookingModal}
         setVisible={setViewSuccessCancelBookingModal}
-        type={1}
         chargeAmount={chargeAmount}
         goBackAfterCancellation={goBackAfterCancellation}
       />
@@ -350,7 +405,7 @@ const styles = StyleSheet.create({
     borderTopColor: constants.COLOR.ORANGE,
     borderLeftColor: constants.COLOR.ORANGE,
     borderRightColor: constants.COLOR.ORANGE,
-    borderRightColor: constants.COLOR.WHITE,
+    borderBottomColor: constants.COLOR.WHITE,
     position: 'absolute',
     paddingTop: 13,
     paddingHorizontal: 16,

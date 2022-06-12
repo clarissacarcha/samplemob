@@ -20,10 +20,6 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
       label: 'Driver is rude',
       value: '2',
     },
-    {
-      label: 'Others',
-      value: '4',
-    },
   ]);
 
   const confirm = () => {
@@ -113,6 +109,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
             </ThrottledOpacity>
             <ThrottledOpacity
               delay={500}
+              disabled={selectedReason ? false : true}
               onPress={() => confirm()}
               style={{
                 flex: 1,

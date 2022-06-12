@@ -67,7 +67,6 @@ export const ToktokBiller = ({navigation, route}) => {
       setRefreshing(false);
     },
     onCompleted: ({getBillItemsPaginate}) => {
-      // let data = refreshing ? getBillItemsPaginate.edges : [...billItems, ...getBillItemsPaginate.edges];
       setBillItems(getBillItemsPaginate.edges);
       setPageInfo(getBillItemsPaginate.pageInfo);
       setRefreshing(false);
@@ -93,8 +92,8 @@ export const ToktokBiller = ({navigation, route}) => {
   });
 
   useEffect(() => {
-    setIsMounted(true);
     handleGetBillItems();
+    setIsMounted(true);
   }, []);
 
   const handleGetBillItems = () => {
@@ -112,7 +111,6 @@ export const ToktokBiller = ({navigation, route}) => {
   useEffect(() => {
     if (!search) {
       handleGetBillItems();
-      setBillItems([]);
     }
   }, [search]);
 
@@ -226,11 +224,12 @@ export const ToktokBiller = ({navigation, route}) => {
       </View>
     );
   }
+
   return (
     <>
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-          {isMounted && (billItems.length != 0 || billItemsLoading) && (
+          {isMounted && billItems.length != 0 && (
             <SearchInput
               search={search}
               onChangeText={onSearchChange}
@@ -247,14 +246,20 @@ export const ToktokBiller = ({navigation, route}) => {
           <FlatList
             data={getData()}
             renderItem={({item, index}) => <Biller item={item} index={index} />}
-            contentContainerStyle={styles.listContainer}
+            contentContainerStyle={getData().length === 0 ? {flexGrow: 1} : {}}
+            style={{flex: 1}}
             keyExtractor={(item, index) => index.toString()}
             extraData={{filteredData, billItems}}
             ListEmptyComponent={ListEmptyComponent}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-            onEndReachedThreshold={0.01}
+            onEndReachedThreshold={0.02}
             onEndReached={fetchMoreData}
             ListFooterComponent={ListFooterComponent}
+            getItemLayout={(data, index) => ({
+              length: data.length,
+              offset: data.length * index,
+              index,
+            })}
           />
         )}
       </View>
@@ -269,11 +274,6 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     padding: moderateScale(16),
-  },
-  listContainer: {
-    paddingHorizontal: moderateScale(16),
-    paddingBottom: moderateScale(16),
-    flexGrow: 1,
   },
   emptyContainer: {
     flex: 1,

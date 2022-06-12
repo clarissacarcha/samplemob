@@ -16,7 +16,7 @@ import {currentLocation} from '../../../helper';
 import {ThrottledHighlight} from '../../../components_section';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
-  const {popTo} = route.params;
+  const {popTo, selectInput} = route.params;
   const [selectedInput, setSelectedInput] = useState('D');
   const [searchResponse, setSearchResponse] = useState([]);
 
@@ -24,10 +24,10 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const dispatch = useDispatch();
   const {origin, destination, sessionToken} = useSelector(state => state.toktokGo);
 
-  const [searchDestination, setSearchDestination] = useState(null);
-  const [searchOrigin, setSearchOrigin] = useState(origin.place.formattedAddress);
+  const [searchDestination, setSearchDestination] = useState(destination?.place?.formattedAddress);
+  const [searchOrigin, setSearchOrigin] = useState(origin?.place?.formattedAddress);
 
-  const [getPlaceAutocomplete] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
+  const [getPlaceAutocomplete, {loading}] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
@@ -97,6 +97,10 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       if (!origin?.place?.formattedAddress) {
         setPlace();
       }
+
+      if (selectInput) {
+        onChangeSelectedInput(selectInput);
+      }
     }, [navigation]),
   );
 
@@ -163,6 +167,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           title={searchDestination}
           setSearchDestination={setSearchDestination}
           setSearchOrigin={setSearchOrigin}
+          loading={loading}
         />
         {searchResponse?.length == 0 ? (
           // <View>

@@ -40,7 +40,7 @@ export const RenderDots = ({scrollX, data, sliderRef, dotPosition, setCurrentInd
 
           const dotColor = dotPosition.interpolate({
             inputRange: [index - 1, index, index + 1],
-            outputRange: ['#898C95', COLOR.ORANGE, '#898C95'],
+            outputRange: ['#F6841F', COLOR.ORANGE, '#F6841F'],
             extrapolate: 'clamp',
           });
 
@@ -54,18 +54,18 @@ export const RenderDots = ({scrollX, data, sliderRef, dotPosition, setCurrentInd
           );
         })}
       </View>
-      {!(currentIndex < data.length - 1) && (
+      <View style={{opacity: !(currentIndex < data.length - 1) ? 1 : 0}}>
         <TouchableOpacity style={styles.btnContainer} onPress={onPressGotIt}>
-          <Text style={styles.btnText}>Got It!</Text>
+          <Text style={styles.btnText}>Got it!</Text>
         </TouchableOpacity>
-      )}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: 100,
+    // height: 100,
   },
   dotsContainer: {
     justifyContent: 'center',
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     color: COLOR.ORANGE,
   },
   btnContainer: {
-    marginTop: moderateScale(20),
+    marginVertical: moderateScale(20),
     marginHorizontal: moderateScale(75),
     backgroundColor: COLOR.ORANGE,
     paddingVertical: moderateScale(10),

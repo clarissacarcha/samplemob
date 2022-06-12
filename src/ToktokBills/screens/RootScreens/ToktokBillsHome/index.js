@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, useMemo, useRef} from 'react';
 import {
   View,
   Text,
@@ -10,9 +10,10 @@ import {
   RefreshControl,
   ImageBackground,
   ScrollView,
+  Animated,
 } from 'react-native';
 import {moderateScale, getStatusbarHeight} from 'toktokbills/helper';
-import {useIsFocused, useRoute} from '@react-navigation/native';
+import {useIsFocused, useRoute, useFocusEffect} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import _ from 'lodash';
 
@@ -40,6 +41,8 @@ export const ToktokBillsHome = ({navigation, route}) => {
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['toktokbills']} isLogo />,
   });
+
+  const fadeAnim = useRef(new Animated.Value(0));
   const isFocused = useIsFocused();
   const [billTypes, setBillTypes] = useState([]);
   const [favoriteBills, setFavoriteBills] = useState([]);
@@ -53,8 +56,8 @@ export const ToktokBillsHome = ({navigation, route}) => {
       setRefreshing(false);
     },
     onCompleted: ({getBillTypes}) => {
-      const res = _.isEqual(getBillTypes, billTypes);
-      if (!res) {
+      let result = getBillTypes.filter(o1 => !billTypes.some(o2 => o1.id === o2.id));
+      if (result.length > 0 || getBillTypes.length != billTypes.length) {
         setBillTypes(getBillTypes);
       }
       setRefreshing(false);
@@ -70,8 +73,9 @@ export const ToktokBillsHome = ({navigation, route}) => {
         setRefreshing(false);
       },
       onCompleted: ({getFavoriteBillsPaginate}) => {
-        const isEqual = _.isEqual(getFavoriteBillsPaginate, favoriteBills);
-        if (!isEqual) {
+        let result = getFavoriteBillsPaginate.edges.filter(o1 => !favoriteBills.some(o2 => o1.node.id === o2.node.id));
+
+        if (result.length > 0 || getFavoriteBillsPaginate.edges.length != favoriteBills.length) {
           setFavoriteBills(getFavoriteBillsPaginate.edges);
         }
         setRefreshing(false);
@@ -80,32 +84,29 @@ export const ToktokBillsHome = ({navigation, route}) => {
   );
 
   useEffect(() => {
-    setIsMounted(true);
-    handleGetData();
-  }, []);
-
-  useEffect(() => {
-    if (isFocused && isMounted) {
-      setRefreshing(true);
-      getFavoriteBillsPaginate({
-        variables: {
-          input: {
-            afterCursorId: null,
-            afterCursorUpdatedAt: null,
-          },
-        },
-      });
+    if (!loading && !getFavoritesLoading && isMounted) {
+      Animated.timing(fadeAnim.current, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
     }
-  }, [isFocused]);
+  }, [getFavoritesLoading, loading, isMounted]);
+
+  useFocusEffect(
+    useCallback(() => {
+      handleGetData();
+    }, []),
+  );
 
   const onRefresh = () => {
     setRefreshing(true);
     handleGetData();
   };
 
-  const handleGetData = () => {
-    getBillTypes();
-    getFavoriteBillsPaginate({
+  const handleGetData = async () => {
+    await getBillTypes();
+    await getFavoriteBillsPaginate({
       variables: {
         input: {
           afterCursorId: null,
@@ -113,65 +114,76 @@ export const ToktokBillsHome = ({navigation, route}) => {
         },
       },
     });
+    setIsMounted(true);
   };
 
-  const onPressSeeAll = () => {
-    navigation.navigate('ToktokBillsFavorites', {billTypes});
-  };
+  const ListFavoriteComponent = () => {
+    const onPressSeeAll = () => {
+      navigation.navigate('ToktokBillsFavorites');
+    };
 
-  if (((loading && billTypes.length === 0) || (getFavoritesLoading && favoriteBills.length === 0)) && !refreshing) {
+    if (favoriteBills.length === 0) return null;
     return (
-      <ImageBackground source={screen_bg} style={styles.loadingContainer} resizeMode="cover">
-        <LoadingIndicator isLoading={true} />
-      </ImageBackground>
+      <Animated.View style={[styles.shadowContainer, {marginBottom: moderateScale(16), opacity: fadeAnim.current}]}>
+        <View style={[styles.favoriteContainer, styles.lineSeperator]}>
+          <Text style={[styles.title]}>Favorite Billers</Text>
+          {favoriteBills.length > 3 && (
+            <TouchableOpacity style={styles.seeAllContainer} onPress={onPressSeeAll}>
+              <Text style={styles.seeAllText}>See All</Text>
+              <VectorIcon color={COLOR.ORANGE} size={15} iconSet={ICON_SET.Entypo} name="chevron-right" />
+            </TouchableOpacity>
+          )}
+        </View>
+        <View style={{marginVertical: moderateScale(16)}}>
+          <FlatList
+            data={favoriteBills.slice(0, 3)}
+            renderItem={({item, index}) => <FavoriteBillerType item={item} />}
+          />
+        </View>
+      </Animated.View>
     );
-  }
+  };
+
+  const ListBillerTypesComponent = useMemo(() => {
+    if (billTypes.length === 0) return null;
+    return (
+      <Animated.View style={[styles.shadowContainer, {opacity: fadeAnim.current}]}>
+        <Text style={[styles.title, styles.lineSeperator]}>Select Biller Type</Text>
+        <View style={styles.billerTypesContainer}>
+          <FlatList
+            data={billTypes}
+            renderItem={({item, index}) => <BillerType item={item} index={index} />}
+            numColumns={4}
+          />
+        </View>
+      </Animated.View>
+    );
+  }, [billTypes]);
+
   if (error || getFavoritesError) {
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} error={error ?? getFavoritesError} />
+        <SomethingWentWrong onRefetch={handleGetData} error={error ?? getFavoritesError} />
       </View>
     );
   }
   return (
-    <View style={styles.container}>
-      <ImageBackground source={screen_bg} style={{flex: 1}} resizeMode="cover">
-        <ScrollView
+    <ImageBackground source={screen_bg} style={{flex: 1}} resizeMode="cover">
+      {((loading && billTypes.length === 0) || (getFavoritesLoading && favoriteBills.length === 0 && !isMounted)) &&
+      !refreshing ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <LoadingIndicator isLoading={true} />
+        </View>
+      ) : (
+        <FlatList
+          extraData={[favoriteBills, billTypes]}
           contentContainerStyle={{padding: moderateScale(16)}}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-          {/* DISPLAY FAVORITES */}
-          {favoriteBills.length > 0 && (
-            <View style={styles.shadowContainer}>
-              <View style={[styles.favoriteContainer, styles.lineSeperator]}>
-                <Text style={[styles.title]}>Favorite Billers</Text>
-                {favoriteBills.length > 3 && (
-                  <TouchableOpacity style={styles.seeAllContainer} onPress={onPressSeeAll}>
-                    <Text style={styles.seeAllText}>See All</Text>
-                    <VectorIcon color={COLOR.ORANGE} size={15} iconSet={ICON_SET.Entypo} name="chevron-right" />
-                  </TouchableOpacity>
-                )}
-              </View>
-              <View style={{marginVertical: moderateScale(16)}}>
-                {favoriteBills.slice(0, 3).map((item, index) => (
-                  <FavoriteBillerType item={item} index={index} billTypes={billTypes} />
-                ))}
-              </View>
-            </View>
-          )}
-          {/* DISPLAY BILLER TYPE */}
-          {billTypes.length > 0 && (
-            <View style={styles.shadowContainer}>
-              <Text style={[styles.title, styles.lineSeperator]}>Select Biller Type</Text>
-              <View style={styles.billerTypesContainer}>
-                {billTypes.map((item, index) => (
-                  <BillerType item={item} index={index} />
-                ))}
-              </View>
-            </View>
-          )}
-        </ScrollView>
-      </ImageBackground>
-    </View>
+          ListHeaderComponent={ListFavoriteComponent}
+          ListFooterComponent={ListBillerTypesComponent}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        />
+      )}
+    </ImageBackground>
   );
 };
 
@@ -191,7 +203,6 @@ const styles = StyleSheet.create({
     elevation: 3,
     backgroundColor: 'white',
     borderRadius: 5,
-    marginBottom: moderateScale(16),
   },
   flatlistContainer: {
     paddingVertical: moderateScale(15),
@@ -229,6 +240,6 @@ const styles = StyleSheet.create({
   billerTypesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: moderateScale(20),
+    marginVertical: moderateScale(20),
   },
 });

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 //UTIL
@@ -38,7 +38,6 @@ export const ConfirmButton = ({paymentData}) => {
   const [postToktokWalletRequestMoney, {loading, error}] = useMutation(POST_TOKTOKWALLET_REQUEST_MONEY, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: error => {
-      console.log(error.graphQLErrors);
       ErrorUtility.StandardErrorHandling({
         error,
         navigation,
@@ -53,10 +52,9 @@ export const ConfirmButton = ({paymentData}) => {
         requestMoneyDetails: postToktokWalletRequestMoney.data,
         hash: postToktokWalletRequestMoney.hash,
       };
-      // navigation.navigate('ToktokBillsEnterPinCode', {paymentSummary});
       return navigation.navigate('ToktokWalletTPINValidator', {
         callBackFunc: handleProcessProceed,
-        screenPopNo: 4,
+        onPressCancelYes: () => navigation.navigate('ToktokBillsHome'),
         enableIdle: false,
         data,
       });
@@ -70,7 +68,7 @@ export const ConfirmButton = ({paymentData}) => {
         error,
         navigation,
         prompt,
-        isPop: true,
+        onPress: () => navigation.navigate('ToktokBillsHome'),
       });
     },
     onCompleted: ({postBillsTransaction}) => {
@@ -91,6 +89,7 @@ export const ConfirmButton = ({paymentData}) => {
       },
       referenceNumber: requestMoneyDetails.referenceNumber,
       senderName: `${firstName} ${lastName}`,
+      senderFirstName: firstName,
       senderMobileNumber: user.username,
       destinationNumber: paymentData.firstField,
       destinationIdentifier: paymentData.secondField,

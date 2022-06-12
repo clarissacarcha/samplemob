@@ -3,13 +3,14 @@ import {View, Text, Dimensions, StyleSheet, Image, TouchableOpacity} from 'react
 import {moderateScale} from 'toktokbills/helper';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useThrottle} from 'src/hooks';
+import FastImage from 'react-native-fast-image';
 
 import {LoadingIndicator} from 'toktokbills/components';
 
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
 
-export const FavoriteBillerType = ({item, index, billTypes}) => {
+export const FavoriteBillerType = React.memo(({item}) => {
   const navigation = useNavigation();
   const route = useRoute();
   const [imageLoading, setImageLoading] = useState(true);
@@ -35,14 +36,15 @@ export const FavoriteBillerType = ({item, index, billTypes}) => {
       <TouchableOpacity onPress={onThrottledPress} style={styles.container}>
         <View style={styles.item}>
           <View style={{justifyContent: 'center'}}>
-            {imageLoading && (
+            {imageLoading && billItem.logo && (
               <View style={styles.loadingContainer}>
                 <LoadingIndicator isLoading={true} size="small" />
               </View>
             )}
-            <Image
+            <FastImage
               source={{uri: billItem.logo}}
               style={styles.itemLogo}
+              resizeMode={FastImage.resizeMode.contain}
               onLoadStart={() => setImageLoading(true)}
               onLoadEnd={() => setImageLoading(false)}
             />
@@ -60,7 +62,7 @@ export const FavoriteBillerType = ({item, index, billTypes}) => {
       </TouchableOpacity>
     </>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -83,11 +85,11 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: moderateScale(20),
+    marginHorizontal: moderateScale(25),
   },
   itemLogo: {
     height: moderateScale(60),
-    width: moderateScale(80),
+    width: moderateScale(60),
     resizeMode: 'contain',
   },
   itemName: {

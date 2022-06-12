@@ -1,16 +1,14 @@
 import React from 'react';
-import {Text, View, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, View, StatusBar, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import CONSTANTS from '../../common/res/constants';
-import MIcon from 'react-native-vector-icons/MaterialIcons';
+import ArrowLeftIcon from '../../assets/icons/arrow-left-icon.png';
 
 export const Header = ({navigation, title}) => {
   return (
     <View style={styles.headerBox}>
       <View style={styles.greetingBox}>
         <TouchableOpacity onPress={() => navigation.pop()}>
-          <Text>
-            <MIcon name={'keyboard-arrow-left'} size={25} color={CONSTANTS.COLOR.ORANGE} />
-          </Text>
+          <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
         </TouchableOpacity>
         <View style={{flex: 1, alignItems: 'center', marginRight: 30}}>
           <Text style={styles.greetingText}>{title}</Text>
@@ -20,6 +18,11 @@ export const Header = ({navigation, title}) => {
   );
 };
 const styles = StyleSheet.create({
+  iconDimensions: {
+    width: 10,
+    height: 15,
+    marginLeft: 16,
+  },
   headerBox: {
     width: '100%',
     backgroundColor: 'white',

@@ -5,7 +5,7 @@ import {CancelModalPrompt} from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
-export const HeaderCancel = ({navigation, screenPopNo = 1}) => {
+export const HeaderCancel = ({navigation, screenPopNo = 1, onPressCancelYes}) => {
   const [leaveModalvisible, setLeaveModalVisible] = useState(false);
 
   const cancelSetup = () => {
@@ -17,7 +17,7 @@ export const HeaderCancel = ({navigation, screenPopNo = 1}) => {
       <CancelModalPrompt
         visible={leaveModalvisible}
         setVisible={setLeaveModalVisible}
-        onPressYes={() => navigation.pop(screenPopNo)}
+        onPressYes={onPressCancelYes ? onPressCancelYes : () => navigation.pop(screenPopNo)}
       />
       <TouchableHighlight style={{paddingRight: 16}} underlayColor={'white'} onPress={cancelSetup}>
         <View style={styles.container}>

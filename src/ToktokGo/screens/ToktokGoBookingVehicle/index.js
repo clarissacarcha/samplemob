@@ -2,16 +2,18 @@ import React, {useState} from 'react';
 import {Text, View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {useSelector, useDispatch} from 'react-redux';
+import { InfoNote } from './components';
 import {Header, VehicleCard} from '../../components';
 
 const ToktokGoBookingVehicle = ({navigation, route}) => {
   const dispatch = useDispatch();
   const {tempVehicleArr} = useSelector(state => state.toktokGo);
   const {data, selectVehicle, selectedVehicle} = route.params;
-  const [dataVehicle, setDataVehicle] = useState();
+  const [dataVehicle, setDataVehicle] = useState(selectedVehicle);
 
   const handleSelect = () => {
     navigation.pop();
+    selectVehicle(dataVehicle);
     let check = tempVehicleArr.includes(dataVehicle);
     if (dataVehicle && !check) {
       tempVehicleArr.unshift(dataVehicle);
@@ -26,6 +28,7 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
       <Header navigation={navigation} title={'Select Vehicle'} />
+      <InfoNote/>
       <FlatList
         style={{marginTop: 24}}
         showsVerticalScrollIndicator={false}
@@ -41,6 +44,7 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
                 selectVehicle={selectVehicle}
                 selectedVehicle={selectedVehicle}
                 setDataVehicle={setDataVehicle}
+                dataVehicle={dataVehicle}
               />
             </View>
           );

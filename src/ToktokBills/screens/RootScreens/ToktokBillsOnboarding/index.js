@@ -8,12 +8,17 @@ import {
   Dimensions,
   Animated,
   TouchableHighlight,
+  ImageBackground,
   Platform,
+  StatusBar,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 //HELPER
-import {getStatusbarHeight} from 'toktokbills/helper';
+import {getStatusbarHeight, moderateScale} from 'toktokbills/helper';
+
+//IMAGE
+import {onboarding_bg, onboarding_toktokbills} from 'toktokbills/assets';
 
 //HOOKS
 import {useThrottle} from 'src/hooks';
@@ -51,54 +56,56 @@ export const ToktokBillsOnboarding = () => {
   const onPressThrottled = useThrottle(skip, 2000);
 
   return (
-    <View style={styles.container}>
-      <Animated.FlatList
-        ref={slider}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        data={data}
-        bounces={false}
-        scrollEventThrottle={16}
-        snapToAlignment="center"
-        pagingEnabled
-        // contentContainerStyle={{flexGrow: 1}}
-        onScroll={Animated.event([{nativeEvent: {contentOffset: {x: scrollX}}}], {
-          useNativeDriver: false,
-          listener: event => {
-            const offsetX = event.nativeEvent.contentOffset.x;
+    <ImageBackground style={styles.container} source={onboarding_bg} resizeMode={'cover'}>
+      <View style={styles.subContainer}>
+      <Image resizeMode="contain" style={styles.logo} source={onboarding_toktokbills} />
+        <Animated.FlatList
+          ref={slider}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={data}
+          bounces={false}
+          scrollEventThrottle={16}
+          snapToAlignment="center"
+          pagingEnabled
+          onScroll={Animated.event([{nativeEvent: {contentOffset: {x: scrollX}}}], {
+            useNativeDriver: false,
+            listener: event => {
+              const offsetX = event.nativeEvent.contentOffset.x;
 
-            let index = Math.ceil(offsetX / width);
+              let index = Math.ceil(offsetX / width);
 
-            if (index % 1 == 0) {
-              setCurrentIndex(index);
-              return;
-            }
-          },
-        })}
-        renderItem={({item, index}) => {
-          const rotate = dotPosition.interpolate({
-            inputRange: [index - 1, index, index + 1],
-            outputRange: ['-180deg', '0deg', '180deg'],
-          });
+              if (index % 1 == 0) {
+                setCurrentIndex(index);
+                return;
+              }
+            },
+          })}
+          renderItem={({item, index}) => {
+            const rotate = dotPosition.interpolate({
+              inputRange: [index - 1, index, index + 1],
+              outputRange: ['-180deg', '0deg', '180deg'],
+            });
 
-          const scale = dotPosition.interpolate({
-            inputRange: [index - 1, index, index + 1],
-            outputRange: [0, 1, 0],
-          });
+            const scale = dotPosition.interpolate({
+              inputRange: [index - 1, index, index + 1],
+              outputRange: [0, 1, 0],
+            });
 
-          return item({label: `Template ${index}`, rotate, scale, tokwaAccount});
-        }}
-      />
-      {/* <PageOne /> */}
-      <RenderDots
-        scrollX={scrollX}
-        data={data}
-        sliderRef={slider}
-        dotPosition={dotPosition}
-        setCurrentIndex={setCurrentIndex}
-        currentIndex={currentIndex}
-      />
-    </View>
+            return item({label: `Template ${index}`, rotate, scale, tokwaAccount});
+          }}
+        />
+        {/* <PageOne /> */}
+        <RenderDots
+          scrollX={scrollX}
+          data={data}
+          sliderRef={slider}
+          dotPosition={dotPosition}
+          setCurrentIndex={setCurrentIndex}
+          currentIndex={currentIndex}
+        />
+      </View>
+    </ImageBackground>
   );
 };
 
@@ -106,7 +113,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    marginTop: Platform.OS == 'android' ? getStatusbarHeight : 0,
+  },
+  subContainer: {
+    flex: 1,
+    marginTop: moderateScale(Platform.OS == 'android' ? StatusBar.currentHeight : 0),
+    marginBottom: moderateScale(Platform.OS == 'android' ? 10 : 0),
   },
   headings: {
     height: 92,
@@ -145,6 +156,13 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
     marginBottom: 5,
     fontSize: FONT_SIZE.S,
+  },
+  logo: {
+    marginVertical: moderateScale(30),
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: moderateScale(42),
+    width: width,
   },
   dots: {
     height: 30,

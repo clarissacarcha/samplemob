@@ -3,16 +3,18 @@ import {View, Text, Dimensions, StyleSheet, Image, TouchableOpacity, ActivityInd
 import {moderateScale} from 'toktokbills/helper';
 import {useNavigation} from '@react-navigation/native';
 import {useThrottle} from 'src/hooks';
+import FastImage from 'react-native-fast-image';
 
 import {LoadingIndicator} from 'toktokbills/components';
 
+import {SIZE} from 'src/res/variables';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
 
-export const BillerType = ({item, index}) => {
+export const BillerType = React.memo(({item, index}) => {
   const navigation = useNavigation();
-  const [imageLoading, setImageLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(false);
 
   const onPress = () => {
     navigation.navigate('ToktokBiller', {billType: item});
@@ -29,9 +31,10 @@ export const BillerType = ({item, index}) => {
               <LoadingIndicator isLoading={true} size="small" />
             </View>
           )}
-          <Image
+          <FastImage
             source={{uri: item.icon}}
             style={styles.itemLogo}
+            resizeMode={FastImage.resizeMode.contain}
             onLoadStart={() => setImageLoading(true)}
             onLoadEnd={() => setImageLoading(false)}
           />
@@ -40,13 +43,14 @@ export const BillerType = ({item, index}) => {
       </View>
     </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
-    height: width / 4,
-    width: width / 4 - moderateScale(10),
+    width: '25%',
     justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: SIZE.MARGIN / 2,
   },
   item: {
     flex: 1,
@@ -61,7 +65,7 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(FONT_SIZE.M),
     textAlign: 'center',
     marginTop: moderateScale(5),
-    marginHorizontal: moderateScale(7),
+    marginHorizontal: moderateScale(5),
   },
   loadingContainer: {
     position: 'absolute',
