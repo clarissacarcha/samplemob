@@ -50,6 +50,7 @@ export const ConfirmButton = ({paymentData}) => {
         totalAmount,
         tokwaBalance,
         requestMoneyDetails: postToktokWalletRequestMoney.data,
+        hash: postToktokWalletRequestMoney.hash,
       };
       return navigation.navigate('ToktokWalletTPINValidator', {
         callBackFunc: handleProcessProceed,
@@ -76,10 +77,11 @@ export const ConfirmButton = ({paymentData}) => {
   });
 
   const handleProcessProceed = ({pinCode, data}) => {
-    let {totalAmount, requestMoneyDetails, paymentData} = data;
+    let {totalAmount, requestMoneyDetails, paymentData , hash} = data;
     let {firstName, lastName} = user.person;
 
     let input = {
+      hash,
       requestMoneyDetails: {
         requestTakeMoneyId: requestMoneyDetails.requestTakeMoneyId,
         TPIN: requestMoneyDetails.validator === 'TPIN' ? pinCode : '',
