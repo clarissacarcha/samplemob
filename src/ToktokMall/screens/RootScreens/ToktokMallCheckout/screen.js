@@ -225,10 +225,39 @@ const Component = ({route, navigation, createMyCartSession}) => {
                   autoShipping: true,
                   discountedAmount: 0,
                   discount: 0,
+                  hashAmount: 0,
                   deduction: fee,
                   voucherCodeType: res.responseData.type
                 })
 
+              }else if(parseFloat(voucher.amount) != 0 && voucher.is_percentage == 0){
+          
+                let fee = null
+		            payload.cartitems.map((a) => a.shopid == voucher.shop_id ? fee = a.shippingfee : null)
+
+                let amount = parseFloat(voucher.amount)
+                let calculatedDiscount = parseFloat(fee) - amount
+                let discount = amount
+      
+                if(amount > parseFloat(fee)){
+                  discount = fee
+                }
+      
+                items.push({
+                  ...req.responseData.voucher, 
+                  deduction: discount,
+                  discountedAmount: discount, 
+                  discount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
+                  hashAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
+                  voucherCodeType: res.responseData.type
+                })
+      
+                getShippingHashDeliveryAmount({variables: {
+                  input: {
+                    items: items
+                  }
+                }})
+      
               }else if(voucher.is_percentage == 1){
 
                 let fee = null
@@ -242,7 +271,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
                   autoShipping: true,
                   deduction: calculatedDiscount < 0 ? fee : pctvalue,
                   discountedAmount: calculatedDiscount < 0 ? 0 : pctvalue, 
-                  discount: calculatedDiscount < 0 ? 0 : pctvalue,
+                  hashAmount: calculatedDiscount < 0 ? 0: calculatedDiscount,
+                  discount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
                   voucherCodeType: res.responseData.type
                 })
 
@@ -258,6 +288,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
                   deduction: discount < 0 ? fee : parseFloat(voucher.amount),
                   discount: discount < 0 ? 0 : discount,
                   discountedAmount: discount < 0 ? 0 : discount,
+                  hashAmount: discount < 0 ? 0 : discount,
                   voucherCodeType: res.responseData.type
                 })
               }
@@ -497,16 +528,29 @@ const Component = ({route, navigation, createMyCartSession}) => {
         console.log("SHIPPING VOUCHERS", shippingVouchers)
         console.log("CHECKOUT BODY FFFFF", JSON.stringify(checkoutBody))
 
-        navigation.push("ToktokMallOTP", {
-          transaction: "payment", 
-          data: checkoutBody,          
-          onSuccess: async (pin) => {
-            // setTimeout(async () => {
-            //   await ProcessCheckout({...checkoutBody, pin})
-            // }, (60000 * 30))
-            await ProcessCheckout({...checkoutBody, pin})
-          }
-        })
+        // navigation.push("ToktokMallOTP", {
+        //   transaction: "payment", 
+        //   data: checkoutBody,          
+        //   onSuccess: async (pin) => {
+        //     // setTimeout(async () => {
+        //     //   await ProcessCheckout({...checkoutBody, pin})
+        //     // }, (60000 * 30))
+        //     await ProcessCheckout({...checkoutBody, pin})
+        //   }
+        // })
+
+        // your logic or process after TPIN validation is successful
+        const handleProcessProceed = async ({pinCode, data}) => {
+          navigation.pop()
+          await ProcessCheckout({...checkoutBody, pin: pinCode})          
+        }
+
+        navigation.push('ToktokWalletTPINValidator', {
+          callBackFunc: handleProcessProceed,
+          onPressCancelYes: () => navigation.pop(), // event after clicking cancel on tokwa TPIN
+          enableIdle: false,
+          data: checkoutBody, // additional data thats need to be process on your side
+        });
 
       }else if(req.responseData && req.responseData.success == 0){
 

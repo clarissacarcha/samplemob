@@ -165,6 +165,33 @@ export const ApplyVoucherForm = (address, customer, payload) => {
             discountedAmount: 0, 
             discount: 0, 
             deduction: fee,
+            hashAmount: 0,
+            voucherCodeType: req.responseData.type
+          })
+
+          getShippingHashDeliveryAmount({variables: {
+            input: {
+              items: items
+            }
+          }})
+
+        }else if(parseFloat(req.responseData.voucher.amount) != 0 && req.responseData.voucher.is_percentage == 0){
+          
+          let fee = CheckoutContextData.getShippingFeeByShopId(item.shop.id)
+          let amount = parseFloat(req.responseData.voucher.amount)
+          let calculatedDiscount = parseFloat(fee) - amount
+          let discount = amount
+
+          if(amount > parseFloat(fee)){
+            discount = fee
+          }
+
+          items.push({
+            ...req.responseData.voucher, 
+            deduction: discount,
+            discountedAmount: discount, 
+            discount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
+            hashAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
             voucherCodeType: req.responseData.type
           })
 
@@ -191,6 +218,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
             deduction: calculatedDiscount < 0 ? fee : pctvalue,
             discountedAmount: calculatedDiscount < 0 ? 0 : pctvalue, 
             discount: calculatedDiscount < 0 ? 0 : pctvalue,
+            hashAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
             voucherCodeType: req.responseData.type
           })
 
@@ -215,6 +243,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
             deduction: calculatedDiscount < 0 ? fee : calculatedDiscount,
             discountedAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount, 
             discount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
+            hashAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
             voucherCodeType: req.responseData.type
           })
 
