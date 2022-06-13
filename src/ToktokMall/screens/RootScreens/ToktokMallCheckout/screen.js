@@ -229,6 +229,23 @@ const Component = ({route, navigation, createMyCartSession}) => {
                   voucherCodeType: res.responseData.type
                 })
 
+              }else if(voucher.is_percentage == 1){
+
+                let fee = null
+		            payload.cartitems.map((a) => a.shopid == voucher.shop_id ? fee = a.shippingfee : null)
+                let pct = (parseFloat(voucher.amount) * 0.01)
+                let pctvalue = fee * pct
+                let calculatedDiscount = fee - pctvalue
+
+                items.push({
+                  ...voucher, 
+                  autoShipping: true,
+                  deduction: calculatedDiscount < 0 ? fee : pctvalue,
+                  discountedAmount: calculatedDiscount < 0 ? 0 : pctvalue, 
+                  discount: calculatedDiscount < 0 ? 0 : pctvalue,
+                  voucherCodeType: res.responseData.type
+                })
+
               }else{
 
                 let fee = null
@@ -901,11 +918,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         <AlertModal
           navigation = {navigation}
           isVisible = {alertModal}
-          setIsVisible = {setAlertModal}
-          onPress={() => {
-            //SAVE APPLIED VOUCHERS
-            CheckoutContextData.saveAppliedVouchers()
-          }}
+          setIsVisible = {setAlertModal}         
         />
         <CheckoutModal 
           navigation={navigation} 
