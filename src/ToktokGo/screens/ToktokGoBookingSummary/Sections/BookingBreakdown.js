@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: CONSTANTS.COLOR.ALMOST_BLACK,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   rowContainer: {
     flexDirection: 'row',

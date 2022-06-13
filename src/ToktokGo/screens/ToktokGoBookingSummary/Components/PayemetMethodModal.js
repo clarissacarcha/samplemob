@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   cashIntextStyle: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.S,
   },

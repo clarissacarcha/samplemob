@@ -100,7 +100,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               }}>
               <Text
                 style={{
-                  fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                  fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
                   fontSize: CONSTANTS.FONT_SIZE.XL,
                   color: CONSTANTS.COLOR.ORANGE,
                 }}>
@@ -122,7 +122,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               }}>
               <Text
                 style={{
-                  fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                  fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
                   fontSize: CONSTANTS.FONT_SIZE.XL,
                   color: CONSTANTS.COLOR.WHITE,
                 }}>
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     fontSize: CONSTANTS.FONT_SIZE.XL,
     lineHeight: 20,
     fontWeight: '600',
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   scrollview: {
     maxHeight: '75%',

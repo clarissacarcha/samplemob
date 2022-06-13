@@ -1,30 +1,27 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, Image, View, Modal} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
-import SuccessIMG from '../../../../assets/images/Sucess.png';
+import Success from '../../../../assets/images/Sucess.png';
 import {ThrottledOpacity} from '../../../../components_section';
 import {numberFormat} from '../../../../helper';
 
-export const PaymentSuccesfullModal = ({showPaymentSuccesful, setShowPaymentSuccessful, tripConsumerPending}) => {
+export const TokwaPaymentProcessedModal = ({viewTokwaPaymentProcessedModal, tokwaPaymentConfirmed, amount}) => {
   return (
-    <Modal animationType="fade" transparent={true} visible={showPaymentSuccesful} style={StyleSheet.absoluteFill}>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={viewTokwaPaymentProcessedModal}
+      style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
-            <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
-            <Text style={styles.modalTitle}>Payment Successful</Text>
+            <Image source={Success} resizeMode={'contain'} style={styles.imageDimensions} />
+            <Text style={styles.modalTitle}>Payment Processed</Text>
             <Text style={styles.modalDescription}>
-              You have successfully paid the{' '}
-              {tripConsumerPending[0]?.cancellation?.initiatedBy == 'CONSUMER' ? 'Cancelation Fee' : 'No Show Fee'} of{' '}
-              <Text style={{color: CONSTANTS.COLOR.ORANGE, fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD}}> ₱50.00</Text>{' '}
-              using toktokwallet. Your e-receipt was sent to your registered email.
+              <Text style={styles.textHighlight}>₱{numberFormat(amount)}</Text> payment is processed and will be
+              returned to you in the event of any cancellation.
             </Text>
-            <ThrottledOpacity
-              delay={500}
-              style={styles.buttonContainer}
-              onPress={() => {
-                setShowPaymentSuccessful(false);
-              }}>
+            <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={tokwaPaymentConfirmed}>
               <Text style={styles.buttonText}>OK</Text>
             </ThrottledOpacity>
           </View>
@@ -54,7 +51,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 3,
     marginVertical: 20,
   },
@@ -69,7 +66,7 @@ const styles = StyleSheet.create({
   },
   textHighlight: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   buttonContainer: {
     marginTop: 20,
@@ -82,7 +79,7 @@ const styles = StyleSheet.create({
     borderColor: CONSTANTS.COLOR.ORANGE,
   },
   buttonText: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL,
     color: CONSTANTS.COLOR.WHITE,
   },

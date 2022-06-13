@@ -14,7 +14,13 @@ import {
   BookingTotal,
 } from './Sections';
 import {useFocusEffect} from '@react-navigation/native';
-import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet, OutstandingFeeModal} from './Components';
+import {
+  PaymentMethodModal,
+  PaymentSuccesModal,
+  PassengerCapacityActionSheet,
+  OutstandingFeeModal,
+  TokwaPaymentProcessedModal,
+} from './Components';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
@@ -41,6 +47,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
   const [viewOutstandingFeeModal, setViewOutstandingFeeModal] = useState(false);
+  const [viewTokwaPaymentProcessedModal, setViewTokwaPaymentProcessedModal] = useState(false);
   const dispatch = useDispatch();
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [selectedVouchers, setSelectedVouchers] = useState(null);
@@ -112,10 +119,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         payload: response.tripBook.trip,
       });
       navigation.pop();
-      navigation.replace('ToktokGoFindingDriver', {
-        popTo: popTo + 1,
-        decodedPolyline,
-      });
+      setViewTokwaPaymentProcessedModal(true);
     },
   });
 
@@ -277,6 +281,14 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     navigation.pop(2);
   };
 
+  const tokwaPaymentConfirmed = () => {
+    navigation.replace('ToktokGoFindingDriver', {
+      popTo: popTo + 1,
+      decodedPolyline,
+    });
+    setViewTokwaPaymentProcessedModal(false);
+  };
+
   const renderContent = () => (
     <View style={styles.card}>
       <BookingDistanceTime quotationData={quotationDataResult} loading={loading} />
@@ -380,6 +392,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
       <PassengerCapacityActionSheet details={details} confirmBooking={confirmBooking} />
       <AlertOverlay visible={TIPLoading || TBLoading} />
+      <TokwaPaymentProcessedModal
+        viewTokwaPaymentProcessedModal={viewTokwaPaymentProcessedModal}
+        amount={details.rate.tripFare.amount}
+        tokwaPaymentConfirmed={tokwaPaymentConfirmed}
+      />
+
       <OutstandingFeeModal
         closeOutstandingFeeModal={closeOutstandingFeeModal}
         viewOutstandingFeeModal={viewOutstandingFeeModal}
