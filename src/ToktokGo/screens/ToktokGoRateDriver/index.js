@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '39%',
   },
   btnTextSubmit: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL,
     color: CONSTANTS.COLOR.WHITE,
   },
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
   },
   starStyle: {
     paddingTop: 40,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 1,
     paddingBottom: 10,
   },

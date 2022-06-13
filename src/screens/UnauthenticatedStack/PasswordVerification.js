@@ -238,9 +238,8 @@ const PasswordVerification = ({navigation, route, createSession}) => {
                 color: COLORS.WHITE,
                 fontSize: FONT_SIZE.M,
                 paddingHorizontal: '37%',
-                fontFamily: constants.FONT_FAMILY.BOLD,
+                fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
                 lineHeight: SIZES.L,
-                fontWeight: '600',
               }}>
               Login
             </Text>
@@ -255,9 +254,8 @@ const PasswordVerification = ({navigation, route, createSession}) => {
                 color: ORANGE,
                 fontSize: FONT_SIZE.M,
                 textDecorationLine: 'underline',
-                fontFamily: constants.FONT_FAMILY.BOLD,
+                fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
                 lineHeight: SIZES.L,
-                fontWeight: '600',
               }}>
               Forgot Password?
             </Text>

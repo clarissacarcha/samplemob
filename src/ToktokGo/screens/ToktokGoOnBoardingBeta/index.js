@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   title: {
     color: constants.COLOR.ORANGE,
     fontSize: constants.FONT_SIZE.XL + 13,
-    fontFamily: constants.FONT_FAMILY.BOLD,
+    fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
     marginTop: 20,
     textAlign: 'center',
   },
