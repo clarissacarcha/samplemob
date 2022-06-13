@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useContext, useCallback} from 'react';
+import _ from 'lodash';
 import {useRoute, useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -470,7 +471,7 @@ const MainComponent = () => {
     const deliveryPrice = orderType === 'Delivery' ? delivery?.price : 0;
     const totalPrice =
       promotions.length > 0 || deals.length > 0
-        ? (await getResellerDiscount(promotions, deals, temporaryCart.items, true))
+        ? await getResellerDiscount(promotions, deals, temporaryCart.items, true)
         : temporaryCart?.totalAmountWithAddons;
     const deductedPrice = promotions.length > 0 || deals.length > 0 ? totalPrice : temporaryCart?.totalAmountWithAddons;
     // const totalPrice =
@@ -482,8 +483,8 @@ const MainComponent = () => {
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
     //   : await handleShippingVouchers(shippingVoucher);
     const amount = await getTotalAmount(promotionVoucher, delivery?.price);
-    const parseAmount = Number(((deliveryPrice + deductedPrice + temporaryCart.addonsTotalAmount) - amount).toFixed(2));
-    // console.log(deductedPrice, temporaryCart?.addonsTotalAmount, deliveryPrice, amount);
+    const parseAmount = Number((deliveryPrice + deductedPrice + temporaryCart.addonsTotalAmount - amount).toFixed(2));
+    console.log(parseAmount);
 
     // if (orderType === 'Delivery') {
     //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
@@ -618,7 +619,7 @@ const MainComponent = () => {
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
     const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
     const deals = promotionVoucher.filter(promo => promo.type === 'deal');
-    const promoDeals = _.unionBy(promotions, deals, 'id')
+    const promoDeals = _.unionBy(promotions, deals, 'id');
     // const autoApply = promotionVoucher.filter(promo => promo.type === 'auto');
     // const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
     // const mergeShipping = _.merge(autoApply, shipping);

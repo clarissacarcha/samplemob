@@ -65,7 +65,7 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
           const filteredProd = _.includes(productIds, items.productid);
           // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
           if (filteredProd && totalReseller === 0) {
-            const {discounted_totalamount} = item;
+            const {discounted_totalamount, voucher_code} = item;
             const deductedDiscount =
               item?.discount_type === '3' ? items?.basePrice - discounted_totalamount : item?.discount_totalamount;
 
@@ -90,11 +90,11 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
           const filteredProd = _.includes(productIds, items.productid);
           const filteredDeductedProd = deductedProducts.filter(product => product.id === items.productid);
           const notEqualDeductedProd = deductedProducts.filter(product => product.id !== items.productid);
+          // console.log(filteredProd, items);
           if (filteredProd && !filteredDeductedProd.length) {
             const {discounted_totalamount} = item;
             const deductedDiscount =
               item?.discount_type === '3' ? items?.basePrice - discounted_totalamount : item?.discount_totalamount;
-            // console.log(items, deductedDiscount);
             totalReseller += deductedDiscount;
             totalAmount += discounted_totalamount;
             // console.log(items?.basePrice, 'baseprice 2')
@@ -149,8 +149,7 @@ export const getTotalAmountOrder = async (promotions, cartItems) => {
           // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
         } else {
           const resellerDiscount = items.quantity * (items?.resellerDiscount || items?.basePrice);
-          const deductedDiscount =
-            item?.discount_type === '3' ? item.discounted_totalamount : resellerDiscount;
+          const deductedDiscount = item?.discount_type === '3' ? item.discounted_totalamount : resellerDiscount;
           // console.log(resellerDiscount);
           totalAmount += deductedDiscount;
         }
