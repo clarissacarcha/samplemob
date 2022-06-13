@@ -40,7 +40,7 @@ import {
 import {
   deleteKeys,
   // getDeductedVoucher,
-  // getResellerDiscount,
+  getResellerDiscount,
   getTotalAmount,
   getTotalAmountOrder,
   // getTotalDiscountAmount,
@@ -86,7 +86,7 @@ import {parseAmountComputation} from './functions';
 import {useQuery} from '@apollo/client';
 
 /*
-  This variable is used for identifier whether the user is able to checkout or not 
+  This variable is used for identifier whether the user is able to checkout or not
   if the user's toktokwallet is pending
 */
 const MINIMUM_CHECKOUT = 2000;
@@ -470,8 +470,9 @@ const MainComponent = () => {
     const deliveryPrice = orderType === 'Delivery' ? delivery?.price : 0;
     const totalPrice =
       promotions.length > 0 || deals.length > 0
-        ? (await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)) + temporaryCart.addonsTotalAmount
+        ? await getResellerDiscount(promotions, deals, temporaryCart.items, true)
         : temporaryCart?.totalAmountWithAddons;
+    const deductedPrice = promotions.length > 0 || deals.length > 0 ? totalPrice : temporaryCart?.totalAmountWithAddons;
     // const totalPrice =
     //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;
     // const totalResellerDiscount =
@@ -481,7 +482,9 @@ const MainComponent = () => {
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
     //   : await handleShippingVouchers(shippingVoucher);
     const amount = await getTotalAmount(promotionVoucher, delivery?.price);
-    const parseAmount = Number((deliveryPrice + totalPrice - amount).toFixed(2));
+    const parseAmount = Number((deliveryPrice + deductedPrice + temporaryCart.addonsTotalAmount - amount).toFixed(2));
+    // console.log(deductedPrice, temporaryCart?.addonsTotalAmount, deliveryPrice, amount);
+
     // if (orderType === 'Delivery') {
     //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
     //   //   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
@@ -623,18 +626,18 @@ const MainComponent = () => {
     //   promotions.length > 0 ? await getTotalAmountOrder(promotions, temporaryCart.items) : temporaryCart?.totalAmount;
     const totalPrice =
       promotions.length > 0 || deals.length > 0
-        ? await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)
+        ? await getResellerDiscount(promotions, deals, temporaryCart.items, true)
         : temporaryCart?.totalAmount;
+    const deductedPrice = promotions.length > 0 || deals.length > 0 ? totalPrice : temporaryCart?.totalAmount;
     // const totalResellerDiscount =
     //   promotions.length > 0 ? (await getResellerDiscount(promotions, temporaryCart.items)).toFixed(2) : 0;
 
     const amount = await getTotalAmount(promotionVoucher, 0);
-    const parsedAmount = Number((totalPrice - amount).toFixed(2));
-    // console.log(temporaryCart?.totalAmount);
-    // console.log(amount, parsedAmount, totalPrice);
+    const parsedAmount = Number((deductedPrice - amount).toFixed(2));
+    // console.log(amount, parsedAmount, deductedPrice, temporaryCart);
 
     const DELIVERY_RECEIVER =
-      (receiver.contactPerson && receiver.contactPerson != null) && receiver.contactPerson !== ''
+      receiver.contactPerson && receiver.contactPerson != null && receiver.contactPerson !== ''
         ? receiver.contactPerson
         : `${customerInfo.firstName} ${customerInfo.lastName}`;
 
@@ -756,7 +759,7 @@ const MainComponent = () => {
       <DialogMessage
         visibility={showItemDisabled}
         title="Currently Unavailable"
-        messages={`Some items in your cart is currently unavailable. Please try again another time.\nThank you!`}
+        messages={'Some items in your cart is currently unavailable. Please try again another time.\nThank you!'}
         type="warning"
         btn1Title="OK"
         onCloseModal={() => {
