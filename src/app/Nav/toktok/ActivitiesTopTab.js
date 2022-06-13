@@ -110,7 +110,7 @@ const Activities = () => {
             })}
           />
         )}
-        {/* <ActivitiesTopTab.Screen
+        <ActivitiesTopTab.Screen
           name="ToktokLoadActivities"
           component={ToktokLoadActivities}
           options={{
@@ -122,11 +122,11 @@ const Activities = () => {
                   color: focused ? COLOR.ORANGE : COLOR.BLACK,
                   marginBottom: 5,
                 }}>
-                toktokload
+                Load
               </Text>
             ),
           }}
-        /> */}
+        />
         <ActivitiesTopTab.Screen
           name="ToktokBillActivities"
           component={ToktokBillActivities}
