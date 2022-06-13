@@ -12,6 +12,8 @@ import {
   StatusBar,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
+  KeyboardAvoidingView,
 } from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
 import {COLOR, DARK, APP_FLAVOR, ACCOUNT_TYPE} from '../../res/constants';
@@ -31,6 +33,7 @@ import {constant} from 'async';
 import {set} from 'lodash';
 
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
+const screenheight = Dimensions.get('screen').height;
 
 const NumberBox = ({onPress, value, borderError}) => (
   <TouchableHighlight onPress={onPress} underlayColor={COLOR} style={{borderRadius: 10}}>
@@ -213,120 +216,133 @@ const Verification = ({navigation, route, createSession}) => {
   };
 
   return (
-    <ImageBackground
-      resizeMode="cover"
-      source={Splash}
+    <KeyboardAvoidingView
+      behavior="padding"
       style={{
         flex: 1,
         justifyContent: 'space-between',
       }}>
-      <AlertOverlay visible={loading} />
+      <ImageBackground
+        resizeMode="cover"
+        source={Splash}
+        style={{
+          flex: 1,
+          justifyContent: 'space-between',
+        }}>
+        <AlertOverlay visible={loading} />
 
-      <View>
-        <TouchableOpacity onPress={() => navigation.pop()}>
-          <Image
-            style={{height: 15, width: 10, top: StatusBar.currentHeight - 10, margin: 16}}
-            source={ArrowLeft}
-            resizeMode={'contain'}
-          />
-        </TouchableOpacity>
-        {/*---------------------------------------- BANNER ----------------------------------------*/}
-        {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
+        <View>
+          <TouchableOpacity onPress={() => navigation.pop()}>
+            <Image
+              style={{height: 15, width: 10, top: StatusBar.currentHeight - 10, margin: 16}}
+              source={ArrowLeft}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          {/*---------------------------------------- BANNER ----------------------------------------*/}
+          {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
 
-        {/*---------------------------------------- HIDDEN TEXT INPUT ----------------------------------------*/}
+          {/*---------------------------------------- HIDDEN TEXT INPUT ----------------------------------------*/}
 
-        {/*---------------------------------------- ENTERED MOBILE NUMBER ----------------------------------------*/}
-        <View style={{alignItems: 'center', marginTop: 120, marginHorizontal: 90}}>
-          {/* <Text>Enter the 6-digit code sent to</Text>
+          {/*---------------------------------------- ENTERED MOBILE NUMBER ----------------------------------------*/}
+          <View
+            style={{
+              alignItems: 'center',
+              marginTop: screenheight > 700 && 60,
+              marginHorizontal: 90,
+              justifyContent: screenheight > 700 ? 'flex-start' : 'center',
+            }}>
+            {/* <Text>Enter the 6-digit code sent to</Text>
           <Text style={{fontFamily: 'Rubik-Medium'}}>{`+63 ${mobile}`}</Text> */}
-          <Image source={ToktokGoIcon} style={{height: 85, width: 100}} resizeMode="contain" />
-          <Text style={{fontSize: constants.FONT_SIZE.XL + 1, marginTop: 40}}>Enter OTP</Text>
-          <Text style={{textAlign: 'center', marginTop: 8, marginBottom: 24}}>
-            We have sent an OTP code to your mobile number ending with {mobile.slice(-3)}.
-          </Text>
-        </View>
-
-        {/*---------------------------------------- NUMBER BOXES ----------------------------------------*/}
-        <View style={{position: 'relative'}}>
-          <NumberBoxes verificationCode={verificationCode} onNumPress={onNumPress} borderError={borderError} />
-          <TextInput
-            caretHidden
-            value={verificationCode}
-            ref={inputRef}
-            style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
-            keyboardType="number-pad"
-            returnKeyType="done"
-            onChangeText={value => {
-              if (value.length <= 6) {
-                setVerificationCode(value);
-              }
-            }}
-            onSubmitEditing={onSubmit}
-          />
-          {verificationCodeError == 'GraphQL error: Invalid verification code.' && (
-            <View style={{alignItems: 'center', marginHorizontal: 60, top: -15}}>
-              <Text style={{textAlign: 'center', fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED}}>
-                The OTP you’ve entered is incorrect. Please try again. ({numberOfAttemps}) attempts left.
-              </Text>
-            </View>
-          )}
-          {verificationCodeError == 'GraphQL error: Verification already expired.' && (
-            <View style={{alignItems: 'center', marginHorizontal: 60, top: -15}}>
-              <Text style={{textAlign: 'center', fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED}}>
-                Sorry, the OTP you’ve entered was already expired. Please request a new OTP code.
-              </Text>
-            </View>
-          )}
-          {verificationCodeError == 'GraphQL error: You have reached the maximum number of allowed attempts.' && (
-            <View style={{alignItems: 'center', marginHorizontal: 60, top: -15}}>
-              <Text style={{textAlign: 'center', fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED}}>
-                Sorry, the OTP you’ve entered was already expired. Please request a new OTP code.
-              </Text>
-            </View>
-          )}
-          {verificationCodeError == '' && <View style={{alignItems: 'center', marginHorizontal: 60, height: 30}} />}
-
-          <MaxAttempsModal isVisible={maxAttemps} setVisible={setMaxAttemps} />
-          <View style={{justifyContent: 'center', flexDirection: 'row', marginTop: 60, alignItems: 'center'}}>
-            <Text style={{color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M, marginRight: 3}}>
-              Didn’t receive OTP code?
+            <Image source={ToktokGoIcon} style={{height: 85, width: 100}} resizeMode="contain" />
+            <Text style={{fontSize: constants.FONT_SIZE.XL + 1, marginTop: 40}}>Enter OTP</Text>
+            <Text style={{textAlign: 'center', marginTop: 8, marginBottom: 24}}>
+              We have sent an OTP code to your mobile number ending with {mobile.slice(-3)}.
             </Text>
-            <TouchableOpacity
-              disabled={resend}
-              onPress={() => {
-                resendOTP();
-              }}>
-              {resend ? (
-                <Text style={{color: constants.COLOR.DARK, fontFamily: constants.FONT_FAMILY.BOLD}}>
-                  Resend ({countdown} secs)
-                </Text>
-              ) : (
-                <Text
-                  style={{
-                    color: constants.COLOR.ORANGE,
-                    fontFamily: constants.FONT_FAMILY.BOLD,
-                    textDecorationLine: 'underline',
-                  }}>
-                  {' '}
-                  Resend
-                </Text>
-              )}
-            </TouchableOpacity>
           </View>
+
+          {/*---------------------------------------- NUMBER BOXES ----------------------------------------*/}
+          <View style={{position: 'relative'}}>
+            <NumberBoxes verificationCode={verificationCode} onNumPress={onNumPress} borderError={borderError} />
+            <TextInput
+              caretHidden
+              value={verificationCode}
+              ref={inputRef}
+              style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
+              keyboardType="number-pad"
+              returnKeyType="done"
+              onChangeText={value => {
+                if (value.length <= 6) {
+                  setVerificationCode(value);
+                }
+              }}
+              onSubmitEditing={onSubmit}
+            />
+            {verificationCodeError == 'GraphQL error: Invalid verification code.' && (
+              <View style={{alignItems: 'center', marginHorizontal: 60, top: -15}}>
+                <Text style={{textAlign: 'center', fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED}}>
+                  The OTP you’ve entered is incorrect. Please try again. ({numberOfAttemps}) attempts left.
+                </Text>
+              </View>
+            )}
+            {verificationCodeError == 'GraphQL error: Verification already expired.' && (
+              <View style={{alignItems: 'center', marginHorizontal: 60, top: -15}}>
+                <Text style={{textAlign: 'center', fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED}}>
+                  Sorry, the OTP you’ve entered was already expired. Please request a new OTP code.
+                </Text>
+              </View>
+            )}
+            {verificationCodeError == 'GraphQL error: You have reached the maximum number of allowed attempts.' && (
+              <View style={{alignItems: 'center', marginHorizontal: 60, top: -15}}>
+                <Text style={{textAlign: 'center', fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED}}>
+                  Sorry, the OTP you’ve entered was already expired. Please request a new OTP code.
+                </Text>
+              </View>
+            )}
+            {verificationCodeError == '' && <View style={{alignItems: 'center', marginHorizontal: 60, height: 30}} />}
+
+            <MaxAttempsModal isVisible={maxAttemps} setVisible={setMaxAttemps} />
+            <View style={{justifyContent: 'center', flexDirection: 'row', marginTop: 60, alignItems: 'center'}}>
+              <Text style={{color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M, marginRight: 3}}>
+                Didn’t receive OTP code?
+              </Text>
+              <TouchableOpacity
+                disabled={resend}
+                onPress={() => {
+                  resendOTP();
+                }}>
+                {resend ? (
+                  <Text style={{color: constants.COLOR.DARK, fontFamily: constants.FONT_FAMILY.BOLD}}>
+                    Resend ({countdown} secs)
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      color: constants.COLOR.ORANGE,
+                      fontFamily: constants.FONT_FAMILY.BOLD,
+                      textDecorationLine: 'underline',
+                    }}>
+                    {' '}
+                    Resend
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/*---------------------------------------- RESEND CODE ----------------------------------------*/}
+          {/* <Text style={styles.resend}>Didn't received it?</Text>
+        <Text style={[styles.resend, {fontFamily: 'Rubik-Medium'}]}>{`Request new code in ${count}`}</Text> */}
         </View>
 
-        {/*---------------------------------------- RESEND CODE ----------------------------------------*/}
-        {/* <Text style={styles.resend}>Didn't received it?</Text>
-        <Text style={[styles.resend, {fontFamily: 'Rubik-Medium'}]}>{`Request new code in ${count}`}</Text> */}
-      </View>
-
-      {/*---------------------------------------- SUBMIT BUTTON ----------------------------------------*/}
-      {/* <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
+        {/*---------------------------------------- SUBMIT BUTTON ----------------------------------------*/}
+        {/* <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
         <View style={styles.submit}>
           <Text style={{color: COLOR, fontSize: 20}}>Continue</Text>
         </View>
       </TouchableHighlight> */}
-    </ImageBackground>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 

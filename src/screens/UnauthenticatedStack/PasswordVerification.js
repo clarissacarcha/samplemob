@@ -12,6 +12,7 @@ import {
   Dimensions,
   TouchableOpacity,
   StatusBar,
+  KeyboardAvoidingView,
 } from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -37,6 +38,7 @@ import ArrowLeft from '../../assets/icons/arrow-left-icon.png';
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
 
 const imageWidth = Dimensions.get('window').width - 80;
+const screenheight = Dimensions.get('screen').height;
 
 const PasswordVerification = ({navigation, route, createSession}) => {
   const {mobile} = route.params;
@@ -184,86 +186,109 @@ const PasswordVerification = ({navigation, route, createSession}) => {
     forgotPassword();
   };
   return (
-    <ImageBackground
-      resizeMode="cover"
-      source={Splash}
+    <KeyboardAvoidingView
+      behavior="padding"
       style={{
         flex: 1,
         justifyContent: 'space-between',
       }}>
-      {/* <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}> */}
-      <AlertOverlay visible={loading} />
-      <TouchableOpacity onPress={() => navigation.pop()}>
-        <Image
-          style={{height: 15, width: 10, margin: 16, top: StatusBar.currentHeight - 10}}
-          source={ArrowLeft}
-          resizeMode={'contain'}
-        />
-      </TouchableOpacity>
-      <View style={{flex: 1, alignItems: 'center', marginTop: '30%'}}>
-        {/*-------------------- BANNER --------------------*/}
-        {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
-        <Image source={ToktokLogo} style={{height: imageWidth - 120, width: imageWidth - 170}} resizeMode="contain" />
-        {/*-------------------- PASSWORD INPUT --------------------*/}
-        {/* <Text style={styles.label}>Enter your password to continue</Text> */}
-        <View style={styles.containerInput}>
-          <TextInput
-            ref={inputRef}
-            value={password}
-            onChangeText={value => setPassword(value)}
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor={constants.COLOR.DARK}
-            secureTextEntry={!showPassword}
-            returnKeyType="done"
-            autoCapitalize="none"
-            onSubmitEditing={onSubmit}
+      <ImageBackground
+        resizeMode="cover"
+        source={Splash}
+        style={{
+          flex: 1,
+          justifyContent: 'space-between',
+        }}>
+        {/* <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}> */}
+        <AlertOverlay visible={loading} />
+        <TouchableOpacity onPress={() => navigation.pop()} style={{zIndex: 999}}>
+          <Image
+            style={{height: 15, width: 10, margin: 16, top: StatusBar.currentHeight - 10}}
+            source={ArrowLeft}
+            resizeMode={'contain'}
           />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <Image source={!showPassword ? HidePassword : ShowPassword} style={styles.showPassword} />
-          </TouchableOpacity>
-        </View>
-        <View style={{alignSelf: 'flex-start', marginHorizontal: 40}}>
-          {inCorrectPassword && (
-            <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED, top: -5}}>
-              Password is incorrect
-            </Text>
-          )}
-        </View>
-        {/*-------------------- SUBMIT INPUT --------------------*/}
-        <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
-          <View style={styles.submit}>
-            <Text
-              style={{
-                color: COLORS.WHITE,
-                fontSize: FONT_SIZE.M,
-                paddingHorizontal: '37%',
-                fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
-                lineHeight: SIZES.L,
-              }}>
-              Login
-            </Text>
-          </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
+        <View
+          style={{
+            flex: 1,
+            marginTop: screenheight > 700 ? 0 : '-15%',
+          }}>
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: screenheight > 700 ? 'flex-start' : 'center',
+              marginTop: screenheight > 700 && '30%',
+            }}>
+            {/*-------------------- BANNER --------------------*/}
+            {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
+            <Image
+              source={ToktokLogo}
+              style={{height: imageWidth - 120, width: imageWidth - 170}}
+              resizeMode="contain"
+            />
+            {/*-------------------- PASSWORD INPUT --------------------*/}
+            {/* <Text style={styles.label}>Enter your password to continue</Text> */}
+            <View style={styles.containerInput}>
+              <TextInput
+                ref={inputRef}
+                value={password}
+                onChangeText={value => setPassword(value)}
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor={constants.COLOR.DARK}
+                secureTextEntry={!showPassword}
+                returnKeyType="done"
+                autoCapitalize="none"
+                onSubmitEditing={onSubmit}
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <Image source={!showPassword ? HidePassword : ShowPassword} style={styles.showPassword} />
+              </TouchableOpacity>
+            </View>
+            <View style={{alignSelf: 'flex-start', marginHorizontal: 40}}>
+              {inCorrectPassword && (
+                <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED, top: -5}}>
+                  Password is incorrect
+                </Text>
+              )}
+            </View>
+            {/*-------------------- SUBMIT INPUT --------------------*/}
+            <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
+              <View style={styles.submit}>
+                <Text
+                  style={{
+                    color: COLORS.WHITE,
+                    fontSize: FONT_SIZE.M,
+                    paddingHorizontal: '37%',
+                    fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
+                    lineHeight: SIZES.L,
+                  }}>
+                  Login
+                </Text>
+              </View>
+            </TouchableHighlight>
 
-        {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
-        <TouchableHighlight onPress={() => sendOTP()} underlayColor={COLOR.YELLOW} style={styles.autoFillBox}>
-          <View style={styles.autoFill}>
-            <Text
-              style={{
-                color: ORANGE,
-                fontSize: FONT_SIZE.M,
-                textDecorationLine: 'underline',
-                fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
-                lineHeight: SIZES.L,
-              }}>
-              Forgot Password?
-            </Text>
+            {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
+            <TouchableHighlight onPress={() => sendOTP()} underlayColor={COLOR.YELLOW} style={styles.autoFillBox}>
+              <View style={styles.autoFill}>
+                <Text
+                  style={{
+                    color: ORANGE,
+                    fontSize: FONT_SIZE.M,
+                    textDecorationLine: 'underline',
+                    fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
+                    lineHeight: SIZES.L,
+                  }}>
+                  Forgot Password?
+                </Text>
+              </View>
+            </TouchableHighlight>
           </View>
-        </TouchableHighlight>
-      </View>
-      {/* </View> */}
-    </ImageBackground>
+        </View>
+        {/* </View> */}
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 
