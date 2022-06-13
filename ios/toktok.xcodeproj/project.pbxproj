@@ -60,7 +60,7 @@
 		E9FBBC1DD37B494CBF427694 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 800A015A200E4872BC47B19B /* Rubik-SemiBold.ttf */; };
 		EB1B18B6ADC343018CF19359 /* Jost-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EE64892DABA4006BD3F1814 /* Jost-MediumItalic.ttf */; };
 		EB7E15BEDD9D486DB99C8BD5 /* Jost-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 08EADD7CBAB0454A89BB1962 /* Jost-ExtraLight.ttf */; };
-		6ED9F5139F934E56AFBE4689 /* FiraSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C8E4E7E5A584A7EBB552BEE /* FiraSans-SemiBold.ttf */; };
+		1AB59A7CC71B483898BA6E62 /* FiraSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0369F8E2AE8146819D419DE0 /* FiraSans-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,7 +187,7 @@
 		F9167798F50C456CB93C31CF /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		F9355CB1EDEF4178B59B23B9 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		F9FD6E347EC84AC6A43C96C1 /* FiraSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-Bold.ttf"; path = "../src/assets/fonts/FiraSans-Bold.ttf"; sourceTree = "<group>"; };
-		4C8E4E7E5A584A7EBB552BEE /* FiraSans-SemiBold.ttf */ = {isa = PBXFileReference; name = "FiraSans-SemiBold.ttf"; path = "../src/assets/fonts/FiraSans-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0369F8E2AE8146819D419DE0 /* FiraSans-SemiBold.ttf */ = {isa = PBXFileReference; name = "FiraSans-SemiBold.ttf"; path = "../src/assets/fonts/FiraSans-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -334,7 +334,7 @@
 				F9FD6E347EC84AC6A43C96C1 /* FiraSans-Bold.ttf */,
 				8FCBB909868F41E3A6996C66 /* FiraSans-Regular.ttf */,
 				DB69349A9D084E02B2BE3E73 /* Akrobat-Regular.ttf */,
-				4C8E4E7E5A584A7EBB552BEE /* FiraSans-SemiBold.ttf */,
+				0369F8E2AE8146819D419DE0 /* FiraSans-SemiBold.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -617,7 +617,7 @@
 				AA5D22FC17104B8CB4AA6F52 /* FiraSans-Bold.ttf in Resources */,
 				03F357427E67434B925EFC69 /* FiraSans-Regular.ttf in Resources */,
 				97304C9A6BBA446789910E4F /* Akrobat-Regular.ttf in Resources */,
-				6ED9F5139F934E56AFBE4689 /* FiraSans-SemiBold.ttf in Resources */,
+				1AB59A7CC71B483898BA6E62 /* FiraSans-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1063,7 +1063,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1330000;
+				CURRENT_PROJECT_VERSION = 1340000;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1077,7 +1077,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 1.33.0;
+				MARKETING_VERSION = 1.34.0;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1104,7 +1104,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1330000;
+				CURRENT_PROJECT_VERSION = 1340000;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				INFOPLIST_FILE = toktok/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -1113,7 +1113,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 1.33.0;
+				MARKETING_VERSION = 1.34.0;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1367,14 +1367,14 @@
 				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1330000;
+				CURRENT_PROJECT_VERSION = 1340000;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.33.0;
+				MARKETING_VERSION = 1.34.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
@@ -1401,14 +1401,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1330000;
+				CURRENT_PROJECT_VERSION = 1340000;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.33.0;
+				MARKETING_VERSION = 1.34.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";

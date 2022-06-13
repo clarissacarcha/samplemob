@@ -66,6 +66,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       }
       if (status == 'CANCELLED' && cancellation?.initiatedBy == 'DRIVER') {
         setCancellationState(cancellation);
+        setChargeAmount(cancellation.charge?.amount);
         if (cancellation.charge?.amount > 0) {
           setCancellationFee(true);
         } else {
@@ -101,7 +102,35 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         setViewCancelBookingModal(true);
       }
     },
-    onError: onErrorAppSync,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else if (errorType === 'TRIP_EXPIRED') {
+            dispatch({
+              type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+            });
+            navigation.replace('ToktokGoBookingStart', {
+              popTo: popTo + 1,
+            });
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
   });
 
   const [tripConsumerCancel] = useMutation(TRIP_CONSUMER_CANCEL, {
@@ -123,6 +152,13 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             Alert.alert('', message);
           } else if (errorType === 'CANCELLATION_CHARGE_UNACKNOWLEDGED') {
             Alert.alert('', message);
+          } else if (errorType === 'TRIP_EXPIRED') {
+            dispatch({
+              type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+            });
+            navigation.replace('ToktokGoBookingStart', {
+              popTo: popTo + 1,
+            });
           } else {
             console.log('ELSE ERROR:', error);
             Alert.alert('', 'Something went wrong...');
@@ -131,7 +167,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       }
     },
     onCompleted: response => {
-      console.log(response);
+      setCancellationState(response.tripConsumerCancel.cancellation);
       setViewSuccessCancelBookingModal(true);
     },
   });
@@ -160,6 +196,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
 
   const goBackAfterCancellation = () => {
     setOriginData(true);
+    setViewCancelBookingModal(false);
     navigation.replace('ToktokGoBookingStart', {
       popTo: popTo + 1,
     });
@@ -192,7 +229,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   };
   const openRateDriver = () => {
     setmodal(false);
-    navigation.push('ToktokGoRateDriver', {
+    navigation.replace('ToktokGoRateDriver', {
       popTo: popTo + 1,
     });
   };
@@ -221,6 +258,11 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   };
   const messageStop = () => {
     Linking.openURL(`sms:${booking.driver?.mobileNumber}`);
+  };
+
+  const noShowFeeSubmit = () => {
+    setCancellationFee(false);
+    setViewSuccessCancelBookingModal(true);
   };
 
   return (
@@ -255,7 +297,8 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       <SuccesCancelBookingModal
         visible={viewSuccessCancelBookingModal}
         setVisible={setViewSuccessCancelBookingModal}
-        type={bookingCancelledType}
+        chargeAmount={chargeAmount}
+        cancellationState={cancellationState}
         goBackAfterCancellation={goBackAfterCancellation}
       />
       <CancelBookingModal
@@ -264,10 +307,8 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         setViewCancelReasonModal={setViewCancelReasonModal}
       />
       <DriverCancelledModal
-        driverVisible={cancellationFee}
-        setDriverVisible={setCancellationFee}
-        setVisible={setViewSuccessCancelBookingModal}
-        setType={setBookingCancelledType}
+        cancellationFee={cancellationFee}
+        noShowFeeSubmit={noShowFeeSubmit}
         cancellationState={cancellationState}
       />
       <DriverArrivedModal

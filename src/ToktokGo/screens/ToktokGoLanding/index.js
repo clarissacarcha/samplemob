@@ -38,7 +38,7 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
           ['ACCEPTED', 'ARRIVED', 'PICKED_UP'].includes(response.getTripsConsumer[0]?.status)
         ) {
           const decodedPolyline = decodeLegsPolyline(response.getTripsConsumer[0]?.route.legs);
-          navigation.push('ToktokGoOnTheWayRoute', {
+          navigation.replace('ToktokGoOnTheWayRoute', {
             popTo: 1,
             decodedPolyline,
           });

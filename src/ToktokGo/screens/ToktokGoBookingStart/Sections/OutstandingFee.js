@@ -11,17 +11,18 @@ import moment from 'moment';
 import {UnpaidModal} from '../Components';
 export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction, tripConsumerPending}) => {
   const [unpaid, setUnpaid] = useState(false);
+  const {logs, cancellation} = tripConsumerPending[0];
+  const lastItem = logs[logs.length - 1];
 
   const onPressLocation = () => {
     navigation.push('ToktokGoBookingConfirmPickup', {
       popTo: 1,
     });
   };
-  const getDate = () => {
-    const {logs} = tripConsumerPending[0];
-    const lastItem = logs[logs.length - 1];
+  const getDateFee = () => {
     const lastItemDateFormatted = moment(lastItem.createdAt).format('MMM D, YYYY');
-    return lastItemDateFormatted;
+    if (cancellation.initiatedBy == 'CONSUMER') return `Cancellation Fee last ${lastItemDateFormatted}`;
+    else return `No Show Fee last ${lastItemDateFormatted}`;
   };
 
   return (
@@ -63,7 +64,7 @@ export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction,
           <View style={{flexDirection: 'row'}}>
             <Image source={CarFee} resizeMode="contain" style={{height: 45, width: 45}} />
             <View style={{marginHorizontal: 8}}>
-              <Text style={{fontSize: CONSTANTS.FONT_SIZE.M}}>Cancellation Fee last {getDate()}</Text>
+              <Text style={{fontSize: CONSTANTS.FONT_SIZE.M}}>{getDateFee()}</Text>
               <ThrottledOpacity
                 delay={500}
                 onPress={() => {

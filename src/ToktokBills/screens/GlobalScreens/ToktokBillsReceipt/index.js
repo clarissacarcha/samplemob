@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState, useRef} from "react";
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -8,116 +8,232 @@ import {
   ScrollView,
   Dimensions,
   StatusBar,
-  BackHandler
-} from "react-native";
-import {useLazyQuery} from '@apollo/react-hooks';
-import {useSelector} from 'react-redux';
-import ViewShot , {captureScreen,releaseCapture} from "react-native-view-shot";
-import { useHeaderHeight } from '@react-navigation/stack';
+  BackHandler,
+  ImageBackground,
+  Platform,
+} from 'react-native';
+import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
+import ViewShot, {captureScreen, releaseCapture} from 'react-native-view-shot';
+import {useHeaderHeight} from '@react-navigation/stack';
 
 //UTIL
-import { moderateScale, numberFormat, getStatusbarHeight } from "toktokbills/helper";
-const {width,height} = Dimensions.get("window");
+import {moderateScale, numberFormat, getStatusbarHeight} from 'toktokbills/helper';
+const {width, height} = Dimensions.get('window');
 
 //COMPONENTS
-import { OrangeButton, HeaderBack, HeaderTitle, LoadingIndicator, HeaderDownloadReceipt } from "toktokbills/components";
-import { SomethingWentWrong } from 'toktokbills/components'
-import { Header, ReceiptDetails } from "./components";
+import {
+  OrangeButton,
+  HeaderBack,
+  HeaderTitle,
+  LoadingIndicator,
+  HeaderDownloadReceipt,
+  ToastModal,
+} from 'toktokbills/components';
+import {Header, ReceiptDetails} from './components';
+import {QuestionModal} from 'toktokbills/components/Modals';
+import {AlertOverlay} from 'src/components';
 
 //FONTS & COLORS & IMAGES
-import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
+import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
+import LinearGradient from 'toktokbills/assets/images/screen-bg.png';
 
-const MainComponent = ({ navigation, route, viewRef, onCapturingScreen }) => {
+//HELPER
+import {usePrompt} from 'src/hooks';
+import {ErrorUtility} from 'toktokbills/util';
+
+//GRAPHQL & HOOKS
+import {useThrottle} from 'src/hooks';
+import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
+import {POST_FAVORITE_BILL, GET_FAVORITE_BILLS, POST_CHECK_IF_FAVORITE_EXIST} from 'toktokbills/graphql/model';
+
+const MainComponent = ({route}) => {
   return (
-    <View style={{ paddingTop: onCapturingScreen ? moderateScale(50) : moderateScale(20) }}>
-      <Header />
+    <View style={styles.receiptContainer}>
+      <Header route={route} />
       <ReceiptDetails route={route} />
-      { !onCapturingScreen && (
-        <View style={styles.buttonContainer}>
-          <Text style={styles.emailText}>A copy of this receipt will be delivered on the email provided.</Text>
-          <OrangeButton label="OK" onPress={() => navigation.navigate("ToktokBillsHome")} />
-        </View>
-      )}
     </View>
   );
 };
 
-export const ToktokBillsReceipt = ({ navigation, route }) => {
+const ReceiptDownload = ({route, onCapturingScreen}) => {
+  return (
+    <ImageBackground source={LinearGradient} resizeMode="cover" style={{padding: moderateScale(16), flex: 1}}>
+      <View
+        style={{
+          ...styles.receiptContainer,
+          ...(onCapturingScreen && Platform.OS === 'android' ? styles.receiptBorder : {}),
+        }}>
+        <Header route={route} />
+        <ReceiptDetails route={route} />
+      </View>
+    </ImageBackground>
+  );
+};
 
+export const ToktokBillsReceipt = ({navigation, route}) => {
   const [onCapturingScreen, setOnCapturingScreen] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
+  const [favoriteBillId, setFavoriteBillId] = useState(favoriteDetails ? favoriteDetails.id : 0);
+  const [favoriteExisting, setFavoriteExisting] = useState(false);
   const viewshotRef = useRef();
-  const headerHeight = useHeaderHeight();
-  const imageHeight = height - headerHeight - ( Platform.OS == 'ios' ? getStatusbarHeight : 0);
-  
+  const prompt = usePrompt();
+  const favoriteDetails = route?.params?.favoriteDetails ? route.params.favoriteDetails : null;
+  const {firstField, secondField} = route?.params?.paymentData;
+
   navigation.setOptions({
-    headerLeft: () => null,
-    headerTitle: () => <HeaderTitle label={"toktokbills Receipt"} />,
-    headerRight: () =>
+    headerLeft: () => {},
+    headerTitle: () => <HeaderTitle label={'Transaction Receipt'} />,
+    headerRight: () => (
       <HeaderDownloadReceipt
         viewshotRef={viewshotRef}
         refNo={route.params.receipt.referenceNumber}
-        onPressDownloadReceipt={(val) => { setOnCapturingScreen(val) }}
-      />,
+        onPressDownloadReceipt={val => {
+          setOnCapturingScreen(val);
+        }}
+      />
+    ),
   });
 
   useEffect(() => {
+    postCheckIfFavoriteExist({
+      variables: {
+        input: {
+          billItemId: route?.params?.paymentData?.billItemSettings?.id,
+          firstFieldValue: firstField,
+          secondFieldValue: secondField,
+        },
+      },
+    });
     const backAction = () => {
       return true;
     };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
     return () => backHandler.remove();
   }, []);
 
+  // POST FAVORITE BILL
+  const [postFavoriteBill, {loading: postFavoriteBillLoading}] = useMutation(POST_FAVORITE_BILL, {
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: error => {
+      setDuplicateFavorites(true);
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        title: 'Duplicate Favorites',
+      });
+    },
+    onCompleted: ({postFavoriteBill}) => {
+      setFavoriteBillId(postFavoriteBill.favoriteBill.id);
+      setFavoriteModal({show: true, message: 'Added to your Favorites'});
+      setTimeout(() => {
+        navigation.navigate('ToktokBillsHome');
+      }, 1000);
+    },
+  });
+
+  //CHECK FAVORITE BILLS
+  const [postCheckIfFavoriteExist, {loading: postCheckIfFavoriteExistLoading}] = useMutation(
+    POST_CHECK_IF_FAVORITE_EXIST,
+    {
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onError: error => {
+        console.log(error);
+      },
+      onCompleted: ({postCheckIfFavoriteExist}) => {
+        setFavoriteExisting(postCheckIfFavoriteExist);
+      },
+    },
+  );
+
+  const onPressFavorite = () => {
+    postFavoriteBill({
+      variables: {
+        input: {
+          billItemId: route?.params?.paymentData?.billItemSettings?.id,
+          firstFieldValue: firstField,
+          secondFieldValue: secondField,
+        },
+      },
+    });
+  };
+
   return (
     <>
+      <QuestionModal
+        visible={visible}
+        setVisible={setVisible}
+        onPressNo={() => navigation.navigate('ToktokBillsHome')}
+        onPressYes={onPressFavorite}
+      />
+      <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} message={favoriteModal.message} />
+      <AlertOverlay visible={postFavoriteBillLoading || onCapturingScreen} />
       <StatusBar barStyle="dark-content" backgroundColor="white" />
-      <ScrollView style={styles.container}>
-        <ViewShot 
-          style={styles.container} 
-          ref={viewshotRef}
-          options={{ format: "jpg", quality: 0.9, result: 'tmpfile' }}
-        >
-          <MainComponent navigation={navigation} route={route} onCapturingScreen={onCapturingScreen} />
-        </ViewShot>
-      </ScrollView>
+      <ImageBackground source={LinearGradient} resizeMode="cover" style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1, padding: onCapturingScreen ? 0 : 16}}>
+          <ViewShot ref={viewshotRef} options={{format: 'jpg', quality: 0.9, result: 'tmpfile'}}>
+            {onCapturingScreen ? (
+              <ReceiptDownload route={route} onCapturingScreen={onCapturingScreen} />
+            ) : (
+              <MainComponent navigation={navigation} route={route} onCapturingScreen={onCapturingScreen} />
+            )}
+          </ViewShot>
+        </ScrollView>
+      </ImageBackground>
+      <View style={styles.buttonContainer}>
+        <OrangeButton
+          label="OK"
+          onPress={() => (favoriteExisting.result ? navigation.navigate('ToktokBillsHome') : setVisible(true))}
+        />
+      </View>
     </>
   );
 };
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-  },
-  headerContainer: {
-    paddingTop: moderateScale(30),
   },
   headerText: {
-    color: "#F6841F",
+    color: '#F6841F',
     fontSize: FONT_SIZE.L,
-    fontFamily: FONT.BOLD
+    fontFamily: FONT.BOLD,
   },
   separator: {
     height: moderateScale(30),
-    backgroundColor: "#F7F7FA"
+    backgroundColor: '#F7F7FA',
   },
   buttonContainer: {
-    justifyContent: "flex-end",
+    paddingHorizontal: moderateScale(32),
+    paddingVertical: moderateScale(16),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 3.84,
+    elevation: 5,
+    borderTopColor: '#F8F8F8',
+    borderTopWidth: 2,
+    backgroundColor: COLOR.WHITE,
+  },
+  receiptContainer: {
     paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(20),
-    flex: 1
+    backgroundColor: COLOR.WHITE,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
-  emailText: {
-    textAlign: "center",
-    fontSize: FONT_SIZE.M,
-    marginBottom: moderateScale(30),
-    marginTop: moderateScale(10)
-  }
-})
+  receiptBorder: {
+    borderColor: '#F8F8F8',
+    borderWidth: 2,
+  },
+});

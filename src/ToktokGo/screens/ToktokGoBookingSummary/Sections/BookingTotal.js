@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
     color: CONSTANTS.COLOR.ORANGE,
-    fontSize: CONSTANTS.FONT_SIZE.L,
+    fontSize: CONSTANTS.FONT_SIZE.XL + 1,
   },
   seeAlltextStyle: {
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,

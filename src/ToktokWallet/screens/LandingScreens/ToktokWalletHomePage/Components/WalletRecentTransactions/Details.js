@@ -17,7 +17,7 @@ const renderDetails = ({details})=> {
             const value = data[1]
             console.log(key,value)
             return (
-                <Text key={`externalDetails_${index}`} style={[styles.labelText , {color: COLOR.DARK}]}>{key}: {value}</Text>
+                <Text key={`externalDetails_${index}`} style={styles.labelText}>{key}: {value}</Text>
             )
         })
         return RenderInfo
@@ -36,11 +36,7 @@ const Details = ({
     const {
         name,
         phrase,
-        details,
-        amount,
-        refNo,
-        refDate,
-        note
+        displayInfo,
     } = transaction
 
 
@@ -52,13 +48,8 @@ const Details = ({
             <View>
                  <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{name}</Text>
                  <Text style={styles.labelText}>{phrase}</Text>
-                 {renderDetails({details})}
                  <View style={{marginTop: 15}}>
-                    {/* <Text style={styles.labelText}>Status: Success</Text> */}
-                    <Text style={styles.labelText}>Amount: {amount}</Text>
-                    <Text style={styles.labelText}>Ref No: {refNo}</Text>
-                    <Text style={styles.labelText}>Date & Time: {refDate}</Text>
-                    { note !== "" && <Text style={styles.labelText}>Note: {note}</Text>}
+                    {renderDetails({details: displayInfo})}
                 </View>
             </View>
         </TransactionModal>

@@ -23,6 +23,7 @@ import {YellowIcon} from '../../../../components/ui';
 import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {useQuery} from '@apollo/react-hooks';
+import {onError} from '../../../../util/ErrorUtility';
 
 const imageWidth = Dimensions.get('window').width - 200;
 
@@ -91,12 +92,13 @@ const Announcements = ({navigation, route, session, createSession}) => {
   });
 
   const {data, loading, error} = useQuery(GET_ANNOUNCEMENTS, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
     variables: {
       filter: {
         appFlavor: APP_FLAVOR,
       },
     },
+    onError: onError,
   });
 
   if (loading) {
@@ -128,7 +130,7 @@ const Announcements = ({navigation, route, session, createSession}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getAnnouncements}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderItem={({item, index}) => {
           const lastItem = index == data.getAnnouncements.length - 1 ? true : false;
 
@@ -139,12 +141,12 @@ const Announcements = ({navigation, route, session, createSession}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
 export const ToktokAnnouncements = connect(mapStateToProps, mapDispatchToProps)(Announcements);

@@ -36,6 +36,12 @@ const Details = ({
     refNo,
     refDate,
     refTime,
+    refDateTime,
+    name,
+    phrase,
+    tokwaAccount,
+    serviceFeeAmount,
+    totalAmount
   } = transaction
 
   return (
@@ -44,11 +50,18 @@ const Details = ({
       setVisible={setVisible}
     >
       <View>
+        <Text style={[styles.labelText, {fontFamily: FONT.BOLD}]}>{name}</Text>
+        <Text style={[styles.labelText, {marginBottom: 20}]}>{phrase}</Text>
         <Text style={styles.labelText}>Status: Success</Text>
-        <Text style={styles.labelText}>Amount Paid: {amount}</Text>
-        <Text style={styles.labelText}>Service Reference No.: {refNo}</Text>
-        <Text style={styles.labelText}>Date of Transaction: {refDate}</Text>
-        <Text style={styles.labelText}>Time of Transaction: {refTime}</Text>
+        <Text style={styles.labelText}>Customer Name: {tokwaAccount?.person?.firstName} {tokwaAccount?.person?.lastName}</Text>
+        <Text style={styles.labelText}>Customer Mobile No: {tokwaAccount?.mobileNumber}</Text>
+        <Text style={styles.labelText}>Reference No.: {refNo}</Text>
+        <Text style={styles.labelText}>Amount: {amount}</Text>
+        <Text style={styles.labelText}>Service Fee: {serviceFeeAmount}</Text>
+        <Text style={styles.labelText}>Total Amount: {totalAmount}</Text>
+        <Text style={styles.labelText}>Date & Time: {refDateTime}</Text>
+        {/* <Text style={styles.labelText}>Date of Transaction: {refDate}</Text>
+        <Text style={styles.labelText}>Time of Transaction: {refTime}</Text> */}
       </View>
     </TransactionModal>
   )

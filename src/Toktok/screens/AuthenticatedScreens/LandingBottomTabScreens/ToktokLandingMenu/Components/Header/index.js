@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
     marginHorizontal: SIZE.MARGIN,
   },
   greetingBox: {
-    marginTop: StatusBar.currentHeight,
+    paddingTop: StatusBar.currentHeight,
+    height: Platform.select({android: 57 + StatusBar.currentHeight, ios: 50}),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',

@@ -1,23 +1,25 @@
-import React, {useContext, useEffect, useState} from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import React, {useContext, useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Image} from 'react-native';
 
 //UTIL
-import { moderateScale } from "toktokbills/helper";
+import {moderateScale} from 'toktokbills/helper';
 
 //FONTS & COLORS & IMAGES
-import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
-import { bills_logo } from "toktokbills/assets/images";
+import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
+import {bills_logo} from 'toktokbills/assets/images';
 
-export const Header = () => {
-  console.log(bills_logo)
+export const Header = ({route}) => {
+  const {receipt} = route.params;
+  const {billerDetails} = receipt;
+
   return (
-    <View style={{ alignItems: "center" }}>
-      <Image source={bills_logo} style={styles.logo} />
+    <View style={{alignItems: 'center'}}>
+      {billerDetails?.logo && (
+       <Image source={{uri: billerDetails.logo}} style={styles.logo} />
+      )}
       <View style={styles.logoTextContainer}>
         <Text>
-          <Text style={styles.headerText} >Thank you for using </Text>
-          <Text style={styles.toktokText}>toktok</Text>
-          <Text style={styles.loadText}>bills!</Text>
+          <Text style={styles.headerText}>{billerDetails.descriptions}</Text>
         </Text>
       </View>
     </View>
@@ -28,14 +30,14 @@ const styles = StyleSheet.create({
   logo: {
     width: moderateScale(60),
     height: moderateScale(60),
-    marginBottom: moderateScale(20)
+    marginBottom: moderateScale(10),
   },
   logoTextContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   headerText: {
-    fontSize: FONT_SIZE.L,
-    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
+    fontFamily: FONT.REGULAR,
   },
   toktokText: {
     color: COLOR.ORANGE,
@@ -47,4 +49,4 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
   },
-})
+});
