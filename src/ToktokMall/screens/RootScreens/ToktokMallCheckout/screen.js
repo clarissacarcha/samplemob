@@ -188,15 +188,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   const getAutoShipping = async (payload) => {
 
-    //setup empty vouchers list
-    // let initialShippingVouchers = []
-    // payload.cartitems.map((item) => {
-    //   initialShippingVouchers.push({
-    //     shopid: item.shopid
-    //   })
-    // })
-    // await CheckoutContextData.setShippingVouchers(initialShippingVouchers)
-
     //MANAGE BRANCH
     let stotal = payload.subtotal
     payload.cartitems.map((cartitem, index) => {
@@ -223,7 +214,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
          
           if(item.type == "shipping"){
             await item.vouchers.map(async (voucher, index) => {
-              
+  
               if(parseFloat(voucher.amount) == 0){
 
                 let fee = null
@@ -235,6 +226,23 @@ const Component = ({route, navigation, createMyCartSession}) => {
                   discountedAmount: 0,
                   discount: 0,
                   deduction: fee,
+                  voucherCodeType: res.responseData.type
+                })
+
+              }else if(voucher.is_percentage == 1){
+
+                let fee = null
+		            payload.cartitems.map((a) => a.shopid == voucher.shop_id ? fee = a.shippingfee : null)
+                let pct = (parseFloat(voucher.amount) * 0.01)
+                let pctvalue = fee * pct
+                let calculatedDiscount = fee - pctvalue
+
+                items.push({
+                  ...voucher, 
+                  autoShipping: true,
+                  deduction: calculatedDiscount < 0 ? fee : pctvalue,
+                  discountedAmount: calculatedDiscount < 0 ? 0 : pctvalue, 
+                  discount: calculatedDiscount < 0 ? 0 : pctvalue,
                   voucherCodeType: res.responseData.type
                 })
 
@@ -910,7 +918,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         <AlertModal
           navigation = {navigation}
           isVisible = {alertModal}
-          setIsVisible = {setAlertModal}
+          setIsVisible = {setAlertModal}         
         />
         <CheckoutModal 
           navigation={navigation} 

@@ -5,6 +5,7 @@ import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks'
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql'
 import { GET_HASH_AMOUNT } from '../../../../graphql/toktokmall/model'
 import { ArrayCopy } from '../../../helpers'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export const CheckoutContext = createContext()
 const {Provider} = CheckoutContext
@@ -137,6 +138,21 @@ export const CheckoutContextProvider = ({children})=> {
 		}, 700)
 	}
 
+	const getErrorMessageByCode = (code) => {
+		switch(code) {
+			case '001': 
+				return ""
+			case '002': 
+				return ""
+			case '003': 
+				return ""
+			case '004': 
+				return "You have already redeemed this voucher."
+			default: 
+				return "Invalid voucher code."
+		}
+	}
+
 	return (
 		<Provider 
 			value={{
@@ -174,7 +190,9 @@ export const CheckoutContextProvider = ({children})=> {
 
 				voucherReloading,
 				setVoucherReloading,
-				deleteVoucher
+				deleteVoucher,
+
+				getErrorMessageByCode
 			}}
 		>
 			{children}
