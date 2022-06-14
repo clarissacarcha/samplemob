@@ -29,7 +29,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
   const [vcode, setvcode] = useState("")
   const [loading, setloading] = useState(false)
   const [succeeded, setSucceeded] = useState(false)
-  const [errormessage, seterrormessage] = useState("*Invalid voucher code. Please check your voucher code.")
+  const [errormessage, seterrormessage] = useState("*Invalid voucher code.")
 
   useEffect(() => {
     setloading(CheckoutContextData.voucherReloading)
@@ -259,7 +259,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
         setSucceeded(true)
         let items = ArrayCopy(CheckoutContextData.shippingVouchers)
-        items.push({...req.responseData.voucher, voucherCodeType: req.responseData.type})
+        items.push({...req.responseData.voucher, appliedToShop: item.shop.id, voucherCodeType: req.responseData.type})
         getShippingHashDeliveryAmount({variables: {
           input: {
             items: items
@@ -321,6 +321,7 @@ export const ApplyVoucherForm = (address, customer, payload) => {
         }
       }else if(req.responseError && req.responseError.error_code){
        // 
+       seterrormessage(req.responseError.message)
       }else if(req.responseError && req.responseError.message){
         seterrormessage(req.responseError.message)
       }else{

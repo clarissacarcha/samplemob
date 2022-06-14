@@ -297,6 +297,8 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
                 }else if(a?.shop_id == "0" || a?.shopid == "0"){
                   let findItem = shopProducts.filter((product) => a.product_id.includes(product.id))
                   return findItem[0]?.shopId && findItem[0]?.shopId == shop.id
+                }else if(a?.shop_id.includes(",")){
+                 return a?.appliedToShop == shop.id
                 }else if(a.autoApply){
                   //CHECK AUTO APPLIED VOUCHERS SHOP BY FINDING DISCOUNTED PRODUCTS 
                   let findItem = shopProducts.filter((product) => a.product_id.includes(product.id))

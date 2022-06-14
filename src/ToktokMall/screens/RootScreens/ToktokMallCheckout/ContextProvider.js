@@ -73,9 +73,7 @@ export const CheckoutContextProvider = ({children})=> {
 	}
 
 	const getShopDiscountCount = (shopid) => {
-		let v = shippingVouchers.filter((a) => a.voucherCodeType == "promotion").map((a) => {
-			if(a?.shopid == shopid || a?.shop_id == shopid) discount = a
-		})
+		let v = shippingVouchers.filter((a) => a.voucherCodeType == "promotion").filter((a) => a.appliedToShop == shopid)
 		return v.length
 	}
 
