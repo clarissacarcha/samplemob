@@ -4,6 +4,7 @@
 
 import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
+import StyledText from 'toktokfood/components/StyledText';
 
 export const Container: ComponentType<any> = styled.View`
   padding: 20px;
@@ -15,6 +16,7 @@ export const TitleContainer: ComponentType<any> = styled.View`
   flex-direction: row;
   align-items: center;
   margin-bottom: 5px;
+  padding-horizontal: 20px;
 `;
 
 export const Image: ComponentType<any> = styled.Image`
@@ -23,4 +25,10 @@ export const Image: ComponentType<any> = styled.Image`
   resize-mode: contain;
   tint-color: ${props => props.theme.color.yellow};
   margin-right: 10px;
+`;
+
+export const Title: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
+}))`
+  text-align: center;
 `;

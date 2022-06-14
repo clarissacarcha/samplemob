@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @format
  * @flow
  */
 
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import type {PropsType} from './types';
 import {
   Container,
@@ -35,6 +36,7 @@ import Alert from 'toktokfood/components/Alert';
 import Divider from 'toktokfood/components/Divider';
 import StyledButton from 'toktokfood/components/StyledButton';
 import StyledText from 'toktokfood/components/StyledText';
+import StyledLoader from 'toktokfood/components/StyledLoader';
 import {
   OrderAnimatedImage,
   OrderAnimatedText,
@@ -67,6 +69,11 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
   const [toCancelOrder, setToCancelOrder] = useState(false);
   const [isCancelledByCustomer, setIsCancelledByCustomer] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [isExhausted, setIsExhausted] = useState(false);
+
+  const timerRef = useRef(null);
 
   //fetch order details
   const [getOrderDetails, {startPolling, stopPolling}] = useLazyQuery(GET_ORDER_TRANSACTION_BY_REF_NUM, {
@@ -104,6 +111,15 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     fetchPolicy: 'cache-and-network',
     onCompleted: ({getDeliveryDetails}) => {
       setRiderDetails(getDeliveryDetails);
+      const isDriverOntheWay = getDeliveryDetails?.deliveryLogs?.find(logs => logs.status === 5);
+      if (
+        Object.keys(isDriverOntheWay).length > 0 &&
+        isDriverOntheWay !== undefined &&
+        !isExhausted &&
+        duration === 0
+      ) {
+        setDuration(getDeliveryDetails?.duration + 1);
+      }
     },
   });
 
@@ -127,6 +143,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     fetchPolicy: 'no-cache',
     onError: error => console.log(error),
     onCompleted: ({cancelOrder}) => {
+      setLoader(false);
       setIsCancelledByCustomer(true);
       setTimeout(() => setIsAlertVisible(true), 500);
     },
@@ -141,6 +158,25 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       fetchOrderDetails(referenceNum);
     }
   }, [fetchOrderDetails, isFocused, route.params]);
+
+  useEffect(() => {
+    if (duration > 0) {
+      timerRef.current = setTimeout(() => {
+        setDuration(duration - 1);
+      }, 60000);
+    }
+
+    const isDriverOntheWay = state?.deliveryLogs?.find(logs => logs.status === 5);
+    if (isDriverOntheWay !== undefined && !isExhausted && duration <= 0) {
+      setIsExhausted(true);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [duration]);
 
   const onBackOrderDetails = () => {
     if (state?.orderStatus === 'c' || state?.orderStatus === 's') {
@@ -177,6 +213,14 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     );
   };
 
+  // const renderExhaustTimer = () => {
+  //   const firstCondition = state?.orderStatus === 'po'
+  //   if (state?.orderIsfor === 2 || state?.orderIsfor === 1) {
+
+  //   }
+  //   return null;
+  // }
+
   const renderAlertComponent = () => {
     var title = '';
     var subtitle = '';
@@ -203,7 +247,9 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         buttonText = 'No';
         onPress = () => {
           setIsAlertVisible(false);
-          setToCancelOrder(false);
+          setTimeout(() => {
+            setToCancelOrder(false);
+          }, 1000);
         };
         buttonText2 = 'Yes';
         onPress2 = () => {
@@ -262,6 +308,30 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     );
   };
 
+  const renderCancellationModalComponent = () => (
+    <OrderCancellationModal
+      isVisible={isCancelModalVisible}
+      onCancel={() => {
+        setIsCancelModalVisible(false);
+        setToCancelOrder(false);
+      }}
+      onConfirm={reason => {
+        setIsCancelModalVisible(false);
+        setTimeout(() => {
+          setLoader(true);
+          postCancelOrder({
+            variables: {
+              input: {
+                reference_num: state?.referenceNum,
+                reason,
+              },
+            },
+          });
+        }, 500);
+      }}
+    />
+  );
+
   const renderAnimationComponent = () => {
     if (!isCompletedOrCancelled) {
       return (
@@ -277,7 +347,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
             {/* Bottom Part */}
             <BottomContainer>
               {/* Exhaust Timer */}
-              <OrderExhaustTimer state={{...state, riderDetails}} />
+              <OrderExhaustTimer state={{...state, riderDetails, duration}} />
               {/* Shop and customer address */}
               <OrderAddresses state={state} />
               <Divider />
@@ -301,6 +371,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
                       setIsAlertVisible(true);
                     }}
                     buttonText="Cancel"
+                    disabled={toCancelOrder}
                   />
                 )}
               </ButtonContainer>
@@ -319,6 +390,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         isVisible={showOrderDetails}
         customBackdrop={<Container />}
         flex={1}
+        coverScreen={true}
         animationIn={animationIn}
         animationOut={animationOut}>
         <HeaderContainer>
@@ -351,24 +423,8 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       {renderAnimationComponent()}
       {renderModalComponent()}
       {renderAlertComponent()}
-      <OrderCancellationModal
-        isVisible={isCancelModalVisible}
-        onCancel={() => {
-          setIsCancelModalVisible(false);
-          setTimeout(() => setToCancelOrder(false), 1000);
-        }}
-        onConfirm={reason => {
-          setIsCancelModalVisible(false);
-          postCancelOrder({
-            variables: {
-              input: {
-                reference_num: state?.referenceNum,
-                reason,
-              },
-            },
-          });
-        }}
-      />
+      {renderCancellationModalComponent()}
+      <StyledLoader isVisible={loader} message="Please wait" />
     </React.Fragment>
   );
 };

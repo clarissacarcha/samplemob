@@ -53,7 +53,9 @@ export const ModifiedText: ComponentType<any> = styled(StyledText).attrs(props =
   ...props,
   fontSize: 11,
   color: props.theme.color.orange,
-}))``;
+}))`
+  width: 95%;
+`;
 
 export const BottomContainer: ComponentType<any> = styled.View`
   background-color: #ffffff;
@@ -72,7 +74,6 @@ export const BottomContainer: ComponentType<any> = styled.View`
 
 export const ButtonContainer: ComponentType<any> = styled.View`
   padding: 20px;
-  padding-bottom: 0;
 `;
 
 export const AmountContainer: ComponentType<any> = styled.View`
