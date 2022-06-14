@@ -84,6 +84,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
               }
             } else if (code === 'AUTHENTICATION_ERROR') {
               // Do Nothing. Error handling should be done on the scren
+              alert({message});
             } else {
               alert({message: 'Something went wrong...'});
             }
