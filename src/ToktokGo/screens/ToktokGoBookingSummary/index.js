@@ -118,8 +118,15 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         type: 'SET_TOKTOKGO_BOOKING',
         payload: response.tripBook.trip,
       });
-      navigation.pop();
-      setViewTokwaPaymentProcessedModal(true);
+      if (details.paymentMethod == 'TOKTOKWALLET') {
+        navigation.pop();
+        setViewTokwaPaymentProcessedModal(true);
+      } else {
+        navigation.replace('ToktokGoFindingDriver', {
+          popTo: popTo + 1,
+          decodedPolyline,
+        });
+      }
     },
   });
 
