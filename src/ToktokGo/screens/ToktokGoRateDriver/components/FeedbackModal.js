@@ -11,7 +11,7 @@ export const FeedbackModal = ({showModal, showBookingReason, popTo, navigation, 
           <View style={styles.card}>
             <View style={styles.containerFeedback}>
               <Image style={{height: 120, width: 135}} source={Warning} />
-              <Text style={styles.FeedbackText}>Feedback Sent!</Text>
+              <Text style={styles.FeedbackText}>Feedback Sent</Text>
               <Text style={styles.feedbackMessage}>Thank you for riding with us.</Text>
               <Text style={styles.feedbackText}>Have a great day, ka-toktok!</Text>
             </View>

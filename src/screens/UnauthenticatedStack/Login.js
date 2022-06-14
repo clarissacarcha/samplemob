@@ -27,6 +27,8 @@ import {useMutation} from '@apollo/react-hooks';
 
 const imageWidth = Dimensions.get('window').width - 80;
 
+const screenheight = Dimensions.get('screen').height;
+
 const Login = ({navigation, session}) => {
   const [mobile, setMobile] = useState('');
   const [delay, setDelay] = useState(true);
@@ -55,6 +57,7 @@ const Login = ({navigation, session}) => {
       }
 
       setMobile(''); //empty out the mobile number
+      setValidNumber(false);
     },
   });
 
@@ -146,63 +149,79 @@ const Login = ({navigation, session}) => {
   }
 
   return (
-    <ImageBackground
-      resizeMode="cover"
-      source={Splash}
+    <KeyboardAvoidingView
+      behavior="padding"
       style={{
         flex: 1,
         justifyContent: 'space-between',
       }}>
-      <AlertOverlay visible={loading} />
-      {/* <AlertModal visible={true} /> */}
-      <View style={{flex: 1, alignItems: 'center', marginBottom: '20%', marginTop: '40%'}}>
-        <Image source={LoginBanner} style={{height: imageWidth - 120, width: imageWidth - 170}} resizeMode="contain" />
-        {/* <View style={{height: 50, paddingHorizontal: 20, justifyContent: 'flex-end', marginBottom: 10}}>
+      <ImageBackground
+        resizeMode="cover"
+        source={Splash}
+        style={{
+          flex: 1,
+          justifyContent: 'space-between',
+        }}>
+        <AlertOverlay visible={loading} />
+        {/* <AlertModal visible={true} /> */}
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: screenheight > 700 ? 'flex-start' : 'center',
+            marginTop: screenheight > 700 && '40%',
+          }}>
+          <Image
+            source={LoginBanner}
+            style={{height: imageWidth - 120, width: imageWidth - 170}}
+            resizeMode="contain"
+          />
+          {/* <View style={{height: 50, paddingHorizontal: 20, justifyContent: 'flex-end', marginBottom: 10}}>
           <Text style={{fontFamily: FONT.BOLD, color: COLOR.BLACK}}>{`Enter your ${
             APP_FLAVOR == 'C' ? 'mobile' : 'rider'
           } number to continue.`}</Text>
         </View> */}
 
-        {/*-------------------- INPUT ROW --------------------*/}
-        <View style={styles.inputContainer}>
-          <View style={styles.inputView}>
-            <Text style={{fontSize: 13, color: DARK}}>+63</Text>
+          {/*-------------------- INPUT ROW --------------------*/}
+          <View style={styles.inputContainer}>
+            <View style={styles.inputView}>
+              <Text style={{fontSize: 13, color: DARK}}>+63</Text>
+            </View>
+            <TextInput
+              value={mobile}
+              onChangeText={onMobileChange}
+              style={styles.input}
+              placeholder="Phone Number"
+              keyboardType="number-pad"
+              returnKeyType="done"
+              onSubmitEditing={() => onSubmit(mobile)}
+              placeholderTextColor={MEDIUM}
+            />
           </View>
-          <TextInput
-            value={mobile}
-            onChangeText={onMobileChange}
-            style={styles.input}
-            placeholder="Phone Number"
-            keyboardType="number-pad"
-            returnKeyType="done"
-            onSubmitEditing={() => onSubmit(mobile)}
-            placeholderTextColor={MEDIUM}
-          />
-        </View>
-        {validNumber && (
-          <View style={{marginHorizontal: '10%', alignSelf: 'flex-start'}}>
-            <Text style={{color: constants.COLOR.RED, fontSize: FONT_SIZE.S}}>Invalid mobile number</Text>
-          </View>
-        )}
+          {validNumber && (
+            <View style={{marginHorizontal: '10%', alignSelf: 'flex-start'}}>
+              <Text style={{color: constants.COLOR.RED, fontSize: FONT_SIZE.S}}>Invalid mobile number</Text>
+            </View>
+          )}
 
-        <TouchableHighlight onPress={() => onSubmit(mobile)} underlayColor={COLOR.ORANGE} style={styles.submitBox}>
-          <View style={styles.submit}>
-            <Text
-              style={{
-                color: COLOR.WHITE,
-                fontSize: FONT_SIZE.M,
-                paddingHorizontal: '36%',
-                fontWeight: '600',
-                lineHeight: SIZES.L,
-                fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
-              }}>
-              Continue
-            </Text>
-          </View>
-        </TouchableHighlight>
+          <TouchableHighlight onPress={() => onSubmit(mobile)} underlayColor={COLOR.ORANGE} style={styles.submitBox}>
+            <View style={styles.submit}>
+              <Text
+                style={{
+                  color: COLOR.WHITE,
+                  fontSize: FONT_SIZE.M,
+                  paddingHorizontal: '36%',
+                  fontWeight: '600',
+                  lineHeight: SIZES.L,
+                  fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
+                }}>
+                Continue
+              </Text>
+            </View>
+          </TouchableHighlight>
 
-        {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
-        {/* <TouchableHighlight
+          {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
+          {/* <TouchableHighlight
           onPress={() => navigation.push('ForgotPasswordRequest')}
           underlayColor={COLOR.YELLOW}
           style={styles.autoFillBox}>
@@ -211,15 +230,16 @@ const Login = ({navigation, session}) => {
           </View>
         </TouchableHighlight> */}
 
-        {/*-------------------- AUTO Fill BUTTON --------------------*/}
-        {/* <TouchableHighlight onPress={onRequestAutoFill} underlayColor={COLOR} style={styles.autoFillBox}>
+          {/*-------------------- AUTO Fill BUTTON --------------------*/}
+          {/* <TouchableHighlight onPress={onRequestAutoFill} underlayColor={COLOR} style={styles.autoFillBox}>
           <View style={styles.autoFill}>
             <Text style={{color: COLOR, fontSize: 20}}>Auto Fill</Text>
           </View>
         </TouchableHighlight> */}
-        {/*-------------------- SUBMIT BUTTON --------------------*/}
-      </View>
-    </ImageBackground>
+          {/*-------------------- SUBMIT BUTTON --------------------*/}
+        </View>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 
