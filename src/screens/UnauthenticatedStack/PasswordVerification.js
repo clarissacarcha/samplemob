@@ -91,6 +91,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
         }
       } catch (err) {
         console.log('ON ERROR ALERT: ', err);
+        alert({message: 'Something went wrong...'});
       }
     },
 
