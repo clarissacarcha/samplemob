@@ -131,3 +131,4 @@ export const map_ic = require('./images/map-ic.png');
 export const success_image = require('./images/prompts_icons/success.png');
 export const warning_image = require('./images/prompts_icons/warning.png');
 export const question_image = require('./images/prompts_icons/question_ic.png');
+export const loading_animation = require('./images/prompts_icons/loading-animation.gif');

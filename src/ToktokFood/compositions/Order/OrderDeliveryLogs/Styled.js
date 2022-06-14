@@ -10,6 +10,7 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome';
 
 export const Container: ComponentType<any> = styled.View`
   padding: 20px;
+  padding-bottom: 50px;
 `;
 
 export const LogsContainer: ComponentType<any> = styled.View`

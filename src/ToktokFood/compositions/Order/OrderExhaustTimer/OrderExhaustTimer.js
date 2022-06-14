@@ -3,9 +3,9 @@
  * @flow
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import type {PropsType} from './types';
-import {Container, Image, TitleContainer} from './Styled';
+import {Container, Image, TitleContainer, Title} from './Styled';
 import moment from 'moment';
 import {time} from 'toktokfood/assets/images';
 import StyledText from 'toktokfood/components/StyledText';
@@ -15,6 +15,8 @@ import {useTheme} from 'styled-components';
 const OrderExhaustTimer = (props: PropsType): React$Node => {
   const {state} = props;
   const theme = useTheme();
+  const [isExhausted, setIsExhausted] = useState(false);
+
   const isLoaded =
     state &&
     Object.keys(state).length > 0 &&
@@ -25,11 +27,23 @@ const OrderExhaustTimer = (props: PropsType): React$Node => {
       const dateBookingConfirmed = moment(state?.dateBookingConfirmed).add(45, 'minutes').format('YYYY-MM-DD HH:mm:ss');
       const remainingMinutes = moment(dateBookingConfirmed).diff(moment(), 'minutes');
       if (remainingMinutes <= 0) {
+        !isExhausted && setIsExhausted(true);
         return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
       }
       return '15 - 45 minutes';
     }
     return '';
+  };
+
+  const setDeliveringText = () => {
+    if (state?.duration !== undefined) {
+      const minutes = state?.duration;
+      if (minutes <= 0) {
+        !isExhausted && setIsExhausted(true);
+        return 'Rider is nearby your location. Thank you for patiently waiting.';
+      }
+      return `${minutes} ${minutes > 1 ? 'minutes' : 'minute'}`;
+    }
   };
 
   const renderComponent = (title, subtitle) => {
@@ -38,7 +52,7 @@ const OrderExhaustTimer = (props: PropsType): React$Node => {
         <Container>
           <TitleContainer>
             <Image source={time} />
-            <StyledText mode="semibold">{title}</StyledText>
+            <Title mode={isExhausted ? 'regular' : 'semibold'}>{title}</Title>
           </TitleContainer>
           <StyledText color={theme.color.gray}>{subtitle}</StyledText>
         </Container>
@@ -53,13 +67,23 @@ const OrderExhaustTimer = (props: PropsType): React$Node => {
 
     switch (state?.orderStatus) {
       case 'po':
-        title = setPreparingText();
-        subtitle = 'Preparing Order';
-        return renderComponent(title, subtitle);
+        if (state?.orderIsfor === 2 || (state?.orderIsfor === 1 && (state?.riderDetails?.driver || state?.rebooked))) {
+          title = setPreparingText();
+          subtitle = 'Preparing Order';
+          return renderComponent(title, subtitle);
+        }
+        return null;
       case 'rp':
         if (state?.orderIsfor === 1 && (state?.riderDetails?.driver || state?.rebooked)) {
           title = setPreparingText();
           subtitle = 'Preparing Order';
+          return renderComponent(title, subtitle);
+        }
+        return null;
+      case 'f':
+        if (state?.orderIsfor === 1 && state?.deliveryLogs[4]?.createdAt) {
+          title = setDeliveringText();
+          subtitle = 'Driver is on the way';
           return renderComponent(title, subtitle);
         }
         return null;

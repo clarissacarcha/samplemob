@@ -215,6 +215,8 @@ const transactionRef = `
     status
     createdAt
   }
+  rebooked
+  estimatedDistance
 `;
 
 export const GET_ORDER_TRANSACTIONS = gql`
