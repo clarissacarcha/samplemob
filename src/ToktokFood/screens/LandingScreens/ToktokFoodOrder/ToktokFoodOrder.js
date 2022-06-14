@@ -118,7 +118,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         !isExhausted &&
         duration === 0
       ) {
-        setDuration(getDeliveryDetails?.duration + 1);
+        setDuration(getDeliveryDetails?.duration + 5);
       }
     },
   });
