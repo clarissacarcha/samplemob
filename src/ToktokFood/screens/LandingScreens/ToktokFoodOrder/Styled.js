@@ -9,7 +9,7 @@ import StyledButton from 'toktokfood/components/StyledButton';
 import Header from 'toktokfood/components/Header';
 import {moderateScale} from 'toktokfood/helper/scale';
 import {Modal} from 'toktokfood/components/Modal';
-import {ScrollView} from 'react-native';
+import {Platform, ScrollView} from 'react-native';
 import FIcon from 'react-native-vector-icons/Feather';
 
 export const Container: ComponentType<any> = styled.View`
@@ -122,8 +122,10 @@ export const OrderDetailsHeader: ComponentType<any> = styled(Header).attrs(props
   ...props,
   title: 'Order Details',
   titleStyle: {
-    fontSize: 18,
-    top: 5,
+    fontSize: 17,
+  },
+  centerContainerStyle: {
+    top: Platform.OS === 'ios' ? 5 : 8,
   },
 }))``;
 
