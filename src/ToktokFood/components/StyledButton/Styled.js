@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /**
  * @flow
  */
@@ -10,8 +11,15 @@ import {TouchableOpacity} from 'react-native';
 export const Container: ComponentType<any> = styled.View`
   width: 100%;
   border-radius: 5px;
-  background-color: ${props => (props.type === 'primary' ? props.theme.color.orange : props.theme.color.white)};
-  border-color: ${props => props.theme.color.orange};
+  background-color: ${props =>
+    props.type === 'primary'
+      ? props.disabled
+        ? props.theme.color.lightgray
+        : props.theme.color.orange
+      : props.disabled
+      ? props.theme.color.lightgray
+      : props.theme.color.white};
+  border-color: ${props => (props.disabled ? props.theme.color.lightgray : props.theme.color.orange)};
   border-width: 1px;
   height: ${props => props.height};
   align-items: center;
@@ -30,5 +38,12 @@ export const ButtonText: ComponentType<any> = styled(StyledText).attrs(props => 
   mode: 'medium',
   fontSize: 15,
 }))`
-  color: ${props => (props.type === 'primary' ? props.theme.color.white : props.theme.color.orange)};
+  color: ${props =>
+    props.type === 'primary'
+      ? props.disabled
+        ? props.theme.color.gray
+        : props.theme.color.white
+      : props.disabled
+      ? props.theme.color.gray
+      : props.theme.color.orange};
 `;

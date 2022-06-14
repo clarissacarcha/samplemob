@@ -39,9 +39,10 @@ const OrderInformation = (props: PropsType): React$Node => {
       <Divider />
       <DeliveryDistanceContainer>
         {renderIconText(calendar_ic, state?.orderIsfor === 1 ? 'Delivery: Now' : 'Pick up: Now')}
-        {state?.orderIsfor === 1 &&
+        {renderIconText(map_ic, `${state?.estimatedDistance} km`)}
+        {/* {state?.orderIsfor === 1 &&
           state?.riderDetails?.driver &&
-          renderIconText(map_ic, `${parseFloat(state?.riderDetails?.distance).toFixed(2)} km`)}
+          renderIconText(map_ic, `${parseFloat(state?.riderDetails?.distance).toFixed(2)} km`)} */}
       </DeliveryDistanceContainer>
       <Divider />
     </Container>
