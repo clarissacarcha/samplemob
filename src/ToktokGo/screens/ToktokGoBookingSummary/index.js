@@ -122,6 +122,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         navigation.pop();
         setViewTokwaPaymentProcessedModal(true);
       } else {
+        navigation.pop();
         navigation.replace('ToktokGoFindingDriver', {
           popTo: popTo + 1,
           decodedPolyline,
@@ -289,6 +290,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   };
 
   const tokwaPaymentConfirmed = () => {
+    navigation.pop();
     navigation.replace('ToktokGoFindingDriver', {
       popTo: popTo + 1,
       decodedPolyline,
