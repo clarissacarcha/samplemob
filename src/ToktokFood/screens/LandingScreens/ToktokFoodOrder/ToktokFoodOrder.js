@@ -113,8 +113,8 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       setRiderDetails(getDeliveryDetails);
       const isDriverOntheWay = getDeliveryDetails?.deliveryLogs?.find(logs => logs.status === 5);
       if (
-        Object.keys(isDriverOntheWay).length > 0 &&
         isDriverOntheWay !== undefined &&
+        Object.keys(isDriverOntheWay).length > 0 &&
         !isExhausted &&
         duration === 0
       ) {
