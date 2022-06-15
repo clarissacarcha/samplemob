@@ -58,12 +58,11 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
         onError: (error) => {
             const {graphQLErrors, networkError} = error;
             if(
-                graphQLErrors[0]?.message === "You currently have an existing account, please contact our Customer Service Representative for support."
-                && graphQLErrors[0]?.payload?.code === "EXISTING_ACCOUNT"
+                graphQLErrors[0]?.payload?.code === "EXISTING_ACCOUNT"
             ){
                 navigation.navigate('ToktokLandingHome');
             }
-            onErrorAlert({alert , error})
+            onErrorAlert({alert , error , title: graphQLErrors[0]?.payload?.title ? graphQLErrors[0]?.payload?.title : null})
         },
         onCompleted: (response)=> {
             let result = response.postKycRegister
