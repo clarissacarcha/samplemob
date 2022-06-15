@@ -56,6 +56,13 @@ export const Confirm = connect(mapStateToProps, mapDispatchToProps)(({session})=
     const [postKYCRegister,{data,error,loading}] = useMutation(POST_KYC_REGISTER, {
         client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
         onError: (error) => {
+            const {graphQLErrors, networkError} = error;
+            if(
+                graphQLErrors[0]?.message === "You currently have an existing account, please contact our Customer Service Representative for support."
+                && graphQLErrors[0]?.payload?.code === "EXISTING_ACCOUNT"
+            ){
+                navigation.navigate('ToktokLandingHome');
+            }
             onErrorAlert({alert , error})
         },
         onCompleted: (response)=> {
