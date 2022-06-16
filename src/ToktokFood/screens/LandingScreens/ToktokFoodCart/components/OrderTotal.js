@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import {VerifyContext} from '../components';
 
-import {getCartTotalAmountOrder, getResellerDiscount} from '../functions';
+import {getCartTotalAmountOrder, getResellerDiscount, getTotalResellerDiscount} from '../functions';
 
 import styles from '../styles';
 
@@ -49,10 +49,9 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     if (promotions.length > 0 || deal.length > 0) {
       const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
       const deal = promotionVoucher.filter(promo => promo.type === 'deal');
-      const totalBasketAmount = await getCartTotalAmountOrder([...promotions, ...deal], temporaryCart.items);
-      // console.log(promotions, deal, totalBasketAmount, totalReseller);
+      const totalBasketAmount = await getTotalResellerDiscount([...promotions, ...deal], temporaryCart.items);
       // setTotalBasket(totalBasketAmount);
-      setTotalReseller(0);
+      setTotalReseller(totalBasketAmount);
       // setTotalBasket(temporaryCart.totalAmountWithAddons);
     } else {
       setTotalBasket(
@@ -154,7 +153,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       {(totalPromotions > 0 || totalDeal > 0) && (
         <View style={styles.header}>
           <Text>Item Discount</Text>
-          <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal).toFixed(2)}`}</Text>
+          <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal + totalReseller).toFixed(2)}`}</Text>
         </View>
       )}
 
