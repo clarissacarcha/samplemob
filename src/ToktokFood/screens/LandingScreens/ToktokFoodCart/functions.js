@@ -144,7 +144,7 @@ export const getTotalResellerDiscount = async (promotions, cartItems) => {
         } else {
           // totalAmount += items?.basePrice - items?.resellerDiscount;
           const resellerDiscount = items.quantity * (items?.basePrice - items?.resellerDiscount);
-          totalAmount += resellerDiscount;
+          totalAmount += items?.resellerDiscount > 0 ? resellerDiscount : 0;
         }
       });
     }),
