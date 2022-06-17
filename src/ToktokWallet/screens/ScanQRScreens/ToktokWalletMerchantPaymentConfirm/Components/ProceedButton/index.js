@@ -17,6 +17,7 @@ import SuccessfulModal from './SuccessfulModal'
 
 export const ProceedButton = ({
     amount,
+    serviceFee,
     swipeEnabled,
     setSwipeEnabled,
     note,
@@ -81,17 +82,17 @@ export const ProceedButton = ({
     const reviewAndConfirm = async ()=> {
 
 
-        const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
-            amount,
-            setErrorMessage: (value)=> {
-                if(errorMessage == ""){
-                    setErrorMessage(value)
-                    if(value != "") setSwipeEnabled(false)
-                }
-            }
-        })
+        // const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+        //     amount: (+amount + +serviceFee),
+        //     setErrorMessage: (value)=> {
+        //         if(errorMessage == ""){
+        //             setErrorMessage(value)
+        //             if(value != "") setSwipeEnabled(false)
+        //         }
+        //     }
+        // })
 
-        if(!checkLimit) return;
+        // if(!checkLimit) return;
         
         return navigation.navigate("ToktokWalletReviewAndConfirm", {
             label: "Pay QR",
@@ -99,10 +100,11 @@ export const ProceedButton = ({
             isSwipe: true,
             onSwipeFail: onSwipeFail,
             onSwipeSuccess: onSwipeSuccess,
-            swipeTitle: `Swipe to Pay PHP ${amount != "" ? numberFormat(amount) : "0"}`,
+            swipeTitle: `Swipe to Pay ₱${amount != "" ? numberFormat(+amount + +serviceFee) : "0.00"}`,
             data: {
-                amount: amount,
-                note: note,
+                amount,
+                serviceFee,
+                note,
                 tokwaAccount,
                 merchant,
                 branch,
@@ -119,6 +121,7 @@ export const ProceedButton = ({
                     TPIN: pinCode,
                     qrCode: qrCode,
                     amount: +amount,
+                    serviceFee: +serviceFee,
                     note
                 }
             }
@@ -138,6 +141,8 @@ export const ProceedButton = ({
                     branch={branch}
                     terminal={terminal}
                     tokwaAccount={tokwaAccount}
+                    amount={amount}
+                    serviceFee={serviceFee}
                 />
            }
             <View style={styles.container}>

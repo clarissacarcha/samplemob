@@ -28,7 +28,13 @@ export const LogItem = ({
       refNo,
       refDate,
       refTime,
-      amount: `₱ ${numberFormat(item.transaction.amount)}`,
+      refDateTime,
+      amount: `₱${numberFormat(item.amount)}`,
+      name: item.transaction.name,
+      phrase: item.transaction.phrase,
+      tokwaAccount,
+      serviceFeeAmount: `₱${numberFormat(item.serviceFeeAmount)}`,
+      totalAmount: `₱${numberFormat(+item.serviceFeeAmount + +item.amount)}`
     })
     setOpenModal(true);
   }
@@ -51,7 +57,7 @@ export const LogItem = ({
         <Text style={{color: "#9E9E9E",fontSize: FONT_SIZE.S,marginTop: 0,fontFamily: FONT.REGULAR}}>Success</Text>
       </View>
       <View style={styles.transactionAmount}>
-        <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>₱ {numberFormat(item.transaction.amount)}</Text>
+        <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>₱{numberFormat(item.transaction.amount)}</Text>
         <Text style={{color: "#9E9E9E",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDateTime}</Text>
       </View>
     </TouchableOpacity>

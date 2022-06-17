@@ -10,6 +10,7 @@ export const POST_VERIFY_MERCHANT_QR_CODE = gql`
                 merchantName
                 serviceFee
                 wTax
+                paymentType
             }
             branch {
                 id
@@ -35,6 +36,9 @@ export const POST_MERCHANT_PAYMENT = gql`
             id
             createdAt
             amount
+            serviceFee
+            paymentType
+            serviceFeeAmount
             transaction {
                 id
                 refNo
@@ -51,11 +55,16 @@ export const GET_MERCHANT_PAYMENTS = gql`
             id
             createdAt
             amount
+            serviceFee
+            paymentType
+            serviceFeeAmount
             transaction {
                 id
                 refNo
                 createdAt
                 amount
+                name
+                phrase
             }
         }
     }

@@ -25,7 +25,9 @@ const SuccessfulModal = ({
     branch ,
     terminal,
     note,
-    tokwaAccount
+    tokwaAccount,
+    amount,
+    serviceFee
 })=> {
     const navigation = useNavigation()
 
@@ -53,7 +55,9 @@ const SuccessfulModal = ({
                         <TransactionInfo label="Merchant/Branch" value={`${merchant.merchantName} ${branch.branchName} (${terminal.terminalName})`}/>
                         <TransactionInfo label="Account Name" value={`${tokwaAccount.person.firstName} ${tokwaAccount.person.lastName}`}/>
                         <TransactionInfo label="Account Number" value={tokwaAccount.mobileNumber}/>
-                        <TransactionInfo label="Amount" value={`PHP ${numberFormat(transaction.amount)}`}/>
+                        <TransactionInfo label="Amount" value={`₱${numberFormat(amount)}`}/>
+                        <TransactionInfo label="Service Fee" value={`₱${numberFormat(serviceFee)}`}/>
+                        <TransactionInfo label="Total Amount" value={`₱${numberFormat(+amount + +serviceFee)}`}/>
                         { note != "" && <TransactionInfo label="Note" value={note}/>}
                 </View>
             </Receipt>

@@ -66,23 +66,16 @@ const RecentRecords = ()=> (
       </View>
 
       <View style={styles.transactions}>
-        <FlatList
-          style={{flex: 1, backgroundColor: 'white'}}
-          showsVerticalScrollIndicator={false}
-          scrollEnabled={true}
-          data={tokwaAccount.wallet.recentTransactions}
-          keyExtractor={(item) => item.id}
-          renderItem={({item, index}) => {
-            return (
-              <Log
-                key={`recentLog${index}`}
-                transaction={item}
-                itemsLength={tokwaAccount.wallet.recentTransactions}
-                index={index}
-              />
-            );
-          }}
-        />
+        {
+          tokwaAccount?.wallet?.recentTransactions?.map((item,index)=>(
+            <Log
+              key={`recentLog${index}`}
+              transaction={item}
+              itemsLength={tokwaAccount?.wallet?.recentTransactions}
+              index={index}
+            />
+          ))
+        }
       </View>
   </>
 )
@@ -125,3 +118,4 @@ const styles = StyleSheet.create({
 });
 
 export default WalletRecentTransactions;
+
