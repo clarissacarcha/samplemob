@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, TouchableWithoutFeedback} from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import {BackHandler, StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, TouchableWithoutFeedback} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {FONT, FONT_SIZE} from '../../../res/variables';
 import {successIcon, errorIcon, warningIcon, questionIcon} from '../../assets';
@@ -8,9 +8,23 @@ const {width, height} = Dimensions.get('screen');
 
 export const TokModal = () => {
   const dispatch = useDispatch();
+  const backhandler = useRef(null);
+
   const {
     modal: {type, onClose, title, message, actions = [], Content, onCloseDisabled},
   } = useSelector(state => state.toktokMall);
+
+  useEffect(() => {
+    backhandler.current = BackHandler.addEventListener('hardwareBackPress', closeModal);
+
+    return () => BackHandler.removeEventListener('hardwareBackPress', closeModal);
+  }, [])
+
+  const closeModal = () => {
+    backhandler.current.remove();
+    dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL'});
+    onClose?.();
+  }
 
   const getIconByType =
     type == 'Success'
