@@ -55,7 +55,8 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         if(shopDiscount){
           total = total + parseFloat(item[i].product.compareAtPrice)
         }else{
-          total = total + parseFloat(item[i].product.price)
+          // total = total + parseFloat(item[i].product.price)
+          total = total + parseFloat(item[i].product.price * item[i].qty)
         }        
       }else{
         total = total + parseFloat(item[i].amount)
