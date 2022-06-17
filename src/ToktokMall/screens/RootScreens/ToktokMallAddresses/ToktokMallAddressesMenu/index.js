@@ -457,17 +457,6 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
   return (
     <>
       <View style={{flex: 1}}>
-        {deleteSuccessModal && (
-          <AddressModal
-            type="Message"
-            isVisible={deleteSuccessModal}
-            setIsVisible={async (val) => {
-              setDeleteSuccessModal(val);
-              await getAddressData();
-            }}
-            message={'Address Deleted!'}
-          />
-        )}
 
         {confirmDeleteModal && (
           <AddressModal
@@ -483,7 +472,13 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                 await deleteAddress(singleItemDelete);
               }
               setTimeout(() => {
-                setDeleteSuccessModal(true);
+                dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+                  type: 'Success',
+                  message: 'Address Deleted!',
+                  onClose: () => {
+                    getAddressData()
+                  }
+                }})
             EventRegister.emit("refreshCheckoutData")
               }, 1000)
             }}

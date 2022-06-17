@@ -279,7 +279,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
           dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
             type: 'Success',
             message: 'Address Deleted!',
-            onCloseCallback: () => {
+            onClose: () => {
               EventRegister.emit("refreshCheckoutData")
               updateUserAddress('remove', newAddressForm.id);
               refresh()

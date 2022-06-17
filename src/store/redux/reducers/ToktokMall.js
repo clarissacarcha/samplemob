@@ -16,7 +16,7 @@ const INITIAL_STATE = {
   customConfirmModal: {
     visible: false,
     onConfirmAction: () => {},
-    message: "Are you sure you want to delete this item?"
+    message: "Are you sure you want to delete\nthis item?"
   },
   customPlaceOrderModal: {
     visible: false,
@@ -50,9 +50,9 @@ export default (state = INITIAL_STATE, action) => {
     case 'TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE': 
     return {...state, toktokWalletBalance: action.payload};
     case 'TOKTOK_MALL_OPEN_MODAL':
-    return {...state, customModal: {visible: true, ...action.payload}};
+    return {...state, modal: {visible: true, ...action.payload}};
     case 'TOKTOK_MALL_CLOSE_MODAL':
-    return {...state, customModal: {visible: false}};
+    return {...state, modal: {visible: false}};
     case 'TOKTOK_MALL_OPEN_MODAL_2':
     return {...state, modal: {...state.modal, visible: true, ...action.payload}};
     case 'TOKTOK_MALL_CLOSE_MODAL_2':

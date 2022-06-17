@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import {AlertModal} from '../components';
 
 //TOKTOKMALL
-import { CustomConfirmModal, CustomMessageModal, CustomModal, CustomPlaceOrderModal, Modal, PopupModal } from '../ToktokMall/Components';
+import { CustomConfirmModal, CustomMessageModal, CustomModal, CustomPlaceOrderModal, Modal, PopupModal, TokModal } from '../ToktokMall/Components';
 
 const initialState = {
   visible: false,
@@ -38,11 +38,12 @@ const AlertProvider = ({children}) => {
     <>
       <Provider value={alert}>{children}</Provider>
       <AlertModal {...alertState} close={close} />
-      {customModal?.visible && <CustomModal {...customModal} />}
-      {modal?.visible && <Modal {...modal} />}
-      {customConfirmModal?.visible && <CustomConfirmModal {...customConfirmModal} />}
+      {modal?.visible && <TokModal />}
+      {/* {customModal?.visible && <CustomModal {...customModal} />} */}
+      {/* {modal?.visible && <Modal {...modal} />} */}
+      {/* {customConfirmModal?.visible && <CustomConfirmModal {...customConfirmModal} />} */}
       {customMessageModal?.visible && <CustomMessageModal {...customMessageModal} />}
-      {customPlaceOrderModal?.visible && <CustomPlaceOrderModal {...customPlaceOrderModal} />}
+      {/* {customPlaceOrderModal?.visible && <CustomPlaceOrderModal {...customPlaceOrderModal} />} */}
       {popupmodal?.visible && <PopupModal {...popupmodal} />}
     </>
   );
