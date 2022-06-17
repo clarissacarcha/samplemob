@@ -44,7 +44,6 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     const autoApply = groupPromo.filter(promo => promo.type === 'auto');
     const shipping = groupPromo.filter(promo => promo.type === 'shipping');
 
-
     if (promotions.length > 0 || deal.length > 0) {
       const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
       const deal = promotionVoucher.filter(promo => promo.type === 'deal');

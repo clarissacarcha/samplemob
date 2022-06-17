@@ -68,7 +68,6 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
             const {discounted_totalamount, voucher_code} = item;
             const deductedDiscount =
               item?.discount_type === '3' ? items?.basePrice - discounted_totalamount : item?.discount_totalamount;
-            console.log(deductedDiscount);
 
             totalReseller += deductedDiscount;
             totalAmount += discounted_totalamount;
