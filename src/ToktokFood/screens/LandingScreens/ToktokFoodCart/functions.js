@@ -372,6 +372,7 @@ export const getTotalDeductedDeliveryFee = (promos, deliveryFee) => {
     .map((objs, key) => ({
       amount: _.sumBy(objs, 'amount'),
       discount_totalamount: _.sumBy(objs, 'discount_totalamount'),
+      sf_discount: _.sumBy(objs, 'sf_discount'),
       type: key,
     }))
     .value();
@@ -380,7 +381,6 @@ export const getTotalDeductedDeliveryFee = (promos, deliveryFee) => {
   const autoApply = groupPromo.filter(promo => promo.type === 'auto');
   const shipping = groupPromo.filter(promo => promo.type === 'shipping');
   let totalDeducted = 0;
-
   // if (promotions.length > 0) {
   //   totalDeducted += promotions[0].discount_totalamount;
   // }
@@ -388,7 +388,7 @@ export const getTotalDeductedDeliveryFee = (promos, deliveryFee) => {
   //   totalDeducted += deal[0].discount_totalamount;
   // }
   if (shipping.length > 0) {
-    totalDeducted += shipping[0].amount;
+    totalDeducted += Number(shipping[0].sf_discount);
   }
   if (autoApply.length > 0) {
     const {amount} = autoApply[0];
@@ -398,6 +398,7 @@ export const getTotalDeductedDeliveryFee = (promos, deliveryFee) => {
       totalDeducted += deliveryFee;
     }
   }
+  // console.log(promos, shipping, deliveryFee, totalDeducted);
 
   return deliveryFee - totalDeducted;
 };
