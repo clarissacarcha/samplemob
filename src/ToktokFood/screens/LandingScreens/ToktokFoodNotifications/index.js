@@ -37,6 +37,7 @@ const ToktokFoodNotifications = () => {
       },
     },
     onCompleted: ({getToktokFoodNotifications}) => {
+      // console.log(getToktokFoodNotifications);
       setNotification(getToktokFoodNotifications);
     },
   });
@@ -47,10 +48,13 @@ const ToktokFoodNotifications = () => {
     }
   }, [isFocus]);
 
-  const getStatus = ({orderStatus, orderIsfor, referenceNum, shopname, refundTotal}) => {
+  const getStatus = ({declinedBy, orderStatus, orderIsfor, referenceNum, shopname, refundTotal}) => {
     // return {title: 'null', desc: 'test'};
     switch (orderStatus) {
       case 'c':
+        if (declinedBy === 2) {
+          return {title: 'Cancelled Order', desc: `Oh, snap! Your order ${referenceNum} has been cancelled`};
+        }
         return {title: 'Cancelled Order', desc: `Order ${referenceNum} has been cancelled`};
       case 'p':
         return {title: 'Upcoming Order', desc: `Ongoing order ${referenceNum}`};
