@@ -192,9 +192,6 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
            <TouchableOpacity onPress={bioLogin} style={styles.container}>
                 <Text style={styles.labelText}>or login with Fingerprint</Text>
             </TouchableOpacity>
-        //    : bioRecord?.status == 1
-        //    ? <Text>MERONG RECORD</Text>
-        //    : null
        }
         
     
