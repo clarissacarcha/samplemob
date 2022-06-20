@@ -231,26 +231,29 @@ const Verification = ({navigation, route, createSession}) => {
         }}>
         <AlertOverlay visible={loading} />
 
-        <View>
-          <TouchableOpacity onPress={() => navigation.pop()}>
-            <Image
-              style={{height: 15, width: 10, top: StatusBar.currentHeight - 10, margin: 16}}
-              source={ArrowLeft}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-          {/*---------------------------------------- BANNER ----------------------------------------*/}
-          {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
+        <TouchableOpacity onPress={() => navigation.pop()} style={{zIndex: 999}}>
+          <Image
+            style={{height: 15, width: 10, top: StatusBar.currentHeight - 10, margin: 16}}
+            source={ArrowLeft}
+            resizeMode={'contain'}
+          />
+        </TouchableOpacity>
+        {/*---------------------------------------- BANNER ----------------------------------------*/}
+        {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
 
-          {/*---------------------------------------- HIDDEN TEXT INPUT ----------------------------------------*/}
+        {/*---------------------------------------- HIDDEN TEXT INPUT ----------------------------------------*/}
 
-          {/*---------------------------------------- ENTERED MOBILE NUMBER ----------------------------------------*/}
+        {/*---------------------------------------- ENTERED MOBILE NUMBER ----------------------------------------*/}
+        <View
+          style={{
+            flex: 1,
+            marginTop: screenheight > 700 ? 0 : '-20%',
+            justifyContent: screenheight > 700 ? 'flex-start' : 'center',
+          }}>
           <View
             style={{
               alignItems: 'center',
-              marginTop: screenheight > 700 && 60,
-              marginHorizontal: 90,
-              justifyContent: screenheight > 700 ? 'flex-start' : 'center',
+              marginHorizontal: 70,
             }}>
             {/* <Text>Enter the 6-digit code sent to</Text>
           <Text style={{fontFamily: 'Rubik-Medium'}}>{`+63 ${mobile}`}</Text> */}
@@ -279,7 +282,7 @@ const Verification = ({navigation, route, createSession}) => {
               onSubmitEditing={onSubmit}
             />
             {verificationCodeError == 'GraphQL error: Invalid verification code.' && (
-              <View style={{alignItems: 'center', marginHorizontal: 60, top: -15}}>
+              <View style={{alignItems: 'center', marginHorizontal: 60, top: -18}}>
                 <Text style={{textAlign: 'center', fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED}}>
                   The OTP you’ve entered is incorrect. Please try again. ({numberOfAttemps}) attempts left.
                 </Text>
@@ -299,10 +302,10 @@ const Verification = ({navigation, route, createSession}) => {
                 </Text>
               </View>
             )}
-            {verificationCodeError == '' && <View style={{alignItems: 'center', marginHorizontal: 60, height: 30}} />}
+            {verificationCodeError == '' && <View style={{alignItems: 'center', marginHorizontal: 60, height: 10}} />}
 
             <MaxAttempsModal isVisible={maxAttemps} setVisible={setMaxAttemps} />
-            <View style={{justifyContent: 'center', flexDirection: 'row', marginTop: 60, alignItems: 'center'}}>
+            <View style={{justifyContent: 'center', flexDirection: 'row', alignItems: 'center'}}>
               <Text style={{color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M, marginRight: 3}}>
                 Didn’t receive OTP code?
               </Text>
