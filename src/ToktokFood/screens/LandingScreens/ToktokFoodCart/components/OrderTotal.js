@@ -44,8 +44,6 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     const autoApply = groupPromo.filter(promo => promo.type === 'auto');
     const shipping = groupPromo.filter(promo => promo.type === 'shipping');
 
-    // console.log(temporaryCart, promotions, deal);
-
     if (promotions.length > 0 || deal.length > 0) {
       const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
       const deal = promotionVoucher.filter(promo => promo.type === 'deal');
@@ -65,6 +63,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       // setTotalPromotions(promotions[0].discount_totalamount);
       const promotion = promotionVoucher.filter(promo => promo.type === 'promotion');
       const deals = promotionVoucher.filter(promo => promo.type === 'deal');
+
       const totalResellerDisc = await getResellerDiscount(promotion, deals, temporaryCart.items);
       // console.log(totalResellerDisc, 'totalResellerDisc')
       setTotalPromotions(totalResellerDisc);

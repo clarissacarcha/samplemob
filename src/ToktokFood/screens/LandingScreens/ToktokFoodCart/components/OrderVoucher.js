@@ -68,8 +68,8 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
         const {amount, is_percentage, on_top} = voucher;
         let totalDeliveryFee = 0;
         const filterDeal = promotionVoucher.filter(promo => promo.type === 'deal');
-        // console.log(filterDeal)
-        if ((on_top && !filterDeal.length) || (on_top && filterDeal[0].on_top > 0)) {
+        // console.log(on_top, filterDeal)
+        if ((!on_top && !filterDeal.length) || (on_top && !filterDeal.length) || (on_top && filterDeal[0].on_top > 0)) {
           if (amount > 0) {
             const pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
             const totalFee = pAmount > deliveryFee ? deliveryFee : pAmount;
