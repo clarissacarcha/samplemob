@@ -253,8 +253,7 @@ const Verification = ({navigation, route, createSession}) => {
           <View
             style={{
               alignItems: 'center',
-
-              marginHorizontal: 90,
+              marginHorizontal: 70,
             }}>
             {/* <Text>Enter the 6-digit code sent to</Text>
           <Text style={{fontFamily: 'Rubik-Medium'}}>{`+63 ${mobile}`}</Text> */}
@@ -283,7 +282,7 @@ const Verification = ({navigation, route, createSession}) => {
               onSubmitEditing={onSubmit}
             />
             {verificationCodeError == 'GraphQL error: Invalid verification code.' && (
-              <View style={{alignItems: 'center', marginHorizontal: 60, top: -15}}>
+              <View style={{alignItems: 'center', marginHorizontal: 60, top: -18}}>
                 <Text style={{textAlign: 'center', fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED}}>
                   The OTP you’ve entered is incorrect. Please try again. ({numberOfAttemps}) attempts left.
                 </Text>
@@ -303,7 +302,7 @@ const Verification = ({navigation, route, createSession}) => {
                 </Text>
               </View>
             )}
-            {verificationCodeError == '' && <View style={{alignItems: 'center', marginHorizontal: 60, height: 30}} />}
+            {verificationCodeError == '' && <View style={{alignItems: 'center', marginHorizontal: 60, height: 10}} />}
 
             <MaxAttempsModal isVisible={maxAttemps} setVisible={setMaxAttemps} />
             <View style={{justifyContent: 'center', flexDirection: 'row', alignItems: 'center'}}>
