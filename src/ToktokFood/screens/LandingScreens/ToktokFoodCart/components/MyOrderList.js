@@ -19,7 +19,7 @@ import {DELETE_TEMPORARY_CART_ITEM, GET_ALL_TEMPORARY_CART} from 'toktokfood/gra
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {FONT, FONT_SIZE} from 'res/variables';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {moderateScale} from 'toktokfood/helper/scale';
+import {moderateScale, verticalScale} from 'toktokfood/helper/scale';
 import {reseller_badge, food_placeholder} from 'toktokfood/assets/images';
 import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
@@ -151,7 +151,7 @@ const MyOrderList = props => {
             <Image source={delete_ic} style={{width: 20, height: 20}} resizeMode="contain" />
           </TouchableOpacity>
         </View>
-        <View style={styles.orderItemContainer}>
+        <View style={[styles.orderItemContainer, {paddingBottom: isDisabled ? verticalScale(25) : verticalScale(18)}]}>
           <View style={[styles.progressiveImageContainer, {opacity: isDisabled ? 0.5 : 1}]}>
             <ProgressiveImage style={styles.foodItemImage} source={productLogo} placeholder={food_placeholder} />
           </View>
