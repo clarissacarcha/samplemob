@@ -10,10 +10,11 @@ import {NHeader, BackButton} from './Styled';
 
 import StyledText from 'toktokfood/components/StyledText';
 
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const Header = (props: PropsType): React$Node => {
   // const context = useContext(GlobalContext);
+  const route = useRoute();
   const {
     containerStyle,
     centerContainerStyle,
@@ -47,6 +48,7 @@ const Header = (props: PropsType): React$Node => {
       backButtonFn();
     } else {
       if (navigation.canGoBack()) {
+        navigation.setParams({orderStatus: undefined});
         navigation.goBack();
       } else {
         navigation.navigate('TabsStack', {screen: 'Communities'});

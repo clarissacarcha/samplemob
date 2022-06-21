@@ -83,7 +83,6 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     onCompleted: ({getTransactionByRefNum}) => {
       const {orderStatus, orderIsfor, tDeliveryId} = getTransactionByRefNum;
       const isDelivery = orderIsfor === 1;
-      console.log(getTransactionByRefNum);
       setState(getTransactionByRefNum);
       const isOrderCompletedOrCancelled = orderStatus === 'c' || orderStatus === 's';
       if (isOrderCompletedOrCancelled) {
@@ -181,7 +180,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
   const onBackOrderDetails = () => {
     if (state?.orderStatus === 'c' || state?.orderStatus === 's') {
       setShowOrderDetails(false);
-      navigation.pop();
+      navigation.navigate('ToktokFoodActivities');
     } else {
       setShowOrderDetails(false);
     }
@@ -213,14 +212,6 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     );
   };
 
-  // const renderExhaustTimer = () => {
-  //   const firstCondition = state?.orderStatus === 'po'
-  //   if (state?.orderIsfor === 2 || state?.orderIsfor === 1) {
-
-  //   }
-  //   return null;
-  // }
-
   const renderAlertComponent = () => {
     var title = '';
     var subtitle = '';
@@ -238,7 +229,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       subtitle =
         'Your order has been successfully cancelled. Cancelling orders multiple times will cause your next orders longer to be accepted by the merchant.';
       buttonText = 'OK';
-      onPress = () => navigation.navigate('ToktokFoodOrderTransactions');
+      onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'});
     } else {
       if (toCancelOrder) {
         title = 'Cancel Order';
@@ -269,7 +260,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           subtitle = 'Yay! Craving satisfied. Thank you for ordering in toktokfood!';
           type = 'success';
           buttonText = 'OK';
-          onPress = () => navigation.navigate('ToktokFoodOrderTransactions');
+          onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 's'});
           buttonText2 = '';
         }
       }
