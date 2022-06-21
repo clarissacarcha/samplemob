@@ -73,19 +73,14 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
           onCancel();
         }
       }
-      if (status == 'ARRIVED') {
+      if (['ARRIVED', 'PICKED_UP', 'COMPLETED'].includes(status)) {
         dispatch({
           type: 'SET_TOKTOKGO_BOOKING',
           payload: response?.subscriptionData?.data?.onTripUpdate,
         });
-        setmodal(true);
-      }
-      if (status == 'COMPLETED') {
-        dispatch({
-          type: 'SET_TOKTOKGO_BOOKING',
-          payload: response?.subscriptionData?.data?.onTripUpdate,
-        });
-        setmodal(true);
+        if (['ARRIVED', 'COMPLETED'].includes(status)) {
+          setmodal(true);
+        }
       }
     },
   });
@@ -265,6 +260,12 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     setViewSuccessCancelBookingModal(true);
   };
 
+  const getHeader = () => {
+    if (booking.status == 'ACCEPTED') return <DriverStatus status={status} booking={booking} />;
+    else if (booking.status == 'ARRIVED') return <Text style={styles.headerText}>Your driver has arrived</Text>;
+    else return <DriverStatusDestination booking={booking} />;
+  };
+
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
       <StatusBar
@@ -333,11 +334,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       </TouchableOpacity>
       <Map booking={booking} decodedPolyline={decodedPolyline} originData={originData} />
       <View style={styles.card}>
-        {booking.status == 'ACCEPTED' ? (
-          <DriverStatus status={status} booking={booking} />
-        ) : (
-          <DriverStatusDestination booking={booking} />
-        )}
+        {getHeader()}
         <View style={styles.divider} />
         <DriverInfo booking={booking} />
         {['ARRIVED', 'ACCEPTED'].includes(booking.status) && (
@@ -448,5 +445,9 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
 
     elevation: 2,
+  },
+  headerText: {
+    textAlign: 'center',
+    fontSize: constants.FONT_SIZE.M,
   },
 });
