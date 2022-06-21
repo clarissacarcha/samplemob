@@ -815,10 +815,10 @@ const MainComponent = () => {
           <DialogMessage
             visibility={tokWaPlaceOrderErr.visible}
             title={'Unavailable Products'}
-            messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
+            messages={`Some items in your cart is currently unavailable. Please remove for now to proceed.\nThank you.`}
             type="warning"
             onCloseModal={() => {
-              navigation.goBack();
+              navigation.replace('ToktokFoodCart', {userId: customerInfo.userId});
               // setTokWaPlaceOrderErr({error: {}, visible: false});
             }}
             btnTitle="OK"
