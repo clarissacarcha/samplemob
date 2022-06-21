@@ -23,14 +23,6 @@ export const DriverStatus = ({status, booking}) => {
           <Text style={{fontSize: constants.FONT_SIZE.S, color: '#525252'}}>Your driver is nearby</Text>
         </View>
       )}
-      {booking.status == 'ARRIVED' && (
-        <View style={styles.Mins}>
-          <Text style={{fontFamily: constants.FONT_FAMILY.SEMI_BOLD, fontSize: constants.FONT_SIZE.M}}>
-            {moment().diff(booking.estimates.pickUpAt, 'minutes', false)} min
-          </Text>
-          <Text style={{fontSize: constants.FONT_SIZE.S, color: '#525252'}}>Your driver has arrived</Text>
-        </View>
-      )}
     </View>
   );
 };
