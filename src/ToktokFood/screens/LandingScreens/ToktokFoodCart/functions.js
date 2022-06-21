@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import _ from 'lodash';
 
 export const arrangeAddons = addons => {
@@ -118,7 +119,7 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
         });
       }
     });
-    return hasTotal ? totalAmount : totalReseller;
+    return hasTotal ? (totalAmount > 0 ? totalAmount : 0) : totalReseller;
   });
 };
 

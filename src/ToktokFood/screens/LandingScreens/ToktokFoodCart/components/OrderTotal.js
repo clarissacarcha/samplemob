@@ -49,6 +49,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       const deal = promotionVoucher.filter(promo => promo.type === 'deal');
       const totalBasketAmount = await getTotalResellerDiscount([...promotions, ...deal], temporaryCart.items);
       // setTotalBasket(totalBasketAmount);
+      // console.log(totalBasketAmount, 'totalBasketAmount');
       setTotalReseller(totalBasketAmount);
       // setTotalBasket(temporaryCart.totalAmountWithAddons);
     } else {
@@ -65,7 +66,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       const deals = promotionVoucher.filter(promo => promo.type === 'deal');
 
       const totalResellerDisc = await getResellerDiscount(promotion, deals, temporaryCart.items);
-      // console.log(totalResellerDisc, 'totalResellerDisc')
+      // console.log(totalResellerDisc, 'totalResellerDisc');
       setTotalPromotions(totalResellerDisc);
     } else {
       setTotalPromotions(0);
