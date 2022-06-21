@@ -64,7 +64,7 @@ const OnGoingActivities = ({navigation, session}) => {
         renderItem={({item, index}) => (
           <ActivitiesCard
             booking={item}
-            onPress={() => navigation.push('SelectedBookingDetails', {booking: item})}
+            onPress={() => navigation.push('ToktokGoLanding')}
             lastItem={data.getTripsConsumer.length == index + 1 ? true : false}
           />
         )}
