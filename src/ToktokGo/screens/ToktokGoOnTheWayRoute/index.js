@@ -73,19 +73,14 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
           onCancel();
         }
       }
-      if (status == 'ARRIVED') {
+      if (['ARRIVED', 'PICKED_UP', 'COMPLETED'].includes(status)) {
         dispatch({
           type: 'SET_TOKTOKGO_BOOKING',
           payload: response?.subscriptionData?.data?.onTripUpdate,
         });
-        setmodal(true);
-      }
-      if (status == 'COMPLETED') {
-        dispatch({
-          type: 'SET_TOKTOKGO_BOOKING',
-          payload: response?.subscriptionData?.data?.onTripUpdate,
-        });
-        setmodal(true);
+        if (['ARRIVED', 'COMPLETED']) {
+          setmodal(true);
+        }
       }
     },
   });
