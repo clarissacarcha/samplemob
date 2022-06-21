@@ -48,6 +48,7 @@ const Header = (props: PropsType): React$Node => {
     } else {
       if (navigation.canGoBack()) {
         navigation.goBack();
+        navigation.setParams({orderStatus: undefined});
       } else {
         navigation.navigate('TabsStack', {screen: 'Communities'});
       }

@@ -8,4 +8,5 @@ export type PropsType = {
   theme?: Object,
   horizontal?: boolean,
   height?: number,
+  marginVertical?: number,
 };
