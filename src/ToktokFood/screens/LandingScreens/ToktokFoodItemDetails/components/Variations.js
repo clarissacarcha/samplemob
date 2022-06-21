@@ -195,7 +195,7 @@ export const Variations = ({data, productId}) => {
                 if (isRequired && noOfSelection === 1) {
                   return (
                     <Text style={styles.variationTitle}>
-                      {optionName.toLowerCase()} (Select {item.noOfSelection})
+                      {optionName} (Select {item.noOfSelection})
                     </Text>
                   );
                 }
@@ -203,7 +203,7 @@ export const Variations = ({data, productId}) => {
                 if (isRequired && noOfSelection > 1) {
                   return (
                     <Text style={styles.variationTitle}>
-                      {optionName.toLowerCase()} (Select up to {item.noOfSelection})
+                      {optionName} (Select up to {item.noOfSelection})
                     </Text>
                   );
                 }
@@ -211,7 +211,7 @@ export const Variations = ({data, productId}) => {
                 if (!isRequired && noOfSelection === 1) {
                   return (
                     <Text style={styles.variationTitle}>
-                      {optionName.toLowerCase()} (Select {item.noOfSelection})
+                      {optionName} (Select {item.noOfSelection})
                     </Text>
                   );
                 }
@@ -219,7 +219,7 @@ export const Variations = ({data, productId}) => {
                 if (!isRequired && noOfSelection > 1) {
                   return (
                     <Text style={styles.variationTitle}>
-                      {optionName.toLowerCase()} (Select up to {item.noOfSelection})
+                      {optionName} (Select up to {item.noOfSelection})
                     </Text>
                   );
                 }

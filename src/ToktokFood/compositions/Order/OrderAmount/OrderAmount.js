@@ -43,7 +43,9 @@ const OrderAmount = (props: PropsType): React$Node => {
           {state?.promoDiscounts > 0 && amountComponent('Discount (Voucher)', state?.promoDiscounts, '-')}
           {state?.promoDetails > 0 && amountComponent('Discount (Delivery)', state?.promoDetails, '-')}
           {state?.orderIsfor === 1 && amountComponent('Delivery Fee', state?.originalShippingFee)}
-          {state?.refundTotal > 0 && amountComponent('Refund Amount', state?.refundTotal, '+')}
+          {state?.refundTotal > 0 &&
+            state?.paymentMethod?.toLowerCase() === 'toktokwallet' &&
+            amountComponent('Refund Amount', state?.refundTotal, '+')}
         </AmountBreakdownContainer>
       );
     }

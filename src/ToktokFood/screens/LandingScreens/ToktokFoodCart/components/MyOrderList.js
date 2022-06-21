@@ -64,7 +64,7 @@ const MyOrderList = props => {
           addonName = addonName.concat(val.addon_name);
         });
         let lastString = optionName.substring(optionName.length - 1);
-        optionName = lastString == 's' ? (addonName.length > 1 ? optionName : optionName.slice(0, -1)) : optionName;
+        // optionName = lastString == 's' ? (addonName.length > 1 ? optionName : optionName.slice(0, -1)) : optionName;
         return <Text style={styles.orderText}>{`${optionName}: ${addonName.join(', ')}`}</Text>;
       }
     });
