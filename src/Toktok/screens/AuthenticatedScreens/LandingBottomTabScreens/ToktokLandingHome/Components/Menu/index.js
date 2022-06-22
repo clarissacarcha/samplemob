@@ -6,6 +6,8 @@ import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../../../res/variables';
 import {APP_VERSION} from '../../../../../../../res/constants';
+import ActionSheet, {SheetManager} from 'react-native-actions-sheet';
+import CONSTANTS from '../../../../../../../common/res/constants';
 
 // import TalkToUsIcon from '../../../../../../../assets/toktok/icons/menu/TalkToUs.png';
 // import WhatsNewIcon from '../../../../../../../assets/toktok/icons/menu/WhatsNew.png';
@@ -18,6 +20,7 @@ import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoServic
 import WalletIcon from '../../../../../../../assets/toktok/icons/menu/WalletService.png';
 import LoadIcon from '../../../../../../../assets/toktok/icons/menu/LoadService.png';
 import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/MallService.png';
+import OthersIcon from '../../../../../../../assets/toktok/icons/menu/Others.png';
 
 import ProfileIcon from '../../../../../../../assets/toktok/icons/menu/ProfileService.png';
 import HelpIcon from '../../../../../../../assets/toktok/icons/menu/HelpService.png';
@@ -59,6 +62,13 @@ export const Menu = ({setUserLocation, constants}) => {
   const state = useSelector(state => state);
   const [appServices, setAppServices] = useState(null);
   const [menuData, setMenuData] = useState([]);
+  const [actionSheetMenuData, setActionSheetMenuData] = useState([]);
+
+  const othersItem = {
+    label: 'Others',
+    icon: OthersIcon,
+    onPress: () => SheetManager.show('homeMenu_Services'), //to be replaced later
+  };
 
   /**
    * DO NOT EDIT THIS VARIABLE
@@ -180,7 +190,15 @@ export const Menu = ({setUserLocation, constants}) => {
 
     console.log(JSON.stringify({filteredMenuData}, null, 2));
 
-    setMenuData(filteredMenuData);
+    if (filteredMenuData.length > 8) {
+      const slicedArr = filteredMenuData.slice(0, 7);
+      slicedArr.push(othersItem);
+
+      setMenuData(slicedArr);
+      setActionSheetMenuData(filteredMenuData.slice(7));
+    } else {
+      setMenuData(filteredMenuData);
+    }
   }, []);
 
   if (!appServices) {
@@ -189,6 +207,23 @@ export const Menu = ({setUserLocation, constants}) => {
 
   return (
     <View style={styles.menuBox}>
+      <ActionSheet id="homeMenu_Services">
+        <View style={styles.container}>
+          <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD, marginLeft: 16, marginTop: 21}}>Services</Text>
+          <View style={styles.divider} />
+          <FlatList
+            keyExtractor={item => item.identifier}
+            data={actionSheetMenuData}
+            numColumns={4}
+            renderItem={({item}) => (
+              <MenuIcon label={item.label} icon={item.icon} onPress={item.onPress} isNew={item.isNew} />
+            )}
+          />
+        </View>
+
+        <View style={{width: '100%', height: 10, backgroundColor: 'white', position: 'absolute', bottom: 0}} />
+      </ActionSheet>
+
       <FlatList
         keyExtractor={item => item.identifier}
         data={menuData}
@@ -254,5 +289,38 @@ const styles = StyleSheet.create({
   newText: {
     fontSize: 10,
     color: 'white',
+  },
+  container: {
+    right: 4,
+    width: '102%',
+    borderWidth: 3,
+    borderTopColor: CONSTANTS.COLOR.ORANGE,
+    borderLeftColor: CONSTANTS.COLOR.ORANGE,
+    borderRightColor: CONSTANTS.COLOR.ORANGE,
+    borderRadius: 15,
+  },
+  dimensions: {
+    width: 53,
+    height: 65,
+  },
+  title: {
+    color: CONSTANTS.COLOR.ORANGE,
+    fontSize: CONSTANTS.FONT_SIZE.XL + 3,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+    margin: 20,
+  },
+  description: {
+    textAlign: 'center',
+    fontSize: CONSTANTS.FONT_SIZE.M,
+    marginBottom: 20,
+  },
+  scrollContainer: {
+    alignSelf: 'stretch',
+  },
+  divider: {
+    borderBottomWidth: 2,
+    borderBottomColor: CONSTANTS.COLOR.LIGHT,
+    marginTop: 16,
+    marginHorizontal: 16,
   },
 });
