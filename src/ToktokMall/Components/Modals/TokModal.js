@@ -113,13 +113,13 @@ export const TokModal = () => {
                     style={[
                       styles.button,
                       {
-                        backgroundColor: type === 'outline' ? '#F6841F' : '#fff',
+                        backgroundColor: type === 'fill' ? '#F6841F' : '#fff',
                       },
                     ]}>
                     <Text
                       style={{
                         fontSize: 13,
-                        color: type != 'outline' ? '#F6841F' : '#fff',
+                        color: type != 'fill' ? '#F6841F' : '#fff',
                       }}>
                       {name}
                     </Text>

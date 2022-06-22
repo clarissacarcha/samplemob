@@ -715,7 +715,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
       type: 'Success',
       title: "Your order has been placed!",
-      message: "Your order has been placed successfully. Please visit My Orders to check the progress and other details.",
+      message: "Your order has been placed successfully.\ngit push --set-upstream origin feature/toktokmall/R1.2-refactor-codePlease visit My Orders to check the progress and other details.",
       onCloseDisabled: true,
       actions: [
         {
@@ -728,7 +728,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         {
           name: "Go to My Orders",
           onPress: onGoToOrders,
-          type: "outline"
+          type: "fill"
         },
 
       ]

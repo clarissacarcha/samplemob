@@ -707,7 +707,7 @@ const Component = ({
                               },
                               {
                                 name: "Confirm",
-                                type: "outline",
+                                type: "fill",
                                 onPress: () => {
                                   deleteSingleItem(item)
                                 }
@@ -742,7 +742,7 @@ const Component = ({
                     },
                     {
                       name: "Confirm",
-                      type: "outline",
+                      type: "fill",
                       onPress: deleteMultipleItems
                     }
                   ]
