@@ -180,7 +180,8 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
   const onBackOrderDetails = () => {
     if (state?.orderStatus === 'c' || state?.orderStatus === 's') {
       setShowOrderDetails(false);
-      navigation.navigate('ToktokFoodActivities');
+      // navigation.navigate('ToktokFoodActivities');
+      navigation.navigate('ToktokFoodOrderTransactions');
     } else {
       setShowOrderDetails(false);
     }
@@ -229,7 +230,8 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       subtitle =
         'Your order has been successfully cancelled. Cancelling orders multiple times will cause your next orders longer to be accepted by the merchant.';
       buttonText = 'OK';
-      onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'});
+      // onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'});
+      onPress = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
     } else {
       if (toCancelOrder) {
         title = 'Cancel Order';
@@ -260,7 +262,8 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           subtitle = 'Yay! Craving satisfied. Thank you for ordering in toktokfood!';
           type = 'success';
           buttonText = 'OK';
-          onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 's'});
+          // onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 's'});
+          onPress = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 2});
           buttonText2 = '';
         }
       }
