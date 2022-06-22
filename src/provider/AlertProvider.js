@@ -39,11 +39,7 @@ const AlertProvider = ({children}) => {
       <Provider value={alert}>{children}</Provider>
       <AlertModal {...alertState} close={close} />
       {modal?.visible && <TokModal />}
-      {/* {customModal?.visible && <CustomModal {...customModal} />} */}
-      {/* {modal?.visible && <Modal {...modal} />} */}
-      {/* {customConfirmModal?.visible && <CustomConfirmModal {...customConfirmModal} />} */}
       {customMessageModal?.visible && <CustomMessageModal {...customMessageModal} />}
-      {/* {customPlaceOrderModal?.visible && <CustomPlaceOrderModal {...customPlaceOrderModal} />} */}
       {popupmodal?.visible && <PopupModal {...popupmodal} />}
     </>
   );
