@@ -21,9 +21,14 @@ export const TokModal = () => {
   }, [])
 
   const closeModal = () => {
+    if(onCloseDisabled) {
+      return true
+    }
+
     backhandler.current.remove();
     dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL'});
     onClose?.();
+    return true;
   }
 
   const getIconByType =
