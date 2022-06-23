@@ -54,7 +54,8 @@ export const ModifiedText: ComponentType<any> = styled(StyledText).attrs(props =
   fontSize: 11,
   color: props.theme.color.orange,
 }))`
-  width: 95%;
+  width: 90%;
+  max-width: 90%;
 `;
 
 export const BottomContainer: ComponentType<any> = styled.View`
