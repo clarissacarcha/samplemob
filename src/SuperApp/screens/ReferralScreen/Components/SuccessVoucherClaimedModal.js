@@ -30,11 +30,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.6)',
     justifyContent: 'center',
-    paddingHorizontal: FULL_WIDTH * 0.25,
+    alignItems: 'center',
   },
   card: {
     backgroundColor: CONSTANTS.COLOR.WHITE,
     borderRadius: 10,
+    width: FULL_WIDTH * 0.4,
   },
   modalTitle: {
     color: CONSTANTS.COLOR.ORANGE,
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
   },
   imageDimensions: {
     marginTop: 31,
-    width: 115,
-    height: 100,
+    width: 80,
+    height: 80,
   },
 });
