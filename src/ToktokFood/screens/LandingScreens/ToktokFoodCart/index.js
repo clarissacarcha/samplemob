@@ -761,7 +761,7 @@ const MainComponent = () => {
       <DialogMessage
         visibility={showItemDisabled}
         title="Currently Unavailable"
-        messages={'Some items in your cart is currently unavailable. Please try again another time.\nThank you!'}
+        messages={`Some items in your cart is currently unavailable. Please remove for now to proceed.\nThank you.`}
         type="warning"
         btn1Title="OK"
         onCloseModal={() => {
@@ -815,10 +815,10 @@ const MainComponent = () => {
           <DialogMessage
             visibility={tokWaPlaceOrderErr.visible}
             title={'Unavailable Products'}
-            messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
+            messages={`Some items in your cart is currently unavailable. Please remove for now to proceed.\nThank you.`}
             type="warning"
             onCloseModal={() => {
-              navigation.goBack();
+              navigation.replace('ToktokFoodCart', {userId: customerInfo.userId});
               // setTokWaPlaceOrderErr({error: {}, visible: false});
             }}
             btnTitle="OK"
@@ -936,7 +936,7 @@ const MainComponent = () => {
         {orderType === 'Delivery' && <ReceiverLocation />}
         <Separator />
 
-        <MyOrderList shopDetails={shopDetails} />
+        <MyOrderList shopDetails={shopDetails} hasUnavailableItem={showItemDisabled} />
         <Separator />
 
         {/*  {orderType === 'Delivery' && (

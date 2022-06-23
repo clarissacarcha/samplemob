@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     height: 20,
     position: 'absolute',
     marginLeft: 95,
-    bottom: 0,
+    bottom: 3,
     paddingHorizontal: 8,
   },
   unavailableText: {
