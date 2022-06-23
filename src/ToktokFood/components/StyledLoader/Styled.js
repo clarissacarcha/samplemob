@@ -5,7 +5,6 @@
 import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
 import {ModalImage} from 'toktokfood/components/Modal';
-import {loading_animation} from 'toktokfood/assets/images';
 import StyledText from '../StyledText';
 
 export const Container: ComponentType<any> = styled.View`
@@ -14,14 +13,14 @@ export const Container: ComponentType<any> = styled.View`
 `;
 
 export const ImageContainer: ComponentType<any> = styled.View`
-  margin-horizontal: -15px;
-  margin-vertical: -30px;
+  margin-horizontal: ${props => (props.type ? `${45}px` : `${-15}px`)};
+  margin-vertical: ${props => (props.type ? `${20}px` : `${-30}px`)};
+  top: ${props => (props.type ? `${10}px` : `${0}px`)};
 `;
 
 export const Image: ComponentType<any> = styled(ModalImage).attrs(props => ({
   ...props,
-  size: 200,
-  source: loading_animation,
+  size: props.size || 200,
 }))``;
 
 export const Text: ComponentType<any> = styled(StyledText).attrs(props => ({
@@ -29,6 +28,6 @@ export const Text: ComponentType<any> = styled(StyledText).attrs(props => ({
   color: props.theme.color.orange,
   mode: 'semibold',
 }))`
-  margin-top: -20px;
-  margin-bottom: 25px;
+  margin-top: ${props => (props.type ? `${-10}px` : `${-30}px`)};
+  margin-bottom: 30px;
 `;

@@ -7,6 +7,6 @@ export type PropsType = {
   accessibilityLabel?: string,
   theme?: Object,
   isVisible: boolean,
-  message?: string,
+  text?: string,
   type?: 'success' | 'error' | typeof undefined | null,
 };

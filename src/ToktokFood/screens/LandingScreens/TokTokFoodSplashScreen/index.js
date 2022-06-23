@@ -27,6 +27,8 @@ import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 
 import {setNewInstall} from 'toktokfood/helper/PersistentLocation';
 
+import {LoaderProvider} from 'toktokfood/provider/LoaderProvider';
+
 const TokTokFoodSplashScreen = () => {
   useUserLocation(); // user location hook
 
@@ -291,12 +293,12 @@ const TokTokFoodSplashScreen = () => {
   // };
 
   return (
-    <>
+    <LoaderProvider>
       <AlertModal visible={errorModal.visible} error={errorModal.error} close={() => navigation.pop()} />
       <ImageBackground style={styles.container} source={splash_new} resizeMode="cover">
         {/* <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.ORANGE} /> */}
       </ImageBackground>
-    </>
+    </LoaderProvider>
   );
 };
 
