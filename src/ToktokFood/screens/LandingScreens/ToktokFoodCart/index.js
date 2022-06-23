@@ -936,7 +936,7 @@ const MainComponent = () => {
         {orderType === 'Delivery' && <ReceiverLocation />}
         <Separator />
 
-        <MyOrderList shopDetails={shopDetails} />
+        <MyOrderList shopDetails={shopDetails} hasUnavailableItem={showItemDisabled} />
         <Separator />
 
         {/*  {orderType === 'Delivery' && (

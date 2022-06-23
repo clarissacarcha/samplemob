@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useRef, useContext, useCallback, useState, useMemo} from 'react';
+import React, {useRef, useContext, useCallback, useState, useMemo, useEffect} from 'react';
 import {Image, View, Text, TouchableOpacity, Alert, ImageBackground} from 'react-native';
 // import _ from 'lodash';
 import styles from '../styles';
@@ -24,7 +24,7 @@ import {reseller_badge, food_placeholder} from 'toktokfood/assets/images';
 import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
 const MyOrderList = props => {
-  const {shopDetails} = props;
+  const {shopDetails, hasUnavailableItem} = props;
   // const route = useRoute();
   const dispatch = useDispatch();
   // const { cart } = route.params;
@@ -69,6 +69,16 @@ const MyOrderList = props => {
       }
     });
   };
+
+  useEffect(() => {
+    getAllTemporaryCart({
+      variables: {
+        input: {
+          userId: customerInfo.userId,
+        },
+      },
+    });
+  }, [hasUnavailableItem]);
 
   const onPressEdit = async (
     Id,
