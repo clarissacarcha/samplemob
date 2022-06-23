@@ -54,6 +54,8 @@ import {
 import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
+import {useLoader} from 'toktokfood/hooks';
+
 const ToktokFoodOrder = (props: PropsType): React$Node => {
   const isFocused = useIsFocused();
   const route = useRoute();
@@ -143,6 +145,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     onError: error => console.log(error),
     onCompleted: ({cancelOrder}) => {
       setLoader(false);
+      // setLoaderState({...loaderState, isVisible: false});
       setIsCancelledByCustomer(true);
       setTimeout(() => setIsAlertVisible(true), 500);
     },
@@ -313,6 +316,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         setIsCancelModalVisible(false);
         setTimeout(() => {
           setLoader(true);
+          // setLoaderState({isVisible: true, text: 'Please wait', type: null});
           postCancelOrder({
             variables: {
               input: {
@@ -355,6 +359,13 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
                 <Button
                   orderStatus={state?.orderStatus}
                   onPress={() => setShowOrderDetails(true)}
+                  // onPress={() => {
+                  //   console.log('loaderState', loaderState);
+                  // setLoaderState({isVisible: true, text: 'Please wait', type: null});
+                  // setTimeout(() => {
+                  //   setLoaderState({...loaderState, text: 'Sample text', type: 'success'});
+                  // }, 3000);
+                  // }}
                   buttonText="See Order Details"
                 />
                 {state?.orderStatus === 'p' && (
@@ -418,7 +429,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       {renderModalComponent()}
       {renderAlertComponent()}
       {renderCancellationModalComponent()}
-      <StyledLoader isVisible={loader} message="Please wait" />
+      <StyledLoader isVisible={loader} text="Please wait" />
     </React.Fragment>
   );
 };
