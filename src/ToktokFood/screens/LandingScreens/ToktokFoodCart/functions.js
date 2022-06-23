@@ -65,18 +65,22 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
         cartItems.map(items => {
           const filteredProd = _.includes(productIds, items.productid);
           // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
+          // console.log(filteredProd, totalReseller, 'testing');
           if (filteredProd && totalReseller === 0) {
             const {discounted_totalamount, voucher_code} = item;
+            const {basePrice, quantity, resellerDiscount} = items;
+            const totalItemsNotIncluded = (resellerDiscount || basePrice) * (quantity - 1);
             const deductedDiscount =
-              item?.discount_type === '3' ? items?.basePrice - discounted_totalamount : item?.discount_totalamount;
-
+              item?.discount_type === '3'
+                ? items?.basePrice - discounted_totalamount + (hasTotal ? totalItemsNotIncluded : 0)
+                : item?.discount_totalamount;
+            // console.log(hasTotal, deductedDiscount, totalItemsNotIncluded, 'deductedDiscount 1');
             totalReseller += deductedDiscount;
-            totalAmount += discounted_totalamount;
-            // console.log(items?.basePrice, 'baseprice 1')
+            totalAmount += discounted_totalamount + (hasTotal ? totalItemsNotIncluded : 0);
             deductedProducts.push({id: items.productid, amount: totalReseller, code: voucher_code});
             // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
           } else {
-            // console.log(items?.basePrice, 'resellerDiscount 1')
+            // console.log(items, 'resellerDiscount 1');
             totalAmount += items?.resellerDiscount;
           }
         });
