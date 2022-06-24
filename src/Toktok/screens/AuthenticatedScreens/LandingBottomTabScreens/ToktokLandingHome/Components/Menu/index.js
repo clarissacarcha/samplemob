@@ -65,7 +65,7 @@ export const Menu = ({setUserLocation, constants}) => {
   const [actionSheetMenuData, setActionSheetMenuData] = useState([]);
 
   const othersItem = {
-    label: 'Others',
+    label: 'More',
     icon: OthersIcon,
     onPress: () => SheetManager.show('homeMenu_Services'), //to be replaced later
   };
@@ -78,25 +78,33 @@ export const Menu = ({setUserLocation, constants}) => {
       identifier: 'delivery',
       label: 'Delivery',
       icon: DeliveryIcon,
-      onPress: () => navigation.push('ToktokDelivery', {setUserLocation}),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokDelivery', {setUserLocation});
+      },
     },
     {
       identifier: 'pabili',
       label: 'Pabili',
       icon: PabiliIcon,
-      onPress: () => navigation.push('Pabili'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('Pabili');
+      },
     },
     {
       identifier: 'wallet',
       label: 'Wallet',
       icon: WalletIcon,
-      onPress: () => navigation.push('ToktokWalletLoginPage'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokWalletLoginPage');
+      },
     },
     {
       identifier: 'food',
       label: 'Food',
       icon: ToktokfoodIcon,
-      onPress: () => navigation.push('TokTokFoodSplashScreen'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('TokTokFoodSplashScreen');
+      },
       isNew: true,
     },
     {
@@ -106,7 +114,9 @@ export const Menu = ({setUserLocation, constants}) => {
           : `${Platform.OS}GoComingSoon`,
       label: 'Go',
       icon: ToktokGoIcon,
-      onPress: () => navigation.push('ToktokgoComingSoon'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokgoComingSoon');
+      },
       isNew: true,
     },
     {
@@ -116,39 +126,51 @@ export const Menu = ({setUserLocation, constants}) => {
           : `${Platform.OS}Go`,
       label: 'Go',
       icon: ToktokGoIconBeta,
-      onPress: () => navigation.push('ToktokGoLanding'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokGoLanding');
+      },
       isNew: true,
     },
     {
       identifier: `${Platform.OS}Load`,
       label: 'Load',
       icon: LoadIcon,
-      onPress: () => navigation.push('ToktokLoadHome'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokLoadHome');
+      },
       isNew: true,
     },
     {
       identifier: `${Platform.OS}Mall`,
       label: 'Mall',
       icon: ToktokMallIcon,
-      onPress: () => navigation.push('ToktokMallLanding'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokMallLanding');
+      },
     },
     {
       identifier: `${Platform.OS}Promos`,
       label: 'Promos',
       icon: PromosIcon,
-      onPress: () => navigation.push('SuperAppPromos'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('SuperAppPromos');
+      },
     },
     {
       identifier: 'profile',
       label: 'Profile',
       icon: ProfileIcon,
-      onPress: () => navigation.push('ToktokProfile'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokProfile');
+      },
     },
     {
       identifier: 'help',
       label: 'Help',
       icon: HelpIcon,
-      onPress: () => navigation.push('TalkToUs'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('TalkToUs');
+      },
     },
   ];
 
@@ -195,7 +217,7 @@ export const Menu = ({setUserLocation, constants}) => {
       slicedArr.push(othersItem);
 
       setMenuData(slicedArr);
-      setActionSheetMenuData(filteredMenuData.slice(7));
+      setActionSheetMenuData(filteredMenuData);
     } else {
       setMenuData(filteredMenuData);
     }

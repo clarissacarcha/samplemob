@@ -33,15 +33,17 @@ export const SuperAppPromosScreen = ({navigation}) => {
           <Text>Referral</Text>
         </View>
         <View style={styles.bannerContainer}>
-          <Image
-            source={VoucherIMG}
-            resizeMode={'contain'}
-            style={{
-              width: bannerWidth,
-              height: bannerHeight,
-              borderRadius: 10,
-            }}
-          />
+          <ThrottledOpacity onPress={() => navigation.navigate('VoucherScreen')}>
+            <Image
+              source={VoucherIMG}
+              resizeMode={'contain'}
+              style={{
+                width: bannerWidth,
+                height: bannerHeight,
+                borderRadius: 10,
+              }}
+            />
+          </ThrottledOpacity>
           <Text>Vouchers</Text>
         </View>
       </View>
