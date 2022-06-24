@@ -157,7 +157,7 @@ export const Menu = ({setUserLocation, constants}) => {
     setAppServices(appServicesObject);
 
     const filteredMenuData = menuDataConstant.filter(menuDataItem => {
-      if (['profile', 'promos', 'help'].includes(menuDataItem.identifier)) {
+      if (['profile', 'help'].includes(menuDataItem.identifier)) {
         return true;
       }
 
