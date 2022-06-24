@@ -80,8 +80,8 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
             deductedProducts.push({id: items.productid, amount: totalReseller, code: voucher_code});
             // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
           } else {
-            // console.log(items, 'resellerDiscount 1');
-            totalAmount += items?.resellerDiscount;
+            // console.log(items, 'resellerDiscount');
+            totalAmount += items?.resellerDiscount || items?.basePrice * items.quantity;
           }
         });
       }
