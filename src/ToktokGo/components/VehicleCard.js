@@ -63,7 +63,7 @@ export const VehicleCard = ({type, data, selectVehicle, setDataVehicle, selected
           </View>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.surgeText}>Max Surge Charge</Text>
-            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>{'2.0'}</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>{'1.5 - 2.0'}</Text>
           </View>
         </View>
       );

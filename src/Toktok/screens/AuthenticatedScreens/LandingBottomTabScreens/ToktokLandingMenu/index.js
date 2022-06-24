@@ -186,13 +186,11 @@ export const ToktokLandingMenu = ({navigation}) => {
                 fontFamily: FONT.BOLD,
               }}></View>
             <DrawerButton label="Log Out" onPress={endUserSession} />
+            <Text style={styles.appVersionStyle}>{APP_VERSION}</Text>
           </ScrollView>
         </View>
       </View>
       {/*--------------- SIGN OUT ---------------*/}
-      <View>
-        <Text style={styles.appVersionStyle}>{APP_VERSION}</Text>
-      </View>
     </View>
   );
 };
@@ -221,6 +219,7 @@ const styles = StyleSheet.create({
     lineHeight: FONT_SIZE.L,
   },
   appVersionStyle: {
+    marginTop: 16,
     paddingLeft: 16,
     paddingBottom: 12,
     color: CONSTANTS.COLOR.GRAY,

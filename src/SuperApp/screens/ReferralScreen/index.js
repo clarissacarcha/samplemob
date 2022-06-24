@@ -1,38 +1,30 @@
-import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Dimensions,
-  TextInput,
-  ImageBackground,
-  ImagePickerIOS,
-  StatusBar,
-} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, View, Image, Dimensions, TextInput, ImageBackground, StatusBar} from 'react-native';
 
 import CONSTANTS from '../../../common/res/constants';
+import {ThrottledOpacity} from '../../../components_section';
+import {SuccessVoucherClaimedModal} from './Components';
+
+import ReferralBG from '../../../assets/images/Promos/ReferralBG.png';
 import TokIcon from '../../../assets/images/Promos/ToktokAppIcon.png';
 import voucherPaperDesign from '../../../assets/toktokgo/voucher-paper-design.png';
 import VoucherIMG from '../../../assets/images/Promos/VoucherImage.png';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 
-import {ThrottledOpacity} from '../../../components_section';
-
-import ReferralBG from '../../../assets/images/Promos/ReferralBG.png';
-
-const ImageWidth = (Dimensions.get('window').width - 230) / 2;
-const decorWidth = (Dimensions.get('window').width - 195) / 2;
+const decorHeight = Dimensions.get('window').height * 0.15;
 
 export const ReferralScreen = ({navigation}) => {
+  const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
+
   return (
     <ImageBackground source={ReferralBG} style={styles.container}>
+      <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
       <ThrottledOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </ThrottledOpacity>
 
       <View style={styles.innerContainer}>
-        <Image source={TokIcon} resizeMode={'contain'} style={{width: decorWidth, height: decorWidth + 20}} />
+        <Image source={TokIcon} resizeMode={'contain'} style={{height: decorHeight}} />
         <Text
           style={{marginTop: 42, fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD, fontSize: CONSTANTS.FONT_SIZE.XL + 7}}>
           Welcome ka-toktok!
@@ -80,7 +72,7 @@ const styles = StyleSheet.create({
   },
   card: {
     borderRadius: 5,
-    height: decorWidth,
+    height: decorHeight,
     marginHorizontal: 42,
     backgroundColor: CONSTANTS.COLOR.WHITE,
     flexDirection: 'row',
@@ -96,7 +88,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   floatingImage: {
-    height: decorWidth,
+    height: decorHeight,
     position: 'absolute',
     left: -20,
   },
@@ -113,10 +105,9 @@ const styles = StyleSheet.create({
     color: CONSTANTS.COLOR.ORANGE,
   },
   voucherImage: {
-    marginTop: 13,
     marginRight: 18,
-    width: decorWidth + 30,
-    height: decorWidth - 26,
+    width: decorHeight,
+    height: decorHeight,
   },
   iconDimensions: {
     width: 10,

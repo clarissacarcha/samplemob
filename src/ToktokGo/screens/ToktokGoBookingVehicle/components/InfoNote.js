@@ -6,10 +6,11 @@ import CONSTANTS from '../../../../common/res/constants';
 export const InfoNote = () => {
   return (
     <View style={styles.container}>
-      <Image source={InfoIcon} resizeMode={'center'} style={styles.imgDimensions} />
-      <Text style={styles.textStyles}>
-        Prices may vary depending on traffic condition. Subject to prevailing IATF guideline.
-      </Text>
+      <Image source={InfoIcon} resizeMode={'contain'} style={styles.imgDimensions} />
+      <View>
+        <Text style={styles.textStyles}>Prices may vary depending on traffic condition.</Text>
+        <Text style={styles.textStyles}>Subject to prevailing IATF guideline.</Text>
+      </View>
     </View>
   );
 };

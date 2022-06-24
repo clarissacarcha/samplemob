@@ -530,14 +530,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: 'white',
     paddingTop: 16,
+
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 0,
+      height: 2,
     },
-    shadowRadius: 50,
-    shadowOpacity: 1.0,
-    elevation: 20,
+    shadowRadius: 3.84,
+    shadowOpacity: 0.2,
+    elevation: 5,
+    borderTopColor: '#F8F8F8',
+    borderTopWidth: 2,
   },
   elementWrapper: {
     position: 'absolute',

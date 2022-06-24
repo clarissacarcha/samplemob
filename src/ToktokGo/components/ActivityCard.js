@@ -73,7 +73,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
         case 'ACCEPTED':
           return 'Driver accepted';
         case 'ARRIVED':
-          return 'Driver arrived at Pick-up location';
+          return 'Driver arrived at pick-up location';
         case 'PICKED_UP':
           return 'Passenger picked up';
         default:
