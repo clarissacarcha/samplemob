@@ -118,7 +118,8 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
               if(shopDiscount){
                 total = total + parseFloat(item2.product.compareAtPrice)
               }else{
-                total = total + parseFloat(item2.product.price)
+                // total = total + parseFloat(item2.product.price)
+                total = total + parseFloat(item2.product.price * item2.qty)
               }
               
             }else{

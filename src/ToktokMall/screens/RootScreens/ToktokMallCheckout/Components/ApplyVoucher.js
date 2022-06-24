@@ -145,6 +145,17 @@ export const ApplyVoucherForm = (address, customer, payload) => {
           return
         }
 
+        //CHECK IF VOUCHER ALREADY APPLIED
+        let checkVoucherIfAlreadyApplied = CheckoutContextData.getVouchersApplied(item.shop.id, req.responseData.voucher)
+        if(checkVoucherIfAlreadyApplied){
+          setVoucherIsValid(-1)
+          CheckoutContextData.setVoucherErrors(prevState => [...prevState, item.shop.id])
+          seterrormessage("You have already applied this voucher.")
+          setloading(false)
+          setSucceeded(false)
+          return
+        }
+
         setSucceeded(true)
           
         let items = ArrayCopy(CheckoutContextData.shippingVouchers)
@@ -166,7 +177,8 @@ export const ApplyVoucherForm = (address, customer, payload) => {
             discount: 0, 
             deduction: fee,
             hashAmount: 0,
-            voucherCodeType: req.responseData.type
+            voucherCodeType: req.responseData.type,
+            appliedToShop: item.shop.id
           })
 
           getShippingHashDeliveryAmount({variables: {
@@ -192,7 +204,8 @@ export const ApplyVoucherForm = (address, customer, payload) => {
             discountedAmount: discount, 
             discount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
             hashAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
-            voucherCodeType: req.responseData.type
+            voucherCodeType: req.responseData.type,
+            appliedToShop: item.shop.id
           })
 
           getShippingHashDeliveryAmount({variables: {
@@ -219,7 +232,8 @@ export const ApplyVoucherForm = (address, customer, payload) => {
             discountedAmount: calculatedDiscount < 0 ? 0 : pctvalue, 
             discount: calculatedDiscount < 0 ? 0 : pctvalue,
             hashAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
-            voucherCodeType: req.responseData.type
+            voucherCodeType: req.responseData.type,
+            appliedToShop: item.shop.id
           })
 
           getShippingHashDeliveryAmount({variables: {
@@ -244,7 +258,8 @@ export const ApplyVoucherForm = (address, customer, payload) => {
             discountedAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount, 
             discount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
             hashAmount: calculatedDiscount < 0 ? 0 : calculatedDiscount,
-            voucherCodeType: req.responseData.type
+            voucherCodeType: req.responseData.type,
+            appliedToShop: item.shop.id
           })
 
           getShippingHashDeliveryAmount({variables: {
@@ -279,7 +294,8 @@ export const ApplyVoucherForm = (address, customer, payload) => {
           ...req.responseData.voucher, 
           discountedAmount: req.responseData.voucher.amount, 
           discount: req.responseData.voucher.amount,
-          voucherCodeType: req.responseData.type
+          voucherCodeType: req.responseData.type,
+          appliedToShop: item.shop.id
         })
 
         getDefaultHashDeliveryAmount({variables: {

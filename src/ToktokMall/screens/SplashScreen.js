@@ -6,7 +6,8 @@ import {
   Image,
   Dimensions,
   ImageBackground, 
-  TouchableOpacity
+  TouchableOpacity,
+  ToastAndroid
 } from 'react-native';
 import {connect, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -22,7 +23,6 @@ import axios from 'axios';
 import moment from 'moment';
 import AsyncStorage from '@react-native-community/async-storage';
 import { EventRegister } from 'react-native-event-listeners';
-
 
 const imageWidth = Dimensions.get('screen').width;
 const imageHeight = Dimensions.get('screen').height;
@@ -59,26 +59,33 @@ const Splash = ({
 
         if(response.getCustomerIfExist.id != null){
 
+          console.log("User already exist!", response.getCustomerIfExist)  
+          console.log("TOKTOKT RECORD", session?.user.person)
+
+          if(session?.user.person.emailAddress != response.getCustomerIfExist.email){
+            //UPDATE CUSTOMER RECORD
+            await UpdateUser(response.getCustomerIfExist)
+          }
+
           //Already exist
           await AsyncStorage.setItem("ToktokMallUser", JSON.stringify(response.getCustomerIfExist))
 
-        getMyCartData({
-          variables: {
-            input: {
-              userId: response.getCustomerIfExist.userId
+          getMyCartData({
+            variables: {
+              input: {
+                userId: response.getCustomerIfExist.userId
+              }
             }
-          }
-        })
+          })
 
-        getOrderNotifications({
-          variables: {
-            input: {
-              userId: response.getCustomerIfExist.userId
+          getOrderNotifications({
+            variables: {
+              input: {
+                userId: response.getCustomerIfExist.userId
+              }
             }
-          }
-        })
+          })
 
-          console.log("User already exist!", response.getCustomerIfExist)  
           await navigation.navigate("ToktokMallLanding")
 
         }else if(response.getCustomerIfExist.id == null){
@@ -108,48 +115,6 @@ const Splash = ({
     }
 	})  
 
-  // const RegisterUser = async (signature) => {
-
-    // let body = {
-    //   firstname: session?.user.person.firstName,
-    //   lastname: session?.user.person.lastName,
-    //   // userid: session?.user.id,
-    //   toktokid: parseInt(session?.user.id), 
-    //   contactnumber: session?.user.username,
-    //   email: session?.user.person.emailAddress,
-    //   address: session?.user.person.address || "NA",
-    //   birthday: session?.user.person.birthdate ? moment(session?.user.person.birthdate).format("Y-m-d") : "",
-    //   gender: session?.user.person.gender || "NA"
-    // }
-
-  //   console.log(body)
-
-  //   let formData = new FormData()
-  //   formData.append("signature", signature)
-  //   formData.append("data", JSON.stringify(body))
-  //   await axios
-  //     .post("http://ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com/toktokmall/create_user", formData)
-  //     .then((response) => {
-        
-  //       if(response.data && response.data.success == 1){
-  //         console.log("Response", response.data) 
-  //         setRegisterRetries(1)
-          // authUser({variables: {
-          //   input: {
-          //     toktokId: parseInt(response.data.user_id)
-          //   }
-          // }})
-  //       }else{
-  //         setFailed(true)
-  //        console.log("Response", response.data) 
-  //       }
-        
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //       setFailed(true)
-  //   })
-
   const RegisterUser = async (signature) => {
 
     let variables = {
@@ -178,6 +143,36 @@ const Splash = ({
     }else if(req.responseError == null && req.responseData == null){
       setFailed(true)
       Toast.show("Something went wrong", Toast.LONG)
+    }
+  }
+
+  const UpdateUser = async ({userId, appSignature}) => {
+
+    let variables = {
+      firstname: session?.user.person.firstName,
+      lastname: session?.user.person.lastName,
+      user_id: userId,
+      contactnumber: session?.user.person.mobileNumber,
+      email: session?.user.person.emailAddress,
+      address: session?.user.person.address || "NA",
+      birthday: session?.user.person.birthdate ? moment(session?.user.person.birthdate).format("Y-m-d") : "",
+      gender: session?.user.person.gender || "N"
+    }
+    console.log(variables, appSignature)
+    const req = await DynamicApiCall("updateCustomerProfile", appSignature, variables, {debug: true})
+    console.log("UPDATE PROFILE", req)
+    if(req.responseData && req.responseData.success == 1){
+      setRegisterRetries(1)
+      authUser()
+    }else if(req.responseError && req.responseError.success == 0){
+      setFailed(true)
+      ToastAndroid.show(req.responseError.message, ToastAndroid.LONG)
+    }else if(req.responseError){
+      setFailed(true)
+      ToastAndroid.show("Something went wrong", ToastAndroid.LONG)
+    }else if(req.responseError == null && req.responseData == null){
+      setFailed(true)
+      ToastAndroid.show("Something went wrong", ToastAndroid.LONG)
     }
   }
 
@@ -292,6 +287,7 @@ const Splash = ({
     await AsyncStorage.getItem("ToktokMallUser").then(async (raw) => {
       const data = JSON.parse(raw) || null
       console.log("user data", data)
+      console.log("TOKTOKT RECORD", session?.user.person)
       if(data && data.userId){
         // await getCustomerRecords({
         //   variables: {
@@ -314,9 +310,16 @@ const Splash = ({
             }
           }
         })
-        setTimeout(() => {
-          navigation.navigate("ToktokMallLanding");
-        }, 2000);
+
+        if(session?.user.person.emailAddress != data.email){
+          //UPDATE CUSTOMER RECORD
+          await UpdateUser(data)
+        }else{
+          setTimeout(() => {
+            navigation.navigate("ToktokMallLanding");
+          }, 2000);
+        }
+        
       }else{
         await authUser()
       }
