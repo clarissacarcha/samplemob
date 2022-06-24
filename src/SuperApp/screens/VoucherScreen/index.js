@@ -25,10 +25,17 @@ export const VoucherScreen = ({navigation}) => {
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [search, setSearch] = useState('');
 
+  const onPressActionButton = () => {
+    setViewSuccesVoucherClaimedModal(true);
+    setTimeout(() => {
+      setViewSuccesVoucherClaimedModal(false);
+    }, 1000);
+  };
+
   return (
     <View style={styles.container}>
       <Header title={'Voucher'} navigation={navigation} />
-      <SuccessVoucherClaimedModal isVissible={true} />
+      <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
       <View style={styles.containerInput}>
         <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} />
         <TextInput
@@ -72,11 +79,7 @@ export const VoucherScreen = ({navigation}) => {
             //   const lastItem = index == data.vehicleTypeRates.length - 1 ? true : false;
             return (
               <View style={{marginVertical: 8}}>
-                <VoucherCard
-                  data={item}
-                  navigation={navigation}
-                  setViewSuccesVoucherClaimedModal={setViewSuccesVoucherClaimedModal}
-                />
+                <VoucherCard data={item} navigation={navigation} onPressActionButton={onPressActionButton} />
               </View>
             );
           }}

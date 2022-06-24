@@ -6,7 +6,7 @@ import voucherPaperDesign from '../../../../assets/toktokgo/voucher-paper-design
 
 const decorHeight = Dimensions.get('window').height * 0.12;
 
-export const VoucherCard = ({data, navigation, setViewSuccesVoucherClaimedModal}) => {
+export const VoucherCard = ({data, navigation, onPressActionButton}) => {
   return (
     <ThrottledOpacity onPress={() => navigation.navigate('SelectedVoucherScreen', {data})}>
       <View style={styles.card}>
@@ -18,11 +18,11 @@ export const VoucherCard = ({data, navigation, setViewSuccesVoucherClaimedModal}
         </View>
         <View style={styles.claimContainer}>
           {data.isClaimed ? (
-            <ThrottledOpacity style={styles.claimButton}>
+            <ThrottledOpacity style={styles.claimButton} onPress={onPressActionButton} delay={500}>
               <Text style={styles.claimButtonText}>Claim</Text>
             </ThrottledOpacity>
           ) : (
-            <ThrottledOpacity style={styles.useButton}>
+            <ThrottledOpacity style={styles.useButton} onPress={onPressActionButton} delay={500}>
               <Text style={styles.useButtonText}>Use</Text>
             </ThrottledOpacity>
           )}

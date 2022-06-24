@@ -15,6 +15,13 @@ export const SelectedVoucherScreen = ({navigation, route}) => {
   const {data} = route.params;
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
 
+  const onPressActionButton = () => {
+    setViewSuccesVoucherClaimedModal(true);
+    setTimeout(() => {
+      setViewSuccesVoucherClaimedModal(false);
+    }, 1000);
+  };
+
   return (
     <View style={styles.outerContainer}>
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
@@ -38,11 +45,11 @@ export const SelectedVoucherScreen = ({navigation, route}) => {
 
       <View style={styles.buttonContainer}>
         {data.isClaimed ? (
-          <ThrottledOpacity style={styles.claimButtonWrapper} onPress={() => setViewSuccesVoucherClaimedModal(true)}>
+          <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPressActionButton}>
             <Text style={styles.claimText}>Claim</Text>
           </ThrottledOpacity>
         ) : (
-          <ThrottledOpacity style={styles.useButtonWrapper}>
+          <ThrottledOpacity style={styles.useButtonWrapper} onPress={onPressActionButton}>
             <Text style={styles.useText}>Use</Text>
           </ThrottledOpacity>
         )}
