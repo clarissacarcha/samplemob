@@ -219,8 +219,8 @@ const PasswordVerification = ({navigation, route, createSession}) => {
             style={{
               flex: 1,
               alignItems: 'center',
-              justifyContent: screenheight > 700 ? 'flex-start' : 'center',
-              marginTop: screenheight > 700 && '30%',
+              justifyContent: screenheight > 735 ? 'flex-start' : 'center',
+              marginTop: screenheight > 735 ? '26%' : 0,
             }}>
             {/*-------------------- BANNER --------------------*/}
             {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
@@ -250,7 +250,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
             </View>
             <View style={{alignSelf: 'flex-start', marginHorizontal: 40}}>
               {inCorrectPassword && (
-                <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED, top: -5}}>
+                <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED, top: -5, marginLeft: 6}}>
                   Password is incorrect
                 </Text>
               )}

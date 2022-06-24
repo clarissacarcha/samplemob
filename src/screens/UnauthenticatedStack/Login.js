@@ -168,8 +168,8 @@ const Login = ({navigation, session}) => {
           style={{
             flex: 1,
             alignItems: 'center',
-            justifyContent: screenheight > 700 ? 'flex-start' : 'center',
-            marginTop: screenheight > 700 && '40%',
+            justifyContent: screenheight > 735 ? 'flex-start' : 'center',
+            marginTop: screenheight > 735 ? '37%' : 0,
           }}>
           <Image
             source={LoginBanner}

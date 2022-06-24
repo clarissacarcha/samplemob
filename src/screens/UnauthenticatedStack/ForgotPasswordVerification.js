@@ -14,6 +14,7 @@ import {
   ScrollView,
   Dimensions,
   KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
 import {COLOR, DARK, APP_FLAVOR, ACCOUNT_TYPE} from '../../res/constants';
@@ -27,7 +28,7 @@ import Splash from '../../assets/images/LinearGradiant.png';
 import ToktokGoIcon from '../../assets/images/ToktokGoIcon.png';
 import constants from '../../common/res/constants';
 import ArrowLeft from '../../assets/icons/arrow-left-icon.png';
-import {MaxAttempsModal, Keyboard} from './Components';
+import {MaxAttempsModal} from './Components';
 import timer from 'react-native-timer';
 import {constant} from 'async';
 import {set} from 'lodash';
@@ -74,6 +75,7 @@ const Verification = ({navigation, route, createSession}) => {
   const [borderError, setBorderError] = useState(false);
   const [maxAttemps, setMaxAttemps] = useState(false);
   const [countdown, setCountdown] = useState(0);
+  const [keyboardStatus, setKeyboardStatus] = useState(false);
 
   const [resend, setResend] = useState(false);
 
@@ -142,14 +144,14 @@ const Verification = ({navigation, route, createSession}) => {
     // }
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      inputRef.current.focus();
-    }, 0);
-    // smsListen();
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     inputRef.current.focus();
+  //   }, 0);
+  //   // smsListen();
 
-    // return SmsRetriever.removeSmsListener();
-  }, []);
+  //   // return SmsRetriever.removeSmsListener();
+  // }, []);
 
   const onNumPress = () => {
     setTimeout(() => {
@@ -214,7 +216,19 @@ const Verification = ({navigation, route, createSession}) => {
     setCountdown(120);
     setResend(true);
   };
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardStatus(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardStatus(false);
+    });
 
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -227,17 +241,20 @@ const Verification = ({navigation, route, createSession}) => {
         source={Splash}
         style={{
           flex: 1,
-          justifyContent: 'space-between',
         }}>
         <AlertOverlay visible={loading} />
 
-        <TouchableOpacity onPress={() => navigation.pop()} style={{zIndex: 999}}>
-          <Image
-            style={{height: 15, width: 10, top: StatusBar.currentHeight - 10, margin: 16}}
-            source={ArrowLeft}
-            resizeMode={'contain'}
-          />
-        </TouchableOpacity>
+        {!keyboardStatus || screenheight > 735 ? (
+          <TouchableOpacity onPress={() => navigation.pop()} style={{zIndex: 999}}>
+            <Image
+              style={{height: 15, width: 10, top: StatusBar.currentHeight - 10, margin: 16}}
+              source={ArrowLeft}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View style={{height: StatusBar.currentHeight + 80}}></View>
+        )}
         {/*---------------------------------------- BANNER ----------------------------------------*/}
         {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
 
