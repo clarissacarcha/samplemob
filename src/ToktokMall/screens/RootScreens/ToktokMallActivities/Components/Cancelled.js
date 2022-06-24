@@ -51,7 +51,7 @@ export const Cancelled = (props) => {
     onCompleted: (response) => {
       if(response.getActivities){
         const newActivities = [...response.getActivities.filter(activity => activity.status.status === 5)];
-        setData(newActivities)
+        setData(newActivities);
       }
     },
     onError: (err) => {

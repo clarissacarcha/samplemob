@@ -45,7 +45,7 @@ export const ToRecieve = () => {
     onCompleted: (response) => {
       if(response.getActivities){
         const newActivities = [...response.getActivities.filter(activity => activity.status.status === 3)];
-        setData(newActivities)
+        setData(newActivities);
       }
     },
     onError: (err) => {
