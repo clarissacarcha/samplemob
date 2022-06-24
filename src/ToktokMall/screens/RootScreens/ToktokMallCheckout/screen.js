@@ -712,14 +712,35 @@ const Component = ({route, navigation, createMyCartSession}) => {
       }
       
     }
+    dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+      type: 'Success',
+      title: "Your order has been placed!",
+      message: "Your order has been placed successfully.\nPlease visit My Orders to check the progress and other details.",
+      onCloseDisabled: true,
+      actions: [
+        {
+          name: "Continue shopping",
+          onPress: () => {
+            navigation.navigate("ToktokMallHome")
+            EventRegister.emit('refreshToktokmallShoppingCart')
+          }
+        },
+        {
+          name: "Go to My Orders",
+          onPress: onGoToOrders,
+          type: "fill"
+        },
 
-    dispatch({type: "TOKTOK_MALL_OPEN_PLACE_ORDER_MODAL", payload: {
-      onConfirmAction: onGoToOrders,
-      onCancelAction: () => {
-        navigation.navigate("ToktokMallHome")
-        EventRegister.emit('refreshToktokmallShoppingCart')
-      }
+      ]
     }})
+
+    // dispatch({type: "TOKTOK_MALL_OPEN_PLACE_ORDER_MODAL", payload: {
+    //   onConfirmAction: onGoToOrders,
+    //   onCancelAction: () => {
+    //     navigation.navigate("ToktokMallHome")
+    //     EventRegister.emit('refreshToktokmallShoppingCart')
+    //   }
+    // }})
     // setIsVisible(true)
   }
 
@@ -847,7 +868,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
-        dispatch({type: "TOKTOK_MALL_CLOSE_PLACE_ORDER_MODAL"})
+        dispatch({type: "TOKTOK_MALL_CLOSE_MODAL"})
         setAlertModal(true)
         return true
       }

@@ -196,13 +196,11 @@ const Component = ({
         // alert(JSON.stringify(customModal.visible))
         if(customModal.visible || customConfirmModal.visible){
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_CONFIRM_MODAL'})
           return true
         }
         else{
           // alert('not true')
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_CONFIRM_MODAL'})
           return false
         }
         return true
@@ -313,7 +311,7 @@ const Component = ({
     dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
       type: 'Success',
       message: 'Items has been removed from your cart.',
-      onCloseCallback: () => {
+      onClose: () => {
         init()
       }
     }})
@@ -337,8 +335,8 @@ const Component = ({
         // setSingleDeletemsgModalShown(true)
         dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
           type: 'Success',
-          message: 'Item has been removed from your cart.',
-          onCloseCallback: () => {
+          message: 'Item has been removed from\nyour cart.',
+          onClose: () => {
             init()
           }
         }})
@@ -592,7 +590,7 @@ const Component = ({
             setIsVisible={(val) => {
               setSingleDeletemsgModalShown(val);
             }}
-            message={`Item has been removed from your cart.`}
+            message={`Item has been removed from\nyour cart.`}
           />
         )}
 
@@ -700,14 +698,22 @@ const Component = ({
                           }
                         }}
                         onItemDelete={(item) => {
-                              dispatch({
-                                type: 'TOKTOK_MALL_OPEN_CONFIRM_MODAL',
-                                payload: {
-                                  onConfirmAction: () => {
-                                    deleteSingleItem(item)
-                                  },
-                                },
-                              });
+                          dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+                            type: "Warning",
+                            message: "Are you sure you want to delete\nthis item?",
+                            actions: [
+                              {
+                                name: "Cancel"
+                              },
+                              {
+                                name: "Confirm",
+                                type: "fill",
+                                onPress: () => {
+                                  deleteSingleItem(item)
+                                }
+                              }
+                            ]
+                          }})
                         }}
                         onChangeQuantity={onChangeQuantity}
                       />
@@ -727,13 +733,20 @@ const Component = ({
           {myCartData.length > 0 && willDelete && (
             <DeleteFooter
               onDelete={() => {
-                  dispatch({
-                    type: 'TOKTOK_MALL_OPEN_CONFIRM_MODAL',
-                    payload: {
-                      onConfirmAction: deleteMultipleItems,
-                      message: 'Are you sure you want to delete the selected item(s)?',
+                dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+                  type: "Warning",
+                  message: 'Are you sure you want to delete the selected item(s)?',
+                  actions: [
+                    {
+                      name: "Cancel"
                     },
-                  });
+                    {
+                      name: "Confirm",
+                      type: "fill",
+                      onPress: deleteMultipleItems
+                    }
+                  ]
+                }})
               }}
               disabled={selectedItemsArr.length === 0}
               style={{backgroundColor: selectedItemsArr.length === 0 ? '#D7D7D7' : '#F6841F'}}

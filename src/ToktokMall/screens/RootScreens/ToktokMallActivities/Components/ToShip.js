@@ -45,7 +45,7 @@ export const ToShip = ({id, email}) => {
     onCompleted: (response) => {
       if(response.getActivities){
         const newActivities = [...response.getActivities.filter(activity => activity.status.status === 2)];
-        setData(newActivities)
+        setData(newActivities);
       }
     },
     onError: (err) => {

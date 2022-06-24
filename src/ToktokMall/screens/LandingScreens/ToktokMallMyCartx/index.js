@@ -582,7 +582,7 @@ const Component =  ({
               setSingleDeletemsgModalShown(val)
               init()
             }}  
-            message={`Item has been removed from your cart.`}
+            message={`Item has been removed from\nyour cart.`}
           />}
             
         </View>

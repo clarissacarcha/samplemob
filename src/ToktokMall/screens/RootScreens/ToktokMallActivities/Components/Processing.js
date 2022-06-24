@@ -43,9 +43,9 @@ export const Processing = ({id, email}) => {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',    
     onCompleted: (response) => {
-      if(response.getActivities){       
-        setData(response.getActivities)
-        // console.log("RAW ORDERS", JSON.stringify(response.getActivities))
+      if(response.getActivities){     
+        const newActivities = [...response.getActivities.filter(activity => activity.status.status === 1)];
+        setData(newActivities);
       }
     },
     onError: (err) => {

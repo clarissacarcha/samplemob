@@ -46,7 +46,7 @@ export const Completed = (props) => {
     onCompleted: (response) => {
       if(response.getActivities){
         const newActivities = [...response.getActivities.filter(activity => activity.status.status === 4)];
-        setData(newActivities)
+        setData(newActivities);
       }
     },
     onError: (err) => {

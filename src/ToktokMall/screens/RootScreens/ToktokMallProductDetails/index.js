@@ -348,8 +348,8 @@ const Component =  ({
 
       dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
         type: 'Success',
-        message: 'Item has been added to your cart.',
-        onCloseCallback: () => {
+        message: 'Item has been added to\nyour cart.',
+        onClose: () => {
           setMessageModalShown(true)
         }
       }})
@@ -454,7 +454,7 @@ const Component =  ({
       <CustomModal 
         type="Success"
         setIsVisible={(val) => setMessageModalShown(val)}
-        message="Item has been added to your cart."
+        message="Item has been added to\nyour cart.."
       />} */}
       
       {/* { isFetching ? <></> : <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} itemName = {route.params.itemname} /> }

@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import {
   View, 
   StyleSheet, 
   BackHandler
 } from 'react-native';
-import { HeaderTab } from '../../../Components';
 import {
   Processing, 
   ToShip, 
@@ -14,6 +13,7 @@ import {
   All
 } from './Components';
 import { useFocusEffect } from '@react-navigation/native';
+import { HeaderTab } from '../../../Components';
 
 export const ToktokMallActivities = ({navigation, route}) => {
 

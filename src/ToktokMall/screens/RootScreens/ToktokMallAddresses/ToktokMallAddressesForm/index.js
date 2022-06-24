@@ -282,7 +282,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
           dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
             type: 'Success',
             message: 'Address Deleted!',
-            onCloseCallback: () => {
+            onClose: () => {
               EventRegister.emit("refreshCheckoutData")
               updateUserAddress('remove', newAddressForm.id);
               refresh()
@@ -500,7 +500,17 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
                 disabled={route.params?.item?.defaultAdd === 1}
                 onPress={() => {
                   // setConfirmDeleteModal(true)
-                  route.params?.item?.defaultAdd === 1 ? Toast.show('Cannot delete default address') : setConfirmDeleteModal(true);
+                  route.params?.item?.defaultAdd === 1 ? Toast.show('Cannot delete default address') : dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+                    type: 'Warning',
+                    message: 'Are you sure you want to delete this address?',
+                    actions: [{
+                      name: "Cancel"
+                    },{
+                      name: "Confirm",
+                      type: "fill",
+                      onPress: DeleteAddress
+                    }]
+                  }})
                 }}>
                 <Text style={{color: route.params?.item?.defaultAdd === 1 ? '#D7D7D7' : '#F6841F'}}>Delete</Text>
               </TouchableOpacity>

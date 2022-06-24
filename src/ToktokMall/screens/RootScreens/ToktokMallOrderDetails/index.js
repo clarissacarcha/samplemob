@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {View, ScrollView, RefreshControl, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, ScrollView, RefreshControl, StyleSheet } from 'react-native';
 import { useLazyQuery } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
-import {HeaderBack, HeaderTitle, HeaderRight, Loading, LoadingOverlay, BuyAgainButton} from '../../../Components';
-import {Renderer} from './Components';
+import { HeaderBack, HeaderTitle, HeaderRight, Loading, LoadingOverlay, BuyAgainButton } from '../../../Components';
 import { ApiCall } from '../../../helpers';
-import {connect, useSelector} from "react-redux"
-import {EventRegister} from 'react-native-event-listeners'
+import { connect, useSelector } from "react-redux"
+import { EventRegister } from 'react-native-event-listeners'
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_ACTIVIY_ORDER_DETAILS } from '../../../../graphql/toktokmall/model';
 import { getRefComAccountType } from '../../../helpers';
@@ -15,11 +14,10 @@ import {
   RenderOrderInfo,
   RenderStore,
   RenderSummary,
-  RenderDeliveryLog,
-  RenderBuyAgain
+  RenderDeliveryLog
 } from './Components'
 
-const Component = ({navigation, route, notificationCountSession, notifications}) => {
+const Component = ({ navigation, route, notificationCountSession, notifications }) => {
   
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack={() => {
@@ -56,7 +54,7 @@ const Component = ({navigation, route, notificationCountSession, notifications})
   const readNotification = async (payload) => {
     const req = await ApiCall(`read_notification`, payload, true)
     if(req.responseData && req.responseData.success){
-      console.log("read notification success")
+      // console.log("read notification success")
     }
   }
 
