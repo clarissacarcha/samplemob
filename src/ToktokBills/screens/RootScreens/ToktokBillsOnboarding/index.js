@@ -27,6 +27,7 @@ import {useSelector} from 'react-redux';
 //SELF  IMPORTS
 import {PageFour, PageOne, PageThree, PageTwo, RenderDots} from './Components';
 import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
+import {HeaderBack} from 'toktokbills/components';
 
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_SIZE, FONT_FAMILY: FONT} = CONSTANTS;
@@ -56,9 +57,13 @@ export const ToktokBillsOnboarding = () => {
   const onPressThrottled = useThrottle(skip, 2000);
 
   return (
-    <ImageBackground style={styles.container} source={onboarding_bg} resizeMode={'cover'}>
-      <View style={styles.subContainer}>
-      <Image resizeMode="contain" style={styles.logo} source={onboarding_toktokbills} />
+    <ImageBackground
+      style={[styles.container, {paddingTop: Platform.OS === 'android' ? getStatusbarHeight : 0}]}
+      source={onboarding_bg}
+      resizeMode={'cover'}>
+      <HeaderBack styleContainer={{marginTop: moderateScale(16)}} />
+      <View style={[styles.subContainer]}>
+        <Image resizeMode="contain" style={styles.logo} source={onboarding_toktokbills} />
         <Animated.FlatList
           ref={slider}
           showsHorizontalScrollIndicator={false}
@@ -95,7 +100,6 @@ export const ToktokBillsOnboarding = () => {
             return item({label: `Template ${index}`, rotate, scale, tokwaAccount});
           }}
         />
-        {/* <PageOne /> */}
         <RenderDots
           scrollX={scrollX}
           data={data}
@@ -116,8 +120,6 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     flex: 1,
-    marginTop: moderateScale(Platform.OS == 'android' ? StatusBar.currentHeight : 0),
-    marginBottom: moderateScale(Platform.OS == 'android' ? 10 : 0),
   },
   headings: {
     height: 92,
@@ -158,7 +160,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.S,
   },
   logo: {
-    marginVertical: moderateScale(30),
+    marginTop: moderateScale(20),
     justifyContent: 'center',
     alignItems: 'center',
     height: moderateScale(42),
@@ -168,7 +170,6 @@ const styles = StyleSheet.create({
     height: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    // flex: 1,
     width: width,
     flexDirection: 'row',
   },
