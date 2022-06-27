@@ -29,56 +29,60 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
       value: '4',
     },
     {
-      label: 'Driver is too far from pick-up point, not willing to wait',
+      label: 'Forgot to input promo code',
       value: '5',
     },
     {
-      label: "Driver doesn't accept cash/toktokwallet/e-mobile wallet",
+      label: 'Driver is too far from pick-up point, not willing to wait',
       value: '6',
     },
     {
-      label: 'Driver is asking for additional charge',
-      value: '7',
+      label: "Driver doesn't accept cash/toktokwallet/e-mobile wallet",
+      value: '7           ',
     },
     {
-      label: 'Driver asked to cancel',
+      label: 'Driver is asking for additional charge',
       value: '8',
     },
     {
-      label: 'The actual driver is different from the app',
+      label: 'Driver asked to cancel',
       value: '9',
     },
     {
-      label: 'Different unit arrived',
+      label: 'The actual driver is different from the app',
       value: '10',
     },
     {
-      label: "Driver is not vaccinated/Doesn't follow safety protocols",
+      label: 'Different unit arrived',
       value: '11',
     },
     {
-      label: 'Driver is rude/inapprorpiate behavior',
+      label: 'Driver is not vaccinated/Not following safety protocols',
       value: '12',
     },
     {
-      label: 'The payment method I chose has a problem',
+      label: 'Driver is rude/inapprorpiate behavior',
       value: '13',
     },
     {
-      label: 'Chose the wrong service',
+      label: 'The payment method I chose has a problem',
       value: '14',
     },
     {
-      label: 'Chose the wrong vehicle type',
+      label: 'Chose the wrong service',
       value: '15',
     },
     {
-      label: 'Driver no-show',
+      label: 'Chose the wrong vehicle',
       value: '16',
     },
     {
-      label: 'Other, please state: ',
+      label: 'Driver no-show',
       value: '17',
+    },
+    {
+      label: 'Other, please state: ',
+      value: '18',
     },
   ]);
 
@@ -125,7 +129,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               );
             })}
           </ScrollView>
-          {selectedReason?.value == '17' && (
+          {selectedReason?.value == '18' && (
             <TextInput
               ref={dropDownRef}
               value={typedReason}
