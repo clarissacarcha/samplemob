@@ -25,3 +25,7 @@ export const onboarding_3 = require('./onboarding/onboarding-3.png');
 export const onboarding_4 = require('./onboarding/onboarding-4.png');
 export const onboarding_bg = require('./onboarding/onboarding-bg.png');
 export const onboarding_toktokbills = require('./onboarding/onboarding-toktokbills.png');
+
+//maintenance images
+export const maintenance_bg = require('./maintenance/maintenance-bg.png');
+export const maintenance_bills = require('./maintenance/maintenance-bills.png');
