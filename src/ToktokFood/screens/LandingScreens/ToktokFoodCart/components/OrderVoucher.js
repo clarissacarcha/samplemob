@@ -71,7 +71,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
         // console.log(on_top, filterDeal)
         if ((!on_top && !filterDeal.length) || (on_top && !filterDeal.length) || (on_top && filterDeal[0].on_top > 0)) {
           if (amount > 0) {
-            const pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
+            const pAmount = is_percentage > 0 ? (amount / 100) * deliveryFee : amount;
             const totalFee = pAmount > deliveryFee ? deliveryFee : pAmount;
             // let totalSF = deliveryFee - pAmount;
             // totalSF = totalSF > 0 ? totalSF : 0;

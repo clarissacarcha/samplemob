@@ -12,6 +12,7 @@ import {useTheme} from 'styled-components';
 
 const OrderAmount = (props: PropsType): React$Node => {
   const {state} = props;
+  const shippingDiscount = state.promoDetails?.amount || 0;
   const [showAmountBreakdown, setShowAmountBreakdown] = useState(false);
   const theme = useTheme();
 
@@ -41,7 +42,7 @@ const OrderAmount = (props: PropsType): React$Node => {
           {state?.resellerDiscountTotal > 0 &&
             amountComponent('Discount (Reseller)', state?.resellerDiscountTotal, '-')}
           {state?.promoDiscounts > 0 && amountComponent('Discount (Voucher)', state?.promoDiscounts, '-')}
-          {state?.promoDetails?.amount > 0 && amountComponent('Discount (Delivery)', state?.promoDetails?.amount, '-')}
+          {shippingDiscount > 0 && amountComponent('Discount (Delivery)', shippingDiscount, '-')}
           {state?.orderIsfor === 1 && amountComponent('Delivery Fee', state?.originalShippingFee)}
           {state?.refundTotal > 0 &&
             state?.paymentMethod?.toLowerCase() === 'toktokwallet' &&
@@ -58,7 +59,7 @@ const OrderAmount = (props: PropsType): React$Node => {
       <TouchableOpacity activeOpacity={0.9} onPress={() => setShowAmountBreakdown(!showAmountBreakdown)}>
         {amountComponent(
           'Total',
-          state?.totalAmount + state?.originalShippingFee,
+          state?.totalAmount + state?.originalShippingFee - shippingDiscount,
           '',
           showAmountBreakdown ? 'chevron-down' : 'chevron-up',
         )}
