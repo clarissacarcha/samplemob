@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.S,
   },
   logo: {
-    marginTop: moderateScale(20),
+    marginTop: moderateScale(10),
     justifyContent: 'center',
     alignItems: 'center',
     height: moderateScale(42),
