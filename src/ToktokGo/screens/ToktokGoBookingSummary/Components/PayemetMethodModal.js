@@ -56,7 +56,7 @@ export const PaymentMethodModal = ({
                 <TouchableOpacity
                   style={styles.cashInWrapper}
                   onPress={() => {
-                    navigation.navigate('ToktokWalletLoginPage');
+                    setViewSelectPaymentModal(false), navigation.navigate('ToktokWalletLoginPage');
                   }}>
                   <Text style={styles.cashIntextStyle}>Cash In</Text>
                 </TouchableOpacity>

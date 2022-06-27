@@ -1,6 +1,6 @@
 import React, {useRef, useCallback, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
-import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, BackHandler} from 'react-native';
+import {Text, View, StyleSheet, StatusBar, KeyboardAvoidingView, Image, BackHandler} from 'react-native';
 import {Pickup, ConfirmPickupButton, NotesToDriver} from './Sections';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
@@ -115,7 +115,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </ThrottledOpacity>
       {origin?.place?.location?.latitude && <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
-      <View style={styles.card}>
+      <KeyboardAvoidingView behavior="padding" style={styles.card}>
         <NotesToDriver
           dropDownRef={dropDownRef}
           navigation={navigation}
@@ -126,7 +126,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
           notes={notes}
         />
         <ConfirmPickupButton onConfirm={onConfirm} />
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };
