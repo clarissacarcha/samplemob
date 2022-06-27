@@ -19,10 +19,13 @@ import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import {ThrottledHighlight} from '../../../components_section';
 import {useMutation} from '@apollo/client';
 import {onErrorAppSync} from '../../util';
-import {PaymentSuccesfullModal} from './Components';
+import {useAccount} from 'toktokwallet/hooks';
+import {CancellationPaymentSuccesfullModal, NoShowPaymentSuccesfullModal} from './Components';
 const ToktokGoBookingStart = ({navigation, constants, session}) => {
+  const {tokwaAccount} = useAccount();
   const [tripConsumerPending, setTripConsumerPending] = useState([]);
-  const [showPaymentSuccesful, setShowPaymentSuccessful] = useState(false);
+  const [showCancellationPaymentSuccesfulModal, setCancellationShowPaymentSuccessfulModal] = useState(false);
+  const [showNoShowPaymentSuccessfulModal, setShowNoShowPaymentSuccessfulModal] = useState(false);
   const dispatch = useDispatch();
 
   const setBookingInitialState = payload => {
@@ -50,7 +53,11 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
       navigation.pop();
-      setShowPaymentSuccessful(true);
+      if (tripConsumerPending[0].cancellation.initiatedBy == 'CONSUMER') {
+        setCancellationShowPaymentSuccessfulModal(true);
+      } else {
+        setShowNoShowPaymentSuccessfulModal(true);
+      }
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -113,13 +120,17 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
   });
 
   const tripChargeInitializePaymentFunction = () => {
-    tripChargeInitializePayment({
-      variables: {
-        input: {
-          tripId: tripConsumerPending[0].id,
+    if (tokwaAccount.wallet.id) {
+      tripChargeInitializePayment({
+        variables: {
+          input: {
+            tripId: tripConsumerPending[0].id,
+          },
         },
-      },
-    });
+      });
+    } else {
+      navigation.push('ToktokWalletLoginPage');
+    }
   };
 
   const setPlaceFunction = async () => {
@@ -152,10 +163,13 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
       <View>
-        <PaymentSuccesfullModal
-          showPaymentSuccesful={showPaymentSuccesful}
-          setShowPaymentSuccessful={setShowPaymentSuccessful}
-          tripConsumerPending={tripConsumerPending}
+        <NoShowPaymentSuccesfullModal
+          isVissible={showNoShowPaymentSuccessfulModal}
+          setVissible={setShowNoShowPaymentSuccessfulModal}
+        />
+        <CancellationPaymentSuccesfullModal
+          isVissible={showCancellationPaymentSuccesfulModal}
+          setVissible={setCancellationShowPaymentSuccessfulModal}
         />
         <Header navigation={navigation} constants={constants} />
         <Landing navigation={navigation} />

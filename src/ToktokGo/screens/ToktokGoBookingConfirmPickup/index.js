@@ -115,7 +115,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </ThrottledOpacity>
       {origin?.place?.location?.latitude && <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
-      <KeyboardAvoidingView behavior="padding" style={styles.card}>
+      <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : null} style={styles.card}>
         <NotesToDriver
           dropDownRef={dropDownRef}
           navigation={navigation}

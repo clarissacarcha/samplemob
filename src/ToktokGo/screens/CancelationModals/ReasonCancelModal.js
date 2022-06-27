@@ -9,16 +9,76 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
   const [typedReason, setTypedReason] = useState('');
   const [data, setData] = useState([
     {
-      label: 'Waited too long',
+      label: 'Driver took too long to arrive',
       value: '0',
     },
     {
-      label: 'Driver asked to cancel',
+      label: 'Found a cheaper option/Found another ride',
       value: '1',
     },
     {
-      label: 'Driver is rude',
+      label: 'Changed my mind',
       value: '2',
+    },
+    {
+      label: 'Want to change address',
+      value: '3',
+    },
+    {
+      label: 'Wrong address/Wrong pin/Wrong pick-up point',
+      value: '4',
+    },
+    {
+      label: 'Driver is too far from pick-up point, not willing to wait',
+      value: '5',
+    },
+    {
+      label: "Driver doesn't accept cash/toktokwallet/e-mobile wallet",
+      value: '6',
+    },
+    {
+      label: 'Driver is asking for additional charge',
+      value: '7',
+    },
+    {
+      label: 'Driver asked to cancel',
+      value: '8',
+    },
+    {
+      label: 'The actual driver is different from the app',
+      value: '9',
+    },
+    {
+      label: 'Different unit arrived',
+      value: '10',
+    },
+    {
+      label: "Driver is not vaccinated/Doesn't follow safety protocols",
+      value: '11',
+    },
+    {
+      label: 'Driver is rude/inapprorpiate behavior',
+      value: '12',
+    },
+    {
+      label: 'The payment method I chose has a problem',
+      value: '13',
+    },
+    {
+      label: 'Chose the wrong service',
+      value: '14',
+    },
+    {
+      label: 'Chose the wrong vehicle type',
+      value: '15',
+    },
+    {
+      label: 'Driver no-show',
+      value: '16',
+    },
+    {
+      label: 'Other, please state: ',
+      value: '17',
     },
   ]);
 
@@ -65,7 +125,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               );
             })}
           </ScrollView>
-          {selectedReason?.value == '4' && (
+          {selectedReason?.value == '17' && (
             <TextInput
               ref={dropDownRef}
               value={typedReason}
