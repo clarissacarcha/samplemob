@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     paddingTop: moderateScale(10),
   },
   message: {
+    paddingHorizontal: moderateScale(5),
     fontSize: FONT_SIZE.M,
     marginTop: moderateScale(8),
     textAlign: 'center',
