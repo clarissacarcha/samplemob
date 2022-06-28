@@ -10,6 +10,8 @@ import StyledText from '../StyledText';
 export const Container: ComponentType<any> = styled.View`
   align-items: center;
   justify-content: center;
+  background-color: #ffffff;
+  border-radius: 10px;
 `;
 
 export const ImageContainer: ComponentType<any> = styled.View`
@@ -25,7 +27,8 @@ export const Image: ComponentType<any> = styled(ModalImage).attrs(props => ({
 
 export const Text: ComponentType<any> = styled(StyledText).attrs(props => ({
   ...props,
-  color: props.theme.color.orange,
+  // color: props.theme.color.orange,
+  color: '#F6841F',
   mode: 'semibold',
 }))`
   margin-top: ${props => (props.type ? `${-10}px` : `${-30}px`)};

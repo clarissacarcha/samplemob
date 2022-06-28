@@ -1,25 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @format
  * @flow
  */
 
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import type {PropsType} from './types';
 import {Container, Image, ImageContainer, Text} from './Styled';
-import {Modal} from 'toktokfood/components/Modal';
+import Modal from 'react-native-modal';
 import {loading_animation, success_mini_image} from 'toktokfood/assets/images';
-import {useLoader} from 'toktokfood/hooks';
+import {useDispatch, useSelector} from 'react-redux';
 const StyledLoader = (props: PropsType): React$Node => {
-  const [loaderState, setLoaderState] = useLoader();
+  const dispatch = useDispatch();
+  const {loader} = useSelector(select => select.toktokFood);
   // const {setIsLoaderVisible} = useLoader();
   const {isVisible, text = '', type} = props;
+  const [isLoaderVisible, setIsLoaderVisible] = useState(false);
   const timer = useRef(null);
 
   useEffect(() => {
-    if (type) {
+    setIsLoaderVisible(isVisible);
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (type && isVisible) {
       timer.current = setTimeout(() => {
-        setLoaderState({...loaderState, isVisible: false});
-        // setIsLoaderVisible(false);
+        const payload = {...loader, isVisible: false};
+        dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
       }, 2000);
     }
 
@@ -28,13 +35,13 @@ const StyledLoader = (props: PropsType): React$Node => {
         clearTimeout(timer.current);
       }
     };
-  }, [loaderState, setLoaderState, type]);
+  }, [type, isVisible]);
 
   return (
     <Modal
-      isVisible={isVisible}
+      isVisible={isLoaderVisible}
       borderRadius={10}
-      flex={0}
+      // flex={0}
       alignSelf="center"
       animationIn="zoomIn"
       animationOut="zoomOut">
