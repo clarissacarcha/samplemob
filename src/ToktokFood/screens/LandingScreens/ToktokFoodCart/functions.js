@@ -80,11 +80,11 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
                 : item?.discount_totalamount;
             // console.log(hasTotal, deductedDiscount, totalItemsNotIncluded, discounted_totalamount, 'deductedDiscount');
             totalReseller += deductedDiscount;
-            totalAmount += discounted_totalamount + items?.addonsTotalAmount + (hasTotal ? totalItemsNotIncluded : 0);
+            totalAmount += discounted_totalamount + (hasTotal ? totalItemsNotIncluded : 0);
             deductedProducts.push({id: items.productid, amount: totalReseller, code: voucher_code});
             // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
           } else {
-            totalAmount += ((items?.resellerDiscount ?? items?.basePrice) + items?.addonsTotalAmount) * items.quantity;
+            totalAmount += (items?.resellerDiscount ?? items?.basePrice) * items.quantity;
             // console.log(items, totalAmount);
           }
         });

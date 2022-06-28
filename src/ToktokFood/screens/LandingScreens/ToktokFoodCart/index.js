@@ -473,7 +473,10 @@ const MainComponent = () => {
       promotions.length > 0 || deals.length > 0
         ? await getResellerDiscount(promotions, deals, temporaryCart.items, true)
         : temporaryCart?.totalAmountWithAddons;
-    const deductedPrice = promotions.length > 0 || deals.length > 0 ? totalPrice : temporaryCart?.totalAmountWithAddons;
+    const deductedPrice =
+      promotions.length > 0 || deals.length > 0
+        ? totalPrice + temporaryCart?.addonsTotalAmount
+        : temporaryCart?.totalAmountWithAddons;
     // const totalPrice =
     //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;
     // const totalResellerDiscount =
@@ -484,7 +487,7 @@ const MainComponent = () => {
     //   : await handleShippingVouchers(shippingVoucher);
     const amount = await getTotalAmount(promotionVoucher, delivery?.price);
     const parseAmount = Number((deliveryPrice + deductedPrice - amount).toFixed(2));
-    // console.log(parseAmount, totalPrice, deliveryPrice, deductedPrice, amount);
+    // console.log(parseAmount, totalPrice, deliveryPrice, deductedPrice, amount, temporaryCart);
 
     // if (orderType === 'Delivery') {
     //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
