@@ -11,6 +11,7 @@ import {
   StatusBar,
   Keyboard,
   Dimensions,
+  Platform,
 } from 'react-native';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
 import CONSTANTS from '../../../common/res/constants';
@@ -26,7 +27,7 @@ import {FeedbackModal} from './components';
 import {useDispatch} from 'react-redux';
 import ArrowLeft from '../../../assets/icons/arrow-left-icon.png';
 
-const Keyboard_Height = -(Dimensions.get('window').height * 1.3);
+const Keyboard_Height = -(Dimensions.get('window').height * 0.1);
 
 const Star = ({onPress, color, isLast}) => {
   return <FAIcon onPress={onPress} name="star" size={35} style={{marginRight: isLast ? 0 : 25}} color={color} />;
@@ -136,7 +137,8 @@ const RateDriver = ({navigation, route}) => {
           resizeMode={'contain'}
         />
       </TouchableOpacity>
-      <View style={isKeyboadShown ? {marginTop: Keyboard_Height} : styles.containerTitle}>
+
+      <View style={isKeyboadShown && Platform.OS == 'ios' ? {marginTop: Keyboard_Height} : styles.containerTitle}>
         <Text style={styles.titleQuestion}>How was your driver?</Text>
         <Text style={styles.starStyle}>{starStatus()}</Text>
         <StarRating onChange={value => setRating(value)} />
