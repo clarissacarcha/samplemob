@@ -24,11 +24,15 @@ import NoNetworkConnection from '../assets/images/NoNetworkConnection.png';
 import ToktokSuperApp from '../assets/images/ToktokLogo.png';
 import ServerDown from '../assets/images/ServerDown.png';
 import MaintenanceLogo from '../assets/images/MaintenanceLogo.png';
-import MaintenanceImage from '../assets/images/MaintenanceImage.png';
+import UpdateLogo from '../assets/images/ToktokUpdateImage.png';
+// import MaintenanceImage from '../assets/images/MaintenanceImage.png';
 import CONSTANTS from '../common/res/constants';
 import LoginBanner from '../assets/images/ToktokLogo.png';
 
 const imageWidth = Dimensions.get('window').width - 80;
+
+const bannerWidth = Dimensions.get('window').width * 0.8;
+const bannerHeight = Dimensions.get('window').height * 0.5;
 
 const mapKeyValueToObject = keyValueArray => {
   const result = {};
@@ -182,10 +186,13 @@ const Splash = ({setConstants, setAppServices}) => {
         source={SplashImage}
         resizeMode={'cover'}>
         <View style={{alignItems: 'center', marginHorizontal: 20}}>
-          <Image source={MaintenanceLogo} style={{width: 189, height: 183, marginTop: '50%'}} resizeMode="contain" />
+          <Image
+            source={UpdateLogo}
+            style={{width: bannerWidth, height: bannerHeight, marginTop: '20%'}}
+            resizeMode="contain"
+          />
           <Text
             style={{
-              marginTop: 54,
               color: CONSTANTS.COLOR.ORANGE,
               fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
               fontSize: CONSTANTS.FONT_SIZE.XL,
@@ -238,10 +245,13 @@ const Splash = ({setConstants, setAppServices}) => {
         source={SplashImage}
         resizeMode={'cover'}>
         <View style={{alignItems: 'center', marginHorizontal: 20}}>
-          <Image source={MaintenanceLogo} style={{width: 189, height: 183, marginTop: '50%'}} resizeMode="contain" />
+          <Image
+            source={UpdateLogo}
+            style={{width: bannerWidth, height: bannerHeight, marginTop: '20%'}}
+            resizeMode="contain"
+          />
           <Text
             style={{
-              marginTop: 54,
               color: CONSTANTS.COLOR.ORANGE,
               fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
               fontSize: CONSTANTS.FONT_SIZE.XL,
@@ -289,10 +299,10 @@ const Splash = ({setConstants, setAppServices}) => {
       <ImageBackground style={{flex: 1, alignItems: 'center'}} source={SplashImage} resizeMode={'cover'}>
         <Image
           source={LoginBanner}
-          style={{height: imageWidth - 200, width: imageWidth - 150, marginTop: 120}}
+          style={{height: imageWidth - 200, width: imageWidth - 150, marginTop: 80}}
           resizeMode="contain"
         />
-        <Image source={MaintenanceImage} style={{height: imageWidth - 30, width: imageWidth - 70}} resizeMode="cover" />
+        <Image source={MaintenanceLogo} style={{width: bannerWidth, height: bannerHeight}} resizeMode="contain" />
         <Text
           style={{
             color: CONSTANTS.COLOR.ORANGE,
@@ -302,8 +312,9 @@ const Splash = ({setConstants, setAppServices}) => {
           Katok ka ulit mamaya!
         </Text>
         <Text style={{marginHorizontal: 20, textAlign: 'center', marginTop: 8}}>
-          We are performing some maintenance to serve you better. We will be right back. Thank you.
+          We are performing some maintenance to serve you better.
         </Text>
+        <Text style={{marginHorizontal: 20, textAlign: 'center'}}>We will be right back. Thank you.</Text>
       </ImageBackground>
     );
   }
