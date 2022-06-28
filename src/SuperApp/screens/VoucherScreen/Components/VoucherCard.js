@@ -2,22 +2,47 @@ import React from 'react';
 import {Text, StyleSheet, Image, View, Modal, Dimensions} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import {ThrottledOpacity} from '../../../../components_section';
+import * as Progress from 'react-native-progress';
 import voucherPaperDesign from '../../../../assets/toktokgo/voucher-paper-design.png';
 
 const decorHeight = Dimensions.get('window').height * 0.12;
 
 export const VoucherCard = ({data, navigation, onPressActionButton}) => {
+  const getComputed = () => {
+    return data.promoVoucher.discountValue * data.voucherWallet.remaining;
+  };
+
+  const getPercentage = () => {
+    return data.voucherWallet.remaining / data.voucherWallet.Total;
+  };
   return (
     <ThrottledOpacity onPress={() => navigation.navigate('SelectedVoucherScreen', {data})}>
       <View style={styles.card}>
         <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
         <Image source={data.image} resizeMode={'contain'} style={styles.voucherImage} />
         <View style={styles.voucherText}>
-          <Text style={styles.voucherName}>{data.title}</Text>
+          <Text style={styles.voucherName}>{data.name}</Text>
           <Text style={styles.voucherDescription}>{data.description}</Text>
+          {/* <View
+            style={{
+              overflow: 'hidden',
+              borderRadius: 10,
+            }}>
+            <Progress.Bar
+              height={3}
+              progress={getPercentage()}
+              unfilledColor={'#FFF1D2'}
+              color={CONSTANTS.COLOR.ORANGE}
+              borderRadius={0}
+              borderWidth={0}
+              width={null}
+              animationType={'timing'}
+            />
+          </View> */}
+          {/* <Text style={styles.computed}>₱{getComputed()}</Text> */}
         </View>
         <View style={styles.claimContainer}>
-          {data.isClaimed ? (
+          {data.promoVoucher.collectable ? (
             <ThrottledOpacity style={styles.claimButton} onPress={onPressActionButton} delay={500}>
               <Text style={styles.claimButtonText}>Claim</Text>
             </ThrottledOpacity>
@@ -62,6 +87,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     marginLeft: 20,
+  },
+  computed: {
+    color: CONSTANTS.COLOR.ORANGE,
+    fontSize: CONSTANTS.FONT_SIZE.S,
   },
   voucherName: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,

@@ -25,26 +25,23 @@ export const SelectedVoucherScreen = ({navigation, route}) => {
   return (
     <View style={styles.outerContainer}>
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
-      <Header title={data.title} navigation={navigation} />
+      <Header title={data.name} navigation={navigation} />
       <View style={styles.container}>
         <Image
           source={GraphicsIMG}
           resizeMode={'stretch'}
           style={{height: FULL_HEIGHT * 0.22, width: FULL_WIDTH - 32}}
         />
+        <Text style={{marginVertical: 16}}>{data.policies}</Text>
+        {/* <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD}}>Promo Terms and Conditions</Text>
         <Text style={{marginVertical: 16}}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim lacus aenean praesent amet ullamcorper nec ac.
           Augue aliquam risus nam pellentesque etiam mattis id nunc. Faucibus diam vitae bibendum viverra adipiscing.
-        </Text>
-        <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD}}>Promo Terms and Conditions</Text>
-        <Text style={{marginVertical: 16}}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim lacus aenean praesent amet ullamcorper nec ac.
-          Augue aliquam risus nam pellentesque etiam mattis id nunc. Faucibus diam vitae bibendum viverra adipiscing.
-        </Text>
+        </Text> */}
       </View>
 
       <View style={styles.buttonContainer}>
-        {data.isClaimed ? (
+        {data.promoVoucher.collectable ? (
           <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPressActionButton}>
             <Text style={styles.claimText}>Claim</Text>
           </ThrottledOpacity>

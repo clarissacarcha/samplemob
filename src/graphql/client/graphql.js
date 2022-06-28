@@ -171,6 +171,10 @@ const toktokGoUploadLink = createUploadLink({
   uri: `${toktokGoBaseUrl}graphql/`,
 });
 
+const toktokWalletVoucherUploadLink = createUploadLink({
+  uri: `${toktokWalletBaseUrl}voucher/graphql/`,
+});
+
 const splitLink = split(({query}) => {
   const definition = getMainDefinition(query);
   return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
@@ -202,6 +206,7 @@ const toktokFoodGraphqlLink = ApolloLink.from([
 ]);
 
 const toktokGoGraphqlLink = ApolloLink.from([errorLinkLogger, setToktokGoGraphqlTokenLink, toktokGoUploadLink]);
+const toktokWalletVoucherGraphqlLink = ApolloLink.from([errorLinkLogger, setTokenLink, toktokWalletVoucherUploadLink]);
 
 const toktokQuotationGraphqlLink = ApolloLink.from([errorLinkLogger, setTokenLink, toktokQuotationUploadLink]);
 
@@ -255,4 +260,9 @@ export const TOKTOK_QUOTATION_GRAPHQL_CLIENT = new ApolloClient({
 export const TOKTOK_GO_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
   link: toktokGoGraphqlLink,
+});
+
+export const TOKTOK_WALLET_VOUCHER_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: toktokWalletVoucherGraphqlLink,
 });
