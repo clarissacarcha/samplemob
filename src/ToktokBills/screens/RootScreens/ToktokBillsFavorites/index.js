@@ -129,8 +129,8 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   );
 
   useEffect(() => {
-    setIsMounted(true);
     handleGetFavoriteBills();
+    setIsMounted(true);
   }, []);
 
   const handleGetFavoriteBills = () => {
@@ -147,7 +147,6 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   useEffect(() => {
     if (!search) {
       handleGetFavoriteBills();
-      setFavorites([]);
     }
   }, [search]);
 
@@ -278,9 +277,9 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   }
   return (
     <View style={styles.container}>
-     {favorites.length !== 0 && (
-        <View style={styles.searchContainer}>
-          <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
+      <View style={styles.searchContainer}>
+        <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
+        {isMounted && favorites.length != 0 && (
           <SearchInput
             search={search}
             onChangeText={onSearchChange}
@@ -289,8 +288,8 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
             }}
             placeholder="Search Favorites"
           />
-        </View>
-      )}
+        )}
+      </View>
       {(searchLoading && filteredData.length === 0) ||
       (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (
         <LoadingIndicator isLoading={true} isFlex />
