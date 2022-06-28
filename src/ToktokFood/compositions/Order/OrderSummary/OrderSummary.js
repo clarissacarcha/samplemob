@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import type {PropsType} from './types';
 import {
   Container,
@@ -17,15 +17,33 @@ import {
   AmountQuantityContainer,
   ModifiedContainer,
   ModifiedTextContainer,
-  // Loader,
+  FooterButton,
+  FooterText,
 } from './Styled';
 import StyledText from 'toktokfood/components/StyledText';
 import {useTheme} from 'styled-components';
 import Divider from 'toktokfood/components/Divider';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+
 const OrderSummary = (props: PropsType): React$Node => {
   const {state} = props;
-  // const isLoaded = state && Object.keys(state).length > 0;
   const theme = useTheme();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [fullList, setFullList] = useState([]);
+  const [limitedList, setLimitedList] = useState([]);
+
+  useEffect(() => {
+    if (state?.length > 0) {
+      setFullList(state);
+      if (state?.length > 5) {
+        const limit = state?.slice(0, 5);
+        setLimitedList(limit);
+      } else {
+        setIsCollapsed(true);
+      }
+    }
+  }, [state]);
+
   const renderAddonsComponent = addons => {
     const parsedAddons = JSON.parse(addons);
     return parsedAddons.map(item => <AddOnText>{item.addon_name}</AddOnText>);
@@ -52,25 +70,22 @@ const OrderSummary = (props: PropsType): React$Node => {
     return <OrderImage source={{uri}} />;
   };
 
-  // function generateRandomWidth(min, max) {
-  //   return Math.floor(Math.random() * (max - min + 1)) + min;
-  // }
+  const renderFooterComponent = () => {
+    return (
+      fullList.length > 5 && (
+        <FooterButton onPress={() => setIsCollapsed(!isCollapsed)}>
+          <FooterText>{isCollapsed ? 'Hide' : 'Show more'}</FooterText>
+          <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={13} color={theme.color.orange} />
+        </FooterButton>
+      )
+    );
+  };
 
-  // const renderLoaderCardComponent = () => {
-  //   return (
-  //     <Loader
-  //       pWidth={[generateRandomWidth(45, 80), generateRandomWidth(45, 80)]}
-  //       tWidth={generateRandomWidth(90, 250)}
-  //     />
-  //   );
-  // };
-
-  const renderComponent = () => {
-    // if (isLoaded) {
+  const renderOrderListComponent = () => {
     return (
       <VirtualizedScroll>
         <OrderList
-          data={state}
+          data={isCollapsed ? fullList : limitedList}
           keyExtractor={item => item.logId}
           renderItem={({item}) => (
             <OrderCard>
@@ -96,23 +111,15 @@ const OrderSummary = (props: PropsType): React$Node => {
               </AmountQuantityContainer>
             </OrderCard>
           )}
+          ListFooterComponent={renderFooterComponent}
         />
       </VirtualizedScroll>
     );
-    // }
-
-    // return (
-    //   <React.Fragment>
-    //     {renderLoaderCardComponent()}
-    //     {renderLoaderCardComponent()}
-    //     {renderLoaderCardComponent()}
-    //   </React.Fragment>
-    // );
   };
 
   return (
     <Container>
-      {renderComponent()}
+      {renderOrderListComponent()}
       <Divider />
     </Container>
   );

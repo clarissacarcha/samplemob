@@ -4,7 +4,7 @@
 
 import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
-import {FlatList, ScrollView} from 'react-native';
+import {FlatList, ScrollView, TouchableOpacity} from 'react-native';
 import StyledText from 'toktokfood/components/StyledText';
 import ContentLoader from 'react-native-easy-content-loader';
 
@@ -105,3 +105,20 @@ export const Loader: ComponentType<any> = styled(ContentLoader).attrs(props => (
     marginBottom: 15,
   },
 }))``;
+
+export const FooterButton: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
+  ...props,
+  activeOpacity: 0.9,
+}))`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-vertical: 15px;
+`;
+
+export const FooterText: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
+  color: props.theme.color.orange,
+}))`
+  margin-right: 10px;
+`;
