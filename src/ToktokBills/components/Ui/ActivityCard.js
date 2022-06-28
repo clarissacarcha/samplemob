@@ -25,7 +25,7 @@ const getStatus = status => {
       return {text: 'Pending', color: '#FDBA1C', iconName: 'remove-circle-outline'};
   }
 };
-export const ActivityCard = ({item, onPress, isLastItem = false}) => {
+export const ActivityCard = React.memo(({item, onPress, isLastItem = false}) => {
   let {amount, convenienceFee, createdAt, billerDetails, referenceNumber, destinationIdentifier, status} = item;
 
   let transactionDateTime = moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
@@ -82,7 +82,7 @@ export const ActivityCard = ({item, onPress, isLastItem = false}) => {
       </View>
     </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
