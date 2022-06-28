@@ -473,10 +473,7 @@ const MainComponent = () => {
       promotions.length > 0 || deals.length > 0
         ? await getResellerDiscount(promotions, deals, temporaryCart.items, true)
         : temporaryCart?.totalAmountWithAddons;
-    const deductedPrice =
-      promotions.length > 0 || deals.length > 0
-        ? totalPrice + temporaryCart.addonsTotalAmount
-        : temporaryCart?.totalAmountWithAddons;
+    const deductedPrice = promotions.length > 0 || deals.length > 0 ? totalPrice : temporaryCart?.totalAmountWithAddons;
     // const totalPrice =
     //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;
     // const totalResellerDiscount =
@@ -487,7 +484,7 @@ const MainComponent = () => {
     //   : await handleShippingVouchers(shippingVoucher);
     const amount = await getTotalAmount(promotionVoucher, delivery?.price);
     const parseAmount = Number((deliveryPrice + deductedPrice - amount).toFixed(2));
-    console.log(parseAmount, totalPrice, deliveryPrice, deductedPrice, amount);
+    // console.log(parseAmount, totalPrice, deliveryPrice, deductedPrice, amount);
 
     // if (orderType === 'Delivery') {
     //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
@@ -636,7 +633,7 @@ const MainComponent = () => {
 
     const amount = await getTotalAmount(promotionVoucher, 0);
     const parsedAmount = Number((deductedPrice - amount).toFixed(2));
-    // console.log(amount, parsedAmount, deductedPrice, temporaryCart);
+    // console.log('PLACE', amount, parsedAmount, deductedPrice, temporaryCart);
 
     const DELIVERY_RECEIVER =
       receiver.contactPerson && receiver.contactPerson != null && receiver.contactPerson !== ''
@@ -685,7 +682,7 @@ const MainComponent = () => {
       discounted_totalamount: parsedAmount,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, []);
-    console.log('DATA', data);
+    console.log('DATA', JSON.stringify(data));
     postCustomerOrder({
       variables: {
         input: data,
