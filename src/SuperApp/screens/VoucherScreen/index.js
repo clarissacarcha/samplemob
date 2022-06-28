@@ -45,7 +45,6 @@ export const VoucherScreen = ({navigation}) => {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log('zionnn', response);
       setData(response.getVouchers);
     },
   });
