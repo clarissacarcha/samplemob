@@ -25,7 +25,6 @@ export const SearchInput = ({
   onChangeText,
   placeholder,
   containerStyle,
-  onSubmitEditing,
   returnKeyType = 'done',
   hasClear,
 }) => {
@@ -40,11 +39,10 @@ export const SearchInput = ({
           size={moderateScale(15)}
         />
         <TextInput
-          value={search}
+          defaultValue={search}
           style={styles.input}
           placeholder={placeholder}
           onChangeText={onChangeText}
-          onSubmitEditing={onSubmitEditing}
           returnKeyType={returnKeyType}
           placeholderTextColor="#9E9E9E"
         />
