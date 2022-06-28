@@ -9,16 +9,80 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
   const [typedReason, setTypedReason] = useState('');
   const [data, setData] = useState([
     {
-      label: 'Waited too long',
+      label: 'Driver took too long to arrive',
       value: '0',
     },
     {
-      label: 'Driver asked to cancel',
+      label: 'Found a cheaper option/Found another ride',
       value: '1',
     },
     {
-      label: 'Driver is rude',
+      label: 'Changed my mind',
       value: '2',
+    },
+    {
+      label: 'Want to change address',
+      value: '3',
+    },
+    {
+      label: 'Wrong address/Wrong pin/Wrong pick-up point',
+      value: '4',
+    },
+    {
+      label: 'Forgot to input promo code',
+      value: '5',
+    },
+    {
+      label: 'Driver is too far from pick-up point, not willing to wait',
+      value: '6',
+    },
+    {
+      label: "Driver doesn't accept cash/toktokwallet/e-mobile wallet",
+      value: '7           ',
+    },
+    {
+      label: 'Driver is asking for additional charge',
+      value: '8',
+    },
+    {
+      label: 'Driver asked to cancel',
+      value: '9',
+    },
+    {
+      label: 'The actual driver is different from the app',
+      value: '10',
+    },
+    {
+      label: 'Different unit arrived',
+      value: '11',
+    },
+    {
+      label: 'Driver is not vaccinated/Not following safety protocols',
+      value: '12',
+    },
+    {
+      label: 'Driver is rude/inapprorpiate behavior',
+      value: '13',
+    },
+    {
+      label: 'The payment method I chose has a problem',
+      value: '14',
+    },
+    {
+      label: 'Chose the wrong service',
+      value: '15',
+    },
+    {
+      label: 'Chose the wrong vehicle',
+      value: '16',
+    },
+    {
+      label: 'Driver no-show',
+      value: '17',
+    },
+    {
+      label: 'Other, please state: ',
+      value: '18',
     },
   ]);
 
@@ -65,7 +129,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               );
             })}
           </ScrollView>
-          {selectedReason?.value == '4' && (
+          {selectedReason?.value == '18' && (
             <TextInput
               ref={dropDownRef}
               value={typedReason}
