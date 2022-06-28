@@ -278,17 +278,19 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   }
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
-        <SearchInput
-          search={search}
-          onChangeText={onSearchChange}
-          onClear={() => {
-            setSearch('');
-          }}
-          placeholder="Search Favorites"
-        />
-      </View>
+     {favorites.length !== 0 && (
+        <View style={styles.searchContainer}>
+          <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
+          <SearchInput
+            search={search}
+            onChangeText={onSearchChange}
+            onClear={() => {
+              setSearch('');
+            }}
+            placeholder="Search Favorites"
+          />
+        </View>
+      )}
       {(searchLoading && filteredData.length === 0) ||
       (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (
         <LoadingIndicator isLoading={true} isFlex />
