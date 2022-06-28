@@ -62,8 +62,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingHorizontal: moderateScale(16),
-    paddingVertical: moderateScale(16),
+    padding: moderateScale(16),
   },
   shadow: {
     margin: 16,
