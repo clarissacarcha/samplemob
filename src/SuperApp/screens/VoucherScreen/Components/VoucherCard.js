@@ -61,7 +61,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
                   animationType={'timing'}
                 />
               </View>
-              <Text style={styles.computed}>₱{getComputed()}</Text>
+              <Text style={styles.computed}>₱{getComputed()} remaining</Text>
             </>
           )}
         </View>
@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     marginLeft: 20,
+    marginRight: 15,
   },
   computed: {
     color: CONSTANTS.COLOR.ORANGE,
