@@ -77,7 +77,7 @@ export const ToktokBillsPendingActivities = ({navigation}) => {
   };
 
   const onPressActivityCard = item => {
-    navigation.navigate('ToktokBillsActivityDetails', {activityDetails: item});
+    navigation.navigate('ToktokBillsActivityDetails', {activityDetails: item.node});
   };
 
   const onRefresh = () => {
