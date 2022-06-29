@@ -51,9 +51,9 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote, no
           maxLength={320}
           multiline
         />
-        <View style={{alignItems: 'flex-end'}}>
+        {/* <View style={{alignItems: 'flex-end'}}>
           <Text style={styles.textInputLength}>{notes.textLength}/320</Text>
-        </View>
+        </View> */}
       </View>
     </View>
   );
