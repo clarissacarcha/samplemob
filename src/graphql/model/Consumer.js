@@ -15,3 +15,11 @@ export const POST_FRANCHISEE_VERIFICATION = gql`
     }
   }
 `;
+
+export const PATCH_GO_REFERRAL_USER_ID = gql`
+  mutation patchGoReferralUserId($input: PatchGoReferralUserIdInput!) {
+    patchGoReferralUserId(input: $input) {
+      message
+    }
+  }
+`;

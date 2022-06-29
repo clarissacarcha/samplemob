@@ -76,7 +76,29 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       });
       setLoading(false);
     },
-    onError: onErrorAppSync,
+    onError: error => {
+      setSelectedVouchersNull();
+      const {graphQLErrors, networkError} = error;
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          console.log('ERROR TYPE:', errorType, 'MESSAGE:', message);
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
   });
 
   const [tripBook, {loading: TBLoading}] = useMutation(TRIP_BOOK, {
@@ -196,6 +218,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
       payload: {...details, vehicleType: selectedVehicle.vehicleType},
     });
+    console.log({
+      input: {
+        vehicleTypeRateHash: selectedVehicle.hash,
+        voucherHash: selectedVouchers?.hash,
+      },
+    });
     getTripFare({
       variables: {
         input: {
@@ -205,6 +233,10 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       },
     });
   };
+
+  useEffect(() => {
+    setSelectedVouchers(details.voucher);
+  }, [details.voucher]);
 
   useEffect(() => {
     setLoading(true);
@@ -309,14 +341,13 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         selectVehicle={selectVehicle}
         setViewPriceNote={setViewPriceNote}
       />
-      {/*  TODO: Vouchers will be added after launch of April 18 */}
-      {/* <BookingVoucher
+      <BookingBreakdown selectedVehicle={selectedVehicle} loading={loading} details={details} />
+      <BookingTotal loading={loading} details={details} />
+      <BookingVoucher
         navigation={navigation}
         selectedVouchers={selectedVouchers}
         setSelectedVouchersNull={setSelectedVouchersNull}
-      /> */}
-      <BookingBreakdown selectedVehicle={selectedVehicle} loading={loading} />
-      <BookingTotal loading={loading} details={details} />
+      />
       <BookingSelectPaymentMethod
         viewPaymenetSucessModal={viewPaymenetSucessModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
@@ -403,7 +434,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       <AlertOverlay visible={TIPLoading || TBLoading} />
       <TokwaPaymentProcessedModal
         viewTokwaPaymentProcessedModal={viewTokwaPaymentProcessedModal}
-        amount={details.rate.tripFare.amount}
+        amount={details.rate.tripFare.total}
         tokwaPaymentConfirmed={tokwaPaymentConfirmed}
       />
 
