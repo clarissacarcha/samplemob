@@ -118,7 +118,7 @@ export const FooterButton: ComponentType<any> = styled(TouchableOpacity).attrs(p
 
 export const FooterText: ComponentType<any> = styled(StyledText).attrs(props => ({
   ...props,
-  color: props.theme.color.orange,
+  color: props.theme.color.gray,
 }))`
   margin-right: 10px;
 `;

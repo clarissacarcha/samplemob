@@ -320,7 +320,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       <Alert
         isVisible={isNoResponseModalVisible}
         type="warning"
-        title="No Response from Merchant"
+        title="No Response From Merchant"
         subtitle={"Merchant hasn't confirmed your order.\nPlease try again."}
         buttonText="OK"
         onPress={() => {
