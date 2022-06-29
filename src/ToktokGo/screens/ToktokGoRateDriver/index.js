@@ -203,9 +203,9 @@ const RateDriver = ({navigation, route}) => {
           multiline
           maxLength={320}
         />
-        <View style={{alignItems: 'flex-end'}}>
+        {/* <View style={{alignItems: 'flex-end'}}>
           <Text style={styles.textInputLength}>{feedBack.textLength}/320</Text>
-        </View>
+        </View> */}
       </View>
       <View style={styles.btnContainer}>
         <TouchableOpacity style={styles.btnConfirm} onPress={() => showBookingReason()}>

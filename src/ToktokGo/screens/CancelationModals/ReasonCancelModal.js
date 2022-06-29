@@ -57,7 +57,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
       value: '11',
     },
     {
-      label: 'Driver is not vaccinated/Not following safety protocols',
+      label: "Driver is not vaccinated/Doesn't follow safety protocols",
       value: '12',
     },
     {
@@ -130,16 +130,22 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
             })}
           </ScrollView>
           {selectedReason?.value == '18' && (
-            <TextInput
-              ref={dropDownRef}
-              value={typedReason}
-              placeholder="Enter your reason"
-              keyboardType="default"
-              onChangeText={value => setTypedReason(value)}
-              style={styles.Input}
-              numberOfLines={5}
-              multiline
-            />
+            <View style={styles.containerTextInput}>
+              <TextInput
+                ref={dropDownRef}
+                value={typedReason}
+                placeholder="Enter your reason"
+                keyboardType="default"
+                onChangeText={value => setTypedReason(value)}
+                style={styles.Input}
+                numberOfLines={5}
+                maxLength={320}
+                multiline
+              />
+              {/* <View style={{alignItems: 'flex-end'}}>
+                <Text style={styles.textInputLength}>{typedReason.length}/320</Text>
+              </View> */}
+            </View>
           )}
           <View
             style={{
@@ -278,10 +284,36 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontSize: 11,
     padding: 8,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
     borderRadius: 5,
     width: '85%',
     marginHorizontal: 23,
     marginTop: 20,
+  },
+  Input: {
+    height: 69,
+    textAlignVertical: 'top',
+    borderColor: CONSTANTS.COLOR.MEDIUM_DARK,
+    borderWidth: 1,
+    fontSize: 11,
+    padding: 8,
+    backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
+    borderRadius: 5,
+    width: '100%',
+  },
+  containerTextInput: {
+    marginTop: 16,
+    marginHorizontal: 16,
+    backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: CONSTANTS.COLOR.MEDIUM_DARK,
+  },
+  textInputLength: {
+    marginRight: 15,
+    marginBottom: 10,
+    color: '#9E9E9E',
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    fontSize: CONSTANTS.FONT_SIZE.S,
   },
 });
