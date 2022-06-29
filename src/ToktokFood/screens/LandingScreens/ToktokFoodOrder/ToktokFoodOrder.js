@@ -102,7 +102,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           setIsCancelModalVisible(false);
         } else {
           if (duration === 0 && !isNoResponseModalVisible) {
-            setDuration(1);
+            setDuration(5);
           }
         }
         console.log('fetching orders...', orderStatus);
@@ -325,7 +325,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         buttonText="OK"
         onPress={() => {
           setIsNoResponseModalVisible(false);
-          setDuration(1);
+          setDuration(5);
         }}
       />
     );
