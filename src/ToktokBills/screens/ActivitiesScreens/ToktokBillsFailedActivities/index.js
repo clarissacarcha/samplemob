@@ -25,7 +25,7 @@ import {empty_activities} from 'src/ToktokLoad/assets/images';
 //GRAPHQL & HOOKS
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_TRANSACTIONS_BY_STATUS} from 'toktokbills/graphql/model';
+import {GET_BILL_TRANSACTIONS_PAGINATE} from 'toktokbills/graphql/model';
 
 const {width, height} = Dimensions.get('window');
 
@@ -36,34 +36,39 @@ const ListEmptyComponent = () => {
     </View>
   );
 };
+
+const ListFooterComponent = ({hasNextPage}) => {
+  return (
+    <View style={{marginTop: moderateScale(15)}}>
+      <LoadingIndicator isLoading={hasNextPage} size="small" />
+    </View>
+  );
+};
+
 export const ToktokBillsFailedActivities = ({navigation}) => {
   const [transactions, setTransactions] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [pageInfo, setPageInfo] = useState({});
   const listRef = useRef(null);
 
   useScrollToTop(listRef); // scroll to top
 
-  const [getTransactionsByStatus, {loading, error}] = useLazyQuery(GET_TRANSACTIONS_BY_STATUS, {
+  const [getTransactionsPaginate, {loading, error, fetchMore}] = useLazyQuery(GET_BILL_TRANSACTIONS_PAGINATE, {
     fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        type: 1,
-        status: 3,
-      },
-    },
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: () => {
       changeStates();
     },
-    onCompleted: ({getTransactionsByStatus}) => {
-      setTransactions(getTransactionsByStatus);
+    onCompleted: ({getTransactionsPaginate}) => {
+      setTransactions(getTransactionsPaginate.edges);
+      setPageInfo(getTransactionsPaginate.pageInfo);
       changeStates();
     },
   });
 
   useEffect(() => {
-    getTransactionsByStatus();
+    handleGetTransactionsPaginate();
   }, []);
 
   const changeStates = () => {
@@ -72,12 +77,52 @@ export const ToktokBillsFailedActivities = ({navigation}) => {
   };
 
   const onPressActivityCard = item => {
-    navigation.navigate('ToktokBillsActivityDetails', {activityDetails: item});
+    navigation.navigate('ToktokBillsActivityDetails', {activityDetails: item.node});
   };
 
   const onRefresh = () => {
     setRefreshing(true);
-    getTransactionsByStatus();
+    handleGetTransactionsPaginate();
+  };
+
+  const handleGetTransactionsPaginate = () => {
+    getTransactionsPaginate({
+      variables: {
+        input: {
+          service: 'BILLS',
+          status: 'FAILED',
+          afterCursorId: null,
+        },
+      },
+    });
+  };
+
+
+  const fetchMoreData = () => {
+    if (pageInfo.hasNextPage) {
+      fetchMore({
+        variables: {
+          input: {
+            service: 'BILLS',
+            status: 'FAILED',
+            afterCursorId: pageInfo.endCursorId,
+          },
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          fetchMoreResult.getTransactionsPaginate.edges = [
+            ...previousResult.getTransactionsPaginate.edges,
+            ...fetchMoreResult.getTransactionsPaginate.edges,
+          ];
+          return fetchMoreResult;
+        },
+      }).then(({data}) => {
+        setPageInfo(data.getTransactionsPaginate.pageInfo);
+        setTransactions(data.getTransactionsPaginate.edges);
+      });
+    }
   };
 
   const FailedActivities = useMemo(() => {
@@ -86,7 +131,7 @@ export const ToktokBillsFailedActivities = ({navigation}) => {
         data={transactions}
         renderItem={({item, index}) => (
           <ActivityCard
-            item={item}
+            item={item.node}
             onPress={() => onPressActivityCard(item)}
             isLastItem={transactions.length - 1 == index}
           />
@@ -104,9 +149,14 @@ export const ToktokBillsFailedActivities = ({navigation}) => {
         }
         ListEmptyComponent={ListEmptyComponent}
         ref={listRef}
+        ListFooterComponent={() => <ListFooterComponent hasNextPage={pageInfo.hasNextPage} />}
+        onEndReachedThreshold={0.02}
+        onEndReached={() => fetchMoreData()}
+        removeClippedSubviews={Platform.OS === 'android'}
+        maxToRenderPerBatch={10}
       />
     );
-  }, [transactions, refreshing]);
+  }, [transactions, refreshing, pageInfo]);
 
   if ((loading && transactions.length == 0) || !isMounted) {
     return (
