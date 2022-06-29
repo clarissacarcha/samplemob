@@ -30,9 +30,8 @@ promoVoucher {
   lifetimeLimit
   dailyMaxCount
   lifetimeMaxCount
-  totalCollectable
+  totalCollected
   totalUsed
-  totalCount
   isCash
   isCod
   isTokwa
