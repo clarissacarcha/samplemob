@@ -4,7 +4,7 @@ import CONSTANTS from '../../../../common/res/constants';
 import InfoIcon from '../../../../assets/icons/InfoIcon.png';
 import {numberFormat} from '../../../../helper';
 
-export const BookingBreakdown = ({selectedVehicle, loading}) => {
+export const BookingBreakdown = ({selectedVehicle, loading, details}) => {
   return (
     <View style={styles.container}>
       <View style={styles.rowContainer}>
@@ -12,10 +12,27 @@ export const BookingBreakdown = ({selectedVehicle, loading}) => {
         {loading ? (
           <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
         ) : (
-          <Text>₱{numberFormat(selectedVehicle?.rate?.amount ? selectedVehicle?.rate?.amount : 0)}</Text>
+          <Text style={styles.rideFareText}>
+            ₱{numberFormat(selectedVehicle?.rate?.amount ? selectedVehicle?.rate?.amount : 0)}
+          </Text>
         )}
       </View>
+      {details?.rate?.tripFare?.discount > 0 && (
+        <View style={styles.rowContainer}>
+          <View>
+            <Text style={styles.title}>Voucher</Text>
+            <Text style={styles.voucherText}>{details?.voucher?.name}</Text>
+          </View>
 
+          {loading ? (
+            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+          ) : (
+            <Text style={styles.discountText}>
+              - ₱{numberFormat(details?.rate?.tripFare?.discount ? details?.rate?.tripFare?.discount : 0)}
+            </Text>
+          )}
+        </View>
+      )}
       {/* todo: Condition here */}
       {false && (
         <View>
@@ -50,10 +67,20 @@ const styles = StyleSheet.create({
     color: CONSTANTS.COLOR.ALMOST_BLACK,
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
+  voucherText: {
+    color: CONSTANTS.COLOR.BLACK,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    fontSize: CONSTANTS.FONT_SIZE.M,
+  },
+  rideFareText: {
+    color: CONSTANTS.COLOR.BLACK,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    fontSize: CONSTANTS.FONT_SIZE.M,
+  },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   fee: {
     flexDirection: 'row',
@@ -73,7 +100,13 @@ const styles = StyleSheet.create({
     color: CONSTANTS.COLOR.RED,
   },
   divider: {
+    marginTop: 8,
     borderBottomWidth: 2,
     borderBottomColor: CONSTANTS.COLOR.LIGHT,
+  },
+  discountText: {
+    color: CONSTANTS.COLOR.RED,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    size: CONSTANTS.FONT_SIZE.M,
   },
 });

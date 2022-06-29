@@ -12,15 +12,8 @@ const FULL_HEIGHT = Dimensions.get('window').height;
 const FULL_WIDTH = Dimensions.get('window').width;
 
 export const SelectedVoucherScreen = ({navigation, route}) => {
-  const {data} = route.params;
+  const {data, onPress} = route.params;
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
-
-  const onPressActionButton = () => {
-    setViewSuccesVoucherClaimedModal(true);
-    setTimeout(() => {
-      setViewSuccesVoucherClaimedModal(false);
-    }, 1000);
-  };
 
   return (
     <View style={styles.outerContainer}>
@@ -41,12 +34,12 @@ export const SelectedVoucherScreen = ({navigation, route}) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        {data.promoVoucher.collectable ? (
-          <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPressActionButton}>
+        {data.promoVoucher.collectable && !data.voucherWallet ? (
+          <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPress}>
             <Text style={styles.claimText}>Claim</Text>
           </ThrottledOpacity>
         ) : (
-          <ThrottledOpacity style={styles.useButtonWrapper} onPress={onPressActionButton}>
+          <ThrottledOpacity style={styles.useButtonWrapper} onPress={onPress}>
             <Text style={styles.useText}>Use</Text>
           </ThrottledOpacity>
         )}

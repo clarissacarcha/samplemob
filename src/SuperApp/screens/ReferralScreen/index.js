@@ -1,5 +1,15 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, Image, Dimensions, TextInput, ImageBackground, StatusBar} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  TextInput,
+  ImageBackground,
+  StatusBar,
+  KeyboardAvoidingView,
+} from 'react-native';
 
 import CONSTANTS from '../../../common/res/constants';
 import {ThrottledOpacity} from '../../../components_section';
@@ -10,14 +20,41 @@ import TokIcon from '../../../assets/images/Promos/ToktokAppIcon.png';
 import voucherPaperDesign from '../../../assets/toktokgo/voucher-paper-design.png';
 import VoucherIMG from '../../../assets/images/Promos/VoucherImage.png';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
+import {useMutation} from '@apollo/react-hooks';
+import {PATCH_GO_REFERRAL_USER_ID} from '../../../graphql';
+import {onError} from '../../../util/ErrorUtility';
+import {AlertOverlay} from '../../../components';
 
 const decorHeight = Dimensions.get('window').height * 0.15;
 
 export const ReferralScreen = ({navigation}) => {
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
+  const [refCode, setRefCode] = useState('');
+
+  const [patchGoReferralUserId, {loading}] = useMutation(PATCH_GO_REFERRAL_USER_ID, {
+    onCompleted: () => {
+      setViewSuccesVoucherClaimedModal(true);
+      setTimeout(() => {
+        setViewSuccesVoucherClaimedModal(false);
+        setRefCode('');
+      }, 1000);
+    },
+    onError: onError,
+  });
+
+  const onPress = () => {
+    patchGoReferralUserId({
+      variables: {
+        input: {
+          goReferralDriverUserId: refCode,
+        },
+      },
+    });
+  };
 
   return (
     <ImageBackground source={ReferralBG} style={styles.container}>
+      <AlertOverlay visible={loading} />
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
       <ThrottledOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
@@ -42,10 +79,19 @@ export const ReferralScreen = ({navigation}) => {
         </View>
 
         <View style={styles.inputContainer}>
-          <TextInput style={styles.input} placeholder="Driver ID" />
+          <KeyboardAvoidingView>
+            <TextInput
+              style={styles.input}
+              placeholder="Driver ID"
+              value={refCode}
+              onChangeText={text => {
+                setRefCode(text);
+              }}
+            />
+          </KeyboardAvoidingView>
         </View>
 
-        <ThrottledOpacity style={styles.button}>
+        <ThrottledOpacity style={styles.button} onPress={onPress}>
           <Text style={styles.buttonText}>Claim Now</Text>
         </ThrottledOpacity>
 

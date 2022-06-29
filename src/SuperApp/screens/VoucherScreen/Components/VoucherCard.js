@@ -1,13 +1,14 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal, Dimensions} from 'react-native';
+import {Text, StyleSheet, Image, View, Modal, Dimensions, ActivityIndicator} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import {ThrottledOpacity} from '../../../../components_section';
 import * as Progress from 'react-native-progress';
 import voucherPaperDesign from '../../../../assets/toktokgo/voucher-paper-design.png';
+import VoucherImage from '../../../../assets/toktokgo/voucher-sedan-image.png';
 
 const decorHeight = Dimensions.get('window').height * 0.12;
 
-export const VoucherCard = ({data, navigation, onPressActionButton}) => {
+export const VoucherCard = ({data, navigation, onPressActionButton, loading}) => {
   const getComputed = () => {
     return data.promoVoucher.discountValue * data.voucherWallet.remaining;
   };
@@ -15,39 +16,64 @@ export const VoucherCard = ({data, navigation, onPressActionButton}) => {
   const getPercentage = () => {
     return data.voucherWallet.remaining / data.voucherWallet.Total;
   };
+
+  const onPress = () => {
+    if (data.promoVoucher.collectable && !data.voucherWallet) {
+      onPressActionButton({voucherId: data.id});
+    } else {
+      navigation.pop(2);
+      navigation.push('ToktokGoLanding');
+    }
+  };
+
+  const onPressSelected = () => {
+    if (data.promoVoucher.collectable && !data.voucherWallet) {
+      onPressActionButton({voucherId: data.id});
+    } else {
+      navigation.pop(3);
+      navigation.push('ToktokGoLanding');
+    }
+  };
+
   return (
-    <ThrottledOpacity onPress={() => navigation.navigate('SelectedVoucherScreen', {data})}>
+    <ThrottledOpacity onPress={() => navigation.navigate('SelectedVoucherScreen', {data, onPress: onPressSelected})}>
       <View style={styles.card}>
         <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
-        <Image source={data.image} resizeMode={'contain'} style={styles.voucherImage} />
+        <Image source={VoucherImage} resizeMode={'contain'} style={styles.voucherImage} />
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
           <Text style={styles.voucherDescription}>{data.description}</Text>
-          {/* <View
-            style={{
-              overflow: 'hidden',
-              borderRadius: 10,
-            }}>
-            <Progress.Bar
-              height={3}
-              progress={getPercentage()}
-              unfilledColor={'#FFF1D2'}
-              color={CONSTANTS.COLOR.ORANGE}
-              borderRadius={0}
-              borderWidth={0}
-              width={null}
-              animationType={'timing'}
-            />
-          </View> */}
-          {/* <Text style={styles.computed}>₱{getComputed()}</Text> */}
+          {data.voucherWallet?.total > 1 && (
+            <>
+              <View
+                style={{
+                  overflow: 'hidden',
+                  borderRadius: 10,
+                }}>
+                <Progress.Bar
+                  height={3}
+                  progress={getPercentage()}
+                  unfilledColor={'#FFF1D2'}
+                  color={CONSTANTS.COLOR.ORANGE}
+                  borderRadius={0}
+                  borderWidth={0}
+                  width={null}
+                  animationType={'timing'}
+                />
+              </View>
+              <Text style={styles.computed}>₱{getComputed()}</Text>
+            </>
+          )}
         </View>
         <View style={styles.claimContainer}>
-          {data.promoVoucher.collectable ? (
-            <ThrottledOpacity style={styles.claimButton} onPress={onPressActionButton} delay={500}>
+          {loading ? (
+            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+          ) : data.promoVoucher.collectable && !data.voucherWallet ? (
+            <ThrottledOpacity style={styles.claimButton} onPress={onPress} delay={500}>
               <Text style={styles.claimButtonText}>Claim</Text>
             </ThrottledOpacity>
           ) : (
-            <ThrottledOpacity style={styles.useButton} onPress={onPressActionButton} delay={500}>
+            <ThrottledOpacity style={styles.useButton} onPress={onPress} delay={500}>
               <Text style={styles.useButtonText}>Use</Text>
             </ThrottledOpacity>
           )}
