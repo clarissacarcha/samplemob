@@ -125,7 +125,6 @@ export const ToktokBillsPendingActivities = ({navigation}) => {
   };
 
   const PendingActivities = useMemo(() => {
-    console.log(transactions);
     return (
       <FlatList
         data={transactions}
