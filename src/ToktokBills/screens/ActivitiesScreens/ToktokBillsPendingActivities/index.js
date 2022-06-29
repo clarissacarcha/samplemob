@@ -90,7 +90,7 @@ export const ToktokBillsPendingActivities = ({navigation}) => {
       variables: {
         input: {
           service: 'BILLS',
-          status: 'ALL',
+          status: 'PENDING',
           afterCursorId: null,
         },
       },
