@@ -120,6 +120,10 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
             totalAmount += discounted_totalamount;
             // console.log(items?.basePrice, 'baseprice 3')
           }
+
+          if (!filteredDeductedProd.length && !filteredProd) {
+            totalAmount += (items?.resellerDiscount ?? items?.basePrice) * items.quantity;
+          }
           // else {
           //   totalAmount += items?.resellerDiscount ?? items.basePrice;
           //   // console.log(items?.basePrice, 'resellerDiscount 2')
