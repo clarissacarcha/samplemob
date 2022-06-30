@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, FlatList, TouchableOpacity, StyleSheet, ScrollView, Image, ActivityIndicator} from 'react-native';
+import {Text, View, FlatList, Dimensions, StyleSheet, ScrollView, Image, ActivityIndicator} from 'react-native';
 import Data from '../../components/BookingDummyData';
 import CONSTANTS from '../../../common/res/constants';
 import {Header} from '../../components';
@@ -10,11 +10,15 @@ import {TextInput} from 'react-native-gesture-handler';
 import {throttle} from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
 import NoVouchers from '../../../assets/toktokgo/no-vouchers.png';
+import NoFound from '../../../assets/images/empty-search.png';
 import {onError} from '../../../util/ErrorUtility';
 import {SuccessVoucherClaimedModal} from '../../../SuperApp/screens/VoucherScreen/Components';
 import SearchICN from '../../../assets/images/SearchIcon.png';
 import XICN from '../../../assets/icons/EraseTextInput.png';
 import {ThrottledOpacity} from '../../../components_section';
+import {useDebounce} from '../../helpers';
+
+const decorWidth = Dimensions.get('window').width * 0.5;
 
 const ToktokGoBookingVouchers = ({navigation}) => {
   const {details} = useSelector(state => state.toktokGo);
@@ -22,6 +26,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [search, setSearch] = useState('');
   const [searchedDatas, setSearchedDatas] = useState([]);
+  const [noResults, setNoResults] = useState(false);
 
   const [getVouchers, {data = {getVouchers: {}}, loading, refetch}] = useLazyQuery(GET_VOUCHERS, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
@@ -51,9 +56,14 @@ const ToktokGoBookingVouchers = ({navigation}) => {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
     onCompleted: response => {
-      setSearchedDatas(response.getSearchVoucher);
+      if (response.getSearchVoucher.length > 0) {
+        setSearchedDatas(response.getSearchVoucher);
+        setNoResults(false);
+      } else {
+        setNoResults(true);
+      }
     },
-    onError: onError,
+    onError: null,
   });
 
   const searchVoucher = () => {
@@ -89,6 +99,31 @@ const ToktokGoBookingVouchers = ({navigation}) => {
     1000,
     {trailing: false},
   );
+
+  const debouncedRequest = useDebounce(value =>
+    getSearchVoucher({
+      variables: {
+        input: {
+          type: 'promo',
+          search: value,
+          service: 'GO',
+        },
+      },
+    }),
+  );
+
+  const onChange = value => {
+    setSearch(value);
+    debouncedRequest(value);
+    if (!value) {
+      setNoResults(false);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearch('');
+    setNoResults(false);
+  };
 
   if (loading) {
     <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />;
@@ -139,37 +174,47 @@ const ToktokGoBookingVouchers = ({navigation}) => {
         <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} />
         <TextInput
           //   ref={inputRef}
-          onChangeText={value => setSearch(value)}
+          onChangeText={value => onChange(value)}
           style={styles.input}
           placeholder={'Find the best discount for you!'}
           value={search}
           onSubmitEditing={searchVoucher}
         />
         {search ? (
-          <ThrottledOpacity onPress={() => setSearch('')}>
+          <ThrottledOpacity onPress={clearSearch}>
             <Image source={XICN} resizeMode={'contain'} style={{width: 15, height: 15, marginRight: 20}} />
           </ThrottledOpacity>
         ) : null}
       </View>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={searchedDatas.length === 0 ? data.getVouchers : searchedDatas}
-        keyExtractor={item => item.id}
-        renderItem={({item, index}) => {
-          const lastItem = index == data.getVouchers.length - 1 ? true : false;
-          return (
-            <View style={{marginVertical: 8}}>
-              <VoucherCard
-                data={item}
-                navigation={navigation}
-                onPressActionButton={onApply}
-                postCollectVoucher={postCollectVoucher}
-                loading={PCVLoading}
-              />
-            </View>
-          );
-        }}
-      />
+
+      {noResults && (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Image source={NoFound} resizeMode={'contain'} style={{width: decorWidth, height: decorWidth}} />
+          <Text style={{color: CONSTANTS.COLOR.ORANGE, fontSize: CONSTANTS.FONT_SIZE.XL + 1}}>No Results Found</Text>
+          <Text>Try to search something similar.</Text>
+        </View>
+      )}
+      {!noResults && (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={searchedDatas.length === 0 ? data.getVouchers : searchedDatas}
+          keyExtractor={item => item.id}
+          renderItem={({item, index}) => {
+            const lastItem = index == data.getVouchers.length - 1 ? true : false;
+            return (
+              <View style={{marginVertical: 8}}>
+                <VoucherCard
+                  data={item}
+                  navigation={navigation}
+                  onPressActionButton={onApply}
+                  postCollectVoucher={postCollectVoucher}
+                  loading={PCVLoading}
+                />
+              </View>
+            );
+          }}
+        />
+      )}
     </View>
   );
 };

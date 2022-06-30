@@ -77,7 +77,9 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
               <Text style={styles.useButtonText}>Use</Text>
             </ThrottledOpacity>
           )}
-          <ThrottledOpacity>
+          <ThrottledOpacity
+            onPress={() => navigation.navigate('SelectedVoucherScreen', {data, onPress: onPressSelected})}
+            delay={500}>
             <Text style={styles.TandC}>T&C</Text>
           </ThrottledOpacity>
         </View>
