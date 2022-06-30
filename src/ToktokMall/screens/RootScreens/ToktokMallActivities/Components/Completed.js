@@ -8,6 +8,7 @@ import {
   Dimensions,
   StyleSheet
 } from 'react-native';
+import { FONT_SIZE } from '../../../../../res/variables';
 import { emptyorders } from '../../../../assets';
 import { RenderItem } from './subComponents';
 import { useLazyQuery } from '@apollo/react-hooks';
@@ -38,8 +39,9 @@ export const CompletedItem = ({fulldata}) => {
 
 export const Completed = (props) => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const [getOrders, {loading, error}] = useLazyQuery(GET_TRANSACTIONS, {
+  const [getOrders] = useLazyQuery(GET_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     context: { headers: { authorization: "Bearer: " + getAccessToken() }},  
     fetchPolicy: 'network-only',
@@ -47,10 +49,12 @@ export const Completed = (props) => {
       if(response.getActivities){
         const newActivities = [...response.getActivities.filter(activity => activity.status.status === 4)];
         setData(newActivities);
+        setLoading(false);
       }
     },
     onError: (err) => {
-      console.log(err)
+      console.log(err);
+      setLoading(false);
     }
   })
 
@@ -64,6 +68,7 @@ export const Completed = (props) => {
   }
 
   const Fetch = async () => {
+    setLoading(true);
     getOrders({variables: {
       input: {
         refCom: "",
@@ -134,13 +139,13 @@ const styles = StyleSheet.create({
     marginTop: 8
   },
   noDataTitle: {
-    fontSize: 18, 
+    fontSize: FONT_SIZE.XL, 
     fontWeight: "600", 
     color: "#F6841F", 
     marginBottom: 8
   },
   noDataBody: {
-    fontSize: 13, 
+    fontSize: FONT_SIZE.M, 
     fontWeight: "400", 
     color: "#000000"
   }

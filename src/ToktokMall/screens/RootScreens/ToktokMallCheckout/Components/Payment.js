@@ -50,61 +50,50 @@ const RenderToktokWalletStatus = ({status}) => {
     return (
       <>
         <View style={styles.container}>
-          <Text style={{marginLeft: 15, marginTop: 15, fontSize: 14, fontFamily: FONT.BOLD}}>Payment Method</Text>
-          <View style={{paddingTop: 15}} />
-          <View style={{backgroundColor: '#FFFCF4', padding: 8}}>
+          <Text style={styles.paymentMethodText}>Payment Method</Text>
+          <View style={styles.margin1} />
+          <View style={styles.sorryContainer}>
             {status == null && 
-            <Text style={{color: '#FFA700', fontSize: 12, textAlign: 'center', paddingHorizontal: 5}}>
+            <Text style={styles.sorryText}>
               Sorry! It seems that you don`t have a toktokwallet account yet. Please submit verification requirements to
               proceed placing an order. Once you get approved, you will be able to enjoy full benefits of shopping from
               your favorite shops online using toktokmall.
             </Text>}
             {status == 0 && 
-            <Text style={{color: '#FFA700', fontSize: 12, textAlign: 'center', paddingHorizontal: 5}}>
+            <Text style={styles.sorryText}>
               Sorry! It seems that you don’t have a toktokwallet account yet. Please submit verification requirements to proceed placing an order. 
               Once you get approved, you will be able to enjoy full benefits of shopping  from your favorite shops online using toktokmall.
             </Text>}
             {status == 2 && 
-            <Text style={{color: '#FFA700', fontSize: 12, textAlign: 'center', paddingHorizontal: 5}}>
+            <Text style={styles.sorryText}>
               Sorry! It seems that you have a pending toktokwallet account. Please patiently wait to be verified to proceed placing an order. 
               Once you get approved, you will be able to enjoy full benefits of shopping  from your favorite shops online using toktokmall.
             </Text>}
           </View>
-          <View style={{height: 8}} />
-          <View style={{alignItems: 'center', justifyContent: 'center', paddingVertical: 8}}>
+          <View style={styles.margin2} />
+          <View style={styles.gotoButtonContainer}>
             <TouchableOpacity onPress={() => {
               navigation.push('ToktokWalletLoginPage');
             }}>
-              <Text style={{color: "#FFA700", fontSize: 14, fontFamily: FONT.BOLD, textDecorationLine: 'underline'}}>{status == 2 ? "Go to toktokwallet" : "Create my toktokwallet account"}</Text>
+              <Text style={styles.gotoButtonText}>{status == 2 ? "Go to toktokwallet" : "Create my toktokwallet account"}</Text>
             </TouchableOpacity>
           </View>
-          <View
-            style={{
-              ...styles.item,
-              backgroundColor: 'white',
-            }}
-          >
-            <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
+          <View style={[styles.item, styles.tokwalletCotainer]}>
+            <View style={styles.tokwalletInfoContainer}>
               <Image
                 source={walletIcon}
-                style={{width: 25, height: 25, resizeMode: 'stretch'}}
+                style={styles.walletIcon1}
               />
               <View>
-                <Text style={{marginLeft: 8, fontSize: 15, color: '#FFA700'}}>totok
-                <Text style={{fontSize: 15, color: "#F6841F"}}>wallet</Text></Text>                                           
-                {status == 0 && <Text style={{fontSize: 12, marginLeft: 8, color: "#ED3A19"}}>Declined</Text>}
-                {status == 2 && <Text style={{fontSize: 12, marginLeft: 8, color: "#F6841F"}}>Pending</Text>}
+                <Text style={styles.tokwalletInfoTitle1()}>totok
+                <Text style={styles.tokwalletInfoTitle2()}>wallet</Text></Text>                                           
+                {status == 0 && <Text style={styles.declinedText}>Declined</Text>}
+                {status == 2 && <Text style={styles.pendingText}>Pending</Text>}
               </View>
             </View>
             <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignContent: 'flex-start',
-                flex: 2,
-                marginTop: status == null ? 0 : -15
-              }}>
-              <Text style={{marginLeft: 5, fontWeight: 'bold', color: '#929191', fontSize: 10}}>
+              style={styles.balanceContainer(status)}>
+              <Text style={styles.balanceText1}>
               (Balance {FormatToText.currency(0)})
               </Text>          
             </View>
@@ -130,47 +119,37 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
   return (
     <>
       <View style={styles.container}>
-        <Text style={{marginHorizontal: 15, marginVertical: 15, fontSize: 14, fontFamily: FONT.REGULAR}}>Payment Method</Text>
+        <Text style={styles.paymentMethodText}>Payment Method</Text>
         {/* <View style={{paddingTop: 15}} /> */}
         
         {/* <View style={{height: 8}} /> */}
         <TouchableOpacity
           // style ={{...styles.item, backgroundColor: payment == 'toktokwallet' ? '#FFEBBC' : 'white' }}
-          style={{
-            ...styles.item,
-            // backgroundColor: parseFloat(currentBalance) < parseFloat(total) ? 'white' : 'rgba(255, 235, 188, 0.25)',
-            backgroundColor: '#fff',
-            borderBottomWidth: 0
-          }}
+          style={[styles.item, styles.tokwalletButtonContainer]}
           onPress={() => {
             setPaymentMethod('toktokwallet');
           }}>
-          <View style={{flexDirection: 'row', alignItems: 'center', flex: 2}}>
+          <View style={styles.tokwalletButtonSubContainer}>
             {/* <View style ={{height: 18, width: 18, backgroundColor: '#F6841F', }} /> */}
             <Image
               source={walletIcon}
-              style={{width: 32, height: 28, resizeMode: 'stretch'}}
+              style={styles.walletIcon2}
             />
             <View>
-              <Text style={{marginLeft: 8, fontSize: 16, color: '#FFA700'}}>toktok
-              <Text style={{fontSize: 16, color: "#F6841F"}}>wallet</Text></Text>              
-              <Text style={{marginLeft: 10, fontWeight: 'normal', color: '#929191', fontSize: 11}}>
+              <Text style={styles.tokwalletInfoTitle1(16)}>toktok
+              <Text style={styles.tokwalletInfoTitle2(16)}>wallet</Text></Text>              
+              <Text style={styles.balanceText2}>
                 Balance: {FormatToText.currency(toktokMall.toktokWalletBalance || 0)}
               </Text>
             </View>
           </View>
           <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-              flex: 1,
-            }}>
+            style={styles.gotoPaymentContainer}>
             {/* <Text style={{marginLeft: 15, fontWeight: 'normal', color: '#929191', fontSize: 13}}>
               (Balance {FormatToText.currency(toktokMall.toktokWalletBalance || 0)})
             </Text> */}
             <TouchableOpacity
-              style={{flex: 1}}
+              style={styles.cashinButton}
               onPress={() => {
                 navigation.navigate('ToktokWalletPaymentOptions', {
                   amount: 0,
@@ -183,15 +162,15 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
                   },
                 });
               }}>
-              <Text style={{alignSelf: 'flex-end', fontSize: 11, fontFamily: FONT.BOLD, color: '#F6841F', paddingVertical: 4, paddingHorizontal: 8, borderWidth: 1, borderRadius: 5, borderColor: '#F6841F'}}>Cash In</Text>
+              <Text style={styles.cashinText}>Cash In</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
         
         {parseFloat(currentBalance) < parseFloat(total) ? (
-            <View style={{flexDirection:'row', alignItems:'center', alignContent:'center', paddingHorizontal:16, paddingBottom:10}}>
+            <View style={styles.insufficientContainer}>
               <AIcons name={'exclamationcircle'} size={13} color={'#ED3A19'}/>
-              <Text style={{color: '#ED3A19', fontSize: 11, textAlign: 'center', marginLeft:8}}>
+              <Text style={styles.insufficientText}>
                 Insufficient balance
               </Text>
             </View>
@@ -232,12 +211,33 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
 };
 
 const styles = StyleSheet.create({
-  body: {flex: 1, backgroundColor: '#F7F7FA'},
-  container: {padding: 0, backgroundColor: 'white', marginTop: 8,paddingBottom:8},
-  itemContainer: {flexDirection: 'row', justifyContent: 'flex-start'},
-  itemImage: {flex: 0.3, height: 100, width: 100},
-  itemprice: {color: '#F6841F', marginRight: 10},
-  itemSaleOff: {textDecorationLine: 'line-through', color: '#9E9E9E'},
+  body: {
+    flex: 1, 
+    backgroundColor: '#F7F7FA'
+  },
+  container: {
+    padding: 0, 
+    backgroundColor: 'white', 
+    marginTop: 8,
+    paddingBottom:8
+  },
+  itemContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'flex-start'
+  },
+  itemImage: {
+    flex: 0.3, 
+    height: 100, 
+    width: 100
+  },
+  itemprice: {
+    color: '#F6841F', 
+    marginRight: 10
+  },
+  itemSaleOff: {
+    textDecorationLine: 'line-through', 
+    color: '#9E9E9E'
+  },
   deliveryfeeContainer: {
     borderWidth: 1,
     borderColor: '#FDDC8C',
@@ -255,4 +255,139 @@ const styles = StyleSheet.create({
     paddingBottom:8,
     borderBottomColor: '#F7F7FA',
   },
+  paymentMethodText: {
+    marginLeft: 15, 
+    marginTop: 15, 
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  margin1: {
+    paddingTop: 15
+  },
+  sorryContainer: {
+    backgroundColor: '#FFFCF4', 
+    padding: 8
+  },
+  sorryText: {
+    color: '#FFA700', 
+    fontSize: 12, 
+    textAlign: 'center', 
+    paddingHorizontal: 5
+  },
+  margin2: {
+    height: 8
+  },
+  gotoButtonContainer: {
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    paddingVertical: 8},
+    gotoButtonText: {color: "#FFA700", 
+    fontSize: 14, 
+    fontFamily: FONT.BOLD, 
+    textDecorationLine: 'underline'
+  },
+  tokwalletCotainer: {
+    backgroundColor: 'white',
+  },
+  tokwalletInfoContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    flex: 1
+  },
+  walletIcon1: {
+    width: 25, 
+    height: 25, 
+    resizeMode: 'stretch'
+  },
+  tokwalletInfoTitle1: (size)  => {
+    return {
+      marginLeft: 8, 
+      fontSize: size ? size : 15, 
+      color: '#FFA700'
+    }
+  },
+  tokwalletInfoTitle2: (size)  => {
+    return {
+      fontSize: size ? size : 15, 
+      color: "#F6841F"
+    }
+  },
+  declinedText: {
+    fontSize: 12, 
+    marginLeft: 8, 
+    color: "#ED3A19"
+  },
+  pendingText: {
+    fontSize: 12, 
+    marginLeft: 8, 
+    color: "#F6841F"
+  },
+  balanceContainer: (status) => {
+    return {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignContent: 'flex-start',
+      flex: 2,
+      marginTop: status == null ? 0 : -15
+    }
+  },
+  balanceText1: {
+    marginLeft: 5, 
+    fontWeight: 'bold', 
+    color: '#929191', 
+    fontSize: 10
+  },
+  tokwalletButtonContainer: {
+    backgroundColor: '#fff',
+    borderBottomWidth: 0
+  },
+  tokwalletButtonSubContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    lex: 2
+  },
+  walletIcon2: {
+    width: 32, 
+    height: 28, 
+    resizeMode: 'stretch'
+  },
+  balanceText2: {
+    marginLeft: 10, 
+    fontWeight: 'normal', 
+    color: '#929191', 
+    fontSize: 11
+  },
+  gotoPaymentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    flex: 1,
+  },
+  cashinButton: {
+    flex: 1
+  },
+  cashinText: {
+    alignSelf: 'flex-end', 
+    fontSize: 11, 
+    fontFamily: FONT.BOLD, 
+    color: '#F6841F', 
+    paddingVertical: 4, 
+    paddingHorizontal: 8, 
+    borderWidth: 1, 
+    borderRadius: 5, 
+    borderColor: '#F6841F'
+  },
+  insufficientContainer: {
+    flexDirection:'row', 
+    alignItems:'center', 
+    alignContent:'center', 
+    paddingHorizontal:16, 
+    paddingBottom:10
+  },
+  insufficientText: {
+    color: '#ED3A19', 
+    fontSize: 11, 
+    textAlign: 'center', 
+    marginLeft:8
+  }
 });

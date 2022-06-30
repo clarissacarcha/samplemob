@@ -21,19 +21,11 @@ export const CheckoutModal = ({navigation, isVisible, setIsVisible, goToOrders})
 
   return (
     <>
-      <View style= {{ flex:1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style= {styles.container}>
           <Modal transparent = {true} visible = {isVisible} animationType = "none"  >
-            <View style = {{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.65)'}}>
+            <View style = {styles.subContainer}>
               
-              <View style = {{
-                backgroundColor: 'white', 
-                width: '90%',
-                borderRadius: 10, 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                // paddingHorizontal: 30, 
-                padding: 15
-              }}>
+              <View style = {styles.promptContainer}>
                 {/* <Image 
                   source = {require('../../../../assets/icons/promptsuccess.png')}
                   style = {{height: '60%', width: '65%', alignSelf: 'center', resizeMode: 'stretch'}}
@@ -56,7 +48,7 @@ export const CheckoutModal = ({navigation, isVisible, setIsVisible, goToOrders})
                 </View> */}
                 <Image 
                   source = {require('../../../../assets/icons/promptsuccess.png')}
-                  style = {{height: '50%', width: '65%', alignSelf: 'center', resizeMode: 'contain'}}
+                  style = {styles.promptImage}
                 />
                 <Text style ={styles.title}>Your order has been placed!</Text>
                 <Text style ={styles.text}>Your order has been placed successfully. Please visit My Orders to check the progress and other details.</Text>
@@ -84,25 +76,82 @@ export const CheckoutModal = ({navigation, isVisible, setIsVisible, goToOrders})
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // height: 200,
-    // width: 200,
-    margin: 20,
-    // marginTop: '40%',
-    
-    backgroundColor: 'white', borderRadius: 20, padding: 30, alignItems: 'center', alignSelf: 'center',
-    // shadowColor: "#000", shadowOpacity: 0.25, shadowRadius: 4, elevation: 5,
-    // shadowOffset: {
-    //     width: 0, height: 2
-    // }
+  container: { 
+    flex:1, 
+    justifyContent: 'center', 
+    alignItems: 'center'
   },
-  title: { color: COLOR.ORANGE, fontFamily: FONT.BOLD, fontSize: 24, flex: 0, marginTop: 0, textAlign: 'center'},
-  text: {color: '#9E9E9E', fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M, flex: 0, paddingVertical: 10, paddingHorizontal: 10, textAlign: 'center'},
-  row: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 },
-  button: { padding: 10, backgroundColor: COLOR.ORANGE, alignItems: 'center', justifyContent: 'center', borderRadius: 5 , width: '45%' },
-  buttonText: {color: 'white', fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M},
-  whiteButton: { padding: 8, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center', 
-    borderRadius: 5, borderWidth: 1, borderColor: COLOR.ORANGE , width: '45%', marginRight: 20, fontSize: 11
+  subContainer: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    backgroundColor: 'rgba(0, 0, 0, 0.65)'
   },
-  whiteButtonText: {color: COLOR.ORANGE, fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M},
+  title: { 
+    color: COLOR.ORANGE, 
+    fontFamily: FONT.BOLD, 
+    fontSize: 24, 
+    flex: 0, 
+    marginTop: 0, 
+    textAlign: 'center'
+  },
+  promptImage: {
+    height: '50%', 
+    width: '65%', 
+    alignSelf: 'center', 
+    resizeMode: 'contain'
+  },
+  promptContainer: {
+    backgroundColor: COLOR.WHITE, 
+    width: '90%',
+    borderRadius: 10, 
+    alignItems: 'center', 
+    justifyContent: 'center',
+    padding: 15
+  },
+  text: {
+    color: COLOR.GRAY, 
+    fontFamily: FONT.REGULAR, 
+    fontSize: FONT_SIZE.M, 
+    flex: 0, 
+    paddingVertical: 10, 
+    paddingHorizontal: 10, 
+    textAlign: 'center'
+  },
+  row: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginTop: 10 
+  },
+  button: { 
+    padding: 10, 
+    backgroundColor: COLOR.ORANGE, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    borderRadius: 5, 
+    width: '45%' 
+  },
+  buttonText: {
+    color: COLOR.WHITE, 
+    fontFamily: FONT.REGULAR, 
+    fontSize: FONT_SIZE.M
+  },
+  whiteButton: { 
+    padding: 8, 
+    backgroundColor: COLOR.WHITE,
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    borderRadius: 5, 
+    borderWidth: 1, 
+    borderColor: COLOR.ORANGE , 
+    width: '45%',
+    marginRight: 20, 
+    fontSize: FONT_SIZE.S
+  },
+  whiteButtonText: {
+    color: COLOR.ORANGE, 
+    fontFamily: FONT.REGULAR, 
+    fontSize: FONT_SIZE.M
+  },
 })

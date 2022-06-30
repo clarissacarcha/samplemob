@@ -97,15 +97,15 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             <Image //source = {item.image} 
             source = {getImageSource(product?.img?.filename)} 
             style ={styles.itemImage}/>
-            <View style = {{ marginLeft: 15, flex: 1}}>
-              <Text style={{fontSize:13, fontWeight:'400'}}>{product?.name ? product?.name.trim() : product?.itemname.trim()}</Text>
-              <Text style ={{ color: '#525252', fontSize: 11, paddingVertical:3}}>Variation: {product.variant || 'None'}</Text>
-              <View style = {{flexDirection: 'row', justifyContent:'space-between'}}>
-                <View style = {{flexDirection: 'row'}}>
+            <View style = {styles.itemInfoContainer}>
+              <Text style={styles.itemNameText}>{product?.name ? product?.name.trim() : product?.itemname.trim()}</Text>
+              <Text style ={styles.itemVariationText}>Variation: {product.variant || 'None'}</Text>
+              <View style = {styles.itemPriceContainer}>
+                <View style = {styles.itemPriceSubContainer}>
                   <Text style ={styles.itemprice}>{FormatToText.currency(product?.price)}</Text>
                   <Text style ={styles.itemSaleOff}>{parseFloat(product?.compareAtPrice) != "0.00" ? FormatToText.currency(product?.compareAtPrice) : ""}</Text>
                 </View>
-                <Text style ={{ color: '#525252', fontSize:13}}>Qty: {item.qty}</Text>
+                <Text style ={styles.itemQuantityText}>Qty: {item.qty}</Text>
               </View>
             </View>
           </View>
@@ -146,16 +146,13 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
         return (
           <>
-            <View style={{flexDirection: 'row'}}>
-              <View style={{flex: 0}}>
+            <View style={styles.shippingFeeContainer}>
+              <View style={styles.shippingFeeTitle}>
                 <Text>Shipping Fee: </Text>
               </View>
-              <View style={{flex: 1, alignItems: 'flex-end'}}>
+              <View style={styles.shippingFeeTotalContainer}>
                 <Text 
-                  style={{
-                    textDecorationLine: "none",  
-                    color: '#000'
-                  }}
+                  style={styles.shippingFeeTotalText}
                 >
                   {FormatToText.currency(getOriginalShippingFee(id))}
                 </Text>
@@ -170,16 +167,13 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         if(discount == null){
           return (
             <>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{flex: 0}}>
+              <View style={styles.shippingFeeContainer}>
+                <View style={styles.shippingFeeTitle}>
                   <Text>Shipping Fee: </Text>
                 </View>
-                <View style={{flex: 1, alignItems: 'flex-end'}}>
+                <View style={styles.shippingFeeTotalContainer}>
                   <Text 
-                    style={{
-                      textDecorationLine: "none",  
-                      color: '#000'
-                    }}
+                    style={styles.shippingFeeTotalText}
                   >
                     {FormatToText.currency(getOriginalShippingFee(id))}
                   </Text>
@@ -193,16 +187,13 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         }else{
           return (
             <>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{flex: 0}}>
+              <View style={styles.shippingFeeContainer}>
+                <View style={styles.shippingFeeTitle}>
                   <Text>Shipping Fee: </Text>
                 </View>
-                <View style={{flex: 1, alignItems: 'flex-end'}}>
+                <View style={styles.shippingFeeTotalContainer}>
                   <Text 
-                    style={{
-                      textDecorationLine: "line-through",  
-                      color: "#929191"
-                    }}
+                    style={styles.shippingFeeTotalText}
                   >
                     {FormatToText.currency(getOriginalShippingFee(id))}
                   </Text>
@@ -254,14 +245,14 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           <>            
             {getDeliveryFee(shopid)}
             <View>
-              <Text style = {{marginBottom: 7, color: '#929191'}}>Receive by {shipping?.deliveryDate || "Add address to calculate"} </Text>
+              <Text style = {styles.receiveText}>Receive by {shipping?.deliveryDate || "Add address to calculate"} </Text>
             </View>
-            <View style={{flexDirection: 'row'}}>
+            <View style={styles.orderContainer}>
               <View style={{flex: 0}}>
                 <Text>Order total ({countItems(item.data[0]) || 0} {countItems(item.data[0]) > 1 ? `items` : 'item'}): </Text>
               </View>              
-              <View style={{flex: 1, alignItems: 'flex-end'}}>
-                <Text style={{fontSize: 14, fontFamily: FONT.BOLD, color: "#F6841F"}}>{computeTotal(item.data[0]) || 0}</Text>
+              <View style={styles.totalContainer}>
+                <Text style={styles.totalText}>{computeTotal(item.data[0]) || 0}</Text>
               </View>
             </View>
           </>
@@ -325,7 +316,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
                     <>
                       <View style={{...styles.voucherBody,  backgroundColor: '#F6841F'}}>
                         <Text ellipsizeMode='tail' style={styles.voucherText}>{item?.voucher_name || item?.vname}</Text>
-                        <TouchableOpacity onPress={() => CheckoutContextData.deleteVoucher(item)} style={{marginLeft: 5, justifyContent: 'center'}}>
+                        <TouchableOpacity onPress={() => CheckoutContextData.deleteVoucher(item)} style={styles.deleteButton}>
                           <Icons.AIcon name='close' size={12} color="#fff" />
                         </TouchableOpacity>
                       </View> 
@@ -343,9 +334,9 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         return (
           <>
           <View>
-            <View style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA'}}>
-              <Image source={voucherIcon} style={{width: 20, height: 20, resizeMode: 'stretch'}} /> 
-              <Text style = {{marginLeft: 10, fontFamily: FONT.REGULAR, fontSize: 13}}>Shop Vouchers</Text>
+            <View style ={styles.shopVoucherContainer}>
+              <Image source={voucherIcon} style={styles.shopVoucherIcon} /> 
+              <Text style = {styles.shopVoucherTitle}>Shop Vouchers</Text>
             </View>            
             <ListVouchers type="promotion" origin={"promotions"} autoapplied={true} />
           </View>
@@ -356,15 +347,15 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       return(
         <>
         <View style={styles.container}>
-          <View style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA'}}>
-            <Image source={getStoreLogo(shop.profileImages.logo || {})} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
-            <Text style = {{marginLeft: 10, fontFamily: FONT.BOLD}}>{shop.shopname}</Text>
+          <View style={styles.shopNameContainer}>
+            <Image source={getStoreLogo(shop.profileImages.logo || {})} style={styles.shopNameIcon} /> 
+            <Text style = {styles.shopNameText}>{shop.shopname}</Text>
           </View>
-          <View style={{padding: 15}}>
+          <View style={styles.renderItemsContainer}>
             {renderItems(item.data[0])}
           </View>
 
-          <View style={{height: 1, marginTop: 10, backgroundColor: "#F7F7FA"}} />
+          <View style={styles.divider1} />
 
           {numAppliedPromoVouchers > 0 && <RenderShopVouchers />}
                     
@@ -374,7 +365,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 
           </TouchableOpacity>
 
-          <View style={{height: 8, marginTop: 5, backgroundColor: "#F7F7FA"}} />
+          <View style={styles.divider2} />
 
           {numAppliedShippingVouchers > 0 && 
           <View>
@@ -403,20 +394,165 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 }
 
 const styles = StyleSheet.create({
-  body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 0, backgroundColor: 'white', marginTop: 8,  },
-  itemContainer: {flexDirection: 'row', justifyContent: 'flex-start'},
-  itemImage: {flex: 0.3, height: 65, width: 50, borderRadius:5},
-  itemprice: {color: '#F6841F', marginRight: 10, fontSize:13},
-  itemSaleOff: {textDecorationLine: 'line-through', color: '#9E9E9E', fontSize: 11},
-  deliveryfeeContainer: {borderWidth: 1, borderColor: '#FDDC8C', marginLeft: 15, marginRight: 15, padding: 10, borderRadius: 5, marginBottom: 15},
+  body: {
+    flex: 1,
+    backgroundColor: '#F7F7FA'
+  },
+  container: {
+    padding: 0,
+    backgroundColor: 'white',
+    marginTop: 8,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
+  },
+  itemImage: {
+    flex: 0.3,
+    height: 65,
+    width: 50,
+    borderRadius:5
+  },
+  itemInfoContainer: {
+    marginLeft: 15,
+    flex: 1 
+  },
+  itemNameText: {
+    fontSize:13,
+    fontWeight:'400'
+  },
+  itemVariationText: {
+    color: '#525252',
+    fontSize: 11,
+    paddingVertical:3
+  },
+  itemPriceContainer: {
+    flexDirection: 'row',
+    justifyContent:'space-between'
+  },
+  itemPriceSubContainer: {
+    flexDirection: 'row'
+  },
+  itemprice: {
+    color: '#F6841F',
+    marginRight: 10,
+    fontSize:13
+  },
+  itemSaleOff: {
+    textDecorationLine: 'line-through',
+    color: '#9E9E9E',
+    fontSize: 11
+  },
+  itemQuantityText: {
+    color: '#525252',
+    fontSize:13
+  },
+  deliveryfeeContainer: {
+    borderWidth: 1,
+    borderColor: '#FDDC8C',
+    marginLeft: 15,
+    marginRight: 15,
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 15
+  },
   voucherContainer: {
-    flexDirection: 'row', padding: 15, flexWrap: 'wrap'
+    flexDirection: 'row',
+    padding: 15,
+    flexWrap: 'wrap'
   },
   voucherBody: {
-    flexDirection: 'row', alignSelf: 'flex-start', paddingVertical: 3, paddingHorizontal: 8, marginVertical: 4, borderRadius: 2, marginRight: 15
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    marginVertical: 4,
+    borderRadius: 2,
+    marginRight: 15
   },
   voucherText: {
-    color: '#fff', fontSize: 11, fontFamily: FONT.BOLD
-  }
+    color: '#fff',
+    fontSize: 11,
+    fontFamily: FONT.BOLD
+  },
+  shippingFeeContainer: {
+    flexDirection: 'row'
+  },
+  shippingFeeTitle: {
+    flex: 0
+  },
+  shippingFeeTotalContainer: {
+    flex: 1,
+    alignItems: 'flex-end'
+  },
+  shippingFeeTotalText: {
+    textDecorationLine: "none",
+    color: '#000'
+  },
+  receiveText: {
+    marginBottom: 7,
+    color: '#929191'
+  },
+  orderContainer: {
+    flexDirection: 'row'
+  },
+  totalContainer: {
+    flex: 1,
+    alignItems: 'flex-end'
+  },
+  totalText: {
+    fontSize: 14,
+    fontFamily: FONT.BOLD,
+    color: "#F6841F"
+  },
+  deleteButton: {
+    marginLeft: 5,
+    justifyContent: 'center'
+  },
+  shopVoucherContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    padding: 15,
+    borderBottomColor: '#F7F7FA'
+  },
+  shopVoucherIcon: {
+    width: 20,
+    height: 20,
+    resizeMode: 'stretch'
+  },
+  shopVoucherTitle: {
+    marginLeft: 10,
+    fontFamily: FONT.REGULAR,
+    fontSize: 13
+  },
+  shopNameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    padding: 15,
+    borderBottomColor: '#F7F7FA'
+  },
+  shopNameIcon: {
+    width: 18,
+    height: 18,
+    resizeMode: 'stretch'
+  },
+  shopNameText: {
+    marginLeft: 10,
+    fontFamily: FONT.BOLD
+  },
+  renderItemsContainer: {
+    padding: 15
+  },
+  divider1: {
+    height: 1,
+    marginTop: 10,
+    backgroundColor: "#F7F7FA"
+  },
+  divider2: {
+    height: 8,
+    marginTop: 5,
+    backgroundColor: "#F7F7FA"
+  },
 })

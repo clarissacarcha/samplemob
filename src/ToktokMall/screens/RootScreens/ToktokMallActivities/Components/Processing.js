@@ -16,7 +16,6 @@ import { GET_TRANSACTIONS, GET_UNPAID_TRANSACTIONS } from '../../../../../graphq
 import { Loading } from '../../../../Components';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-import moment from 'moment';
 
 export const ProcessingItem = ({fulldata}) => {
   const navigation = useNavigation();
@@ -33,23 +32,26 @@ export const ProcessingItem = ({fulldata}) => {
 
 export const Processing = ({id, email}) => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getAccessToken = async () => { 
     const accessToken = await AsyncStorage.getItem('accessToken');
     return accessToken
   }
 
-  const [getOrders, {loading, error}] = useLazyQuery(GET_TRANSACTIONS, {
+  const [getOrders] = useLazyQuery(GET_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'no-cache',    
     onCompleted: (response) => {
       if(response.getActivities){     
         const newActivities = [...response.getActivities.filter(activity => activity.status.status === 1)];
         setData(newActivities);
+        setLoading(false);
       }
     },
     onError: (err) => {
-      console.log(err)
+      console.log(err);
+      setLoading(false);
     }
   })
 
@@ -62,6 +64,7 @@ export const Processing = ({id, email}) => {
   }
 
   const Fetch = async () => {
+    setLoading(true);
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw)
       if(data.userId){        

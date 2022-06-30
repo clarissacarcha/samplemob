@@ -1,22 +1,45 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Platform } from 'react-native';
-
-import { FONT } from '../../../../../res/variables';
-import {placeholder, voucherIcon} from '../../../../assets';
-import { Price, FormatToText } from '../../../../helpers/formats';
-
-import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
+import React, { useState, useEffect, useRef, useContext} from 'react';
+import {
+  StyleSheet, 
+  View, 
+  Text, 
+  ImageBackground,
+  Image, 
+  TouchableOpacity, 
+  FlatList, 
+  ScrollView, 
+  TextInput, 
+  Picker, 
+  Platform 
+} from 'react-native';
+import { 
+  useLazyQuery,
+  useQuery, 
+  useMutation 
+} from '@apollo/react-hooks';
+import { 
+  GET_APPLY_VOUCHER, 
+  GET_HASH_AMOUNT 
+} from '../../../../../graphql/toktokmall/model';
+import {
+  placeholder, 
+  voucherIcon
+} from '../../../../assets';
+import { 
+  Price, 
+  FormatToText 
+} from '../../../../helpers/formats';
+import {
+  ApiCall, 
+  ArrayCopy
+} from '../../../../helpers';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import { GET_APPLY_VOUCHER, GET_HASH_AMOUNT } from '../../../../../graphql/toktokmall/model';
-import {ApiCall, ArrayCopy} from '../../../../helpers';
-
+import { PopupModalComponent } from '../../../../Components/Modals/Popup';
+import { CheckoutContext} from '../ContextProvider';
+import { useDispatch } from 'react-redux';
+import { FONT } from '../../../../../res/variables';
 import CustomIcon from '../../../../Components/Icons';
 import Spinner from 'react-native-spinkit';
-
-import {CheckoutContext} from '../ContextProvider';
-import { useDispatch } from 'react-redux';
-
-import { PopupModalComponent } from '../../../../Components/Modals/Popup';
 
 export const ApplyVoucherForm = (address, customer, payload) => {
 
@@ -377,26 +400,14 @@ export const ApplyVoucherForm = (address, customer, payload) => {
             <Text style={{marginLeft: 10, fontFamily: FONT.BOLD}}>{item.shop.shopname} vouchers</Text>
           </View> */}
 
+          <View style={styles.container}>
 
-
-          <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
-
-            <View style={{flexDirection: 'row'}}>
-              <View
-                style={{
-                  flex: 1,
-                  padding: Platform.OS === 'ios' ? 10 : 0,
-                  backgroundColor: '#F8F8F8',
-                  marginTop: voucherIsValid == -1 ? 10 : 0,
-                  borderRadius: 5,
-                  flexDirection: 'row',
-                  borderWidth: voucherIsValid == -1 ? 1 : 0, 
-                  borderColor: voucherIsValid == -1 ? '#ED3A19' : ''
-                }}>
+            <View style={styles.subContainer}>
+              <View style={styles.voucherInputContainer(voucherIsValid)}>
                 <TextInput
                   autoCapitalize="characters"
                   value={vcode.toUpperCase()}
-                  style={{marginLeft: 10, flex: 1}}
+                  style={styles.voucherInput}
                   placeholder="Enter voucher code (optional)"
                   placeholderTextColor="gray"    
                   onChangeText={(val) => {
@@ -419,18 +430,13 @@ export const ApplyVoucherForm = (address, customer, payload) => {
                   validate();
 
                 }}
-                style={{
-                  flex: 0,
-                  paddingVertical: 15,
-                  paddingHorizontal: 15,
-                  backgroundColor: 'white',
-                }}>
-                <Text style={{color: vcode == '' ? '#9E9E9E' : '#F6841F', marginTop: 5}}>Apply</Text>
+                style={styles.applyButton}>
+                <Text style={styles.applyText(vcode)}>Apply</Text>
               </TouchableOpacity>
             </View>
             {!loading && voucherIsValid == -1 && (
-              <View style={{backgroundColor: '#fff', padding: 4}}>
-                <Text style={{color: '#ED3A19', fontSize: 12}}>
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>
                   {errormessage}
                 </Text>
               </View>
@@ -440,3 +446,49 @@ export const ApplyVoucherForm = (address, customer, payload) => {
       </>
     );
   }
+
+  const styles = StyleSheet.create({
+    container: {
+      paddingHorizontal: 15, 
+      paddingVertical: 15
+    },
+    subContainer: {
+      flexDirection: 'row'
+    },
+    voucherInputContainer: (voucherIsValid) => {
+      return {
+        flex: 1,
+        padding: Platform.OS === 'ios' ? 10 : 0,
+        backgroundColor: '#F8F8F8',
+        marginTop: voucherIsValid == -1 ? 10 : 0,
+        borderRadius: 5,
+        flexDirection: 'row',
+        borderWidth: voucherIsValid == -1 ? 1 : 0, 
+        borderColor: voucherIsValid == -1 ? '#ED3A19' : ''
+      }
+    },
+    voucherInput: {
+      marginLeft: 10, 
+      flex: 1
+    },
+    applyButton: {
+      flex: 0,
+      paddingVertical: 15,
+      paddingHorizontal: 15,
+      backgroundColor: 'white',
+    },
+    applyText: (vcode) => {
+      return {
+        color: vcode == '' ? '#9E9E9E' : '#F6841F', 
+        marginTop: 5
+      }
+    },
+    errorContainer: {
+      backgroundColor: '#fff', 
+      padding: 4
+    },
+    errorText: {
+      color: '#ED3A19', 
+      fontSize: 12
+    }
+  })

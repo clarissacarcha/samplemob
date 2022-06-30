@@ -60,16 +60,16 @@ export const Vouchers = ({ navigation, items, vouchers, setVouchers, setVoucher}
       return vouchers.map((data, i) => {
         return(
           <>
-            <View style={{flex: 0.5, height: 2, backgroundColor: '#F7F7FA'}} />  
-            <View style={{paddingVertical: 15, paddingHorizontal: 15, flexDirection: 'row'}}>
-              <View style={{flex: 2, justifyContent: 'center', alignItems: 'center'}}>
-                <View style={{height: 50, width: 50, backgroundColor: '#FCC442', alignItems: 'center', justifyContent: 'center', paddingVertical: 5, paddingHorizontal: 5}}>
-                <Text style={{textAlign: 'center', fontSize: 9, fontWeight: '600', color: "#fff", textTransform: 'uppercase'}}>{data.type}</Text> 
+            <View style={styles.divider1} />  
+            <View style={styles.voucherContainer}>
+              <View style={styles.typeContainer}>
+                <View style={styles.typeSubContainer}>
+                  <Text style={styles.typeText}>{data.type}</Text> 
                 </View>
               </View>
-              <View style={{flex: 10, justifyContent: 'center'}}>
+              <View style={styles.labelContainer}>
                 <Text>{data.label}</Text>
-                <Text style={{color: "#9E9E9E", fontSize: 11}}>{data.description}</Text>
+                <Text style={styles.labelDescriptionText}>{data.description}</Text>
               </View>
               
             </View>
@@ -86,32 +86,24 @@ export const Vouchers = ({ navigation, items, vouchers, setVouchers, setVoucher}
           // navigation.navigate("ToktokMallVouchersClaim", {tab: 1, vouchers: vouchers, setVouchers: setVouchers})
         }}>
         {/* <TouchableOpacity style = {styles.container} onPress = {() => {navigation.navigate("ToktokMallMyVouchersClaim", {tab: 1})}}> */}
-            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Voucher</Text>
+            <Text style={styles.voucherTitle}>Voucher</Text>
             {/* <TouchableOpacity onPress = {() => {alert(JSON.stringify(vouchers))}}>
               <CustomIcon.FA5Icon name="chevron-right" size={11} color="#F6841F" />
             </TouchableOpacity> */}
         </TouchableOpacity>
-        <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
+        <View style={styles.divider2} />
         {/* {renderVouchers()} */}
     
         {!loading && isValid == -1 && 
-        <View style={{backgroundColor: '#FFFCF4', padding:10}}>
-          <Text style={{color: '#F6841F', fontSize: 12, textAlign: 'center'}}>*Invalid voucher code. Please check your voucher code.</Text>
+        <View style={styles.inValidContainer}>
+          <Text style={styles.inValidText}>*Invalid voucher code. Please check your voucher code.</Text>
         </View>}
     
-        <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-          <View style={{
-            flex: 1,
-            padding: Platform.OS === 'ios' ? 10 : 0,
-            backgroundColor: '#F8F8F8',
-            marginTop: 10,
-            borderRadius: 5,
-            alignItems: 'flex-start',
-            flexDirection: 'row'            
-          }}>
+        <View style={styles.inputVoucherContainer}>
+          <View style={styles.inputVoucherSubContainer}>
             <TextInput
               value={vcode}
-              style={{marginLeft: 10, flex: 1}}
+              style={styles.inputVoucher}
               placeholder="Input voucher (optional)"
               autoCapitalize="characters"
               onChangeText={(val) => {
@@ -119,8 +111,8 @@ export const Vouchers = ({ navigation, items, vouchers, setVouchers, setVoucher}
                 setIsValid(0)
               }}
             />
-            <View style={{flex: 0.2, alignItems: 'center', justifyContent: 'center'}}>
-              <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={styles.spinnerContainer}>
+              <View style={styles.spinnerSubContainer}>
                 {loading && <Spinner 
                   isVisible={loading}
                   // isVisible={true}
@@ -142,15 +134,9 @@ export const Vouchers = ({ navigation, items, vouchers, setVouchers, setVoucher}
                   }
                 }})
               }}
-              style={{
-                flex: 0, 
-                paddingVertical: 15, 
-                paddingHorizontal: 15,
-                backgroundColor: 'white',
-                alignItems: 'flex-end'
-              }}
+              style={styles.applyButton}
             >
-              <Text style={{color: vcode == "" ? "#9E9E9E" : "#F6841F", textAlign: 'right'}}>Apply</Text>
+              <Text style={styles.applyText(vcode)}>Apply</Text>
             </TouchableOpacity>
           </View>          
         </View>
@@ -161,8 +147,115 @@ export const Vouchers = ({ navigation, items, vouchers, setVouchers, setVoucher}
 }
 
 const styles = StyleSheet.create({
-  body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 15, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'  },
-  container2: { backgroundColor: 'white', marginTop: 8,  }
-
+  body: {
+    flex: 1, 
+    backgroundColor: '#F7F7FA'
+  },
+  container: {
+    padding: 15, 
+    backgroundColor: 'white', 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center'
+  },
+  container2: { 
+    backgroundColor: 'white', 
+    marginTop: 8 
+  },
+  divider1: {
+    flex: 0.5, 
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  },
+  voucherContainer: {
+    paddingVertical: 15, 
+    paddingHorizontal: 15, 
+    flexDirection: 'row'
+  },
+  typeContainer: {
+    flex: 2, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
+  typeSubContainer: {
+    height: 50, 
+    width: 50, 
+    backgroundColor: '#FCC442',
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    paddingVertical: 5, 
+    paddingHorizontal: 5
+  },
+  typeText: {
+    textAlign: 'center', 
+    fontSize: 9, 
+    fontWeight: '600', 
+    color: "#fff", 
+    textTransform: 'uppercase'
+  },
+  labelContainer: {
+    flex: 10, 
+    justifyContent: 'center'
+  },
+  labelDescriptionText: {
+    color: "#9E9E9E", 
+    fontSize: 11
+  },
+  voucherTitle: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  divider2: { 
+    height: 2, 
+    backgroundColor: '#F7F7FA' 
+  },
+  inValidContainer: {
+    backgroundColor: '#FFFCF4', 
+    padding:10
+  },
+  inValidText: {
+    color: '#F6841F', 
+    fontSize: 12, 
+    textAlign: 'center'
+  },
+  inputVoucherContainer: {
+    flexDirection: 'row', 
+    paddingVertical: 15, 
+    paddingHorizontal: 15
+  },
+  inputVoucherSubContainer: {
+    flex: 1,
+    padding: Platform.OS === 'ios' ? 10 : 0,
+    backgroundColor: '#F8F8F8',
+    marginTop: 10,
+    borderRadius: 5,
+    alignItems: 'flex-start',
+    flexDirection: 'row'            
+  },
+  inputVoucher: {
+    marginLeft: 10, 
+    flex: 1
+  },
+  spinnerContainer: {
+    flex: 0.2, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  spinnerSubContainer: {
+    flex: 1, 
+    justifyContent: 'center'
+  },
+  applyButton: {
+    flex: 0, 
+    paddingVertical: 15, 
+    paddingHorizontal: 15,
+    backgroundColor: 'white',
+    alignItems: 'flex-end'
+  },
+  applyText: (vcode) => {
+    return {
+      color: vcode == "" ? "#9E9E9E" : "#F6841F", 
+      textAlign: 'right'
+    }
+  }
 })
