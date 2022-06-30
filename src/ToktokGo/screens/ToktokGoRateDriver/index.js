@@ -138,7 +138,7 @@ const RateDriver = ({navigation, route}) => {
         />
       </TouchableOpacity>
 
-      <View style={isKeyboadShown && Platform.OS == 'ios' ? {marginTop: Keyboard_Height} : styles.containerTitle}>
+      <View style={isKeyboadShown ? {marginTop: Keyboard_Height} : styles.containerTitle}>
         <Text style={styles.titleQuestion}>How was your driver?</Text>
         <Text style={styles.starStyle}>{starStatus()}</Text>
         <StarRating onChange={value => setRating(value)} />
