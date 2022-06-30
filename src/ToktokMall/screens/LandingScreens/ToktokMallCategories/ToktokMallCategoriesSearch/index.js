@@ -1,16 +1,14 @@
 import React from 'react'
-import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, FlatList, BackHandler} from 'react-native'
+import { View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity, FlatList, BackHandler} from 'react-native'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
 import RNFS from 'react-native-fs'
-import { useLazyQuery, useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import {GET_FULL_CATEGORIES} from '../../../../../graphql/toktokmall/model';
+import { GET_FULL_CATEGORIES } from '../../../../../graphql/toktokmall/model';
 
-import { HeaderBack, HeaderTitle, HeaderRight, Header } from '../../../../Components';
-import { AlertOverlay} from '../../../../../components';
-import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
-import CustomIcon from '../../../../Components/Icons';
+import { Header } from '../../../../Components';
+import { COLOR } from '../../../../../res/variables';
 import { Dropdown } from '../../../../Components';
 import {emptysearch} from '../../../../assets';
 import { useFocusEffect } from '@react-navigation/native'
@@ -62,8 +60,10 @@ export const ToktokMallCategoriesSearch = ({navigation})=> {
           navigation.navigate("ToktokMallSearch", {})
         }}
       />
-      <View style={{flex: 1}}>     
-        <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
+      <View style={{flex: 1}}>  
+
+        <View style={styles.line} />
+
         {data?.getCategories && data?.getCategories.length > 0 && 
           <Dropdown 
             loading={loading} 
@@ -71,22 +71,23 @@ export const ToktokMallCategoriesSearch = ({navigation})=> {
             onRefresh={null} 
           />
         }
+
         {data?.getCategories && data?.getCategories.length == 0 && 
           <>
-          <View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
-            <Image 
-		  			  source={emptysearch}
-	  				  style={{width: '70%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}}
-  				  />
-            <View style={{height: 20}} />
-            <View style={{alignItems: 'center', justifyContent: 'center'}}>
-		    			<Text style={{fontSize: 16, color: "#9E9E9E"}}>No categories found</Text>
-              <Text style={{fontSize: 11, color: "#9E9E9E"}}></Text>              
-	    			</View>
-          </View>
-          <View style={{flex: 0.2}} />
+            <View style={styles.empty}>
+              <Image 
+                source={emptysearch}
+                style={styles.image}
+              />
+              <View style={{height: 20}} />
+              <View style={styles.emptySearchContainer}>
+                <Text style={styles.emptySearchTitle}>No categories found</Text>         
+              </View>
+            </View>
+            <View style={{flex: 0.2}} />
           </>
         }
+
 			</View>
     </View>
     </>
@@ -97,5 +98,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.WHITE
+  },
+  line: {
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  },
+  empty: {
+    flex: 1, 
+    backgroundColor: 'white', 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  image: {
+    width: '70%', 
+    height: Dimensions.get("screen").height / 4, 
+    resizeMode: 'contain'
+  },
+  emptySearchContainer: {
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  emptySearchTitle: {
+    fontSize: 16, 
+    color: "#9E9E9E"
   }
 })
