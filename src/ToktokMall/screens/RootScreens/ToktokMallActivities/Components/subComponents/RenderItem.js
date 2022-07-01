@@ -67,10 +67,10 @@ export const RenderItem = (props) => {
                         <View style={styles.renderItemFirstContainer}>
                             <View style={styles.renderItemFCRight}>
                                 <View style={styles.renderItemIDContainer}>
-                                <Text style={styles.renderItemIDText}>
-                                    Order ID
-                                </Text>
-                                <Text style={styles.renderItemID}>{referenceNum}</Text>
+                                    <Text numberOfLines={1} adjustsFontSizeToFit style={styles.renderItemIDText}>
+                                        Order ID <Text style={styles.renderItemID}>{referenceNum}</Text>
+                                    </Text>
+                                    
                                 </View>
                                 
                                 <Text style={styles.renderItemPlaced}>{DisplayDateAndTime(status.date)}</Text>

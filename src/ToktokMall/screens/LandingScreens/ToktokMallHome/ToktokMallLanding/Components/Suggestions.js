@@ -212,12 +212,12 @@ export const Suggestions = ({lazyload}) => {
       <View style={styles.container}>
         <View style={styles.heading}>
           <View style={{flex: 8}}>
-            <Text style={styles.h1}>Suggestions for you</Text>
+            <Text style={styles.h1}>Discover</Text>
           </View>
           <TouchableOpacity onPress={() => {
             
             // navigation.push("ToktokMallProductDetails", {Id: "7a0c028ecd26437c8cb317294db5086f"})
-            navigation.navigate("ToktokMallSearch", {searchValue: "Suggestions for you", origin: "suggestion"})
+            navigation.navigate("ToktokMallSearch", {searchValue: "Discover", origin: "suggestion"})
 
           }} style={{flex: 2, flexDirection: 'row'}}>
             <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>

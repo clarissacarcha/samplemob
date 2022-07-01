@@ -163,9 +163,12 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
             receiver_name: newAddressForm.receiverName,
             receiver_contact: newAddressForm.receiverContact,
             address: newAddressForm.address,
-            region_id: parseInt(regCode) || 0,
-            province_id: parseInt(provCode),
-            municipality_id: parseInt(munCode),
+            // region_id: parseInt(regCode) || 0,
+            // province_id: parseInt(provCode),
+            // municipality_id: parseInt(munCode),
+            region_id: regCode,
+            province_id: provCode,
+            municipality_id: munCode,
             landmark: newAddressForm.landmark,
             postal_code: newAddressForm.postalCode ? newAddressForm.postalCode : "",
             latitude: parseFloat(latitude),
@@ -410,7 +413,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
               onChangeText={(text) => {
                 onChangeText('receiverContact', text);
               }}
-              keyboardType={'phone-pad'}
               keyboardType="numeric"
               maxLength={11}
               returnKeyType="done"
