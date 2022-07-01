@@ -6,7 +6,7 @@ import {successIcon, errorIcon, warningIcon, questionIcon} from '../../assets';
 
 const {width, height} = Dimensions.get('screen');
 
-export const TokModal = () => {
+export const ToktokMallModal = () => {
   const dispatch = useDispatch();
   const backhandler = useRef(null);
 
@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 5,
     flex: 1,
+    maxWidth: "60%",
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',

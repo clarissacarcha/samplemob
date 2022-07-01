@@ -39,6 +39,39 @@ import {
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
 import { EventRegister } from 'react-native-event-listeners';
 
+const OutOfStock = () => (
+  <>
+    <Text
+      style={{
+        fontSize: 22,
+        textAlign: 'center',
+        marginVertical: 10,
+        width: 250,
+      }}>
+      {"We're sorry but this product is "}
+      <Text
+        style={{
+          color: '#F6841F',
+          fontSize: 22,
+          textAlign: 'center',
+          marginTop: 15,
+        }}>
+        SOLD OUT.
+      </Text>
+    </Text>
+    <Text
+      style={{
+        fontSize: 17,
+        textAlign: 'center',
+        marginTop: 15,
+        marginBottom: 10,
+        paddingHorizontal: 15
+      }}>
+      This item is currently out of stock.
+    </Text>
+  </>
+)
+
 const Component =  ({
   navigation,
   createMyFavorites,
@@ -198,15 +231,23 @@ const Component =  ({
         if(response.getProductDetails.noOfStocks <= 0 &&
           response.getProductDetails.contSellingIsset == 0) {
           setisOutOfStock(true)
-          dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL', payload: {
-            action: {
-              onPress:() => {
-                navigation.navigate("ToktokMallHome")
-                dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
-              },
-              title: "Back to Home."
-            }
-          }})
+
+          dispatch({
+            type: 'TOKTOK_MALL_OPEN_MODAL',
+            payload: {
+              Content: OutOfStock,
+              actions: [
+                {
+                  onPress: () => {
+                    navigation.navigate('ToktokMallHome');
+                    dispatch({type: 'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'});
+                  },
+                  name: 'Back to Home',
+                },
+              ],
+              onCloseDisabled: true
+            },
+          });
         }
         console.log("Stock", response.getProductDetails.noOfStocks)
       }
