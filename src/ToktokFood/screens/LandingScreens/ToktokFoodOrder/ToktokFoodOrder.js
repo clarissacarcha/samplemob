@@ -76,6 +76,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
   const [isCancelledByCustomer, setIsCancelledByCustomer] = useState(false);
   const [duration, setDuration] = useState(0);
   const [isExhausted, setIsExhausted] = useState(false);
+  const [animationContainerHeight, setAnimationContainerHeight] = useState(0);
 
   const timerRef = useRef(null);
 
@@ -102,7 +103,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           setIsCancelModalVisible(false);
         } else {
           if (duration === 0 && !isNoResponseModalVisible) {
-            setDuration(1);
+            setDuration(5);
           }
         }
         console.log('fetching orders...', orderStatus);
@@ -320,12 +321,12 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       <Alert
         isVisible={isNoResponseModalVisible}
         type="warning"
-        title="No Response from Merchant"
+        title="No Response From Merchant"
         subtitle={"Merchant hasn't confirmed your order.\nPlease try again."}
         buttonText="OK"
         onPress={() => {
           setIsNoResponseModalVisible(false);
-          setDuration(1);
+          setDuration(5);
         }}
       />
     );
@@ -356,6 +357,12 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     />
   );
 
+  const getAnimationContainerHeight = e => {
+    const {height} = e.nativeEvent.layout;
+    setAnimationContainerHeight(height);
+    console.log('test height', height);
+  };
+
   const renderAnimationComponent = () => {
     if (!isCompletedOrCancelled) {
       return (
@@ -363,8 +370,11 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           <Header hasBack />
           <Container>
             {/* Animation Part */}
-            <AnimationContainer>
-              <OrderAnimatedImage state={{...state, riderDetails}} />
+            <AnimationContainer onLayout={getAnimationContainerHeight}>
+              <OrderAnimatedImage
+                state={{...state, riderDetails}}
+                animationContainerHeight={animationContainerHeight}
+              />
               <OrderAnimatedText state={{...state, riderDetails}} />
             </AnimationContainer>
 

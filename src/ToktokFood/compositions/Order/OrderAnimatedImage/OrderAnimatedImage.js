@@ -4,14 +4,14 @@
  */
 
 import React from 'react';
-
 import type {PropsType} from './types';
 import {AnimatedImage, LoaderContainer} from './Styled';
 import {restaurant_confirmation, driver_on_the_way, preparing_order, ready_for_pick_up} from 'toktokfood/assets/images';
 import ContentLoader from 'react-native-easy-content-loader';
 
 const OrderAnimatedImage = (props: PropsType): React$Node => {
-  const {state} = props;
+  const {state, animationContainerHeight} = props;
+
   const isLoaded =
     state &&
     Object.keys(state).length > 0 &&
@@ -57,7 +57,7 @@ const OrderAnimatedImage = (props: PropsType): React$Node => {
         source = source;
         break;
     }
-    return <AnimatedImage source={source} />;
+    return <AnimatedImage source={source} animationContainerHeight={animationContainerHeight} />;
   }
 
   return (

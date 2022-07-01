@@ -23,7 +23,7 @@ import {
 import StyledText from 'toktokfood/components/StyledText';
 import {useTheme} from 'styled-components';
 import Divider from 'toktokfood/components/Divider';
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import FA5Icon from 'react-native-vector-icons/Entypo';
 
 const OrderSummary = (props: PropsType): React$Node => {
   const {state} = props;
@@ -31,6 +31,7 @@ const OrderSummary = (props: PropsType): React$Node => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [fullList, setFullList] = useState([]);
   const [limitedList, setLimitedList] = useState([]);
+  const [remainingList, setRemainingList] = useState([]);
 
   useEffect(() => {
     if (state?.length > 0) {
@@ -38,6 +39,8 @@ const OrderSummary = (props: PropsType): React$Node => {
       if (state?.length > 5) {
         const limit = state?.slice(0, 5);
         setLimitedList(limit);
+        const remaining = state?.slice(4, -1);
+        setRemainingList(remaining);
       } else {
         setIsCollapsed(true);
       }
@@ -73,10 +76,13 @@ const OrderSummary = (props: PropsType): React$Node => {
   const renderFooterComponent = () => {
     return (
       fullList.length > 5 && (
-        <FooterButton onPress={() => setIsCollapsed(!isCollapsed)}>
-          <FooterText>{isCollapsed ? 'Hide' : 'Show more'}</FooterText>
-          <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={13} color={theme.color.orange} />
-        </FooterButton>
+        <React.Fragment>
+          <Divider />
+          <FooterButton onPress={() => setIsCollapsed(!isCollapsed)}>
+            <FooterText>{isCollapsed ? 'Show Less' : `(${remainingList.length}) Show More`}</FooterText>
+            <FA5Icon name={isCollapsed ? 'chevron-thin-up' : 'chevron-thin-down'} size={12} color={theme.color.gray} />
+          </FooterButton>
+        </React.Fragment>
       )
     );
   };
