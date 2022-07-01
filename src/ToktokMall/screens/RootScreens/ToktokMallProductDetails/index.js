@@ -39,7 +39,7 @@ import {
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
 import { EventRegister } from 'react-native-event-listeners';
 
-const OutOfStock = () => (
+const OutOfStockModalContent = () => (
   <>
     <Text
       style={{
@@ -235,7 +235,7 @@ const Component =  ({
           dispatch({
             type: 'TOKTOK_MALL_OPEN_MODAL',
             payload: {
-              Content: OutOfStock,
+              Content: OutOfStockModalContent,
               actions: [
                 {
                   onPress: () => {
