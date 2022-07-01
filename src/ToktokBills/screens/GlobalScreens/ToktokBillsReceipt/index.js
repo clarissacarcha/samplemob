@@ -57,7 +57,7 @@ const MainComponent = ({route}) => {
 
 const ReceiptDownload = ({route, onCapturingScreen}) => {
   return (
-    <ImageBackground source={LinearGradient} resizeMode="cover" style={{padding: moderateScale(16), flex: 1}}>
+    <ImageBackground source={LinearGradient} resizeMode="cover" style={{padding: moderateScale(16)}}>
       <View
         style={{
           ...styles.receiptContainer,
@@ -171,7 +171,11 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
       <AlertOverlay visible={postFavoriteBillLoading || onCapturingScreen} />
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <ImageBackground source={LinearGradient} resizeMode="cover" style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1, padding: onCapturingScreen ? 0 : 16}}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{
+            padding: onCapturingScreen ? (Platform.OS === 'ios' ? moderateScale(10) : 0) : moderateScale(16),
+          }}>
           <ViewShot ref={viewshotRef} options={{format: 'jpg', quality: 0.9, result: 'tmpfile'}}>
             {onCapturingScreen ? (
               <ReceiptDownload route={route} onCapturingScreen={onCapturingScreen} />
