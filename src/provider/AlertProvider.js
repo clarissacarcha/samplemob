@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import {AlertModal} from '../components';
 
 //TOKTOKMALL
-import { CustomConfirmModal, CustomMessageModal, CustomModal, CustomPlaceOrderModal, Modal, PopupModal, TokModal } from '../ToktokMall/Components';
+import { CustomConfirmModal, CustomMessageModal, CustomModal, CustomPlaceOrderModal, Modal, PopupModal, ToktokMallModal } from '../ToktokMall/Components';
 
 const initialState = {
   visible: false,
@@ -38,8 +38,7 @@ const AlertProvider = ({children}) => {
     <>
       <Provider value={alert}>{children}</Provider>
       <AlertModal {...alertState} close={close} />
-      {modal?.visible && <TokModal />}
-      {customMessageModal?.visible && <CustomMessageModal {...customMessageModal} />}
+      {modal?.visible && <ToktokMallModal />}
       {popupmodal?.visible && <PopupModal {...popupmodal} />}
     </>
   );
