@@ -9,6 +9,7 @@ import {
   FlatList,
   StatusBar,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 
 import CONSTANTS from '../../../common/res/constants';
@@ -58,6 +59,7 @@ export const VoucherScreen = ({navigation}) => {
         setViewSuccesVoucherClaimedModal(false);
       }, 1000);
       refetch();
+      handleGetData();
     },
     onError: onError,
   });
@@ -66,8 +68,17 @@ export const VoucherScreen = ({navigation}) => {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setData(response.getVouchers);
+      var tempData = [];
+      response.getVouchers.map(item => {
+        if (!item.voucherWallet) {
+          tempData.push(item);
+        } else {
+          tempData.unshift(item);
+        }
+      });
+      setData(tempData);
     },
+    onError: onError,
   });
 
   const [getSearchVoucher, {loading: GSVLoading}] = useLazyQuery(GET_SEARCH_VOUCHER, {
@@ -97,15 +108,19 @@ export const VoucherScreen = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
-      getVouchers({
-        variables: {
-          input: {
-            type: 'promo',
-          },
-        },
-      });
+      handleGetData();
     }, []),
   );
+
+  const handleGetData = () => {
+    getVouchers({
+      variables: {
+        input: {
+          type: 'promo',
+        },
+      },
+    });
+  };
 
   useEffect(() => {
     if (search === '' || search === null) {
@@ -195,6 +210,9 @@ export const VoucherScreen = ({navigation}) => {
         <FlatList
           style={{marginTop: 24}}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl onRefresh={handleGetData} refreshing={getVouchersLoading} color={CONSTANTS.COLOR.ORANGE} />
+          }
           data={searchedDatas.length === 0 ? data : searchedDatas}
           // keyExtractor={item => item.id}
           renderItem={({item, index}) => {

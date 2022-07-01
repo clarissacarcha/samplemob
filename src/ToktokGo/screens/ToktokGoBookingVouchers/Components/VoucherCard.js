@@ -5,10 +5,11 @@ import {ThrottledOpacity} from '../../../../components_section';
 import * as Progress from 'react-native-progress';
 import voucherPaperDesign from '../../../../assets/toktokgo/voucher-paper-design.png';
 import VoucherImage from '../../../../assets/toktokgo/voucher-sedan-image.png';
+import moment from 'moment';
 
 const decorHeight = Dimensions.get('window').height * 0.12;
 
-export const VoucherCard = ({data, navigation, onPressActionButton, loading, postCollectVoucher}) => {
+export const VoucherCard = ({data, navigation, onPressActionButton, loading, postCollectVoucher, tawaginMo}) => {
   const getComputed = () => {
     return data.promoVoucher.discountValue * data.voucherWallet.remaining;
   };
@@ -39,6 +40,9 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading, pos
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
           <Text style={styles.voucherDescription}>{data.description}</Text>
+          {data.promoVoucher.endAt && (
+            <Text style={styles.voucherDescription}>Valid unitl {moment(data.promoVoucher.endAt).format('LL')}</Text>
+          )}
           {data.voucherWallet?.total > 1 && (
             <>
               <View
@@ -119,7 +123,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   voucherDescription: {
-    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.GRAY,
     fontSize: CONSTANTS.FONT_SIZE.S,
   },

@@ -23,19 +23,26 @@ const decorWidth = Dimensions.get('window').width * 0.5;
 const ToktokGoBookingVouchers = ({navigation}) => {
   const {details} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
+  const [data, setData] = useState([]);
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [search, setSearch] = useState('');
   const [searchedDatas, setSearchedDatas] = useState([]);
   const [noResults, setNoResults] = useState(false);
 
-  const [getVouchers, {data = {getVouchers: {}}, loading, refetch}] = useLazyQuery(GET_VOUCHERS, {
+  const [getVouchers, {loading, error: getVouchersError, refetch}] = useLazyQuery(GET_VOUCHERS, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
     fetchPolicy: 'network-only',
-    variables: {
-      input: {
-        type: 'promo',
-        service: 'GO',
-      },
+    onCompleted: response => {
+      var tempData = [];
+
+      response.getVouchers.map(item => {
+        if (!item.voucherWallet) {
+          tempData.push(item);
+        } else {
+          tempData.unshift(item);
+        }
+      });
+      setData(tempData);
     },
     onError: onError,
   });
@@ -79,7 +86,14 @@ const ToktokGoBookingVouchers = ({navigation}) => {
   };
 
   useEffect(() => {
-    getVouchers();
+    getVouchers({
+      variables: {
+        input: {
+          type: 'promo',
+          service: 'GO',
+        },
+      },
+    });
   }, []);
 
   useEffect(() => {
@@ -129,7 +143,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
     <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />;
   }
 
-  if (data.getVouchers.length === 0) {
+  if (data.length === 0) {
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
       <Header navigation={navigation} title={'Vouchers'} />
       {/* ========= ENTER VOUCHER CODE FOR NEXT RELEASE */}
@@ -197,10 +211,10 @@ const ToktokGoBookingVouchers = ({navigation}) => {
       {!noResults && (
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={searchedDatas.length === 0 ? data.getVouchers : searchedDatas}
+          data={searchedDatas.length === 0 ? data : searchedDatas}
           keyExtractor={item => item.id}
           renderItem={({item, index}) => {
-            const lastItem = index == data.getVouchers.length - 1 ? true : false;
+            const lastItem = index == data.length - 1 ? true : false;
             return (
               <View style={{marginVertical: 8}}>
                 <VoucherCard

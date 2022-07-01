@@ -25,12 +25,18 @@ export const SelectedVoucherScreen = ({navigation, route}) => {
           resizeMode={'stretch'}
           style={{height: FULL_HEIGHT * 0.22, width: FULL_WIDTH - 32}}
         />
-        <Text style={{marginVertical: 16}}>{data.policies}</Text>
-        {/* <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD}}>Promo Terms and Conditions</Text>
-        <Text style={{marginVertical: 16}}>
+        <Text style={{marginVertical: 16}}>{data.description}</Text>
+
+        <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD}}>Promo Terms and Conditions</Text>
+        {/* <Text style={{marginVertical: 16}}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim lacus aenean praesent amet ullamcorper nec ac.
           Augue aliquam risus nam pellentesque etiam mattis id nunc. Faucibus diam vitae bibendum viverra adipiscing.
         </Text> */}
+        <Text style={{marginVertical: 16}}>{data.policies}</Text>
+        <Text style={styles.TandC}>
+          Voucher is subject to toktok Terms and Conditions. Toktok reserves the right to withdraw the promotion or
+          change the Terms and Conditions of the promotion without prior notice.
+        </Text>
       </View>
 
       <View style={styles.buttonContainer}>
@@ -103,5 +109,9 @@ const styles = StyleSheet.create({
     fontSize: CONSTANTS.FONT_SIZE.L,
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.WHITE,
+  },
+  TandC: {
+    color: CONSTANTS.COLOR.ALMOST_BLACK,
+    fontSize: CONSTANTS.FONT_SIZE.S,
   },
 });
