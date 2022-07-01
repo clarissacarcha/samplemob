@@ -7,6 +7,7 @@ import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
 import StyledText from 'toktokfood/components/StyledText';
 import {TouchableOpacity} from 'react-native';
+import {scale, verticalScale, moderateScale} from 'toktokfood/helper/scale';
 
 export const Container: ComponentType<any> = styled.View`
   width: 100%;
@@ -21,7 +22,7 @@ export const Container: ComponentType<any> = styled.View`
       : props.theme.color.white};
   border-color: ${props => (props.disabled ? props.theme.color.lightgray : props.theme.color.orange)};
   border-width: 1px;
-  height: ${props => props.height};
+  height: ${props => verticalScale(props.height)}px;
   align-items: center;
   justify-content: center;
 `;
@@ -36,7 +37,7 @@ export const Button: ComponentType<any> = styled(TouchableOpacity).attrs(props =
 export const ButtonText: ComponentType<any> = styled(StyledText).attrs(props => ({
   ...props,
   mode: 'medium',
-  fontSize: 15,
+  fontSize: scale(15),
 }))`
   color: ${props =>
     props.type === 'primary'

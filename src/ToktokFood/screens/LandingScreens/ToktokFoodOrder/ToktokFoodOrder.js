@@ -76,6 +76,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
   const [isCancelledByCustomer, setIsCancelledByCustomer] = useState(false);
   const [duration, setDuration] = useState(0);
   const [isExhausted, setIsExhausted] = useState(false);
+  const [animationContainerHeight, setAnimationContainerHeight] = useState(0);
 
   const timerRef = useRef(null);
 
@@ -356,6 +357,12 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     />
   );
 
+  const getAnimationContainerHeight = e => {
+    const {height} = e.nativeEvent.layout;
+    setAnimationContainerHeight(height);
+    console.log('test height', height);
+  };
+
   const renderAnimationComponent = () => {
     if (!isCompletedOrCancelled) {
       return (
@@ -363,8 +370,11 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           <Header hasBack />
           <Container>
             {/* Animation Part */}
-            <AnimationContainer>
-              <OrderAnimatedImage state={{...state, riderDetails}} />
+            <AnimationContainer onLayout={getAnimationContainerHeight}>
+              <OrderAnimatedImage
+                state={{...state, riderDetails}}
+                animationContainerHeight={animationContainerHeight}
+              />
               <OrderAnimatedText state={{...state, riderDetails}} />
             </AnimationContainer>
 
