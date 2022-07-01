@@ -72,17 +72,17 @@ export const ToktokMallCategoriesList = ({navigation, route})=> {
           }}
 				/>
 
-        <View style={{flex: 1}}>
+        <View style={styles.subContainer}>
 
 					{error || !loading && searchValue != "" && searchedProducts.length == 0 &&
-					<View style={{paddingHorizontal: 15, paddingVertical: 15}}>
-						<Text style={{color: "#9E9E9E", fontSize: 14}}>No results found</Text>
+					<View style={styles.noResultContainer}>
+						<Text style={styles.noResultText}>No results found</Text>
 					</View>}
 
           {!loading && searchedProducts.length > 0 && <Product data={searchedProducts} />}
 
           {loading && 
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <View style={styles.spinnerContainer}>
             <Spinner 
               isVisible={loading}
               type='Circle'
@@ -102,5 +102,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   	backgroundColor: COLOR.WHITE
+  },
+  subContainer: {
+    flex: 1
+  },
+  noResultContainer: {
+    paddingHorizontal: 15, 
+    paddingVertical: 15
+  },
+  noResultText: {
+    color: "#9E9E9E", 
+    fontSize: 14
+  },
+  spinnerContainer: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center'
   }
 })

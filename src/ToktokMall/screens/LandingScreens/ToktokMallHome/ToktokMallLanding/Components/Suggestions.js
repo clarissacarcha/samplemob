@@ -211,7 +211,7 @@ export const Suggestions = ({lazyload}) => {
     <>
       <View style={styles.container}>
         <View style={styles.heading}>
-          <View style={{flex: 8}}>
+          <View style={styles.discoveryContainer}>
             <Text style={styles.h1}>Discover</Text>
           </View>
           <TouchableOpacity onPress={() => {
@@ -219,11 +219,11 @@ export const Suggestions = ({lazyload}) => {
             // navigation.push("ToktokMallProductDetails", {Id: "7a0c028ecd26437c8cb317294db5086f"})
             navigation.navigate("ToktokMallSearch", {searchValue: "Discover", origin: "suggestion"})
 
-          }} style={{flex: 2, flexDirection: 'row'}}>
-            <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+          }} style={styles.searchButton}>
+            <View style={styles.seeAllContainer}>
               <Text style={styles.link}>See all </Text>
             </View>
-            <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
+            <View style={styles.rightContainer}>
               <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
             </View>
           </TouchableOpacity>
@@ -232,7 +232,7 @@ export const Suggestions = ({lazyload}) => {
         <FlatList
           data={products}
           numColumns={2}
-          style={{paddingHorizontal: 10}}
+          style={styles.flatList}
           nestedScrollEnabled = {true}
           renderItem={({item, index}) => {
             const isEven = products?.length % 2 === 0
@@ -242,7 +242,7 @@ export const Suggestions = ({lazyload}) => {
                 return (
                   <>
                     <RenderItem navigation={navigation} item={item} />
-                    <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}></View>
+                    <View style={styles.margin1}></View>
                   </>
                 )
               }                  
@@ -256,7 +256,7 @@ export const Suggestions = ({lazyload}) => {
             return (
               <>
                 {isFetching && 
-                <View style={{padding: 15, alignItems: 'center', justifyContent: 'center'}}>
+                <View style={styles.spinnerContainer}>
                   <Spinner 
                     isVisible={true}
                     type={"Circle"}
@@ -279,18 +279,76 @@ export const Suggestions = ({lazyload}) => {
         />
             
       </View>
-    <View style={{height: 15}}></View>
+    <View style={styles.margin2}></View>
     {/* <View style={styles.separator} /> */}
   </>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, paddingVertical: 0},
-  heading: {paddingHorizontal: 15, paddingVertical: 20, flexDirection: 'row'},
-  h1: {fontSize: 14, fontFamily: FONT.BOLD},
-  link: {fontSize: 12, color: "#F6841F"},
-  image: {width: 50, height: 50, resizeMode: 'cover', alignSelf: 'center', borderRadius: 8},
-  label: {fontSize: 11, alignSelf: 'center'},
-  separator: {height: 8, backgroundColor: '#F7F7FA'}
+  container: {
+    flex: 1, 
+    paddingVertical: 0
+  },
+  heading: {
+    paddingHorizontal: 15, 
+    paddingVertical: 20, 
+    flexDirection: 'row'
+  },
+  discoveryContainer: {
+    flex: 8
+  },
+  h1: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  searchButton: {
+    flex: 2, 
+    flexDirection: 'row'
+  },
+  seeAllContainer: {
+    flex: 2, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  link: {
+    fontSize: 12, 
+    color: "#F6841F"
+  },
+  rightContainer: {
+    flex: 0, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  flatList: {
+    paddingHorizontal: 10
+  },
+  margin1: {
+    flex: 2, 
+    backgroundColor: '#fff', 
+    margin: 5
+  },
+  spinnerContainer: {
+    padding: 15, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  margin2: {
+    height: 15
+  },
+  image: {
+    width: 50, 
+    height: 50, 
+    resizeMode: 'cover', 
+    alignSelf: 'center', 
+    borderRadius: 8
+  },
+  label: {
+    fontSize: 11, 
+    alignSelf: 'center'
+  },
+  separator: {
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  }
 })

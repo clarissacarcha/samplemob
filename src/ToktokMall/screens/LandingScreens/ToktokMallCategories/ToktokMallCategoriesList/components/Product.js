@@ -32,38 +32,29 @@ const RenderItem = ({navigation, item}) => {
 
   return (
     <>
-      <View style={styles.productContainer}>
+      <View style={styles.renderItemContainer}>
                   
-        <View style={{padding: 5}}>
-
+        <View style={styles.renderItemSubContainer}>
           <Image 
             source={getImageSource(item?.images || [])} 
-            style={styles.productImage} 
+            style={styles.renderItemImage} 
           />
 
           <TouchableOpacity onPress={() => navigation.navigate("ToktokMallProductDetails", item)}>
-            <Text style={styles.productName}>
-              {item?.itemname || ""}
-            </Text>
+            <Text style={styles.renderItemNameText}>{item?.itemname || ""}</Text>
           </TouchableOpacity>
-
-          <Text style={styles.productPrice}>
+          <Text style={styles.renderItemPriceText}>
             <Price amount={item?.price}/>
           </Text>    
-
-          <View style={{flexDirection: 'row'}}>
-            {/* <View style={styles.productStar}>
+          <View style={styles.renderItemNoStockContainer}>
+            {/* <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item?.rating} />
             </View> */}
-            <View style={{flex: 9}}>
-              <Text style={styles.productNoOfStocks}>
-                ({item?.noOfStocks || 0})
-              </Text>
+            <View style={styles.renderItemNoStockTextContainer}>
+              <Text style={styles.renderItemNoStockText}>({item?.noOfStocks || 0})</Text>
             </View>
-            <View style={{flex: 3}}>
-              <Text style={{fontSize: 10}}>
-                {item?.soldCount || 0} sold
-              </Text>
+            <View style={styles.renderItemSoldContainer}>
+              <Text style={styles.renderItemSoldText}>{item?.soldCount || 0} sold</Text>
             </View>
           </View>
           
@@ -130,35 +121,46 @@ const styles = StyleSheet.create({
   },
   separator: {
     flex: 0.5, 
-    height: 8,
+    height: 8, 
     backgroundColor: '#F7F7FA'
   },
-  productContainer: {
+  renderItemContainer: {
     flex: 2, 
     backgroundColor: '#fff', 
     margin: 5
   },
-  productImage: {
+  renderItemSubContainer: {
+    padding: 5
+  },
+  renderItemImage: {
     resizeMode: 'cover', 
     width: '100%', 
     height: 120, 
     borderRadius: 5
   },
-  productName: {
+  renderItemNameText: {
     fontSize: 13, 
     fontWeight: '500', 
     paddingVertical: 5
   },
-  productPrice: {
+  renderItemPriceText: {
     fontSize: 13, 
     color: "#F6841F"
   },
-  productStar: {
-    flex: 7, 
+  renderItemNoStockContainer: {
     flexDirection: 'row'
   },
-  productNoOfStocks: {
+  renderItemNoStockTextContainer: {
+    flex: 9
+  },
+  renderItemNoStockText: {
     color: "#9E9E9E", 
     fontSize: 10
   },
+  renderItemSoldContainer: {
+    flex: 3
+  },
+  renderItemSoldText: {
+    fontSize: 10
+  }
 })

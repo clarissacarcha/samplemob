@@ -60,10 +60,8 @@ export const ToktokMallCategoriesSearch = ({navigation})=> {
           navigation.navigate("ToktokMallSearch", {})
         }}
       />
-      <View style={{flex: 1}}>  
-
-        <View style={styles.line} />
-
+      <View style={styles.subContainer}>     
+        <View style={styles.dropDownContainer} />
         {data?.getCategories && data?.getCategories.length > 0 && 
           <Dropdown 
             loading={loading} 
@@ -74,17 +72,18 @@ export const ToktokMallCategoriesSearch = ({navigation})=> {
 
         {data?.getCategories && data?.getCategories.length == 0 && 
           <>
-            <View style={styles.empty}>
-              <Image 
-                source={emptysearch}
-                style={styles.image}
-              />
-              <View style={{height: 20}} />
-              <View style={styles.emptySearchContainer}>
-                <Text style={styles.emptySearchTitle}>No categories found</Text>         
-              </View>
-            </View>
-            <View style={{flex: 0.2}} />
+          <View style={styles.emptyContainer}>
+            <Image 
+		  			  source={emptysearch}
+	  				  style={styles.emptyImage}
+  				  />
+            <View style={styles.margin1} />
+            <View style={styles.emptyImageContainer}>
+		    			<Text style={styles.emptyTitle1}>No categories found</Text>
+              <Text style={styles.emptyTitle2}></Text>              
+	    			</View>
+          </View>
+          <View style={styles.margin2} />
           </>
         }
 
@@ -99,27 +98,40 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.WHITE
   },
-  line: {
+  subContainer: {
+    flex: 1
+  },
+  dropDownContainer: {
     height: 8, 
     backgroundColor: '#F7F7FA'
   },
-  empty: {
+  emptyContainer: {
     flex: 1, 
     backgroundColor: 'white', 
     alignItems: 'center', 
     justifyContent: 'center'
   },
-  image: {
+  emptyImage: {
     width: '70%', 
     height: Dimensions.get("screen").height / 4, 
     resizeMode: 'contain'
   },
-  emptySearchContainer: {
+  margin1: {
+    height: 20
+  },
+  emptyImageContainer: {
     alignItems: 'center', 
     justifyContent: 'center'
   },
-  emptySearchTitle: {
+  emptyTitle1: {
     fontSize: 16, 
     color: "#9E9E9E"
+  },
+  emptyTitle2:{
+    fontSize: 11, 
+    color: "#9E9E9E"
+  },
+  margin2: {
+    flex: 0.2
   }
 })
