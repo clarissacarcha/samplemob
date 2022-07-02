@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,8 @@ import {
   ImageBackground,
   StatusBar,
   KeyboardAvoidingView,
+  Alert,
+  BackHandler,
 } from 'react-native';
 
 import CONSTANTS from '../../../common/res/constants';
@@ -27,8 +29,10 @@ import {AlertOverlay} from '../../../components';
 
 const decorHeight = Dimensions.get('window').height * 0.15;
 
-export const ReferralScreen = ({navigation}) => {
+export const ReferralScreen = ({navigation, route}) => {
+  const {fromRegistration} = route.params;
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
+  const [isValidDriverId, setIsValidDriverId] = useState(false);
   const [refCode, setRefCode] = useState('');
 
   const [patchGoReferralUserId, {loading}] = useMutation(PATCH_GO_REFERRAL_USER_ID, {
@@ -37,9 +41,28 @@ export const ReferralScreen = ({navigation}) => {
       setTimeout(() => {
         setViewSuccesVoucherClaimedModal(false);
         setRefCode('');
+        if (fromRegistration) {
+          navigation.replace('RootDrawer', {
+            screen: 'AuthenticatedStack',
+            params: {
+              screen: 'ConsumerLanding',
+            },
+          });
+        }
       }, 1000);
     },
-    onError: onError,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (message == 'Invalid Referral Code.') {
+            setIsValidDriverId(true);
+          }
+        });
+      }
+    },
   });
 
   const onPress = () => {
@@ -52,13 +75,49 @@ export const ReferralScreen = ({navigation}) => {
     });
   };
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', function () {
+      if (fromRegistration) {
+        navigation.replace('RootDrawer', {
+          screen: 'AuthenticatedStack',
+          params: {
+            screen: 'ConsumerLanding',
+          },
+        });
+      }
+      return true;
+    });
+    return () => {
+      backHandler.remove();
+    };
+  }, []);
+
+  const onBackPress = () => {
+    if (fromRegistration) {
+      navigation.replace('RootDrawer', {
+        screen: 'AuthenticatedStack',
+        params: {
+          screen: 'ConsumerLanding',
+        },
+      });
+    } else {
+      navigation.pop();
+    }
+  };
+
   return (
     <ImageBackground source={ReferralBG} style={styles.container}>
       <AlertOverlay visible={loading} />
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
-      <ThrottledOpacity style={styles.backButton} onPress={() => navigation.pop()}>
+      <ThrottledOpacity style={styles.backButton} onPress={onBackPress}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </ThrottledOpacity>
+
+      {fromRegistration && (
+        <ThrottledOpacity style={styles.skipButton} onPress={onBackPress}>
+          <Text style={styles.skipButtonText}>Skip</Text>
+        </ThrottledOpacity>
+      )}
 
       <View style={styles.innerContainer}>
         <Image source={TokIcon} resizeMode={'contain'} style={{height: decorHeight}} />
@@ -66,7 +125,7 @@ export const ReferralScreen = ({navigation}) => {
           style={{marginTop: 42, fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD, fontSize: CONSTANTS.FONT_SIZE.XL + 7}}>
           Welcome ka-toktok!
         </Text>
-        <Text style={{textAlign: 'center', marginTop: 12}}>Did a driver refer you? Enter Driver ID</Text>
+        <Text style={{textAlign: 'center', marginTop: 12}}>Did a driver refer you? Enter Referral Code</Text>
         <Text style={{textAlign: 'center', marginBottom: 28}}> below to claim New User Voucher!</Text>
 
         <View style={styles.card}>
@@ -78,20 +137,25 @@ export const ReferralScreen = ({navigation}) => {
           <Image source={VoucherIMG} resizeMode={'contain'} style={styles.voucherImage} />
         </View>
 
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, isValidDriverId && styles.inputContainerError]}>
           <KeyboardAvoidingView>
             <TextInput
               style={styles.input}
-              placeholder="Driver ID"
+              placeholder="Referral Code"
               value={refCode}
               onChangeText={text => {
-                setRefCode(text);
+                setRefCode(text), setIsValidDriverId(false);
               }}
             />
           </KeyboardAvoidingView>
         </View>
+        {isValidDriverId && (
+          <View style={{alignSelf: 'stretch', marginHorizontal: 82}}>
+            <Text style={{color: CONSTANTS.COLOR.RED, fontSize: CONSTANTS.FONT_SIZE.S}}>Invalid Referral Code</Text>
+          </View>
+        )}
 
-        <ThrottledOpacity style={styles.button} onPress={onPress}>
+        <ThrottledOpacity style={styles.button} onPress={onPress} disabled={!refCode && true}>
           <Text style={styles.buttonText}>Claim Now</Text>
         </ThrottledOpacity>
 
@@ -165,12 +229,28 @@ const styles = StyleSheet.create({
     left: 16,
     padding: 6,
   },
+  skipButton: {
+    position: 'absolute',
+    top: StatusBar.currentHeight + 23,
+    right: 16,
+    padding: 6,
+    flexDirection: 'row',
+  },
+  skipButtonText: {
+    color: CONSTANTS.COLOR.ORANGE,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    fontSize: CONSTANTS.FONT_SIZE.M,
+  },
   inputContainer: {
     backgroundColor: '#F8F8F8',
     borderRadius: 5,
     alignSelf: 'stretch',
     marginHorizontal: 82,
-    marginVertical: 20,
+    marginTop: 20,
+  },
+  inputContainerError: {
+    borderColor: 'red',
+    borderWidth: 1,
   },
   input: {
     marginHorizontal: 12,
@@ -182,6 +262,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'stretch',
     paddingVertical: 11,
+    marginTop: 20,
     marginHorizontal: 82,
     borderRadius: 5,
   },

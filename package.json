@@ -47,6 +47,7 @@
     "graphql-tag": "^2.10.3",
     "jail-monkey": "^2.6.0",
     "lodash": "^4.17.15",
+    "lottie-react-native": "^5.1.3",
     "moment": "^2.26.0",
     "moment-timezone": "^0.5.31",
     "patch-package": "^6.2.2",

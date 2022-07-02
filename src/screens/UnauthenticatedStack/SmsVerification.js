@@ -58,10 +58,10 @@ const Verification = ({navigation, route, createSession}) => {
       },
     },
 
-    onError: (error) => {
+    onError: error => {
       onErrorAlert({alert, error});
     },
-    onCompleted: (res) => {
+    onCompleted: res => {
       const {user, accessToken} = res.verifyRegistration;
 
       AsyncStorage.setItem('userId', user.id);
@@ -84,11 +84,14 @@ const Verification = ({navigation, route, createSession}) => {
           return;
         }
 
-        navigation.replace('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'ConsumerLanding',
-          },
+        // navigation.replace('RootDrawer', {
+        //   screen: 'AuthenticatedStack',
+        //   params: {
+        //     screen: 'ConsumerLanding',
+        //   },
+        // });
+        navigation.replace('ReferralScreen', {
+          fromRegistration: true,
         });
       }
 
@@ -164,7 +167,7 @@ const Verification = ({navigation, route, createSession}) => {
             style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
             keyboardType="number-pad"
             returnKeyType="done"
-            onChangeText={(value) => {
+            onChangeText={value => {
               if (value.length <= 6) {
                 setVerificationCode(value);
               }
@@ -188,8 +191,8 @@ const Verification = ({navigation, route, createSession}) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
 export default connect(null, mapDispatchToProps)(Verification);

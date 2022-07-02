@@ -40,6 +40,7 @@ user {
     id
     rating
     referralCode
+    goReferralDriverUserId
     referralName
     franchiseeCode
     franchiseeFirstName

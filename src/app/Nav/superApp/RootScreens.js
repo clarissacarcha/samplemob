@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {SuperAppPromosScreen, ReferralScreen, VoucherScreen} from '../../../SuperApp/screens';
-import {SelectedVoucherScreen} from '../../../SuperApp/screens';
+import SuperAppPromosScreen from '../../../SuperApp/screens/SuperAppPromos/SuperAppPromos';
+import {ReferralScreen, SelectedVoucherScreen, VoucherScreen} from '../../../SuperApp/screens';
 
 export default ({Navigator}) => (
   <>

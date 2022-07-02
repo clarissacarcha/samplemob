@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,7 @@ import {
   FlatList,
   StatusBar,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 
 import CONSTANTS from '../../../common/res/constants';
@@ -18,22 +19,27 @@ import {Header} from '../Components';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_VOUCHER_CLIENT, POST_COLLECT_VOUCHER, GET_VOUCHERS, GET_SEARCH_VOUCHER} from '../../../graphql';
 import {useFocusEffect} from '@react-navigation/native';
+import {AlertOverlay} from '../Components';
+import {useDebounce} from '../../../ToktokGo/helpers';
 
 import SearchICN from '../../../assets/images/SearchIcon.png';
 import XICN from '../../../assets/icons/EraseTextInput.png';
 import CarIMG from '../../../assets/images/Promos/Car.png';
 import EmptyIMG from '../../../assets/images/empty-search.png';
 import NoVoucherIMG from '../../../assets/images/Promos/No-Voucher.png';
+import NoFound from '../../../assets/images/empty-search.png';
 import {onError} from '../../../util/ErrorUtility';
 
 const decorWidth = Dimensions.get('window').width * 0.5;
 const FULL_HEIGHT = Dimensions.get('window').height;
 
 export const VoucherScreen = ({navigation}) => {
+  const inputRef = useRef();
   const [data, setData] = useState([]);
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [search, setSearch] = useState('');
   const [searchedDatas, setSearchedDatas] = useState([]);
+  const [noResults, setNoResults] = useState(false);
 
   const onPressActionButton = ({voucherId}) => {
     postCollectVoucher({
@@ -52,25 +58,41 @@ export const VoucherScreen = ({navigation}) => {
       setTimeout(() => {
         setViewSuccesVoucherClaimedModal(false);
       }, 1000);
+      refetch();
+      handleGetData();
     },
     onError: onError,
   });
 
-  const [getVouchers, {loading: getVouchersLoading, error: getVouchersError}] = useLazyQuery(GET_VOUCHERS, {
+  const [getVouchers, {loading: getVouchersLoading, error: getVouchersError, refetch}] = useLazyQuery(GET_VOUCHERS, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setData(response.getVouchers);
+      var tempData = [];
+      response.getVouchers.map(item => {
+        if (!item.voucherWallet) {
+          tempData.push(item);
+        } else {
+          tempData.unshift(item);
+        }
+      });
+      setData(tempData);
     },
+    onError: onError,
   });
 
   const [getSearchVoucher, {loading: GSVLoading}] = useLazyQuery(GET_SEARCH_VOUCHER, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
     onCompleted: response => {
-      setSearchedDatas(response.getSearchVoucher);
+      if (response.getSearchVoucher.length > 0) {
+        setSearchedDatas(response.getSearchVoucher);
+        setNoResults(false);
+      } else {
+        setNoResults(true);
+      }
     },
-    onError: onError,
+    onError: null,
   });
 
   const searchVoucher = () => {
@@ -86,15 +108,19 @@ export const VoucherScreen = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
-      getVouchers({
-        variables: {
-          input: {
-            type: 'promo',
-          },
-        },
-      });
+      handleGetData();
     }, []),
   );
+
+  const handleGetData = () => {
+    getVouchers({
+      variables: {
+        input: {
+          type: 'promo',
+        },
+      },
+    });
+  };
 
   useEffect(() => {
     if (search === '' || search === null) {
@@ -102,22 +128,47 @@ export const VoucherScreen = ({navigation}) => {
     }
   }, [search]);
 
+  const debouncedRequest = useDebounce(value =>
+    getSearchVoucher({
+      variables: {
+        input: {
+          type: 'promo',
+          search: value,
+        },
+      },
+    }),
+  );
+
+  const onChange = value => {
+    setSearch(value);
+    debouncedRequest(value);
+    if (!value) {
+      setNoResults(false);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearch('');
+    setNoResults(false);
+  };
+
   return (
     <View style={styles.container}>
+      <AlertOverlay visible={PCVLoading} />
       <Header title={'Voucher'} navigation={navigation} />
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
       <View style={styles.containerInput}>
         <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} />
         <TextInput
           //   ref={inputRef}
-          onChangeText={value => setSearch(value)}
+          onChangeText={value => onChange(value)}
           style={styles.input}
-          placeholder={'Find the best discount for you!'}
+          placeholder={'Enter Voucher Code'}
           value={search}
           onSubmitEditing={searchVoucher}
         />
         {search ? (
-          <ThrottledOpacity onPress={() => setSearch('')}>
+          <ThrottledOpacity onPress={clearSearch}>
             <Image source={XICN} resizeMode={'contain'} style={{width: 15, height: 15, marginRight: 20}} />
           </ThrottledOpacity>
         ) : null}
@@ -140,14 +191,28 @@ export const VoucherScreen = ({navigation}) => {
         </View>
       )}
 
-      {getVouchersLoading ? (
+      {noResults && (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          {/* <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} /> */}
+          <Image source={NoFound} resizeMode={'contain'} style={{width: decorWidth, height: decorWidth}} />
+          <Text style={{color: CONSTANTS.COLOR.ORANGE, fontSize: CONSTANTS.FONT_SIZE.XL + 1}}>No Results Found</Text>
+          <Text>Try to search something similar.</Text>
+        </View>
+      )}
+
+      {getVouchersLoading && (
         <View style={{flex: 1, justifyContent: 'center'}}>
           <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
         </View>
-      ) : (
+      )}
+
+      {!getVouchersLoading && !noResults && (
         <FlatList
           style={{marginTop: 24}}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl onRefresh={handleGetData} refreshing={getVouchersLoading} color={CONSTANTS.COLOR.ORANGE} />
+          }
           data={searchedDatas.length === 0 ? data : searchedDatas}
           // keyExtractor={item => item.id}
           renderItem={({item, index}) => {
