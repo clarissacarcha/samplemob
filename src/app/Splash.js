@@ -102,7 +102,7 @@ const Splash = ({setConstants, setAppServices}) => {
         fetchPolicy: 'network-only',
       });
 
-      setAppServices(appServicesResult.data.getAppServices);
+      // setAppServices(appServicesResult.data.getAppServices);
 
       /**
        * Check App Version Status

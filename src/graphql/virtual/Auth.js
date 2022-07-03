@@ -65,6 +65,10 @@ user {
   }
 }
 accessToken
+serviceAccess {
+  identifier
+  visible
+}
 `;
 
 export const LOGIN_REGISTER = gql`
