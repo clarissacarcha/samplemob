@@ -37,20 +37,20 @@ const onPress = (params, data, navigation) => {
 const Item = ({data, params, navigation}) => {
   return (
       <>
-        <View style={{flex: 0.5, height: 2, backgroundColor: '#F7F7FA'}} />  
-        <TouchableOpacity style={{paddingVertical: 15, paddingHorizontal: 15, flexDirection: 'row'}} onPress = {() => { data.status == 1 ? null : onPress(params, data, navigation)  }}>
-          <View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
-            <View style={{height: 50, width: 50, backgroundColor: '#FCC442', alignItems: 'center', justifyContent: 'center', paddingVertical: 5, paddingHorizontal: 5}}>
-             <Text style={{textAlign: 'center', fontSize: 9, fontWeight: '600', color: "#fff", textTransform: 'uppercase'}}>{data.type}</Text> 
+        <View style={styles.container} />  
+        <TouchableOpacity style={styles.button} onPress = {() => { data.status == 1 ? null : onPress(params, data, navigation)  }}>
+          <View style={styles.typeContainer}>
+            <View style={styles.typeSubContainer}>
+             <Text style={styles.typeText}>{data.type}</Text> 
             </View>
           </View>
-          <View style={{flex: 9, justifyContent: 'center'}}>
+          <View style={styles.labelContainer}>
             <Text>{data.label}</Text>
-            <Text style={{color: "#9E9E9E", fontSize: 11}}>{data.description}</Text>
+            <Text style={styles.descriptionText}>{data.description}</Text>
           </View>
-          <View style={{flex: 3, alignItems: 'center', justifyContent: 'center'}}>
-            <View style={{backgroundColor: data.status == 1 ? "#FFFCF4" : '#F6841F', borderRadius: 5, paddingVertical: 2, paddingHorizontal: 10}}>
-              <Text style={{fontSize: 12, color: data.status == 1 ? "#F6841F" : "#FFF"}}>{data.status == 1 ? "Claimed" : "Claim"}</Text>
+          <View style={styles.claimContainer}>
+            <View style={styles.claimSubContainer(data)}>
+              <Text style={styles.claimText(data)}>{data.status == 1 ? "Claimed" : "Claim"}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -68,15 +68,87 @@ export const ToktokMallVouchersClaim = ({route, navigation}) => {
   });
 
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <View style={styles.voucherContainer}>
       
       <FlatList 
         data={testdata}
         renderItem={({item}) => <Item data={item} params = {route.params} navigation = {navigation} />}
       />
-      <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
-      <View style={{height: 15}}></View>
+      <View style={styles.margin1} />
+      <View style={styles.margin2} />
 
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 0.5, 
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  },
+  button: {
+    paddingVertical: 15, 
+    paddingHorizontal: 15, 
+    flexDirection: 'row'
+  },
+  typeContainer: {
+    flex: 3, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
+  typeSubContainer: {
+    height: 50, 
+    width: 50, 
+    backgroundColor: '#FCC442', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    paddingVertical: 5, 
+    paddingHorizontal: 5
+  },
+  typeText: {
+    textAlign: 'center', 
+    fontSize: 9, 
+    fontWeight: '600', 
+    color: "#fff", 
+    textTransform: 'uppercase'
+  },
+  labelContainer: {
+    flex: 9, 
+    justifyContent: 'center'
+  },
+  descriptionText: {
+    color: "#9E9E9E", 
+    fontSize: 11
+  },
+  claimContainer: {
+    flex: 3, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  claimSubContainer: (data) => {
+    return {
+      backgroundColor: data.status == 1 ? "#FFFCF4" : '#F6841F', 
+      borderRadius: 5, 
+      paddingVertical: 2, 
+      paddingHorizontal: 10
+    }
+  },
+  claimText: (data) => {
+    return {
+      fontSize: 12, 
+      color: data.status == 1 ? "#F6841F" : "#FFF"
+    }
+  },
+  voucherContainer: {
+    flex: 1, 
+    backgroundColor: '#fff'
+  },
+  margin1: {
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  },
+  margin2: {
+    height: 15
+  }
+})

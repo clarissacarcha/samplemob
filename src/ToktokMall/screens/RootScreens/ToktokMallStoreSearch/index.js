@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Image, FlatList, TouchableOpacity, Dimensions} from 'react-native';
+import {View, Text, Image, FlatList, TouchableOpacity, Dimensions, StyleSheet} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {LandingSubHeader, Dropdown, MessageModal} from '../../../Components';
 import { Product} from './components';
@@ -115,8 +115,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
   }, [])
 
   return (
-    <View style={{flex: 1, backgroundColor: "#fff"}}>
-      <View style={{flex: 1}}>
+    <View style={styles.container}>
+      <View style={styles.flex1}>
 
         <LandingSubHeader  
           placeholder="Search in Store"
@@ -170,22 +170,22 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
         {emptySearch &&
           <>
-          <View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
+          <View style={styles.emptyContainer}>
             <Image 
 		  			  source={emptysearch}
-	  				  style={{width: '70%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}}
+	  				  style={styles.emptyImage}
   				  />
-            <View style={{height: 20}} />
-            <View style={{alignItems: 'center', justifyContent: 'center'}}>
-		    			<Text style={{fontSize: 16, color: "#9E9E9E"}}>No results found</Text>
-              <Text style={{fontSize: 11, color: "#9E9E9E"}}>Try to search something similar</Text>              
+            <View style={styles.margin1} />
+            <View style={styles.noResultContainer}>
+		    			<Text style={styles.noResultText1}>No results found</Text>
+              <Text style={styles.noResultText2}>Try to search something similar</Text>              
 	    			</View>
           </View>
-          <View style={{flex: 0.2}} />
+          <View style={styles.flex02} />
           </>}
 
         {loading && 
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={styles.loadingContainer}>
           <Spinner 
             isVisible={loading}
             type='Circle'
@@ -195,7 +195,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
         </View>}
 
         {error && 
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={styles.errorContainer}>
           <Text>Something went wrong</Text>
         </View>}
 
@@ -204,8 +204,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           {/* <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
             <Text style={{fontFamily: FONT.BOLD}}>Suggestions</Text>
           </View> */}
-          <View style={{paddingHorizontal: 20, paddingVertical: 10}}>
-            <Text style={{fontFamily: FONT.REGULAR, color: COLOR.ORANGE}}>Product</Text>
+          <View style={styles.productTitleContainer}>
+            <Text style={styles.productTitleText}>Product</Text>
           </View>
           <FlatList 
             data={suggestions}
@@ -226,15 +226,15 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                         }
                       }
                     })
-                  }} style={{paddingHorizontal: 20, paddingVertical: 8, flexDirection: 'row', alignItems: 'center'}}>
+                  }} style={styles.tagsContainer}>
                      {/* <View style = {{height: 33, width: 33, borderRadius: 8, backgroundColor: 'black', marginRight: 10}} /> */}
                     <Image
-                      style = {{height: 33, width: 33, borderRadius: 8,  marginRight: 10}}
+                      style = {styles.image}
                       source={getImageSource(item?.images || [])}
                     />
-                    <Text style={{color: "black", fontSize: 13, textTransform: 'capitalize'}}>{item.tags}</Text>
+                    <Text style={styles.tagsText}>{item.tags}</Text>
                   </TouchableOpacity>
-                  {index < suggestions.length - 1 && <View style={{height: 1, backgroundColor: "#F7F7FA"}} />}
+                  {index < suggestions.length - 1 && <View style={styles.margin2} />}
                 </>
               )
             }}
@@ -243,15 +243,15 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
         {searchedProducts.length == 0 && searchValue == "" && !loading && 
         <>
-        <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-          <View style={{flex: 1}}>
-            <Text style={{fontSize: 14}}>Search History</Text>
+        <View style={styles.searchContainer}>
+          <View style={styles.flex1}>
+            <Text style={styles.searchTitle}>Search History</Text>
           </View>
           <TouchableOpacity onPress={async () => {
             await createSearchHistorySession("clear")
             Toast.show("Cleared search history")
           }} style={{flex: 1}}>
-            <Text style={{fontSize: 12, textAlign: 'right', color: '#F6841F'}}>Clear History</Text>
+            <Text style={styles.clearSearchText}>Clear History</Text>
           </TouchableOpacity>
         </View> 
         <FlatList 
@@ -271,8 +271,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
                   }
                 }
               })
-            }} style={{paddingHorizontal: 15, paddingVertical: 15}}>
-              <Text style={{color: "#9E9E9E", fontSize: 14}}>{item}</Text>
+            }} style={styles.itemButton}>
+              <Text style={styles.itemText}>{item}</Text>
             </TouchableOpacity>
           }
         />
@@ -317,3 +317,102 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export const ToktokMallStoreSearch = connect(mapStateToProps, mapDispatchToProps)(Component);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, 
+    backgroundColor: "#fff"
+  },
+  flex1: {
+    flex: 1
+  },
+  emptyContainer: {
+    flex: 1, 
+    backgroundColor: 'white', 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  emptyImage: {
+    width: '70%', 
+    height: Dimensions.get("screen").height / 4, 
+    resizeMode: 'contain'
+  },
+  margin1: {
+    height: 20
+  },
+  noResultContainer: {
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  noResultText1: {
+    fontSize: 16, 
+    color: "#9E9E9E"
+  },
+  noResultText2: {
+    fontSize: 11, 
+    color: "#9E9E9E"
+  },
+  flex02: {
+    flex: 0.2
+  },
+  loadingContainer: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  errorContainer: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  productTitleContainer: {
+    paddingHorizontal: 20, 
+    paddingVertical: 10
+  },
+  productTitleText: {
+    fontFamily: FONT.REGULAR, 
+    color: COLOR.ORANGE
+  },
+  tagsContainer: {
+    paddingHorizontal: 20, 
+    paddingVertical: 8, 
+    flexDirection: 'row', 
+    alignItems: 'center'
+  },
+  image: {
+    height: 33, 
+    width: 33, 
+    borderRadius: 8, 
+     marginRight: 10
+    },
+  tagsText: {
+    color: "black", 
+    fontSize: 13, 
+    textTransform: 'capitalize'
+  },
+  margin2: {
+    height: 1, 
+    backgroundColor: "#F7F7FA"
+  },
+  searchContainer: {
+    flexDirection: 'row', 
+    paddingVertical: 15, 
+    paddingHorizontal: 15
+  },
+  searchTitle: {
+    fontSize: 14
+  },
+  clearSearchText: {
+    fontSize: 12, 
+    textAlign: 'right', 
+    color: '#F6841F'
+  },
+  itemButton: {
+    paddingHorizontal: 15, 
+    paddingVertical: 15
+  },
+  itemText: {
+    color: "#9E9E9E", 
+    fontSize: 14
+  },
+}) 
