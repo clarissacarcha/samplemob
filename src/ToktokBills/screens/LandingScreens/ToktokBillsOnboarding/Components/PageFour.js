@@ -16,7 +16,7 @@ export const PageFour = ({scale}) => {
       <Image resizeMode="contain" style={styles.onboardingImage1} source={onboarding_4} />
       <Text style={styles.title}>Received Receipt</Text>
       <Text style={styles.message}>
-        There will be a downloable receipt, which will also be sent to your email account.
+        There will be a downloadable receipt, which will also be sent to your email account.
       </Text>
     </Animated.View>
   );
