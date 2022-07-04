@@ -383,8 +383,8 @@ const styles = StyleSheet.create({
     height: 33, 
     width: 33, 
     borderRadius: 8, 
-     marginRight: 10
-    },
+    marginRight: 10
+  },
   tagsText: {
     color: "black", 
     fontSize: 13, 
