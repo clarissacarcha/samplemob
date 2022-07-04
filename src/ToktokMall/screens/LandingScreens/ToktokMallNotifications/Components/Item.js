@@ -46,11 +46,11 @@ export const Item = ({active, data, onSelect}) => {
     return (
       <>
         <Text>
-          <Text style={{fontSize: 12, color: "#9E9E9E"}}>Your order </Text>
-          <Text style={{fontSize: 12, color: "#F6841F"}}>{ref}</Text>
-          <Text style={{fontSize: 12, color: "#9E9E9E"}}> from </Text>
-          <Text style={{fontSize: 12, color: "#F6841F"}}>{shop}</Text>
-          <Text style={{fontSize: 12, color: "#9E9E9E"}}>{content}</Text>
+          <Text style={styles.title}>Your order </Text>
+          <Text style={styles.text}>{ref}</Text>
+          <Text style={styles.title}> from </Text>
+          <Text style={styles.text}>{shop}</Text>
+          <Text style={styles.title}>{content}</Text>
         </Text>
         
       </>
@@ -63,23 +63,23 @@ export const Item = ({active, data, onSelect}) => {
         onPress={() => {          
           navigation.push("ToktokMallOrderDetails", {...data, onBack: onSelect})
         }}
-        style={{flexDirection: 'row', backgroundColor: data.read && data.read == 1 ? '#fff' : '#FFFCF4'}}>
-        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center', paddingVertical: 20, paddingHorizontal: 15}}>
+        style={styles.orderDetailsButton(data)}>
+        <View style={styles.imageContainer}>
           <Image 
             source={getImage(data?.images)} 
-            style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}}
+            style={styles.imageStyle}
           />
         </View>
-        <View style={{flex: 8, paddingVertical: 20, paddingHorizontal: 0}}>
-          <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>{orderStatus?.content?.title}</Text>
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.titleText}>{orderStatus?.content?.title}</Text>
           {getDescription(orderStatus?.content?.description || "")}
         </View>
-        <View style={{flex: 2.5, flexDirection:'column', alignItems:'flex-end', paddingVertical: 20, paddingHorizontal: 15}}>
+        <View style={styles.formContainer}>
           <View>
-            <Text style={{color: "#9E9E9E", fontSize: 10}}>{DisplayDate(orderStatus?.content?.formatDate)}</Text>
+            <Text style={styles.formText}>{DisplayDate(orderStatus?.content?.formatDate)}</Text>
           </View>
           <View>
-            <Text style={{color: "#9E9E9E", fontSize: 10}}>{orderStatus?.content?.formatTime}</Text>
+            <Text style={styles.formText}>{orderStatus?.content?.formatTime}</Text>
           </View>
           {/* <TouchableOpacity onPress={() => {
             if(clicks == 0 && !active){
@@ -91,7 +91,61 @@ export const Item = ({active, data, onSelect}) => {
           </TouchableOpacity> */}
         </View>
       </NewTouchableOpacity>
-      <View style={{ height: 2, backgroundColor: '#F7F7FA'}} />
+      <View style={styles.margin} />
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 12, 
+    color: "#9E9E9E"
+  },
+  text: {
+    fontSize: 12, 
+    color: "#F6841F"
+  },
+  orderDetailsButton: (data) => {
+    return {
+      flexDirection: 'row', 
+      backgroundColor: data.read && data.read == 1 ? '#fff' : '#FFFCF4'
+    }
+  },
+  imageContainer: {
+    flex: 2, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    paddingVertical: 20, 
+    paddingHorizontal: 15
+  },
+  imageStyle: {
+    width: 50, 
+    height: 50, 
+    resizeMode: 'cover', 
+    borderRadius: 5
+  },
+  descriptionContainer: {
+    flex: 8, 
+    paddingVertical: 20, 
+    paddingHorizontal: 0
+  },
+  titleText: {
+    fontSize: 13, 
+    fontFamily: FONT.BOLD
+  },
+  formContainer: {
+    flex: 2.5, 
+    flexDirection:'column', 
+    alignItems:'flex-end', 
+    paddingVertical: 20, 
+    paddingHorizontal: 15
+  },
+  formText: {
+    color: "#9E9E9E", 
+    fontSize: 10
+  },
+  margin: {
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  }
+})

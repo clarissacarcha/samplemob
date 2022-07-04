@@ -604,8 +604,8 @@ const Component = ({
           />
         )} */}
         <Header label="Shopping Cart" />
-        <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
-        <View style={{flex: 1}}>
+        <View style={styles.margin1} />
+        <View style={styles.subContainer}>
           {loading && <LoadingOverlay isVisible={loading} />}
           {apiloader && <LoadingOverlay isVisible={apiloader} />}
 
@@ -613,14 +613,14 @@ const Component = ({
 
           {myCartData.length > 0 && (
             <>
-              <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-                <View style={{flex: 6, justifyContent: 'center'}}>
+              <View style={styles.cartContainer}>
+                <View style={styles.checkboxContainer}>
                   <CheckBox
                     // isChecked={allSelected || itemsToCheckoutArr.length == totalitems}
                     isChecked={CartContextData.selectAll || selectedItemsArr.length == totalitems}
                     // isChecked = {CartContext.sele}
                     rightText="Select All"
-                    rightTextStyle={{fontSize: 14, fontWeight: '500', fontFamily:FONT.BOLD}}
+                    rightTextStyle={styles.checkbox}
                     checkedCheckBoxColor="#F6841F"
                     uncheckedCheckBoxColor="#F6841F"
                     onClick={() => {
@@ -652,11 +652,11 @@ const Component = ({
                     setWillDelete(!willDelete);
                     CartContextData.setWillDelete(!willDelete);
                   }}
-                  style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
-                  <Text style={{fontSize: 14, color: '#F6841F'}}>Cancel</Text>
+                  style={styles.cancelButton}>
+                  <Text style={styles.cancelText}>Cancel</Text>
                 </TouchableOpacity>}
               </View>
-              <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
+              <View style={styles.margin2} />
 
               <FlatList
                 data={myCartData}
@@ -717,7 +717,7 @@ const Component = ({
                         }}
                         onChangeQuantity={onChangeQuantity}
                       />
-                      <View style={{height: 6, backgroundColor: '#F7F7FA'}} />
+                      <View style={styles.margin3} />
                     </>
                   );
                 }}
@@ -728,7 +728,7 @@ const Component = ({
             </>
           )}
 
-          {myCartData.length > 0 && <View style={{height: 80}}></View>}
+          {myCartData.length > 0 && <View style={styles.margin4}></View>}
 
           {myCartData.length > 0 && willDelete && (
             <DeleteFooter
@@ -749,7 +749,7 @@ const Component = ({
                 }})
               }}
               disabled={selectedItemsArr.length === 0}
-              style={{backgroundColor: selectedItemsArr.length === 0 ? '#D7D7D7' : '#F6841F'}}
+              style={styles.deleteFooter(selectedItemsArr)}
             />
           )}
 
@@ -788,4 +788,50 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.WHITE,
   },
+  margin1: {
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  },
+  subContainer: {
+    flex: 1
+  },
+  cartContainer: {
+    flexDirection: 'row', 
+    paddingVertical: 15, 
+    paddingHorizontal: 15
+  },
+  checkboxContainer: {
+    flex: 6, 
+    justifyContent: 'center'
+  },
+  checkbox: {
+    fontSize: 14, 
+    fontWeight: '500', 
+    fontFamily:FONT.BOLD
+  },
+  cancelButton: {
+    flex: 1, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  cancelText: {
+    fontSize: 14, 
+    color: '#F6841F'
+  },
+  margin2: {
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  },
+  margin3: {
+    height: 6, 
+    backgroundColor: '#F7F7FA'
+  },
+  margin4: {
+    height: 80
+  },
+  deleteFooter: (selectedItemsArr) => {
+    return {
+      backgroundColor: selectedItemsArr.length === 0 ? '#D7D7D7' : '#F6841F'
+    }
+  }
 });

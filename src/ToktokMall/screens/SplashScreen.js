@@ -344,20 +344,20 @@ const Splash = ({
 	}, [loading])
 
   return (
-    <View style={{flex: 1, justifyContent:'center', alignItems: 'center'}}>
+    <View style={styles.container}>
       <Image 
 				source={SplashImage} 
-				style={{height: '100%', width: '100%' }} 
+				style={styles.splashImage} 
 				resizeMode="cover" 
 			/>
 
       {failed && 
-      <View style={{position:'absolute', bottom: '34%'}}>
-        <View style={{alignItems: 'center'}}>
-          <Text style={{fontSize: 12, textAlign: 'center'}}>Unable to connect to server. </Text>
+      <View style={styles.subContainer}>
+        <View style={styles.unableContainer}>
+          <Text style={styles.unableText}>Unable to connect to server. </Text>
         </View>
-        <TouchableOpacity onPress={init} style={{alignItems: 'center'}}>
-          <Text style={{fontSize: 14, color: "#F6841F"}}> Try again</Text>
+        <TouchableOpacity onPress={init} style={styles.tryAgainContainer}>
+          <Text style={styles.tryAgainButton}> Try again</Text>
         </TouchableOpacity>
       </View>}
 
@@ -375,4 +375,34 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(null, mapDispatchToProps)(Splash);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, 
+    justifyContent:'center', 
+    alignItems: 'center'
+  },
+  splashImage: {
+    height: '100%', 
+    width: '100%' 
+  },
+  subContainer: {
+    position:'absolute', 
+    bottom: '34%'
+  },
+  unableContainer: {
+    alignItems: 'center'
+  },
+  unableText: {
+    fontSize: 12, 
+    textAlign: 'center'
+  },
+  tryAgainContainer: {
+    alignItems: 'center'
+  },
+  tryAgainButton: {
+    fontSize: 14, 
+    color: "#F6841F"
+  }
+})
 

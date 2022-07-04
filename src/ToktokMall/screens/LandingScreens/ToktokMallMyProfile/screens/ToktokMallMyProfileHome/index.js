@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, ImageBackground, TouchableOpacity, Image, Platform, BackHandler} from 'react-native';
+import {View, Text, ImageBackground, TouchableOpacity, Image, Platform, BackHandler, StyleSheet} from 'react-native';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AIcons from 'react-native-vector-icons/dist/AntDesign';
 import {useDispatch, useSelector} from 'react-redux';
@@ -137,37 +137,37 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
   )
 
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <View style={styles.container}>
       <ImageBackground 
         source={banner}
-        imageStyle={{ resizeMode: "stretch", width: '100%'}}
-        style={{width: "100%", height: Platform.OS == "android" ? 150 : 120}}
+        imageStyle={styles.imageBackground1}
+        style={styles.imageBackground2}
       >
-        <View style={{flex: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: Platform.OS == "android" ? 15 : 0, paddingHorizontal: 10}}>
-          <View style={{flex: 3, alignItems: 'center'}}>
-            <Image source={profileImage != "" ? {uri: profileImage} : userIcon} style={{width: 80, height: 80, borderRadius: 40, resizeMode: 'cover'}} />
+        <View style={styles.subContainer}>
+          <View style={styles.profileImageContainer}>
+            <Image source={profileImage != "" ? {uri: profileImage} : userIcon} style={styles.profileImage} />
           </View>
-          <View style={{flex: 0.3}}></View>
-          <View style={{flex: 8}}>
-            <Text style={{fontSize: 15, fontFamily: FONT.BOLD}}>{userName}</Text>
-            <Text style={{fontSize: 11, fontWeight: '800'}}>{conNo}</Text>
-            {userDefaultAddress.fullAddress && <Text style={{fontSize: 11, fontWeight: '800', textTransform: 'capitalize'}}>{userDefaultAddress.fullAddress}</Text>}
+          <View style={styles.margin1}></View>
+          <View style={styles.userInfoContainer}>
+            <Text style={styles.userFullNameText}>{userName}</Text>
+            <Text style={styles.userNameText}>{conNo}</Text>
+            {userDefaultAddress.fullAddress && <Text style={styles.userAddressText}>{userDefaultAddress.fullAddress}</Text>}
           </View>
-          <View style={{flex: 0.5}} />
+          <View style={styles.margin2} />
         </View>            
       </ImageBackground>
 
-      <View style={{flex: 1, padding: 15, zIndex: 1}}>
+      <View style={styles.body}>
 
         <Card>
-          <View style={{flexDirection: 'row', padding: 20}}>
-            <View style={{flex: 4, alignItems: 'center', justifyContent: 'center'}}>
-              <Image source={require("../../../../../../assets/toktokwallet-assets/toktokwallet.png")} style={{width:'100%', height: 20, resizeMode: 'stretch'}} />
+          <View style={styles.balanceContainer}>
+            <View style={styles.TTWContainer}>
+              <Image source={require("../../../../../../assets/toktokwallet-assets/toktokwallet.png")} style={TTWImage} />
             </View>
-            <View style={{flex: 4, alignItems: 'flex-start', justifyContent: 'center'}}>
-              <Text style={{fontSize: 11, marginLeft: 8, color: COLOR.DARK}}>(Balance {FormatToText.currency(toktokMall.toktokWalletBalance)})</Text>
+            <View style={styles.balanceInfoContainer}>
+              <Text style={styles.balanceInfoText}>(Balance {FormatToText.currency(toktokMall.toktokWalletBalance)})</Text>
             </View>
-            <TouchableOpacity style={{display: walletAccountStatus == 1 ? 'flex' : 'none', flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}
+            <TouchableOpacity style={styles.paymentOptionsButton(walletAccountStatus)}
               onPress = {() => {
 
                 navigation.navigate("ToktokWalletPaymentOptions" , {
@@ -181,20 +181,20 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
 
               }}
             >
-              <Text style={{fontSize: 13, fontFamily: FONT.REGULAR, color: COLOR.ORANGE}}>Top up</Text>
+              <Text style={styles.topupText}>Top up</Text>
             </TouchableOpacity>
           </View>
         </Card>
         
-        <View style={{height: 15}}></View>
+        <View style={styles.margin3} />
 
         <Card>
-          <TouchableOpacity style={{flexDirection: 'row', padding: 20}} onPress = {() => {navigation.navigate("ToktokMallAddressesMenu", {
+          <TouchableOpacity style={styles.addressButton} onPress = {() => {navigation.navigate("ToktokMallAddressesMenu", {
                 addressData: testData, screen: 'profile', defaultAddress: 1 })}}>
-            <View style={{flex: 4,  justifyContent: 'center'}}>
-              <Text style={{fontFamily: FONT.BOLD, fontSize: 14}}>My Addresses</Text>
+            <View style={styles.addressTextContainer}>
+              <Text style={styles.addressText}>My Addresses</Text>
             </View>
-            <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+            <View style={styles.rightContainer}>
               <AIcons 
                 name = {'right'}
                 size = {17}
@@ -204,14 +204,14 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
           </TouchableOpacity>
         </Card>
 
-        <View style={{height: 15}}></View>
+        <View style={styles.margin4}></View>
 
         <Card>
-          <View style={{paddingVertical: 10 }}>
-            <View style={{paddingVertical: 10, paddingHorizontal: 20}}>
-              <Text style={{fontFamily: FONT.BOLD, fontSize: 14}}>My Orders</Text>
+          <View style={styles.myOrdersContainer}>
+            <View style={styles.myOrdersTextContainer}>
+              <Text style={styles.myOrdersText}>My Orders</Text>
             </View>
-            <View style={{flexDirection: 'row', paddingVertical: 10}}>
+            <View style={styles.statusContainer}>
               {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 0})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.MCIcon name="comment-check-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Confirmed</Text>
@@ -233,32 +233,32 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 <Text style={{fontSize: 12}}>Cancelled</Text>
               </TouchableOpacity> */}
 
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 1})} style={styles.statusButton}>
                 <CustomIcon.MCIcon name="comment-check-outline" size={30} color={COLOR.ORANGE} />
-                <Text style={{fontSize: 12}}>Confirmed</Text>
+                <Text style={styles.statusText}>Confirmed</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 2})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 2})} style={styles.statusButton}>
                 <CustomIcon.FeIcon name="truck" size={30} color={COLOR.ORANGE} />
-                <Text style={{fontSize: 12}}>To Ship</Text>
+                <Text style={styles.statusText}>To Ship</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 3})} style={{flex: 2,  alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 3})} style={styles.statusButton}>
                 <CustomIcon.FeIcon name="package" size={30} color={COLOR.ORANGE} />
-                <Text style={{fontSize: 12}}>To Receive</Text>
+                <Text style={styles.statusText}>To Receive</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 4})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallActivities", {tab: 4})} style={styles.statusButton}>
                 <Image style={{height: 35, width: 35}} source={deliveredIcon} />
-                <Text style={{fontSize: 12}}>Completed</Text>
+                <Text style={styles.statusText}>Completed</Text>
               </TouchableOpacity>
             </View>
           </View>
         </Card>
 
-        <View style={{height: 15}}></View>
+        <View style={styles.margin5} />
 
         <Card>
-          <View style={{paddingVertical: 10 }}>            
-            <View style={{flexDirection: 'row', paddingVertical: 10}}>
-              <View style={{flex: 1}} />
+          <View style={styles.helpCentreContainer}>            
+            <View style={styles.helpCentreSubContainer}>
+              <View style={styles.flex1} />
               {/* <TouchableOpacity onPress={() => navigation.navigate("ToktokMallMyWishlist", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
                 <CustomIcon.EIcon name="heart-outlined" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>Favorites</Text>
@@ -271,11 +271,11 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
                 <CustomIcon.MCIcon name="ticket-outline" size={30} color={COLOR.ORANGE} />
                 <Text style={{fontSize: 12}}>My Vouchers</Text>
               </TouchableOpacity> */}
-              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallHelp", {tab: 1})} style={{flex: 2, alignItems: 'center' , justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => navigation.navigate("ToktokMallHelp", {tab: 1})} style={styles.helpCentreButton}>
                 <CustomIcon.FeIcon name="help-circle" size={30} color={COLOR.ORANGE} />
-                <Text style={{fontSize: 12}}>Help Centre</Text>
+                <Text style={styles.helpCentreText}>Help Centre</Text>
               </TouchableOpacity>
-              <View style={{flex: 1}} />
+              <View style={styles.flex1} />
               {/* <View style={{flex: 2}} /> */}
               {/* <View style={{flex: 1}} /> */}
             </View>
@@ -287,3 +287,167 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, 
+    backgroundColor: '#fff'
+  },
+  imageBackground1: {
+    resizeMode: "stretch", 
+    width: '100%'
+  },
+  imageBackground2: {
+    width: "100%", 
+    height: Platform.OS == "android" ? 150 : 120
+  },
+  subContainer: {
+    flex: 2, 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    paddingTop: Platform.OS == "android" ? 15 : 0, 
+    paddingHorizontal: 10
+  },
+  profileImageContainer: {
+    flex: 3, 
+    alignItems: 'center'
+  },
+  profileImage: {
+    width: 80, 
+    height: 80, 
+    borderRadius: 40, 
+    resizeMode: 'cover'
+  },
+  margin1: {
+    flex: 0.3
+  },
+  userInfoContainer: {
+    flex: 8
+  },
+  userFullNameText: {
+    fontSize: 15, 
+    fontFamily: FONT.BOLD
+  },
+  userNameText: {
+    fontSize: 11, 
+    fontWeight: '800'
+  },
+  userAddressText: {
+    fontSize: 11, 
+    fontWeight: '800', 
+    textTransform: 'capitalize'
+  },
+  margin2: {
+    flex: 0.5
+  },
+  body: {
+    flex: 1, 
+    padding: 15, 
+    zIndex: 1
+  },
+  balanceContainer: {
+    flexDirection: 'row', 
+    padding: 20
+  },
+  TTWContainer: {
+    flex: 4, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  TTWImage: {
+    width:'100%', 
+    height: 20, 
+    resizeMode: 'stretch'
+  },
+  balanceInfoContainer: {
+    flex: 4, 
+    alignItems: 'flex-start', 
+    justifyContent: 'center'
+  },
+  balanceInfoText: {
+    fontSize: 11, 
+    marginLeft: 8, 
+    color: COLOR.DARK
+  },
+  paymentOptionsButton: (walletAccountStatus) => {
+    return {
+      display: walletAccountStatus == 1 ? 'flex' : 'none', 
+      flex: 2, 
+      alignItems: 'flex-end', 
+      justifyContent: 'center'
+    }
+  },
+  topupText: {
+    fontSize: 13, 
+    fontFamily: FONT.REGULAR, 
+    color: COLOR.ORANGE
+  },
+  margin3: {
+    height: 15
+  },
+  addressButton: {
+    flexDirection: 'row', 
+    padding: 20
+  },
+  addressTextContainer: {
+    flex: 4, 
+    justifyContent: 'center'
+  },
+  addressText: {
+    fontFamily: FONT.BOLD, 
+    fontSize: 14
+  },
+  rightContainer: {
+    flex: 2, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  margin4: {
+    height: 15
+  },
+  myOrdersContainer: {
+    paddingVertical: 10
+  },
+  myOrdersTextContainer: {
+    paddingVertical: 10, 
+    paddingHorizontal: 20
+  },
+  myOrdersText: {
+    fontFamily: FONT.BOLD, 
+    fontSize: 14
+  },
+  statusContainer: {
+    flexDirection: 'row', 
+    paddingVertical: 10
+  },
+  statusButton: {
+    flex: 2, 
+    alignItems: 'center' , 
+    justifyContent: 'center'
+  },
+  statusText: {
+    fontSize: 12
+  },
+  margin5: {
+    height: 15
+  },
+  helpCentreContainer: {
+    paddingVertical: 10
+  },
+  helpCentreSubContainer: {
+    flexDirection: 'row', 
+    paddingVertical: 10
+  },
+  flex1: {
+    flex: 1
+  },
+  helpCentreButton: {
+    flex: 2, 
+    alignItems: 'center' , 
+    justifyContent: 'center'
+  },
+  helpCentreText: {
+    fontSize: 12
+  },
+})
