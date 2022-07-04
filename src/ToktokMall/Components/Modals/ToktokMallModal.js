@@ -11,7 +11,7 @@ export const ToktokMallModal = () => {
   const backhandler = useRef(null);
 
   const {
-    modal: {type, onClose, title, message, actions = [], Content, onCloseDisabled},
+    toktokMallModal: {type, onClose, title, message, actions = [], Content, onCloseDisabled},
   } = useSelector(state => state.toktokMall);
 
   useEffect(() => {
