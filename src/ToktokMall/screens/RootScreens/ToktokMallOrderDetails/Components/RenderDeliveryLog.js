@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, FlatList } from 'react-native';
-import { FormatDateTime } from '../../../../helpers';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { FONT } from '../../../../../res/variables';
 import { RenderRow } from './SubComponents'
 
@@ -30,13 +29,13 @@ export const RenderDeliveryLog = ({ data }) => {
   },[data])
 
   return (
-    <View style={{paddingVertical: 16, paddingHorizontal: 16}}>
+    <View style={styles.container}>
       <View style={{ flexDirection: 'row' }}>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 13, fontFamily: FONT.BOLD }}>Delivery Log</Text>
+          <Text style={styles.h1}>Delivery Log</Text>
         </View>
       </View>
-      <View style={{ height: 2, backgroundColor: '#F7F7FA', marginVertical: 15}} />
+      <View style={styles.subContainer} />
       <FlatList
         data={logs}
         renderItem={({ item, index }) => {
@@ -52,3 +51,19 @@ export const RenderDeliveryLog = ({ data }) => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 16, 
+    paddingHorizontal: 16
+  },
+  h1: {
+    fontSize: 13, 
+    fontFamily: FONT.BOLD
+  },
+  subContainer: {
+    height: 2, 
+    backgroundColor: '#F7F7FA',
+    marginVertical: 15
+  }
+}) 

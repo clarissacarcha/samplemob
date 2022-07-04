@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { Header } from '../../../../Components';
 import {Price} from '../../../../helpers';
@@ -31,7 +31,7 @@ export const RenderStore = ({data, loading, isOutOfStock}) => {
 
 	return (
 		<>
-			<View style={{paddingVertical: 16, paddingHorizontal: 16}}>
+			<View style={styles.container}>
         {/* <ContentLoader 
           loading = {loading} 
           avatar = {false}
@@ -41,18 +41,33 @@ export const RenderStore = ({data, loading, isOutOfStock}) => {
           paragraphStyles = {{height: 13, left: -10, paddingTop: 14 }}
           pWidth = {'45%'}
         ></ContentLoader> */}
-        <TouchableOpacity disabled={isOutOfStock} activeOpacity={1} onPress={() => {
+
+        <TouchableOpacity 
+          disabled={isOutOfStock} 
+          activeOpacity={1} 
+          onPress={() => {
             navigation.navigate("ToktokMallStore", {id: data?.id, searchValue: ""})
-          }} style={{flexDirection: 'row', justifyContent: 'center'}}>
-          <View style={{flex: 2, alignItems: 'flex-start', justifyContent: 'center'}}>
-						<Image source={getStoreLogo(data?.profileImages?.logo)} style={{width: 50, height: 50, resizeMode: 'stretch', borderRadius: 30}} />
+          }} 
+          style={{flexDirection: 'row', justifyContent: 'center'}}
+        >
+          <View style={styles.imageContainer}>
+						<Image 
+              source={getStoreLogo(data?.profileImages?.logo)} 
+              style={styles.images} 
+            />
 					</View>
           <View style={{flex: 5, justifyContent: 'center'}}>
-            <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>{data?.shopname}</Text>
-            <Text style={{fontSize: 13, color: "#9E9E9E"}}>{data?.address}</Text>
+            <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>
+              {data?.shopname}
+            </Text>
+            <Text style={{fontSize: 13, color: "#9E9E9E"}}>
+              {data?.address}
+            </Text>
           </View>
-          <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
-            <Text style={{fontSize: 13, color: "#F6841F"}}>{isOutOfStock ? "" : "Visit Store"}</Text>
+          <View style={styles.visit}>
+            <Text style={{fontSize: 13, color: "#F6841F"}}>
+              {isOutOfStock ? "" : "Visit Store"}
+            </Text>
           </View>
         </TouchableOpacity>
         {/* <View style={{flexDirection: 'row', paddingVertical: 14}}>
@@ -117,3 +132,27 @@ export const RenderStore = ({data, loading, isOutOfStock}) => {
 		</>
 	)
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 16, 
+    paddingHorizontal: 16
+  },
+  imageContainer:{
+    flex: 2, 
+    alignItems: 'flex-start', 
+    justifyContent: 'center'
+  },
+  images: {
+    width: 50, 
+    height: 50, 
+    resizeMode: 'stretch', 
+    borderRadius: 30
+  },
+  visit: {
+    flex: 3, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  }
+})

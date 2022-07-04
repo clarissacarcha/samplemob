@@ -154,9 +154,8 @@ export const ToktokMallOrderDetails = connect(mapStateToProps, mapDispatchToProp
 
 const styles = StyleSheet.create({
   footer: {
-      borderTopWidth:.50,
-      borderTopColor:'rgba(0, 0, 0, 0.25)',
-      // paddingVertical: 15,
+      borderTopWidth: .50,
+      borderTopColor: 'rgba(0, 0, 0, 0.25)',
       paddingHorizontal: 16,
       position: 'absolute',
       bottom: 0,

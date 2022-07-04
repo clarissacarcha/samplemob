@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import Share from 'react-native-share';
 
@@ -169,7 +169,7 @@ const Component = ({
 
 	return (
 		<>
-			<View style={{marginTop: 35, paddingVertical: 8, paddingHorizontal: 16}}>
+			<View style={styles.container}>
         {/* <ContentLoader 
           loading = {loading} 
           avatar = {false}
@@ -180,18 +180,33 @@ const Component = ({
         ></ContentLoader> */}
           <Animated.View style={{flexDirection: 'row', opacity: opacity}}>
             <View style={{flex: 9}}>
-              <Text style={[{fontSize: 22, fontWeight: '500', fontFamily: FONT.BOLD}]} numberOfLines={2} ellipsizeMode="tail">{data?.itemname?.trim()}</Text>
+              <Text 
+                style={styles.itemTitle} 
+                numberOfLines={2} 
+                ellipsizeMode="tail"
+              >
+                {data?.itemname?.trim()}
+              </Text>
             </View>         
             <View style={{flex: 0}}>
               {data?.discountRate != "" && 
-              <View style={{position:'absolute', zIndex: 1, right: 0, top: -16, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
-                <Text style={{fontSize: 11, paddingHorizontal: 8, paddingLeft: 16, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{data?.discountRate}</Text>
+              <View style={styles.discountRateContainer}>
+                <Text style={styles.discountRateText}>{data?.discountRate}</Text>
               </View>}
             </View> 
           </Animated.View>
-          <View style={{flexDirection: 'row', alignItems: "center"}}>
-            {data.price ? <Text style={{color: "#F6841F", fontSize: 20}}><Price amount={data.price} /></Text> : null}
-            {data.compareAtPrice && data.compareAtPrice != "0.00" ? <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 14, marginLeft: 10}}><Price amount={data.compareAtPrice} /></Text> : null}
+          <View style={styles.itemPriceContainer}>
+
+            { data.price ? 
+                <Text style={styles.itemPriceText}>
+                  <Price amount={data.price} />
+                </Text> : null}
+
+            { data.compareAtPrice && data.compareAtPrice != "0.00" ? 
+                <Text style={styles.compareAtPriceText}>
+                  <Price amount={data.compareAtPrice} />
+                </Text> : null}
+
               {/* <Text style={{marginLeft: 10}}>{data.soldCount || 0} sold</Text>  */}
             {/* <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'flex-end'}}>
               <TouchableOpacity style={{marginRight: 10}} onPress={() => HandleToggleFavorites()}>
@@ -201,13 +216,16 @@ const Component = ({
                 <CustomIcon.FeIcon name="share" size={20} color="#9E9E9E" />
               </TouchableOpacity>
             </View> */}
-            <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'flex-end'}}>
-              {data.refComDiscountRate && data.refComDiscountRate != "" ? <RefComDiscountRate value={data.refComDiscountRate} w='40%' /> : null}
+
+            <View style={styles.refComDiscountRateText}>
+              {data.refComDiscountRate && data.refComDiscountRate != "" ? 
+                <RefComDiscountRate value={data.refComDiscountRate} w='40%' /> : null}
             </View>
+
           </View>
           <View style={{flexDirection: 'row'}}>
             <Text style={{flex: 1}}>{data.soldCount || 0} sold</Text>
-            <View style={{flex: 1.8, flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <View style={styles.share}>
               {/* <TouchableOpacity style={{marginRight: 10}} onPress={() => HandleToggleFavorites()}>
                 {favorite ? <CustomIcon.EIcon name="heart" size={22} color="#F6841F" /> : <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />}
               </TouchableOpacity> */}
@@ -244,3 +262,58 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export const RenderProduct = connect(mapStateToProps, mapDispatchToProps)(Component);
+
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 35, 
+    paddingVertical: 8, 
+    paddingHorizontal: 16
+  },
+  itemTitle: {
+    fontSize: 22, 
+    fontWeight: '500', 
+    fontFamily: FONT.BOLD
+  },
+  discountRateContainer: {
+    position:'absolute', 
+    zIndex: 1, 
+    right: 0, 
+    top: -16, 
+    backgroundColor: '#F6841F', 
+    borderBottomLeftRadius: 30
+  },
+  discountRateText: {
+    fontSize: 11, 
+    paddingHorizontal: 8,
+    paddingLeft: 16, 
+    paddingTop: 1, 
+    paddingBottom: 3, 
+    color: "#fff", 
+    fontFamily: FONT.BOLD
+  },
+  itemPriceContainer:{
+    flexDirection: 'row', 
+    alignItems: "center"
+  },
+  itemPriceText: {
+    color: "#F6841F", 
+    fontSize: 20
+  },
+  compareAtPriceText: {
+    color: "#9E9E9E", 
+    textDecorationLine: 'line-through', 
+    fontSize: 14, 
+    marginLeft: 10
+  },
+  refComDiscountRateText: {
+    flex: 1.8, 
+    flexDirection: 'row', 
+    justifyContent: 'flex-end'
+  },
+  share: {
+    flex: 1.8, 
+    flexDirection: 'row', 
+    justifyContent: 'flex-end'
+  }
+})
