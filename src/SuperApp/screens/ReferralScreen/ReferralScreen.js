@@ -22,23 +22,37 @@ import TokIcon from '../../../assets/images/Promos/ToktokAppIcon.png';
 import voucherPaperDesign from '../../../assets/toktokgo/voucher-paper-design.png';
 import VoucherIMG from '../../../assets/images/Promos/VoucherImage.png';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-import {useMutation} from '@apollo/react-hooks';
-import {PATCH_GO_REFERRAL_USER_ID} from '../../../graphql';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {AUTH_CLIENT, GET_USER_SESSION, PATCH_GO_REFERRAL_USER_ID} from '../../../graphql';
 import {onError} from '../../../util/ErrorUtility';
 import {AlertOverlay} from '../../../components';
+import {connect} from 'react-redux';
 
 const decorHeight = Dimensions.get('window').height * 0.15;
 
-export const ReferralScreen = ({navigation, route}) => {
+const ReferralScreen = ({navigation, route, session, createSession}) => {
   const {fromRegistration} = route.params;
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [isValidDriverId, setIsValidDriverId] = useState(false);
+  const [invalidReferralCodeText, setInvalidReferralCodeText] = useState('');
   const [refCode, setRefCode] = useState('');
 
   const [patchGoReferralUserId, {loading}] = useMutation(PATCH_GO_REFERRAL_USER_ID, {
     onCompleted: () => {
+      const storedUserId = session.user.id;
       setViewSuccesVoucherClaimedModal(true);
       setTimeout(() => {
+        if (storedUserId) {
+          getUserSession({
+            variables: {
+              input: {
+                userId: storedUserId,
+              },
+            },
+          });
+        } else {
+          navigation.replace('UnauthenticatedStack');
+        }
         setViewSuccesVoucherClaimedModal(false);
         setRefCode('');
         if (fromRegistration) {
@@ -49,7 +63,7 @@ export const ReferralScreen = ({navigation, route}) => {
             },
           });
         }
-      }, 1000);
+      }, 1500);
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -57,10 +71,50 @@ export const ReferralScreen = ({navigation, route}) => {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
-          if (message == 'Invalid Referral Code.') {
-            setIsValidDriverId(true);
+          setIsValidDriverId(true);
+          setInvalidReferralCodeText(message);
+        });
+      }
+    },
+  });
+
+  const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
+    client: AUTH_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(error);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, code}) => {
+          if (message === 'Session expired. Please log in again.') {
+            Alert.alert('', message);
+            AsyncStorage.removeItem('accessToken');
+            destroySession();
+            navigation.replace('UnauthenticatedStack');
+          } else if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+          } else if (code === 'USER_INPUT_ERROR') {
+            Alert.alert('', message);
+          } else if (code === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            navigation.push('UnauthenticatedStack', {
+              screen: 'AccountBlocked',
+            });
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
           }
         });
+      }
+    },
+    onCompleted: ({getUserSession}) => {
+      try {
+        createSession(getUserSession);
+      } catch (error) {
+        console.log(error);
       }
     },
   });
@@ -151,7 +205,7 @@ export const ReferralScreen = ({navigation, route}) => {
         </View>
         {isValidDriverId && (
           <View style={{alignSelf: 'stretch', marginHorizontal: 82}}>
-            <Text style={{color: CONSTANTS.COLOR.RED, fontSize: CONSTANTS.FONT_SIZE.S}}>Invalid Referral Code</Text>
+            <Text style={{color: CONSTANTS.COLOR.RED, fontSize: CONSTANTS.FONT_SIZE.S}}>{invalidReferralCodeText}</Text>
           </View>
         )}
 
@@ -170,6 +224,17 @@ export const ReferralScreen = ({navigation, route}) => {
     </ImageBackground>
   );
 };
+
+const mapStateToProps = state => ({
+  session: state.session,
+});
+
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
+  destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReferralScreen);
 
 const styles = StyleSheet.create({
   container: {
@@ -256,6 +321,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     color: CONSTANTS.COLOR.BLACK,
     alignSelf: 'stretch',
+    paddingVertical: 12,
   },
   button: {
     backgroundColor: CONSTANTS.COLOR.ORANGE,

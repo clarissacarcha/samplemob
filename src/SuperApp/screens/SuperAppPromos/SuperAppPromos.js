@@ -13,33 +13,36 @@ const bannerWidth = Dimensions.get('window').width - 32;
 const bannerHeight = Dimensions.get('window').height * 0.23;
 
 const SuperAppPromosScreen = ({session, navigation}) => {
+  const onPressReferral = () => {
+    if (!session.user.consumer.goReferralDriverCode) {
+      navigation.push('ReferralScreen', {
+        fromRegistration: false,
+      });
+    } else {
+      navigation.push('ReferralExistScreen');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Header title={'Promos'} navigation={navigation} />
       <View style={styles.innerContainer}>
         <Text style={styles.headerText}>Explore</Text>
         <Text>New features you surely don't wanna miss.</Text>
-        {!session.user.consumer.goReferralDriverUserId && (
-          <View style={styles.bannerContainer}>
-            <ThrottledOpacity
-              onPress={() =>
-                navigation.navigate('ReferralScreen', {
-                  fromRegistration: false,
-                })
-              }>
-              <Image
-                source={ReferralIMG}
-                resizeMode={'contain'}
-                style={{
-                  width: bannerWidth,
-                  height: bannerHeight,
-                  borderRadius: 10,
-                }}
-              />
-            </ThrottledOpacity>
-            <Text>Referral</Text>
-          </View>
-        )}
+        <View style={styles.bannerContainer}>
+          <ThrottledOpacity onPress={onPressReferral}>
+            <Image
+              source={ReferralIMG}
+              resizeMode={'contain'}
+              style={{
+                width: bannerWidth,
+                height: bannerHeight,
+                borderRadius: 10,
+              }}
+            />
+          </ThrottledOpacity>
+          <Text>Referral</Text>
+        </View>
         <View style={styles.bannerContainer}>
           <ThrottledOpacity onPress={() => navigation.navigate('VoucherScreen')}>
             <Image
