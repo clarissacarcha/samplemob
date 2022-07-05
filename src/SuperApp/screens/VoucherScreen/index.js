@@ -247,6 +247,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     color: CONSTANTS.COLOR.BLACK,
     width: '80%',
+    paddingVertical: 12,
   },
   containerInput: {
     marginTop: 24,

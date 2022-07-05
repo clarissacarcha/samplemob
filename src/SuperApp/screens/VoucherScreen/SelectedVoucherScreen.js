@@ -6,7 +6,7 @@ import {ThrottledOpacity} from '../../../components_section';
 import {SuccessVoucherClaimedModal} from './Components';
 import {Header} from '../Components';
 
-import GraphicsIMG from '../../../assets/images/Promos/Dummy_graphics.png';
+import GraphicsIMG from '../../../assets/images/Promos/toktokgo_voucher.png';
 
 const FULL_HEIGHT = Dimensions.get('window').height;
 const FULL_WIDTH = Dimensions.get('window').width;
@@ -22,21 +22,13 @@ export const SelectedVoucherScreen = ({navigation, route}) => {
       <View style={styles.container}>
         <Image
           source={GraphicsIMG}
-          resizeMode={'stretch'}
-          style={{height: FULL_HEIGHT * 0.22, width: FULL_WIDTH - 32}}
+          resizeMode={'contain'}
+          style={{height: FULL_HEIGHT * 0.17, width: FULL_WIDTH - 32}}
         />
         <Text style={{marginVertical: 16}}>{data.description}</Text>
 
         <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD}}>Promo Terms and Conditions</Text>
-        {/* <Text style={{marginVertical: 16}}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim lacus aenean praesent amet ullamcorper nec ac.
-          Augue aliquam risus nam pellentesque etiam mattis id nunc. Faucibus diam vitae bibendum viverra adipiscing.
-        </Text> */}
         <Text style={{marginVertical: 16}}>{data.policies}</Text>
-        <Text style={styles.TandC}>
-          Voucher is subject to toktok Terms and Conditions. Toktok reserves the right to withdraw the promotion or
-          change the Terms and Conditions of the promotion without prior notice.
-        </Text>
       </View>
 
       <View style={styles.buttonContainer}>
