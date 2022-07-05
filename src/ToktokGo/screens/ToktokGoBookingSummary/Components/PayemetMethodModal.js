@@ -21,6 +21,7 @@ export const PaymentMethodModal = ({
   setViewSelectPaymentModal,
   details,
   setSelectedPaymentMethod,
+  setSelectedVouchersNull,
   tokwaAccount,
   getMyAccountLoading,
 }) => {
@@ -30,6 +31,7 @@ export const PaymentMethodModal = ({
     dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, paymentMethod: paymentMethod}});
     setSelectedPaymentMethod(paymentMethod);
     setViewSelectPaymentModal(false);
+    setSelectedVouchersNull();
   };
 
   return (
