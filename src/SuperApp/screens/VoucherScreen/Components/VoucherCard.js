@@ -5,6 +5,7 @@ import {ThrottledOpacity} from '../../../../components_section';
 import * as Progress from 'react-native-progress';
 import voucherPaperDesign from '../../../../assets/toktokgo/voucher-paper-design.png';
 import VoucherImage from '../../../../assets/toktokgo/voucher-sedan-image.png';
+import moment from 'moment';
 
 const decorHeight = Dimensions.get('window').height * 0.12;
 
@@ -26,23 +27,17 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
     }
   };
 
-  const onPressSelected = () => {
-    if (data.promoVoucher.collectable && !data.voucherWallet) {
-      onPressActionButton({voucherId: data.id});
-    } else {
-      navigation.pop(3);
-      navigation.push('ToktokGoLanding');
-    }
-  };
-
   return (
-    <ThrottledOpacity onPress={() => navigation.navigate('SelectedVoucherScreen', {data, onPress: onPressSelected})}>
+    <ThrottledOpacity onPress={() => navigation.navigate('SelectedVoucherScreen', {id: data.id})}>
       <View style={styles.card}>
         <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
         <Image source={VoucherImage} resizeMode={'contain'} style={styles.voucherImage} />
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
           <Text style={styles.voucherDescription}>{data.description}</Text>
+          {data.promoVoucher.endAt && (
+            <Text style={styles.voucherDescription}>Valid unitl {moment(data.promoVoucher.endAt).format('LL')}</Text>
+          )}
           {data.voucherWallet?.total > 1 && (
             <>
               <View
@@ -77,9 +72,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
               <Text style={styles.useButtonText}>Use</Text>
             </ThrottledOpacity>
           )}
-          <ThrottledOpacity
-            onPress={() => navigation.navigate('SelectedVoucherScreen', {data, onPress: onPressSelected})}
-            delay={500}>
+          <ThrottledOpacity onPress={() => navigation.navigate('SelectedVoucherScreen', {id: data.id})} delay={500}>
             <Text style={styles.TandC}>T&C</Text>
           </ThrottledOpacity>
         </View>

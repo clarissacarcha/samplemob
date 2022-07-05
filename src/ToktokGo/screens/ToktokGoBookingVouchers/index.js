@@ -1,10 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Text, View, FlatList, Dimensions, StyleSheet, ScrollView, Image, ActivityIndicator} from 'react-native';
 import Data from '../../components/BookingDummyData';
 import CONSTANTS from '../../../common/res/constants';
 import {Header} from '../../components';
 import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
+import {useFocusEffect} from '@react-navigation/native';
 import {GET_SEARCH_VOUCHER, GET_VOUCHERS, POST_COLLECT_VOUCHER, TOKTOK_WALLET_VOUCHER_CLIENT} from '../../../graphql';
+import moment from 'moment';
 import {VoucherCard} from './Components/VoucherCard';
 import {TextInput} from 'react-native-gesture-handler';
 import {throttle} from 'lodash';
@@ -19,6 +21,7 @@ import {ThrottledOpacity} from '../../../components_section';
 import {useDebounce} from '../../helpers';
 
 const decorWidth = Dimensions.get('window').width * 0.5;
+const FULL_HEIGHT = Dimensions.get('window').height;
 
 const ToktokGoBookingVouchers = ({navigation}) => {
   const {details} = useSelector(state => state.toktokGo);
@@ -27,22 +30,39 @@ const ToktokGoBookingVouchers = ({navigation}) => {
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [search, setSearch] = useState('');
   const [searchedDatas, setSearchedDatas] = useState([]);
+  const [noVouchers, setNoVouchers] = useState(false);
   const [noResults, setNoResults] = useState(false);
 
   const [getVouchers, {loading, error: getVouchersError, refetch}] = useLazyQuery(GET_VOUCHERS, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      var tempData = [];
-
-      response.getVouchers.map(item => {
-        if (!item.voucherWallet) {
-          tempData.push(item);
-        } else {
-          tempData.unshift(item);
-        }
-      });
-      setData(tempData);
+      if (response.getVouchers.length > 0) {
+        var toClaimExpiring = [];
+        var toUseExpiring = [];
+        var toClaim = [];
+        var toUse = [];
+        var allVouchers = [];
+        response.getVouchers.map(item => {
+          if (item.voucherWallet || !item.promoVoucher.collectable) {
+            item.promoVoucher.endAt ? toUseExpiring.unshift(item) : toUse.push(item);
+          } else {
+            item.promoVoucher.endAt ? toClaimExpiring.unshift(item) : toClaim.push(item);
+          }
+        });
+        toUseExpiring.sort(
+          (a, b) => moment(a.promoVoucher.endAt).format('YYYYMMDD') - moment(b.promoVoucher.endAt).format('YYYYMMDD'),
+        );
+        toClaimExpiring.sort(
+          (a, b) => moment(a.promoVoucher.endAt).format('YYYYMMDD') - moment(b.promoVoucher.endAt).format('YYYYMMDD'),
+        );
+        toUse = toUse.concat(toUseExpiring);
+        toClaim = toClaim.concat(toClaimExpiring);
+        allVouchers = toUse.concat(toClaim);
+        setData(allVouchers);
+      } else {
+        setNoVouchers(true);
+      }
     },
     onError: onError,
   });
@@ -55,6 +75,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
         setViewSuccesVoucherClaimedModal(false);
       }, 1000);
       refetch();
+      handleGetData();
     },
     onError: onError,
   });
@@ -85,7 +106,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
     });
   };
 
-  useEffect(() => {
+  const handleGetData = () => {
     getVouchers({
       variables: {
         input: {
@@ -94,7 +115,13 @@ const ToktokGoBookingVouchers = ({navigation}) => {
         },
       },
     });
-  }, []);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      handleGetData();
+    }, []),
+  );
 
   useEffect(() => {
     if (search === '' || search === null) {
@@ -201,6 +228,15 @@ const ToktokGoBookingVouchers = ({navigation}) => {
         ) : null}
       </View>
 
+      {noVouchers && (
+        <View style={styles.noResultsContainer}>
+          <Image source={NoVouchers} resizeMode={'contain'} style={styles.noResultsIMG} />
+          <Text style={styles.noResultsTitle}>No Vouchers</Text>
+          <Text>We are preparing the best deals for you.</Text>
+          <Text>Stay tuned!</Text>
+        </View>
+      )}
+
       {noResults && (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Image source={NoFound} resizeMode={'contain'} style={{width: decorWidth, height: decorWidth}} />
@@ -208,7 +244,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
           <Text>Try to search something similar.</Text>
         </View>
       )}
-      {!noResults && (
+      {!noResults && !noVouchers && (
         <FlatList
           showsVerticalScrollIndicator={false}
           data={searchedDatas.length === 0 ? data : searchedDatas}
@@ -218,6 +254,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
             return (
               <View style={{marginVertical: 8}}>
                 <VoucherCard
+                  details={details}
                   data={item}
                   navigation={navigation}
                   onPressActionButton={onApply}
@@ -270,5 +307,20 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 5,
     color: CONSTANTS.COLOR.BLACK,
+  },
+  noResultsContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: FULL_HEIGHT * 0.15,
+  },
+  noResultsIMG: {
+    width: decorWidth,
+    height: decorWidth,
+    marginBottom: 24,
+  },
+  noResultsTitle: {
+    color: CONSTANTS.COLOR.ORANGE,
+    fontSize: CONSTANTS.FONT_SIZE.XL + 1,
+    marginBottom: 8,
   },
 });

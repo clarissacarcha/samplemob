@@ -17,7 +17,7 @@ import RightArrow from '../../../../../assets/icons/profileMenu-arrow-rightIcon.
 
 import {Header} from './Components';
 
-const DrawerButton = ({label, onPress, restrict}) => {
+const DrawerButton = ({isNew, label, onPress, restrict}) => {
   if (restrict && restrict != APP_FLAVOR) {
     return null;
   }
@@ -33,7 +33,18 @@ const DrawerButton = ({label, onPress, restrict}) => {
           size={16}
           style={{marginRight: 2}}
         /> */}
-        <Image source={RightArrow} style={{color: 'red', height: 12, width: 15}} resizeMode={'contain'} />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {isNew && (
+            <View style={{backgroundColor: COLOR.RED, paddingVertical: 3, paddingHorizontal: 9, borderRadius: 10}}>
+              <Text style={{fontSize: FONT_SIZE.S, color: COLOR.WHITE}}>New</Text>
+            </View>
+          )}
+          <Image
+            source={RightArrow}
+            style={{color: 'red', height: 12, width: 15, marginLeft: 25}}
+            resizeMode={'contain'}
+          />
+        </View>
       </View>
     </TouchableHighlight>
   );
@@ -158,6 +169,25 @@ export const ToktokLandingMenu = ({navigation}) => {
                 navigation.push('ToktokAnnouncements');
               }}
             />
+            {/*--------------- Referral ---------------*/}
+            <DrawerButton
+              isNew
+              label="Referral"
+              onPress={() => {
+                navigation.push('ReferralScreen', {
+                  fromRegistration: false,
+                });
+              }}
+            />
+            {/*--------------- Vouchers ---------------*/}
+            <DrawerButton
+              isNew
+              label="Vouchers"
+              onPress={() => {
+                navigation.push('VoucherScreen');
+              }}
+            />
+
             {/*--------------- TALK TO US ---------------*/}
             <Text
               style={{

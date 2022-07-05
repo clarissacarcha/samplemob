@@ -68,6 +68,14 @@ export const GET_SEARCH_VOUCHER = gql`
   }
 `;
 
+export const GET_VOUCHER = gql`
+  query getVoucher($input: GetVoucherInput) {
+    getVoucher(input: $input) {
+      ${TokwaVoucher}
+    }
+  }
+`;
+
 export const POST_COLLECT_VOUCHER = gql`
   mutation postCollectVoucher($input: PostCollectVoucherInput) {
     postCollectVoucher(input: $input) {

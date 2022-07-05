@@ -1,22 +1,79 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
-
+import React, {useState, useCallback} from 'react';
+import {StyleSheet, Text, View, Image, Dimensions, ActivityIndicator} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {onError} from '../../../util/ErrorUtility';
 import CONSTANTS from '../../../common/res/constants';
 import {ThrottledOpacity} from '../../../components_section';
 import {SuccessVoucherClaimedModal} from './Components';
 import {Header} from '../Components';
-
+import {AlertOverlay} from '../Components';
+import {TOKTOK_WALLET_VOUCHER_CLIENT, GET_VOUCHER, POST_COLLECT_VOUCHER} from '../../../graphql';
 import GraphicsIMG from '../../../assets/images/Promos/toktokgo_voucher.png';
 
 const FULL_HEIGHT = Dimensions.get('window').height;
 const FULL_WIDTH = Dimensions.get('window').width;
 
 export const SelectedVoucherScreen = ({navigation, route}) => {
-  const {data, onPress} = route.params;
+  const {id} = route.params;
+  const [data, setData] = useState({});
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
+
+  const [getVoucher, {loading: GVLoading}] = useLazyQuery(GET_VOUCHER, {
+    client: TOKTOK_WALLET_VOUCHER_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setData(response.getVoucher);
+    },
+    onError: onError,
+  });
+
+  const getDataVoucher = () => {
+    getVoucher({
+      variables: {
+        input: {
+          id: id,
+        },
+      },
+    });
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getDataVoucher();
+    }, []),
+  );
+
+  const [postCollectVoucher, {loading: PCVLoading}] = useMutation(POST_COLLECT_VOUCHER, {
+    client: TOKTOK_WALLET_VOUCHER_CLIENT,
+    onCompleted: () => {
+      setViewSuccesVoucherClaimedModal(true);
+      setTimeout(() => {
+        setViewSuccesVoucherClaimedModal(false);
+      }, 1000);
+      getDataVoucher();
+    },
+    onError: onError,
+  });
+
+  const onPressSelected = () => {
+    if (data?.promoVoucher?.collectable && !data.voucherWallet) {
+      postCollectVoucher({
+        variables: {
+          input: {
+            voucherId: data.id,
+          },
+        },
+      });
+    } else {
+      navigation.pop(3);
+      navigation.push('ToktokGoLanding');
+    }
+  };
 
   return (
     <View style={styles.outerContainer}>
+      <AlertOverlay visible={PCVLoading} />
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
       <Header title={data.name} navigation={navigation} />
       <View style={styles.container}>
@@ -32,12 +89,14 @@ export const SelectedVoucherScreen = ({navigation, route}) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        {data.promoVoucher.collectable && !data.voucherWallet ? (
-          <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPress}>
+        {GVLoading ? (
+          <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{paddingVertical: 16}} />
+        ) : data?.promoVoucher?.collectable && !data?.voucherWallet ? (
+          <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPressSelected}>
             <Text style={styles.claimText}>Claim</Text>
           </ThrottledOpacity>
         ) : (
-          <ThrottledOpacity style={styles.useButtonWrapper} onPress={onPress}>
+          <ThrottledOpacity style={styles.useButtonWrapper} onPress={onPressSelected}>
             <Text style={styles.useText}>Use</Text>
           </ThrottledOpacity>
         )}
