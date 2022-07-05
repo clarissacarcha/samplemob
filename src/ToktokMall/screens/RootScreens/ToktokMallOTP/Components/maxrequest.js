@@ -30,7 +30,7 @@ export const ValidatorMaxRequest =  ({onValidate}) => {
 
   const text = (minutes) => {
     return(
-        <Text style = {{fontSize: 13, color: "#F6841F", fontFamily: FONT.REGULAR, textAlign: 'center'}}>{minutes} minutes.</Text>
+        <Text style = {styles.timeText}>{minutes} minutes.</Text>
     )
   }
 
@@ -50,12 +50,12 @@ export const ValidatorMaxRequest =  ({onValidate}) => {
       />
 
       <View style = {styles.container} >
-        <View style = {{margin: 20, alignItems: 'center', height: Dimensions.get("window").height*0.8, paddingTop: Dimensions.get("window").height*0.15}}>
+        <View style = {styles.subContainer}>
             <Image
               source={otpicon2}
             />     
             <>
-              <Text style = {{fontFamily: FONT.BOLD, fontSize: 17, marginTop: 25, marginBottom:10}}>No Attempts Left</Text>
+              <Text style = {styles.title}>No Attempts Left</Text>
               {/* <Text style = {{textAlign: 'center', paddingHorizontal: 15, fontSize: 14, fontFamily: FONT.REGULAR}}>
                 {Context.lockMessage}
               </Text> */}
@@ -93,6 +93,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  subContainer: {
+    margin: 20, 
+    alignItems: 'center', 
+    height: Dimensions.get("window").height*0.8, 
+    paddingTop: Dimensions.get("window").height*0.15
+  },
   image:{
     alignSelf: 'center'
   },
@@ -128,7 +134,22 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
     fontSize: 14
   },
+  title: {
+    fontFamily: FONT.BOLD, 
+    fontSize: 17, 
+    marginTop: 25, 
+    marginBottom:10
+  },
   label: {
-    fontSize: 13, color: "#000", fontFamily: FONT.REGULAR, textAlign: 'center'
+    fontSize: 13, 
+    color: "#000", 
+    fontFamily: FONT.REGULAR, 
+    textAlign: 'center'
+  },
+  timeText: {
+    fontSize: 13, 
+    color: "#F6841F", 
+    fontFamily: FONT.REGULAR, 
+    textAlign: 'center'
   }
 });

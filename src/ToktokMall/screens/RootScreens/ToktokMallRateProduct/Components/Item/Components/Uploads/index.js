@@ -1,9 +1,8 @@
 import { useNavigation } from '@react-navigation/core';
-import React, {useEffect, useState} from 'react';
-import {View, Image, TouchableOpacity} from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
-import DocumentPicker from 'react-native-document-picker'
-import {UploadModal} from '../../../../../../../Components';
+import React, { useEffect, useState } from 'react';
+import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { UploadModal } from '../../../../../../../Components';
 import CustomIcon from '../../../../../../../Components/Icons';
 
 export const Uploads = ({images, setRating, index}) => {
@@ -56,44 +55,31 @@ export const Uploads = ({images, setRating, index}) => {
 
   return (
     <>
-      {visibility && <UploadModal isVisible={visibility} setIsVisible={setVisibility} actions={modalActions} />}
-      <View
-        style={{
-          alignItems: 'center',
-          marginTop: 15,
-          paddingTop: 15,
-        }}>
-        <View style={{flexDirection: 'row', marginLeft: -15}}>
+      {visibility && 
+        <UploadModal 
+          isVisible={visibility} 
+          setIsVisible={setVisibility} 
+          actions={modalActions} 
+        />}
+
+      <View style={styles.container}>
+        <View style={styles.subContainer}>
           {images.map(({uri}, i) => (
             <View style={{marginHorizontal: 12}}>
               <CustomIcon.AIcon
                 name="closecircle"
                 color="#9E9E9E"
                 size={15}
-                style={{
-                  position: 'absolute',
-                  top: -13,
-                  right: -17,
-                  zIndex: 1,
-                }}
+                style={styles.customIcon}
                 onPress={() => setRating({index, image: {action: 'remove', index: i}})}
               />
-              <Image style={{height: 54, width: 54, borderRadius: 5}} source={{uri}} />
+              <Image style={styles.image} source={{uri}} />
             </View>
           ))}
           {images.length < 5 && (
             <TouchableOpacity
               onPress={setVisibility.bind(this, true)}
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderStyle: 'dashed',
-                borderColor: '#9E9E9E',
-                borderRadius: 5,
-                borderWidth: 2,
-                padding: 15,
-                marginHorizontal: 12,
-              }}>
+              style={styles.button}>
               <CustomIcon.FA5Icon name="camera" color="#9E9E9E" size={20} />
             </TouchableOpacity>
           )}
@@ -102,3 +88,36 @@ export const Uploads = ({images, setRating, index}) => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    marginTop: 15,
+    paddingTop: 15,
+  },
+  subContainer: {
+    flexDirection: 'row', 
+    marginLeft: -15
+  },
+  customIcon: {
+    position: 'absolute',
+    top: -13,
+    right: -17,
+    zIndex: 1,
+  },
+  image: {
+    height: 54, 
+    width: 54, 
+    borderRadius: 5
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderStyle: 'dashed',
+    borderColor: '#9E9E9E',
+    borderRadius: 5,
+    borderWidth: 2,
+    padding: 15,
+    marginHorizontal: 12,
+  }
+});

@@ -1,6 +1,6 @@
 import React from 'react'
-import {View, Image, Text, TextInput, TouchableOpacity, Platform} from 'react-native'
-import {Rate, Uploads} from './Components'
+import { View, Image, Text, TextInput, StyleSheet, Platform } from 'react-native'
+import { Rate, Uploads } from './Components'
 
 export const Item = ({index, setRating, rating: {star, feedback, images}, ...data}) => {
 
@@ -14,42 +14,101 @@ export const Item = ({index, setRating, rating: {star, feedback, images}, ...dat
   }
 
   return (
-    <View style={{flex: 1, marginTop: 10, paddingBottom: 15, backgroundColor: '#FFF'}}>
-      <View style={{flexDirection: 'row', paddingTop: 10, padding: 15}}>
+    <View style={styles.container}>
+      <View style={styles.itemContainer}>
         <Image
           source={getImage(data.image)}
-          style={{width: 55, height: 60, resizeMode: 'stretch', borderRadius: 5}}
+          style={styles.itemImages}
         />
-        <View style={{marginLeft: 15}}>
-          <View style={{flex: 1, justifyContent: 'center'}}>
-            <Text style={{fontSize: 13, fontWeight: '100'}}>{data.label}</Text>
-            <Text style={{color: '#9E9E9E', fontSize: 13}}>Variation: {data.variation}</Text>
+        <View style={{ marginLeft: 15 }}>
+          <View style={styles.itemText}>
+            <Text style={styles.label}>{data.label}</Text>
+            <Text style={styles.variation}>Variation: {data.variation}</Text>
           </View>
         </View>
       </View>
-      <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
+      <View style={styles.line} />
 
-      <View style={{alignItems: 'center', paddingTop: 40}}>
-        <Text style={{fontSize: 16, fontWeight: '100'}}>How was your purchase</Text>
-        <Text style={{color: '#9E9E9E', fontSize: 13}}>Kindly select a star rating</Text>
+      <View style={styles.text1}>
+        <Text style={styles.text2}>How was your purchase</Text>
+        <Text style={styles.text3}>Kindly select a star rating</Text>
       </View>
-      <View style={{flexDirection: 'row', justifyContent: 'center', paddingVertical: 20}}>
+      <View style={styles.rateContainer}>
         <Rate {...{star, setRating, index}}/>
       </View>
 
       <View
-        style={{
-          minHeight: 150,
-          paddingHorizontal: 15,
-          paddingTop: Platform.OS === 'ios' ? 15 : 0,
-          marginHorizontal: 15,
-          borderColor: 'rgba(33, 37, 41, 0.1)',
-          borderRadius: 5,
-          borderWidth: 2,
-        }}>
-        <TextInput multiline value={feedback} placeholder="(Write your feedback here)" onChangeText={onChangeText} />
+        style={styles.textInputContainer}>
+        <TextInput 
+          multiline 
+          value={feedback} 
+          placeholder="(Write your feedback here)" 
+          onChangeText={onChangeText} 
+        />
       </View>
       <Uploads {...{images, setRating,index}}/>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, 
+    marginTop: 10, 
+    paddingBottom: 15, 
+    backgroundColor: '#FFF'
+  },
+  itemContainer: {
+    flexDirection: 'row', 
+    paddingTop: 10, 
+    padding: 15
+  },
+  itemImages: {
+    width: 55, 
+    height: 60, 
+    resizeMode: 'stretch', 
+    borderRadius: 5
+  },
+  itemText: {
+    flex: 1, 
+    justifyContent: 'center'
+  },
+  label: {
+    fontSize: 13, 
+    fontWeight: '100'
+  },
+  variation: {
+    color: '#9E9E9E', 
+    fontSize: 13
+  },
+  line: {
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  },
+  rateContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'center', 
+    paddingVertical: 20
+  },
+  textInputContainer: {
+    minHeight: 150,
+    paddingHorizontal: 15,
+    paddingTop: Platform.OS === 'ios' ? 15 : 0,
+    marginHorizontal: 15,
+    borderColor: 'rgba(33, 37, 41, 0.1)',
+    borderRadius: 5,
+    borderWidth: 2,
+  },
+  text1: {
+    alignItems: 'center', 
+    paddingTop: 40
+  },
+  text2: {
+    fontSize: 16, 
+    fontWeight: '100'
+  },
+  text3: {
+    color: '#9E9E9E', 
+    fontSize: 13
+  }
+});

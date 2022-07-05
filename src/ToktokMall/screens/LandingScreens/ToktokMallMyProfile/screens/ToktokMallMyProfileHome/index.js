@@ -162,7 +162,7 @@ export const ToktokMallMyProfileHome = ({navigation}) => {
         <Card>
           <View style={styles.balanceContainer}>
             <View style={styles.TTWContainer}>
-              <Image source={require("../../../../../../assets/toktokwallet-assets/toktokwallet.png")} style={TTWImage} />
+              <Image source={require("../../../../../../assets/toktokwallet-assets/toktokwallet.png")} style={styles.TTWImage} />
             </View>
             <View style={styles.balanceInfoContainer}>
               <Text style={styles.balanceInfoText}>(Balance {FormatToText.currency(toktokMall.toktokWalletBalance)})</Text>
