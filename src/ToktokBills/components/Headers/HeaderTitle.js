@@ -17,13 +17,14 @@ export const HeaderTitle = ({
   backButtonColor = 'black',
   headerBackLabel = '',
   headerStyle = {},
+  labelStyle={}
 }) => {
   return (
     <View style={[styles.header, headerStyle]}>
       {isLogo ? (
         <Image resizeMode="contain" style={styles.logo} source={toktokbills} />
       ) : (
-        <Text style={[styles.title, {color: labelColor}]}>{label}</Text>
+        <Text style={[styles.title, {color: labelColor}, labelStyle]}>{label}</Text>
       )}
     </View>
   );

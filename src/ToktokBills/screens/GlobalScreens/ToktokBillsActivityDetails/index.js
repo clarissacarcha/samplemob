@@ -30,7 +30,7 @@ const getStatus = status => {
 export const ToktokBillsActivityDetails = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={'Bill Details'} />,
+    headerTitle: () => <HeaderTitle label={'Bill Details'} labelStyle={{fontSize: moderateScale(FONT_SIZE.L + 3)}}/>,
   });
 
   const {
