@@ -140,7 +140,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
   };
 
   if (loading) {
-    <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />;
+    // <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />;
   }
 
   if (data.length === 0) {
@@ -256,6 +256,7 @@ const styles = StyleSheet.create({
   },
   containerInput: {
     marginTop: 24,
+    marginBottom: 12,
     marginHorizontal: 16,
     backgroundColor: '#F8F8F8',
     flexDirection: 'row',
@@ -266,6 +267,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     paddingHorizontal: 16,
+    paddingVertical: 12,
     borderRadius: 5,
     color: CONSTANTS.COLOR.BLACK,
   },

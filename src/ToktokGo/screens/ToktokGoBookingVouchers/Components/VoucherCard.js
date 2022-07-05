@@ -15,7 +15,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading, pos
   };
 
   const getPercentage = () => {
-    return data.voucherWallet.remaining / data.voucherWallet.Total;
+    return data.voucherWallet.remaining / data.voucherWallet.total;
   };
 
   const onPress = () => {
@@ -49,6 +49,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading, pos
                 style={{
                   overflow: 'hidden',
                   borderRadius: 10,
+                  marginVertical: 8,
                 }}>
                 <Progress.Bar
                   height={3}
@@ -61,7 +62,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading, pos
                   animationType={'timing'}
                 />
               </View>
-              <Text style={styles.computed}>₱{getComputed()}</Text>
+              <Text style={styles.computed}>₱{getComputed()} remaining</Text>
             </>
           )}
         </View>

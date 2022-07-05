@@ -14,7 +14,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
   };
 
   const getPercentage = () => {
-    return data.voucherWallet.remaining / data.voucherWallet.Total;
+    return data.voucherWallet.remaining / data.voucherWallet.total;
   };
 
   const onPress = () => {
