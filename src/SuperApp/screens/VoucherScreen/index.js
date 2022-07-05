@@ -21,6 +21,7 @@ import {TOKTOK_WALLET_VOUCHER_CLIENT, POST_COLLECT_VOUCHER, GET_VOUCHERS, GET_SE
 import {useFocusEffect} from '@react-navigation/native';
 import {AlertOverlay} from '../Components';
 import {useDebounce} from '../../../ToktokGo/helpers';
+import moment from 'moment';
 
 import SearchICN from '../../../assets/images/SearchIcon.png';
 import XICN from '../../../assets/icons/EraseTextInput.png';
@@ -39,6 +40,7 @@ export const VoucherScreen = ({navigation}) => {
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [search, setSearch] = useState('');
   const [searchedDatas, setSearchedDatas] = useState([]);
+  const [noVouchers, setNoVouchers] = useState(false);
   const [noResults, setNoResults] = useState(false);
 
   const onPressActionButton = ({voucherId}) => {
@@ -68,15 +70,32 @@ export const VoucherScreen = ({navigation}) => {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      var tempData = [];
-      response.getVouchers.map(item => {
-        if (!item.voucherWallet) {
-          tempData.push(item);
-        } else {
-          tempData.unshift(item);
-        }
-      });
-      setData(tempData);
+      if (response.getVouchers.length > 0) {
+        var toClaimExpiring = [];
+        var toUseExpiring = [];
+        var toClaim = [];
+        var toUse = [];
+        var allVouchers = [];
+        response.getVouchers.map(item => {
+          if (item.voucherWallet || !item.promoVoucher.collectable) {
+            item.promoVoucher.endAt ? toUseExpiring.unshift(item) : toUse.push(item);
+          } else {
+            item.promoVoucher.endAt ? toClaimExpiring.unshift(item) : toClaim.push(item);
+          }
+        });
+        toUseExpiring.sort(
+          (a, b) => moment(a.promoVoucher.endAt).format('YYYYMMDD') - moment(b.promoVoucher.endAt).format('YYYYMMDD'),
+        );
+        toClaimExpiring.sort(
+          (a, b) => moment(a.promoVoucher.endAt).format('YYYYMMDD') - moment(b.promoVoucher.endAt).format('YYYYMMDD'),
+        );
+        toUse = toUse.concat(toUseExpiring);
+        toClaim = toClaim.concat(toClaimExpiring);
+        allVouchers = toUse.concat(toClaim);
+        setData(allVouchers);
+      } else {
+        setNoVouchers(true);
+      }
     },
     onError: onError,
   });
@@ -160,7 +179,6 @@ export const VoucherScreen = ({navigation}) => {
       <View style={styles.containerInput}>
         <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} />
         <TextInput
-          //   ref={inputRef}
           onChangeText={value => onChange(value)}
           style={styles.input}
           placeholder={'Enter Voucher Code'}
@@ -174,47 +192,36 @@ export const VoucherScreen = ({navigation}) => {
         ) : null}
       </View>
 
-      {false && (
-        <View style={styles.noResultsContainer}>
-          <Image source={EmptyIMG} resizeMode={'contain'} style={styles.noResultsIMG} />
-          <Text style={styles.noResultsTitle}>No Results Found</Text>
-          <Text>Try to search something similar.</Text>
-        </View>
-      )}
-
-      {false && (
+      {noVouchers && (
         <View style={styles.noResultsContainer}>
           <Image source={NoVoucherIMG} resizeMode={'contain'} style={styles.noResultsIMG} />
           <Text style={styles.noResultsTitle}>No Vouchers</Text>
-          <Text>We are preparing the best deals for you. Stay tuned!</Text>
+          <Text>We are preparing the best deals for you.</Text>
           <Text>Stay tuned!</Text>
         </View>
       )}
 
       {noResults && (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          {/* <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} /> */}
           <Image source={NoFound} resizeMode={'contain'} style={{width: decorWidth, height: decorWidth}} />
           <Text style={{color: CONSTANTS.COLOR.ORANGE, fontSize: CONSTANTS.FONT_SIZE.XL + 1}}>No Results Found</Text>
           <Text>Try to search something similar.</Text>
         </View>
       )}
 
-      {getVouchersLoading && (
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
-        </View>
-      )}
-
-      {!getVouchersLoading && !noResults && (
+      {!getVouchersLoading && !noResults && !noVouchers && (
         <FlatList
           style={{marginTop: 24}}
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl onRefresh={handleGetData} refreshing={getVouchersLoading} color={CONSTANTS.COLOR.ORANGE} />
+            <RefreshControl
+              onRefresh={handleGetData}
+              refreshing={getVouchersLoading}
+              colors={[CONSTANTS.COLOR.ORANGE]}
+            />
           }
           data={searchedDatas.length === 0 ? data : searchedDatas}
-          // keyExtractor={item => item.id}
+          keyExtractor={item => item.id}
           renderItem={({item, index}) => {
             //   const lastItem = index == data.vehicleTypeRates.length - 1 ? true : false;
             return (

@@ -1,15 +1,19 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, StyleSheet, Image, View, Modal, Dimensions, ActivityIndicator} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import {ThrottledOpacity} from '../../../../components_section';
 import * as Progress from 'react-native-progress';
 import voucherPaperDesign from '../../../../assets/toktokgo/voucher-paper-design.png';
 import VoucherImage from '../../../../assets/toktokgo/voucher-sedan-image.png';
+import voucherPaperDesignDisabled from '../../../../assets/toktokgo/voucher-paper-design-disabled.png';
+import VoucherImageDisabled from '../../../../assets/toktokgo/voucher-sedan-image-disabled.png';
 import moment from 'moment';
 
 const decorHeight = Dimensions.get('window').height * 0.12;
 
-export const VoucherCard = ({data, navigation, onPressActionButton, loading, postCollectVoucher, tawaginMo}) => {
+export const VoucherCard = ({details, data, navigation, onPressActionButton, loading, postCollectVoucher}) => {
+  const [isApplicable, setIsApplicable] = useState(true);
+
   const getComputed = () => {
     return data.promoVoucher.discountValue * data.voucherWallet.remaining;
   };
@@ -32,11 +36,32 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading, pos
     }
   };
 
+  const checkPaymentMethod = () => {
+    if (details.paymentMethod == 'TOKTOKWALLET') {
+      if (data.promoVoucher.isTokwa) setIsApplicable(false);
+    } else {
+      if (data.promoVoucher.isCash || data.promoVoucher.isCod) setIsApplicable(false);
+    }
+  };
+
+  useEffect(() => {
+    checkPaymentMethod();
+  }, []);
   return (
-    <ThrottledOpacity onPress={() => navigation.navigate('SelectedVoucherScreen', {data: data, onPress})}>
+    <ThrottledOpacity
+      onPress={() => navigation.navigate('SelectedVoucherScreen', {id: data.id})}
+      disabled={isApplicable}>
       <View style={styles.card}>
-        <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
-        <Image source={VoucherImage} resizeMode={'contain'} style={styles.voucherImage} />
+        <Image
+          source={isApplicable ? voucherPaperDesignDisabled : voucherPaperDesign}
+          resizeMode={'contain'}
+          style={styles.floatingImage}
+        />
+        <Image
+          source={isApplicable ? VoucherImageDisabled : VoucherImage}
+          resizeMode={'contain'}
+          style={styles.voucherImage}
+        />
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
           <Text style={styles.voucherDescription}>{data.description}</Text>
@@ -70,19 +95,45 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading, pos
           {loading ? (
             <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
           ) : data.promoVoucher.collectable && !data.voucherWallet ? (
-            <ThrottledOpacity style={styles.claimButton} onPress={onPress} delay={500}>
+            <ThrottledOpacity
+              style={isApplicable ? [styles.claimButton, {backgroundColor: CONSTANTS.COLOR.GRAY}] : styles.claimButton}
+              onPress={onPress}
+              delay={500}
+              disabled={isApplicable}>
               <Text style={styles.claimButtonText}>Claim</Text>
             </ThrottledOpacity>
           ) : (
-            <ThrottledOpacity style={styles.useButton} onPress={onPress} delay={500}>
-              <Text style={styles.useButtonText}>Use</Text>
+            <ThrottledOpacity
+              style={isApplicable ? [styles.useButton, {borderColor: CONSTANTS.COLOR.GRAY}] : styles.useButton}
+              onPress={onPress}
+              delay={500}
+              disabled={isApplicable}>
+              <Text style={isApplicable ? [styles.useButtonText, {color: CONSTANTS.COLOR.GRAY}] : styles.useButtonText}>
+                Use
+              </Text>
             </ThrottledOpacity>
           )}
-          <ThrottledOpacity>
-            <Text style={styles.TandC}>T&C</Text>
+          <ThrottledOpacity
+            onPress={() => navigation.navigate('SelectedVoucherScreen', {id: data.id})}
+            disabled={isApplicable}>
+            <Text style={isApplicable ? [styles.TandC, {color: CONSTANTS.COLOR.GRAY}] : styles.TandC}>T&C</Text>
           </ThrottledOpacity>
         </View>
       </View>
+      {isApplicable && (
+        <View
+          style={{
+            backgroundColor: '#fff3e8',
+            flex: 1,
+            marginHorizontal: 16,
+            borderBottomLeftRadius: 5,
+            borderBottomRightRadius: 5,
+          }}>
+          <Text style={{color: CONSTANTS.COLOR.RED, margin: 8, fontSize: CONSTANTS.FONT_SIZE.S}}>
+            Not applicable to selected payment method
+          </Text>
+        </View>
+      )}
     </ThrottledOpacity>
   );
 };
