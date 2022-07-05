@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(10),
   },
   billerNologo: {
-    paddingVertical: moderateScale(15),
+    paddingVertical: moderateScale(20),
     fontSize: FONT_SIZE.M,
   },
 });
