@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert } from 'react-native';
-import {connect} from 'react-redux';
-import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components';
+import { StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert } from 'react-native';
+import { connect } from 'react-redux';
+import { HeaderBack, HeaderTitle, HeaderRight } from '../../../Components';
 import { Loading } from '../../../Components';
-import {emptyPlaceOrder} from "../../../assets"
-import {useFocusEffect, CommonActions} from '@react-navigation/native'
+import { emptyPlaceOrder } from "../../../assets"
+import { useFocusEffect, CommonActions } from '@react-navigation/native'
 
 const Component = ({route, navigation, createMyCartSession}) => {
 

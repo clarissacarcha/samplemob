@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, Modal} from 'react-native';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
@@ -20,19 +20,11 @@ export const MessageModal = ({navigation, isVisible, setIsVisible}) => {
   
   return (
     <>
-      <View style= {{ flex:1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style= {styles.body}>
           <Modal transparent = {true} visible = {isVisible} animationType = "none"  >
-            <View style = {{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.65)'}}>
+            <View style = {styles.container}>
               
-              <View style = {{
-                backgroundColor: 'white', 
-                width: '90%',
-                borderRadius: 10, 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                // paddingHorizontal: 30, 
-                padding: 15
-              }}>
+              <View style = {styles.subContainer}>
                 {/* <Image 
                   source = {require('../../../../assets/icons/promptsuccess.png')}
                   style = {{height: '60%', width: '65%', alignSelf: 'center', resizeMode: 'stretch'}}
@@ -87,25 +79,75 @@ export const MessageModal = ({navigation, isVisible, setIsVisible}) => {
 }
 
 const styles = StyleSheet.create({
+  body: {
+    flex:1, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
   container: {
-    // height: 200,
-    // width: 200,
-    margin: 20,
-    // marginTop: '40%',
-    
-    backgroundColor: 'white', borderRadius: 20, padding: 30, alignItems: 'center', alignSelf: 'center',
-    // shadowColor: "#000", shadowOpacity: 0.25, shadowRadius: 4, elevation: 5,
-    // shadowOffset: {
-    //     width: 0, height: 2
-    // }
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    backgroundColor: 'rgba(0, 0, 0, 0.65)'
   },
-  title: { color: '#000', fontSize: 24, flex: 0, marginTop: 0, textAlign: 'center'},
-  text: {color: '#9E9E9E', fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M, flex: 0, paddingVertical: 10, paddingHorizontal: 10, textAlign: 'center'},
-  row: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 },
-  button: { padding: 10, backgroundColor: COLOR.ORANGE, alignItems: 'center', justifyContent: 'center', borderRadius: 5 , width: '45%' },
-  buttonText: {color: 'white', fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M},
-  whiteButton: { padding: 8, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center', 
-    borderRadius: 5, borderWidth: 1, borderColor: COLOR.ORANGE , width: '45%', marginRight: 20, fontSize: 11
+  subContainer: {
+    backgroundColor: 'white', 
+    width: '90%',
+    borderRadius: 10, 
+    alignItems: 'center', 
+    justifyContent: 'center',
+    padding: 15
   },
-  whiteButtonText: {color: COLOR.ORANGE, fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M},
+  title: { 
+    color: '#000', 
+    fontSize: 24, 
+    flex: 0, 
+    marginTop: 0, 
+    textAlign: 'center'
+  },
+  text: {
+    color: '#9E9E9E', 
+    fontFamily: FONT.REGULAR, 
+    fontSize: FONT_SIZE.M, 
+    flex: 0, 
+    paddingVertical: 10, 
+    paddingHorizontal: 10, 
+    textAlign: 'center'
+  },
+  row: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginTop: 10 
+  },
+  button: { 
+    padding: 10, 
+    backgroundColor: COLOR.ORANGE, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    borderRadius: 5 ,
+     width: '45%' 
+  },
+  buttonText: {
+    color: 'white', 
+    fontFamily: FONT.REGULAR, 
+    fontSize: FONT_SIZE.M
+  },
+  whiteButton: { 
+    padding: 8, 
+    backgroundColor: 'white', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    borderRadius: 5, 
+    borderWidth: 1, 
+    borderColor: COLOR.ORANGE ,
+     width: '45%', 
+     marginRight: 20, 
+     fontSize: 11
+  },
+  whiteButtonText: {
+    color: COLOR.ORANGE, 
+    fontFamily: FONT.REGULAR, 
+    fontSize: FONT_SIZE.M
+  },
 })

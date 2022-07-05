@@ -1,8 +1,7 @@
-import React, {useState, useEffect,} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert } from 'react-native';
-import {CheckoutContextProvider} from './ContextProvider';
+import React from 'react';
+import { CheckoutContextProvider } from './ContextProvider';
 import { ToktokMallCheckoutScreen } from './screen';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 const Component = ({route, navigation, createMyCartSession}) => {
 

@@ -130,7 +130,10 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
                 {FormatToText.currency(shippingFeeTotal)}
               </Text>
             </View>
-            <View style={{flex: 0}}>{getDiscount('shipping') ? <Text> {FormatToText.currency(shippingDiscountTotal)}</Text> : null}</View>
+            <View style={{flex: 0}}>
+              {getDiscount('shipping') ? 
+                <Text> {FormatToText.currency(shippingDiscountTotal)}</Text> : null}
+            </View>
           </View>
         </View>
         <View style={styles.textContainer}>
@@ -154,8 +157,25 @@ export const Totals = ({raw, shipping, setGrandTotal}) => {
 };
 
 const styles = StyleSheet.create({
-  body: {flex: 1, backgroundColor: '#F7F7FA'},
-  container: {padding: 15, backgroundColor: 'white', marginTop: 8},
-  textContainer: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 12},
-  textContainer2: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20},
+  body: {
+    lex: 1, 
+    backgroundColor: '#F7F7FA'
+  },
+  container: {
+    padding: 15, 
+    backgroundColor: 'white', 
+    marginTop: 8
+  },
+  textContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginTop: 12
+  },
+  textContainer2: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginTop: 20
+  },
 });

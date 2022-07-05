@@ -224,12 +224,32 @@ export const Payment = ({list, payment, total, setPaymentMethod, currentBalance,
 };
 
 const styles = StyleSheet.create({
-  body: {flex: 1, backgroundColor: '#F7F7FA'},
-  container: {padding: 0, backgroundColor: 'white', marginTop: 8},
-  itemContainer: {flexDirection: 'row', justifyContent: 'flex-start'},
-  itemImage: {flex: 0.3, height: 100, width: 100},
-  itemprice: {color: '#F6841F', marginRight: 10},
-  itemSaleOff: {textDecorationLine: 'line-through', color: '#9E9E9E'},
+  body: {
+    flex: 1, 
+    backgroundColor: '#F7F7FA'
+  },
+  container: {
+    padding: 0, 
+    backgroundColor: 'white', 
+    marginTop: 8
+  },
+  itemContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'flex-start'
+  },
+  itemImage: {
+    flex: 0.3, 
+    height: 100, 
+    width: 100
+  },
+  itemprice: {
+    color: '#F6841F', 
+    marginRight: 10
+  },
+  itemSaleOff: {
+    textDecorationLine: 'line-through', 
+    color: '#9E9E9E'
+  },
   deliveryfeeContainer: {
     borderWidth: 1,
     borderColor: '#FDDC8C',

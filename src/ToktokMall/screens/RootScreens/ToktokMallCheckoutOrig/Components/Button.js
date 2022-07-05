@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, { useContext } from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, AsyncStorage} from 'react-native';
 import { Price, FormatToText } from '../../../../helpers/formats';
 import Spinner from 'react-native-spinkit';
@@ -9,7 +9,7 @@ import { FONT } from '../../../../../res/variables';
 // import CustomIcon from '../../../../../Components/Icons';
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
 
-import {CheckoutContext} from '../ContextProvider';
+import { CheckoutContext } from '../ContextProvider';
 
 const REAL_WIDTH = Dimensions.get('window').width;
 
@@ -60,8 +60,18 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
 }
 
 const styles = StyleSheet.create({
-  body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 15, backgroundColor: 'white', marginTop: 15,flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'  },
+  body: {
+    flex: 1, 
+    backgroundColor: '#F7F7FA', 
+  },
+  container: {
+    padding: 15, 
+    backgroundColor: 'white', 
+    marginTop: 15,
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center'  
+  },
   footer: {
     position: 'absolute',
     // top: REAL_HEIGHT * 0.9,
@@ -77,7 +87,25 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     zIndex: 1,
   },
-  activeButton: { backgroundColor: '#F6841F', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
-  invalidButton: { backgroundColor: '#D7D7D7', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
-  buttonText: {color: 'white', fontFamily: FONT.BOLD, fontSize: 13}
+  activeButton: { 
+    backgroundColor: '#F6841F', 
+    height: 47, 
+    width: 140, 
+    borderRadius: 5, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  invalidButton: { 
+    backgroundColor: '#D7D7D7', 
+    height: 47, 
+    width: 140, 
+    borderRadius: 5, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  buttonText: {
+    color: 'white', 
+    fontFamily: FONT.BOLD, 
+    fontSize: 13
+  }
 })
