@@ -1,17 +1,16 @@
 import React from 'react';
-import {View,StyleSheet } from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
 //UTIL
-import {moderateScale } from 'toktokwallet/helper';
+import {moderateScale} from 'toktokwallet/helper';
 
 //COMPONENTS
-import {OrangeButton } from 'toktokwallet/components';
+import {OrangeButton} from 'toktokwallet/components';
 
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT_SIZE} from 'src/res/variables';
 
 export const ConfirmButton = ({}) => {
-
   return (
     <>
       <View style={styles.buttonContainer}>
@@ -36,8 +35,5 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.WHITE,
     borderTopColor: '#F8F8F8',
     borderTopWidth: 2,
-  },
-  footerText: {
-    fontSize: FONT_SIZE.S,
   },
 });
