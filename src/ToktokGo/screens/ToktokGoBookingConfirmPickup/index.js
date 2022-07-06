@@ -13,6 +13,7 @@ import {decodeLegsPolyline, useDebounce} from '../../helpers';
 import {MAP_DELTA_LOW} from '../../../res/constants';
 import {throttle} from 'lodash';
 import {ThrottledOpacity} from '../../../components_section';
+import {AlertOverlay} from '../../../SuperApp/screens/Components';
 
 const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const {popTo, source} = route.params;
@@ -33,7 +34,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
         text: text,
       });
   };
-  const [getQuotation] = useLazyQuery(GET_QUOTATION, {
+  const [getQuotation, {loading}] = useLazyQuery(GET_QUOTATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
@@ -111,6 +112,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   };
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
+      <AlertOverlay visible={loading} />
       <ThrottledOpacity delay={500} style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </ThrottledOpacity>

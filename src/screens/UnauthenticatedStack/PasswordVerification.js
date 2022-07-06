@@ -231,7 +231,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
             />
             {/*-------------------- PASSWORD INPUT --------------------*/}
             {/* <Text style={styles.label}>Enter your password to continue</Text> */}
-            <View style={styles.containerInput}>
+            <View style={[styles.containerInput, inCorrectPassword ? styles.incorrectPass : styles.normalPass]}>
               <TextInput
                 ref={inputRef}
                 value={password}
@@ -248,7 +248,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
                 <Image source={!showPassword ? HidePassword : ShowPassword} style={styles.showPassword} />
               </TouchableOpacity>
             </View>
-            <View style={{alignSelf: 'flex-start', marginHorizontal: 40}}>
+            <View style={{alignSelf: 'flex-start', marginHorizontal: 45}}>
               {inCorrectPassword && (
                 <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED, top: -5, marginLeft: 6}}>
                   Password is incorrect
@@ -336,28 +336,36 @@ const styles = StyleSheet.create({
   },
   input: {
     marginHorizontal: 1,
-    borderWidth: 1,
     paddingLeft: 16,
     height: 50,
     color: constants.COLOR.BLACK,
     width: '100%',
-    borderRightColor: '#F8F8F8',
-    borderLeftColor: '#F8F8F8',
-    borderTopColor: '#F8F8F8',
-    borderBottomColor: '#F8F8F8',
   },
   containerInput: {
     marginHorizontal: '16%',
     backgroundColor: '#F8F8F8',
-    marginVertical: 2,
+    marginVertical: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 5,
+    borderWidth: 1,
   },
   showPassword: {
     marginRight: 16,
     height: 17,
     width: 17,
+  },
+  normalPass: {
+    borderRightColor: '#F8F8F8',
+    borderLeftColor: '#F8F8F8',
+    borderTopColor: '#F8F8F8',
+    borderBottomColor: '#F8F8F8',
+  },
+  incorrectPass: {
+    borderRightColor: constants.COLOR.RED,
+    borderLeftColor: constants.COLOR.RED,
+    borderTopColor: constants.COLOR.RED,
+    borderBottomColor: constants.COLOR.RED,
   },
 });

@@ -87,6 +87,16 @@ export const ToktokLandingMenu = ({navigation}) => {
     });
   };
 
+  const onPressReferral = () => {
+    if (!session.user.consumer.goReferralDriverCode) {
+      navigation.push('ReferralScreen', {
+        fromRegistration: false,
+      });
+    } else {
+      navigation.push('ReferralExistScreen');
+    }
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'space-between'}}>
       <AlertOverlay visible={loading} />
@@ -170,15 +180,7 @@ export const ToktokLandingMenu = ({navigation}) => {
               }}
             />
             {/*--------------- Referral ---------------*/}
-            <DrawerButton
-              isNew
-              label="Referral"
-              onPress={() => {
-                navigation.push('ReferralScreen', {
-                  fromRegistration: false,
-                });
-              }}
-            />
+            <DrawerButton isNew label="Referral" onPress={onPressReferral} />
             {/*--------------- Vouchers ---------------*/}
             <DrawerButton
               isNew
