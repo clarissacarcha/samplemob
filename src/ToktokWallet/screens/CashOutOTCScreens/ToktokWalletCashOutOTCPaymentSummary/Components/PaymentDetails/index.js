@@ -1,16 +1,18 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, ImageBackground} from 'react-native';
+import {View, Text, StyleSheet, Image, ImageBackground, Platform} from 'react-native';
+import moment from 'moment';
 
 //HELPER
-import {moderateScale, currencyCode } from 'toktokwallet/helper';
+import {moderateScale, currencyCode, numberFormat} from 'toktokwallet/helper';
 
 // COLORS AND FONTS AND IMAGES
+import {banner, info_icon} from 'toktokwallet/assets';
 import CONSTANTS from 'common/res/constants';
-import {banner} from 'toktokwallet/assets';
-import infoIcon from 'toktokwallet/assets/icons/infoIcon.png';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 
-export const PaymentDetails = ({}) => {
+export const PaymentDetails = ({route}) => {
+  const {recipientName, recipientMobileNo, email, dateOfClaim, amount, purpose} = route.params.transactionDetails;
+
   return (
     <>
       <ImageBackground source={banner.banner_logo} resizeMode="cover">
@@ -27,65 +29,68 @@ export const PaymentDetails = ({}) => {
         </View>
       </ImageBackground>
       <View style={styles.note}>
-          <Image
-            source={infoIcon}
-            style={styles.noteLogoPolicy1}
-          />
-          <View>
-            <Text style={styles.noteText}>All transactions made before 01.00 PM will be processed within the day.</Text>
-            <Text style={styles.noteText}>All transactions after 01.00 PM will be processed the next banking day.</Text>
+        <Image source={info_icon} style={styles.noteLogo} />
+        <View>
+          <Text style={styles.noteText}>All transactions made before 01.00 PM will be processed within the day.</Text>
+          <Text style={styles.noteText}>All transactions after 01.00 PM will be processed the next banking day.</Text>
+        </View>
+      </View>
+      <View style={{marginVertical: moderateScale(10)}}>
+        <View style={styles.detailsContainer}>
+          <Text style={styles.label}>Recipient Name</Text>
+          <Text style={styles.description}>{recipientName}</Text>
+        </View>
+        <View style={styles.detailsContainer}>
+          <Text style={styles.label}>Recipient Mobile Number</Text>
+          <Text style={styles.description}>{recipientMobileNo}</Text>
+        </View>
+        {!!email && (
+          <View style={styles.detailsContainer}>
+            <Text style={styles.label}>Email Address </Text>
+            <Text style={styles.description}>{email}</Text>
           </View>
-      </View>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Recipient Name</Text>
-        <Text style={styles.description}>Juan Dela Cruz</Text>
-      </View>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Recipient Mobile Number</Text>
-        <Text style={styles.description}>09123456789</Text>
-      </View>
-      <View style={styles.detailsContainer}>
-          <Text style={styles.label}>Email Address </Text>
-          <Text style={styles.description}>juandelacruz@toktok.ph</Text>
-      </View>
-      <View style={styles.detailsContainer}>
-          <Text style={styles.label}>Date of Claim</Text>
-          <Text style={styles.description}>June 1, 2022</Text>
-      </View>
-      <View style={styles.detailsContainer}>
-          <Text style={styles.label}>Purpose</Text>
-          <Text style={styles.description}>Lorem Ipsum is simply dummy text of the printing and Lorem Ipsum is simply dummy text of the printing and</Text>
+        )}
+        <View style={styles.detailsContainer}>
+          <Text style={styles.label}>Date of Claim </Text>
+          <Text style={styles.description}>{moment(dateOfClaim).format('ll')}</Text>
+        </View>
+        {!!purpose && (
+          <View style={styles.detailsContainer}>
+            <Text style={styles.label}>Purpose </Text>
+            <Text style={styles.description}>{purpose}</Text>
+          </View>
+        )}
       </View>
       <View style={styles.line} />
-      <View style={[styles.detailsContainer]}>
-        <Text style={styles.label}>Amount </Text>
-        <Text style={styles.description}>
-          {currencyCode}
-          2,000.00
-        </Text>
-      </View>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.label}>Service Fee </Text>
-        <Text style={styles.description}>
-        {currencyCode}
-          10.00
-        </Text>
+      <View style={{marginVertical: moderateScale(10)}}>
+        <View style={[styles.detailsContainer]}>
+          <Text style={styles.label}>Amount </Text>
+          <Text style={styles.description}>
+            {currencyCode}
+            {numberFormat(amount)}
+          </Text>
+        </View>
+        <View style={styles.detailsContainer}>
+          <Text style={styles.label}>Service Fee </Text>
+          <Text style={styles.description}>
+            {currencyCode}
+            10.00
+          </Text>
+        </View>
       </View>
       <View style={styles.totalSeparator} />
       <View style={styles.detailsContainer}>
         <Text style={styles.totalLabel}>Total </Text>
         <Text style={styles.totalLabel}>
-        {currencyCode}
-            2,000.00
+          {currencyCode}
+          2,000.00
         </Text>
       </View>
       <View style={styles.totalSeparator} />
       <View style={styles.container}>
         <Text style={styles.terms}>
           <Text style={styles.footerText}>Please review the accuracy of the details provided and read our </Text>
-          <Text style={[styles.tnc, styles.footerText]}>
-            Terms and Conditions{' '}
-          </Text>
+          <Text style={[styles.tnc, styles.footerText]}>Terms and Conditions </Text>
           <Text style={styles.footerText}>before you proceed with your transaction.</Text>
         </Text>
       </View>
@@ -96,7 +101,6 @@ export const PaymentDetails = ({}) => {
 const styles = StyleSheet.create({
   note: {
     flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: COLOR.LIGHT_YELLOW,
     paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(16),
@@ -104,19 +108,13 @@ const styles = StyleSheet.create({
   noteText: {
     color: '#F6841F',
     fontSize: FONT_SIZE.S,
+    marginHorizontal: moderateScale(10),
   },
   noteLogo: {
-    height: 13,
-    width: 13,
-    marginRight: 8,
-    marginTop: -16,
+    height: moderateScale(12),
+    width: moderateScale(12),
+    marginTop: Platform.OS == 'android' ? moderateScale(3) : 0,
   },
-  noteLogoPolicy1: {
-    height: 13,
-    width: 13,
-    marginRight: 8,
-  },
-
   detailsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -187,5 +185,8 @@ const styles = StyleSheet.create({
   },
   tnc: {
     color: '#F6841F',
+  },
+  footerText: {
+    fontSize: FONT_SIZE.S,
   },
 });
