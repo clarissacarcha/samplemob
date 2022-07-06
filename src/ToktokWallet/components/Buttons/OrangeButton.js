@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   blackButtonBox: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 40,
+    height: 50,
     backgroundColor: COLORS.ORANGE,
     borderRadius: 5,
   },

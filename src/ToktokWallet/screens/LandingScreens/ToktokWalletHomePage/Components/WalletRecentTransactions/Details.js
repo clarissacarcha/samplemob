@@ -13,13 +13,16 @@ const renderDetails = ({details})=> {
     if(details){
         const data = Object.entries(details)
         const RenderInfo = data.map((data,index)=> {
-            console.log("data", data)
+            // console.log("data", data)
             if(!data[0] && !data[1]) return null
             const key = data[0]
             const value = data[1]
             // console.log(key,value)
             return (
-                <Text key={`externalDetails_${index}`} style={styles.labelText}>{key}: <Text>{value}</Text></Text>
+                <Text style={{ paddingVertical: moderateScale(4)}}>
+                     <Text key={`externalDetails_${index}`} style={styles.labelText}>{key}: </Text>
+                     <Text key={`externalDetails_${index}`}>{value}</Text>
+                </Text>    
             )
         })
         return RenderInfo
@@ -43,8 +46,8 @@ const Details = ({
 
     const dataSample = { 
         Status: "Success",
-        Amount: "2,000.00",
-        ServiceFee: "10.00",
+        Amount: "₱2,000.00",
+        ServiceFee: "₱10.00",
         RecipientName: "Juan Dela Cruz",
         RecipientMobileNumber: "09123456789",
         EmailAddress: "juandelacruz@toktok.ph",
@@ -81,7 +84,6 @@ const styles = StyleSheet.create({
         alignItems:"center"
     },
     labelText: {
-        paddingVertical: moderateScale(4),
         fontFamily: FONTS.BOLD,
         fontSize: FONT_SIZE.M,
     },
