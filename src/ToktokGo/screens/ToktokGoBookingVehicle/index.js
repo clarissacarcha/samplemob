@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Text, View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {useSelector, useDispatch} from 'react-redux';
+import { InfoNote } from './components';
 import {Header, VehicleCard} from '../../components';
 
 const ToktokGoBookingVehicle = ({navigation, route}) => {
@@ -27,6 +28,7 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
       <Header navigation={navigation} title={'Select Vehicle'} />
+      <InfoNote/>
       <FlatList
         style={{marginTop: 24}}
         showsVerticalScrollIndicator={false}

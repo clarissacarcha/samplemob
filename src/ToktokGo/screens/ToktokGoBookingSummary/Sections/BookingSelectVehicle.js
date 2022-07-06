@@ -3,7 +3,7 @@ import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import {VehicleCard} from '../../../components';
 import CONSTANTS from '../../../../common/res/constants';
 import {useSelector} from 'react-redux';
-import IOIcons from 'react-native-vector-icons/Ionicons';
+import InfoIcon from '../../../../assets/images/info.png';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 import {ThrottledOpacity} from '../../../../components_section';
@@ -19,11 +19,7 @@ export const BookingSelectVehicle = ({navigation, data, selectVehicle, selectedV
             onPress={() => {
               setViewPriceNote(true);
             }}>
-            <IOIcons
-              name={'information-circle-outline'}
-              size={CONSTANTS.FONT_SIZE.L}
-              style={{color: CONSTANTS.COLOR.YELLOW}}
-            />
+            <Image source={InfoIcon} resizeMode={'contain'} style={{width: 13, height: 13}} />
           </ThrottledOpacity>
         </View>
 
