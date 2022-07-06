@@ -18,7 +18,7 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import CONSTANTS from 'common/res/constants';
 
 //COMPONENTS
-import {OrangeButton, HeaderDownloadReceipt} from 'toktokwallet/components';
+import {OrangeButton, HeaderTitleRevamp, HeaderDownloadReceipt} from 'toktokwallet/components';
 import {HeaderBack, HeaderTitle} from 'src/revamp';
 import {Header, ReceiptDetails} from './components';
 
@@ -60,7 +60,7 @@ export const ToktokWalletCashOutOTCReceipt = ({navigation, route}) => {
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['Transaction Receipt']} />,
+    headerTitle: () => <HeaderTitleRevamp label={'Transaction Receipt'} />,
     headerRight: () => (
       <HeaderDownloadReceipt
         viewshotRef={viewshotRef}
@@ -90,7 +90,7 @@ export const ToktokWalletCashOutOTCReceipt = ({navigation, route}) => {
         </ScrollView>
       </ImageBackground>
       <View style={styles.buttonContainer}>
-        <OrangeButton label="OK" />
+        <OrangeButton label="OK" onPress={() => navigation.navigate('ToktokWalletCashOutOTCHome')} />
       </View>
     </>
   );

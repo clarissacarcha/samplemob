@@ -59,7 +59,7 @@ const WalletMethods = () => {
     {
       label: 'Cash Out',
       icon: require('toktokwallet/assets/icons/services/cash-out.png'),
-      onPress: () => onPressThrottled('ToktokWalletCashOutOTCReceipt'),
+      onPress: () => onPressThrottled('ToktokWalletCashOutOTCHome'),
       isEnabled: true,
     },
   ];
