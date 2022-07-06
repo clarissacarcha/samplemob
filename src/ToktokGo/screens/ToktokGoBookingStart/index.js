@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, TouchableHighlight, Text, Image, Alert} from 'react-native';
+import {View, TouchableHighlight, Text, Image, Alert, ScrollView} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {connect, useDispatch} from 'react-redux';
 import {Landing, Header, OutstandingFee} from './Sections';
@@ -16,7 +16,7 @@ import {ToktokgoBeta, EmptyRecent} from '../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {currentLocation} from '../../../helper';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
-import {ThrottledHighlight} from '../../../components_section';
+import {ThrottledHighlight, ThrottledOpacity} from '../../../components_section';
 import {useMutation} from '@apollo/client';
 import {onErrorAppSync} from '../../util';
 import {useAccount} from 'toktokwallet/hooks';
@@ -162,7 +162,7 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
   );
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
-      <View>
+      <View style={{flex: 1}}>
         <NoShowPaymentSuccesfullModal
           isVissible={showNoShowPaymentSuccessfulModal}
           setVissible={setShowNoShowPaymentSuccessfulModal}
@@ -176,55 +176,55 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
         {/* <RecentDestinations navigation={navigation} />
         <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
         <SavedLocations /> */}
-        {tripConsumerPending.length > 0 && (
-          <OutstandingFee
-            navigation={navigation}
-            tripChargeInitializePaymentFunction={tripChargeInitializePaymentFunction}
-            tripConsumerPending={tripConsumerPending}
-          />
-        )}
-        {<ToktokgoBeta />}
+        <ScrollView contentContainerStyle={{flexGrow: 1}} scrollEnabled={tripConsumerPending.length > 0}>
+          {tripConsumerPending.length > 0 && (
+            <OutstandingFee
+              navigation={navigation}
+              tripChargeInitializePaymentFunction={tripChargeInitializePaymentFunction}
+              tripConsumerPending={tripConsumerPending}
+            />
+          )}
+          {<ToktokgoBeta />}
+        </ScrollView>
       </View>
-      <ThrottledHighlight
+      <ThrottledOpacity
         delay={500}
+        style={{
+          paddingHorizontal: CONSTANTS.SIZE.MARGIN,
+          backgroundColor: 'white',
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingVertical: 16,
+          borderTopColor: '#ECECEC',
+          // borderTopWidth: 1,
+          shadowColor: '#000000',
+          shadowOffset: {
+            width: 0,
+            height: 0,
+          },
+          shadowRadius: 25,
+          shadowOpacity: 0.3,
+          elevation: 10,
+        }}
         onPress={() => {
           navigation.push('ToktokGoBookingConfirmDestination', {
             popTo: 1,
           });
         }}>
-        <View
-          style={{
-            paddingHorizontal: CONSTANTS.SIZE.MARGIN,
-            backgroundColor: 'white',
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingVertical: 16,
-            borderTopColor: '#ECECEC',
-            // borderTopWidth: 1,
-            shadowColor: '#000000',
-            shadowOffset: {
-              width: 0,
-              height: 0,
-            },
-            shadowRadius: 50,
-            shadowOpacity: 1.0,
-            elevation: 20,
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            {/* <FA5Icon name="map-marker-alt" size={15} color={CONSTANTS.COLOR.ORANGE} style={{marginRight: 10}} /> */}
-            <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {/* <FA5Icon name="map-marker-alt" size={15} color={CONSTANTS.COLOR.ORANGE} style={{marginRight: 10}} /> */}
+          <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
 
-            <Text
-              style={{
-                color: CONSTANTS.COLOR.ORANGE,
-                fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-                fontSize: CONSTANTS.FONT_SIZE.M,
-              }}>
-              Select via Map
-            </Text>
-          </View>
+          <Text
+            style={{
+              color: CONSTANTS.COLOR.ORANGE,
+              fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+              fontSize: CONSTANTS.FONT_SIZE.M,
+            }}>
+            Select via Map
+          </Text>
         </View>
-      </ThrottledHighlight>
+      </ThrottledOpacity>
     </View>
   );
 };
