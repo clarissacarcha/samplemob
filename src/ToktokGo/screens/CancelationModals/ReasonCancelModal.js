@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: CONSTANTS.COLOR.WHITE,
     borderRadius: 10,
-    paddingVertical: 30,
+    paddingTop: 30,
   },
   containerHeader: {
     justifyContent: 'flex-start',
@@ -241,7 +241,6 @@ const styles = StyleSheet.create({
   },
   radioButtonContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     paddingHorizontal: 23,
     paddingTop: 20,
   },

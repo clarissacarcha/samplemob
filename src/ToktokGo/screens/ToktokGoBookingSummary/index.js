@@ -448,7 +448,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         viewSelectPaymentModal={viewSelectPaymentModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
         setSelectedPaymentMethod={setSelectedPaymentMethod}
-        setSelectedVouchersNull={setSelectedVouchersNull}
+        setSelectedVouchers={setSelectedVouchers}
         details={details}
         tokwaAccount={tokwaAccount}
         getMyAccountLoading={getMyAccountLoading}
