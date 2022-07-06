@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   modalDescription: {
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: CONSTANTS.FONT_SIZE.M,
     color: CONSTANTS.COLOR.BLACK,
   },

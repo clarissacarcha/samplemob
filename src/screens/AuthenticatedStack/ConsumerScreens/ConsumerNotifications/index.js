@@ -102,7 +102,7 @@ const Notifications = ({navigation, route, session, createSession}) => {
         userId: session.user.id,
       },
     },
-    onError: (error) => {
+    onError: error => {
       console.log(JSON.stringify(error, null, 4));
     },
   });
@@ -199,7 +199,7 @@ const Notifications = ({navigation, route, session, createSession}) => {
           )}
           showsVerticalScrollIndicator={false}
           data={data.getNotifications}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           renderItem={({item, index}) => null}
           refreshControl={<RefreshControl onRefresh={refetch} refreshing={loading} colors={[COLOR.YELLOW]} />}
         />
@@ -230,7 +230,7 @@ const Notifications = ({navigation, route, session, createSession}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getNotifications}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderItem={({item, index}) => {
           const lastItem = index == data.getNotifications.length - 1 ? true : false;
 
@@ -245,12 +245,12 @@ const Notifications = ({navigation, route, session, createSession}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  createSession: (payload) => dispatch({type: 'CREATE_SESSION', payload}),
+const mapDispatchToProps = dispatch => ({
+  createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Notifications);

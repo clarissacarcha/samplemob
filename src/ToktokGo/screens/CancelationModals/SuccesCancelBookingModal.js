@@ -1,10 +1,59 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, Image, View, Modal, TouchableOpacity, Linking} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import SuccessIMG from '../../../assets/images/Sucess.png';
 import {ThrottledOpacity} from '../../../components_section';
 
-export const SuccesCancelBookingModal = ({visible, setVisible, type, chargeAmount, goBackAfterCancellation}) => {
+export const SuccesCancelBookingModal = ({visible, cancellationState, chargeAmount, goBackAfterCancellation}) => {
+  const getDescription = () => {
+    if (chargeAmount) {
+      if (cancellationState?.initiatedBy == 'CONSUMER') {
+        return (
+          <Text style={styles.modalDescription}>
+            Your booking has been cancelled. Cancellation fee will be charged in your next booking. You may read more
+            about our{' '}
+            <ThrottledOpacity
+              onPress={() =>
+                Linking.openURL(
+                  'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
+                )
+              }>
+              <Text
+                style={{
+                  color: CONSTANTS.COLOR.ORANGE,
+                  textDecorationLine: 'underline',
+                  textAlign: 'center',
+                }}>
+                Cancellation Policies
+              </Text>
+            </ThrottledOpacity>
+            .
+          </Text>
+        );
+      } else {
+        return (
+          <Text style={styles.modalDescription}>
+            Your booking has been cancelled. No show fee will be charged in your next booking. You may read more about
+            our{' '}
+            <ThrottledOpacity
+              onPress={() =>
+                Linking.openURL(
+                  'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
+                )
+              }>
+              <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>
+                Cancellation Policies
+              </Text>
+            </ThrottledOpacity>
+            .
+          </Text>
+        );
+      }
+    } else {
+      return <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>;
+    }
+  };
+
   return (
     <Modal animationType="fade" transparent={true} visible={visible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
@@ -12,19 +61,7 @@ export const SuccesCancelBookingModal = ({visible, setVisible, type, chargeAmoun
           <View style={styles.container}>
             <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
             <Text style={styles.modalTitle}>Booking Cancelled</Text>
-            {chargeAmount == 0 ? (
-              <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>
-            ) : (
-              <Text style={styles.modalDescription}>
-                Your booking has been cancelled. No show fee will be charged in your next booking. You may read more
-                about our{' '}
-                <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>
-                  Cancellation Policies
-                </Text>
-                .
-              </Text>
-            )}
-
+            {getDescription()}
             <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={goBackAfterCancellation}>
               <Text style={styles.buttonText}>OK</Text>
             </ThrottledOpacity>
