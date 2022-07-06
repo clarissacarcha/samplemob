@@ -24,8 +24,8 @@ export const ReceiptDetails = ({route}) => {
           <Text style={[styles.description, {color: COLOR.ORANGE, fontFamily: FONT.BOLD}]}>12345678910</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Transaction Date and Time </Text>
-          <Text style={styles.description}>Jan 7, 2021 10:30 AM</Text>
+          <Text style={styles.title}>Transaction Date </Text>
+          <Text style={styles.description}>Jan 7, 2021</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Recipient Name</Text>
