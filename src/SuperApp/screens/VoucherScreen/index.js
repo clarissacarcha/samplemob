@@ -181,7 +181,7 @@ export const VoucherScreen = ({navigation}) => {
         <TextInput
           onChangeText={value => onChange(value)}
           style={styles.input}
-          placeholder={'Enter Voucher Code'}
+          placeholder={'Enter voucher code'}
           value={search}
           onSubmitEditing={searchVoucher}
         />
@@ -204,7 +204,7 @@ export const VoucherScreen = ({navigation}) => {
       {noResults && (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Image source={NoFound} resizeMode={'contain'} style={{width: decorWidth, height: decorWidth}} />
-          <Text style={{color: CONSTANTS.COLOR.ORANGE, fontSize: CONSTANTS.FONT_SIZE.XL + 1}}>No Results Found</Text>
+          <Text style={styles.noResultsTitle}>No Results Found</Text>
           <Text>Try to search something similar.</Text>
         </View>
       )}
@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
   noResultsTitle: {
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.XL + 1,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     marginBottom: 8,
   },
 });

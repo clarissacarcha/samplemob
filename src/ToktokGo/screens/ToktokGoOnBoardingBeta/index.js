@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import constants from '../../../common/res/constants';
 import GradientBackground from '../../../assets/toktokgo/BackGroundBeta.png';
+import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import ToktokgoIcon from '../../../assets/images/ToktokgoIconBeta.png';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
@@ -133,6 +134,9 @@ const ToktokGoOnBoardingBeta = ({navigation}) => {
 
   return (
     <ImageBackground source={GradientBackground} style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
+        <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
+      </TouchableOpacity>
       <View style={{alignItems: 'center'}}>
         <View style={{marginTop: StatusBar.currentHeight + 40}}>
           <Image source={ToktokgoIcon} resizeMode={'contain'} style={{height: 45, width: 190}} />
@@ -186,6 +190,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  backButton: {
+    zIndex: 999,
+    position: 'absolute',
+    top: StatusBar.currentHeight + 23,
+    left: 16,
+    padding: 6,
+  },
+  iconDimensions: {
+    width: 10,
+    height: 15,
   },
 });
 export default ToktokGoOnBoardingBeta;

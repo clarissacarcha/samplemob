@@ -59,7 +59,7 @@ export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummySt
             <Text
               style={{
                 fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-                fontSize: CONSTANTS.FONT_SIZE.M + 1,
+                fontSize: CONSTANTS.FONT_SIZE.XL,
                 color: CONSTANTS.COLOR.ORANGE,
               }}>
               {titleText}
@@ -69,7 +69,7 @@ export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummySt
             <Text
               style={{
                 fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-                fontSize: CONSTANTS.FONT_SIZE.M + 1,
+                fontSize: CONSTANTS.FONT_SIZE.XL,
                 color: CONSTANTS.COLOR.ORANGE,
               }}>
               {titleAmount}
