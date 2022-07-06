@@ -7,3 +7,4 @@ export * from './Others';
 export * from './Reports';
 export * from './SplashScreens';
 export * from './Validator';
+export * from './Ui';
