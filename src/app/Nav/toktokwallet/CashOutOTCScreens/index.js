@@ -39,7 +39,7 @@ export default ({Navigator}) => (
     />
     <Navigator.Screen
       name="ToktokWalletCashoutOTCReceipt"
-      component={ToktokWalletCashOutOTCPaymentSummary}
+      component={ToktokWalletCashoutOTCReceipt}
       options={{
         headerTitleAlign: 'center',
         headerStyle: {
