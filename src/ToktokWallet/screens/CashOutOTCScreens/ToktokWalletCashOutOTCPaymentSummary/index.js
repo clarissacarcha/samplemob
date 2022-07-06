@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, Text, View,  ScrollView,} from 'react-native';
 
 //COMPONENTS
-import {HeaderBack, HeaderTitle} from 'src/revamp';
+import {HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
 import {ConfirmButton, PaymentDetails} from './Components';
 
 import CONSTANTS from 'common/res/constants';
@@ -12,7 +12,7 @@ const {height, width} = Dimensions.get('window');
 export const ToktokWalletCashOutOTCPaymentSummary = ({navigation}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['Payment Summary']} />,
+    headerTitle: () => <HeaderTitleRevamp label={['Payment Summary']} />,
   });
 
   return (

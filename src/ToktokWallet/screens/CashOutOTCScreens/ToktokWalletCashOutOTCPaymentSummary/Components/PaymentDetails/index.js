@@ -1,9 +1,5 @@
 import React from 'react';
-import {View, Text, Dimensions, StyleSheet, TextInput, Image, ImageBackground} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useThrottle} from 'src/hooks';
-import validator from 'validator';
-import {LoadingIndicator} from 'toktokwallet/components';
+import {View, Text, StyleSheet, Image, ImageBackground} from 'react-native';
 
 //HELPER
 import {moderateScale, currencyCode } from 'toktokwallet/helper';
@@ -11,9 +7,8 @@ import {moderateScale, currencyCode } from 'toktokwallet/helper';
 // COLORS AND FONTS AND IMAGES
 import CONSTANTS from 'common/res/constants';
 import {banner} from 'toktokwallet/assets';
-import InfoIcon from '../../../../../../assets/icons/InfoIcon.png';
+import InfoIcon from 'toktokwallet/assets/icons/InfoIcon.png';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
-const {width, height} = Dimensions.get('window');
 
 export const PaymentDetails = ({}) => {
   return (
@@ -21,18 +16,11 @@ export const PaymentDetails = ({}) => {
       <ImageBackground source={banner.banner_logo} resizeMode="cover">
         <View style={styles.headerContainer}>
           <View style={{justifyContent: 'center'}}>
-            {/* {/* {imageLoading && (
-              <View style={{position: 'absolute', right: 0, left: 0}}>
-                <LoadingIndicator isLoading={true} size="small" />
-              </View>
-            )} */}
             <Image
               source={{
                 uri: 'https://upload.wikimedia.org/wikipedia/en/thumb/9/98/LBC_Express_2013_Logo.svg/1200px-LBC_Express_2013_Logo.svg.png',
               }}
               style={styles.headerLogo}
-              // onLoadStart={() => setImageLoading(true)}
-              // onLoadEnd={() => setImageLoading(false)}
             />
           </View>
           <Text style={styles.walletName}>LBC Express</Text>
@@ -41,7 +29,7 @@ export const PaymentDetails = ({}) => {
       <View style={styles.note}>
           <Image
             source={InfoIcon}
-            style={{height: 12, width: 12, marginRight: 20}}
+            style={styles.noteLogoPolicy1}
           />
           <View>
             <Text style={styles.noteText}>All transactions made before 01.00 PM will be processed within the day.</Text>
@@ -92,6 +80,15 @@ export const PaymentDetails = ({}) => {
         </Text>
       </View>
       <View style={styles.totalSeparator} />
+      <View style={styles.container}>
+        <Text style={styles.terms}>
+          <Text style={styles.footerText}>Please review the accuracy of the details provided and read our </Text>
+          <Text style={[styles.tnc, styles.footerText]}>
+            Terms and Conditions{' '}
+          </Text>
+          <Text style={styles.footerText}>before you proceed with your transaction.</Text>
+        </Text>
+      </View>
     </>
   );
 };
@@ -102,7 +99,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLOR.LIGHT_YELLOW,
     paddingHorizontal: moderateScale(16),
-    paddingVertical: moderateScale(10),
+    paddingVertical: moderateScale(16),
   },
   noteText: {
     color: '#F6841F',
@@ -176,5 +173,19 @@ const styles = StyleSheet.create({
     height: moderateScale(40),
     resizeMode: 'contain',
     flexShrink: 1,
+  },
+  container: {
+    justifyContent: 'flex-end',
+    backgroundColor: 'white',
+    paddingHorizontal: moderateScale(16),
+    paddingTop: moderateScale(10),
+  },
+  terms: {
+    textAlign: 'left',
+    marginBottom: moderateScale(15),
+    fontSize: FONT_SIZE.S,
+  },
+  tnc: {
+    color: '#F6841F',
   },
 });
