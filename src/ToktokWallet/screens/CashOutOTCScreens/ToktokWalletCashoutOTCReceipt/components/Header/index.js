@@ -7,7 +7,6 @@ import {moderateScale} from 'toktokbills/helper';
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
 import {bills_logo} from 'toktokbills/assets/images';
-import tokwa2 from 'toktokwallet/assets/images/tokwa2.png';
 
 export const Header = ({route}) => {
   //   const {receipt} = route.params;
@@ -15,7 +14,12 @@ export const Header = ({route}) => {
   return (
     <View style={{alignItems: 'center'}}>
       {/* {billerDetails?.logo && <Image source={{uri: billerDetails.logo}} style={styles.logo} />} */}
-      <Image source={tokwa2} style={styles.logo} />
+      <Image
+        source={{
+          uri: 'https://upload.wikimedia.org/wikipedia/en/thumb/9/98/LBC_Express_2013_Logo.svg/1200px-LBC_Express_2013_Logo.svg.png',
+        }}
+        style={styles.logo}
+      />
       <View style={styles.logoTextContainer}>
         <Text>
           <Text style={styles.headerText}>LBC Express</Text>

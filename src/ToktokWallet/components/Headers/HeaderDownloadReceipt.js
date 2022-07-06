@@ -1,20 +1,15 @@
 import React, {useRef} from 'react';
 import {StyleSheet, View, TouchableOpacity, Text, Image, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {throttle} from 'lodash';
-import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import ViewShot, {captureScreen, releaseCapture} from 'react-native-view-shot';
 import RNFS from 'react-native-fs';
 import CameraRoll from '@react-native-community/cameraroll';
-import Toast from 'react-native-simple-toast';
 
 // FONTS, COLORS AND IMAGES
-import {COLOR, FONT} from 'src/res/variables';
 import {download_icon} from 'toktokload/assets/icons';
 
 //HELPER
-import {moderateScale} from 'toktokbills/helper';
+import {moderateScale} from 'toktokwallet/helper';
 import moment from 'moment';
 import {usePrompt} from 'src/hooks';
 
@@ -145,6 +140,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row',
   },
 });

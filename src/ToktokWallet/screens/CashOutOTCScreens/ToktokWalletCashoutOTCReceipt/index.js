@@ -18,7 +18,7 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import CONSTANTS from 'common/res/constants';
 
 //COMPONENTS
-import {OrangeButton, LoadingIndicator, HeaderDownloadReceipt} from 'toktokwallet/components';
+import {OrangeButton, HeaderDownloadReceipt} from 'toktokwallet/components';
 import {HeaderBack, HeaderTitle} from 'src/revamp';
 import {Header, ReceiptDetails} from './components';
 
@@ -73,21 +73,26 @@ export const ToktokWalletCashOutOTCReceipt = ({navigation, route}) => {
   });
 
   return (
-    <ImageBackground source={LinearGradient} resizeMode="cover" style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{
-          padding: onCapturingScreen ? (Platform.OS === 'ios' ? moderateScale(10) : 0) : moderateScale(16),
-        }}>
-        <ViewShot ref={viewshotRef} options={{format: 'jpg', quality: 0.9, result: 'tmpfile'}}>
-          {onCapturingScreen ? (
-            <ReceiptDownload route={route} onCapturingScreen={onCapturingScreen} />
-          ) : (
-            <MainComponent navigation={navigation} route={route} onCapturingScreen={onCapturingScreen} />
-          )}
-        </ViewShot>
-      </ScrollView>
-    </ImageBackground>
+    <>
+      <ImageBackground source={LinearGradient} resizeMode="cover" style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{
+            padding: onCapturingScreen ? (Platform.OS === 'ios' ? moderateScale(10) : 0) : moderateScale(16),
+          }}>
+          <ViewShot ref={viewshotRef} options={{format: 'jpg', quality: 0.9, result: 'tmpfile'}}>
+            {onCapturingScreen ? (
+              <ReceiptDownload route={route} onCapturingScreen={onCapturingScreen} />
+            ) : (
+              <MainComponent navigation={navigation} route={route} onCapturingScreen={onCapturingScreen} />
+            )}
+          </ViewShot>
+        </ScrollView>
+      </ImageBackground>
+      <View style={styles.buttonContainer}>
+        <OrangeButton label="OK" />
+      </View>
+    </>
   );
 };
 

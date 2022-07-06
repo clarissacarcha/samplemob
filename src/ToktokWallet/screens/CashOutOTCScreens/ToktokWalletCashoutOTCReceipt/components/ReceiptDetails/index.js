@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
   bodyContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
   },
   marginBottom15: {
     marginBottom: moderateScale(15),
