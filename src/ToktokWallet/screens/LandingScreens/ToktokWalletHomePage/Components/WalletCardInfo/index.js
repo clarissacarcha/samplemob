@@ -136,6 +136,17 @@ const WalletCardInfo = ({loading}) => {
               </Text>
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ToktokWalletCashOutOTCPaymentSummary')}
+            style={{flexDirection: 'row', padding: 2, marginTop: 10}}>
+            <Image
+              style={{height: 21, width: 21, marginRight: 5}}
+              source={require('toktokwallet/assets/icons/walletVerify.png')}
+            />
+            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S}}>
+              Payment Summary
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
       <Separator />

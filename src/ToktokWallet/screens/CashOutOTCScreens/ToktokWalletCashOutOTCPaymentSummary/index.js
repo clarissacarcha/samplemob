@@ -1,8 +1,9 @@
 import React from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, StyleSheet, Text, View,  ScrollView,} from 'react-native';
 
 //COMPONENTS
 import {HeaderBack, HeaderTitle} from 'src/revamp';
+import {ConfirmButton, PaymentDetails} from './Components';
 
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
@@ -15,10 +16,20 @@ export const ToktokWalletCashOutOTCPaymentSummary = ({navigation}) => {
   });
 
   return (
-    <View>
-      <Text>Payment Summary</Text>
-    </View>
+    <>
+      <View style={styles.container}>
+        <ScrollView keyboardShouldPersistTaps="handled">
+          <PaymentDetails/>
+        </ScrollView>
+        <ConfirmButton/>
+      </View>
+    </>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+});
