@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     width: moderateScale(60),
     height: moderateScale(60),
     marginBottom: moderateScale(10),
+    resizeMode: 'contain',
   },
   logoTextContainer: {
     flexDirection: 'row',
