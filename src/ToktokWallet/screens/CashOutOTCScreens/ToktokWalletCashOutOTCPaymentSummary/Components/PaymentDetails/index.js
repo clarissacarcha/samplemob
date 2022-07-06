@@ -7,7 +7,7 @@ import {moderateScale, currencyCode } from 'toktokwallet/helper';
 // COLORS AND FONTS AND IMAGES
 import CONSTANTS from 'common/res/constants';
 import {banner} from 'toktokwallet/assets';
-import InfoIcon from 'toktokwallet/assets/icons/InfoIcon.png';
+import infoIcon from 'toktokwallet/assets/icons/infoIcon.png';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 
 export const PaymentDetails = ({}) => {
@@ -28,7 +28,7 @@ export const PaymentDetails = ({}) => {
       </ImageBackground>
       <View style={styles.note}>
           <Image
-            source={InfoIcon}
+            source={infoIcon}
             style={styles.noteLogoPolicy1}
           />
           <View>
