@@ -3,7 +3,7 @@ import { View, Text, StyleSheet ,Dimensions, Image} from 'react-native';
 import { TransactionModal } from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants'
 import { moderateScale } from "toktokwallet/helper";
-import infoIcon from 'toktokwallet/assets/icons/info-icon.png';
+import {info_icon} from 'toktokwallet/icons'
 
 const { COLOR, FONT_FAMILY: FONTS, FONT_SIZE } = CONSTANTS
 const { width } = Dimensions.get("window")
