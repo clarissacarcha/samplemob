@@ -7,6 +7,7 @@ import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
 import StyledText from 'toktokfood/components/StyledText';
 import ContentLoader from 'react-native-easy-content-loader';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 export const Container: ComponentType<any> = styled.View`
   margin-top: 5px;
@@ -30,7 +31,9 @@ export const AmountText: ComponentType<any> = styled(StyledText).attrs(props => 
 }))`
   margin-right: ${props => (props.total ? '10' : 0)};
   color: ${props =>
-    props.total
+    props.type === 'Discount'
+      ? props.theme.color.darkgray
+      : props.total
       ? props.theme.color.orange
       : props.sign === '-'
       ? props.theme.color.red
@@ -47,3 +50,10 @@ export const Loader: ComponentType<any> = styled(ContentLoader).attrs(props => (
     right: '12%',
   },
 }))``;
+
+export const DiscountIcon: ComponentType<any> = styled(FeatherIcon).attrs(props => ({
+  ...props,
+}))`
+  margin-left: 5px;
+  bottom: 2px;
+`;

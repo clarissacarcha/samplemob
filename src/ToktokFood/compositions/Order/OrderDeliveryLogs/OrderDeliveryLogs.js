@@ -90,6 +90,8 @@ const OrderDeliveryLogs = (props: PropsType): React$Node => {
       {state?.deliveryImgurl ? renderDeliveryImageComponent(state?.deliveryImgurl) : renderDashComponent()}
       {renderLogsComponent('Preparing order', state?.dateBookingConfirmed)}
       {renderDashComponent()}
+      {renderLogsComponent('Finding driver', state?.dateOrderProcessed)}
+      {renderDashComponent()}
       {renderLogsComponent('Order placed', state?.dateOrdered)}
     </React.Fragment>
   );
