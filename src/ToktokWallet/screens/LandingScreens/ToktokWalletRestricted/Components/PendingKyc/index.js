@@ -137,6 +137,8 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.S,
   },
   buttonContainer: {
+    backgroundColor: COLOR.WHITE,
+    opacity: 0.5,
     paddingHorizontal: moderateScale(32),
     paddingVertical: moderateScale(16),
   },
