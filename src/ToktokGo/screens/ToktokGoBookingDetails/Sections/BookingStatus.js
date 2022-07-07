@@ -25,7 +25,7 @@ const StatusBar = ({label, log, number}) => {
         : log.createdAt;
     fontColor = constants.COLOR.ORANGE;
     fontFamily = constants.FONT_FAMILY.BOLD;
-    hasImage = log.image !== null ? true : false;
+    hasImage = log.image ? true : false;
   }
 
   useEffect(() => {
@@ -108,7 +108,6 @@ const StatusBar = ({label, log, number}) => {
 
 const Status = ({booking}) => {
   const mappedLogs = _.mapKeys(booking.logs, 'status');
-  console.log(mappedLogs);
   return (
     /*-------------------- FOR FIDELITY --------------------*/
     // <View>
