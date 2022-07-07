@@ -24,7 +24,6 @@ import Constants from '../../store/redux/reducers/Constants';
 import {numberFormat} from '../../helper';
 
 const getDisplayAddress = ({stop}) => {
-  console.log(stop);
   if (stop?.addressBreakdown) {
     const {city, province} = stop.addressBreakdown;
     const {formattedAddress} = stop;

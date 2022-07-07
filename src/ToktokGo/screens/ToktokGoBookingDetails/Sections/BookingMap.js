@@ -32,24 +32,22 @@ export const BookingMap = ({booking, routeDetails}) => {
         ...southwest,
       },
     ];
-    setTimeout(() => {
-      try {
-        mapRef.current.fitToCoordinates(
-          coordinates,
-          {
-            edgePadding: {
-              right: 100,
-              bottom: 200,
-              left: 100,
-              top: 100,
-            },
+    try {
+      mapRef.current.fitToCoordinates(
+        coordinates,
+        {
+          edgePadding: {
+            right: 10,
+            bottom: 30,
+            left: 10,
+            top: 50,
           },
-          3000, // Animation duration in milliseconds.
-        );
-      } catch (err) {
-        console.log('fitToCoordinates error: ', err);
-      }
-    }, 1000);
+        },
+        500, // Animation duration in milliseconds.
+      );
+    } catch (err) {
+      console.log('fitToCoordinates error: ', err);
+    }
   };
 
   return (
@@ -59,7 +57,11 @@ export const BookingMap = ({booking, routeDetails}) => {
         provider={PROVIDER_GOOGLE}
         style={{width: '100%', height: 200}}
         initialRegion={INITIAL_REGION}
-        onMapReady={onMapReady}>
+        onMapReady={onMapReady}
+        pitchEnabled={false}
+        rotateEnabled={false}
+        scrollEnabled={false}
+        zoomEnabled={false}>
         <Marker
           key={key => {
             1;

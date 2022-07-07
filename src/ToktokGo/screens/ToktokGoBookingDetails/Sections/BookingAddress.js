@@ -32,7 +32,6 @@ const LocationDots = () => (
 
 const DeliveryStop = ({booking, stop}) => {
   const getDisplayAddress = ({stop, formatted}) => {
-    console.log(stop);
     if (stop.addressBreakdown && !formatted) {
       const {city, province} = stop.addressBreakdown;
       if (city) {
