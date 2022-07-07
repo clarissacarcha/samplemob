@@ -22,6 +22,16 @@ export const RejectedKyc = () => {
     headerLeft: () => <HeaderBack color={COLOR.ORANGE} />,
     headerTitle: () => <HeaderTitleRevamp isLogo={true} headerStyle={styles.headerStyle} />,
     headerRight: () => <HeaderKebab />,
+    headerStyle: {
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
+      elevation: 5,
+    },
   });
   return (
     <>
@@ -79,14 +89,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 5,
   },
   benefitsContainer: {
     marginTop: 20,
@@ -137,9 +139,8 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.S,
   },
   buttonContainer: {
-    backgroundColor: COLOR.WHITE,
-    opacity: 0.5,
     paddingHorizontal: moderateScale(32),
     paddingVertical: moderateScale(16),
+    backgroundColor: COLOR.WHITE,
   },
 });
