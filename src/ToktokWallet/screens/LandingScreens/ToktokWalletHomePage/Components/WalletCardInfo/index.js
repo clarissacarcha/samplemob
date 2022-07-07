@@ -4,7 +4,7 @@ import CONSTANTS from 'common/res/constants';
 import {useNavigation} from '@react-navigation/native';
 import {Separator, HeaderImageBackground, HeaderTitleRevamp, HeaderBack, HeaderRight} from 'toktokwallet/components';
 import {numberFormat, moderateScale, currencyCode, getDeviceWidth as width} from 'toktokwallet/helper';
-import {basic} from 'toktokwallet/assets';
+import {basic, enterprise, verified} from 'toktokwallet/assets';
 import {useAccount} from 'toktokwallet/hooks';
 import {APP_FLAVOR, ACCOUNT_TYPE} from 'src/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -61,14 +61,20 @@ const WalletCardInfo = ({loading}) => {
         })
       }
       <HeaderImageBackground>
-        <View style={{flex: 1, justifyContent: 'flex-end', paddingBottom: 45}}>
+        <View style={{flex: 1, justifyContent: 'flex-end', paddingBottom: 50}}>
           <View>
             <View style={{flexDirection: 'row'}}>
               <TouchableOpacity onPress={redirectLinking} style={{paddingHorizontal: 16, flexDirection: 'row'}}>
                 <View style={{marginRight: moderateScale(5)}}>
                 <Image
                   style={styles.level}
-                  source={basic.basic_logo}
+                  source={
+                    tokwaAccount.person.accountType.level == 1 ? 
+                    basic.basic_logo :
+                    tokwaAccount.person.accountType.level == 2 ?
+                    verified.verified_logo :
+                    enterprise.enterprise_logo 
+                  }
                 />
                 </View>
                 <Text style={styles.accountRank}>
