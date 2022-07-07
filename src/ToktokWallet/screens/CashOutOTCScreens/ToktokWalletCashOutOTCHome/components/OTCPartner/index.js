@@ -55,6 +55,7 @@ export const OTCPartner = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: moderateScale(16),
   },
   shadowContainer: {
     shadowColor: '#000',
