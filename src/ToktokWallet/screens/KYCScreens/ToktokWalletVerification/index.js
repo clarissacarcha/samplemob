@@ -12,7 +12,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {useFocusEffect} from '@react-navigation/native';
-import {Separator, LeavePromptModal, FlagSecureScreen} from 'toktokwallet/components';
+import {Separator, LeavePromptModal, FlagSecureScreen, HeaderTitleRevamp} from 'toktokwallet/components';
 import RNFS from 'react-native-fs';
 import CONSTANTS from 'common/res/constants';
 
@@ -44,33 +44,21 @@ const HeaderBackClose = ({currentIndex, setCurrentIndex, setPromptVisible}) => {
     setPromptVisible(true);
   };
 
-  useFocusEffect(
-    () => {
-      const backAction = () => {
-        closeScreen();
-        return true;
-      };
+  useFocusEffect(() => {
+    const backAction = () => {
+      closeScreen();
+      return true;
+    };
 
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
 
-      return () => backHandler.remove();
-    },
-  );
+    return () => backHandler.remove();
+  });
 
   return (
     <TouchableHighlight onPress={closeScreen} underlayColor={'white'} style={styles.button}>
-      <View style={styles.iconBox}>
-        <FIcon5 name={'chevron-left'} size={13} color={COLOR.YELLOW} />
-      </View>
+      <FIcon5 name={'chevron-left'} size={15} color={COLOR.ORANGE} />
     </TouchableHighlight>
-  );
-};
-
-const HeaderTitle = ({label}) => {
-  return (
-    <View style={{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-      <Text style={{fontFamily: FONT.BOLD, fontSize: 16}}>{label}</Text>
-    </View>
   );
 };
 
@@ -87,14 +75,7 @@ const MainSetupComponent = () => {
         setCurrentIndex={setCurrentIndex}
       />
     ),
-    headerTitle: () => <HeaderTitle label={'Verification'} />,
-    headerRight: () => (
-      <TouchableHighlight style={{paddingRight: 16}} underlayColor={'white'} onPress={cancelSetup}>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, color: '#929191'}}>Cancel</Text>
-        </View>
-      </TouchableHighlight>
-    ),
+    headerTitle: () => <HeaderTitleRevamp label={'Verification'} />,
   });
 
   const [screenSlides, setScreenSlides] = useState([
@@ -138,14 +119,14 @@ const MainSetupComponent = () => {
           navigation.goBack();
         }}
       />
-      <Separator />
+      {/* <Separator /> */}
       <View style={styles.container}>
         <View style={styles.progressBar}>
           {screenSlides.map((item, index) => {
-            if (index < screenSlides.length - 1)
+            if (index < screenSlides.length)
               return (
                 <View
-                  style={[styles.progressBarItem, {backgroundColor: index < currentIndex ? '#F6841F' : 'transparent'}]}
+                  style={[styles.progressBarItem, {backgroundColor: index <= currentIndex ? '#F6841F' : 'transparent'}]}
                 />
               );
           })}
@@ -173,26 +154,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   progressBar: {
-    height: 2,
+    height: 10,
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: '#F7F7FA',
+    backgroundColor: '#FFF1D2',
   },
   progressBarItem: {
     flex: 1,
   },
   button: {
     borderRadius: 10,
-    marginLeft: 10,
+    marginHorizontal: 16,
     overflow: 'hidden',
-
-    height: 30,
-    width: 30,
-  },
-  iconBox: {
-    height: 30,
-    width: 30,
     justifyContent: 'center',
-    alignItems: 'center',
   },
 });
