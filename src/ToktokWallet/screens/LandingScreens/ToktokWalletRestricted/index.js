@@ -47,9 +47,9 @@ export const ToktokWalletRestricted = ({navigation, route}) => {
       case 'noAccount':
         return <NoAccount />;
       case 'pendingKYC':
-        return <PendingKyc navigation={navigation} />;
+        return <PendingKyc />;
       case 'rejectedKYC':
-        return <RejectedKyc navigation={navigation} />;
+        return <RejectedKyc />;
       case 'blockedAccount':
         return <BlockedAccount data={data} showPrompt={showPrompt} />;
       case 'deletedAccount':

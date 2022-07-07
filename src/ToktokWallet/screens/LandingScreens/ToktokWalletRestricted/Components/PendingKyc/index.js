@@ -1,8 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, ImageBackground, Dimensions, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {HeaderImageBackground, HeaderTitle, Separator} from 'toktokwallet/components';
-import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 
 //COMPONENTS
@@ -17,17 +15,23 @@ const {COLOR, FONT_SIZE, FONT_FAMILY: FONT} = CONSTANTS;
 //UTIL
 import {moderateScale} from 'toktokwallet/helper';
 
-export const PendingKyc = ({navigation}) => {
+export const PendingKyc = () => {
+  const navigation = useNavigation();
   navigation.setOptions({
     headerShown: true,
     headerLeft: () => <HeaderBack color={COLOR.ORANGE} />,
-    headerTitle: () => (
-      <HeaderTitleRevamp
-        isLogo={true}
-        headerStyle={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}
-      />
-    ),
+    headerTitle: () => <HeaderTitleRevamp isLogo={true} headerStyle={styles.headerStyle} />,
     headerRight: () => <HeaderKebab />,
+    headerStyle: {
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
+      elevation: 5,
+    },
   });
   return (
     <>
@@ -77,6 +81,12 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerStyle: {
+    flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -131,5 +141,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingHorizontal: moderateScale(32),
     paddingVertical: moderateScale(16),
+    backgroundColor: COLOR.WHITE,
   },
 });
