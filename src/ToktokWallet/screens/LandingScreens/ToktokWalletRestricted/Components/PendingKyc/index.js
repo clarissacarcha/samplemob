@@ -20,12 +20,7 @@ export const PendingKyc = () => {
   navigation.setOptions({
     headerShown: true,
     headerLeft: () => <HeaderBack color={COLOR.ORANGE} />,
-    headerTitle: () => (
-      <HeaderTitleRevamp
-        isLogo={true}
-        headerStyle={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}
-      />
-    ),
+    headerTitle: () => <HeaderTitleRevamp isLogo={true} headerStyle={styles.headerStyle} />,
     headerRight: () => <HeaderKebab />,
   });
   return (
@@ -76,6 +71,12 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerStyle: {
+    flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
