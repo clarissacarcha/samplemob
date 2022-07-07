@@ -2,8 +2,9 @@ import React, {useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Animated, Alert, Image, Platform} from 'react-native';
 import CONSTANTS from 'common/res/constants';
 import {useNavigation} from '@react-navigation/native';
-import {Separator, HeaderImageBackground, HeaderTitle} from 'toktokwallet/components';
-import {numberFormat, getDeviceWidth as width} from 'toktokwallet/helper';
+import {Separator, HeaderImageBackground, HeaderTitleRevamp, HeaderBack, HeaderRight} from 'toktokwallet/components';
+import {numberFormat, moderateScale, currencyCode, getDeviceWidth as width} from 'toktokwallet/helper';
+import {basic} from 'toktokwallet/assets';
 import {useAccount} from 'toktokwallet/hooks';
 import {APP_FLAVOR, ACCOUNT_TYPE} from 'src/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -45,43 +46,32 @@ const WalletCardInfo = ({loading}) => {
   };
 
   const tokwaNotifications = () => navigation.navigate('ToktokWalletNotifications');
+ 
+  navigation.setOptions({
+    headerShown: true,
+  });
 
   return (
     <View style={styles.container}>
+      {
+        navigation.setOptions({
+          headerLeft: () => <HeaderBack color={COLOR.ORANGE} />,
+          headerTitle: () => <HeaderTitleRevamp isLogo={true} />,
+          headerRight: () => <HeaderRight rightIconOnPress={() => navigation.navigate('ToktokWalletNotifications')} />,
+        })
+      }
       <HeaderImageBackground>
-        <HeaderTitle
-          isRightIcon
-          isLogo={true}
-          rightIconOnPress={() => navigation.navigate('ToktokWalletNotifications')}
-          headerBackLabel="Home"
-        />
         <View style={{flex: 1, justifyContent: 'flex-end', paddingBottom: 45}}>
           <View>
             <View style={{flexDirection: 'row'}}>
               <TouchableOpacity onPress={redirectLinking} style={{paddingHorizontal: 16, flexDirection: 'row'}}>
-                <View
-                  style={{
-                    alignSelf: 'center',
-                    padding: 1,
-                    borderRadius: 100,
-                    borderWidth: 1,
-                    borderColor: titleAccountTypeColor[tokwaAccount.person.accountType.level],
-                    justifyContent: 'center',
-                    marginRight: 5,
-                  }}>
-                  <VectorIcon
-                    size={FONT_SIZE.XS}
-                    iconSet={ICON_SET.Feather}
-                    name="check"
-                    color={titleAccountTypeColor[tokwaAccount.person.accountType.level]}
-                  />
+                <View style={{marginRight: moderateScale(5)}}>
+                <Image
+                  style={styles.level}
+                  source={basic.basic_logo}
+                />
                 </View>
-                <Text
-                  style={{
-                    fontFamily: FONT.REGULAR,
-                    fontSize: FONT_SIZE.S,
-                    color: titleAccountTypeColor[tokwaAccount.person.accountType.level],
-                  }}>
+                <Text style={styles.accountRank}>
                   {tokwaAccount.person.accountType.title}
                 </Text>
               </TouchableOpacity>
@@ -89,30 +79,17 @@ const WalletCardInfo = ({loading}) => {
             <View style={styles.walletContent}>
               <View>
                 {
-                  <Text style={{fontSize: 24, fontFamily: FONT.BOLD}}>
-                    {tokwaAccount.wallet.currency.code} {numberFormat(+tokwaAccount.wallet.balance)}
+                  <Text style={styles.balance}>
+                    {currencyCode}{numberFormat(+tokwaAccount.wallet.balance)}
                   </Text>
                 }
-                <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Available Balance</Text>
+                <Text style={styles.balanceText}>Available Balance</Text>
               </View>
 
               <TouchableOpacity onPress={cashIn} style={styles.topUp}>
                 <View style={styles.topUpbtn}>
-                  <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="black" size={20} />
+                  <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="#EDAF1F" size={15} />
                 </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.walletSettings}
-                onPress={() => {
-                  animation.start(() => {
-                    animation.reset();
-                    navigation.navigate('ToktokWalletSettings');
-                  });
-                }}>
-                <Animated.View style={[{transform: [{rotate: rotateanimation}]}]}>
-                  <VectorIcon iconSet={ICON_SET.FontAwesome5} name="cog" color="black" size={30} />
-                </Animated.View>
               </TouchableOpacity>
             </View>
           </View>
@@ -147,11 +124,11 @@ const styles = StyleSheet.create({
   container: {
     // height: 215, // ios
     // height: 255,
-    height: 280,
+    height: 240,
     width: width,
   },
   whitespace: {
-    height: 80,
+    height: 90,
     backgroundColor: 'white',
     position: 'relative',
   },
@@ -177,12 +154,13 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS == 'android' ? 10 : 5,
   },
   topUpbtn: {
-    height: 34,
-    width: 34,
+    height: moderateScale(24),
+    width: moderateScale(24),
     borderRadius: 100,
-    borderColor: 'black',
+    borderColor: 'white',
     borderWidth: 2,
     justifyContent: 'center',
+    backgroundColor: "white",
     alignItems: 'center',
   },
   walletSettings: {
@@ -190,6 +168,25 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginTop: Platform.OS == 'android' ? 10 : 5,
   },
+  balanceText: {
+    fontSize: FONT_SIZE.S, 
+    fontFamily: FONT.REGULAR, 
+    color: COLOR.WHITE
+  },
+  balance: {
+    fontSize: moderateScale(26), 
+    fontFamily: FONT.BOLD,
+    color: COLOR.WHITE,
+  },
+  accountRank: {
+      fontFamily: FONT.BOLD,
+      fontSize: FONT_SIZE.M,
+      color: COLOR.WHITE,
+  },
+  level: {
+    height: moderateScale(14), 
+    width: moderateScale(14), 
+  }
 });
 
 export default WalletCardInfo;

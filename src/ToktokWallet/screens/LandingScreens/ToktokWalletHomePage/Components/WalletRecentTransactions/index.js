@@ -40,7 +40,7 @@ const WalletRecentTransactions = () => {
 
   const RecentRecords = () => (
     <>
-      <View style={{flexDirection: 'row', marginTop: 0, paddingBottom: 0}}>
+      <View style={{flexDirection: 'row', marginTop: -30, paddingBottom: 0}}>
         <View style={{flex: 1, alignItems: 'flex-start'}}>
           <Text style={styles.title}>Recent Transactions</Text>
         </View>

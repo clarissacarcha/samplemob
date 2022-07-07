@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Image, Platform, StatusBar, TouchableOpacity} from 'react-native';
 import {moderateScale, scale} from 'toktokbills/helper';
 import {logos} from 'toktokwallet/assets';
-
+import {ICON_SET, VectorIcon} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
