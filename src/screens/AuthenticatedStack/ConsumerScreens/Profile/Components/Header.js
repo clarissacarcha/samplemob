@@ -3,35 +3,28 @@ import {Text, View, StatusBar, StyleSheet, Image, TouchableOpacity} from 'react-
 import ToktokgoIcon from '../../../../../assets/images/ToktokgoLandingIcon.png';
 import CONSTANTS from '../../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import ArrowLeftIcon from '../../../../../assets/icons/arrow-left-icon.png';
 
-export const Header = ({navigation}) => {
+export const Header = ({title, navigation}) => {
   return (
     <View style={styles.headerBox}>
-      <View
-        style={{
-          marginTop: StatusBar.currentHeight,
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          paddingLeft: 10,
-          alignItems: 'center',
-        }}>
+      <View style={styles.greetingBox}>
         <TouchableOpacity onPress={() => navigation.pop()}>
-          <Text>
-            <MIcon name={'keyboard-arrow-left'} size={25} color={CONSTANTS.COLOR.ORANGE} />
-          </Text>
+          <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
         </TouchableOpacity>
-        <View style={styles.greetingBox}>
-          <Text
-            style={{fontSize: CONSTANTS.FONT_SIZE.XL + 1, fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD, lineHeight: 21}}>
-            {' '}
-            Change Password
-          </Text>
+        <View style={{flex: 1, alignItems: 'center', marginRight: 30}}>
+          <Text style={styles.greetingText}>{title}</Text>
         </View>
       </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
+  iconDimensions: {
+    width: 10,
+    height: 15,
+    marginLeft: 16,
+  },
   headerBox: {
     width: '100%',
     backgroundColor: 'white',
@@ -41,18 +34,23 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
 
-    elevation: 5,
+    elevation: 4,
   },
   greetingBox: {
-    // paddingHorizontal: CONSTANTS.SIZE.MARGIN,
-    marginHorizontal: 90,
+    flexDirection: 'row',
+    marginTop: StatusBar.currentHeight,
+    marginLeft: 5,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    paddingHorizontal: CONSTANTS.SIZE.MARGIN,
   },
   greetingText: {
-    color: CONSTANTS.COLOR.ORANGE,
-    fontSize: CONSTANTS.FONT_SIZE.XL,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    color: CONSTANTS.COLOR.BLACK,
+    fontSize: CONSTANTS.FONT_SIZE.XL + 1,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
   },
 });

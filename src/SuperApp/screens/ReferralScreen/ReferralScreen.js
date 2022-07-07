@@ -62,6 +62,8 @@ const ReferralScreen = ({navigation, route, session, createSession}) => {
               screen: 'ConsumerLanding',
             },
           });
+        } else {
+          navigation.pop();
         }
       }, 1500);
     },
