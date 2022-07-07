@@ -3,7 +3,7 @@ import {Dimensions, StyleSheet, Text, View, ImageBackground} from 'react-native'
 
 //COMPONENTS
 import {HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
-import {OTCPartner} from './components';
+import {OTCPartner, TransferableAndNonTransferableBalance} from './components';
 
 //HELPER
 import {moderateScale} from 'toktokwallet/helper';
@@ -21,6 +21,7 @@ export const ToktokWalletCashOutOTCHome = ({navigation}) => {
 
   return (
     <ImageBackground style={styles.container} source={backgrounds.gradient_bg} resizeMode="cover">
+      <TransferableAndNonTransferableBalance />
       <OTCPartner />
     </ImageBackground>
   );
