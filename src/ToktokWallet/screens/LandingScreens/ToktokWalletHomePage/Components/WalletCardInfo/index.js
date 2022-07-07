@@ -46,7 +46,19 @@ const WalletCardInfo = ({loading}) => {
   };
 
   const tokwaNotifications = () => navigation.navigate('ToktokWalletNotifications');
- 
+  
+  const levelIcon = () => {
+    let type = tokwaAccount.person.accountType.level;
+    switch (type) {
+      case "1":
+        return basic.basic_logo;
+      case "2":
+        return verified.verified_logo;
+      case "3":
+        return enterprise.enterprise_logo;
+    }
+  };
+
   navigation.setOptions({
     headerShown: true,
   });
@@ -68,13 +80,7 @@ const WalletCardInfo = ({loading}) => {
                 <View style={{marginRight: moderateScale(5)}}>
                 <Image
                   style={styles.level}
-                  source={
-                    tokwaAccount.person.accountType.level == 1 ? 
-                    basic.basic_logo :
-                    tokwaAccount.person.accountType.level == 2 ?
-                    verified.verified_logo :
-                    enterprise.enterprise_logo 
-                  }
+                  source={levelIcon()}
                 />
                 </View>
                 <Text style={styles.accountRank}>
