@@ -97,8 +97,8 @@ const Component = ({navigation, reduxStates: {myFavorites}, reduxActions: {updat
 			<TouchableOpacity
 			  onPress={onPress}
 			  activeOpacity={1}
-			  style={{flex: 1, width: 75, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'}}>
-			  <Text style={{fontSize: 14, color: '#fff'}}>Delete</Text>
+			  style={styles.deleteButtonContainer}>
+			  <Text style={styles.deleteButtontext}>Delete</Text>
 				{/* <CustomIcon.FoIcon name="trash" size={20} color={"white"} /> */}
 			</TouchableOpacity>
 		  </>
@@ -154,14 +154,14 @@ const Component = ({navigation, reduxStates: {myFavorites}, reduxActions: {updat
             </Swipeable>
           </>
         ))}
-        <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
+        <View style={styles.margin1} />
       </>
     );
   };
 
   return (
     <>
-      <View style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={styles.margin2}>
       
       {!loading && favorites.length === 0 ? (
         <EmptyList
@@ -225,4 +225,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.WHITE,
   },
+  deleteButtonContainer: {flex: 1, width: 75, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'},
+  deleteButtontext: {fontSize: 14, color: '#fff'},
+  margin1: {height: 8, backgroundColor: '#F7F7FA'},
+  margin2: {flex: 1, backgroundColor: 'white'},
+  
 });

@@ -8,11 +8,11 @@ import CheckBox from 'react-native-check-box';
 export const DeleteFooter = ({onDelete}) => {
   return (
     <>
-    	<View style={{flex: 1, backgroundColor: '#fff', position: 'absolute', bottom: 0, width: '100%'}} >
-        <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>                        
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', alignSelf: 'center'}}>
-            <TouchableOpacity onPress={onDelete} style={{backgroundColor: '#F6841F', paddingVertical: 15, paddingHorizontal: 50, borderRadius: 5}}>
-              <Text style={{fontSize: 14, color: '#fff'}}>Delete</Text>
+    	<View style={styles.container} >
+        <View style={styles.subContainer}>                        
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={onDelete} style={styles.deleteButton}>
+              <Text style={styles.deleteText}>Delete</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -20,3 +20,11 @@ export const DeleteFooter = ({onDelete}) => {
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: '#fff', position: 'absolute', bottom: 0, width: '100%'},
+  subContainer: {flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15},
+  buttonContainer: {flex: 1, justifyContent: 'center', alignItems: 'center', alignSelf: 'center'},
+  deleteButton: {backgroundColor: '#F6841F', paddingVertical: 15, paddingHorizontal: 50, borderRadius: 5},
+  deleteText: {fontSize: 14, color: '#fff'}
+})  

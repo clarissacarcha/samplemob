@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Text, Image, StyleSheet} from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { FONT } from '../../../../../res/variables';
 import {
     carIcon, 
@@ -33,23 +33,27 @@ export const RenderOrderInfo = ({ data }) => {
                             : carIcon
                         }
                     />
-                <Text style={styles.status} >
-									{status[data?.status?.status]}
-                </Text>
+                    <Text style={styles.status} >
+                        {status[data?.status?.status]}
+                    </Text>
                 </View>
             </View>
         
             <View style={styles.delivery}>
                 <View style={{flex: 1.5, flexDirection: 'column'}}>
                     <Text style={styles.orderInfo}>Delivery Information</Text>
-                    <Text style={[styles.subText, { color: "#525252" } ]}>{DisplayDateAndTime(data?.status?.date)}</Text>
+                    <Text style={[styles.subText, { color: "#525252" } ]}>
+                        {DisplayDateAndTime(data?.status?.date)}
+                    </Text>
                 </View>
                 <View style={styles.imgView2}>
                     <Image 
                         style={styles.img2}
                         source={data?.paymentMethod == "TOKTOKWALLET" ? walletIcon : paypandalogo}
                     />
-                    {/* <Text style={[styles.subText, { color: "#F6841F" } ]}>Waiting for payment</Text> */}
+                    {/* <Text style={[styles.subText, { color: "#F6841F" } ]}>
+                            Waiting for payment
+                        </Text> */}
                 </View>
             </View>
             <View style={[ styles.line, { marginHorizontal:16 } ]} />

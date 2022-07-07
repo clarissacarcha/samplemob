@@ -79,8 +79,8 @@ export const Item = ({
       })
       onPress()
     }}>          
-      <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-        <View style={{flex: 1, justifyContent: 'center'}}>
+      <View style={styles.container}>
+        <View style={styles.checkboxContainer}>
           <CheckBox
             isChecked={selected}
             checkedCheckBoxColor="#F6841F"
@@ -102,34 +102,32 @@ export const Item = ({
 						}}
 					/>
         </View>
-				<View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
-					<Image source={getImageSource(product?.img?.filename)} style={{width: 50, height: 65, resizeMode: 'stretch'}} />
+				<View style={styles.imgContainer}>
+					<Image source={getImageSource(product?.img?.filename)} style={styles.img} />
 				</View>
-        <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>       
-          <View style={{flex: 1, justifyContent: 'center'}}>
-							<Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>{product?.itemname}</Text>
-						<View style={{flexDirection: 'row'}}>
-              <View style={{flex: 0}}>
-								<Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={product?.price} /></Text>
+        <View style={styles.infoContainer}>       
+          <View style={styles.infoSubContainer}>
+            <Text style={styles.infoItemNameText} numberOfLines={2}>{product?.itemname}</Text>
+						<View style={styles.flexDirection}>
+              <View style={styles.flex0}>
+								<Text style={styles.priceText}><Price amount={product?.price} /></Text>
               </View>
-							<View style={{flex: 0, paddingHorizontal: 15, justifyContent: 'center'}}>
-								<Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 10}}>{product?.compareAtPrice > 0 ? <Price amount={product?.compareAtPrice} /> : ""}</Text>
+							<View style={styles.compareAtPriceContainer}>
+								<Text style={styles.compareAtPriceText}>{product?.compareAtPrice > 0 ? <Price amount={product?.compareAtPrice} /> : ""}</Text>
               </View>
             </View>
-            <View style={{flexDirection: 'row'}}>
-              <View style={{flex: 1}}>
-                <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {data?.variation || "None"}</Text>
+            <View style={styles.flexDirection}>
+              <View style={styles.flex1}>
+                <Text style={styles.variationText}>Variation: {data?.variation || "None"}</Text>
               </View>
               {/* <View style={{flex: 0}}>
                 <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data?.qty}</Text>
               </View> */}
             </View>
-            <View style={{flexDirection: 'row', marginTop: 7, alignItems: 'center', height: 40}}>
-              <Text style = {{fontFamily: FONT.REGULAR, fontSize: 12}}>Qty</Text>
+            <View style={styles.subContainer}>
+              <Text style={styles.qtyTitleText}>Qty</Text>
               <TouchableOpacity 
-                style = {{marginLeft: 10,  alignItems: 'center', justifyContent: 'center',  height: 25,width: 25,
-                  borderWidth: 1, borderColor: '#F8F8F8'
-                }}
+                style = {styles.minusButton}
                 disabled = {qty == 1}
                 onPress = {() => {
                   onChangeQuantity(qty - 1, data?.id)
@@ -142,16 +140,11 @@ export const Item = ({
                   color = {qty == 1 ? '#D7D7D7':  COLOR.ORANGE}
                 />
               </TouchableOpacity>
-              <View 
-                style = {{backgroundColor: '#F8F8F8', padding: 5, height: 25,width: 35, alignItems: 'center', justifyContent: 'center',
-                borderWidth: 1, borderColor: '#F8F8F8'
-              }}>
+              <View style={styles.qtyText}>
                 <Text>{qty}</Text>
               </View>
               <TouchableOpacity
-                style = {{alignItems: 'center', justifyContent: 'center',  height: 25,width: 25,
-                  borderWidth: 1, borderColor: '#F8F8F8'
-                }}
+                style = {styles.plusButton}
                 disabled={product.noOfStocks === qty || qty === 200}
                 onPress = {() => {
                   onChangeQuantity(qty + 1, data?.id)
@@ -168,7 +161,109 @@ export const Item = ({
           </View>
         </View>
       </View>
-      <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
+      <View style={styles.margin1} />
 						</TouchableOpacity>
     )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row', 
+    paddingVertical: 15, 
+    paddingHorizontal: 15
+  },
+  checkboxContainer: {
+    flex: 1, 
+    justifyContent: 'center'
+  },
+  imgContainer: {
+    flex: 3, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
+  img: {
+    width: 50, 
+    height: 65, 
+    resizeMode: 'stretch'
+  },
+  infoContainer: {
+    flex: 9, 
+    justifyContent: 'center', 
+    flexDirection: 'row'
+  },
+  infoSubContainer: {
+    flex: 1, 
+    justifyContent: 'center'
+  },
+  infoItemNameText: {
+    fontSize: 13, 
+    fontWeight: '100'
+  },
+  flexDirection: {
+    flexDirection: 'row'
+  },
+  flex0: {
+    flex: 0
+  },
+  priceText: {
+    fontSize: 13, 
+    color: "#F6841F"
+  },
+  compareAtPriceContainer: {
+    flex: 0, 
+    paddingHorizontal: 15, 
+    justifyContent: 'center'
+  },
+  compareAtPriceText: {
+    color: "#9E9E9E", 
+    textDecorationLine: 'line-through', 
+    fontSize: 10
+  },
+  flex1: {
+    flex: 1
+  },
+  variationText: {
+    color: "#9E9E9E", 
+    fontSize: 13
+  },
+  subContainer: {
+    flexDirection: 'row', 
+    marginTop: 7, 
+    alignItems: 'center', 
+    height: 40
+  },
+  qtyTitleText: {
+    fontFamily: FONT.REGULAR, 
+    fontSize: 12
+  },
+  minusButton: {
+    marginLeft: 10, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    height: 25,
+    width: 25, 
+    borderWidth: 1, 
+    borderColor: '#F8F8F8'
+  },
+  qtyText: {
+    backgroundColor: '#F8F8F8', 
+    padding: 5, 
+    height: 25,width: 35, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    borderWidth: 1, 
+    borderColor: '#F8F8F8'
+  },
+  plusButton: {
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    height: 25,
+    width: 25,
+    borderWidth: 1, 
+    borderColor: '#F8F8F8'
+  },
+  margin1: {
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  }
+})

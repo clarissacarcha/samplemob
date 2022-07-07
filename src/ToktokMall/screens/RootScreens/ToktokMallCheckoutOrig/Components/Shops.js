@@ -224,9 +224,9 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         return (
           <>
           <View>
-            <View style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA'}}>
-              <Image source={voucherIcon} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
-              <Text style = {{marginLeft: 10, fontFamily: FONT.REGULAR, fontSize: 13}}>Shop Vouchers</Text>
+            <View style ={styles.imageContainer}>
+              <Image source={voucherIcon} style={styles.image} /> 
+              <Text style = {styles.shopVoucher}>Shop Vouchers</Text>
             </View>            
           </View>
           </>
@@ -236,9 +236,9 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       return(
         <>
         <View style={styles.container}>
-          <View style ={{flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, padding: 15, borderBottomColor: '#F7F7FA'}}>
-            <Image source={getStoreLogo(shop.profileImages.logo || {})} style={{width: 18, height: 18, resizeMode: 'stretch'}} /> 
-            <Text style = {{marginLeft: 10, fontFamily: FONT.BOLD}}>{shop.shopname}</Text>
+          <View style ={styles.imageContainer}>
+            <Image source={getStoreLogo(shop.profileImages.logo || {})} style={styles.image} /> 
+            <Text style = {styles.shopName}>{shop.shopname}</Text>
           </View>
           <View style={{padding: 15}}>
             {renderItems(item.data[0])}
@@ -274,11 +274,62 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
 }
 
 const styles = StyleSheet.create({
-  body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 0, backgroundColor: 'white', marginTop: 8,  },
-  itemContainer: {flexDirection: 'row', justifyContent: 'flex-start'},
-  itemImage: {flex: 0.3, height: 100, width: 100},
-  itemprice: {color: '#F6841F', marginRight: 10},
-  itemSaleOff: {textDecorationLine: 'line-through', color: '#9E9E9E', fontSize: 11, marginTop: 2},
-  deliveryfeeContainer: {borderWidth: 1, borderColor: '#FDDC8C', marginLeft: 15, marginRight: 15, padding: 10, borderRadius: 5, marginBottom: 15,}
+  body: {
+    flex: 1, 
+    backgroundColor: '#F7F7FA', 
+  },
+  container: {
+    padding: 0, 
+    backgroundColor: 'white', 
+    marginTop: 8,  
+  },
+  itemContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'flex-start'
+  },
+  itemImage: {
+    flex: 0.3, 
+    height: 100, 
+    width: 100
+  },
+  itemprice: {
+    color: '#F6841F', 
+    marginRight: 10
+  },
+  itemSaleOff: {
+    textDecorationLine: 'line-through', 
+    color: '#9E9E9E', 
+    fontSize: 11, 
+    marginTop: 2
+  },
+  deliveryfeeContainer: {
+    borderWidth: 1, 
+    borderColor: '#FDDC8C', 
+    marginLeft: 15, 
+    marginRight: 15, 
+    padding: 10, 
+    borderRadius: 5, 
+    marginBottom: 15,
+  },
+  imageContainer: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    borderBottomWidth: 1, 
+    padding: 15, 
+    borderBottomColor: '#F7F7FA' 
+  },
+  image:{ 
+    width: 18, 
+    height: 18, 
+    resizeMode: 'stretch'
+  },
+  shopVoucher: {
+    marginLeft: 10, 
+    fontFamily: FONT.REGULAR, 
+    fontSize: 13
+  },
+  shopName:{
+    marginLeft: 10, 
+    fontFamily: FONT.BOLD
+  }
 })

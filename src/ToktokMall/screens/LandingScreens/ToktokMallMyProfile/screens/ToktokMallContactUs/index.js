@@ -164,70 +164,66 @@ export const ToktokMallContactUs = ({navigation}) => {
             paddingHorizontal: 15
           }}>
 
-          <View style={{alignItems: 'center'}}>
-            <Image source={contactus} style={{width: 130, height: 100, resizeMode: 'contain'}} />
+          <View style={styles.contactusImageContainer}>
+            <Image source={contactus} style={styles.contactusImage} />
           </View>
 
-          <View style={{flex: 0, flexDirection:'row', alignContent: 'center', alignItems: 'center', paddingVertical: 15}}>
-            <View style={{flex: 0.8}} />
-            <View style={{flex: 4, flexDirection: 'row', alignItems: 'center', alignSelf: 'center'}}>
-              <Text style={{textAlign: 'center', color: "#FDBA1C", fontSize: 25, fontWeight: "bold"}}>How</Text>
-              <Text style={{textAlign: 'center', color: "#F6841F", fontSize: 25, fontWeight: "bold"}}> can we help you?</Text>
+          <View style={styles.helpTextContainer}>
+            <View style={styles.margin1} />
+            <View style={styles.helpTextSubContainer}>
+              <Text style={styles.helpText1}>How</Text>
+              <Text style={styles.helpText2}> can we help you?</Text>
             </View>
-            <View style={{flex: 1}} />
+            <View style={styles.margin2} />
           </View>
 
-          <View style={{alignItems: 'center'}}>
-            <Text style={{textAlign: 'center', fontSize: 12}}>Email us with any of your inquiries or contact us with the contact information provided below. We will
+          <View style={styles.emailusContainer}>
+            <Text style={styles.emailusText}>Email us with any of your inquiries or contact us with the contact information provided below. We will
                   gladly discuss with you the best possible solution to your needs.</Text>
           </View>
 
-          <View style={{height: 15}} />
-          <View style={{backgroundColor: "#F7F7FA", height: 2}} />
-          <View style={{height: 15}} />
+          <View style={styles.margin3} />
+          <View style={styles.margin4} />
+          <View style={styles.margin3} />
 
-          <View style={{flexDirection: 'row', paddingBottom: 8}}>
-            <View style={{flex: 0.25, justifyContent: 'center' }}>
+          <View style={styles.contactInfoContainer}>
+            <View style={styles.contactInfoIconContainer}>
               <CustomIcon.FeIcon name="phone" size={16} color={COLOR.ORANGE} />
             </View>
-            <View style={{flex: 3, justifyContent: 'center' }}>
-              <Text style={{color: "#525252", fontSize: 12}}>(632) 8424 8617</Text>
+            <View style={styles.contactInfoTextContainer}>
+              <Text style={styles.contactInfoText}>(632) 8424 8617</Text>
             </View>
           </View>
           
-          <View style={{flexDirection: 'row', paddingBottom: 8}}>
-            <View style={{flex: 0.25, justifyContent: 'center' }}>
+          <View style={styles.contactInfoContainer}>
+            <View style={styles.contactInfoIconContainer}>
               <CustomIcon.FeIcon name="mail" size={16} color={COLOR.ORANGE} />
             </View>
-            <View style={{flex: 3, justifyContent: 'center' }}>
-              <Text style={{color: "#525252", fontSize: 12}}>mail@toktok.ph</Text>
+            <View style={styles.contactInfoTextContainer}>
+              <Text style={styles.contactInfoText}>mail@toktok.ph</Text>
             </View>
           </View>
 
-          <View style={{flexDirection: 'row', paddingBottom: 8}}>
-            <View style={{flex: 0.25, justifyContent: 'center' }}>
+          <View style={styles.contactInfoContainer}>
+            <View style={styles.contactInfoIconContainer}>
               <CustomIcon.MCIcon name="web" size={16} color={COLOR.ORANGE} />
             </View>
-            <View style={{flex: 3, justifyContent: 'center' }}>
-              <Text style={{color: "#525252", fontSize: 12}}>www.toktokmall.ph</Text>
+            <View style={styles.contactInfoTextContainer}>
+              <Text style={styles.contactInfoText}>www.toktokmall.ph</Text>
             </View>
           </View>
 
-          <View style={{height: 8}} />
+          <View style={styles.margin5} />
 
           <Card>
-            <View style={{flex: 0, padding: 15}}>
+            <View style={styles.submitContainer}>
 
               <View
-                style={{
-                  flex: 0,
-                  paddingVertical: 0,
-                  paddingHorizontal: 10,
-                }}>
-                <View style={{flexDirection: 'row'}}>
+                style={styles.messageContainer}>
+                <View style={styles.messageSubContainer}>
                 </View>
                 <View>
-                  <Text style={{fontSize: 11, color: "#9E9E9E"}}>Message</Text>
+                  <Text style={styles.messageText}>Message</Text>
                 </View>
                   <TextInput 
                     style={[styles.textinputLastContainer]} 
@@ -238,12 +234,12 @@ export const ToktokMallContactUs = ({navigation}) => {
                   />
                 </View>
               <View
-                style={{flex: 0, marginTop: 18, alignItems: 'center', justifyContent: 'center', paddingVertical: 10}}>
+                style={styles.submitButtonContainer}>
                 <TouchableOpacity disabled = {message.length > 300} onPress = {() => {onPress()}} style={message.length > 300 ?styles.disabled :styles.button}>
                   <Text style={styles.buttonText}>Submit</Text>
                 </TouchableOpacity>
               </View>
-              <View style={{height: 30}} />
+              <View style={styles.margin6} />
             </View>
         </Card>
       </View>
@@ -265,7 +261,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'flex-start',
   },
-  textinput: {width: '100%', marginLeft: 10},
+  textinput: {
+    width: '100%', 
+    marginLeft: 10
+  },
   textinputLastContainer: {
     backgroundColor: '#F8F8F8',
     marginTop: 10,
@@ -282,7 +281,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonText: {color: 'white', fontSize: 14},
+  buttonText: {
+    color: 'white', 
+    fontSize: 14
+  },
   disabled: {
     backgroundColor: 'grey',
     padding: 10,
@@ -290,5 +292,103 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  contactusImageContainer: {
+    alignItems: 'center'
+  },
+  contactusImage: {
+    width: 130, 
+    height: 100, 
+    resizeMode: 'contain'
+  },
+  helpTextContainer: {
+    flex: 0, 
+    flexDirection:'row', 
+    alignContent: 'center', 
+    alignItems: 'center', 
+    paddingVertical: 15
+  },
+  margin1: {
+    flex: 0.8
+  },
+  helpTextSubContainer: {
+    flex: 4, 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    alignSelf: 'center'
+  },
+  helpText1: {
+    textAlign: 'center', 
+    color: "#FDBA1C", 
+    fontSize: 25, 
+    fontWeight: "bold"
+  },
+  helpText2: {
+    textAlign: 'center', 
+    color: "#F6841F", 
+    fontSize: 25, 
+    fontWeight: "bold"
+  },
+  margin2: {
+    flex: 1
+  },
+  emailusContainer: {
+    alignItems: 'center'
+  },
+  emailusText: {
+    textAlign: 'center', 
+    fontSize: 12
+  },
+  margin3: {
+    height: 15
+  },
+  margin4: {
+    backgroundColor: "#F7F7FA", 
+    height: 2
+  },
+  contactInfoContainer: {
+    flexDirection: 'row', 
+    paddingBottom: 8
+  },
+  contactInfoIconContainer: {
+    flex: 0.25, 
+    justifyContent: 'center'
+  },
+  contactInfoTextContainer: {
+    flex: 3, 
+    justifyContent: 'center'
+  },
+  contactInfoText: {
+    color: "#525252", 
+    fontSize: 12
+  },
+  margin5: {
+    height: 8
+  },
+  submitContainer: {
+    flex: 0, 
+    padding: 15
+  },
+  messageContainer: {
+    flex: 0,
+    paddingVertical: 0,
+    paddingHorizontal: 10,
+  },
+  messageSubContainer: {
+    flexDirection: 'row'
+  },
+  messageText: {
+    fontSize: 11, 
+    color: "#9E9E9E"
+  },
+  submitButtonContainer: {
+    flex: 0, 
+    marginTop: 18, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    paddingVertical: 10
+  },
+  margin6: {
+    height: 30
   }
-});
+}); 

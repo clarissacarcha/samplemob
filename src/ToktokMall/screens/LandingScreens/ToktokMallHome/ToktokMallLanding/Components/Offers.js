@@ -83,22 +83,22 @@ export const Offers = ({data}) => {
       <>
         <View style={styles.container}>
             <View style={styles.heading}>
-              <View style={{flex: 8}}>
-                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Piso Deal</Text>
+              <View style={styles.pisoDeal}>
+                <Text style={styles.pisoDealText}>Piso Deal</Text>
               </View>
               <TouchableOpacity onPress={() => {
                 navigation.navigate("ToktokMallSearch", {searchValue: "Today's Offers", origin: "sale"})
-              }} style={{flex: 2, flexDirection: 'row'}}>
-                <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+              }} style={styles.searchButton}>
+                <View style={styles.seeAllContainer}>
                   <Text style={styles.link}>See all </Text>
                 </View>
-                <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
+                <View style={styles.rightContainer}>
                   <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
                 </View>
               </TouchableOpacity>
             </View>
             <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {1}
-              tHeight = {70} avatarStyles = {{ left: 0, borderRadius: 5}}  tWidth = {'100%'}
+              tHeight = {70} avatarStyles = {styles.avatarStyles}  tWidth = {'100%'}
               pWidth = {'100%'}
             >
               <FlatList
@@ -119,7 +119,7 @@ export const Offers = ({data}) => {
                     <>
                       <TouchableOpacity onPress={() => {
                         navigation.navigate("ToktokMallProductDetails", item)
-                      }} style={{flex: 1, paddingBottom: 12, paddingHorizontal: 4, alignItems: 'center', justifyContent: 'center'}}>
+                      }} style={styles.productContainer}>
                         <Image source={getImageSource(item?.images)} style={styles.image} />
                         <Text style={styles.label}><Price amount={item?.price} /></Text>
                         <Text style={styles.labelLine}><Price amount={item?.compareAtPrice} /></Text>                
@@ -127,23 +127,93 @@ export const Offers = ({data}) => {
                     </>
                   )
                 }}
-                ListEmptyComponent={<View style={{height: 70}} />}
+                ListEmptyComponent={<View style={styles.emptyContainer} />}
                 keyExtractor={(item, index) => item + index}
               />
             </ContentLoader>
           </View>
-          <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} />
+          <View style={styles.margin1} />
       </>
     )
   }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, paddingHorizontal: 15, paddingVertical: 0},
-  heading: {paddingVertical: 20, flexDirection: 'row'},
-  h1: {fontSize: 14, fontFamily: FONT.BOLD},
-  link: {fontSize: 12, color: "#F6841F"},
-  image: {width: 80, height: 80, resizeMode: 'cover', borderRadius: 5},
-  label: {fontSize: 14, fontWeight: '600', color: "#F6841F"},
-  labelLine: {fontSize: 11, textDecorationLine: 'line-through', color: "#9E9E9E"},
-  separator: {flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}
+  container: {
+    flex: 1, 
+    paddingHorizontal: 15, 
+    paddingVertical: 0
+  },
+  heading: {
+    paddingVertical: 20, 
+    flexDirection: 'row'
+  },
+  pisoDeal: {
+    flex: 8
+  },
+  pisoDealText: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  searchButton: {
+    flex: 2, 
+    flexDirection: 'row'
+  },
+  h1: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  seeAllContainer: {
+    flex: 2, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  link: {
+    fontSize: 12, 
+    color: "#F6841F"
+  },
+  rightContainer: {
+    flex: 0, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  avatarStyles: {
+     left: 0, 
+     borderRadius: 5
+    },
+  productContainer: {
+    flex: 1, 
+    paddingBottom: 12, 
+    paddingHorizontal: 4, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  image: {
+    width: 80, 
+    height: 80, 
+    resizeMode: 'cover', 
+    borderRadius: 5
+  },
+  emptyContainer: {
+    height: 70
+  },
+  margin1: {
+    flex: 0.5, 
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  },
+  label: {
+    fontSize: 14, 
+    fontWeight: '600', 
+    color: "#F6841F"
+  },
+  labelLine: {
+    fontSize: 11, 
+    textDecorationLine: 'line-through', 
+    color: "#9E9E9E"
+  },
+  separator: {
+    flex: 0.5, 
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  }
 })

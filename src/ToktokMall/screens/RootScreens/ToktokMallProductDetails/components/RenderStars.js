@@ -1,10 +1,5 @@
 import React from 'react';
-import {View, Text, Image, FlatList, SectionList, ImageBackground} from 'react-native';
-import { Header } from '../../../../Components';
-import {Price} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
-import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
-import { FONT } from '../../../../../res/variables';
 
 export const RenderStars = ({value}) => {
     let orange = "#FFC833"

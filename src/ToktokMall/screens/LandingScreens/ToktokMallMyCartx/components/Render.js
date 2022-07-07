@@ -37,7 +37,7 @@ export const RenderDetails = ({
 			<TouchableOpacity
 			  onPress={onPress}
 			  activeOpacity={1}
-			  style={{flex: 1, width: 75, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'}}>
+			  style={styles.deleteButton}>
 			  {/* <Text style={{fontSize: 14, color: '#fff'}}>Delete</Text> */}
 				<CustomIcon.FoIcon name="trash" size={20} color={"white"} />
 			</TouchableOpacity>
@@ -158,3 +158,14 @@ export const RenderDetails = ({
 		</>
 	);
 }
+
+const styles = StyleSheet.create({
+	deleteButton: {
+		flex: 1, 
+		width: 75, 
+		backgroundColor: '#F6841F', 
+		alignItems: 'center', 
+		justifyContent: 'center'
+	},
+
+})

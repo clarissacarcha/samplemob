@@ -50,17 +50,17 @@ const Item = ({data}) => {
     <>
       <TouchableOpacity activeOpacity={0.5} onPress={() => {
           navigation.navigate("ToktokMallProductDetails", data)
-        }} style={{flex: 2, paddingBottom: 4, marginHorizontal: 2, alignItems: 'center', backgroundColor: '#fff', borderRadius: 5}}>
-        <View style={{height: 4}}></View>
-        <Image source={getImageSource(data?.images)} style={{width: '100%', height: 120, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} />
-        <View style={{height: 2}}></View>
-        <Text style={{fontSize: 14, fontWeight: '600', color: "#F6841F", alignSelf: 'flex-start', paddingHorizontal: 5}}><Price amount={data?.price} /></Text>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <View style={{flex: 2}}>
-            <Text style={{fontSize: 10, textDecorationLine: 'line-through', alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}><Price amount={data?.compareAtPrice} /></Text>          
+        }} style={styles.itemContainer}>
+        <View style={styles.itemMargin1}></View>
+        <Image source={getImageSource(data?.images)} style={styles.itemGetSourceImage} />
+        <View style={styles.itemMargin2}></View>
+        <Text style={styles.itemPriceText}><Price amount={data?.price} /></Text>
+        <View style={styles.itemDiscountAndCompareAtPriceContainer}>
+          <View style={styles.itemCompareAtPriceContainer}>
+            <Text style={styles.itemCompareAtPriceText}><Price amount={data?.compareAtPrice} /></Text>          
           </View>
-          <View style={{flex: 1}}>
-            <Text style={{fontSize: 9.5, alignSelf: 'center', color: "#FDBA1C"}}>{data?.discountRate}</Text>
+          <View style={styles.itemDiscountContainer}>
+            <Text style={styles.itemDiscountText}>{data?.discountRate}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -72,18 +72,18 @@ const Empty = ({data}) => {
 
   return (
     <>
-      <View style={{flex: 2, paddingBottom: 4, marginHorizontal: 2, alignItems: 'center', backgroundColor: "rgba(255,255,255,0.4)", borderRadius: 5}}>
-        <View style={{height: 4}}></View>
-        <View style={{height: 120 }} />
+      <View style={styles.emptyContainer}>
+        <View style={styles.emptyMargin1} />
+        <View style={styles.emptyMargin2} />
         {/* <Image source={getImageSource(data?.images)} style={{width: '100%', height: 120, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} /> */}
-        <View style={{height: 2}}></View>
-        <Text style={{fontSize: 14, fontWeight: '600', color: "#F6841F", alignSelf: 'flex-start', paddingHorizontal: 5}}></Text>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <View style={{flex: 2}}>
-            <Text style={{fontSize: 10, textDecorationLine: 'line-through', alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}></Text>          
+        <View style={styles.emptyMargin3} />
+        <Text style={styles.emptyText1}></Text>
+        <View style={styles.emptyContainer1}>
+          <View style={styles.emptyContainer2}>
+            <Text style={styles.emptyText2}></Text>          
           </View>
-          <View style={{flex: 1}}>
-            <Text style={{fontSize: 9.5, alignSelf: 'center', color: "#FDBA1C"}}></Text>
+          <View style={styles.emptyContainer3}>
+            <Text style={styles.emptyText3}></Text>
           </View>
         </View>
       </View>
@@ -126,41 +126,189 @@ export const FlashSale = () => {
         <ImageBackground 
           source={flashsalebg}
           imageStyle={{resizeMode: 'cover'}}          
-          style={{flex: 1, paddingHorizontal: 15, paddingVertical: 0}}>
+          style={styles.imageBackground}>
           {/* <ContentLoader active loading = {loading} avatar = {false}  title = {true} pRows = {4}
             tHeight = {70} avatarStyles = {{ left: 0, borderRadius: 5}}  tWidth = {'100%'}
             pWidth = {'100%'}
           ></ContentLoader> */}
-            <View style={{paddingVertical: 20, flexDirection: 'row'}}>
+            <View style={styles.container}>
               {/* <View style={{flex: 4}}>
                 <Image source={flashsale} style={{width: 90, height: 90, resizeMode: 'center', justifyContent: 'center', alignSelf: 'flex-end'}} />
               </View> */}
-              <View style={{flex: 11, justifyContent: 'center', paddingHorizontal: 4}}>
-                <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Featured Items</Text>
+              <View style={styles.featuredContainer}>
+                <Text style={styles.featuredTitleText}>Featured Items</Text>
                 {/* <Text style={{color: "#747575", fontSize: 12}}>Offer ends 5.17.2021</Text> */}
               </View>
               <TouchableOpacity disabled = {loading} onPress={() => {
                 navigation.navigate("ToktokMallSearch", {searchValue: "Featured Items", origin: "flashsale"})
-              }} style={{flex: 3, flexDirection: 'row'}}>
-                <View style={{flex: 3, alignItems: 'flex-end', justifyContent: 'center'}}>
-                  <Text style={{fontSize: 12, color: "#F6841F", fontWeight: '600'}}>Shop now </Text>
+              }} style={styles.button}>
+                <View style={styles.shopNowContainer}>
+                  <Text style={styles.shopNowText}>Shop now </Text>
                 </View>
-                <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
+                <View style={styles.rightContainer}>
                   <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
                 </View>
               </TouchableOpacity>
             </View>
             
             <View>            
-              <View style={{flex: 1, flexDirection: 'row'}}>
+              <View style={styles.loadingContainer}>
                 {loading && [1,2,3].map((item, i) => <Empty key={i} data={item} />)}
                 {!loading && featured.map((item, i) => <Item key={i} data={item} /> )}
               </View>
             </View>
           
-          <View style={{height: 15}}></View>
+          <View style={styles.margin1}></View>
         </ImageBackground>
-        <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} />
+        <View style={styles.margin2} />
         </>
     )
 }
+
+const styles = StyleSheet.create({
+  itemContainer: {
+    flex: 2, 
+    paddingBottom: 4, 
+    marginHorizontal: 2, 
+    alignItems: 'center', 
+    backgroundColor: '#fff', 
+    borderRadius: 5
+  },
+  itemMargin1: {
+    height: 4
+  },
+  itemGetSourceImage: {
+    width: '100%', 
+    height: 120, 
+    resizeMode: 'stretch', 
+    alignSelf: 'center', 
+    borderRadius: 5
+  },
+  itemMargin2: {
+    height: 2
+  },
+  itemPriceText: {
+    fontSize: 14, 
+    fontWeight: '600', 
+    color: "#F6841F", 
+    alignSelf: 'flex-start', 
+    paddingHorizontal: 5
+  },
+  itemDiscountAndCompareAtPriceContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between'
+  },
+  itemCompareAtPriceContainer: {
+    flex: 2
+  },
+  itemCompareAtPriceText: {
+    fontSize: 10, 
+    textDecorationLine: 'line-through', 
+    alignSelf: 'flex-start', 
+    paddingHorizontal: 5, 
+    color: "#9E9E9E"
+  },
+  itemDiscountContainer: {
+    flex: 1
+  },
+  itemDiscountText: {
+    fontSize: 9.5, 
+    alignSelf: 'center', 
+    color: "#FDBA1C"
+  },
+  emptyContainer: {
+    flex: 2, 
+    paddingBottom: 4, 
+    marginHorizontal: 2, 
+    alignItems: 'center', 
+    backgroundColor: "rgba(255,255,255,0.4)", 
+    borderRadius: 5
+  },
+  emptyMargin1: {
+    height: 4
+  },
+  emptyMargin2: {
+    height: 120
+  },
+  emptyMargin3: {
+    height: 2
+  },
+  emptyText1: {
+    fontSize: 14, 
+    fontWeight: '600', 
+    color: "#F6841F", 
+    alignSelf: 'flex-start', 
+    paddingHorizontal: 5
+  },
+  emptyContainer1: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between'
+  },
+  emptyContainer2: {
+    flex: 2
+  },
+  emptyText2: {
+    fontSize: 10, 
+    textDecorationLine: 'line-through', 
+    alignSelf: 'flex-start', 
+    paddingHorizontal: 5, 
+    color: "#9E9E9E"
+  },
+  emptyContainer3: {
+    flex: 1
+  },
+  emptyText3: {
+    fontSize: 9.5, 
+    alignSelf: 'center', 
+    color: "#FDBA1C"
+  },
+  imageBackground: {
+    flex: 1, 
+    paddingHorizontal: 15, 
+    paddingVertical: 0
+  },
+  container: {
+    paddingVertical: 20, 
+    flexDirection: 'row'
+  },
+  featuredContainer: {
+    flex: 11, 
+    justifyContent: 'center', 
+    paddingHorizontal: 4
+  },
+  featuredTitleText: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  button: {
+    flex: 3, 
+    flexDirection: 'row'
+  },
+  shopNowContainer: {
+    flex: 3, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  shopNowText: {
+    fontSize: 12, 
+    color: "#F6841F", 
+    fontWeight: '600'
+  },
+  rightContainer: {
+    flex: 0, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  loadingContainer: {
+    flex: 1, 
+    flexDirection: 'row'
+  },
+  margin1: {
+    height: 15
+  },
+  margin2: {
+    flex: 0.5, 
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  }
+})

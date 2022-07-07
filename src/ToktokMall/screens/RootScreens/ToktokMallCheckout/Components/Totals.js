@@ -152,13 +152,13 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
     return (
       <>
         <View style={styles.textContainer}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 13}}>Vouchers</Text>
-            <TouchableOpacity onPress={() => setToggleVouchers(!toggleVouchers)} style={{flex: 1, marginLeft: 8, alignItems: 'center', justifyContent: 'center'}}>
+          <View style={styles.voucherContainer}>
+            <Text style={styles.voucherTitleText}>Vouchers</Text>
+            <TouchableOpacity onPress={() => setToggleVouchers(!toggleVouchers)} style={styles.toggleVoucherButton}>
               <Icons.AIcon name={toggleVouchers ? 'down' : 'up'} size={14} />
             </TouchableOpacity>
           </View>        
-          <Text style={{color: "#ED3A19"}}>- {FormatToText.currency(totalDeduction)}</Text>
+          <Text style={styles.totalDeductionText}>- {FormatToText.currency(totalDeduction)}</Text>
         </View>        
         <View>          
           {
@@ -171,9 +171,9 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
 
                 return (
                   <>
-                    <View style={{...styles.textContainer}}>
-                      <Text ellipsizeMode='tail' style={{flex: 1, fontSize: 13, color: "#525252"}}>{item.vname || item.voucher_name}</Text>
-                      <Text style={{color: "#ED3A19"}}>- {FormatToText.currency(deduction)}</Text>
+                    <View style={styles.textContainer}>
+                      <Text ellipsizeMode='tail' style={styles.voucherNameText}>{item.vname || item.voucher_name}</Text>
+                      <Text style={styles.deductionText}>- {FormatToText.currency(deduction)}</Text>
                     </View>
                   </>
                 )
@@ -205,20 +205,20 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
           </View>
         </View> */}
         <View style={styles.textContainer}>
-          <Text style={{fontSize: 13}}>Shipping Total</Text>
+          <Text style={styles.shippingTotalTitle}>Shipping Total</Text>
           <Text>{FormatToText.currency(shippingFeeTotal)}</Text>
         </View>
         <View style={styles.textContainer}>
-          <Text style={{fontSize: 13}}>Merchandise Subtotal</Text>
+          <Text style={styles.shippingTotalTitle}>Merchandise Subtotal</Text>
           <Text>{FormatToText.currency(merchandiseTotal)}</Text>
         </View>
         
         {numOfVouchers > 0 && <RenderVouchersBreakdown />}
 
-        <View style={{height: 1, marginTop: 10, backgroundColor: "#F7F7FA"}} />
+        <View style={styles.divider} />
 
         <View style={styles.textContainer}>
-          <Text style={{fontFamily: FONT.BOLD, color: "#F6841F"}}>Total</Text>
+          <Text style={styles.totalTitle}>Total</Text>
           {/* {
             getDiscount('shipping') ? 
             <Text style={{color: '#F6841F'}}>
@@ -230,7 +230,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
             </Text>
           } */}
 
-            <Text style={{color: '#F6841F', fontFamily: FONT.SEMI_BOLD}}>
+            <Text style={styles.totalText}>
             {FormatToText.currency((merchandiseTotal || 0) + (shippingFeeTotal || 0) - (shippingDiscountTotal || 0))}
             </Text>
           
@@ -242,8 +242,64 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
 };
 
 const styles = StyleSheet.create({
-  body: {flex: 1, backgroundColor: '#F7F7FA'},
-  container: {padding: 15, backgroundColor: 'white', marginTop: 8},
-  textContainer: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 12},
-  textContainer2: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20},
+  body: {
+    flex: 1, 
+    backgroundColor: '#F7F7FA'
+  },
+  container: {
+    padding: 15, 
+    backgroundColor: 'white', 
+    marginTop: 8
+  },
+  voucherContainer: {
+    flexDirection: 'row'
+  },
+  voucherTitleText: {
+    fontSize: 13
+  },
+  toggleVoucherButton: {
+    flex: 1, 
+    marginLeft: 8, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  totalDeductionText: {
+    color: "#ED3A19"
+  },
+  textContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginTop: 12
+  },
+  voucherNameText: {
+    flex: 1, 
+    fontSize: 13, 
+    color: "#525252"
+  },
+  deductionText: {
+    color: "#ED3A19"
+  },
+  shippingTotalTitle: {
+    fontSize: 13
+  },
+  textContainer2: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginTop: 20
+  },
+  divider: {
+    height: 1, 
+    marginTop: 10, 
+    backgroundColor: "#F7F7FA"
+  },
+  totalTitle: {
+    fontFamily: FONT.BOLD, 
+    color: "#F6841F"
+  },
+  totalText: {
+    color: '#F6841F', 
+    fontFamily: FONT.SEMI_BOLD
+  }
 });

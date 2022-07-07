@@ -1,11 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity} from 'react-native';
-import { Header } from '../../../../Components';
-import {Price} from '../../../../helpers';
-import CustomIcon from '../../../../Components/Icons';
-import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import CustomIcon from '../../../../Components/Icons';;
 import { FONT } from '../../../../../res/variables';
-import ContentLoader from 'react-native-easy-content-loader';
 
 const DotList = ({data}) => {
 	return (
@@ -37,9 +33,9 @@ export const RenderDescription = ({data, loading}) => {
           paragraphStyles = {{height: 13, left: 0, top: 15}}
           pWidth = {'100%'}
       ></ContentLoader> */}
-        <View style={{paddingVertical: 16, paddingHorizontal: 16}}>
+        <View style={styles.container}>
           <View style={{paddingBottom: 12}}>
-            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Product Description</Text>
+            <Text style={styles.h1}>Product Description</Text>
           </View>          
           <View style={{paddingBottom: 12}}>
             <Text style={{fontSize: 13}}>{data ? data?.summary?.length > maxChar && !seeMore ? 
@@ -59,3 +55,14 @@ export const RenderDescription = ({data, loading}) => {
 		</>
 	)
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 16, 
+    paddingHorizontal: 16
+  },
+  h1:{
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+})

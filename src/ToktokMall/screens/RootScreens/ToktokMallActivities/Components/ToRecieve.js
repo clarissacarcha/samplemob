@@ -32,13 +32,14 @@ export const ToRecieveItem = ({fulldata}) => {
 
 export const ToRecieve = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   
   const getAccessToken = async () => { 
     const accessToken = await AsyncStorage.getItem('accessToken');
     return accessToken
   }
 
-  const [getOrders, {loading, error}] = useLazyQuery(GET_TRANSACTIONS, {
+  const [getOrders] = useLazyQuery(GET_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     context: { headers: { authorization: "Bearer: " + getAccessToken() }},
     fetchPolicy: 'network-only',    
@@ -46,10 +47,12 @@ export const ToRecieve = () => {
       if(response.getActivities){
         const newActivities = [...response.getActivities.filter(activity => activity.status.status === 3)];
         setData(newActivities);
+        setLoading(false);
       }
     },
     onError: (err) => {
-      console.log(err)
+      console.log(err);
+      setLoading(false);
     }
   })
 
@@ -62,6 +65,7 @@ export const ToRecieve = () => {
   }
 
   const Fetch = async () => {
+    setLoading(true);
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw)
       if(data.userId){        

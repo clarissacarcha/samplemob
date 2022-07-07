@@ -169,18 +169,10 @@ export const Item = ({
 
     return (
       <>
-        <View style={{flexDirection: 'row', marginTop: 7, alignItems: 'center', height: 40}}>
-          <Text style={{fontFamily: FONT.REGULAR, fontSize: 12}}>Qty</Text>
+        <View style={styles.renderQuantity}>
+          <Text style={styles.renderQuantityText}>Qty</Text>
           <TouchableOpacity
-            style={{
-              marginLeft: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 25,
-              width: 25,
-              borderWidth: 1,
-              borderColor: '#F8F8F8',
-            }}
+            style={styles.minusButton}
             disabled={qty == 1 || product.enabled != 1 || (contSellingIsset === 0 && product.noOfStocks === 0)}
             onPress={() => {
               // if(selected){
@@ -201,27 +193,11 @@ export const Item = ({
             />
           </TouchableOpacity>
           <View
-            style={{
-              backgroundColor: '#F8F8F8',
-              padding: 2,
-              height: 25,
-              width: 35,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderWidth: 1,
-              borderColor: '#F8F8F8',
-            }}>
-            <Text style={{fontSize: 12}}>{qty}</Text>
+            style={styles.qtyContainer}>
+            <Text style={styles.qtyText}>{qty}</Text>
           </View>
           <TouchableOpacity
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 25,
-              width: 25,
-              borderWidth: 1,
-              borderColor: '#F8F8F8',
-            }}
+            style={styles.plusButton}
             disabled={
               product.noOfStocks === qty ||
               qty === 200 ||
@@ -256,8 +232,8 @@ export const Item = ({
   
   return (
     <View>          
-      <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-        <View style={{flex: 0, justifyContent: 'center'}}>
+      <View style={styles.container}>
+        <View style={styles.checkboxContainer}>
           <CheckBox
             disabled={getCheckboxState(product, "disabled")}
             isChecked={selected}
@@ -290,28 +266,26 @@ export const Item = ({
               index: index,
             })
           }}
-          style={{
-            flex: 1, flexDirection: 'row'
-          }}
+          style={styles.button}
           onPress = {() => {recenter()}}
         >
-          <View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={styles.productImageContainer}>
             <Image source={getImageSource(product?.img?.filename)} style={{width: 50, height: 65, resizeMode: 'stretch'}} />
           </View>
-          <View style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>       
-            <View style={{flex: 1, justifyContent: 'center'}}>
-                <Text style={{fontSize: 13, fontWeight: '100'}} numberOfLines={2}>{product?.name}</Text>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{flex: 0}}>
-                  <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={product?.price} /></Text>
+          <View style={styles.productDataContainer}>       
+            <View style={styles.productNameContainer}>
+                <Text style={styles.productNameText} numberOfLines={2}>{product?.name}</Text>
+              <View style={styles.dataContainer}>
+                <View style={styles.priceContainer}>
+                  <Text style={styles.priceText}><Price amount={product?.price} /></Text>
                 </View>
-                <View style={{flex: 0, paddingHorizontal: 15, justifyContent: 'center'}}>
-                  <Text style={{color: "#9E9E9E", textDecorationLine: 'line-through', fontSize: 10}}>{product?.compareAtPrice > 0 ? <Price amount={product?.compareAtPrice} /> : ""}</Text>
+                <View style={styles.compareAtPriceContainer}>
+                  <Text style={styles.compareAtPriceText}>{product?.compareAtPrice > 0 ? <Price amount={product?.compareAtPrice} /> : ""}</Text>
                 </View>
               </View>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{flex: 1}}>
-                  <Text style={{color: "#9E9E9E", fontSize: 13}}>Variation: {product?.variant || "None"}</Text>
+              <View style={styles.dataContainer}>
+                <View style={styles.variantContainer}>
+                  <Text style={styles.variantText}>Variation: {product?.variant || "None"}</Text>
                 </View>
                 {/* <View style={{flex: 0}}>
                   <Text style={{color: "#9E9E9E", fontSize: 13}}>Qty: {data?.qty}</Text>
@@ -328,17 +302,17 @@ export const Item = ({
               <RenderQuantity />
 
               {product?.enabled != 1 &&
-                <View style={{paddingVertical: 15}}>
-                  <View style={{borderWidth: 0.5, borderColor: '#F6841F', width: '50%', alignItems: 'center', borderRadius: 2}}>
-                    <Text style={{fontSize: 11, color: "#F6841F"}}>Product not available</Text>
+                <View style={styles.enabledContainer}>
+                  <View style={styles.enabledSubContainer}>
+                    <Text style={styles.enabledText}>Product not available</Text>
                   </View>
                 </View>              
               }
 
               {product?.enabled == 1 && product?.contSellingIsset === 0 && product?.noOfStocks <= 0 &&
-                <View style={{paddingVertical: 15}}>
-                  <View style={{borderWidth: 0.5, borderColor: '#F6841F', width: '35%', alignItems: 'center', borderRadius: 2}}>
-                    <Text style={{fontSize: 11, color: "#F6841F"}}>Out of Stock</Text>
+                <View style={styles.stockContainer}>
+                  <View style={styles.stockSubContainer}>
+                    <Text style={styles.stockText}>Out of Stock</Text>
                   </View>
                 </View>              
               }
@@ -348,7 +322,140 @@ export const Item = ({
         </TouchableOpacity>
 
       </View>
-      <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
+      <View style={styles.margin} />
 		</View>
   )
 }
+
+const styles = StyleSheet.create({
+  renderQuantity: {
+    flexDirection: 'row', 
+    marginTop: 7, 
+    alignItems: 'center', 
+    height: 40
+  },
+  renderQuantityText: {
+    fontFamily: FONT.REGULAR, 
+    fontSize: 12
+  },
+  minusButton: {
+    marginLeft: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 25,
+    width: 25,
+    borderWidth: 1,
+    borderColor: '#F8F8F8',
+  },
+  qtyContainer: {
+    backgroundColor: '#F8F8F8',
+    padding: 2,
+    height: 25,
+    width: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#F8F8F8',
+  },
+  qtyText: {
+    fontSize: 12
+  },
+  plusButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 25,
+    width: 25,
+    borderWidth: 1,
+    borderColor: '#F8F8F8',
+  },
+  container: {
+    flexDirection: 'row',
+    paddingVertical: 15,
+    paddingHorizontal: 15
+  },
+  checkboxContainer: {
+    flex: 0, 
+    justifyContent: 'center'
+  },
+  button: {
+    flex: 1, 
+    flexDirection: 'row'
+  },
+  productImageContainer: {
+    flex: 3, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
+  productDataContainer: {
+    flex: 9, 
+    justifyContent: 'center', 
+    flexDirection: 'row'
+  },
+  productNameContainer: {
+    flex: 1, 
+    justifyContent: 'center'
+  },
+  productNameText: {
+    fontSize: 13, 
+    fontWeight: '100'
+  },
+  dataContainer: {
+    flexDirection: 'row'
+  },
+  priceContainer: {
+    flex: 0
+  },
+  priceText: {
+    fontSize: 13, 
+    color: "#F6841F"
+  },
+  compareAtPriceContainer: {
+    flex: 0, 
+    paddingHorizontal: 15, 
+    justifyContent: 'center'
+  },
+  compareAtPriceText: {
+    color: "#9E9E9E", 
+    textDecorationLine: 'line-through', 
+    fontSize: 10
+  },
+  variantContainer: {
+    flex: 1
+  },
+  variantText: {
+    color: "#9E9E9E", 
+    fontSize: 13
+  },
+  enabledContainer: {
+    paddingVertical: 15
+  },
+  enabledSubContainer: {
+    borderWidth: 0.5, 
+    borderColor: '#F6841F', 
+    width: '50%', 
+    alignItems: 'center', 
+    borderRadius: 2
+  },
+  enabledText: {
+    fontSize: 11, 
+    color: "#F6841F"
+  },
+  stockContainer: {
+    paddingVertical: 15
+  },
+  stockSubContainer: {
+    borderWidth: 0.5, 
+    borderColor: '#F6841F', 
+    width: '35%', 
+    alignItems: 'center', 
+    borderRadius: 2
+  },
+  stockText: {
+    fontSize: 11, 
+    color: "#F6841F"
+  },
+  margin: {
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  }
+})

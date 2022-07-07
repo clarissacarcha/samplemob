@@ -12,14 +12,9 @@ import { emptyorders } from '../../../../assets';
 import { RenderItem } from './subComponents';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import { 
-  GET_BUY_AGAIN,
-  GET_TRANSACTIONS
-} from '../../../../../graphql/toktokmall/model';
+import { GET_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
 import { useNavigation } from '@react-navigation/native';
 import { Loading } from '../../../../Components';
-import { ApiCall } from '../../../../helpers';
-import { EventRegister } from 'react-native-event-listeners';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const getAccessToken = async () => { 
@@ -43,8 +38,9 @@ export const CancelledItem = ({fulldata}) => {
 
 export const Cancelled = (props) => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const [getOrders, {loading, error}] = useLazyQuery(GET_TRANSACTIONS, {
+  const [getOrders] = useLazyQuery(GET_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     context: { headers: { authorization: "Bearer: " + getAccessToken() }},
     fetchPolicy: 'network-only',
@@ -52,10 +48,12 @@ export const Cancelled = (props) => {
       if(response.getActivities){
         const newActivities = [...response.getActivities.filter(activity => activity.status.status === 5)];
         setData(newActivities);
+        setLoading(false);
       }
     },
     onError: (err) => {
-      console.log(err)
+      console.log(err);
+      setLoading(false);
     }
   });
 
@@ -69,6 +67,7 @@ export const Cancelled = (props) => {
   };
 
   const Fetch = async () => {
+    setLoading(true);
     getOrders({variables: {
       input: {
         refCom: "",

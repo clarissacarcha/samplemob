@@ -106,11 +106,37 @@ export const RenderReviews = ({value}) => {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, paddingVertical: 0},
-  heading: {paddingHorizontal: 15, paddingVertical: 20, flexDirection: 'row'},
-  h1: {fontSize: 14, fontFamily: FONT.BOLD},
-  link: {fontSize: 12, color: "#F6841F"},
-  image: {width: 50, height: 50, resizeMode: 'cover', alignSelf: 'center', borderRadius: 8},
-  label: {fontSize: 11, alignSelf: 'center'},
-  separator: {flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}
+  container: {
+    flex: 1, 
+    paddingVertical: 0
+	},
+  heading: {
+    paddingHorizontal: 15, 
+    paddingVertical: 20, 
+    flexDirection: 'row'
+  },
+  h1: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  link: {
+    fontSize: 12, 
+    color: "#F6841F"
+  },
+  image: {
+    width: 50, 
+    height: 50, 
+    resizeMode: 'cover', 
+    alignSelf: 'center', 
+    borderRadius: 8
+  },
+  label: {
+    fontSize: 11, 
+    alignSelf: 'center'
+  },
+  separator: {
+    flex: 0.5, 
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  }
 })

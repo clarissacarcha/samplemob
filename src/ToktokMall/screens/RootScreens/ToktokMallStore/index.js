@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {LandingSubHeader, Dropdown, MessageModal} from '../../../Components';
 import {Tab, Store, Product} from './components';
@@ -99,7 +99,7 @@ export const ToktokMallStore = ({navigation, route}) => {
   const RenderContent = () => {
     return (
       <>
-        <View style={{height: 15}} />
+        <View style={styles.margin1} />
         <Tab 
           index={activeTab} 
           onTabChange={(index) => {
@@ -134,8 +134,8 @@ export const ToktokMallStore = ({navigation, route}) => {
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: "#fff"}}>
-      <View style={{flex: 1}}>
+    <View style={styles.container}>
+      <View style={styles.subContainer}>
 
         <LandingSubHeader  
           placeholder="Search in Store"
@@ -147,7 +147,7 @@ export const ToktokMallStore = ({navigation, route}) => {
         />
 
         {loading && 
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={styles.customView}>
           <Spinner 
             isVisible={loading}
             type='Circle'
@@ -157,7 +157,7 @@ export const ToktokMallStore = ({navigation, route}) => {
         </View>}
 
         {error && 
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={styles.customView}>
           <Text>Something went wrong</Text>
         </View>}
 
@@ -200,3 +200,11 @@ export const ToktokMallStore = ({navigation, route}) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({ 
+  margin1: {height: 15},
+  container: {flex: 1, backgroundColor: "#fff"},
+  subContainer: {flex: 1},
+  customView: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+  
+})
