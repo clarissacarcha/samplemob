@@ -6,3 +6,4 @@ export * from './HeaderTitle';
 export * from './HeaderTitleRevamp';
 export * from './HeadingBannerLogo';
 export * from './HeaderDownloadReceipt';
+export * from './HeaderKebab';
