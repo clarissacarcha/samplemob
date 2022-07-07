@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, {useState, useRef} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
@@ -44,28 +43,10 @@ export const HeaderKebab = ({onPress, color = '#F6841F', refNo, format}) => {
         </MenuOptions>
       </Menu>
     </>
-=======
-import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
-import CONSTANTS from 'common/res/constants';
-
-// FONTS, ICONS, COLORS AND IMAGES
-import {VectorIcon, ICON_SET} from 'src/revamp';
-
-//HELPER
-const {COLOR, FONT_FAMILY: FONT} = CONSTANTS;
-
-export const HeaderKebab = ({onPress, color = '#F6841F', refNo, format}) => {
-  return (
-    <TouchableOpacity onPress={''} style={styles.backContainer}>
-      <VectorIcon color={COLOR.ORANGE} size={21} iconSet={ICON_SET.Entypo} name="dots-three-vertical" />
-    </TouchableOpacity>
->>>>>>> 01c4ce4f87c530b572aa82f94bc3a42a95defbf1
   );
 };
 
 const styles = StyleSheet.create({
-<<<<<<< HEAD
   threeDotIconButton: {
     paddingLeft: 25 / 2,
     paddingRight: 23,
@@ -112,12 +93,5 @@ const styles = StyleSheet.create({
   },
   termsConditionsText: {
     fontSize: 13,
-=======
-  backContainer: {
-    paddingHorizontal: 15,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
->>>>>>> 01c4ce4f87c530b572aa82f94bc3a42a95defbf1
   },
 });
