@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import DashedLine from 'react-native-dashed-line';
 
 //UTIL
-import {moderateScale, numberFormat, currencyCode} from 'toktokbills/helper';
+import {moderateScale, numberFormat, currencyCode} from 'toktokwallet/helper';
 
 //COMPONENTS
 import {ReceiptSeparator} from 'toktokwallet/components';

@@ -1,86 +1,65 @@
 import React from 'react';
-import {Text, Image} from 'react-native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {COLOR} from 'src/res/variables';
-import {
-  activities_fill_ic,
-  activities_ic,
-  home_fill_ic,
-  home_ic,
-  notification_fill_ic,
-  notification_ic
-} from 'toktokbills/assets/icons';
-import { moderateScale } from "toktokbills/helper";
+import {ToktokBillsMaintenance, ToktokBillsOnboarding, ToktokBillsSplashScreen} from 'toktokbills/screens';
+import {Platform} from 'react-native';
+import {moderateScale} from 'toktokbills/helper';
 
-import {
-  ToktokBillsActivities,
-  ToktokBillsHome,
-  ToktokBillsNotifications
-} from 'toktokbills/screens';
-
-const ToktokLandingBottomTab = createBottomTabNavigator();
-
-const ToktokBillsLanding = () => {
-  return(
-    <ToktokLandingBottomTab.Navigator>
-      <ToktokLandingBottomTab.Screen
-        name="ToktokBillsHome"
-        component={ToktokBillsHome}
+export default ({Navigator}) => {
+  return (
+    <>
+      <Navigator.Screen
+        name="ToktokBillsMaintenance"
+        component={ToktokBillsMaintenance}
         options={{
-          tabBarLabel: ({focused}) => (
-            <>
-              <Image
-                resizeMode="contain"
-                style={{height: 23, width: 25}}
-                source={focused ? home_fill_ic : home_ic}
-              />
-              <Text style={{fontSize: 10, marginTop: 2 }}>Home</Text>
-            </>
-          ),
+          headerTitleAlign: 'center',
+          headerStyle: {
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 3,
+            elevation: 5,
+            // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          },
         }}
       />
-      <ToktokLandingBottomTab.Screen
-        name="ToktokBillsActivities"
-        component={ToktokBillsActivities}
+      <Navigator.Screen
+        name="ToktokBillsOnboarding"
+        component={ToktokBillsOnboarding}
         options={{
-          tabBarLabel: ({focused}) => (
-            <>
-              <Image
-                resizeMode="contain"
-                style={{height: 27, width: 27}}
-                source={focused ? activities_fill_ic : activities_ic}
-              />
-              <Text style={{fontSize: 10, marginTop: 2 }}>Activities</Text>
-            </>
-          ),
+          headerTitleAlign: 'center',
+          headerStyle: {
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 1,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 3,
+            elevation: 5,
+            // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          },
         }}
       />
-      <ToktokLandingBottomTab.Screen
-        name="ToktokBillsNotifications"
-        component={ToktokBillsNotifications}
+      <Navigator.Screen
+        name="ToktokBillsSplashScreen"
+        component={ToktokBillsSplashScreen}
         options={{
-          tabBarLabel: ({focused}) => (
-            <>
-              <Image
-                resizeMode="contain"
-                style={{height: 25, width: 25}}
-                source={focused ? notification_fill_ic : notification_ic}
-              />
-              <Text style={{fontSize: 10, marginTop: 2 }}>Notifications</Text>
-            </>
-          ),
+          headerTitleAlign: 'center',
+          headerStyle: {
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 3,
+            elevation: 5,
+            // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
+          },
         }}
       />
-    </ToktokLandingBottomTab.Navigator>
-  )
-}
-
-export default ({Navigator}) => (
-  <Navigator.Screen
-    name="ToktokBillsLanding"
-    component={ToktokBillsLanding}
-    options={{
-      headerShown: false
-    }}
-  />
-);
+    </>
+  );
+};

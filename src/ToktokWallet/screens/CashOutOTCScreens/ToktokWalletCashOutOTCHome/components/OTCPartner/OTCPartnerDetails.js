@@ -17,7 +17,7 @@ export const OTCPartnerDetails = React.memo(({item, index}) => {
   const [imageLoading, setImageLoading] = useState(false);
 
   const onPress = () => {
-    navigation.navigate('ToktokBiller', {billType: item});
+    navigation.navigate('ToktokWalletCashOutOTCTransaction');
   };
 
   const onThrottledPress = useThrottle(onPress, 2000);

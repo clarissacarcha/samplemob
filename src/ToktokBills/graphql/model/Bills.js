@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 export const GET_BILL_TYPES = gql`
   query {
@@ -8,27 +8,49 @@ export const GET_BILL_TYPES = gql`
       icon
     }
   }
-`
+`;
 export const GET_BILL_ITEMS = gql`
-  query getBillItems($input: GetBillItemsInput) {
-    getBillItems(input: $input) {
-      id
-      name
-      descriptions
-      logo
+  query getBillItemsPaginate($input: GetBillItemsInput) {
+    getBillItemsPaginate(input: $input) {
+      edges {
+        node {
+          id
+          name
+          descriptions
+          logo
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        startCursorName
+        endCursorName
+        hasNextPage
+      }
     }
   }
-`
+`;
 export const GET_SEARCH_BILL_ITEMS = gql`
-  query getSearchBillItems($input: GetSearchBillItemsInput) {
-    getSearchBillItems(input: $input) {
-      id
-      name
-      descriptions
-      logo
+  query getSearchBillItemsPaginate($input: GetSearchBillItemsPaginateInput) {
+    getSearchBillItemsPaginate(input: $input) {
+      edges {
+        node {
+          id
+          name
+          descriptions
+          logo
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        startCursorName
+        endCursorName
+        hasNextPage
+      }
     }
   }
-`
+`;
 export const GET_BILL_ITEM_SETTINGS = gql`
   query getBillItemSettings($input: GetBillSettingsInput) {
     getBillItemSettings(input: $input) {
@@ -76,4 +98,4 @@ export const GET_BILL_ITEM_SETTINGS = gql`
       }
     }
   }
-`
+`;

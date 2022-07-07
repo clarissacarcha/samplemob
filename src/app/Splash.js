@@ -177,7 +177,10 @@ const Splash = ({setConstants, setAppServices}) => {
   // New Version Optional = SUGGEST
   if (checkPoint === 'S') {
     return (
-      <ImageBackground style={{flex: 1, alignItems: 'center'}} source={SplashImage} resizeMode={'cover'}>
+      <ImageBackground
+        style={{flex: 1, alignItems: 'center', justifyContent: 'space-between'}}
+        source={SplashImage}
+        resizeMode={'cover'}>
         <View style={{alignItems: 'center', marginHorizontal: 20}}>
           <Image source={MaintenanceLogo} style={{width: 189, height: 183, marginTop: '50%'}} resizeMode="contain" />
           <Text
@@ -220,6 +223,9 @@ const Splash = ({setConstants, setAppServices}) => {
             <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, color: CONSTANTS.COLOR.ORANGE}}>Skip</Text>
           </TouchableHighlight>
         </View>
+        <Text style={{color: CONSTANTS.COLOR.ORANGE, marginBottom: 22, fontSize: CONSTANTS.FONT_SIZE.M}}>
+          v{APP_VERSION}
+        </Text>
       </ImageBackground>
     );
   }
@@ -227,7 +233,10 @@ const Splash = ({setConstants, setAppServices}) => {
   //New Version Required = BLOCK
   if (checkPoint == 'B') {
     return (
-      <ImageBackground style={{flex: 1, alignItems: 'center'}} source={SplashImage} resizeMode={'cover'}>
+      <ImageBackground
+        style={{flex: 1, alignItems: 'center', justifyContent: 'space-between'}}
+        source={SplashImage}
+        resizeMode={'cover'}>
         <View style={{alignItems: 'center', marginHorizontal: 20}}>
           <Image source={MaintenanceLogo} style={{width: 189, height: 183, marginTop: '50%'}} resizeMode="contain" />
           <Text
@@ -267,6 +276,9 @@ const Splash = ({setConstants, setAppServices}) => {
             </View>
           </TouchableHighlight>
         </View>
+        <Text style={{color: CONSTANTS.COLOR.ORANGE, marginBottom: 22, fontSize: CONSTANTS.FONT_SIZE.M}}>
+          v{APP_VERSION}
+        </Text>
       </ImageBackground>
     );
   }

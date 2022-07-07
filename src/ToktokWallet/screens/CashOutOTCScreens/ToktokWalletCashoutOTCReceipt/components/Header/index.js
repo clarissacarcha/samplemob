@@ -2,11 +2,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 
 //UTIL
-import {moderateScale} from 'toktokbills/helper';
+import {moderateScale} from 'toktokwallet/helper';
 
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
-import {bills_logo} from 'toktokbills/assets/images';
 
 export const Header = ({route}) => {
   //   const {receipt} = route.params;
