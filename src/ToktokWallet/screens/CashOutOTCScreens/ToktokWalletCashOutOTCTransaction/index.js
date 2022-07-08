@@ -44,6 +44,7 @@ const MainComponent = ({navigation, route}) => {
 
   const [isMounted, setIsMounted] = useState(false);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
+  const {logo, description} = route.params?.otcPartnerDetails;
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack color={COLOR.ORANGE} />,
@@ -77,6 +78,7 @@ const MainComponent = ({navigation, route}) => {
     setDateOfClaimError,
     dateOfClaimError,
     purpose,
+    serviceFee,
   } = useContext(VerifyContext);
 
   useEffect(() => {
@@ -128,7 +130,7 @@ const MainComponent = ({navigation, route}) => {
     const isAmountValid = checkAmount();
     const isDateOfClaimValid = checkDateOfClaim();
     const isValidEmail = checkEmail();
-    if (isDateOfClaimValid && isAmountValid && isValidEmail) {
+    if (isAmountValid && isValidEmail) {
       const transactionDetails = {
         recipientName,
         recipientMobileNo,
@@ -136,6 +138,11 @@ const MainComponent = ({navigation, route}) => {
         dateOfClaim,
         amount,
         purpose,
+        serviceFee,
+        otcPartnerDetails: {
+          logo,
+          description,
+        },
       };
       navigation.navigate('ToktokWalletCashOutOTCPaymentSummary', {
         transactionDetails,
@@ -164,9 +171,8 @@ const MainComponent = ({navigation, route}) => {
           keyboardShouldPersistTaps="handled"
           ref={scrollRef}
           keyboardOffset={Platform.OS === 'ios' && moderateScale(headerHeight + getStatusBarHeight())}>
-          <Header />
-
-          <OTCPartnerForm />
+          <Header route={route} />
+          <OTCPartnerForm route={route} />
         </InputScrollView>
       </View>
       <View style={styles.buttonContainer}>
