@@ -11,21 +11,26 @@ import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 
 export const PaymentDetails = ({route}) => {
-  const {recipientName, recipientMobileNo, email, dateOfClaim, amount, purpose} = route.params.transactionDetails;
+  const {recipientName, recipientMobileNo, email, dateOfClaim, amount, purpose, otcPartnerDetails, serviceFee} =
+    route.params.transactionDetails;
 
   return (
     <>
       <ImageBackground source={banner.banner_logo} resizeMode="cover">
         <View style={styles.headerContainer}>
-          <View style={{justifyContent: 'center'}}>
-            <Image
-              source={{
-                uri: 'https://upload.wikimedia.org/wikipedia/en/thumb/9/98/LBC_Express_2013_Logo.svg/1200px-LBC_Express_2013_Logo.svg.png',
-              }}
-              style={styles.headerLogo}
-            />
-          </View>
-          <Text style={styles.walletName}>LBC Express</Text>
+          {otcPartnerDetails.logo && (
+            <View style={{justifyContent: 'center'}}>
+              <Image
+                source={{
+                  uri: otcPartnerDetails.logo,
+                }}
+                style={styles.headerLogo}
+              />
+            </View>
+          )}
+          <Text style={otcPartnerDetails.logo ? styles.otcDescription : styles.nologo}>
+            {otcPartnerDetails.description}
+          </Text>
         </View>
       </ImageBackground>
       <View style={styles.note}>
@@ -50,10 +55,10 @@ export const PaymentDetails = ({route}) => {
             <Text style={styles.description}>{email}</Text>
           </View>
         )}
-        <View style={styles.detailsContainer}>
+        {/* <View style={styles.detailsContainer}>
           <Text style={styles.label}>Date of Claim </Text>
           <Text style={styles.description}>{moment(dateOfClaim).format('ll')}</Text>
-        </View>
+        </View> */}
         {!!purpose && (
           <View style={styles.detailsContainer}>
             <Text style={styles.label}>Purpose </Text>
@@ -74,7 +79,7 @@ export const PaymentDetails = ({route}) => {
           <Text style={styles.label}>Service Fee </Text>
           <Text style={styles.description}>
             {currencyCode}
-            10.00
+            {numberFormat(serviceFee)}
           </Text>
         </View>
       </View>
@@ -188,5 +193,13 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: FONT_SIZE.S,
+  },
+  otcDescription: {
+    fontSize: FONT_SIZE.M,
+    marginTop: moderateScale(10),
+  },
+  nologo: {
+    paddingVertical: moderateScale(20),
+    fontSize: FONT_SIZE.M,
   },
 });

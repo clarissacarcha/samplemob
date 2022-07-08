@@ -14,17 +14,18 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 import {VerifyContext} from '../VerifyContextProvider';
 import {banner, info_icon} from 'toktokwallet/assets';
 
-export const Header = ({billType, billItemSettings = {}, tokwaBalance = 0}) => {
+export const Header = ({route}) => {
   const navigation = useNavigation();
+
+  const {logo, description} = route.params.otcPartnerDetails;
   const [imageLoading, setImageLoading] = useState(true);
-  const logo =
-    'https://upload.wikimedia.org/wikipedia/en/thumb/9/98/LBC_Express_2013_Logo.svg/1200px-LBC_Express_2013_Logo.svg.png';
+
   return (
     <>
       <ImageBackground source={banner.banner_logo} resizeMode="cover">
         <View style={styles.headerContainer}>
           <View style={{justifyContent: 'center'}}>
-            {imageLoading && billItemSettings?.logo && (
+            {imageLoading && logo && (
               <View style={{position: 'absolute', right: 0, left: 0}}>
                 <LoadingIndicator isLoading={true} size="small" />
               </View>
@@ -40,7 +41,7 @@ export const Header = ({billType, billItemSettings = {}, tokwaBalance = 0}) => {
               />
             )}
           </View>
-          <Text style={logo ? styles.billerName : styles.billerNologo}>LBC Express</Text>
+          <Text style={logo ? styles.description : styles.nologo}>{description}</Text>
         </View>
       </ImageBackground>
       <View style={styles.note}>
@@ -65,11 +66,11 @@ const styles = StyleSheet.create({
     height: moderateScale(60),
     resizeMode: 'contain',
   },
-  billerName: {
+  description: {
     fontSize: FONT_SIZE.M,
     marginTop: moderateScale(10),
   },
-  billerNologo: {
+  nologo: {
     paddingVertical: moderateScale(20),
     fontSize: FONT_SIZE.M,
   },

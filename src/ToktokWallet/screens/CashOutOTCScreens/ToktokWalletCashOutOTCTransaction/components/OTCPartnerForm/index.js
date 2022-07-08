@@ -22,18 +22,20 @@ import {VerifyContext} from '../VerifyContextProvider';
 
 // COLORS AND FONTS
 import CONSTANTS from 'common/res/constants';
-import {InputAmount} from 'toktokwallet/components';
+import {InputAmount, DateModal} from 'toktokwallet/components';
 import {calendar_icon} from 'toktokwallet/assets';
-import {DateModal} from '../../../../../components/Modals';
 import moment from 'moment';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
 
-export const OTCPartnerForm = ({billItemSettings}) => {
+export const OTCPartnerForm = ({route}) => {
+  const {cashOutProviderFee} = route.params.otcPartnerDetails;
+
   const {firstName, middleName, lastName, mobileNumber} = useSelector(state => state.session.user.person);
   const recipientName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
   const recipientMobileNo = mobileNumber.replace('+63', '0');
+
   const [showDateModal, setShowDateModal] = useState(false);
 
   const navigation = useNavigation();
@@ -57,6 +59,8 @@ export const OTCPartnerForm = ({billItemSettings}) => {
     dateOfClaimError,
     purpose,
     setPurpose,
+    serviceFee,
+    setServiceFee,
   } = useContext(VerifyContext);
 
   const changeEmail = value => {
@@ -64,7 +68,17 @@ export const OTCPartnerForm = ({billItemSettings}) => {
     setEmail(value);
   };
 
+  const checkServiceFee = value => {
+    let providerFee = cashOutProviderFee.filter(item => {
+      return parseFloat(item.amountFrom) >= parseFloat(value) && parseFloat(value) <= parseFloat(item.amountTo);
+    });
+    const {amountFee, percentageFee} = providerFee[0];
+    const computedSF = parseFloat(amountFee) + parseFloat(value) * (parseFloat(percentageFee) / 100) + parseFloat(2);
+    setServiceFee(computedSF);
+  };
+
   const changeAmount = value => {
+    checkServiceFee(value);
     setIsInsufficientBalance(false);
     setAmountError('');
     const num = value.replace(/[^0-9.]/g, '');
@@ -111,7 +125,7 @@ export const OTCPartnerForm = ({billItemSettings}) => {
           />
           {!!emailError && <Text style={styles.error}>{emailError}</Text>}
         </View>
-        <View style={[{marginBottom: moderateScale(20)}]}>
+        {/* <View style={[{marginBottom: moderateScale(20)}]}>
           <Text style={styles.label}>Date of Claim</Text>
           <TouchableOpacity
             onPress={() => setShowDateModal(true)}
@@ -132,13 +146,14 @@ export const OTCPartnerForm = ({billItemSettings}) => {
             <Image source={calendar_icon} style={{width: moderateScale(20), height: moderateScale(20)}} />
           </TouchableOpacity>
           {!!dateOfClaimError && <Text style={styles.error}>{dateOfClaimError}</Text>}
-        </View>
+        </View> */}
         <View style={{marginBottom: moderateScale(20)}}>
           <Text style={styles.label}>Enter Amount</Text>
           <InputAmount errorMessage={amountError} amount={amount} changeAmount={changeAmount} />
           {!!amountError && <Text style={styles.error}>{amountError}</Text>}
           <Text style={{fontSize: FONT_SIZE.S, marginTop: 5}}>
-            Additional ₱10.00 convenience fee will be charge for this transaction.
+            Additional {currencyCode}
+            {numberFormat(serviceFee)} convenience fee will be charge for this transaction.
           </Text>
         </View>
         <View>
