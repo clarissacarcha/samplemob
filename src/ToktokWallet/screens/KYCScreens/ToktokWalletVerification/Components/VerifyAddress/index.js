@@ -297,28 +297,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  proceedBtn: {
-    flex: 1,
-    marginBottom: 26,
-    marginTop: 20,
-  },
   label: {
     fontFamily: FONT.BOLD,
     marginBottom: moderateScale(5),
     color: '#525252',
     fontSize: FONT_SIZE.S,
-  },
-  labelText: {
-    fontSize: FONT_SIZE.M,
-    fontFamily: FONT.BOLD,
-  },
-  labelSmall: {
-    fontFamily: FONT.REGULAR,
-    fontSize: FONT_SIZE.S,
-    color: '#929191',
-  },
-  ViewInput: {
-    marginTop: 20,
   },
   input: {
     paddingHorizontal: 10,
