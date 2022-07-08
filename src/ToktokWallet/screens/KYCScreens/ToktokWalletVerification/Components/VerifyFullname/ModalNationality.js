@@ -82,7 +82,11 @@ const ModalNationality = ({visible, setVisible}) => {
       }}
       style={styles.container}
       animationType="slide">
-      <View style={[styles.content, {marginTop: Platform.OS === 'ios' ? getStatusbarHeight : moderateScale(15)}]}>
+      <View
+        style={[
+          styles.content,
+          {marginTop: Platform.OS === 'ios' ? getStatusbarHeight + moderateScale(15) : moderateScale(15)},
+        ]}>
         <View style={{flexDirection: 'row', marginHorizontal: 16}}>
           <TouchableOpacity onPress={() => setVisible(false)} style={styles.center}>
             <FIcon name="chevron-left" size={16} color={COLOR.ORANGE} />
