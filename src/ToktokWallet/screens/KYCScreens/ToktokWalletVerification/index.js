@@ -91,7 +91,7 @@ const MainSetupComponent = () => {
   };
 
   const DisplayComponents = () => {
-    switch (4) {
+    switch (currentIndex) {
       case 0:
         return <VerifyFullname />;
       case 1:
