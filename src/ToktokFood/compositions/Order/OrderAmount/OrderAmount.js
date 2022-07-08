@@ -43,7 +43,7 @@ const OrderAmount = (props: PropsType): React$Node => {
   };
 
   const renderDiscountComponent = () => {
-    const {resellerDiscountTotal = 0, promoDiscounts = 0} = state;
+    const {resellerDiscountTotal = 0, promoDiscounts = 0, voucherDiscounts = []} = state;
     if (resellerDiscountTotal || promoDiscounts || shippingDiscount) {
       const totalDiscount = resellerDiscountTotal + promoDiscounts + shippingDiscount;
       return (
@@ -59,8 +59,12 @@ const OrderAmount = (props: PropsType): React$Node => {
           {showDiscountBreakdown && (
             <React.Fragment>
               {resellerDiscountTotal > 0 && amountComponent('Discount', 'Reseller', resellerDiscountTotal, '-')}
-              {promoDiscounts > 0 && amountComponent('Discount', 'Voucher', promoDiscounts, '-')}
-              {shippingDiscount > 0 && amountComponent('Discount', 'Delivery', shippingDiscount, '-')}
+              {promoDiscounts > 0 &&
+                voucherDiscounts.map(voucher =>
+                  amountComponent('Discount', voucher?.voucherName, voucher?.discountAmount, '-'),
+                )}
+              {shippingDiscount > 0 &&
+                amountComponent('Discount', state?.promoDetails?.shippingDiscountName, shippingDiscount, '-')}
             </React.Fragment>
           )}
         </React.Fragment>
