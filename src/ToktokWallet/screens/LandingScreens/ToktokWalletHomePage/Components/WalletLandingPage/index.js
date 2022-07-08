@@ -32,9 +32,7 @@ export const WalletLandingPage = connect(
         scrollEnabled={true}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-        <View style={{height: 280}}>
-          <WalletCardInfo />
-        </View>
+        <WalletCardInfo />
         <View>
           <WalletRecentTransactions />
           <Advertisements />
