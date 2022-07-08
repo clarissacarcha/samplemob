@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useRef} from 'react';
 import {
   View,
   Text,
@@ -7,16 +7,18 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Linking,
   ScrollView,
   Alert,
   Dimensions,
+  Image
 } from 'react-native';
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import {useQuery, useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_CITIES} from 'toktokwallet/graphql/virtual';
 import {VerifyContext} from '../VerifyContextProvider';
-import {YellowButton} from 'src/revamp';
+import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
@@ -25,6 +27,10 @@ import {getStatusBarHeight} from 'react-native-status-bar-height';
 import ModalCity from './ModalCity';
 import ModalCountry from './ModalCountry';
 import ModalProvince from './ModalProvince';
+import {PreviousNextButton} from 'toktokwallet/components';
+
+//HELPER
+import {moderateScale} from 'toktokwallet/helper';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 const screen = Dimensions.get('window');
@@ -51,6 +57,8 @@ export const VerifyAddress = () => {
   const headerHeight = useHeaderHeight();
   const keyboardVerticalOffset = headerHeight + getStatusBarHeight() + 10;
 
+  const scrollviewRef = useRef();
+  
   const [getCityByProvinceCode, {error, loading}] = useLazyQuery(GET_CITIES, {
     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -63,12 +71,21 @@ export const VerifyAddress = () => {
     },
   });
 
-  const Proceed = () => {
-    if (address.line1 == '') return Alert.alert('', 'Street Address is required.');
-    if (address.line2 == '') return Alert.alert('', 'Barangay is required.');
-    if (provinceId == '') return Alert.alert('', 'Province is required.');
-    if (cityId == '') return Alert.alert('', 'City is required.');
-    if (address.postalCode == '') return Alert.alert('', 'Postal code is required.');
+  const Previous = () => {
+    // if (address.line1 == '') return Alert.alert('', 'Street Address is required.');
+    // if (address.line2 == '') return Alert.alert('', 'Barangay is required.');
+    // if (provinceId == '') return Alert.alert('', 'Province is required.');
+    // if (cityId == '') return Alert.alert('', 'City is required.');
+    // if (address.postalCode == '') return Alert.alert('', 'Postal code is required.');
+
+    setCurrentIndex(oldval => oldval - 1);
+  };
+  const Next = () => {
+    // if (address.line1 == '') return Alert.alert('', 'Street Address is required.');
+    // if (address.line2 == '') return Alert.alert('', 'Barangay is required.');
+    // if (provinceId == '') return Alert.alert('', 'Province is required.');
+    // if (cityId == '') return Alert.alert('', 'City is required.');
+    // if (address.postalCode == '') return Alert.alert('', 'Postal code is required.');
 
     setCurrentIndex(oldval => oldval + 1);
   };
@@ -82,6 +99,10 @@ export const VerifyAddress = () => {
         },
       },
     });
+  };
+
+  const ViewPrivacyPolicy = () => {
+    return Linking.openURL('https://toktok.ph/privacy-policy');
   };
 
   useEffect(() => {
@@ -99,123 +120,141 @@ export const VerifyAddress = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={Platform.OS === 'ios' ? keyboardVerticalOffset : screen.height * 0.5}
         style={{flex: 1}}>
-        <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
+        <ScrollView style={{flex: 1}}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          ref={scrollviewRef}>
+          <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
+            <View>
+              <Image
+                style={styles.policyIcon}
+                source={require('toktokwallet/assets/icons/walletVerify.png')}
+                resizeMode="contain"
+              />
+            </View>
+            <View style={styles.privacyPolicyContainer}>
+              <Text style={styles.detailsText}>
+                All your details are protected in accordance with our{' '}
+                <Text style={styles.privacyPolicy}>Privacy Policy.</Text>
+              </Text>
+            </View>
+          </TouchableOpacity>
           <View style={styles.mainInput}>
-            <Text style={styles.labelText}>Address</Text>
-            <Text style={[styles.labelSmall]}>Please enter your current address.</Text>
-
-            <View style={styles.ViewInput}>
-              <Text style={styles.labelText}>Country</Text>
-              <View style={[styles.input, {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}]}>
-                {address.country ? (
-                  <Text style={{flex: 1, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{address.country}</Text>
-                ) : (
-                  <Text style={{flex: 1, color: COLOR.DARK, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>
-                    - Select Country -
-                  </Text>
-                )}
-
-                {/* <TouchableOpacity
-                                    onPress={()=>setModalCountryVisible(true)}
-                                    style={{
-                                        paddingHorizontal: 10,
-                                        borderWidth: 1,
-                                        borderColor: COLORS.YELLOW,
-                                        borderRadius: 5,
-                                        height: 20
-                                    }}
-                                >
-                                    <View style={{
-                                         flex: 1,
-                                         justifyContent:"center",
-                                         alignItems:"center",
-                                    }}>
-                                    <Text style={{color: COLORS.YELLOW,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.S}}>Change</Text>
-                                    </View>
-                                </TouchableOpacity> */}
-              </View>
+            <Text style={styles.title}>Fill out the Information</Text>
+            <Text style={styles.information}>Please enter your permanent address.</Text>
+           
+            <View style={{marginTop: 20}}>
+              <Text style={styles.label}>Country</Text>
+              <TouchableOpacity
+                onPress={() => setModalNationalityVisible(true)}
+                style={[styles.input, styles.selectionContainer, styles.shadow]}>
+                <Text style={{flex: 1, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{address.country}</Text>
+                <VectorIcon
+                  iconSet={ICON_SET.FontAwesome5}
+                  name="chevron-down"
+                  size={moderateScale(16)}
+                  color={COLOR.ORANGE}
+                />
+              </TouchableOpacity>
             </View>
 
-            <View style={styles.ViewInput}>
-              <Text style={styles.labelText}>Street Address</Text>
+            <View style={{marginTop: 20}}>
+              <Text style={styles.label}>Street Address</Text>
               <TextInput
                 style={styles.input}
-                placeholder="House/Unit #, Floor"
-                placeholderTextColor={COLOR.DARK}
                 value={address.line1}
-                onChangeText={text => changeAddress('line1', text)}
-                returnKeyType="done"
-                // onSubmitEditing={Proceed}
-              />
-            </View>
-
-            <View style={styles.ViewInput}>
-              <Text style={styles.labelText}>Barangay</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Bldg, Barangay, Subdivision/Village"
-                placeholderTextColor={COLOR.DARK}
-                value={address.line2}
-                onChangeText={text => changeAddress('line2', text)}
-                returnKeyType="done"
-                // onSubmitEditing={Proceed}
-              />
-            </View>
-
-            <View style={styles.ViewInput}>
-              <Text style={styles.labelText}>Province</Text>
-              <TouchableOpacity
-                onPress={() => setModalProvinceVisible(true)}
-                style={[styles.input, {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}]}>
-                {province ? (
-                  <Text style={{flex: 1, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{province}</Text>
-                ) : (
-                  <Text style={{flex: 1, color: COLOR.DARK, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>
-                    - Select Province -
-                  </Text>
-                )}
-                <EIcon name="chevron-right" size={24} color="#FCB91A" />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.ViewInput}>
-              <Text style={styles.labelText}>City</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  if (province == '') return Alert.alert('', 'Please select Province first');
-                  setModalCityVisible(true);
+                onChangeText={value => {
+                  changeAddress('line1', value);
+                  // changeVerifyAdressErrors('addressError', '');
                 }}
-                style={[styles.input, {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}]}>
-                {selectedCity ? (
-                  <Text style={{flex: 1, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{selectedCity}</Text>
+                placeholderTextColor={COLOR.DARK}
+                returnKeyType="done"
+              />
+              {/* {!!verifyAddressErrors.streetError && (
+                <Text style={styles.errorMessage}>{verifyAddressErrors.streetError}</Text>
+              )} */}
+            </View>
+
+            <View style={{marginTop: 20}}>
+              <Text style={styles.label}>Barangay</Text>
+              <TextInput
+                style={styles.input}
+                value={address.line2}
+                onChangeText={value => {
+                  changeAddress('line2', value);
+                }}
+                placeholderTextColor={COLOR.DARK}
+                returnKeyType="done"
+              />
+            </View>
+            
+            <View style={{marginTop: 20}}>
+              <Text style={styles.label}>Province</Text>
+              <TouchableOpacity
+                style={[
+                  styles.input,
+                  styles.selectionContainer,
+                  styles.shadow,
+                  // {...(verifyFullNameErrors.provinceError ? styles.errorBorder : {})},
+                ]}
+                onPress={() => setModalProvinceVisible(true)}>
+                {province == '' ? (
+                  <Text style={[styles.selectionText, {color: COLOR.DARK}]}>Select Province</Text>
                 ) : (
-                  <Text style={{flex: 1, color: COLOR.DARK, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>
-                    - Select City -
-                  </Text>
+                  <Text style={styles.selectionText}>{province}</Text>
                 )}
-                <EIcon name={loading ? 'spinner' : 'chevron-right'} size={24} color="#FCB91A" />
+                <VectorIcon
+                  iconSet={ICON_SET.FontAwesome5}
+                  name="chevron-down"
+                  size={moderateScale(16)}
+                  color={COLOR.ORANGE}
+                />
+              </TouchableOpacity>
+              {/* {!!verifyAddressErrors.provinceError && (
+                <Text style={styles.errorMessage}>{verifyAddressErrors.provinceError}</Text>
+              )} */}
+            </View>
+
+            <View style={{marginTop: 20}}>
+              <Text style={styles.label}>City or Municipality</Text>
+              <TouchableOpacity
+                style={[
+                  styles.input,
+                  styles.selectionContainer,
+                  styles.shadow,
+                ]}
+                onPress={() => setModalCityVisible(true)}>
+                {selectedCity == '' ? (
+                  <Text style={[styles.selectionText, {color: COLOR.DARK}]}>Select City</Text>
+                ) : (
+                  <Text style={styles.selectionText}>{province}</Text>
+                )}
+                <VectorIcon
+                  iconSet={ICON_SET.FontAwesome5}
+                  name="chevron-down"
+                  size={moderateScale(16)}
+                  color={COLOR.ORANGE}
+                />
               </TouchableOpacity>
             </View>
 
-            <View style={styles.ViewInput}>
-              <Text style={styles.labelText}>Postal Code</Text>
+            <View style={{marginTop: 20}}>
+              <Text style={styles.label}>Postal Code</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Enter postal code here"
-                placeholderTextColor={COLOR.DARK}
                 value={address.postalCode}
-                onChangeText={text => changeAddress('postalCode', text)}
+                onChangeText={value => {
+                  changeAddress('postalCode', value);
+                }}
+                placeholderTextColor={COLOR.DARK}
                 keyboardType="number-pad"
                 returnKeyType="done"
-                onSubmitEditing={Proceed}
               />
             </View>
-          </View>
-          <View style={{justifyContent: 'flex-end', height: 70, padding: 16, marginTop: 20}}>
-            <YellowButton label="Next" onPress={Proceed} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <PreviousNextButton label="Previous" labelTwo={"Next"} hasShadow onPressNext={Next} onPressPrevious={Previous}/>
     </>
   );
 };
@@ -226,6 +265,34 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 16,
   },
+  policyView: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFCF4',
+    padding: 16,
+    alignItems: 'center',
+  },
+  policyIcon: {
+    height: 21,
+    width: 21,
+    alignSelf: 'center',
+  },
+  privacyPolicyContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: moderateScale(20),
+  },
+  detailsText: {
+    marginHorizontal: moderateScale(10),
+    fontSize: FONT_SIZE.S,
+    fontFamily: FONT.REGULAR,
+    color: COLOR.ORANGE,
+  },
+  privacyPolicy: {
+    color: COLOR.ORANGE,
+    fontSize: FONT_SIZE.S,
+    fontFamily: FONT.SEMI_BOLD,
+    textDecorationLine: 'underline',
+  },
   mainInput: {
     flex: 1,
     padding: 16,
@@ -234,6 +301,12 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 26,
     marginTop: 20,
+  },
+  label: {
+    fontFamily: FONT.BOLD,
+    marginBottom: moderateScale(5),
+    color: '#525252',
+    fontSize: FONT_SIZE.S,
   },
   labelText: {
     fontSize: FONT_SIZE.M,
@@ -255,5 +328,41 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
+  },
+  title: {
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
+  },
+  information: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.S,
+    color: '#525252',
+    marginTop: 5,
+  },
+  selectionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  selectionText: {
+    flex: 1,
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.M,
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2,
+    elevation: 3,
+    backgroundColor: 'white',
+  },
+  errorBorder: {
+    borderColor: COLOR.RED,
+    borderWidth: 1,
   },
 });
