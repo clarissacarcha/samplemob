@@ -62,65 +62,69 @@ const ViewPrivacyPolicy = () => {
 const MainComponent = ({children, onPress, onPressBack}) => {
   return (
     <>
-      <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
-        <View>
-          <Image
-            style={styles.policyIcon}
-            source={require('toktokwallet/assets/icons/walletVerify.png')}
-            resizeMode="contain"
-          />
-        </View>
-        <View style={styles.privacyPolicyContainer}>
-          <Text style={styles.detailsText}>
-            All your details are protected in accordance with our{' '}
-            <Text style={styles.privacyPolicy}>Privacy Policy.</Text>
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <ScrollView contentContainerStyle={{flexGrow: 1}} style={styles.content}>
-        <Text style={styles.title}>Take a Selfie with your Valid ID</Text>
-        <Text style={styles.titleDescription}>Get verified by taking selfie with your valid government issued ID.</Text>
-        <View style={styles.mainInput}>
-          <View style={{marginTop: 20, flex: 1}}>
-            <Text style={styles.selfieLabel}>Take a Selfie with ID</Text>
-            {children}
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
+          <View>
+            <Image
+              style={styles.policyIcon}
+              source={require('toktokwallet/assets/icons/walletVerify.png')}
+              resizeMode="contain"
+            />
           </View>
-          <View style={styles.reminderContainer}>
-            <Text style={styles.benefitsText}>Reminders</Text>
-            <View style={styles.benefitsContainer}>
-              <View style={styles.benefitsListContainer}>
-                <Image style={styles.checkIcon} source={circleCheck} />
-                <Text style={styles.benefitsListText}>Position your face within the frame</Text>
-              </View>
-              <View style={styles.benefitsListContainer}>
-                <Image style={styles.checkIcon} source={circleCheck} />
-                <Text style={styles.benefitsListText}>Don’t wear anything covering your face</Text>
-              </View>
-              <View style={styles.benefitsListContainer}>
-                <Image style={styles.checkIcon} source={circleCheck} />
-                <Text style={styles.benefitsListText}>
-                  Take a selfie with the same valid government-issued ID that you have uploaded
-                </Text>
-              </View>
-              <View style={styles.benefitsListContainer}>
-                <Image style={styles.checkIcon} source={circleCheck} />
-                <Text style={styles.benefitsListText}>
-                  Show front side of the ID and do not cover while taking a selfie{' '}
-                </Text>
+          <View style={styles.privacyPolicyContainer}>
+            <Text style={styles.detailsText}>
+              All your details are protected in accordance with our{' '}
+              <Text style={styles.privacyPolicy}>Privacy Policy.</Text>
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.content}>
+          <Text style={styles.title}>Take a Selfie with your Valid ID</Text>
+          <Text style={styles.titleDescription}>
+            Get verified by taking selfie with your valid government issued ID.
+          </Text>
+          <View style={styles.mainInput}>
+            <View style={{marginTop: 20, flex: 1}}>
+              <Text style={styles.selfieLabel}>Take a Selfie with ID</Text>
+              {children}
+            </View>
+            <View style={styles.reminderContainer}>
+              <Text style={styles.benefitsText}>Reminders</Text>
+              <View style={styles.benefitsContainer}>
+                <View style={styles.benefitsListContainer}>
+                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Text style={styles.benefitsListText}>Position your face within the frame</Text>
+                </View>
+                <View style={styles.benefitsListContainer}>
+                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Text style={styles.benefitsListText}>Don’t wear anything covering your face</Text>
+                </View>
+                <View style={styles.benefitsListContainer}>
+                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Text style={styles.benefitsListText}>
+                    Take a selfie with the same valid government-issued ID that you have uploaded
+                  </Text>
+                </View>
+                <View style={styles.benefitsListContainer}>
+                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Text style={styles.benefitsListText}>
+                    Show front side of the ID and do not cover while taking a selfie{' '}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-          <View style={styles.instructionsContainer}>
-            <Image
-              style={styles.instructionsPicture}
-              source={require('toktokwallet/assets/images/correctWay.png')}
-              resizeMode="contain"
-            />
-            <Image
-              style={styles.instructionsPicture}
-              source={require('toktokwallet/assets/images/wrongWay.png')}
-              resizeMode="contain"
-            />
+            <View style={styles.instructionsContainer}>
+              <Image
+                style={styles.instructionsPicture}
+                source={require('toktokwallet/assets/images/correctWay.png')}
+                resizeMode="contain"
+              />
+              <Image
+                style={styles.instructionsPicture}
+                source={require('toktokwallet/assets/images/wrongWay.png')}
+                resizeMode="contain"
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -310,11 +314,10 @@ export const VerifySelfieWithID = () => {
           onPress={() => {
             navigation.push('ToktokWalletSelfieImageWithIDCamera', {setImage});
           }}
-          style={[styles.selfieBtn, tempSelfieImageWithID && {borderColor: COLOR.RED}]}>
+          style={[styles.selfieBtn]}>
           <EIcon name="camera" color={COLOR.ORANGE} size={25} />
           <Text style={{marginBottom: 5, fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Take a photo</Text>
         </TouchableOpacity>
-        {tempSelfieImageWithID && <Text style={styles.requiredText}>Photo is required</Text>}
       </MainComponent>
     </>
   );
