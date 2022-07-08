@@ -49,9 +49,7 @@ const HeaderBackClose = ({currentIndex, setCurrentIndex, setPromptVisible}) => {
       closeScreen();
       return true;
     };
-
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-
     return () => backHandler.remove();
   });
 
@@ -75,7 +73,7 @@ const MainSetupComponent = () => {
         setCurrentIndex={setCurrentIndex}
       />
     ),
-    headerTitle: () => <HeaderTitleRevamp label={'Verification'} />,
+    headerTitle: () => <HeaderTitleRevamp label={'Create Account'} />,
   });
 
   const [screenSlides, setScreenSlides] = useState([
@@ -93,7 +91,7 @@ const MainSetupComponent = () => {
   };
 
   const DisplayComponents = () => {
-    switch (currentIndex) {
+    switch (4) {
       case 0:
         return <VerifyFullname />;
       case 1:

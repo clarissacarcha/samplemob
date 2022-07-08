@@ -1,5 +1,5 @@
 import React, {useState, useRef} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Dimensions, Linking} from 'react-native';
 import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 import {useNavigation} from '@react-navigation/native';
 
@@ -18,6 +18,10 @@ export const HeaderKebab = ({onPress, color = '#F6841F', refNo, format}) => {
     dropDownRef.current.close();
   };
 
+  const ViewPrivacyPolicy = () => {
+    return Linking.openURL('https://toktok.ph/privacy-policy');
+  };
+
   return (
     <>
       <Menu ref={dropDownRef}>
@@ -30,7 +34,7 @@ export const HeaderKebab = ({onPress, color = '#F6841F', refNo, format}) => {
         </MenuTrigger>
         <MenuOptions>
           <View style={styles.dropDown}>
-            <TouchableOpacity onPress={''} style={styles.privacyContainer}>
+            <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.privacyContainer}>
               <Text style={styles.privacyText}>Privacy Policy</Text>
             </TouchableOpacity>
             <View style={styles.divider} />
