@@ -12,6 +12,7 @@ import {useTheme} from 'styled-components';
 
 const OrderAmount = (props: PropsType): React$Node => {
   const {state} = props;
+  const {resellerDiscountTotal = 0, promoDiscounts = 0, voucherDiscounts = [], originalShippingFee = 0} = state;
   const shippingDiscount = state.promoDetails?.amount || 0;
   const [showAmountBreakdown, setShowAmountBreakdown] = useState(false);
   const [showDiscountBreakdown, setShowDiscountBreakdown] = useState(false);
@@ -43,7 +44,6 @@ const OrderAmount = (props: PropsType): React$Node => {
   };
 
   const renderDiscountComponent = () => {
-    const {resellerDiscountTotal = 0, promoDiscounts = 0, voucherDiscounts = []} = state;
     if (resellerDiscountTotal || promoDiscounts || shippingDiscount) {
       const totalDiscount = resellerDiscountTotal + promoDiscounts + shippingDiscount;
       return (
@@ -73,12 +73,16 @@ const OrderAmount = (props: PropsType): React$Node => {
   };
 
   const renderTotalAmountComponent = () => {
+    let icon;
+    if (resellerDiscountTotal || promoDiscounts || shippingDiscount || originalShippingFee) {
+      icon = showAmountBreakdown ? 'chevron-down' : 'chevron-up';
+    }
     return amountComponent(
       '',
       'Total',
       state?.totalAmount + state?.originalShippingFee - shippingDiscount,
       '',
-      showAmountBreakdown ? 'chevron-down' : 'chevron-up',
+      icon,
       () => setShowAmountBreakdown(!showAmountBreakdown),
     );
   };

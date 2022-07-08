@@ -102,6 +102,8 @@ const OrderDeliveryLogs = (props: PropsType): React$Node => {
       {renderDashComponent()}
       {renderLogsComponent('Ready for pick up', state?.dateReadyPickup)}
       {renderDashComponent()}
+      {renderLogsComponent('Preparing order', state?.dateOrderProcessed)}
+      {renderDashComponent()}
       {renderLogsComponent('Order placed', state?.dateOrdered)}
     </React.Fragment>
   );

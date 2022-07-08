@@ -100,7 +100,7 @@ const OrderSummary = (props: PropsType): React$Node => {
               <OrderProductDetailsContainer opacity={item?.status === 0 ? 0.5 : 1}>
                 <ProductName>{item?.productDetails?.parentProductName ?? item?.productDetails?.itemname}</ProductName>
                 {item?.productDetails?.parentProductName && (
-                  <AddOnText fontSize={11}>Variation: {item?.productDetails?.itemname}</AddOnText>
+                  <AddOnText fontSize={11}>{item?.productDetails?.itemname}</AddOnText>
                 )}
                 {item?.addons?.length > 0 && renderAddonsComponent(item?.addons)}
                 {item?.notes?.length > 0 && (
