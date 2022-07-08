@@ -96,6 +96,7 @@ const MainComponent = ({children, onPress, onPressBack}) => {
 
 export const VerifySelfie = () => {
   const VerifyUserData = useContext(VerifyContext);
+  const [required, setRequired] = useState(false);
   const {
     setCacheImagesList,
     setCurrentIndex,
@@ -134,25 +135,27 @@ export const VerifySelfie = () => {
 
   const Proceed = async () => {
     if (tempSelfieImage == null) {
-      return navigation.push('ToktokWalletSelfieImageCamera', {setImage});
-    }
-    try {
-      const croppedResult = await ImageCropper.crop({
-        ...cropperParams,
-        // imageUri: selfieImage.uri,
-        imageUri: tempSelfieImage.uri,
-        cropSize,
-        cropAreaSize,
-      });
+      // return navigation.push('ToktokWalletSelfieImageCamera', {setImage});
+      setRequired(true);
+    } else {
+      try {
+        const croppedResult = await ImageCropper.crop({
+          ...cropperParams,
+          // imageUri: selfieImage.uri,
+          imageUri: tempSelfieImage.uri,
+          cropSize,
+          cropAreaSize,
+        });
 
-      setSelfieImage(state => ({
-        ...state,
-        uri: croppedResult,
-      }));
-    } catch (err) {
-      console.log(err);
+        setSelfieImage(state => ({
+          ...state,
+          uri: croppedResult,
+        }));
+      } catch (err) {
+        console.log(err);
+      }
+      return setCurrentIndex(oldval => oldval + 1);
     }
-    return setCurrentIndex(oldval => oldval + 1);
   };
 
   if (tempSelfieImage) {
@@ -196,10 +199,11 @@ export const VerifySelfie = () => {
           onPress={() => {
             navigation.push('ToktokWalletSelfieImageCamera', {setImage});
           }}
-          style={[styles.selfieBtn]}>
+          style={[styles.selfieBtn, required && {borderColor: COLOR.RED}]}>
           <EIcon name="camera" color={COLOR.ORANGE} size={25} />
           <Text style={{marginBottom: 5, fontSize: FONT_SIZE.S}}>Take a photo</Text>
         </TouchableOpacity>
+        {required && <Text style={styles.requiredText}>Photo is required</Text>}
       </MainComponent>
     </>
   );
