@@ -75,15 +75,19 @@ export const Tab = (props) => {
 }
 
 const styles = StyleSheet.create({
-  labelButton: {
-    backgroundColor: bgcolor, 
-    borderRadius: 5, 
-    paddingHorizontal: 20, 
-    paddingVertical: 8
+  labelButton: (bgcolor) => {
+    return {
+      backgroundColor: bgcolor, 
+      borderRadius: 5, 
+      paddingHorizontal: 20, 
+      paddingVertical: 8
+    }
   },
-  labelText: {
-    fontSize: 12, 
-    color: txtcolor
+  labelText: (txtcolor) => {
+    return {
+      fontSize: 12, 
+      color: txtcolor
+    }
   },
   container: {
     flexDirection: 'row', 

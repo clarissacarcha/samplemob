@@ -120,12 +120,15 @@ export const Product = ({data}) => {
   const [loading, setloading] = useState(false)
   const [offset, setOffset] = useState(0)
   const [products, setProducts] = useState(data)
+  const [onEndReached, setOnEndReached] = useState(true);
 
-  const LoadMore = () => {   
+  const LoadMore = () => { 
+    if(onEndReached) return;  
     setloading(true)
     setTimeout(() => {
       setOffset(offset + 10)
-      setloading(false)
+      setloading(false);
+      setOnEndReached(true);
     }, 700)
   }
 
@@ -141,7 +144,6 @@ export const Product = ({data}) => {
         <FlatList
           data={data.slice(0, offset + 10)}
           numColumns={2}
-          style={{paddingHorizontal: 5}}
           renderItem={({item, index}) => {
             const isEven = products?.length % 2 === 0;
             if (!isEven) {
@@ -161,10 +163,12 @@ export const Product = ({data}) => {
               </View>
             );
           }}
+          
           keyExtractor={(item, index) => item + index}
           showsVerticalScrollIndicator={false}
           onEndReached={LoadMore}
-          onEndReachedThreshold={0.2}
+          onEndReachedThreshold={.1}
+          onMomentumScrollBegin={() => setOnEndReached(false)  }
           ListFooterComponent={<SwipeReloader state={loading} />}
         />
       </View>
