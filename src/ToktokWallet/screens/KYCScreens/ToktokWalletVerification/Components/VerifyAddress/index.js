@@ -18,6 +18,7 @@ import {useQuery, useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_CITIES} from 'toktokwallet/graphql/virtual';
 import {VerifyContext} from '../VerifyContextProvider';
+import validator from 'validator';
 import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 import {useHeaderHeight} from '@react-navigation/stack';
@@ -50,8 +51,10 @@ export const VerifyAddress = () => {
     setCity,
     cityId,
     setCityId,
+    verifyAddressErrors,
+    changeVerifyAddressErrors
   } = useContext(VerifyContext);
-
+  
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState('');
   const headerHeight = useHeaderHeight();
@@ -72,22 +75,36 @@ export const VerifyAddress = () => {
   });
 
   const Previous = () => {
-    // if (address.line1 == '') return Alert.alert('', 'Street Address is required.');
-    // if (address.line2 == '') return Alert.alert('', 'Barangay is required.');
-    // if (provinceId == '') return Alert.alert('', 'Province is required.');
-    // if (cityId == '') return Alert.alert('', 'City is required.');
-    // if (address.postalCode == '') return Alert.alert('', 'Postal code is required.');
-
     setCurrentIndex(oldval => oldval - 1);
   };
-  const Next = () => {
-    // if (address.line1 == '') return Alert.alert('', 'Street Address is required.');
-    // if (address.line2 == '') return Alert.alert('', 'Barangay is required.');
-    // if (provinceId == '') return Alert.alert('', 'Province is required.');
-    // if (cityId == '') return Alert.alert('', 'City is required.');
-    // if (address.postalCode == '') return Alert.alert('', 'Postal code is required.');
 
-    setCurrentIndex(oldval => oldval + 1);
+  const checkFieldIsEmpty = (key, value, fieldType) => {
+    let message = fieldType === 'selection' ? 'Please make a selection' : 'This field is required';
+    let errorMessage = validator.isEmpty(value, {ignore_whitespace: true}) ? message : '';
+    if (value != '' && key == 'emailError' && !validator.isEmail(contactInfo.email, {ignore_whitespace: true})) {
+      errorMessage = 'Email format is invalid';
+    }
+    changeVerifyAddressErrors(key, errorMessage);
+
+    return !errorMessage;
+  };
+
+  const Next = () => {
+    const isStreetValid = checkFieldIsEmpty('streetError', address.line1);
+    const isBarangayValid = checkFieldIsEmpty('barangayError', address.line2);
+    const isProvinceValid = checkFieldIsEmpty('provinceError', province, 'selection');
+    const isCityValid = checkFieldIsEmpty('cityError', selectedCity, 'selection');
+    const isPostalValid = checkFieldIsEmpty('postalError', address.postalCode);
+  
+    if (
+      isStreetValid &&
+      isBarangayValid &&
+      isProvinceValid &&
+      isCityValid &&
+      isPostalValid 
+    ) {
+      setCurrentIndex(oldval => oldval + 1);
+    }
   };
 
   const onProvinceSelect = code => {
@@ -145,8 +162,8 @@ export const VerifyAddress = () => {
            
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Country</Text>
-              <TouchableOpacity
-                onPress={() => setModalNationalityVisible(true)}
+              {/* <TouchableOpacity
+                onPress={() => setModalCountryVisible(true)}
                 style={[styles.input, styles.selectionContainer, styles.shadow]}>
                 <Text style={{flex: 1, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{address.country}</Text>
                 <VectorIcon
@@ -155,37 +172,51 @@ export const VerifyAddress = () => {
                   size={moderateScale(16)}
                   color={COLOR.ORANGE}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+              <View
+                style={[styles.input, styles.selectionContainer, styles.shadow]}>
+                <Text style={{flex: 1, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{address.country}</Text>
+                {/* <VectorIcon
+                  iconSet={ICON_SET.FontAwesome5}
+                  name="chevron-down"
+                  size={moderateScale(16)}
+                  color={COLOR.ORANGE}
+                /> */}
+              </View>
             </View>
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Street Address</Text>
               <TextInput
-                style={styles.input}
+                style={{...styles.input, ...(!!verifyAddressErrors.streetError ? styles.errorBorder : {})}}
                 value={address.line1}
                 onChangeText={value => {
                   changeAddress('line1', value);
-                  // changeVerifyAdressErrors('addressError', '');
+                  changeVerifyAddressErrors('streetError', '');
                 }}
                 placeholderTextColor={COLOR.DARK}
                 returnKeyType="done"
               />
-              {/* {!!verifyAddressErrors.streetError && (
+              {!!verifyAddressErrors.streetError && (
                 <Text style={styles.errorMessage}>{verifyAddressErrors.streetError}</Text>
-              )} */}
+              )}
             </View>
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Barangay</Text>
               <TextInput
-                style={styles.input}
+                style={{...styles.input, ...(!!verifyAddressErrors.barangayError ? styles.errorBorder : {})}}
                 value={address.line2}
                 onChangeText={value => {
                   changeAddress('line2', value);
+                  changeVerifyAddressErrors('barangayError', '');
                 }}
                 placeholderTextColor={COLOR.DARK}
                 returnKeyType="done"
               />
+              {!!verifyAddressErrors.barangayError && (
+                <Text style={styles.errorMessage}>{verifyAddressErrors.barangayError}</Text>
+              )}
             </View>
             
             <View style={{marginTop: 20}}>
@@ -195,7 +226,7 @@ export const VerifyAddress = () => {
                   styles.input,
                   styles.selectionContainer,
                   styles.shadow,
-                  // {...(verifyFullNameErrors.provinceError ? styles.errorBorder : {})},
+                  {...(verifyAddressErrors.provinceError ? styles.errorBorder : {})},
                 ]}
                 onPress={() => setModalProvinceVisible(true)}>
                 {province == '' ? (
@@ -210,9 +241,9 @@ export const VerifyAddress = () => {
                   color={COLOR.ORANGE}
                 />
               </TouchableOpacity>
-              {/* {!!verifyAddressErrors.provinceError && (
+              {!!verifyAddressErrors.provinceError && (
                 <Text style={styles.errorMessage}>{verifyAddressErrors.provinceError}</Text>
-              )} */}
+              )}
             </View>
 
             <View style={{marginTop: 20}}>
@@ -222,12 +253,13 @@ export const VerifyAddress = () => {
                   styles.input,
                   styles.selectionContainer,
                   styles.shadow,
+                  {...(verifyAddressErrors.cityError ? styles.errorBorder : {})},
                 ]}
                 onPress={() => setModalCityVisible(true)}>
                 {selectedCity == '' ? (
                   <Text style={[styles.selectionText, {color: COLOR.DARK}]}>Select City</Text>
                 ) : (
-                  <Text style={styles.selectionText}>{province}</Text>
+                  <Text style={styles.selectionText}>{city}</Text>
                 )}
                 <VectorIcon
                   iconSet={ICON_SET.FontAwesome5}
@@ -236,20 +268,27 @@ export const VerifyAddress = () => {
                   color={COLOR.ORANGE}
                 />
               </TouchableOpacity>
+              {!!verifyAddressErrors.cityError && (
+                <Text style={styles.errorMessage}>{verifyAddressErrors.cityError}</Text>
+              )}
             </View>
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Postal Code</Text>
               <TextInput
-                style={styles.input}
+                style={{...styles.input, ...(!!verifyAddressErrors.postalError ? styles.errorBorder : {})}}
                 value={address.postalCode}
                 onChangeText={value => {
                   changeAddress('postalCode', value);
+                  changeVerifyAddressErrors('postalError', '');
                 }}
                 placeholderTextColor={COLOR.DARK}
                 keyboardType="number-pad"
                 returnKeyType="done"
               />
+              {!!verifyAddressErrors.postalError && (
+                <Text style={styles.errorMessage}>{verifyAddressErrors.postalError}</Text>
+              )}
             </View>
           </View>
         </ScrollView>
@@ -347,5 +386,10 @@ const styles = StyleSheet.create({
   errorBorder: {
     borderColor: COLOR.RED,
     borderWidth: 1,
+  },
+  errorMessage: {
+    color: COLOR.RED,
+    fontSize: FONT_SIZE.S,
+    marginTop: 5,
   },
 });
