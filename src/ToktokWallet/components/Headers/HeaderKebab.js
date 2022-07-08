@@ -2,10 +2,11 @@ import React, {useState, useRef} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 import {useNavigation} from '@react-navigation/native';
+import {moderateScale} from 'toktokwallet/helper';
 
 const {width} = Dimensions.get('window');
 
-export const HeaderKebab = ({onPress, color = '#F6841F', refNo, format}) => {
+export const HeaderKebab = ({onPress, color = '#F6841F', refNo, format, showSettings}) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
   const dropDownRef = useRef(null);
@@ -29,15 +30,21 @@ export const HeaderKebab = ({onPress, color = '#F6841F', refNo, format}) => {
           </View>
         </MenuTrigger>
         <MenuOptions>
-          <View style={styles.dropDown}>
-            <TouchableOpacity onPress={''} style={styles.privacyContainer}>
-              <Text style={styles.privacyText}>Privacy Policy</Text>
+          <View style={[styles.dropDown, {bottom: showSettings ? -167 : -120}]}>
+            {showSettings && (
+              <>
+                <TouchableOpacity onPress={() => navigate('ToktokWalletSettings')} style={styles.content}>
+                  <Text>Settings</Text>
+                </TouchableOpacity>
+                <View style={styles.divider} />
+              </>
+            )}
+            <TouchableOpacity onPress={''} style={styles.content}>
+              <Text>Privacy Policy</Text>
             </TouchableOpacity>
             <View style={styles.divider} />
-            <TouchableOpacity
-              onPress={() => navigate('ToktokWalletTermsConditions')}
-              style={styles.termsConditionsContainer}>
-              <Text style={styles.termsConditionsText}>Terms and Conditions</Text>
+            <TouchableOpacity onPress={() => navigate('ToktokWalletTermsConditions')} style={styles.content}>
+              <Text>Terms and Conditions</Text>
             </TouchableOpacity>
           </View>
         </MenuOptions>
@@ -48,12 +55,11 @@ export const HeaderKebab = ({onPress, color = '#F6841F', refNo, format}) => {
 
 const styles = StyleSheet.create({
   threeDotIconButton: {
-    paddingLeft: 25 / 2,
-    paddingRight: 23,
+    paddingHorizontal: moderateScale(20),
   },
   dotStyle: {
-    height: 4,
-    width: 4,
+    height: 3.5,
+    width: 3.5,
     backgroundColor: '#F6841F',
     borderRadius: 2,
   },
@@ -61,7 +67,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: width * 0.45,
     backgroundColor: 'white',
-    bottom: -120,
     right: 15,
     borderRadius: 10,
     shadowColor: '#000',
@@ -71,27 +76,14 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 5,
   },
-  privacyContainer: {
-    paddingHorizontal: 10,
-    marginBottom: 16,
-    paddingTop: 10,
-  },
-  privacyText: {
-    fontSize: 13,
-  },
   divider: {
     flex: 1,
     marginHorizontal: 10,
     height: 1,
     backgroundColor: 'rgba(0,0,0,.1)',
   },
-  termsConditionsContainer: {
-    paddingHorizontal: 10,
-    paddingTop: 16,
+  content: {
+    padding: 15,
     justifyContent: 'flex-end',
-    paddingBottom: 10,
-  },
-  termsConditionsText: {
-    fontSize: 13,
   },
 });
