@@ -46,7 +46,7 @@ const MenuIcon = ({label, icon, onPress, isNew = false}) => {
     <TouchableOpacity style={styles.menuButton} onPress={onPressThrottled}>
       {isNew && (
         <View style={styles.new}>
-          <Text style={styles.newText}>NEW</Text>
+          <Text style={styles.newText}>New</Text>
         </View>
       )}
       <View style={styles.menuIconBox}>
@@ -311,6 +311,7 @@ const styles = StyleSheet.create({
   newText: {
     fontSize: 10,
     color: 'white',
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   container: {
     right: 4,

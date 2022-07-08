@@ -35,8 +35,15 @@ const DrawerButton = ({isNew, label, onPress, restrict}) => {
         /> */}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {isNew && (
-            <View style={{backgroundColor: COLOR.RED, paddingVertical: 3, paddingHorizontal: 9, borderRadius: 10}}>
-              <Text style={{fontSize: FONT_SIZE.S, color: COLOR.WHITE}}>New</Text>
+            <View style={{backgroundColor: COLOR.RED, borderRadius: 20}}>
+              <Text
+                style={{
+                  paddingHorizontal: 12,
+                  color: CONSTANTS.COLOR.WHITE,
+                  fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                }}>
+                New
+              </Text>
             </View>
           )}
           <Image
