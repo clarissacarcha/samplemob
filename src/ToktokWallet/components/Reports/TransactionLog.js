@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import {numberFormat, MaskLeftZero} from 'toktokwallet/helper';
+import {numberFormat, MaskLeftZero, moderateScale, sameDay, dayTitle} from 'toktokwallet/helper';
 
 import {useThrottle} from 'src/hooks';
 import moment from 'moment';
@@ -12,7 +12,7 @@ import {TransactionDetails} from './TransactionDetails';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
-export const TransactionLog = ({transaction, itemsLength, index}) => {
+export const TransactionLog = ({transaction, itemsLength, index, data}) => {
   const {id, refNo, name, phrase, displayInfo, amount, sourceWalletId, createdAt, note} = transaction.node;
 
   const {tokwaAccount} = useAccount();
@@ -22,6 +22,22 @@ export const TransactionLog = ({transaction, itemsLength, index}) => {
   const amountprefix = sourceWalletId == tokwaAccount?.wallet.id ? '-' : '+';
   const transactionAmount = `${amountprefix} ${tokwaAccount?.wallet.currency.code} ${numberFormat(amount)}`;
   const referenceDate = moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
+  let nextItem = [];
+  let isSameDay = false;
+  let lowerText = '';
+  let upperText = '';
+
+  if (data) {
+    nextItem = data[index + 1] ? data[index + 1] : false;
+    if (index === 0) {
+      upperText = dayTitle(referenceDate);
+    }
+    if (nextItem) {
+      let dateNext = moment(nextItem?.node.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
+      isSameDay = sameDay(referenceDate.toString(), dateNext.toString());
+      lowerText = !isSameDay ? dayTitle(dateNext) : '';
+    }
+  }
 
   const showDetails = () => {
     setTransactionInfo({
@@ -41,6 +57,7 @@ export const TransactionLog = ({transaction, itemsLength, index}) => {
   return (
     <>
       <TransactionDetails visible={openModal} setVisible={setOpenModal} transaction={transactionInfo} />
+      {!!upperText && <Text style={styles.dayTitle}>{upperText}</Text>}
       <TouchableOpacity style={styles.transaction} onPress={OnThrottledPress}>
         <View style={styles.transactionDetails}>
           <Text numberOfLines={1} style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>
@@ -62,6 +79,7 @@ export const TransactionLog = ({transaction, itemsLength, index}) => {
         </View>
       </TouchableOpacity>
       <View style={styles.divider} />
+      {!!lowerText && <Text style={styles.dayTitle}>{lowerText}</Text>}
     </>
   );
 };
@@ -91,5 +109,9 @@ const styles = StyleSheet.create({
     height: 1,
     width: '100%',
     backgroundColor: COLOR.LIGHT,
+  },
+  dayTitle: {
+    fontFamily: FONT.BOLD,
+    marginTop: moderateScale(12),
   },
 });

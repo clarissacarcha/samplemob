@@ -63,24 +63,24 @@ export const GET_OUTGOING_TRANSFER = gql`
 `;
 
 const WalletTransactions = `
-id
-refNo
-name
-phrase
-displayInfo
-amount
-note
-status
-sourceWalletId
-destinationWalletId
-cashInId
-cashOutId
-createdAt
-externalName
-externalPhrase
-externalReferenceNumber
-externalPayload
-externalDetails
+  id
+  refNo
+  name
+  phrase
+  displayInfo
+  amount
+  note
+  status
+  sourceWalletId
+  destinationWalletId
+  cashInId
+  cashOutId
+  createdAt
+  externalName
+  externalPhrase
+  externalReferenceNumber
+  externalPayload
+  externalDetails
 `;
 
 export const GET_TRANSACTIONS = gql`

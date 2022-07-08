@@ -19,7 +19,7 @@ const WalletRecentTransactions = () => {
 
     return navigation.navigate('ToktokWalletPaymentOptions');
   };
-  console.log(tokwaAccount.transactions);
+
   const CashInNow = () => (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Image style={{height: 219, width: 291}} source={require('toktokwallet/assets/images/Landing-page.png')} />
@@ -67,6 +67,7 @@ const WalletRecentTransactions = () => {
             transaction={item}
             itemsLength={tokwaAccount?.wallet?.recentTransactions}
             index={index}
+            data={tokwaAccount?.wallet?.transactions?.slice(0, 5)}
           />
         ))}
       </View>

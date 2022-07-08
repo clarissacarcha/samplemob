@@ -130,7 +130,9 @@ export const ToktokWalletTransactions = connect(
           showsVerticalScrollIndicator={false}
           data={allTransactions}
           keyExtractor={item => item.id}
-          renderItem={({item, index}) => <TransactionLog key={`walletLogs${index}`} transaction={item} index={index} />}
+          renderItem={({item, index}) => (
+            <TransactionLog key={`walletLogs${index}`} transaction={item} index={index} data={allTransactions} />
+          )}
           onEndReachedThreshold={0.02}
           onEndReached={fetchMoreData}
           ListFooterComponent={ListFooterComponent}

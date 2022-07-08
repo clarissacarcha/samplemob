@@ -9,7 +9,7 @@ const {COLOR, FONT_FAMILY: FONTS, FONT_SIZE} = CONSTANTS;
 const {width} = Dimensions.get('window');
 
 export const TransactionDetails = ({transaction, visible, setVisible}) => {
-  const {name, phrase, displayInfo} = transaction;
+  const {name, phrase, displayInfo, createdAt} = transaction;
 
   const renderDetails = ({details}) => {
     if (details) {
