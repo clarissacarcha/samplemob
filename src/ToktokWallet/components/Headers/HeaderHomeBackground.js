@@ -2,10 +2,10 @@ import React from 'react'
 import {ImageBackground,StyleSheet} from 'react-native'
 import {home} from 'toktokwallet/assets';
 
-export const HeaderImageBackground = ({children})=> {
+export const HeaderHomeBackground = ({children})=> {
 
     return (
-        <ImageBackground imageStyle={[]} style={styles.walletbackgroundimage} source={require('toktokwallet/assets/images/header-bg.png')}>
+        <ImageBackground resizeMode='cover' style={styles.walletbackgroundimage} source={home.home_logo}>
                 {children}
         </ImageBackground>
     )
@@ -13,8 +13,8 @@ export const HeaderImageBackground = ({children})=> {
 
 const styles = StyleSheet.create({
     walletbackgroundimage: {
+        height: 140,
         flex: 1,
-        resizeMode: "cover",
     },
 })
 
