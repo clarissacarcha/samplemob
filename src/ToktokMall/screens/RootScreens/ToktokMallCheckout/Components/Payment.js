@@ -10,6 +10,7 @@ import {
   ScrollView,
   TextInput,
   Picker,
+  Platform
 } from 'react-native';
 import {Price, FormatToText} from '../../../../helpers/formats';
 // import { COLOR, FONT } from '../../../../../../res/variables';
@@ -324,6 +325,7 @@ const styles = StyleSheet.create({
   },
   balanceContainer: (status) => {
     return {
+      marginLeft: Platform.OS == "ios" ? 0 : 20,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignContent: 'flex-start',

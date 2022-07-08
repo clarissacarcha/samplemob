@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
   itemPrice: {
     color: "#F6841F", 
     fontSize: 14, 
-    paddingLeft: Platform.OS != "ios" ? 0 : 20
+    paddingLeft: Platform.OS == "ios" ? 0 : 20
   },
   itemOriginalPrice: {
     color: "#9E9E9E", 
@@ -435,13 +435,13 @@ const styles = StyleSheet.create({
     fontSize: 11, 
     marginTop: 2.5, 
     marginLeft: 8, 
-    paddingLeft: Platform.OS != "ios" ? 0 : 20
+    paddingLeft: Platform.OS == "ios" ? 0 : 20
   },
   itemStocks: {
     color: "#9E9E9E", 
     fontSize: 12, 
     marginTop: 5, 
-    paddingLeft: Platform.OS != "ios" ? 0 : 20
+    paddingLeft: Platform.OS == "ios" ? 0 : 20
   },
   box: {
     marginBottom: 20,
