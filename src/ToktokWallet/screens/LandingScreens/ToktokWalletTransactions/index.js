@@ -1,113 +1,170 @@
-import React, {useState} from 'react'
-import {View,StyleSheet,FlatList,RefreshControl} from 'react-native'
-import { onErrorAlert} from 'src/util/ErrorUtility'
-import {Separator,WalletLog,CheckIdleState , SwipeDownToRefresh , NoData } from 'toktokwallet/components'
-import { HeaderBack , HeaderTitle } from 'src/revamp'
-import { useAlert } from 'src/hooks'
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import { GET_TRANSACTIONS } from 'toktokwallet/graphql'
-import {useLazyQuery} from '@apollo/react-hooks'
-import { connect } from 'react-redux'
-import Log from 'toktokwallet/screens/LandingScreens/ToktokWalletHomePage/Components/WalletRecentTransactions/Log'
-import CONSTANTS from 'common/res/constants'
-const { COLOR } = CONSTANTS
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
+import {onErrorAlert} from 'src/util/ErrorUtility';
+import {moderateScale} from 'toktokwallet/helper';
 
-const mapDispatchtoProps = (dispatch) => ({
-    getTokwaTransactions: (payload) => dispatch({
-        type: "SET_TOKTOKWALLET_TRANSACTIONS",
-        payload: payload
-    })
-})
+//COMPONENTS
+import {
+  Separator,
+  WalletLog,
+  CheckIdleState,
+  SwipeDownToRefresh,
+  NoData,
+  TransactionLog,
+  LoadingIndicator,
+  HeaderBack,
+  HeaderTitleRevamp,
+} from 'toktokwallet/components';
 
-export const ToktokWalletTransactions = connect(null,mapDispatchtoProps)(({navigation,route,getTokwaTransactions})=> {
-    navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['Recent Transactions']} />,
-    })
+//HOOKS
+import {useAlert} from 'src/hooks';
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+import {GET_TRANSACTIONS_PAGINATE} from 'toktokwallet/graphql';
+import {useLazyQuery} from '@apollo/react-hooks';
+import {connect} from 'react-redux';
 
-    const [allTransactions, setAllTransactions] = useState(route.params.allTransactions)
-    const [pageLoading,setPageLoading] = useState(false)
-    const alert = useAlert()
+//ASSETS
+import CONSTANTS from 'common/res/constants';
+const {COLOR} = CONSTANTS;
 
-    const [getTransactions , {data, error ,loading}] = useLazyQuery(GET_TRANSACTIONS, {
-        fetchPolicy: 'network-only',
-        client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-        onCompleted: ({getTransactions})=>{
-            setAllTransactions(state=>{
-                return [...getTransactions.allTransactions]
-            })
-            getTokwaTransactions(getTransactions)
-            setPageLoading(false)
+const mapDispatchtoProps = dispatch => ({
+  getTokwaTransactions: payload =>
+    dispatch({
+      type: 'SET_TOKTOKWALLET_TRANSACTIONS',
+      payload: payload,
+    }),
+});
+
+export const ToktokWalletTransactions = connect(
+  null,
+  mapDispatchtoProps,
+)(({navigation, route, getTokwaTransactions}) => {
+  navigation.setOptions({
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitleRevamp label={'Transactions'} />,
+  });
+
+  const [allTransactions, setAllTransactions] = useState([]);
+  const [pageInfo, setPageInfo] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
+  const alert = useAlert();
+
+  const [getTransactionsPaginate, {data, error, loading, fetchMore}] = useLazyQuery(GET_TRANSACTIONS_PAGINATE, {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onCompleted: ({getTransactionsPaginate}) => {
+      setAllTransactions(getTransactionsPaginate.edges);
+      setPageInfo(getTransactionsPaginate.pageInfo);
+      setRefreshing(false);
+    },
+    onError: error => {
+      setRefreshing(false);
+      onErrorAlert({alert, error, navigation});
+    },
+  });
+
+  const Refetch = () => {
+    setRefreshing(true);
+    handleGetTransactionsPaginate();
+  };
+
+  useEffect(() => {
+    handleGetTransactionsPaginate();
+  }, []);
+
+  const handleGetTransactionsPaginate = () => {
+    getTransactionsPaginate({
+      variables: {
+        input: {
+          afterCursorId: null,
         },
-        onError: (error)=> {
-            onErrorAlert({alert ,error , navigation})
-        }
-    })
+      },
+    });
+  };
 
-    const Refetch = ()=> {
-        getTransactions()
+  const fetchMoreData = async () => {
+    if (pageInfo.hasNextPage) {
+      await fetchMore({
+        variables: {
+          input: {
+            afterCursorId: pageInfo.endCursorId,
+          },
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          fetchMoreResult.getTransactionsPaginate.edges = [
+            ...previousResult.getTransactionsPaginate.edges,
+            ...fetchMoreResult.getTransactionsPaginate.edges,
+          ];
+          return fetchMoreResult;
+        },
+      }).then(({data}) => {
+        setPageInfo(data.getTransactionsPaginate.pageInfo);
+        setAllTransactions(data.getTransactionsPaginate.edges);
+      });
     }
+  };
 
-    // useEffect(()=>{
-    //     if(pageIndex > 0){
-    //         // call pagination here
-    //         getTransactions()
-    //     }
-    // },[pageIndex])
-
+  const ListFooterComponent = () => {
     return (
-        <CheckIdleState>
-        <Separator />
-        {/* <SwipeDownToRefresh/> */}
-        <View style={styles.container}>        
-                <View style={styles.logs}>
-                        <FlatList 
-                          ListHeaderComponent={() => {
-                                if(allTransactions.length > 0) return null
-                                if(loading) return null
-                                return <NoData/>
-                            }}
-                            refreshControl={<RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />}
-                            showsVerticalScrollIndicator={false}
-                            data={allTransactions}
-                            keyExtractor={(item)=>item.id}
-                            renderItem={({item,index})=>(
-                                <Log
-                                    key={`walletLogs${index}`}
-                                    transaction={item}
-                                    index={index}
-                                />
-                            )}
-                            // onEndReached={()=>{
-                            //     setPageLoading(true)
-                            //     setPageIndex(state=>state+1)
-                            // }}
-                            // onEndReachedThreshold={2}
-                            scrollEnabled={true}
-                        />
-                </View>
-        </View>
-            
-       </CheckIdleState>
-    )
-})
+      <View style={{marginVertical: moderateScale(15)}}>
+        <LoadingIndicator isLoading={pageInfo.hasNextPage} size="small" />
+      </View>
+    );
+  };
+
+  if (loading && !refreshing) {
+    return (
+      <View style={styles.container}>
+        <LoadingIndicator isLoading={true} isFlex />
+      </View>
+    );
+  }
+  return (
+    <CheckIdleState>
+      <View style={styles.container}>
+        <FlatList
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={Refetch} />}
+          showsVerticalScrollIndicator={false}
+          data={allTransactions}
+          keyExtractor={item => item.id}
+          renderItem={({item, index}) => (
+            <TransactionLog key={`walletLogs${index}`} transaction={item} index={index} data={allTransactions} />
+          )}
+          onEndReachedThreshold={0.02}
+          onEndReached={fetchMoreData}
+          ListFooterComponent={ListFooterComponent}
+          getItemLayout={(data, index) => ({
+            length: data.length,
+            offset: data.length * index,
+            index,
+          })}
+          scrollEnabled={true}
+          contentContainerStyle={{paddingHorizontal: moderateScale(16)}}
+        />
+      </View>
+    </CheckIdleState>
+  );
+});
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor:"white",
-    },
-    logs: {
-        // marginTop: 10,
-        paddingHorizontal: 16,
-        paddingVertical: 10,
-    },
-    filterType: {
-        alignSelf: "flex-end",
-        padding: 2, 
-        paddingHorizontal: 15, 
-        borderRadius: 10,
-        borderWidth: 1,
-        marginRight: 5
-    },
-})
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  logs: {
+    // marginTop: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  filterType: {
+    alignSelf: 'flex-end',
+    padding: 2,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginRight: 5,
+  },
+});
