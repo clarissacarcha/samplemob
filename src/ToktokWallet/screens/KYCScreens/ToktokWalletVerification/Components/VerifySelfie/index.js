@@ -15,7 +15,6 @@ import {
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import {VerifyContext} from '../VerifyContextProvider';
 import {useNavigation} from '@react-navigation/native';
-import {ICON_SET, VectorIcon, YellowButton} from 'src/revamp';
 import ImageCropper from 'react-native-simple-image-cropper';
 import CONSTANTS from 'common/res/constants';
 
@@ -35,17 +34,6 @@ const CROP_AREA_WIDTH = width * 0.9;
 const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 const ratio = Math.min(width / CROP_AREA_WIDTH, height / CROP_AREA_HEIGHT);
 
-const Reminder = ({children}) => {
-  return (
-    <View style={{flexDirection: 'row', marginVertical: 5}}>
-      <View style={{padding: 2, borderRadius: 100, borderColor: COLOR.YELLOW, borderWidth: 1, marginRight: 10}}>
-        <VectorIcon size={12} iconSet={ICON_SET.Feather} name="check" />
-      </View>
-      {children}
-    </View>
-  );
-};
-
 const ViewPrivacyPolicy = () => {
   return Linking.openURL('https://toktok.ph/privacy-policy');
 };
@@ -53,39 +41,41 @@ const ViewPrivacyPolicy = () => {
 const MainComponent = ({children, onPress, onPressBack}) => {
   return (
     <>
-      <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
-        <View>
-          <Image
-            style={styles.policyIcon}
-            source={require('toktokwallet/assets/icons/walletVerify.png')}
-            resizeMode="contain"
-          />
-        </View>
-        <View style={styles.privacyPolicyContainer}>
-          <Text style={styles.detailsText}>
-            All your details are protected in accordance with our{' '}
-            <Text style={styles.privacyPolicy}>Privacy Policy.</Text>
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <ScrollView style={styles.content}>
-        <Text style={styles.title}>Take a Selfie</Text>
-        <Text style={styles.titleDescription}>Take a photo to verify your identity.</Text>
-        <View style={styles.mainInput}>
-          <View style={{marginTop: 20, flex: 1}}>
-            <Text style={styles.selfieLabel}>Take a Selfie</Text>
-            {children}
+      <ScrollView>
+        <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
+          <View>
+            <Image
+              style={styles.policyIcon}
+              source={require('toktokwallet/assets/icons/walletVerify.png')}
+              resizeMode="contain"
+            />
           </View>
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Text style={styles.benefitsText}>Reminders</Text>
-            <View style={styles.benefitsContainer}>
-              <View style={styles.benefitsListContainer}>
-                <Image style={styles.checkIcon} source={circleCheck} />
-                <Text style={styles.benefitsListText}>Position your face within the frame</Text>
-              </View>
-              <View style={styles.benefitsListContainer}>
-                <Image style={styles.checkIcon} source={circleCheck} />
-                <Text style={styles.benefitsListText}>Don’t wear anything covering your face</Text>
+          <View style={styles.privacyPolicyContainer}>
+            <Text style={styles.detailsText}>
+              All your details are protected in accordance with our{' '}
+              <Text style={styles.privacyPolicy}>Privacy Policy.</Text>
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.content}>
+          <Text style={styles.title}>Take a Selfie</Text>
+          <Text style={styles.titleDescription}>Take a photo to verify your identity.</Text>
+          <View style={styles.mainInput}>
+            <View style={{marginTop: 20, flex: 1}}>
+              <Text style={styles.selfieLabel}>Take a Selfie</Text>
+              {children}
+            </View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <Text style={styles.benefitsText}>Reminders</Text>
+              <View style={styles.benefitsContainer}>
+                <View style={styles.benefitsListContainer}>
+                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Text style={styles.benefitsListText}>Position your face within the frame</Text>
+                </View>
+                <View style={styles.benefitsListContainer}>
+                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Text style={styles.benefitsListText}>Don’t wear anything covering your face</Text>
+                </View>
               </View>
             </View>
           </View>
@@ -95,7 +85,7 @@ const MainComponent = ({children, onPress, onPressBack}) => {
       <PreviousNextButton
         label="Previous"
         labelTwo="Next"
-        onPress={onPress}
+        onPressNext={onPress}
         onPressPrevious={onPressBack}
         hasShadow
         isPrevious
@@ -206,11 +196,10 @@ export const VerifySelfie = () => {
           onPress={() => {
             navigation.push('ToktokWalletSelfieImageCamera', {setImage});
           }}
-          style={[styles.selfieBtn, tempSelfieImage && {borderColor: COLOR.RED}]}>
+          style={[styles.selfieBtn]}>
           <EIcon name="camera" color={COLOR.ORANGE} size={25} />
           <Text style={{marginBottom: 5, fontSize: FONT_SIZE.S}}>Take a photo</Text>
         </TouchableOpacity>
-        {tempSelfieImage && <Text style={styles.requiredText}>Photo is required</Text>}
       </MainComponent>
     </>
   );
