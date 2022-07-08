@@ -2,12 +2,9 @@ import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator, FlatList, Dimensions} from 'react-native';
 import CONSTANTS from 'common/res/constants';
 import {useNavigation} from '@react-navigation/native';
-import {Separator, WalletLog} from 'toktokwallet/components';
+import {Separator, WalletLog, TransactionLog} from 'toktokwallet/components';
 import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
 import {useAccount} from 'toktokwallet/hooks';
-
-//SELF IMPORTS
-import Log from './Log';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 const {height, width} = Dimensions.get('window');
@@ -22,7 +19,7 @@ const WalletRecentTransactions = () => {
 
     return navigation.navigate('ToktokWalletPaymentOptions');
   };
-
+  console.log(tokwaAccount.transactions);
   const CashInNow = () => (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Image style={{height: 219, width: 291}} source={require('toktokwallet/assets/images/Landing-page.png')} />
@@ -40,11 +37,11 @@ const WalletRecentTransactions = () => {
 
   const RecentRecords = () => (
     <>
-      <View style={{flexDirection: 'row', marginTop: -30, paddingBottom: 0}}>
+      <View style={{flexDirection: 'row', paddingBottom: 0}}>
         <View style={{flex: 1, alignItems: 'flex-start'}}>
           <Text style={styles.title}>Recent Transactions</Text>
         </View>
-        {tokwaAccount?.wallet?.allTransactions?.length > 5 && (
+        {tokwaAccount?.wallet?.transactions?.length > 5 && (
           <TouchableOpacity
             onPress={ViewTransactions}
             style={{flex: 1, justifyContent: 'flex-end', flexDirection: 'row'}}>
@@ -64,8 +61,8 @@ const WalletRecentTransactions = () => {
       </View>
 
       <View style={styles.transactions}>
-        {tokwaAccount?.wallet?.recentTransactions?.map((item, index) => (
-          <Log
+        {tokwaAccount?.wallet?.transactions?.slice(0, 5).map((item, index) => (
+          <TransactionLog
             key={`recentLog${index}`}
             transaction={item}
             itemsLength={tokwaAccount?.wallet?.recentTransactions}
