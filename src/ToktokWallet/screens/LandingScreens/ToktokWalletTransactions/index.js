@@ -109,7 +109,7 @@ export const ToktokWalletTransactions = connect(
 
   const ListFooterComponent = () => {
     return (
-      <View style={{marginTop: moderateScale(15)}}>
+      <View style={{marginVertical: moderateScale(15)}}>
         <LoadingIndicator isLoading={pageInfo.hasNextPage} size="small" />
       </View>
     );
@@ -142,7 +142,7 @@ export const ToktokWalletTransactions = connect(
             index,
           })}
           scrollEnabled={true}
-          contentContainerStyle={{padding: moderateScale(16)}}
+          contentContainerStyle={{paddingHorizontal: moderateScale(16)}}
         />
       </View>
     </CheckIdleState>

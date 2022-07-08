@@ -1,5 +1,6 @@
 export * from './HeaderBack';
 export * from './HeaderCancel';
+export * from './HeaderHomeBackground';
 export * from './HeaderImageBackground';
 export * from './HeaderRight';
 export * from './HeaderTitle';
