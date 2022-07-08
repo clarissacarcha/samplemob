@@ -42,19 +42,6 @@ const CROP_AREA_HEIGHT = CROP_AREA_WIDTH + 50;
 
 const ratio = Math.min(width / CROP_AREA_WIDTH, height / CROP_AREA_HEIGHT);
 
-const Reminder = ({children}) => {
-  return (
-    <View style={{flexDirection: 'row', marginVertical: 5, paddingHorizontal: 16}}>
-      <View>
-        <View style={{padding: 2, borderRadius: 100, borderColor: COLOR.YELLOW, borderWidth: 1, marginRight: 10}}>
-          <VectorIcon size={12} iconSet={ICON_SET.Feather} name="check" />
-        </View>
-      </View>
-      <View style={{paddingRight: 20}}>{children}</View>
-    </View>
-  );
-};
-
 const ViewPrivacyPolicy = () => {
   return Linking.openURL('https://toktok.ph/privacy-policy');
 };
@@ -131,7 +118,7 @@ const MainComponent = ({children, onPress, onPressBack}) => {
       <PreviousNextButton
         label="Previous"
         labelTwo="Next"
-        onPress={onPress}
+        onPressNext={onPress}
         onPressPrevious={onPressBack}
         hasShadow
         isPrevious
@@ -143,6 +130,7 @@ const MainComponent = ({children, onPress, onPressBack}) => {
 export const VerifySelfieWithID = () => {
   const [showPepQuestionnaire, setShowPepQuestionnaire] = useState(false);
   const [showPepVideoRequest, setShowPepVideoRequest] = useState(false);
+  const [required, setRequired] = useState(false);
   const VerifyUserData = useContext(VerifyContext);
   const {
     setCacheImagesList,
@@ -211,37 +199,39 @@ export const VerifySelfieWithID = () => {
 
   const Proceed = async () => {
     if (tempSelfieImageWithID == null) {
-      return navigation.push('ToktokWalletSelfieImageWithIDCamera', {setImage});
-    }
-    try {
-      const croppedResult = await ImageCropper.crop({
-        ...cropperParams,
-        // imageUri: selfieImage.uri,
-        imageUri: tempSelfieImageWithID.uri,
-        cropSize,
-        cropAreaSize,
-      });
+      // return navigation.push('ToktokWalletSelfieImageWithIDCamera', {setImage});
+      setRequired(true);
+    } else {
+      try {
+        const croppedResult = await ImageCropper.crop({
+          ...cropperParams,
+          // imageUri: selfieImage.uri,
+          imageUri: tempSelfieImageWithID.uri,
+          cropSize,
+          cropAreaSize,
+        });
 
-      setSelfieImageWithID(state => ({
-        ...state,
-        uri: croppedResult,
-      }));
+        setSelfieImageWithID(state => ({
+          ...state,
+          uri: croppedResult,
+        }));
 
-      postVerifyIfPep({
-        variables: {
-          input: {
-            firstName: person.firstName,
-            middleName: person.middleName,
-            lastName: person.lastName,
-            birthDate: birthInfo.birthdate,
-            placeOfBirth: birthInfo.birthPlace,
-            gender: person.gender,
-            nationality: nationalityId,
+        postVerifyIfPep({
+          variables: {
+            input: {
+              firstName: person.firstName,
+              middleName: person.middleName,
+              lastName: person.lastName,
+              birthDate: birthInfo.birthdate,
+              placeOfBirth: birthInfo.birthPlace,
+              gender: person.gender,
+              nationality: nationalityId,
+            },
           },
-        },
-      });
-    } catch (error) {
-      throw error;
+        });
+      } catch (error) {
+        throw error;
+      }
     }
   };
 
@@ -314,10 +304,11 @@ export const VerifySelfieWithID = () => {
           onPress={() => {
             navigation.push('ToktokWalletSelfieImageWithIDCamera', {setImage});
           }}
-          style={[styles.selfieBtn]}>
+          style={[styles.selfieBtn, required && {borderColor: COLOR.RED}]}>
           <EIcon name="camera" color={COLOR.ORANGE} size={25} />
           <Text style={{marginBottom: 5, fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Take a photo</Text>
         </TouchableOpacity>
+        {required && <Text style={styles.requiredText}>Photo is required</Text>}
       </MainComponent>
     </>
   );
