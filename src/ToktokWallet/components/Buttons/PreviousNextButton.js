@@ -34,19 +34,19 @@ export const PreviousNextButton = ({
     <>
       <View
         style={{
-        ...styles.blackButton,
-        ...(hasShadow && styles.shadow),
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignContent: 'center',
+          ...styles.blackButton,
+          ...(hasShadow && styles.shadow),
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignContent: 'center',
         }}
         underlayColor={'white'}>
-          <TouchableOpacity style={[styles.previous, style, {width: '45%'}]}  onPress={onPressPreviousThrottled}>
-            <Text style={[styles.previousLabel, labelStyle]}>{label}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.blackButtonBox, style, {width: '45%'}]}  onPress={onPressNextThrottled}>
-            <Text style={[styles.label, labelStyle]}>{labelTwo}</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={[styles.previous, style, {width: '48%'}]} onPress={onPressPreviousThrottled}>
+          <Text style={[styles.previousLabel, labelStyle]}>{label}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.blackButtonBox, style, {width: '48%'}]} onPress={onPressNextThrottled}>
+          <Text style={[styles.label, labelStyle]}>{labelTwo}</Text>
+        </TouchableOpacity>
       </View>
     </>
   );
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.BOLD,
   },
   shadow: {
-    paddingHorizontal: moderateScale(32),
+    paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(16),
     shadowColor: '#000',
     shadowOffset: {
