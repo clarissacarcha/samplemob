@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Animated, Alert, Image, Platform} from 'react-native';
 import CONSTANTS from 'common/res/constants';
 import {useNavigation} from '@react-navigation/native';
-import {Separator, HeaderImageBackground, HeaderTitleRevamp, HeaderBack, HeaderKebab} from 'toktokwallet/components';
+import {Separator, HeaderHomeBackground, HeaderTitleRevamp, HeaderBack, HeaderKebab} from 'toktokwallet/components';
 import {numberFormat, moderateScale, currencyCode, getDeviceWidth as width} from 'toktokwallet/helper';
 import {basic, enterprise, verified} from 'toktokwallet/assets';
 import {useAccount} from 'toktokwallet/hooks';
@@ -68,7 +68,7 @@ const WalletCardInfo = ({loading}) => {
 
   return (
     <View style={styles.container}>
-      <HeaderImageBackground>
+      <HeaderHomeBackground>
         <View style={styles.headerContainer}>
           <View>
             <View style={{flexDirection: 'row'}}>
@@ -98,7 +98,7 @@ const WalletCardInfo = ({loading}) => {
             </View>
           </View>
         </View>
-      </HeaderImageBackground>
+      </HeaderHomeBackground>
       <View style={styles.whitespace}>
         <WalletMethods />
         <View style={styles.informationContainer}>
