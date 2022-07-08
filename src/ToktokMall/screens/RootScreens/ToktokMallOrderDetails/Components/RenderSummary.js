@@ -95,7 +95,7 @@ export const RenderSummary = ({data}) => {
             <View style={{flex: 1}}>
               <Text style={{fontSize: 13}}>Shipping Total</Text>
               <Text style={styles.itemTotalText}>Merchandise Subtotal </Text>
-              <Text style={styles.itemTotalText}>Discount </Text>
+              {data?.discounts?.totalDiscount > 0 && <Text style={styles.itemTotalText}>Discount </Text>}              
             </View>
             <View styl={{flex: 1}}>
               <Text style={{fontSize: 13, textAlign:'right'}}>
@@ -104,9 +104,11 @@ export const RenderSummary = ({data}) => {
               <Text style={styles.itemTotalText}>
                 <Price amount={data?.srpTotalamount} />
               </Text>
-              <Text style={{fontSize: 13, paddingTop:8, color: "#ED3A19"}}>
-                - <Price amount={data?.discounts?.totalDiscount} />
-              </Text>
+              {data?.discounts?.totalDiscount > 0 &&
+                <Text style={{fontSize: 13, paddingTop:8, color: "#ED3A19"}}>
+                  - <Price amount={data?.discounts?.totalDiscount} />
+                </Text>
+              }
             </View>
           </View>
         }
