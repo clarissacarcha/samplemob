@@ -174,7 +174,7 @@ export const VoucherScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <AlertOverlay visible={PCVLoading} />
-      <Header title={'Voucher'} navigation={navigation} />
+      <Header title={'Vouchers'} navigation={navigation} />
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
       <View style={styles.containerInput}>
         <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} />
