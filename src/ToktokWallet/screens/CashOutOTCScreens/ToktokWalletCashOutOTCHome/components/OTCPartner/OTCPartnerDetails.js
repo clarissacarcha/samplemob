@@ -17,7 +17,7 @@ export const OTCPartnerDetails = React.memo(({item, index}) => {
   const [imageLoading, setImageLoading] = useState(false);
 
   const onPress = () => {
-    navigation.navigate('ToktokWalletCashOutOTCTransaction');
+    navigation.navigate('ToktokWalletCashOutOTCTransaction', {otcPartnerDetails: item});
   };
 
   const onThrottledPress = useThrottle(onPress, 2000);
@@ -32,7 +32,7 @@ export const OTCPartnerDetails = React.memo(({item, index}) => {
             </View>
           )}
           <FastImage
-            source={{uri: item.icon}}
+            source={{uri: item?.logo}}
             style={styles.itemLogo}
             resizeMode={FastImage.resizeMode.contain}
             onLoadStart={() => setImageLoading(true)}

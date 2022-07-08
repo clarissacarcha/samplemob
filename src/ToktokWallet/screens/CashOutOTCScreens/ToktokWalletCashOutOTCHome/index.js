@@ -1,9 +1,14 @@
-import React from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {Dimensions, StyleSheet, Text, View, ImageBackground} from 'react-native';
 
 //COMPONENTS
-import {HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
-import {OTCPartner, TransferableAndNonTransferableBalance} from './components';
+import {HeaderBack, HeaderTitleRevamp, LoadingIndicator, SomethingWentWrong} from 'toktokwallet/components';
+import {OTCPartner, TransferableAndNonTransferableBalance, VerifyContext, VerifyContextProvider} from './components';
+
+//GRAPHQL & HOOKS
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+import {GET_CASH_OUT_PROVIDER_PARTNERS} from 'toktokwallet/graphql';
 
 //HELPER
 import {moderateScale} from 'toktokwallet/helper';
@@ -13,6 +18,21 @@ const {height, width} = Dimensions.get('window');
 
 //IMAGES
 import {backgrounds} from 'toktokwallet/assets';
+
+const MainComponent = ({navigation}) => {
+  const {getCashOutProviderPartnersError, getCashOutProviderPartners} = useContext(VerifyContext);
+
+  if (getCashOutProviderPartnersError) {
+    return <SomethingWentWrong onRefetch={getCashOutProviderPartners} error={getCashOutProviderPartnersError} />;
+  }
+  return (
+    <ImageBackground style={styles.container} source={backgrounds.gradient_bg} resizeMode="cover">
+      <TransferableAndNonTransferableBalance />
+      <OTCPartner />
+    </ImageBackground>
+  );
+};
+
 export const ToktokWalletCashOutOTCHome = ({navigation}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack color={COLOR.ORANGE} />,
@@ -20,10 +40,9 @@ export const ToktokWalletCashOutOTCHome = ({navigation}) => {
   });
 
   return (
-    <ImageBackground style={styles.container} source={backgrounds.gradient_bg} resizeMode="cover">
-      <TransferableAndNonTransferableBalance />
-      <OTCPartner />
-    </ImageBackground>
+    <VerifyContextProvider>
+      <MainComponent />
+    </VerifyContextProvider>
   );
 };
 
