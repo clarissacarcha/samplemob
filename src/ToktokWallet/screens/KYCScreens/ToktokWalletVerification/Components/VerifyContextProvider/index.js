@@ -63,6 +63,15 @@ export const VerifyContextProvider = ({children}) => {
     postalCode: '',
     countryId: 175,
   });
+
+  const [verifyAddressErrors, setVerifyAddressErrors] = useState({
+    streetError: '',
+    barangayError: '',
+    provinceError: '',
+    cityError: '',
+    postalError: ''
+  })
+
   const [province, setProvince] = useState('');
   const [provinceId, setProvinceId] = useState('');
   const [city, setCity] = useState('');
@@ -139,6 +148,14 @@ export const VerifyContextProvider = ({children}) => {
       [key]: value,
     }));
   };
+
+  const changeVerifyAddressErrors = (key, value) => {
+    setVerifyAddressErrors(oldstate => ({
+      ...oldstate,
+      [key]: value,
+    }));
+  };
+  
 
   const changeAddress = (key, value) => {
     setAddress(oldstate => ({
@@ -233,6 +250,9 @@ export const VerifyContextProvider = ({children}) => {
         verifyFullNameErrors,
         setVerifyFullNameErrors,
         changeVerifyFullNameErrors,
+        verifyAddressErrors,
+        setVerifyAddressErrors,
+        changeVerifyAddressErrors
       }}>
       {children}
     </Provider>
