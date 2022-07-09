@@ -31,6 +31,7 @@ const INITIAL_STATE = {
   },
   constants: {},
   contacts: [],
+  appServices: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -77,6 +78,11 @@ export default (state = INITIAL_STATE, action) => {
           ...action.payload,
         },
       };
+    case 'SET_TOKWA_APP_SERVICES':
+      return {
+        ...state,
+        appServices:[...action.payload]
+      }
     case 'SET_CONTACTS':
       return {
         ...state,
