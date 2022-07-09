@@ -32,19 +32,6 @@ export const ToktokWalletHomePage = ({navigation, route}) => {
     });
   }, []);
 
-  // useFocusEffect(() => {
-  //     const backAction = () => {
-  //       navigation.pop(2);
-  //       return true;
-  //     };
-
-  //     const backHandler = BackHandler.addEventListener(
-  //       "hardwareBackPress",
-  //       backAction
-  //     );
-
-  //     return () => backHandler.remove();
-  //   }, []);
 
   return (
     <FlagSecureScreen>

@@ -4,6 +4,7 @@ export * from './AccountFavorite';
 export * from './AccountRecovery';
 export * from './AccountType';
 export * from './Advertisement';
+export * from './AppService';
 export * from './CallChannel';
 export * from './CashIn';
 export * from './CashInPartnerType';

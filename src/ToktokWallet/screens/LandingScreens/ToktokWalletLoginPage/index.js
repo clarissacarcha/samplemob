@@ -3,7 +3,7 @@ import { View ,ActivityIndicator,StatusBar,Text,TouchableOpacity, Alert} from 'r
 import {SomethingWentWrong} from 'src/components'
 import CONSTANTS from 'common/res/constants'
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
-import {GET_USER_TOKTOK_WALLET_DATA ,GET_GLOBAL_SETTINGS} from 'toktokwallet/graphql'
+import {GET_USER_TOKTOK_WALLET_DATA ,GET_GLOBAL_SETTINGS , GET_APP_SERVICES } from 'toktokwallet/graphql'
 import {useAlert, usePrompt} from 'src/hooks'
 import {onErrorAlert} from 'src/util/ErrorUtility'
 import {useLazyQuery, useQuery} from '@apollo/react-hooks'
@@ -71,6 +71,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
          CheckIfDeviceIsRooted();
          refreshWallet();
          getGlobalSettings();
+         getAppServices();
      },[])
 
      const mapKeyValueToObject = keyValueArray => {
@@ -81,6 +82,17 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
       
         return result;
       };
+
+    const [getAppServices] = useLazyQuery(GET_APP_SERVICES , {
+        fetchPolicy:"network-only",
+        client:TOKTOK_WALLET_GRAPHQL_CLIENT,
+        onCompleted: ({getAppServices})=> {
+            dispatch({
+                type: "SET_TOKWA_APP_SERVICES",
+                payload: getAppServices
+            })
+        }
+    })
 
     const [getGlobalSettings] = useLazyQuery(GET_GLOBAL_SETTINGS, {
         fetchPolicy: "network-only",
@@ -145,7 +157,7 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
                         pinSet={pinSet}
                         isPinCodeCheckingEnabled={tokwaAccount.constants.isPinCodeCheckingEnabled }
                   />
-                : <RenderAccessComponent kycPep={kycPep} kycStatus={kycStatus}/>     
+                : <RenderAccessComponent kycPep={kycPep} kycStatus={kycStatus}/>    
             }
             
         </FlagSecureScreen>
