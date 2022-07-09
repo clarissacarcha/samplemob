@@ -34,11 +34,9 @@ import {moderateScale} from 'toktokwallet/helper';
 import {calendar_icon} from 'toktokwallet/assets';
 
 //SELF IMPORTS
-import BottomSheetGender from './BottomSheetGender';
-import BottomSheetSourceOfIncome from './BottomSheetSourceOfIncome';
-import DateBirthModal from './DateBirthModal';
+import SourceOfIncome from './SourceOfIncome';
 import ModalNationality from './ModalNationality';
-import {OrangeButton} from 'toktokwallet/components';
+import {OrangeButton, CustomTextInput, CustomSelectionList, CustomDateInput} from 'toktokwallet/components';
 
 const {COLOR, FONT_FAMILY: FONT, SIZE, FONT_SIZE} = CONSTANTS;
 
@@ -179,14 +177,6 @@ export const VerifyFullname = () => {
 
   return (
     <>
-      <DateBirthModal
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        birthInfo={birthInfo}
-        changeBirthInfo={changeBirthInfo}
-        changeError={() => changeVerifyFullNameErrors('birthdateError', '')}
-      />
-      <ModalNationality visible={modalNationalityVisible} setVisible={setModalNationalityVisible} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={Platform.OS === 'ios' ? keyboardVerticalOffset : screen.height * 0.5}
@@ -228,38 +218,25 @@ export const VerifyFullname = () => {
             </View>
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>First Name</Text>
-              <TextInput
-                style={{...styles.input, ...(!!verifyFullNameErrors.firstNameError ? styles.errorBorder : {})}}
+              <CustomTextInput
                 value={person.firstName}
                 onChangeText={value => {
                   changePersonInfo('firstName', value);
                   changeVerifyFullNameErrors('firstNameError', '');
                 }}
-                placeholder="Enter first name here"
-                placeholderTextColor={COLOR.DARK}
-                returnKeyType="done"
+                errorMessage={verifyFullNameErrors.firstNameError}
               />
-              {!!verifyFullNameErrors.firstNameError && (
-                <Text style={styles.errorMessage}>{verifyFullNameErrors.firstNameError}</Text>
-              )}
             </View>
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Middle Name</Text>
-              <TextInput
-                editable={person.hasMiddleName}
-                style={{...styles.input, ...(verifyFullNameErrors.middleNameError ? styles.errorBorder : {})}}
+              <CustomTextInput
                 value={person.middleName}
                 onChangeText={value => {
                   changePersonInfo('middleName', value);
                   changeVerifyFullNameErrors('middleNameError', '');
                 }}
-                placeholder="Enter middle name here"
-                placeholderTextColor={COLOR.DARK}
-                returnKeyType="done"
+                errorMessage={verifyFullNameErrors.middleNameError}
               />
-              {!!verifyFullNameErrors.middleNameError && (
-                <Text style={styles.errorMessage}>{verifyFullNameErrors.middleNameError}</Text>
-              )}
               <View style={styles.checkBoxContainer}>
                 <CheckBox
                   isChecked={!person.hasMiddleName}
@@ -278,210 +255,103 @@ export const VerifyFullname = () => {
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Last Name</Text>
-              <TextInput
-                style={{...styles.input, ...(verifyFullNameErrors.lastNameError ? styles.errorBorder : {})}}
+              <CustomTextInput
                 value={person.lastName}
                 onChangeText={value => {
                   changePersonInfo('lastName', value);
                   changeVerifyFullNameErrors('lastNameError', '');
                 }}
-                placeholder="Enter last name here"
-                placeholderTextColor={COLOR.DARK}
-                returnKeyType="done"
+                errorMessage={verifyFullNameErrors.lastNameError}
               />
-              {!!verifyFullNameErrors.lastNameError && (
-                <Text style={styles.errorMessage}>{verifyFullNameErrors.lastNameError}</Text>
-              )}
             </View>
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Gender</Text>
-              <TouchableOpacity
-                style={[
-                  styles.input,
-                  styles.selectionContainer,
-                  styles.shadow,
-                  {...(verifyFullNameErrors.genderError ? styles.errorBorder : {})},
-                ]}
-                onPress={() => setVisibleGenderModal(true)}>
-                {person.gender == '' ? (
-                  <Text style={[styles.selectionText, {color: COLOR.DARK}]}>Select Gender</Text>
-                ) : (
-                  <Text style={styles.selectionText}>{person.gender}</Text>
-                )}
-                <VectorIcon
-                  iconSet={ICON_SET.FontAwesome5}
-                  name="chevron-down"
-                  size={moderateScale(16)}
-                  color={COLOR.ORANGE}
-                />
-              </TouchableOpacity>
-              {!!verifyFullNameErrors.genderError && (
-                <Text style={styles.errorMessage}>{verifyFullNameErrors.genderError}</Text>
-              )}
+              <CustomSelectionList
+                placeholder="Select Gender"
+                onSelectedValue={({value}) => {
+                  changePersonInfo('gender', value);
+                  changeVerifyFullNameErrors('genderError', '');
+                }}
+                errorMessage={verifyFullNameErrors.genderError}
+                data={[{description: 'Female'}, {description: 'Male'}]}
+                selectedValue={person.gender}
+              />
             </View>
-
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Email</Text>
-              <TextInput
-                style={{...styles.input, ...(verifyFullNameErrors.emailError ? styles.errorBorder : {})}}
+              <CustomTextInput
                 value={contactInfo.email}
                 onChangeText={value => {
                   changeContactInfo('email', value);
                   changeVerifyFullNameErrors('emailError', '');
                 }}
-                placeholder="Enter email here"
-                placeholderTextColor={COLOR.DARK}
-                returnKeyType="done"
+                errorMessage={verifyFullNameErrors.emailError}
               />
-              {!!verifyFullNameErrors.emailError && (
-                <Text style={styles.errorMessage}>{verifyFullNameErrors.emailError}</Text>
-              )}
             </View>
-
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Date of Birth</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  scrollviewRef.current.scrollTo({x: 0, y: screen.height * 0.9, animated: true});
-                  setModalVisible(true);
+              <CustomDateInput
+                onSelectedValue={date => {
+                  changeBirthInfo('birthdate', date);
+                  changeVerifyFullNameErrors('birthdateError', '');
                 }}
-                style={{
-                  ...styles.input,
-                  ...styles.flexCenter,
-                  ...(verifyFullNameErrors.birthdateError ? styles.errorBorder : {}),
-                }}>
-                {birthInfo.birthdate == '' ? (
-                  <Text style={[styles.selectionText, {color: COLOR.DARK}]}>mm/dd/yy</Text>
-                ) : (
-                  <Text style={[styles.selectionText]}>{moment(birthInfo.birthdate).format('MM/DD/YYYY')}</Text>
-                )}
-                <Image source={calendar_icon} style={{width: moderateScale(20), height: moderateScale(20)}} />
-              </TouchableOpacity>
-              {!!verifyFullNameErrors.birthdateError && (
-                <Text style={styles.errorMessage}>{verifyFullNameErrors.birthdateError}</Text>
-              )}
+                selectedValue={birthInfo.birthdate}
+                errorMessage={verifyFullNameErrors.birthdateError}
+              />
             </View>
-
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Place of Birth</Text>
-              <TextInput
-                style={{
-                  ...styles.input,
-                  ...(verifyFullNameErrors.birthPlaceError ? styles.errorBorder : {}),
-                }}
+              <CustomTextInput
                 value={birthInfo.birthPlace}
                 onChangeText={value => {
                   changeBirthInfo('birthPlace', value);
                   changeVerifyFullNameErrors('birthPlaceError', '');
                 }}
-                placeholder={'Enter place of birth here'}
-                placeholderTextColor={COLOR.DARK}
-                returnKeyType="done"
+                errorMessage={verifyFullNameErrors.birthPlaceError}
               />
-              {!!verifyFullNameErrors.birthPlaceError && (
-                <Text style={styles.errorMessage}>{verifyFullNameErrors.birthPlaceError}</Text>
-              )}
             </View>
-
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Nationality</Text>
-              <TouchableOpacity
-                onPress={() => setModalNationalityVisible(true)}
-                style={[styles.input, styles.selectionContainer, styles.shadow]}>
-                <Text style={{flex: 1, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{nationality}</Text>
-                <VectorIcon
-                  iconSet={ICON_SET.FontAwesome5}
-                  name="chevron-down"
-                  size={moderateScale(16)}
-                  color={COLOR.ORANGE}
-                />
-              </TouchableOpacity>
+              <ModalNationality verifyFullNameErrors={verifyFullNameErrors} />
             </View>
-
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Occupation</Text>
-              <TextInput
-                placeholder="Enter occupation here"
-                placeholderTextColor={COLOR.DARK}
-                style={{
-                  ...styles.input,
-                  ...(verifyFullNameErrors.occupationError ? styles.errorBorder : {}),
-                }}
+              <CustomTextInput
                 value={incomeInfo.occupation}
                 onChangeText={value => {
                   changeIncomeInfo('occupation', value);
                   changeVerifyFullNameErrors('occupationError', '');
                 }}
                 maxLength={30}
+                errorMessage={verifyFullNameErrors.occupationError}
               />
-              {!!verifyFullNameErrors.occupationError && (
-                <Text style={styles.errorMessage}>{verifyFullNameErrors.occupationError}</Text>
-              )}
             </View>
-
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Source of Income</Text>
-              <TouchableOpacity
-                onPress={() => setVisibleSOIModal(true)}
-                style={[
-                  styles.input,
-                  styles.selectionContainer,
-                  styles.shadow,
-                  {...(verifyFullNameErrors.sourceIncomeError ? styles.errorBorder : {})},
-                ]}>
-                {incomeInfo.source == '' ? (
-                  <Text style={[styles.selectionText, {color: COLOR.DARK}]}>Select Source of Income</Text>
-                ) : (
-                  <Text style={[styles.selectionText]}>{incomeInfo.source.description}</Text>
-                )}
-                <VectorIcon
-                  iconSet={ICON_SET.FontAwesome5}
-                  name="chevron-down"
-                  size={moderateScale(16)}
-                  color={COLOR.ORANGE}
-                />
-              </TouchableOpacity>
-              {!!verifyFullNameErrors.sourceIncomeError && (
-                <Text style={styles.errorMessage}>{verifyFullNameErrors.sourceIncomeError}</Text>
-              )}
+              <SourceOfIncome
+                selectedValue={incomeInfo?.source.description}
+                changeIncomeInfo={changeIncomeInfo}
+                changeVerifyFullNameErrors={changeVerifyFullNameErrors}
+                verifyFullNameErrors={verifyFullNameErrors}
+              />
             </View>
             {incomeInfo.source.id == '0' && (
-              <View style={{marginTop: 10}}>
-                <TextInput
-                  placeholder="Enter Source of Income here"
-                  placeholderTextColor={COLOR.DARK}
-                  style={{
-                    ...styles.input,
-                    ...(verifyFullNameErrors.otherSourceError ? styles.errorBorder : {}),
-                  }}
+              <View style={{marginTop: moderateScale(10)}}>
+                <CustomTextInput
                   value={incomeInfo.otherSource}
                   onChangeText={value => {
                     changeIncomeInfo('otherSource', value);
                     changeVerifyFullNameErrors('otherSourceError', '');
                   }}
+                  errorMessage={verifyFullNameErrors.otherSourceError}
                 />
-                {!!verifyFullNameErrors.otherSourceError && (
-                  <Text style={styles.errorMessage}>{verifyFullNameErrors.otherSourceError}</Text>
-                )}
               </View>
             )}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
       <OrangeButton label="Next" onPress={NextPage} hasShadow />
-      <BottomSheetGender
-        setVisibleGenderModal={setVisibleGenderModal}
-        visibleGenderModal={visibleGenderModal}
-        changePersonInfo={changePersonInfo}
-        changeVerifyFullNameErrors={changeVerifyFullNameErrors}
-      />
-      <BottomSheetSourceOfIncome
-        changeIncomeInfo={changeIncomeInfo}
-        visibleSOIModal={visibleSOIModal}
-        setVisibleSOIModal={setVisibleSOIModal}
-        changeVerifyFullNameErrors={changeVerifyFullNameErrors}
-      />
     </>
   );
 };
@@ -521,24 +391,6 @@ const styles = StyleSheet.create({
   proceedBtn: {
     height: 40,
     width: '100%',
-  },
-  input: {
-    height: 50,
-    borderRadius: 5,
-    backgroundColor: '#F7F7FA',
-    marginTop: 5,
-    fontFamily: FONT.REGULAR,
-    fontSize: FONT_SIZE.M,
-    paddingHorizontal: moderateScale(15),
-  },
-  errorBorder: {
-    borderColor: COLOR.RED,
-    borderWidth: 1,
-  },
-  errorMessage: {
-    color: COLOR.RED,
-    fontSize: FONT_SIZE.S,
-    marginTop: 5,
   },
   flexCenter: {
     flexDirection: 'row',
@@ -585,7 +437,6 @@ const styles = StyleSheet.create({
     height: SIZE.FORM_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: moderateScale(4.3),
     borderRightColor: '#DADADA',
     borderRightWidth: 1,
   },
@@ -611,28 +462,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 5,
     alignItems: 'center',
-  },
-  selectionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2,
-    elevation: 3,
-    backgroundColor: 'white',
-  },
-  selectionText: {
-    flex: 1,
-    fontFamily: FONT.REGULAR,
-    fontSize: FONT_SIZE.M,
   },
   information: {
     fontFamily: FONT.REGULAR,

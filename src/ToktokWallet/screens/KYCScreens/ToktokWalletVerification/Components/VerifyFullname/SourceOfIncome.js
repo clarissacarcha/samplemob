@@ -7,17 +7,11 @@ import {GET_SOURCE_OF_INCOME} from 'toktokwallet/graphql';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 import CONSTANTS from 'common/res/constants';
-import {ListModal} from '../../../../../components/Modals';
+import {CustomSelectionList} from 'toktokwallet/components';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 
-const BottomSheetSourceOfIncome = ({
-  changeIncomeInfo,
-  changeError,
-  visibleSOIModal,
-  setVisibleSOIModal,
-  changeVerifyFullNameErrors,
-}) => {
+const SourceOfIncome = ({changeIncomeInfo, changeVerifyFullNameErrors, verifyFullNameErrors, selectedValue}) => {
   const snapPoints = useMemo(() => [0, 550], []);
   const alert = useAlert();
   const [filteredSourceOfIncome, setFilteredSourceOfIncome] = useState([]);
@@ -34,7 +28,7 @@ const BottomSheetSourceOfIncome = ({
     },
   });
 
-  const onChangeSelect = ({index}) => {
+  const onSelectedValue = ({index}) => {
     if (filteredSourceOfIncome[index].id == '0') {
       changeIncomeInfo('otherSource', '');
     }
@@ -45,13 +39,14 @@ const BottomSheetSourceOfIncome = ({
   useEffect(() => getSourceOfIncome(), []);
 
   return (
-    <ListModal
+    <CustomSelectionList
       data={filteredSourceOfIncome}
-      setVisible={setVisibleSOIModal}
-      visible={visibleSOIModal}
-      onChangeSelect={onChangeSelect}
+      onSelectedValue={onSelectedValue}
+      errorMessage={verifyFullNameErrors.sourceIncomeError}
+      placeholder="Select Source of Income"
+      selectedValue={selectedValue}
     />
   );
 };
 
-export default BottomSheetSourceOfIncome;
+export default SourceOfIncome;
