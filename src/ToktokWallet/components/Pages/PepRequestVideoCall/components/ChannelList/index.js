@@ -14,7 +14,7 @@ import {
 
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR, SHADOW, SIZE } = CONSTANTS;
 
-export const ChannelList = ({ item, onPress }) => {
+export const ChannelList = ({ item, onPress , index }) => {
     const { selectedCallChannel, setSelectedCallChannel } = useContext(ContextChannelForm);
     const { channelName, logo, id } = item
     const isSelected = selectedCallChannel.channelName === channelName;
