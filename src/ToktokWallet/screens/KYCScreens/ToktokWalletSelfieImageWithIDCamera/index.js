@@ -302,7 +302,7 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation,route})=> {
                 }
         </View> */}
 
-                {/* <View
+                <View
                     style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
@@ -316,7 +316,7 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation,route})=> {
                          
                         </View>
                     </TouchableOpacity>
-                </View> */}
+                </View>
 
     </View>
     )

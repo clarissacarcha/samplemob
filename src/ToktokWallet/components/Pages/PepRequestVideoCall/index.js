@@ -30,7 +30,7 @@ const MainComponent = (props) => {
     return (
         <Transitioning.View ref={transitionRef} transition={transition} style={styles.container}>
             <FlatList
-                data={callChannels.splice(0,3)}
+                data={callChannels}
                 renderItem={({ item  , index }) => {
                     return(
                         <ChannelList index={index} item={item} onPress={onPress} />
