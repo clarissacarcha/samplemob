@@ -15,12 +15,9 @@ import {
 } from 'react-native';
 import {VerifyContext} from '../VerifyContextProvider';
 import validator from 'validator';
-import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
-import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import moment from 'moment';
 import {TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CHECK_BLOCKED_ACCOUNT_RECORD} from 'toktokwallet/graphql';
-import {useLazyQuery} from '@apollo/react-hooks';
+import {GET_CHECK_BLOCKED_ACCOUNT_RECORD,POST_VERIFY_IF_PEP} from 'toktokwallet/graphql';
+import {useLazyQuery,useMutation} from '@apollo/react-hooks';
 import {useAlert} from 'src/hooks/useAlert';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useNavigation} from '@react-navigation/native';
@@ -28,6 +25,7 @@ import CheckBox from 'react-native-check-box';
 import CONSTANTS from 'common/res/constants';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
+import {AlertOverlay} from 'src/components';
 
 //HELPER
 import {moderateScale} from 'toktokwallet/helper';
@@ -44,36 +42,46 @@ const screen = Dimensions.get('window');
 
 export const VerifyFullname = () => {
   const {
-    nationality,
-    nationalityId,
-    setCurrentIndex,
-    person,
-    changePersonInfo,
-    contactInfo,
-    changeContactInfo,
     birthInfo,
     changeBirthInfo,
-    setModalCountryVisible,
-    incomeInfo,
+    changeContactInfo,
     changeIncomeInfo,
-    verifyFullNameErrors,
+    changePersonInfo,
     changeVerifyFullNameErrors,
+    contactInfo,
+    incomeInfo,
+    nationalityId,
+    person,
+    setCurrentIndex,
+    setPepInfo,
+    verifyFullNameErrors,
+    appendPepScreens,
+    resetStepScreens
   } = useContext(VerifyContext);
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalNationalityVisible, setModalNationalityVisible] = useState(false);
-  const [modaltype, setModaltype] = useState('');
+
   const [mobile, setMobile] = useState(contactInfo.mobile_number.replace('+63', ''));
-  const genderRef = useRef();
-  const SourceOfIncomeRef = useRef();
   const alert = useAlert();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const keyboardVerticalOffset = headerHeight + getStatusBarHeight() + 10;
-  const [visibleGenderModal, setVisibleGenderModal] = useState(false);
-  const [visibleSOIModal, setVisibleSOIModal] = useState(false);
 
   const scrollviewRef = useRef();
+
+  const [postVerifyIfPep, {loading: verifyPepLoading}] = useMutation(POST_VERIFY_IF_PEP, {
+    client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+    onError: error => onErrorAlert({alert, error}),
+    onCompleted: ({postVerifyIfPep}) => {
+        setPepInfo(state => {
+          return {
+            ...state,
+            isPep: postVerifyIfPep,
+          };
+        });
+        postVerifyIfPep ? appendPepScreens() : resetStepScreens();
+        return setCurrentIndex(oldval => oldval + 1);
+    },
+  });
 
   const [getCheckBlockedAccountRecord, {loading}] = useLazyQuery(GET_CHECK_BLOCKED_ACCOUNT_RECORD, {
     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
@@ -91,7 +99,19 @@ export const VerifyFullname = () => {
       });
     },
     onCompleted: ({getCheckBlockedAccountRecord}) => {
-      return setCurrentIndex(oldval => oldval + 1);
+      postVerifyIfPep({
+        variables: {
+          input: {
+            firstName: person.firstName,
+            middleName: person.middleName,
+            lastName: person.lastName,
+            birthDate: birthInfo.birthdate,
+            placeOfBirth: birthInfo.birthPlace,
+            gender: person.gender,
+            nationality: nationalityId,
+          },
+        },
+      });
     },
   });
 
@@ -152,7 +172,6 @@ export const VerifyFullname = () => {
           },
         },
       });
-      setCurrentIndex(oldval => oldval + 1);
     }
   };
 
@@ -177,6 +196,7 @@ export const VerifyFullname = () => {
 
   return (
     <>
+      <AlertOverlay visible={verifyPepLoading}/>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={Platform.OS === 'ios' ? keyboardVerticalOffset : screen.height * 0.5}

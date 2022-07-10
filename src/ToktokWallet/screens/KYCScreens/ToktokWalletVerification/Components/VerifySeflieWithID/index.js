@@ -15,16 +15,7 @@ import {
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import {VerifyContext} from '../VerifyContextProvider';
 import {useNavigation} from '@react-navigation/native';
-import {ICON_SET, VectorIcon, YellowButton} from 'src/revamp';
-import {PepQuestionnaireModal, PepRequestVideoCallModal} from 'toktokwallet/components';
 import {moderateScale} from 'toktokwallet/helper';
-import {useMutation} from '@apollo/react-hooks';
-import {useAlert} from 'src/hooks';
-import {onErrorAlert} from 'src/util/ErrorUtility';
-import {AlertOverlay} from 'src/components';
-import {TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
-import {POST_VERIFY_IF_PEP} from 'toktokwallet/graphql';
-import {useFocusEffect} from '@react-navigation/native';
 import CONSTANTS from 'common/res/constants';
 import ImageCropper from 'react-native-simple-image-cropper';
 
@@ -128,26 +119,17 @@ const MainComponent = ({children, onPress, onPressBack}) => {
 };
 
 export const VerifySelfieWithID = () => {
-  const [showPepQuestionnaire, setShowPepQuestionnaire] = useState(false);
-  const [showPepVideoRequest, setShowPepVideoRequest] = useState(false);
   const [required, setRequired] = useState(false);
   const VerifyUserData = useContext(VerifyContext);
   const {
     setCacheImagesList,
     setCurrentIndex,
-    selfieImageWithID,
     setSelfieImageWithID,
     setTempSelfieImageWithID,
     tempSelfieImageWithID,
-    person,
-    birthInfo,
-    nationalityId,
-    pepInfo,
-    setPepInfo,
   } = VerifyUserData;
   const [cropperParams, setCropperParams] = useState({});
   const navigation = useNavigation();
-  const alert = useAlert();
   const cropSize = {
     // width: width,
     // height: height,
@@ -170,29 +152,6 @@ export const VerifySelfieWithID = () => {
     // setCurrentIndex(oldval => oldval + 1)
   };
 
-  const [postVerifyIfPep, {loading}] = useMutation(POST_VERIFY_IF_PEP, {
-    client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
-    onError: error => onErrorAlert({alert, error}),
-    onCompleted: ({postVerifyIfPep}) => {
-      if (postVerifyIfPep) {
-        setPepInfo(state => {
-          return {
-            ...state,
-            isPep: true,
-          };
-        });
-        return setShowPepQuestionnaire(true);
-      }
-
-      return setCurrentIndex(oldval => oldval + 1);
-    },
-  });
-
-  useFocusEffect(
-    useCallback(() => {
-      if (pepInfo?.questionnaire?.sourceOfIncomeId.length > 0) setShowPepQuestionnaire(true);
-    }, [pepInfo]),
-  );
   const Back = async () => {
     setCurrentIndex(oldstate => oldstate - 1);
   };
@@ -216,19 +175,8 @@ export const VerifySelfieWithID = () => {
           uri: croppedResult,
         }));
 
-        postVerifyIfPep({
-          variables: {
-            input: {
-              firstName: person.firstName,
-              middleName: person.middleName,
-              lastName: person.lastName,
-              birthDate: birthInfo.birthdate,
-              placeOfBirth: birthInfo.birthPlace,
-              gender: person.gender,
-              nationality: nationalityId,
-            },
-          },
-        });
+        return setCurrentIndex(oldval => oldval + 1);
+
       } catch (error) {
         throw error;
       }
@@ -238,31 +186,6 @@ export const VerifySelfieWithID = () => {
   if (tempSelfieImageWithID) {
     return (
       <>
-        <AlertOverlay visible={loading} />
-        <PepRequestVideoCallModal
-          visible={showPepVideoRequest}
-          setVisible={setShowPepVideoRequest}
-          callback={() => {
-            navigation.navigate('ToktokWalletPepVideoCallSchedule', {
-              setCurrentIndex,
-              pepInfo,
-              setPepInfo,
-            });
-            setShowPepVideoRequest(false);
-          }}
-          setShowPepQuestionnaire={setShowPepQuestionnaire}
-        />
-        <PepQuestionnaireModal
-          visible={showPepQuestionnaire}
-          setVisible={setShowPepQuestionnaire}
-          onRequestClose={() => setShowPepQuestionnaire(false)}
-          pepInfo={pepInfo}
-          setPepInfo={setPepInfo}
-          callback={() => {
-            setShowPepQuestionnaire(false);
-            setShowPepVideoRequest(true);
-          }}
-        />
         <MainComponent onPress={Proceed}>
           <View style={styles.PreviewImage}>
             {/* <Image style={{height:290,width: 280,flex: 1}} resizeMode="stretch" source={{uri: selfieImageWithID.uri}}/> */}

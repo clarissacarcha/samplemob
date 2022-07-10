@@ -15,19 +15,11 @@ import {useFocusEffect} from '@react-navigation/native';
 import {Separator, LeavePromptModal, FlagSecureScreen, HeaderTitleRevamp} from 'toktokwallet/components';
 import RNFS from 'react-native-fs';
 import CONSTANTS from 'common/res/constants';
-
-//SELF IMPORTS
 import {
-  Confirm,
-  VerifyAddress,
   VerifyContextProvider,
-  VerifyContext,
-  VerifyFullname,
-  VerifyID,
-  VerifySelfie,
-  VerifySelfieWithID,
-  VerifySourceOfIncome,
-} from './Components';
+  VerifyContext
+} from "./Components"
+
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
@@ -61,7 +53,11 @@ const HeaderBackClose = ({currentIndex, setCurrentIndex, setPromptVisible}) => {
 };
 
 const MainSetupComponent = () => {
-  const {currentIndex, setCurrentIndex} = useContext(VerifyContext);
+  const {
+    currentIndex, 
+    setCurrentIndex,
+    stepsScreens
+  } = useContext(VerifyContext);
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
 
@@ -76,37 +72,6 @@ const MainSetupComponent = () => {
     headerTitle: () => <HeaderTitleRevamp label={'Create Account'} />,
   });
 
-  const [screenSlides, setScreenSlides] = useState([
-    'Fullname',
-    'Address',
-    'IDPic',
-    'SelfiePic',
-    'SelfiePicWithID',
-    'Confirm',
-  ]);
-
-  const cancelSetup = () => {
-    console.log('Cancelling');
-    setVisible(true);
-  };
-
-  const DisplayComponents = () => {
-    switch (currentIndex) {
-      case 0:
-        return <VerifyFullname />;
-      case 1:
-        return <VerifyAddress />;
-      case 2:
-        return <VerifyID />;
-      case 3:
-        return <VerifySelfie />;
-      case 4:
-        return <VerifySelfieWithID />;
-      default:
-        return <Confirm />;
-    }
-  };
-
   return (
     <>
       <LeavePromptModal
@@ -120,8 +85,8 @@ const MainSetupComponent = () => {
       {/* <Separator /> */}
       <View style={styles.container}>
         <View style={styles.progressBar}>
-          {screenSlides.map((item, index) => {
-            if (index < screenSlides.length)
+          {stepsScreens.map((item, index) => {
+            if (index < stepsScreens.length)
               return (
                 <View
                   style={[styles.progressBarItem, {backgroundColor: index <= currentIndex ? '#F6841F' : 'transparent'}]}
@@ -129,8 +94,7 @@ const MainSetupComponent = () => {
               );
           })}
         </View>
-
-        {DisplayComponents()}
+        {stepsScreens[currentIndex]}
       </View>
     </>
   );

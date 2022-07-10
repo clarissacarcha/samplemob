@@ -1,5 +1,16 @@
 import React, {createContext, useState} from 'react';
 import {useSelector} from 'react-redux';
+//Steps Components
+import {
+  VerifyFullname,
+  VerifyAddress,
+  VerifyID,
+  VerifySelfie,
+  VerifySelfieWithID,
+  PepQuestionnaire,
+  PepRequestVideoCall,
+  Confirm,
+} from "../../Components"
 
 export const VerifyContext = createContext();
 const {Provider} = VerifyContext;
@@ -13,7 +24,6 @@ export const VerifyContextProvider = ({children}) => {
   const [modalProvinceVisible, setModalProvinceVisible] = useState(false);
   const [modalCityVisible, setModalCityVisible] = useState(false);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [fullname, setFullname] = useState(
     `${session.user.person.firstName} ${session.user.person.middleName ? session.user.person.middleName + ' ' : ''}${
       session.user.person.lastName
@@ -184,7 +194,37 @@ export const VerifyContextProvider = ({children}) => {
 
   const [cacheImagesList, setCacheImagesList] = useState([]);
 
-  // console.log("Context Provider", session.user.username)
+  // States for Steps rendering
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const defaultStepsScreens = [
+    <VerifyFullname/>,
+    <VerifyAddress/>,
+    <VerifyID/>,
+    <VerifySelfie/>,
+    <VerifySelfieWithID/>,
+    <Confirm/>,
+  ]
+  const pepSreens = [
+    <PepQuestionnaire/>,
+    <PepRequestVideoCall/>
+  ]
+  
+  const [stepsScreens , setStepScreens] = useState(defaultStepsScreens)
+  const appendPepScreens = ()=> {
+    setStepScreens([
+      <VerifyFullname/>,
+      <VerifyAddress/>,
+      <VerifyID/>,
+      <VerifySelfie/>,
+      <VerifySelfieWithID/>,
+      ...pepSreens,
+      <Confirm/>,
+    ])
+  }
+
+  const resetStepScreens = ()=> {
+    setStepScreens(defaultStepsScreens)
+  }
 
   return (
     <Provider
@@ -252,7 +292,13 @@ export const VerifyContextProvider = ({children}) => {
         changeVerifyFullNameErrors,
         verifyAddressErrors,
         setVerifyAddressErrors,
-        changeVerifyAddressErrors
+        changeVerifyAddressErrors,
+
+        stepsScreens,
+        setStepScreens,
+        pepSreens,
+        appendPepScreens,
+        resetStepScreens
       }}>
       {children}
     </Provider>
