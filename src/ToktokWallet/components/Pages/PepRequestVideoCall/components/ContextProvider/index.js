@@ -35,7 +35,8 @@ export const ContextProvider = ({ children , pepInfo })=> {
             onErrorAlert({alert,error})
         },
         onCompleted:({getCallChannels})=> {
-            setCallChannels(getCallChannels)
+            const channels = getCallChannels.splice(0,3)
+            setCallChannels(channels)
         }
     })
 

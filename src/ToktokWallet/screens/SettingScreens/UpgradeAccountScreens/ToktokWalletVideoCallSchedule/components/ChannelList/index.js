@@ -12,6 +12,14 @@ import {
     whatsApp
 } from "toktokwallet/assets/icons/contacts-platform"
 
+const staticLogo = [
+    viber,
+    whatsApp,
+    telegram,
+    skype,
+    messenger
+]
+
 const { FONT_FAMILY: FONT , FONT_SIZE , COLOR, SHADOW, SIZE } = CONSTANTS;
 
 export const ChannelList = ({ item, onPress }) => {
@@ -19,14 +27,6 @@ export const ChannelList = ({ item, onPress }) => {
     const { channelName, logo, id } = item
     const isSelected = selectedCallChannel.channelName === channelName;
     const borderColor = isSelected? styles.yellowBorder : styles.whiteBorder;
-
-    const staticLogo = [
-        viber,
-        whatsApp,
-        telegram,
-        skype,
-        messenger
-    ]
 
     const onItemPress = () => {
         onPress()
