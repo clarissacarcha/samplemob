@@ -79,6 +79,12 @@ export const ContextProvider = ({children}) => {
         })
     }
 
+    // States for Steps rendering
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [stepsScreens,setStepScreens] = useState([
+        
+    ]);
+
     return (
         <Provider
             value={{
@@ -92,6 +98,11 @@ export const ContextProvider = ({children}) => {
                 setValidID2,
                 pepInfo,
                 setPepInfo,
+                // For rendering of Steps Component
+                currentIndex,
+                setCurrentIndex,
+                stepsScreens,
+                setStepScreens
             }}
         >
             {children}
