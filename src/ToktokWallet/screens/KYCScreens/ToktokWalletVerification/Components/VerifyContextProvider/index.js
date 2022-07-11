@@ -214,11 +214,11 @@ export const VerifyContextProvider = ({children}) => {
   const appendPepScreens = () => {
     setStepScreens([
       <VerifyFullname />,
-      ...pepSreens,
       <VerifyAddress />,
       <VerifyID />,
       <VerifySelfie />,
       <VerifySelfieWithID />,
+      ...pepSreens,
       <Confirm />,
     ]);
   };
