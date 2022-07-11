@@ -25,18 +25,46 @@ const RenderStars = ({value}) => {
   )
 }
 
-const RenderItem = ({item}) => {
+const RenderProductImage = ({data}) => {
 
-  const navigation = useNavigation()
-  
-  const getImageSource = (data) => {
-    if(data.length > 0){
-      return {uri: data[0].filename}
+  const getImageSource = (imgs) => {
+    if(imgs.length > 0){
+      return {uri: imgs[0].filename}
     }else {
       return placeholder
     }
   }
 
+  const {contSellingIsset, noOfStocks, images} = data
+
+  if(contSellingIsset == 1 || contSellingIsset == 0 && noOfStocks > 0){
+    return <Image 
+      source={getImageSource(images || [])} 
+      style={styles.imageWithStock} 
+    />
+  }else if(contSellingIsset == 0 && noOfStocks <= 0){
+    return (<>
+      <ImageBackground 
+        source={getImageSource(images || [])} 
+        imageStyle={{resizeMode: 'contain'}} 
+        style={styles.imageNoStock}
+      >        
+      </ImageBackground>
+    </>)
+  }else{
+    console.log(data)
+    return <Image 
+      source={placeholder} 
+      style={styles.imageWithStock} 
+    />
+  }
+
+}
+
+const RenderItem = ({item}) => {
+
+  const navigation = useNavigation()
+  
   return (
     <>
       <View style={styles.renderItemContainer}>
@@ -52,28 +80,31 @@ const RenderItem = ({item}) => {
             <Text style={styles.discountText}>{item?.discountRate}</Text>
           </View>}
           {
-            item.promotions && item.promotions != null && 
+            item?.promotions && item.promotions != null && 
             <PromotionBanner label={item.promotions.name} content={item.promotions.duration} />
           }
-          {item?.noOfStocks <= 0  && item?.contSellingIsset === 0 &&
+
+          <RenderProductImage data={ item || {}} />
+          
+          {/* {item?.noOfStocks <= 0  && item?.contSellingIsset == 0 &&
             <ImageBackground 
               source={getImageSource(item?.images || [])} 
               imageStyle={{resizeMode: 'contain'}} 
               style={styles.imageNoStock}
             >
-              {/* <View style={{backgroundColor: 'transparent', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+              <View style={{backgroundColor: 'transparent', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
                 <View style={{width: 90, height: 90, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 45, justifyContent: 'center', alignItems: 'center'}}>
                   <Text style={{color: '#f2f2f2', fontSize: 12}}>OUT OF STOCK</Text>
                 </View>
-              </View> */}
+              </View>
             </ImageBackground> 
-          }
-          {item?.noOfStocks > 0 || item?.contSellingIsset === 1 &&
+          } 
+          {item?.noOfStocks > 0 &&  item?.contSellingIsset === 0 || item?.noOfStocks < 0 && item?.contSellingIsset === 1 ?
             <Image 
-              source={getImageSource(item?.images || [])} 
+              source={getImageSource(item?.images || [], item)} 
               style={styles.imageWithStock} 
-            />
-          }
+            /> : null
+          }          */}
           <View>
             <Text style={styles.itemNameText}  numberOfLines={2} ellipsizeMode="tail">{item?.itemname || ""}</Text>
           </View>
