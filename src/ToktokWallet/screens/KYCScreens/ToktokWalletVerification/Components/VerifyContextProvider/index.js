@@ -116,9 +116,12 @@ export const VerifyContextProvider = ({children}) => {
       sourceOfIncomeId: [],
       sourceOfIncomeDes: [],
       sourceOfIncome: '',
+      selectedSourceOfIncome: [],
       sourceOfWealthId: [],
       sourceOfWealthDes: [],
       sourceOfWealth: '',
+      selectedSourceOfWealth: [],
+      agreement: false,
     },
     videocall: {
       videoCallContactDetails: '',
@@ -130,6 +133,8 @@ export const VerifyContextProvider = ({children}) => {
       preferredVcsTimeMax: '',
     },
   });
+
+  const [pepSourceOfIncome, setPepSourceOfIncome] = useState([]);
 
   const changePersonInfo = (key, value) => {
     setPerson(oldstate => ({
@@ -209,11 +214,11 @@ export const VerifyContextProvider = ({children}) => {
   const appendPepScreens = () => {
     setStepScreens([
       <VerifyFullname />,
+      ...pepSreens,
       <VerifyAddress />,
       <VerifyID />,
       <VerifySelfie />,
       <VerifySelfieWithID />,
-      ...pepSreens,
       <Confirm />,
     ]);
   };
@@ -295,6 +300,8 @@ export const VerifyContextProvider = ({children}) => {
         pepSreens,
         appendPepScreens,
         resetStepScreens,
+        pepSourceOfIncome,
+        setPepSourceOfIncome,
       }}>
       {children}
     </Provider>

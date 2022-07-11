@@ -40,7 +40,16 @@ const RenderItem = ({item, index, onPress}) => {
   );
 };
 
-export const SourceOfWealthModal = ({visible, setVisible, loading, data, setData, doneProcess}) => {
+export const SourceOfWealthModal = ({
+  visible,
+  setVisible,
+  loading,
+  data,
+  setData,
+  doneProcess,
+  setSelectedData,
+  selectedData,
+}) => {
   const onPressThrottle = useThrottle(() => {
     doneProcess();
     setVisible(false);
@@ -54,6 +63,8 @@ export const SourceOfWealthModal = ({visible, setVisible, loading, data, setData
       selected: !currentData[index].selected,
     };
     setData(currentData);
+    selectedData.push(currentData[index]);
+    setSelectedData(selectedData);
   };
 
   return (
