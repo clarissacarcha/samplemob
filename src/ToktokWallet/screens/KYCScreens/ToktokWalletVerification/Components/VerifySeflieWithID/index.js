@@ -28,8 +28,8 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 const {width, height} = Dimensions.get('window');
 
-const CROP_AREA_WIDTH = width * 0.9;
-const CROP_AREA_HEIGHT = CROP_AREA_WIDTH + 50;
+const CROP_AREA_WIDTH = width * 0.8;
+const CROP_AREA_HEIGHT = CROP_AREA_WIDTH + 30;
 
 const ratio = Math.min(width / CROP_AREA_WIDTH, height / CROP_AREA_HEIGHT);
 
@@ -120,9 +120,9 @@ const MainComponent = ({children, onPress, onPressBack}) => {
 
 export const VerifySelfieWithID = () => {
   const [required, setRequired] = useState(false);
-  const VerifyUserData = useContext(VerifyContext);
   const {setCacheImagesList, setCurrentIndex, setSelfieImageWithID, setTempSelfieImageWithID, tempSelfieImageWithID} =
-    VerifyUserData;
+    useContext(VerifyContext);
+
   const [cropperParams, setCropperParams] = useState({});
   const navigation = useNavigation();
   const cropSize = {
@@ -147,7 +147,7 @@ export const VerifySelfieWithID = () => {
     // setCurrentIndex(oldval => oldval + 1)
   };
 
-  const Back = async () => {
+  const Back = () => {
     setCurrentIndex(oldstate => oldstate - 1);
   };
 
@@ -180,7 +180,7 @@ export const VerifySelfieWithID = () => {
   if (tempSelfieImageWithID) {
     return (
       <>
-        <MainComponent onPress={Proceed}>
+        <MainComponent onPress={Proceed} onPressBack={Back}>
           <View style={styles.PreviewImage}>
             {/* <Image style={{height:290,width: 280,flex: 1}} resizeMode="stretch" source={{uri: selfieImageWithID.uri}}/> */}
             <ImageCropper
@@ -193,11 +193,12 @@ export const VerifySelfieWithID = () => {
               setCropperParams={cropperParams => {
                 setCropperParams(cropperParams);
               }}
+              areaOverlay={<View style={styles.overlay} />}
             />
             <TouchableOpacity
               onPress={() => navigation.push('ToktokWalletSelfieImageWithIDCamera', {setImage})}
               style={styles.changePhoto}>
-              <EIcon name="camera" color={COLOR.ORANGE} size={25} />
+              <EIcon name="camera" color={COLOR.ORANGE} size={20} />
               <Text
                 style={{
                   textAlign: 'center',
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
   },
   mainInput: {
     flex: 1,
-    margin: moderateScale(30),
+    marginHorizontal: moderateScale(30),
   },
   requiredText: {
     fontSize: FONT_SIZE.S,
@@ -254,7 +255,7 @@ const styles = StyleSheet.create({
   titleDescription: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.S,
-    color: '#929191',
+    color: '#525252',
   },
   policyView: {
     flexDirection: 'row',
@@ -271,7 +272,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignContent: 'center',
-    marginVertical: moderateScale(30),
   },
   instructionsPicture: {
     height: moderateScale(189),
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
     color: COLOR.ORANGE,
     marginBottom: moderateScale(5),
-    marginTop: moderateScale(48),
+    marginTop: moderateScale(30),
   },
   checkIcon: {
     resizeMode: 'contain',
@@ -364,10 +364,11 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
     alignSelf: 'center',
     marginBottom: moderateScale(5),
+    marginTop: moderateScale(15),
   },
   selfieBtn: {
-    height: 180,
-    width: 180,
+    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110,
+    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FEFAF6',
@@ -375,7 +376,7 @@ const styles = StyleSheet.create({
     marginVertical: moderateScale(10),
     borderStyle: 'dashed',
     borderColor: COLOR.ORANGE,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 5,
   },
   overlay: {
@@ -384,16 +385,14 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   PreviewImage: {
-    // width: 290,
-    // height: 300,
-    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 10,
-    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 10,
+    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 3,
+    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 3,
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 7,
     borderStyle: 'dashed',
     borderColor: COLOR.ORANGE,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 5,
     marginBottom: 5,
     transform: [
@@ -412,5 +411,10 @@ const styles = StyleSheet.create({
         scaleX: -1,
       },
     ],
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'black',
+    opacity: 0.5,
   },
 });

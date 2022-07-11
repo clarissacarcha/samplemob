@@ -30,7 +30,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
-const CROP_AREA_WIDTH = width * 0.9;
+const CROP_AREA_WIDTH = width * 0.8;
 const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 const ratio = Math.min(width / CROP_AREA_WIDTH, height / CROP_AREA_HEIGHT);
 
@@ -129,7 +129,7 @@ export const VerifySelfie = () => {
     setTempSelfieImage(data);
     // setCurrentIndex(oldval => oldval + 1)
   };
-  const Back = async () => {
+  const Back = () => {
     setCurrentIndex(oldstate => oldstate - 1);
   };
 
@@ -160,7 +160,7 @@ export const VerifySelfie = () => {
 
   if (tempSelfieImage) {
     return (
-      <MainComponent onPress={Proceed} onPressPrevious={Back}>
+      <MainComponent onPress={Proceed} onPressBack={Back}>
         <View style={styles.PreviewImage}>
           <ImageCropper
             imageUri={tempSelfieImage.uri}
@@ -172,6 +172,7 @@ export const VerifySelfie = () => {
             setCropperParams={cropperParams => {
               setCropperParams(cropperParams);
             }}
+            areaOverlay={<View style={styles.overlay} />}
           />
           <TouchableOpacity
             onPress={() => navigation.push('ToktokWalletSelfieImageCamera', {setImage})}
@@ -333,8 +334,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   selfieBtn: {
-    height: 180,
-    width: 180,
+    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110,
+    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FEFAF6',
@@ -342,7 +343,7 @@ const styles = StyleSheet.create({
     marginVertical: moderateScale(10),
     borderStyle: 'dashed',
     borderColor: COLOR.ORANGE,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 5,
   },
   overlay: {
@@ -351,14 +352,14 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   PreviewImage: {
-    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 10,
-    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 10,
+    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 3,
+    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 3,
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 7,
     borderStyle: 'dashed',
     borderColor: COLOR.ORANGE,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 5,
     marginBottom: 5,
     transform: [
@@ -377,5 +378,10 @@ const styles = StyleSheet.create({
         scaleX: -1,
       },
     ],
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'black',
+    opacity: 0.5,
   },
 });
