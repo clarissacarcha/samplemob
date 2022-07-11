@@ -34,16 +34,19 @@ export const PreviousNextButton = ({
     <>
       <View
         style={{
-        ...styles.blackButton,
-        ...(hasShadow && styles.shadow),
+          ...styles.blackButton,
+          ...(hasShadow && styles.shadow),
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignContent: 'center',
         }}
         underlayColor={'white'}>
-          <TouchableOpacity style={[styles.previous, style, {width: '47%'}]}  onPress={onPressPreviousThrottled}>
-            <Text style={[styles.previousLabel, labelStyle]}>{label}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.blackButtonBox, style, {width: '47%'}]}  onPress={onPressNextThrottled}>
-            <Text style={[styles.label, labelStyle]}>{labelTwo}</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={[styles.previous, style, {width: '48%'}]} onPress={onPressPreviousThrottled}>
+          <Text style={[styles.previousLabel, labelStyle]}>{label}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.blackButtonBox, style, {width: '48%'}]} onPress={onPressNextThrottled}>
+          <Text style={[styles.label, labelStyle]}>{labelTwo}</Text>
+        </TouchableOpacity>
       </View>
     </>
   );
@@ -52,10 +55,6 @@ export const PreviousNextButton = ({
 const styles = StyleSheet.create({
   blackButton: {
     borderRadius: 5,
-    justifyContent: "space-between",
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start'
   },
   blackButtonBox: {
     justifyContent: 'center',

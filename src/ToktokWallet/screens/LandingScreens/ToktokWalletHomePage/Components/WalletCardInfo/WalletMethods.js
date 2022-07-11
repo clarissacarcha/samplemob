@@ -1,11 +1,12 @@
-import React, {useContext, useState} from 'react';
-import {View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Alert, FlatList} from 'react-native';
+import React, {useContext, useState , useEffect} from 'react';
+import {View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Alert, FlatList, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {APP_FLAVOR, ACCOUNT_TYPE} from 'src/res/constants';
 import {useThrottle} from 'src/hooks';
 import {useDispatch} from 'react-redux';
 import {useAccount} from 'toktokwallet/hooks';
 import {moderateScale} from 'toktokwallet/helper';
+import _ from "lodash";
 
 //COMPONENTS
 import {CustomBottomSheet} from 'toktokwallet/components';
@@ -29,40 +30,76 @@ const WalletMethods = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {checkIfTpinIsSet, tokwaAccount} = useAccount();
+  const [appServices,setAppServices] = useState([]);
+  const [menuData, setMenuData] = useState([]);
 
   const [visibleMoreServices, setVisibleMoreServices] = useState(false);
-  const services = [
+  const menuDataConstant = [
     {
       label: 'Cash In',
       icon: require('toktokwallet/assets/icons/services/cash-in.png'),
       onPress: () => onPressThrottled('ToktokWalletPaymentOptions'),
       isEnabled: true,
+      identifier: "cashIn",
     },
     {
       label: 'Fund Transfer',
       icon: require('toktokwallet/assets/icons/services/fund-transfer.png'),
       onPress: () => onPressThrottled('ToktokWalletCashOutHomePage'),
       isEnabled: tokwaAccount.constants.isFundTransferEnabled == '1',
+      identifier: "fundTransfer",
     },
     {
       label: 'Send Money',
       icon: require('toktokwallet/assets/icons/services/send-money.png'),
       onPress: () => onPressThrottled('ToktokWalletSendMoney'),
       isEnabled: true,
+      identifier: "sendMoney",
     },
     {
       label: 'Scan QR',
       icon: require('toktokwallet/assets/icons/services/qr-code-scan.png'),
       onPress: () => onPressThrottled('ToktokWalletScanQrHome'),
       isEnabled: true,
+      identifier: "scanQR",
     },
     {
       label: 'Cash Out',
       icon: require('toktokwallet/assets/icons/services/cash-out.png'),
       onPress: () => onPressThrottled('ToktokWalletCashOutOTCHome'),
       isEnabled: true,
+      identifier: `${Platform.OS.toLowerCase()}CashOut`,
     },
   ];
+
+  useEffect(()=>{
+    const appServicesObject = _.keyBy(tokwaAccount.appServices, 'identifier');
+    setAppServices(appServicesObject);
+
+    const filteredMenuData = menuDataConstant.filter(menuDataItem => {
+      const appService = appServicesObject[menuDataItem.identifier];
+
+      if (!appService) {
+        console.log(`Menu item ${menuDataItem.identifier} not set in App Services. Do not bypass this validation.`);
+        return false;
+      }
+
+      const isEnabled = appService.isEnabled;
+      const isEnabledInEarlyAccess = tokwaAccount.constants.isEarlyAccess === 'TRUE' && appService.isEarlyAccess;
+      const isDisplayed = isEnabled || isEnabledInEarlyAccess;
+
+      if (!isDisplayed) {
+        console.log(`Menu item ${menuDataItem.identifier} is hidden in App Services. Do not bypass this validation.`);
+        return false;
+      }
+
+      return true;
+    })
+
+    console.log(JSON.stringify({filteredMenuData}, null, 2));
+
+    setMenuData(filteredMenuData);
+  },[])
 
   const onPress = route => {
     if (APP_FLAVOR == 'D' && ACCOUNT_TYPE == 2) {
@@ -93,7 +130,7 @@ const WalletMethods = () => {
           <Text style={styles.servicesTitle}>Services</Text>
           <View style={styles.separator} />
           <FlatList
-            data={services}
+            data={menuData}
             renderItem={({item, index}) => (
               <Method
                 label={item.label}
@@ -109,9 +146,9 @@ const WalletMethods = () => {
         </View>
       </CustomBottomSheet>
       <View style={styles.content}>
-        {services.slice(0, 4).map((item, index) => {
+        {menuData.slice(0, 4).map((item, index) => {
           if (item.isEnabled) {
-            if (index === 3 && services.length > 4) {
+            if (index === 3 && menuData.length > 4) {
               return (
                 <Method
                   label={'More'}

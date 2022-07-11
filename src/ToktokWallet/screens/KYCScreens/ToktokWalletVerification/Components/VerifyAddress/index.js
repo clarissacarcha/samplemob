@@ -11,7 +11,7 @@ import {
   ScrollView,
   Alert,
   Dimensions,
-  Image
+  Image,
 } from 'react-native';
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import {useQuery, useLazyQuery} from '@apollo/react-hooks';
@@ -52,7 +52,7 @@ export const VerifyAddress = () => {
     cityId,
     setCityId,
     verifyAddressErrors,
-    changeVerifyAddressErrors
+    changeVerifyAddressErrors,
   } = useContext(VerifyContext);
   
   const [cities, setCities] = useState([]);
@@ -61,7 +61,7 @@ export const VerifyAddress = () => {
   const keyboardVerticalOffset = headerHeight + getStatusBarHeight() + 10;
 
   const scrollviewRef = useRef();
-  
+
   const [getCityByProvinceCode, {error, loading}] = useLazyQuery(GET_CITIES, {
     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -95,14 +95,8 @@ export const VerifyAddress = () => {
     const isProvinceValid = checkFieldIsEmpty('provinceError', province, 'selection');
     const isCityValid = checkFieldIsEmpty('cityError', selectedCity, 'selection');
     const isPostalValid = checkFieldIsEmpty('postalError', address.postalCode);
-  
-    if (
-      isStreetValid &&
-      isBarangayValid &&
-      isProvinceValid &&
-      isCityValid &&
-      isPostalValid 
-    ) {
+
+    if (isStreetValid && isBarangayValid && isProvinceValid && isCityValid && isPostalValid) {
       setCurrentIndex(oldval => oldval + 1);
     }
   };
@@ -137,7 +131,8 @@ export const VerifyAddress = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={Platform.OS === 'ios' ? keyboardVerticalOffset : screen.height * 0.5}
         style={{flex: 1}}>
-        <ScrollView style={{flex: 1}}
+        <ScrollView
+          style={{flex: 1}}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
           ref={scrollviewRef}>
@@ -159,10 +154,10 @@ export const VerifyAddress = () => {
           <View style={styles.mainInput}>
             <Text style={styles.title}>Fill out the Information</Text>
             <Text style={styles.information}>Please enter your permanent address.</Text>
-           
-            <View style={{marginTop: 20}}>
+
+            {/* <View style={{marginTop: 20}}>
               <Text style={styles.label}>Country</Text>
-              {/* <TouchableOpacity
+              <TouchableOpacity
                 onPress={() => setModalCountryVisible(true)}
                 style={[styles.input, styles.selectionContainer, styles.shadow]}>
                 <Text style={{flex: 1, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{address.country}</Text>
@@ -172,17 +167,27 @@ export const VerifyAddress = () => {
                   size={moderateScale(16)}
                   color={COLOR.ORANGE}
                 />
-              </TouchableOpacity> */}
-              <View
-                style={[styles.input, styles.selectionContainer, styles.shadow]}>
+              </TouchableOpacity>
+              <View style={[styles.input, styles.selectionContainer, styles.shadow]}>
                 <Text style={{flex: 1, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{address.country}</Text>
-                {/* <VectorIcon
+                <VectorIcon
                   iconSet={ICON_SET.FontAwesome5}
                   name="chevron-down"
                   size={moderateScale(16)}
                   color={COLOR.ORANGE}
-                /> */}
+                />
               </View>
+            </View> */}
+
+            <View style={{marginTop: 20}}>
+              <Text style={styles.label}>Country</Text>
+              <TextInput
+                style={{...styles.input}}
+                value={address.country}
+                placeholderTextColor={COLOR.DARK}
+                returnKeyType="done"
+                editable={false}
+              />
             </View>
 
             <View style={{marginTop: 20}}>
@@ -218,7 +223,7 @@ export const VerifyAddress = () => {
                 <Text style={styles.errorMessage}>{verifyAddressErrors.barangayError}</Text>
               )}
             </View>
-            
+
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Province</Text>
               <TouchableOpacity
@@ -255,7 +260,10 @@ export const VerifyAddress = () => {
                   styles.shadow,
                   {...(verifyAddressErrors.cityError ? styles.errorBorder : {})},
                 ]}
-                onPress={() => setModalCityVisible(true)}>
+                onPress={() => {
+                  if (province == '') return Alert.alert('', 'Please select Province first');
+                  setModalCityVisible(true);
+                }}>
                 {selectedCity == '' ? (
                   <Text style={[styles.selectionText, {color: COLOR.DARK}]}>Select City</Text>
                 ) : (
@@ -293,7 +301,7 @@ export const VerifyAddress = () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      <PreviousNextButton label="Previous" labelTwo={"Next"} hasShadow onPressNext={Next} onPressPrevious={Previous}/>
+      <PreviousNextButton label="Previous" labelTwo={'Next'} hasShadow onPressNext={Next} onPressPrevious={Previous} />
     </>
   );
 };

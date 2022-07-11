@@ -1,5 +1,5 @@
 import React, {useState, useRef} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Dimensions, Linking} from 'react-native';
 import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 import {useNavigation} from '@react-navigation/native';
 import {moderateScale} from 'toktokwallet/helper';
@@ -17,6 +17,10 @@ export const HeaderKebab = ({onPress, color = '#F6841F', refNo, format, showSett
     navigation.navigate(name);
     setShowDropDown(false);
     dropDownRef.current.close();
+  };
+
+  const ViewPrivacyPolicy = () => {
+    return Linking.openURL('https://toktok.ph/privacy-policy');
   };
 
   return (
@@ -39,7 +43,7 @@ export const HeaderKebab = ({onPress, color = '#F6841F', refNo, format, showSett
                 <View style={styles.divider} />
               </>
             )}
-            <TouchableOpacity onPress={''} style={styles.content}>
+            <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.content}>
               <Text>Privacy Policy</Text>
             </TouchableOpacity>
             <View style={styles.divider} />
