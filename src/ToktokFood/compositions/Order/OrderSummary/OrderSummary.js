@@ -111,7 +111,7 @@ const OrderSummary = (props: PropsType): React$Node => {
               </OrderProductDetailsContainer>
               <AmountQuantityContainer opacity={item?.status === 0 ? 0.5 : 1}>
                 <ProductName mode="medium" color={theme.color.orange}>
-                  &#x20B1;{parseFloat(item?.srpTotalamount).toFixed(2)}
+                  &#x20B1;{parseFloat(item?.totalAmountWithAddons * item?.quantity).toFixed(2)}
                 </ProductName>
                 <StyledText>Qty: {item?.quantity}</StyledText>
               </AmountQuantityContainer>
