@@ -24,7 +24,7 @@ export const CheckoutContextProvider = ({children})=> {
 
 	const [unavailableItems, setUnavailableItems] = useState([])
 
-	const [voucherReloading, setVoucherReloading] = useState(false)
+	const [voucherRemoved, setVoucherRemoved] = useState(false)
 
 	const [getShippingHashDeliveryAmount, {data}] = useLazyQuery(GET_HASH_AMOUNT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -129,7 +129,7 @@ export const CheckoutContextProvider = ({children})=> {
 	}
 
 	const deleteVoucher = (voucher) => {
-		setVoucherReloading(true)
+		setVoucherRemoved(true)
 		let items = ArrayCopy(shippingVouchers)
 		// console.log("DELETEION OF VOUCHERS REF", voucher)
 		// console.log("DELETION OF VOUCHERS BEFORE", JSON.stringify(items))
@@ -137,8 +137,8 @@ export const CheckoutContextProvider = ({children})=> {
 		// console.log("DELETION OF VOUCHERS AFTER", JSON.stringify(newitems))
 		setShippingVouchers(newitems)
 		setTimeout(() => {
-			setVoucherReloading(false)
-		}, 700)
+			setVoucherRemoved(false)
+		}, 100)
 	}
 
 	const getErrorMessageByCode = (code) => {
@@ -192,8 +192,8 @@ export const CheckoutContextProvider = ({children})=> {
 				getShopDiscountCount,
 				getVouchersApplied,
 
-				voucherReloading,
-				setVoucherReloading,
+				voucherRemoved,
+				setVoucherRemoved,
 				deleteVoucher,
 
 				getErrorMessageByCode

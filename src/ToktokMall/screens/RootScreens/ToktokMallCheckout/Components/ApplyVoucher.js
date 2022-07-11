@@ -52,11 +52,12 @@ export const ApplyVoucherForm = (address, customer, payload) => {
   const [vcode, setvcode] = useState("")
   const [loading, setloading] = useState(false)
   const [succeeded, setSucceeded] = useState(false)
+  const [voucherRemoved, setVoucherRemoved] = useState(false)
   const [errormessage, seterrormessage] = useState("*Invalid voucher code.")
 
   useEffect(() => {
-    setloading(CheckoutContextData.voucherReloading)
-  }, [CheckoutContextData?.voucherReloading])
+    setVoucherRemoved(CheckoutContextData.voucherRemoved)
+  }, [CheckoutContextData?.voucherRemoved])
 
   const [getShippingHashDeliveryAmount, {error, loading2}] = useLazyQuery(GET_HASH_AMOUNT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -386,6 +387,9 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
       {/* ON SUCCESS POPUP */}
       <PopupModalComponent isVisible={succeeded} type="Success" label='Voucher Applied' />
+
+      {/* ON SUCCESS REMOVE VOUCHER POPUP */}
+      <PopupModalComponent isVisible={voucherRemoved} type="Success" label='Voucher Removed' />
 
       <View>
         {/* <View
