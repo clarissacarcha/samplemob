@@ -121,13 +121,8 @@ const MainComponent = ({children, onPress, onPressBack}) => {
 export const VerifySelfieWithID = () => {
   const [required, setRequired] = useState(false);
   const VerifyUserData = useContext(VerifyContext);
-  const {
-    setCacheImagesList,
-    setCurrentIndex,
-    setSelfieImageWithID,
-    setTempSelfieImageWithID,
-    tempSelfieImageWithID,
-  } = VerifyUserData;
+  const {setCacheImagesList, setCurrentIndex, setSelfieImageWithID, setTempSelfieImageWithID, tempSelfieImageWithID} =
+    VerifyUserData;
   const [cropperParams, setCropperParams] = useState({});
   const navigation = useNavigation();
   const cropSize = {
@@ -176,7 +171,6 @@ export const VerifySelfieWithID = () => {
         }));
 
         return setCurrentIndex(oldval => oldval + 1);
-
       } catch (error) {
         throw error;
       }
@@ -195,6 +189,7 @@ export const VerifySelfieWithID = () => {
               cropAreaHeight={Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
               containerColor="transparent"
               areaColor="black"
+              areaOverlay={<View style={styles.overlay} />}
               setCropperParams={cropperParams => {
                 setCropperParams(cropperParams);
               }}
@@ -202,14 +197,13 @@ export const VerifySelfieWithID = () => {
             <TouchableOpacity
               onPress={() => navigation.push('ToktokWalletSelfieImageWithIDCamera', {setImage})}
               style={styles.changePhoto}>
-              <EIcon name="camera" color={COLOR.YELLOW} size={20} />
+              <EIcon name="camera" color={COLOR.ORANGE} size={25} />
               <Text
                 style={{
                   textAlign: 'center',
-                  color: COLOR.YELLOW,
+                  color: COLOR.WHITE,
                   fontFamily: FONT.REGULAR,
                   fontSize: FONT_SIZE.S,
-                  marginTop: -2,
                 }}>
                 Change Photo
               </Text>
@@ -384,6 +378,11 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
   },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'black',
+    opacity: 0.5,
+  },
   PreviewImage: {
     // width: 290,
     // height: 300,
@@ -392,9 +391,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 7,
-    padding: 2,
     borderStyle: 'dashed',
-    borderColor: COLOR.YELLOW,
+    borderColor: COLOR.ORANGE,
     borderWidth: 2,
     borderRadius: 5,
     marginBottom: 5,
@@ -406,9 +404,6 @@ const styles = StyleSheet.create({
   },
   changePhoto: {
     position: 'absolute',
-    bottom: 15,
-    width: 180,
-    height: 20,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',

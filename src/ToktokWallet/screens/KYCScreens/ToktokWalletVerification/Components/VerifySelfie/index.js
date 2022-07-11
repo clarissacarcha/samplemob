@@ -168,6 +168,7 @@ export const VerifySelfie = () => {
             cropAreaHeight={Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
             containerColor="transparent"
             areaColor="black"
+            areaOverlay={<View style={styles.overlay} />}
             setCropperParams={cropperParams => {
               setCropperParams(cropperParams);
             }}
@@ -175,14 +176,13 @@ export const VerifySelfie = () => {
           <TouchableOpacity
             onPress={() => navigation.push('ToktokWalletSelfieImageCamera', {setImage})}
             style={styles.changePhoto}>
-            <EIcon name="camera" color={COLOR.ORANGE} size={20} />
+            <EIcon name="camera" color={COLOR.ORANGE} size={25} />
             <Text
               style={{
                 textAlign: 'center',
-                color: COLOR.ORANGE,
+                color: COLOR.WHITE,
                 fontFamily: FONT.REGULAR,
                 fontSize: FONT_SIZE.S,
-                marginTop: -2,
               }}>
               Change Photo
             </Text>
@@ -345,15 +345,19 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
   },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'black',
+    opacity: 0.5,
+  },
   PreviewImage: {
     height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 10,
     width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 10,
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 7,
-    padding: 2,
     borderStyle: 'dashed',
-    borderColor: COLOR.YELLOW,
+    borderColor: COLOR.ORANGE,
     borderWidth: 2,
     borderRadius: 5,
     marginBottom: 5,
@@ -365,9 +369,6 @@ const styles = StyleSheet.create({
   },
   changePhoto: {
     position: 'absolute',
-    bottom: 15,
-    width: 180,
-    height: 20,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
