@@ -16,8 +16,8 @@ import {
 import {VerifyContext} from '../VerifyContextProvider';
 import validator from 'validator';
 import {TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CHECK_BLOCKED_ACCOUNT_RECORD,POST_VERIFY_IF_PEP} from 'toktokwallet/graphql';
-import {useLazyQuery,useMutation} from '@apollo/react-hooks';
+import {GET_CHECK_BLOCKED_ACCOUNT_RECORD, POST_VERIFY_IF_PEP} from 'toktokwallet/graphql';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {useAlert} from 'src/hooks/useAlert';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useNavigation} from '@react-navigation/native';
@@ -56,9 +56,8 @@ export const VerifyFullname = () => {
     setPepInfo,
     verifyFullNameErrors,
     appendPepScreens,
-    resetStepScreens
+    resetStepScreens,
   } = useContext(VerifyContext);
-
 
   const [mobile, setMobile] = useState(contactInfo.mobile_number.replace('+63', ''));
   const alert = useAlert();
@@ -72,14 +71,14 @@ export const VerifyFullname = () => {
     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
     onError: error => onErrorAlert({alert, error}),
     onCompleted: ({postVerifyIfPep}) => {
-        setPepInfo(state => {
-          return {
-            ...state,
-            isPep: postVerifyIfPep,
-          };
-        });
-        postVerifyIfPep ? appendPepScreens() : resetStepScreens();
-        return setCurrentIndex(oldval => oldval + 1);
+      setPepInfo(state => {
+        return {
+          ...state,
+          isPep: postVerifyIfPep,
+        };
+      });
+      postVerifyIfPep ? appendPepScreens() : resetStepScreens();
+      return setCurrentIndex(oldval => oldval + 1);
     },
   });
 
@@ -108,7 +107,7 @@ export const VerifyFullname = () => {
             birthDate: birthInfo.birthdate,
             placeOfBirth: birthInfo.birthPlace,
             gender: person.gender,
-            nationality: nationalityId,
+            nationality: +nationalityId,
           },
         },
       });
@@ -196,7 +195,7 @@ export const VerifyFullname = () => {
 
   return (
     <>
-      <AlertOverlay visible={verifyPepLoading}/>
+      <AlertOverlay visible={verifyPepLoading} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={Platform.OS === 'ios' ? keyboardVerticalOffset : screen.height * 0.5}
