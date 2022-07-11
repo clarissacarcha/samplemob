@@ -4,7 +4,7 @@ import {throttle} from 'lodash';
 import {COLORS, SIZES, FONTS} from 'src/res/constants';
 import {moderateScale} from 'toktokwallet/helper';
 
-export const OrangeButton = ({label, onPress, style, delay = 2000, labelStyle, hasShadow = false}) => {
+export const OrangeButton = ({label, onPress, style, delay = 2000, labelStyle, hasShadow = false, buttonStyle}) => {
   const useThrottle = (cb, delayDuration) => {
     const options = {leading: true, trailing: false}; // add custom lodash options
     const cbRef = useRef(cb);
@@ -23,7 +23,7 @@ export const OrangeButton = ({label, onPress, style, delay = 2000, labelStyle, h
   return (
     <TouchableHighlight
       onPress={onPressThrottled}
-      style={{...styles.blackButton, ...(hasShadow && styles.shadow)}}
+      style={{...styles.blackButton, ...(hasShadow && styles.shadow), ...buttonStyle}}
       underlayColor={'white'}>
       <View style={[styles.blackButtonBox, style]}>
         <Text style={[styles.label, labelStyle]}>{label}</Text>
