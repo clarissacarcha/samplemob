@@ -255,6 +255,7 @@ export const VerifyFullname = () => {
                   changeVerifyFullNameErrors('middleNameError', '');
                 }}
                 errorMessage={verifyFullNameErrors.middleNameError}
+                editable={person.hasMiddleName}
               />
               <View style={styles.checkBoxContainer}>
                 <CheckBox

@@ -40,7 +40,16 @@ const RenderItem = ({item, index, onPress}) => {
   );
 };
 
-export const SourceOfIncomeModal = ({visible, setVisible, loading, data, setData, doneProcess}) => {
+export const SourceOfIncomeModal = ({
+  visible,
+  setVisible,
+  loading,
+  data,
+  setData,
+  setSelectedData,
+  selectedData,
+  doneProcess,
+}) => {
   const onPressThrottle = useThrottle(() => {
     doneProcess();
     setVisible(false);
@@ -54,6 +63,8 @@ export const SourceOfIncomeModal = ({visible, setVisible, loading, data, setData
       selected: !currentData[index].selected,
     };
     setData(currentData);
+    selectedData.push(currentData[index]);
+    setSelectedData(selectedData);
   };
 
   return (

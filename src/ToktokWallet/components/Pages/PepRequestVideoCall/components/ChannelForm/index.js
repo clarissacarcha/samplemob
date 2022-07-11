@@ -64,7 +64,6 @@ export const ChannelForm = ({data}) => {
   const changeNumberOrLink = value => {
     if (isMobileNumber) {
       let mobile = value.replace(/[^0-9]/g, '');
-
       if (mobile.length > 11) return;
       if (value[0] != '0' || value[1] != '9') {
         setNumberOrLink('09');
@@ -80,7 +79,7 @@ export const ChannelForm = ({data}) => {
     <View style={styles.containerShadow}>
       <TextInput
         keyboardType={isMobileNumber ? 'number-pad' : 'default'}
-        defaultValue={numberOrLink}
+        value={numberOrLink}
         placeholder={`Enter ${placeholder}`}
         style={[styles.input, {borderWidth: 1, borderColor: errorMessage == '' ? 'transparent' : COLOR.RED}]}
         onChangeText={changeNumberOrLink}

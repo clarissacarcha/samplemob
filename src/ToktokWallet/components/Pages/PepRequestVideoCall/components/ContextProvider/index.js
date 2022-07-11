@@ -16,7 +16,9 @@ export const ContextProvider = ({children, pepInfo}) => {
     channelName: videocall.callChannel,
   });
   const [callChannels, setCallChannels] = useState('');
-  const [numberOrLink, setNumberOrLink] = useState();
+  const [numberOrLink, setNumberOrLink] = useState(
+    videocall.videoCallContactDetails ? videocall.videoCallContactDetails.replace('+63', '0') : '',
+  );
   const [dayPicked, setDayPicked] = useState({
     index: 0,
     min: 2,
@@ -41,6 +43,10 @@ export const ContextProvider = ({children, pepInfo}) => {
       setCallChannels(channels);
     },
   });
+
+  useEffect(() => {
+    getCallChannels();
+  }, []);
 
   useEffect(() => {
     getCallChannels();
