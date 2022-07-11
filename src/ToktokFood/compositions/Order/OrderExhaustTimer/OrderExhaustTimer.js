@@ -24,7 +24,7 @@ const OrderExhaustTimer = (props: PropsType): React$Node => {
 
   const setPreparingText = () => {
     if (state?.dateBookingConfirmed) {
-      const dateBookingConfirmed = moment(state?.dateBookingConfirmed).add(45, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+      const dateBookingConfirmed = moment(state?.dateBookingConfirmed).add(3, 'minutes').format('YYYY-MM-DD HH:mm:ss');
       const remainingMinutes = moment(dateBookingConfirmed).diff(moment(), 'minutes');
       if (remainingMinutes <= 0) {
         !isExhausted && setIsExhausted(true);
