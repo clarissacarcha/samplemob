@@ -236,8 +236,6 @@ export const Confirm = connect(
 
   return (
     <>
-      {console.log(VerifyUserData.pepInfo)}
-      {console.log(VerifyUserData.pepInfo.questionnaire.sourceOfIncomeDes.join(','))}
       <AlertOverlay visible={loading} />
       <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
         <View>
@@ -256,7 +254,7 @@ export const Confirm = connect(
       </TouchableOpacity>
       <View style={styles.content}>
         <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Review and Confirm</Text>
+          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, color: '#525252'}}>Review and Confirm</Text>
           <Text style={{fontFamily: FONT.REGULAR, marginBottom: 10, fontSize: FONT_SIZE.M, color: '#929191'}}>
             Review the details that you enter before clicking ‘Confrm’.
           </Text>
