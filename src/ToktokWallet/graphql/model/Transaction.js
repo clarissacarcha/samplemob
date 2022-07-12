@@ -67,6 +67,12 @@ const WalletTransactions = `
   refNo
   name
   phrase
+  transactionType {
+    id
+    name
+    key
+    type
+  }
   displayInfo
   amount
   note
