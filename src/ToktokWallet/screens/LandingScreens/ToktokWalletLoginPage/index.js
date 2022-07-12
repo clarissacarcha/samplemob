@@ -151,14 +151,13 @@ export const ToktokWalletLoginPage = ({navigation,route})=> {
         <FlagSecureScreen>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             {
-                // isRooted || ( !pinSet && tokwaAccount.constants.isPinCodeCheckingEnabled == "1" )
-                // ? <RenderRestricted 
-                //         isRooted={isRooted}
-                //         pinSet={pinSet}
-                //         isPinCodeCheckingEnabled={tokwaAccount.constants.isPinCodeCheckingEnabled }
-                //   />
-                // : <RenderAccessComponent kycPep={kycPep} kycStatus={kycStatus}/>    
-                <RenderAccessComponent kycPep={kycPep} kycStatus={kycStatus}/>   
+                isRooted || ( !pinSet && tokwaAccount.constants.isPinCodeCheckingEnabled == "1" )
+                ? <RenderRestricted 
+                        isRooted={isRooted}
+                        pinSet={pinSet}
+                        isPinCodeCheckingEnabled={tokwaAccount.constants.isPinCodeCheckingEnabled }
+                  />
+                : <RenderAccessComponent kycPep={kycPep} kycStatus={kycStatus}/>    
             }
             
         </FlagSecureScreen>
