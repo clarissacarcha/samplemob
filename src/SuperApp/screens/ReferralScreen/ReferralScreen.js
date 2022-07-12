@@ -41,18 +41,19 @@ const ReferralScreen = ({navigation, route, session, createSession}) => {
     onCompleted: () => {
       const storedUserId = session.user.id;
       setViewSuccesVoucherClaimedModal(true);
-      setTimeout(() => {
-        if (storedUserId) {
-          getUserSession({
-            variables: {
-              input: {
-                userId: storedUserId,
-              },
+      if (storedUserId) {
+        getUserSession({
+          variables: {
+            input: {
+              userId: storedUserId,
             },
-          });
-        } else {
-          navigation.replace('UnauthenticatedStack');
-        }
+          },
+        });
+      } else {
+        navigation.replace('UnauthenticatedStack');
+      }
+
+      setTimeout(() => {
         setViewSuccesVoucherClaimedModal(false);
         setRefCode('');
         if (fromRegistration) {
