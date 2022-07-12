@@ -348,14 +348,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         selectedVouchers={selectedVouchers}
         setSelectedVouchersNull={setSelectedVouchersNull}
       />
-      <BookingSelectPaymentMethod
-        viewPaymenetSucessModal={viewPaymenetSucessModal}
-        setViewSelectPaymentModal={setViewSelectPaymentModal}
-        details={details}
-        tokwaAccount={tokwaAccount}
-        getMyAccountLoading={getMyAccountLoading}
-        navigation={navigation}
-      />
     </View>
   );
 
@@ -468,6 +460,14 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       />
 
       <View style={styles.buttonContainer}>
+        <BookingSelectPaymentMethod
+          viewPaymenetSucessModal={viewPaymenetSucessModal}
+          setViewSelectPaymentModal={setViewSelectPaymentModal}
+          details={details}
+          tokwaAccount={tokwaAccount}
+          getMyAccountLoading={getMyAccountLoading}
+          navigation={navigation}
+        />
         <BookingConfirmButton SheetManager={SheetManager} />
       </View>
     </View>

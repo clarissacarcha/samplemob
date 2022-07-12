@@ -12,21 +12,19 @@ export const SuccesCancelBookingModal = ({visible, cancellationState, chargeAmou
           <Text style={styles.modalDescription}>
             Your booking has been cancelled. Cancellation Fee will be charged in your next booking. You may read more
             about our{' '}
-            <ThrottledOpacity
+            <Text
               onPress={() =>
                 Linking.openURL(
                   'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
                 )
-              }>
-              <Text
-                style={{
-                  color: CONSTANTS.COLOR.ORANGE,
-                  textDecorationLine: 'underline',
-                  textAlign: 'center',
-                }}>
-                Cancellation Policies
-              </Text>
-            </ThrottledOpacity>
+              }
+              style={{
+                color: CONSTANTS.COLOR.ORANGE,
+                textDecorationLine: 'underline',
+                textAlign: 'center',
+              }}>
+              Cancellation Policies
+            </Text>
             .
           </Text>
         );
@@ -35,16 +33,19 @@ export const SuccesCancelBookingModal = ({visible, cancellationState, chargeAmou
           <Text style={styles.modalDescription}>
             Your booking has been cancelled. No Show Fee will be charged in your next booking. You may read more about
             our{' '}
-            <ThrottledOpacity
+            <Text
               onPress={() =>
                 Linking.openURL(
                   'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
                 )
-              }>
-              <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>
-                Cancellation Policies
-              </Text>
-            </ThrottledOpacity>
+              }
+              style={{
+                color: CONSTANTS.COLOR.ORANGE,
+                textDecorationLine: 'underline',
+                textAlign: 'center',
+              }}>
+              Cancellation Policies
+            </Text>
             .
           </Text>
         );
