@@ -28,7 +28,7 @@ export const modifyPlaceholderAccordingToChannel = channelName => {
   }
 };
 
-export const ChannelForm = ({data}) => {
+export const ChannelForm = ({data, setPepInfo, pepInfo}) => {
   const {channelName, contactDescription} = data;
   const isMobileNumber = contactDescription == 'number';
   const placeholder = modifyPlaceholderAccordingToChannel(channelName);
@@ -44,21 +44,39 @@ export const ChannelForm = ({data}) => {
   } = useContext(ContextChannelForm);
 
   const onPressPickDay = index => {
-    let data = {
+    let pickerData = {
       index,
       min: index ? 1 : 2,
       max: index ? 7 : 6,
     };
-    setDayPicked(data);
+    setDayPicked(pickerData);
+    setPepInfo(state => {
+      return {
+        ...state,
+        videocall: {
+          ...state.videocall,
+          selectedDay: {...DAY_LIST[index], pickerData},
+        },
+      };
+    });
   };
 
   const onPressPickTime = index => {
-    let data = {
+    let pickerData = {
       index,
       min: index ? '13:00' : '08:00',
       max: index ? '17:00' : '12:00',
     };
-    setTimePicked(data);
+    setTimePicked(pickerData);
+    setPepInfo(state => {
+      return {
+        ...state,
+        videocall: {
+          ...state.videocall,
+          selectedTime: {...TIME_LIST[index], pickerData},
+        },
+      };
+    });
   };
 
   const changeNumberOrLink = value => {
@@ -98,14 +116,30 @@ export const ChannelForm = ({data}) => {
       <View style={styles.contentShadow}>
         <Text style={{marginBottom: 10, fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.M, color: '#525252'}}>Day</Text>
         <View style={{height: 1, backgroundColor: '#F8F8F8', marginBottom: 16}} />
-        <CustomRadioButton data={DAY_LIST} selected={dayPicked.index} onPress={onPressPickDay} />
+        <CustomRadioButton
+          data={DAY_LIST}
+          selected={
+            pepInfo.videocall.selectedDay?.pickerData?.index
+              ? pepInfo.videocall.selectedDay.pickerData.index
+              : dayPicked.index
+          }
+          onPress={onPressPickDay}
+        />
       </View>
       <View style={[styles.contentShadow, {marginTop: 16}]}>
         <Text style={{marginBottom: 10, fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.M, color: '#525252'}}>
           Time
         </Text>
         <View style={{height: 1, backgroundColor: '#F8F8F8', marginBottom: 16}} />
-        <CustomRadioButton data={TIME_LIST} selected={timePicked.index} onPress={onPressPickTime} />
+        <CustomRadioButton
+          data={TIME_LIST}
+          selected={
+            pepInfo.videocall.selectedTime?.pickerData?.index
+              ? pepInfo.videocall.selectedTime.pickerData.index
+              : timePicked.index
+          }
+          onPress={onPressPickTime}
+        />
       </View>
     </View>
   );

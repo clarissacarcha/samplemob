@@ -8,7 +8,7 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 const {width, height} = Dimensions.get('window');
 
-const CROP_AREA_WIDTH = width * 0.8;
+const CROP_AREA_WIDTH = width * 0.85;
 const CROP_AREA_HEIGHT = CROP_AREA_WIDTH + 50;
 
 export const ToktokWalletSelfieImageWithIDCamera = ({navigation, route}) => {
@@ -319,21 +319,19 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation, route}) => {
                 }
         </View> */}
 
-      {/* <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        position: 'absolute',
-                        bottom: 0,
-                        width: '100%',
-                        marginBottom: 20,
-                    }}>
-                    <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
-                        <View style={styles.inCapture}>
-                         
-                        </View>
-                    </TouchableOpacity>
-                </View> */}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+          marginBottom: 20,
+        }}>
+        <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
+          <View style={styles.inCapture}></View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

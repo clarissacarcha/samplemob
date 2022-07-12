@@ -10,7 +10,7 @@ const staticLogo = [viber, whatsApp, telegram, skype, messenger];
 
 const {FONT_FAMILY: FONT, FONT_SIZE, COLOR, SHADOW, SIZE} = CONSTANTS;
 
-export const ChannelList = ({item, onPress, index}) => {
+export const ChannelList = ({item, onPress, index, setPepInfo, pepInfo}) => {
   const {selectedCallChannel, setSelectedCallChannel} = useContext(ContextChannelForm);
   const {channelName, logo, id} = item;
   const isSelected = selectedCallChannel.channelName === channelName;
@@ -29,7 +29,7 @@ export const ChannelList = ({item, onPress, index}) => {
           <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.SEMI_BOLD, paddingHorizontal: 16}}>{channelName}</Text>
         </View>
       </TouchableOpacity>
-      {isSelected && <ChannelForm data={item} />}
+      {isSelected && <ChannelForm data={item} setPepInfo={setPepInfo} pepInfo={pepInfo} />}
     </View>
   );
 };
