@@ -36,7 +36,7 @@ const UserInfo = ({label, value}) => {
   return (
     <View style={{paddingVertical: 10, width: '100%', flexDirection: 'row'}}>
       <View style={{flex: 1}}>
-        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, textAlign: 'left', color: '#525252'}}>{label}</Text>
+        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: '#525252', textAlign: 'left'}}>{label}</Text>
       </View>
       <View style={{flex: 1, alignItems: 'flex-end'}}>
         <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M, textAlign: 'right'}}>{value}</Text>
