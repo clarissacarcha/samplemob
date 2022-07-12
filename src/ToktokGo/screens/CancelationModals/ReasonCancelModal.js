@@ -153,7 +153,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               justifyContent: 'center',
               flexDirection: 'row',
               paddingHorizontal: 25,
-              paddingTop: 20,
+              paddingVertical: 20,
             }}>
             <ThrottledOpacity
               delay={500}
@@ -167,6 +167,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
                 backgroundColor: CONSTANTS.COLOR.WHITE,
                 borderWidth: 1,
                 borderColor: CONSTANTS.COLOR.ORANGE,
+                margin: 10,
               }}>
               <Text
                 style={{
