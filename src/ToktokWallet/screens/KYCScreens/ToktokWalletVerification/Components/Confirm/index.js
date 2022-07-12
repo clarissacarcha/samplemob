@@ -236,6 +236,8 @@ export const Confirm = connect(
 
   return (
     <>
+      {console.log(VerifyUserData.pepInfo)}
+      {console.log(VerifyUserData.pepInfo.questionnaire.sourceOfIncomeDes.join(','))}
       <AlertOverlay visible={loading} />
       <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
         <View>
@@ -283,18 +285,39 @@ export const Confirm = connect(
               <Text style={styles.titleText}>PEP Information</Text>
               <UserInfo
                 label="Have you ever been categorized as PEP (Political Exposed Person) by a bank, brokerage firm or any financial institution?"
-                value={''}
+                value={
+                  VerifyUserData.pepInfo.questionnaire.isPep === '1'
+                    ? 'Yes'
+                    : VerifyUserData.pepInfo.questionnaire.isPep === '2'
+                    ? 'No'
+                    : "I don't know"
+                }
               />
               <UserInfo
                 label="Do you have an immediate family member or business/close associate which is currently/formally qualified as PEP?"
-                value={''}
+                value={
+                  VerifyUserData.pepInfo.questionnaire.isFamilyPep === '1'
+                    ? 'Yes'
+                    : VerifyUserData.pepInfo.questionnaire.isFamilyPep === '2'
+                    ? 'No'
+                    : "I don't know"
+                }
               />
-              <UserInfo label="Source of Income" value={''} />
-              <UserInfo label="Source of Wealth" value={''} />
+              <UserInfo
+                label="Source of Income"
+                value={VerifyUserData.pepInfo.questionnaire.sourceOfIncomeDes.join(',')}
+              />
+              <UserInfo
+                label="Source of Wealth"
+                value={VerifyUserData.pepInfo.questionnaire.sourceOfWealthDes.join(',')}
+              />
               <Text style={styles.titleText}>Video Call Schedule</Text>
-              <UserInfo label="Viber" value={''} />
-              <UserInfo label="Weekday" value={''} />
-              <UserInfo label="Time" value={''} />
+              <UserInfo
+                label={VerifyUserData.pepInfo.videocall.callChannel}
+                value={VerifyUserData.pepInfo.videocall.videoCallContactDetails}
+              />
+              <UserInfo label="Weekday" value={!VerifyUserData.pepInfo.videocall.selectedDay && 'Monday-Friday'} />
+              <UserInfo label="Time" value={!VerifyUserData.pepInfo.videocall.selectedTime && '8:00 AM - 12:00 PM'} />
             </>
           )}
           <Text style={styles.titleText}>Gallery</Text>
@@ -352,7 +375,7 @@ export const Confirm = connect(
         label="Previous"
         labelTwo="Confirm"
         onPressNext={Back}
-        onPressPrevious={confirm}
+        onPressPrevious={isCertify && confirm}
         hasShadow
         isPrevious
       />
