@@ -74,7 +74,9 @@ const StatusBar = ({label, log, number}) => {
           />
         </View>
         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={{fontFamily: fontFamily, fontSize: constants.FONT_SIZE.M, color: fontColor}}>{label}</Text>
+          <Text style={{fontFamily: fontFamily, fontSize: constants.FONT_SIZE.M, color: fontColor, flex: 0.9}}>
+            {label}
+          </Text>
           <Text
             style={{
               fontFamily: constants.FONT_FAMILY.REGULAR,

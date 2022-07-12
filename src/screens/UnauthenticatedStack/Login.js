@@ -72,6 +72,7 @@ const Login = ({navigation, session}) => {
   // };
 
   const onMobileChange = value => {
+    setValidNumber(false);
     if (value.length == 1 && value == '0') {
       setMobile('');
       return;
@@ -183,14 +184,14 @@ const Login = ({navigation, session}) => {
         </View> */}
 
           {/*-------------------- INPUT ROW --------------------*/}
-          <View style={styles.inputContainer}>
+          <View style={[styles.inputContainer, validNumber && {borderColor: 'red', borderWidth: 1}]}>
             <View style={styles.inputView}>
               <Text style={{fontSize: 13, color: DARK}}>+63</Text>
             </View>
             <TextInput
               value={mobile}
               onChangeText={onMobileChange}
-              style={styles.input}
+              style={[styles.input]}
               placeholder="Phone Number"
               keyboardType="number-pad"
               returnKeyType="done"
