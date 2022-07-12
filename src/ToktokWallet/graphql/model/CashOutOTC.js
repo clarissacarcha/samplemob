@@ -15,6 +15,7 @@ export const GET_CASH_OUT_PROVIDER_PARTNERS = gql`
       type
       status
       validity
+      toktokServiceFee
       cashOutProviderFee {
         id
         cashOutProviderPartnerId
