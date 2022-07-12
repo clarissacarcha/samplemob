@@ -30,7 +30,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
-const CROP_AREA_WIDTH = width * 0.8;
+const CROP_AREA_WIDTH = width * 0.85;
 const CROP_AREA_HEIGHT = CROP_AREA_WIDTH;
 const ratio = Math.min(width / CROP_AREA_WIDTH, height / CROP_AREA_HEIGHT);
 
@@ -164,15 +164,14 @@ export const VerifySelfie = () => {
         <View style={styles.PreviewImage}>
           <ImageCropper
             imageUri={tempSelfieImage.uri}
-            cropAreaWidth={Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110}
-            cropAreaHeight={Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
+            cropAreaWidth={CROP_AREA_WIDTH - 100}
+            cropAreaHeight={CROP_AREA_HEIGHT - 100}
             containerColor="transparent"
             areaColor="black"
             areaOverlay={<View style={styles.overlay} />}
             setCropperParams={cropperParams => {
               setCropperParams(cropperParams);
             }}
-            areaOverlay={<View style={styles.overlay} />}
           />
           <TouchableOpacity
             onPress={() => navigation.push('ToktokWalletSelfieImageCamera', {setImage})}
@@ -334,8 +333,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   selfieBtn: {
-    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110,
-    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
+    width: CROP_AREA_WIDTH - 100,
+    height: CROP_AREA_HEIGHT - 100,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FEFAF6',
@@ -352,8 +351,8 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   PreviewImage: {
-    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100 + 3,
-    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110 + 3,
+    height: CROP_AREA_HEIGHT - 100 + 3,
+    width: CROP_AREA_WIDTH - 100 + 3,
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 7,

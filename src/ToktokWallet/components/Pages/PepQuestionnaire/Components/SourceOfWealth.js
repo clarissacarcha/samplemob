@@ -45,7 +45,9 @@ export const SourceOfWealth = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
 
   const doneProcess = () => {
     const sourceOfWealthId = selectedData.map(data => data.id);
-    const sourceOfWealthDes = selectedData.map(data => data.description);
+    const sourceOfWealthDes = selectedData.map(data => {
+      return data.description === 'Others' ? pepInfoAnswer.others : data.description;
+    });
     setPepInfo(state => {
       return {
         ...state,
@@ -97,6 +99,7 @@ export const SourceOfWealth = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
         },
       };
     });
+    doneProcess();
   };
 
   const handleErrorMessage = index => {

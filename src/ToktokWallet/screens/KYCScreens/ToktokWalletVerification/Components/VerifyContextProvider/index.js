@@ -138,6 +138,26 @@ export const VerifyContextProvider = ({children}) => {
       preferredVcsDayMax: '',
       preferredVcsTimeMin: '',
       preferredVcsTimeMax: '',
+      selectedDay: {
+        label: 'Weekday',
+        description: 'Monday - Friday',
+        value: 0,
+        pickerData: {
+          index: 0,
+          min: 2,
+          max: 6,
+        },
+      },
+      selectedTime: {
+        label: 'Morning',
+        description: '8:00 AM - 12:00 PM',
+        value: 0,
+        pickerData: {
+          index: 0,
+          min: '08:00',
+          max: '12:00',
+        },
+      },
     },
   });
 
