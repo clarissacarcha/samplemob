@@ -2,16 +2,16 @@ import React, {useState, useEffect, useContext} from 'react';
 import {Modal, View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput} from 'react-native';
 import {VerifyContext} from '../VerifyContextProvider';
 import FIcon from 'react-native-vector-icons/FontAwesome5';
-import {SearchInput, NoData} from 'toktokwallet/components';
+import {SearchInput, NoData, CustomSelectionList} from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
 import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 
-const ModalCity = ({type, data}) => {
+const ModalCity = ({type, data, selectedCity}) => {
   const [cities, setCities] = useState(data);
 
-  const {modalCityVisible, setModalCityVisible, setCityId, setCity, changeVerifyAddressErrors} =
+  const {modalCityVisible, city, setModalCityVisible, setCityId, setCity, changeVerifyAddressErrors, verifyAddressErrors} =
     useContext(VerifyContext);
   const [filteredCities, setFilteredCities] = useState(cities);
 
@@ -41,51 +41,65 @@ const ModalCity = ({type, data}) => {
     setFilteredCities(filtered);
   };
 
+  const onSelectedValue = ({index}) => {
+    selectCountry(index);
+  };
+
   useEffect(() => {
     setCities(data);
     setFilteredCities(data);
   }, [data]);
 
   return (
-    <Modal
-      visible={modalCityVisible}
-      onRequestClose={() => {
-        setModalCityVisible(false);
-        setFilteredCities(cities);
-      }}
-      style={styles.container}
-      animationType="slide">
-      <View
-        style={[
-          styles.content,
-          {marginTop: Platform.OS === 'ios' ? getStatusbarHeight + moderateScale(15) : moderateScale(15)},
-        ]}>
-        <View style={{flexDirection: 'row', marginHorizontal: 16}}>
-          <TouchableOpacity onPress={() => setModalCityVisible(false)} style={styles.center}>
-            <FIcon name="chevron-left" size={16} color={COLOR.ORANGE} />
-          </TouchableOpacity>
-          <SearchInput
-            containerStyle={styles.search}
-            placeholder="Search your city"
-            placeholderTextColor={'#525252'}
-            onChangeText={filterSearch}
-            // search={search}
-            onClear={() => setSearch('')}
-          />
-        </View>
-        <FlatList
-          style={{marginVertical: 15}}
-          data={filteredCities}
-          keyExtractor={city => city.id}
-          renderItem={renderCountry}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => {
-            return <NoData type="search" title="No Results Found" label="Try to search something similar." />;
-          }}
-          contentContainerStyle={{flexGrow: 1, marginBottom: getStatusbarHeight}}
-        />
-      </View>
-    </Modal>
+    <CustomSelectionList
+      data={filteredCities}
+      onSelectedValue={onSelectedValue}
+      errorMessage={verifyAddressErrors.cityError}
+      placeholder="Search your City"
+      withSearch={true}
+      onSearchValue={filterSearch}
+      hasDefault={true}
+      selectedValue={city}
+    />
+    // <Modal
+    //   visible={modalCityVisible}
+    //   onRequestClose={() => {
+    //     setModalCityVisible(false);
+    //     setFilteredCities(cities);
+    //   }}
+    //   style={styles.container}
+    //   animationType="slide">
+    //   <View
+    //     style={[
+    //       styles.content,
+    //       {marginTop: Platform.OS === 'ios' ? getStatusbarHeight + moderateScale(15) : moderateScale(15)},
+    //     ]}>
+    //     <View style={{flexDirection: 'row', marginHorizontal: 16}}>
+    //       <TouchableOpacity onPress={() => setModalCityVisible(false)} style={styles.center}>
+    //         <FIcon name="chevron-left" size={16} color={COLOR.ORANGE} />
+    //       </TouchableOpacity>
+    //       <SearchInput
+    //         containerStyle={styles.search}
+    //         placeholder="Search your city"
+    //         placeholderTextColor={'#525252'}
+    //         onChangeText={filterSearch}
+    //         // search={search}
+    //         onClear={() => setSearch('')}
+    //       />
+    //     </View>
+    //     <FlatList
+    //       style={{marginVertical: 15}}
+    //       data={filteredCities}
+    //       keyExtractor={city => city.id}
+    //       renderItem={renderCountry}
+    //       showsVerticalScrollIndicator={false}
+    //       ListEmptyComponent={() => {
+    //         return <NoData type="search" title="No Results Found" label="Try to search something similar." />;
+    //       }}
+    //       contentContainerStyle={{flexGrow: 1, marginBottom: getStatusbarHeight}}
+    //     />
+    //   </View>
+    // </Modal>
   );
 };
 

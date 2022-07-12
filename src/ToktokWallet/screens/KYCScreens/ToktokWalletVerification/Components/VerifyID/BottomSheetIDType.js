@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, forwardRef, useState, useContext} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState, useContext} from 'react';
 import {useSelector} from 'react-redux';
 import {VerifyContext} from '../VerifyContextProvider'
 import {View, StyleSheet, Text, TextInput, FlatList, TouchableOpacity} from 'react-native';
@@ -7,16 +7,18 @@ import { useLazyQuery } from '@apollo/react-hooks'
 import { TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_IDENTIFICATION_CARDS } from 'toktokwallet/graphql/virtual'
 import CONSTANTS from 'common/res/constants'
+import {CustomSelectionList} from 'toktokwallet/components';
+import {ListModal} from '../../../../../components/Modals';
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
 
-const BottomSheetIDType = forwardRef(({onChange}, ref) => {
+const BottomSheetIDType = ({ visibleSOIModal, setVisibleSOIModal, changeVerifyID, changeVerifyIDErrors, verifyIDErrors, selectedValue}) => {
   
     const snapPoints = useMemo(() => [0, 550], []);
     const constants = useSelector((state) => state.constants);
-    const {changeVerifyID, setIdentificationId} = useContext(VerifyContext)
+    const {setIdentificationId, setIsbackRequired,} = useContext(VerifyContext)
     const [filteredValidID, setFilteredValidID] = useState([])
-
+    const ref = useRef();
     const [getIdentificationCards, {error, loading}] = useLazyQuery(GET_IDENTIFICATION_CARDS, {
       client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
       fetchPolicy: 'network-only',
@@ -28,61 +30,29 @@ const BottomSheetIDType = forwardRef(({onChange}, ref) => {
         console.log(err)
       }
     })
-
+    
     useEffect(() => {
       getIdentificationCards()
-    }, [onChange])
+    }, [])
 
-    const selectValidID = (index)=> {
-        const validID = filteredValidID[index].name
-        changeVerifyID("idType",validID)
-        // setFilteredValidID(validIDList)
-        setIdentificationId(filteredValidID[index].id)
-        onChange(filteredValidID[index])
-        ref.current.collapse()
-        console.log(filteredValidID[index].id)
+    const onSelectedValue = (index)=> {
+      const validID = filteredValidID[index.index];
+      changeVerifyID("idType",validID);
+      setIdentificationId(filteredValidID[index.index].id);
+      setIsbackRequired(filteredValidID[index.index].isBackRequired == 1)
+      changeVerifyIDErrors('idError', '');
     }
 
   return (
-    <BottomSheet
-      ref={ref}
-      index={-1}
-      snapPoints={snapPoints}
-      enableHandlePanningGesture={true}
-      enableContentPanningGesture={false}
-      handleComponent={() => (
-        <View
-          style={{
-            height: 20,
-            borderTopRightRadius: 15,
-            borderTopLeftRadius: 15,
-            borderTopWidth: 3,
-            borderRightWidth: 2,
-            borderLeftWidth: 2,
-            borderColor: COLOR.ORANGE,
-            marginHorizontal: -2,
-          }}
-        />
-      )}
-      backdropComponent={BottomSheetBackdrop}>
-      <View style={styles.sheet}>
-        <Text style={{fontFamily: FONT.BOLD}}>Select ID Type</Text>
-        <View style={{height: 10}} />
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          style={{marginBottom:50}}
-          data={filteredValidID}
-          ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: COLOR.LIGHT}} />}
-          renderItem={({item, index}) => (
-            <TouchableOpacity onPress={()=>selectValidID(index)} style={[styles.validID]}>
-                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{item.name}</Text>
-            </TouchableOpacity>     
-          )}
-        />
-      </View>
-    </BottomSheet>
+    <CustomSelectionList
+      data={filteredValidID}
+      errorMessage={verifyIDErrors.idError}
+      placeholder="Select ID Type"
+      onSelectedValue={onSelectedValue}
+      selectedValue={selectedValue}
+    />
   );
-})
+};
 
 const styles = StyleSheet.create({
   box: {
