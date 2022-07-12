@@ -59,6 +59,7 @@ export const Confirm = connect(
   mapDispatchToProps,
 )(({session}) => {
   const prompt = usePrompt();
+  const {setCurrentIndex} = useContext(VerifyContext);
   const VerifyUserData = useContext(VerifyContext);
   const {selfieImage, selfieImageWithID, frontImage, backImage} = VerifyUserData;
   const [cropperParams, setCropperParams] = useState({});
@@ -138,96 +139,98 @@ export const Confirm = connect(
   };
 
   const confirm = async () => {
-    const rnValidIDFile = new ReactNativeFile({
-      ...VerifyUserData.verifyID.idImage,
-      name: 'documentValidID.jpg',
-      type: 'image/jpeg',
-    });
+    if (isCertify) {
+      const rnValidIDFile = new ReactNativeFile({
+        ...VerifyUserData.verifyID.idImage,
+        name: 'documentValidID.jpg',
+        type: 'image/jpeg',
+      });
 
-    const rnSelfieFile = new ReactNativeFile({
-      ...VerifyUserData.selfieImage,
-      name: 'documentSelfie.jpg',
-      type: 'image/jpeg',
-    });
+      const rnSelfieFile = new ReactNativeFile({
+        ...VerifyUserData.selfieImage,
+        name: 'documentSelfie.jpg',
+        type: 'image/jpeg',
+      });
 
-    const rnSelfieFileWithID = new ReactNativeFile({
-      ...VerifyUserData.selfieImageWithID,
-      name: 'documentSelfieWithID.jpg',
-      type: 'image/jpeg',
-    });
+      const rnSelfieFileWithID = new ReactNativeFile({
+        ...VerifyUserData.selfieImageWithID,
+        name: 'documentSelfieWithID.jpg',
+        type: 'image/jpeg',
+      });
 
-    const rnFrontIDFile = VerifyUserData.frontImage
-      ? new ReactNativeFile({
-          ...VerifyUserData.frontImage,
-          name: 'documentValidIDFront.jpg',
-          type: 'image/jpeg',
-        })
-      : null;
+      const rnFrontIDFile = VerifyUserData.frontImage
+        ? new ReactNativeFile({
+            ...VerifyUserData.frontImage,
+            name: 'documentValidIDFront.jpg',
+            type: 'image/jpeg',
+          })
+        : null;
 
-    const rnBackIDFile = VerifyUserData.backImage
-      ? new ReactNativeFile({
-          ...VerifyUserData.backImage,
-          name: 'documentValidIDBack.jpg',
-          type: 'image/jpeg',
-        })
-      : null;
+      const rnBackIDFile = VerifyUserData.backImage
+        ? new ReactNativeFile({
+            ...VerifyUserData.backImage,
+            name: 'documentValidIDBack.jpg',
+            type: 'image/jpeg',
+          })
+        : null;
 
-    const input = {
-      // userId: session.user.id,
-      userId: await AsyncStorage.getItem('accessToken'),
-      mobileNumber: VerifyUserData.contactInfo.mobile_number,
-      emailAddress: VerifyUserData.contactInfo.email,
-      firstName: VerifyUserData.person.firstName,
-      middleName: VerifyUserData.person.middleName,
-      lastName: VerifyUserData.person.lastName,
-      hasMiddleName: VerifyUserData.person.hasMiddleName,
-      gender: VerifyUserData.person.gender,
-      birthdate: moment(VerifyUserData.birthInfo.birthdate).format('YYYY-MM-DD'),
-      // birthdate: VerifyUserData.birthInfo.birthdate,
-      birthPlace: VerifyUserData.birthInfo.birthPlace,
-      ...(rnSelfieFile ? {selfieImage: rnSelfieFile} : {}),
-      ...(rnSelfieFileWithID ? {selfieImageWithID: rnSelfieFileWithID} : {}),
-      nationality: VerifyUserData.nationalityId.toString(),
-      line1: VerifyUserData.address.line1,
-      line2: VerifyUserData.address.line2,
-      postalCode: VerifyUserData.address.postalCode,
-      cityId: VerifyUserData.cityId,
-      provinceId: VerifyUserData.provinceId,
-      ...(rnFrontIDFile ? {frontImage: rnFrontIDFile} : {}),
-      ...(rnBackIDFile ? {backImage: rnBackIDFile} : {}),
-      identificationCardNumber: VerifyUserData.verifyID.idNumber,
-      identificationCardId: VerifyUserData.identificationId,
-      sourceIncomeId: VerifyUserData.incomeInfo.source.id,
-      otherSource: VerifyUserData.incomeInfo.otherSource,
-      occupation: VerifyUserData.incomeInfo.occupation,
-      isPep: VerifyUserData.pepInfo.isPep,
-      pepRequest: {
-        videocall: {
-          videoCallContactDetails: VerifyUserData.pepInfo.videocall.videoCallContactDetails,
-          callChannelId: VerifyUserData.pepInfo.videocall.callChannelId,
-          preferredVcsDayMin: +VerifyUserData.pepInfo.videocall.preferredVcsDayMin,
-          preferredVcsDayMax: +VerifyUserData.pepInfo.videocall.preferredVcsDayMax,
-          preferredVcsTimeMin: VerifyUserData.pepInfo.videocall.preferredVcsTimeMin,
-          preferredVcsTimeMax: VerifyUserData.pepInfo.videocall.preferredVcsTimeMax,
+      const input = {
+        // userId: session.user.id,
+        userId: await AsyncStorage.getItem('accessToken'),
+        mobileNumber: VerifyUserData.contactInfo.mobile_number,
+        emailAddress: VerifyUserData.contactInfo.email,
+        firstName: VerifyUserData.person.firstName,
+        middleName: VerifyUserData.person.middleName,
+        lastName: VerifyUserData.person.lastName,
+        hasMiddleName: VerifyUserData.person.hasMiddleName,
+        gender: VerifyUserData.person.gender,
+        birthdate: moment(VerifyUserData.birthInfo.birthdate).format('YYYY-MM-DD'),
+        // birthdate: VerifyUserData.birthInfo.birthdate,
+        birthPlace: VerifyUserData.birthInfo.birthPlace,
+        ...(rnSelfieFile ? {selfieImage: rnSelfieFile} : {}),
+        ...(rnSelfieFileWithID ? {selfieImageWithID: rnSelfieFileWithID} : {}),
+        nationality: VerifyUserData.nationalityId.toString(),
+        line1: VerifyUserData.address.line1,
+        line2: VerifyUserData.address.line2,
+        postalCode: VerifyUserData.address.postalCode,
+        cityId: VerifyUserData.cityId,
+        provinceId: VerifyUserData.provinceId,
+        ...(rnFrontIDFile ? {frontImage: rnFrontIDFile} : {}),
+        ...(rnBackIDFile ? {backImage: rnBackIDFile} : {}),
+        identificationCardNumber: VerifyUserData.verifyID.idNumber,
+        identificationCardId: VerifyUserData.identificationId,
+        sourceIncomeId: VerifyUserData.incomeInfo.source.id,
+        otherSource: VerifyUserData.incomeInfo.otherSource,
+        occupation: VerifyUserData.incomeInfo.occupation,
+        isPep: VerifyUserData.pepInfo.isPep,
+        pepRequest: {
+          videocall: {
+            videoCallContactDetails: VerifyUserData.pepInfo.videocall.videoCallContactDetails,
+            callChannelId: VerifyUserData.pepInfo.videocall.callChannelId,
+            preferredVcsDayMin: +VerifyUserData.pepInfo.videocall.preferredVcsDayMin,
+            preferredVcsDayMax: +VerifyUserData.pepInfo.videocall.preferredVcsDayMax,
+            preferredVcsTimeMin: VerifyUserData.pepInfo.videocall.preferredVcsTimeMin,
+            preferredVcsTimeMax: VerifyUserData.pepInfo.videocall.preferredVcsTimeMax,
+          },
+          questionnaire: {
+            isPep: VerifyUserData.pepInfo.questionnaire.isPep,
+            pepPosition: VerifyUserData.pepInfo.questionnaire.pepPosition,
+            isFamilyPep: VerifyUserData.pepInfo.questionnaire.isFamilyPep,
+            familyPepPosition: VerifyUserData.pepInfo.questionnaire.familyPepPosition,
+            sourceOfIncomeId: JSON.stringify(VerifyUserData.pepInfo.questionnaire.sourceOfIncomeId),
+            sourceOfIncome: VerifyUserData.pepInfo.questionnaire.sourceOfIncome,
+            sourceOfWealthId: JSON.stringify(VerifyUserData.pepInfo.questionnaire.sourceOfWealthId),
+            sourceOfWealth: VerifyUserData.pepInfo.questionnaire.sourceOfWealth,
+          },
         },
-        questionnaire: {
-          isPep: VerifyUserData.pepInfo.questionnaire.isPep,
-          pepPosition: VerifyUserData.pepInfo.questionnaire.pepPosition,
-          isFamilyPep: VerifyUserData.pepInfo.questionnaire.isFamilyPep,
-          familyPepPosition: VerifyUserData.pepInfo.questionnaire.familyPepPosition,
-          sourceOfIncomeId: JSON.stringify(VerifyUserData.pepInfo.questionnaire.sourceOfIncomeId),
-          sourceOfIncome: VerifyUserData.pepInfo.questionnaire.sourceOfIncome,
-          sourceOfWealthId: JSON.stringify(VerifyUserData.pepInfo.questionnaire.sourceOfWealthId),
-          sourceOfWealth: VerifyUserData.pepInfo.questionnaire.sourceOfWealth,
-        },
-      },
-    };
+      };
 
-    postKYCRegister({
-      variables: {
-        input: input,
-      },
-    });
+      postKYCRegister({
+        variables: {
+          input: input,
+        },
+      });
+    }
   };
 
   const ViewPrivacyPolicy = () => {
@@ -372,8 +375,8 @@ export const Confirm = connect(
       <PreviousNextButton
         label="Previous"
         labelTwo="Confirm"
-        onPressNext={Back}
-        onPressPrevious={isCertify && confirm}
+        onPressNext={confirm}
+        onPressPrevious={Back}
         hasShadow
         isPrevious
       />
@@ -456,7 +459,7 @@ const styles = StyleSheet.create({
     width: moderateScale(85),
     flexDirection: 'column',
     justifyContent: 'center',
-    alignContent: 'center',
+    alignItems: 'center',
     borderStyle: 'dashed',
     borderColor: COLOR.ORANGE,
     borderWidth: 1,
