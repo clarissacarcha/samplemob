@@ -1,7 +1,7 @@
 import React , {useContext,useState} from 'react';
 import { View , Text , StyleSheet } from 'react-native';
 import { YellowButton } from 'src/revamp';
-import { Separator , PromptModal } from 'toktokwallet/components';
+import { Separator , PromptModal , PreviousNextButton } from 'toktokwallet/components';
 import { ContextEnterpriseApplication } from "../ContextProvider";
 import { TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import { POST_ENTERPRISE_UPGRADE_REQUEST } from 'toktokwallet/graphql';
@@ -88,6 +88,7 @@ export const Submit = ()=> {
         setValidID1,
         setValidID2,
         pepInfo,
+        setCurrentIndex
     } = useContext(ContextEnterpriseApplication)
     const [visible,setVisible] = useState(false);
     const alert = useAlert();
@@ -150,6 +151,8 @@ export const Submit = ()=> {
         return setVisible(false);
     }
 
+    const Previous = ()=> setCurrentIndex(state=>state-1)
+
     return (
         <>
         <AlertOverlay visible={loading}/>
@@ -160,9 +163,7 @@ export const Submit = ()=> {
                 title="Success!"
                 event="success"
         />
-        <View style={styles.container}>
-            <YellowButton label="Submit" onPress={onPress}/>
-        </View>
+        <PreviousNextButton label="Previous" labelTwo={'Submit'} hasShadow onPressNext={onPress} onPressPrevious={Previous} />
         </>
     )
 }

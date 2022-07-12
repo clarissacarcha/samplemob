@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, Modal, ScrollView, TouchableOpacity, TextInput} from 'react-native';
 import {getStatusbarHeight} from 'toktokwallet/helper';
-import {Separator, PolicyNote, PreviousNextButton, CustomTextInput} from 'toktokwallet/components';
+import {Separator, PolicyNote, PreviousNextButton, CustomTextInput , OrangeButton} from 'toktokwallet/components';
 import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
 import CheckBox from 'react-native-check-box';
 
@@ -74,9 +74,8 @@ const Question = ({question, errorMessage, setErrorMessage, index, chooseAnswer,
   );
 };
 
-export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex}) => {
+export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex, hasPreviousButton = true }) => {
   const [errorMessage, setErrorMessage] = useState(['', '', '', '', '', '']);
-  const [agree, setAgree] = useState(false);
   const [readMorePEP, setReadMorePEP] = useState(false);
 
   const onPress = () => {
@@ -147,6 +146,7 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
       sourceOfWealthId,
       sourceOfWealth,
       sourceOfWealthDes,
+      agreement,
     } = pepInfo.questionnaire;
     const isValidPepPosition = isPep == '1' ? checkFieldIsEmpty(0, pepPosition) : true;
     const isValidFamilyPepPosition = isFamilyPep == '1' ? checkFieldIsEmpty(1, familyPepPosition) : true;
@@ -164,7 +164,7 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
       isValidFamilyPepPosition &&
       isValidSourceOfIncome &&
       isValidSourceOfWealth &&
-      agree
+      agreement
     ) {
       setCurrentIndex(oldval => oldval + 1);
     }
@@ -182,7 +182,7 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
           }}
         />
         <View style={styles.headings}>
-          <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>PEP Questionnaire</Text>
+          <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, marginTop: 15}}>PEP Questionnaire</Text>
           <View style={styles.questions}>
             <Question
               question="Have you ever been categorized as PEP (Political Exposed Person)
@@ -214,6 +214,7 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
                 value: pepInfo.questionnaire.sourceOfIncomeId,
                 des: pepInfo.questionnaire.sourceOfIncomeDes,
                 others: pepInfo.questionnaire.sourceOfIncome,
+                selected: pepInfo.questionnaire.selectedSourceOfIncome,
               }}
               setPepInfo={setPepInfo}
               errorMessage={errorMessage}
@@ -225,6 +226,7 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
                 value: pepInfo.questionnaire.sourceOfWealthId,
                 des: pepInfo.questionnaire.sourceOfWealthDes,
                 others: pepInfo.questionnaire.sourceOfWealth,
+                selected: pepInfo.questionnaire.selectedSourceOfWealth,
               }}
               setPepInfo={setPepInfo}
               errorMessage={errorMessage}
@@ -233,8 +235,18 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
           </View>
           <View style={{flexDirection: 'row', marginVertical: 20, alignItems: 'center'}}>
             <CheckBox
-              isChecked={agree}
-              onClick={() => setAgree(!agree)}
+              isChecked={pepInfo.questionnaire.agreement}
+              onClick={() => {
+                setPepInfo(state => {
+                  return {
+                    ...state,
+                    questionnaire: {
+                      ...state.questionnaire,
+                      agreement: !state.questionnaire.agreement,
+                    },
+                  };
+                });
+              }}
               checkBoxColor={COLOR.ORANGE}
               checkedCheckBoxColor={COLOR.ORANGE}
             />
@@ -251,7 +263,16 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
           </View>
         </View>
       </ScrollView>
-      <PreviousNextButton label="Previous" labelTwo={'Next'} hasShadow onPressNext={Next} onPressPrevious={Previous} />
+      {
+        hasPreviousButton
+        ? <PreviousNextButton label="Previous" labelTwo={'Next'} hasShadow onPressNext={Next} onPressPrevious={Previous} />
+        : <OrangeButton 
+            label="Next" 
+            hasShadow 
+            onPress={Next}
+          />
+      }
+    
     </>
   );
 };

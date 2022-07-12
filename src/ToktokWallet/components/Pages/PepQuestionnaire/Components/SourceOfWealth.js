@@ -17,7 +17,7 @@ const {COLOR, FONT_FAMILY: FONT, SIZE, FONT_SIZE} = CONSTANTS;
 export const SourceOfWealth = ({pepInfoAnswer, setPepInfo, errorMessage, setErrorMessage}) => {
   const [data, setData] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [selectedData, setSelectedData] = useState([]);
+  const [selectedData, setSelectedData] = useState(pepInfoAnswer.selected);
   const [sourceOfWealths, setSourceOfWealths] = useState([]);
 
   const [getSourceOfWealth, {loading}] = useLazyQuery(GET_SOURCE_OF_WEALTH, {
@@ -53,6 +53,7 @@ export const SourceOfWealth = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
           ...state.questionnaire,
           sourceOfWealthId,
           sourceOfWealthDes,
+          selectedSourceOfWealth: selectedData,
         },
       };
     });
@@ -81,6 +82,7 @@ export const SourceOfWealth = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
     }
 
     setData(currentData);
+    selectedData.splice(index, 1);
     doneProcess();
   };
 
@@ -106,14 +108,6 @@ export const SourceOfWealth = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
 
   useEffect(() => getSourceOfWealth(), []);
   useEffect(() => doneProcess(), [selectedData]);
-  useEffect(() => {
-    const selected = data.filter((item, index) => {
-      if (item.selected) {
-        return item;
-      }
-    });
-    setSelectedData(selected);
-  }, [data]);
 
   return (
     <>
@@ -125,6 +119,8 @@ export const SourceOfWealth = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
         loading={loading}
         doneProcess={doneProcess}
         setSourceOfWealths={setSourceOfWealths}
+        setSelectedData={setSelectedData}
+        selectedData={selectedData}
       />
       <View style={{marginTop: 10}}>
         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S, color: '#525252'}}>Source of Wealth</Text>

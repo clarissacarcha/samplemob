@@ -17,7 +17,7 @@ const {COLOR, FONT_FAMILY: FONT, SIZE, FONT_SIZE} = CONSTANTS;
 export const SourceOfIncome = ({pepInfoAnswer, setPepInfo, errorMessage, setErrorMessage}) => {
   const [data, setData] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [selectedData, setSelectedData] = useState([]);
+  const [selectedData, setSelectedData] = useState(pepInfoAnswer.selected);
   const alert = useAlert();
 
   const [getSourceOfIncome, {loading}] = useLazyQuery(GET_SOURCE_OF_INCOME, {
@@ -46,6 +46,7 @@ export const SourceOfIncome = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
   const doneProcess = () => {
     const sourceOfIncomeId = selectedData.map(data => data.id);
     const sourceOfIncomeDes = selectedData.map(data => data.description);
+
     setPepInfo(state => {
       return {
         ...state,
@@ -53,6 +54,7 @@ export const SourceOfIncome = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
           ...state.questionnaire,
           sourceOfIncomeId,
           sourceOfIncomeDes,
+          selectedSourceOfIncome: selectedData,
         },
       };
     });
@@ -80,6 +82,8 @@ export const SourceOfIncome = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
       });
     }
     setData(currentData);
+    selectedData.splice(index, 1);
+    setSelectedData(selectedData);
     doneProcess();
   };
 
@@ -105,14 +109,6 @@ export const SourceOfIncome = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
 
   useEffect(() => getSourceOfIncome(), []);
   useEffect(() => doneProcess(), [selectedData]);
-  useEffect(() => {
-    const selected = data.filter((item, index) => {
-      if (item.selected) {
-        return item;
-      }
-    });
-    setSelectedData(selected);
-  }, [data]);
 
   return (
     <>
@@ -123,6 +119,8 @@ export const SourceOfIncome = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
         setData={setData}
         loading={loading}
         doneProcess={doneProcess}
+        setSelectedData={setSelectedData}
+        selectedData={selectedData}
       />
       <View style={{marginTop: 10}}>
         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S, color: '#525252'}}>Source of Income</Text>

@@ -26,12 +26,40 @@ import {Transitioning, Transition} from 'react-native-reanimated';
 const {FONT_FAMILY: FONT, FONT_SIZE, COLOR, SHADOW, SIZE} = CONSTANTS;
 
 const MainComponent = props => {
-  const {selectedCallChannel, callChannels} = useContext(ContextChannelForm);
+  const {
+    selectedCallChannel,
+    callChannels,
+    numberOrLink,
+    setNumberOrLink,
+    dayPicked,
+    setDayPicked,
+    timePicked,
+    setTimePicked,
+    errorMessage,
+    setErrorMessage,
+  } = useContext(ContextChannelForm);
+
   const transitionRef = useRef();
   const transition = <Transition.Change interpolation="easeOut" />;
 
   const onPress = () => {
     transitionRef.current.animateNextTransition();
+    resetFields();
+  };
+
+  const resetFields = () => {
+    setNumberOrLink('');
+    setErrorMessage('');
+    setDayPicked({
+      index: 0,
+      min: 2,
+      max: 6,
+    });
+    setTimePicked({
+      index: 0,
+      min: '08:00',
+      max: '12:00',
+    });
   };
 
   if (callChannels.length === 0) {

@@ -28,25 +28,6 @@ export const Submit = ({pepInfo, setPepInfo, setCurrentIndex}) => {
     }
   }, [numberOrLink]);
 
-  useEffect(() => {
-    resetFields();
-  }, [selectedCallChannel]);
-
-  const resetFields = () => {
-    setNumberOrLink('');
-    setErrorMessage('');
-    setDayPicked({
-      index: 0,
-      min: 2,
-      max: 6,
-    });
-    setTimePicked({
-      index: 0,
-      min: '08:00',
-      max: '12:00',
-    });
-  };
-
   const onPressSubmit = () => {
     let noError = true;
     let {channelName} = selectedCallChannel;

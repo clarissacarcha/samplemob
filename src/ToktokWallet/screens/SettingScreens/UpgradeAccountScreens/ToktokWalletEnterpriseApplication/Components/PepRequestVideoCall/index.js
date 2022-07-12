@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import {View,StyleSheet,Text} from "react-native"
 import { PepRequestVideoCall as PepRequestVideoCallComponent } from "toktokwallet/components";
-import {VerifyContext} from "../ContextProvider";
+import {ContextEnterpriseApplication} from "../ContextProvider";
 
 export const PepRequestVideoCall = ()=> {
 
@@ -9,7 +9,7 @@ export const PepRequestVideoCall = ()=> {
         pepInfo,
         setPepInfo,
         setCurrentIndex,
-    } = useContext(VerifyContext);
+    } = useContext(ContextEnterpriseApplication);
 
     const callBackFunction = () => {
         setCurrentIndex(oldval => oldval + 1);
