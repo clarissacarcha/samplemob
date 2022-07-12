@@ -36,7 +36,7 @@ const UserInfo = ({label, value}) => {
   return (
     <View style={{paddingVertical: 10, width: '100%', flexDirection: 'row'}}>
       <View style={{flex: 1}}>
-        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, textAlign: 'left'}}>{label}</Text>
+        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, textAlign: 'left', color: '#525252'}}>{label}</Text>
       </View>
       <View style={{flex: 1, alignItems: 'flex-end'}}>
         <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M, textAlign: 'right'}}>{value}</Text>
@@ -340,8 +340,8 @@ export const Confirm = connect(
           <View
             style={{
               flexDirection: 'row',
-              flexGrow: 1,
-              paddingVertical: moderateScale(16),
+              alignItems: 'flex-start',
+              marginVertical: moderateScale(20),
             }}>
             <CheckBox
               isChecked={isCertify}
@@ -353,7 +353,7 @@ export const Confirm = connect(
             <TouchableOpacity
               // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")}
               onPress={() => navigation.navigate('ToktokWalletTermsConditions')}
-              style={{paddingHorizontal: 16, alignSelf: 'center'}}>
+              style={{paddingHorizontal: 16, textAlign: 'left'}}>
               <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>
                 I hereby certify that the above information is true and correct. I have also read, understand, and
                 accepts the{' '}
