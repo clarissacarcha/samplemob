@@ -109,7 +109,7 @@ export const MainComponent = ({navigation, route}) => {
     <CheckIdleState>
       <AlertOverlay visible={loading} />
       <ImageBackground source={backgrounds.gradient_tpin} style={styles.subContainer}>
-        <View style={{marginTop: getStatusbarHeight + moderateScale(16)}}>
+        <View style={{marginTop: Platform.OS === 'ios' ? moderateScale(16) : getStatusbarHeight + moderateScale(16)}}>
           <HeaderBack color={COLOR.ORANGE} />
         </View>
         <View style={styles.inputContainer}>
