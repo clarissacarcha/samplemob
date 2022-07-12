@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 //UTIL
 import {moderateScale} from 'toktokwallet/helper';
@@ -11,10 +12,21 @@ import {OrangeButton} from 'toktokwallet/components';
 import {COLOR, FONT_SIZE} from 'src/res/variables';
 
 export const ConfirmButton = ({}) => {
+  const navigation = useNavigation();
+
+  const onPressConfirm = () => {
+    navigation.navigate('ToktokWalletTPINValidator', {
+      // callBackFunc: handleProcessProceed,
+      // onPressCancelYes: () => navigation.navigate('ToktokBillsHome'),
+      enableIdle: false,
+      // data,
+    });
+  };
+
   return (
     <>
       <View style={styles.buttonContainer}>
-        <OrangeButton label="Confirm" />
+        <OrangeButton label="Confirm" onPress={onPressConfirm} />
       </View>
     </>
   );
