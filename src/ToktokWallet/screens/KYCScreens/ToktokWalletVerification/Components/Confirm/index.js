@@ -75,10 +75,19 @@ export const Confirm = connect(
     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
     onError: error => {
       const {graphQLErrors, networkError} = error;
+
       if (graphQLErrors[0]?.payload?.code === 'EXISTING_ACCOUNT') {
-        navigation.navigate('ToktokLandingHome');
+        prompt({
+          type: 'error',
+          title: 'Existing Account Detected',
+          message:
+            'You already haved an existing account. Having trouble accessing your account? Please contact our Customer Support Team.',
+          event: 'TOKTOKBILLSLOAD',
+          onPress: () => navigation.pop(1),
+        });
+      } else {
+        onErrorAlert({alert, error, title: graphQLErrors[0]?.payload?.title ? graphQLErrors[0]?.payload?.title : null});
       }
-      onErrorAlert({alert, error, title: graphQLErrors[0]?.payload?.title ? graphQLErrors[0]?.payload?.title : null});
     },
     onCompleted: response => {
       let result = response.postKycRegister;
@@ -95,7 +104,7 @@ export const Confirm = connect(
           message:
             'Kindly wait for the notification as our representative assesses your application. Thank you for choosing toktokwallet!',
           event: 'TOKTOKBILLSLOAD',
-          onPress: () => navigation.replace('ToktokWalletVerifyResult'),
+          onPress: () => navigation.pop(1),
         });
       }
     },
@@ -276,10 +285,15 @@ export const Confirm = connect(
             label="Address"
             value={`${VerifyUserData.address.line1} ${VerifyUserData.address.line2} ${VerifyUserData.city} ${VerifyUserData.province}, ${VerifyUserData.address.country} ${VerifyUserData.address.postalCode}`}
           />
-          <UserInfo label="Source of Income" value={VerifyUserData.incomeInfo.source.description} />
-          {VerifyUserData.incomeInfo.source.description == 'others' && (
-            <UserInfo label="" value={VerifyUserData.incomeInfo.otherSource} />
-          )}
+          <UserInfo
+            label="Source of Income"
+            value={
+              VerifyUserData.incomeInfo.source.description == 'others'
+                ? VerifyUserData.incomeInfo.otherSource
+                : VerifyUserData.incomeInfo.source.description
+            }
+          />
+
           <UserInfo label="Occupation" value={VerifyUserData.incomeInfo.occupation} />
           <UserInfo label="ID Type" value={VerifyUserData.verifyID.idType} />
           <UserInfo label="ID number" value={VerifyUserData.verifyID.idNumber} />
@@ -290,7 +304,7 @@ export const Confirm = connect(
                 label="Have you ever been categorized as PEP (Political Exposed Person) by a bank, brokerage firm or any financial institution?"
                 value={
                   VerifyUserData.pepInfo.questionnaire.isPep === '1'
-                    ? 'Yes'
+                    ? `Yes, as ${VerifyUserData.pepInfo.questionnaire.pepPosition} position`
                     : VerifyUserData.pepInfo.questionnaire.isPep === '2'
                     ? 'No'
                     : "I don't know"
@@ -300,7 +314,7 @@ export const Confirm = connect(
                 label="Do you have an immediate family member or business/close associate which is currently/formally qualified as PEP?"
                 value={
                   VerifyUserData.pepInfo.questionnaire.isFamilyPep === '1'
-                    ? 'Yes'
+                    ? `Yes, as ${VerifyUserData.pepInfo.questionnaire.familyPepPosition} position`
                     : VerifyUserData.pepInfo.questionnaire.isFamilyPep === '2'
                     ? 'No'
                     : "I don't know"
@@ -308,11 +322,11 @@ export const Confirm = connect(
               />
               <UserInfo
                 label="Source of Income"
-                value={VerifyUserData.pepInfo.questionnaire.sourceOfIncomeDes.join(',')}
+                value={VerifyUserData.pepInfo.questionnaire.sourceOfIncomeDes.join(', ')}
               />
               <UserInfo
                 label="Source of Wealth"
-                value={VerifyUserData.pepInfo.questionnaire.sourceOfWealthDes.join(',')}
+                value={VerifyUserData.pepInfo.questionnaire.sourceOfWealthDes.join(', ')}
               />
               <Text style={styles.titleText}>Video Call Schedule</Text>
               <UserInfo

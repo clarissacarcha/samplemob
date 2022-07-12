@@ -67,7 +67,7 @@ export const RejectedKyc = () => {
           label="Create Account"
           style={{height: moderateScale(40)}}
           onPress={() => {
-            navigation.pop();
+            navigation.replace('ToktokWalletVerification');
           }}
         />
       </View>
