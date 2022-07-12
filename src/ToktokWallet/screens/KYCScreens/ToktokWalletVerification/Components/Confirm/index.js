@@ -36,7 +36,9 @@ const UserInfo = ({label, value}) => {
   return (
     <View style={{paddingVertical: 10, width: '100%', flexDirection: 'row'}}>
       <View style={{flex: 1}}>
-        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: '#525252', textAlign: 'left'}}>{label}</Text>
+        <Text style={{fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.M, color: '#525252', textAlign: 'left'}}>
+          {label}
+        </Text>
       </View>
       <View style={{flex: 1, alignItems: 'flex-end'}}>
         <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M, textAlign: 'right'}}>{value}</Text>
@@ -258,7 +260,7 @@ export const Confirm = connect(
       <View style={styles.content}>
         <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
           <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, color: '#525252'}}>Review and Confirm</Text>
-          <Text style={{fontFamily: FONT.REGULAR, marginBottom: 10, fontSize: FONT_SIZE.M, color: '#929191'}}>
+          <Text style={{fontFamily: FONT.REGULAR, marginBottom: 10, fontSize: FONT_SIZE.M, color: '#525252'}}>
             Review the details that you enter before clicking ‘Confrm’.
           </Text>
           <Text style={styles.titleText}>Personal Information</Text>
@@ -317,8 +319,11 @@ export const Confirm = connect(
                 label={VerifyUserData.pepInfo.videocall.callChannel}
                 value={VerifyUserData.pepInfo.videocall.videoCallContactDetails}
               />
-              <UserInfo label="Weekday" value={!VerifyUserData.pepInfo.videocall.selectedDay && 'Monday-Friday'} />
-              <UserInfo label="Time" value={!VerifyUserData.pepInfo.videocall.selectedTime && '8:00 AM - 12:00 PM'} />
+              <UserInfo
+                label={VerifyUserData.pepInfo.videocall.selectedDay.label}
+                value={VerifyUserData.pepInfo.videocall.selectedDay.description}
+              />
+              <UserInfo label={'Time'} value={VerifyUserData.pepInfo.videocall.selectedTime.description} />
             </>
           )}
           <Text style={styles.titleText}>Gallery</Text>
@@ -335,7 +340,7 @@ export const Confirm = connect(
               <Image source={selfieImage} style={styles.imageStyle} />
             </View>
             <View style={styles.previewImage}>
-              <Image source={selfieImageWithID} style={styles.imageStyle} />
+              <Image source={selfieImageWithID} style={styles.imageStyle} resizeMode="contain" />
             </View>
           </View>
           <View
@@ -354,7 +359,7 @@ export const Confirm = connect(
             <TouchableOpacity
               // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")}
               onPress={() => navigation.navigate('ToktokWalletTermsConditions')}
-              style={{paddingHorizontal: 16, textAlign: 'left'}}>
+              style={{paddingLeft: 10, flexShrink: 1}}>
               <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>
                 I hereby certify that the above information is true and correct. I have also read, understand, and
                 accepts the{' '}
@@ -455,8 +460,8 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   previewImage: {
-    height: moderateScale(85),
-    width: moderateScale(85),
+    height: moderateScale(82),
+    width: moderateScale(82),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',

@@ -37,6 +37,7 @@ const MainComponent = props => {
     setTimePicked,
     errorMessage,
     setErrorMessage,
+    getCallChannelsLoading,
   } = useContext(ContextChannelForm);
 
   const transitionRef = useRef();
@@ -62,7 +63,7 @@ const MainComponent = props => {
     });
   };
 
-  if (callChannels.length === 0) {
+  if (getCallChannelsLoading) {
     return (
       <View style={styles.activityIndicator}>
         <ActivityIndicator color={COLOR.YELLOW} size={24} />
@@ -75,7 +76,7 @@ const MainComponent = props => {
       <FlatList
         data={callChannels}
         renderItem={({item, index}) => {
-          return <ChannelList index={index} item={item} onPress={onPress} />;
+          return <ChannelList index={index} item={item} onPress={onPress} {...props} />;
         }}
         extraData={selectedCallChannel.channelName}
         keyExtractor={(item, index) => index.toString()}

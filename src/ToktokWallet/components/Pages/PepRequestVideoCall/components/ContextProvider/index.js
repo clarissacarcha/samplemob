@@ -32,7 +32,7 @@ export const ContextProvider = ({children, pepInfo}) => {
   const [errorMessage, setErrorMessage] = useState('');
   const alert = useAlert();
 
-  const [getCallChannels] = useLazyQuery(GET_CALL_CHANNELS, {
+  const [getCallChannels, {loading: getCallChannelsLoading}] = useLazyQuery(GET_CALL_CHANNELS, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
@@ -43,10 +43,6 @@ export const ContextProvider = ({children, pepInfo}) => {
       setCallChannels(channels);
     },
   });
-
-  useEffect(() => {
-    getCallChannels();
-  }, []);
 
   useEffect(() => {
     getCallChannels();
@@ -66,6 +62,7 @@ export const ContextProvider = ({children, pepInfo}) => {
         setTimePicked,
         errorMessage,
         setErrorMessage,
+        getCallChannelsLoading,
       }}>
       {children}
     </Provider>
