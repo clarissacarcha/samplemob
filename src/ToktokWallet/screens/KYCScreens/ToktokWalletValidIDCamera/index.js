@@ -1,5 +1,5 @@
 import React, {useState, useRef} from 'react'
-import {View,Text,StyleSheet,TouchableOpacity,Dimensions,Platform} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Dimensions,Platform, Image, ImageBackground} from 'react-native'
 import {RNCamera} from 'react-native-camera';
 import FIcon from 'react-native-vector-icons/Feather'
 import FIcon5 from 'react-native-vector-icons/FontAwesome5'
@@ -7,13 +7,15 @@ import ImageCropper from 'react-native-simple-image-cropper';
 import EIcon from 'react-native-vector-icons/EvilIcons'
 import { CheckIdleState } from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
+import { moderateScale } from 'toktokwallet/helper'
+import {camera_icon, camera_circle} from 'toktokwallet/assets';
 
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
 
 const {width,height} = Dimensions.get("window")
 
-const CROP_AREA_WIDTH = width * 0.90;
-const CROP_AREA_HEIGHT = height * 0.40;
+const CROP_AREA_WIDTH = width * 0.95;
+const CROP_AREA_HEIGHT = height * 0.30;
 
 const MainComponent = ({checkTimeout , children})=> {
 
@@ -33,16 +35,15 @@ const MainComponent = ({checkTimeout , children})=> {
 }
 
 export const ToktokWalletValidIDCamera = ({navigation,route})=> {
-
     navigation.setOptions({
         headerShown: false,
     })
 
     // const [image,setImage] = useState(null)
     const cameraRef = useRef(null)
-    const [tempImage,setTempImage] = useState(null)
-    const [cropperParams, setCropperParams] = useState({});
     const checkTimeout = route?.params?.checkTimeout ? true : false
+
+    const title = route?.params?.placement == "front" ? 'Front of ID' : 'Back of ID';
 
     const takePicture = async () => {
         try {
@@ -56,8 +57,10 @@ export const ToktokWalletValidIDCamera = ({navigation,route})=> {
               orientation: "portrait"
             };
             const data = await cameraRef.current.takePictureAsync(options);
-          //  route.params.setImage(data)
-            setTempImage(data)
+            route.params.setImage({
+                ...data,
+            }, route.params.placement) //front or back
+            navigation.pop()
             // navigation.pop()
           }
         } catch (error) {
@@ -84,82 +87,28 @@ export const ToktokWalletValidIDCamera = ({navigation,route})=> {
         // height: CROP_AREA_HEIGHT - 100,
       };
 
-      const confirmPicture = async ()=> {
-        try {
-            const croppedResult = await ImageCropper.crop({
-              ...cropperParams,
-              imageUri: tempImage.uri,
-              cropSize,
-              cropAreaSize,
-            });
+    //   const confirmPicture = async ()=> {
+    //     try {
+    //         const croppedResult = await ImageCropper.crop({
+    //           ...cropperParams,
+    //           imageUri: tempImage.uri,
+    //           cropSize,
+    //           cropAreaSize,
+    //         });
 
-            route.params.setImage({
-                ...tempImage,
-                uri: croppedResult
-            }, route.params.placement) //front or back
-            navigation.pop()
+    //         route.params.setImage({
+    //             ...tempImage,
+    //             uri: croppedResult
+    //         }, route.params.placement) //front or back
+    //         navigation.pop()
       
-          } catch (error) {
-            console.log(error);
-            Alert.alert('', 'Sorry, we cannot process this image. Please select another one.');
-          }
-      }
+    //       } catch (error) {
+    //         console.log(error);
+    //         Alert.alert('', 'Sorry, we cannot process this image. Please select another one.');
+    //       }
+    //   }
 
 
-      if(tempImage){
-          return (
-            <MainComponent
-                checkTimeout={checkTimeout}
-            >
-            <View style={{flex: 1}}>
-                <View style={{flex: 1,justifyContent:"center", alignItems: "center"}}>
-                    {/* <View style={{height: CROP_AREA_HEIGHT - 100, width: CROP_AREA_WIDTH - 110, borderRadius: 10}}>
-                        <ImageCropper
-                        imageUri={tempImage.uri}
-                        cropAreaWidth={CROP_AREA_WIDTH - 110}
-                        cropAreaHeight={CROP_AREA_HEIGHT - 100}
-                        containerColor="black"
-                        areaColor="black"
-                        setCropperParams={cropperParams =>{
-                            setCropperParams(cropperParams)
-                        }}
-                        />
-                    </View> */}
-
-                    <View style={{height: Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100, width: Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110, borderRadius: 10}}>
-                        <ImageCropper
-                        imageUri={tempImage.uri}
-                        cropAreaWidth={Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110}
-                        cropAreaHeight={Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100}
-                        containerColor="black"
-                        areaColor="black"
-                        setCropperParams={cropperParams =>{
-                            setCropperParams(cropperParams)
-                        }}
-                        />
-                    </View>
-
-
-                    <View style={{marginTop: 20}}>
-                        <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M }}><FIcon5 color="orange" name="check" /> Make sure the picture has no glare and not blur.</Text>
-                        <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M }}><FIcon5 color="orange" name="check" /> Make sure your Valid ID is not expired.</Text>
-                    </View>
-                    
-                </View>
-
-                <View style={{alignItems:"flex-end",flexDirection:"row",padding: 16,height: 70}}>
-                    <TouchableOpacity style={[styles.actionbtn, {marginRight: 10,backgroundColor:"#F7F7FA"}]} onPress={()=>setTempImage(null)}>
-                        <Text style={{fontFamily: FONT.BOLD,color: "gray", fontSize: FONT_SIZE.M}}>Retake</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={[styles.actionbtn,{marginLeft: 10,backgroundColor: COLOR.YELLOW}]} onPress={confirmPicture}>
-                        <Text style={{fontFamily: FONT.BOLD , fontSize: FONT_SIZE.M}}>Submit</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </MainComponent>
-          )
-      }
 
       return (
         <MainComponent
@@ -167,9 +116,8 @@ export const ToktokWalletValidIDCamera = ({navigation,route})=> {
         >
         <View style={styles.container}>
              <TouchableOpacity onPress={()=>navigation.pop()} style={styles.backBtn}>
-                <FIcon name="chevron-left" size={20} color={'#222222'} /> 
+                <FIcon name="chevron-left" size={25} color={'#F6841F'} /> 
             </TouchableOpacity>
-
              <View style={styles.cameraContainer}>
                 <RNCamera
                     ref={cameraRef}
@@ -184,17 +132,19 @@ export const ToktokWalletValidIDCamera = ({navigation,route})=> {
                         buttonNegative: 'Cancel',
                     }}
                 >
-
                         <View style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"transparent"}}>
                             <View style={styles.cameraBox}>
-                                        <View style={[styles.borderEdges,{borderTopWidth: 5,borderLeftWidth: 5,top: 0,left: 0,}]}/>
-                                        <View style={[styles.borderEdges,{borderTopWidth: 5,borderRightWidth: 5,top: 0,right: 0,}]}/>
-                                        <View style={[styles.borderEdges,{borderBottomWidth: 5,borderLeftWidth: 5,bottom:0,left: 0,}]}/>
-                                        <View style={[styles.borderEdges,{borderBottomWidth: 5,borderRightWidth: 5,bottom:0,right:0,}]}/>
+                                        <View style={{position:"absolute" , bottom : 350, flex: 1,justifyContent:"center",alignItems:"center"}}>
+                                            <Text style={styles.titleText}>{title}</Text>
+                                        </View>
+                                        <View style={[styles.borderEdges,{borderTopWidth: 6,borderLeftWidth: 6,top: 0,left: 0,}]}/>
+                                        <View style={[styles.borderEdges,{borderTopWidth: 6,borderRightWidth: 6,top: 0,right: 0,}]}/>
+                                        <View style={[styles.borderEdges,{borderBottomWidth: 6,borderLeftWidth: 6,bottom:0,left: 0,}]}/>
+                                        <View style={[styles.borderEdges,{borderBottomWidth: 6,borderRightWidth: 6,bottom:0,right:0,}]}/>
 
-                                        <View style={{position:"absolute" , bottom : -60, flex: 1,justifyContent:"center",alignItems:"center"}}>
-                                            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M , color:"white",paddingHorizontal: 5,paddingVertical: 2,backgroundColor:"rgba(255,255,255,0.1)",borderRadius: 5}}>Position your ID within the frame.</Text>
-                                            <Text style={{marginTop: 5,fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M , color:"white",paddingHorizontal: 5,paddingVertical: 2,backgroundColor:"rgba(255,255,255,0.1)",borderRadius: 5}}>Make sure the picture has no glare and not blur.</Text>
+                                        <View style={{position:"absolute" , bottom : -80, flex: 1,justifyContent:"center",alignItems:"center"}}>
+                                            <Text style={styles.position}>Position your ID within the frame.</Text>
+                                            <Text style={styles.blurText}>Make sure the picture has no glare and not blur.</Text>
                                         </View>
                             </View>
                         </View>
@@ -204,15 +154,16 @@ export const ToktokWalletValidIDCamera = ({navigation,route})=> {
                     style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
-                        position: 'absolute',
                         bottom: 0,
                         width: '100%',
                         marginBottom: 20,
                     }}>
-                    <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
-                        <View style={styles.inCapture}>
-                            <EIcon name="camera" color={COLOR.YELLOW} size={40} />
-                        </View>
+                    <TouchableOpacity onPress={() => takePicture()}>
+                        <ImageBackground source={camera_circle}  style={styles.capture} resizeMethod="contain">
+                            <View style={styles.inCapture}>
+                                <Image source={camera_icon} style={{height: 55, width:55}}/>
+                            </View>
+                        </ImageBackground>
                     </TouchableOpacity>
                 </View>
 
@@ -233,6 +184,8 @@ const styles = StyleSheet.create({
         backgroundColor:"black"
     },
     cameraBox: {
+        borderColor: "#F6841F",
+        borderWidth: 1,
         height: CROP_AREA_HEIGHT,
         width: CROP_AREA_WIDTH,
         backgroundColor: "rgba(255,255,255,0.1)",
@@ -243,50 +196,61 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    titleText:{
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.XL, 
+        color: "white",
+    },
     actions: {
         flexBasis: 80,
     },
     capture: {
-        height: 60,
-        width: 60,
-        borderRadius: 30,
-        backgroundColor: COLOR.YELLOW,
+        height: moderateScale(60),
+        width: moderateScale(60),
         justifyContent: 'center',
         alignItems: 'center',
       },
-    inCapture: {
-        height: 50,
-        width: 50,
-        borderRadius: 25,
-        backgroundColor: 'white',
-        justifyContent:"center",
-        alignItems:"center"
+    position: {
+        fontFamily: FONT.REGULAR,
+        fontSize: FONT_SIZE.M , 
+        color:"white",
+        paddingHorizontal: moderateScale(5),
+        paddingVertical: moderateScale(2),
+        backgroundColor:"rgba(255,255,255,0.1)",
+        borderRadius: 5
+    },
+    blurText: {
+        marginTop: moderateScale(5),
+        fontFamily: FONT.REGULAR, 
+        fontSize: FONT_SIZE.M , 
+        color:"white",
+        paddingHorizontal: moderateScale(5),
+        paddingVertical: moderateScale(2),
+        backgroundColor:"rgba(255,255,255,0.1)",
+        borderRadius: 5
     },
     actionbtn: {
         flex: 1,
         justifyContent:"center",
         alignItems:"center",
-        paddingHorizontal: 10,
+        paddingHorizontal: moderateScale(10),
         borderRadius: 5,
         height: SIZE.FORM_HEIGHT
     },
     borderEdges: {
-        height: 40,
-        width: 40,
+        height: moderateScale(40),
+        width: moderateScale(40),
         position: "absolute",
-        borderColor: COLOR.YELLOW,
+        borderColor: "#F6841F",
     },
     backBtn: {
-        backgroundColor:"#FFFFFF",
         top: Platform.OS === "android" ? 30 : 20, 
         // top: 30,
-        left: 16,
         position:"absolute",
         zIndex: 1,
         justifyContent:"center",
         alignItems:"center",
-        borderRadius: 100,
-        height: 35,
-        width: 35,
+        height: moderateScale(35),
+        width: moderateScale(35),
     }
 })

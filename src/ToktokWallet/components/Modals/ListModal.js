@@ -31,7 +31,11 @@ const List = ({data, onChangeSelect, setVisible, hasDefault, defaultCondition}) 
         defCon: item.nationality === 'Filipino',
         name: item.nationality,
       };
-    } else {
+    } else if(item.name) {
+      return {
+        name: item.name
+      }
+    } else{ 
       return {
         name: item.description,
       };

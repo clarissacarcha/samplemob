@@ -82,6 +82,13 @@ export const VerifyContextProvider = ({children}) => {
     postalError: '',
   });
 
+  const [verifyIDErrors, setVerifyIDErrors] = useState({
+    idError: '',
+    idNumberError: '',
+    idFrontError: '',
+    idBackError: ''
+  })
+
   const [province, setProvince] = useState('');
   const [provinceId, setProvinceId] = useState('');
   const [city, setCity] = useState('');
@@ -102,7 +109,7 @@ export const VerifyContextProvider = ({children}) => {
   const [tempSelfieImageWithID, setTempSelfieImageWithID] = useState(null);
   const [frontImage, setFrontImage] = useState(null);
   const [backImage, setBackImage] = useState(null);
-  const [isBackRequired, setIsbackRequired] = useState(false);
+  const [isBackRequired, setIsbackRequired] = useState(true);
   const [cities, setCities] = useState(citiesList);
   const [provinceCities, setProvinceCities] = useState([]);
 
@@ -180,6 +187,13 @@ export const VerifyContextProvider = ({children}) => {
 
   const changeVerifyID = (key, value) => {
     setVerifyID(oldstate => ({
+      ...oldstate,
+      [key]: value,
+    }));
+  };
+
+  const changeVerifyIDErrors = (key, value) => {
+    setVerifyIDErrors(oldstate => ({
       ...oldstate,
       [key]: value,
     }));
@@ -288,6 +302,8 @@ export const VerifyContextProvider = ({children}) => {
         setCacheImagesList,
         pepInfo,
         setPepInfo,
+        changeVerifyIDErrors,
+        verifyIDErrors,
         verifyFullNameErrors,
         setVerifyFullNameErrors,
         changeVerifyFullNameErrors,
