@@ -1,7 +1,7 @@
 import React , {useContext} from "react";
 import {View,StyleSheet,Text} from "react-native"
 import { PepQuestionnaire as PepQuestionnaireComponent } from "toktokwallet/components";
-import {VerifyContext} from "../ContextProvider";
+import {ContextEnterpriseApplication} from "../ContextProvider";
 
 export const PepQuestionnaire = ()=> {
 
@@ -9,18 +9,15 @@ export const PepQuestionnaire = ()=> {
         pepInfo,
         setPepInfo,
         setCurrentIndex,
-    } = useContext(VerifyContext);
-
-    const callBackFunction = () => {
-        setCurrentIndex(oldval => oldval + 1);
-    }
+    } = useContext(ContextEnterpriseApplication);
 
     return (
         <View style={styles.container}>
             <PepQuestionnaireComponent
                  pepInfo={pepInfo}
                  setPepInfo={setPepInfo}
-                 callback={callBackFunction}
+                 setCurrentIndex={setCurrentIndex}
+                 hasPreviousButton={false}
             />
         </View>
     )

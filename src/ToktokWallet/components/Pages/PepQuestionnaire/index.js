@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, View, Text, Modal, ScrollView, TouchableOpacity, TextInput} from 'react-native';
 import {getStatusbarHeight} from 'toktokwallet/helper';
-import {Separator, PolicyNote, PreviousNextButton, CustomTextInput} from 'toktokwallet/components';
+import {Separator, PolicyNote, PreviousNextButton, CustomTextInput , OrangeButton} from 'toktokwallet/components';
 import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
 import CheckBox from 'react-native-check-box';
 
@@ -74,7 +74,7 @@ const Question = ({question, errorMessage, setErrorMessage, index, chooseAnswer,
   );
 };
 
-export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex}) => {
+export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex, hasPreviousButton = true }) => {
   const [errorMessage, setErrorMessage] = useState(['', '', '', '', '', '']);
   const [readMorePEP, setReadMorePEP] = useState(false);
 
@@ -263,7 +263,16 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
           </View>
         </View>
       </ScrollView>
-      <PreviousNextButton label="Previous" labelTwo={'Next'} hasShadow onPressNext={Next} onPressPrevious={Previous} />
+      {
+        hasPreviousButton
+        ? <PreviousNextButton label="Previous" labelTwo={'Next'} hasShadow onPressNext={Next} onPressPrevious={Previous} />
+        : <OrangeButton 
+            label="Next" 
+            hasShadow 
+            onPress={Next}
+          />
+      }
+    
     </>
   );
 };
