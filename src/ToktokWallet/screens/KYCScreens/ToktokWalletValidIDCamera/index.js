@@ -159,7 +159,7 @@ export const ToktokWalletValidIDCamera = ({navigation,route})=> {
                         marginBottom: 20,
                     }}>
                     <TouchableOpacity onPress={() => takePicture()}>
-                        <ImageBackground source={camera_circle}  style={styles.capture} resizeMethod="contain">
+                        <ImageBackground source={camera_circle}  style={styles.capture} resizeMode="contain">
                             <View style={styles.inCapture}>
                                 <Image source={camera_icon} style={{height: 55, width:55}}/>
                             </View>

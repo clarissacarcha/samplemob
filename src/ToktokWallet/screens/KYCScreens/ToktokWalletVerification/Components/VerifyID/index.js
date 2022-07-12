@@ -5,6 +5,7 @@ import {VerifyContext} from '../VerifyContextProvider'
 import {useNavigation} from '@react-navigation/native'
 import {useHeaderHeight} from '@react-navigation/stack';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
+import ImageCropper from 'react-native-simple-image-cropper';
 import { YellowButton, VectorIcon, ICON_SET } from 'src/revamp'
 import validator from 'validator'
 import CONSTANTS from 'common/res/constants'
@@ -20,6 +21,7 @@ import {moderateScale} from 'toktokwallet/helper';
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE , SIZE } = CONSTANTS
 
 const {height,width} = Dimensions.get("window")
+const screen = Dimensions.get('window');
 
 const CROP_AREA_WIDTH = width * 0.40
 const CROP_AREA_HEIGHT = height * 0.12;
@@ -44,11 +46,13 @@ export const VerifyID = ()=> {
     } = useContext(VerifyContext)
     const [isFront, setIsFront] = useState(false);
     const [isBack, setIsBack] = useState(false);
+    const [cropperParams, setCropperParams] = useState({});
     const navigation = useNavigation()
     const scrollviewRef = useRef();
     const IDTypeRef = useRef()
     const headerHeight = useHeaderHeight();
     const keyboardVerticalOffset = headerHeight + getStatusBarHeight() + 10;
+    
 
     const setImage = (data, placement)=> {
         console.log("here", data, placement)
@@ -102,7 +106,7 @@ export const VerifyID = ()=> {
                 navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})
             }}
             style={styles.chooseImage}>   
-                <EIcon name="camera" color="#F6841F" size={30} />
+                <EIcon name="camera" color="#F6841F" size={25} />
                 <Text style={styles.photoText}>Take a photo</Text>
         </TouchableOpacity>
     )
@@ -111,21 +115,25 @@ export const VerifyID = ()=> {
     const ImageIDSet = ({placement})=> (
         <View style={styles.chooseImage}>
                 {/* <Image resizeMode="cover" style={{height: CROP_AREA_HEIGHT ,width: width - 40}} source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} /> */}
-                <Image resizeMode="stretch" 
-                    style={{
-                        height:  Platform.OS === "ios" ? CROP_AREA_HEIGHT - 4 : CROP_AREA_HEIGHT - 110,
-                        width:  Platform.OS === "ios" ? CROP_AREA_WIDTH - 4 : CROP_AREA_WIDTH - 120,
-                        borderRadius: 8
-                    }} 
-                    source={{uri: placement == "front" ? frontImage.uri : backImage.uri}} 
+                <ImageCropper
+                    cropAreaWidth={Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 5}
+                    cropAreaHeight={Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 10}
+                    containerColor="transparent"
+                    areaColor="black"
+                    areaOverlay={<View style={styles.overlay} />}
+                    imageUri={placement == "front" ? frontImage.uri : backImage.uri}
+                    setCropperParams={cropperParams => {
+                        setCropperParams(cropperParams);
+                    }}
                 />
-                <TouchableOpacity onPress={()=>{
-                    if(verifyID.idType == "") return Next()
+                <TouchableOpacity onPress={()=> {
+                    console.log("setImage", setImage)
+                    // if(verifyID.idType == "") return Next()
                     navigation.push("ToktokWalletValidIDCamera",{setImage, placement: placement})
                 }} style={styles.changePhoto}>
                     <EIcon name="camera" color="#F6841F" size={25} />
                     <Text style={styles.changeText}>Change Photo</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>               
         </View>
     )
 
@@ -299,14 +307,20 @@ const styles = StyleSheet.create({
         marginTop: 16,
         borderRadius: 8,
         borderStyle: "dashed",
-        height:  Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
-        width:  Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110,
+        height:  Platform.OS === "ios" ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 5,
+        width:  Platform.OS === "ios" ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 10,
         borderWidth: 1,
         borderColor: "#F6841F",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#FEFAF6"
+        backgroundColor: "#FEFAF6",
+        borderRadius: 8,
     },
+    overlay: {
+        flex: 1,
+        backgroundColor: 'black',
+        opacity: 0.5,
+      },
     front: {
         flex: 1, 
         paddingVertical: 10, 
