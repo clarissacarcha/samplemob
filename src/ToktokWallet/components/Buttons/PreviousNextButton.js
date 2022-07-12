@@ -1,7 +1,8 @@
 import React, {useRef, useEffect, useCallback} from 'react';
 import {View, Text, StyleSheet, TouchableHighlight, TouchableOpacity} from 'react-native';
 import {throttle} from 'lodash';
-import {COLORS, SIZES, FONTS} from 'src/res/constants';
+import CONSTANTS from 'common/res/constants';
+const {FONT_FAMILY: FONT, FONT_SIZE, SIZE, COLOR} = CONSTANTS;
 import {moderateScale} from 'toktokwallet/helper';
 
 export const PreviousNextButton = ({
@@ -60,29 +61,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 40,
-    backgroundColor: COLORS.ORANGE,
+    backgroundColor: COLOR.ORANGE,
     borderRadius: 5,
   },
   previousLabel: {
-    color: COLORS.ORANGE,
-    fontSize: SIZES.L,
+    color: COLOR.ORANGE,
+    fontSize: SIZE.L,
     paddingHorizontal: 10,
-    fontFamily: FONTS.BOLD,
+    fontFamily: FONT.SEMI_BOLD,
   },
   previous: {
     justifyContent: 'center',
     alignItems: 'center',
     height: 40,
-    backgroundColor: COLORS.WHITE,
+    backgroundColor: COLOR.WHITE,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: COLORS.ORANGE,
+    borderColor: COLOR.ORANGE,
   },
   label: {
     color: 'white',
-    fontSize: SIZES.L,
+    fontSize: SIZE.L,
     paddingHorizontal: 10,
-    fontFamily: FONTS.BOLD,
+    fontFamily: FONT.BOLD,
   },
   shadow: {
     paddingHorizontal: moderateScale(16),
