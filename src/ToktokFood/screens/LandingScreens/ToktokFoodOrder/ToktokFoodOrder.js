@@ -270,7 +270,8 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           buttonText = 'Browse Menu';
           onPress = () => navigation.goBack();
           buttonText2 = 'OK';
-          onPress2 = () => navigation.navigate('ToktokFoodHome');
+          onPress2 = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
+          // onPress2 = () => navigation.navigate('ToktokFoodHome');
         } else {
           title = state?.orderIsfor === 1 ? 'Order Delivered' : 'Order Picked Up';
           subtitle = 'Yay! Craving satisfied. Thank you for ordering in toktokfood!';
