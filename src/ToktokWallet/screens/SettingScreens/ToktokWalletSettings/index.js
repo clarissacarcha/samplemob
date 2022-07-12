@@ -39,6 +39,12 @@ export const ToktokWalletSettings = ({navigation, route}) => {
       checkIfMerchantLinked: false,
     },
     {
+      label: "Cash Out",
+      route: "ToktokWalletCashOutOtcLogs",
+      identifier: `${Platform.OS.toLowerCase()}LogCashOutOtc`,
+      checkIfMerchantLinked: false,
+    },
+    {
       label: 'Send Money',
       route: "ToktokWalletSendMoneyLogs",
       identifier: "logSendMoney",
@@ -94,8 +100,8 @@ export const ToktokWalletSettings = ({navigation, route}) => {
     },
     {
       label: "Settlement",
-      route: "ToktokWalletMallLogs",
-      identifier: `${Platform.OS.toLowerCase()}logMerchantSettlement`,
+      route: "ToktokWalletMerchantSettlementLogs",
+      identifier: `${Platform.OS.toLowerCase()}LogMerchantSettlement`,
       checkIfMerchantLinked: true,
     }
   ]

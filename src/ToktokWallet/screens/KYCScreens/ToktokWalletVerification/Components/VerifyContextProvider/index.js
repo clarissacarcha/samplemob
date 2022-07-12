@@ -10,7 +10,7 @@ import {
   PepQuestionnaire,
   PepRequestVideoCall,
   Confirm,
-} from "../../Components"
+} from '../../Components';
 
 export const VerifyContext = createContext();
 const {Provider} = VerifyContext;
@@ -79,8 +79,8 @@ export const VerifyContextProvider = ({children}) => {
     barangayError: '',
     provinceError: '',
     cityError: '',
-    postalError: ''
-  })
+    postalError: '',
+  });
 
   const [province, setProvince] = useState('');
   const [provinceId, setProvinceId] = useState('');
@@ -113,12 +113,15 @@ export const VerifyContextProvider = ({children}) => {
       pepPosition: '',
       isFamilyPep: '',
       familyPepPosition: '',
-      sourceOfIncomeId: '',
-      sourceOfIncomeDes: '',
+      sourceOfIncomeId: [],
+      sourceOfIncomeDes: [],
       sourceOfIncome: '',
-      sourceOfWealthId: '',
-      sourceOfWealthDes: '',
+      selectedSourceOfIncome: [],
+      sourceOfWealthId: [],
+      sourceOfWealthDes: [],
       sourceOfWealth: '',
+      selectedSourceOfWealth: [],
+      agreement: false,
     },
     videocall: {
       videoCallContactDetails: '',
@@ -130,6 +133,8 @@ export const VerifyContextProvider = ({children}) => {
       preferredVcsTimeMax: '',
     },
   });
+
+  const [pepSourceOfIncome, setPepSourceOfIncome] = useState([]);
 
   const changePersonInfo = (key, value) => {
     setPerson(oldstate => ({
@@ -165,7 +170,6 @@ export const VerifyContextProvider = ({children}) => {
       [key]: value,
     }));
   };
-  
 
   const changeAddress = (key, value) => {
     setAddress(oldstate => ({
@@ -197,34 +201,31 @@ export const VerifyContextProvider = ({children}) => {
   // States for Steps rendering
   const [currentIndex, setCurrentIndex] = useState(0);
   const defaultStepsScreens = [
-    <VerifyFullname/>,
-    <VerifyAddress/>,
-    <VerifyID/>,
-    <VerifySelfie/>,
-    <VerifySelfieWithID/>,
-    <Confirm/>,
-  ]
-  const pepSreens = [
-    <PepQuestionnaire/>,
-    <PepRequestVideoCall/>
-  ]
-  
-  const [stepsScreens , setStepScreens] = useState(defaultStepsScreens)
-  const appendPepScreens = ()=> {
-    setStepScreens([
-      <VerifyFullname/>,
-      <VerifyAddress/>,
-      <VerifyID/>,
-      <VerifySelfie/>,
-      <VerifySelfieWithID/>,
-      ...pepSreens,
-      <Confirm/>,
-    ])
-  }
+    <VerifyFullname />,
+    <VerifyAddress />,
+    <VerifyID />,
+    <VerifySelfie />,
+    <VerifySelfieWithID />,
+    <Confirm />,
+  ];
+  const pepSreens = [<PepQuestionnaire />, <PepRequestVideoCall />];
 
-  const resetStepScreens = ()=> {
-    setStepScreens(defaultStepsScreens)
-  }
+  const [stepsScreens, setStepScreens] = useState(defaultStepsScreens);
+  const appendPepScreens = () => {
+    setStepScreens([
+      <VerifyFullname />,
+      <VerifyAddress />,
+      <VerifyID />,
+      <VerifySelfie />,
+      <VerifySelfieWithID />,
+      ...pepSreens,
+      <Confirm />,
+    ]);
+  };
+
+  const resetStepScreens = () => {
+    setStepScreens(defaultStepsScreens);
+  };
 
   return (
     <Provider
@@ -297,7 +298,9 @@ export const VerifyContextProvider = ({children}) => {
         setStepScreens,
         pepSreens,
         appendPepScreens,
-        resetStepScreens
+        resetStepScreens,
+        pepSourceOfIncome,
+        setPepSourceOfIncome,
       }}>
       {children}
     </Provider>
