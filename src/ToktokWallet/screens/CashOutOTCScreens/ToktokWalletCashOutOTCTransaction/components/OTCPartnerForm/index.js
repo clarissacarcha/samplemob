@@ -30,7 +30,7 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
 
 export const OTCPartnerForm = ({route}) => {
-  const {cashOutProviderFee} = route.params.otcPartnerDetails;
+  const {cashOutProviderFee, toktokServiceFee, maximumAmount} = route.params.otcPartnerDetails;
 
   const {firstName, middleName, lastName, mobileNumber} = useSelector(state => state.session.user.person);
   const recipientName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
@@ -69,12 +69,18 @@ export const OTCPartnerForm = ({route}) => {
   };
 
   const checkServiceFee = value => {
-    let providerFee = cashOutProviderFee.filter(item => {
-      return parseFloat(item.amountFrom) >= parseFloat(value) && parseFloat(value) <= parseFloat(item.amountTo);
-    });
-    const {amountFee, percentageFee} = providerFee[0];
-    const computedSF = parseFloat(amountFee) + parseFloat(value) * (parseFloat(percentageFee) / 100) + parseFloat(2);
-    setServiceFee(computedSF);
+    if (value && parseFloat(value) <= parseFloat(maximumAmount)) {
+      let providerFee = cashOutProviderFee.filter(item => {
+        return parseFloat(value) >= parseFloat(item.amountFrom) && parseFloat(value) <= parseFloat(item.amountTo);
+      });
+
+      const {amountFee, percentageFee} = providerFee[0];
+      const computedSF =
+        parseFloat(amountFee) + parseFloat(value) * (parseFloat(percentageFee) / 100) + parseFloat(toktokServiceFee);
+      setServiceFee(computedSF);
+    } else {
+      setServiceFee(0);
+    }
   };
 
   const changeAmount = value => {
@@ -152,8 +158,7 @@ export const OTCPartnerForm = ({route}) => {
           <InputAmount errorMessage={amountError} amount={amount} changeAmount={changeAmount} />
           {!!amountError && <Text style={styles.error}>{amountError}</Text>}
           <Text style={{fontSize: FONT_SIZE.S, marginTop: 5}}>
-            Additional {currencyCode}
-            {numberFormat(serviceFee)} convenience fee will be charge for this transaction.
+            Additional service fee will be charge for this transaction.
           </Text>
         </View>
         <View>
@@ -170,7 +175,7 @@ export const OTCPartnerForm = ({route}) => {
           />
         </View>
       </View>
-      <DateModal
+      {/* <DateModal
         visible={showDateModal}
         setVisible={setShowDateModal}
         value={dateOfClaim}
@@ -181,7 +186,7 @@ export const OTCPartnerForm = ({route}) => {
           setDateOfClaim(date);
           setDateOfClaimError('');
         }}
-      />
+      /> */}
     </>
   );
 };

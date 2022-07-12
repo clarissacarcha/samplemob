@@ -13,11 +13,10 @@ import {
 } from 'react-native';
 import {useHeaderHeight} from '@react-navigation/stack';
 import InputScrollView from 'react-native-input-scroll-view';
-import {getStatusBarHeight} from 'react-native-status-bar-height';
 import validator from 'validator';
 
 //HELPER & UTIL
-import {moderateScale, numberFormat} from 'toktokbills/helper';
+import {moderateScale, numberFormat, getStatusbarHeight} from 'toktokbills/helper';
 import {ErrorUtility} from 'toktokbills/util';
 
 //COMPONENTS
@@ -44,7 +43,7 @@ const MainComponent = ({navigation, route}) => {
 
   const [isMounted, setIsMounted] = useState(false);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
-  const {logo, description} = route.params?.otcPartnerDetails;
+  const {logo, description, maximumAmount, toktokServiceFee} = route.params?.otcPartnerDetails;
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack color={COLOR.ORANGE} />,
@@ -115,9 +114,20 @@ const MainComponent = ({navigation, route}) => {
   };
 
   const checkInsufficientBalance = () => {
-    const totalAmount = parseFloat(2) + parseFloat(amount);
-    setAmountError(parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.balance) ? 'Insufficient Balance' : '');
-    return !(parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.balance));
+    let totalAmount = parseFloat(toktokServiceFee) + parseFloat(amount);
+    let isInsufficientBalance = parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.balance);
+    let isMaxAmount = parseFloat(amount) > parseFloat(maximumAmount);
+    let error = '';
+
+    if (isMaxAmount) {
+      error = `The maximum is up to ₱${numberFormat(maximumAmount).replace('.00', '')} only`;
+    } else if (isInsufficientBalance) {
+      error = `You have insufficient balance. ₱${serviceFee} service fee is added to this transaction. Kindly cash in or edit the amount.`;
+    } else {
+      error = '';
+    }
+    setAmountError(error);
+    return !error;
   };
 
   const checkDateOfClaim = () => {
@@ -165,20 +175,21 @@ const MainComponent = ({navigation, route}) => {
   //   );
   // }
   return (
-    <>
-      <View style={styles.container}>
-        <InputScrollView
-          keyboardShouldPersistTaps="handled"
-          ref={scrollRef}
-          keyboardOffset={Platform.OS === 'ios' && moderateScale(headerHeight + getStatusBarHeight())}>
+    <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        ref={scrollRef}
+        behavior={Platform.OS === 'ios' ? 'position' : null}
+        keyboardVerticalOffset={Platform.OS === 'ios' && moderateScale(headerHeight + getStatusbarHeight)}>
+        <ScrollView>
           <Header route={route} />
           <OTCPartnerForm route={route} />
-        </InputScrollView>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
       <View style={styles.buttonContainer}>
         <OrangeButton label="Proceed" onPress={onPressProceed} />
       </View>
-    </>
+    </View>
   );
 };
 export const ToktokWalletCashOutOTCTransaction = ({navigation, route}) => {
