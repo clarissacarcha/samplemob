@@ -1,5 +1,6 @@
 export const backgrounds = {
-  gradient_bg: require('./gradient-bg.png'),
+  gradient_bg: require('./backgrounds/gradient-bg.png'),
+  gradient_tpin: require('./backgrounds/gradient-tpin.png'),
 };
 export const logos = {
   toktokwallet_logo: require('./toktokwallet.png'),
