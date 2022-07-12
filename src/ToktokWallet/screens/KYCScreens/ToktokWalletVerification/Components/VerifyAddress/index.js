@@ -28,7 +28,7 @@ import {getStatusBarHeight} from 'react-native-status-bar-height';
 import ModalCity from './ModalCity';
 import ModalCountry from './ModalCountry';
 import ModalProvince from './ModalProvince';
-import {PreviousNextButton} from 'toktokwallet/components';
+import {PreviousNextButton, CustomTextInput, CustomSelectionList,} from 'toktokwallet/components';
 
 //HELPER
 import {moderateScale} from 'toktokwallet/helper';
@@ -102,6 +102,7 @@ export const VerifyAddress = () => {
   };
 
   const onProvinceSelect = code => {
+    console.log("code", code)
     changeAddress('city', '');
     getCityByProvinceCode({
       variables: {
@@ -122,11 +123,6 @@ export const VerifyAddress = () => {
 
   return (
     <>
-      <ModalCountry type="address" />
-      <ModalProvince type="address" onSelect={onProvinceSelect} />
-
-      {cities.length == 0 ? null : <ModalCity type="address" data={cities} />}
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset={Platform.OS === 'ios' ? keyboardVerticalOffset : screen.height * 0.5}
@@ -192,111 +188,52 @@ export const VerifyAddress = () => {
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Street Address</Text>
-              <TextInput
-                style={{...styles.input, ...(!!verifyAddressErrors.streetError ? styles.errorBorder : {})}}
+              <CustomTextInput
                 value={address.line1}
                 onChangeText={value => {
                   changeAddress('line1', value);
                   changeVerifyAddressErrors('streetError', '');
                 }}
-                placeholderTextColor={COLOR.DARK}
+                maxLength={30}
+                errorMessage={verifyAddressErrors.streetError}
                 returnKeyType="done"
               />
-              {!!verifyAddressErrors.streetError && (
-                <Text style={styles.errorMessage}>{verifyAddressErrors.streetError}</Text>
-              )}
             </View>
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Barangay</Text>
-              <TextInput
-                style={{...styles.input, ...(!!verifyAddressErrors.barangayError ? styles.errorBorder : {})}}
+              <CustomTextInput
                 value={address.line2}
                 onChangeText={value => {
                   changeAddress('line2', value);
                   changeVerifyAddressErrors('barangayError', '');
                 }}
-                placeholderTextColor={COLOR.DARK}
+                errorMessage={verifyAddressErrors.barangayError}
                 returnKeyType="done"
               />
-              {!!verifyAddressErrors.barangayError && (
-                <Text style={styles.errorMessage}>{verifyAddressErrors.barangayError}</Text>
-              )}
             </View>
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Province</Text>
-              <TouchableOpacity
-                style={[
-                  styles.input,
-                  styles.selectionContainer,
-                  styles.shadow,
-                  {...(verifyAddressErrors.provinceError ? styles.errorBorder : {})},
-                ]}
-                onPress={() => setModalProvinceVisible(true)}>
-                {province == '' ? (
-                  <Text style={[styles.selectionText, {color: COLOR.DARK}]}>Select Province</Text>
-                ) : (
-                  <Text style={styles.selectionText}>{province}</Text>
-                )}
-                <VectorIcon
-                  iconSet={ICON_SET.FontAwesome5}
-                  name="chevron-down"
-                  size={moderateScale(16)}
-                  color={COLOR.ORANGE}
-                />
-              </TouchableOpacity>
-              {!!verifyAddressErrors.provinceError && (
-                <Text style={styles.errorMessage}>{verifyAddressErrors.provinceError}</Text>
-              )}
+              <ModalProvince verifyAddressErrors={verifyAddressErrors} onSelect={onProvinceSelect}/>
             </View>
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>City or Municipality</Text>
-              <TouchableOpacity
-                style={[
-                  styles.input,
-                  styles.selectionContainer,
-                  styles.shadow,
-                  {...(verifyAddressErrors.cityError ? styles.errorBorder : {})},
-                ]}
-                onPress={() => {
-                  if (province == '') return Alert.alert('', 'Please select Province first');
-                  setModalCityVisible(true);
-                }}>
-                {selectedCity == '' ? (
-                  <Text style={[styles.selectionText, {color: COLOR.DARK}]}>Select City</Text>
-                ) : (
-                  <Text style={styles.selectionText}>{city}</Text>
-                )}
-                <VectorIcon
-                  iconSet={ICON_SET.FontAwesome5}
-                  name="chevron-down"
-                  size={moderateScale(16)}
-                  color={COLOR.ORANGE}
-                />
-              </TouchableOpacity>
-              {!!verifyAddressErrors.cityError && (
-                <Text style={styles.errorMessage}>{verifyAddressErrors.cityError}</Text>
-              )}
+              <ModalCity type="address" data={cities} verifyAddressErrors={verifyAddressErrors} selectedCity={selectedCity}/>
             </View>
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Postal Code</Text>
-              <TextInput
-                style={{...styles.input, ...(!!verifyAddressErrors.postalError ? styles.errorBorder : {})}}
+               <CustomTextInput
                 value={address.postalCode}
                 onChangeText={value => {
                   changeAddress('postalCode', value);
                   changeVerifyAddressErrors('postalError', '');
                 }}
-                placeholderTextColor={COLOR.DARK}
-                keyboardType="number-pad"
+                errorMessage={verifyAddressErrors.postalError}
                 returnKeyType="done"
               />
-              {!!verifyAddressErrors.postalError && (
-                <Text style={styles.errorMessage}>{verifyAddressErrors.postalError}</Text>
-              )}
             </View>
           </View>
         </ScrollView>

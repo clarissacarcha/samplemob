@@ -134,7 +134,7 @@ export const ToktokWalletValidIDCamera = ({navigation,route})=> {
                 >
                         <View style={{flex: 1,justifyContent:"center",alignItems:"center",backgroundColor:"transparent"}}>
                             <View style={styles.cameraBox}>
-                                        <View style={{position:"absolute" , bottom : 350, flex: 1,justifyContent:"center",alignItems:"center"}}>
+                                        <View style={{position:"absolute" , bottom : 300, flex: 1,justifyContent:"center",alignItems:"center"}}>
                                             <Text style={styles.titleText}>{title}</Text>
                                         </View>
                                         <View style={[styles.borderEdges,{borderTopWidth: 6,borderLeftWidth: 6,top: 0,left: 0,}]}/>
@@ -142,31 +142,29 @@ export const ToktokWalletValidIDCamera = ({navigation,route})=> {
                                         <View style={[styles.borderEdges,{borderBottomWidth: 6,borderLeftWidth: 6,bottom:0,left: 0,}]}/>
                                         <View style={[styles.borderEdges,{borderBottomWidth: 6,borderRightWidth: 6,bottom:0,right:0,}]}/>
 
-                                        <View style={{position:"absolute" , bottom : -80, flex: 1,justifyContent:"center",alignItems:"center"}}>
+                                        <View style={{position:"absolute" , bottom : -100, flex: 1,justifyContent:"center",alignItems:"center"}}>
                                             <Text style={styles.position}>Position your ID within the frame.</Text>
                                             <Text style={styles.blurText}>Make sure the picture has no glare and not blur.</Text>
                                         </View>
                             </View>
                         </View>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                bottom: 0,
+                                width: '100%',
+                                marginBottom: 30,
+                            }}>
+                            <TouchableOpacity onPress={() => takePicture()}>
+                                <ImageBackground source={camera_circle}  style={styles.capture} resizeMode="contain">
+                                    <View style={styles.inCapture}>
+                                        <Image source={camera_icon} style={{height: 55, width:55}}/>
+                                    </View>
+                                </ImageBackground>
+                            </TouchableOpacity>
+                        </View>
                 </RNCamera>
-                
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        bottom: 0,
-                        width: '100%',
-                        marginBottom: 20,
-                    }}>
-                    <TouchableOpacity onPress={() => takePicture()}>
-                        <ImageBackground source={camera_circle}  style={styles.capture} resizeMode="contain">
-                            <View style={styles.inCapture}>
-                                <Image source={camera_icon} style={{height: 55, width:55}}/>
-                            </View>
-                        </ImageBackground>
-                    </TouchableOpacity>
-                </View>
-
              </View>
         </View>
         </MainComponent>

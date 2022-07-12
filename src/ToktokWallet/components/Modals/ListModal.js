@@ -35,6 +35,14 @@ const List = ({data, onChangeSelect, setVisible, hasDefault, defaultCondition}) 
       return {
         name: item.name
       }
+    } else if (item.provDesc){
+      return {
+        name: item.provDesc
+      }
+    } else if (item.citymunDesc){
+      return {
+        name: item.citymunDesc
+      }
     } else{ 
       return {
         name: item.description,
