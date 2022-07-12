@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     borderStyle: 'dashed',
     borderColor: COLOR.ORANGE,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 5,
     marginBottom: 5,
     transform: [
