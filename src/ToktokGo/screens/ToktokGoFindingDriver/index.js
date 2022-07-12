@@ -46,29 +46,6 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
 
-  const {data, loading} = useSubscription(ON_TRIP_UPDATE, {
-    client: TOKTOKGO_SUBSCRIPTION_CLIENT,
-    variables: {
-      consumerUserId: session.user.id,
-    },
-    onSubscriptionData: response => {
-      console.log(response);
-      if (response?.subscriptionData?.data?.onTripUpdate?.id) {
-        dispatch({
-          type: 'SET_TOKTOKGO_BOOKING',
-          payload: response?.subscriptionData?.data?.onTripUpdate,
-        });
-      }
-      if (response?.subscriptionData?.data?.onTripUpdate?.status == 'ACCEPTED') {
-        setShowDriverFoundModal(true);
-      }
-      if (response?.subscriptionData?.data?.onTripUpdate?.status == 'EXPIRED') {
-        setWaitingStatus(0);
-        setWaitingText(6);
-      }
-    },
-  });
-
   useEffect(() => {
     console.log('[effect] Observe Trip Update!');
     const observer = TOKTOKGO_SUBSCRIPTION_CLIENT.subscribe({
