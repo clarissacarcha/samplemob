@@ -5,6 +5,7 @@ import {SheetManager} from 'react-native-actions-sheet';
 import {ThrottledOpacity} from '../../../components_section';
 export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
   const dropDownRef = useRef(null);
+  const scrollViewRef = useRef();
   const [selectedReason, setSelectedReason] = useState(null);
   const [typedReason, setTypedReason] = useState('');
   const [data, setData] = useState([
@@ -104,7 +105,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               <Text style={styles.headerText}>Reason for cancelling</Text>
             </View>
           </View>
-          <ScrollView style={styles.scrollview}>
+          <ScrollView style={styles.scrollview} ref={scrollViewRef}>
             {data.map((text, key) => {
               return (
                 <View style={styles.radioButtonContainer} key={key}>
@@ -112,6 +113,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
                     delay={500}
                     onPress={() => {
                       setSelectedReason(text);
+                      if (selectedReason?.value == '18') scrollViewRef.current.scrollToEnd({animated: true});
                     }}
                     style={styles.radioButton}>
                     <View
@@ -122,6 +124,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
                     delay={500}
                     onPress={() => {
                       setSelectedReason(text);
+                      if (selectedReason?.value == '18') scrollViewRef.current.scrollToEnd({animated: true});
                     }}>
                     <Text style={styles.radioButtonText}>{text.label}</Text>
                   </ThrottledOpacity>
@@ -153,7 +156,11 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               justifyContent: 'center',
               flexDirection: 'row',
               paddingHorizontal: 25,
-              paddingVertical: 20,
+
+              position: 'absolute',
+              bottom: 0,
+              paddingVertical: 0,
+              paddingBottom: 25,
             }}>
             <ThrottledOpacity
               delay={500}
@@ -244,6 +251,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 23,
     paddingTop: 20,
+    marginRight: 10,
   },
   radioButton: {
     height: 16,
@@ -302,7 +310,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   containerTextInput: {
-    marginTop: 16,
+    marginTop: -30,
     marginHorizontal: 16,
     backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
     borderRadius: 5,
