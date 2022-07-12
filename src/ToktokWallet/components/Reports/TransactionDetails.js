@@ -23,7 +23,7 @@ export const TransactionDetails = ({transaction, visible, setVisible}) => {
             <Text key={`externalDetails_${index}`} style={styles.labelText}>
               {key}:{' '}
             </Text>
-            <Text key={`externalDetails_${index}`}>{value}</Text>
+            <Text key={`externalDetailsSub_${index}`}>{value}</Text>
           </Text>
         );
       });
@@ -38,17 +38,21 @@ export const TransactionDetails = ({transaction, visible, setVisible}) => {
       <View>
         <Text style={styles.cashOutText}>{name}</Text>
         <Text style={styles.labelCashOut}>{phrase}</Text>
-        {/* <View style={styles.pendingContent}>
-          <Image source={info_icon} style={styles.pendingPolicty} />
-          <View>
-            <Text style={styles.pendingText}>
-              All transactions made before 01.00 PM will be processed within the day.
-            </Text>
-            <Text style={styles.pendingText}>
-              All transactions after 01.00 PM will be processed the next banking day.
-            </Text>
-          </View>
-        </View> */}
+        {Object.entries(transaction).length > 0 &&
+          transaction?.transactionType?.key === 'CASH_OUT' &&
+          displayInfo.Status === 'Pending' && (
+            <View style={styles.pendingContent}>
+              <Image source={info_icon} style={styles.pendingPolicty} />
+              <View>
+                <Text style={styles.pendingText}>
+                  All transactions made before 01.00 PM will be processed within the day.
+                </Text>
+                <Text style={styles.pendingText}>
+                  All transactions after 01.00 PM will be processed the next banking day.
+                </Text>
+              </View>
+            </View>
+          )}
         <View style={{marginTop: 15}}>{renderDetails({details: displayInfo})}</View>
       </View>
     </TransactionModal>
