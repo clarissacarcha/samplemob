@@ -10,8 +10,9 @@ import {
   Dimensions,
   StatusBar,
   Image,
+  ImageBackground,
 } from 'react-native';
-import {ICON_SET, VectorIcon, YellowButton, HeaderBack, HeaderTitle} from 'src/revamp';
+import {ICON_SET, VectorIcon} from 'src/revamp';
 import {AlertOverlay} from 'src/components';
 import {
   CheckIdleState,
@@ -20,6 +21,7 @@ import {
   HeaderCancel,
   CircleIndicator,
   NumPad,
+  HeaderBack,
 } from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
 import {BuildingBottom} from '../../../components';
@@ -30,7 +32,8 @@ import {useMutation} from '@apollo/react-hooks';
 import {useAlert, usePrompt} from 'src/hooks';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import tokwaLogo from 'toktokwallet/assets/images/tokwa2.png';
-import {moderateScale} from 'toktokwallet/helper';
+import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
+import {backgrounds} from 'toktokwallet/assets';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
@@ -44,23 +47,7 @@ export const MainComponent = ({navigation, route}) => {
   const onPressCancelYes = route?.params?.onPressCancelYes ? route.params.onPressCancelYes : null;
 
   navigation.setOptions({
-    headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['']} />,
-    headerRight: () =>
-      btnLabel == 'Cash In' ||
-      (screenPopNo && (
-        <HeaderCancel navigation={navigation} screenPopNo={screenPopNo} onPressCancelYes={onPressCancelYes} />
-      )),
-    headerStyle: {
-      elevation: 0,
-      shadowColor: '#fff',
-      shadowOffset: {
-        width: 0,
-        height: 0,
-      },
-      shadowOpacity: 0,
-      shadowRadius: 0,
-    },
+    headerShown: false,
   });
 
   const [pinCode, setPinCode] = useState('');
@@ -120,8 +107,11 @@ export const MainComponent = ({navigation, route}) => {
 
   return (
     <CheckIdleState>
-      <View style={styles.subContainer}>
-        <AlertOverlay visible={loading} />
+      <AlertOverlay visible={loading} />
+      <ImageBackground source={backgrounds.gradient_tpin} style={styles.subContainer}>
+        <View style={{marginTop: getStatusbarHeight + moderateScale(16)}}>
+          <HeaderBack color={COLOR.ORANGE} />
+        </View>
         <View style={styles.inputContainer}>
           <Image source={tokwaLogo} style={styles.tokwaLogo} />
           <Text style={styles.otpText}>Enter TPIN</Text>
@@ -138,8 +128,8 @@ export const MainComponent = ({navigation, route}) => {
             <Text style={styles.forgotTPIN}>Forgot TPIN?</Text>
           </TouchableOpacity>
         </View>
-        <BuildingBottom />
-      </View>
+        {/* <BuildingBottom /> */}
+      </ImageBackground>
     </CheckIdleState>
   );
 };
@@ -164,13 +154,13 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     flex: 1,
-    padding: moderateScale(16),
     backgroundColor: 'white',
   },
   inputContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: moderateScale(16),
   },
   otpText: {
     fontFamily: FONT.BOLD,
