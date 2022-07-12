@@ -35,11 +35,12 @@ const OrderSummary = (props: PropsType): React$Node => {
 
   useEffect(() => {
     if (state?.length > 0) {
-      setFullList(state);
-      if (state?.length > 5) {
-        const limit = state?.slice(0, 5);
+      const list = state.sort((a, b) => a.id - b.id);
+      setFullList(list);
+      if (list.length > 5) {
+        const limit = list.slice(0, 5);
         setLimitedList(limit);
-        const remaining = state?.slice(4, -1);
+        const remaining = list.slice(4, -1);
         setRemainingList(remaining);
       } else {
         setIsCollapsed(true);
