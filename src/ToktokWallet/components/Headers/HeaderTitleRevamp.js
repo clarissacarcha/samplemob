@@ -34,5 +34,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: moderateScale(FONT_SIZE.XL),
     fontFamily: FONT.REGULAR,
+    textAlign: 'center',
+  },
+  header: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
