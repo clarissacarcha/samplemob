@@ -21,7 +21,7 @@ const ModalProvince = ({type, onSelect}) => {
     setCity,
     setCityId,
     changeVerifyAddressErrors,
-    verifyAddressErrors
+    verifyAddressErrors,
   } = useContext(VerifyContext);
 
   const [filteredProvinces, setFilteredProvinces] = useState([]);
@@ -75,7 +75,8 @@ const ModalProvince = ({type, onSelect}) => {
       data={filteredProvinces}
       onSelectedValue={onSelectedValue}
       errorMessage={verifyAddressErrors.provinceError}
-      placeholder="Search your province"
+      searchPlaceholder="Search your province"
+      placeholder="Select Province"
       withSearch={true}
       onSearchValue={filterSearch}
       hasDefault={true}
