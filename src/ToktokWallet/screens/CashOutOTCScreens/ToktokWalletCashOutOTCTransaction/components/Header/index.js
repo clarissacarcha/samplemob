@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {moderateScale} from 'toktokwallet/helper';
 
 //COMPONENTS
-import {LoadingIndicator} from 'toktokwallet/components';
+import {LoadingIndicator, PolicyNote} from 'toktokwallet/components';
 
 //FONTS & COLORS & IMAGES
 import CONSTANTS from 'common/res/constants';
@@ -44,13 +44,10 @@ export const Header = ({route}) => {
           <Text style={logo ? styles.description : styles.nologo}>{description}</Text>
         </View>
       </ImageBackground>
-      <View style={styles.note}>
-        <Image source={info_icon} style={styles.noteLogo} />
-        <View>
-          <Text style={styles.noteText}>All transactions made before 01.00 PM will be processed within the day.</Text>
-          <Text style={styles.noteText}>All transactions after 01.00 PM will be processed the next banking day.</Text>
-        </View>
-      </View>
+      <PolicyNote
+        note1="All transactions made before 01.00 PM will be processed within the day."
+        note2="All transactions after 01.00 PM will be processed the next banking day."
+      />
     </>
   );
 };

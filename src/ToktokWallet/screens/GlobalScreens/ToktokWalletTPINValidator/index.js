@@ -69,6 +69,8 @@ export const MainComponent = ({navigation, route}) => {
       return callBackFunc({pinCode, data});
     },
     onError: error => {
+      const {graphQLErrors, networkError} = error;
+      if (networkError) setPinCode('');
       TransactionUtility.StandardErrorHandling({
         error,
         setErrorMessage,

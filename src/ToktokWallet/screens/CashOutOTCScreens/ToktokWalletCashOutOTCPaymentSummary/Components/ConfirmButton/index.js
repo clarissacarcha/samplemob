@@ -1,30 +1,93 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {TransactionUtility} from 'toktokwallet/util';
+
+//GRAPHQL & HOOKS
+import {useAccount} from 'toktokbills/hooks';
+import {useMutation} from '@apollo/react-hooks';
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+import {POST_FINALIZE_OTC} from 'toktokwallet/graphql';
+import {usePrompt} from 'src/hooks';
+import {onErrorAlert} from 'src/util/ErrorUtility';
+import {useAlert, useThrottle} from 'src/hooks';
+import {useSelector} from 'react-redux';
 
 //UTIL
 import {moderateScale} from 'toktokwallet/helper';
 
 //COMPONENTS
 import {OrangeButton} from 'toktokwallet/components';
+import {AlertOverlay} from 'src/components';
 
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT_SIZE} from 'src/res/variables';
 
-export const ConfirmButton = ({}) => {
+export const ConfirmButton = ({route}) => {
+  const prompt = usePrompt();
   const navigation = useNavigation();
+  const {
+    recipientName,
+    recipientMobileNo,
+    email,
+    amount,
+    purpose,
+    otcPartnerDetails,
+    toktokServiceFee,
+    providerServiceFee,
+    cashOutProviderPartnerId,
+  } = route.params.transactionDetails;
+
+  const [postFinalizeOtc, {loading: postFinalizeOtcLoading}] = useMutation(POST_FINALIZE_OTC, {
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onError: error => {
+      TransactionUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        onPress: () => navigation.navigate('ToktokWalletCashOutOTCHome'),
+      });
+    },
+    onCompleted: ({postFinalizeOtc}) => {
+      console.log(postFinalizeOtc);
+      navigation.navigate('ToktokWalletCashOutOTCReceipt', {
+        receipt: postFinalizeOtc,
+        transactionDetails: {otcPartnerDetails, recipientName, recipientMobileNo},
+      });
+    },
+  });
 
   const onPressConfirm = () => {
     navigation.navigate('ToktokWalletTPINValidator', {
-      // callBackFunc: handleProcessProceed,
+      callBackFunc: handleProcessProceed,
       // onPressCancelYes: () => navigation.navigate('ToktokBillsHome'),
       enableIdle: false,
       // data,
     });
   };
 
+  const handleProcessProceed = ({pinCode}) => {
+    const input = {
+      amount,
+      cashOutProviderPartnerId,
+      note: purpose,
+      emailAddress: email,
+      convenienceFee: providerServiceFee,
+      serviceFee: toktokServiceFee,
+      validator: 'TPIN',
+      pinCode,
+    };
+    console.log(input);
+    postFinalizeOtc({
+      variables: {
+        input,
+      },
+    });
+  };
+
   return (
     <>
+      <AlertOverlay visible={postFinalizeOtcLoading} />
       <View style={styles.buttonContainer}>
         <OrangeButton label="Confirm" onPress={onPressConfirm} />
       </View>

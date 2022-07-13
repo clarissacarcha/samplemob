@@ -13,7 +13,8 @@ import {TransactionDetails} from './TransactionDetails';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 export const TransactionLog = ({transaction, itemsLength, index, data}) => {
-  const {id, refNo, name, phrase, displayInfo, amount, sourceWalletId, createdAt, note} = transaction.node;
+  const {id, refNo, name, phrase, displayInfo, amount, sourceWalletId, createdAt, note, transactionType} =
+    transaction.node;
 
   const {tokwaAccount} = useAccount();
   const [openModal, setOpenModal] = useState(false);
@@ -48,6 +49,7 @@ export const TransactionLog = ({transaction, itemsLength, index, data}) => {
       refNo,
       refDate: referenceDate,
       note,
+      transactionType,
     });
     setOpenModal(true);
   };

@@ -55,5 +55,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: moderateScale(30),
     paddingHorizontal: moderateScale(25),
+    maxHeight: '70%',
   },
 });

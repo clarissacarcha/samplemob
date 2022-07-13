@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, ImageBackground, Platform} from 'react-native';
 import moment from 'moment';
+import {PolicyNote} from 'toktokwallet/components';
 
 //HELPER
 import {moderateScale, currencyCode, numberFormat} from 'toktokwallet/helper';
@@ -11,7 +12,7 @@ import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 
 export const PaymentDetails = ({route}) => {
-  const {recipientName, recipientMobileNo, email, dateOfClaim, amount, purpose, otcPartnerDetails, serviceFee} =
+  const {recipientName, recipientMobileNo, email, dateOfClaim, amount, purpose, otcPartnerDetails, totalServiceFee} =
     route.params.transactionDetails;
 
   return (
@@ -33,13 +34,10 @@ export const PaymentDetails = ({route}) => {
           </Text>
         </View>
       </ImageBackground>
-      <View style={styles.note}>
-        <Image source={info_icon} style={styles.noteLogo} />
-        <View>
-          <Text style={styles.noteText}>All transactions made before 01.00 PM will be processed within the day.</Text>
-          <Text style={styles.noteText}>All transactions after 01.00 PM will be processed the next banking day.</Text>
-        </View>
-      </View>
+      <PolicyNote
+        note1="All transactions made before 01.00 PM will be processed within the day."
+        note2="All transactions after 01.00 PM will be processed the next banking day."
+      />
       <View style={{marginVertical: moderateScale(10)}}>
         <View style={styles.detailsContainer}>
           <Text style={styles.label}>Recipient Name</Text>
@@ -79,7 +77,7 @@ export const PaymentDetails = ({route}) => {
           <Text style={styles.label}>Service Fee </Text>
           <Text style={styles.description}>
             {currencyCode}
-            {numberFormat(serviceFee)}
+            {numberFormat(totalServiceFee)}
           </Text>
         </View>
       </View>
@@ -88,7 +86,7 @@ export const PaymentDetails = ({route}) => {
         <Text style={styles.totalLabel}>Total </Text>
         <Text style={styles.totalLabel}>
           {currencyCode}
-          2,000.00
+          {numberFormat(parseFloat(amount) + parseFloat(totalServiceFee))}
         </Text>
       </View>
       <View style={styles.totalSeparator} />

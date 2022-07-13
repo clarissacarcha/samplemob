@@ -4,6 +4,7 @@ import DashedLine from 'react-native-dashed-line';
 
 //UTIL
 import {moderateScale, numberFormat, currencyCode} from 'toktokwallet/helper';
+import moment from 'moment';
 
 //COMPONENTS
 import {ReceiptSeparator} from 'toktokwallet/components';
@@ -14,6 +15,11 @@ import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
 
 export const ReceiptDetails = ({route}) => {
   const [footerHeight, setFooterHeight] = useState(80);
+  const {recipientMobileNo, recipientName} = route.params.transactionDetails;
+  const {cashOut, emailAddress, note, requestDate} = route.params.receipt;
+  const {amount, referenceNumber, systemServiceFee, providerServiceFee} = cashOut;
+  const totalServiceFee = parseFloat(systemServiceFee) + parseFloat(providerServiceFee);
+  const transactionDate = moment(requestDate).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
 
   return (
     <>
@@ -21,44 +27,53 @@ export const ReceiptDetails = ({route}) => {
       <View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Service Reference Number </Text>
-          <Text style={[styles.description, {color: COLOR.ORANGE, fontFamily: FONT.BOLD}]}>12345678910</Text>
+          <Text style={[styles.description, {color: COLOR.ORANGE, fontFamily: FONT.BOLD}]}>{referenceNumber}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Transaction Date </Text>
-          <Text style={styles.description}>Jan 7, 2021</Text>
+          <Text style={styles.description}>{transactionDate}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Recipient Name</Text>
-          <Text style={styles.description}>Juan Dela Cruz</Text>
+          <Text style={styles.description}>{recipientName}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Recipient Mobile Number</Text>
-          <Text style={styles.description}>09123456789</Text>
+          <Text style={styles.description}>{recipientMobileNo}</Text>
         </View>
-        {/* {!!email && (
+        {!!emailAddress && (
           <View style={[styles.bodyContainer, styles.marginBottom15]}>
             <Text style={styles.title}>Email Address </Text>
-            <Text style={styles.description}>{email}</Text>
+            <Text style={styles.description}>{emailAddress}</Text>
           </View>
-        )} */}
+        )}
+        {!!note && (
+          <View style={[styles.bodyContainer, styles.marginBottom15]}>
+            <Text style={styles.title}>Purpose</Text>
+            <Text style={styles.description}>{note}</Text>
+          </View>
+        )}
+
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Date of Claim </Text>
-          <Text style={styles.description}>Jun 7, 2022</Text>
-        </View>
-        <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Purpose</Text>
+          <Text style={styles.title}>Amount</Text>
           <Text style={styles.description}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Hevivamus sit amet venenatis ex. Vivamus sit amet
-            venenatis.
+            {currencyCode}
+            {numberFormat(amount)}
           </Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Amount</Text>
-          <Text style={styles.description}>₱2,000.00</Text>
+          <Text style={styles.title}>Service Fee</Text>
+          <Text style={styles.description}>
+            {currencyCode}
+            {numberFormat(totalServiceFee)}
+          </Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Service Fee</Text>
-          <Text style={styles.description}>₱10.00</Text>
+          <Text style={styles.title}>Total</Text>
+          <Text style={styles.description}>
+            {currencyCode}
+            {numberFormat(parseFloat(totalServiceFee) + parseFloat(amount))}
+          </Text>
         </View>
         <ReceiptSeparator bottomHeight={footerHeight} />
         <View style={styles.brokenLine}>

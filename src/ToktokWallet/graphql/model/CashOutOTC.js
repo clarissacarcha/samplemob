@@ -28,3 +28,30 @@ export const GET_CASH_OUT_PROVIDER_PARTNERS = gql`
     }
   }
 `;
+
+export const POST_FINALIZE_OTC = gql`
+  mutation postFinalizeOtc($input: PostFinalizeOtcInput) {
+    postFinalizeOtc(input: $input) {
+      id
+      cashOutId
+      emailAddress
+      status
+      purpose
+      requestDate
+      settledDate
+      validityEndDate
+      isClaim
+      claimedDate
+      cashOut {
+        id
+        referenceNumber
+        amount
+        currencyId
+        cashOutProviderId
+        cashOutBankAccountId
+        providerServiceFee
+        systemServiceFee
+      }
+    }
+  }
+`;

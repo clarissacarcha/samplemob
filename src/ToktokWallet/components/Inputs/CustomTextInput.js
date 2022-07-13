@@ -33,6 +33,7 @@ export const CustomTextInput = ({
         returnKeyType="done"
         editable={editable}
         maxLength={maxLength}
+        keyboardType={keyboardType}
       />
       {!!errorMessage && <Text style={styles.errorMessage}>{errorMessage}</Text>}
     </>
