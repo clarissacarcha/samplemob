@@ -44,29 +44,46 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [chargeAmount, setChargeAmount] = useState(0);
   const [viewCancelBookingWithCharge, setViewCancelBookingWithCharge] = useState(false);
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
+  const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
 
-  const {data, loading} = useSubscription(ON_TRIP_UPDATE, {
-    client: TOKTOKGO_SUBSCRIPTION_CLIENT,
-    variables: {
-      consumerUserId: session.user.id,
-    },
-    onSubscriptionData: response => {
-      console.log(response);
-      if (response?.subscriptionData?.data?.onTripUpdate?.id) {
-        dispatch({
-          type: 'SET_TOKTOKGO_BOOKING',
-          payload: response?.subscriptionData?.data?.onTripUpdate,
-        });
-      }
-      if (response?.subscriptionData?.data?.onTripUpdate?.status == 'ACCEPTED') {
-        setShowDriverFoundModal(true);
-      }
-      if (response?.subscriptionData?.data?.onTripUpdate?.status == 'EXPIRED') {
-        setWaitingStatus(0);
-        setWaitingText(6);
-      }
-    },
-  });
+  useEffect(() => {
+    console.log('[effect] Observe Trip Update!');
+    const observer = TOKTOKGO_SUBSCRIPTION_CLIENT.subscribe({
+      query: ON_TRIP_UPDATE,
+      variables: {
+        consumerUserId: session.user.id,
+      },
+    });
+    const subscription = observer.subscribe(
+      ({data}) => {
+        console.log('[subscription] TripUpdate:', data);
+        if (data?.onTripUpdate?.id) {
+          dispatch({
+            type: 'SET_TOKTOKGO_BOOKING',
+            payload: data?.onTripUpdate,
+          });
+        }
+        if (data?.onTripUpdate?.status == 'ACCEPTED') {
+          setShowDriverFoundModal(true);
+        }
+        if (data?.onTripUpdate?.status == 'EXPIRED') {
+          setWaitingStatus(0);
+          setWaitingText(6);
+        }
+      },
+      error => {
+        console.log('[error] Trip Update:', error);
+        if (error && subscription.closed) {
+          setTimeout(() => {
+            // retry subscription connection after 3s
+            setTripUpdateRetrySwitch(!tripUpdateRetrySwitch);
+          }, 3000);
+        }
+      },
+    );
+
+    return () => subscription.unsubscribe();
+  }, [tripUpdateRetrySwitch]);
 
   useEffect(() => {
     if (waitingText <= 5 && waitingStatus) {

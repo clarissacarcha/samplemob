@@ -1,4 +1,4 @@
-import React, {useRef, useCallback, useState} from 'react';
+import React, {useRef, useCallback, useState, useEffect} from 'react';
 import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, Linking, Platform, Alert} from 'react-native';
 import {Map, SeeBookingDetails, DriverStatus, DriverInfo, Actions, DriverStatusDestination} from './Sections';
 import {DriverArrivedModal} from './Components';
@@ -47,43 +47,61 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [cancellationState, setCancellationState] = useState();
   const [originData, setOriginData] = useState(false);
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
+  const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
 
   const {driver, booking} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
 
-  const onTripUpdate = useSubscription(ON_TRIP_UPDATE, {
-    client: TOKTOKGO_SUBSCRIPTION_CLIENT,
-    variables: {
-      consumerUserId: session.user.id,
-    },
-    onSubscriptionData: response => {
-      const {id, status, cancellation} = response?.subscriptionData?.data?.onTripUpdate;
-      if (id && status != 'CANCELLED' && cancellation?.initiatedBy == 'CONSUMER') {
-        dispatch({
-          type: 'SET_TOKTOKGO_BOOKING',
-          payload: response?.subscriptionData?.data?.onTripUpdate,
-        });
-      }
-      if (status == 'CANCELLED' && cancellation?.initiatedBy == 'DRIVER') {
-        setCancellationState(cancellation);
-        setChargeAmount(cancellation.charge?.amount);
-        if (cancellation.charge?.amount > 0) {
-          setCancellationFee(true);
-        } else {
-          onCancel();
+  useEffect(() => {
+    console.log('[effect] Observe Trip Update!');
+    const observer = TOKTOKGO_SUBSCRIPTION_CLIENT.subscribe({
+      query: ON_TRIP_UPDATE,
+      variables: {
+        consumerUserId: session.user.id,
+      },
+    });
+    const subscription = observer.subscribe(
+      ({data}) => {
+        console.log('[subscription] TripUpdate:', data);
+        const {id, status, cancellation} = data?.onTripUpdate;
+        if (id && status != 'CANCELLED' && cancellation?.initiatedBy == 'CONSUMER') {
+          dispatch({
+            type: 'SET_TOKTOKGO_BOOKING',
+            payload: data?.onTripUpdate,
+          });
         }
-      }
-      if (['ARRIVED', 'PICKED_UP', 'COMPLETED'].includes(status)) {
-        dispatch({
-          type: 'SET_TOKTOKGO_BOOKING',
-          payload: response?.subscriptionData?.data?.onTripUpdate,
-        });
-        if (['ARRIVED', 'COMPLETED'].includes(status)) {
-          setmodal(true);
+        if (status == 'CANCELLED' && cancellation?.initiatedBy == 'DRIVER') {
+          setCancellationState(cancellation);
+          setChargeAmount(cancellation.charge?.amount);
+          if (cancellation.charge?.amount > 0) {
+            setCancellationFee(true);
+          } else {
+            onCancel();
+          }
         }
-      }
-    },
-  });
+        if (['ARRIVED', 'PICKED_UP', 'COMPLETED'].includes(status)) {
+          dispatch({
+            type: 'SET_TOKTOKGO_BOOKING',
+            payload: data?.onTripUpdate,
+          });
+          if (['ARRIVED', 'COMPLETED'].includes(status)) {
+            setmodal(true);
+          }
+        }
+      },
+      error => {
+        console.log('[error] Trip Update:', error);
+        if (error && subscription.closed) {
+          setTimeout(() => {
+            // retry subscription connection after 3s
+            setTripUpdateRetrySwitch(!tripUpdateRetrySwitch);
+          }, 3000);
+        }
+      },
+    );
+
+    return () => subscription.unsubscribe();
+  }, [tripUpdateRetrySwitch]);
 
   const [getTripCancellationCharge] = useLazyQuery(GET_TRIP_CANCELLATION_CHARGE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
