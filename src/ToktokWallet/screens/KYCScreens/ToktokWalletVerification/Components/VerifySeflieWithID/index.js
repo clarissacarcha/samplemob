@@ -125,17 +125,15 @@ export const VerifySelfieWithID = () => {
 
   const [cropperParams, setCropperParams] = useState({});
   const navigation = useNavigation();
+
   const cropSize = {
-    // width: width,
-    // height: height,
     width: CROP_AREA_WIDTH,
     height: CROP_AREA_HEIGHT,
   };
+
   const cropAreaSize = {
-    // width: width,
-    // height: height,
-    width: CROP_AREA_WIDTH,
-    height: CROP_AREA_HEIGHT,
+    width: CROP_AREA_WIDTH - 100,
+    height: CROP_AREA_HEIGHT - 100,
   };
 
   const setImage = data => {
@@ -172,6 +170,7 @@ export const VerifySelfieWithID = () => {
 
         return setCurrentIndex(oldval => oldval + 1);
       } catch (error) {
+        console.log(error);
         throw error;
       }
     }
