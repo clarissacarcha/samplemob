@@ -114,6 +114,6 @@ const styles = StyleSheet.create({
   },
   dayTitle: {
     fontFamily: FONT.BOLD,
-    marginTop: moderateScale(12),
+    marginTop: moderateScale(20),
   },
 });
