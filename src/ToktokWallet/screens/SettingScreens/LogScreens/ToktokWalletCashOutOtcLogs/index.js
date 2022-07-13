@@ -13,6 +13,7 @@ import {
   LoadingIndicator,
 } from 'toktokwallet/components';
 import {HeaderBack, HeaderTitle} from 'src/revamp';
+
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
@@ -118,6 +119,7 @@ export const ToktokWalletCashOutOtcLogs = ({navigation}) => {
     );
   }
 
+  const renderSeparator = () => <View style={styles.separator} />;
   return (
     <>
       <CheckIdleState>
@@ -159,9 +161,19 @@ export const ToktokWalletCashOutOtcLogs = ({navigation}) => {
                 )}
                 onEndReachedThreshold={0.02}
                 onEndReached={fetchMoreData}
-                ListFooterComponent={ListFooterComponent}
-                scrollEnabled={true}
-                contentContainerStyle={{paddingHorizontal: moderateScale(16)}}
+                ItemSeparatorComponent={renderSeparator}
+                ListFooterComponent={() => {
+                  if (records.length == 0) return null;
+                  if (getCashOutOtcLoading) return null;
+                  return <ListFooterComponent />;
+                }}
+                style={{flex: 1}}
+                contentContainerStyle={records.length == 0 && {flexGrow: 1}}
+                getItemLayout={(data, index) => ({
+                  length: data.length,
+                  offset: data.length * index,
+                  index,
+                })}
               />
             </View>
           </View>
@@ -181,7 +193,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    padding: 16,
     flex: 1,
   },
   filterType: {
@@ -193,7 +204,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   transactionLogsContainer: {
-    marginVertical: 0,
+    marginVertical: 5,
   },
   transaction: {
     paddingVertical: 10,
@@ -213,5 +224,9 @@ const styles = StyleSheet.create({
   transactionAmount: {
     flexBasis: 'auto',
     alignItems: 'flex-end',
+  },
+  separator: {
+    backgroundColor: '#F4F4F4',
+    height: 1,
   },
 });
