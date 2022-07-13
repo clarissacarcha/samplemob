@@ -48,7 +48,7 @@ const DeliveryStop = ({booking, stop}) => {
           );
         } else {
           return (
-            <View style={{width: 340}}>
+            <View style={{width: 300}}>
               <Text>{city}</Text>
               <Text style={{color: constants.COLOR.ALMOST_BLACK, fontSize: constants.FONT_SIZE.S}}>
                 {stop.formattedAddress}
