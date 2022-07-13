@@ -14,12 +14,48 @@ import {
 
 export default ({Navigator}) => (
   <>
-    <Navigator.Screen name="ToktokWalletHomePage" component={ToktokWalletHomePage} />
-    <Navigator.Screen name="ToktokWalletLinkAccount" component={ToktokWalletLinkAccount} />
-    <Navigator.Screen name="ToktokWalletLoginPage" component={ToktokWalletLoginPage} />
-    <Navigator.Screen name="ToktokWalletNotifications" component={ToktokWalletNotifications} />
-    <Navigator.Screen name="ToktokWalletOTPValidator" component={ToktokWalletOTPValidator} />
-    <Navigator.Screen name="ToktokWalletRestricted" component={ToktokWalletRestricted} />
+    <Navigator.Screen
+      name="ToktokWalletHomePage"
+      component={ToktokWalletHomePage}
+      options={{
+        headerTitleAlign: 'center',
+      }}
+    />
+    <Navigator.Screen
+      name="ToktokWalletLinkAccount"
+      component={ToktokWalletLinkAccount}
+      options={{
+        headerTitleAlign: 'center',
+      }}
+    />
+    <Navigator.Screen
+      name="ToktokWalletLoginPage"
+      component={ToktokWalletLoginPage}
+      options={{
+        headerTitleAlign: 'center',
+      }}
+    />
+    <Navigator.Screen
+      name="ToktokWalletNotifications"
+      component={ToktokWalletNotifications}
+      options={{
+        headerTitleAlign: 'center',
+      }}
+    />
+    <Navigator.Screen
+      name="ToktokWalletOTPValidator"
+      component={ToktokWalletOTPValidator}
+      options={{
+        headerTitleAlign: 'center',
+      }}
+    />
+    <Navigator.Screen
+      name="ToktokWalletRestricted"
+      component={ToktokWalletRestricted}
+      options={{
+        headerTitleAlign: 'center',
+      }}
+    />
     <Navigator.Screen
       name="ToktokWalletReviewAndConfirm"
       component={ToktokWalletReviewAndConfirm}
