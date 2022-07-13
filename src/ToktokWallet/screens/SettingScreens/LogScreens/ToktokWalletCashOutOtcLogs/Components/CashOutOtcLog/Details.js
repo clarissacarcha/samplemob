@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
-import {TransactionModal} from 'toktokwallet/components';
+import {SettingsLogModal} from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
@@ -29,7 +29,7 @@ const Details = ({transaction, visible, setVisible}) => {
   const {name, phrase, details, amount, refNo, refDate, time, date, status, requestNo} = transaction;
 
   return (
-    <TransactionModal visible={visible} setVisible={setVisible}>
+    <SettingsLogModal visible={visible} setVisible={setVisible}>
       <View>
         <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{name}</Text>
         <Text style={styles.labelText}>{phrase}</Text>
@@ -42,7 +42,7 @@ const Details = ({transaction, visible, setVisible}) => {
           {refDate && <Text style={styles.labelText}>Time of Payment {time}</Text>}
         </View>
       </View>
-    </TransactionModal>
+    </SettingsLogModal>
   );
 };
 
