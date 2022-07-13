@@ -37,7 +37,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
           <Text style={styles.voucherDescription}>{data.description}</Text>
           {data.promoVoucher.endAt && (
             <Text style={styles.voucherDescriptionDate}>
-              Valid unitl {moment(data.promoVoucher.endAt).format('LL')}
+              Valid unitl {moment(data.promoVoucher.endAt).format('MMM DD YYYY')}
             </Text>
           )}
           {data.voucherWallet?.total > 1 && (
