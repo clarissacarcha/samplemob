@@ -36,7 +36,9 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
           <Text style={styles.voucherName}>{data.name}</Text>
           <Text style={styles.voucherDescription}>{data.description}</Text>
           {data.promoVoucher.endAt && (
-            <Text style={styles.voucherDescription}>Valid unitl {moment(data.promoVoucher.endAt).format('LL')}</Text>
+            <Text style={styles.voucherDescriptionDate}>
+              Valid unitl {moment(data.promoVoucher.endAt).format('LL')}
+            </Text>
           )}
           {data.voucherWallet?.total > 1 && (
             <>
@@ -120,8 +122,15 @@ const styles = StyleSheet.create({
   },
   voucherDescription: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+    // color: CONSTANTS.COLOR.GRAY,
+    fontSize: CONSTANTS.FONT_SIZE.S,
+    fontWeight: 'normal',
+  },
+  voucherDescriptionDate: {
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.GRAY,
     fontSize: CONSTANTS.FONT_SIZE.S,
+    fontWeight: 'normal',
   },
   voucherImage: {
     alignSelf: 'center',
