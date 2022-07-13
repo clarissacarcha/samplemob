@@ -1,4 +1,4 @@
-import React, {useRef, useCallback, useState} from 'react';
+import React, {useRef, useCallback, useState, useEffect} from 'react';
 import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, Linking, Platform, Alert} from 'react-native';
 import {Map, SeeBookingDetails, DriverStatus, DriverInfo, Actions, DriverStatusDestination} from './Sections';
 import {DriverArrivedModal} from './Components';
@@ -63,11 +63,11 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     const subscription = observer.subscribe(
       ({data}) => {
         console.log('[subscription] TripUpdate:', data);
-        const {id, status, cancellation} = response?.subscriptionData?.data?.onTripUpdate;
+        const {id, status, cancellation} = data?.onTripUpdate;
         if (id && status != 'CANCELLED' && cancellation?.initiatedBy == 'CONSUMER') {
           dispatch({
             type: 'SET_TOKTOKGO_BOOKING',
-            payload: response?.subscriptionData?.data?.onTripUpdate,
+            payload: data?.onTripUpdate,
           });
         }
         if (status == 'CANCELLED' && cancellation?.initiatedBy == 'DRIVER') {
@@ -82,7 +82,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         if (['ARRIVED', 'PICKED_UP', 'COMPLETED'].includes(status)) {
           dispatch({
             type: 'SET_TOKTOKGO_BOOKING',
-            payload: response?.subscriptionData?.data?.onTripUpdate,
+            payload: data?.onTripUpdate,
           });
           if (['ARRIVED', 'COMPLETED'].includes(status)) {
             setmodal(true);

@@ -5,6 +5,7 @@ import {ApolloLink} from 'apollo-link';
 import {createHttpLink} from 'apollo-link-http';
 import ApolloClient from 'apollo-client';
 import {InMemoryCache} from 'apollo-cache-inmemory';
+import {createClient} from 'graphql-ws';
 
 import ENVIRONMENTS from '../../../common/res/environments';
 
