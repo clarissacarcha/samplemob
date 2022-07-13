@@ -55,3 +55,12 @@ export const POST_FINALIZE_OTC = gql`
     }
   }
 `;
+
+export const POST_INITIALIZE_OTC = gql`
+  mutation postInitializeOtc($input: PostInitializeOtcInput) {
+    postInitializeOtc(input: $input) {
+      validator
+      message
+    }
+  }
+`;

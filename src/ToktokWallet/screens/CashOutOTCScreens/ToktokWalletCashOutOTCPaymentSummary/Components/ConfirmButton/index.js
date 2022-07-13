@@ -7,7 +7,7 @@ import {TransactionUtility} from 'toktokwallet/util';
 import {useAccount} from 'toktokbills/hooks';
 import {useMutation} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {POST_FINALIZE_OTC} from 'toktokwallet/graphql';
+import {POST_FINALIZE_OTC, POST_INITIALIZE_OTC} from 'toktokwallet/graphql';
 import {usePrompt} from 'src/hooks';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert, useThrottle} from 'src/hooks';
@@ -57,12 +57,34 @@ export const ConfirmButton = ({route}) => {
     },
   });
 
+  const [postInitializeOtc, {loading: postInitializeOtcLoading}] = useMutation(POST_INITIALIZE_OTC, {
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onError: error => {
+      TransactionUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+      });
+    },
+    onCompleted: ({postInitializeOtc}) => {
+      navigation.navigate('ToktokWalletTPINValidator', {
+        callBackFunc: handleProcessProceed,
+        enableIdle: false,
+      });
+    },
+  });
+
   const onPressConfirm = () => {
-    navigation.navigate('ToktokWalletTPINValidator', {
-      callBackFunc: handleProcessProceed,
-      // onPressCancelYes: () => navigation.navigate('ToktokBillsHome'),
-      enableIdle: false,
-      // data,
+    const input = {
+      amount,
+      cashOutProviderPartnerId,
+      convenienceFee: providerServiceFee,
+      serviceFee: toktokServiceFee,
+    };
+    postInitializeOtc({
+      variables: {
+        input,
+      },
     });
   };
 
@@ -77,7 +99,7 @@ export const ConfirmButton = ({route}) => {
       validator: 'TPIN',
       pinCode,
     };
-    console.log(input);
+
     postFinalizeOtc({
       variables: {
         input,
@@ -87,7 +109,7 @@ export const ConfirmButton = ({route}) => {
 
   return (
     <>
-      <AlertOverlay visible={postFinalizeOtcLoading} />
+      <AlertOverlay visible={postFinalizeOtcLoading || postInitializeOtcLoading} />
       <View style={styles.buttonContainer}>
         <OrangeButton label="Confirm" onPress={onPressConfirm} />
       </View>
