@@ -86,8 +86,8 @@ export const VerifyContextProvider = ({children}) => {
     idError: '',
     idNumberError: '',
     idFrontError: '',
-    idBackError: ''
-  })
+    idBackError: '',
+  });
 
   const [province, setProvince] = useState('');
   const [provinceId, setProvinceId] = useState('');

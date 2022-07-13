@@ -28,7 +28,7 @@ import {getStatusBarHeight} from 'react-native-status-bar-height';
 import ModalCity from './ModalCity';
 import ModalCountry from './ModalCountry';
 import ModalProvince from './ModalProvince';
-import {PreviousNextButton, CustomTextInput, CustomSelectionList,} from 'toktokwallet/components';
+import {PreviousNextButton, CustomTextInput, CustomSelectionList} from 'toktokwallet/components';
 
 //HELPER
 import {moderateScale} from 'toktokwallet/helper';
@@ -54,7 +54,7 @@ export const VerifyAddress = () => {
     verifyAddressErrors,
     changeVerifyAddressErrors,
   } = useContext(VerifyContext);
-  
+
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState('');
   const headerHeight = useHeaderHeight();
@@ -102,7 +102,6 @@ export const VerifyAddress = () => {
   };
 
   const onProvinceSelect = code => {
-    console.log("code", code)
     changeAddress('city', '');
     getCityByProvinceCode({
       variables: {
@@ -215,17 +214,22 @@ export const VerifyAddress = () => {
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Province</Text>
-              <ModalProvince verifyAddressErrors={verifyAddressErrors} onSelect={onProvinceSelect}/>
+              <ModalProvince verifyAddressErrors={verifyAddressErrors} onSelect={onProvinceSelect} />
             </View>
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>City or Municipality</Text>
-              <ModalCity type="address" data={cities} verifyAddressErrors={verifyAddressErrors} selectedCity={selectedCity}/>
+              <ModalCity
+                type="address"
+                data={cities}
+                verifyAddressErrors={verifyAddressErrors}
+                selectedCity={selectedCity}
+              />
             </View>
 
             <View style={{marginTop: 20}}>
               <Text style={styles.label}>Postal Code</Text>
-               <CustomTextInput
+              <CustomTextInput
                 value={address.postalCode}
                 onChangeText={value => {
                   changeAddress('postalCode', value);
@@ -233,6 +237,7 @@ export const VerifyAddress = () => {
                 }}
                 errorMessage={verifyAddressErrors.postalError}
                 returnKeyType="done"
+                keyboardType="numeric"
               />
             </View>
           </View>

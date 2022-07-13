@@ -19,6 +19,12 @@ export const CustomSelectionList = ({
   onSearchValue,
   hasDefault,
   defaultCondition,
+  searchPlaceholder,
+  //use this props for additional validation
+  hasValidation = false,
+  onChangeValidation = () => {},
+  showList,
+  setShowList,
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -26,20 +32,25 @@ export const CustomSelectionList = ({
     onSelectedValue({value, index});
   };
 
+  const onPressInput = () => {
+    hasValidation ? onChangeValidation() : setVisible(true);
+  };
+
   return (
     <>
       <ListModal
         data={data}
-        visible={visible}
-        setVisible={setVisible}
+        visible={hasValidation ? showList : visible}
+        setVisible={hasValidation ? setShowList : setVisible}
         onChangeSelect={onChangeSelect}
         withSearch={withSearch}
         onSearchValue={onSearchValue}
         hasDefault={hasDefault}
         defaultCondition={defaultCondition}
+        searchPlaceholder={searchPlaceholder}
       />
       <TouchableOpacity
-        onPress={() => setVisible(true)}
+        onPress={() => onPressInput()}
         style={{
           ...styles.input,
           ...styles.selectionContainer,
