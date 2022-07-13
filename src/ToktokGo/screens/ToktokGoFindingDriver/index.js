@@ -25,6 +25,7 @@ import {
   GET_TRIP_CANCELLATION_CHARGE,
   TRIP_CONSUMER_CANCEL,
   TRIP_REBOOK_INITIALIZE_PAYMENT,
+  GET_TRIPS_CONSUMER,
 } from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
@@ -70,11 +71,27 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
           setWaitingStatus(0);
           setWaitingText(6);
         }
+        if (data?.onTripUpdate?.status == 'CANCELLED') {
+          setChargeAmount(data?.onTripUpdate?.cancellation?.charge?.amount);
+          if (data?.onTripUpdate?.cancellation?.charge?.amount > 0) {
+            setViewCancelBookingWithCharge(true);
+            setCancellationChargeResponse(data?.onTripUpdate.cancellation);
+          } else {
+            setViewCancelBookingModal(true);
+          }
+        }
       },
       error => {
         console.log('[error] Trip Update:', error);
         if (error && subscription.closed) {
           setTimeout(() => {
+            getTripsConsumer({
+              variables: {
+                input: {
+                  tag: 'ONGOING',
+                },
+              },
+            });
             // retry subscription connection after 3s
             setTripUpdateRetrySwitch(!tripUpdateRetrySwitch);
           }, 3000);
@@ -85,6 +102,33 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     return () => subscription.unsubscribe();
   }, [tripUpdateRetrySwitch]);
 
+  const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      if (response.getTripsConsumer.length > 0) {
+        dispatch({
+          type: 'SET_TOKTOKGO_BOOKING',
+          payload: response.getTripsConsumer[0],
+        });
+      } else {
+        setWaitingStatus(0);
+        setWaitingText(6);
+      }
+      setTimeout(() => {
+        if (
+          response.getTripsConsumer[0]?.tag == 'ONGOING' &&
+          ['ACCEPTED', 'ARRIVED', 'PICKED_UP'].includes(response.getTripsConsumer[0]?.status)
+        ) {
+          setShowDriverFoundModal(true);
+        } else if (response.getTripsConsumer[0]?.status == 'EXPIRED') {
+          setWaitingStatus(0);
+          setWaitingText(6);
+        }
+      }, 1000);
+    },
+    onError: onErrorAppSync,
+  });
   useEffect(() => {
     if (waitingText <= 5 && waitingStatus) {
       const interval = setTimeout(() => {
@@ -98,7 +142,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     }
   }, [waitingText]);
 
-  const [getTripCancellationCharge, {loading: GTCCLoading}] = useLazyQuery(GET_TRIP_CANCELLATION_CHARGE, {
+  const [getTripCancellationCharge] = useLazyQuery(GET_TRIP_CANCELLATION_CHARGE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
@@ -142,7 +186,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     },
   });
 
-  const [tripConsumerCancel, {loading: TCCLoading}] = useMutation(TRIP_CONSUMER_CANCEL, {
+  const [tripConsumerCancel] = useMutation(TRIP_CONSUMER_CANCEL, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
       console.log(response);
@@ -179,7 +223,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     },
   });
 
-  const [tripRebook, {loading: TRLoading}] = useMutation(TRIP_REBOOK, {
+  const [tripRebook] = useMutation(TRIP_REBOOK, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -223,7 +267,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     },
   });
 
-  const [tripRebookInitializePayment, {loading: TRIPLoading}] = useMutation(TRIP_REBOOK_INITIALIZE_PAYMENT, {
+  const [tripRebookInitializePayment] = useMutation(TRIP_REBOOK_INITIALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -359,7 +403,6 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: constants.COLOR.WHITE}}>
-      <AlertOverlay visible={TCCLoading || GTCCLoading || TRLoading || TRIPLoading} />
       <CancelBookingNoFeeModal
         isVisible={viewCancelBookingModal}
         setVisible={setViewCancelBookingModal}
