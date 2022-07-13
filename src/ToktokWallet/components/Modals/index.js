@@ -9,4 +9,5 @@ export * from './ModalPaginationLoading';
 export * from './PepQuestionnaireModal';
 export * from './PepRequestVideoCallModal';
 export * from './PromptModal';
+export * from './QuestionModal';
 export * from './SuccessfulModal';

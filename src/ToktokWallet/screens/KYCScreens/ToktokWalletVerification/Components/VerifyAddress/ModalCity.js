@@ -11,9 +11,18 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 const ModalCity = ({type, data, selectedCity}) => {
   const [cities, setCities] = useState(data);
 
-  const {modalCityVisible, city, setModalCityVisible, setCityId, setCity, changeVerifyAddressErrors, verifyAddressErrors} =
-    useContext(VerifyContext);
+  const {
+    province,
+    modalCityVisible,
+    city,
+    setModalCityVisible,
+    setCityId,
+    setCity,
+    changeVerifyAddressErrors,
+    verifyAddressErrors,
+  } = useContext(VerifyContext);
   const [filteredCities, setFilteredCities] = useState(cities);
+  const [showList, setShowList] = useState(false);
 
   const selectCountry = index => {
     const city = filteredCities[index].citymunDesc;
@@ -50,56 +59,26 @@ const ModalCity = ({type, data, selectedCity}) => {
     setFilteredCities(data);
   }, [data]);
 
+  const onChangeValidation = () => {
+    province != '' ? setShowList(true) : changeVerifyAddressErrors('provinceError', 'This is a required field');
+  };
+
   return (
     <CustomSelectionList
       data={filteredCities}
       onSelectedValue={onSelectedValue}
       errorMessage={verifyAddressErrors.cityError}
-      placeholder="Search your City"
+      searchPlaceholder="Search your city"
+      placeholder="Select City"
       withSearch={true}
       onSearchValue={filterSearch}
       hasDefault={true}
       selectedValue={city}
+      hasValidation={true}
+      onChangeValidation={onChangeValidation}
+      showList={showList}
+      setShowList={setShowList}
     />
-    // <Modal
-    //   visible={modalCityVisible}
-    //   onRequestClose={() => {
-    //     setModalCityVisible(false);
-    //     setFilteredCities(cities);
-    //   }}
-    //   style={styles.container}
-    //   animationType="slide">
-    //   <View
-    //     style={[
-    //       styles.content,
-    //       {marginTop: Platform.OS === 'ios' ? getStatusbarHeight + moderateScale(15) : moderateScale(15)},
-    //     ]}>
-    //     <View style={{flexDirection: 'row', marginHorizontal: 16}}>
-    //       <TouchableOpacity onPress={() => setModalCityVisible(false)} style={styles.center}>
-    //         <FIcon name="chevron-left" size={16} color={COLOR.ORANGE} />
-    //       </TouchableOpacity>
-    //       <SearchInput
-    //         containerStyle={styles.search}
-    //         placeholder="Search your city"
-    //         placeholderTextColor={'#525252'}
-    //         onChangeText={filterSearch}
-    //         // search={search}
-    //         onClear={() => setSearch('')}
-    //       />
-    //     </View>
-    //     <FlatList
-    //       style={{marginVertical: 15}}
-    //       data={filteredCities}
-    //       keyExtractor={city => city.id}
-    //       renderItem={renderCountry}
-    //       showsVerticalScrollIndicator={false}
-    //       ListEmptyComponent={() => {
-    //         return <NoData type="search" title="No Results Found" label="Try to search something similar." />;
-    //       }}
-    //       contentContainerStyle={{flexGrow: 1, marginBottom: getStatusbarHeight}}
-    //     />
-    //   </View>
-    // </Modal>
   );
 };
 

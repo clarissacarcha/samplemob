@@ -31,19 +31,19 @@ const List = ({data, onChangeSelect, setVisible, hasDefault, defaultCondition}) 
         defCon: item.nationality === 'Filipino',
         name: item.nationality,
       };
-    } else if(item.name) {
+    } else if (item.name) {
       return {
-        name: item.name
-      }
-    } else if (item.provDesc){
+        name: item.name,
+      };
+    } else if (item.provDesc) {
       return {
-        name: item.provDesc
-      }
-    } else if (item.citymunDesc){
+        name: item.provDesc,
+      };
+    } else if (item.citymunDesc) {
       return {
-        name: item.citymunDesc
-      }
-    } else{ 
+        name: item.citymunDesc,
+      };
+    } else {
       return {
         name: item.description,
       };
@@ -89,6 +89,7 @@ export const ListModal = ({
   onSearchValue,
   hasDefault,
   defaultCondition,
+  searchPlaceholder,
 }) => {
   const [search, setSearch] = useState('');
 
@@ -119,7 +120,7 @@ export const ListModal = ({
               </TouchableOpacity>
               <SearchInput
                 containerStyle={styles.search}
-                placeholder="Search your nationality"
+                placeholder={searchPlaceholder}
                 placeholderTextColor={'#525252'}
                 onChangeText={onChangeSearch}
                 search={search}
