@@ -22,7 +22,7 @@ export const TransactionModal = ({visible, setVisible, children}) => {
         <View style={styles.modalSize}>
           {children}
           <View style={styles.button}>
-            <OrangeButton label="OK" onPress={closeModal} />
+            <YellowButton label="OK" onPress={closeModal} />
           </View>
         </View>
       </View>
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
   },
   button: {
-    width: '100%',
+    width: '50%',
     alignSelf: 'center',
     marginTop: moderateScale(25),
   },
@@ -55,6 +55,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: moderateScale(30),
     paddingHorizontal: moderateScale(25),
-    maxHeight: '70%',
+    maxHeight: '50%',
   },
 });
