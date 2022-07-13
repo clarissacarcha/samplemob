@@ -69,7 +69,7 @@ const ModalNationality = ({verifyFullNameErrors}) => {
       data={filteredNationalities}
       onSelectedValue={onSelectedValue}
       errorMessage={verifyFullNameErrors.nationalityError}
-      placeholder="Search your nationality"
+      searchPlaceholder="Search your nationality"
       withSearch={true}
       onSearchValue={filterSearch}
       hasDefault={true}

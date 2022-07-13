@@ -12,27 +12,15 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {useFocusEffect} from '@react-navigation/native';
-import {Separator, LeavePromptModal, FlagSecureScreen, HeaderTitleRevamp} from 'toktokwallet/components';
+import {Separator, QuestionModal, FlagSecureScreen, HeaderTitleRevamp} from 'toktokwallet/components';
 import RNFS from 'react-native-fs';
 import CONSTANTS from 'common/res/constants';
-import {
-  VerifyContextProvider,
-  VerifyContext
-} from "./Components"
-
+import {VerifyContextProvider, VerifyContext} from './Components';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 const HeaderBackClose = ({currentIndex, setCurrentIndex, setPromptVisible}) => {
   const closeScreen = () => {
-    if (currentIndex == 0) {
-      PromptQuestionCloseMessage();
-    } else {
-      setCurrentIndex(oldstate => oldstate - 1);
-    }
-  };
-
-  const PromptQuestionCloseMessage = () => {
     setPromptVisible(true);
   };
 
@@ -53,11 +41,7 @@ const HeaderBackClose = ({currentIndex, setCurrentIndex, setPromptVisible}) => {
 };
 
 const MainSetupComponent = () => {
-  const {
-    currentIndex, 
-    setCurrentIndex,
-    stepsScreens
-  } = useContext(VerifyContext);
+  const {currentIndex, setCurrentIndex, stepsScreens} = useContext(VerifyContext);
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
 
@@ -74,14 +58,20 @@ const MainSetupComponent = () => {
 
   return (
     <>
-      <LeavePromptModal
+      <QuestionModal
         visible={visible}
         setVisible={setVisible}
-        onConfirm={() => {
+        onPressYes={() => {
           if (RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
           navigation.goBack();
         }}
+        title="Unsaved Changes"
+        message="You are about to close form with unsaved changes. Would you like to proceed?"
       />
+      {/* visible={visible}
+        setVisible={setVisible}
+        onPressNo={() => navigation.navigate('ToktokBillsHome')}
+        onPressYes={onPressFavorite} */}
       {/* <Separator /> */}
       <View style={styles.container}>
         <View style={styles.progressBar}>
