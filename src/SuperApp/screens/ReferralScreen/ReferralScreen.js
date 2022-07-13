@@ -23,21 +23,28 @@ import voucherPaperDesign from '../../../assets/toktokgo/voucher-paper-design.pn
 import VoucherIMG from '../../../assets/images/Promos/VoucherImage.png';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {AUTH_CLIENT, GET_USER_SESSION, PATCH_GO_REFERRAL_USER_ID} from '../../../graphql';
+import {
+  AUTH_CLIENT,
+  GET_USER_SESSION,
+  PATCH_GO_REFERRAL_USER_ID,
+  TOKTOK_WALLET_VOUCHER_CLIENT,
+  POST_COLLECT_VOUCHER,
+} from '../../../graphql';
 import {onError} from '../../../util/ErrorUtility';
 import {AlertOverlay} from '../../../components';
 import {connect} from 'react-redux';
 
 const decorHeight = Dimensions.get('window').height * 0.15;
 
-const ReferralScreen = ({navigation, route, session, createSession}) => {
+const ReferralScreen = ({navigation, route, constants, session, createSession}) => {
   const {fromRegistration} = route.params;
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [isValidDriverId, setIsValidDriverId] = useState(false);
   const [invalidReferralCodeText, setInvalidReferralCodeText] = useState('');
   const [refCode, setRefCode] = useState('');
 
-  const [patchGoReferralUserId, {loading}] = useMutation(PATCH_GO_REFERRAL_USER_ID, {
+  const [postCollectVoucher, {loading: PCVLoading}] = useMutation(POST_COLLECT_VOUCHER, {
+    client: TOKTOK_WALLET_VOUCHER_CLIENT,
     onCompleted: () => {
       const storedUserId = session.user.id;
       setViewSuccesVoucherClaimedModal(true);
@@ -52,7 +59,6 @@ const ReferralScreen = ({navigation, route, session, createSession}) => {
       } else {
         navigation.replace('UnauthenticatedStack');
       }
-
       setTimeout(() => {
         setViewSuccesVoucherClaimedModal(false);
         setRefCode('');
@@ -67,6 +73,19 @@ const ReferralScreen = ({navigation, route, session, createSession}) => {
           navigation.pop();
         }
       }, 1500);
+    },
+    onError: onError,
+  });
+
+  const [patchGoReferralUserId, {loading}] = useMutation(PATCH_GO_REFERRAL_USER_ID, {
+    onCompleted: () => {
+      postCollectVoucher({
+        variables: {
+          input: {
+            voucherId: parseInt(constants.toktokGo10K),
+          },
+        },
+      });
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -164,7 +183,7 @@ const ReferralScreen = ({navigation, route, session, createSession}) => {
 
   return (
     <ImageBackground source={ReferralBG} style={styles.container}>
-      <AlertOverlay visible={loading} />
+      <AlertOverlay visible={loading || PCVLoading} />
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
       <ThrottledOpacity style={styles.backButton} onPress={onBackPress}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
@@ -230,6 +249,7 @@ const ReferralScreen = ({navigation, route, session, createSession}) => {
 
 const mapStateToProps = state => ({
   session: state.session,
+  constants: state.constants,
 });
 
 const mapDispatchToProps = dispatch => ({
