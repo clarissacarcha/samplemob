@@ -69,6 +69,28 @@ export const GET_MERCHANT_PAYMENTS = gql`
         }
     }
 `
+export const GET_MERCHANT_SETTLEMENT = gql`
+  query getMerchantSettlements($input: GetMerchantSettlementsInput) {
+    getMerchantSettlements(input: $input) {
+      edges{
+        node {
+            id
+            refNo
+            name
+            phrase
+            createdAt
+            updatedAt
+            displayInfo
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        hasNextPage
+      }
+    }
+  }
+`
 
 export const POST_REQUEST_MERCHANT_PAYMENT = gql`
     mutation {
