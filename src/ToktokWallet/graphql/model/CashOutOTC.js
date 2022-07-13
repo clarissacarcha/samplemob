@@ -64,3 +64,62 @@ export const POST_INITIALIZE_OTC = gql`
     }
   }
 `;
+
+export const GET_CASH_OUT_OTC = gql`
+  query getCashOutOtc($input: GetCashOutOtcInput!) {
+    getCashOutOtc(input: $input) {
+      edges {
+        node {
+          id
+          cashOutId
+          cashOut {
+            id
+            referenceNumber
+            amount
+            isExported
+            status
+            accountId
+            currencyId
+            cashOutProviderId
+            cashOutBankAccountId
+          }
+          cashOutProviderPartnerId
+          cashOutProviderPartner {
+            id
+            procId
+            email
+            mobileNumber
+            name
+            description
+            logo
+            cashOutProvider
+            maximumAmount
+            type
+            status
+            validity
+            createdAt
+            updatedAt
+            toktokServiceFee
+          }
+          status
+          statusCode
+          providerReferenceNumber
+          requestDate
+          settledDate
+          validityEndDate
+          isClaim
+          claimedDate
+          purpose
+          emailAddress
+          createdAt
+          updatedAt
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        hasNextPage
+      }
+    }
+  }
+`;
