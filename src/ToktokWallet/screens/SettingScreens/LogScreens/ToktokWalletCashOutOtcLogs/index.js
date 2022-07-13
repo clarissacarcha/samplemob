@@ -102,7 +102,8 @@ export const ToktokWalletCashOutOtcLogs = ({navigation}) => {
   const ListFooterComponent = () => {
     return (
       <View>
-        <View style={{marginVertical: moderateScale(35)}}>
+        <Separator />
+        <View style={{marginVertical: moderateScale(16)}}>
           <LoadingIndicator isLoading={pageInfo.hasNextPage} size="small" />
         </View>
       </View>
