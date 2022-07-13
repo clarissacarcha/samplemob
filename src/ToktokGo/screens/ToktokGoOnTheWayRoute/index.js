@@ -23,6 +23,7 @@ import {
   TRIP_REBOOK,
   TRIP_CONSUMER_CANCEL,
   GET_TRIP_CANCELLATION_CHARGE,
+  GET_TRIPS_CONSUMER,
 } from '../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
@@ -94,6 +95,13 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         if (error && subscription.closed) {
           setTimeout(() => {
             // retry subscription connection after 3s
+            getTripsConsumer({
+              variables: {
+                input: {
+                  tag: 'ONGOING',
+                },
+              },
+            });
             setTripUpdateRetrySwitch(!tripUpdateRetrySwitch);
           }, 3000);
         }
@@ -102,6 +110,22 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
 
     return () => subscription.unsubscribe();
   }, [tripUpdateRetrySwitch]);
+
+  const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      if (response.getTripsConsumer.length > 0) {
+        dispatch({
+          type: 'SET_TOKTOKGO_BOOKING',
+          payload: response.getTripsConsumer[0],
+        });
+      } else {
+        navigation.replace('ToktokGoBookingStart');
+      }
+    },
+    onError: onErrorAppSync,
+  });
 
   const [getTripCancellationCharge] = useLazyQuery(GET_TRIP_CANCELLATION_CHARGE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
