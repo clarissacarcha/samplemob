@@ -7,7 +7,6 @@ import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import type {PropsType} from './types';
 import {Container, AmountContainer, AmountText, AmountBreakdownContainer, Loader, DiscountIcon} from './Styled';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import {useTheme} from 'styled-components';
 
 const OrderAmount = (props: PropsType): React$Node => {
@@ -33,7 +32,7 @@ const OrderAmount = (props: PropsType): React$Node => {
               <AmountText total={title === 'Total'} sign={sign}>
                 {sign} &#x20B1;{parseFloat(amount).toFixed(2)}
               </AmountText>
-              {icon && title === 'Total' && <FeatherIcon name={icon} color={theme.color.orange} size={18} />}
+              {icon && title === 'Total' && <DiscountIcon name={icon} color={theme.color.orange} size={18} />}
             </AmountContainer>
           ) : (
             <Loader active title={false} pRows={1} pWidth={100} pHeight={18} />
@@ -94,9 +93,6 @@ const OrderAmount = (props: PropsType): React$Node => {
           {amountComponent('', 'Subtotal', state?.srpTotal)}
           {state?.orderIsfor === 1 && amountComponent('', 'Delivery Fee', state?.originalShippingFee)}
           {renderDiscountComponent()}
-          {state?.refundTotal > 0 &&
-            state?.paymentMethod?.toLowerCase() === 'toktokwallet' &&
-            amountComponent('', 'Refund Amount', state?.refundTotal, '+')}
         </AmountBreakdownContainer>
       );
     }

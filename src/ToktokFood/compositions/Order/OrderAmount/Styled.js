@@ -29,7 +29,6 @@ export const AmountText: ComponentType<any> = styled(StyledText).attrs(props => 
   mode: props.total ? 'medium' : 'regular',
   fontSize: props.total ? 17 : 13,
 }))`
-  margin-right: ${props => (props.total ? '10' : 0)};
   color: ${props =>
     props.type === 'Discount'
       ? props.theme.color.darkgray

@@ -22,6 +22,7 @@ import {
   ModifiedText,
   CancelledText,
   ReasonText,
+  Image,
 } from './Styled';
 import {useIsFocused, useRoute} from '@react-navigation/native';
 import {
@@ -55,6 +56,7 @@ import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
+import {toktokwallet_ic} from 'toktokfood/assets/images';
 
 const ToktokFoodOrder = (props: PropsType): React$Node => {
   const isFocused = useIsFocused();
@@ -216,12 +218,23 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     return (
       isOrderModified() && (
         <ModifiedContainer adjustSpacing={adjustSpacing}>
-          <Icon name="info" size={14} color={theme.color.orange} />
-          <ModifiedText>
-            {state?.paymentMethod.toLowerCase() === 'toktokwallet'
-              ? 'This order has been modified by merchant. Total refund amount for updated order should be credited to your toktokwallet account.'
-              : 'Total amount for this order has been updated.'}
-          </ModifiedText>
+          {state?.paymentMethod.toLowerCase() === 'toktokwallet' ? (
+            <React.Fragment>
+              <Image source={toktokwallet_ic} />
+              <ModifiedText>
+                This order has been modified by merchant. Total amount of{' '}
+                <StyledText color={theme.color.orange} fontSize={11} mode="medium">
+                  &#x20B1;{parseFloat(state?.refundTotal).toFixed(2)}{' '}
+                </StyledText>
+                is refunded to your toktokwallet account.
+              </ModifiedText>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Icon name="info" size={14} color={theme.color.orange} />
+              <ModifiedText>Total amount for this order has been updated.</ModifiedText>
+            </React.Fragment>
+          )}
         </ModifiedContainer>
       )
     );

@@ -23,6 +23,13 @@ export const AnimationContainer: ComponentType<any> = styled.View`
   align-items: center;
 `;
 
+export const Image: ComponentType<any> = styled.Image`
+  width: 22px;
+  height: 20px;
+  resize-mode: contain;
+  margin-right: 10px;
+`;
+
 export const AnimationText: ComponentType<any> = styled(StyledText).attrs(props => ({
   ...props,
   mode: props.title ? 'bold' : 'regular',
