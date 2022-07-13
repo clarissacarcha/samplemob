@@ -8,21 +8,13 @@ import {moderateScale} from 'toktokwallet/helper';
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
 
 export const Header = ({route}) => {
-  //   const {receipt} = route.params;
-  //   const {billerDetails} = receipt;
+  const {logo, description} = route.params.transactionDetails.otcPartnerDetails;
+
   return (
     <View style={{alignItems: 'center'}}>
-      {/* {billerDetails?.logo && <Image source={{uri: billerDetails.logo}} style={styles.logo} />} */}
-      <Image
-        source={{
-          uri: 'https://upload.wikimedia.org/wikipedia/en/thumb/9/98/LBC_Express_2013_Logo.svg/1200px-LBC_Express_2013_Logo.svg.png',
-        }}
-        style={styles.logo}
-      />
-      <View style={styles.logoTextContainer}>
-        <Text>
-          <Text style={styles.headerText}>LBC Express</Text>
-        </Text>
+      {logo && <Image source={{uri: logo}} style={styles.logo} />}
+      <View style={logo ? styles.withLogo : styles.withoutLogo}>
+        <Text style={styles.headerText}>{description}</Text>
       </View>
     </View>
   );
@@ -35,8 +27,11 @@ const styles = StyleSheet.create({
     marginBottom: moderateScale(10),
     resizeMode: 'contain',
   },
-  logoTextContainer: {
-    flexDirection: 'row',
+  withLogo: {
+    marginTop: moderateScale(5),
+  },
+  withoutLogo: {
+    marginVertical: moderateScale(10),
   },
   headerText: {
     fontSize: FONT_SIZE.M,

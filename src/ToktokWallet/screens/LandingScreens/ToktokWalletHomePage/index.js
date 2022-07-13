@@ -21,8 +21,13 @@ export const ToktokWalletHomePage = ({navigation, route}) => {
     refreshWallet();
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      onRefresh();
+    }, []),
+  );
+
   useEffect(() => {
-    refreshWallet();
     dispatch({
       type: 'SET_TOKWA_EVENTS_REDIRECT',
       payload: {
@@ -31,7 +36,6 @@ export const ToktokWalletHomePage = ({navigation, route}) => {
       },
     });
   }, []);
-
 
   return (
     <FlagSecureScreen>

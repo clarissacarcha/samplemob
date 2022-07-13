@@ -18,7 +18,7 @@ export const VerifyContextProvider = ({children}) => {
   const [dateOfClaim, setDateOfClaim] = useState('');
   const [dateOfClaimError, setDateOfClaimError] = useState('');
   const [purpose, setPurpose] = useState('');
-  const [serviceFee, setServiceFee] = useState(0);
+  const [providerServiceFee, setProviderServiceFee] = useState(0);
 
   const changeErrorMessages = (key, value) => {
     setPerson(oldstate => ({
@@ -50,8 +50,8 @@ export const VerifyContextProvider = ({children}) => {
         dateOfClaimError,
         purpose,
         setPurpose,
-        serviceFee,
-        setServiceFee,
+        providerServiceFee,
+        setProviderServiceFee,
       }}>
       {children}
     </Provider>

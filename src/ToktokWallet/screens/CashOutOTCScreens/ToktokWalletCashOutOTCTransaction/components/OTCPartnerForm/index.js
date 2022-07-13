@@ -59,8 +59,8 @@ export const OTCPartnerForm = ({route}) => {
     dateOfClaimError,
     purpose,
     setPurpose,
-    serviceFee,
-    setServiceFee,
+    providerServiceFee,
+    setProviderServiceFee,
   } = useContext(VerifyContext);
 
   const changeEmail = value => {
@@ -68,23 +68,22 @@ export const OTCPartnerForm = ({route}) => {
     setEmail(value);
   };
 
-  const checkServiceFee = value => {
+  const checkProviderServiceFee = value => {
     if (value && parseFloat(value) <= parseFloat(maximumAmount)) {
       let providerFee = cashOutProviderFee.filter(item => {
         return parseFloat(value) >= parseFloat(item.amountFrom) && parseFloat(value) <= parseFloat(item.amountTo);
       });
 
       const {amountFee, percentageFee} = providerFee[0];
-      const computedSF =
-        parseFloat(amountFee) + parseFloat(value) * (parseFloat(percentageFee) / 100) + parseFloat(toktokServiceFee);
-      setServiceFee(computedSF);
+      const providerServiceFee = parseFloat(amountFee) + parseFloat(value) * (parseFloat(percentageFee) / 100);
+      setProviderServiceFee(providerServiceFee);
     } else {
-      setServiceFee(0);
+      setProviderServiceFee(0);
     }
   };
 
   const changeAmount = value => {
-    checkServiceFee(value);
+    checkProviderServiceFee(value);
     setIsInsufficientBalance(false);
     setAmountError('');
     const num = value.replace(/[^0-9.]/g, '');
@@ -236,7 +235,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F7FA',
     borderRadius: 5,
     color: COLOR.BLACK,
-    fontSize: FONT_SIZE.L,
+    fontSize: FONT_SIZE.M,
     fontFamily: FONT.REGULAR,
     borderColor: COLOR.MEDIUM,
     marginTop: moderateScale(5),

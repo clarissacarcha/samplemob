@@ -59,7 +59,7 @@ export const ToktokWalletCashOutOTCReceipt = ({navigation, route}) => {
   const viewshotRef = useRef();
 
   navigation.setOptions({
-    headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
+    headerLeft: () => null,
     headerTitle: () => <HeaderTitleRevamp label={'Transaction Receipt'} />,
     headerRight: () => (
       <HeaderDownloadReceipt

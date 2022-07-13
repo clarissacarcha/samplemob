@@ -43,7 +43,7 @@ const MainComponent = ({navigation, route}) => {
 
   const [isMounted, setIsMounted] = useState(false);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
-  const {logo, description, maximumAmount, toktokServiceFee} = route.params?.otcPartnerDetails;
+  const {logo, description, maximumAmount, toktokServiceFee, id} = route.params?.otcPartnerDetails;
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack color={COLOR.ORANGE} />,
@@ -77,7 +77,7 @@ const MainComponent = ({navigation, route}) => {
     setDateOfClaimError,
     dateOfClaimError,
     purpose,
-    serviceFee,
+    providerServiceFee,
   } = useContext(VerifyContext);
 
   useEffect(() => {
@@ -114,7 +114,8 @@ const MainComponent = ({navigation, route}) => {
   };
 
   const checkInsufficientBalance = () => {
-    let totalAmount = parseFloat(toktokServiceFee) + parseFloat(amount);
+    let totalServiceFee = parseFloat(toktokServiceFee) + parseFloat(providerServiceFee);
+    let totalAmount = totalServiceFee + parseFloat(amount);
     let isInsufficientBalance = parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.balance);
     let isMaxAmount = parseFloat(amount) > parseFloat(maximumAmount);
     let error = '';
@@ -122,7 +123,7 @@ const MainComponent = ({navigation, route}) => {
     if (isMaxAmount) {
       error = `The maximum is up to ₱${numberFormat(maximumAmount).replace('.00', '')} only`;
     } else if (isInsufficientBalance) {
-      error = `You have insufficient balance. ₱${serviceFee} service fee is added to this transaction. Kindly cash in or edit the amount.`;
+      error = `You have insufficient balance. ₱${totalServiceFee} service fee is added to this transaction. Kindly cash in or edit the amount.`;
     } else {
       error = '';
     }
@@ -146,13 +147,16 @@ const MainComponent = ({navigation, route}) => {
         recipientMobileNo,
         email,
         dateOfClaim,
-        amount,
         purpose,
-        serviceFee,
+        providerServiceFee,
+        toktokServiceFee,
         otcPartnerDetails: {
           logo,
           description,
         },
+        amount: parseFloat(amount),
+        cashOutProviderPartnerId: +id,
+        totalServiceFee: parseFloat(providerServiceFee) + parseFloat(toktokServiceFee),
       };
       navigation.navigate('ToktokWalletCashOutOTCPaymentSummary', {
         transactionDetails,

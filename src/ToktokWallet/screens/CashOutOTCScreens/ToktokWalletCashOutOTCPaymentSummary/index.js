@@ -21,7 +21,7 @@ export const ToktokWalletCashOutOTCPaymentSummary = ({navigation, route}) => {
         <ScrollView keyboardShouldPersistTaps="handled">
           <PaymentDetails route={route} />
         </ScrollView>
-        <ConfirmButton />
+        <ConfirmButton route={route} />
       </View>
     </>
   );
