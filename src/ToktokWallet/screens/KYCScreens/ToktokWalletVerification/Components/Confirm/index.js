@@ -343,11 +343,11 @@ export const Confirm = connect(
           <Text style={styles.titleText}>Gallery</Text>
           <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
             <View style={[styles.previewImage]}>
-              <Image source={frontImage} style={[styles.imageStyle, {height: moderateScale(50)}]} />
+              <Image source={{uri: frontImage.uri}} style={[styles.imageStyle, {height: moderateScale(50)}]} />
             </View>
-            {backImage && (
+            {backImage != null && (
               <View style={styles.previewImage}>
-                <Image source={backImage} style={[styles.imageStyle, {height: moderateScale(50)}]} />
+                <Image source={{uri: backImage.uri}} style={[styles.imageStyle, {height: moderateScale(50)}]} />
               </View>
             )}
             <View style={styles.previewImage}>
