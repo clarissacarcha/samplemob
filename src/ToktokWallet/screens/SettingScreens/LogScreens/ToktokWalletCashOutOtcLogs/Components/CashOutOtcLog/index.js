@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import moment from 'moment';
-import {numberFormat, MaskLeftZero} from 'toktokwallet/helper';
+import {numberFormat, moderateScale} from 'toktokwallet/helper';
 import {useThrottle} from 'src/hooks';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
@@ -16,16 +16,16 @@ export const CashOutOtcLog = ({item, tokwaAccount, index}) => {
   let status;
   switch (item.status) {
     case 0:
-      status = 'Requested';
+      status = 'Pending';
       break;
     case 1:
       status = 'Success';
       break;
     case 2:
-      status = 'Pending';
+      status = 'Failed';
       break;
     default:
-      status = 'Failed';
+      status = 'Pending';
       break;
   }
   const transaction = item.cashOut.transaction;
@@ -69,7 +69,9 @@ export const CashOutOtcLog = ({item, tokwaAccount, index}) => {
           </Text>
         </View>
         <View style={styles.transactionAmount}>
-          <Text style={{color: '#FCB91A', fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
+          <Text style={{color: COLOR.ORANGE, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>
+            {transactionAmount}
+          </Text>
           <Text
             style={{
               color: '#909294',
@@ -88,10 +90,11 @@ export const CashOutOtcLog = ({item, tokwaAccount, index}) => {
 
 const styles = StyleSheet.create({
   transaction: {
-    paddingVertical: 10,
     borderBottomWidth: 0.2,
     borderColor: 'silver',
     flexDirection: 'row',
+    paddingHorizontal: moderateScale(30),
+    paddingVertical: moderateScale(20),
   },
   transactionIcon: {
     flexBasis: 50,
