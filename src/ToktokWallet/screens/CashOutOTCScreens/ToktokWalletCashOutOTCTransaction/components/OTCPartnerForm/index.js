@@ -69,14 +69,18 @@ export const OTCPartnerForm = ({route}) => {
   };
 
   const checkProviderServiceFee = value => {
-    if (value && parseFloat(value) <= parseFloat(maximumAmount)) {
+    if (parseFloat(value) > 0 && parseFloat(value) <= parseFloat(maximumAmount)) {
       let providerFee = cashOutProviderFee.filter(item => {
         return parseFloat(value) >= parseFloat(item.amountFrom) && parseFloat(value) <= parseFloat(item.amountTo);
       });
 
-      const {amountFee, percentageFee} = providerFee[0];
-      const providerServiceFee = parseFloat(amountFee) + parseFloat(value) * (parseFloat(percentageFee) / 100);
-      setProviderServiceFee(providerServiceFee);
+      if (providerFee.length > 0) {
+        const {amountFee, percentageFee} = providerFee[0];
+        const providerServiceFee = parseFloat(amountFee) + parseFloat(value) * (parseFloat(percentageFee) / 100);
+        setProviderServiceFee(providerServiceFee);
+      } else {
+        setProviderServiceFee(0);
+      }
     } else {
       setProviderServiceFee(0);
     }

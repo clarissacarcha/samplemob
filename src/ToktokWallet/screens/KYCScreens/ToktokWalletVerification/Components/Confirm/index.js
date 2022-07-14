@@ -484,11 +484,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 5,
-    transform: [
-      {
-        scaleX: -1,
-      },
-    ],
-    marginRight: moderateScale(7),
+    marginRight: moderateScale(5),
   },
 });

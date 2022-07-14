@@ -35,7 +35,6 @@ export const PreviousNextButton = ({
     <>
       <View
         style={{
-          ...styles.blackButton,
           ...(hasShadow && styles.shadow),
           flexDirection: 'row',
           justifyContent: 'space-between',
