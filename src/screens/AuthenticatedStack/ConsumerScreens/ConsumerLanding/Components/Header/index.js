@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   greetingBox: {
-    height: 50,
+    height: 40,
     marginTop: StatusBar.currentHeight,
     justifyContent: 'center',
     paddingHorizontal: SIZE.MARGIN,

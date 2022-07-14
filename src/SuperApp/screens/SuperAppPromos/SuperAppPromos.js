@@ -10,7 +10,7 @@ import VoucherIMG from '../../../assets/images/Promos/Voucher.png';
 import {connect} from 'react-redux';
 
 const bannerWidth = Dimensions.get('window').width - 32;
-const bannerHeight = Dimensions.get('window').height * 0.23;
+const bannerHeight = Dimensions.get('window').height * 0.22;
 
 const SuperAppPromosScreen = ({session, navigation}) => {
   const onPressReferral = () => {
@@ -33,7 +33,7 @@ const SuperAppPromosScreen = ({session, navigation}) => {
           <ThrottledOpacity onPress={onPressReferral}>
             <Image
               source={ReferralIMG}
-              resizeMode={'contain'}
+              resizeMode={'cover'}
               style={{
                 width: bannerWidth,
                 height: bannerHeight,
@@ -41,13 +41,13 @@ const SuperAppPromosScreen = ({session, navigation}) => {
               }}
             />
           </ThrottledOpacity>
-          <Text>Referral</Text>
+          <Text style={styles.textContainer}>Referral</Text>
         </View>
         <View style={styles.bannerContainer}>
           <ThrottledOpacity onPress={() => navigation.navigate('VoucherScreen')}>
             <Image
               source={VoucherIMG}
-              resizeMode={'contain'}
+              resizeMode={'cover'}
               style={{
                 width: bannerWidth,
                 height: bannerHeight,
@@ -55,7 +55,7 @@ const SuperAppPromosScreen = ({session, navigation}) => {
               }}
             />
           </ThrottledOpacity>
-          <Text>Vouchers</Text>
+          <Text style={styles.textContainer}>Vouchers</Text>
         </View>
       </View>
     </View>
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: constants.FONT_SIZE.L,
     fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
+    marginVertical: 10,
   },
   innerContainer: {
     marginTop: 24,
@@ -83,5 +84,9 @@ const styles = StyleSheet.create({
   },
   bannerContainer: {
     marginVertical: 8,
+    paddingVertical: 10,
+  },
+  textContainer: {
+    paddingVertical: 10,
   },
 });

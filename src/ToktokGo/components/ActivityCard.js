@@ -136,7 +136,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                       fontFamily: constants.FONT_FAMILY.REGULAR,
                       fontSize: constants.FONT_SIZE.M,
                       color: constants.COLOR.BLACK,
-                      paddingLeft: 10,
+                      paddingLeft: 15,
                       fontWeight: '400',
                     }}>
                     {getTextStatus()}
