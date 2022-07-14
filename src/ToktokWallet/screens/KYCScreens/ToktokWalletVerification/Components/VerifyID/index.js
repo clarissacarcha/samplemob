@@ -168,8 +168,8 @@ export const VerifyID = () => {
       <Image
         resizeMode="cover"
         style={{
-          height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT - 6 : CROP_AREA_HEIGHT - 5,
-          width: Platform.OS === 'ios' ? CROP_AREA_WIDTH - 6 : CROP_AREA_WIDTH - 10,
+          height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT - 6 : CROP_AREA_HEIGHT - 10,
+          width: Platform.OS === 'ios' ? CROP_AREA_WIDTH - 6 : CROP_AREA_WIDTH - 13,
           borderRadius: 5,
         }}
         source={{uri: placement == 'front' ? frontImage.uri : backImage.uri}}
