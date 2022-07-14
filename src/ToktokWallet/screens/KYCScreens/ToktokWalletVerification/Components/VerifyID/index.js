@@ -37,8 +37,8 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 const {height, width} = Dimensions.get('window');
 const screen = Dimensions.get('window');
 
-const CROP_AREA_WIDTH = width * 0.9;
-const CROP_AREA_HEIGHT = height * 0.3;
+const CROP_AREA_WIDTH = width * 0.5;
+const CROP_AREA_HEIGHT = CROP_AREA_WIDTH - 60;
 export const VerifyID = () => {
   const {
     setCurrentIndex,
@@ -72,8 +72,8 @@ export const VerifyID = () => {
   };
 
   const cropAreaSize = {
-    width: CROP_AREA_WIDTH - 110,
-    height: CROP_AREA_HEIGHT - 100,
+    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110,
+    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
   };
 
   const setImage = (data, placement) => {
@@ -129,7 +129,6 @@ export const VerifyID = () => {
       const croppedResult = await ImageCropper.crop({
         ...cropperParams,
         imageUri,
-        cropSize,
         cropAreaSize,
       });
       if (placement == 'front') {
@@ -166,16 +165,14 @@ export const VerifyID = () => {
 
   const ImageIDSet = ({placement}) => (
     <View style={[styles.chooseImage]}>
-      <ImageCropper
-        imageUri={placement == 'front' ? frontImage.uri : backImage.uri}
-        cropAreaWidth={cropAreaSize.width}
-        cropAreaHeight={cropAreaSize.height}
-        containerColor="transparent"
-        areaColor="black"
-        areaOverlay={<View style={styles.overlay} />}
-        setCropperParams={cropperParams => {
-          setCropperParams(cropperParams);
+      <Image
+        resizeMode="cover"
+        style={{
+          height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT - 6 : CROP_AREA_HEIGHT - 5,
+          width: Platform.OS === 'ios' ? CROP_AREA_WIDTH - 6 : CROP_AREA_WIDTH - 10,
+          borderRadius: 5,
         }}
+        source={{uri: placement == 'front' ? frontImage.uri : backImage.uri}}
       />
       <TouchableOpacity
         onPress={() => {
@@ -186,6 +183,7 @@ export const VerifyID = () => {
         <EIcon name="camera" color="#F6841F" size={25} />
         <Text style={styles.changeText}>Change Photo</Text>
       </TouchableOpacity>
+      <View style={styles.overlay} />
     </View>
   );
 
@@ -360,8 +358,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   chooseImage: {
-    height: CROP_AREA_HEIGHT - 100 + 3,
-    width: CROP_AREA_WIDTH - 110 + 3,
+    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT - 4 : CROP_AREA_HEIGHT - 5,
+    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH - 4 : CROP_AREA_WIDTH - 10,
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 7,
@@ -415,6 +413,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 2,
   },
   changeText: {
     color: COLOR.WHITE,
@@ -493,8 +492,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   overlay: {
-    flex: 1,
     backgroundColor: 'black',
-    opacity: 0.5,
+    opacity: 0.3,
+    position: 'absolute',
+    zIndex: 1,
+    height: '100%',
+    width: '100%',
   },
 });
