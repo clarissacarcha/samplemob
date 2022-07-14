@@ -121,7 +121,7 @@ const MainComponent = ({navigation, route}) => {
     let error = '';
 
     if (isMaxAmount) {
-      error = `The maximum is up to ₱${numberFormat(maximumAmount).replace('.00', '')} only`;
+      error = `The maximum amount is up to ₱${numberFormat(maximumAmount).replace('.00', '')} only`;
     } else if (isInsufficientBalance) {
       error = `You have insufficient balance. ₱${totalServiceFee} service fee is added to this transaction. Kindly cash in or edit the amount.`;
     } else {
