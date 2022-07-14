@@ -14,7 +14,7 @@ export const Container: ComponentType<any> = styled.View`
 
 export const TitleContainer: ComponentType<any> = styled.View`
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 5px;
   padding-horizontal: 20px;
 `;
@@ -25,6 +25,7 @@ export const Image: ComponentType<any> = styled.Image`
   resize-mode: contain;
   tint-color: ${props => props.theme.color.yellow};
   margin-right: 10px;
+  top: 1px;
 `;
 
 export const Title: ComponentType<any> = styled(StyledText).attrs(props => ({

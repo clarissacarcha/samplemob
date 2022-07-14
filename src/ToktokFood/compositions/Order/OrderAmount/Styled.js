@@ -27,7 +27,7 @@ export const AmountBreakdownContainer: ComponentType<any> = styled.View`
 export const AmountText: ComponentType<any> = styled(StyledText).attrs(props => ({
   ...props,
   mode: props.total ? 'medium' : 'regular',
-  fontSize: props.total ? 17 : 13,
+  fontSize: props?.placement === 'StatusScreen' && props.total ? 17 : 13,
 }))`
   color: ${props =>
     props.type === 'Discount'

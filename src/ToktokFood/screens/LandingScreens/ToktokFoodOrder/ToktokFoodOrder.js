@@ -402,7 +402,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
               {renderModifiedTextComponent()}
               {/* Amount and its breakdown */}
               <AmountContainer>
-                <OrderAmount state={state} />
+                <OrderAmount state={state} placement="StatusScreen" />
               </AmountContainer>
               {/* Buttons for order details and cancel order */}
               <ButtonContainer>
