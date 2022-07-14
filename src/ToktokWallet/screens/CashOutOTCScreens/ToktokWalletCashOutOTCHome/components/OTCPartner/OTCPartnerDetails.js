@@ -40,7 +40,7 @@ export const OTCPartnerDetails = React.memo(({item, index}) => {
           />
         </View>
         <Text style={styles.itemName} numberOfLines={2}>
-          {item.name}
+          {item.description}
         </Text>
       </View>
     </TouchableOpacity>

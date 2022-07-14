@@ -318,8 +318,8 @@ export const ToktokWalletSelfieImageCamera = ({navigation, route}) => {
                     : <FIcon5 style={{marginTop: 10}} size={30} color={COLOR.YELLOW} name={message.icon}/>
                 }
         </View> */}
-
-      {/* <View
+      {/* 
+      <View
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
@@ -374,8 +374,7 @@ const styles = StyleSheet.create({
     borderColor: COLOR.YELLOW,
   },
   backBtn: {
-    top: Platform.OS === 'android' ? 40 : 30,
-    left: 10,
+    top: Platform.OS === 'android' ? 30 : 10,
     position: 'absolute',
     zIndex: 1,
     justifyContent: 'center',
