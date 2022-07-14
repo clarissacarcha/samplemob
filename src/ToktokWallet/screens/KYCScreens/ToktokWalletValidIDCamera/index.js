@@ -1,12 +1,22 @@
-import React, {useState, useRef} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Dimensions, Platform, Image, ImageBackground} from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Platform,
+  Image,
+  ImageBackground,
+  Alert,
+} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import ImageCropper from 'react-native-simple-image-cropper';
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import {CheckIdleState, PreviousNextButton} from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
-import {moderateScale} from 'toktokwallet/helper';
+import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
 import {camera_icon, camera_circle} from 'toktokwallet/assets';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
@@ -14,7 +24,7 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
 
 const CROP_AREA_WIDTH = width * 0.9;
-const CROP_AREA_HEIGHT = height * 0.33;
+const CROP_AREA_HEIGHT = height * 0.3;
 
 const MainComponent = ({checkTimeout, children}) => {
   if (checkTimeout) {
@@ -33,6 +43,7 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
   const cameraRef = useRef(null);
   const [tempImage, setTempImage] = useState(null);
   const [cropperParams, setCropperParams] = useState({});
+  const [takingPicture, setTakingPicture] = useState(false);
   const checkTimeout = route?.params?.checkTimeout ? true : false;
 
   const title = route?.params?.placement == 'front' ? 'Front of ID' : 'Back of ID';
@@ -41,50 +52,69 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
     try {
       if (cameraRef) {
         const options = {
-          //   quality: 0.5,
           quality: 1,
-          // base64: true,
           width: 1024,
           fixOrientation: true,
           orientation: 'portrait',
+          autoFocus: true,
         };
+        setTakingPicture(true);
         const data = await cameraRef.current.takePictureAsync(options);
-        setTempImage(data);
-        // navigation.pop()
+        Platform.OS === 'ios' ? setTempImage(data) : setTempImage(data);
       }
     } catch (error) {
       console.log(error);
-      //   Alert.alert('Something went wrong with taking a picture.');
     }
   };
 
   const cropSize = {
-    // height: 480,
-    // width: 480,
-    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH + 100,
-    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT + 100,
-    // width: CROP_AREA_WIDTH + 70,
-    // height: CROP_AREA_HEIGHT + 100,
+    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH + 700,
+    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT + 700,
   };
 
   const cropAreaSize = {
-    // width: CROP_AREA_WIDTH - 60,
-    // height: CROP_AREA_HEIGHT -70,
-    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 20,
-    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT - 100,
-    // width: CROP_AREA_WIDTH - 100,
-    // height: CROP_AREA_HEIGHT - 100,
+    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH,
+    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT,
   };
 
-  const confirmPicture = async () => {
+  useEffect(() => {
+    if (Platform.OS === 'android' && tempImage && cropperParams && takingPicture) {
+      androidCrop(tempImage, cropperParams);
+    }
+  }, [cropperParams, takingPicture]);
+
+  const androidCrop = async data => {
+    try {
+      setTakingPicture(false);
+      const croppedResult = await ImageCropper.crop({
+        ...cropperParams,
+        imageUri: data.uri,
+        cropAreaSize,
+        cropSize,
+      });
+      setTempImage({
+        ...data,
+        uri: croppedResult,
+      });
+    } catch (error) {
+      console.log(error);
+      Alert.alert('', 'Sorry, we cannot process this image. Please select another one.');
+    }
+  };
+
+  const confirmAndroidPicture = tempImage => {
+    route.params.setImage(tempImage, route.params.placement);
+    navigation.pop();
+  };
+
+  const confirmIosPicture = async () => {
     try {
       const croppedResult = await ImageCropper.crop({
         ...cropperParams,
         imageUri: tempImage.uri,
-        cropSize,
         cropAreaSize,
+        cropSize,
       });
-
       route.params.setImage(
         {
           ...tempImage,
@@ -106,10 +136,15 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
           <Text style={{fontSize: FONT_SIZE.L + 1, textAlign: 'center'}}>Upload Valid ID</Text>
         </View>
         <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <View style={styles.cameraBox}>
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', alignSelf: 'center'}}>
+            <View style={styles.retakeCameraBox}>
               <View
-                style={{position: 'absolute', bottom: 250, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                style={{
+                  position: 'absolute',
+                  bottom: Platform.OS === 'ios' ? 250 : 300,
+                  flex: 1,
+                  alignSelf: 'center',
+                }}>
                 <Text style={styles.titleText}>{title}</Text>
               </View>
               <View style={[styles.borderEdges, {borderTopWidth: 6, borderLeftWidth: 6, top: 0, left: 0}]} />
@@ -118,8 +153,8 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
               <View style={[styles.borderEdges, {borderBottomWidth: 6, borderRightWidth: 6, bottom: 0, right: 0}]} />
               <ImageCropper
                 imageUri={tempImage.uri}
-                cropAreaWidth={Platform.OS === 'ios' ? CROP_AREA_WIDTH - 2 : CROP_AREA_WIDTH - 110}
-                cropAreaHeight={Platform.OS === 'ios' ? CROP_AREA_HEIGHT - 2 : CROP_AREA_HEIGHT - 100}
+                cropAreaWidth={CROP_AREA_WIDTH - 2}
+                cropAreaHeight={CROP_AREA_HEIGHT - 2}
                 containerColor="black"
                 areaColor="black"
                 setCropperParams={cropperParams => {
@@ -135,7 +170,7 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
             onPressPrevious={() => {
               setTempImage(null);
             }}
-            onPressNext={confirmPicture}
+            onPressNext={Platform.OS === 'ios' ? confirmIosPicture : confirmIosPicture}
           />
         </View>
       </MainComponent>
@@ -164,7 +199,13 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'transparent'}}>
               <View style={styles.cameraBox}>
                 <View
-                  style={{position: 'absolute', bottom: 250, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                  style={{
+                    position: 'absolute',
+                    bottom: Platform.OS === 'ios' ? 250 : 300,
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
                   <Text style={styles.titleText}>{title}</Text>
                 </View>
                 <View style={[styles.borderEdges, {borderTopWidth: 6, borderLeftWidth: 6, top: 0, left: 0}]} />
@@ -219,7 +260,14 @@ const styles = StyleSheet.create({
     width: CROP_AREA_WIDTH,
     backgroundColor: 'rgba(255,255,255,0.1)',
     alignItems: 'center',
-    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  retakeCameraBox: {
+    borderColor: '#F6841F',
+    borderWidth: 1,
+    height: CROP_AREA_HEIGHT,
+    width: CROP_AREA_WIDTH,
+    backgroundColor: 'rgba(255,255,255,0.1)',
     justifyContent: 'center',
   },
   preview: {
@@ -231,6 +279,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.XL,
     color: 'white',
+    textAlign: 'center',
   },
   actions: {
     flexBasis: 80,
@@ -289,15 +338,6 @@ const styles = StyleSheet.create({
     padding: moderateScale(15),
     paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(16),
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 3.84,
-    elevation: 5,
-    backgroundColor: 'white',
-    overflow: 'hidden',
+    marginTop: Platform.OS === 'ios' ? 0 : getStatusbarHeight,
   },
 });
