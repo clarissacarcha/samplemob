@@ -44,7 +44,7 @@ const Alert = (props: PropsType): React$Node => {
     <Modal isVisible={isVisible} borderRadius={15} flex={0}>
       <ModalBody>
         <Container>
-          {image && <ModalImage source={image} size={130} />}
+          {image && <ModalImage source={image} size={140} />}
           {title.length > 0 && (
             <TitleContainer>
               <ModalTitle color={color}>{title}</ModalTitle>

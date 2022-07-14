@@ -10,7 +10,7 @@ import {Container, AmountContainer, AmountText, AmountBreakdownContainer, Loader
 import {useTheme} from 'styled-components';
 
 const OrderAmount = (props: PropsType): React$Node => {
-  const {state} = props;
+  const {state, placement} = props;
   const {resellerDiscountTotal = 0, promoDiscounts = 0, voucherDiscounts = [], originalShippingFee = 0} = state;
   const shippingDiscount = state.promoDetails?.amount || 0;
   const [showAmountBreakdown, setShowAmountBreakdown] = useState(false);
@@ -22,14 +22,14 @@ const OrderAmount = (props: PropsType): React$Node => {
       <TouchableOpacity activeOpacity={0.9} onPress={onPress} disabled={icon ? false : true}>
         <AmountContainer>
           <AmountContainer>
-            <AmountText type={type} total={title === 'Total'}>
+            <AmountText type={type} total={title === 'Total'} placement={placement}>
               {title}
             </AmountText>
             {icon && title === 'Discount' && <DiscountIcon name={icon} color={theme.color.black} size={18} />}
           </AmountContainer>
           {state && Object.keys(state).length > 0 ? (
             <AmountContainer>
-              <AmountText total={title === 'Total'} sign={sign}>
+              <AmountText total={title === 'Total'} sign={sign} placement={placement}>
                 {sign} &#x20B1;{parseFloat(amount).toFixed(2)}
               </AmountText>
               {icon && title === 'Total' && <DiscountIcon name={icon} color={theme.color.orange} size={18} />}

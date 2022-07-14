@@ -40,7 +40,7 @@ const OrderExhaustTimer = (props: PropsType): React$Node => {
       const minutes = state?.duration;
       if (minutes <= 0) {
         !isExhausted && setIsExhausted(true);
-        return 'Rider is nearby your location. Thank you for patiently waiting.';
+        return 'Driver is nearby your location. Thank you for patiently waiting.';
       }
       return `${minutes} ${minutes > 1 ? 'minutes' : 'minute'}`;
     }
