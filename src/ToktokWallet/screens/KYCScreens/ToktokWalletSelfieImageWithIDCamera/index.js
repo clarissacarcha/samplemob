@@ -326,6 +326,10 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation, route}) => {
             hasShadow
             onPressPrevious={() => {
               setTempImage(null);
+              setMessage({
+                msg: 'Position your face within the frame.',
+                icon: 'bullseye',
+              });
             }}
             onPressNext={Platform.OS === 'ios' ? confirmIosPicture : confirmIosPicture}
           />
