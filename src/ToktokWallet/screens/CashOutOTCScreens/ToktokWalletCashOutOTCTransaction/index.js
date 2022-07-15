@@ -43,7 +43,7 @@ const MainComponent = ({navigation, route}) => {
 
   const [isMounted, setIsMounted] = useState(false);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
-  const {logo, description, maximumAmount, toktokServiceFee, id} = route.params?.otcPartnerDetails;
+  const {logo, description, maximumAmount, id} = route.params?.otcPartnerDetails;
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack color={COLOR.ORANGE} />,
@@ -78,6 +78,7 @@ const MainComponent = ({navigation, route}) => {
     dateOfClaimError,
     purpose,
     providerServiceFee,
+    toktokServiceFee,
   } = useContext(VerifyContext);
 
   useEffect(() => {
