@@ -186,6 +186,7 @@ export const VerifySelfieWithID = () => {
                 Change Photo
               </Text>
             </TouchableOpacity>
+            <View style={styles.overlay} />
           </View>
         </MainComponent>
       </>
@@ -357,9 +358,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   overlay: {
-    flex: 1,
     backgroundColor: 'black',
-    opacity: 0.5,
+    opacity: 0.3,
+    position: 'absolute',
+    zIndex: 1,
+    height: '100%',
+    width: '100%',
   },
   PreviewImage: {
     height: CROP_AREA_HEIGHT - 130 + 3,
