@@ -76,6 +76,10 @@ const MainComponent = ({children, onPress, onPressBack}) => {
                   <Image style={styles.checkIcon} source={circleCheck} />
                   <Text style={styles.benefitsListText}>Don’t wear anything covering your face</Text>
                 </View>
+                <View style={styles.benefitsListContainer}>
+                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Text style={styles.benefitsListText}>Avoid blurry, grainy or shadows in the photo</Text>
+                </View>
               </View>
             </View>
           </View>
@@ -122,12 +126,10 @@ export const VerifySelfie = () => {
   };
 
   const setImage = data => {
-    // setSelfieImage(data);
     setCacheImagesList(state => {
       return [...state, data.uri];
     });
     setTempSelfieImage(data);
-    // setCurrentIndex(oldval => oldval + 1)
   };
   const Back = () => {
     setCurrentIndex(oldstate => oldstate - 1);
@@ -135,26 +137,10 @@ export const VerifySelfie = () => {
 
   const Proceed = async () => {
     if (tempSelfieImage == null) {
-      // return navigation.push('ToktokWalletSelfieImageCamera', {setImage});
       setRequired(true);
     } else {
-      try {
-        const croppedResult = await ImageCropper.crop({
-          ...cropperParams,
-          // imageUri: selfieImage.uri,
-          imageUri: tempSelfieImage.uri,
-          cropSize,
-          cropAreaSize,
-        });
-
-        setSelfieImage(state => ({
-          ...state,
-          uri: croppedResult,
-        }));
-      } catch (err) {
-        console.log(err);
-      }
-      return setCurrentIndex(oldval => oldval + 1);
+      setSelfieImage(tempSelfieImage);
+      setCurrentIndex(oldval => oldval + 1);
     }
   };
 
@@ -162,16 +148,14 @@ export const VerifySelfie = () => {
     return (
       <MainComponent onPress={Proceed} onPressBack={Back}>
         <View style={styles.PreviewImage}>
-          <ImageCropper
-            imageUri={tempSelfieImage.uri}
-            cropAreaWidth={CROP_AREA_WIDTH - 100}
-            cropAreaHeight={CROP_AREA_HEIGHT - 100}
-            containerColor="transparent"
-            areaColor="black"
-            areaOverlay={<View style={styles.overlay} />}
-            setCropperParams={cropperParams => {
-              setCropperParams(cropperParams);
+          <Image
+            resizeMode="cover"
+            style={{
+              height: CROP_AREA_WIDTH - 150,
+              width: CROP_AREA_HEIGHT - 150,
+              borderRadius: 5,
             }}
+            source={{uri: tempSelfieImage.uri}}
           />
           <TouchableOpacity
             onPress={() => navigation.push('ToktokWalletSelfieImageCamera', {setImage})}
@@ -187,6 +171,7 @@ export const VerifySelfie = () => {
               Change Photo
             </Text>
           </TouchableOpacity>
+          <View style={styles.overlay} />
         </View>
       </MainComponent>
     );
@@ -333,8 +318,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   selfieBtn: {
-    width: CROP_AREA_WIDTH - 100,
-    height: CROP_AREA_HEIGHT - 100,
+    width: CROP_AREA_WIDTH - 150,
+    height: CROP_AREA_HEIGHT - 150,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FEFAF6',
@@ -351,8 +336,8 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   PreviewImage: {
-    height: CROP_AREA_HEIGHT - 100 + 3,
-    width: CROP_AREA_WIDTH - 100 + 3,
+    height: CROP_AREA_HEIGHT - 150 + 3,
+    width: CROP_AREA_WIDTH - 150 + 3,
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 7,
@@ -361,26 +346,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 5,
-    transform: [
-      {
-        scaleX: -1,
-      },
-    ],
   },
   changePhoto: {
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    transform: [
-      {
-        scaleX: -1,
-      },
-    ],
+    zIndex: 2,
   },
   overlay: {
-    flex: 1,
     backgroundColor: 'black',
-    opacity: 0.5,
+    opacity: 0.3,
+    position: 'absolute',
+    zIndex: 1,
+    height: '100%',
+    width: '100%',
   },
 });
