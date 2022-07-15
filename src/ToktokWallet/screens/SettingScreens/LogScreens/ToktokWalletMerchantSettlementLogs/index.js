@@ -41,6 +41,7 @@ export const ToktokWalletMerchantSettlementLogs = ({navigation}) => {
       onErrorAlert({alert, error, navigation});
     },
     onCompleted: ({getMerchantSettlements}) => {
+      console.log(getMerchantSettlements.edges.length);
       setRecords(getMerchantSettlements.edges);
       setPageInfo(getMerchantSettlements.pageInfo);
     },
@@ -109,46 +110,37 @@ export const ToktokWalletMerchantSettlementLogs = ({navigation}) => {
   return (
     <CheckIdleState>
       <Separator />
-      {
-        <View style={styles.container}>
-          <FlatList
-            ListEmptyComponent={() => {
-              if (records.length > 0) return null;
-              if (loading) return null;
-              return <NoData />;
-            }}
-            refreshControl={
-              <RefreshControl
-                refreshing={loading}
-                onRefresh={Refetch}
-                colors={[COLOR.YELLOW]}
-                tintColor={COLOR.YELLOW}
-              />
-            }
-            showsVerticalScrollIndicator={false}
-            data={records}
-            keyExtractor={item => item.id}
-            renderItem={({item, index}) => (
-              <LogItem key={index} item={item} index={index} tokwaAccount={tokwaAccount} />
-            )}
-            onEndReachedThreshold={0.02}
-            onEndReached={fetchMoreData}
-            ItemSeparatorComponent={renderSeparator}
-            ListFooterComponent={() => {
-              if (records.length == 0) return null;
-              if (loading) return null;
-              return <ListFooterComponent />;
-            }}
-            style={{flex: 1}}
-            contentContainerStyle={records.length == 0 && {flexGrow: 1}}
-            getItemLayout={(data, index) => ({
-              length: data.length,
-              offset: data.length * index,
-              index,
-            })}
-          />
-        </View>
-      }
+      <View style={styles.container}>
+        <FlatList
+          ListEmptyComponent={() => {
+            if (records.length > 0) return null;
+            if (loading) return null;
+            return <NoData />;
+          }}
+          refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={Refetch} colors={[COLOR.YELLOW]} tintColor={COLOR.YELLOW} />
+          }
+          showsVerticalScrollIndicator={false}
+          data={records}
+          keyExtractor={item => item.id}
+          renderItem={({item, index}) => <LogItem key={index} item={item} index={index} tokwaAccount={tokwaAccount} />}
+          onEndReachedThreshold={0.02}
+          onEndReached={fetchMoreData}
+          ItemSeparatorComponent={renderSeparator}
+          ListFooterComponent={() => {
+            if (records.length == 0) return null;
+            if (loading) return null;
+            return <ListFooterComponent />;
+          }}
+          style={{flex: 1}}
+          contentContainerStyle={records.length == 0 && {flexGrow: 1}}
+          getItemLayout={(data, index) => ({
+            length: data.length,
+            offset: data.length * index,
+            index,
+          })}
+        />
+      </View>
     </CheckIdleState>
   );
 };
