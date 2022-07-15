@@ -1,11 +1,22 @@
-import React, {useRef, useState, useEffect} from 'react';
-import {Modal, StyleSheet, Text, View, TouchableOpacity, Dimensions, Platform, ActivityIndicator} from 'react-native';
+import React, {useRef, useState, useEffect, useMemo, useCallback} from 'react';
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+  Platform,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import ImageCropper from 'react-native-simple-image-cropper';
 import {CheckIdleState, PreviousNextButton} from 'toktokwallet/components';
 import FIcon from 'react-native-vector-icons/FontAwesome5';
 import CONSTANTS from 'common/res/constants';
 import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
+import {RetakeConfirmImage} from './components';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
@@ -52,6 +63,7 @@ export const ToktokWalletSelfieImageCamera = ({navigation, route}) => {
   const [cropperParams, setCropperParams] = useState({});
   const checkTimeout = route?.params?.checkTimeout ? true : false;
   const [picInterval, setPicInterval] = useState(null);
+  const [takingPicture, setTakingPicture] = useState(false);
 
   const takePicture = async () => {
     setCheck(true);
@@ -62,20 +74,35 @@ export const ToktokWalletSelfieImageCamera = ({navigation, route}) => {
           // base64: true,
           width: 1024,
           fixOrientation: true,
+          mirrorImage: true,
         };
-        
-        // setTimeout(async () => {
-        //   const data = await cameraRef.current.takePictureAsync(options);
-        //   route.params.setImage(data);
-        //   navigation.pop();
-        // }, 1000);
+
         const data = await cameraRef.current.takePictureAsync(options);
-        Platform.OS === 'ios' ? setTempImage(data) : setTempImage(data);
+        const imageDetails = {
+          cropAreaWidth: CROP_AREA_WIDTH,
+          cropAreaHeight: CROP_AREA_HEIGHT,
+          takingPicture: true,
+          tempImage: data,
+        };
+        navigation.replace('ToktokWalletConfirmImage', {
+          imageDetails,
+          setImage: route.params.setImage,
+          screen: {
+            navigateTo: 'ToktokWalletSelfieImageCamera',
+            screenLabel: 'Take a Selfie',
+          },
+          onCallBack: data => onCallBack(data),
+        });
       }
     } catch (error) {
       console.log(error);
       //   Alert.alert('Something went wrong with taking a picture.');
     }
+  };
+
+  const onCallBack = data => {
+    route.params.setImage(data); //front or back
+    navigation.pop();
   };
 
   const confirmIosPicture = async () => {
@@ -86,12 +113,10 @@ export const ToktokWalletSelfieImageCamera = ({navigation, route}) => {
         cropAreaSize,
         cropSize,
       });
-      route.params.setImage(
-        {
-          ...tempImage,
-          uri: croppedResult,
-        },
-      ); //front or back
+      route.params.setImage({
+        ...tempImage,
+        uri: croppedResult,
+      }); //front or back
       navigation.pop();
     } catch (error) {
       console.log(error);
@@ -100,24 +125,24 @@ export const ToktokWalletSelfieImageCamera = ({navigation, route}) => {
   };
 
   const cropSize = {
-    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH,
-    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT,
+    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH + 700,
+    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT + 700,
   };
 
   const cropAreaSize = {
-    width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH,
-    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT,
+    width: CROP_AREA_WIDTH - 50,
+    height: CROP_AREA_HEIGHT - 50,
   };
 
-  useEffect(() => {
-    if ((leftEyeWink && leftEyeOpen) || (rightEyeWink && rightEyeOpen)) {
-      setMessage({
-        msg: `Don't move , Scanning Face`,
-        icon: null,
-      });
-      takePicture();
-    }
-  }, [leftEyeWink, rightEyeWink]);
+  // useEffect(() => {
+  //   if ((leftEyeWink && leftEyeOpen) || (rightEyeWink && rightEyeOpen)) {
+  //     setMessage({
+  //       msg: `Don't move , Scanning Face`,
+  //       icon: null,
+  //     });
+  //     takePicture();
+  //   }
+  // }, [leftEyeWink, rightEyeWink]);
 
   const refreshStates = () => {
     setBoxColor('white');
@@ -129,111 +154,114 @@ export const ToktokWalletSelfieImageCamera = ({navigation, route}) => {
     setRightEyeWink(false);
   };
 
-  const onFacesDetected = async e => {
-    const result = {
-      // // x: e.faces[0].bounds.origin.x / 2,
-      // x: e.faces[0].bounds.origin.x,
-      x: Platform.OS === 'ios' ? e.faces[0].bounds.origin.x : e.faces[0].bounds.origin.x / 2,
-      y: e.faces[0].bounds.origin.y,
-      // // width: e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
-      // width: e.faces[0].bounds.size.width,
-      width:
-        Platform.OS === 'ios'
-          ? e.faces[0].bounds.size.width
-          : e.faces[0].bounds.size.width + e.faces[0].bounds.origin.x / 2,
-      height: e.faces[0].bounds.size.height,
-      rotateX: e.faces[0].yawAngle,
-      rotateY: e.faces[0].rollAngle,
-    };
+  const onFacesDetected = useCallback(
+    async e => {
+      const result = {
+        // // x: e.faces[0].bounds.origin.x / 2,
+        // x: e.faces[0].bounds.origin.x,
+        x: Platform.OS === 'ios' ? e.faces[0].bounds.origin.x : e.faces[0].bounds.origin.x / 2,
+        y: e.faces[0].bounds.origin.y,
+        // // width: e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
+        // width: e.faces[0].bounds.size.width,
+        width:
+          Platform.OS === 'ios'
+            ? e.faces[0].bounds.size.width
+            : e.faces[0].bounds.size.width + e.faces[0].bounds.origin.x / 2,
+        height: e.faces[0].bounds.size.height,
+        rotateX: e.faces[0].yawAngle,
+        rotateY: e.faces[0].rollAngle,
+      };
 
-    setBox(result);
+      setBox(result);
 
-    if (message.icon) {
-      if (checkifOutsideBox(boundary, result)) {
-        console.log('Outside the box');
-        setMessage({
-          msg: "Position your face within the frame. Don't wear anything covering your face.",
-          icon: 'bullseye',
-        });
-        refreshStates();
-        return;
-      }
-
-      if (e.faces[0].bounds.size.height < CROP_AREA_HEIGHT - 120) {
-        setMessage({
-          msg: 'Bring your phone closer to you.',
-          icon: 'mobile-alt',
-        });
-        refreshStates();
-        return;
-      }
-    }
-
-    if (!check) {
-      setBoxColor(COLOR.YELLOW);
-      console.log(JSON.stringify(e));
-
-      if (e.faces[0].leftEyeOpenProbability > 0.6) {
-        setLeftEyeOpen(true);
-      }
-
-      if (e.faces[0].rightEyeOpenProbability > 0.6) {
-        setRightEyeOpen(true);
-      }
-
-      if (e.faces[0].smilingProbability < 0.6) {
-        setCheckNotSmiling(true);
-      }
-
-      if (!checkSmile) {
-        setMessage({
-          msg: `Smile to auto capture photo`,
-          icon: 'smile',
-        });
-        if (e.faces[0].smilingProbability > 0.8) {
-          setCheckSmile(true);
+      if (message.icon) {
+        if (checkifOutsideBox(boundary, result)) {
+          console.log('Outside the box');
+          setMessage({
+            msg: "Position your face within the frame. Don't wear anything covering your face.",
+            icon: 'bullseye',
+          });
+          refreshStates();
+          return;
         }
-        return;
+
+        if (e.faces[0].bounds.size.height < CROP_AREA_HEIGHT - 120) {
+          setMessage({
+            msg: 'Bring your phone closer to you.',
+            icon: 'mobile-alt',
+          });
+          refreshStates();
+          return;
+        }
       }
 
-      // if(!leftEyeWink){
-      //     setMessage({
-      //         msg: `Try to blink your left eye`,
-      //         icon: "smile"
-      //     })
-      //     if(e.faces[0].leftEyeOpenProbability < 0.2){
-      //         setLeftEyeWink(true)
-      //     }
-      //     return
-      // }
+      if (!check) {
+        setBoxColor(COLOR.YELLOW);
+        // console.log(JSON.stringify(e));
 
-      if (checkSmile && checkNotSmiling) {
-        setMessage({
-          msg: `Don't move , Scanning Face`,
-          icon: null,
-        });
-        takePicture();
+        if (e.faces[0].leftEyeOpenProbability > 0.6) {
+          setLeftEyeOpen(true);
+        }
+
+        if (e.faces[0].rightEyeOpenProbability > 0.6) {
+          setRightEyeOpen(true);
+        }
+
+        if (e.faces[0].smilingProbability < 0.6) {
+          setCheckNotSmiling(true);
+        }
+
+        if (!checkSmile) {
+          setMessage({
+            msg: `Smile to auto capture photo`,
+            icon: 'smile',
+          });
+          if (e.faces[0].smilingProbability > 0.8) {
+            setCheckSmile(true);
+          }
+          return;
+        }
+
+        // if(!leftEyeWink){
+        //     setMessage({
+        //         msg: `Try to blink your left eye`,
+        //         icon: "smile"
+        //     })
+        //     if(e.faces[0].leftEyeOpenProbability < 0.2){
+        //         setLeftEyeWink(true)
+        //     }
+        //     return
+        // }
+
+        if (checkSmile && checkNotSmiling) {
+          setMessage({
+            msg: `Don't move , Scanning Face`,
+            icon: null,
+          });
+          takePicture();
+        }
+
+        // if(checkSmile){
+        //        if(!leftEyeWink || !rightEyeWink){
+        //             setMessage({
+        //                 msg: `BLINK your eye`,
+        //                 icon: "smile"
+        //             })
+        //             if(e.faces[0].leftEyeOpenProbability < 0.2){
+        //                 setLeftEyeWink(true)
+        //             }
+        //             if(e.faces[0].rightEyeOpenProbability < 0.2){
+        //                 setRightEyeWink(true)
+        //             }
+        //             return
+        //         }
+
+        //     return
+        // }
       }
-
-      // if(checkSmile){
-      //        if(!leftEyeWink || !rightEyeWink){
-      //             setMessage({
-      //                 msg: `BLINK your eye`,
-      //                 icon: "smile"
-      //             })
-      //             if(e.faces[0].leftEyeOpenProbability < 0.2){
-      //                 setLeftEyeWink(true)
-      //             }
-      //             if(e.faces[0].rightEyeOpenProbability < 0.2){
-      //                 setRightEyeWink(true)
-      //             }
-      //             return
-      //         }
-
-      //     return
-      // }
-    }
-  };
+    },
+    [box],
+  );
 
   const checkifOutsideBox = (boundary, result) => {
     return (
@@ -246,47 +274,8 @@ export const ToktokWalletSelfieImageCamera = ({navigation, route}) => {
     );
   };
 
-  if (tempImage) {
+  const displayMain = useMemo(() => {
     return (
-      <MainComponent checkTimeout={checkTimeout}>
-        <View style={styles.header}>
-          <Text style={{fontSize: FONT_SIZE.L + 1, textAlign: 'center'}}>Take a Selfie</Text>
-        </View>
-        <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', alignSelf: 'center'}}>
-            <View style={styles.retakeCameraBox}>
-              <View style={[styles.borderEdges, {borderTopWidth: 6, borderLeftWidth: 6, top: 0, left: 0}]} />
-              <View style={[styles.borderEdges, {borderTopWidth: 6, borderRightWidth: 6, top: 0, right: 0}]} />
-              <View style={[styles.borderEdges, {borderBottomWidth: 6, borderLeftWidth: 6, bottom: 0, left: 0}]} />
-              <View style={[styles.borderEdges, {borderBottomWidth: 6, borderRightWidth: 6, bottom: 0, right: 0}]} />
-              <ImageCropper
-                imageUri={tempImage.uri}
-                cropAreaWidth={CROP_AREA_WIDTH - 2}
-                cropAreaHeight={CROP_AREA_HEIGHT - 2}
-                containerColor="black"
-                areaColor="black"
-                setCropperParams={cropperParams => {
-                  setCropperParams(cropperParams);
-                }}
-              />
-            </View>
-          </View>
-          <PreviousNextButton
-            label="Retake"
-            labelTwo={'Confirm'}
-            hasShadow
-            onPressPrevious={() => {
-              setTempImage(null);
-            }}
-            onPressNext={Platform.OS === 'ios' ? confirmIosPicture : confirmIosPicture}
-          />
-        </View>
-      </MainComponent>
-    );
-  }
-
-  return (
-    <MainComponent checkTimeout={checkTimeout}>
       <View style={styles.camera}>
         <TouchableOpacity onPress={() => navigation.pop()} style={styles.backBtn}>
           <FIcon name="chevron-left" size={16} color={COLOR.ORANGE} />
@@ -392,17 +381,7 @@ export const ToktokWalletSelfieImageCamera = ({navigation, route}) => {
             </View>
           </View>
         </RNCamera>
-
-        {/* <View style={styles.instructions}>
-              <Text style={{fontFamily: FONT.BOLD,FONTize: FONT_SIZE.L}}>{message.msg}</Text>
-                  {
-                      message.icon == null
-                      ? <ActivityIndicator style={{marginTop: 10}} color={COLOR.YELLOW} />
-                      : <FIcon5 style={{marginTop: 10}} size={30} color={COLOR.YELLOW} name={message.icon}/>
-                  }
-          </View> */}
-        {/* 
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
@@ -416,8 +395,10 @@ export const ToktokWalletSelfieImageCamera = ({navigation, route}) => {
           </TouchableOpacity>
         </View> */}
       </View>
-    </MainComponent>
-  );
+    );
+  });
+
+  return <MainComponent>{displayMain}</MainComponent>;
 };
 
 const styles = StyleSheet.create({
@@ -426,18 +407,12 @@ const styles = StyleSheet.create({
   },
   cameraContainer: {
     flex: 1,
-    // height: 240,
-    // width: 240,
-    // borderRadius: 120,
-    // overflow: 'hidden', // to make it circle
     backgroundColor: 'black',
     justifyContent: 'center',
   },
   cameraBox: {
     height: CROP_AREA_HEIGHT,
     width: CROP_AREA_WIDTH,
-    // borderRadius: CROP_AREA_WIDTH,
-    // overflow: 'hidden', // to make it circle
     backgroundColor: 'rgba(255,255,255,0.1)',
     position: 'absolute',
   },
@@ -458,7 +433,8 @@ const styles = StyleSheet.create({
     borderColor: COLOR.YELLOW,
   },
   backBtn: {
-    top: Platform.OS === 'android' ? 30 : 10,
+    top: Platform.OS === 'android' ? 40 : 10,
+    left: Platform.OS === 'android' ? 10 : 0,
     position: 'absolute',
     zIndex: 1,
     justifyContent: 'center',
@@ -481,25 +457,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  retakeCameraBox: {
-    borderColor: '#F6841F',
-    borderWidth: 1,
-    height: CROP_AREA_HEIGHT,
-    width: CROP_AREA_WIDTH,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    justifyContent: 'center',
-    transform: [
-      {
-        scaleX: -1,
-      },
-    ],
-  },
-  header: {
-    backgroundColor: 'white',
-    padding: moderateScale(15),
-    paddingHorizontal: moderateScale(16),
-    paddingVertical: moderateScale(16),
-    marginTop: Platform.OS === 'ios' ? 0 : getStatusbarHeight,
   },
 });

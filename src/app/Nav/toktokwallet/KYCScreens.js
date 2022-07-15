@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ToktokWalletConfirmImage,
   ToktokWalletPepVideoCallSchedule,
   ToktokWalletSelfieImageCamera,
   ToktokWalletSelfieImageWithIDCamera,
@@ -11,6 +12,13 @@ import {
 
 export default ({Navigator}) => (
   <>
+    <Navigator.Screen
+      name="ToktokWalletConfirmImage"
+      component={ToktokWalletConfirmImage}
+      options={{
+        headerTitleAlign: 'center',
+      }}
+    />
     <Navigator.Screen
       name="ToktokWalletPepVideoCallSchedule"
       component={ToktokWalletPepVideoCallSchedule}

@@ -60,7 +60,7 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
         };
         setTakingPicture(true);
         const data = await cameraRef.current.takePictureAsync(options);
-        Platform.OS === 'ios' ? setTempImage(data) : setTempImage(data);
+        setTempImage(data);
       }
     } catch (error) {
       console.log(error);
@@ -74,7 +74,7 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
 
   const cropAreaSize = {
     width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH,
-    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT,
+    height: Platform.OS === 'ios' ? CROP_AREA_HEIGHT : CROP_AREA_HEIGHT + 40,
   };
 
   useEffect(() => {
