@@ -22,11 +22,11 @@ const RenderItem = ({item, index, onPress}) => {
   return (
     <View underlayColor={COLOR.LIGHT} style={styles.network}>
       <TouchableOpacity
-        onPress={() => onPress(index)}
+        onPress={() => onPress({item, index})}
         style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
         <CheckBox
           isChecked={item.selected}
-          onClick={() => onPress(index)}
+          onClick={() => onPress({item, index})}
           checkBoxColor={COLOR.ORANGE}
           checkedCheckBoxColor={COLOR.ORANGE}
         />
@@ -55,7 +55,7 @@ export const SourceOfWealthModal = ({
     setVisible(false);
   }, 2000);
 
-  const onPress = index => {
+  const onPress = ({index, item}) => {
     // setVisible(false)
     const currentData = [...data];
     currentData[index] = {
@@ -63,7 +63,12 @@ export const SourceOfWealthModal = ({
       selected: !currentData[index].selected,
     };
     setData(currentData);
-    selectedData.push(currentData[index]);
+    if (currentData[index].selected) {
+      selectedData.push(currentData[index]);
+    } else {
+      const findIndex = selectedData.findIndex(d => d.id === item.id);
+      selectedData.splice(findIndex, 1);
+    }
     setSelectedData(selectedData);
   };
 
