@@ -19,6 +19,7 @@ export const VerifyContextProvider = ({children}) => {
   const [dateOfClaimError, setDateOfClaimError] = useState('');
   const [purpose, setPurpose] = useState('');
   const [providerServiceFee, setProviderServiceFee] = useState(0);
+  const [toktokServiceFee, setToktokServiceFee] = useState(0);
 
   const changeErrorMessages = (key, value) => {
     setPerson(oldstate => ({
@@ -52,6 +53,8 @@ export const VerifyContextProvider = ({children}) => {
         setPurpose,
         providerServiceFee,
         setProviderServiceFee,
+        toktokServiceFee,
+        setToktokServiceFee,
       }}>
       {children}
     </Provider>

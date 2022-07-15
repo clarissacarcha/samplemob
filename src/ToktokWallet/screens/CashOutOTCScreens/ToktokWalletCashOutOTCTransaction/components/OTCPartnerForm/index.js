@@ -59,8 +59,8 @@ export const OTCPartnerForm = ({route}) => {
     dateOfClaimError,
     purpose,
     setPurpose,
-    providerServiceFee,
     setProviderServiceFee,
+    setToktokServiceFee,
   } = useContext(VerifyContext);
 
   const changeEmail = value => {
@@ -75,15 +75,22 @@ export const OTCPartnerForm = ({route}) => {
       });
 
       if (providerFee.length > 0) {
-        const {amountFee, percentageFee} = providerFee[0];
+        const {amountFee, percentageFee, toktokServiceFee} = providerFee[0];
+        console.log(providerFee[0]);
         const providerServiceFee = parseFloat(amountFee) + parseFloat(value) * (parseFloat(percentageFee) / 100);
         setProviderServiceFee(providerServiceFee);
+        setToktokServiceFee(toktokServiceFee);
       } else {
-        setProviderServiceFee(0);
+        setFeesToZero();
       }
     } else {
-      setProviderServiceFee(0);
+      setFeesToZero();
     }
+  };
+
+  const setFeesToZero = () => {
+    setProviderServiceFee(0);
+    setToktokServiceFee(0);
   };
 
   const changeAmount = value => {

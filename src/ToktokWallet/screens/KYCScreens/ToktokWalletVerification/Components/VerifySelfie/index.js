@@ -151,8 +151,8 @@ export const VerifySelfie = () => {
           <Image
             resizeMode="cover"
             style={{
-              height: CROP_AREA_WIDTH - 150,
-              width: CROP_AREA_HEIGHT - 150,
+              height: CROP_AREA_WIDTH - 130,
+              width: CROP_AREA_HEIGHT - 130,
               borderRadius: 5,
             }}
             source={{uri: tempSelfieImage.uri}}
@@ -318,8 +318,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   selfieBtn: {
-    width: CROP_AREA_WIDTH - 150,
-    height: CROP_AREA_HEIGHT - 150,
+    width: CROP_AREA_WIDTH - 130,
+    height: CROP_AREA_HEIGHT - 130,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FEFAF6',
@@ -336,8 +336,8 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   PreviewImage: {
-    height: CROP_AREA_HEIGHT - 150 + 3,
-    width: CROP_AREA_WIDTH - 150 + 3,
+    height: CROP_AREA_HEIGHT - 130 + 3,
+    width: CROP_AREA_WIDTH - 130 + 3,
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 7,

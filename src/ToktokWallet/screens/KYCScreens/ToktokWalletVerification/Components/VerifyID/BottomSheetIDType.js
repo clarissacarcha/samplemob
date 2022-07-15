@@ -43,11 +43,13 @@ const BottomSheetIDType = ({
 
   const onSelectedValue = ({index}) => {
     const validID = filteredValidID[index];
-    console.log(validID);
     changeVerifyID('idType', validID.name);
     setIdentificationId(validID.id);
     setIsbackRequired(validID.isBackRequired == 1);
     changeVerifyIDErrors('idError', '');
+    changeVerifyIDErrors('idNumberError', '');
+    changeVerifyIDErrors('idFrontError', '');
+    changeVerifyIDErrors('idBackError', '');
     setFrontImage(null);
     setBackImage(null);
   };
