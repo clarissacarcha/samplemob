@@ -39,12 +39,12 @@ export const ToktokWalletConfirmImage = ({route, navigation}) => {
   };
 
   const cropAreaSize = {
-    width: Platform.OS === 'ios' ? cropAreaWidth + 70 : cropAreaWidth - 70,
-    height: Platform.OS === 'ios' ? cropAreaHeight + 70 : cropAreaHeight - 70,
+    width: Platform.OS === 'ios' ? cropAreaWidth : cropAreaWidth - 70,
+    height: Platform.OS === 'ios' ? cropAreaHeight : cropAreaHeight - 70,
   };
 
   useEffect(() => {
-    if (tempImage && cropperParams && takingPicture) {
+    if (Platform.OS === 'android' && tempImage && cropperParams && takingPicture) {
       cropImage(tempImage, cropperParams);
     }
   }, [cropperParams]);
@@ -67,6 +67,12 @@ export const ToktokWalletConfirmImage = ({route, navigation}) => {
         uri: croppedResult,
       });
       setTakingPicture(false);
+      if (Platform.OS === 'ios') {
+        route.params.onCallBack({
+          ...tempImage,
+          uri: croppedResult,
+        });
+      }
     } catch (error) {
       console.log(error);
       Alert.alert('', 'Sorry, we cannot process this image. Please select another one.');
@@ -103,7 +109,7 @@ export const ToktokWalletConfirmImage = ({route, navigation}) => {
             navigation.replace(navigateTo, {setImage: route.params.setImage});
           }}
           onPressNext={() => {
-            route.params.onCallBack(tempImage);
+            Platform.OS === 'ios' ? cropImage() : route.params.onCallBack(tempImage);
           }}
         />
       </View>

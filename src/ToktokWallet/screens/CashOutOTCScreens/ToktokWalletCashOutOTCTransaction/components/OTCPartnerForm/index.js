@@ -76,7 +76,6 @@ export const OTCPartnerForm = ({route}) => {
 
       if (providerFee.length > 0) {
         const {amountFee, percentageFee, toktokServiceFee} = providerFee[0];
-        console.log(providerFee[0]);
         const providerServiceFee = parseFloat(amountFee) + parseFloat(value) * (parseFloat(percentageFee) / 100);
         setProviderServiceFee(providerServiceFee);
         setToktokServiceFee(toktokServiceFee);

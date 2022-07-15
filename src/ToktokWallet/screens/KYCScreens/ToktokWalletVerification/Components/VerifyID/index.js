@@ -77,12 +77,11 @@ export const VerifyID = () => {
   };
 
   const setImage = (data, placement) => {
-    console.log('here', data, placement);
     setCacheImagesList(state => {
       return [...state, data.uri];
     });
-    if (placement == 'front') setFrontImage(data), setFrontRequired(false);
-    else if (placement == 'back') setBackImage(data), setBackRequired(false);
+    if (placement == 'front') setFrontImage(data), changeVerifyIDErrors('idFrontError', '');
+    else if (placement == 'back') setBackImage(data), changeVerifyIDErrors('idBackError', '');
   };
 
   // const Proceed = ()=>{
@@ -98,28 +97,25 @@ export const VerifyID = () => {
   const checkFieldIsEmpty = (key, value, fieldType) => {
     let message = fieldType === 'selection' ? 'Please make a selection' : 'This is a required field';
     let errorMessage = validator.isEmpty(value, {ignore_whitespace: true}) ? message : '';
-    if (value != '' && key == 'emailError' && !validator.isEmail(contactInfo.email, {ignore_whitespace: true})) {
-      errorMessage = 'Email format is invalid';
-    }
     changeVerifyIDErrors(key, errorMessage);
-
     return !errorMessage;
   };
 
   const Next = () => {
     let validBackImage = true;
     if (frontImage == null) {
-      changeVerifyIDErrors('idFrontError', 'This');
+      changeVerifyIDErrors('idFrontError', 'Photo is required');
     }
     if (backImage == null && isBackRequired) {
-      changeVerifyIDErrors('idBackError', '');
+      changeVerifyIDErrors('idBackError', 'Photo is required');
       validBackImage = false;
     }
+
     const isIdtypeValid = checkFieldIsEmpty('idError', verifyID.idType != '' ? verifyID.idType : '', 'selection');
     const isIdnumberValid = verifyID.idType != '' ? checkFieldIsEmpty('idNumberError', verifyID.idNumber) : false;
     if (isIdtypeValid && isIdnumberValid && frontImage && validBackImage) {
       cropImage(frontImage.uri, 'front');
-      if (backImage != null) cropImage(backImage.uri, 'back');
+      if (backImage != null && isBackRequired) cropImage(backImage.uri, 'back');
       setCurrentIndex(oldval => oldval + 1);
     }
   };

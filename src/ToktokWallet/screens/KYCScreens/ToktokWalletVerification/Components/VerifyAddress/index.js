@@ -31,7 +31,7 @@ import ModalProvince from './ModalProvince';
 import {PreviousNextButton, CustomTextInput, CustomSelectionList} from 'toktokwallet/components';
 
 //HELPER
-import {moderateScale} from 'toktokwallet/helper';
+import {moderateScale, numericRegex} from 'toktokwallet/helper';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 const screen = Dimensions.get('window');
@@ -232,7 +232,8 @@ export const VerifyAddress = () => {
               <CustomTextInput
                 value={address.postalCode}
                 onChangeText={value => {
-                  changeAddress('postalCode', value);
+                  const code = numericRegex(value);
+                  changeAddress('postalCode', code);
                   changeVerifyAddressErrors('postalError', '');
                 }}
                 errorMessage={verifyAddressErrors.postalError}
