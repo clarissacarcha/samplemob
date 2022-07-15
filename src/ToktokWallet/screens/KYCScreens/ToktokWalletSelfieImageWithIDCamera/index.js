@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect, useMemo, useCallback} from 'react';
 import {
   Modal,
   StyleSheet,
@@ -49,6 +49,7 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation, route}) => {
   const checkTimeout = route?.params?.checkTimeout ? true : false;
   const [canDetectFaces, setCanDetectFaces] = useState(null);
   const [box, setBox] = useState(null);
+
   const [check, setCheck] = useState(false);
   const [boundary, setBoundary] = useState({
     x: 0,
@@ -93,22 +94,41 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation, route}) => {
   // };
 
   const takePicture = async () => {
+    setCheck(true);
     try {
       if (cameraRef) {
         const options = {
           quality: 1,
           width: 1024,
           fixOrientation: true,
-          orientation: 'portrait',
-          autoFocus: true,
+          mirrorImage: true,
         };
-        setTakingPicture(true);
+
         const data = await cameraRef.current.takePictureAsync(options);
-        Platform.OS === 'ios' ? setTempImage(data) : setTempImage(data);
+        const imageDetails = {
+          cropAreaWidth: CROP_AREA_WIDTH,
+          cropAreaHeight: CROP_AREA_HEIGHT,
+          takingPicture: true,
+          tempImage: data,
+        };
+        navigation.replace('ToktokWalletConfirmImage', {
+          imageDetails,
+          setImage: route.params.setImage,
+          screen: {
+            navigateTo: 'ToktokWalletSelfieImageWithIDCamera',
+            screenLabel: 'Take a selfie with ID',
+          },
+          onCallBack: data => onCallBack(data),
+        });
       }
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const onCallBack = data => {
+    route.params.setImage(data); //front or back
+    navigation.pop();
   };
 
   const cropSize = {
@@ -122,13 +142,13 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    if ((leftEyeWink && leftEyeOpen) || (rightEyeWink && rightEyeOpen)) {
-      setMessage({
-        msg: `Don't move , Scanning Face`,
-        icon: null,
-      });
-      takePicture();
-    }
+    // if ((leftEyeWink && leftEyeOpen) || (rightEyeWink && rightEyeOpen)) {
+    //   setMessage({
+    //     msg: `Don't move , Scanning Face`,
+    //     icon: null,
+    //   });
+    //   takePicture();
+    // }
   }, [leftEyeWink, rightEyeWink]);
 
   const refreshStates = () => {
@@ -141,205 +161,117 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation, route}) => {
     setRightEyeWink(false);
   };
 
-  const onFacesDetected = async e => {
-    const result = {
-      // // x: e.faces[0].bounds.origin.x / 2,
-      // x: e.faces[0].bounds.origin.x,
-      x: Platform.OS === 'ios' ? e.faces[0].bounds.origin.x : e.faces[0].bounds.origin.x / 2,
-      y: e.faces[0].bounds.origin.y,
-      // // width: e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
-      // width: e.faces[0].bounds.size.width,
-      width:
-        Platform.OS === 'ios'
-          ? e.faces[0].bounds.size.width
-          : e.faces[0].bounds.size.width + e.faces[0].bounds.origin.x / 2,
-      height: e.faces[0].bounds.size.height,
-      rotateX: e.faces[0].yawAngle,
-      rotateY: e.faces[0].rollAngle,
-    };
+  const onFacesDetected = useCallback(
+    async e => {
+      const result = {
+        // // x: e.faces[0].bounds.origin.x / 2,
+        // x: e.faces[0].bounds.origin.x,
+        x: Platform.OS === 'ios' ? e.faces[0].bounds.origin.x : e.faces[0].bounds.origin.x / 2,
+        y: e.faces[0].bounds.origin.y,
+        // // width: e.faces[0].bounds.size.width + ( e.faces[0].bounds.origin.x / 2),
+        // width: e.faces[0].bounds.size.width,
+        width:
+          Platform.OS === 'ios'
+            ? e.faces[0].bounds.size.width
+            : e.faces[0].bounds.size.width + e.faces[0].bounds.origin.x / 2,
+        height: e.faces[0].bounds.size.height,
+        rotateX: e.faces[0].yawAngle,
+        rotateY: e.faces[0].rollAngle,
+      };
 
-    setBox(result);
+      setBox(result);
 
-    if (message.icon) {
-      if (checkifOutsideBox(boundary, result)) {
-        console.log('Outside the box');
-        setMessage({
-          msg: 'Position your face within the frame.',
-          icon: 'bullseye',
-        });
-        refreshStates();
-        return;
-      }
-
-      //  if(e.faces[0].bounds.size.height < ((CROP_AREA_HEIGHT + 500))){
-      //      setMessage({
-      //          msg: "Bring your phone closer to you.",
-      //          icon: "mobile-alt"
-      //      })
-      //      refreshStates()
-      //      return
-      //  }
-    }
-
-    if (!check) {
-      setBoxColor(COLOR.YELLOW);
-      console.log(JSON.stringify(e));
-
-      if (e.faces[0].leftEyeOpenProbability > 0.6) {
-        setLeftEyeOpen(true);
-      }
-
-      if (e.faces[0].rightEyeOpenProbability > 0.6) {
-        setRightEyeOpen(true);
-      }
-
-      if (e.faces[0].smilingProbability < 0.6) {
-        setCheckNotSmiling(true);
-      }
-
-      if (!checkSmile) {
-        setMessage({
-          msg: `Smile to auto capture photo`,
-          icon: 'smile',
-        });
-        if (e.faces[0].smilingProbability > 0.8) {
-          setCheckSmile(true);
+      if (message.icon) {
+        if (checkifOutsideBox(boundary, result)) {
+          console.log('Outside the box');
+          setMessage({
+            msg: 'Position your face within the frame.',
+            icon: 'bullseye',
+          });
+          refreshStates();
+          return;
         }
-        return;
+
+        //  if(e.faces[0].bounds.size.height < ((CROP_AREA_HEIGHT + 500))){
+        //      setMessage({
+        //          msg: "Bring your phone closer to you.",
+        //          icon: "mobile-alt"
+        //      })
+        //      refreshStates()
+        //      return
+        //  }
       }
 
-      // if(!leftEyeWink){
-      //     setMessage({
-      //         msg: `Try to blink your left eye`,
-      //         icon: "smile"
-      //     })
-      //     if(e.faces[0].leftEyeOpenProbability < 0.2){
-      //         setLeftEyeWink(true)
-      //     }
-      //     return
-      // }
+      if (!check) {
+        setBoxColor(COLOR.YELLOW);
+        console.log(JSON.stringify(e));
 
-      if (checkSmile && checkNotSmiling) {
-        setMessage({
-          msg: `Don't move , Scanning Face`,
-          icon: null,
-        });
-        takePicture();
+        if (e.faces[0].leftEyeOpenProbability > 0.6) {
+          setLeftEyeOpen(true);
+        }
+
+        if (e.faces[0].rightEyeOpenProbability > 0.6) {
+          setRightEyeOpen(true);
+        }
+
+        if (e.faces[0].smilingProbability < 0.6) {
+          setCheckNotSmiling(true);
+        }
+
+        if (!checkSmile) {
+          setMessage({
+            msg: `Smile to auto capture photo`,
+            icon: 'smile',
+          });
+          if (e.faces[0].smilingProbability > 0.8) {
+            setCheckSmile(true);
+          }
+          return;
+        }
+
+        // if(!leftEyeWink){
+        //     setMessage({
+        //         msg: `Try to blink your left eye`,
+        //         icon: "smile"
+        //     })
+        //     if(e.faces[0].leftEyeOpenProbability < 0.2){
+        //         setLeftEyeWink(true)
+        //     }
+        //     return
+        // }
+
+        if (checkSmile && checkNotSmiling) {
+          setMessage({
+            msg: `Don't move , Scanning Face`,
+            icon: null,
+          });
+          takePicture();
+        }
+
+        // if(checkSmile){
+        //        if(!leftEyeWink || !rightEyeWink){
+        //             setMessage({
+        //                 msg: `BLINK your eye`,
+        //                 icon: "smile"
+        //             })
+        //             if(e.faces[0].leftEyeOpenProbability < 0.2){
+        //                 setLeftEyeWink(true)
+        //             }
+        //             if(e.faces[0].rightEyeOpenProbability < 0.2){
+        //                 setRightEyeWink(true)
+        //             }
+        //             return
+        //         }
+
+        //     return
+        // }
       }
+    },
+    [box],
+  );
 
-      // if(checkSmile){
-      //        if(!leftEyeWink || !rightEyeWink){
-      //             setMessage({
-      //                 msg: `BLINK your eye`,
-      //                 icon: "smile"
-      //             })
-      //             if(e.faces[0].leftEyeOpenProbability < 0.2){
-      //                 setLeftEyeWink(true)
-      //             }
-      //             if(e.faces[0].rightEyeOpenProbability < 0.2){
-      //                 setRightEyeWink(true)
-      //             }
-      //             return
-      //         }
-
-      //     return
-      // }
-    }
-  };
-
-  const checkifOutsideBox = (boundary, result) => {
+  const displayMain = useMemo(() => {
     return (
-      result.x < boundary.x ||
-      result.x + result.width > boundary.x + boundary.width ||
-      result.y < boundary.y ||
-      result.y + result.height > boundary.y + boundary.height ||
-      result.height > boundary.height ||
-      result.width > boundary.width
-    );
-  };
-
-  const androidCrop = async data => {
-    try {
-      setTakingPicture(false);
-      const croppedResult = await ImageCropper.crop({
-        ...cropperParams,
-        imageUri: data.uri,
-        cropAreaSize,
-        cropSize,
-      });
-      setTempImage({
-        ...data,
-        uri: croppedResult,
-      });
-    } catch (error) {
-      console.log(error);
-      Alert.alert('', 'Sorry, we cannot process this image. Please select another one.');
-    }
-  };
-
-  const confirmIosPicture = async () => {
-    try {
-      const croppedResult = await ImageCropper.crop({
-        ...cropperParams,
-        imageUri: tempImage.uri,
-        cropAreaSize,
-        cropSize,
-      });
-      route.params.setImage(
-        {
-          ...tempImage,
-          uri: croppedResult,
-        },
-        route.params.placement,
-      ); //front or back
-      navigation.pop();
-    } catch (error) {
-      console.log(error);
-      Alert.alert('', 'Sorry, we cannot process this image. Please select another one.');
-    }
-  };
-
-  if (tempImage) {
-    return (
-      <MainComponent checkTimeout={checkTimeout}>
-        <View style={styles.header}>
-          <Text style={{fontSize: FONT_SIZE.L + 1, textAlign: 'center'}}>Take a Selfie with ID</Text>
-        </View>
-        <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', alignSelf: 'center'}}>
-            <View style={styles.retakeCameraBox}>
-              <ImageCropper
-                imageUri={tempImage.uri}
-                cropAreaWidth={CROP_AREA_WIDTH - 2}
-                cropAreaHeight={CROP_AREA_HEIGHT - 2}
-                containerColor="black"
-                areaColor="black"
-                setCropperParams={cropperParams => {
-                  setCropperParams(cropperParams);
-                }}
-              />
-            </View>
-          </View>
-          <PreviousNextButton
-            label="Retake"
-            labelTwo={'Confirm'}
-            hasShadow
-            onPressPrevious={() => {
-              setTempImage(null);
-              setMessage({
-                msg: 'Position your face within the frame.',
-                icon: 'bullseye',
-              });
-            }}
-            onPressNext={Platform.OS === 'ios' ? confirmIosPicture : confirmIosPicture}
-          />
-        </View>
-      </MainComponent>
-    );
-  }
-
-  return (
-    <MainComponent checkTimeout={checkTimeout}>
       <View style={styles.camera}>
         <TouchableOpacity onPress={() => navigation.pop()} style={styles.backBtn}>
           <FIcon name="chevron-left" size={16} color={COLOR.ORANGE} />
@@ -395,7 +327,6 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation, route}) => {
                   ],
                 }}></View>
             )}
-
             <View
               style={{
                 flex: 1,
@@ -415,7 +346,8 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation, route}) => {
                     paddingVertical: 10,
                     position: 'absolute',
                     top: -70,
-
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     width: '100%',
                   }}>
                   <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.XL, color: 'white', textAlign: 'center'}}>
@@ -445,9 +377,35 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation, route}) => {
             </View>
           </View>
         </RNCamera>
+        {/* <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            marginBottom: 20,
+          }}>
+          <TouchableOpacity onPress={() => takePicture()} style={styles.capture}>
+            <View style={styles.inCapture}></View>
+          </TouchableOpacity>
+        </View> */}
       </View>
-    </MainComponent>
-  );
+    );
+  });
+
+  const checkifOutsideBox = (boundary, result) => {
+    return (
+      result.x < boundary.x ||
+      result.x + result.width > boundary.x + boundary.width ||
+      result.y < boundary.y ||
+      result.y + result.height > boundary.y + boundary.height ||
+      result.height > boundary.height ||
+      result.width > boundary.width
+    );
+  };
+
+  return <MainComponent>{displayMain}</MainComponent>;
 };
 
 //

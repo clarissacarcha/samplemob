@@ -164,6 +164,11 @@ const styles = StyleSheet.create({
   retakeCameraBox: {
     backgroundColor: 'rgba(255,255,255,0.1)',
     justifyContent: 'center',
+    transform: [
+      {
+        scaleX: -1,
+      },
+    ],
   },
   header: {
     backgroundColor: 'white',
