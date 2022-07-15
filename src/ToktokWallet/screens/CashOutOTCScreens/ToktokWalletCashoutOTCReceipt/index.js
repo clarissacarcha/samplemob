@@ -90,7 +90,7 @@ export const ToktokWalletCashOutOTCReceipt = ({navigation, route}) => {
         </ScrollView>
       </ImageBackground>
       <View style={styles.buttonContainer}>
-        <OrangeButton label="OK" onPress={() => navigation.navigate('ToktokWalletCashOutOTCHome')} />
+        <OrangeButton label="OK" onPress={() => navigation.navigate('ToktokWalletHomePage')} />
       </View>
     </>
   );
