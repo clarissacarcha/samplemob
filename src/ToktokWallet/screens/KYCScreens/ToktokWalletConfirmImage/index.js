@@ -39,13 +39,13 @@ export const ToktokWalletConfirmImage = ({route, navigation}) => {
   };
 
   const cropAreaSize = {
-    width: cropAreaWidth - 70,
-    height: cropAreaHeight - 70,
+    width: Platform.OS === 'ios' ? cropAreaWidth + 70 : cropAreaWidth - 70,
+    height: Platform.OS === 'ios' ? cropAreaHeight + 70 : cropAreaHeight - 70,
   };
 
   useEffect(() => {
-    if (Platform.OS === 'android' && tempImage && cropperParams && takingPicture) {
-      androidCrop(tempImage, cropperParams);
+    if (tempImage && cropperParams && takingPicture) {
+      cropImage(tempImage, cropperParams);
     }
   }, [cropperParams]);
 
@@ -53,7 +53,7 @@ export const ToktokWalletConfirmImage = ({route, navigation}) => {
     setCropperParams(null);
   };
 
-  const androidCrop = async () => {
+  const cropImage = async () => {
     try {
       // setTakingPicture(false);
       const croppedResult = await ImageCropper.crop({
@@ -164,11 +164,6 @@ const styles = StyleSheet.create({
   retakeCameraBox: {
     backgroundColor: 'rgba(255,255,255,0.1)',
     justifyContent: 'center',
-    transform: [
-      {
-        scaleX: -1,
-      },
-    ],
   },
   header: {
     backgroundColor: 'white',

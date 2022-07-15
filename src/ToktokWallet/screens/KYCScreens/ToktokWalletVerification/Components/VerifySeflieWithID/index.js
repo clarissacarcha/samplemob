@@ -59,7 +59,7 @@ const MainComponent = ({children, onPress, onPressBack}) => {
         <View style={styles.content}>
           <Text style={styles.title}>Take a Selfie with your Valid ID</Text>
           <Text style={styles.titleDescription}>
-            Get verified by taking selfie with your valid government issued ID.
+            Get verified by taking a selfie with your valid government issued ID.
           </Text>
           <View style={styles.mainInput}>
             <View style={{marginTop: 20, flex: 1}}>
@@ -151,28 +151,10 @@ export const VerifySelfieWithID = () => {
 
   const Proceed = async () => {
     if (tempSelfieImageWithID == null) {
-      // return navigation.push('ToktokWalletSelfieImageWithIDCamera', {setImage});
       setRequired(true);
     } else {
-      try {
-        const croppedResult = await ImageCropper.crop({
-          ...cropperParams,
-          // imageUri: selfieImage.uri,
-          imageUri: tempSelfieImageWithID.uri,
-          cropSize,
-          cropAreaSize,
-        });
-
-        setSelfieImageWithID(state => ({
-          ...state,
-          uri: croppedResult,
-        }));
-
-        return setCurrentIndex(oldval => oldval + 1);
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
+      setSelfieImageWithID(tempSelfieImageWithID);
+      setCurrentIndex(oldval => oldval + 1);
     }
   };
 
@@ -181,17 +163,14 @@ export const VerifySelfieWithID = () => {
       <>
         <MainComponent onPress={Proceed} onPressBack={Back}>
           <View style={styles.PreviewImage}>
-            {/* <Image style={{height:290,width: 280,flex: 1}} resizeMode="stretch" source={{uri: selfieImageWithID.uri}}/> */}
-            <ImageCropper
-              imageUri={tempSelfieImageWithID.uri}
-              cropAreaWidth={CROP_AREA_WIDTH - 100}
-              cropAreaHeight={CROP_AREA_HEIGHT - 100}
-              containerColor="transparent"
-              areaColor="black"
-              areaOverlay={<View style={styles.overlay} />}
-              setCropperParams={cropperParams => {
-                setCropperParams(cropperParams);
+            <Image
+              resizeMode="cover"
+              style={{
+                height: CROP_AREA_HEIGHT - 130,
+                width: CROP_AREA_WIDTH - 130,
+                borderRadius: 5,
               }}
+              source={{uri: tempSelfieImageWithID.uri}}
             />
             <TouchableOpacity
               onPress={() => navigation.push('ToktokWalletSelfieImageWithIDCamera', {setImage})}
@@ -365,8 +344,8 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(15),
   },
   selfieBtn: {
-    width: CROP_AREA_WIDTH - 100,
-    height: CROP_AREA_HEIGHT - 100,
+    width: CROP_AREA_WIDTH - 130,
+    height: CROP_AREA_HEIGHT - 130,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FEFAF6',
@@ -383,8 +362,8 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   PreviewImage: {
-    height: CROP_AREA_HEIGHT - 100 + 3,
-    width: CROP_AREA_WIDTH - 100 + 3,
+    height: CROP_AREA_HEIGHT - 130 + 3,
+    width: CROP_AREA_WIDTH - 130 + 3,
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 7,
@@ -393,22 +372,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 5,
-    transform: [
-      {
-        scaleX: -1,
-      },
-    ],
   },
   changePhoto: {
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    transform: [
-      {
-        scaleX: -1,
-      },
-    ],
   },
   overlay: {
     flex: 1,

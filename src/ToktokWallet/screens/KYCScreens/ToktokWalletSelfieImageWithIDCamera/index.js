@@ -361,7 +361,7 @@ export const ToktokWalletSelfieImageWithIDCamera = ({navigation, route}) => {
                     position: 'absolute',
                     left: 0,
                     right: 0,
-                    bottom: -130,
+                    bottom: -80,
                   }}>
                   <View
                     style={{

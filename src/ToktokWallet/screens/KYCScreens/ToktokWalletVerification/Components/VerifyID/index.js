@@ -109,14 +109,14 @@ export const VerifyID = () => {
   const Next = () => {
     let validBackImage = true;
     if (frontImage == null) {
-      setFrontRequired(true);
+      changeVerifyIDErrors('idFrontError', 'This');
     }
     if (backImage == null && isBackRequired) {
-      setBackRequired(true);
+      changeVerifyIDErrors('idBackError', '');
       validBackImage = false;
     }
     const isIdtypeValid = checkFieldIsEmpty('idError', verifyID.idType != '' ? verifyID.idType : '', 'selection');
-    const isIdnumberValid = checkFieldIsEmpty('idNumberError', verifyID.idNumber);
+    const isIdnumberValid = verifyID.idType != '' ? checkFieldIsEmpty('idNumberError', verifyID.idNumber) : false;
     if (isIdtypeValid && isIdnumberValid && frontImage && validBackImage) {
       cropImage(frontImage.uri, 'front');
       if (backImage != null) cropImage(backImage.uri, 'back');
@@ -188,8 +188,8 @@ export const VerifyID = () => {
   );
 
   const renderImageSetOptions = () => {
-    const borderColorFront = {borderColor: frontRequired ? COLOR.RED : COLOR.ORANGE};
-    const borderColorBack = {borderColor: backRequired ? COLOR.RED : COLOR.ORANGE};
+    const borderColorFront = {borderColor: !!verifyIDErrors.idFrontError ? COLOR.RED : COLOR.ORANGE};
+    const borderColorBack = {borderColor: !!verifyIDErrors.idBackError ? COLOR.RED : COLOR.ORANGE};
 
     if (isBackRequired) {
       return (
@@ -199,14 +199,14 @@ export const VerifyID = () => {
             {frontImage
               ? ImageIDSet({placement: 'front'})
               : ChooseImage({placement: 'front', borderColor: borderColorFront})}
-            {frontRequired && <Text style={styles.requiredText}>Photo is required</Text>}
+            {!!verifyIDErrors.idFrontError && <Text style={styles.requiredText}>Photo is required</Text>}
           </View>
           <View style={styles.front}>
             <Text style={styles.frontText}>Back of ID</Text>
             {backImage
               ? ImageIDSet({placement: 'back'})
               : ChooseImage({placement: 'back', borderColor: borderColorBack})}
-            {backRequired && <Text style={styles.requiredText}>Photo is required</Text>}
+            {!!verifyIDErrors.idBackError && <Text style={styles.requiredText}>Photo is required</Text>}
           </View>
         </>
       );
@@ -218,7 +218,7 @@ export const VerifyID = () => {
             {frontImage
               ? ImageIDSet({placement: 'front'})
               : ChooseImage({placement: 'front', borderColor: borderColorFront})}
-            {frontRequired && <Text style={styles.requiredText}>Photo is required</Text>}
+            {!!verifyIDErrors.idFrontError && <Text style={styles.requiredText}>Photo is required</Text>}
           </View>
         </>
       );
