@@ -435,11 +435,6 @@ const styles = StyleSheet.create({
     width: moderateScale(80),
     height: moderateScale(80),
     borderRadius: moderateScale(5),
-    transform: [
-      {
-        scaleX: -1,
-      },
-    ],
   },
   policyView: {
     flexDirection: 'row',
