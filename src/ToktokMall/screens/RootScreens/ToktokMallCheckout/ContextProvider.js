@@ -150,7 +150,7 @@ export const CheckoutContextProvider = ({children})=> {
 			case '003': 
 				return ""
 			case '004': 
-				return "You have already redeemed this voucher."
+				return "This voucher has reached the redemption limit."
 			default: 
 				return "Invalid voucher code."
 		}
