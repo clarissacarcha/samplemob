@@ -201,7 +201,7 @@ export const VoucherScreen = ({navigation}) => {
         </View>
       )}
 
-      {noResults && (
+      {noResults && !noVouchers && (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Image source={NoFound} resizeMode={'contain'} style={{width: decorWidth, height: decorWidth}} />
           <Text style={styles.noResultsTitle}>No Results Found</Text>
