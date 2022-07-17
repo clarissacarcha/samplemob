@@ -319,6 +319,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   noResultsTitle: {
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.XL + 1,
     marginBottom: 8,

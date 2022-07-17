@@ -161,8 +161,8 @@ export const ToktokLandingMenu = ({navigation}) => {
         <View style={{height: SIZE.MARGIN / 2, backgroundColor: COLOR.LIGHT}} />
 
         <View style={{flex: 1, backgroundColor: 'white'}}>
-          <Text style={{paddingLeft: 20, paddingTop: 20, paddingBottom: 15, fontFamily: FONT.BOLD}}> Account</Text>
           <ScrollView>
+            <Text style={{paddingLeft: 20, paddingTop: 20, paddingBottom: 15, fontFamily: FONT.BOLD}}> Account</Text>
             {/*--------------- MY DELIVERIES ---------------*/}
             {/* <DrawerButton
               label="Saved Addresses"

@@ -244,17 +244,14 @@ const Verification = ({navigation, route, createSession}) => {
         }}>
         <AlertOverlay visible={loading} />
 
-        {!keyboardStatus || screenheight > 735 ? (
-          <TouchableOpacity onPress={() => navigation.pop()} style={{zIndex: 999}}>
-            <Image
-              style={{height: 15, width: 10, top: StatusBar.currentHeight - 10, margin: 16}}
-              source={ArrowLeft}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-        ) : (
-          <View style={{height: StatusBar.currentHeight + 80}}></View>
-        )}
+        <TouchableOpacity onPress={() => navigation.pop()} style={{zIndex: 999}}>
+          <Image
+            style={{height: 15, width: 10, top: StatusBar.currentHeight - 10, margin: 16}}
+            source={ArrowLeft}
+            resizeMode={'contain'}
+          />
+        </TouchableOpacity>
+
         {/*---------------------------------------- BANNER ----------------------------------------*/}
         {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
 

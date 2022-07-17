@@ -250,7 +250,7 @@ const PasswordVerification = ({navigation, route, createSession}) => {
             </View>
             <View style={{alignSelf: 'flex-start', marginHorizontal: 45}}>
               {inCorrectPassword && (
-                <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED, top: -5, marginLeft: 6}}>
+                <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED, top: -5, marginLeft: -2}}>
                   Password is incorrect
                 </Text>
               )}

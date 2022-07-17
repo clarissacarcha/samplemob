@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     backgroundColor: '#F8F8F8',
     borderRadius: 5,
-    marginHorizontal: 82,
     marginTop: 20,
     alignItems: 'center',
     paddingHorizontal: 40,
