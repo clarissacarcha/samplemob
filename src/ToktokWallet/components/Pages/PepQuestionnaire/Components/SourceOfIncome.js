@@ -26,9 +26,10 @@ export const SourceOfIncome = ({pepInfoAnswer, setPepInfo, errorMessage, setErro
     onCompleted: ({getSourceOfIncome}) => {
       const data = [...getSourceOfIncome, {id: '0', description: 'Others'}];
       const finalData = data.map((item, index) => {
+        const findIndex = selectedData.findIndex(d => d.id === item.id);
         return {
           ...item,
-          selected: false,
+          selected: findIndex != -1 ? true : false,
         };
       });
 

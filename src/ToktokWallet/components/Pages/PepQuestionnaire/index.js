@@ -1,14 +1,25 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, Modal, ScrollView, TouchableOpacity, TextInput} from 'react-native';
-import {getStatusbarHeight} from 'toktokwallet/helper';
-import {Separator, PolicyNote, PreviousNextButton, CustomTextInput , OrangeButton} from 'toktokwallet/components';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+} from 'react-native';
+import {getStatusbarHeight, moderateScale} from 'toktokwallet/helper';
+import {Separator, PolicyNote, PreviousNextButton, CustomTextInput, OrangeButton} from 'toktokwallet/components';
 import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
 import CheckBox from 'react-native-check-box';
+import {useHeaderHeight} from '@react-navigation/stack';
 
 //SELF IMPORTS
 import {AboutPEPModal, SourceOfIncome, SourceOfWealth} from './Components';
 
 import CONSTANTS from 'common/res/constants';
+
 const {COLOR, FONT_FAMILY: FONT, SIZE, FONT_SIZE} = CONSTANTS;
 
 const Question = ({question, errorMessage, setErrorMessage, index, chooseAnswer, pepInfoAnswer}) => {
@@ -74,9 +85,10 @@ const Question = ({question, errorMessage, setErrorMessage, index, chooseAnswer,
   );
 };
 
-export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex, hasPreviousButton = true }) => {
+export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex, hasPreviousButton = true}) => {
   const [errorMessage, setErrorMessage] = useState(['', '', '', '', '', '']);
   const [readMorePEP, setReadMorePEP] = useState(false);
+  const headerHeight = useHeaderHeight();
 
   const onPress = () => {
     callback();
@@ -173,106 +185,113 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
   return (
     <>
       <AboutPEPModal visible={readMorePEP} setVisible={setReadMorePEP} />
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <PolicyNote
-          note1="Click here to read more about Politically Exposed Person (PEP)."
-          disabled={false}
-          onPress={() => {
-            setReadMorePEP(true);
-          }}
-        />
-        <View style={styles.headings}>
-          <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, marginTop: 15}}>PEP Questionnaire</Text>
-          <View style={styles.questions}>
-            <Question
-              question="Have you ever been categorized as PEP (Political Exposed Person)
-                            by a bank, brokerage firm, or any financial institution?"
-              errorMessage={errorMessage}
-              setErrorMessage={setErrorMessage}
-              chooseAnswer={chooseAnswer}
-              pepInfoAnswer={{
-                value: pepInfo.questionnaire.isPep,
-                position: pepInfo.questionnaire.pepPosition,
-              }}
-              index={0}
-            />
-
-            <Question
-              question="Do you have an immediate family member or business/close
-                            associate which is currently/formally qualified as PEP?"
-              errorMessage={errorMessage}
-              setErrorMessage={setErrorMessage}
-              chooseAnswer={chooseAnswer}
-              pepInfoAnswer={{
-                value: pepInfo.questionnaire.isFamilyPep,
-                position: pepInfo.questionnaire.familyPepPosition,
-              }}
-              index={1}
-            />
-            <SourceOfIncome
-              pepInfoAnswer={{
-                value: pepInfo.questionnaire.sourceOfIncomeId,
-                des: pepInfo.questionnaire.sourceOfIncomeDes,
-                others: pepInfo.questionnaire.sourceOfIncome,
-                selected: pepInfo.questionnaire.selectedSourceOfIncome,
-              }}
-              setPepInfo={setPepInfo}
-              errorMessage={errorMessage}
-              setErrorMessage={setErrorMessage}
-            />
-
-            <SourceOfWealth
-              pepInfoAnswer={{
-                value: pepInfo.questionnaire.sourceOfWealthId,
-                des: pepInfo.questionnaire.sourceOfWealthDes,
-                others: pepInfo.questionnaire.sourceOfWealth,
-                selected: pepInfo.questionnaire.selectedSourceOfWealth,
-              }}
-              setPepInfo={setPepInfo}
-              errorMessage={errorMessage}
-              setErrorMessage={setErrorMessage}
-            />
-          </View>
-          <View style={{flexDirection: 'row', marginVertical: 20, alignItems: 'center'}}>
-            <CheckBox
-              isChecked={pepInfo.questionnaire.agreement}
-              onClick={() => {
-                setPepInfo(state => {
-                  return {
-                    ...state,
-                    questionnaire: {
-                      ...state.questionnaire,
-                      agreement: !state.questionnaire.agreement,
-                    },
-                  };
-                });
-              }}
-              checkBoxColor={COLOR.ORANGE}
-              checkedCheckBoxColor={COLOR.ORANGE}
-            />
-            <Text
-              style={{
-                paddingRight: 16,
-                paddingLeft: 10,
-                fontFamily: FONT.REGULAR,
-                fontSize: FONT_SIZE.S,
-                textAlign: 'left',
-              }}>
-              I hereby certify that the above information is complete, true, and correct as to the best of my knowledge.
-            </Text>
-          </View>
-        </View>
-      </ScrollView>
-      {
-        hasPreviousButton
-        ? <PreviousNextButton label="Previous" labelTwo={'Next'} hasShadow onPressNext={Next} onPressPrevious={Previous} />
-        : <OrangeButton 
-            label="Next" 
-            hasShadow 
-            onPress={Next}
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior="padding"
+        keyboardVerticalOffset={getStatusbarHeight + headerHeight + moderateScale(10)}>
+        <ScrollView>
+          <PolicyNote
+            note1="Click here to read more about Politically Exposed Person (PEP)."
+            disabled={false}
+            onPress={() => {
+              setReadMorePEP(true);
+            }}
           />
-      }
-    
+          <View style={styles.headings}>
+            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, marginTop: 15}}>PEP Questionnaire</Text>
+            <View style={styles.questions}>
+              <Question
+                question="Have you ever been categorized as PEP (Political Exposed Person)
+                            by a bank, brokerage firm, or any financial institution?"
+                errorMessage={errorMessage}
+                setErrorMessage={setErrorMessage}
+                chooseAnswer={chooseAnswer}
+                pepInfoAnswer={{
+                  value: pepInfo.questionnaire.isPep,
+                  position: pepInfo.questionnaire.pepPosition,
+                }}
+                index={0}
+              />
+
+              <Question
+                question="Do you have an immediate family member or business/close
+                            associate which is currently/formally qualified as PEP?"
+                errorMessage={errorMessage}
+                setErrorMessage={setErrorMessage}
+                chooseAnswer={chooseAnswer}
+                pepInfoAnswer={{
+                  value: pepInfo.questionnaire.isFamilyPep,
+                  position: pepInfo.questionnaire.familyPepPosition,
+                }}
+                index={1}
+              />
+              <SourceOfIncome
+                pepInfoAnswer={{
+                  value: pepInfo.questionnaire.sourceOfIncomeId,
+                  des: pepInfo.questionnaire.sourceOfIncomeDes,
+                  others: pepInfo.questionnaire.sourceOfIncome,
+                  selected: pepInfo.questionnaire.selectedSourceOfIncome,
+                }}
+                setPepInfo={setPepInfo}
+                errorMessage={errorMessage}
+                setErrorMessage={setErrorMessage}
+              />
+
+              <SourceOfWealth
+                pepInfoAnswer={{
+                  value: pepInfo.questionnaire.sourceOfWealthId,
+                  des: pepInfo.questionnaire.sourceOfWealthDes,
+                  others: pepInfo.questionnaire.sourceOfWealth,
+                  selected: pepInfo.questionnaire.selectedSourceOfWealth,
+                }}
+                setPepInfo={setPepInfo}
+                errorMessage={errorMessage}
+                setErrorMessage={setErrorMessage}
+              />
+            </View>
+            <View style={{flexDirection: 'row', marginVertical: 20, alignItems: 'center'}}>
+              <CheckBox
+                isChecked={pepInfo.questionnaire.agreement}
+                onClick={() => {
+                  setPepInfo(state => {
+                    return {
+                      ...state,
+                      questionnaire: {
+                        ...state.questionnaire,
+                        agreement: !state.questionnaire.agreement,
+                      },
+                    };
+                  });
+                }}
+                checkBoxColor={COLOR.ORANGE}
+                checkedCheckBoxColor={COLOR.ORANGE}
+              />
+              <Text
+                style={{
+                  paddingRight: 16,
+                  paddingLeft: 10,
+                  fontFamily: FONT.REGULAR,
+                  fontSize: FONT_SIZE.S,
+                  textAlign: 'left',
+                }}>
+                I hereby certify that the above information is complete, true, and correct as to the best of my
+                knowledge.
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+      {hasPreviousButton ? (
+        <PreviousNextButton
+          label="Previous"
+          labelTwo={'Next'}
+          hasShadow
+          onPressNext={Next}
+          onPressPrevious={Previous}
+        />
+      ) : (
+        <OrangeButton label="Next" hasShadow onPress={Next} />
+      )}
     </>
   );
 };
