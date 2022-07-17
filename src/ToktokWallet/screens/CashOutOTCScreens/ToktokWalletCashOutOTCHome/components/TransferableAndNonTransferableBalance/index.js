@@ -10,11 +10,12 @@ import {
   ImageBackground,
   Platform,
 } from 'react-native';
+import {useAccount} from 'toktokwallet/hooks';
 
 //COMPONENTS
 import {HeaderBack, HeaderTitle} from 'src/revamp';
 
-import {moderateScale, currencyCode} from 'toktokwallet/helper';
+import {moderateScale, currencyCode, numberFormat} from 'toktokwallet/helper';
 
 import {banner} from 'toktokwallet/assets';
 import CONSTANTS from 'common/res/constants';
@@ -24,6 +25,7 @@ const {height, width} = Dimensions.get('window');
 export const TransferableAndNonTransferableBalance = ({navigation}) => {
   const [showDetails, setShowDetails] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0));
+  const {tokwaAccount} = useAccount();
 
   useEffect(() => {
     Animated.timing(fadeAnim.current, {
@@ -51,7 +53,10 @@ export const TransferableAndNonTransferableBalance = ({navigation}) => {
           <View style={{padding: moderateScale(16)}}>
             <View style={styles.titleContainer}>
               <Text style={styles.label}>Transferable Balance</Text>
-              <Text style={{fontFamily: FONT.BOLD}}>{currencyCode}2,500.00</Text>
+              <Text style={{fontFamily: FONT.BOLD}}>
+                {currencyCode}
+                {numberFormat(tokwaAccount.wallet.transferableBalance)}
+              </Text>
             </View>
             <Text style={{marginTop: moderateScale(15)}}>
               Cash Ins via online banks, debit card, OTC bank, OTC non-bank and JC Wallet can be transferred to other
@@ -62,7 +67,10 @@ export const TransferableAndNonTransferableBalance = ({navigation}) => {
           <View style={{padding: moderateScale(15)}}>
             <View style={styles.titleContainer}>
               <Text style={styles.label}>Non-Transferable Balance</Text>
-              <Text style={{fontFamily: FONT.BOLD}}>{currencyCode}500.00</Text>
+              <Text style={{fontFamily: FONT.BOLD}}>
+                {currencyCode}
+                {numberFormat(tokwaAccount.wallet.creditCardBalance)}
+              </Text>
             </View>
             <Text style={{marginTop: moderateScale(16)}}>
               Cash Ins via credit card, or foreign debit card cannot be transferred to any toktokwallet users’ accounts
