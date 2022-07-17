@@ -24,6 +24,7 @@ import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
 import validator from 'validator';
 import CONSTANTS from 'common/res/constants';
 import ImageCropper from 'react-native-simple-image-cropper';
+import {throttle} from 'lodash';
 
 //SELF IMPORTS
 import {PreviousNextButton, CustomTextInput} from 'toktokwallet/components';
@@ -84,16 +85,6 @@ export const VerifyID = () => {
     else if (placement == 'back') setBackImage(data), changeVerifyIDErrors('idBackError', '');
   };
 
-  // const Proceed = ()=>{
-  //     if(verifyID.idType == "") return Alert.alert("","ID Type is required.")
-  //     if (validator.isEmpty(verifyID.idNumber, {ignore_whitespace: true})) {
-  //         return Alert.alert("","ID Number is required.")
-  //     }
-  //     if(frontImage == null) return Alert.alert("","Front of ID photo is required.")
-  //     if(isBackRequired && backImage == null)  return Alert.alert("","Back of ID photo is required.")
-  //     setCurrentIndex(oldval => oldval + 1)
-  // }
-
   const checkFieldIsEmpty = (key, value, fieldType) => {
     let message = fieldType === 'selection' ? 'Please make a selection' : 'This is a required field';
     let errorMessage = validator.isEmpty(value, {ignore_whitespace: true}) ? message : '';
@@ -147,12 +138,18 @@ export const VerifyID = () => {
     setCurrentIndex(oldval => oldval - 1);
   };
 
+  const onPressTakeAPhoto = throttle(
+    placement => {
+      if (verifyID.idType == '') return checkFieldIsEmpty('idError', '', 'selection');
+      navigation.push('ToktokWalletValidIDCamera', {setImage, placement: placement});
+    },
+    1000,
+    {trailing: false},
+  );
+
   const ChooseImage = ({placement, borderColor}) => (
     <TouchableOpacity
-      onPress={() => {
-        if (verifyID.idType == '') return checkFieldIsEmpty('idError', '', 'selection');
-        navigation.push('ToktokWalletValidIDCamera', {setImage, placement: placement});
-      }}
+      onPress={() => onPressTakeAPhoto(placement)}
       style={[styles.chooseImage, {alignItems: 'center'}, borderColor]}>
       <EIcon name="camera" color="#F6841F" size={30} />
       <Text style={styles.photoText}>Take a photo</Text>
@@ -170,12 +167,7 @@ export const VerifyID = () => {
         }}
         source={{uri: placement == 'front' ? frontImage.uri : backImage.uri}}
       />
-      <TouchableOpacity
-        onPress={() => {
-          if (verifyID.idType == '') return Next();
-          navigation.push('ToktokWalletValidIDCamera', {setImage, placement: placement});
-        }}
-        style={styles.changePhoto}>
+      <TouchableOpacity onPress={() => onPressTakeAPhoto(placement)} style={styles.changePhoto}>
         <EIcon name="camera" color="#F6841F" size={25} />
         <Text style={styles.changeText}>Change Photo</Text>
       </TouchableOpacity>

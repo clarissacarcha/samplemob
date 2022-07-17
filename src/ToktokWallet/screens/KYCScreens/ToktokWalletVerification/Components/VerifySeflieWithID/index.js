@@ -18,6 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import {moderateScale} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
 import ImageCropper from 'react-native-simple-image-cropper';
+import {throttle} from 'lodash';
 
 //COMPONENTS
 import {PreviousNextButton} from 'toktokwallet/components';
@@ -158,6 +159,14 @@ export const VerifySelfieWithID = () => {
     }
   };
 
+  const onPressTakeAPhoto = throttle(
+    () => {
+      navigation.push('ToktokWalletSelfieImageWithIDCamera', {setImage});
+    },
+    1000,
+    {trailing: false},
+  );
+
   if (tempSelfieImageWithID) {
     return (
       <>
@@ -172,9 +181,7 @@ export const VerifySelfieWithID = () => {
               }}
               source={{uri: tempSelfieImageWithID.uri}}
             />
-            <TouchableOpacity
-              onPress={() => navigation.push('ToktokWalletSelfieImageWithIDCamera', {setImage})}
-              style={styles.changePhoto}>
+            <TouchableOpacity onPress={onPressTakeAPhoto} style={styles.changePhoto}>
               <EIcon name="camera" color={COLOR.ORANGE} size={20} />
               <Text
                 style={{
@@ -196,11 +203,7 @@ export const VerifySelfieWithID = () => {
   return (
     <>
       <MainComponent onPress={Proceed} onPressBack={Back}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.push('ToktokWalletSelfieImageWithIDCamera', {setImage});
-          }}
-          style={[styles.selfieBtn, required && {borderColor: COLOR.RED}]}>
+        <TouchableOpacity onPress={onPressTakeAPhoto} style={[styles.selfieBtn, required && {borderColor: COLOR.RED}]}>
           <EIcon name="camera" color={COLOR.ORANGE} size={25} />
           <Text style={{marginBottom: 5, fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Take a photo</Text>
         </TouchableOpacity>

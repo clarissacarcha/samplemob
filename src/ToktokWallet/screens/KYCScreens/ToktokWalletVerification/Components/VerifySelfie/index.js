@@ -17,6 +17,7 @@ import {VerifyContext} from '../VerifyContextProvider';
 import {useNavigation} from '@react-navigation/native';
 import ImageCropper from 'react-native-simple-image-cropper';
 import CONSTANTS from 'common/res/constants';
+import {throttle} from 'lodash';
 
 //FONT & IMAGES
 import circleCheck from 'toktokwallet/assets/icons/circleCheck.png';
@@ -144,6 +145,14 @@ export const VerifySelfie = () => {
     }
   };
 
+  const onPressTakeAPhoto = throttle(
+    () => {
+      navigation.push('ToktokWalletSelfieImageCamera', {setImage});
+    },
+    1000,
+    {trailing: false},
+  );
+
   if (tempSelfieImage) {
     return (
       <MainComponent onPress={Proceed} onPressBack={Back}>
@@ -157,9 +166,7 @@ export const VerifySelfie = () => {
             }}
             source={{uri: tempSelfieImage.uri}}
           />
-          <TouchableOpacity
-            onPress={() => navigation.push('ToktokWalletSelfieImageCamera', {setImage})}
-            style={styles.changePhoto}>
+          <TouchableOpacity onPress={onPressTakeAPhoto} style={styles.changePhoto}>
             <EIcon name="camera" color={COLOR.ORANGE} size={25} />
             <Text
               style={{
@@ -180,11 +187,7 @@ export const VerifySelfie = () => {
   return (
     <>
       <MainComponent onPress={Proceed} onPressBack={Back}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.push('ToktokWalletSelfieImageCamera', {setImage});
-          }}
-          style={[styles.selfieBtn, required && {borderColor: COLOR.RED}]}>
+        <TouchableOpacity onPress={onPressTakeAPhoto} style={[styles.selfieBtn, required && {borderColor: COLOR.RED}]}>
           <EIcon name="camera" color={COLOR.ORANGE} size={25} />
           <Text style={{marginBottom: 5, fontSize: FONT_SIZE.S}}>Take a photo</Text>
         </TouchableOpacity>
