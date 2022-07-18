@@ -27,6 +27,8 @@ const ReceiverLocation = () => {
     navigation.navigate('ToktokFoodAddressDetails', {isCart: true});
   };
 
+  const removeSpecialCharacters = text => text.replace(/[^a-z0-9 ]/gi, '');
+
   return (
     <>
       <DialogMessage
@@ -55,19 +57,19 @@ const ReceiverLocation = () => {
         <View style={compStyle.textAddressContainer}>
           <Image style={styles.addressMarkerIcon} source={locationOutline} />
           <Text style={styles.textAddress} numberOfLines={2}>
-            {location ? location.address : ''}
+            {location ? removeSpecialCharacters(location.address) : ''}
           </Text>
         </View>
         {receiver.landmark !== '' && (
           <Text style={[styles.textAddress, {marginLeft: 20, color: '#525252'}]} numberOfLines={2}>
-            Landmark: {receiver.landmark}
+            Landmark: {removeSpecialCharacters(receiver.landmark)}
           </Text>
         )}
 
         <View style={[compStyle.textAddressContainer, {marginTop: 7}]}>
           <Image style={styles.addressMarkerIcon} source={user} />
           <Text style={styles.textAddress} numberOfLines={2}>
-            {DELIVERY_RECEIVER.replace(/[^a-z0-9_ ]/gi, '')}
+            {removeSpecialCharacters(DELIVERY_RECEIVER)}
           </Text>
         </View>
 

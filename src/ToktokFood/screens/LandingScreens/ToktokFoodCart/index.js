@@ -441,7 +441,7 @@ const MainComponent = () => {
           total_amount: Number(totalAmount.toFixed(2)),
           quantity: item.quantity,
           order_type: 1,
-          notes: item.notes.replace(/[^a-z0-9_ ]/gi, ''),
+          notes: item.notes.replace(/[^a-z0-9 ]/gi, ''),
           addons: await fixAddOns(item.addonsDetails),
         };
         items.push(data);
@@ -645,15 +645,15 @@ const MainComponent = () => {
 
     const LAND_MARK = receiver.landmark && receiver.landmark !== '' ? receiver.landmark : '';
 
-    const replaceName = DELIVERY_RECEIVER.replace(/[^a-z0-9_ ]/gi, '');
-    const replaceLandMark = LAND_MARK.replace(/[^a-z0-9_ ]/gi, '');
+    const replaceName = DELIVERY_RECEIVER.replace(/[^a-z0-9 ]/gi, '');
+    const replaceLandMark = LAND_MARK.replace(/[^a-z0-9 ]/gi, '');
 
     const ORDER = {
       // total_amount: temporaryCart.totalAmount,
       // srp_totalamount: temporaryCart.totalAmount,
       total_amount: parsedAmount,
       srp_totalamount: temporaryCart?.srpTotalAmount,
-      notes: riderNotes.replace(/[^a-z0-9_ ]/gi, ''),
+      notes: riderNotes.replace(/[^a-z0-9 ]/gi, ''),
       order_isfor: orderType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       // order_type: 2,
       order_type: await getOrderType(customerFranchisee),
