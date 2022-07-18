@@ -23,7 +23,7 @@ import {
 import StyledText from 'toktokfood/components/StyledText';
 import {useTheme} from 'styled-components';
 import Divider from 'toktokfood/components/Divider';
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import FA5Icon from 'react-native-vector-icons/Entypo';
 
 const OrderSummary = (props: PropsType): React$Node => {
   const {state} = props;
@@ -31,13 +31,17 @@ const OrderSummary = (props: PropsType): React$Node => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [fullList, setFullList] = useState([]);
   const [limitedList, setLimitedList] = useState([]);
+  const [remainingList, setRemainingList] = useState([]);
 
   useEffect(() => {
     if (state?.length > 0) {
-      setFullList(state);
-      if (state?.length > 5) {
-        const limit = state?.slice(0, 5);
+      const list = state.sort((a, b) => a.id - b.id);
+      setFullList(list);
+      if (list.length > 5) {
+        const limit = list.slice(0, 5);
         setLimitedList(limit);
+        const remaining = list.slice(4, -1);
+        setRemainingList(remaining);
       } else {
         setIsCollapsed(true);
       }
@@ -73,10 +77,13 @@ const OrderSummary = (props: PropsType): React$Node => {
   const renderFooterComponent = () => {
     return (
       fullList.length > 5 && (
-        <FooterButton onPress={() => setIsCollapsed(!isCollapsed)}>
-          <FooterText>{isCollapsed ? 'Hide' : 'Show more'}</FooterText>
-          <FA5Icon name={isCollapsed ? 'chevron-up' : 'chevron-down'} size={13} color={theme.color.orange} />
-        </FooterButton>
+        <React.Fragment>
+          <Divider />
+          <FooterButton onPress={() => setIsCollapsed(!isCollapsed)}>
+            <FooterText>{isCollapsed ? 'Show Less' : `(${remainingList.length}) Show More`}</FooterText>
+            <FA5Icon name={isCollapsed ? 'chevron-thin-up' : 'chevron-thin-down'} size={12} color={theme.color.gray} />
+          </FooterButton>
+        </React.Fragment>
       )
     );
   };
@@ -94,7 +101,7 @@ const OrderSummary = (props: PropsType): React$Node => {
               <OrderProductDetailsContainer opacity={item?.status === 0 ? 0.5 : 1}>
                 <ProductName>{item?.productDetails?.parentProductName ?? item?.productDetails?.itemname}</ProductName>
                 {item?.productDetails?.parentProductName && (
-                  <AddOnText fontSize={11}>Variation: {item?.productDetails?.itemname}</AddOnText>
+                  <AddOnText fontSize={11}>{item?.productDetails?.itemname}</AddOnText>
                 )}
                 {item?.addons?.length > 0 && renderAddonsComponent(item?.addons)}
                 {item?.notes?.length > 0 && (
@@ -105,7 +112,7 @@ const OrderSummary = (props: PropsType): React$Node => {
               </OrderProductDetailsContainer>
               <AmountQuantityContainer opacity={item?.status === 0 ? 0.5 : 1}>
                 <ProductName mode="medium" color={theme.color.orange}>
-                  &#x20B1;{parseFloat(item?.srpTotalamount).toFixed(2)}
+                  &#x20B1;{parseFloat(item?.totalAmountWithAddons * item?.quantity).toFixed(2)}
                 </ProductName>
                 <StyledText>Qty: {item?.quantity}</StyledText>
               </AmountQuantityContainer>

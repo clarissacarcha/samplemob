@@ -22,6 +22,7 @@ import {
   ModifiedText,
   CancelledText,
   ReasonText,
+  Image,
 } from './Styled';
 import {useIsFocused, useRoute} from '@react-navigation/native';
 import {
@@ -55,6 +56,7 @@ import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
+import {toktokwallet_ic} from 'toktokfood/assets/images';
 
 const ToktokFoodOrder = (props: PropsType): React$Node => {
   const isFocused = useIsFocused();
@@ -76,6 +78,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
   const [isCancelledByCustomer, setIsCancelledByCustomer] = useState(false);
   const [duration, setDuration] = useState(0);
   const [isExhausted, setIsExhausted] = useState(false);
+  const [animationContainerHeight, setAnimationContainerHeight] = useState(0);
 
   const timerRef = useRef(null);
 
@@ -102,7 +105,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           setIsCancelModalVisible(false);
         } else {
           if (duration === 0 && !isNoResponseModalVisible) {
-            setDuration(1);
+            setDuration(5);
           }
         }
         console.log('fetching orders...', orderStatus);
@@ -215,12 +218,23 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     return (
       isOrderModified() && (
         <ModifiedContainer adjustSpacing={adjustSpacing}>
-          <Icon name="info" size={14} color={theme.color.orange} />
-          <ModifiedText>
-            {state?.paymentMethod.toLowerCase() === 'toktokwallet'
-              ? 'This order has been modified by merchant. Total refund amount for updated order should be credited to your toktokwallet account.'
-              : 'Total amount for this order has been updated.'}
-          </ModifiedText>
+          {state?.paymentMethod.toLowerCase() === 'toktokwallet' ? (
+            <React.Fragment>
+              <Image source={toktokwallet_ic} />
+              <ModifiedText>
+                This order has been modified by merchant. Total amount of{' '}
+                <StyledText color={theme.color.orange} fontSize={11} mode="medium">
+                  &#x20B1;{parseFloat(state?.refundTotal).toFixed(2)}{' '}
+                </StyledText>
+                is refunded to your toktokwallet account.
+              </ModifiedText>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Icon name="info" size={14} color={theme.color.orange} />
+              <ModifiedText>Total amount for this order has been updated.</ModifiedText>
+            </React.Fragment>
+          )}
         </ModifiedContainer>
       )
     );
@@ -269,7 +283,8 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           buttonText = 'Browse Menu';
           onPress = () => navigation.goBack();
           buttonText2 = 'OK';
-          onPress2 = () => navigation.navigate('ToktokFoodHome');
+          onPress2 = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
+          // onPress2 = () => navigation.navigate('ToktokFoodHome');
         } else {
           title = state?.orderIsfor === 1 ? 'Order Delivered' : 'Order Picked Up';
           subtitle = 'Yay! Craving satisfied. Thank you for ordering in toktokfood!';
@@ -320,12 +335,12 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       <Alert
         isVisible={isNoResponseModalVisible}
         type="warning"
-        title="No Response from Merchant"
+        title="No Response From Merchant"
         subtitle={"Merchant hasn't confirmed your order.\nPlease try again."}
         buttonText="OK"
         onPress={() => {
           setIsNoResponseModalVisible(false);
-          setDuration(1);
+          setDuration(5);
         }}
       />
     );
@@ -356,6 +371,12 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     />
   );
 
+  const getAnimationContainerHeight = e => {
+    const {height} = e.nativeEvent.layout;
+    setAnimationContainerHeight(height);
+    console.log('test height', height);
+  };
+
   const renderAnimationComponent = () => {
     if (!isCompletedOrCancelled) {
       return (
@@ -363,8 +384,11 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           <Header hasBack />
           <Container>
             {/* Animation Part */}
-            <AnimationContainer>
-              <OrderAnimatedImage state={{...state, riderDetails}} />
+            <AnimationContainer onLayout={getAnimationContainerHeight}>
+              <OrderAnimatedImage
+                state={{...state, riderDetails}}
+                animationContainerHeight={animationContainerHeight}
+              />
               <OrderAnimatedText state={{...state, riderDetails}} />
             </AnimationContainer>
 
@@ -378,7 +402,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
               {renderModifiedTextComponent()}
               {/* Amount and its breakdown */}
               <AmountContainer>
-                <OrderAmount state={state} />
+                <OrderAmount state={state} placement="StatusScreen" />
               </AmountContainer>
               {/* Buttons for order details and cancel order */}
               <ButtonContainer>

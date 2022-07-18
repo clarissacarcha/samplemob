@@ -217,6 +217,22 @@ const transactionRef = `
   }
   rebooked
   estimatedDistance
+  voucherDiscounts {
+    id
+    referenceNum
+    voucherId
+    voucherCode
+    voucherName
+    userId
+    shopId
+    productId
+    region
+    discountType
+    discountAmount
+    shoulderedBy
+    paymentMethod
+    status
+  }
 `;
 
 export const GET_ORDER_TRANSACTIONS = gql`

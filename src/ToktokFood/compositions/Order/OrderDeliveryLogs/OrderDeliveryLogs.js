@@ -83,15 +83,14 @@ const OrderDeliveryLogs = (props: PropsType): React$Node => {
       {state?.deliveryImgurl2 ? renderDeliveryImageComponent(state?.deliveryImgurl2) : renderDashComponent()}
       {renderLogsComponent(
         'On the way to recipient',
-        state?.deliveryLogs?.length > 4 ? state?.deliveryLogs[4].createdAt : 'Invalid date',
+        state?.deliveryLogs?.length > 4 ? state?.deliveryLogs[4].createdAt : state?.dateShipped ?? 'Invalid date',
       )}
       {renderDashComponent()}
-      {renderLogsComponent(
-        'Picked up order',
-        state?.deliveryLogs?.length > 3 ? state?.deliveryLogs[3].createdAt : 'Invalid date',
-      )}
+      {renderLogsComponent('Picked up order', state?.dateFulfilled)}
       {state?.deliveryImgurl ? renderDeliveryImageComponent(state?.deliveryImgurl) : renderDashComponent()}
       {renderLogsComponent('Preparing order', state?.dateBookingConfirmed)}
+      {renderDashComponent()}
+      {renderLogsComponent('Finding driver', state?.dateOrderProcessed)}
       {renderDashComponent()}
       {renderLogsComponent('Order placed', state?.dateOrdered)}
     </React.Fragment>
@@ -102,6 +101,8 @@ const OrderDeliveryLogs = (props: PropsType): React$Node => {
       {renderLogsComponent('Order picked up', state?.dateShipped)}
       {renderDashComponent()}
       {renderLogsComponent('Ready for pick up', state?.dateReadyPickup)}
+      {renderDashComponent()}
+      {renderLogsComponent('Preparing order', state?.dateOrderProcessed)}
       {renderDashComponent()}
       {renderLogsComponent('Order placed', state?.dateOrdered)}
     </React.Fragment>

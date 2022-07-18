@@ -23,16 +23,16 @@ const OrderExhaustTimer = (props: PropsType): React$Node => {
     ((state?.orderIsfor === 1 && Object.keys(state?.riderDetails).length > 0) || state?.orderIsfor === 2);
 
   const setPreparingText = () => {
-    if (state?.dateBookingConfirmed) {
-      const dateBookingConfirmed = moment(state?.dateBookingConfirmed).add(45, 'minutes').format('YYYY-MM-DD HH:mm:ss');
-      const remainingMinutes = moment(dateBookingConfirmed).diff(moment(), 'minutes');
-      if (remainingMinutes <= 0) {
-        !isExhausted && setIsExhausted(true);
-        return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
-      }
-      return '15 - 45 minutes';
+    const isDelivery = state?.orderIsfor === 1;
+    const dateBookingConfirmed = moment(isDelivery ? state?.dateBookingConfirmed : state?.dateOrderProcessed)
+      .add(3, 'minutes')
+      .format('YYYY-MM-DD HH:mm:ss');
+    const remainingMinutes = moment(dateBookingConfirmed).diff(moment(), 'minutes');
+    if (remainingMinutes <= 0) {
+      !isExhausted && setIsExhausted(true);
+      return 'Sorry, your order seems to be taking too long to prepare. Thank you for patiently waiting.';
     }
-    return '';
+    return '15 - 45 minutes';
   };
 
   const setDeliveringText = () => {
@@ -40,7 +40,7 @@ const OrderExhaustTimer = (props: PropsType): React$Node => {
       const minutes = state?.duration;
       if (minutes <= 0) {
         !isExhausted && setIsExhausted(true);
-        return 'Rider is nearby your location. Thank you for patiently waiting.';
+        return 'Driver is nearby your location. Thank you for patiently waiting.';
       }
       return `${minutes} ${minutes > 1 ? 'minutes' : 'minute'}`;
     }

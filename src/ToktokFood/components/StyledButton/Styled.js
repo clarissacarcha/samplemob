@@ -21,7 +21,7 @@ export const Container: ComponentType<any> = styled.View`
       : props.theme.color.white};
   border-color: ${props => (props.disabled ? props.theme.color.lightgray : props.theme.color.orange)};
   border-width: 1px;
-  height: ${props => props.height};
+  height: ${props => props.height}px;
   align-items: center;
   justify-content: center;
 `;
