@@ -126,6 +126,7 @@ export const cash_ic = require('./images/cash-ic.png');
 export const toktokwallet_ic = require('./images/toktokwallet-ic.png');
 export const calendar_ic = require('./images/calendar-ic.png');
 export const map_ic = require('./images/map-ic.png');
+export const location_pin_ic = require('./images/location-pin-ic.png');
 
 //alert images
 export const success_image = require('./images/prompts_icons/success.png');

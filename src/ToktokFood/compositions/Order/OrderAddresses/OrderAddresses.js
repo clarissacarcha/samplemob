@@ -6,11 +6,12 @@
 import React from 'react';
 
 import type {PropsType} from './types';
-import {Container, AddressContainer, Icon, AddressIconContainer, DashContainer, IconContainer} from './Styled';
+import {Container, AddressContainer, Icon, AddressIconContainer, DashContainer, IconContainer, Image} from './Styled';
 import StyledText from 'toktokfood/components/StyledText';
 import {useTheme} from 'styled-components';
 import DashedLine from 'react-native-dashed-line';
 import ContentLoader from 'react-native-easy-content-loader';
+import {location_pin_ic} from 'toktokfood/assets/images';
 
 const OrderAddresses = (props: PropsType): React$Node => {
   const theme = useTheme();
@@ -45,7 +46,8 @@ const OrderAddresses = (props: PropsType): React$Node => {
   const iconComponent = () => {
     return (
       <IconContainer>
-        <Icon name="map-pin" color={theme.color.yellow} size={22} />
+        {/* <Icon name="map-pin" color={theme.color.yellow} size={22} /> */}
+        <Image source={location_pin_ic} />
         {state?.orderIsfor === 1 && (
           <React.Fragment>
             {dashComponent()}

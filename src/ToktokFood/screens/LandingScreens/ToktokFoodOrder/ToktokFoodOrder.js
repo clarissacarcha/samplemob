@@ -399,11 +399,12 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
               {/* Shop and customer address */}
               <OrderAddresses state={state} />
               <Divider />
-              {renderModifiedTextComponent()}
+              {/* {renderModifiedTextComponent()} */}
               {/* Amount and its breakdown */}
               <AmountContainer>
                 <OrderAmount state={state} placement="StatusScreen" />
               </AmountContainer>
+              {renderModifiedTextComponent()}
               {/* Buttons for order details and cancel order */}
               <ButtonContainer>
                 <Button

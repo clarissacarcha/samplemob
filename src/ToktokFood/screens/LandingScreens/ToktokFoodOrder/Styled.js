@@ -94,14 +94,14 @@ export const ModifiedContainer: ComponentType<any> = styled.View`
   background-color: ${props => props.theme.color.lightYellow};
   padding-horizontal: 20px;
   padding-vertical: 15px;
-  margin-top: ${props => (props.adjustSpacing ? -20 : 0)};
-  margin-bottom: ${props => (props.adjustSpacing ? 20 : 0)};
+  margin-top: ${props => (props.adjustSpacing ? -20 : 15)}px;
+  margin-bottom: ${props => (props.adjustSpacing ? 20 : -5)}px;
 `;
 
 export const Button: ComponentType<any> = styled(StyledButton).attrs(props => ({
   ...props,
 }))`
-  margin-bottom: ${props => (props.orderStatus && props.orderStatus === 'p' ? 15 : 0)};
+  margin-bottom: ${props => (props.orderStatus && props.orderStatus === 'p' ? 15 : 0)}px;
 `;
 
 export const Icon: ComponentType<any> = styled(FIcon).attrs(props => ({

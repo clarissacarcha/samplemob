@@ -19,7 +19,13 @@ export const Row: ComponentType<any> = styled.View`
   flex: 1;
 `;
 
-export const Image: ComponentType<any> = styled.Image`
+export const ImageContainer: ComponentType<any> = styled.View`
   width: 20px;
   height: 20px;
+`;
+
+export const Image: ComponentType<any> = styled.Image`
+  width: 18px;
+  height: 18px;
+  resize-mode: stretch;
 `;
