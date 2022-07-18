@@ -149,6 +149,9 @@ const MyOrderList = props => {
     } = item;
     const addons = arrangeAddons(addonsDetails);
     const totalAmountWithAddons = parseFloat(addonsTotalAmount) + parseFloat(basePrice);
+
+    const removeSpecialCharacters = text => text.replace(/[^a-z0-9 ]/gi, '');
+
     return (
       <SwipeRow
         disableRightSwipe
@@ -173,7 +176,7 @@ const MyOrderList = props => {
             <Text style={[styles.orderText]}>{`x${quantity}`}</Text>
             {parentProductId && <Text style={styles.orderText}>{`Variation: ${productName}`}</Text>}
             {addonsDetails.length > 0 && displayAddOns(addons)}
-            {!!notes && <Text style={styles.orderText}>{`Note: ${notes}`}</Text>}
+            {!!notes && <Text style={styles.orderText}>{`Note: ${removeSpecialCharacters(notes)}`}</Text>}
           </View>
           <View style={[styles.priceWrapper, {opacity: isDisabled ? 0.5 : 1}]}>
             <Text
