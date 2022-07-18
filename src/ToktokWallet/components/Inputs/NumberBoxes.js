@@ -12,7 +12,7 @@ const NumberBox = ({onPress, value, showPin, error}) => (
     style={{
       borderRadius: 10,
       marginHorizontal: 5,
-      ...(!error ? {} : {borderWidth: 1, borderRadius: 0, borderColor: COLOR.RED}),
+      ...(!error ? {} : {borderWidth: 1, borderRadius: 5, borderColor: COLOR.RED}),
     }}>
     <View style={styles.inputView}>
       <Text style={{fontSize: showPin ? 25 : 40, fontFamily: FONT.REGULAR}}>
@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
   inputView: {
     backgroundColor: '#F7F7FA',
     borderRadius: 5,
-    height: width * 0.15,
-    width: width * 0.13,
+    height: width * 0.14,
+    width: width * 0.12,
     justifyContent: 'center',
     alignItems: 'center',
   },

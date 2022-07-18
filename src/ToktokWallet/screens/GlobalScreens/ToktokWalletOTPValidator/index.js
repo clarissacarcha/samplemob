@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react';
+import React, {useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle} from 'react';
 import {
   View,
   Text,
@@ -13,9 +13,8 @@ import {
 } from 'react-native';
 import {ICON_SET, VectorIcon, YellowButton} from 'src/revamp';
 import {AlertOverlay} from 'src/components';
-import {CheckIdleState, DisabledButton, NumberBoxes, HeaderBack} from 'toktokwallet/components';
+import {CheckIdleState, DisabledButton, HeaderBack, NumberInputBox} from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
-import {BuildingBottom} from '../../../components';
 import {useAccount} from 'toktokwallet/hooks';
 import {useFocusEffect} from '@react-navigation/native';
 import BackgroundTimer from 'react-native-background-timer';
@@ -26,7 +25,7 @@ import tokwaLogo from 'toktokwallet/assets/images/tokwa_splash.png';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
 
-export const ToktokWalletOTPValidator = ({navigation, route}) => {
+export const ToktokWalletOTPValidator = forwardRef(({navigation, route}, ref) => {
   navigation.setOptions({
     headerShown: false,
   });
@@ -82,78 +81,37 @@ export const ToktokWalletOTPValidator = ({navigation, route}) => {
           <View style={styles.tpinBody}>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <Image style={styles.logo} source={tokwaLogo} />
-              <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.XL + 1, marginTop: 30}}>Enter OTP</Text>
+              <Text style={styles.title}>Enter OTP</Text>
             </View>
-            <Text
-              style={{
-                fontFamily: FONT.REGULAR,
-                fontSize: FONT_SIZE.M,
-                marginBottom: 20,
-                marginTop: 10,
-                textAlign: 'center',
-                marginHorizontal: moderateScale(30),
-              }}>
+            <Text style={styles.description}>
               {'We have sent an OTP code to yourmobile number ending with '}
               {tokwaAccount.mobileNumber.substr(tokwaAccount.mobileNumber.length - 3)}.
             </Text>
-            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-              <NumberBoxes pinCode={otpCode} onNumPress={onNumPress} showPin={true} error={errorMessage} />
-              <TextInput
-                caretHidden
-                value={otpCode}
-                ref={inputRef}
-                style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
-                keyboardType="numeric"
-                returnKeyType="done"
-                onSubmitEditing={() => {
-                  if (otpCode.length == 6) callBackFunc({Otp: otpCode, data: data});
-                }}
-                onChangeText={value => {
-                  if (value.length <= 6) {
-                    const replaceValue = value.replace(/[^0-9]/g, '');
-                    setOtpCode(replaceValue);
-                  }
-                }}
-              />
-            </View>
-            {errorMessage != '' && (
-              <Text
-                style={{
-                  fontFamily: FONT.REGULAR,
-                  color: 'red',
-                  alignSelf: 'center',
-                  fontSize: 12,
-                  textAlign: 'center',
-                }}>
-                {errorMessage}
-              </Text>
-            )}
-            <TouchableOpacity style={{marginTop: height * 0.07, paddingBottom: 10, alignItems: 'center'}}>
+            <NumberInputBox
+              otpCode={otpCode}
+              onNumPress={onNumPress}
+              showPin={true}
+              errorMessage={errorMessage}
+              callBackFunc={() => callBackFunc({Otp: otpCode, data: data})}
+              onChangeText={val => {
+                setOtpCode(val);
+                navigation.setParams({errorMessage: ''});
+              }}
+            />
+            <TouchableOpacity style={styles.sendOtpContainer}>
               <Text>
-                <Text
-                  style={{
-                    opacity: otpTimer > 0 ? 0.7 : 1,
-                    color: '#525252',
-                    fontSize: FONT_SIZE.M,
-                    fontFamily: FONT.REGULAR,
-                  }}>
-                  {'Didn’t receive OTP code? '}
-                </Text>
-                <Text onPress={otpTimer > 0 ? () => {} : resendRequest}>
+                <Text style={styles.didntReceive}>{'Didn’t receive OTP code? '}</Text>
+                <Text onPress={otpTimer > 0 ? () => {} : resendRequest} style={{textDecorationLine: 'underline'}}>
                   <Text
-                    style={{
-                      color: otpTimer > 0 ? '#9E9E9E' : COLOR.ORANGE,
-                      fontSize: FONT_SIZE.M,
-                      fontFamily: FONT.BOLD,
-                      textDecorationLine: 'underline',
-                    }}>
+                    style={[
+                      styles.resendText,
+                      {
+                        color: otpTimer > 0 ? '#9E9E9E' : COLOR.ORANGE,
+                      },
+                    ]}>
                     {'Resend'}
                   </Text>
-                  {otpTimer > 0 && (
-                    <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: '#9E9E9E'}}>
-                      {` (${otpTimer} secs)`}
-                    </Text>
-                  )}
+                  {otpTimer > 0 && <Text style={styles.otpTimer}>{` (${otpTimer} secs)`}</Text>}
                 </Text>
               </Text>
             </TouchableOpacity>
@@ -171,11 +129,10 @@ export const ToktokWalletOTPValidator = ({navigation, route}) => {
             )}
           </View> */}
         </View>
-        {/* <BuildingBottom /> */}
       </ImageBackground>
     </CheckIdleState>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -189,20 +146,6 @@ const styles = StyleSheet.create({
   },
   tpinBody: {
     flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
-  backBtn: {
-    backgroundColor: '#F7F7FA',
-    top: Platform.OS == 'ios' ? 40 : 10,
-    left: 16,
-    position: 'absolute',
-    zIndex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 100,
-    height: 35,
-    width: 35,
   },
   proceedBtn: {
     height: 70,
@@ -213,5 +156,37 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: moderateScale(72),
     height: moderateScale(88),
+  },
+  description: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.M,
+    marginBottom: moderateScale(20),
+    marginTop: moderateScale(10),
+    textAlign: 'center',
+    marginHorizontal: moderateScale(30),
+  },
+  title: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.XL + 1,
+    marginTop: moderateScale(30),
+  },
+  sendOtpContainer: {
+    marginTop: height * 0.07,
+    paddingBottom: moderateScale(10),
+    alignItems: 'center',
+  },
+  didntReceive: {
+    color: '#525252',
+    fontSize: FONT_SIZE.M,
+    fontFamily: FONT.REGULAR,
+  },
+  resendText: {
+    fontSize: FONT_SIZE.M,
+    fontFamily: FONT.SEMI_BOLD,
+  },
+  otpTimer: {
+    fontFamily: FONT.SEMI_BOLD,
+    fontSize: FONT_SIZE.M,
+    color: '#9E9E9E',
   },
 });

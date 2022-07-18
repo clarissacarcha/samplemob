@@ -68,7 +68,7 @@ const CustomerNoAccount = () => {
           label="Create Account"
           style={{height: moderateScale(40)}}
           onPress={() => {
-            navigation.replace('ToktokWalletVerification');
+            navigation.navigate('ToktokWalletVerification');
           }}
         />
       </View>
