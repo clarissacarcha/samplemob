@@ -15,7 +15,7 @@ import {
   Linking,
   KeyboardAvoidingView,
 } from 'react-native';
-import EIcon from 'react-native-vector-icons/EvilIcons';
+import FIcon from 'react-native-vector-icons/Feather';
 import {VerifyContext} from '../VerifyContextProvider';
 import {useNavigation} from '@react-navigation/native';
 import {useHeaderHeight} from '@react-navigation/stack';
@@ -151,7 +151,7 @@ export const VerifyID = () => {
     <TouchableOpacity
       onPress={() => onPressTakeAPhoto(placement)}
       style={[styles.chooseImage, {alignItems: 'center'}, borderColor]}>
-      <EIcon name="camera" color="#F6841F" size={30} />
+      <FIcon name="camera" color="#F6841F" size={30} />
       <Text style={styles.photoText}>Take a photo</Text>
     </TouchableOpacity>
   );
@@ -168,7 +168,7 @@ export const VerifyID = () => {
         source={{uri: placement == 'front' ? frontImage.uri : backImage.uri}}
       />
       <TouchableOpacity onPress={() => onPressTakeAPhoto(placement)} style={styles.changePhoto}>
-        <EIcon name="camera" color="#F6841F" size={25} />
+        <FIcon name="camera" color="#F6841F" size={25} />
         <Text style={styles.changeText}>Change Photo</Text>
       </TouchableOpacity>
       <View style={styles.overlay} />

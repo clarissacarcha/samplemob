@@ -12,7 +12,7 @@ import {
   ScrollView,
   Linking,
 } from 'react-native';
-import EIcon from 'react-native-vector-icons/EvilIcons';
+import FIcon from 'react-native-vector-icons/Feather';
 import {VerifyContext} from '../VerifyContextProvider';
 import {useNavigation} from '@react-navigation/native';
 import {moderateScale} from 'toktokwallet/helper';
@@ -182,7 +182,7 @@ export const VerifySelfieWithID = () => {
               source={{uri: tempSelfieImageWithID.uri}}
             />
             <TouchableOpacity onPress={onPressTakeAPhoto} style={styles.changePhoto}>
-              <EIcon name="camera" color={COLOR.ORANGE} size={20} />
+              <FIcon name="camera" color={COLOR.ORANGE} size={20} />
               <Text
                 style={{
                   textAlign: 'center',
@@ -204,7 +204,7 @@ export const VerifySelfieWithID = () => {
     <>
       <MainComponent onPress={Proceed} onPressBack={Back}>
         <TouchableOpacity onPress={onPressTakeAPhoto} style={[styles.selfieBtn, required && {borderColor: COLOR.RED}]}>
-          <EIcon name="camera" color={COLOR.ORANGE} size={25} />
+          <FIcon name="camera" color={COLOR.ORANGE} size={25} />
           <Text style={{marginBottom: 5, fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>Take a photo</Text>
         </TouchableOpacity>
         {required && <Text style={styles.requiredText}>Photo is required</Text>}

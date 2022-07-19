@@ -12,7 +12,7 @@ import {
   ScrollView,
   Linking,
 } from 'react-native';
-import EIcon from 'react-native-vector-icons/EvilIcons';
+import FIcon from 'react-native-vector-icons/Feather';
 import {VerifyContext} from '../VerifyContextProvider';
 import {useNavigation} from '@react-navigation/native';
 import ImageCropper from 'react-native-simple-image-cropper';
@@ -167,7 +167,7 @@ export const VerifySelfie = () => {
             source={{uri: tempSelfieImage.uri}}
           />
           <TouchableOpacity onPress={onPressTakeAPhoto} style={styles.changePhoto}>
-            <EIcon name="camera" color={COLOR.ORANGE} size={25} />
+            <FIcon name="camera" color={COLOR.ORANGE} size={25} />
             <Text
               style={{
                 textAlign: 'center',
@@ -188,7 +188,7 @@ export const VerifySelfie = () => {
     <>
       <MainComponent onPress={Proceed} onPressBack={Back}>
         <TouchableOpacity onPress={onPressTakeAPhoto} style={[styles.selfieBtn, required && {borderColor: COLOR.RED}]}>
-          <EIcon name="camera" color={COLOR.ORANGE} size={25} />
+          <FIcon name="camera" color={COLOR.ORANGE} size={25} />
           <Text style={{marginBottom: 5, fontSize: FONT_SIZE.S}}>Take a photo</Text>
         </TouchableOpacity>
         {required && <Text style={styles.requiredText}>Photo is required</Text>}
