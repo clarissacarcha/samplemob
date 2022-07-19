@@ -20,7 +20,7 @@ export const HeaderKebab = ({onPress, color = '#F6841F', refNo, format, showSett
   };
 
   const ViewPrivacyPolicy = () => {
-    return Linking.openURL('https://toktok.ph/privacy-policy');
+    return Linking.openURL('https://wallet.toktok.ph/privacy-policy');
   };
 
   return (
