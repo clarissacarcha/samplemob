@@ -28,9 +28,11 @@ import {
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {onErrorAppSync} from '../../util';
+import {useAccount} from 'toktokwallet/hooks';
 
 const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const {popTo, decodedPolyline} = route.params;
+  const {tokwaAccount} = useAccount();
 
   const [status, setStatus] = useState(5);
   const [action, setAction] = useState(true);
@@ -204,6 +206,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       }
     },
     onCompleted: response => {
+      console.log('zion', respones);
       setCancellationState(response.tripConsumerCancel.cancellation);
       setViewSuccessCancelBookingModal(true);
     },
@@ -350,6 +353,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         setViewCancelReasonModal={setViewCancelReasonModal}
       />
       <DriverCancelledModal
+        hastokwa={tokwaAccount.wallet.id ? true : false}
         cancellationFee={cancellationFee}
         noShowFeeSubmit={noShowFeeSubmit}
         cancellationState={cancellationState}
