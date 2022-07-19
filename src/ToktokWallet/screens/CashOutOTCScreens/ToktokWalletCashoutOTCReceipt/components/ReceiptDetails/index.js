@@ -16,7 +16,7 @@ import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
 export const ReceiptDetails = ({route}) => {
   const [footerHeight, setFooterHeight] = useState(80);
   const {recipientMobileNo, recipientName} = route.params.transactionDetails;
-  const {cashOut, emailAddress, note, requestDate} = route.params.receipt;
+  const {cashOut, emailAddress, requestDate, purpose} = route.params.receipt;
   const {amount, referenceNumber, systemServiceFee, providerServiceFee} = cashOut;
   const totalServiceFee = parseFloat(systemServiceFee) + parseFloat(providerServiceFee);
   const transactionDate = moment(requestDate).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
@@ -47,10 +47,10 @@ export const ReceiptDetails = ({route}) => {
             <Text style={styles.description}>{emailAddress}</Text>
           </View>
         )}
-        {!!note && (
+        {!!purpose && (
           <View style={[styles.bodyContainer, styles.marginBottom15]}>
             <Text style={styles.title}>Purpose</Text>
-            <Text style={styles.description}>{note}</Text>
+            <Text style={styles.description}>{purpose}</Text>
           </View>
         )}
 
