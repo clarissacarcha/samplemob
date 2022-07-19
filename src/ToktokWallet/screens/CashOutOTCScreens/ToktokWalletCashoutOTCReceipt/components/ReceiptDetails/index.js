@@ -23,7 +23,6 @@ export const ReceiptDetails = ({route}) => {
 
   return (
     <>
-      {console.log(purpose)}
       <View style={styles.line} />
       <View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
