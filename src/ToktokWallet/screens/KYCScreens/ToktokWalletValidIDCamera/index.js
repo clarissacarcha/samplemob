@@ -141,7 +141,7 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
               <View
                 style={{
                   position: 'absolute',
-                  bottom: Platform.OS === 'ios' ? 250 : 300,
+                  bottom: Platform.OS === 'ios' ? 350 : 300,
                   flex: 1,
                   alignSelf: 'center',
                 }}>
@@ -201,7 +201,7 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
                 <View
                   style={{
                     position: 'absolute',
-                    bottom: Platform.OS === 'ios' ? 250 : 300,
+                    bottom: Platform.OS === 'ios' ? 350 : 300,
                     flex: 1,
                     justifyContent: 'center',
                     alignItems: 'center',
