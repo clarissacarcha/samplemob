@@ -71,15 +71,15 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
           setWaitingStatus(0);
           setWaitingText(6);
         }
-        if (data?.onTripUpdate?.status == 'CANCELLED') {
-          setChargeAmount(data?.onTripUpdate?.cancellation?.charge?.amount);
-          if (data?.onTripUpdate?.cancellation?.charge?.amount > 0) {
-            setViewCancelBookingWithCharge(true);
-            setCancellationChargeResponse(data?.onTripUpdate.cancellation);
-          } else {
-            setViewCancelBookingModal(true);
-          }
-        }
+        // if (data?.onTripUpdate?.status == 'CANCELLED') {
+        //   setChargeAmount(data?.onTripUpdate?.cancellation?.charge?.amount);
+        //   if (data?.onTripUpdate?.cancellation?.charge?.amount > 0) {
+        //     setViewCancelBookingWithCharge(true);
+        //     setCancellationChargeResponse(data?.onTripUpdate.cancellation);
+        //   } else {
+        //     setViewCancelBookingModal(true);
+        //   }
+        // }
       },
       error => {
         console.log('[error] Trip Update:', error);
