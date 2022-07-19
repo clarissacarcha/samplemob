@@ -16,7 +16,7 @@ import {
 import {VerifyContext} from '../VerifyContextProvider';
 import validator from 'validator';
 import {TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CHECK_BLOCKED_ACCOUNT_RECORD, POST_VERIFY_IF_PEP} from 'toktokwallet/graphql';
+import {POST_VERIFY_IF_PEP, GET_CHECK_BLOCKED_ACCOUNT_RECORD} from 'toktokwallet/graphql/virtual';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {useAlert} from 'src/hooks/useAlert';
 import {onErrorAlert} from 'src/util/ErrorUtility';
