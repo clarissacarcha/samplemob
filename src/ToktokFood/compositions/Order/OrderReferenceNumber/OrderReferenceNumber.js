@@ -6,7 +6,7 @@
 import React from 'react';
 // import {Image} from 'react-native';
 import type {PropsType} from './types';
-import {Container, Row, Image} from './Styled';
+import {Container, Row, Image, ImageContainer} from './Styled';
 import StyledText from 'toktokfood/components/StyledText';
 import {useTheme} from 'styled-components';
 import {carbon_delivery, carbon_check, carbon_x} from 'toktokfood/assets/images';
@@ -52,8 +52,10 @@ const OrderReferenceNumber = (props: PropsType): React$Node => {
   const renderStatusComponent = () => {
     if (isLoaded) {
       return (
-        <Row justifyContent="flex-end" alignItems="center">
-          <Image source={image} />
+        <Row justifyContent="flex-end" alignItems="center" flex={1}>
+          <ImageContainer>
+            <Image source={image} />
+          </ImageContainer>
           <StyledText>{`  ${status}`}</StyledText>
         </Row>
       );

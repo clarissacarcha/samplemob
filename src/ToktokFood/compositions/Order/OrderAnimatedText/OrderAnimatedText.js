@@ -49,7 +49,7 @@ const OrderAnimatedText = (props: PropsType): React$Node => {
             subtitle = 'The driver is on the way to deliver your order.';
           } else {
             title = 'Order has been picked-up';
-            subtitle = 'Driver has picked-up the order';
+            subtitle = 'Driver has picked-up the order.';
           }
         } else if (state?.orderIsfor === 2) {
           title = 'Order is ready for pick up';

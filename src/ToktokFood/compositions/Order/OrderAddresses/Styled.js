@@ -22,6 +22,12 @@ export const AddressIconContainer: ComponentType<any> = styled.View`
   justify-content: center;
 `;
 
+export const Image: ComponentType<any> = styled.Image`
+  resize-mode: contain;
+  height: 22px;
+  width: 12px;
+`;
+
 export const IconContainer: ComponentType<any> = styled.View``;
 
 export const Icon: ComponentType<any> = styled(FontAwesomeIcon).attrs(props => ({
