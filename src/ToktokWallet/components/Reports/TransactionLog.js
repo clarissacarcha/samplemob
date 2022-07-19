@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import {numberFormat, MaskLeftZero, moderateScale, sameDay, dayTitle} from 'toktokwallet/helper';
+import {numberFormat, MaskLeftZero, moderateScale, sameDay, dayTitle, currencyCode} from 'toktokwallet/helper';
 
 import {useThrottle} from 'src/hooks';
 import moment from 'moment';
@@ -21,7 +21,7 @@ export const TransactionLog = ({transaction, itemsLength, index, data}) => {
   const [transactionInfo, setTransactionInfo] = useState({});
   const amountcolor = sourceWalletId == tokwaAccount?.wallet.id ? COLOR.RED : 'green';
   const amountprefix = sourceWalletId == tokwaAccount?.wallet.id ? '-' : '+';
-  const transactionAmount = `${amountprefix} ${tokwaAccount?.wallet.currency.code} ${numberFormat(amount)}`;
+  const transactionAmount = `${amountprefix} ${currencyCode}${numberFormat(amount)}`;
   const referenceDate = moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
   let nextItem = [];
   let isSameDay = false;

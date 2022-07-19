@@ -20,7 +20,7 @@ const SourceOfIncome = ({changeIncomeInfo, changeVerifyFullNameErrors, verifyFul
     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getSourceOfIncome}) => {
-      const data = [...getSourceOfIncome, {id: '0', description: 'others'}];
+      const data = [...getSourceOfIncome, {id: '0', description: 'Others'}];
       setFilteredSourceOfIncome(data);
     },
     onError: error => {

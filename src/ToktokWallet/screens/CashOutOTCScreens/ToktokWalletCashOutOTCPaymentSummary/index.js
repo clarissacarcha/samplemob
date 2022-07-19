@@ -19,7 +19,7 @@ export const ToktokWalletCashOutOTCPaymentSummary = ({navigation, route}) => {
     <>
       <View style={styles.container}>
         <ScrollView keyboardShouldPersistTaps="handled">
-          <PaymentDetails route={route} />
+          <PaymentDetails route={route} navigation={navigation} />
         </ScrollView>
         <ConfirmButton route={route} />
       </View>

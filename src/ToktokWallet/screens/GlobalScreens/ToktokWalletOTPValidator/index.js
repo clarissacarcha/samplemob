@@ -1,161 +1,192 @@
-import React, { useState , useRef , useEffect , useCallback } from 'react';
-import {View,Text,StyleSheet,TouchableOpacity,KeyboardAvoidingView,Platform,TextInput,Dimensions} from 'react-native';
-import { ICON_SET, VectorIcon, YellowButton , HeaderBack , HeaderTitle } from 'src/revamp'
-import { AlertOverlay } from 'src/components';
-import { CheckIdleState  , DisabledButton , NumberBoxes} from 'toktokwallet/components'
-import CONSTANTS from 'common/res/constants'
-import { BuildingBottom } from '../../../components';
-import { useAccount } from 'toktokwallet/hooks'
-import { useFocusEffect } from '@react-navigation/native';
-import BackgroundTimer from 'react-native-background-timer'
+import React, {useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  Dimensions,
+  ImageBackground,
+  Image,
+} from 'react-native';
+import {ICON_SET, VectorIcon, YellowButton} from 'src/revamp';
+import {AlertOverlay} from 'src/components';
+import {CheckIdleState, DisabledButton, HeaderBack, NumberInputBox} from 'toktokwallet/components';
+import CONSTANTS from 'common/res/constants';
+import {useAccount} from 'toktokwallet/hooks';
+import {useFocusEffect} from '@react-navigation/native';
+import BackgroundTimer from 'react-native-background-timer';
+import {backgrounds} from 'toktokwallet/assets';
+import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
+import tokwaLogo from 'toktokwallet/assets/images/tokwa_splash.png';
 
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
+const {width, height} = Dimensions.get('window');
 
-const {COLOR , FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS
-const { width , height } = Dimensions.get("window")
+export const ToktokWalletOTPValidator = forwardRef(({navigation, route}, ref) => {
+  navigation.setOptions({
+    headerShown: false,
+  });
 
-export const ToktokWalletOTPValidator = ({navigation,route})=> {
+  const callBackFunc = route?.params?.callBackFunc ? route.params.callBackFunc : null;
+  const errorMessage = route?.params?.errorMessage ? route.params.errorMessage : null;
+  const resendRequest = route?.params?.resendRequest ? route.params.resendRequest : null;
+  const data = route?.params?.data ? route.params.data : null;
+  const btnLabel = route?.params?.btnLabel ? route.params.btnLabel : 'Confirm';
 
+  const [otpCode, setOtpCode] = useState('');
+  const inputRef = useRef();
+  const {tokwaAccount} = useAccount();
+  const [otpTimer, setOtpTimer] = useState(120);
+  const [startCount, setStartCount] = useState(false);
 
-    navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={[""]}/>
-    })
+  const onNumPress = () => {
+    setTimeout(() => {
+      inputRef.current.focus();
+    }, 10);
+  };
 
-    const callBackFunc = route?.params?.callBackFunc ? route.params.callBackFunc : null
-    const errorMessage = route?.params?.errorMessage ? route.params.errorMessage : null
-    const resendRequest = route?.params?.resendRequest ? route.params.resendRequest : null
-    const data = route?.params?.data ? route.params.data : null
-    const btnLabel = route?.params?.btnLabel ? route.params.btnLabel : "Confirm"
+  // useFocusEffect(useCallback(()=>{
+  //     BackgroundTimer.setTimeout(()=>{
+  //         setOtpTimer(state=>state-1)
+  //     },1000)
+  // },[otpTimer]))
 
-    const [otpCode,setOtpCode] = useState("")
-    const inputRef = useRef();
-    const {tokwaAccount} = useAccount()
-    const [otpTimer,setOtpTimer] = useState(120)
-    const [startCount,setStartCount] = useState(false)
+  useEffect(() => {
+    if (startCount && otpTimer >= 0) {
+      if (otpTimer >= 0) {
+        BackgroundTimer.setTimeout(() => {
+          setOtpTimer(state => state - 1);
+        }, 1000);
+        return;
+      }
+      setStartCount(false);
+    }
+  }, [otpTimer, startCount]);
 
-    const onNumPress = () => {
-        setTimeout(() => {
-          inputRef.current.focus();
-        }, 10);
-    };
+  useEffect(() => {
+    setOtpTimer(120);
+    setStartCount(true);
+  }, [callBackFunc]);
 
-    // useFocusEffect(useCallback(()=>{
-    //     BackgroundTimer.setTimeout(()=>{
-    //         setOtpTimer(state=>state-1)
-    //     },1000)
-    // },[otpTimer]))
-
-    useEffect(()=>{
-        if(startCount && otpTimer >= 0){
-            if(otpTimer >= 0){
-                BackgroundTimer.setTimeout(()=>{
-                    setOtpTimer(state=>state-1)
-                },1000)
-                return
-            }
-            setStartCount(false) 
-        }
-    },[otpTimer,startCount])
-
-    useEffect(()=>{
-        setOtpTimer(120)
-        setStartCount(true)
-    },[callBackFunc])
-
-    return(
-        <CheckIdleState>
-            <View
-                // behavior={Platform.OS == "ios" ? "padding" : "height"}
-                // keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80} 
-                style={styles.container}
-            >
-                 <View style={styles.content}>
-                    <View style={styles.tpinBody}>
-                        <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.L,marginVertical: 30}}>Enter OTP</Text>
-                        {/* <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.L,marginBottom: 20,}}>{tokwaAccount.mobileNumber}</Text> */}
-                        <View style={{flexDirection:"row"}}>
-                        <NumberBoxes 
-                            pinCode={otpCode} 
-                            onNumPress={onNumPress} 
-                            showPin={true}
-                            error={errorMessage}
-                        />
-                         <TextInput
-                            caretHidden
-                            value={otpCode}
-                            ref={inputRef}
-                            style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
-                            keyboardType="numeric"
-                            returnKeyType="done"
-                            onSubmitEditing={()=> {
-                                if(otpCode.length == 6) callBackFunc({Otp: otpCode , data: data})
-                            }}
-                            onChangeText={(value) => {
-                                if (value.length <= 6) {
-                                    const replaceValue = value.replace(/[^0-9]/g,"")
-                                    setOtpCode(replaceValue);
-                                }
-                            }}
-                        />
-                        </View>
-                        {
-                            errorMessage != "" && <Text style={{fontFamily: FONT.REGULAR,color:"red",alignSelf:"center",fontSize: 12,textAlign:'center'}}>{errorMessage}</Text>
-                        }
-                        <TouchableOpacity
-                            disabled={otpTimer > 0 ? true : false}
-                            style={{marginTop: height * .07, paddingBottom: 10,alignItems: "center"}}
-                            onPress={resendRequest}
-                        >
-                            <Text style={{opacity: otpTimer > 0 ? 0.7 : 1, color: "#FF8A48",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Resend OTP</Text>
-                            { otpTimer > 0 && <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{otpTimer} s</Text> }
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.proceedBtn}>
-                        {
-                            otpCode.length < 6
-                            ? <DisabledButton label={btnLabel} />
-                            : <YellowButton label={btnLabel} onPress={()=>{
-                                callBackFunc({Otp: otpCode , data: data})
-                            }} />
-                        }
-                    </View>
-                </View>
-                <BuildingBottom/>
+  return (
+    <CheckIdleState>
+      <ImageBackground source={backgrounds.gradient_tpin} style={styles.container}>
+        <View style={{marginTop: Platform.OS === 'ios' ? moderateScale(16) : getStatusbarHeight + moderateScale(16)}}>
+          <HeaderBack color={COLOR.ORANGE} />
+        </View>
+        <View style={styles.content}>
+          <View style={styles.tpinBody}>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Image style={styles.logo} source={tokwaLogo} />
+              <Text style={styles.title}>Enter OTP</Text>
             </View>
-        </CheckIdleState>
-    )
-}
+            <Text style={styles.description}>
+              {'We have sent an OTP code to yourmobile number ending with '}
+              {tokwaAccount.mobileNumber.substr(tokwaAccount.mobileNumber.length - 3)}.
+            </Text>
+            <NumberInputBox
+              otpCode={otpCode}
+              onNumPress={onNumPress}
+              showPin={true}
+              errorMessage={errorMessage}
+              callBackFunc={() => callBackFunc({Otp: otpCode, data: data})}
+              onChangeText={val => {
+                setOtpCode(val);
+                navigation.setParams({errorMessage: ''});
+              }}
+            />
+            <TouchableOpacity style={styles.sendOtpContainer}>
+              <Text>
+                <Text style={styles.didntReceive}>{'Didn’t receive OTP code? '}</Text>
+                <Text onPress={otpTimer > 0 ? () => {} : resendRequest} style={{textDecorationLine: 'underline'}}>
+                  <Text
+                    style={[
+                      styles.resendText,
+                      {
+                        color: otpTimer > 0 ? '#9E9E9E' : COLOR.ORANGE,
+                      },
+                    ]}>
+                    {'Resend'}
+                  </Text>
+                  {otpTimer > 0 && <Text style={styles.otpTimer}>{` (${otpTimer} secs)`}</Text>}
+                </Text>
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {/* <View style={styles.proceedBtn}>
+            {otpCode.length < 6 ? (
+              <DisabledButton label={btnLabel} />
+            ) : (
+              <YellowButton
+                label={btnLabel}
+                onPress={() => {
+                  callBackFunc({Otp: otpCode, data: data});
+                }}
+              />
+            )}
+          </View> */}
+        </View>
+      </ImageBackground>
+    </CheckIdleState>
+  );
+});
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor:"white"
-    },
-    content: {
-        flex: 1,
-        padding: 16,
-        justifyContent: "center",
-    },
-    tpinBody: {
-        flex: 1,
-        alignItems:"center",
-        justifyContent: "center"
-    },
-    backBtn: {
-        backgroundColor:"#F7F7FA",
-        top: Platform.OS == "ios" ? 40 : 10, 
-        left: 16,
-        position:"absolute",
-        zIndex: 1,
-        justifyContent:"center",
-        alignItems:"center",
-        borderRadius: 100,
-        height: 35,
-        width: 35,
-    },
-    proceedBtn: {
-        height: 70,
-        width: "100%",
-        justifyContent:"flex-end",
-    },
-})
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  content: {
+    flex: 1,
+    padding: 16,
+    justifyContent: 'center',
+  },
+  tpinBody: {
+    flex: 1,
+  },
+  proceedBtn: {
+    height: 70,
+    width: '100%',
+    justifyContent: 'flex-end',
+  },
+  logo: {
+    resizeMode: 'contain',
+    width: moderateScale(72),
+    height: moderateScale(88),
+  },
+  description: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.M,
+    marginBottom: moderateScale(20),
+    marginTop: moderateScale(10),
+    textAlign: 'center',
+    marginHorizontal: moderateScale(30),
+  },
+  title: {
+    fontFamily: FONT.REGULAR,
+    fontSize: FONT_SIZE.XL + 1,
+    marginTop: moderateScale(30),
+  },
+  sendOtpContainer: {
+    marginTop: height * 0.07,
+    paddingBottom: moderateScale(10),
+    alignItems: 'center',
+  },
+  didntReceive: {
+    color: '#525252',
+    fontSize: FONT_SIZE.M,
+    fontFamily: FONT.REGULAR,
+  },
+  resendText: {
+    fontSize: FONT_SIZE.M,
+    fontFamily: FONT.SEMI_BOLD,
+  },
+  otpTimer: {
+    fontFamily: FONT.SEMI_BOLD,
+    fontSize: FONT_SIZE.M,
+    color: '#9E9E9E',
+  },
+});

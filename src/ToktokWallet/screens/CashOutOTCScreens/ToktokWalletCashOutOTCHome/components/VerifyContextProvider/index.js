@@ -25,7 +25,6 @@ export const VerifyContextProvider = ({children}) => {
       console.log(error);
     },
     onCompleted: ({getCashOutProviderPartners}) => {
-      console.log(getCashOutProviderPartners);
       setCashOutProviderPartners(getCashOutProviderPartners);
     },
   });

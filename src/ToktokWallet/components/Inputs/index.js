@@ -4,5 +4,6 @@ export * from './CustomSelectionList';
 export * from './CustomTextInput';
 export * from './InputAmount';
 export * from './NumberBoxes';
+export * from './NumberInputBox';
 export * from './NumberPad';
 export * from './SearchInput';

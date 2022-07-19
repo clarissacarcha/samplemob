@@ -78,7 +78,7 @@ export const ToktokWalletCashOutOTCReceipt = ({navigation, route}) => {
         <ScrollView
           style={styles.container}
           contentContainerStyle={{
-            padding: onCapturingScreen ? (Platform.OS === 'ios' ? moderateScale(10) : 0) : moderateScale(16),
+            padding: onCapturingScreen ? 0 : moderateScale(16),
           }}>
           <ViewShot ref={viewshotRef} options={{format: 'jpg', quality: 0.9, result: 'tmpfile'}}>
             {onCapturingScreen ? (

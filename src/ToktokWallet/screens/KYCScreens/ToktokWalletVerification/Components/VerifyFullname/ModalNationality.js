@@ -25,9 +25,18 @@ const ModalNationality = ({verifyFullNameErrors}) => {
     onCompleted: response => {
       const countries = response.getCountries;
       const nationality = 'Filipino';
+
+      countries.sort((x, y) => {
+        return x.nationality > y.nationality;
+      });
       countries.sort((x, y) => {
         return x.nationality === nationality ? -1 : y.nationality === nationality ? 1 : 0;
       });
+
+      //REMOVE UNITED STATES MINOR OUTLYING ISLANDS
+      const findIndex = countries.findIndex(item => item.iso2 === 'UM');
+      countries.splice(findIndex, 1);
+
       setNationalities(countries);
       setFilteredNationalities(countries);
     },
