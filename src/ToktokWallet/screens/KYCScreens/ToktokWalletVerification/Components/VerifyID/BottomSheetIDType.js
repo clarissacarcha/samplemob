@@ -44,6 +44,7 @@ const BottomSheetIDType = ({
   const onSelectedValue = ({index}) => {
     const validID = filteredValidID[index];
     changeVerifyID('idType', validID.name);
+    changeVerifyID('idNumber', '');
     setIdentificationId(validID.id);
     setIsbackRequired(validID.isBackRequired == 1);
     changeVerifyIDErrors('idError', '');
