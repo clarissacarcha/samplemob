@@ -46,7 +46,7 @@ export const CashOutOtcLog = ({item, tokwaAccount, index}) => {
       refDate,
       date,
       time,
-      name: 'Cash In',
+      name: 'Cash Out',
       phrase,
       amount: transactionAmount,
       status,
@@ -63,7 +63,7 @@ export const CashOutOtcLog = ({item, tokwaAccount, index}) => {
       <Details transaction={info} visible={openModal} setVisible={setOpenModal} />
       <TouchableOpacity style={styles.transaction} onPress={onthrottledPress}>
         <View style={styles.transactionDetails}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Request # {requestNo}</Text>
+          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Reference #{requestNo}</Text>
           <Text style={{color: '#909294', fontSize: FONT_SIZE.M, marginTop: 0, fontFamily: FONT.REGULAR}}>
             {status}
           </Text>

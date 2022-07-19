@@ -11,7 +11,7 @@ import {banner, info_icon} from 'toktokwallet/assets';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 
-export const PaymentDetails = ({route}) => {
+export const PaymentDetails = ({route, navigation}) => {
   const {recipientName, recipientMobileNo, email, dateOfClaim, amount, purpose, otcPartnerDetails, totalServiceFee} =
     route.params.transactionDetails;
 
@@ -93,7 +93,11 @@ export const PaymentDetails = ({route}) => {
       <View style={styles.container}>
         <Text style={styles.terms}>
           <Text style={styles.footerText}>Please review the accuracy of the details provided and read our </Text>
-          <Text style={[styles.tnc, styles.footerText]}>Terms and Conditions </Text>
+          <Text
+            style={[styles.tnc, styles.footerText]}
+            onPress={() => navigation.navigate('ToktokWalletTermsConditions')}>
+            Terms and Conditions{' '}
+          </Text>
           <Text style={styles.footerText}>before you proceed with your transaction.</Text>
         </Text>
       </View>

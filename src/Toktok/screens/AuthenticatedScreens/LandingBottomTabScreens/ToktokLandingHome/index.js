@@ -33,6 +33,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
         setTimeout(() => {
           // navigation.navigate('ToktokWalletHomePage');
           // navigation.replace('ToktokWalletHomePage');
+          // navigation.navigate('ToktokLandingNotifications');
         }, 10);
         return;
       }

@@ -288,7 +288,7 @@ export const Confirm = connect(
           <UserInfo
             label="Source of Income"
             value={
-              VerifyUserData.incomeInfo.source.description == 'others'
+              VerifyUserData.incomeInfo.source.id == '0'
                 ? VerifyUserData.incomeInfo.otherSource
                 : VerifyUserData.incomeInfo.source.description
             }
@@ -304,7 +304,7 @@ export const Confirm = connect(
                 label="Have you ever been categorized as PEP (Political Exposed Person) by a bank, brokerage firm or any financial institution?"
                 value={
                   VerifyUserData.pepInfo.questionnaire.isPep === '1'
-                    ? `Yes, as ${VerifyUserData.pepInfo.questionnaire.pepPosition} position`
+                    ? `Yes, ${VerifyUserData.pepInfo.questionnaire.pepPosition}`
                     : VerifyUserData.pepInfo.questionnaire.isPep === '2'
                     ? 'No'
                     : "I don't know"
@@ -314,7 +314,7 @@ export const Confirm = connect(
                 label="Do you have an immediate family member or business/close associate which is currently/formally qualified as PEP?"
                 value={
                   VerifyUserData.pepInfo.questionnaire.isFamilyPep === '1'
-                    ? `Yes, as ${VerifyUserData.pepInfo.questionnaire.familyPepPosition} position`
+                    ? `Yes, ${VerifyUserData.pepInfo.questionnaire.familyPepPosition}`
                     : VerifyUserData.pepInfo.questionnaire.isFamilyPep === '2'
                     ? 'No'
                     : "I don't know"
