@@ -83,7 +83,7 @@ export const Confirm = connect(
           message:
             'You already haved an existing account. Having trouble accessing your account? Please contact our Customer Support Team.',
           event: 'TOKTOKBILLSLOAD',
-          onPress: () => navigation.pop(1),
+          onPress: () => navigation.pop(2),
         });
       } else {
         onErrorAlert({alert, error, title: graphQLErrors[0]?.payload?.title ? graphQLErrors[0]?.payload?.title : null});
@@ -104,7 +104,10 @@ export const Confirm = connect(
           message:
             'Kindly wait for the notification as our representative assesses your application. Thank you for choosing toktokwallet!',
           event: 'TOKTOKBILLSLOAD',
-          onPress: () => navigation.pop(1),
+          onPress: () => {
+            navigation.pop(2);
+            navigation.navigate('ToktokWalletRestricted', {component: 'pendingKYC'});
+          },
         });
       }
     },
