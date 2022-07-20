@@ -65,9 +65,11 @@ export const VerifyAddress = () => {
   const [getCityByProvinceCode, {error, loading}] = useLazyQuery(GET_CITIES, {
     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: response => {
-      // console.log("Clity", response)
-      setCities(response.getCities);
+    onCompleted: ({getCities}) => {
+      getCities.sort((x, y) => {
+        return x.citymunDesc > y.citymunDesc;
+      });
+      setCities(getCities);
     },
     onError: err => {
       console.log(err);
