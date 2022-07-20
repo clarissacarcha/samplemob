@@ -14,7 +14,7 @@ import {RNCamera} from 'react-native-camera';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import ImageCropper from 'react-native-simple-image-cropper';
 import EIcon from 'react-native-vector-icons/EvilIcons';
-import {CheckIdleState, PreviousNextButton} from 'toktokwallet/components';
+import {CheckIdleState, PreviousNextButton, HeaderTitleRevamp} from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
 import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
 import {camera_icon, camera_circle} from 'toktokwallet/assets';
@@ -133,17 +133,19 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
     return (
       <MainComponent checkTimeout={checkTimeout}>
         <View style={styles.header}>
-          <Text style={{fontSize: FONT_SIZE.L + 1, textAlign: 'center'}}>Upload Valid ID</Text>
+          <HeaderTitleRevamp label={"Upload Valid ID"} />
         </View>
         <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', alignSelf: 'center'}}>
             <View style={styles.retakeCameraBox}>
               <View
                 style={{
+                  paddingVertical: 10,
                   position: 'absolute',
-                  bottom: Platform.OS === 'ios' ? 350 : 300,
-                  flex: 1,
-                  alignSelf: 'center',
+                  top: -100,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
                 }}>
                 <Text style={styles.titleText}>{title}</Text>
               </View>
@@ -335,9 +337,9 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: 'white',
-    padding: moderateScale(15),
-    paddingHorizontal: moderateScale(16),
-    paddingVertical: moderateScale(16),
+    // padding: moderateScale(15),
+    paddingHorizontal: moderateScale(13),
+    paddingVertical: moderateScale(13),
     marginTop: Platform.OS === 'ios' ? 0 : getStatusbarHeight,
   },
 });
