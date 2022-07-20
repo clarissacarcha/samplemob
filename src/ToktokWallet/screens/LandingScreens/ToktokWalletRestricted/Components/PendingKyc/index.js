@@ -8,7 +8,7 @@ import {OrangeButton, HeaderBack, HeaderTitleRevamp, HeaderKebab} from 'toktokwa
 
 //FONTS & IMAGES
 import tokwaLogo from 'toktokwallet/assets/images/tokwa_splash.png';
-import circleCheck from 'toktokwallet/assets/icons/circleCheck.png';
+import {circle_check} from 'toktokwallet/assets';
 import LinearGradient from 'toktokwallet/assets/images/backgrounds/gradient-bg2.png';
 const {COLOR, FONT_SIZE, FONT_FAMILY: FONT} = CONSTANTS;
 
@@ -45,17 +45,17 @@ export const PendingKyc = () => {
           <Text style={styles.benefitsText}>Benefits</Text>
           <View style={styles.benefitsContainer}>
             <View style={styles.benefitsListContainer}>
-              <Image style={styles.checkIcon} source={circleCheck} />
+              <Image style={styles.checkIcon} source={circle_check} />
               <Text style={styles.benefitsListText}>Safe and secure toktokwallet account</Text>
             </View>
 
             <View style={styles.benefitsListContainer}>
-              <Image style={styles.checkIcon} source={circleCheck} />
+              <Image style={styles.checkIcon} source={circle_check} />
               <Text style={styles.benefitsListText}>Enjoy a convenient payment experience</Text>
             </View>
 
             <View style={styles.benefitsListContainer}>
-              <Image style={styles.checkIcon} source={circleCheck} />
+              <Image style={styles.checkIcon} source={circle_check} />
               <Text style={styles.benefitsListText}>Enjoy perks and rewards</Text>
             </View>
           </View>

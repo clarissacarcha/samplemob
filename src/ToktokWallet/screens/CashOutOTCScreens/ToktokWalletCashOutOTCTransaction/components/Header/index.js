@@ -45,8 +45,8 @@ export const Header = ({route}) => {
         </View>
       </ImageBackground>
       <PolicyNote
-        note1="All transactions made before 01.00 PM will be processed within the day."
-        note2="All transactions after 01.00 PM will be processed the next banking day."
+        note1="All transactions made before 01:00 PM will be processed within the day."
+        note2="All transactions after 01:00 PM will be processed the next banking day."
       />
     </>
   );

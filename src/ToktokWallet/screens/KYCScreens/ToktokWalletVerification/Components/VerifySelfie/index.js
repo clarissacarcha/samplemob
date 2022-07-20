@@ -20,7 +20,7 @@ import CONSTANTS from 'common/res/constants';
 import {throttle} from 'lodash';
 
 //FONT & IMAGES
-import circleCheck from 'toktokwallet/assets/icons/circleCheck.png';
+import {circle_check} from 'toktokwallet/assets';
 
 //COMPONENTS
 import {PreviousNextButton} from 'toktokwallet/components';
@@ -70,15 +70,15 @@ const MainComponent = ({children, onPress, onPressBack}) => {
               <Text style={styles.benefitsText}>Reminders</Text>
               <View style={styles.benefitsContainer}>
                 <View style={styles.benefitsListContainer}>
-                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Image style={styles.checkIcon} source={circle_check} />
                   <Text style={styles.benefitsListText}>Position your face within the frame</Text>
                 </View>
                 <View style={styles.benefitsListContainer}>
-                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Image style={styles.checkIcon} source={circle_check} />
                   <Text style={styles.benefitsListText}>Don’t wear anything covering your face</Text>
                 </View>
                 <View style={styles.benefitsListContainer}>
-                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Image style={styles.checkIcon} source={circle_check} />
                   <Text style={styles.benefitsListText}>Avoid blurry, grainy or shadows in the photo</Text>
                 </View>
               </View>

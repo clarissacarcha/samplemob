@@ -133,7 +133,7 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
     return (
       <MainComponent checkTimeout={checkTimeout}>
         <View style={styles.header}>
-          <HeaderTitleRevamp label={"Upload Valid ID"} />
+          <HeaderTitleRevamp label={'Upload Valid ID'} />
         </View>
         <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', alignSelf: 'center'}}>
@@ -203,7 +203,7 @@ export const ToktokWalletValidIDCamera = ({navigation, route}) => {
                 <View
                   style={{
                     position: 'absolute',
-                    bottom: Platform.OS === 'ios' ? 350 : 300,
+                    top: Platform.OS === 'ios' ? -70 : -100,
                     flex: 1,
                     justifyContent: 'center',
                     alignItems: 'center',
