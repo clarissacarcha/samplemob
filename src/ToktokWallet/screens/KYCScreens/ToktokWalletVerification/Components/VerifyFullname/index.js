@@ -360,6 +360,7 @@ export const VerifyFullname = () => {
               <View style={{marginTop: moderateScale(10)}}>
                 <CustomTextInput
                   value={incomeInfo.otherSource}
+                  placeholder="Enter Other Source of Income"
                   onChangeText={value => {
                     changeIncomeInfo('otherSource', value);
                     changeVerifyFullNameErrors('otherSourceError', '');
