@@ -217,14 +217,19 @@ const Component =  ({
         setIsFetching(false)
         if(response.getProductDetails.enabled === 2){
           dispatch({
-            type: 'TOKTOK_MALL_OPEN_MODAL_2',
+            type: 'TOKTOK_MALL_OPEN_MODAL',
             payload: {
               type: 'Warning',
               title: 'Product not Available',
               message:
                 'We’re sorry but this product is no longer available. This product will be deleted upon refresh.',
-              btnTitle: 'OK',
-              onConfirm: () => navigation.goBack(),
+                actions: [
+                  {
+                    name: 'OK',
+                    type: 'fill',
+                    onPress: () => navigation.goBack()
+                  }
+                ]
             },
           });
         }

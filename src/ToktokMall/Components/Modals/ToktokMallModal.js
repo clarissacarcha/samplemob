@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import {BackHandler, StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, TouchableWithoutFeedback} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import { FONT_SEMIBOLD } from '../../../res/constants';
 import {FONT, FONT_SIZE} from '../../../res/variables';
 import {successIcon, errorIcon, warningIcon, questionIcon} from '../../assets';
 
@@ -62,7 +63,7 @@ export const ToktokMallModal = () => {
               backgroundColor: 'white',
               minWidth: '70%',
               paddingVertical: 20,
-              paddingHorizontal: 20,
+              paddingHorizontal: 40,
               borderRadius: 5,
             }}>
             <View
@@ -80,16 +81,15 @@ export const ToktokMallModal = () => {
                         source={getIconByType}
                         style={{width: 130, height: 120, resizeMode: 'stretch', overflow: 'hidden'}}
                       />
-                      <View style={{paddingVertical: 12}} />
+                      <View style={{paddingVertical: 8}} />
                     </>
                   )}
                   {title && (
-                    <Text style={{color: '#F6841F', marginBottom: 10, fontSize: 22, textAlign: 'center', marginTop: 15}}>{title}</Text>
+                    <Text style={{color: '#F6841F', marginBottom: 12, fontSize: 22, textAlign: 'center', marginTop: 15}}>{title}</Text>
                   )}
                   <Text
                     style={{
                       fontSize: title ? FONT_SIZE.M : 20,
-                      color: '#F6841F',
                       fontFamily: FONT.REGULAR,
                       textAlign: 'center',
                     }}>
@@ -97,12 +97,13 @@ export const ToktokMallModal = () => {
                   </Text>
                 </>
               )}
-              {actions.length > 0 && <View style={{paddingVertical: 8}} />}
+              {actions.length > 0 && <View style={{paddingVertical: 12}} />}
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  marginHorizontal: -20,
                 }}>
                 {actions.map(({onPress, type, name}) => (
                   <TouchableOpacity
@@ -154,5 +155,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#F6841F',
+    fontSize: FONT_SEMIBOLD
   },
 });

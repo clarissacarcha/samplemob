@@ -428,51 +428,58 @@ const Component = ({route, navigation, createMyCartSession}) => {
     
     console.log("TOKTOK_MALL_OPEN_MODAL_2", paramsDataCopy.data.filter((val) => val !== null))
     dispatch({
-      type: 'TOKTOK_MALL_OPEN_MODAL_2',
+      type: 'TOKTOK_MALL_OPEN_MODAL',
       payload: {
         type: 'Warning',
         title: 'Unable to Place Order',
-        message: 'We’re sorry but some items in your cart is currently unavailable. Please try again another time.',        
-        onConfirm: async () => {
-          let filtered = {
-            ...paramsDataCopy,
-            data: paramsDataCopy.data.filter((val) => val !== null)
+        message: 'We’re sorry but some items in your cart is\ncurrently unavailable. Please try again another\ntime.',        
+        actions: [
+          {
+            name: 'OK',
+            type: 'fill',
+            onPress: async () => {
+              let filtered = {
+                ...paramsDataCopy,
+                data: paramsDataCopy.data.filter((val) => val !== null)
+              }
+              console.log("PARAMS DATA COPY", JSON.stringify(paramsDataCopy))
+              console.log("FILTERED PARAMS DATA", JSON.stringify(filtered))
+    
+              // return //used for debugging
+              EventRegister.emit("refreshToktokmallShoppingCart")
+    
+              navigation.replace("ToktokMallEmptyCheckout", {
+                ...route.params,
+                data: filtered
+              })
+            },
           }
-          console.log("PARAMS DATA COPY", JSON.stringify(paramsDataCopy))
-          console.log("FILTERED PARAMS DATA", JSON.stringify(filtered))
-
-          // return //used for debugging
-          EventRegister.emit("refreshToktokmallShoppingCart")
-
-          navigation.replace("ToktokMallEmptyCheckout", {
-            ...route.params,
-            data: filtered
-          })
-        },
+        ]
+        
       },
     });
   }
 
   const onVoucherInvalid = (data) => {
     dispatch({
-      type: 'TOKTOK_MALL_OPEN_MODAL_2',
+      type: 'TOKTOK_MALL_OPEN_MODAL',
       payload: {
         type: 'Warning',
         title: 'Voucher Removed',
         message: 'We`re sorry but the voucher you used has already expired. Would you like to proceed and remove voucher?',
-        buttons: [
+        actions: [
           {
-            title: 'No',
+            name: 'No',
             type: 'transparent',
             onPress: () => {
-              dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+              dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL'})
             }
           },
           {
-            title: 'Yes',
-            type: 'filled',
+            name: 'Yes',
+            type: 'fill',
             onPress: () => {
-              dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+              dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL'})
               
             }
           }
@@ -628,22 +635,22 @@ const Component = ({route, navigation, createMyCartSession}) => {
       }else if(req.responseData.order_status == "Waiting for Payment"){
         //HANDLE REQUEST MONEY ID HAS EXPIRED
         dispatch({
-          type: 'TOKTOK_MALL_OPEN_MODAL_2',
+          type: 'TOKTOK_MALL_OPEN_MODAL',
           payload: {
             type: 'Warning',
             title: 'Unable to Place Order',
-            message: ' Oops! Sorry, but this transaction was unsuccesful! Kindly try again to proceed.',
-            buttons: [
+            message: ' Oops! Sorry, but this transaction was\nunsuccesful! Kindly try again to proceed.',
+            actions: [
               {
-                title: 'Cancel',
+                name: 'Cancel',
                 type: 'transparent',
                 onPress: () => {
-                  dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+                  dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL'})
                 }
               },
               {
-                title: 'Try Again',
-                type: 'filled',
+                name: 'Try Again',
+                type: 'fill',
                 onPress: () => {
 
                   let ids = []
@@ -652,7 +659,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
                       ids.push(item.id)
                     });
                   })
-                  dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL_2'})
+                  dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL'})
                   checkItemFromCheckout({
                     variables: {
                       input: {

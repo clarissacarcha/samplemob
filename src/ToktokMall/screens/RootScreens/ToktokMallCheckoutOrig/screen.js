@@ -284,27 +284,33 @@ const Component = ({route, navigation, createMyCartSession}) => {
     })
     
     dispatch({
-      type: 'TOKTOK_MALL_OPEN_MODAL_2',
+      type: 'TOKTOK_MALL_OPEN_MODAL',
       payload: {
         type: 'Warning',
         title: 'Unable to Place Order',
         message: 'We’re sorry but some items in your cart is currently unavailable. Please try again another time.',
-        onConfirm: async () => {
-
-          let filtered = {
-            ...paramsDataCopy,
-            data: paramsDataCopy.data.filter((val) => val !== null)
+        actions: [
+          {
+            name: 'Confirm',
+            type: 'fill',
+            onPress: async () => {
+              let filtered = {
+                ...paramsDataCopy,
+                data: paramsDataCopy.data.filter((val) => val !== null)
+              }
+              console.log("PARAMS DATA COPY", JSON.stringify(paramsDataCopy))
+              console.log("FILTERED PARAMS DATA", JSON.stringify(filtered))
+    
+              // return //used for debugging
+              EventRegister.emit("refreshToktokmallShoppingCart")
+    
+              navigation.replace("ToktokMallEmptyCheckout", {
+                ...route.params,
+                data: filtered
+              })
+            },
           }
-          console.log("PARAMS DATA COPY", JSON.stringify(paramsDataCopy))
-          console.log("FILTERED PARAMS DATA", JSON.stringify(filtered))
-
-          // return //used for debugging
-
-          navigation.replace("ToktokMallEmptyCheckout", {
-            ...route.params,
-            data: filtered
-          })
-        },
+        ]
       },
     });
   }
