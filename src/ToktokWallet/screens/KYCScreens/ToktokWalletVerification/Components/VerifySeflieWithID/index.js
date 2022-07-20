@@ -24,7 +24,7 @@ import {throttle} from 'lodash';
 import {PreviousNextButton} from 'toktokwallet/components';
 
 //FONT & IMAGES
-import circleCheck from 'toktokwallet/assets/icons/circleCheck.png';
+import {circle_check} from 'toktokwallet/assets';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 const {width, height} = Dimensions.get('window');
@@ -63,7 +63,7 @@ const MainComponent = ({children, onPress, onPressBack}) => {
             Get verified by taking a selfie with your valid government issued ID.
           </Text>
           <View style={styles.mainInput}>
-            <View style={{marginTop: 20, flex: 1}}>
+            <View style={{marginTop: 20}}>
               <Text style={styles.selfieLabel}>Take a Selfie with ID</Text>
               {children}
             </View>
@@ -71,27 +71,27 @@ const MainComponent = ({children, onPress, onPressBack}) => {
               <Text style={styles.benefitsText}>Reminders</Text>
               <View style={styles.benefitsContainer}>
                 <View style={styles.benefitsListContainer}>
-                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Image style={styles.checkIcon} source={circle_check} />
                   <Text style={styles.benefitsListText}>Position your face within the frame</Text>
                 </View>
                 <View style={styles.benefitsListContainer}>
-                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Image style={styles.checkIcon} source={circle_check} />
                   <Text style={styles.benefitsListText}>Don’t wear anything covering your face</Text>
                 </View>
                 <View style={styles.benefitsListContainer}>
-                  <Image style={[styles.checkIcon, {marginTop: moderateScale(-15)}]} source={circleCheck} />
+                  <Image style={[styles.checkIcon]} source={circle_check} />
                   <Text style={styles.benefitsListText}>
                     Take a selfie with the same valid government-issued ID that you have uploaded
                   </Text>
                 </View>
                 <View style={styles.benefitsListContainer}>
-                  <Image style={[styles.checkIcon, {marginTop: moderateScale(-15)}]} source={circleCheck} />
+                  <Image style={[styles.checkIcon]} source={circle_check} />
                   <Text style={styles.benefitsListText}>
                     Show front side of the ID and do not cover while taking a selfie{' '}
                   </Text>
                 </View>
                 <View style={styles.benefitsListContainer}>
-                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Image style={styles.checkIcon} source={circle_check} />
                   <Text style={styles.benefitsListText}>Avoid blurry, grainy, or shadows in the photo</Text>
                 </View>
               </View>
@@ -281,19 +281,14 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   reminderContainer: {
-    flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: moderateScale(10),
   },
   benefitsContainer: {
     marginTop: 20,
-    justifyContent: 'center',
   },
   benefitsListContainer: {
     flexDirection: 'row',
     marginVertical: 3,
-    alignItems: 'center',
   },
   benefitsListText: {
     fontFamily: FONT.REGULAR,
@@ -305,12 +300,14 @@ const styles = StyleSheet.create({
     color: COLOR.ORANGE,
     marginBottom: moderateScale(5),
     marginTop: moderateScale(30),
+    textAlign: 'center',
   },
   checkIcon: {
     resizeMode: 'contain',
     width: moderateScale(13),
     height: moderateScale(13),
     paddingHorizontal: moderateScale(14),
+    marginTop: Platform.OS === 'android' ? moderateScale(3) : 0,
   },
   input: {
     padding: 10,

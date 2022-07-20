@@ -10,8 +10,8 @@ import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 export const PolicyNote = ({onPress, disabled = true, note1, note2, containerStyle}) => {
-  // 'All transactions made before 01.00 PM will be processed within the day.'
-  // 'All transactions after 01.00 PM will be processed the next banking day.'
+  // 'All transactions made before 01:00 PM will be processed within the day.'
+  // 'All transactions after 01:00 PM will be processed the next banking day.'
   return (
     <TouchableOpacity style={[styles.note, containerStyle]} onPress={onPress} disabled={disabled}>
       <Image source={info_icon} style={styles.noteLogo} />
