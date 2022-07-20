@@ -79,13 +79,13 @@ const MainComponent = ({children, onPress, onPressBack}) => {
                   <Text style={styles.benefitsListText}>Don’t wear anything covering your face</Text>
                 </View>
                 <View style={styles.benefitsListContainer}>
-                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Image style={[styles.checkIcon, {marginTop: moderateScale(-15)}]} source={circleCheck} />
                   <Text style={styles.benefitsListText}>
                     Take a selfie with the same valid government-issued ID that you have uploaded
                   </Text>
                 </View>
                 <View style={styles.benefitsListContainer}>
-                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Image style={[styles.checkIcon, {marginTop: moderateScale(-15)}]} source={circleCheck} />
                   <Text style={styles.benefitsListText}>
                     Show front side of the ID and do not cover while taking a selfie{' '}
                   </Text>
@@ -253,6 +253,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignContent: 'center',
+    marginTop: moderateScale(16),
   },
   instructionsPicture: {
     height: moderateScale(189),
