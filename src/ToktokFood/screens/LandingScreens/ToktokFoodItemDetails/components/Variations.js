@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import _ from 'lodash';
 import React, {useEffect, useState, useContext, useCallback} from 'react';
-import {StyleSheet, Platform, Text, TextInput, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, FlatList} from 'react-native';
 import {COLOR, FONT, FONT_SIZE, SHADOW} from 'res/variables';
 import RadioButton from 'toktokfood/components/RadioButton';
 // Utils
@@ -9,6 +9,7 @@ import {moderateScale, scale, verticalScale} from 'toktokfood/helper/scale';
 import {VerifyContext} from './VerifyContextProvider';
 // import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import Separator from 'toktokfood/components/Separator';
+import Divider from 'toktokfood/components/Divider';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import Modal from 'react-native-modal';
 import {useRoute} from '@react-navigation/native';
@@ -402,7 +403,7 @@ export const Variations = ({data, productId}) => {
         <Text style={{color: '#525252'}}>If this item is unavailable</Text>
         <TouchableOpacity activeOpacity={0.9} onPress={() => setIsModalVisible(true)}>
           <View style={styles.orderInstructionContainer}>
-          <Text>{orderInstructions}</Text>
+            <Text>{orderInstructions}</Text>
             <FA5Icon name={'chevron-down'} size={12} color={'#FFA700'} />
           </View>
         </TouchableOpacity>
@@ -418,18 +419,21 @@ export const Variations = ({data, productId}) => {
         isVisible={isModalVisible}
         onBackdropPress={() => setIsModalVisible(false)}>
         <View style={styles.modalContainer}>
-          {ORDER_INSTRUCTIONS_OPTIONS.map(instruction => {
-            return (
+          <FlatList
+            data={ORDER_INSTRUCTIONS_OPTIONS}
+            keyExtractor={item => item}
+            renderItem={({item}) => (
               <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => {
-                  setOrderInstructions(instruction);
+                  setOrderInstructions(item);
                   setIsModalVisible(false);
                 }}>
-                <Text style={styles.modalInstructionText}>{instruction}</Text>
+                <Text style={styles.modalInstructionText}>{item}</Text>
               </TouchableOpacity>
-            );
-          })}
+            )}
+            ItemSeparatorComponent={() => <Divider marginVertical={5} />}
+          />
         </View>
       </Modal>
     );

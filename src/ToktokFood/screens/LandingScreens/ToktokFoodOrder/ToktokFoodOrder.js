@@ -226,7 +226,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
                 <StyledText color={theme.color.orange} fontSize={11} mode="medium">
                   &#x20B1;{parseFloat(state?.refundTotal).toFixed(2)}{' '}
                 </StyledText>
-                is refunded to your toktokwallet account.
+                will be refunded to your toktokwallet account.
               </ModifiedText>
             </React.Fragment>
           ) : (
