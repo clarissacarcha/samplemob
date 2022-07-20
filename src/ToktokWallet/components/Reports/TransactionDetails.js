@@ -42,8 +42,8 @@ export const TransactionDetails = ({transaction, visible, setVisible}) => {
         <Text style={styles.labelCashOut}>{phrase}</Text>
         {isCashOutPending && (
           <PolicyNote
-            note1="All transactions made before 01.00 PM will be processed within the day."
-            note2="All transactions after 01.00 PM will be processed the next banking day."
+            note1="All transactions made before 01:00 PM will be processed within the day."
+            note2="All transactions after 01:00 PM will be processed the next banking day."
             containerStyle={{marginTop: moderateScale(10)}}
           />
         )}
