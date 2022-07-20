@@ -90,6 +90,10 @@ const MainComponent = ({children, onPress, onPressBack}) => {
                     Show front side of the ID and do not cover while taking a selfie{' '}
                   </Text>
                 </View>
+                <View style={styles.benefitsListContainer}>
+                  <Image style={styles.checkIcon} source={circleCheck} />
+                  <Text style={styles.benefitsListText}>Avoid blurry, grainy, or shadows in the photo</Text>
+                </View>
               </View>
             </View>
             <View style={styles.instructionsContainer}>
