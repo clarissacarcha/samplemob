@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {moderateScale} from 'toktokwallet/helper';
@@ -48,6 +48,7 @@ export const ToktokWalletTransactions = connect(
   const [pageInfo, setPageInfo] = useState({});
   const [refreshing, setRefreshing] = useState(false);
   const alert = useAlert();
+  const onEndReachedCalledDuringMomentum = useRef(null);
 
   const [getTransactionsPaginate, {data, error, loading, fetchMore}] = useLazyQuery(GET_TRANSACTIONS_PAGINATE, {
     fetchPolicy: 'network-only',
@@ -133,16 +134,28 @@ export const ToktokWalletTransactions = connect(
           renderItem={({item, index}) => (
             <TransactionLog key={`walletLogs${index}`} transaction={item} index={index} data={allTransactions} />
           )}
-          onEndReachedThreshold={0.02}
-          onEndReached={fetchMoreData}
+          onEndReachedThreshold={0.01}
+          onEndReached={() => {
+            if (!onEndReachedCalledDuringMomentum.current) {
+              fetchMoreData();
+              onEndReachedCalledDuringMomentum.current = true;
+            }
+          }}
           ListFooterComponent={ListFooterComponent}
-          getItemLayout={(data, index) => ({
-            length: data.length,
-            offset: data.length * index,
-            index,
-          })}
+          getItemLayout={
+            allTransactions.length <= 30
+              ? (data, index) => ({
+                  length: allTransactions.length,
+                  offset: allTransactions.length * index,
+                  index,
+                })
+              : undefined
+          }
           scrollEnabled={true}
           contentContainerStyle={{paddingHorizontal: moderateScale(16)}}
+          onMomentumScrollBegin={() => {
+            onEndReachedCalledDuringMomentum.current = false;
+          }}
         />
       </View>
     </CheckIdleState>
