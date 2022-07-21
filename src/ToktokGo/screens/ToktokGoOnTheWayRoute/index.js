@@ -24,6 +24,8 @@ import {
   TRIP_CONSUMER_CANCEL,
   GET_TRIP_CANCELLATION_CHARGE,
   GET_TRIPS_CONSUMER,
+  TRIP_CHARGE_FINALIZE_PAYMENT,
+  TRIP_CHARGE_INITIALIZE_PAYMENT,
 } from '../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
@@ -32,7 +34,7 @@ import {useAccount} from 'toktokwallet/hooks';
 
 const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const {popTo, decodedPolyline} = route.params;
-  const {tokwaAccount} = useAccount();
+  const {tokwaAccount, getMyAccount} = useAccount();
 
   const [status, setStatus] = useState(5);
   const [action, setAction] = useState(true);
@@ -51,6 +53,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [originData, setOriginData] = useState(false);
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
+  const [isViaTokwa, setIsViaTokwa] = useState(false);
 
   const {driver, booking} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
@@ -206,7 +209,6 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       }
     },
     onCompleted: response => {
-      console.log('zion', respones);
       setCancellationState(response.tripConsumerCancel.cancellation);
       setViewSuccessCancelBookingModal(true);
     },
@@ -237,6 +239,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const goBackAfterCancellation = () => {
     setOriginData(true);
     setViewCancelBookingModal(false);
+    setIsViaTokwa(false);
     navigation.replace('ToktokGoBookingStart', {
       popTo: popTo + 1,
     });
@@ -311,6 +314,93 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     else return <DriverStatusDestination booking={booking} />;
   };
 
+  console.log('zion', tokwaAccount);
+
+  const [tripChargeFinalizePayment] = useMutation(TRIP_CHARGE_FINALIZE_PAYMENT, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onCompleted: response => {
+      console.log('zion successss');
+      navigation.pop();
+      setViewSuccessCancelBookingModal(true);
+      setIsViaTokwa(true);
+    },
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
+            Alert.alert('', JSON.parse(message).message);
+          } else if (errorType === 'WALLET_PIN_CODE_INVALID') {
+            Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
+  });
+
+  const tripChargeFinalizePaymentFunction = ({pinCode, data}) => {
+    tripChargeFinalizePayment({
+      variables: {
+        input: {
+          initializedPayment: {
+            hash: data.hash,
+            pinCode,
+          },
+        },
+      },
+    });
+  };
+
+  const [tripChargeInitializePayment] = useMutation(TRIP_CHARGE_INITIALIZE_PAYMENT, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onCompleted: response => {
+      const data = response.tripChargeInitializePayment;
+      console.log('DATA', data.hash);
+      if (data.validator == 'TPIN') {
+        navigation.navigate('ToktokWalletTPINValidator', {
+          callBackFunc: tripChargeFinalizePaymentFunction,
+          data: {
+            hash: data?.hash,
+          },
+        });
+      } else {
+        Alert.alert('', 'Something went wrong...');
+      }
+    },
+    onError: onErrorAppSync,
+  });
+
+  const payFeeViaTokwa = () => {
+    setCancellationFee(false);
+    tripChargeInitializePayment({
+      variables: {
+        input: {
+          tripId: booking.id,
+        },
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (session.user.toktokWalletAccountId) {
+      getMyAccount();
+    }
+  }, []);
+
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
       <StatusBar
@@ -341,6 +431,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         finalizeCancel={finalizeCancel}
       />
       <SuccesCancelBookingModal
+        isViaTokwa={isViaTokwa}
         visible={viewSuccessCancelBookingModal}
         setVisible={setViewSuccessCancelBookingModal}
         chargeAmount={chargeAmount}
@@ -357,6 +448,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         cancellationFee={cancellationFee}
         noShowFeeSubmit={noShowFeeSubmit}
         cancellationState={cancellationState}
+        payFeeViaTokwa={payFeeViaTokwa}
       />
       <DriverArrivedModal
         modal={modal}

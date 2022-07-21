@@ -4,7 +4,13 @@ import CONSTANTS from '../../../common/res/constants';
 import SuccessIMG from '../../../assets/images/Sucess.png';
 import {ThrottledOpacity} from '../../../components_section';
 
-export const SuccesCancelBookingModal = ({visible, cancellationState, chargeAmount, goBackAfterCancellation}) => {
+export const SuccesCancelBookingModal = ({
+  visible,
+  isViaTokwa,
+  cancellationState,
+  chargeAmount,
+  goBackAfterCancellation,
+}) => {
   const getDescription = () => {
     if (chargeAmount) {
       if (cancellationState?.initiatedBy == 'CONSUMER') {
@@ -29,26 +35,35 @@ export const SuccesCancelBookingModal = ({visible, cancellationState, chargeAmou
           </Text>
         );
       } else {
-        return (
-          <Text style={styles.modalDescription}>
-            Your booking has been cancelled. No Show Fee will be charged in your next booking. You may read more about
-            our{' '}
-            <Text
-              onPress={() =>
-                Linking.openURL(
-                  'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
-                )
-              }
-              style={{
-                color: CONSTANTS.COLOR.ORANGE,
-                textDecorationLine: 'underline',
-                textAlign: 'center',
-              }}>
-              Cancellation Policies
+        if (isViaTokwa) {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. We received your payment for No Show Fee of{' '}
+              <Text style={styles.textHighlight}>₱50.00</Text>. Your e-receipt was sent to your registered email.
             </Text>
-            .
-          </Text>
-        );
+          );
+        } else {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. No Show Fee will be charged in your next booking. You may read more about
+              our{' '}
+              <Text
+                onPress={() =>
+                  Linking.openURL(
+                    'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
+                  )
+                }
+                style={{
+                  color: CONSTANTS.COLOR.ORANGE,
+                  textDecorationLine: 'underline',
+                  textAlign: 'center',
+                }}>
+                Cancellation Policies
+              </Text>
+              .
+            </Text>
+          );
+        }
       }
     } else {
       return <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>;
