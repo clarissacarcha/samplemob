@@ -21,8 +21,9 @@ import {useMutation} from '@apollo/client';
 import {onErrorAppSync} from '../../util';
 import {useAccount} from 'toktokwallet/hooks';
 import {CancellationPaymentSuccesfullModal, NoShowPaymentSuccesfullModal} from './Components';
+
 const ToktokGoBookingStart = ({navigation, constants, session}) => {
-  const {tokwaAccount} = useAccount();
+  const {tokwaAccount, getMyAccount} = useAccount();
   const [tripConsumerPending, setTripConsumerPending] = useState([]);
   const [showCancellationPaymentSuccesfulModal, setCancellationShowPaymentSuccessfulModal] = useState(false);
   const [showNoShowPaymentSuccessfulModal, setShowNoShowPaymentSuccessfulModal] = useState(false);
@@ -118,6 +119,12 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
     },
     onError: onErrorAppSync,
   });
+
+  useEffect(() => {
+    if (session.user.toktokWalletAccountId) {
+      getMyAccount();
+    }
+  }, []);
 
   const tripChargeInitializePaymentFunction = () => {
     if (tokwaAccount.wallet.id) {
