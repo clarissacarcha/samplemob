@@ -1,11 +1,11 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 
-export const ReceiptSeparator = ({bottomHeight = 80}) => {
+export const ReceiptSeparator = ({bottomHeight = 80, roundLeftStyle, roundRightStyle}) => {
   return (
     <>
-      <View style={[styles.roundLeft, {bottom: bottomHeight}]} />
-      <View style={[styles.roundRight, {bottom: bottomHeight}]} />
+      <View style={[styles.roundLeft, {bottom: bottomHeight}, roundLeftStyle]} />
+      <View style={[styles.roundRight, {bottom: bottomHeight}, roundRightStyle]} />
     </>
   );
 };

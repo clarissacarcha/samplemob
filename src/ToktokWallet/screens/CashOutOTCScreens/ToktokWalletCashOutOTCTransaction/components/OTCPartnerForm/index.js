@@ -114,7 +114,6 @@ export const OTCPartnerForm = ({route}) => {
             style={[styles.input]}
             value={recipientName}
             keyboardType={'default'}
-            maxLength={30}
             returnKeyType="done"
             editable={false}
           />
