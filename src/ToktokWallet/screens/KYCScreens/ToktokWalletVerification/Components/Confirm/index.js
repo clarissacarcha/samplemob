@@ -91,9 +91,6 @@ export const Confirm = connect(
     },
     onCompleted: response => {
       let result = response.postKycRegister;
-      // removeCacheImages({
-      //     VerifyUserData
-      // })
       if (RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
       if (result.status == 2) {
         // navigation.pop(2)
@@ -278,7 +275,10 @@ export const Confirm = connect(
           <Text style={styles.titleText}>Personal Information</Text>
           <UserInfo label="Mobile Number" value={VerifyUserData.contactInfo.mobile_number} />
           <UserInfo label="First Name" value={VerifyUserData.person.firstName} />
-          <UserInfo label="Middle Name" value={VerifyUserData.person.middleName} />
+          <UserInfo
+            label="Middle Name"
+            value={!VerifyUserData.person.middleName ? 'Unknown' : VerifyUserData.person.middleName}
+          />
           <UserInfo label="Last Name" value={VerifyUserData.person.lastName} />
           <UserInfo label="Gender" value={VerifyUserData.person.gender} />
           <UserInfo label="Date of Birth" value={moment(VerifyUserData.birthInfo.birthdate).format('MMM DD, YYYY')} />
