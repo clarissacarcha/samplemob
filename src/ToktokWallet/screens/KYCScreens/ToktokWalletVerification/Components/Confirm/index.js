@@ -91,9 +91,7 @@ export const Confirm = connect(
     },
     onCompleted: response => {
       let result = response.postKycRegister;
-      // removeCacheImages({
-      //     VerifyUserData
-      // })
+
       if (RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
       if (result.status == 2) {
         // navigation.pop(2)
