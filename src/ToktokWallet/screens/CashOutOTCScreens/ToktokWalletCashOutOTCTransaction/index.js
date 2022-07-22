@@ -77,6 +77,7 @@ const MainComponent = ({navigation, route}) => {
     setDateOfClaimError,
     dateOfClaimError,
     purpose,
+    setPurpose,
     providerServiceFee,
     toktokServiceFee,
   } = useContext(VerifyContext);
@@ -148,7 +149,7 @@ const MainComponent = ({navigation, route}) => {
         recipientMobileNo,
         email,
         dateOfClaim,
-        purpose,
+        purpose: purpose.trim(),
         providerServiceFee,
         toktokServiceFee,
         otcPartnerDetails: {
@@ -159,6 +160,7 @@ const MainComponent = ({navigation, route}) => {
         cashOutProviderPartnerId: +id,
         totalServiceFee: parseFloat(providerServiceFee) + parseFloat(toktokServiceFee),
       };
+      setPurpose(purpose.trim())
       navigation.navigate('ToktokWalletCashOutOTCPaymentSummary', {
         transactionDetails,
       });
