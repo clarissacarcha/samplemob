@@ -127,7 +127,7 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
   };
 
   const checkFieldIsEmpty = (index, value, fieldType) => {
-    let errorMessage = value === '' ? 'This field is required' : '';
+    let errorMessage = value === '' ? 'This is a required field' : '';
 
     setErrorMessage(state => {
       state[index] = errorMessage;
