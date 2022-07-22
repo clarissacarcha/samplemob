@@ -21,12 +21,16 @@ export const TransactionDetails = ({transaction, visible, setVisible}) => {
         const key = data[0];
         const value = data[1];
         return (
-          <Text style={{marginTop: moderateScale(2)}}>
-            <Text key={`externalDetails_${index}`} style={styles.labelText}>
-              {key}:{' '}
+          <View style={{flexDirection: 'row'}}>
+            <Text style={{marginTop: moderateScale(2)}}>
+              <Text key={`externalDetails_${index}`} style={styles.labelText}>
+                {key}:
+              </Text>
+              <Text key={`externalDetailsSub_${index}`} style={{flexShrink: 1}}>
+                {` ${value}`}
+              </Text>
             </Text>
-            <Text key={`externalDetailsSub_${index}`}>{value}</Text>
-          </Text>
+          </View>
         );
       });
       return RenderInfo;
