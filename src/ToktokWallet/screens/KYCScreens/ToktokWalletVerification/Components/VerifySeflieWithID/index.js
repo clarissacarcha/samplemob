@@ -35,7 +35,7 @@ const CROP_AREA_HEIGHT = CROP_AREA_WIDTH + 50;
 const ratio = Math.min(width / CROP_AREA_WIDTH, height / CROP_AREA_HEIGHT);
 
 const ViewPrivacyPolicy = () => {
-  return Linking.openURL('https://toktok.ph/privacy-policy');
+  return Linking.openURL('https://wallet.toktok.ph/privacy-policy');
 };
 
 const MainComponent = ({children, onPress, onPressBack}) => {
