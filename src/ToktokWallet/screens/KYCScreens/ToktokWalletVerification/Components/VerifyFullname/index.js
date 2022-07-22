@@ -175,7 +175,7 @@ export const VerifyFullname = () => {
   };
 
   const ViewPrivacyPolicy = () => {
-    return Linking.openURL('https://toktok.ph/privacy-policy');
+    return Linking.openURL('https://wallet.toktok.ph/privacy-policy');
   };
 
   const onMobileChange = val => {

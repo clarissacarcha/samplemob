@@ -115,7 +115,7 @@ export const VerifyAddress = () => {
   };
 
   const ViewPrivacyPolicy = () => {
-    return Linking.openURL('https://toktok.ph/privacy-policy');
+    return Linking.openURL('https://wallet.toktok.ph/privacy-policy');
   };
 
   useEffect(() => {
