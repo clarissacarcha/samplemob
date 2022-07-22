@@ -115,7 +115,7 @@ export const VerifyFullname = () => {
   });
 
   const checkFieldIsEmpty = (key, value, fieldType) => {
-    let message = fieldType === 'selection' ? 'Please make a selection' : 'This field is required';
+    let message = fieldType === 'selection' ? 'Please make a selection' : 'This is a required field';
     let errorMessage = validator.isEmpty(value, {ignore_whitespace: true}) ? message : '';
     if (value != '' && key == 'emailError' && !validator.isEmail(contactInfo.email, {ignore_whitespace: true})) {
       errorMessage = 'Email format is invalid';
