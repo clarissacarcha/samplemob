@@ -278,7 +278,7 @@ export const Confirm = connect(
           <Text style={styles.titleText}>Personal Information</Text>
           <UserInfo label="Mobile Number" value={VerifyUserData.contactInfo.mobile_number} />
           <UserInfo label="First Name" value={VerifyUserData.person.firstName} />
-          <UserInfo label="Middle Name" value={VerifyUserData.person.middleName} />
+          <UserInfo label="Middle Name" value={!VerifyUserData.person.middleName ? 'Unknowm' : VerifyUserData.person.middleName)} />
           <UserInfo label="Last Name" value={VerifyUserData.person.lastName} />
           <UserInfo label="Gender" value={VerifyUserData.person.gender} />
           <UserInfo label="Date of Birth" value={moment(VerifyUserData.birthInfo.birthdate).format('MMM DD, YYYY')} />
