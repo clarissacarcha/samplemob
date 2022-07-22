@@ -273,7 +273,7 @@ export const Confirm = connect(
         <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
           <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, color: '#525252'}}>Review and Confirm</Text>
           <Text style={{fontFamily: FONT.REGULAR, marginBottom: 10, fontSize: FONT_SIZE.M, color: '#525252'}}>
-            Review the details that you enter before clicking ‘Confrm’.
+            Review the details that you enter before clicking ‘Confirm’.
           </Text>
           <Text style={styles.titleText}>Personal Information</Text>
           <UserInfo label="Mobile Number" value={VerifyUserData.contactInfo.mobile_number} />
