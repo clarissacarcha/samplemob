@@ -70,6 +70,13 @@ const WalletMethods = () => {
       isEnabled: true,
       identifier: `${Platform.OS.toLowerCase()}CashOut`,
     },
+    {
+      label: 'Cash Out',
+      icon: require('toktokwallet/assets/icons/services/cash-out.png'),
+      onPress: () => onPressThrottled('ToktokWalletCashOutOTCHome'),
+      isEnabled: true,
+      identifier: `cashOut`,
+    },
   ];
 
   useEffect(()=>{
