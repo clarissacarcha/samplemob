@@ -136,7 +136,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
             marginTop: getStatusbarHeight,
             paddingVertical: isHome
               ? 0
-              : Platform.OS == 'android'
+              : Platform.OS === 'android'
               ? moderateScale(20)
               : moderateScale(searchBox ? 20 : 10),
             height: isHome ? 80 : 0,
@@ -148,9 +148,11 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
           style={[styles.headerBack, {marginBottom: isHome ? 15 : 0}]}>
           <FIcon5 name="chevron-left" size={15} />
         </TouchableOpacity>
-        <View style={styles.foodLogoWrapper}>
-          <Image source={toktokfood_ic} style={styles.foodLogo} resizeMode="contain" />
-        </View>
+        {isHome && (
+          <View style={styles.foodLogoWrapper}>
+            <Image source={toktokfood_ic} style={styles.foodLogo} resizeMode="contain" />
+          </View>
+        )}
         {loading || error ? (
           <LoadingIndicator isLoading={true} size="small" />
         ) : (
@@ -159,7 +161,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
               <View
                 style={{
                   right: -10,
-                  top: -10,
+                  top: isHome ? 15 : -10,
                   position: 'absolute',
                   backgroundColor: '#FFA700',
                   paddingHorizontal: 5,
