@@ -35,6 +35,7 @@ import {useAccount} from 'toktokwallet/hooks';
 import {AppSyncOnError, onErrorAppSync} from '../../util';
 import {onError} from '../../../util/ErrorUtility';
 import {PricesNoteModal} from './Components/PricesNoteModal';
+import {VoucherRemovedModal} from './Components/VoucherRemovedModal';
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
@@ -61,6 +62,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(paymentMethod);
   const [viewPriceNote, setViewPriceNote] = useState(false);
   const [outstandingFee, setOutstandingFee] = useState();
+  const [voucherRemovedVisible, setvoucherRemovedVisible] = useState(false);
+  const [voucherTextMessage, setvoucherTextMessage] = useState('');
   const hasNotch = StatusBar.currentHeight > 24;
 
   useEffect(() => {
@@ -118,7 +121,16 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
             Alert.alert('', message);
           } else if (errorType === 'BAD_USER_INPUT') {
             setTripBookError(message);
-            Alert.alert('', message);
+            navigation.pop();
+            if (message == 'Promo Voucher Expired.') {
+              setvoucherTextMessage('Promo Voucher Expired.');
+              setvoucherRemovedVisible(true);
+            } else if (message == 'Daily limit is reached.') {
+              setvoucherTextMessage('Daily limit is reached.');
+              setvoucherRemovedVisible(true);
+            } else if (message == 'Voucher wallet remaining is 0.') {
+              Alert.alert('', message);
+            }
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
@@ -277,6 +289,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const confirmBooking = num => {
     setSelectedSeatNum(num);
     SheetManager.hide('passenger_capacity');
+    // setvoucherRemovedVisible(true);
     setTimeout(() => {
       if (selectedPaymentMethod == 'CASH') {
         tripBooking({pinCode: null});
@@ -331,6 +344,11 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       decodedPolyline,
     });
     setViewTokwaPaymentProcessedModal(false);
+  };
+
+  const handleVoucherRemoved = () => {
+    setvoucherRemovedVisible(false);
+    setSelectedVouchersNull();
   };
 
   const renderContent = () => (
@@ -457,7 +475,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         setViewPaymenetSucessModal={setViewPaymenetSucessModal}
       />
       <PricesNoteModal viewPriceNote={viewPriceNote} setViewPriceNote={setViewPriceNote} />
-
+      <VoucherRemovedModal
+        voucherRemovedVisible={voucherRemovedVisible}
+        setvoucherRemovedVisible={setvoucherRemovedVisible}
+        handleVoucherRemoved={handleVoucherRemoved}
+        voucherTextMessage={voucherTextMessage}
+      />
       <BookingMap
         decodedPolyline={decodedPolyline}
         routeDetails={routeDetails}
