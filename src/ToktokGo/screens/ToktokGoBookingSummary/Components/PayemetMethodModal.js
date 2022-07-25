@@ -20,7 +20,6 @@ export const PaymentMethodModal = ({
   viewSelectPaymentModal,
   setViewSelectPaymentModal,
   details,
-  setSelectedVouchers,
   setSelectedPaymentMethod,
   tokwaAccount,
   getMyAccountLoading,
@@ -28,10 +27,9 @@ export const PaymentMethodModal = ({
   const dispatch = useDispatch();
   const {wallet, id} = tokwaAccount;
   const setSelected = paymentMethod => {
-    setSelectedVouchers(null);
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-      payload: {...details, voucher: null, paymentMethod: paymentMethod},
+      payload: {...details, paymentMethod: paymentMethod},
     });
     setSelectedPaymentMethod(paymentMethod);
     setViewSelectPaymentModal(false);
