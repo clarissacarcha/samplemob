@@ -14,26 +14,35 @@ export const SuccesCancelBookingModal = ({
   const getDescription = () => {
     if (chargeAmount) {
       if (cancellationState?.initiatedBy == 'CONSUMER') {
-        return (
-          <Text style={styles.modalDescription}>
-            Your booking has been cancelled. Cancellation Fee will be charged in your next booking. You may read more
-            about our{' '}
-            <Text
-              onPress={() =>
-                Linking.openURL(
-                  'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
-                )
-              }
-              style={{
-                color: CONSTANTS.COLOR.ORANGE,
-                textDecorationLine: 'underline',
-                textAlign: 'center',
-              }}>
-              Cancellation Policies
+        if (isViaTokwa) {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. We received your payment for Cancellation Fee of{' '}
+              <Text style={styles.textHighlight}>₱50.00</Text>. Your e-receipt was sent to your registered email.
             </Text>
-            .
-          </Text>
-        );
+          );
+        } else {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. Cancellation Fee will be charged in your next booking. You may read more
+              about our{' '}
+              <Text
+                onPress={() =>
+                  Linking.openURL(
+                    'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
+                  )
+                }
+                style={{
+                  color: CONSTANTS.COLOR.ORANGE,
+                  textDecorationLine: 'underline',
+                  textAlign: 'center',
+                }}>
+                Cancellation Policies
+              </Text>
+              .
+            </Text>
+          );
+        }
       } else {
         if (isViaTokwa) {
           return (
