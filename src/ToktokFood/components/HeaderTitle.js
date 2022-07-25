@@ -11,7 +11,7 @@ import {markerIcon, cart_ic, toktokfood_ic} from 'toktokfood/assets/images';
 import {getStatusbarHeight, verticalScale, moderateScale} from 'toktokfood/helper/scale';
 
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {useLazyQuery} from '@apollo/react-hooks';
 import LoadingIndicator from 'toktokfood/components/LoadingIndicator';
 import {GET_ALL_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import {useIsFocused} from '@react-navigation/native';
