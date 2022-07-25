@@ -6,7 +6,7 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import ContentLoader from 'react-native-easy-content-loader';
 
 import {FONT, FONT_SIZE, COLOR} from 'res/variables';
-import {markerIcon, cart_ic} from 'toktokfood/assets/images';
+import {markerIcon, cart_ic, toktokfood_ic} from 'toktokfood/assets/images';
 
 import {getStatusbarHeight, verticalScale, moderateScale} from 'toktokfood/helper/scale';
 
@@ -134,16 +134,27 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
           styles.container,
           {
             marginTop: getStatusbarHeight,
-            paddingVertical: Platform.OS == 'android' ? moderateScale(20) : moderateScale(searchBox ? 20 : 10),
+            paddingVertical: isHome
+              ? 0
+              : Platform.OS == 'android'
+              ? moderateScale(20)
+              : moderateScale(searchBox ? 20 : 10),
+            height: isHome ? 80 : 0,
           },
         ]}>
-        <TouchableOpacity hitSlop={styles.hitSlop} onPress={onBack} style={styles.headerBack}>
+        <TouchableOpacity
+          hitSlop={styles.hitSlop}
+          onPress={onBack}
+          style={[styles.headerBack, {marginBottom: isHome ? 15 : 0}]}>
           <FIcon5 name="chevron-left" size={15} />
         </TouchableOpacity>
+        <View style={styles.foodLogoWrapper}>
+          <Image source={toktokfood_ic} style={styles.foodLogo} resizeMode="contain" />
+        </View>
         {loading || error ? (
           <LoadingIndicator isLoading={true} size="small" />
         ) : (
-          <TouchableOpacity onPress={onPressCart} style={styles.headerBack}>
+          <TouchableOpacity onPress={onPressCart} style={[styles.headerBack, {marginBottom: isHome ? 15 : 0}]}>
             {allTemporaryCart.cartItemsLength > 0 && newInstallFlag === false && (
               <View
                 style={{
@@ -200,6 +211,7 @@ const styles = StyleSheet.create({
   },
   headerBack: {
     justifyContent: 'center',
+    // marginTop: 30,
   },
   headerLabel: {
     marginLeft: 2,
@@ -233,5 +245,14 @@ const styles = StyleSheet.create({
     bottom: moderateScale(40),
     left: moderateScale(40),
     right: moderateScale(40),
+  },
+  foodLogoWrapper: {
+    flex: 1,
+    height: 35,
+    marginTop: 10,
+  },
+  foodLogo: {
+    height: '100%',
+    width: '100%',
   },
 });
