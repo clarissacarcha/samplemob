@@ -15,7 +15,6 @@ import {useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../helper';
 import {ThrottledHighlight} from '../../../components_section';
 import AsyncStorage from '@react-native-community/async-storage';
-import {element} from 'prop-types';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const {popTo, selectInput} = route.params;
@@ -29,10 +28,12 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const [searchDestination, setSearchDestination] = useState(destination?.place?.formattedAddress);
   const [searchOrigin, setSearchOrigin] = useState(origin?.place?.formattedAddress);
   const [recentSearchDataList, setrecentSearchDataList] = useState([]);
+  const [recentDestinationList, setrecentDestinationList] = useState([]);
 
   useEffect(() => {
     async function tempFunction() {
-      await getItemList();
+      await getSearchList();
+      await getDestinationList();
     }
 
     tempFunction();
@@ -197,12 +198,23 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     }
   };
 
-  const getItemList = async () => {
+  const getSearchList = async () => {
     try {
       const data = await AsyncStorage.getItem('recentSearchList');
 
       const output = JSON.parse(data);
       setrecentSearchDataList(output);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getDestinationList = async () => {
+    try {
+      const data = await AsyncStorage.getItem('recentDestinationList');
+
+      const output = JSON.parse(data);
+      console.log(output);
+      setrecentDestinationList(output);
     } catch (err) {
       console.log(err);
     }
@@ -237,7 +249,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           <View>
             <FrequentlyUsed navigation={navigation} popTo={popTo} recentSearchDataList={recentSearchDataList} />
             <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
-            <SavedLocations />
+            <SavedLocations navigation={navigation} popTo={popTo} recentDestinationList={recentDestinationList} />
           </View>
         ) : (
           // <ToktokgoBeta />

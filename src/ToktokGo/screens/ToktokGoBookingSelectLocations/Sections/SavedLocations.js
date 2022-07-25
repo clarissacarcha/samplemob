@@ -7,7 +7,12 @@ import Home from '../../../../assets/icons/home-address-icon.png';
 import Office from '../../../../assets/icons/office-address-icon.png';
 import {LocationCard} from '../../../components';
 
-export const SavedLocations = () => {
+export const SavedLocations = ({recentDestinationList, popTo, navigation}) => {
+  const onPressLocation = () => {
+    navigation.push('ToktokGoBookingConfirmPickup', {
+      popTo: popTo + 1,
+    });
+  };
   return (
     <>
       <View
@@ -43,12 +48,12 @@ export const SavedLocations = () => {
         </TouchableOpacity>
       </View>
 
-      {/* <FlatList
+      <FlatList
         showsVerticalScrollIndicator={false}
-        data={Data.savedLocations}
+        data={recentDestinationList}
         // keyExtractor={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} image={item.name === 'Home' ? Home : Office} />}
-      /> */}
+        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressLocation} />}
+      />
     </>
   );
 };
