@@ -26,10 +26,10 @@ export const SavedLocations = () => {
             fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
             marginLeft: 7,
           }}>
-          Saved Locations
+          Recent Destinations
         </Text>
         <TouchableOpacity onPress={() => console.log('trigger')}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
               style={{
                 fontSize: CONSTANTS.FONT_SIZE.M,
@@ -39,16 +39,16 @@ export const SavedLocations = () => {
               See All
             </Text>
             <MIcon name={'keyboard-arrow-right'} size={23} color={CONSTANTS.COLOR.ORANGE} />
-          </View>
+          </View> */}
         </TouchableOpacity>
       </View>
 
-      <FlatList
+      {/* <FlatList
         showsVerticalScrollIndicator={false}
         data={Data.savedLocations}
         // keyExtractor={item => item.id}
         renderItem={({item, index}) => <LocationCard item={item} image={item.name === 'Home' ? Home : Office} />}
-      />
+      /> */}
     </>
   );
 };
