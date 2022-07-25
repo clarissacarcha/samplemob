@@ -18,6 +18,7 @@ import ToktokGoBookingVouchers from '../../../ToktokGo/screens/ToktokGoBookingVo
 import ToktokGoOnBoardingBeta from '../../../ToktokGo/screens/ToktokGoOnBoardingBeta';
 import ToktokGoMaintance from '../../../ToktokGo/screens/ToktokGoMaintance';
 import ToktokGoPaymentDetails from '../../../ToktokGo/screens/ToktokGoPaymentDetails';
+import ToktokGoCreateTokwa from '../../../ToktokGo/screens/ToktokGoCreateTokwa';
 
 const navbarShadowOption = {
   backgroundColor: 'white',
@@ -96,5 +97,6 @@ export default ({Navigator}) => (
       component={ToktokGoPaymentDetails}
       options={{headerStyle: navbarShadowOption}}
     />
+    <Navigator.Screen name="ToktokGoCreateTokwa" component={ToktokGoCreateTokwa} options={{headerShown: false}} />
   </>
 );
