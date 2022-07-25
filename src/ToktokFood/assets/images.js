@@ -38,6 +38,7 @@ export const arrow_right = require('./images/arrow-right.png');
 export const cart_ic = require('./images/cart.png');
 export const down_arrow_ic = require('./images/down-arrow.png');
 export const info_ic = require('./images/info.png');
+export const toktokfood_ic = require('./images/toktokfood_logo.png');
 
 // Notifications
 export const empty_notification = require('./images/empty_icons/empty-notification.png');
