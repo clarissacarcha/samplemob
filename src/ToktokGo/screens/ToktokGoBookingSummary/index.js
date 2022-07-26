@@ -30,7 +30,7 @@ import {GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT, GET_TRIPS_CONSUMER} f
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import BottomSheet from 'reanimated-bottom-sheet';
-import {AlertOverlay} from '../../../components';
+import {AlertOverlay} from '../../../SuperApp/screens/Components';
 import {useAccount} from 'toktokwallet/hooks';
 import {AppSyncOnError, onErrorAppSync} from '../../util';
 import {onError} from '../../../util/ErrorUtility';
