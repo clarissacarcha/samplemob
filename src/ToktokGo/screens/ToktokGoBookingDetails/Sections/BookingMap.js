@@ -57,7 +57,7 @@ export const BookingMap = ({booking, routeDetails}) => {
         provider={PROVIDER_GOOGLE}
         style={{width: '100%', height: 200}}
         initialRegion={INITIAL_REGION}
-        onMapReady={onMapReady}
+        onLayout={onMapReady}
         pitchEnabled={false}
         rotateEnabled={false}
         scrollEnabled={false}
@@ -75,7 +75,7 @@ export const BookingMap = ({booking, routeDetails}) => {
 
         <Marker
           key={key => {
-            1;
+            2;
           }}
           coordinate={{
             latitude: booking.route.destinations[0].location.latitude,
