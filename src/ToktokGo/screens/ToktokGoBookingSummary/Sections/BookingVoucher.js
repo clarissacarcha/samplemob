@@ -3,6 +3,7 @@ import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import voucher_image from '../../../../assets/toktokgo/voucher.png';
 import IOIcons from 'react-native-vector-icons/Ionicons';
+import InfoIcon from '../../../../assets/images/info.png';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 
@@ -34,6 +35,18 @@ export const BookingVoucher = ({navigation, selectedVouchers, setSelectedVoucher
           </TouchableOpacity>
         )}
       </View>
+      <View style={{
+    justifyContent: 'flex-start',
+    padding: 16,
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    backgroundColor: CONSTANTS.COLOR.LIGHT_YELLOW,
+  }}>
+      <Image source={InfoIcon} resizeMode={'center'} style={styles.imgDimensions} />
+      <Text style={styles.textStyles}>
+      Your changes does not meet the Terms and Conditions of the voucher you used.
+      </Text>
+    </View>
       <View style={styles.divider} />
     </>
   );

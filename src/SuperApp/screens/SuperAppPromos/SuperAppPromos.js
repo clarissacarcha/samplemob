@@ -83,10 +83,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   bannerContainer: {
-    marginVertical: 8,
-    paddingVertical: 10,
+    marginTop: 8,
+    paddingTop: 15,
   },
   textContainer: {
     paddingVertical: 10,
+    paddingBottom: 0,
   },
 });

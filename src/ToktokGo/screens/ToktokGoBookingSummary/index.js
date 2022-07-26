@@ -36,6 +36,7 @@ import {AppSyncOnError, onErrorAppSync} from '../../util';
 import {onError} from '../../../util/ErrorUtility';
 import {PricesNoteModal} from './Components/PricesNoteModal';
 import {VoucherRemovedModal} from './Components/VoucherRemovedModal';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
@@ -65,11 +66,22 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [voucherRemovedVisible, setvoucherRemovedVisible] = useState(false);
   const [voucherTextMessage, setvoucherTextMessage] = useState('');
   const hasNotch = StatusBar.currentHeight > 24;
+  const [recentDestinationList, setrecentDestinationList] = useState([]);
 
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
       getMyAccount();
     }
+  }, []);
+
+  useEffect(() => {
+    async function tempFunction() {
+      await getDestinationList();
+    }
+
+    tempFunction();
+
+    return () => {};
   }, []);
 
   const [getTripFare, {called}] = useLazyQuery(GET_TRIP_FARE, {
@@ -129,7 +141,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
               setvoucherTextMessage('Daily limit is reached.');
               setvoucherRemovedVisible(true);
             } else if (message == 'Voucher wallet remaining is 0.') {
-              Alert.alert('', message);
+              setvoucherTextMessage('Daily limit is reached.');
+              setvoucherRemovedVisible(true);
             }
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
@@ -287,22 +300,101 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   };
 
   const confirmBooking = num => {
-    setSelectedSeatNum(num);
-    SheetManager.hide('passenger_capacity');
-    // setvoucherRemovedVisible(true);
-    setTimeout(() => {
-      if (selectedPaymentMethod == 'CASH') {
-        tripBooking({pinCode: null});
-      } else {
-        tripInitializePayment({
-          variables: {
-            input: {
-              tripFareHash: details?.rate?.hash,
+    if (details.voucher == null) {
+      setSelectedSeatNum(num);
+      SheetManager.hide('passenger_capacity');
+      // setvoucherRemovedVisible(true);
+      addItemToList(destination);
+      setTimeout(() => {
+        if (selectedPaymentMethod == 'CASH') {
+          tripBooking({pinCode: null});
+        } else {
+          tripInitializePayment({
+            variables: {
+              input: {
+                tripFareHash: details?.rate?.hash,
+              },
             },
-          },
-        });
+          });
+        }
+      }, 500);
+    } else if (selectedPaymentMethod == 'CASH' && details.voucher.promoVoucher.isCash == 0) {
+      SheetManager.hide('passenger_capacity');
+      setvoucherTextMessage('WrongPaymentMethod');
+      setvoucherRemovedVisible(true);
+    } else if (selectedPaymentMethod == 'TOKTOKWALLET' && details.voucher.promoVoucher.isCash == 1) {
+      SheetManager.hide('passenger_capacity');
+      setvoucherTextMessage('WrongPaymentMethod');
+      setvoucherRemovedVisible(true);
+    } else {
+      setSelectedSeatNum(num);
+      SheetManager.hide('passenger_capacity');
+      // setvoucherRemovedVisible(true);
+      addItemToList(destination);
+      setTimeout(() => {
+        if (selectedPaymentMethod == 'CASH') {
+          tripBooking({pinCode: null});
+        } else {
+          tripInitializePayment({
+            variables: {
+              input: {
+                tripFareHash: details?.rate?.hash,
+              },
+            },
+          });
+        }
+      }, 500);
+    }
+  };
+
+  const addItemToList = async destination => {
+    console.log(destination);
+    try {
+      const data = await AsyncStorage.getItem('recentDestinationList');
+      if (data === null) {
+        const destinationList = JSON.stringify([destination]);
+
+        await AsyncStorage.setItem('recentDestinationList', destinationList);
+      } else {
+        const recentList = JSON.parse(data);
+        if (recentList.length >= 3) {
+          let obj = recentList.find(o => o.place.formattedAddress === destination.place.formattedAddress);
+          console.log(obj);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            setrecentDestinationList([]);
+            const removedItem = recentList.slice(0, 2);
+            removedItem.unshift(destination);
+            const destinationList = JSON.stringify(removedItem);
+            await AsyncStorage.setItem('recentDestinationList', destinationList);
+          }
+        } else {
+          let obj = recentList.find(o => o.place.formattedAddress === destination.place.formattedAddress);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            recentDestinationList.push(destination);
+            const destinationList = JSON.stringify(recentDestinationList);
+            await AsyncStorage.setItem('recentDestinationList', destinationList);
+          }
+        }
       }
-    }, 500);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getDestinationList = async () => {
+    try {
+      const data = await AsyncStorage.getItem('recentDestinationList');
+
+      const output = JSON.parse(data);
+      console.log(output);
+      setrecentDestinationList(output);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
