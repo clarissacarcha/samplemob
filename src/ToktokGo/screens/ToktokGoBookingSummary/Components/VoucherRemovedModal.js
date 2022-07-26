@@ -30,6 +30,11 @@ export const VoucherRemovedModal = ({
                 We're sorry but the voucher you used has already reached its maximum redemption limit. Would you like to
                 proceed and remove voucher?
               </Text>
+            ) : voucherTextMessage == 'WrongPaymentMethod' ? (
+              <Text style={styles.modalDescription}>
+                We're sorry but the voucher you used is not applicable to selected payment method. Would you like to
+                proceed and remove voucher?
+              </Text>
             ) : null}
             <View style={{flexDirection: 'row'}}>
               <TouchableOpacity style={styles.buttonContainerNo} onPress={() => setvoucherRemovedVisible(false)}>

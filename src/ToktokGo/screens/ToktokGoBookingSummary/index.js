@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, StatusBar, Text, Dimensions, Alert, Platform } from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {View, StyleSheet, TouchableOpacity, Image, StatusBar, Text, Dimensions, Alert, Platform} from 'react-native';
 import constants from '../../../common/res/constants';
-import { SheetManager } from 'react-native-actions-sheet';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import {SheetManager} from 'react-native-actions-sheet';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import {
   BookingDistanceTime,
   BookingSelectVehicle,
@@ -13,7 +13,7 @@ import {
   BookingBreakdown,
   BookingTotal,
 } from './Sections';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   PaymentMethodModal,
   PaymentSuccesModal,
@@ -24,27 +24,28 @@ import {
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-import { GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT, GET_TRIPS_CONSUMER } from '../../graphql';
-import { TOKTOK_GO_GRAPHQL_CLIENT } from '../../../graphql';
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import {GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT, GET_TRIPS_CONSUMER} from '../../graphql';
+import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { AlertOverlay } from '../../../components';
-import { useAccount } from 'toktokwallet/hooks';
-import { AppSyncOnError, onErrorAppSync } from '../../util';
-import { onError } from '../../../util/ErrorUtility';
-import { PricesNoteModal } from './Components/PricesNoteModal';
-import { VoucherRemovedModal } from './Components/VoucherRemovedModal';
+import {AlertOverlay} from '../../../components';
+import {useAccount} from 'toktokwallet/hooks';
+import {AppSyncOnError, onErrorAppSync} from '../../util';
+import {onError} from '../../../util/ErrorUtility';
+import {PricesNoteModal} from './Components/PricesNoteModal';
+import {VoucherRemovedModal} from './Components/VoucherRemovedModal';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const ToktokGoBookingSummary = ({ navigation, route, session }) => {
+const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const FULLSCREEN_HEIGHT = Dimensions.get('window').height;
   const SNAP_ARR_NOTCH = [FULLSCREEN_HEIGHT - 78, FULLSCREEN_HEIGHT * 0.6];
   const SNAP_ARR = [FULLSCREEN_HEIGHT, FULLSCREEN_HEIGHT * 0.6];
-  const { popTo } = route.params;
-  const { details, routeDetails, origin, destination, paymentMethod, tempVehicleArr } = useSelector(
+  const {popTo} = route.params;
+  const {details, routeDetails, origin, destination, paymentMethod, tempVehicleArr} = useSelector(
     state => state.toktokGo,
   );
-  const { tokwaAccount, getMyAccount, getMyAccountLoading, getMyAccountError } = useAccount();
-  const { quotationDataResult, decodedPolyline } = route.params;
+  const {tokwaAccount, getMyAccount, getMyAccountLoading, getMyAccountError} = useAccount();
+  const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
   const [viewOutstandingFeeModal, setViewOutstandingFeeModal] = useState(false);
@@ -62,6 +63,7 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
   const [voucherRemovedVisible, setvoucherRemovedVisible] = useState(false);
   const [voucherTextMessage, setvoucherTextMessage] = useState('');
   const hasNotch = StatusBar.currentHeight > 24;
+  const [recentDestinationList, setrecentDestinationList] = useState([]);
 
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
@@ -69,23 +71,33 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
     }
   }, []);
 
-  const [getTripFare, { called }] = useLazyQuery(GET_TRIP_FARE, {
+  useEffect(() => {
+    async function tempFunction() {
+      await getDestinationList();
+    }
+
+    tempFunction();
+
+    return () => {};
+  }, []);
+
+  const [getTripFare, {called}] = useLazyQuery(GET_TRIP_FARE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-        payload: { ...details, rate: response.getTripFare },
+        payload: {...details, rate: response.getTripFare},
       });
       setLoading(false);
     },
     onError: error => {
       setSelectedVouchersNull();
-      const { graphQLErrors, networkError } = error;
+      const {graphQLErrors, networkError} = error;
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
-        graphQLErrors.map(({ message, locations, path, errorType }) => {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
           console.log('ERROR TYPE:', errorType, 'MESSAGE:', message);
           if (errorType === 'INTERNAL_SERVER_ERROR') {
             Alert.alert('', message);
@@ -104,14 +116,14 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
     },
   });
 
-  const [tripBook, { loading: TBLoading }] = useMutation(TRIP_BOOK, {
+  const [tripBook, {loading: TBLoading}] = useMutation(TRIP_BOOK, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onError: error => {
-      const { graphQLErrors, networkError } = error;
+      const {graphQLErrors, networkError} = error;
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
-        graphQLErrors.map(({ message, locations, path, errorType }) => {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
           console.log('ERROR TYPE:', errorType, 'MESSAGE:', message);
           if (errorType === 'INTERNAL_SERVER_ERROR') {
             setTripBookError(message);
@@ -122,12 +134,13 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
             if (message == 'Promo Voucher Expired.') {
               setvoucherTextMessage('Promo Voucher Expired.');
               setvoucherRemovedVisible(true);
-            }else if (message == 'Daily limit is reached.') {
+            } else if (message == 'Daily limit is reached.') {
               setvoucherTextMessage('Daily limit is reached.');
               setvoucherRemovedVisible(true);
-            }else if (message == 'Voucher wallet remaining is 0.'){
-              Alert.alert('', message);
-            } 
+            } else if (message == 'Voucher wallet remaining is 0.') {
+              setvoucherTextMessage('Daily limit is reached.');
+              setvoucherRemovedVisible(true);
+            }
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
@@ -165,14 +178,14 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
     },
   });
 
-  const [tripInitializePayment, { loading: TIPLoading }] = useMutation(TRIP_INITIALIZE_PAYMENT, {
+  const [tripInitializePayment, {loading: TIPLoading}] = useMutation(TRIP_INITIALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onError: error => {
-      const { graphQLErrors, networkError } = error;
+      const {graphQLErrors, networkError} = error;
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
-        graphQLErrors.map(({ message, locations, path, errorType }) => {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
             Alert.alert('', message);
           } else if (errorType === 'BAD_USER_INPUT') {
@@ -219,7 +232,7 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
     setSelectedVouchers(null);
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-      payload: { ...details, voucher: null },
+      payload: {...details, voucher: null},
     });
   };
 
@@ -228,7 +241,7 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
     setLoading(true);
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-      payload: { ...details, vehicleType: selectedVehicle.vehicleType },
+      payload: {...details, vehicleType: selectedVehicle.vehicleType},
     });
     console.log({
       input: {
@@ -257,7 +270,8 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
     }
   }, [selectedVehicle, selectedVouchers]);
 
-  const tripBooking = ({ pinCode, data }) => {
+  const tripBooking = ({pinCode, data}) => {
+    console.log(details);
     if (!session.userHash) {
       return Alert.alert('', 'Please restart your application!');
     }
@@ -271,35 +285,114 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
           paymentMethod: selectedPaymentMethod,
           ...(selectedPaymentMethod == 'TOKTOKWALLET'
             ? {
-              initializedPayment: {
-                hash: data.paymentHash,
-                pinCode: pinCode,
-              },
-            }
+                initializedPayment: {
+                  hash: data.paymentHash,
+                  pinCode: pinCode,
+                },
+              }
             : {}),
-          ...(details?.noteToDriver ? { notes: details?.noteToDriver } : {}),
+          ...(details?.noteToDriver ? {notes: details?.noteToDriver} : {}),
         },
       },
     });
   };
 
   const confirmBooking = num => {
-    setSelectedSeatNum(num);
-    SheetManager.hide('passenger_capacity');
-    // setvoucherRemovedVisible(true);
-    setTimeout(() => {
-      if (selectedPaymentMethod == 'CASH') {
-        tripBooking({ pinCode: null });
-      } else {
-        tripInitializePayment({
-          variables: {
-            input: {
-              tripFareHash: details?.rate?.hash,
+    if (details.voucher == null) {
+      setSelectedSeatNum(num);
+      SheetManager.hide('passenger_capacity');
+      // setvoucherRemovedVisible(true);
+      addItemToList(destination);
+      setTimeout(() => {
+        if (selectedPaymentMethod == 'CASH') {
+          tripBooking({pinCode: null});
+        } else {
+          tripInitializePayment({
+            variables: {
+              input: {
+                tripFareHash: details?.rate?.hash,
+              },
             },
-          },
-        });
+          });
+        }
+      }, 500);
+    } else if (selectedPaymentMethod == 'CASH' && details.voucher.promoVoucher.isCash == 0) {
+      SheetManager.hide('passenger_capacity');
+      setvoucherTextMessage('WrongPaymentMethod');
+      setvoucherRemovedVisible(true);
+    } else if (selectedPaymentMethod == 'TOKTOKWALLET' && details.voucher.promoVoucher.isCash == 1) {
+      SheetManager.hide('passenger_capacity');
+      setvoucherTextMessage('WrongPaymentMethod');
+      setvoucherRemovedVisible(true);
+    } else {
+      setSelectedSeatNum(num);
+      SheetManager.hide('passenger_capacity');
+      // setvoucherRemovedVisible(true);
+      addItemToList(destination);
+      setTimeout(() => {
+        if (selectedPaymentMethod == 'CASH') {
+          tripBooking({pinCode: null});
+        } else {
+          tripInitializePayment({
+            variables: {
+              input: {
+                tripFareHash: details?.rate?.hash,
+              },
+            },
+          });
+        }
+      }, 500);
+    }
+  };
+
+  const addItemToList = async destination => {
+    console.log(destination);
+    try {
+      const data = await AsyncStorage.getItem('recentDestinationList');
+      if (data === null) {
+        const destinationList = JSON.stringify([destination]);
+
+        await AsyncStorage.setItem('recentDestinationList', destinationList);
+      } else {
+        const recentList = JSON.parse(data);
+        if (recentList.length >= 3) {
+          let obj = recentList.find(o => o.place.formattedAddress === destination.place.formattedAddress);
+          console.log(obj);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            setrecentDestinationList([]);
+            const removedItem = recentList.slice(0, 2);
+            removedItem.unshift(destination);
+            const destinationList = JSON.stringify(removedItem);
+            await AsyncStorage.setItem('recentDestinationList', destinationList);
+          }
+        } else {
+          let obj = recentList.find(o => o.place.formattedAddress === destination.place.formattedAddress);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            recentDestinationList.push(destination);
+            const destinationList = JSON.stringify(recentDestinationList);
+            await AsyncStorage.setItem('recentDestinationList', destinationList);
+          }
+        }
       }
-    }, 500);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getDestinationList = async () => {
+    try {
+      const data = await AsyncStorage.getItem('recentDestinationList');
+
+      const output = JSON.parse(data);
+      console.log(output);
+      setrecentDestinationList(output);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
@@ -344,9 +437,9 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
   };
 
   const handleVoucherRemoved = () => {
-    setvoucherRemovedVisible(false)
+    setvoucherRemovedVisible(false);
     setSelectedVouchersNull();
-  }
+  };
 
   const renderContent = () => (
     <View style={styles.card}>
@@ -393,9 +486,9 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
           onPress={() => {
             sheetRef.current.snapTo(1), setshowHeader(false);
           }}>
-          <Image source={ArrowLeftIcon} resizeMode={'contain'} style={[styles.iconDimensions, { marginLeft: 16 }]} />
+          <Image source={ArrowLeftIcon} resizeMode={'contain'} style={[styles.iconDimensions, {marginLeft: 16}]} />
         </TouchableOpacity>
-        <View style={{ flex: 1, alignItems: 'center', marginRight: 30 }}>
+        <View style={{flex: 1, alignItems: 'center', marginRight: 30}}>
           <Text style={styles.greetingText}>Booking Summary</Text>
         </View>
       </View>
@@ -411,7 +504,7 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
   const sheetRef = React.useRef(null);
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       <StatusBar backgroundColor={viewSelectPaymentModal ? 'rgba(0,0,0,0.6)' : null} />
       <StatusBar backgroundColor={showHeader ? 'white' : null} />
       {!showHeader && (
@@ -469,7 +562,12 @@ const ToktokGoBookingSummary = ({ navigation, route, session }) => {
         setViewPaymenetSucessModal={setViewPaymenetSucessModal}
       />
       <PricesNoteModal viewPriceNote={viewPriceNote} setViewPriceNote={setViewPriceNote} />
-      <VoucherRemovedModal voucherRemovedVisible={voucherRemovedVisible} setvoucherRemovedVisible={setvoucherRemovedVisible} handleVoucherRemoved={handleVoucherRemoved} voucherTextMessage={voucherTextMessage} />
+      <VoucherRemovedModal
+        voucherRemovedVisible={voucherRemovedVisible}
+        setvoucherRemovedVisible={setvoucherRemovedVisible}
+        handleVoucherRemoved={handleVoucherRemoved}
+        voucherTextMessage={voucherTextMessage}
+      />
       <BookingMap
         decodedPolyline={decodedPolyline}
         routeDetails={routeDetails}
