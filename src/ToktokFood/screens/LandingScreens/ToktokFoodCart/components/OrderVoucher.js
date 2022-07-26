@@ -24,7 +24,7 @@ import {deleteKeys, parseAmountComputation} from '../functions';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_PAYMENT_METHOD_VALIDATION, GET_VOUCHER_CODE} from 'toktokfood/graphql/toktokfood';
 
-const OrderVoucher = ({autoShipping, deliveryFee}) => {
+const OrderVoucher = ({autoShipping, deliveryFee, orderType}) => {
   const dispatch = useDispatch();
   const {paymentMethod, shippingVoucher, setShippingVoucher, temporaryCart} = useContext(VerifyContext);
   const {customerInfo, promotionVoucher} = useSelector(state => state.toktokFood);
@@ -180,6 +180,12 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
       }
     }
   }, [autoShipping]);
+
+  useEffect(() => {
+    if (orderType !== '') {
+      dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
+    }
+  }, [orderType]);
 
   useEffect(() => {
     // if (!autoShipping?.success && voucher) {

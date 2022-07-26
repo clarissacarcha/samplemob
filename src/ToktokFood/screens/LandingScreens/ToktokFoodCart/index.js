@@ -945,7 +945,7 @@ const MainComponent = () => {
             <Separator />
           </>
         )} */}
-        <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} />
+        <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} orderType={orderType} />
         <Separator />
 
         {/* <AlsoOrder /> */}

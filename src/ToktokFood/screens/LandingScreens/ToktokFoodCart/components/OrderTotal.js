@@ -23,7 +23,11 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
   const {promotionVoucher} = useSelector(state => state.toktokFood);
 
   const totalSumSF = totalDelivery + totalShipping;
-  const totalSF = totalSumSF > deliveryFee ? deliveryFee.toFixed(2) : totalSumSF.toFixed(2);
+  const totalSF = forDelivery
+    ? totalSumSF > deliveryFee
+      ? deliveryFee.toFixed(2)
+      : totalSumSF.toFixed(2)
+    : (0.0).toFixed(2);
   // const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
 
   useEffect(() => {
@@ -176,7 +180,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         </View>
       )}
 
-      {(totalDelivery > 0 || totalShipping > 0) && (
+      {forDelivery && (totalDelivery > 0 || totalShipping > 0) && (
         <View style={styles.header}>
           <Text>Delivery Fee Discount</Text>
           <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
