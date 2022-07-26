@@ -171,13 +171,14 @@ export const GET_PRODUCT_DETAILS = gql`
     	summary
     	tags
     	noOfStocks
-		enabled
+		  enabled
     	price
     	compareAtPrice
 			discountRate
 			refComDiscountRate
 			refCom
 			soldCount
+			weeklySold
 			contSellingIsset
     	images {
       	arrangement

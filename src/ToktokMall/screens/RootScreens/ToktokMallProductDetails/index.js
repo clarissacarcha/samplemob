@@ -176,7 +176,7 @@ const Component =  ({
       const onBackPress = () => {
         // navigation.pop(2)
         // alert(JSON.stringify(customModal.visible))
-        if(customModal.visible || customMessageModal.visible){
+        if(customModal?.visible || customMessageModal?.visible){
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
           dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})

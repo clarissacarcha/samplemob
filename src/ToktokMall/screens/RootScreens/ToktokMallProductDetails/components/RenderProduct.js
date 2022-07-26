@@ -224,7 +224,7 @@ const Component = ({
 
           </View>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{flex: 1}}>{data.soldCount || 0} sold</Text>
+            <Text style={{flex: 1}}>{data.weeklySold || 0} sold</Text>
             <View style={styles.share}>
               {/* <TouchableOpacity style={{marginRight: 10}} onPress={() => HandleToggleFavorites()}>
                 {favorite ? <CustomIcon.EIcon name="heart" size={22} color="#F6841F" /> : <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />}

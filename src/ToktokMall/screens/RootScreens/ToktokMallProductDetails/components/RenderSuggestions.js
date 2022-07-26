@@ -187,12 +187,12 @@ export const RenderSuggestions = ({data, lazyload, category}) => {
         <View style={styles.container}>
             <View style={styles.heading}>
               <View style={{flex: 8}}>
-                <Text style={styles.h1}>Suggestions for you</Text>
+                <Text style={styles.h1}>Discover</Text>
               </View>
               <TouchableOpacity 
                 onPress={() => 
                   navigate("ToktokMallSearch", {
-                    searchValue: "Suggestions for you", origin: "relevant", data: data 
+                    searchValue: "Discover", origin: "relevant", data: data 
                 })}
                 style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
                   <Text style={styles.link}>See all </Text>
