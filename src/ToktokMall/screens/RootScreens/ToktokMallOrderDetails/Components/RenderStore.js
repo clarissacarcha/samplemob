@@ -7,6 +7,11 @@ import { RenderItem } from './RenderItem'
 
 export const RenderStore = ({data , navigation}) => {
     const [bolean,setBolean] = useState(true);
+
+    const renderTotalItems = () => {
+        const total = data?.orders?.items.reduce((prevTotal, newTotal) => prevTotal + newTotal.quantity, 0);
+        return total <= 1 ? `${total} item` : `${total} items`;
+    }
     
     return (
         <>
@@ -30,8 +35,7 @@ export const RenderStore = ({data , navigation}) => {
                 </View> */}
                 <View style={{flex: 0, justifyContent: 'center'}}>
                     <Text style={{fontSize: 14}}>
-                        {data?.orders?.totalItems}{' '}
-                        {data?.orders?.totalItems > 1 ? "items" : "item"}
+                        {renderTotalItems()}
                     </Text>
                 </View>
             </View>
