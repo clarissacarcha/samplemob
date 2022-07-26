@@ -1,5 +1,7 @@
 import React from 'react';
 import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions, ActivityIndicator} from 'react-native';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 import CONSTANTS from '../../common/res/constants';
 import {numberFormat} from '../../helper';
 import SedanIMG from '../../assets/images/vehicleTypes/Sedan.png';
@@ -8,7 +10,8 @@ import LargeMpvIMG from '../../assets/images/vehicleTypes/LargeMPV.png';
 
 const ImageWidth = (Dimensions.get('window').width - 230) / 2;
 
-export const VehicleCard = ({type, data, selectVehicle, setDataVehicle, selectedVehicle, dataVehicle}) => {
+export const VehicleCard = ({type, loading, data, selectVehicle, setDataVehicle, selectedVehicle, dataVehicle}) => {
+  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   const render_image = () => {
     switch (data?.vehicleType?.imageClass) {
       case 'SEDAN': {
@@ -85,7 +88,9 @@ export const VehicleCard = ({type, data, selectVehicle, setDataVehicle, selected
               <Text style={styles.descTextStlye}>{data?.vehicleType?.phrase}</Text>
             </View>
           </View>
-          <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
+          <ShimmerPlaceHolder style={{width: !loading ? 60 : 45}} visible={!loading}>
+            <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
+          </ShimmerPlaceHolder>
         </View>
       </TouchableOpacity>
       {seeVehicleFees()}
