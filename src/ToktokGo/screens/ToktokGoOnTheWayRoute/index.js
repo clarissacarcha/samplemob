@@ -4,7 +4,7 @@ import {Map, SeeBookingDetails, DriverStatus, DriverInfo, Actions, DriverStatusD
 import {DriverArrivedModal} from './Components';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-
+import {SheetManager} from 'react-native-actions-sheet';
 import {
   CancelBookingModal,
   ReasonCancelModal,
@@ -210,7 +210,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     },
     onCompleted: response => {
       setCancellationState(response.tripConsumerCancel.cancellation);
-      setViewSuccessCancelBookingModal(true);
+      SheetManager.show('cancel_booking');
     },
   });
 
@@ -466,7 +466,14 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         tripRebookFunc={tripRebookFunc}
       />
       {/* <SuccesCancelBookingModal /> */}
-      <CancelBookingActionSheet setVisible={setViewSuccessCancelBookingModal} />
+      <CancelBookingActionSheet
+        hastokwa={tokwaAccount.wallet.id ? true : false}
+        setViewSuccessCancelBookingModal={setViewSuccessCancelBookingModal}
+        setVisible={setViewSuccessCancelBookingModal}
+        SheetManager={SheetManager}
+        cancellationState={cancellationState}
+        payFeeViaTokwa={payFeeViaTokwa}
+      />
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>

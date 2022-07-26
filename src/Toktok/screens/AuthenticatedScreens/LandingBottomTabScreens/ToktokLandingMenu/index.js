@@ -89,6 +89,7 @@ export const ToktokLandingMenu = ({navigation}) => {
     if (RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
     OneSignal.deleteTag('userId');
     dispatch({type: 'DESTROY_SESSION'});
+    dispatch({type: 'SET_TOKWA_TO_INITIAL_STATE'});
     navigation.replace('UnauthenticatedStack', {
       screen: 'Login',
     });
