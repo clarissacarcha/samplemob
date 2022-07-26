@@ -1,5 +1,7 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {View, StyleSheet, TouchableOpacity, Image, StatusBar, Text, Dimensions, Alert, Platform} from 'react-native';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 import constants from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -37,6 +39,7 @@ import {VoucherRemovedModal} from './Components/VoucherRemovedModal';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
+  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   const FULLSCREEN_HEIGHT = Dimensions.get('window').height;
   const SNAP_ARR_NOTCH = [FULLSCREEN_HEIGHT - 78, FULLSCREEN_HEIGHT * 0.6];
   const SNAP_ARR = [FULLSCREEN_HEIGHT, FULLSCREEN_HEIGHT * 0.6];
@@ -271,7 +274,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   }, [selectedVehicle, selectedVouchers]);
 
   const tripBooking = ({pinCode, data}) => {
-    console.log(details);
     if (!session.userHash) {
       return Alert.alert('', 'Please restart your application!');
     }
@@ -444,8 +446,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const renderContent = () => (
     <View style={styles.card}>
       <BookingDistanceTime quotationData={quotationDataResult} loading={loading} />
-
       <BookingSelectVehicle
+        loading={loading}
         data={quotationDataResult}
         selectedVehicle={selectedVehicle}
         navigation={navigation}
@@ -459,6 +461,9 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         selectedVouchers={selectedVouchers}
         setSelectedVouchersNull={setSelectedVouchersNull}
       />
+      <ShimmerPlaceHolder style={styles.shimmer} visible={!loading} />
+      {loading && <View style={styles.divider} />}
+      <ShimmerPlaceHolder style={styles.shimmer} visible={!loading} />
     </View>
   );
 
@@ -726,5 +731,16 @@ const styles = StyleSheet.create({
     color: constants.COLOR.BLACK,
     fontSize: constants.FONT_SIZE.XL + 1,
     fontFamily: constants.FONT_FAMILY.REGULAR,
+  },
+  shimmer: {
+    width: 382,
+    height: 16,
+  },
+  divider: {
+    borderBottomWidth: 2,
+    borderBottomColor: constants.COLOR.LIGHT,
+    marginBottom: 16,
+    marginTop: 14,
+    width: 382,
   },
 });
