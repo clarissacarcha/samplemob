@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions, ActivityIndicator} from 'react-native';
+import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions, Platform} from 'react-native';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import CONSTANTS from '../../common/res/constants';
@@ -88,7 +88,7 @@ export const VehicleCard = ({type, loading, data, selectVehicle, setDataVehicle,
               <Text style={styles.descTextStlye}>{data?.vehicleType?.phrase}</Text>
             </View>
           </View>
-          <ShimmerPlaceHolder style={{width: !loading ? 60 : 45}} visible={!loading}>
+          <ShimmerPlaceHolder style={{width: !loading ? (Platform.OS == 'ios' ? 60 : 75) : 45}} visible={!loading}>
             <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
           </ShimmerPlaceHolder>
         </View>

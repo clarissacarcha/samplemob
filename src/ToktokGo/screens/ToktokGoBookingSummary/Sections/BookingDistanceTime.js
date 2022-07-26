@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, StyleSheet, View, ActivityIndicator} from 'react-native';
+import {Text, StyleSheet, View, Platform} from 'react-native';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import CONSTANTS from '../../../../common/res/constants';
@@ -20,7 +20,7 @@ export const BookingDistanceTime = ({quotationData, loading}) => {
         <ShimmerPlaceHolder
           style={{
             width: !loading ? 150 : 138,
-            height: !loading ? 28 : 16,
+            height: !loading ? (Platform.OS == 'ios' ? 28 : 35) : 16,
           }}
           visible={!loading}>
           <View style={styles.elementWrapper}>
