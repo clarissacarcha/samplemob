@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import voucher_image from '../../../../assets/toktokgo/voucher.png';
