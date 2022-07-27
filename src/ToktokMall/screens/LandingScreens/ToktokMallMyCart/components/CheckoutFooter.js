@@ -4,8 +4,9 @@ import { HeaderBack, HeaderTitle, HeaderRight } from '../../../../Components';
 import { AlertOverlay} from '../../../../../components';
 import { COLOR, FONT, FONT_SIZE } from '../../../../../res/variables';
 import CheckBox from 'react-native-check-box';
+import { Price } from '../../../../helpers';
 
-export const CheckoutFooter = ({subtotal}) => {
+export const CheckoutFooter = ({subtotal, onSubmit}) => {
     return (
         <>
             <View 
@@ -14,10 +15,10 @@ export const CheckoutFooter = ({subtotal}) => {
                 <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
                     <View style={{flex: 1, justifyContent: 'center'}}>
                         <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Subtotal </Text>
-                        <Text style={{fontSize: 18, color: "#F6841F"}}>&#8369;{parseFloat(subtotal || 0).toFixed(2)}</Text>
+                        <Text style={{fontSize: 18, color: "#F6841F"}}><Price amount={subtotal} /></Text>
                     </View>
                     <View style={{justifyContent: 'center'}}>
-                        <TouchableOpacity style={{backgroundColor: '#F6841F', paddingVertical: 15, paddingHorizontal: 40, borderRadius: 5}}>
+                        <TouchableOpacity onPress={onSubmit} style={{backgroundColor: '#F6841F', paddingVertical: 15, paddingHorizontal: 40, borderRadius: 5}}>
                             <Text style={{fontSize: 14, color: '#fff'}}>Checkout</Text>
                         </TouchableOpacity>
                     </View>

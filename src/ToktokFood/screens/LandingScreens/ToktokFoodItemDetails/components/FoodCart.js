@@ -227,7 +227,7 @@ export const FoodCart = ({loading, action}) => {
       quantity: count.quantity,
       addons: extractAddons(),
       notes: notes.replace(/[^a-z0-9_ ]/gi, ''),
-      // order_instructions: orderInstructions === 'Select one' ? '' : orderInstructions,
+      order_instructions: orderInstructions,
     };
 
     let filterItemByProductId = await temporaryCart.items.filter(item => {

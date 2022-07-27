@@ -17,7 +17,7 @@ import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet} fr
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-import {GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT} from '../../graphql';
+import {GET_TRIP_FARE, TRIP_BOOK} from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import BottomSheet from 'reanimated-bottom-sheet';
@@ -35,7 +35,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const {details, routeDetails, origin, destination, paymentMethod, tempVehicleArr} = useSelector(
     state => state.toktokGo,
   );
-  const {tokwaAccount, getMyAccount, getMyAccountLoading, getMyAccountError} = useAccount();
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
@@ -191,9 +190,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
   useEffect(() => {
     setLoading(true);
-    if (selectedVehicle) {
-      dispatchRequest();
-    }
+    dispatchRequest();
   }, [selectedVehicle, selectedVouchers]);
 
   const tripBooking = ({pinCode, data}) => {
@@ -257,15 +254,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         selectedVouchers={selectedVouchers}
         setSelectedVouchersNull={setSelectedVouchersNull}
       /> */}
-      <BookingBreakdown selectedVehicle={selectedVehicle} loading={loading} />
+      <BookingBreakdown selectedVehicle={selectedVehicle} />
       <BookingTotal loading={loading} details={details} />
       <BookingSelectPaymentMethod
         viewPaymenetSucessModal={viewPaymenetSucessModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
         details={details}
-        tokwaAccount={tokwaAccount}
-        getMyAccountLoading={getMyAccountLoading}
-        navigation={navigation}
       />
     </View>
   );
@@ -349,7 +343,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         navigation={navigation}
         viewSelectPaymentModal={viewSelectPaymentModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
-        setSelectedPaymentMethod={setSelectedPaymentMethod}
         details={details}
         tokwaAccount={tokwaAccount}
         getMyAccountLoading={getMyAccountLoading}
