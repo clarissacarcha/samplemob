@@ -11,6 +11,7 @@ import {connect, useDispatch, useSelector} from 'react-redux';
 import {useDebounce} from '../../helpers';
 import {EmptyRecent, ToktokgoBeta} from '../../components';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
+import DestinationBC from '../../../assets/toktokgo/destination4.png';
 import {useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../helper';
 import {ThrottledHighlight} from '../../../components_section';
@@ -65,6 +66,15 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     },
     onError: error => console.log('error', error),
   });
+
+  const onPressRecentSearch = loc => {
+    if (selectedInput == 'D') {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
+    } else {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
+    }
+    onPressLocation();
+  };
 
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
@@ -204,6 +214,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
       const output = JSON.parse(data);
       setrecentSearchDataList(output);
+      console.log(output);
     } catch (err) {
       console.log(err);
     }
@@ -247,9 +258,48 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
         />
         {searchResponse?.length == 0 ? (
           <View>
-            <FrequentlyUsed navigation={navigation} popTo={popTo} recentSearchDataList={recentSearchDataList} />
-            <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
-            <SavedLocations navigation={navigation} popTo={popTo} recentDestinationList={recentDestinationList} />
+            {recentSearchDataList == null && recentDestinationList == null ? (
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 110}}>
+                <Image source={DestinationBC} resizeMode={'contain'} style={{height: 200, width: 200}} />
+                <Text
+                  style={{
+                    fontSize: CONSTANTS.FONT_SIZE.L,
+                    color: CONSTANTS.COLOR.ORANGE,
+                    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                  }}>
+                  No Recent Destination
+                </Text>
+                <Text
+                  style={{
+                    fontSize: CONSTANTS.FONT_SIZE.M,
+                  }}>
+                  You don’t have recent destination yet.
+                </Text>
+              </View>
+            ) : (
+              <View>
+                {recentSearchDataList == null ? null : (
+                  <View>
+                    <FrequentlyUsed
+                      navigation={navigation}
+                      popTo={popTo}
+                      recentSearchDataList={recentSearchDataList}
+                      onPressRecentSearch={onPressRecentSearch}
+                    />
+                    {recentDestinationList == null ? null : (
+                      <View>
+                        <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+                        <SavedLocations
+                          navigation={navigation}
+                          popTo={popTo}
+                          recentDestinationList={recentDestinationList}
+                        />
+                      </View>
+                    )}
+                  </View>
+                )}
+              </View>
+            )}
           </View>
         ) : (
           // <ToktokgoBeta />

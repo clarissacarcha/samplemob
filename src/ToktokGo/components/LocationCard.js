@@ -6,7 +6,7 @@ export const LocationCard = ({item, image, onPress, lastItem = false}) => {
   return (
     <>
       <TouchableOpacity
-        onPress={onPress}
+        onPress={() => onPress(item)}
         style={{paddingHorizontal: 20, paddingVertical: 16, backgroundColor: 'white'}}>
         <View style={{flexDirection: 'row', paddingRight: image ? 20 : 0}}>
           {image && <Image source={image} resizeMode={'contain'} style={{height: 15, width: 15, marginRight: 10}} />}

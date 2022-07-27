@@ -10,6 +10,7 @@ export const VoucherRemovedModal = ({
   setvoucherRemovedVisible,
   handleVoucherRemoved,
   voucherTextMessage,
+  onProceedToBooking,
 }) => {
   return (
     <Modal animationType="fade" transparent={true} visible={voucherRemovedVisible} style={StyleSheet.absoluteFill}>
@@ -40,7 +41,7 @@ export const VoucherRemovedModal = ({
               <TouchableOpacity style={styles.buttonContainerNo} onPress={() => setvoucherRemovedVisible(false)}>
                 <Text style={styles.buttonTextNo}>No</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonContainerYes} onPress={() => handleVoucherRemoved()}>
+              <TouchableOpacity style={styles.buttonContainerYes} onPress={() => onProceedToBooking()}>
                 <Text style={styles.buttonTextYes}>Yes</Text>
               </TouchableOpacity>
             </View>

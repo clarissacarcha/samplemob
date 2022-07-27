@@ -16,18 +16,39 @@ import {ToktokgoBeta, EmptyRecent} from '../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {currentLocation} from '../../../helper';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
+import DestinationBC from '../../../assets/toktokgo/destination4.png';
 import {ThrottledHighlight, ThrottledOpacity} from '../../../components_section';
 import {useMutation} from '@apollo/client';
 import {onErrorAppSync} from '../../util';
 import {useAccount} from 'toktokwallet/hooks';
 import {CancellationPaymentSuccesfullModal, NoShowPaymentSuccesfullModal} from './Components';
+import {SavedLocations} from './Sections/SavedLocations';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const ToktokGoBookingStart = ({navigation, constants, session}) => {
+const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
+  // const {popTo, selectInput} = route.params;
+  const [selectedInput, setSelectedInput] = useState('D');
   const {tokwaAccount, getMyAccount} = useAccount();
   const [tripConsumerPending, setTripConsumerPending] = useState([]);
   const [showCancellationPaymentSuccesfulModal, setCancellationShowPaymentSuccessfulModal] = useState(false);
   const [showNoShowPaymentSuccessfulModal, setShowNoShowPaymentSuccessfulModal] = useState(false);
   const dispatch = useDispatch();
+  const [recentSearchDataList, setrecentSearchDataList] = useState([]);
+  const [recentDestinationList, setrecentDestinationList] = useState([]);
+
+  useEffect(() => {
+    // console.log(options[175].value);
+    const subscribe = navigation.addListener('focus', async () => {
+      await getSearchList();
+      await getDestinationList();
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      return subscribe;
+    });
+    const unsubscribe = navigation.addListener('blur', async () => {
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      return unsubscribe;
+    });
+  }, [navigation]);
 
   const setBookingInitialState = payload => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
@@ -167,6 +188,64 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
       });
     }, [navigation]),
   );
+
+  const onChangeSelectedInput = value => {
+    setSelectedInput(value);
+    if (value == 'D') {
+      debouncedRequest(searchDestination);
+    } else {
+      debouncedRequest(searchOrigin);
+    }
+  };
+
+  const onPressRecentSearch = loc => {
+    if (selectedInput == 'D') {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
+    } else {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
+    }
+    onPressLocation();
+  };
+
+  const onPressLocation = () => {
+    if (selectedInput == 'D') {
+      navigation.push('ToktokGoBookingConfirmDestination', {
+        popTo: 1,
+      });
+    } else {
+      navigation.pop();
+      navigation.push('ToktokGoBookingConfirmPickup', {
+        popTo: 1,
+        source: 'searchLocation',
+      });
+    }
+  };
+
+  const getSearchList = async () => {
+    try {
+      const data = await AsyncStorage.getItem('recentSearchList');
+
+      const output = JSON.parse(data);
+      if (output != null) {
+        setrecentSearchDataList(output);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getDestinationList = async () => {
+    try {
+      const data = await AsyncStorage.getItem('recentDestinationList');
+
+      const output = JSON.parse(data);
+      if (output != null) {
+        setrecentDestinationList(output);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
       <View style={{flex: 1}}>
@@ -183,7 +262,9 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
         {/* <RecentDestinations navigation={navigation} />
         <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
         <SavedLocations /> */}
-        <ScrollView contentContainerStyle={{flexGrow: 1}} scrollEnabled={tripConsumerPending.length > 0}>
+        <ScrollView
+          contentContainerStyle={{flexGrow: 1}}
+          scrollEnabled={tripConsumerPending.length > 0 || recentSearchDataList.length != 0}>
           {tripConsumerPending.length > 0 && (
             <OutstandingFee
               navigation={navigation}
@@ -191,7 +272,20 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
               tripConsumerPending={tripConsumerPending}
             />
           )}
-          {<ToktokgoBeta />}
+          {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? (
+            <ToktokgoBeta />
+          ) : (
+            <View>
+              <SavedLocations
+                navigation={navigation}
+                recentSearchDataList={recentSearchDataList}
+                onPressRecentSearch={onPressRecentSearch}
+              />
+              {recentSearchDataList.length <= 3 && <ToktokgoBeta />}
+            </View>
+          )}
+
+          {/* {<ToktokgoBeta />} */}
         </ScrollView>
       </View>
       <ThrottledOpacity
