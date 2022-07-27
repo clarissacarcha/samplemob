@@ -29,7 +29,7 @@ const getDisplayAddress = ({stop}) => {
     const {formattedAddress} = stop;
     if (province) {
       return (
-        <View style={{width: 320}}>
+        <View style={{marginRight: 20}}>
           <Text>
             {city}, {province}
           </Text>
@@ -38,7 +38,7 @@ const getDisplayAddress = ({stop}) => {
       );
     } else {
       return (
-        <View style={{width: 320}}>
+        <View style={{marginRight: 20}}>
           <Text>{city}</Text>
           <Text style={{fontSize: 11, color: '#525252'}}>{formattedAddress}</Text>
         </View>
@@ -193,28 +193,28 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                         flex: 1,
                         marginBottom: 5,
                       }}>
-                      <Text
-                        style={{
-                          fontFamily: conditionalFontFamily,
-                          fontSize: constants.FONT_SIZE.S,
-                          color: blackFont,
-                          marginTop: 2,
-                        }}>
-                        {getDisplayAddress({stop: booking?.route?.origin})}
-                      </Text>
+                      {/* <Text
+                         style={{
+                           fontFamily: conditionalFontFamily,
+                           fontSize: constants.FONT_SIZE.S,
+                           color: blackFont,
+                           marginTop: 2,
+                         }}> */}
+                      {getDisplayAddress({stop: booking?.route?.origin})}
+                      {/* </Text> */}
                     </View>
 
                     {/*-------------------- RECIPIENT DETAILS --------------------*/}
                     <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 3}}>
-                      <Text
-                        style={{
-                          fontFamily: conditionalFontFamily,
-                          fontSize: constants.FONT_SIZE.S,
-                          color: blackFont,
-                          marginTop: 2,
-                        }}>
-                        {getDisplayAddress({stop: booking?.route?.destinations[0]})}
-                      </Text>
+                      {/* <Text
+                         style={{
+                           fontFamily: conditionalFontFamily,
+                           fontSize: constants.FONT_SIZE.S,
+                           color: blackFont,
+                           marginTop: 2,
+                         }}> */}
+                      {getDisplayAddress({stop: booking?.route?.destinations[0]})}
+                      {/* </Text> */}
                     </View>
                   </View>
                 </View>

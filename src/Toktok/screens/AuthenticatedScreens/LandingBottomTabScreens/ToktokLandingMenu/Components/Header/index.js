@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
-
+    borderBottomWidth: 3,
+    borderColor: '#F8F8F8',
     elevation: 4,
   },
 

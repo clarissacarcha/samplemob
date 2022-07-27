@@ -5,21 +5,17 @@ import CONSTANTS from '../../../common/res/constants';
 import LottieView from 'lottie-react-native';
 import Loading from '../../../assets/JSON/loading.json';
 
-const width = Dimensions.get('window').width;
+const WIDTH = Dimensions.get('window').width * 0.3;
 
 export const AlertOverlay = ({visible}) => {
   return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      useNativeDriver={true}
-      style={styles.container}
-      animationIn={'fadeIn'}
-      animationOut={'fadeOut'}>
-      <View style={styles.modalBody}>
-        <View style={styles.content}>
-          <LottieView source={Loading} autoPlay loop style={styles.loading} />
-          <Text style={styles.processing}>Processing</Text>
+    <Modal transparent={true} visible={visible}>
+      <View style={styles.transparent}>
+        <View style={styles.labelRow}>
+          <View style={styles.loaderBox}>
+            <LottieView source={Loading} autoPlay loop />
+          </View>
+          <Text style={styles.textDesign}>Processing</Text>
         </View>
       </View>
     </Modal>
@@ -27,30 +23,29 @@ export const AlertOverlay = ({visible}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  transparent: {
     flex: 1,
-  },
-  modalBody: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.75)',
+    paddingHorizontal: 105,
   },
-  content: {
-    width: width * 0.5,
-    backgroundColor: 'white',
+  labelRow: {
+    paddingTop: 33,
+    alignItems: 'center',
+    marginTop: '125%',
+    backgroundColor: CONSTANTS.COLOR.WHITE,
     borderRadius: 10,
-    padding: 20,
+  },
+  loaderBox: {
+    width: WIDTH, // size of the loader
+    height: WIDTH, // size of the loader
+    borderRadius: 10,
     alignItems: 'center',
   },
-  processing: {
+  textDesign: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-    marginTop: 10,
     fontSize: CONSTANTS.FONT_SIZE.M,
-  },
-  loading: {
-    height: 80,
-    width: 80,
+    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    marginTop: 22,
+    paddingBottom: 37,
   },
 });
