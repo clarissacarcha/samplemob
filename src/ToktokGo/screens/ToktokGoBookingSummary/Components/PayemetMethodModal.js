@@ -23,6 +23,7 @@ export const PaymentMethodModal = ({
   setSelectedPaymentMethod,
   tokwaAccount,
   getMyAccountLoading,
+  checkPaymentMethod,
 }) => {
   const dispatch = useDispatch();
   const {wallet, id} = tokwaAccount;
@@ -33,6 +34,7 @@ export const PaymentMethodModal = ({
     });
     setSelectedPaymentMethod(paymentMethod);
     setViewSelectPaymentModal(false);
+    checkPaymentMethod();
   };
 
   return (

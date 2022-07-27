@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import voucher_image from '../../../../assets/toktokgo/voucher.png';
@@ -7,7 +7,7 @@ import InfoIcon from '../../../../assets/images/info.png';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 
-export const BookingVoucher = ({navigation, selectedVouchers, setSelectedVouchersNull}) => {
+export const BookingVoucher = ({navigation, selectedVouchers, setSelectedVouchersNull, isNotVoucherApplicable}) => {
   return (
     <>
       <View style={styles.container}>
@@ -35,18 +35,14 @@ export const BookingVoucher = ({navigation, selectedVouchers, setSelectedVoucher
           </TouchableOpacity>
         )}
       </View>
-      <View style={{
-    justifyContent: 'flex-start',
-    padding: 16,
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    backgroundColor: CONSTANTS.COLOR.LIGHT_YELLOW,
-  }}>
-      <Image source={InfoIcon} resizeMode={'center'} style={styles.imgDimensions} />
-      <Text style={styles.textStyles}>
-      Your changes does not meet the Terms and Conditions of the voucher you used.
-      </Text>
-    </View>
+      {isNotVoucherApplicable && (
+        <View style={styles.warningContainer}>
+          <Image source={InfoIcon} resizeMode={'contain'} style={styles.imgDimensions} />
+          <Text style={styles.textStyles}>
+            Your changes does not meet the Terms and Conditions of the voucher you used.
+          </Text>
+        </View>
+      )}
       <View style={styles.divider} />
     </>
   );
@@ -139,5 +135,20 @@ const styles = StyleSheet.create({
     color: CONSTANTS.COLOR.WHITE,
     fontSize: CONSTANTS.FONT_SIZE.M,
     marginLeft: 3,
+  },
+  warningContainer: {
+    flexDirection: 'row',
+    padding: 16,
+    marginHorizontal: -16,
+    backgroundColor: CONSTANTS.COLOR.LIGHT_YELLOW,
+  },
+  imgDimensions: {
+    width: 13,
+    height: 13,
+    marginRight: 8,
+    marginTop: 4,
+  },
+  textStyles: {
+    color: CONSTANTS.COLOR.ORANGE,
   },
 });
