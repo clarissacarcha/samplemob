@@ -3,19 +3,31 @@ import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import {VehicleCard} from '../../../components';
 import CONSTANTS from '../../../../common/res/constants';
 import {useSelector} from 'react-redux';
+import IOIcons from 'react-native-vector-icons/Ionicons';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
+import {ThrottledOpacity} from '../../../../components_section';
 
-export const BookingSelectVehicle = ({navigation, data, selectVehicle, selectedVehicle}) => {
+export const BookingSelectVehicle = ({navigation, data, selectVehicle, selectedVehicle, setViewPriceNote}) => {
   const {tempVehicleArr} = useSelector(state => state.toktokGo);
   return (
     <>
       <View style={styles.container}>
         <View style={styles.elementWrapper}>
           <Text style={styles.textStyle}>Select Vehicle</Text>
+          <ThrottledOpacity
+            onPress={() => {
+              setViewPriceNote(true);
+            }}>
+            <IOIcons
+              name={'information-circle-outline'}
+              size={CONSTANTS.FONT_SIZE.L}
+              style={{color: CONSTANTS.COLOR.YELLOW}}
+            />
+          </ThrottledOpacity>
         </View>
 
-        <TouchableOpacity
+        <ThrottledOpacity
           onPress={() =>
             navigation.push('ToktokGoBookingVehicle', {
               data,
@@ -26,7 +38,7 @@ export const BookingSelectVehicle = ({navigation, data, selectVehicle, selectedV
           style={styles.elementWrapper}>
           <Text style={styles.seeAlltextStyle}>See All</Text>
           <Image source={ArrowRightIcon} resizeMode={'contain'} style={styles.arrowIconStyle} />
-        </TouchableOpacity>
+        </ThrottledOpacity>
       </View>
 
       <VehicleCard data={tempVehicleArr[0]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
@@ -53,6 +65,7 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
     fontSize: CONSTANTS.FONT_SIZE.M,
+    marginRight: 8,
   },
   seeAlltextStyle: {
     fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,

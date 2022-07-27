@@ -96,7 +96,7 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
         {/* todo: replace condition if status is completed */}
         {booking.tag == 'COMPLETED' && <BookingMap booking={booking} routeDetails={booking.route} />}
         <BookingAddress booking={booking} />
-        <BookingTotal booking={booking} />
+        <BookingTotal booking={booking} navigation={navigation} />
 
         <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
 

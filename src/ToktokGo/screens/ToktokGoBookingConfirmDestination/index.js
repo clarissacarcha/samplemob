@@ -20,6 +20,9 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   const dispatch = useDispatch();
   const onConfirm = throttle(
     () => {
+      if (data?.getPlaceByLocation) {
+        dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: data?.getPlaceByLocation});
+      }
       navigation.pop();
       navigation.pop();
       navigation.push('ToktokGoBookingConfirmPickup', {
@@ -36,12 +39,9 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       : {...origin.place.location, ...MAP_DELTA_LOW},
   );
 
-  const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
+  const [getPlaceByLocation, {data}] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
-    onCompleted: response => {
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: response.getPlaceByLocation});
-    },
     onError: error => console.log('error', error),
   });
 
@@ -73,9 +73,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      {destination?.place?.location?.latitude && (
-        <DestinationMap onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />
-      )}
+      {mapRegion ? <DestinationMap onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} /> : <></>}
       <View style={styles.card}>
         <View
           style={{
@@ -90,7 +88,11 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
               textAlign: 'center',
             }}>
             <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
-            <Text>{destination.place.formattedAddress}</Text>
+            <Text>
+              {destination?.place?.formattedAddress
+                ? destination.place.formattedAddress
+                : origin.place.formattedAddress}
+            </Text>
           </View>
         </View>
         <ConfirmDestinationButton onConfirm={onConfirm} />

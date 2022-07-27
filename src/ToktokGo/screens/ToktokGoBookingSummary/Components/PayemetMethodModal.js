@@ -16,6 +16,7 @@ import WalletIcon from '../../../../assets/images/Wallet.png';
 import {numberFormat} from '../../../../helper';
 
 export const PaymentMethodModal = ({
+  navigation,
   viewSelectPaymentModal,
   setViewSelectPaymentModal,
   details,
@@ -52,7 +53,11 @@ export const PaymentMethodModal = ({
                   </View>
                 </View>
 
-                <TouchableOpacity style={styles.cashInWrapper}>
+                <TouchableOpacity
+                  style={styles.cashInWrapper}
+                  onPress={() => {
+                    navigation.navigate('ToktokWalletLoginPage');
+                  }}>
                   <Text style={styles.cashIntextStyle}>Cash In</Text>
                 </TouchableOpacity>
               </View>

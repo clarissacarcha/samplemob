@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react';
-import {Text, View, TextInput, StyleSheet, Image} from 'react-native';
+import {Text, View, TextInput, StyleSheet, Image, ActivityIndicator} from 'react-native';
 import ClearTextInput from '../../../../assets/icons/EraseTextInput.png';
 import CONSTANTS from '../../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -7,6 +7,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
 import {isEmpty} from 'lodash';
 import {ThrottledOpacity} from '../../../../components_section';
+import {useDispatch} from 'react-redux';
 export const Location = ({
   onChange,
   inputRef,
@@ -17,7 +18,10 @@ export const Location = ({
   onChangeOrigin,
   setSearchDestination,
   setSearchOrigin,
+  loading,
 }) => {
+  const dispatch = useDispatch();
+
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, paddingHorizontal: 16, marginBottom: 15}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -44,14 +48,20 @@ export const Location = ({
               </Text>
             </ThrottledOpacity>
           )}
-          {!isEmpty(titleOrigin) && selectedInput == 'P' && (
-            <ThrottledOpacity
-              delay={500}
-              onPress={() => {
-                setSearchOrigin(null);
-              }}>
-              <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
-            </ThrottledOpacity>
+          {loading && selectedInput == 'P' ? (
+            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+          ) : (
+            !isEmpty(titleOrigin) &&
+            selectedInput == 'P' && (
+              <ThrottledOpacity
+                delay={500}
+                onPress={() => {
+                  setSearchOrigin(null);
+                  dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: null});
+                }}>
+                <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
+              </ThrottledOpacity>
+            )
           )}
         </View>
       </View>
@@ -80,14 +90,20 @@ export const Location = ({
               </Text>
             </ThrottledOpacity>
           )}
-          {!isEmpty(title) && selectedInput == 'D' && (
-            <ThrottledOpacity
-              delay={500}
-              onPress={() => {
-                setSearchDestination(null);
-              }}>
-              <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
-            </ThrottledOpacity>
+          {loading && selectedInput == 'D' ? (
+            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+          ) : (
+            !isEmpty(title) &&
+            selectedInput == 'D' && (
+              <ThrottledOpacity
+                delay={500}
+                onPress={() => {
+                  setSearchDestination(null);
+                  dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: null});
+                }}>
+                <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
+              </ThrottledOpacity>
+            )
           )}
         </View>
       </View>

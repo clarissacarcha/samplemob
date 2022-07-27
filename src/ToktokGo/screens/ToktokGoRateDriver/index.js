@@ -107,7 +107,7 @@ const RateDriver = ({navigation, route}) => {
 
   const rateDriverDone = () => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
-    navigation.pop(popTo);
+    navigation.replace('ToktokGoBookingStart');
   };
   return (
     <ScrollView style={styles.mainContainer}>
