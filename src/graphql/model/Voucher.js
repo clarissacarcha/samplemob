@@ -7,49 +7,36 @@ name
 code
 description
 policies
-category
 status
+discountType
+discountValue
+useCost
+collectable
+collectCost
+collectCount
+dailyLimit
+lifetimeLimit
+dailyMaxCount
+lifetimeMaxCount
+isCash
+isCod
+isTokwa
+startAt
+endAt
 createdAt
-tokwaVoucher {
-  id
-  tokwaExchangeCost
-  tokwaExchangeValue
-  image
-  createdAt
-  voucherId
-}
-promoVoucher {
-  id
-  discountType
-  discountValue
-  useCost
-  collectable
-  collectCost
-  collectCount
-  dailyLimit
-  lifetimeLimit
-  dailyMaxCount
-  lifetimeMaxCount
-  totalCollected
-  totalUsed
-  isCash
-  isCod
-  isTokwa
-  startAt
-  endAt
-  createdAt
-  voucherId
-}
+updatedAt
 voucherWallet {
   id
   remaining
   total
   status
   createdAt
+  createdAt
+  updatedAt
   voucherId
   toktokUserId
   voucherTransactionId
-}
+} 
 `;
 
 export const GET_VOUCHERS = gql`

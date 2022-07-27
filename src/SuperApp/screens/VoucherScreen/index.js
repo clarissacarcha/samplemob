@@ -77,18 +77,14 @@ export const VoucherScreen = ({navigation}) => {
         var toUse = [];
         var allVouchers = [];
         response.getVouchers.map(item => {
-          if (item.voucherWallet || !item.promoVoucher.collectable) {
-            item.promoVoucher.endAt ? toUseExpiring.unshift(item) : toUse.push(item);
+          if (item.voucherWallet || !item.collectable) {
+            item.endAt ? toUseExpiring.unshift(item) : toUse.push(item);
           } else {
-            item.promoVoucher.endAt ? toClaimExpiring.unshift(item) : toClaim.push(item);
+            item.endAt ? toClaimExpiring.unshift(item) : toClaim.push(item);
           }
         });
-        toUseExpiring.sort(
-          (a, b) => moment(a.promoVoucher.endAt).format('YYYYMMDD') - moment(b.promoVoucher.endAt).format('YYYYMMDD'),
-        );
-        toClaimExpiring.sort(
-          (a, b) => moment(a.promoVoucher.endAt).format('YYYYMMDD') - moment(b.promoVoucher.endAt).format('YYYYMMDD'),
-        );
+        toUseExpiring.sort((a, b) => moment(a.endAt).format('YYYYMMDD') - moment(b.endAt).format('YYYYMMDD'));
+        toClaimExpiring.sort((a, b) => moment(a.endAt).format('YYYYMMDD') - moment(b.endAt).format('YYYYMMDD'));
         toUse = toUse.concat(toUseExpiring);
         toClaim = toClaim.concat(toClaimExpiring);
         allVouchers = toUse.concat(toClaim);
@@ -135,7 +131,7 @@ export const VoucherScreen = ({navigation}) => {
     getVouchers({
       variables: {
         input: {
-          type: 'promo',
+          service: 'GO',
         },
       },
     });
