@@ -71,13 +71,15 @@ const MyOrderList = props => {
   };
 
   useEffect(() => {
-    getAllTemporaryCart({
-      variables: {
-        input: {
-          userId: customerInfo.userId,
+    if (hasUnavailableItem) {
+      getAllTemporaryCart({
+        variables: {
+          input: {
+            userId: customerInfo.userId,
+          },
         },
-      },
-    });
+      });
+    }
   }, [hasUnavailableItem]);
 
   const onPressEdit = async (

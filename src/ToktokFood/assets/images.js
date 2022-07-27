@@ -125,8 +125,8 @@ export const carbon_check = require('./images/carbon-check.png');
 export const carbon_x = require('./images/carbon-x.png');
 export const cash_ic = require('./images/cash-ic.png');
 export const toktokwallet_ic = require('./images/toktokwallet-ic.png');
-export const calendar_ic = require('./images/calendar-ic.png');
-export const map_ic = require('./images/map-ic.png');
+export const calendar_ic = require('./images/calendar-icon.png');
+export const map_ic = require('./images/map-icon.png');
 export const location_pin_ic = require('./images/location-pin-ic.png');
 
 //alert images

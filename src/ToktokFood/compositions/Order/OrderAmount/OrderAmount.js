@@ -5,19 +5,27 @@
 
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
-import type {PropsType} from './types';
+import type {PropsType, StateTypes} from './types';
 import {Container, AmountContainer, AmountText, AmountBreakdownContainer, Loader, DiscountIcon} from './Styled';
 import {useTheme} from 'styled-components';
 
 const OrderAmount = (props: PropsType): React$Node => {
   const {state, placement} = props;
-  const {resellerDiscountTotal = 0, promoDiscounts = 0, voucherDiscounts = [], originalShippingFee = 0} = state;
-  const shippingDiscount = state.promoDetails?.amount || 0;
+  const {
+    resellerDiscountTotal = 0,
+    promoDiscounts = 0,
+    voucherDiscounts = [],
+    originalShippingFee = 0,
+  }: StateTypes = state;
+  const shippingDiscount =
+    state?.promoDetails && state.promoDetails?.amount === 0
+      ? state.originalShippingFee
+      : state.promoDetails?.amount || 0;
   const [showAmountBreakdown, setShowAmountBreakdown] = useState(false);
   const [showDiscountBreakdown, setShowDiscountBreakdown] = useState(false);
   const theme = useTheme();
 
-  const amountComponent = (type = '', title, amount, sign = '', icon, onPress) => {
+  const amountComponent = (type = '', title, amount, sign = '', icon, onPress): React$Node => {
     return (
       <TouchableOpacity activeOpacity={0.9} onPress={onPress} disabled={icon ? false : true}>
         <AmountContainer>

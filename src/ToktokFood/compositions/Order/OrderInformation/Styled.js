@@ -3,6 +3,7 @@
  */
 
 import type {ComponentType} from 'react';
+import {Image} from 'react-native';
 import styled from 'styled-components/native';
 import StyledText from 'toktokfood/components/StyledText';
 
@@ -27,7 +28,10 @@ export const IconTextContainer: ComponentType<any> = styled.View`
   flex-direction: row;
 `;
 
-export const Icon: ComponentType<any> = styled.Image`
+export const Icon: ComponentType<any> = styled(Image).attrs(props => ({
+  ...props,
+  resizeMode: 'cover',
+}))`
   width: 17px;
   height: 17px;
   margin-right: 10px;

@@ -44,6 +44,9 @@ export const deleteKeys = data => {
     if (promo?.items && promo.items.length) {
       promo.items.map(i => delete i.__typename);
     }
+    if (promo?.origAmount || promo.origAmount === 0) {
+      promo.amount = promo.origAmount;
+    }
     delete promo.origAmount;
     return delete promo.__typename;
   });
@@ -69,17 +72,19 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
         cartItems.map(items => {
           const filteredProd = _.includes(productIds, items.productid);
           // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
-          // console.log(filteredProd, items);
+          // console.log(filteredProd, item, items);
           if (filteredProd && totalReseller === 0) {
             const {discounted_totalamount, voucher_code} = item;
             const {basePrice, quantity, resellerDiscount} = items;
             const totalItemsNotIncluded = (resellerDiscount || basePrice) * (quantity - 1);
+            const totalItemsResellerNotIncluded = (basePrice - resellerDiscount) * (quantity - 1);
+            const hasReseller = resellerDiscount ? totalItemsResellerNotIncluded : 0;
             const deductedDiscount =
               item?.discount_type === '3'
                 ? items?.basePrice - discounted_totalamount + (hasTotal ? totalItemsNotIncluded : 0)
                 : item?.discount_totalamount;
-            // console.log(hasTotal, deductedDiscount, totalItemsNotIncluded, discounted_totalamount, 'deductedDiscount');
-            totalReseller += deductedDiscount;
+            // console.log(deductedDiscount, totalItemsResellerNotIncluded, hasReseller);
+            totalReseller += deductedDiscount + hasReseller;
             totalAmount += discounted_totalamount + (hasTotal ? totalItemsNotIncluded : 0);
             deductedProducts.push({id: items.productid, amount: totalReseller, code: voucher_code});
             // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
@@ -309,7 +314,7 @@ export const getShippingVoucher = async promos => {
     return shippingObj;
   });
   shipping = await shipping.map(promo => {
-    let shippingObj = {...promo, amount: promo.origAmount};
+    let shippingObj = {...promo, amount: promo.origAmount ?? promo.amount};
     delete shippingObj.__typename;
     return shippingObj;
   });
@@ -318,7 +323,6 @@ export const getShippingVoucher = async promos => {
     delete promo.origAmount;
     delete promo.__typename;
   });
-  // console.log(autoApply, shipping)
   return [...autoApply, ...shipping];
 };
 
@@ -403,8 +407,9 @@ export const getTotalDeductedDeliveryFee = (promos, deliveryFee) => {
   // if (deal.length > 0) {
   //   totalDeducted += deal[0].discount_totalamount;
   // }
+  // console.log(shipping);
   if (shipping.length > 0) {
-    totalDeducted += Number(shipping[0].sf_discount);
+    totalDeducted += Number(shipping[0].amount) || deliveryFee;
   }
   if (autoApply.length > 0) {
     const {amount} = autoApply[0];
