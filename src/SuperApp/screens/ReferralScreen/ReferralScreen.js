@@ -301,6 +301,7 @@ const styles = StyleSheet.create({
   voucherAmount: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
+    fontSize: CONSTANTS.FONT_SIZE.XL + 3,
   },
   voucherImage: {
     marginRight: 18,

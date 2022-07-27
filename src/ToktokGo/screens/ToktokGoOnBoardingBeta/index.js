@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   SafeAreaView,
   Image,
@@ -17,6 +17,8 @@ import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import ToktokgoIcon from '../../../assets/images/ToktokgoIconBeta.png';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
+import {useAccount} from 'toktokwallet/hooks';
+import {connect} from 'react-redux';
 
 const {width} = Dimensions.get('screen');
 
@@ -61,14 +63,21 @@ const Slide = ({item}) => {
   );
 };
 
-const ToktokGoOnBoardingBeta = ({navigation}) => {
+const ToktokGoOnBoardingBeta = ({navigation, session}) => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const ref = useRef();
+  const {tokwaAccount, getMyAccount} = useAccount();
+
   const updateCurrentSlideIndex = e => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(contentOffsetX / width);
     setCurrentSlideIndex(currentIndex);
   };
+  useEffect(() => {
+    if (session.user.toktokWalletAccountId) {
+      getMyAccount();
+    }
+  }, []);
 
   const onPress = async () => {
     const data = moment(new Date()).format('MMM D, YYYY');
@@ -77,8 +86,10 @@ const ToktokGoOnBoardingBeta = ({navigation}) => {
 
     if (date === moment(new Date()).format('MMM D, YYYY')) {
       navigation.replace('ToktokGoBookingStart');
-    } else {
+    } else if (tokwaAccount.wallet.id) {
       navigation.replace('ToktokGoHealthCare');
+    } else {
+      navigation.replace('ToktokGoCreateTokwa');
     }
   };
 
@@ -155,6 +166,11 @@ const ToktokGoOnBoardingBeta = ({navigation}) => {
     </ImageBackground>
   );
 };
+const mapStateToProps = state => ({
+  session: state.session,
+});
+
+export default connect(mapStateToProps, null)(ToktokGoOnBoardingBeta);
 
 const styles = StyleSheet.create({
   subtitle: {
@@ -203,4 +219,3 @@ const styles = StyleSheet.create({
     height: 15,
   },
 });
-export default ToktokGoOnBoardingBeta;

@@ -28,7 +28,7 @@ import {GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT, GET_TRIPS_CONSUMER} f
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import BottomSheet from 'reanimated-bottom-sheet';
-import {AlertOverlay} from '../../../components';
+import {AlertOverlay} from '../../../SuperApp/screens/Components';
 import {useAccount} from 'toktokwallet/hooks';
 import {AppSyncOnError, onErrorAppSync} from '../../util';
 import {onError} from '../../../util/ErrorUtility';
@@ -64,6 +64,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [voucherTextMessage, setvoucherTextMessage] = useState('');
   const hasNotch = StatusBar.currentHeight > 24;
   const [recentDestinationList, setrecentDestinationList] = useState([]);
+  const [isNotVoucherApplicable, setIsNotVoucherApplicable] = useState(false);
 
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
@@ -229,6 +230,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
   // TODO: This will be added once vouchers is added
   const setSelectedVouchersNull = () => {
+    setIsNotVoucherApplicable(false);
     setSelectedVouchers(null);
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
@@ -440,6 +442,18 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     setSelectedVouchersNull();
   };
 
+  const checkPaymentMethod = () => {
+    if (selectedVouchers) {
+      if (selectedVouchers?.promoVoucher?.isCash && !selectedVouchers?.promoVoucher?.isTokwa) {
+        selectedPaymentMethod == 'TOKTOKWALLET' ? setIsNotVoucherApplicable(false) : setIsNotVoucherApplicable(true);
+      } else if (!selectedVouchers?.promoVoucher?.isCash && selectedVouchers?.promoVoucher?.isTokwa) {
+        selectedPaymentMethod == 'CASH' ? setIsNotVoucherApplicable(false) : setIsNotVoucherApplicable(true);
+      } else {
+        setIsNotVoucherApplicable(false);
+      }
+    }
+  };
+
   const renderContent = () => (
     <View style={styles.card}>
       <BookingDistanceTime quotationData={quotationDataResult} loading={loading} />
@@ -455,6 +469,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         navigation={navigation}
         selectedVouchers={selectedVouchers}
         setSelectedVouchersNull={setSelectedVouchersNull}
+        selectedPaymentMethod={selectedPaymentMethod}
+        isNotVoucherApplicable={isNotVoucherApplicable}
       />
       <BookingBreakdown selectedVehicle={selectedVehicle} loading={loading} details={details} />
       <BookingTotal loading={loading} details={details} />
@@ -554,6 +570,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         details={details}
         tokwaAccount={tokwaAccount}
         getMyAccountLoading={getMyAccountLoading}
+        checkPaymentMethod={checkPaymentMethod}
       />
 
       <PaymentSuccesModal
