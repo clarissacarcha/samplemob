@@ -1,22 +1,25 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {Text, StyleSheet, Image, View, ActivityIndicator, Dimensions} from 'react-native';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 import CONSTANTS from '../../../../common/res/constants';
 import InfoIcon from '../../../../assets/icons/InfoIcon.png';
 import {numberFormat} from '../../../../helper';
 
+const screenWidth = Dimensions.get('window').width;
+
 export const BookingBreakdown = ({selectedVehicle, loading, details}) => {
+  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   return (
     <View style={styles.container}>
-      <View style={styles.rowContainer}>
-        <Text style={styles.title}>Ride Fare</Text>
-        {loading ? (
-          <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
-        ) : (
+      <ShimmerPlaceHolder style={{width: screenWidth / 1.08, marginBottom: 8}} visible={!loading}>
+        <View style={styles.rowContainer}>
+          <Text style={styles.title}>Ride Fare</Text>
           <Text style={styles.rideFareText}>
             ₱{numberFormat(selectedVehicle?.rate?.amount ? selectedVehicle?.rate?.amount : 0)}
           </Text>
-        )}
-      </View>
+        </View>
+      </ShimmerPlaceHolder>
       {details?.rate?.tripFare?.discount > 0 && (
         <View style={styles.rowContainer}>
           <View>

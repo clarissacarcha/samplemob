@@ -1,7 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {View, StyleSheet, TouchableOpacity, Image, StatusBar, Text, Dimensions, Alert, Platform} from 'react-native';
-import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import LinearGradient from 'react-native-linear-gradient';
 import constants from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -39,7 +37,6 @@ import {VoucherRemovedModal} from './Components/VoucherRemovedModal';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
-  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   const FULLSCREEN_HEIGHT = Dimensions.get('window').height;
   const SNAP_ARR_NOTCH = [FULLSCREEN_HEIGHT - 78, FULLSCREEN_HEIGHT * 0.6];
   const SNAP_ARR = [FULLSCREEN_HEIGHT, FULLSCREEN_HEIGHT * 0.6];
@@ -477,9 +474,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       />
       <BookingBreakdown selectedVehicle={selectedVehicle} loading={loading} details={details} />
       <BookingTotal loading={loading} details={details} />
-      <ShimmerPlaceHolder style={styles.shimmer} visible={!loading} />
-      {loading && <View style={styles.divider} />}
-      <ShimmerPlaceHolder style={styles.shimmer} visible={!loading} />
     </View>
   );
 
