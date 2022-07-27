@@ -38,7 +38,7 @@ const VerificationBanner = require('../../assets/images/VerificationBanner.png')
 
 const imageWidth = Dimensions.get('window').width - 80;
 
-const PasswordVerification = ({navigation, route, createSession}) => {
+const PasswordVerification = ({navigation, route, createSession, setAppServices}) => {
   const {mobile} = route.params;
   const inputRef = useRef();
 
@@ -95,12 +95,13 @@ const PasswordVerification = ({navigation, route, createSession}) => {
     },
 
     onCompleted: data => {
-      const {user, accessToken} = data.verifyLogin;
+      const {user, accessToken, serviceAccess} = data.verifyLogin;
 
       AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
       AsyncStorage.setItem('accessToken', accessToken);
 
       createSession(data.verifyLogin); // Create session in redux
+      setAppServices(serviceAccess);
       console.log(`SENDING TAG:${user.id}`);
       OneSignal.sendTags({
         userId: user.id,

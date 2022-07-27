@@ -182,7 +182,8 @@ export const Menu = ({setUserLocation, constants}) => {
        */
       const isEnabled = appService.isEnabled;
       const isEnabledInEarlyAccess = constants.isEarlyAccess === 'TRUE' && appService.isEarlyAccess;
-      const isDisplayed = isEnabled || isEnabledInEarlyAccess;
+      // const isDisplayed = isEnabled || isEnabledInEarlyAccess;
+      const isDisplayed = appService.visible;
 
       if (!isDisplayed) {
         console.log(`Menu item ${menuDataItem.identifier} is hidden in App Services. Do not bypass this validation.`);

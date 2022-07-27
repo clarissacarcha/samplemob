@@ -72,7 +72,7 @@ const Activities = () => {
           options={() => ({
             tabBarLabel: ({focused}) => {
               return (
-                <View style={{width: 90}}>
+                <View style={{width: 100}}>
                   <Text
                     style={{
                       fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
@@ -87,7 +87,7 @@ const Activities = () => {
             },
           })}
         />
-        {!hideGo && (
+        {true && (
           <ActivitiesTopTab.Screen
             name="ToktokGoActivities"
             component={ToktokGoActivities}

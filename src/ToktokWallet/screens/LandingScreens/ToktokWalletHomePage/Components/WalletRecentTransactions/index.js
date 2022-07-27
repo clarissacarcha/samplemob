@@ -64,14 +64,16 @@ const WalletRecentTransactions = () => {
       </View>
 
       <View style={styles.transactions}>
-        {tokwaAccount?.wallet?.recentTransactions?.map((item, index) => (
-          <Log
-            key={`recentLog${index}`}
-            transaction={item}
-            itemsLength={tokwaAccount?.wallet?.recentTransactions}
-            index={index}
-          />
-        ))}
+        {
+          tokwaAccount?.wallet?.recentTransactions?.map((item,index)=>(
+            <Log
+              key={`recentLog${index}`}
+              transaction={item}
+              itemsLength={tokwaAccount?.wallet?.recentTransactions}
+              index={index}
+            />
+          ))
+        }
       </View>
     </>
   );
