@@ -376,10 +376,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     let paramsDataCopy = ArrayCopy(route.params)
 
-    items.map(({id, name, cartQty, noOfStocks, status}) => {
+    items.map(({id, name, cartQty, noOfStocks, enabled}) => {
       console.log(noOfStocks < cartQty, noOfStocks ,cartQty, "noOfStocks < cartQty")
       
-      if(status && noOfStocks != 0 && noOfStocks < cartQty){
+      if(enabled && noOfStocks != 0 && noOfStocks < cartQty){
 
       route.params.data.map(({data, ...rest}, index) => {
 
