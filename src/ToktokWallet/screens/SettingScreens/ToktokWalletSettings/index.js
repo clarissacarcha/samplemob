@@ -45,12 +45,6 @@ export const ToktokWalletSettings = ({navigation, route}) => {
       checkIfMerchantLinked: false,
     },
     {
-      label: "Cash Out",
-      route: "ToktokWalletCashOutOtcLogs",
-      identifier: `${Platform.OS.toLowerCase()}LogCashOutOtc`,
-      checkIfMerchantLinked: false,
-    },
-    {
       label: 'Send Money',
       route: "ToktokWalletSendMoneyLogs",
       identifier: "logSendMoney",
@@ -109,17 +103,11 @@ export const ToktokWalletSettings = ({navigation, route}) => {
       route: "ToktokWalletMerchantSettlementLogs",
       identifier: `logMerchantSettlement`,
       checkIfMerchantLinked: true,
-    },
-    {
-      label: "Settlement",
-      route: "ToktokWalletMerchantSettlementLogs",
-      identifier: `${Platform.OS.toLowerCase()}LogMerchantSettlement`,
-      checkIfMerchantLinked: true,
     }
   ]
 
   useEffect(()=>{
-    const appServicesObject = _.keyBy(tokwaAccount.appServices, 'identifier');
+    const appServicesObject = _.keyBy(tokwaAccount.appServiceLogs, 'identifier');
     const filteredMenuData = menuDataConstant.filter(menuDataItem => {
       const appService = appServicesObject[menuDataItem.identifier];
 
