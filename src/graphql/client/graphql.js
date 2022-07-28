@@ -276,7 +276,7 @@ export const TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT = new ApolloClient({
 
 export const TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
-  link: toktokMallGraphqlLink,
+  link: toktokBillsLoadGraphqlLink,
 });
 export const TOKTOK_MALL_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
