@@ -5,13 +5,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import Data from '../../../components/BookingDummyData';
 import {LocationCard} from '../../../components';
 import AsyncStorage from '@react-native-community/async-storage';
-export const FrequentlyUsed = ({navigation, popTo, recentSearchDataList, goTo}) => {
-  const onPressLocation = () => {
-    navigation.push('ToktokGoBookingConfirmPickup', {
-      popTo: popTo + 1,
-    });
-  };
-
+export const FrequentlyUsed = ({navigation, popTo, recentSearchDataList, onPressRecentSearch}) => {
   return (
     <>
       <View
@@ -49,7 +43,7 @@ export const FrequentlyUsed = ({navigation, popTo, recentSearchDataList, goTo}) 
         showsVerticalScrollIndicator={false}
         data={recentSearchDataList}
         // keyExtractor={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} onPress={goTo} />}
+        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressRecentSearch} />}
       />
     </>
   );

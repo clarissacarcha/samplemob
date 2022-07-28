@@ -29,7 +29,7 @@ export const SavedLocations = ({recentDestinationList, popTo, navigation}) => {
             fontSize: CONSTANTS.FONT_SIZE.M,
             color: CONSTANTS.COLOR.ORANGE,
             fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
-            marginLeft: 7,
+            marginLeft: 3,
           }}>
           Recent Destinations
         </Text>

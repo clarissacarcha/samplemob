@@ -65,6 +65,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const hasNotch = StatusBar.currentHeight > 24;
   const [recentDestinationList, setrecentDestinationList] = useState([]);
   const [isNotVoucherApplicable, setIsNotVoucherApplicable] = useState(false);
+  const [proceedBooking, setProceedBooking] = useState(false);
+  const [bookingState, setBookingState] = useState(false);
 
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
@@ -91,9 +93,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         payload: {...details, rate: response.getTripFare},
       });
       setLoading(false);
+      if (bookingState) {
+        setProceedBooking(true);
+      }
     },
     onError: error => {
-      setSelectedVouchersNull();
+      // setSelectedVouchersNull();
       const {graphQLErrors, networkError} = error;
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
@@ -138,7 +143,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
             } else if (message == 'Daily limit is reached.') {
               setvoucherTextMessage('Daily limit is reached.');
               setvoucherRemovedVisible(true);
-            } else if (message == 'Voucher wallet remaining is 0.') {
+            } else {
               setvoucherTextMessage('Daily limit is reached.');
               setvoucherRemovedVisible(true);
             }
@@ -239,7 +244,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   };
 
   // TODO: This will be used on onSelectVoucher
-  const dispatchRequest = async () => {
+  const dispatchRequest = () => {
     setLoading(true);
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
@@ -303,7 +308,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       setSelectedSeatNum(num);
       SheetManager.hide('passenger_capacity');
       // setvoucherRemovedVisible(true);
-      addItemToList(destination);
       setTimeout(() => {
         if (selectedPaymentMethod == 'CASH') {
           tripBooking({pinCode: null});
@@ -329,7 +333,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       setSelectedSeatNum(num);
       SheetManager.hide('passenger_capacity');
       // setvoucherRemovedVisible(true);
-      addItemToList(destination);
       setTimeout(() => {
         if (selectedPaymentMethod == 'CASH') {
           tripBooking({pinCode: null});
@@ -346,55 +349,28 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     }
   };
 
-  const addItemToList = async destination => {
-    console.log(destination);
-    try {
-      const data = await AsyncStorage.getItem('recentDestinationList');
-      if (data === null) {
-        const destinationList = JSON.stringify([destination]);
+  const onProceedToBooking = () => {
+    setSelectedVouchersNull();
+    dispatchRequest();
+    setvoucherRemovedVisible(false);
+    setBookingState(true);
+  };
 
-        await AsyncStorage.setItem('recentDestinationList', destinationList);
+  useEffect(() => {
+    if (proceedBooking) {
+      if (selectedPaymentMethod == 'CASH') {
+        tripBooking({pinCode: null});
       } else {
-        const recentList = JSON.parse(data);
-        if (recentList.length >= 3) {
-          let obj = recentList.find(o => o.place.formattedAddress === destination.place.formattedAddress);
-          console.log(obj);
-          if (obj != undefined) {
-            console.log('SameAddress');
-          } else {
-            setrecentDestinationList([]);
-            const removedItem = recentList.slice(0, 2);
-            removedItem.unshift(destination);
-            const destinationList = JSON.stringify(removedItem);
-            await AsyncStorage.setItem('recentDestinationList', destinationList);
-          }
-        } else {
-          let obj = recentList.find(o => o.place.formattedAddress === destination.place.formattedAddress);
-          if (obj != undefined) {
-            console.log('SameAddress');
-          } else {
-            recentDestinationList.push(destination);
-            const destinationList = JSON.stringify(recentDestinationList);
-            await AsyncStorage.setItem('recentDestinationList', destinationList);
-          }
-        }
+        tripInitializePayment({
+          variables: {
+            input: {
+              tripFareHash: details?.rate?.hash,
+            },
+          },
+        });
       }
-    } catch (err) {
-      console.log(err);
     }
-  };
-
-  const getDestinationList = async () => {
-    try {
-      const data = await AsyncStorage.getItem('recentDestinationList');
-
-      const output = JSON.parse(data);
-      console.log(output);
-      setrecentDestinationList(output);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  }, [proceedBooking]);
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -583,6 +559,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         setvoucherRemovedVisible={setvoucherRemovedVisible}
         handleVoucherRemoved={handleVoucherRemoved}
         voucherTextMessage={voucherTextMessage}
+        onProceedToBooking={onProceedToBooking}
       />
       <BookingMap
         decodedPolyline={decodedPolyline}
