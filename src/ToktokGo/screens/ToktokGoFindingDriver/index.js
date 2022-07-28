@@ -26,6 +26,7 @@ import {
   TRIP_CONSUMER_CANCEL,
   TRIP_REBOOK_INITIALIZE_PAYMENT,
   GET_TRIPS_CONSUMER,
+  GET_BOOKING_DRIVER,
 } from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
@@ -46,6 +47,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [viewCancelBookingWithCharge, setViewCancelBookingWithCharge] = useState(false);
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
+  const [driverData, setDriverData] = useState();
 
   useEffect(() => {
     console.log('[effect] Observe Trip Update!');
@@ -65,7 +67,13 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
           });
         }
         if (data?.onTripUpdate?.status == 'ACCEPTED') {
-          setShowDriverFoundModal(true);
+          getBookingDriver({
+            variables: {
+              input: {
+                driverUserId: parseInt(data?.onTripUpdate?.driverUserId),
+              },
+            },
+          });
         }
         if (data?.onTripUpdate?.status == 'EXPIRED') {
           setWaitingStatus(0);
@@ -101,6 +109,15 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
 
     return () => subscription.unsubscribe();
   }, [tripUpdateRetrySwitch]);
+
+  const [getBookingDriver] = useLazyQuery(GET_BOOKING_DRIVER, {
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setShowDriverFoundModal(true);
+      setDriverData(response.getBookingDriver.driver);
+    },
+    onError: err => console.log('zion', err),
+  });
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -427,6 +444,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         goBackAfterCancellation={goBackAfterCancellation}
       />
       <DriverFoundModal
+        driverData={driverData}
         showDriverFoundModal={showDriverFoundModal}
         setShowDriverFoundModal={setShowDriverFoundModal}
         navigation={navigation}
