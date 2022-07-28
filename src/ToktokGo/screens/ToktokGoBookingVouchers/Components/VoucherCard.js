@@ -15,7 +15,7 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
   const [isApplicable, setIsApplicable] = useState(true);
 
   const getComputed = () => {
-    return data.promoVoucher.discountValue * data.voucherWallet.remaining;
+    return data.discountValue * data.voucherWallet.remaining;
   };
 
   const getPercentage = () => {
@@ -23,7 +23,7 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
   };
 
   const onPress = () => {
-    if (data.promoVoucher.collectable && !data.voucherWallet) {
+    if (data.collectable && !data.voucherWallet) {
       postCollectVoucher({
         variables: {
           input: {
@@ -38,9 +38,9 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
 
   const checkPaymentMethod = () => {
     if (details.paymentMethod == 'TOKTOKWALLET') {
-      if (data.promoVoucher.isTokwa) setIsApplicable(false);
+      if (data.isTokwa) setIsApplicable(false);
     } else {
-      if (data.promoVoucher.isCash || data.promoVoucher.isCod) setIsApplicable(false);
+      if (data.isCash || data.isCod) setIsApplicable(false);
     }
   };
 
@@ -65,9 +65,7 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
           <Text style={styles.voucherDescription}>{data.description}</Text>
-          {data.promoVoucher.endAt && (
-            <Text style={styles.voucherDescription}>Valid unitl {moment(data.promoVoucher.endAt).format('LL')}</Text>
-          )}
+          {data.endAt && <Text style={styles.voucherDescription}>Valid unitl {moment(data.endAt).format('LL')}</Text>}
           {data.voucherWallet?.total > 1 && (
             <>
               <View
@@ -94,7 +92,7 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
         <View style={styles.claimContainer}>
           {loading ? (
             <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
-          ) : data.promoVoucher.collectable && !data.voucherWallet ? (
+          ) : data.collectable && !data.voucherWallet ? (
             <ThrottledOpacity
               style={isApplicable ? [styles.claimButton, {backgroundColor: CONSTANTS.COLOR.GRAY}] : styles.claimButton}
               onPress={onPress}

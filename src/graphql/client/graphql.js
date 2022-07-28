@@ -14,6 +14,7 @@ import ENVIRONMENTS from 'src/common/res/environments';
 const baseUrl = `${ENVIRONMENTS.TOKTOK_SERVER}/`;
 const wsUrl = `ws://${HOST_PORT}/graphql`;
 
+const toktokVoucherBaseUrl = `${ENVIRONMENTS.TOKTOK_VOUCHERS_SERVER}/`;
 const toktokWalletBaseUrl = `${ENVIRONMENTS.TOKTOKWALLET_SERVER}/`;
 const toktokBillsLoadBaseUrl = `${ENVIRONMENTS.TOKTOKBILLSLOAD_SERVER}/`;
 const toktokFoodBaseUrl = `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/`;
@@ -172,7 +173,7 @@ const toktokGoUploadLink = createUploadLink({
 });
 
 const toktokWalletVoucherUploadLink = createUploadLink({
-  uri: `${toktokWalletBaseUrl}voucher/graphql/`,
+  uri: `${toktokVoucherBaseUrl}graphql/`,
 });
 
 const splitLink = split(({query}) => {

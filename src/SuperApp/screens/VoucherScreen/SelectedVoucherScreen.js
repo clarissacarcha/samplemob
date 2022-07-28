@@ -57,7 +57,7 @@ export const SelectedVoucherScreen = ({navigation, route}) => {
   });
 
   const onPressSelected = () => {
-    if (data?.promoVoucher?.collectable && !data.voucherWallet) {
+    if (data?.collectable && !data.voucherWallet) {
       postCollectVoucher({
         variables: {
           input: {
@@ -91,7 +91,7 @@ export const SelectedVoucherScreen = ({navigation, route}) => {
       <View style={styles.buttonContainer}>
         {GVLoading ? (
           <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{paddingVertical: 16}} />
-        ) : data?.promoVoucher?.collectable && !data?.voucherWallet ? (
+        ) : data?.collectable && !data?.voucherWallet ? (
           <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPressSelected}>
             <Text style={styles.claimText}>Claim</Text>
           </ThrottledOpacity>

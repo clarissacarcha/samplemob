@@ -450,6 +450,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       />
       <BookingBreakdown selectedVehicle={selectedVehicle} loading={loading} details={details} />
       <BookingTotal loading={loading} details={details} />
+      <View style={{height: FULLSCREEN_HEIGHT * 0.25}} />
     </View>
   );
 

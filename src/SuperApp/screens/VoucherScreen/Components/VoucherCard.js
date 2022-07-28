@@ -11,7 +11,7 @@ const decorHeight = Dimensions.get('window').height * 0.12;
 
 export const VoucherCard = ({data, navigation, onPressActionButton, loading}) => {
   const getComputed = () => {
-    return data.promoVoucher.discountValue * data.voucherWallet.remaining;
+    return data.discountValue * data.voucherWallet.remaining;
   };
 
   const getPercentage = () => {
@@ -19,7 +19,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
   };
 
   const onPress = () => {
-    if (data.promoVoucher.collectable && !data.voucherWallet) {
+    if (data.collectable && !data.voucherWallet) {
       onPressActionButton({voucherId: data.id});
     } else {
       navigation.pop(2);
@@ -35,10 +35,8 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
           <Text style={styles.voucherDescription}>{data.description}</Text>
-          {data.promoVoucher.endAt && (
-            <Text style={styles.voucherDescriptionDate}>
-              Valid unitl {moment(data.promoVoucher.endAt).format('MMM DD YYYY')}
-            </Text>
+          {data.endAt && (
+            <Text style={styles.voucherDescriptionDate}>Valid unitl {moment(data.endAt).format('MMM DD YYYY')}</Text>
           )}
           {data.voucherWallet?.total > 1 && (
             <>
@@ -65,7 +63,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
         <View style={styles.claimContainer}>
           {loading ? (
             <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
-          ) : data.promoVoucher.collectable && !data.voucherWallet ? (
+          ) : data.collectable && !data.voucherWallet ? (
             <ThrottledOpacity style={styles.claimButton} onPress={onPress} delay={500}>
               <Text style={styles.claimButtonText}>Claim</Text>
             </ThrottledOpacity>
