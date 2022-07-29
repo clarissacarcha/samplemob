@@ -1,5 +1,5 @@
 import React, {useState, useRef} from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, Platform} from 'react-native';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import CONSTANTS from '../../../../common/res/constants';
 
@@ -57,7 +57,8 @@ export const BookingMap = ({booking, routeDetails}) => {
         provider={PROVIDER_GOOGLE}
         style={{width: '100%', height: 200}}
         initialRegion={INITIAL_REGION}
-        onLayout={onMapReady}
+        onLayout={Platform.OS == 'android' && onMapReady}
+        onMapReady={Platform.OS == 'ios' && onMapReady}
         pitchEnabled={false}
         rotateEnabled={false}
         scrollEnabled={false}

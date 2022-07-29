@@ -17,7 +17,7 @@ import {APP_FLAVOR, DARK, MEDIUM, ORANGE, SIZES} from '../../res/constants';
 import constants from '../../common/res/constants';
 import {COLOR, FONT, FONT_SIZE, SIZE} from '../../res/variables';
 import {AUTH_CLIENT, LOGIN_REGISTER} from '../../graphql';
-import {AlertOverlay, AlertModal} from '../../components';
+import {AlertOverlay} from '../../SuperApp/screens/Components';
 import LoginBanner from '../../assets/images/ToktokLogo.png';
 import SmsRetriever from 'react-native-sms-retriever';
 import Splash from '../../assets/images/LinearGradiant.png';

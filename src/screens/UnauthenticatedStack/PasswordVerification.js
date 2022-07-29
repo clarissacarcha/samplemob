@@ -25,7 +25,7 @@ import {COLOR, DARK, APP_FLAVOR, FONT_SIZE, ORANGE, COLORS, FONTS, SIZES, ACCOUN
 import constants from '../../common/res/constants';
 import {FONT} from '../../res/variables';
 import {AUTH_CLIENT, VERIFY_LOGIN, FORGOT_PASSWORD} from '../../graphql';
-import {AlertOverlay} from '../../components';
+import {AlertOverlay} from '../../SuperApp/screens/Components';
 import {onError, onErrorAlert} from '../../util/ErrorUtility';
 import {useAlert} from '../../hooks/useAlert';
 import Splash from '../../assets/images/LinearGradiant.png';
