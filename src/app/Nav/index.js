@@ -34,7 +34,7 @@ import ToktokMallScreens from './toktokmall';
 import ToktokBillScreens from './toktokbills';
 import ToktokGoScreens from './toktokgo';
 /*---------- TOKTOKMALL DEEP LINKING  ----------*/
-import linking from '../../ToktokMall/util/linking'
+import linking from '../../ToktokMall/util/linking';
 
 /*---------- CONSUMER SCREENS ----------*/
 
@@ -58,7 +58,8 @@ import SelectedDelivery from '../../screens/AuthenticatedStack/ConsumerScreens/D
 // import AddLocation from '../../screens/AuthenticatedStack/ConsumerScreens/SavedLocations/AddLocation';
 import ConsumerChangePassword from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerChangePassword';
 import EnterPassword from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/EnterPassword';
-
+import AccountSecurity from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/AccountSecurity';
+import AccountDeletion from '../../screens/AuthenticatedStack/ConsumerScreens/AccountDeletion';
 // import ConsumerProfile from '../../screens/AuthenticatedStack/ConsumerScreens/Profile/ConsumerProfile';
 import DeliveryTracking from '../../screens/AuthenticatedStack/ConsumerScreens/Deliveries/DeliveryTracking';
 import SearchContact from '../../screens/AuthenticatedStack/ConsumerScreens/Booking/SearchContacts';
@@ -345,6 +346,8 @@ const AuthenticatedStack = () => (
       <Authenticated.Screen name="SearchLocationFilter" component={SearchLocationFilter} />
       <Authenticated.Screen name="DriverDeliveriesTab" component={DriverDeliveriesTab} />
       <Authenticated.Screen name="EnterPassword" component={EnterPassword} options={{headerShown: false}} />
+      <Authenticated.Screen name="AccountSecurity" component={AccountSecurity} />
+      <Authenticated.Screen name="AccountDeletion" component={AccountDeletion} />
     </Authenticated.Navigator>
   </ThemeProvider>
 );
@@ -383,7 +386,7 @@ const SwitchStack = () => {
 
 const Nav = ({initialRoute}) => {
   return (
-    <NavigationContainer linking = {linking} ref={navigationRef}>
+    <NavigationContainer linking={linking} ref={navigationRef}>
       <SwitchStack initialRoute={initialRoute} />
     </NavigationContainer>
   );
