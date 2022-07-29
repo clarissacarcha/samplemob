@@ -16,7 +16,7 @@ import ToktokWashed from '../../../../../assets/images/ToktokWashed.png';
 import RightArrow from '../../../../../assets/icons/profileMenu-arrow-rightIcon.png';
 
 import {Header} from './Components';
-import { ToktokMallSession } from '../../../../../ToktokMall/util/session';
+import {ToktokMallSession} from '../../../../../ToktokMall/util/session';
 
 const DrawerButton = ({label, onPress, restrict}) => {
   if (restrict && restrict != APP_FLAVOR) {
@@ -102,14 +102,14 @@ export const ToktokLandingMenu = ({navigation}) => {
                 <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, paddingTop: 3}}>
                   {session.user.username}
                 </Text>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={() => {
                     navigation.push('ToktokProfile');
                   }}>
                   <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, color: COLOR.ORANGE, paddingTop: 5}}>
                     View Profile
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             ) : (
               <View
@@ -145,13 +145,25 @@ export const ToktokLandingMenu = ({navigation}) => {
               }}
               restrict="C"
             /> */}
-            {/*--------------- CHANGE PASSWORD ---------------*/}
             <DrawerButton
+              label="Personal Information"
+              onPress={() => {
+                navigation.push('ToktokProfile');
+              }}
+            />
+            <DrawerButton
+              label="Account Security"
+              onPress={() => {
+                navigation.push('AccountSecurity', {userName});
+              }}
+            />
+            {/*--------------- CHANGE PASSWORD ---------------*/}
+            {/* <DrawerButton
               label="Change Password"
               onPress={() => {
                 navigation.push('EnterPassword', {userName});
               }}
-            />
+            /> */}
 
             {/*--------------- ANNOUNCEMENTS ---------------*/}
             <DrawerButton
