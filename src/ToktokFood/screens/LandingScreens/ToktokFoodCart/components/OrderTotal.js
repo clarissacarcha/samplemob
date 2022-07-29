@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-nested-ternary */
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import {useSelector} from 'react-redux';

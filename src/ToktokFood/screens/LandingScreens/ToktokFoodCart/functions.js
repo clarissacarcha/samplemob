@@ -66,6 +66,7 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
       // console.log(item, '=============');
       if (
         (Number(item?.on_top) && deals.length > 0) ||
+        (Number(item?.on_top) > 0 && !deals.length) ||
         (Number(!item?.on_top) && !deals.length) ||
         (item?.on_top === '0' && !deals.length)
       ) {
