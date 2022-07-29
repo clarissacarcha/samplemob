@@ -3,8 +3,13 @@ import {Text, View, TouchableHighlight, Image} from 'react-native';
 import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation} from './Sections';
 import CONSTANTS from '../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION} from '../../graphql';
-import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
+import {
+  GET_PLACE_AUTOCOMPLETE,
+  GET_PLACE_BY_ID,
+  GET_PLACE_BY_LOCATION,
+  GET_CONSUMER_RECENT_DESTINATION,
+} from '../../graphql';
+import {TOKTOK_QUOTATION_GRAPHQL_CLIENT, TOKTOK_GO_GRAPHQL_CLIENT} from 'src/graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {throttle, debounce, get} from 'lodash';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -35,6 +40,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     async function tempFunction() {
       await getSearchList();
       await getDestinationList();
+      getRecentDestination();
     }
 
     tempFunction();
@@ -52,6 +58,15 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     onError: error => console.log('getPlaceAutocomplete', error),
   });
 
+  const [getRecentDestination] = useLazyQuery(GET_CONSUMER_RECENT_DESTINATION, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setrecentDestinationList(response.getConsumerPreviousDestinations);
+    },
+    onError: error => console.log('getConsumerPreviousDestinations', error),
+  });
+
   const [getPlaceById] = useLazyQuery(GET_PLACE_BY_ID, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -67,15 +82,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     onError: error => console.log('error', error),
   });
 
-  const onPressRecentSearch = loc => {
-    if (selectedInput == 'D') {
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
-    } else {
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
-    }
-    onPressLocation();
-  };
-
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -87,6 +93,24 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     },
     onError: error => console.log('error', error),
   });
+
+  const onPressRecentSearch = loc => {
+    if (selectedInput == 'D') {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
+    } else {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
+    }
+    onPressLocation();
+  };
+
+  const onPressRecentDestination = loc => {
+    if (selectedInput == 'D') {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
+    } else {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
+    }
+    onPressLocation();
+  };
 
   const debouncedRequest = useDebounce(
     value =>
@@ -182,7 +206,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
         const recentList = JSON.parse(data);
         if (recentList.length >= 3) {
           let obj = recentList.find(o => o.place.formattedAddress === response.place.formattedAddress);
-          console.log(obj);
           if (obj != undefined) {
             console.log('SameAddress');
           } else {
@@ -213,8 +236,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       const data = await AsyncStorage.getItem('recentSearchList');
 
       const output = JSON.parse(data);
-      setrecentSearchDataList(output);
-      console.log(output);
+      if (output != null) {
+        setrecentSearchDataList(output);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -224,8 +248,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       const data = await AsyncStorage.getItem('recentDestinationList');
 
       const output = JSON.parse(data);
-      console.log(output);
-      setrecentDestinationList(output);
+      if (output != null) {
+        setrecentDestinationList(output);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -258,7 +283,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
         />
         {searchResponse?.length == 0 ? (
           <View>
-            {recentSearchDataList == null && recentDestinationList == null ? (
+            {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? (
               <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 110}}>
                 <Image source={DestinationBC} resizeMode={'contain'} style={{height: 200, width: 200}} />
                 <Text
@@ -278,21 +303,26 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
               </View>
             ) : (
               <View>
-                {recentSearchDataList == null ? null : (
+                {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
                   <View>
-                    <FrequentlyUsed
-                      navigation={navigation}
-                      popTo={popTo}
-                      recentSearchDataList={recentSearchDataList}
-                      onPressRecentSearch={onPressRecentSearch}
-                    />
-                    {recentDestinationList == null ? null : (
+                    {recentSearchDataList.length == 0 ? null : (
+                      <FrequentlyUsed
+                        navigation={navigation}
+                        popTo={popTo}
+                        recentSearchDataList={recentSearchDataList}
+                        onPressRecentSearch={onPressRecentSearch}
+                      />
+                    )}
+                    {recentDestinationList.length == 0 ? null : (
                       <View>
-                        <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+                        {recentSearchDataList.length != 0 && (
+                          <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+                        )}
                         <SavedLocations
                           navigation={navigation}
                           popTo={popTo}
                           recentDestinationList={recentDestinationList}
+                          onPressRecentDestination={onPressRecentDestination}
                         />
                       </View>
                     )}
