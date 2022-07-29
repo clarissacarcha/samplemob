@@ -13,8 +13,8 @@ import {
   CancelBookingActionSheet,
   CancelBookingNoFeeModal,
   DriverCancelled,
+  FailedChargePaymentModal,
 } from '../CancelationModals';
-import DummyData from '../../components/DummyData';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import {useSubscription} from '@apollo/client';
 import {
@@ -48,6 +48,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [viewCancelBookingModal, setViewCancelBookingModal] = useState(false);
   const [viewCancelReasonModal, setViewCancelReasonModal] = useState(false);
   const [viewSuccessCancelBookingModal, setViewSuccessCancelBookingModal] = useState(false);
+  const [viewFailedCancelBookingModal, setViewFailedCancelBookingModal] = useState(false);
   const [chargeAmount, setChargeAmount] = useState(0);
   const [cancellationState, setCancellationState] = useState();
   const [originData, setOriginData] = useState(false);
@@ -319,7 +320,6 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [tripChargeFinalizePayment] = useMutation(TRIP_CHARGE_FINALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
-      console.log('zion successss');
       navigation.pop();
       setViewSuccessCancelBookingModal(true);
       setIsViaTokwa(true);
@@ -329,21 +329,27 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       console.log(graphQLErrors);
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
+        setViewFailedCancelBookingModal(true);
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
+            setViewFailedCancelBookingModal(true);
             Alert.alert('', message);
           } else if (errorType === 'BAD_USER_INPUT') {
+            setViewFailedCancelBookingModal(true);
             Alert.alert('', message);
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
             Alert.alert('', JSON.parse(message).message);
           } else if (errorType === 'WALLET_PIN_CODE_INVALID') {
             Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
           } else if (errorType === 'AUTHENTICATION_ERROR') {
+            setViewFailedCancelBookingModal(true);
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
+            setViewFailedCancelBookingModal(true);
             Alert.alert('', message);
           } else {
+            setViewFailedCancelBookingModal(true);
             console.log('ELSE ERROR:', error);
             Alert.alert('', 'Something went wrong...');
           }
@@ -437,6 +443,13 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         chargeAmount={chargeAmount}
         cancellationState={cancellationState}
         goBackAfterCancellation={goBackAfterCancellation}
+      />
+      <FailedChargePaymentModal
+        SheetManager={SheetManager}
+        setCancellationFee={setCancellationFee}
+        isVisible={viewFailedCancelBookingModal}
+        setVisible={setViewFailedCancelBookingModal}
+        cancellationState={cancellationState}
       />
       <CancelBookingModal
         isVisible={driverCancel}
