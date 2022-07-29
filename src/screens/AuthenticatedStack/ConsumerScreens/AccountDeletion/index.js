@@ -27,7 +27,7 @@ const AccountDeletion = ({navigation}) => {
     setLoading(true);
     setTimeout(() => {
       //   setAccountDeletionStep(1);
-      Alert.alert('', 'Something went wrong.');
+      Alert.alert('', 'Incorrect PIN. Please try again.');
       setLoading(false);
     }, 2000);
   };
