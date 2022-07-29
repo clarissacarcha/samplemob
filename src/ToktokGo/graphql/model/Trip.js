@@ -121,6 +121,14 @@ export const TRIP_BOOK = gql`
   }
 `;
 
+export const GET_TRIP = gql`
+query getTrip($input: GetTripInput) {
+  getTrip(input: $input) {
+    ${trip}
+  }
+}
+`;
+
 export const GET_TRIPS_CONSUMER = gql`
   query getTripsConsumer($input: GetTripsConsumerInput) {
     getTripsConsumer(input: $input) {
