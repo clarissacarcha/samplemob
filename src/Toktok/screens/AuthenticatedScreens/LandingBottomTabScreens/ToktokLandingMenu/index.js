@@ -4,7 +4,7 @@ import {COLOR, FONT, SIZE, FONT_SIZE} from '../../../../../res/variables';
 import {VectorIcon, ICON_SET} from '../../../../../revamp/';
 import {AUTH_CLIENT, END_USER_SESSION} from '../../../../../graphql';
 import {onError} from '../../../../../util/ErrorUtility';
-import {AlertOverlay} from '../../../../../components';
+import {AlertOverlay} from '../../../../../SuperApp/screens/Components';
 import {useMutation} from '@apollo/react-hooks';
 import CONSTANTS from '../../../../../common/res/constants';
 import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar, TouchableOpacity} from 'react-native';

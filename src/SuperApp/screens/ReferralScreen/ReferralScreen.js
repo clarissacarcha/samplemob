@@ -31,7 +31,7 @@ import {
   POST_COLLECT_VOUCHER,
 } from '../../../graphql';
 import {onError} from '../../../util/ErrorUtility';
-import {AlertOverlay} from '../../../components';
+import {AlertOverlay} from '../../../SuperApp/screens/Components';
 import {connect} from 'react-redux';
 
 const decorHeight = Dimensions.get('window').height * 0.15;
