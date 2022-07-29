@@ -85,7 +85,7 @@ const Activities = () => {
             },
           })}
         />
-        {true && (
+        {!hideGo && (
           <ActivitiesTopTab.Screen
             name="ToktokGoActivities"
             component={ToktokGoActivities}

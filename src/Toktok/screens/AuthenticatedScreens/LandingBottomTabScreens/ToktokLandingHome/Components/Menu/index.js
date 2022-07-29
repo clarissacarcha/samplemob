@@ -99,16 +99,16 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => navigation.push('ToktokgoComingSoon'),
       isNew: true,
     },
-    {
-      identifier:
-        constants.iosVersionDisableBeta == APP_VERSION && Platform.OS == 'ios'
-          ? 'HideForVersion-Go' // Just change identifier to hide
-          : `${Platform.OS}Go`,
-      label: 'Go',
-      icon: ToktokGoIconBeta,
-      onPress: () => navigation.push('ToktokGoLanding'),
-      isNew: true,
-    },
+    // {
+    //   identifier:
+    //     constants.iosVersionDisableBeta == APP_VERSION && Platform.OS == 'ios'
+    //       ? 'HideForVersion-Go' // Just change identifier to hide
+    //       : `${Platform.OS}Go`,
+    //   label: 'Go',
+    //   icon: ToktokGoIconBeta,
+    //   onPress: () => navigation.push('ToktokGoLanding'),
+    //   isNew: true,
+    // },
     {
       identifier: `${Platform.OS}Load`,
       label: 'Load',
