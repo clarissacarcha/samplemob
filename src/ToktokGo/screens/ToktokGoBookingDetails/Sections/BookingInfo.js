@@ -60,7 +60,7 @@ export const BookingInfo = ({booking}) => {
               </Text>
             </View>
           </View>
-          <View style={{marginLeft: 70}}>
+          <View style={{marginLeft: 60}}>
             <Text style={{fontFamily: FONT.REGULAR, fontSize: constants.FONT_SIZE.M}}>Estimated Time of Drop off</Text>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={ClockIcon} resizeMode="contain" style={{width: 16, height: 16, marginRight: 8}} />
@@ -85,7 +85,7 @@ export const BookingInfo = ({booking}) => {
               <Text style={{color: constants.COLOR.ALMOST_BLACK}}>{booking?.vehicleType?.name}</Text>
             </View>
           </View>
-          <View style={{marginLeft: 70}}>
+          <View style={{marginLeft: 60}}>
             <Text style={{fontFamily: FONT.REGULAR, fontSize: constants.FONT_SIZE.M}}>Passenger</Text>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={PassengerIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
