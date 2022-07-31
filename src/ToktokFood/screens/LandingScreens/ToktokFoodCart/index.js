@@ -408,7 +408,8 @@ const MainComponent = () => {
   const fixOrderLogs = async () => {
     const autoApply = promotionVoucher.filter(promo => promo.type === 'auto');
     const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
-    const VOUCHER_FlAG = shipping.length > 0 ? shipping[0]?.handle_shipping_promo : autoApply[0]?.handle_shipping_promo ? 1 : 0;
+    const VOUCHER_FlAG =
+      shipping.length > 0 ? shipping[0]?.handle_shipping_promo : autoApply[0]?.handle_shipping_promo ? 1 : 0;
     // console.log(VOUCHER_FlAG, shippingVoucher, promotionVoucher);
     let orderLogs = {
       sys_shop: temporaryCart.items[0]?.shopid,
@@ -687,6 +688,8 @@ const MainComponent = () => {
       reseller_code: customerFranchisee?.franchiseeCode || '',
       referral_code: customerFranchisee?.franchiseeCode ? '' : customerFranchisee?.referralCode || '',
       discounted_totalamount: parsedAmount,
+      service_type: '',
+      service_fee: 0.0,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, []);
     console.log('DATA', data);
