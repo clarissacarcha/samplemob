@@ -38,6 +38,7 @@ export const arrow_right = require('./images/arrow-right.png');
 export const cart_ic = require('./images/cart.png');
 export const down_arrow_ic = require('./images/down-arrow.png');
 export const info_ic = require('./images/info.png');
+export const toktokfood_ic = require('./images/toktokfood_logo.png');
 
 // Notifications
 export const empty_notification = require('./images/empty_icons/empty-notification.png');
@@ -77,6 +78,7 @@ export const banner_1 = require('./images/sample_banners/banner_1.png');
 export const burger_king = require('./images/sample_banners/burger_king.jpeg');
 export const splash = require('./images/splash.png');
 export const splash_new = require('./images/splash_new.png');
+export const starbucks_banner = require('./images/starbucks_banner.png');
 
 // Test Rider
 export const rider1 = require('./images/riders/rider1.png');
@@ -105,12 +107,35 @@ export const terms_and_conditions_ic = require('./images/me_icons/terms-and-cond
 export const email_ic = require('./images/me_icons/email.png');
 export const call_ic = require('./images/me_icons/call.png');
 export const wallet_ic = require('./images/me_icons/wallet.png');
-export const order_type_icon = require('./images/ordertype_icon.png');
-export const cart_map_pin_icon = require('./images/cart_map_pin.png');
-
-
 // Reseller
 export const reseller_badge = require('./images/reseller-badge.png');
 
 // New empty shop result icon
 export const new_empty_shop_icon = require('./images/empty_icons/empty_result.png');
+
+//json animations
+export const restaurant_confirmation = require('./images/animations/restaurant-confirmation.gif');
+export const driver_on_the_way = require('./images/animations/driver-on-the-way.gif');
+export const ready_for_pick_up = require('./images/animations/ready-for-pickup.gif');
+export const preparing_order = require('./images/animations/preparing-order.gif');
+
+//order detail icons
+export const carbon_delivery = require('./images/carbon-delivery.png');
+export const carbon_check = require('./images/carbon-check.png');
+export const carbon_x = require('./images/carbon-x.png');
+export const cash_ic = require('./images/cash-ic.png');
+export const toktokwallet_ic = require('./images/toktokwallet-ic.png');
+export const calendar_ic = require('./images/calendar-icon.png');
+export const map_ic = require('./images/map-icon.png');
+export const location_pin_ic = require('./images/location-pin-ic.png');
+
+//alert images
+export const success_image = require('./images/prompts_icons/success.png');
+export const success_mini_image = require('./images/prompts_icons/success_mini.png');
+export const warning_image = require('./images/prompts_icons/warning.png');
+export const question_image = require('./images/prompts_icons/question_ic.png');
+export const loading_animation = require('./images/prompts_icons/loading-animation.gif');
+
+//activities images
+export const empty_activities = require('./images/empty_icons/empty-activities.png');
+export const timer_ic = require('./images/timer.png');

@@ -5,7 +5,7 @@ import { useNavigation , useFocusEffect  , useRoute} from '@react-navigation/nat
 
 export const FlagSecureScreen = ({children , enable = true})=> {
     if(Platform.OS == "android"){
-        enable ? FlagSecure.activate() : FlagSecure.deactivate()
+    enable ? FlagSecure.activate() : FlagSecure.deactivate()
     }
 
     // useFocusEffect(useCallback(()=>{

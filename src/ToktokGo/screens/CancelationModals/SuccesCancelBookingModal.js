@@ -4,21 +4,34 @@ import CONSTANTS from '../../../common/res/constants';
 import SuccessIMG from '../../../assets/images/Sucess.png';
 import {ThrottledOpacity} from '../../../components_section';
 
-export const SuccesCancelBookingModal = ({visible, cancellationState, chargeAmount, goBackAfterCancellation}) => {
+export const SuccesCancelBookingModal = ({
+  visible,
+  isViaTokwa,
+  cancellationState,
+  chargeAmount,
+  goBackAfterCancellation,
+}) => {
   const getDescription = () => {
     if (chargeAmount) {
       if (cancellationState?.initiatedBy == 'CONSUMER') {
-        return (
-          <Text style={styles.modalDescription}>
-            Your booking has been cancelled. Cancellation fee will be charged in your next booking. You may read more
-            about our{' '}
-            <ThrottledOpacity
-              onPress={() =>
-                Linking.openURL(
-                  'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
-                )
-              }>
+        if (isViaTokwa) {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. We received your payment for Cancellation Fee of{' '}
+              <Text style={styles.textHighlight}>₱50.00</Text>. Your e-receipt was sent to your registered email.
+            </Text>
+          );
+        } else {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. Cancellation Fee will be charged in your next booking. You may read more
+              about our{' '}
               <Text
+                onPress={() =>
+                  Linking.openURL(
+                    'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
+                  )
+                }
                 style={{
                   color: CONSTANTS.COLOR.ORANGE,
                   textDecorationLine: 'underline',
@@ -26,28 +39,40 @@ export const SuccesCancelBookingModal = ({visible, cancellationState, chargeAmou
                 }}>
                 Cancellation Policies
               </Text>
-            </ThrottledOpacity>
-            .
-          </Text>
-        );
+              .
+            </Text>
+          );
+        }
       } else {
-        return (
-          <Text style={styles.modalDescription}>
-            Your booking has been cancelled. No show fee will be charged in your next booking. You may read more about
-            our{' '}
-            <ThrottledOpacity
-              onPress={() =>
-                Linking.openURL(
-                  'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
-                )
-              }>
-              <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>
+        if (isViaTokwa) {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. We received your payment for No Show Fee of{' '}
+              <Text style={styles.textHighlight}>₱50.00</Text>. Your e-receipt was sent to your registered email.
+            </Text>
+          );
+        } else {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. No Show Fee will be charged in your next booking. You may read more about
+              our{' '}
+              <Text
+                onPress={() =>
+                  Linking.openURL(
+                    'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
+                  )
+                }
+                style={{
+                  color: CONSTANTS.COLOR.ORANGE,
+                  textDecorationLine: 'underline',
+                  textAlign: 'center',
+                }}>
                 Cancellation Policies
               </Text>
-            </ThrottledOpacity>
-            .
-          </Text>
-        );
+              .
+            </Text>
+          );
+        }
       }
     } else {
       return <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>;
@@ -92,7 +117,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 3,
     marginVertical: 20,
   },
@@ -107,7 +132,7 @@ const styles = StyleSheet.create({
   },
   textHighlight: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   buttonContainer: {
     marginTop: 20,
@@ -120,7 +145,7 @@ const styles = StyleSheet.create({
     borderColor: CONSTANTS.COLOR.ORANGE,
   },
   buttonText: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL,
     color: CONSTANTS.COLOR.WHITE,
   },

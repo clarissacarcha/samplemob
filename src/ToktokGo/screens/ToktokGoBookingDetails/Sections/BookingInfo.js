@@ -48,7 +48,7 @@ export const BookingInfo = ({booking}) => {
           {/*-------------------- ORDER DATE --------------------*/}
           <View>
             <Text style={{fontFamily: FONT.REGULAR, fontSize: constants.FONT_SIZE.M}}>Distance</Text>
-            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={MapIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
               <Text
                 style={{
@@ -60,7 +60,7 @@ export const BookingInfo = ({booking}) => {
               </Text>
             </View>
           </View>
-          <View style={{flex: 1, marginLeft: 70}}>
+          <View style={{marginLeft: 60}}>
             <Text style={{fontFamily: FONT.REGULAR, fontSize: constants.FONT_SIZE.M}}>Estimated Time of Drop off</Text>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={ClockIcon} resizeMode="contain" style={{width: 16, height: 16, marginRight: 8}} />
@@ -78,14 +78,14 @@ export const BookingInfo = ({booking}) => {
         <View style={{borderBottomWidth: 1, borderColor: constants.COLOR.LIGHT}} />
         <View style={styles.directionDetail}>
           {/*-------------------- ORDER DATE --------------------*/}
-          <View style={{flex: 1}}>
+          <View>
             <Text style={{fontFamily: FONT.REGULAR, fontSize: constants.FONT_SIZE.M}}>Vehicle type</Text>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={GoVehicle} resizeMode="contain" style={{width: 18, height: 15, marginRight: 8}} />
               <Text style={{color: constants.COLOR.ALMOST_BLACK}}>{booking?.vehicleType?.name}</Text>
             </View>
           </View>
-          <View style={{flex: 1}}>
+          <View style={{marginLeft: 60}}>
             <Text style={{fontFamily: FONT.REGULAR, fontSize: constants.FONT_SIZE.M}}>Passenger</Text>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={PassengerIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
@@ -116,6 +116,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     paddingVertical: 16,
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
   },
   directionsBox: {
     flex: 1,

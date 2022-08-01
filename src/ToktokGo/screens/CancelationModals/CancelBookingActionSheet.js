@@ -1,25 +1,29 @@
 import React, {useState} from 'react';
-import ActionSheet, {SheetManager} from 'react-native-actions-sheet';
+import ActionSheet from 'react-native-actions-sheet';
 import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import tokGoIMG from '../../../assets/images/tokGo.png';
 import tokWaIMG from '../../../assets/images/Wallet.png';
 import {ThrottledOpacity} from '../../../components_section';
 
-export const CancelBookingActionSheet = ({setVisible}) => {
+export const CancelBookingActionSheet = ({
+  SheetManager,
+  cancellationState,
+  setViewSuccessCancelBookingModal,
+  hastokwa,
+  payFeeViaTokwa,
+}) => {
   const [selectedPayment, setSelectedPayment] = useState();
-  const [data, setData] = useState([
-    {
-      label: 'Passenger no show',
-      img: tokGoIMG,
-      value: '0',
-    },
-    {
-      label: 'Passenger rude',
-      img: tokWaIMG,
-      value: '1',
-    },
-  ]);
+
+  const onConfirm = () => {
+    if (selectedPayment == 'CASH') {
+      setViewSuccessCancelBookingModal(true);
+    } else {
+      payFeeViaTokwa();
+    }
+
+    SheetManager.hide('cancel_booking');
+  };
 
   return (
     <ActionSheet id="cancel_booking" overlayColor="none">
@@ -28,7 +32,7 @@ export const CancelBookingActionSheet = ({setVisible}) => {
           <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD, color: CONSTANTS.COLOR.ALMOST_BLACK}}>
             Reason for Cancellation
           </Text>
-          <Text style={{color: CONSTANTS.COLOR.ALMOST_BLACK}}>data here</Text>
+          <Text style={{color: CONSTANTS.COLOR.ALMOST_BLACK}}>{cancellationState?.reason}</Text>
         </View>
         <View style={styles.divider} />
         <View>
@@ -36,16 +40,16 @@ export const CancelBookingActionSheet = ({setVisible}) => {
             Select Payment
           </Text>
 
-          <View opacity={true ? 0.5 : 1}>
+          <View opacity={!hastokwa ? 0.5 : 1}>
             <ThrottledOpacity
               delay={500}
-              disabled={true}
+              disabled={!hastokwa}
               onPress={() => {
-                setSelectedPayment(1);
+                setSelectedPayment('TOKWA');
               }}
               style={styles.radioButtonContainer}>
               <View style={styles.radioButton}>
-                <View style={1 == selectedPayment ? styles.radioButtonIcon : styles.radioButtonIcon1} />
+                <View style={selectedPayment == 'TOKWA' ? styles.radioButtonIcon : styles.radioButtonIcon1} />
               </View>
               <View style={{flexDirection: 'row'}}>
                 <Image source={tokWaIMG} style={styles.imageDimensions} resizeMode={'contain'} />
@@ -58,11 +62,11 @@ export const CancelBookingActionSheet = ({setVisible}) => {
           <View style={styles.radioDivider} />
           <TouchableOpacity
             onPress={() => {
-              setSelectedPayment(2);
+              setSelectedPayment('CASH');
             }}
             style={styles.radioButtonContainer}>
             <View style={styles.radioButton}>
-              <View style={2 == selectedPayment ? styles.radioButtonIcon : styles.radioButtonIcon1} />
+              <View style={selectedPayment == 'CASH' ? styles.radioButtonIcon : styles.radioButtonIcon1} />
             </View>
             <View style={{flexDirection: 'row'}}>
               <Image source={tokGoIMG} style={styles.imageDimensions} resizeMode={'contain'} />
@@ -75,11 +79,7 @@ export const CancelBookingActionSheet = ({setVisible}) => {
           <Text style={styles.textStyles}>Total</Text>
           <Text style={styles.textStyles}>₱50.00</Text>
         </View>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => {
-            SheetManager.hide('cancel_booking'), setVisible(true);
-          }}>
+        <TouchableOpacity style={styles.buttonContainer} onPress={onConfirm}>
           <Text style={styles.buttonText}>Confirm</Text>
         </TouchableOpacity>
       </View>

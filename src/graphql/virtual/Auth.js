@@ -40,6 +40,8 @@ user {
     id
     rating
     referralCode
+    goReferralDriverUserId
+    goReferralDriverCode
     referralName
     franchiseeCode
     franchiseeFirstName
@@ -65,6 +67,10 @@ user {
   }
 }
 accessToken
+serviceAccess {
+  identifier
+  visible
+}
 `;
 
 export const LOGIN_REGISTER = gql`

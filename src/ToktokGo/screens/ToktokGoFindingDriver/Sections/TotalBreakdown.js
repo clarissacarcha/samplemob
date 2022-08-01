@@ -15,7 +15,7 @@ export const TotalBreakdown = ({booking}) => {
               <Text
                 style={{
                   color: constants.COLOR.ORANGE,
-                  fontFamily: constants.FONT_FAMILY.BOLD,
+                  fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
                   fontSize: constants.FONT_SIZE.XL,
                 }}>
                 Total
@@ -23,7 +23,7 @@ export const TotalBreakdown = ({booking}) => {
               <Text
                 style={{
                   color: constants.COLOR.ORANGE,
-                  fontFamily: constants.FONT_FAMILY.BOLD,
+                  fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
                   fontSize: constants.FONT_SIZE.XL,
                 }}>
                 ₱{numberFormat(booking.fare.total)}

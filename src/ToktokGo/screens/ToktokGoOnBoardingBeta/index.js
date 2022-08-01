@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   SafeAreaView,
   Image,
@@ -13,9 +13,12 @@ import {
 } from 'react-native';
 import constants from '../../../common/res/constants';
 import GradientBackground from '../../../assets/toktokgo/BackGroundBeta.png';
+import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import ToktokgoIcon from '../../../assets/images/ToktokgoIconBeta.png';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
+import {useAccount} from 'toktokwallet/hooks';
+import {connect} from 'react-redux';
 
 const {width} = Dimensions.get('screen');
 
@@ -60,14 +63,21 @@ const Slide = ({item}) => {
   );
 };
 
-const ToktokGoOnBoardingBeta = ({navigation}) => {
+const ToktokGoOnBoardingBeta = ({navigation, session}) => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const ref = useRef();
+  const {tokwaAccount, getMyAccount} = useAccount();
+
   const updateCurrentSlideIndex = e => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(contentOffsetX / width);
     setCurrentSlideIndex(currentIndex);
   };
+  useEffect(() => {
+    if (session.user.toktokWalletAccountId) {
+      getMyAccount();
+    }
+  }, []);
 
   const onPress = async () => {
     const data = moment(new Date()).format('MMM D, YYYY');
@@ -76,8 +86,10 @@ const ToktokGoOnBoardingBeta = ({navigation}) => {
 
     if (date === moment(new Date()).format('MMM D, YYYY')) {
       navigation.replace('ToktokGoBookingStart');
-    } else {
+    } else if (tokwaAccount.wallet.id) {
       navigation.replace('ToktokGoHealthCare');
+    } else {
+      navigation.replace('ToktokGoCreateTokwa');
     }
   };
 
@@ -133,6 +145,9 @@ const ToktokGoOnBoardingBeta = ({navigation}) => {
 
   return (
     <ImageBackground source={GradientBackground} style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
+        <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
+      </TouchableOpacity>
       <View style={{alignItems: 'center'}}>
         <View style={{marginTop: StatusBar.currentHeight + 40}}>
           <Image source={ToktokgoIcon} resizeMode={'contain'} style={{height: 45, width: 190}} />
@@ -151,6 +166,11 @@ const ToktokGoOnBoardingBeta = ({navigation}) => {
     </ImageBackground>
   );
 };
+const mapStateToProps = state => ({
+  session: state.session,
+});
+
+export default connect(mapStateToProps, null)(ToktokGoOnBoardingBeta);
 
 const styles = StyleSheet.create({
   subtitle: {
@@ -163,7 +183,7 @@ const styles = StyleSheet.create({
   title: {
     color: constants.COLOR.ORANGE,
     fontSize: constants.FONT_SIZE.XL + 13,
-    fontFamily: constants.FONT_FAMILY.BOLD,
+    fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
     marginTop: 20,
     textAlign: 'center',
   },
@@ -187,5 +207,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  backButton: {
+    zIndex: 999,
+    position: 'absolute',
+    top: StatusBar.currentHeight + 23,
+    left: 16,
+    padding: 6,
+  },
+  iconDimensions: {
+    width: 10,
+    height: 15,
+  },
 });
-export default ToktokGoOnBoardingBeta;

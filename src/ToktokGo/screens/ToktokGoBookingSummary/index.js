@@ -14,7 +14,13 @@ import {
   BookingTotal,
 } from './Sections';
 import {useFocusEffect} from '@react-navigation/native';
-import {PaymentMethodModal, PaymentSuccesModal, PassengerCapacityActionSheet, OutstandingFeeModal} from './Components';
+import {
+  PaymentMethodModal,
+  PaymentSuccesModal,
+  PassengerCapacityActionSheet,
+  OutstandingFeeModal,
+  TokwaPaymentProcessedModal,
+} from './Components';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
@@ -22,11 +28,13 @@ import {GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT, GET_TRIPS_CONSUMER} f
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import BottomSheet from 'reanimated-bottom-sheet';
-import {AlertOverlay} from '../../../components';
+import {AlertOverlay} from '../../../SuperApp/screens/Components';
 import {useAccount} from 'toktokwallet/hooks';
 import {AppSyncOnError, onErrorAppSync} from '../../util';
 import {onError} from '../../../util/ErrorUtility';
 import {PricesNoteModal} from './Components/PricesNoteModal';
+import {VoucherRemovedModal} from './Components/VoucherRemovedModal';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const FULLSCREEN_HEIGHT = Dimensions.get('window').height;
@@ -36,11 +44,11 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const {details, routeDetails, origin, destination, paymentMethod, tempVehicleArr} = useSelector(
     state => state.toktokGo,
   );
-  const {tokwaAccount, getMyAccount, getMyAccountLoading, getMyAccountError} = useAccount();
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
   const [viewOutstandingFeeModal, setViewOutstandingFeeModal] = useState(false);
+  const [viewTokwaPaymentProcessedModal, setViewTokwaPaymentProcessedModal] = useState(false);
   const dispatch = useDispatch();
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [selectedVouchers, setSelectedVouchers] = useState(null);
@@ -51,12 +59,28 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(paymentMethod);
   const [viewPriceNote, setViewPriceNote] = useState(false);
   const [outstandingFee, setOutstandingFee] = useState();
+  const [voucherRemovedVisible, setvoucherRemovedVisible] = useState(false);
+  const [voucherTextMessage, setvoucherTextMessage] = useState('');
   const hasNotch = StatusBar.currentHeight > 24;
+  const [recentDestinationList, setrecentDestinationList] = useState([]);
+  const [isNotVoucherApplicable, setIsNotVoucherApplicable] = useState(false);
+  const [proceedBooking, setProceedBooking] = useState(false);
+  const [bookingState, setBookingState] = useState(false);
 
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
       getMyAccount();
     }
+  }, []);
+
+  useEffect(() => {
+    async function tempFunction() {
+      await getDestinationList();
+    }
+
+    tempFunction();
+
+    return () => {};
   }, []);
 
   const [getTripFare, {called}] = useLazyQuery(GET_TRIP_FARE, {
@@ -68,8 +92,33 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         payload: {...details, rate: response.getTripFare},
       });
       setLoading(false);
+      if (bookingState) {
+        setProceedBooking(true);
+      }
     },
-    onError: onErrorAppSync,
+    onError: error => {
+      // setSelectedVouchersNull();
+      const {graphQLErrors, networkError} = error;
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          console.log('ERROR TYPE:', errorType, 'MESSAGE:', message);
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
   });
 
   const [tripBook, {loading: TBLoading}] = useMutation(TRIP_BOOK, {
@@ -86,7 +135,17 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
             Alert.alert('', message);
           } else if (errorType === 'BAD_USER_INPUT') {
             setTripBookError(message);
-            Alert.alert('', message);
+            navigation.pop();
+            if (message == 'Promo Voucher Expired.') {
+              setvoucherTextMessage('Promo Voucher Expired.');
+              setvoucherRemovedVisible(true);
+            } else if (message == 'Daily limit is reached.') {
+              setvoucherTextMessage('Daily limit is reached.');
+              setvoucherRemovedVisible(true);
+            } else {
+              setvoucherTextMessage('Daily limit is reached.');
+              setvoucherRemovedVisible(true);
+            }
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
@@ -111,11 +170,16 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         type: 'SET_TOKTOKGO_BOOKING',
         payload: response.tripBook.trip,
       });
-      navigation.pop();
-      navigation.replace('ToktokGoFindingDriver', {
-        popTo: popTo + 1,
-        decodedPolyline,
-      });
+      if (details.paymentMethod == 'TOKTOKWALLET') {
+        navigation.pop();
+        setViewTokwaPaymentProcessedModal(true);
+      } else {
+        navigation.pop();
+        navigation.replace('ToktokGoFindingDriver', {
+          popTo: popTo + 1,
+          decodedPolyline,
+        });
+      }
     },
   });
 
@@ -170,6 +234,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
   // TODO: This will be added once vouchers is added
   const setSelectedVouchersNull = () => {
+    setIsNotVoucherApplicable(false);
     setSelectedVouchers(null);
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
@@ -178,11 +243,17 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   };
 
   // TODO: This will be used on onSelectVoucher
-  const dispatchRequest = async () => {
+  const dispatchRequest = () => {
     setLoading(true);
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
       payload: {...details, vehicleType: selectedVehicle.vehicleType},
+    });
+    console.log({
+      input: {
+        vehicleTypeRateHash: selectedVehicle.hash,
+        voucherHash: selectedVouchers?.hash,
+      },
     });
     getTripFare({
       variables: {
@@ -195,10 +266,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   };
 
   useEffect(() => {
+    setSelectedVouchers(details.voucher);
+  }, [details.voucher]);
+
+  useEffect(() => {
     setLoading(true);
-    if (selectedVehicle) {
-      dispatchRequest();
-    }
+    dispatchRequest();
   }, [selectedVehicle, selectedVouchers]);
 
   const tripBooking = ({pinCode, data}) => {
@@ -228,9 +301,60 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   };
 
   const confirmBooking = num => {
-    setSelectedSeatNum(num);
-    SheetManager.hide('passenger_capacity');
-    setTimeout(() => {
+    if (details.voucher == null) {
+      setSelectedSeatNum(num);
+      SheetManager.hide('passenger_capacity');
+      // setvoucherRemovedVisible(true);
+      setTimeout(() => {
+        if (selectedPaymentMethod == 'CASH') {
+          tripBooking({pinCode: null});
+        } else {
+          tripInitializePayment({
+            variables: {
+              input: {
+                tripFareHash: details?.rate?.hash,
+              },
+            },
+          });
+        }
+      }, 500);
+    } else if (selectedPaymentMethod == 'CASH' && details.voucher.promoVoucher.isCash == 0) {
+      SheetManager.hide('passenger_capacity');
+      setvoucherTextMessage('WrongPaymentMethod');
+      setvoucherRemovedVisible(true);
+    } else if (selectedPaymentMethod == 'TOKTOKWALLET' && details.voucher.promoVoucher.isCash == 1) {
+      SheetManager.hide('passenger_capacity');
+      setvoucherTextMessage('WrongPaymentMethod');
+      setvoucherRemovedVisible(true);
+    } else {
+      setSelectedSeatNum(num);
+      SheetManager.hide('passenger_capacity');
+      // setvoucherRemovedVisible(true);
+      setTimeout(() => {
+        if (selectedPaymentMethod == 'CASH') {
+          tripBooking({pinCode: null});
+        } else {
+          tripInitializePayment({
+            variables: {
+              input: {
+                tripFareHash: details?.rate?.hash,
+              },
+            },
+          });
+        }
+      }, 500);
+    }
+  };
+
+  const onProceedToBooking = () => {
+    setSelectedVouchersNull();
+    dispatchRequest();
+    setvoucherRemovedVisible(false);
+    setBookingState(true);
+  };
+
+  useEffect(() => {
+    if (proceedBooking) {
       if (selectedPaymentMethod == 'CASH') {
         tripBooking({pinCode: null});
       } else {
@@ -242,8 +366,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           },
         });
       }
-    }, 500);
-  };
+    }
+  }, [proceedBooking]);
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -277,33 +401,53 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     navigation.pop(2);
   };
 
+  const tokwaPaymentConfirmed = () => {
+    navigation.pop();
+    navigation.replace('ToktokGoFindingDriver', {
+      popTo: popTo + 1,
+      decodedPolyline,
+    });
+    setViewTokwaPaymentProcessedModal(false);
+  };
+
+  const handleVoucherRemoved = () => {
+    setvoucherRemovedVisible(false);
+    setSelectedVouchersNull();
+  };
+
+  const checkPaymentMethod = () => {
+    if (selectedVouchers) {
+      if (selectedVouchers?.promoVoucher?.isCash && !selectedVouchers?.promoVoucher?.isTokwa) {
+        selectedPaymentMethod == 'TOKTOKWALLET' ? setIsNotVoucherApplicable(false) : setIsNotVoucherApplicable(true);
+      } else if (!selectedVouchers?.promoVoucher?.isCash && selectedVouchers?.promoVoucher?.isTokwa) {
+        selectedPaymentMethod == 'CASH' ? setIsNotVoucherApplicable(false) : setIsNotVoucherApplicable(true);
+      } else {
+        setIsNotVoucherApplicable(false);
+      }
+    }
+  };
+
   const renderContent = () => (
     <View style={styles.card}>
       <BookingDistanceTime quotationData={quotationDataResult} loading={loading} />
-
       <BookingSelectVehicle
+        loading={loading}
         data={quotationDataResult}
         selectedVehicle={selectedVehicle}
         navigation={navigation}
         selectVehicle={selectVehicle}
         setViewPriceNote={setViewPriceNote}
       />
-      {/*  TODO: Vouchers will be added after launch of April 18 */}
-      {/* <BookingVoucher
+      <BookingVoucher
         navigation={navigation}
         selectedVouchers={selectedVouchers}
         setSelectedVouchersNull={setSelectedVouchersNull}
-      /> */}
-      <BookingBreakdown selectedVehicle={selectedVehicle} loading={loading} />
-      <BookingTotal loading={loading} details={details} />
-      <BookingSelectPaymentMethod
-        viewPaymenetSucessModal={viewPaymenetSucessModal}
-        setViewSelectPaymentModal={setViewSelectPaymentModal}
-        details={details}
-        tokwaAccount={tokwaAccount}
-        getMyAccountLoading={getMyAccountLoading}
-        navigation={navigation}
+        selectedPaymentMethod={selectedPaymentMethod}
+        isNotVoucherApplicable={isNotVoucherApplicable}
       />
+      <BookingBreakdown selectedVehicle={selectedVehicle} loading={loading} details={details} />
+      <BookingTotal loading={loading} details={details} />
+      <View style={{height: FULLSCREEN_HEIGHT * 0.25}} />
     </View>
   );
 
@@ -380,6 +524,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
       <PassengerCapacityActionSheet details={details} confirmBooking={confirmBooking} />
       <AlertOverlay visible={TIPLoading || TBLoading} />
+      <TokwaPaymentProcessedModal
+        viewTokwaPaymentProcessedModal={viewTokwaPaymentProcessedModal}
+        amount={details.rate.tripFare.total}
+        tokwaPaymentConfirmed={tokwaPaymentConfirmed}
+      />
+
       <OutstandingFeeModal
         closeOutstandingFeeModal={closeOutstandingFeeModal}
         viewOutstandingFeeModal={viewOutstandingFeeModal}
@@ -390,9 +540,11 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         viewSelectPaymentModal={viewSelectPaymentModal}
         setViewSelectPaymentModal={setViewSelectPaymentModal}
         setSelectedPaymentMethod={setSelectedPaymentMethod}
+        setSelectedVouchers={setSelectedVouchers}
         details={details}
         tokwaAccount={tokwaAccount}
         getMyAccountLoading={getMyAccountLoading}
+        checkPaymentMethod={checkPaymentMethod}
       />
 
       <PaymentSuccesModal
@@ -400,7 +552,13 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         setViewPaymenetSucessModal={setViewPaymenetSucessModal}
       />
       <PricesNoteModal viewPriceNote={viewPriceNote} setViewPriceNote={setViewPriceNote} />
-
+      <VoucherRemovedModal
+        voucherRemovedVisible={voucherRemovedVisible}
+        setvoucherRemovedVisible={setvoucherRemovedVisible}
+        handleVoucherRemoved={handleVoucherRemoved}
+        voucherTextMessage={voucherTextMessage}
+        onProceedToBooking={onProceedToBooking}
+      />
       <BookingMap
         decodedPolyline={decodedPolyline}
         routeDetails={routeDetails}
@@ -409,6 +567,14 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       />
 
       <View style={styles.buttonContainer}>
+        <BookingSelectPaymentMethod
+          viewPaymenetSucessModal={viewPaymenetSucessModal}
+          setViewSelectPaymentModal={setViewSelectPaymentModal}
+          details={details}
+          tokwaAccount={tokwaAccount}
+          getMyAccountLoading={getMyAccountLoading}
+          navigation={navigation}
+        />
         <BookingConfirmButton SheetManager={SheetManager} />
       </View>
     </View>
@@ -503,14 +669,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: 'white',
     paddingTop: 16,
+
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 0,
+      height: 2,
     },
-    shadowRadius: 50,
-    shadowOpacity: 1.0,
-    elevation: 20,
+    shadowRadius: 3.84,
+    shadowOpacity: 0.2,
+    elevation: 5,
+    borderTopColor: '#F8F8F8',
+    borderTopWidth: 2,
   },
   elementWrapper: {
     position: 'absolute',
@@ -548,5 +717,16 @@ const styles = StyleSheet.create({
     color: constants.COLOR.BLACK,
     fontSize: constants.FONT_SIZE.XL + 1,
     fontFamily: constants.FONT_FAMILY.REGULAR,
+  },
+  shimmer: {
+    width: 382,
+    height: 16,
+  },
+  divider: {
+    borderBottomWidth: 2,
+    borderBottomColor: constants.COLOR.LIGHT,
+    marginBottom: 16,
+    marginTop: 14,
+    width: 382,
   },
 });
