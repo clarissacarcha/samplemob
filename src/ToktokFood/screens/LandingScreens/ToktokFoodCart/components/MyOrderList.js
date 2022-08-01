@@ -24,7 +24,7 @@ import {reseller_badge, food_placeholder} from 'toktokfood/assets/images';
 import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 
 const MyOrderList = props => {
-  const {shopDetails, hasUnavailableItem} = props;
+  const {shopDetails, hasUnavailableItem, pabiliShopDetails} = props;
   // const route = useRoute();
   const dispatch = useDispatch();
   // const { cart } = route.params;
@@ -34,6 +34,8 @@ const MyOrderList = props => {
   const {temporaryCart, setTemporaryCart} = useContext(VerifyContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const swipeListViewRef = useRef(null);
+
+  const isPabiliMerchant = pabiliShopDetails?.isPabiliMerchant === 1;
 
   const [deleteTemporaryCartItem, {loading: deleteLoading}] = useMutation(DELETE_TEMPORARY_CART_ITEM, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,

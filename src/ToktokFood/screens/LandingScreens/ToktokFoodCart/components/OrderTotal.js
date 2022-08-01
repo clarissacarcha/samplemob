@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-nested-ternary */
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 import _ from 'lodash';
 
@@ -11,7 +11,16 @@ import {getCartTotalAmountOrder, getResellerDiscount, getTotalResellerDiscount} 
 
 import styles from '../styles';
 
-const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = true, oneCartTotal}) => {
+import {info_ic} from 'toktokfood/assets/images';
+
+const OrderTotal = ({
+  autoShipping,
+  subtotal = 0,
+  deliveryFee = 0,
+  forDelivery = true,
+  oneCartTotal,
+  pabiliShopDetails,
+}) => {
   // deliveryFee = deliveryFee ? deliveryFee : 0;
   // subtotal = subtotal ? subtotal : 0;
   const {shippingVoucher, temporaryCart} = useContext(VerifyContext);
@@ -32,9 +41,19 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     : (0.0).toFixed(2);
   // const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
 
+  const isPabiliMerchant = pabiliShopDetails?.isPabiliMerchant === 1;
+
   useEffect(() => {
     oneCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
+    console.log(JSON.stringify(temporaryCart.items));
   }, [shippingVoucher, totalBasket, totalShipping]);
+
+  const getPabiliServiceFee = () => {
+    const cartItems = temporaryCart.items;
+    _.map(cartItems, (item, index) => {});
+
+    return {ser};
+  };
 
   const getVoucherFee = async () => {
     const groupPromo = _(promotionVoucher)
@@ -191,6 +210,18 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         <View style={styles.header}>
           <Text>Delivery Fee Discount</Text>
           <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
+        </View>
+      )}
+
+      {isPabiliMerchant && (
+        <View style={styles.header}>
+          <View style={styles.serviceFeeLabelWrapper}>
+            <Text>Service Fee</Text>
+            <TouchableOpacity>
+              <Image resizeMode="center" source={info_ic} style={styles.modifiedIcon} />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
         </View>
       )}
 

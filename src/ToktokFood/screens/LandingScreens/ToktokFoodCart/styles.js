@@ -324,6 +324,13 @@ const styles = StyleSheet.create({
   unavailableText: {
     color: '#FF6200',
   },
+  serviceFeeLabelWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    
+    alignItems: 'center',
+  },
+  modifiedIcon: {height: 22, width: 22, marginRight: 8, marginLeft: 5},
 });
 
 export default styles;

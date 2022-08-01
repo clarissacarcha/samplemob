@@ -73,6 +73,7 @@ import {
   GET_SHOP_STATUS,
   GET_ALL_TEMPORARY_CART,
   GET_SHOP_DETAILS,
+  GET_SHOP_SERVICE_FEE_DETAILS,
 } from 'toktokfood/graphql/toktokfood';
 
 import moment from 'moment';
@@ -134,12 +135,25 @@ const MainComponent = () => {
   const [closeShop, setShowCloseShop] = useState({visible: false, shopName: ''});
   const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
   const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({error: {}, visible: false});
+  const [pabiliShopDetails, setPabiliShopDetails] = useState(null);
   const alert = useAlert();
   const isFocus = useIsFocused();
 
   const [closeInfo, setCloseInfo] = useState({visible: false, shopName: ''});
 
   const [diablePlaceOrder, setDisablePlaceOrder] = useState(true);
+
+  const [getShopPabiliDetails, {error: pabiliDetailsError, loading: pabiliDetailsLoading}] = useLazyQuery(
+    GET_SHOP_SERVICE_FEE_DETAILS,
+    {
+      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+      fetchPolicy: 'network-only',
+      onCompleted: ({getShopServiceFeeDetails}) => {
+        setPabiliShopDetails(getShopServiceFeeDetails);
+      },
+      onError: error => console.log('getShopPabiliDetails', error),
+    },
+  );
 
   const [getShopDetails, {error: shopDetailsError, loading: shopDetailsLoading}] = useLazyQuery(GET_SHOP_DETAILS, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -201,6 +215,13 @@ const MainComponent = () => {
             shopId: temporaryCart.items[0]?.shopid.toString(),
             userLongitude: location?.longitude,
             userLatitude: location?.latitude,
+          },
+        },
+      });
+      getShopPabiliDetails({
+        variables: {
+          input: {
+            shopId: temporaryCart.items[0]?.shopid.toString(),
           },
         },
       });
@@ -943,7 +964,11 @@ const MainComponent = () => {
         {orderType === 'Delivery' && <ReceiverLocation />}
         <Separator />
 
-        <MyOrderList shopDetails={shopDetails} hasUnavailableItem={showItemDisabled} />
+        <MyOrderList
+          shopDetails={shopDetails}
+          hasUnavailableItem={showItemDisabled}
+          pabiliShopDetails={pabiliShopDetails}
+        />
         <Separator />
 
         {/*  {orderType === 'Delivery' && (
@@ -967,6 +992,7 @@ const MainComponent = () => {
             deliveryFee={delivery.price}
             forDelivery={orderType === 'Delivery'}
             oneCartTotal={v => customerWallet?.status === 2 && setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
+            pabiliShopDetails={pabiliShopDetails}
           />
         )}
         <Separator />
