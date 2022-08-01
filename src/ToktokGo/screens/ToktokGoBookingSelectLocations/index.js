@@ -20,6 +20,7 @@ import DestinationBC from '../../../assets/toktokgo/destination4.png';
 import {useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../helper';
 import {ThrottledHighlight} from '../../../components_section';
+import {onErrorAppSync} from '../../util';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
@@ -64,7 +65,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     onCompleted: response => {
       setrecentDestinationList(response.getConsumerPreviousDestinations);
     },
-    onError: error => console.log('getConsumerPreviousDestinations', error),
+    onError: onErrorAppSync,
   });
 
   const [getPlaceById] = useLazyQuery(GET_PLACE_BY_ID, {

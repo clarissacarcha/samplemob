@@ -61,7 +61,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     onCompleted: response => {
       setrecentDestinationList(response.getConsumerPreviousDestinations);
     },
-    onError: error => console.log('getConsumerPreviousDestinations', error),
+    onError: onErrorAppSync,
   });
 
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
