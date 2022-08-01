@@ -89,6 +89,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
   }, []);
 
   const [getUserHash] = useLazyQuery(GET_USER_HASH, {
+    fetchPolicy: 'network-only',
     onError,
     onCompleted: response => {
       const newSession = {...session};

@@ -11,7 +11,7 @@ export const FeedbackModal = ({showModal, showBookingReason, popTo, navigation, 
           <View style={styles.card}>
             <View style={styles.containerFeedback}>
               <Image style={{height: 120, width: 135}} source={Warning} />
-              <Text style={styles.FeedbackText}>Feedback Sent!</Text>
+              <Text style={styles.FeedbackText}>Feedback Sent</Text>
               <Text style={styles.feedbackMessage}>Thank you for riding with us.</Text>
               <Text style={styles.feedbackText}>Have a great day, ka-toktok!</Text>
             </View>
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   FeedbackText: {
-    fontFamily: constants.FONT_FAMILY.BOLD,
+    fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
     fontSize: constants.FONT_SIZE.XL + 3,
     color: constants.COLOR.ORANGE,
     paddingVertical: 20,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   btnTextOk: {
-    fontFamily: constants.FONT_FAMILY.BOLD,
+    fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
     fontSize: constants.FONT_SIZE.XL,
     color: constants.COLOR.WHITE,
   },

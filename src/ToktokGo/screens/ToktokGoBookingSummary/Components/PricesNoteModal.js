@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 3,
     marginVertical: 20,
   },
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   textHighlight: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   buttonContainer: {
     marginTop: 20,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     borderColor: CONSTANTS.COLOR.ORANGE,
   },
   buttonText: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL,
     color: CONSTANTS.COLOR.WHITE,
   },

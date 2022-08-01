@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 3,
     marginVertical: 20,
   },

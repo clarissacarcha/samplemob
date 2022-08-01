@@ -25,7 +25,7 @@ const StatusBar = ({label, log, number}) => {
         : log.createdAt;
     fontColor = constants.COLOR.ORANGE;
     fontFamily = constants.FONT_FAMILY.BOLD;
-    hasImage = log.image !== null ? true : false;
+    hasImage = log.image ? true : false;
   }
 
   useEffect(() => {
@@ -74,7 +74,9 @@ const StatusBar = ({label, log, number}) => {
           />
         </View>
         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={{fontFamily: fontFamily, fontSize: constants.FONT_SIZE.M, color: fontColor}}>{label}</Text>
+          <Text style={{fontFamily: fontFamily, fontSize: constants.FONT_SIZE.M, color: fontColor, flex: 0.9}}>
+            {label}
+          </Text>
           <Text
             style={{
               fontFamily: constants.FONT_FAMILY.REGULAR,
@@ -108,7 +110,6 @@ const StatusBar = ({label, log, number}) => {
 
 const Status = ({booking}) => {
   const mappedLogs = _.mapKeys(booking.logs, 'status');
-  console.log(mappedLogs);
   return (
     /*-------------------- FOR FIDELITY --------------------*/
     // <View>

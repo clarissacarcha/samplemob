@@ -43,7 +43,9 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
       newSession.user.person.emailAddress = emailAddress;
       newSession.user.consumer.referralCode = referralCode;
       createSession(newSession);
-      navigation.replace('ConsumerLanding');
+      navigation.replace('ReferralScreen', {
+        fromRegistration: true,
+      });
     },
   });
 
@@ -161,7 +163,6 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
           keyboardType="email-address"
           autoCapitalize="none"
           placeholderTextColor={LIGHT}
-          caretHidden
         />
 
         <Text style={styles.label}>Password</Text>

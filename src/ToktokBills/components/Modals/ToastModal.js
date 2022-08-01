@@ -5,7 +5,7 @@ import {moderateScale} from 'toktokwallet/helper';
 
 import CONSTANTS from 'common/res/constants';
 import Modal from 'react-native-modal';
-import {check_icon} from 'toktokload/assets/icons';
+import check_icon from 'toktokbills/assets/icons/check_ic.png';
 
 const {width} = Dimensions.get('screen');
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE, SHADOW} = CONSTANTS;
@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
     color: COLOR.ORANGE,
   },
   checkIcon: {
-    width: moderateScale(70),
-    height: moderateScale(70),
+    width: moderateScale(80),
+    height: moderateScale(80),
     resizeMode: 'contain',
     marginBottom: moderateScale(10),
   },

@@ -57,7 +57,7 @@ const RiderNotes = ({
 
   const onValidateAmount = useCallback(() => {
     if (deliveryFee) {
-      const deliveryFeeTotal = forDelivery ? deliveryFee : 0;
+      let deliveryFeeTotal = forDelivery ? deliveryFee : 0;
       let totalAmt = 0;
       const groupPromo = _(promotionVoucher)
         .groupBy('type')
@@ -69,11 +69,16 @@ const RiderNotes = ({
         .value();
       const promotions = groupPromo.filter(promo => promo.type === 'promotion');
       const deal = groupPromo.filter(promo => promo.type === 'deal');
+      const shipping = groupPromo.filter(promo => promo.type === 'shipping');
+
       if (promotions.length > 0) {
         totalAmt += promotions[0]?.discount_totalamount;
       }
       if (deal.length > 0) {
         totalAmt += deal[0]?.discount_totalamount;
+      }
+      if (shipping.length > 0) {
+        deliveryFeeTotal -= shipping[0]?.amount;
       }
       setTotalAmount(temporaryCart?.totalAmount + deliveryFeeTotal - totalAmt);
     }

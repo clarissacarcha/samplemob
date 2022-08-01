@@ -1,5 +1,5 @@
 import React , {useEffect,useState} from 'react'
-import {View , Text , StyleSheet , TouchableOpacity ,Image} from 'react-native'
+import {View , Text , StyleSheet , TouchableOpacity ,Image , ScrollView } from 'react-native'
 import { HeaderBack, HeaderTitle , VectorIcon , ICON_SET , YellowButton} from 'src/revamp'
 import { Separator , CheckIdleState } from 'toktokwallet/components'
 import imageLogo from 'toktokwallet/assets/images/AccountUpgrade/Tokwa.png'
@@ -44,6 +44,7 @@ export const ToktokWalletUpgradeAccount = ({navigation})=> {
     return (
         <CheckIdleState>
             <Separator/>
+            <ScrollView contentContainerStyle={{flexGrow: 1}} style={styles.container}>
             <View style={styles.container}>
                 <View style={styles.imageDiv}>
                     <Image style={styles.image} source={imageLogo} />
@@ -72,6 +73,7 @@ export const ToktokWalletUpgradeAccount = ({navigation})=> {
                     <YellowButton label="Upgrade Now" onPress={upgradeAccount}/>
                 </View>
             </View>
+            </ScrollView>
         </CheckIdleState>
     )
 }

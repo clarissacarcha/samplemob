@@ -40,7 +40,6 @@ export const BookingID = ({booking}) => {
             <Image source={getIconStatus()} style={{height: 20, width: 20, marginRight: 10}} resizeMode={'contain'} />
             <Text
               style={{
-                fontFamily: constants.FONT_FAMILY.BOLD,
                 fontSize: constants.FONT_SIZE.M,
                 color: constants.COLOR.BLACK,
               }}>

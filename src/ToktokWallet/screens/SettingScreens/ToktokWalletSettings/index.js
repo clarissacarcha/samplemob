@@ -49,30 +49,39 @@ export const ToktokWalletSettings = ({navigation, route}) => {
         {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
         {/* <Biometrics/> */}
         <Separator />
-        <SettingHeaderTitle title="Account" />
-        <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart" />
-        <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit" />
-        {!tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3 ? (
-          <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account" />
-        ) : tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2 ? (
-          <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account" />
-        ) : null}
-        <Separator />
-        <SettingHeaderTitle title="Help Centre" />
-        <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy" />
-        <SettingOption route="ToktokWalletTermsConditions" title="Terms and Conditions" />
-        <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us" />
-        <Separator />
-        <SettingHeaderTitle title="Logs" />
-        <SettingOption route="ToktokWalletCashInLogs" title="Cash In" />
-        <SettingOption route="ToktokWalletCashOutLogs" title="Fund Transfer" />
-        {/* <SettingOption route="ToktokWalletRequestMoneyLogs" title="Request Money"/> */}
-        <SettingOption route="ToktokWalletSendMoneyLogs" title="Send Money" />
-        <SettingOption route="ToktokWalletBillsLogs" title="Bills" />
-        <SettingOption route="ToktokWalletPabiliDeliveryLogs" title="Delivery" />
-        <SettingOption route="ToktokWalletFoodLogs" title="Food" />
-        {/* <SettingOption route="ToktokWalletLoadLogs" title="Load"/> */}
-        {/* <SettingOption route="ToktokWalletMartLogs" title="Mart"/>
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+            <SettingHeaderTitle title="Security"/>
+            <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? "Change" : "Setup"} TPIN`}/>
+            <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN"/>
+            {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
+            {/* <Biometrics/> */}
+            <Separator/>   
+            <SettingHeaderTitle title="Account"/>
+            <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart"/>
+            <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit"/>
+            {
+                ( !tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3  ) 
+                ? <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
+                :  ( tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2  ) 
+                    ? <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account"/>
+                    : null
+            }       
+            <Separator/>
+            <SettingHeaderTitle title="Help Centre"/>
+            <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy"/>
+            <SettingOption route="ToktokWalletTermsConditions" title="Terms and Conditions"/>
+            <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us"/>
+            <Separator/>
+            <SettingHeaderTitle title="Logs"/>
+            <SettingOption route="ToktokWalletCashInLogs" title="Cash In"/>
+            <SettingOption route="ToktokWalletCashOutLogs" title="Fund Transfer"/>
+            {/* <SettingOption route="ToktokWalletRequestMoneyLogs" title="Request Money"/> */}
+            <SettingOption route="ToktokWalletSendMoneyLogs" title="Send Money"/>
+            {/* <SettingOption route="ToktokWalletBillsLogs" title="Bills"/> */}
+            <SettingOption route="ToktokWalletPabiliDeliveryLogs" title="Delivery"/>
+            <SettingOption route="ToktokWalletFoodLogs" title="Food"/>
+            <SettingOption route="ToktokWalletLoadLogs" title="Load"/>
+            {/* <SettingOption route="ToktokWalletMartLogs" title="Mart"/>
             <SettingOption route="ToktokWalletMallLogs" title="Mall"/> */}
         <SettingOption route="ToktokWalletMerchantPaymentLogs" title="QR Payment" />
         <Separator />
