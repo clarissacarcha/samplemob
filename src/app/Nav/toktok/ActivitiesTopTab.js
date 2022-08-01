@@ -24,6 +24,7 @@ const Activities = () => {
       <View
         style={{
           paddingTop: StatusBar.currentHeight,
+          height: Platform.select({android: 57 + StatusBar.currentHeight, ios: 50}),
           backgroundColor: 'white',
           justifyContent: 'center',
           alignItems: 'center',
@@ -34,10 +35,10 @@ const Activities = () => {
           },
           shadowOpacity: 0.2,
           shadowRadius: 1.41,
-
           elevation: 2,
+          marginBottom: 3,
         }}>
-        <Text style={{paddingVertical: 20, fontSize: FONT_SIZE.XL + 3}}>Activities</Text>
+        <Text style={{paddingVertical: 14, fontSize: FONT_SIZE.XL + 3}}>Activities</Text>
       </View>
       <ActivitiesTopTab.Navigator
         swipeEnabled={false}

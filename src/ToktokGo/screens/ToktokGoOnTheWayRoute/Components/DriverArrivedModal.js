@@ -19,7 +19,7 @@ export const DriverArrivedModal = ({modal, booking, openModal, openRateDriver}) 
             <View style={{marginHorizontal: 10}}>
               {booking.status == 'ARRIVED' ? (
                 <Text style={styles.modalDescription}>
-                  Your driver has arrived. Please be in your pick up location within{' '}
+                  Your driver has arrived. Please be in your pick-up location within{' '}
                   <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> to avoid cancellation.
                 </Text>
               ) : (
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 3,
     marginVertical: 20,
   },

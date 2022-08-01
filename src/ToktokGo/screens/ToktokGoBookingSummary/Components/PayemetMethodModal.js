@@ -23,13 +23,18 @@ export const PaymentMethodModal = ({
   setSelectedPaymentMethod,
   tokwaAccount,
   getMyAccountLoading,
+  checkPaymentMethod,
 }) => {
   const dispatch = useDispatch();
   const {wallet, id} = tokwaAccount;
   const setSelected = paymentMethod => {
-    dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, paymentMethod: paymentMethod}});
+    dispatch({
+      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+      payload: {...details, paymentMethod: paymentMethod},
+    });
     setSelectedPaymentMethod(paymentMethod);
     setViewSelectPaymentModal(false);
+    checkPaymentMethod();
   };
 
   return (
@@ -56,7 +61,7 @@ export const PaymentMethodModal = ({
                 <TouchableOpacity
                   style={styles.cashInWrapper}
                   onPress={() => {
-                    navigation.navigate('ToktokWalletLoginPage');
+                    setViewSelectPaymentModal(false), navigation.navigate('ToktokWalletLoginPage');
                   }}>
                   <Text style={styles.cashIntextStyle}>Cash In</Text>
                 </TouchableOpacity>
@@ -102,7 +107,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   cashIntextStyle: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.S,
   },
