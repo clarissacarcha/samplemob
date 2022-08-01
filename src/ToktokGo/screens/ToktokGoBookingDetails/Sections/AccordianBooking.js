@@ -42,7 +42,7 @@ export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummySt
               color: CONSTANTS.COLOR.ORANGE,
               marginHorizontal: 5,
             }}>
-            Show Details{' '}
+            Show Details
           </Text>
           {/* <MIcons
             name={'keyboard-arrow-right'}
@@ -58,8 +58,8 @@ export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummySt
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
               style={{
-                fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
-                fontSize: CONSTANTS.FONT_SIZE.M,
+                fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+                fontSize: CONSTANTS.FONT_SIZE.XL,
                 color: CONSTANTS.COLOR.ORANGE,
               }}>
               {titleText}
@@ -68,8 +68,8 @@ export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummySt
           <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
             <Text
               style={{
-                fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
-                fontSize: CONSTANTS.FONT_SIZE.M,
+                fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+                fontSize: CONSTANTS.FONT_SIZE.XL,
                 color: CONSTANTS.COLOR.ORANGE,
               }}>
               {titleAmount}

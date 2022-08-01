@@ -52,3 +52,25 @@ export const GET_PLACE_BY_LOCATION = gql`
     }
   }
 `;
+
+export const GET_CONSUMER_RECENT_DESTINATION = gql`
+  query {
+    getConsumerPreviousDestinations {
+      hash
+      place {
+        addressBreakdown {
+          city
+          province
+          region
+          country
+          postal
+        }
+        formattedAddress
+        location {
+          latitude
+          longitude
+        }
+      }
+    }
+  }
+`;

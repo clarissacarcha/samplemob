@@ -26,6 +26,7 @@ export * from './ToktokWalletCashIn';
 export * from './ToktokWalletCashout';
 export * from './User';
 export * from './VehicleType';
+export * from './Voucher';
 export * from './Wallet';
 export * from './WelcomeMessage';
 export * from './WelcomeBanner';

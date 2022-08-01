@@ -312,36 +312,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: moderateScale(10),
   },
-  orderTypeIcon: {
-    alignSelf: 'center',
-    marginRight: 10,
-    height: 12,
-    width: 12,
-  },
-  shopDetails: {
-    paddingHorizontal: 10,
-  },
-  shopDetailsContainer: {
-    borderBottomWidth: 1,
-    borderColor: '#DDDDDD',
-    flexDirection: 'row',
-    marginBottom: 10,
-    paddingVertical: 15,
-  },
-  subtitle: {
-    color: '#525252',
-    fontSize: FONT_SIZE.M,
-    paddingVertical: 5,
-  },
-  subtitle2: {
-    fontSize: FONT_SIZE.L,
-    flex: 1,
-    paddingVertical: 5,
-  },
-  mapPin: {
+  cartItemWrapper: {
+    borderWidth: 1,
+    borderColor: '#FF6200',
     height: 20,
-    width: 12,
-  }
+    position: 'absolute',
+    marginLeft: 95,
+    bottom: 3,
+    paddingHorizontal: 8,
+  },
+  unavailableText: {
+    color: '#FF6200',
+  },
 });
 
 export default styles;

@@ -17,7 +17,7 @@ import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 // Fonts & Colors
 import {COLORS, FONTS, FONT_SIZE, NUMBERS, BUTTON_HEIGHT} from 'res/constants';
-import {verticalScale, getStatusbarHeight} from 'toktokfood/helper/scale';
+import {verticalScale} from 'toktokfood/helper/scale';
 
 import Contacts from 'react-native-contacts';
 import _ from 'lodash';
@@ -170,7 +170,7 @@ const AddressBookModal = props => {
     }
 
     onSelected({
-      name: name.replace(/[^a-z0-9_ ]/gi, ''),
+      name: name.replace(/[^a-z0-9 ]/gi, ''),
       number: mobileNumber,
     });
     onClose();

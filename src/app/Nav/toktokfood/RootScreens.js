@@ -13,17 +13,20 @@ import {
   ToktokFoodOrderDetails,
   ToktokFoodAddressDetails,
   ToktokFoodRestaurantOverview,
+  ToktokFoodShopOverview,
   ToktokRiderRating,
   ToktokFoodTermsAndConditions,
   ToktokFoodPrivacyPolicy,
   ToktokFoodContactUs,
   ToktokFoodEmptyCart,
+  ToktokFoodOrder,
 } from 'toktokfood/screens';
 
 export default ({Navigator}) => (
   <>
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodCart" component={ToktokFoodCart} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodDriver" component={ToktokFoodDriver} />
+    <Navigator.Screen options={{headerShown: false}} name="ToktokFoodOrder" component={ToktokFoodOrder} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodSearch" component={ToktokFoodSearch} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokRiderRating" component={ToktokRiderRating} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodMapSearch" component={ToktokFoodMapSearch} />
@@ -46,6 +49,8 @@ export default ({Navigator}) => (
       name="ToktokFoodRestaurantOverview"
       component={ToktokFoodRestaurantOverview}
     />
+    <Navigator.Screen options={{headerShown: false}} name="ToktokFoodShopOverview" component={ToktokFoodShopOverview} />
+
     <Navigator.Screen
       options={{headerShown: false}}
       name="ToktokFoodAddressDetails"

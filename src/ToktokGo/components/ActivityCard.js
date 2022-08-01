@@ -24,13 +24,12 @@ import Constants from '../../store/redux/reducers/Constants';
 import {numberFormat} from '../../helper';
 
 const getDisplayAddress = ({stop}) => {
-  console.log(stop);
   if (stop?.addressBreakdown) {
     const {city, province} = stop.addressBreakdown;
     const {formattedAddress} = stop;
     if (province) {
       return (
-        <View style={{width: 320}}>
+        <View style={{marginRight: 20}}>
           <Text>
             {city}, {province}
           </Text>
@@ -39,7 +38,7 @@ const getDisplayAddress = ({stop}) => {
       );
     } else {
       return (
-        <View style={{width: 320}}>
+        <View style={{marginRight: 20}}>
           <Text>{city}</Text>
           <Text style={{fontSize: 11, color: '#525252'}}>{formattedAddress}</Text>
         </View>
@@ -73,7 +72,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
         case 'ACCEPTED':
           return 'Driver accepted';
         case 'ARRIVED':
-          return 'Driver arrived at Pick-up location';
+          return 'Driver arrived at pick-up location';
         case 'PICKED_UP':
           return 'Passenger picked up';
         default:
@@ -137,7 +136,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                       fontFamily: constants.FONT_FAMILY.REGULAR,
                       fontSize: constants.FONT_SIZE.M,
                       color: constants.COLOR.BLACK,
-                      paddingLeft: 10,
+                      paddingLeft: 15,
                       fontWeight: '400',
                     }}>
                     {getTextStatus()}
@@ -194,28 +193,28 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                         flex: 1,
                         marginBottom: 5,
                       }}>
-                      <Text
-                        style={{
-                          fontFamily: conditionalFontFamily,
-                          fontSize: constants.FONT_SIZE.S,
-                          color: blackFont,
-                          marginTop: 2,
-                        }}>
-                        {getDisplayAddress({stop: booking?.route?.origin})}
-                      </Text>
+                      {/* <Text
+                         style={{
+                           fontFamily: conditionalFontFamily,
+                           fontSize: constants.FONT_SIZE.S,
+                           color: blackFont,
+                           marginTop: 2,
+                         }}> */}
+                      {getDisplayAddress({stop: booking?.route?.origin})}
+                      {/* </Text> */}
                     </View>
 
                     {/*-------------------- RECIPIENT DETAILS --------------------*/}
                     <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 3}}>
-                      <Text
-                        style={{
-                          fontFamily: conditionalFontFamily,
-                          fontSize: constants.FONT_SIZE.S,
-                          color: blackFont,
-                          marginTop: 2,
-                        }}>
-                        {getDisplayAddress({stop: booking?.route?.destinations[0]})}
-                      </Text>
+                      {/* <Text
+                         style={{
+                           fontFamily: conditionalFontFamily,
+                           fontSize: constants.FONT_SIZE.S,
+                           color: blackFont,
+                           marginTop: 2,
+                         }}> */}
+                      {getDisplayAddress({stop: booking?.route?.destinations[0]})}
+                      {/* </Text> */}
                     </View>
                   </View>
                 </View>

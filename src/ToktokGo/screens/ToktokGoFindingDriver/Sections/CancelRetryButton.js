@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: 'center',
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
   },
   retryContainer: {
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   cancelTextStyle: {
     textAlign: 'center',
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.WHITE,
   },
 });
