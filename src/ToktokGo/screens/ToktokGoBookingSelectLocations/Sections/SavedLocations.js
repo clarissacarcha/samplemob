@@ -7,7 +7,7 @@ import Home from '../../../../assets/icons/home-address-icon.png';
 import Office from '../../../../assets/icons/office-address-icon.png';
 import {LocationCard} from '../../../components';
 
-export const SavedLocations = ({recentDestinationList, popTo, navigation}) => {
+export const SavedLocations = ({recentDestinationList, popTo, navigation, onPressRecentDestination}) => {
   const onPressLocation = () => {
     navigation.push('ToktokGoBookingConfirmPickup', {
       popTo: popTo + 1,
@@ -52,7 +52,7 @@ export const SavedLocations = ({recentDestinationList, popTo, navigation}) => {
         showsVerticalScrollIndicator={false}
         data={recentDestinationList}
         // keyExtractor={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressLocation} />}
+        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressRecentDestination} />}
       />
     </>
   );
