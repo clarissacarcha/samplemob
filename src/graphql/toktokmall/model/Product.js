@@ -295,6 +295,9 @@ export const CHECK_ITEM_FROM_CHECKOUT = gql`
 			status
 			noOfStocks
 			contSellingIsset
+			validItems
+			invalidItems
+			payload
 		}
 	}
 `
