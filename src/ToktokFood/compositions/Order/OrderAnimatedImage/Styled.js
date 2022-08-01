@@ -12,8 +12,8 @@ export const LoaderContainer: ComponentType<any> = styled.View`
 
 export const AnimatedImage: ComponentType<any> = styled.Image`
   resize-mode: contain;
-  width: ${props => (props.animationContainerHeight && props.animationContainerHeight < 200 ? 90 : 150)}px;
-  height: ${props => (props.animationContainerHeight && props.animationContainerHeight < 200 ? 90 : 150)}px;
-  margin-top: ${props => (props.animationContainerHeight && props.animationContainerHeight < 200 ? -30 : 0)}px;
+  width: ${props => (props.animationContainerHeight && props.animationContainerHeight < 210 ? 90 : 150)}px;
+  height: ${props => (props.animationContainerHeight && props.animationContainerHeight < 210 ? 90 : 150)}px;
+  margin-top: ${props => (props.animationContainerHeight && props.animationContainerHeight < 210 ? -30 : 0)}px;
   margin-bottom: 20px;
 `;
