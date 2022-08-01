@@ -22,6 +22,17 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const [mapRegion, setMapRegion] = useState({...origin.place.location, ...MAP_DELTA_LOW});
   const [initialRegionChange, setInitialRegionChange] = useState(true);
   const [note, setNote] = useState('');
+  const [notes, setNotes] = useState({
+    text: '',
+    textLength: 0,
+  });
+  const notesToDriver = text => {
+    if (text.length <= 320)
+      setNotes({
+        textLength: text.length,
+        text: text,
+      });
+  };
   const [getQuotation] = useLazyQuery(GET_QUOTATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -43,7 +54,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
 
   const onConfirm = throttle(
     () => {
-      if (source == 'searchLocation') {
+      if (!destination?.place?.formattedAddress) {
         navigation.pop();
         navigation.push('ToktokGoBookingSelectLocations', {
           popTo: 1,
@@ -105,7 +116,15 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       </ThrottledOpacity>
       {origin?.place?.location?.latitude && <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
       <View style={styles.card}>
-        <NotesToDriver dropDownRef={dropDownRef} navigation={navigation} popTo={popTo} note={note} setNote={setNote} />
+        <NotesToDriver
+          dropDownRef={dropDownRef}
+          navigation={navigation}
+          popTo={popTo}
+          note={note}
+          setNote={setNote}
+          notesToDriver={notesToDriver}
+          notes={notes}
+        />
         <ConfirmPickupButton onConfirm={onConfirm} />
       </View>
     </View>

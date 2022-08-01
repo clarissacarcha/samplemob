@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useContext, useCallback} from 'react';
 import _ from 'lodash';
@@ -405,9 +406,10 @@ const MainComponent = () => {
   }, [paymentMethod]);
 
   const fixOrderLogs = async () => {
-    const VOUCHER_FlAG =
-      shippingVoucher.length > 0 ? shippingVoucher[0]?.voucher?.handle_shipping_promo : autoShipping?.success ? 1 : 0;
-
+    const autoApply = promotionVoucher.filter(promo => promo.type === 'auto');
+    const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
+    const VOUCHER_FlAG = shipping.length > 0 ? shipping[0]?.handle_shipping_promo : autoApply[0]?.handle_shipping_promo ? 1 : 0;
+    // console.log(VOUCHER_FlAG, shippingVoucher, promotionVoucher);
     let orderLogs = {
       sys_shop: temporaryCart.items[0]?.shopid,
       branchid: temporaryCart.items[0]?.branchid,
@@ -622,7 +624,9 @@ const MainComponent = () => {
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
     const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
     const deals = promotionVoucher.filter(promo => promo.type === 'deal');
-    const promoDeals = _.unionBy(promotions, deals, 'id');
+    // const promoDeals = _.unionBy(promotions, deals, 'id');
+    const {items} = temporaryCart;
+
     // const autoApply = promotionVoucher.filter(promo => promo.type === 'auto');
     // const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
     // const mergeShipping = _.merge(autoApply, shipping);
@@ -674,7 +678,7 @@ const MainComponent = () => {
       user_id: Number(customerInfo.userId),
       latitude: location.latitude,
       longitude: location.longitude,
-      regCode: '0',
+      regCode: items[0]?.shopRegion,
       provCode: '0',
       citymunCode: '0',
       shippingvouchers: await getShippingVoucher(promotionVoucher),
@@ -685,7 +689,7 @@ const MainComponent = () => {
       discounted_totalamount: parsedAmount,
     };
     const data = processData(WALLET, CUSTOMER, ORDER, []);
-    console.log('DATA', JSON.stringify(data));
+    console.log('DATA', data);
     postCustomerOrder({
       variables: {
         input: data,

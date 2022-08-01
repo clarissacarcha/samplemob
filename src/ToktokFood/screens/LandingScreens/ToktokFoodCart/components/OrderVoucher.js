@@ -26,7 +26,7 @@ import {GET_PAYMENT_METHOD_VALIDATION, GET_VOUCHER_CODE} from 'toktokfood/graphq
 
 const OrderVoucher = ({autoShipping, deliveryFee, orderType}) => {
   const dispatch = useDispatch();
-  const {paymentMethod, shippingVoucher, setShippingVoucher, temporaryCart} = useContext(VerifyContext);
+  const {paymentMethod, shippingVoucher, temporaryCart} = useContext(VerifyContext);
   const {customerInfo, promotionVoucher} = useSelector(state => state.toktokFood);
 
   // State
@@ -90,7 +90,7 @@ const OrderVoucher = ({autoShipping, deliveryFee, orderType}) => {
         } else {
           setShowError(true);
           setVoucherError(
-            '* Oops! Voucher not applied for this order. Please review details of voucher and try again.',
+            '* Oops! Voucher was not applied for this order. Please review details of voucher and try again.',
           );
           setShowInlineError(true);
         }
@@ -111,7 +111,7 @@ const OrderVoucher = ({autoShipping, deliveryFee, orderType}) => {
     },
   });
 
-  const [getVoucherPaymentMethod, {loading: loadingVoucher}] = useLazyQuery(GET_PAYMENT_METHOD_VALIDATION, {
+  const [getVoucherPaymentMethod] = useLazyQuery(GET_PAYMENT_METHOD_VALIDATION, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: error => console.log('getAutoShipping', error.response),
@@ -140,7 +140,7 @@ const OrderVoucher = ({autoShipping, deliveryFee, orderType}) => {
       //     shopid: items[0]?.shopid,
       //     code: voucher,
       //     region: items[0]?.shopRegion,
-      //     subtotal: temporaryCart.totalAmount,
+      //     subtotal: temporaryCart.totalAmount + temporaryCart.addonsTotalAmount,
       //     paymentMethod: paymentMethod,
       //     promoCount,
       //     orders,
@@ -154,7 +154,7 @@ const OrderVoucher = ({autoShipping, deliveryFee, orderType}) => {
             shopid: items[0]?.shopid,
             code: voucher,
             region: items[0]?.shopRegion,
-            subtotal: temporaryCart.totalAmount,
+            subtotal: temporaryCart.totalAmount + temporaryCart.addonsTotalAmount,
             paymentMethod: paymentMethod,
             promoCount,
             orders,

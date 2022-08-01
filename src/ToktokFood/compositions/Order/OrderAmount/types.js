@@ -9,3 +9,10 @@ export type PropsType = {
   state: Object,
   placement?: 'StatusScreen' | 'OrderDetailsScreen',
 };
+
+export type StateTypes = {
+  originalShippingFee: number,
+  promoDiscounts: number,
+  resellerDiscountTotal: number,
+  voucherDiscounts: Array<any>,
+};

@@ -13,13 +13,13 @@ export const BookingDistanceTime = ({booking}) => {
   return (
     <>
       <View style={styles.container}>
-        <View>
+        {/* <View>
           <View style={styles.elementWrapper}>
             <FIcon name={'map'} size={CONSTANTS.FONT_SIZE.M} style={{color: CONSTANTS.COLOR.YELLOW}} />
             <Text style={styles.textStyle}>{booking.route.distance.kilometer} km</Text>
           </View>
           <Text style={styles.bottomTextStyle}>Distance</Text>
-        </View>
+        </View> */}
 
         <View>
           <View style={styles.elementWrapper}>

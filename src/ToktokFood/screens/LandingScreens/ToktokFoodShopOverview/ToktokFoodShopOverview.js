@@ -106,6 +106,8 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
     );
   });
 
+  // const onPress = (params: ParamTypes) => {};
+
   return (
     <Container>
       <Pager ref={pagerViewRef}>

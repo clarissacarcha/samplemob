@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-nested-ternary */
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -85,7 +87,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     //   setTotalDeal(0);
     // }
     if (shipping.length > 0) {
-      setTotalDelivery(shipping[0].amount);
+      setTotalDelivery(shipping[0].amount > 0 ? shipping[0].amount : deliveryFee);
     } else {
       setTotalDelivery(0);
     }
@@ -146,6 +148,11 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     setTotalBasket(temporaryCart.totalAmountWithAddons + totalReseller);
   }, [temporaryCart]);
 
+  const totalAmount = (totalBasket + deliveryFee - totalSumSF - totalReseller - (totalPromotions + totalDeal)).toFixed(
+    2,
+  );
+  const deliveryAmount = forDelivery && totalAmount > 0 ? totalAmount : deliveryFee;
+
   return (
     <View style={[styles.sectionContainer, styles.totalContainer]}>
       {/* {forDelivery && ( */}
@@ -193,13 +200,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${(
-            totalBasket +
-            deliveryFee -
-            totalSumSF -
-            totalReseller -
-            (totalPromotions + totalDeal)
-          ).toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${deliveryAmount}`}</Text>
         ) : (
           <Text style={styles.totalPrice}>{`PHP ${(
             totalBasket -
