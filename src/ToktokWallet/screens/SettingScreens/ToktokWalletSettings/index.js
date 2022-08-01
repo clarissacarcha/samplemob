@@ -41,14 +41,7 @@ export const ToktokWalletSettings = ({navigation, route}) => {
 
   return (
     <CheckIdleState>
-      <Separator />
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-        <SettingHeaderTitle title="Security" />
-        <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? 'Change' : 'Setup'} TPIN`} />
-        <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN" />
-        {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
-        {/* <Biometrics/> */}
-        <Separator />
+      <Separator />      
         <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
             <SettingHeaderTitle title="Security"/>
             <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? "Change" : "Setup"} TPIN`}/>
