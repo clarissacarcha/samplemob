@@ -48,7 +48,7 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
     },
     onCompleted: async ({getUserSession}) => {
       try {
-        const {user, accessToken} = getUserSession;
+        const {user, accessToken, serviceAccess} = getUserSession;
         AsyncStorage.setItem('accessToken', accessToken);
 
         if (user.status == 3) {
@@ -61,6 +61,7 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
         getUserSession.dummyStatus = 1;
 
         createSession(getUserSession);
+        setAppServices(serviceAccess);
 
         OneSignal.sendTags({
           userId: user.id,
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: imageWidth - 70, 
-    width: imageWidth - 150 
+    height: imageWidth - 70,
+    width: imageWidth - 150,
   },
 });

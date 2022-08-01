@@ -36,8 +36,8 @@ const Activities = () => {
           },
           shadowOpacity: 0.2,
           shadowRadius: 1.41,
-
           elevation: 2,
+          marginBottom: 3,
         }}>
         <Text style={{paddingVertical: 14, fontSize: FONT_SIZE.XL + 3}}>Activities</Text>
       </View>
@@ -72,7 +72,7 @@ const Activities = () => {
           options={() => ({
             tabBarLabel: ({focused}) => {
               return (
-                <View style={{width: 90}}>
+                <View style={{width: 100}}>
                   <Text
                     style={{
                       fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,

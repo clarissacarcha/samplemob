@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.github.reactnativecommunity.location.RNLocationPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
 import com.gantix.JailMonkey.JailMonkeyPackage;

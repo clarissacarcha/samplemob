@@ -8,7 +8,13 @@ import TokGoIMG from '../../../assets/images/tokGo.png';
 import {numberFormat} from '../../../helper';
 import {ThrottledOpacity} from '../../../components_section';
 
-export const DriverCancelledModal = ({cancellationFee, cancellationState, noShowFeeSubmit}) => {
+export const DriverCancelledModal = ({
+  payFeeViaTokwa,
+  hastokwa,
+  cancellationFee,
+  cancellationState,
+  noShowFeeSubmit,
+}) => {
   return (
     <Modal animationType="fade" transparent={true} visible={cancellationFee} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
@@ -26,23 +32,24 @@ export const DriverCancelledModal = ({cancellationFee, cancellationState, noShow
               </Text>{' '}
               to compensate the driver. Would you like to pay now?
             </Text>
-            {true && (
-              <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={noShowFeeSubmit}>
-                <Image source={TokGoWhiteIMG} style={styles.buttonImg} resizeMode={'contain'} />
-                <Text style={styles.buttonText}>Pay in Next Booking</Text>
-              </ThrottledOpacity>
-            )}
-            {false && (
+
+            {hastokwa ? (
               <>
-                <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={() => {}}>
+                <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={payFeeViaTokwa}>
                   <Image source={TokWaIMG} style={styles.buttonImg} resizeMode={'contain'} />
                   <Text style={styles.buttonText}>Pay via toktokwallet</Text>
                 </ThrottledOpacity>
-                <ThrottledOpacity delay={500} style={styles.whiteButtonContainer} onPress={() => {}}>
+
+                <ThrottledOpacity delay={500} style={styles.whiteButtonContainer} onPress={noShowFeeSubmit}>
                   <Image source={TokGoIMG} style={styles.buttonImg} resizeMode={'contain'} />
                   <Text style={styles.whiteButtonText}>Pay in Next Booking</Text>
                 </ThrottledOpacity>
               </>
+            ) : (
+              <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={noShowFeeSubmit}>
+                <Image source={TokGoWhiteIMG} style={styles.buttonImg} resizeMode={'contain'} />
+                <Text style={styles.buttonText}>Pay in Next Booking</Text>
+              </ThrottledOpacity>
             )}
           </View>
         </View>

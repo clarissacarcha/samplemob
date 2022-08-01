@@ -22,11 +22,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 12,
     alignItems: 'center',
-    marginVertical: 20,
+    marginBottom: 20,
   },
   confirmText: {
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.WHITE,
   },
 });
