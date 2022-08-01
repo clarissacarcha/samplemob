@@ -13,10 +13,10 @@ import ToktokGoBookingConfirmPickup from '../../../ToktokGo/screens/ToktokGoBook
 import ToktokGoBookingConfirmDestination from '../../../ToktokGo/screens/ToktokGoBookingConfirmDestination';
 import ToktokGoFindingDriver from '../../../ToktokGo/screens/ToktokGoFindingDriver';
 import ToktokGoOnTheWayRoute from '../../../ToktokGo/screens/ToktokGoOnTheWayRoute';
-import ToktokGoRateDriver from '../../../ToktokGo/screens/ToktokGoRateDriver';
+// import ToktokGoRateDriver from '../../../ToktokGo/screens/ToktokGoRateDriver';
 import ToktokGoBookingVouchers from '../../../ToktokGo/screens/ToktokGoBookingVouchers';
-import ToktokGoOnBoardingBeta from '../../../ToktokGo/screens/ToktokGoOnBoardingBeta';
-import ToktokGoMaintance from '../../../ToktokGo/screens/ToktokGoMaintance';
+// import ToktokGoOnBoardingBeta from '../../../ToktokGo/screens/ToktokGoOnBoardingBeta';
+// import ToktokGoMaintance from '../../../ToktokGo/screens/ToktokGoMaintance';
 import ToktokGoPaymentDetails from '../../../ToktokGo/screens/ToktokGoPaymentDetails';
 import ToktokGoCreateTokwa from '../../../ToktokGo/screens/ToktokGoCreateTokwa';
 
@@ -84,14 +84,14 @@ export default ({Navigator}) => (
     />
     <Navigator.Screen name="ToktokGoFindingDriver" component={ToktokGoFindingDriver} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokGoOnTheWayRoute" component={ToktokGoOnTheWayRoute} options={{headerShown: false}} />
-    <Navigator.Screen name="ToktokGoRateDriver" component={ToktokGoRateDriver} options={{headerShown: false}} />
+    {/* <Navigator.Screen name="ToktokGoRateDriver" component={ToktokGoRateDriver} options={{headerShown: false}} /> */}
     <Navigator.Screen
       name="ToktokGoBookingVouchers"
       component={ToktokGoBookingVouchers}
       options={{headerShown: false}}
     />
-    <Navigator.Screen name="ToktokGoOnBoardingBeta" component={ToktokGoOnBoardingBeta} options={{headerShown: false}} />
-    <Navigator.Screen name="ToktokGoMaintance" component={ToktokGoMaintance} options={{headerShown: false}} />
+    {/* <Navigator.Screen name="ToktokGoOnBoardingBeta" component={ToktokGoOnBoardingBeta} options={{headerShown: false}} /> */}
+    {/* <Navigator.Screen name="ToktokGoMaintance" component={ToktokGoMaintance} options={{headerShown: false}} /> */}
     <Navigator.Screen
       name="ToktokGoPaymentDetails"
       component={ToktokGoPaymentDetails}

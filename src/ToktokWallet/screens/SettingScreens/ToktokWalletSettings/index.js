@@ -74,7 +74,7 @@ export const ToktokWalletSettings = ({navigation , route })=> {
             {/* <SettingOption route="ToktokWalletBillsLogs" title="Bills"/> */}
             <SettingOption route="ToktokWalletPabiliDeliveryLogs" title="Delivery"/>
             <SettingOption route="ToktokWalletFoodLogs" title="Food"/>
-            {/* <SettingOption route="ToktokWalletLoadLogs" title="Load"/> */}
+            <SettingOption route="ToktokWalletLoadLogs" title="Load"/>
             {/* <SettingOption route="ToktokWalletMartLogs" title="Mart"/>
             <SettingOption route="ToktokWalletMallLogs" title="Mall"/> */}
             <SettingOption route="ToktokWalletMerchantPaymentLogs" title="QR Payment"/>

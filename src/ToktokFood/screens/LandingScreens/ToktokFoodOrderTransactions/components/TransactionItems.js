@@ -45,11 +45,12 @@ export const TransactionItems = props => {
   }
 
   const onTransactionsNavigate = referenceNum => {
-    if (orderStatus == 's' || orderStatus == 'c') {
-      navigation.navigate('ToktokFoodOrderDetails', {referenceNum, orderStatus});
-    } else {
-      navigation.navigate('ToktokFoodDriver', {referenceNum});
-    }
+    // if (orderStatus == 's' || orderStatus == 'c') {
+    //   navigation.navigate('ToktokFoodOrderDetails', {referenceNum, orderStatus});
+    // } else {
+    //   navigation.navigate('ToktokFoodDriver', {referenceNum});
+    // }
+    navigation.navigate('ToktokFoodOrder', {referenceNum, orderStatus});
   };
 
   return (

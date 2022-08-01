@@ -44,7 +44,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const {details, routeDetails, origin, destination, paymentMethod, tempVehicleArr} = useSelector(
     state => state.toktokGo,
   );
-  const {tokwaAccount, getMyAccount, getMyAccountLoading, getMyAccountError} = useAccount();
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
@@ -272,9 +271,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
   useEffect(() => {
     setLoading(true);
-    if (selectedVehicle) {
-      dispatchRequest();
-    }
+    dispatchRequest();
   }, [selectedVehicle, selectedVouchers]);
 
   const tripBooking = ({pinCode, data}) => {

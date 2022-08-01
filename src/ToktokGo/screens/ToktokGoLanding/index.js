@@ -71,7 +71,7 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
         navigation.replace('ToktokGoCreateTokwa');
       }
     } else {
-      navigation.replace('ToktokGoOnBoardingBeta');
+      navigation.replace('ToktokGoHealthCare');
     }
   };
 

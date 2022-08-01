@@ -3,58 +3,60 @@ import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatLi
 import { COLOR, FONT } from '../../../res/variables';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomIcon from '../Icons';
+import {testData2Suggestions} from './datas'
+import Spinner from 'react-native-spinkit';
 
-const testdata = [{
-  image: require("../../../assets/toktokmall-assets/images/Cloth-Face-Mask.png"),
+let testdata = [{
+  image: require("../../assets/images/Cloth-Face-Mask.png"),
   rating: 4,
   price: 190,
   stock: 35,
   sold: 187,
   label: "Cloth Face Mask"
 }, {
-  image: require("../../../assets/toktokmall-assets/images/Medical-Face-Mask.png"),
+  image: require("../../assets/images/Medical-Face-Mask.png"),
   rating: 3,
   price: 80,
   stock: 201,
   sold: 407,
   label: "Medical Face Mask"
 }, {
-  image: require("../../../assets/toktokmall-assets/images/Cloth-Face-Mask.png"),
+  image: require("../../assets/images/Cloth-Face-Mask.png"),
   rating: 5,
   price: 190,
   stock: 35,
   sold: 187,
   label: "Cloth Face Mask"
 }, {
-  image: require("../../../assets/toktokmall-assets/images/Medical-Face-Mask.png"),
+  image: require("../../assets/images/Medical-Face-Mask.png"),
   rating: 2,
   price: 190,
   stock: 35,
   sold: 187,
   label: "Medical Face Mask"
 }, {
-    image: require("../../../assets/toktokmall-assets/images/Cloth-Face-Mask.png"),
+    image: require("../../assets/images/Cloth-Face-Mask.png"),
     rating: 4,
     price: 190,
     stock: 35,
     sold: 187,
     label: "Cloth Face Mask"
   }, {
-    image: require("../../../assets/toktokmall-assets/images/Medical-Face-Mask.png"),
+    image: require("../../assets/images/Medical-Face-Mask.png"),
     rating: 3,
     price: 80,
     stock: 201,
     sold: 407,
     label: "Medical Face Mask"
   }, {
-    image: require("../../../assets/toktokmall-assets/images/Cloth-Face-Mask.png"),
+    image: require("../../assets/images/Cloth-Face-Mask.png"),
     rating: 5,
     price: 190,
     stock: 35,
     sold: 187,
     label: "Cloth Face Mask"
   }, {
-    image: require("../../../assets/toktokmall-assets/images/Medical-Face-Mask.png"),
+    image: require("../../assets/images/Medical-Face-Mask.png"),
     rating: 2,
     price: 190,
     stock: 35,
@@ -105,18 +107,40 @@ const RenderItem = ({item}) => {
   )
 }
 
+const pullData = (items) => {
+  if(items.length < 30){
+    for (let x = 0; testData2Suggestions.length > x; x++){
+      items.push(testData2Suggestions[x])
+    }
+  }
+}
+
 export const Product = ({data}) => {
+  const [items, setItems] = useState(testdata)
+  const [isLoading, setIsLoading] = useState(false)
+
     return (
       <>
         <View style={styles.container}>
             
             <FlatList
-              data={testdata}
+              data={items}
               numColumns={2}
               style={{paddingHorizontal: 5}}
               renderItem={RenderItem}
+              keyExtractor={(item, index) => item + index}
+              showsVerticalScrollIndicator={false}
+              onEndReachedThreshold = {.001}
+              onEndReached = {() => {pullData(items)}}
             />
-            
+            {/* <Spinner 
+            isVisible = {true}
+              type = 'Circle'
+              style = {{position: 'absolute', alignSelf: 'center', justifyContent: 'center'}}
+              color = {COLOR.ORANGE}
+              size = {50}
+            /> */}
+             {/* <View style={{marginTop: 50}}></View> */}
           </View>
           <View style={{height: 15}}></View>
           <View style={styles.separator} />
@@ -125,11 +149,11 @@ export const Product = ({data}) => {
   }
 
 const styles = StyleSheet.create({
-  container: {flex: 0, paddingVertical: 10},
+  // container: {flex: 0, paddingVertical: 10},
   heading: {paddingHorizontal: 15, paddingVertical: 20, flexDirection: 'row'},
   h1: {fontSize: 14, fontFamily: FONT.BOLD},
   link: {fontSize: 12, color: "#F6841F"},
   image: {width: 50, height: 50, resizeMode: 'cover', alignSelf: 'center', borderRadius: 8},
   label: {fontSize: 11, alignSelf: 'center'},
-  separator: {flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}
+  separator: {flex:3, height: 8, backgroundColor: '#F7F7FA'}
 })

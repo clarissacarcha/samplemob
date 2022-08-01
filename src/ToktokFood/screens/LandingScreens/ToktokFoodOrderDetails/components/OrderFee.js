@@ -22,7 +22,7 @@ const getShippingDiscount = (promoDetails, deliveryFee) => {
   }
 };
 
-const OrderFee = ({data, forDelivery}) => {
+const OrderFee = ({data, forDelivery, showRefund, forWallet}) => {
   let {
     originalShippingFee,
     // actualTotalamount,
@@ -33,6 +33,8 @@ const OrderFee = ({data, forDelivery}) => {
     srpTotalamount,
     srpTotal,
     totalAmount,
+    totalAmountWithAddons,
+    refundTotal,
   } = data;
   let deliveryFee = deliveryAmount ? deliveryAmount : 0;
   const promotionDiscount = promoDiscounts || 0;
@@ -79,11 +81,22 @@ const OrderFee = ({data, forDelivery}) => {
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${(deliveryFee + totalAmount).toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(
+            deliveryFee + (resellerDiscountTotal > 0 ? srpTotal - resellerDiscountTotal : srpTotal)
+          ).toFixed(2)}`}</Text>
         ) : (
-          <Text style={styles.totalPrice}>{`PHP ${totalAmount.toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${(resellerDiscountTotal > 0
+            ? srpTotal - resellerDiscountTotal
+            : srpTotal
+          ).toFixed(2)}`}</Text>
         )}
       </View>
+      {forWallet && showRefund && (
+        <View style={styles.header}>
+          <Text style={styles.total}>Total Refund Amount</Text>
+          <Text style={styles.totalPrice}>{`PHP ${refundTotal.toFixed(2)}`}</Text>
+        </View>
+      )}
     </View>
   );
 };
