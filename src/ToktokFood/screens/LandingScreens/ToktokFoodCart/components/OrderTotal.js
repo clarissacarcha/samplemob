@@ -11,15 +11,18 @@ import {getCartTotalAmountOrder, getResellerDiscount, getTotalResellerDiscount} 
 
 import styles from '../styles';
 
-import {info_ic} from 'toktokfood/assets/images';
+import {info_ic, toktokwallet_ic} from 'toktokfood/assets/images';
 
 const OrderTotal = ({
   autoShipping,
   subtotal = 0,
   deliveryFee = 0,
   forDelivery = true,
-  oneCartTotal,
+  onCartTotal,
+  onServiceFeeTotal,
   pabiliShopDetails,
+  onServiceFeeIconPress,
+  navigation,
 }) => {
   // deliveryFee = deliveryFee ? deliveryFee : 0;
   // subtotal = subtotal ? subtotal : 0;
@@ -30,6 +33,7 @@ const OrderTotal = ({
   const [totalDelivery, setTotalDelivery] = useState(0);
   const [totalReseller, setTotalReseller] = useState(temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount);
   const [totalDeal, setTotalDeal] = useState(0);
+  const [pabiliServiceFee, setPabiliServiceFee] = useState(0.0);
 
   const {promotionVoucher} = useSelector(state => state.toktokFood);
 
@@ -43,17 +47,47 @@ const OrderTotal = ({
 
   const isPabiliMerchant = pabiliShopDetails?.isPabiliMerchant === 1;
 
-  useEffect(() => {
-    oneCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
-    console.log(JSON.stringify(temporaryCart.items));
-  }, [shippingVoucher, totalBasket, totalShipping]);
-
-  const getPabiliServiceFee = () => {
-    const cartItems = temporaryCart.items;
-    _.map(cartItems, (item, index) => {});
-
-    return {ser};
+  const getServiceFeeInPercentage = (srp_amount, sf_value, quantity) => {
+    const val = srp_amount * sf_value;
+    return val * quantity;
   };
+
+  const getServiceFeeInFixed = (sf_value, quantity) => {
+    return sf_value * quantity;
+  };
+
+  const initPabiliServiceFee = () => {
+    const cartItems = temporaryCart.items;
+    const mappedItems = _.mapValues(cartItems, item => {
+      const {basePrice, itemServiceFeeType, itemServiceFeeValue, quantity} = item;
+      if (itemServiceFeeType !== 0) {
+        if (itemServiceFeeType === 1) {
+          return getServiceFeeInPercentage(basePrice, itemServiceFeeValue, quantity);
+        } else if (itemServiceFeeType === 2) {
+          return getServiceFeeInFixed(itemServiceFeeValue, quantity);
+        }
+      } else {
+        const {shopServiceFeeType, shopServiceFeeValue} = pabiliShopDetails;
+        if (shopServiceFeeType === 1) {
+          return getServiceFeeInPercentage(basePrice, shopServiceFeeValue, quantity);
+        } else if (shopServiceFeeType === 2) {
+          return getServiceFeeInFixed(itemServiceFeeValue, quantity);
+        }
+      }
+    });
+    setPabiliServiceFee(parseFloat(_.sum(Object.values(mappedItems))));
+  };
+
+  useEffect(() => {
+    onCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
+    if (isPabiliMerchant) {
+      initPabiliServiceFee();
+    }
+  }, [shippingVoucher, totalBasket, totalShipping, pabiliShopDetails]);
+
+  useEffect(() => {
+    onServiceFeeTotal(pabiliServiceFee);
+  }, [pabiliServiceFee]);
 
   const getVoucherFee = async () => {
     const groupPromo = _(promotionVoucher)
@@ -159,6 +193,26 @@ const OrderTotal = ({
     // }
   };
 
+  const onTermsAndConditionsPress = () => {
+    navigation.navigate('ToktokFoodTermsAndConditions');
+  };
+
+  const ModifiedAlert = (
+    <View style={styles.pabiliSubInfoWrapper}>
+      <Image resizeMode="contain" source={toktokwallet_ic} style={styles.pabiliSubInfoWalletIcon} />
+      <View style={{display: 'flex', flexDirection: 'row', maxWidth: '90%'}}>
+        <Text style={styles.pabiliSubInfoText} numberOfLines={2}>
+          Items prices and availability are subject to change without prior notice. Learn more about our{' '}
+          <Text
+            onPress={() => onTermsAndConditionsPress()}
+            style={[styles.pabiliSubInfoText, {textDecorationLine: 'underline'}]}>
+            Terms and Conditions.
+          </Text>
+        </Text>
+      </View>
+    </View>
+  );
+
   useEffect(() => {
     getVoucherFee();
   }, [promotionVoucher, deliveryFee]);
@@ -173,75 +227,80 @@ const OrderTotal = ({
   const deliveryAmount = forDelivery && totalAmount > 0 ? totalAmount : deliveryFee;
 
   return (
-    <View style={[styles.sectionContainer, styles.totalContainer]}>
-      {/* {forDelivery && ( */}
-      {/* <> */}
-      <View style={styles.header}>
-        <Text>Subtotal</Text>
-        <Text style={styles.subtotal}>{`PHP ${totalBasket?.toFixed(2)}`}</Text>
-      </View>
-      {(totalPromotions > 0 || totalDeal > 0) && (
+    <>
+      <View style={[styles.sectionContainer, styles.totalContainer]}>
+        {/* {forDelivery && ( */}
+        {/* <> */}
         <View style={styles.header}>
-          <Text>Item Discount</Text>
-          <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal + totalReseller).toFixed(2)}`}</Text>
+          <Text>Subtotal</Text>
+          <Text style={styles.subtotal}>{`PHP ${totalBasket?.toFixed(2)}`}</Text>
         </View>
-      )}
+        {(totalPromotions > 0 || totalDeal > 0) && (
+          <View style={styles.header}>
+            <Text>Item Discount</Text>
+            <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal + totalReseller).toFixed(2)}`}</Text>
+          </View>
+        )}
 
-      {totalPromotions === 0 && totalDeal === 0 && totalReseller > 0 && (
-        <View style={styles.header}>
-          <Text>Item Discount (Reseller)</Text>
-          <Text style={styles.subtotal}>{`-PHP ${totalReseller.toFixed(2)}`}</Text>
-        </View>
-      )}
+        {totalPromotions === 0 && totalDeal === 0 && totalReseller > 0 && (
+          <View style={styles.header}>
+            <Text>Item Discount (Reseller)</Text>
+            <Text style={styles.subtotal}>{`-PHP ${totalReseller.toFixed(2)}`}</Text>
+          </View>
+        )}
 
-      {forDelivery && (
-        <View style={styles.header}>
-          <Text>Delivery Fee</Text>
-          <View style={styles.deliveryFee}>
-            {/* {(autoShipping?.success || shippingVoucher.length > 0) && (
+        {forDelivery && (
+          <View style={styles.header}>
+            <Text>Delivery Fee</Text>
+            <View style={styles.deliveryFee}>
+              {/* {(autoShipping?.success || shippingVoucher.length > 0) && (
           <Text style={styles.deliveryFeeText}>{`\u20B1${deliveryFee.toFixed(2)}`}</Text>
         )} */}
-            <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
+              <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
+            </View>
           </View>
-        </View>
-      )}
-
-      {forDelivery && (totalDelivery > 0 || totalShipping > 0) && (
-        <View style={styles.header}>
-          <Text>Delivery Fee Discount</Text>
-          <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
-        </View>
-      )}
-
-      {isPabiliMerchant && (
-        <View style={styles.header}>
-          <View style={styles.serviceFeeLabelWrapper}>
-            <Text>Service Fee</Text>
-            <TouchableOpacity>
-              <Image resizeMode="center" source={info_ic} style={styles.modifiedIcon} />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
-        </View>
-      )}
-
-      <View style={styles.divider} />
-      {/* </> */}
-      {/* )} */}
-      <View style={styles.header}>
-        <Text style={styles.total}>Total</Text>
-        {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${deliveryAmount}`}</Text>
-        ) : (
-          <Text style={styles.totalPrice}>{`PHP ${(
-            totalBasket -
-            totalSumSF -
-            totalReseller -
-            (totalPromotions + totalDeal)
-          ).toFixed(2)}`}</Text>
         )}
+
+        {forDelivery && (totalDelivery > 0 || totalShipping > 0) && (
+          <View style={styles.header}>
+            <Text>Delivery Fee Discount</Text>
+            <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
+          </View>
+        )}
+
+        {isPabiliMerchant && (
+          <View style={styles.header}>
+            <View style={styles.serviceFeeLabelWrapper}>
+              <Text>Service Fee</Text>
+              <TouchableOpacity onPress={() => onServiceFeeIconPress()}>
+                <Image resizeMode="center" source={info_ic} style={styles.modifiedIcon} />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.subtotal}>
+              {pabiliServiceFee > 0 ? `PHP ${pabiliServiceFee.toFixed(2)}` : 'WAIVED'}
+            </Text>
+          </View>
+        )}
+
+        <View style={styles.divider} />
+        {/* </> */}
+        {/* )} */}
+        <View style={styles.header}>
+          <Text style={styles.total}>Total</Text>
+          {forDelivery ? (
+            <Text style={styles.totalPrice}>{`PHP ${deliveryAmount}`}</Text>
+          ) : (
+            <Text style={styles.totalPrice}>{`PHP ${(
+              totalBasket -
+              totalSumSF -
+              totalReseller -
+              (totalPromotions + totalDeal)
+            ).toFixed(2)}`}</Text>
+          )}
+        </View>
       </View>
-    </View>
+      {ModifiedAlert}
+    </>
   );
 };
 

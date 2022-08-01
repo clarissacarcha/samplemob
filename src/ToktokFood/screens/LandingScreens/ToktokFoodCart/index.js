@@ -24,6 +24,11 @@ import OrderTypeSelection from 'toktokfood/components/OrderTypeSelection';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import Separator from 'toktokfood/components/Separator';
 import DialogMessage from 'toktokfood/components/DialogMessage';
+
+import {Modal} from 'toktokfood/components/Modal';
+import StyledButton from 'toktokfood/components/StyledButton';
+import StyledText from 'toktokfood/components/StyledText/StyledText';
+
 // import AlertModal from 'toktokfood/components/AlertModal';
 
 import styles from './styles';
@@ -136,6 +141,9 @@ const MainComponent = () => {
   const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
   const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({error: {}, visible: false});
   const [pabiliShopDetails, setPabiliShopDetails] = useState(null);
+  const [pabiliServiceFee, setPabiliServiceFee] = useState(0);
+  const [showPabiliServiceFeeInfo, setShowPabiliServiceFeeInfo] = useState(false);
+
   const alert = useAlert();
   const isFocus = useIsFocused();
 
@@ -709,9 +717,13 @@ const MainComponent = () => {
       reseller_code: customerFranchisee?.franchiseeCode || '',
       referral_code: customerFranchisee?.franchiseeCode ? '' : customerFranchisee?.referralCode || '',
       discounted_totalamount: parsedAmount,
-      service_type: '',
-      service_fee: 0.0,
     };
+
+    if (pabiliShopDetails?.isPabiliMerchant === 1) {
+      CUSTOMER.service_type = 'pabili';
+      CUSTOMER.service_fee = pabiliServiceFee;
+    }
+
     const data = processData(WALLET, CUSTOMER, ORDER, []);
     console.log('DATA', data);
     postCustomerOrder({
@@ -761,6 +773,17 @@ const MainComponent = () => {
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle backOnly />
       </HeaderImageBackground>
+
+      {showPabiliServiceFeeInfo && (
+        <Modal isVisible={true} borderRadius={10} width={310} alignSelf="center">
+          <View style={styles.pabiliInfoWrapper}>
+            <StyledText mode="semibold" style={styles.pabiliInfoText}>
+              {`This fee is for us to continue providing\nexcellent delivery experience along with\nbetter promos and to expand our\n merchants selection.`}
+            </StyledText>
+            <StyledButton type="primary" onPress={() => setShowPabiliServiceFeeInfo(false)} buttonText="OK" />
+          </View>
+        </Modal>
+      )}
 
       <DialogMessage
         visibility={showConfirmation}
@@ -964,11 +987,7 @@ const MainComponent = () => {
         {orderType === 'Delivery' && <ReceiverLocation />}
         <Separator />
 
-        <MyOrderList
-          shopDetails={shopDetails}
-          hasUnavailableItem={showItemDisabled}
-          pabiliShopDetails={pabiliShopDetails}
-        />
+        <MyOrderList shopDetails={shopDetails} hasUnavailableItem={showItemDisabled} />
         <Separator />
 
         {/*  {orderType === 'Delivery' && (
@@ -991,8 +1010,13 @@ const MainComponent = () => {
             subtotal={totalAmount}
             deliveryFee={delivery.price}
             forDelivery={orderType === 'Delivery'}
-            oneCartTotal={v => customerWallet?.status === 2 && setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
+            onServiceFeeTotal={serviceFeeTotal => setPabiliServiceFee(serviceFeeTotal)}
+            onCartTotal={cartTotal =>
+              customerWallet?.status === 2 && setDisablePlaceOrder(cartTotal > MINIMUM_CHECKOUT)
+            }
             pabiliShopDetails={pabiliShopDetails}
+            onServiceFeeIconPress={() => setShowPabiliServiceFeeInfo(true)}
+            navigation={navigation}
           />
         )}
         <Separator />
