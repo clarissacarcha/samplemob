@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 const transaction = `
   id
@@ -46,7 +46,7 @@ const transaction = `
   providerComRate
   comType
   createdAt
-`
+`;
 
 export const GET_TRANSACTIONS_BY_STATUS = gql`
   query getTransactionsByStatus($input: GetTransactionsByStatusInput!) {
@@ -54,10 +54,34 @@ export const GET_TRANSACTIONS_BY_STATUS = gql`
       ${transaction}
     }
   }
-`
+`;
+export const GET_BILL_TRANSACTIONS = gql`
+  query getTransactions($input: GetTransactionsInput!) {
+    getTransactions(input: $input) {
+      ${transaction}
+    }
+  }
+`;
+export const GET_BILL_TRANSACTIONS_PAGINATE = gql`
+  query getTransactionsPaginate($input: GetTransactionsPaginateInput!) {
+    getTransactionsPaginate(input: $input) {
+      edges{
+        node {
+          ${transaction}
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        hasNextPage
+      }
+    }
+  }
+`;
 export const POST_TOKTOKWALLET_REQUEST_MONEY = gql`
   mutation postToktokWalletRequestMoney($input: PostToktokWalletRequestMoneyInput!) {
     postToktokWalletRequestMoney(input: $input) {
+      hash
       status
       data {
         message
@@ -67,7 +91,7 @@ export const POST_TOKTOKWALLET_REQUEST_MONEY = gql`
       }
     }
   }
-`
+`;
 export const POST_BILLS_TRANSACTION = gql`
   mutation postBillsTransaction($input: PostTransactionInput!) {
     postBillsTransaction(input: $input) {
@@ -77,7 +101,7 @@ export const POST_BILLS_TRANSACTION = gql`
       }
     }
   }
-`
+`;
 export const POST_BILLS_VALIDATE_TRANSACTION = gql`
   mutation postBillsValidateTransaction($input: PostBillsValidateTransactionInput!) {
     postBillsValidateTransaction(input: $input) {
@@ -93,4 +117,4 @@ export const POST_BILLS_VALIDATE_TRANSACTION = gql`
       }
     }
   }
-`
+`;

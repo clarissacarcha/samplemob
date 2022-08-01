@@ -47,7 +47,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
 
       if (notification.additionalData.classification === 'toktokbills') {
         setTimeout(() => {
-          navigation.navigate('ToktokBillsNotifications');
+          navigation.navigate('ToktokLandingNotifications', {screen: 'ToktokBillsNotifications'});
         }, 10);
         return;
       }

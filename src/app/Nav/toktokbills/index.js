@@ -1,7 +1,7 @@
 import React from 'react';
 import GlobalScreens from './GlobalScreens';
 import LandingScreens from './LandingScreens';
-import RootScreens  from './RootScreens';
+import RootScreens from './RootScreens';
 export default ({Navigator}) => {
   return (
     <>

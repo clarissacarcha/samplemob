@@ -1,23 +1,18 @@
 import React from 'react';
-import {
-  ToktokBillsEnterPinCode,
-  ToktokBillsReceipt,
-  ToktokBillsTermsAndConditions,
-  ToktokBillsTransactionLogs
-} from 'toktokbills/screens';
-import { Platform } from 'react-native';
-import { moderateScale } from "toktokbills/helper";
+import {ToktokBillsActivityDetails, ToktokBillsReceipt, ToktokBillsTermsAndConditions} from 'toktokbills/screens';
+import {Platform} from 'react-native';
+import {moderateScale} from 'toktokbills/helper';
 
 export default ({Navigator}) => {
   return (
-    <>   
-      <Navigator.Screen 
-        name="ToktokBillsEnterPinCode" 
-        component={ToktokBillsEnterPinCode}
+    <>
+      <Navigator.Screen
+        name="ToktokBillsActivityDetails"
+        component={ToktokBillsActivityDetails}
         options={{
-          headerTitleAlign: "center",
+          headerTitleAlign: 'center',
           headerStyle: {
-            shadowColor: "#000",
+            shadowColor: '#000',
             shadowOffset: {
               width: 0,
               height: 2,
@@ -29,13 +24,13 @@ export default ({Navigator}) => {
           },
         }}
       />
-      <Navigator.Screen 
-        name="ToktokBillsReceipt" 
+      <Navigator.Screen
+        name="ToktokBillsReceipt"
         component={ToktokBillsReceipt}
         options={{
-          headerTitleAlign: "center",
+          headerTitleAlign: 'center',
           headerStyle: {
-            shadowColor: "#000",
+            shadowColor: '#000',
             shadowOffset: {
               width: 0,
               height: 2,
@@ -47,31 +42,13 @@ export default ({Navigator}) => {
           },
         }}
       />
-      <Navigator.Screen 
-        name="ToktokBillsTermsAndConditions" 
+      <Navigator.Screen
+        name="ToktokBillsTermsAndConditions"
         component={ToktokBillsTermsAndConditions}
         options={{
-          headerTitleAlign: "center",
+          headerTitleAlign: 'center',
           headerStyle: {
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.1,
-            shadowRadius: 3,
-            elevation: 5,
-            // height: Platform.OS == "ios" ? moderateScale(60) : moderateScale(80)
-          },
-        }}
-      />
-      <Navigator.Screen 
-        name="ToktokBillsTransactionLogs" 
-        component={ToktokBillsTransactionLogs}
-        options={{
-          headerTitleAlign: "center",
-          headerStyle: {
-            shadowColor: "#000",
+            shadowColor: '#000',
             shadowOffset: {
               width: 0,
               height: 2,

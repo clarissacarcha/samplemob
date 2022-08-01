@@ -10,6 +10,7 @@ import OnGoing from '../../../ToktokGo/screens/ToktokGoActivitiesOnGoing';
 import Completed from '../../../ToktokGo/screens/ToktokGoActivitiesCompleted';
 import Cancelled from '../../../ToktokGo/screens/ToktokGoActivitiesCancelled';
 import ToktokLoadActivities from '../toktokload/ActivitiesScreen';
+import ToktokBillActivities from '../toktokbills/ActivitiesScreen';
 
 const ActivitiesTopTab = createMaterialTopTabNavigator();
 const ToktokGoActivitiesTopTab = createMaterialTopTabNavigator();
@@ -109,7 +110,7 @@ const Activities = () => {
             })}
           />
         )}
-        {/* <ActivitiesTopTab.Screen
+        <ActivitiesTopTab.Screen
           name="ToktokLoadActivities"
           component={ToktokLoadActivities}
           options={{
@@ -121,11 +122,28 @@ const Activities = () => {
                   color: focused ? COLOR.ORANGE : COLOR.BLACK,
                   marginBottom: 5,
                 }}>
-                toktokload
+                Load
               </Text>
             ),
           }}
-        /> */}
+        />
+        <ActivitiesTopTab.Screen
+          name="ToktokBillActivities"
+          component={ToktokBillActivities}
+          options={{
+            tabBarLabel: ({focused}) => (
+              <Text
+                style={{
+                  // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.Thin800,
+                  fontSize: FONT_SIZE.M,
+                  color: focused ? COLOR.ORANGE : COLOR.BLACK,
+                  marginBottom: 5,
+                }}>
+                Bills
+              </Text>
+            ),
+          }}
+        />
       </ActivitiesTopTab.Navigator>
     </>
   );
