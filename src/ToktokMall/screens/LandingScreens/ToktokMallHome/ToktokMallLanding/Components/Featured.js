@@ -92,7 +92,7 @@ const Item = ({data}) => {
         </Text>
         <View style={styles.comparePriceContainer}>
           <View style={styles.comparePriceSubContainer}>
-            {data?.compareAtPrice != '0.00' ? (
+            {data?.compareAtPrice != '0.00' &&  data?.compareAtPrice != "" ? (
               <Text
                 style={styles.comparePriceText}>
                 <Price amount={data?.compareAtPrice} />
