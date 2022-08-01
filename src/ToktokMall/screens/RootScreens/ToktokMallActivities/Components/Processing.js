@@ -12,7 +12,7 @@ import { RenderItem } from './subComponents';
 import { emptyorders } from '../../../../assets';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
-import { GET_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
+import { GET_TRANSACTIONS, GET_UNPAID_TRANSACTIONS } from '../../../../../graphql/toktokmall/model';
 import { Loading } from '../../../../Components';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -32,23 +32,26 @@ export const ProcessingItem = ({fulldata}) => {
 
 export const Processing = ({id, email}) => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getAccessToken = async () => { 
     const accessToken = await AsyncStorage.getItem('accessToken');
     return accessToken
   }
 
-  const [getOrders, {loading, error}] = useLazyQuery(GET_TRANSACTIONS, {
+  const [getOrders] = useLazyQuery(GET_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    context: { headers: { authorization: "Bearer: " + getAccessToken() }},
-    fetchPolicy: 'network-only',    
+    fetchPolicy: 'no-cache',    
     onCompleted: (response) => {
-      if(response.getActivities){
-        setData(response.getActivities)
+      if(response.getActivities){     
+        const newActivities = [...response.getActivities.filter(activity => activity.status.status === 1)];
+        setData(newActivities);
+        setLoading(false);
       }
     },
     onError: (err) => {
-      console.log(err)
+      console.log(err);
+      setLoading(false);
     }
   })
 
@@ -61,6 +64,7 @@ export const Processing = ({id, email}) => {
   }
 
   const Fetch = async () => {
+    setLoading(true);
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw)
       if(data.userId){        
@@ -91,7 +95,7 @@ export const Processing = ({id, email}) => {
           <Image source={emptyorders} style={styles.noDataImage} />
           <View style={styles.noDataTextContainer}>
             <Text style={styles.noDataTitle}>No Orders</Text>
-    				<Text style={styles.noDataBody}>Go browse and checkout something you like</Text>
+    				<Text style={styles.noDataBody}>Go browse and checkout something you like!</Text>
 		    	</View>
         </View>
       </>

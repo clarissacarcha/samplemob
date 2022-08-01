@@ -8,12 +8,17 @@ import {
 import { Price  } from '../../../../../helpers';
 
 const walletIcon = require('../../../../../assets/images/tokwaicon.png');
+const paypandalogo = require('../../../../../assets/icons/paypandalogo.png')
 
 export const RenderSummary = ({data}) => {
   return (
     <View style={styles.summaryContainer}>
         <View style={styles.summarySubContainer}>
+          {data.paymentMethod == "TOKTOKWALLET" ?
             <Image source={walletIcon} style={styles.summaryWalletIcon} />
+            :
+            <Image source={paypandalogo} style={styles.summaryWalletIcon} />
+          }
         </View>
         <View style={{...styles.summarySubContainer, alignItems: 'flex-end'}}>
             <Text style={styles.summaryTotalText}>Total: <Text style={{fontSize: 13, color: "#F6841F", fontWeight: '600'}}><Price amount={data.totalAmount} /></Text></Text>
@@ -27,7 +32,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     paddingHorizontal: 16, 
     alignItems: 'center', 
-    marginBottom: 16
   },
   summarySubContainer: {
     flex: 1

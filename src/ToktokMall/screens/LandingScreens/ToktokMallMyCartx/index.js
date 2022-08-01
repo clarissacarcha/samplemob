@@ -430,8 +430,8 @@ const Component =  ({
     <>
       <View style={styles.container}>
         <Header label="Shopping Cart" />
-        <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
-        <View style={{flex: 1}}>
+        <View style={styles.margin1} />
+        <View style={styles.flex1}>
 
           {loading && <LoadingOverlay isVisible={loading} />}
           {apiloader && <LoadingOverlay isVisible={apiloader} />}
@@ -440,12 +440,12 @@ const Component =  ({
 
           {myCartData.length > 0 && 
           <>
-          <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-            <View style={{flex: 6, justifyContent: 'center'}}>
+          <View style={styles.deleteContainer}>
+            <View style={styles.deleteCheckboxContainer}>
               <CheckBox
                 isChecked={!willDelete ? itemsToCheckoutArr.length === totalitems : itemsToDelArr.length === totalitems}
                 rightText="Select All"
-                rightTextStyle={{fontSize: 14, fontWeight: '500'}}
+                rightTextStyle={styles.deleteCheckbox}
                 checkedCheckBoxColor="#F6841F"
                 uncheckedCheckBoxColor="#F6841F"
                 onClick={() => {
@@ -470,11 +470,11 @@ const Component =  ({
                 }
                 setWillDelete(!willDelete)
               }}
-              style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
-              <Text style={{fontSize: 14, color: '#F6841F'}}>{willDelete ? 'Cancel' : ''}</Text>
+              style={styles.deleteButton}>
+              <Text style={styles.deleteButtonText}>{willDelete ? 'Cancel' : ''}</Text>
             </TouchableOpacity>
           </View>
-          <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
+          <View style={styles.margin2} />
           
           <FlatList
             data={myCartData}
@@ -534,7 +534,7 @@ const Component =  ({
                       createMyCartSession("UpdateQuantity", {item_id: id, qty: qty})
                     }}
                   />
-                  <View style={{height: 6, backgroundColor: '#F7F7FA'}} />
+                  <View style={styles.margin3} />
                 </>
               );
             }}
@@ -545,7 +545,7 @@ const Component =  ({
           </>
           }
 
-          {myCartData.length > 0 && <View style={{height: 80}}></View>}
+          {myCartData.length > 0 && <View style={styles.margin4} />}
 
           {myCartData.length > 0 && willDelete && 
           <DeleteFooter 
@@ -582,7 +582,7 @@ const Component =  ({
               setSingleDeletemsgModalShown(val)
               init()
             }}  
-            message={`Item has been removed from your cart.`}
+            message={`Item has been removed from\nyour cart.`}
           />}
             
         </View>
@@ -609,4 +609,44 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.WHITE,
   },
+  margin1: {
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  },
+  flex1: {
+    flex: 1
+  },
+  deleteContainer: {
+    flexDirection: 'row', 
+    paddingVertical: 15, 
+    paddingHorizontal: 15
+  },
+  deleteCheckboxContainer: {
+    flex: 6, 
+    justifyContent: 'center'
+  },
+  deleteCheckbox: {
+    fontSize: 14, 
+    fontWeight: '500'
+  },
+  deleteButton: {
+    flex: 1, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  deleteButtonText: {
+    fontSize: 14, 
+    color: '#F6841F'
+  },
+  margin2: {
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  },
+  margin3: {
+    height: 6, 
+    backgroundColor: '#F7F7FA'
+  },
+  margin4: {
+    height: 80
+  }
 });

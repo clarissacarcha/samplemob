@@ -40,10 +40,10 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
   return (
     <>
         {/* <View style={styles.footer}> */}
-          <View style = {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 15}}>
-            <View>
-              <Text style = {{fontWeight: 'bold'}}>Total Payment</Text>
-              <Text style = {{fontWeight: 'bold', color: isDisabled() ?'#D7D7D7' :'#F6841F'  }}>{
+          <View style = {styles.placeOrderContainer}>
+            <View style= {styles.totalContainer}>
+              <Text style = {styles.totalTitle}>Total</Text>
+              <Text style = {styles.totalText}>{
                 !total ? FormatToText.currency(0) : FormatToText.currency(total)
               }</Text>
             </View>
@@ -60,8 +60,18 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
 }
 
 const styles = StyleSheet.create({
-  body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 15, backgroundColor: 'white', marginTop: 15,flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'  },
+  body: {
+    flex: 1, 
+    backgroundColor: '#F7F7FA', 
+  },
+  container: {
+    padding: 15, 
+    backgroundColor: 'white', 
+    marginTop: 15,
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
+    alignItems: 'center'  
+  },
   footer: {
     position: 'absolute',
     // top: REAL_HEIGHT * 0.9,
@@ -77,7 +87,45 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     zIndex: 1,
   },
-  activeButton: { backgroundColor: '#F6841F', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
-  invalidButton: { backgroundColor: '#D7D7D7', height: 47, width: 140, borderRadius: 5, alignItems: 'center', justifyContent: 'center'},
-  buttonText: {color: 'white', fontFamily: FONT.BOLD, fontSize: 13}
+  activeButton: { 
+    backgroundColor: '#F6841F', 
+    height: 47, 
+    width: 140,
+    borderRadius: 5, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  invalidButton: { 
+    backgroundColor: '#D7D7D7', 
+    height: 47, 
+    width: 140, 
+    borderRadius: 5, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  buttonText: {
+    color: 'white', 
+    fontFamily: FONT.BOLD, 
+    fontSize: 13
+  },
+  placeOrderContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    padding: 15
+  },
+  totalContainer: {
+    flexDirection: 'row'
+  },
+  totalTitle: {
+    fontSize: 18, 
+    fontFamily: FONT.BOLD, 
+    marginRight: 5, 
+    color: '#F6841F'
+  },
+  totalText: {
+    fontSize: 18, 
+    fontFamily: FONT.BOLD, 
+    color: '#F6841F' 
+  },
 })

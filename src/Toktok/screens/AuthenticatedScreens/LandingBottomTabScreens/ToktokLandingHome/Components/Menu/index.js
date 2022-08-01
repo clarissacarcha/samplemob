@@ -142,17 +142,11 @@ export const Menu = ({setUserLocation, constants}) => {
       isNew: true,
     },
     {
-      identifier: 'mall',
-      label: 'Mall',
-      icon: ToktokMallIcon,
-      onPress: () => navigation.push('ToktokMallSplashScreen'),
-    },
-    {
       identifier: `${Platform.OS}Mall`,
       label: 'Mall',
       icon: ToktokMallIcon,
       onPress: () => {
-        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokMallLanding');
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokMallSplashScreen');
       },
     },
     {

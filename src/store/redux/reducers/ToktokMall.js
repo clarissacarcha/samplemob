@@ -10,33 +10,14 @@ const INITIAL_STATE = {
   myCartCount: 0,
   notificationCount: 0,
   otpAttempts: 1,
-  customModal: {
-    visible: false
-  },
-  customConfirmModal: {
-    visible: false,
-    onConfirmAction: () => {},
-    message: "Are you sure you want to delete this item?"
-  },
-  customPlaceOrderModal: {
-    visible: false,
-    onConfirmAction: () => {},
-    onCancelAction: () => {},
-    title: "Your order has been placed!",
-    message: "Your order has been placed successfully. Please visit My Orders to check the progress and other details."
-  },
-  modal: {
+  toktokMallModal: {
     visible: false,
   },
-  customMessageModal: {
+  popupmodal: {
     visible: false,
-    title: ["We're sorry but this product is ", "SOLD OUT."],
-    message: "This item is currently out of stock.",
-    action: {
-      onPress: () => {},
-      title: "Back to Home."
-    }
-  },
+    type: '',
+    label: ''
+  },  
   toktokWalletBalance: 0
 };
 
@@ -45,25 +26,13 @@ export default (state = INITIAL_STATE, action) => {
     case 'TOKTOK_MALL_SET_TOKTOK_WALLET_BALANCE': 
     return {...state, toktokWalletBalance: action.payload};
     case 'TOKTOK_MALL_OPEN_MODAL':
-    return {...state, customModal: {visible: true, ...action.payload}};
+    return {...state, toktokMallModal: {visible: true, ...action.payload}};
     case 'TOKTOK_MALL_CLOSE_MODAL':
-    return {...state, customModal: {visible: false}};
-    case 'TOKTOK_MALL_OPEN_MODAL_2':
-    return {...state, modal: {...state.modal, visible: true, ...action.payload}};
-    case 'TOKTOK_MALL_CLOSE_MODAL_2':
-    return {...state, modal: {visible: false}};
-    case 'TOKTOK_MALL_OPEN_CONFIRM_MODAL':
-    return {...state, customConfirmModal: { ...state.customConfirmModal, visible: true, ...action.payload}};
-    case 'TOKTOK_MALL_CLOSE_CONFIRM_MODAL':
-    return {...state, customConfirmModal: INITIAL_STATE.customConfirmModal};
-    case 'TOKTOK_MALL_OPEN_MESSAGE_MODAL':
-      return {...state, customMessageModal: { ...state.customMessageModal, visible: true, ...action.payload}};
-    case 'TOKTOK_MALL_CLOSE_MESSAGE_MODAL':
-    return {...state, customMessageModal: INITIAL_STATE.customMessageModal};
-    case 'TOKTOK_MALL_OPEN_PLACE_ORDER_MODAL':
-      return {...state, customPlaceOrderModal: { ...state.customPlaceOrderModal, visible: true, ...action.payload}};
-    case 'TOKTOK_MALL_CLOSE_PLACE_ORDER_MODAL':
-    return {...state, customPlaceOrderModal: INITIAL_STATE.customPlaceOrderModal};
+    return {...state, toktokMallModal: {visible: false}};
+    case 'TOKTOK_MALL_OPEN_POPUP':
+      return {...state, popupmodal: {...state.popupmodal, visible: true, ...action.payload}};
+    case 'TOKTOK_MALL_CLOSE_POPUP':
+    return {...state, popupmodal: {visible: false}};
     case 'TOKTOK_MALL_CART_COUNT':
       let count = state.myCartCount
       if(action.action === "add"){

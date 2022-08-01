@@ -34,12 +34,12 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
 
     return (
       <View style={{width: Dimensions.get("screen").width, height: HEIGHT}}>
-        {isOutOfStock && 
+        {/* {isOutOfStock && 
         <View style={{position: "absolute", zIndex: 1, top: 60, left: (Dimensions.get("screen").width-150)/2}}>
           <View style={{width: 150, height: 150, borderRadius: 150/2, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
           </View>
-        </View>}
+        </View>} */}
 
         {
           promotion && promotion != null && 
@@ -68,7 +68,7 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
   }
 
   return (
-    <View style={{paddingHorizontal: 0, paddingTop: 0, height: HEIGHT}}>
+    <View style={styles.container}>
       <View style={{height: 0}} />
         <Carousel
           data={data}
@@ -93,18 +93,23 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
                     <View style={{flex: 2}} />
                     {data.map((d, i) => 
                     <View style={{flex: 0, paddingHorizontal: 3}}>
-                      <CustomIcon.MCIcon name={i == activeIndex ? "circle" : "circle-outline"} color="#F6841F" size={6} />
+                      <CustomIcon.MCIcon 
+                        name={i == activeIndex ? "circle" : "circle-outline"} 
+                        color="#F6841F" size={6} 
+                      />
                     </View>)}
                     <View style={{flex: 2}} />
                   </View>
-                  <Text style={{fontSize: 9, alignSelf: 'center', textAlign: 'center'}}>{activeIndex + 1}/{data.length}</Text>
+                  <Text style={{fontSize: 9, alignSelf: 'center', textAlign: 'center'}}>
+                    {activeIndex + 1}/{data.length}
+                  </Text>
                 </View>
               )
             }}
             containerStyle={{
               position: 'absolute',
               backgroundColor: 'transparent',
-              bottom: -40,
+              bottom: -55,
               alignItems: 'center',
               justifyContent: 'center'
             }}        
@@ -116,11 +121,27 @@ export const ProductCarousel = ({data, isOutOfStock, isLoading, setIsLoading, lo
 }
 
 const styles = StyleSheet.create({
+  container:{
+    paddingHorizontal: 0, 
+    paddingTop: 0, 
+    height: HEIGHT
+  },
   paginationContainerStyle: {
-    backgroundColor: 'transparent', top: -20, padding: 0, alignSelf: 'center', alignContent: 'flex-end', backgroundColor: 'transparent'
+    backgroundColor: 'transparent', 
+    top: -20, 
+    padding: 0, 
+    alignSelf: 'center', 
+    alignContent: 'flex-end', 
+    backgroundColor: 'transparent'
   },
   paginationDotContainerStyle: {
-    height: 0, width: '30%', marginLeft: '35%', flexDirection: 'row', backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'
+    height: 0, 
+    width: '30%',
+     marginLeft: '35%', 
+     flexDirection: 'row', 
+     backgroundColor: 'transparent', 
+     alignItems: 'center', 
+     justifyContent: 'center'
   },
   pxImageContainerStyle: {
     flex: 1,

@@ -1,7 +1,6 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList} from 'react-native';
-import { COLOR, FONT } from '../../../../../../res/variables';
-import { ScrollView } from 'react-native-gesture-handler';
+import React from 'react';
+import {StyleSheet, View, Text, Image, TouchableOpacity, FlatList} from 'react-native';
+import { FONT } from '../../../../../../res/variables';
 import CustomIcon from '../../../../../Components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import {placeholder} from '../../../../../assets';
@@ -33,30 +32,32 @@ const RenderItem = ({navigation, item}) => {
 
   return (
     <>
-      <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
+      <View style={styles.renderItemContainer}>
                   
-        <View style={{padding: 5}}>
+        <View style={styles.renderItemSubContainer}>
           <Image 
             source={getImageSource(item?.images || [])} 
-            style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
+            style={styles.renderItemImage} 
           />
+
           <TouchableOpacity onPress={() => navigation.navigate("ToktokMallProductDetails", item)}>
-            <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}>{item?.itemname || ""}</Text>
+            <Text style={styles.renderItemNameText}>{item?.itemname || ""}</Text>
           </TouchableOpacity>
-          <Text style={{fontSize: 13, color: "#F6841F"}}>
-          <Price amount={item?.price}/>
+          <Text style={styles.renderItemPriceText}>
+            <Price amount={item?.price}/>
           </Text>    
-          <View style={{flexDirection: 'row'}}>
+          <View style={styles.renderItemNoStockContainer}>
             {/* <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item?.rating} />
             </View> */}
-            <View style={{flex: 9}}>
-              <Text style={{color: "#9E9E9E", fontSize: 10}}>({item?.noOfStocks || 0})</Text>
+            <View style={styles.renderItemNoStockTextContainer}>
+              <Text style={styles.renderItemNoStockText}>({item?.noOfStocks || 0})</Text>
             </View>
-            <View style={{flex: 3}}>
-              <Text style={{fontSize: 10}}>{item?.soldCount || 0} sold</Text>
+            <View style={styles.renderItemSoldContainer}>
+              <Text style={styles.renderItemSoldText}>{item?.soldCount || 0} sold</Text>
             </View>
           </View>
+          
         </View>
       </View>
     </>
@@ -90,11 +91,76 @@ export const Product = ({data}) => {
   }
 
 const styles = StyleSheet.create({
-  container: {flex: 0, paddingVertical: 10},
-  heading: {paddingHorizontal: 15, paddingVertical: 20, flexDirection: 'row'},
-  h1: {fontSize: 14, fontFamily: FONT.BOLD},
-  link: {fontSize: 12, color: "#F6841F"},
-  image: {width: 50, height: 50, resizeMode: 'cover', alignSelf: 'center', borderRadius: 8},
-  label: {fontSize: 11, alignSelf: 'center'},
-  separator: {flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}
+  container: {
+    flex: 0, 
+    paddingVertical: 10
+  },
+  heading: {
+    paddingHorizontal: 15, 
+    paddingVertical: 20, 
+    flexDirection: 'row'
+  },
+  h1: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  link: {
+    fontSize: 12, 
+    color: "#F6841F"
+  },
+  image: {
+    width: 50, 
+    height: 50, 
+    resizeMode: 'cover', 
+    alignSelf: 'center', 
+    borderRadius: 8
+  },
+  label: {
+    fontSize: 11, 
+    alignSelf: 'center'
+  },
+  separator: {
+    flex: 0.5, 
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  },
+  renderItemContainer: {
+    flex: 2, 
+    backgroundColor: '#fff', 
+    margin: 5
+  },
+  renderItemSubContainer: {
+    padding: 5
+  },
+  renderItemImage: {
+    resizeMode: 'cover', 
+    width: '100%', 
+    height: 120, 
+    borderRadius: 5
+  },
+  renderItemNameText: {
+    fontSize: 13, 
+    fontWeight: '500', 
+    paddingVertical: 5
+  },
+  renderItemPriceText: {
+    fontSize: 13, 
+    color: "#F6841F"
+  },
+  renderItemNoStockContainer: {
+    flexDirection: 'row'
+  },
+  renderItemNoStockTextContainer: {
+    flex: 9
+  },
+  renderItemNoStockText: {
+    color: "#9E9E9E", 
+    fontSize: 10
+  },
+  renderItemSoldContainer: {
+    flex: 3
+  },
+  renderItemSoldText: {
+    fontSize: 10
+  }
 })

@@ -8,7 +8,12 @@ import {
 import { shopIcon } from '../../../../../assets';
 
 export const RenderStore = ({data}) => {
-  const totalItems = data.totalItems;
+  const items = data.items;
+
+  const renderTotalItems = () => {
+    const total = items.reduce((prevTotal, newTotal) => prevTotal + newTotal.quantity, 0);
+    return total <= 1 ? `${total} item` : `${total} items`;
+  }
   
   return (
     <View style={styles.storeContainer}>
@@ -17,7 +22,7 @@ export const RenderStore = ({data}) => {
             <Text style={styles.storeShopName}>{data.shopName}</Text>
         </View>
         <View style={styles.storeItemContainer}>
-            <Text style={styles.storeItemText}>{totalItems > 1 ? `${totalItems} items` : `${totalItems} item`}</Text>
+            <Text style={styles.storeItemText}>{renderTotalItems()}</Text>
         </View>
     </View>
   )

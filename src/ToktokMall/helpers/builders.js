@@ -39,7 +39,7 @@ export const BuildPostCheckoutBody = async ({
 			total_amount: parseFloat(subTotal),
 			srp_totalamount: parseFloat(srpTotal),
 			order_type: orderType,
-			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates, shippingVouchers, orderType}),
+			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates, shippingVouchers, orderType, vouchers}),
 			//Optional values
 			user_id: session.userId,
 			notes: addressData.landmark || "",
@@ -65,7 +65,7 @@ export const BuildPostCheckoutBody = async ({
 	
 }
 
-export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouchers, orderType}) => {
+export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouchers, orderType, vouchers}) => {
 
 	let logs = []
 	data.map((val, index) => {
@@ -73,8 +73,23 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 		let items = []
 		if(val.data.length == 0 || val.data == undefined) return
 		val.data[0].map((item, i) => {
+
+			//HANDLE ITEM DISCOUNTS
+			let discount = null
+			vouchers.map((promo) => {
+				promo?.items.map((itemwithpromo) => {
+					if(itemwithpromo.product_id == item.product.Id){
+						discount = itemwithpromo
+					}
+				})
+			})
+
+			console.log("ITEM DISCOUNT HANDLER", discount)
 			
-			let total = parseFloat(item.product.price) * item.qty
+			let amount = discount ? discount.discounted_amount : item.product?.price
+
+			let itemssubtotal = parseFloat(amount) * item.qty
+			let itemssrptotal = parseFloat(item.product.price) * item.qty
 
 			//PROMOTIONS
 			let promo = {}
@@ -94,27 +109,31 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 				quantity: item.qty,
 				// amount: parseFloat(item.amount),
 				// srp_amount: parseFloat(item.amount),
-				amount: item.product.price,
+				// amount: item.product.price,
+				amount: amount,
 				srp_amount: item.product.price,
-				srp_totalamount: total,
-				total_amount: total,
+				srp_totalamount: itemssrptotal,
+				total_amount: itemssubtotal,
 				order_type: GetItemOrderType(orderType, promo),
 				...promo
 			})
 		})
 
 		let shippingfeeindex = shippingRates.findIndex((e) => e.shopid == val.shop.id)
-		let vdiscountindex = shippingVouchers.findIndex((e) => e.shopid == val.shop.id)
+		let vdiscountindex = shippingVouchers.findIndex((e) => e.shop_id == val.shop.id)
+		let shippingFee = shippingRates[shippingfeeindex]
+		let voucherDiscount = shippingVouchers[vdiscountindex]
 
 		logs.push({
 			sys_shop: val.shop.id,
-			branchid: shippingRates[shippingfeeindex].branchid,
+			branchid: shippingFee.branchid,
 			// delivery_amount: shipping.rateAmount,
-			delivery_amount: shippingVouchers[vdiscountindex] && shippingVouchers[vdiscountindex]?.discountedAmount != undefined ? shippingVouchers[vdiscountindex].discountedAmount : parseFloat(shippingRates[shippingfeeindex].shippingfee),
-			original_shipping_fee: parseFloat(shippingRates[shippingfeeindex].original_shipping),
+			delivery_amount: shippingVouchers[vdiscountindex] && shippingVouchers[vdiscountindex]?.hashAmount != undefined ? shippingVouchers[vdiscountindex].hashAmount : parseFloat(shippingRates[shippingfeeindex].shippingfee),
+			original_shipping_fee: parseFloat(shippingFee.original_shipping),
 			handle_shipping_promo: 1,
-			hash: shippingRates[shippingfeeindex].hash,
-			hash_delivery_amount:  shippingVouchers[vdiscountindex] && shippingVouchers[vdiscountindex]?.hash_delivery_amount != undefined ? shippingVouchers[vdiscountindex].hash_delivery_amount : shippingRates[shippingfeeindex].hash_price,
+			hash: shippingFee.hash,
+			// hash_delivery_amount:  shippingVouchers[vdiscountindex] && shippingVouchers[vdiscountindex]?.hash_delivery_amount != undefined ? shippingVouchers[vdiscountindex].hash_delivery_amount : shippingRates[shippingfeeindex].hash_price,
+			hash_delivery_amount: voucherDiscount && voucherDiscount?.hash_delivery_amount != undefined ? voucherDiscount?.hash_delivery_amount : shippingFee.hash_price,
 			daystoship: shipping.fromDay,
 			daystoship_to: shipping.toDay,
 			items: items
@@ -149,7 +168,7 @@ export const BuildTransactionPayload = async ({method, notes, total, toktokid}) 
 
 export const CheckShippingVouchers = (data) => {
 	if(data.length > 0){
-		if(data[0].amount){
+		if(data[0].valid){
 			return data
 		}else{
 			return []

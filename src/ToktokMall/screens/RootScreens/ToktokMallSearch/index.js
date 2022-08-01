@@ -13,8 +13,8 @@ import {GET_TOP_PRODUCTS, SEARCH_PRODUCT, SEARCH_PRODUCT_SUGGESTIONS} from '../.
 import { connect, useSelector } from 'react-redux';
 
 import {Product} from './components'
-import {emptysearch} from '../../../assets'
-import { FONT } from '../../../../res/variables';
+import {emptysearch, noHistoryFound} from '../../../assets'
+import { FONT, COLOR } from '../../../../res/variables';
 import { ArrayCopy, getRefComAccountType } from '../../../helpers';
 
 const testdata = ["Gaming Chair", "Mousepad", "Face mask", "Pillow", "Ballpen"]
@@ -295,17 +295,25 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
 
         {searchedProducts.length == 0 && searchValue == "" && !loading && !loading2 && 
         <>
-        <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-          <View style={{flex: 1}}>
-            <Text style={{fontSize: 14}}>Search History</Text>
-          </View>
-          <TouchableOpacity onPress={async () => {
-            await createSearchHistorySession("clear")
-            Toast.show("Cleared search history")
-          }} style={{flex: 1}}>
-            <Text style={{fontSize: 12, textAlign: 'right', color: '#F6841F'}}>Clear History</Text>
-          </TouchableOpacity>
-        </View> 
+
+        {
+          searchHist.length != 0 &&
+          <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
+            <View style={{flex: 1}}>
+              <Text style={{fontSize: 14}}>Search History</Text>
+            </View>
+            <TouchableOpacity 
+              onPress={async () => {
+                await createSearchHistorySession("clear")
+                Toast.show("Cleared search history")
+              }} 
+              style={{flex: 1}}
+            >
+              <Text style={{fontSize: 12, textAlign: 'right', color: '#F6841F'}}>Clear History</Text>
+            </TouchableOpacity>
+          </View> 
+        }
+        
         <FlatList 
           data={searchHist.slice(0,5)}
           ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#F7F7FA'}} />}
@@ -347,21 +355,36 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           }
         />
         </>}
+        
+        {
+          !searchHist.length && searchValue == "" &&
+          <>
+              <View style={{flex: 8, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
+                <Image 
+                  source={noHistoryFound}
+                  style={{width: 195, height: 165, resizeMode: 'contain'}}
+                />
+                <View style={{height: 20}} />
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style={{fontSize: 18, color: COLOR.ORANGE, fontWeight: 'bold'}}>No History</Text>
+                  <Text style={{fontSize: 13, width:220, textAlign:'center', paddingVertical: 8 }}>Try searching what you like and your search history will appear here.</Text>              
+                </View>
+              </View>
+              <View style={{flex: 4}} />
+            </>
+        }
 
         {error || !loading && !loading2 && !suggest && searchValue != "" && searchedProducts.length == 0 && emptySearch && 
-					// <View style={{paddingHorizontal: 15, paddingVertical: 15}}>
-					// 	<Text style={{color: "#9E9E9E", fontSize: 14}}>No results found</Text>
-					// </View>
           <>
           <View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
             <Image 
 		  			  source={emptysearch}
-	  				  style={{width: '70%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}}
+	  				  style={{width: 195, height: 165, resizeMode: 'contain'}}
   				  />
             <View style={{height: 20}} />
             <View style={{alignItems: 'center', justifyContent: 'center'}}>
-		    			<Text style={{fontSize: 16, color: "#9E9E9E", fontWeight: 'bold'}}>No results found</Text>
-              <Text style={{fontSize: 11, color: "#9E9E9E"}}>Try to search something similar</Text>              
+		    			<Text style={{fontSize: 18, color: COLOR.ORANGE, fontWeight: 'bold'}}>No Results Found</Text>
+              <Text style={{fontSize: 13, paddingVertical: 8 }}>Try to search something similar.</Text>              
 	    			</View>
           </View>
           <View style={{flex: 0.2}} />

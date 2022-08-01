@@ -170,12 +170,12 @@ const Component = ({
 
   useEffect(() => {
     init()
-    EventRegister.addEventListener('refreshToktokmallShoppingCart', init) 
+    EventRegister.addEventListener('refreshToktokmallShoppingCart', init)
   }, [])
 
   // Read changes in route params and myCartData. This will trigger our way of selecting items from buy again function.
   useEffect(() => {
-    getPreITems();
+    getPreItems();
   }, [route.params, myCartData])
 
   useEffect(() => {
@@ -196,13 +196,11 @@ const Component = ({
         // alert(JSON.stringify(customModal.visible))
         if(customModal.visible || customConfirmModal.visible){
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_CONFIRM_MODAL'})
           return true
         }
         else{
           // alert('not true')
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_CONFIRM_MODAL'})
           return false
         }
         return true
@@ -213,13 +211,20 @@ const Component = ({
   )
 
   // Function that will select our items from buy again function.
-  const getPreITems = () => {
+  const getPreItems = () => {
     if(route.params?.items && rawitems.length > 0) {
       setPreSelectedItems(route.params.items);
       const allitems = route.params.items.map(item => {
         const order = rawitems.find(raw => raw.productid === item);
         
+        //Order is already in cart.
         if(!order) return;
+
+        //Stocks and cont selling checker.
+        if(order.product.contSellingIsset === 0 && order.product.noOfStocks <= 0) return;
+
+        // //Checker if product is enabled.
+        if(order.product.enabled !== 1) return;
 
         const orderIndex = rawitems.findIndex(raw => raw.productid === item);
         const data = {};
@@ -244,7 +249,19 @@ const Component = ({
     }
   }
 
-  const onChangeQuantity = (id, qty) => {
+  const onChangeQuantity = (id, qty, shopId) => {
+    let cartItems = ArrayCopy(myCartData);
+    let cartItemIndex = cartItems.findIndex(i => i.shop.id === shopId);
+    let shopData = cartItems.filter(item => item.shop.id === shopId)[0];
+    let itemsData = shopData.data;
+    let itemIndex = itemsData.findIndex(i => i.product.Id === id);
+    let data = itemsData[itemIndex];
+
+    data.quantity = qty;
+    cartItems[cartItemIndex].data === data
+
+    setMyCartData(cartItems);
+
     // let items = ArrayCopy(itemsToCheckoutArr)
     let items = ArrayCopy(selectedItemsArr)
     let updatedItems = items.map(item => {
@@ -294,7 +311,7 @@ const Component = ({
     dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
       type: 'Success',
       message: 'Items has been removed from your cart.',
-      onCloseCallback: () => {
+      onClose: () => {
         init()
       }
     }})
@@ -318,8 +335,8 @@ const Component = ({
         // setSingleDeletemsgModalShown(true)
         dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
           type: 'Success',
-          message: 'Item has been removed from your cart.',
-          onCloseCallback: () => {
+          message: 'Item has been removed from\nyour cart.',
+          onClose: () => {
             init()
           }
         }})
@@ -372,7 +389,7 @@ const Component = ({
     })
     setSelectedItemsArr(items)
     // if(!willDelete){
-      getSubTotal(items)
+    getSubTotal(items)
     // }
     CartContextData.setSelectedFrom('store')
   }
@@ -457,9 +474,9 @@ const Component = ({
       }).filter(Boolean)
       // setItemsToCheckoutArr(allitems)
       // getSubTotal(allitems)
-      setSelectedItemsArr(allitems.filter(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0)))
+      setSelectedItemsArr(allitems.filter(item => (item.product.enabled === 1 && (item.product.contSellingIsset === 1 ? true : item.product.noOfStocks > 0))))
       // if(!willDelete){
-        getSubTotal(allitems.filter(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0)))
+        getSubTotal(allitems.filter(item => (item.product.enabled === 1 && (item.product.contSellingIsset === 1 ? true : item.product.noOfStocks > 0))))
       // }
     // }
 
@@ -554,8 +571,6 @@ const Component = ({
     }
   }
 
-  
-
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -575,7 +590,7 @@ const Component = ({
             setIsVisible={(val) => {
               setSingleDeletemsgModalShown(val);
             }}
-            message={`Item has been removed from your cart.`}
+            message={`Item has been removed from\nyour cart.`}
           />
         )}
 
@@ -589,8 +604,8 @@ const Component = ({
           />
         )} */}
         <Header label="Shopping Cart" />
-        <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
-        <View style={{flex: 1}}>
+        <View style={styles.margin1} />
+        <View style={styles.subContainer}>
           {loading && <LoadingOverlay isVisible={loading} />}
           {apiloader && <LoadingOverlay isVisible={apiloader} />}
 
@@ -598,14 +613,14 @@ const Component = ({
 
           {myCartData.length > 0 && (
             <>
-              <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-                <View style={{flex: 6, justifyContent: 'center'}}>
+              <View style={styles.cartContainer}>
+                <View style={styles.checkboxContainer}>
                   <CheckBox
                     // isChecked={allSelected || itemsToCheckoutArr.length == totalitems}
                     isChecked={CartContextData.selectAll || selectedItemsArr.length == totalitems}
                     // isChecked = {CartContext.sele}
                     rightText="Select All"
-                    rightTextStyle={{fontSize: 14, fontWeight: '500'}}
+                    rightTextStyle={styles.checkbox}
                     checkedCheckBoxColor="#F6841F"
                     uncheckedCheckBoxColor="#F6841F"
                     onClick={() => {
@@ -637,11 +652,11 @@ const Component = ({
                     setWillDelete(!willDelete);
                     CartContextData.setWillDelete(!willDelete);
                   }}
-                  style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
-                  <Text style={{fontSize: 14, color: '#F6841F'}}>Cancel</Text>
+                  style={styles.cancelButton}>
+                  <Text style={styles.cancelText}>Cancel</Text>
                 </TouchableOpacity>}
               </View>
-              <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
+              <View style={styles.margin2} />
 
               <FlatList
                 data={myCartData}
@@ -683,20 +698,26 @@ const Component = ({
                           }
                         }}
                         onItemDelete={(item) => {
-                              dispatch({
-                                type: 'TOKTOK_MALL_OPEN_CONFIRM_MODAL',
-                                payload: {
-                                  onConfirmAction: () => {
-                                    deleteSingleItem(item)
-                                  },
-                                },
-                              });
+                          dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+                            type: "Warning",
+                            message: "Are you sure you want to delete\nthis item?",
+                            actions: [
+                              {
+                                name: "Cancel"
+                              },
+                              {
+                                name: "Confirm",
+                                type: "fill",
+                                onPress: () => {
+                                  deleteSingleItem(item)
+                                }
+                              }
+                            ]
+                          }})
                         }}
-                        onChangeQuantity={(qty, id) => {
-                          onChangeQuantity(id, qty);
-                        }}
+                        onChangeQuantity={onChangeQuantity}
                       />
-                      <View style={{height: 6, backgroundColor: '#F7F7FA'}} />
+                      <View style={styles.margin3} />
                     </>
                   );
                 }}
@@ -707,21 +728,28 @@ const Component = ({
             </>
           )}
 
-          {myCartData.length > 0 && <View style={{height: 80}}></View>}
+          {myCartData.length > 0 && <View style={styles.margin4}></View>}
 
           {myCartData.length > 0 && willDelete && (
             <DeleteFooter
               onDelete={() => {
-                  dispatch({
-                    type: 'TOKTOK_MALL_OPEN_CONFIRM_MODAL',
-                    payload: {
-                      onConfirmAction: deleteMultipleItems,
-                      message: 'Are you sure you want to delete the selected item(s)?',
+                dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+                  type: "Warning",
+                  message: 'Are you sure you want to delete the selected item(s)?',
+                  actions: [
+                    {
+                      name: "Cancel"
                     },
-                  });
+                    {
+                      name: "Confirm",
+                      type: "fill",
+                      onPress: deleteMultipleItems
+                    }
+                  ]
+                }})
               }}
               disabled={selectedItemsArr.length === 0}
-              style={{backgroundColor: selectedItemsArr.length === 0 ? '#D7D7D7' : '#F6841F'}}
+              style={styles.deleteFooter(selectedItemsArr)}
             />
           )}
 
@@ -760,4 +788,50 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.WHITE,
   },
+  margin1: {
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  },
+  subContainer: {
+    flex: 1
+  },
+  cartContainer: {
+    flexDirection: 'row', 
+    paddingVertical: 15, 
+    paddingHorizontal: 15
+  },
+  checkboxContainer: {
+    flex: 6, 
+    justifyContent: 'center'
+  },
+  checkbox: {
+    fontSize: 14, 
+    fontWeight: '500', 
+    fontFamily:FONT.BOLD
+  },
+  cancelButton: {
+    flex: 1, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  cancelText: {
+    fontSize: 14, 
+    color: '#F6841F'
+  },
+  margin2: {
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  },
+  margin3: {
+    height: 6, 
+    backgroundColor: '#F7F7FA'
+  },
+  margin4: {
+    height: 80
+  },
+  deleteFooter: (selectedItemsArr) => {
+    return {
+      backgroundColor: selectedItemsArr.length === 0 ? '#D7D7D7' : '#F6841F'
+    }
+  }
 });

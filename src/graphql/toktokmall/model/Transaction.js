@@ -1,12 +1,14 @@
 import gql from 'graphql-tag'
 
 export const GET_TRANSACTIONS = gql`
-  query getActvities($input: getActivitiesInput) {
+  query getActivities($input: getActivitiesInput) {
     getActivities(input: $input) {
       id
       referenceNum
+      paymentMethod
       dateOrdered
       totalAmount
+      unpaidOrder
       orderStatus
       orderType
       orderIds
@@ -26,6 +28,7 @@ export const GET_TRANSACTIONS = gql`
             name
             price
             variant
+            enabled
           }
         }
       }

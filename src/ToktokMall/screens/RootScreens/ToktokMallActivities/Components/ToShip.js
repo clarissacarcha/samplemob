@@ -31,24 +31,28 @@ export const ToShipItem = ({fulldata}) => {
 }
 
 export const ToShip = ({id, email}) => {
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getAccessToken = async () => { 
     const accessToken = await AsyncStorage.getItem('accessToken');
     return accessToken
   }
 
-  const [getOrders, {loading, error}] = useLazyQuery(GET_TRANSACTIONS, {
+  const [getOrders] = useLazyQuery(GET_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     context: { headers: { authorization: "Bearer: " + getAccessToken() }},
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getActivities){
-        setData(response.getActivities)
+        const newActivities = [...response.getActivities.filter(activity => activity.status.status === 2)];
+        setData(newActivities);
+        setLoading(false);
       }
     },
     onError: (err) => {
-      console.log(err)
+      console.log(err);
+      setLoading(false);
     }
   })
 
@@ -61,6 +65,7 @@ export const ToShip = ({id, email}) => {
   }
 
   const Fetch = async () => {
+    setLoading(true);
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw)
       if(data.userId){        
@@ -91,7 +96,7 @@ export const ToShip = ({id, email}) => {
           <Image source={emptyorders} style={styles.noDataImage} />
           <View style={styles.noDataTextContainer}>
             <Text style={styles.noDataTitle}>No Orders</Text>
-    				<Text style={styles.noDataBody}>Go browse and checkout something you like</Text>
+    				<Text style={styles.noDataBody}>Go browse and checkout something you like!</Text>
 		    	</View>
         </View>
       </>
