@@ -9,6 +9,9 @@ import FIcon from 'react-native-vector-icons/Feather';
 import OneSignal from 'react-native-onesignal';
 import React from 'react';
 import ToktokWashed from '../assets/images/ToktokWashed.png';
+import AsyncStorage from '@react-native-community/async-storage';
+
+import { ToktokMallSession } from '../ToktokMall/util/session';
 
 const DrawerButton = ({label, onPress, restrict}) => {
   if (restrict && restrict != APP_FLAVOR) {
@@ -41,6 +44,7 @@ const Drawer = ({navigation, session, constants, destroySession}) => {
   const onSignOut = () => {
     OneSignal.deleteTag('userId');
     destroySession();
+    ToktokMallSession.destroy()
     navigation.replace('UnauthenticatedStack', {
       screen: 'Login',
     });

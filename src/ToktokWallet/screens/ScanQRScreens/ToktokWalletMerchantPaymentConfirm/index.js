@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { View , Text , StyleSheet, ScrollView, TouchableOpacity , Image} from 'react-native';
 import { HeaderBack , HeaderTitle , ICON_SET, VectorIcon  } from 'src/revamp';
 import { CheckIdleState, FlagSecureScreen , BuildingBottom, TransferableHeaderReminder , Separator } from 'toktokwallet/components';
@@ -36,6 +36,14 @@ export const ToktokWalletMerchantPaymentConfirm = ({
     const [swipeEnabled,setSwipeEnabled] = useState(false)
     const [errorMessage,setErrorMessage] = useState("")
     const [isCertify, setCertify] = useState(true)
+    const [serviceFee , setServiceFee] = useState(0);
+
+    useEffect(()=>{
+        if(merchant.paymentType === 1){
+            const serviceFee = +amount * (+branch.serviceFee / 100);
+            setServiceFee(serviceFee);
+        }
+    },[amount,merchant])
 
     return (
         <FlagSecureScreen>
@@ -68,6 +76,7 @@ export const ToktokWalletMerchantPaymentConfirm = ({
                                         tokwaAccount={tokwaAccount}
                                         errorMessage={errorMessage}
                                         setErrorMessage={setErrorMessage}
+                                        serviceFee={serviceFee}
                                     />
 
                                     <EnterNote
@@ -75,16 +84,21 @@ export const ToktokWalletMerchantPaymentConfirm = ({
                                         setNote={setNote}
                                     />
                                     <View style={{paddingHorizontal: 16}}> 
-                                        <TouchableOpacity 
+                                        {/* <TouchableOpacity 
                                             onPress={()=>navigation.navigate("ToktokWalletTermsConditions")}
                                             style={{paddingLeft: 5,marginRight: 16,marginBottom: 20}}
                                         >
                                             <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Please read our <Text style={{color: COLOR.ORANGE,fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M}}>Terms and Conditions</Text> before you proceed with your transaction.</Text>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity> */}
+                                       {
+                                           merchant.paymentType === 1 &&
+                                           <Text style={{fontFamily: FONT.REGULAR,fontSize: FONT_SIZE.M,marginBottom: 10}}>*An additional {branch.serviceFee}% service fee will be charged for this transaction.</Text>
+                                       }
 
 
                                         <ProceedButton 
                                             amount={amount} 
+                                            serviceFee={serviceFee}
                                             swipeEnabled={swipeEnabled} 
                                             setSwipeEnabled={setSwipeEnabled}
                                             note={note} 

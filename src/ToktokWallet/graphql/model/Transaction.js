@@ -67,7 +67,7 @@ id
 refNo
 name
 phrase
-details
+displayInfo
 amount
 note
 status

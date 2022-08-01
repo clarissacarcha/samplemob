@@ -106,7 +106,7 @@ const Splash = ({setConstants, setAppServices}) => {
         fetchPolicy: 'network-only',
       });
 
-      setAppServices(appServicesResult.data.getAppServices);
+      // setAppServices(appServicesResult.data.getAppServices);
 
       /**
        * Check App Version Status
@@ -124,6 +124,7 @@ const Splash = ({setConstants, setAppServices}) => {
       });
 
       const {isCurrent, enabled} = result.data.getAppVersionStatus;
+      console.log(result.data.getAppVersionStatus);
 
       if (isCurrent && enabled) {
         setcheckPoint('A');
@@ -226,8 +227,10 @@ const Splash = ({setConstants, setAppServices}) => {
               </Text>
             </View>
           </TouchableHighlight>
-          <TouchableHighlight onPress={() => setcheckPoint('A')} underlayColor={COLOR} style={{marginTop: 25}}>
-            <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, color: CONSTANTS.COLOR.ORANGE}}>Skip</Text>
+          <TouchableHighlight onPress={() => setcheckPoint('A')} underlayColor={COLOR} style={styles.submitBox}>
+            <View style={styles.submit}>
+              <Text style={{color: COLOR, fontSize: 20}}>Update Later</Text>
+            </View>
           </TouchableHighlight>
         </View>
         <Text style={{color: CONSTANTS.COLOR.ORANGE, marginBottom: 22, fontSize: CONSTANTS.FONT_SIZE.M}}>

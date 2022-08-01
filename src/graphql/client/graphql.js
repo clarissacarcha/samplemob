@@ -1,5 +1,12 @@
-import {ApolloLink, split} from 'apollo-link';
-import {HOST_PORT} from 'res/constants';
+import {ApolloLink, split, fromPromise} from 'apollo-link';
+import {
+  HOST_PORT,
+  PROTOCOL,
+  TOKTOK_WALLET_PROTOCOL,
+  TOKTOK_WALLET_PROTOCOL_HOST_PORT,
+  TOKTOK_MALL_PROTOCOL,
+  TOKTOK_MALL_PROTOCOL_HOST_PORT,
+} from '../../res/constants';
 import {onError} from 'apollo-link-error';
 import {ApolloClient} from 'apollo-client';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -17,6 +24,7 @@ const wsUrl = `ws://${HOST_PORT}/graphql`;
 const toktokVoucherBaseUrl = `${ENVIRONMENTS.TOKTOK_VOUCHERS_SERVER}/`;
 const toktokWalletBaseUrl = `${ENVIRONMENTS.TOKTOKWALLET_SERVER}/`;
 const toktokBillsLoadBaseUrl = `${ENVIRONMENTS.TOKTOKBILLSLOAD_SERVER}/`;
+const toktokMallBaseUrl = `${ENVIRONMENTS.TOKTOKMALL_SERVER}/`;
 const toktokFoodBaseUrl = `${ENVIRONMENTS.TOKTOKFOOD_SERVER}/`;
 const toktokGoBaseUrl = `${ENVIRONMENTS.TOKTOKGO_SERVER}/`;
 
@@ -111,6 +119,20 @@ const setToktokBillsLoadGraphqlTokenLink = setContext(async (_, {headers}) => {
   }
 });
 
+const setToktokMallGraphqlTokenLink = setContext(async (_, {headers}) => {
+  try {
+    const accountToken = await AsyncStorage.getItem('toktokMallAccountToken');
+    return {
+      headers: {
+        ...headers,
+        authorization: accountToken ? `Bearer ${accountToken}` : '',
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const setToktokGoGraphqlTokenLink = setContext(async (_, {headers}) => {
   try {
     const accountToken = await AsyncStorage.getItem('accessToken');
@@ -119,6 +141,20 @@ const setToktokGoGraphqlTokenLink = setContext(async (_, {headers}) => {
         ...headers,
         authorization: accountToken ? `Bearer ${accountToken}` : '',
         'X-API-KEY': ENVIRONMENTS.TOKTOKGO_X_API_KEY,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+const setToktokMallAuthGraphqlTokenLink = setContext(async (_, {headers}) => {
+  try {
+    const accountToken = await AsyncStorage.getItem('toktokMallAuthAccountToken');
+    return {
+      headers: {
+        ...headers,
+        authorization: accountToken ? `Bearer ${accountToken}` : '',
       },
     };
   } catch (error) {
@@ -171,6 +207,13 @@ const toktokQuotationUploadLink = createUploadLink({
 const toktokGoUploadLink = createUploadLink({
   uri: `${toktokGoBaseUrl}graphql/`,
 });
+const toktokMallGraphqlUploadLink = createUploadLink({
+  uri: `${toktokMallBaseUrl}graphql/`,
+});
+
+const toktokMallAuthGraphqlUploadLink = createUploadLink({
+  uri: `${toktokMallBaseUrl}auth/graphql/`,
+});
 
 const toktokWalletVoucherUploadLink = createUploadLink({
   uri: `${toktokVoucherBaseUrl}graphql/`,
@@ -197,6 +240,18 @@ const toktokBillsLoadGraphqlLink = ApolloLink.from([
   errorLinkLogger,
   setToktokBillsLoadGraphqlTokenLink,
   toktokBillsLoadGraphqlUploadLink,
+]);
+const toktokMallGraphqlLink = ApolloLink.from([
+  errorLinkLogger,
+  setTokenLink,
+  // setToktokMallGraphqlTokenLink,
+  toktokMallGraphqlUploadLink,
+]);
+const toktokMallAuthGraphqlLink = ApolloLink.from([
+  errorLinkLogger,
+  setTokenLink,
+  // setToktokMallAuthGraphqlTokenLink,
+  toktokMallAuthGraphqlUploadLink,
 ]);
 
 const toktokFoodGraphqlLink = ApolloLink.from([
@@ -235,6 +290,15 @@ export const TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
   link: toktokBillsLoadGraphqlLink,
 });
+export const TOKTOK_MALL_GRAPHQL_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: toktokMallGraphqlLink,
+});
+
+export const TOKTOK_MALL_AUTH_GRAPHQL_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: toktokMallAuthGraphqlLink,
+});
 export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
   cache: new InMemoryCache({
     typePolicies: {
@@ -242,8 +306,12 @@ export const TOKTOK_FOOD_GRAPHQL_CLIENT = new ApolloClient({
         fields: {
           getShops: {
             merge(existing = [], incoming) {
-              console.log(existing, incoming);
               return [...existing, ...incoming];
+            },
+          },
+          getProductsByShopCategory: {
+            merge(existing = [], incoming) {
+              return incoming;
             },
           },
         },
