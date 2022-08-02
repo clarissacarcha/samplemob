@@ -221,9 +221,14 @@ const OrderTotal = ({
     setTotalBasket(temporaryCart.totalAmountWithAddons + totalReseller);
   }, [temporaryCart]);
 
-  const totalAmount = (totalBasket + deliveryFee - totalSumSF - totalReseller - (totalPromotions + totalDeal)).toFixed(
-    2,
-  );
+  const totalAmount = (
+    pabiliServiceFee +
+    totalBasket +
+    deliveryFee -
+    totalSumSF -
+    totalReseller -
+    (totalPromotions + totalDeal)
+  ).toFixed(2);
   const deliveryAmount = forDelivery && totalAmount > 0 ? totalAmount : deliveryFee;
 
   return (
@@ -294,12 +299,13 @@ const OrderTotal = ({
               totalBasket -
               totalSumSF -
               totalReseller -
-              (totalPromotions + totalDeal)
+              (totalPromotions + totalDeal) +
+              pabiliServiceFee
             ).toFixed(2)}`}</Text>
           )}
         </View>
       </View>
-      {ModifiedAlert}
+      {isPabiliMerchant && ModifiedAlert}
     </>
   );
 };
