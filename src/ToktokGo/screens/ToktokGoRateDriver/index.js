@@ -13,6 +13,7 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
+import {useMutation} from '@apollo/react-hooks';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
 import CONSTANTS from '../../../common/res/constants';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -26,6 +27,7 @@ import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../res/const
 import {FeedbackModal} from './components';
 import {useDispatch} from 'react-redux';
 import ArrowLeft from '../../../assets/icons/arrow-left-icon.png';
+import {POST_GO_DRIVER_RATING} from '../../../graphql';
 
 const Keyboard_Height = -(Dimensions.get('window').height * 0.1);
 
@@ -71,11 +73,31 @@ const RateDriver = ({navigation, route}) => {
     textLength: 0,
   });
 
+  const [postGoDriverRating, {loadingConsumer}] = useMutation(POST_GO_DRIVER_RATING, {
+    onError: onError,
+    onCompleted: ({postGoDriverRating}) => {
+      console.log(postGoDriverRating, 'Driver Rating');
+    },
+  });
+
+  const driverRating = () => {
+    postGoDriverRating({
+      variables: {
+        rating: rating,
+        feedback: feedBack,
+        feedbackIcon: selected,
+        bookingId: '',
+        forTokDriverUserId: '',
+      },
+    });
+  };
+
   const dispatch = useDispatch();
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['', '']} />,
   });
+
   const starStatus = () => {
     if (rating == 1) {
       return 'Poor';
@@ -89,7 +111,9 @@ const RateDriver = ({navigation, route}) => {
       return 'Excellent';
     }
   };
+
   const showBookingReason = () => {
+    driverRating();
     setShowModal(!showModal);
   };
 

@@ -21,18 +21,18 @@ import ToktokWalletText from '../../../assets/images/ToktokwalletText.png';
 
 const {COLOR, FONT_SIZE, FONT_FAMILY} = CONSTANTS;
 
-const getStatus = (status) => {
+const getStatus = status => {
   //	1 = successful; 2 = pending; 3 = failed
-  switch(status){
+  switch (status) {
     case 1:
-      return { text: "Success", color: "#F6841F", iconName: "ios-paper-plane-outline" }
+      return {text: 'Success', color: '#F6841F', iconName: 'ios-paper-plane-outline'};
     case 3:
-      return { text: "Failed", color: "#ED3A19", iconName: "close-circle-outline" }
-    
-    default: 
-      return { text: "Pending", color: "#FDBA1C", iconName: "remove-circle-outline" }
+      return {text: 'Failed', color: '#ED3A19', iconName: 'close-circle-outline'};
+
+    default:
+      return {text: 'Pending', color: '#FDBA1C', iconName: 'remove-circle-outline'};
   }
-}
+};
 export const ActivityCard = ({item, onPress, isLastItem = false}) => {
   let {
     amount,
@@ -63,15 +63,23 @@ export const ActivityCard = ({item, onPress, isLastItem = false}) => {
             <Text style={styles.subText}>{transactionDateTime}</Text>
           </View>
           <View style={styles.rowAlignItemsCenter}>
-            { statusData.text == 'Success' ? (
-              <Image source={paper_airplane_icon} style={{ resizeMode: "contain", height: moderateScale(15), width: moderateScale(15) }} />
+            {statusData.text == 'Success' ? (
+              <Image
+                source={paper_airplane_icon}
+                style={{resizeMode: 'contain', height: moderateScale(15), width: moderateScale(15)}}
+              />
             ) : (
-              <VectorIcon size={moderateScale(15)} iconSet={ICON_SET.Ionicon} color={statusData.color} name={statusData.iconName} />
+              <VectorIcon
+                size={moderateScale(15)}
+                iconSet={ICON_SET.Ionicon}
+                color={statusData.color}
+                name={statusData.iconName}
+              />
             )}
             <Text style={[styles.statusText]}>{statusData.text}</Text>
           </View>
         </View>
-        
+
         <View style={styles.detailTwoContainer}>
           <Image source={{uri: loadDetails?.networkDetails.iconUrl}} style={styles.networkIcon} />
           <View style={{paddingLeft: moderateScale(10), flexShrink: 1}}>
@@ -128,8 +136,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FBFAE3',
     borderTopRightRadius: 5,
     borderTopLeftRadius: 5,
-    flexDirection: "row",
-    justifyContent: "space-between"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   subText: {
     color: '#525252',
@@ -167,14 +175,14 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILY.BOLD,
   },
   rowAlignItemsCenter: {
-    flexDirection: "row",
-    alignItems: "center"
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerContainer: {
     flexShrink: 1,
-    marginRight: moderateScale(10)
+    marginRight: moderateScale(10),
   },
   statusText: {
-    paddingLeft: moderateScale(3)
+    paddingLeft: moderateScale(3),
   },
 });
