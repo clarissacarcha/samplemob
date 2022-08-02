@@ -1,94 +1,8 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ActivityIndicator} from 'react-native';
-import { COLOR, FONT } from '../../../../../res/variables';
-import { ScrollView } from 'react-native-gesture-handler';
-import CustomIcon from '../../../../Components/Icons';
+import React, {useState, useEffect } from 'react';
+import { StyleSheet, View, FlatList, ActivityIndicator } from 'react-native';
+import { FONT } from '../../../../../res/variables';
 import { useNavigation } from '@react-navigation/native';
-import {placeholder} from '../../../../assets';
-import { SwipeReloader, PromotionBanner, RefComDiscountRate } from '../../../../Components';
-import { Price } from '../../../../helpers';
-
-const RenderStars = ({value}) => {
-  let orange = "#FFC833"
-  let gray = "rgba(33, 37, 41, 0.1)"
-  return (
-    <>
-      <CustomIcon.FoIcon name="star" size={12} color={value >= 1 ? orange : gray}  />
-      <CustomIcon.FoIcon name="star" size={12} color={value >= 2 ? orange : gray} />
-      <CustomIcon.FoIcon name="star" size={12} color={value >= 3 ? orange : gray} />
-      <CustomIcon.FoIcon name="star" size={12} color={value >= 4 ? orange : gray} />
-      <CustomIcon.FoIcon name="star" size={12} color={value >= 5 ? orange : gray} />
-    </>
-  )
-}
-
-const RenderItem = ({navigation, item}) => {
-
-  const getImageSource = (data) => {
-    if(data.length > 0){
-      return {uri: data[0].filename}
-    }else {
-      return placeholder
-    }
-  }
-
-  return (
-    <>
-      <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
-                  
-        <TouchableOpacity onPress={() => navigation.navigate("ToktokMallProductDetails", item)} style={{padding: 5}}>
-          {item?.discountRate != "" && 
-          <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
-            <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
-          </View>}
-          {
-            item.promotions && item.promotions != null &&
-            <PromotionBanner 
-              label={item.promotions.name}
-              content={item.promotions.duration}
-            />
-          }
-          <Image 
-            source={getImageSource(item?.images || [])} 
-            style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
-          />
-          <View>
-            <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}} numberOfLines={2}>{item?.itemname || ""}</Text>
-          </View>
-          {/* <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item?.price}/></Text>    
-          <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 7, flexDirection: 'row'}}>
-              <RenderStars value={item?.rating} />
-            </View>
-            <View style={{flex: 9}}>
-              <Text style={{color: "#9E9E9E", fontSize: 10}}>({item?.noOfStocks || 0})</Text>
-            </View>
-            <View style={{flex: 3}}>
-              <Text style={{fontSize: 10}}>{item?.soldCount || 0} sold</Text>
-            </View>
-          </View> */}
-          <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 2.3}}>
-              <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>
-            </View>
-            <View style={{flex: 2, justifyContent: 'center'}}>
-            {
-                item.discountRate && item.discountRate != "" || 
-                item.refComDiscountRate && item.refComDiscountRate != "" ?  
-                <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}>
-                  {item.compareAtPrice == "" ? null : <Price amount={item.compareAtPrice} />}
-                  </Text> : <></>}
-            </View>
-            <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
-              <Text style={{fontSize: 9}}>{item.weeklySold || item.soldCount || 0} sold</Text>
-            </View>
-          </View>
-          {item.refComDiscountRate && item.refComDiscountRate != "" ? <RefComDiscountRate value={item.refComDiscountRate} /> : null}
-        </TouchableOpacity>
-      </View>
-    </>
-  )
-}
+import { Item } from './Item';
 
 export const Product = ({data, state, fetch, lazyload, loading2}) => {
 
@@ -108,7 +22,7 @@ export const Product = ({data, state, fetch, lazyload, loading2}) => {
     return (
       <>
         <View style={styles.container}>
-            
+
             <FlatList
               data={products}
               numColumns={2}
@@ -120,13 +34,13 @@ export const Product = ({data, state, fetch, lazyload, loading2}) => {
                   if(index == products?.length - 1){
                     return (
                       <>
-                        <RenderItem navigation={navigation} item={item} />
+                        <Item navigation={navigation} item={item} />
                         <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}></View>
                       </>
                     )
                   }                  
                 }
-                return <RenderItem navigation={navigation} item={item} />
+                return <Item navigation={navigation} item={item} />
               }}
               onScroll = {({nativeEvent}) => {
                 if(isCloseToBottom(nativeEvent)){
@@ -153,11 +67,36 @@ export const Product = ({data, state, fetch, lazyload, loading2}) => {
   }
 
 const styles = StyleSheet.create({
-  container: {flex: 0, paddingVertical: 10},
-  heading: {paddingHorizontal: 15, paddingVertical: 20, flexDirection: 'row'},
-  h1: {fontSize: 14, fontFamily: FONT.BOLD},
-  link: {fontSize: 12, color: "#F6841F"},
-  image: {width: 50, height: 50, resizeMode: 'cover', alignSelf: 'center', borderRadius: 8},
-  label: {fontSize: 11, alignSelf: 'center'},
-  separator: { height: 8, backgroundColor: '#F7F7FA'}
+  container: {
+    flex: 0,
+    paddingVertical: 10
+  },
+  heading: {
+    paddingHorizontal: 15, 
+    paddingVertical: 20, 
+    flexDirection: 'row'
+  },
+  h1: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  link: {
+    fontSize: 12, 
+    color: "#F6841F"
+  },
+  image: {
+    width: 50, 
+    height: 50, 
+    resizeMode: 'cover', 
+    alignSelf: 'center', 
+    borderRadius: 8
+  },
+  label: {
+    fontSize: 11, 
+    alignSelf: 'center'
+  },
+  separator: { 
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  }
 })

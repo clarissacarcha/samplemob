@@ -16,7 +16,7 @@ const DeleteButton = ({onPress}) => {
 		<TouchableOpacity
 			onPress={onPress}
 			activeOpacity={1}
-			style={{flex: 1, width: 75, backgroundColor: '#F6841F', alignItems: 'center', justifyContent: 'center'}}>
+			style={styles.deleteButton}>
 			{/* <Text style={{fontSize: 14, color: '#fff'}}>Delete</Text> */}
 			<CustomIcon.FoIcon name="trash" size={20} color={"white"} />
 		</TouchableOpacity>
@@ -187,9 +187,9 @@ export const RenderDetails = forwardRef(({
 		disabled={storeCheckboxIsDisabled()}
         onSelect={(raw) => {
           	toggleCheckBox(raw.checked);
-          	onStoreSelect(raw, CartContext.willDelete ? item.data : item.data.filter(item => (item.product.enabled === 1 && item.product.noOfStocks !== 0)));
-					CartContextData.setSelectAll(false);
-					CartContextData.setSelectedFrom('store')
+          	onStoreSelect(raw, CartContext.willDelete ? item.data : item.data.filter(item => (item.product.enabled === 1 && (item.product.contSellingIsset === 1 ? true : item.product.noOfStocks > 0))));
+			CartContextData.setSelectAll(false);
+			CartContextData.setSelectedFrom('store')
         }}
         onPress={onPress}
       />
@@ -318,4 +318,14 @@ export const RenderDetails = forwardRef(({
       {/* <View style={{height: 8, backgroundColor: '#F7F7FA'}} /> */}
     </>
   );
+})
+
+const styles = StyleSheet.create({
+	deleteButton: {
+		flex: 1, 
+		width: 75, 
+		backgroundColor: '#F6841F', 
+		alignItems: 'center', 
+		justifyContent: 'center'
+	}
 })

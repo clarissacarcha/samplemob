@@ -282,14 +282,14 @@ const Component =  ({
     <>
       <View style={styles.container}>
         <Header label="Shopping Cart" />
-        <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
-        <View style={{flex: 1}}>
-          <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-            <View style={{flex: 6, justifyContent: 'center'}}>
+        <View style={styles.margin1} />
+        <View style={styles.flex1}>
+          <View style={styles.deleteContainer}>
+            <View style={styles.deleteCheckboxContainer}>
               <CheckBox
                 isChecked={allSelected}
                 rightText="Select All"
-                rightTextStyle={{fontSize: 14, fontWeight: '500'}}
+                rightTextStyle={styles.deleteCheckbox}
                 checkedCheckBoxColor="#F6841F"
                 uncheckedCheckBoxColor="#F6841F"
                 onClick={() => {
@@ -310,11 +310,11 @@ const Component =  ({
             </View>
             <TouchableOpacity
               onPress={() => setWillDelete(!willDelete)}
-              style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
-              <Text style={{fontSize: 14, color: '#F6841F'}}>{willDelete ? 'Done' : 'Edit'}</Text>
+              style={styles.deleteButton}>
+              <Text style={styles.deleteButtonText}>{willDelete ? 'Done' : 'Edit'}</Text>
             </TouchableOpacity>
           </View>
-          <View style={{height: 2, backgroundColor: '#F7F7FA'}} />
+          <View style={styles.margin2} />
 
           <FlatList
             // data={testdata}
@@ -358,7 +358,7 @@ const Component =  ({
                     }} 
                     deleteItem = {deleteItem}
                   />
-                  <View style={{height: 8, backgroundColor: '#F7F7FA'}} />
+                  <View style={styles.margin3} />
                 </>
               );
             }}
@@ -366,7 +366,7 @@ const Component =  ({
             showsVerticalScrollIndicator={false}
           />
 
-          <View style={{height: 80}}></View>
+          <View style={styles.margin4}></View>
 
           {willDelete ? 
           <DeleteFooter onDelete={() => {
@@ -410,4 +410,44 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.WHITE,
   },
+  margin1: {
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  },
+  flex1: {
+    flex: 1
+  },
+  deleteContainer: {
+    flexDirection: 'row', 
+    paddingVertical: 15, 
+    paddingHorizontal: 15
+  },
+  deleteCheckboxContainer: {
+    flex: 6, 
+    justifyContent: 'center'
+  },
+  deleteCheckbox: {
+    fontSize: 14, 
+    fontWeight: '500'
+  },
+  deleteButton: {
+    flex: 1, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  deleteButtonText: {
+    fontSize: 14, 
+    color: '#F6841F'
+  },
+  margin2: {
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  },
+  margin3: {
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  },
+  margin4: {
+    height: 80
+  }
 });

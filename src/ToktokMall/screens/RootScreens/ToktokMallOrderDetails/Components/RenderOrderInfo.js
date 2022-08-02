@@ -1,16 +1,18 @@
 import React from 'react'
-import {View, Text, Image, StyleSheet} from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { FONT } from '../../../../../res/variables';
 import {
     carIcon, 
     cancelledIcon, 
     deliveredIcon, 
-    walletIcon
+    walletIcon,
+    paypandalogo
 } from './../../../../assets';
+import { DisplayDateAndTime } from '../../../../helpers';
 
 export const RenderOrderInfo = ({ data }) => {
   
-    const status = ['All', 'Confirmed', 'To Ship', 'To Receive', 'Delivered', 'Cancelled']
+    const status = ['To Pay', 'Confirmed', 'To Ship', 'To Receive', 'Delivered', 'Cancelled']
 
     return (
         <>
@@ -31,22 +33,27 @@ export const RenderOrderInfo = ({ data }) => {
                             : carIcon
                         }
                     />
-                <Text style={styles.status} >
-                    {status[data?.status?.status]}
-                </Text>
+                    <Text style={styles.status} >
+                        {status[data?.status?.status]}
+                    </Text>
                 </View>
             </View>
         
             <View style={styles.delivery}>
                 <View style={{flex: 1.5, flexDirection: 'column'}}>
                     <Text style={styles.orderInfo}>Delivery Information</Text>
-                    <Text style={styles.date}>{data?.status?.date}</Text>
+                    <Text style={[styles.subText, { color: "#525252" } ]}>
+                        {DisplayDateAndTime(data?.status?.date)}
+                    </Text>
                 </View>
                 <View style={styles.imgView2}>
                     <Image 
                         style={styles.img2}
-                        source={walletIcon}
+                        source={data?.paymentMethod == "TOKTOKWALLET" ? walletIcon : paypandalogo}
                     />
+                    {/* <Text style={[styles.subText, { color: "#F6841F" } ]}>
+                            Waiting for payment
+                        </Text> */}
                 </View>
             </View>
             <View style={[ styles.line, { marginHorizontal:16 } ]} />
@@ -95,17 +102,17 @@ const styles = StyleSheet.create({
         paddingVertical: 16, 
         paddingHorizontal: 16
     },
-    date: {
-        color: "#525252", 
-        fontSize: 11
+    subText: {
+        fontSize: 11,
+        paddingTop: 8
     },
     imgView2: {
-        flexDirection: 'row', 
-        alignItems:'center'
+        flexDirection: 'column', 
+        alignItems:'flex-end'
     },
     img2: {
         height: 20, 
-        width: 100, 
-        resizeMode: 'contain' 
+        width: 90, 
+        resizeMode: 'contain'
     },
   }) 

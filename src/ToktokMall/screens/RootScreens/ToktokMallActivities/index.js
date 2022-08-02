@@ -1,13 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import {
   View, 
   StyleSheet, 
   BackHandler
 } from 'react-native';
-import { 
-  HeaderTab,
-  LoadingOverlay
-} from '../../../Components';
 import {
   Processing, 
   ToShip, 
@@ -17,10 +13,11 @@ import {
   All
 } from './Components';
 import { useFocusEffect } from '@react-navigation/native';
+import { HeaderTab } from '../../../Components';
 
 export const ToktokMallActivities = ({navigation, route}) => {
 
-  const [activeTab, setActiveTab] = useState(route.params.tab || 0);
+  const [activeTab, setActiveTab] = useState(route?.params?.tab || 0);
   const [apiloader, setapiloader] = useState(false)
 
   useFocusEffect(
@@ -59,11 +56,10 @@ export const ToktokMallActivities = ({navigation, route}) => {
 
       {activeTab == 3 && <ToRecieve />}
 
-      {activeTab == 4 && <Completed onPressBuy={onPressBuy} />}
+      {activeTab == 4 && <Completed />}
 
-      {activeTab == 5 && <Cancelled onPressBuy={onPressBuy} />}
+      {activeTab == 5 && <Cancelled />}
       
-      {apiloader && <LoadingOverlay isVisible={apiloader} />}
     </View>
   );
 };

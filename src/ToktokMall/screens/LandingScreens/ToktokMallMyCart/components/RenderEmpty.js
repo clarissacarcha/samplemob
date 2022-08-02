@@ -6,17 +6,44 @@ import {emptyCartIcon} from '../../../../assets';
 export const RenderEmpty = () => {
 	return (
 		<>
-			<View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
-        <Image 
+			<View style={styles.container}>
+				<Image 
 					source={emptyCartIcon}
-					style={{width: '80%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}}
+					style={styles.emptyIcon}
 				/>
-        <View style={{height: 8}} />
-        <View>
-					<Text style={{fontSize: 16, color: "black", textAlign: 'center'}}>Your cart is empty</Text>
-					<Text style={{fontSize: 12, color: '#525252', textAlign: 'center'}}>Browse our products and add to your cart now!</Text>
+				<View style={styles.margin} />
+				<View>
+					<Text style={styles.emptyTitle1}>Your cart is empty</Text>
+					<Text style={styles.emptyTitle2}>Browse our products and add to your cart now!</Text>
 				</View>
-      </View>
+			</View>
 		</>
 	)
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1, 
+		backgroundColor: 'white', 
+		alignItems: 'center', 
+		justifyContent: 'center'
+	},
+	emptyIcon: {
+		width: '80%', 
+		height: Dimensions.get("screen").height / 4, 
+		resizeMode: 'contain'
+	},
+	margin: {
+		height: 8
+	},
+	emptyTitle1: {
+		fontSize: 16, 
+		color: "black", 
+		textAlign: 'center'
+	},
+	emptyTitle2: {
+		fontSize: 12, 
+		color: '#525252', 
+		textAlign: 'center'
+	}
+})

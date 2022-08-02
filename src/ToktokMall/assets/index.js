@@ -25,6 +25,7 @@ export const otpbg = require("../assets/images/otp-bg.png")
 export const emptyorders = require("../assets/images/empty-orders.png")
 export const emptynotification = require("../assets/images/empty-notification.png")
 export const emptysearch = require("../assets/images/empty-search.png")
+export const noHistoryFound = require("../assets/images/noHistoryFound.png")
 export const contactus = require("../assets/images/contact-us.png");
 export const walletIcon = require("../assets/images/tokwaicon.png");
 export const emptyPlaceOrder = require("../assets/images/empty_place_order.png");
@@ -42,9 +43,15 @@ export const otpicon2 = require("../assets/icons/otpicon2.png")
 export const emptyCartIcon = require("../assets/icons/empty-cart.png");
 export const emptyFaveIcon = require("../assets/icons/empty-fave.png");
 export const emptyFollowingIcon = require("../assets/icons/empty-following.png");
+export const voucherIcon = require("../assets/icons/voucher.png");
+export const success2 = require("../assets/icons/success2.png");
 export const carIcon = require("./icons/car-outline.png")
 export const shopIcon = require("./icons/shop-outline.png");
 export const destination = require("../assets/icons/destination.png");
 export const origin = require("../assets/icons/origin.png");
 export const cancelledIcon = require("./icons/cancelled.png")
 export const deliveredIcon = require("../assets/icons/double-check.png");
+export const paypandalogo = require("./icons/paypandalogo.png")
+
+//LOTIE
+export const loadingLottie = require("./lottie/loading.json");

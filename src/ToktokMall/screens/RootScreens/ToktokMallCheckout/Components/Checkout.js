@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions } from 'react-native';
-// import { COLOR, FONT } from '../../../../../../res/variables';
+import { StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions } from 'react-native';
+import { COLOR, FONT } from '../../../../../res/variables';
 // import {LandingHeader, AdsCarousel} from '../../../../../Components';
 // import { ScrollView } from 'react-native-gesture-handler';
 // import CustomIcon from '../../../../../Components/Icons';
@@ -87,23 +87,49 @@ const Checkout = ({data}) => {
         
       </ScrollView>  
       <View style ={styles.footer}>
-               <Button data = {testData2} />
-             </View>
+        <Button data = {testData2} />
+      </View>
     </>
     )
 }
 
 const styles = StyleSheet.create({
-  body: {flex: 1, backgroundColor: '#F7F7FA', },
-  container: {padding: 15, backgroundColor: 'white', marginTop: 15,  flex: 1},
-  addressContainer: {borderRadius: 5, backgroundColor: '#F8F8F8', padding: 10, marginTop: 10, marginBottom: 10},
-  defaultText: {color: '#F6841F'},
-  fullName: {},
-  contact_number: {color: '#9E9E9E'},
-  address: {marginTop: 10, fontWeight: 'bold'},
-  button: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, height: 50,
-    elevation: 5, shadowOffset: {width: 1, height: 1}, shadowColor: '#000',
-
+  body: {
+    flex: 1, 
+    backgroundColor: COLOR.LIGHT, 
+  },
+  container: {
+    padding: 15, 
+    backgroundColor: COLOR.WHITE, 
+    marginTop: 15,  
+    flex: 1
+  },
+  addressContainer: {
+    borderRadius: 5, 
+    backgroundColor: '#F8F8F8', 
+    padding: 10, 
+    marginTop: 10,
+    marginBottom: 10
+  },
+  defaultText: {
+    color: '#F6841F'
+  },
+  contact_number: {
+    color: COLOR.GRAY
+  },
+  address: {
+    marginTop: 10, 
+    fontWeight: 'bold'
+  },
+  button: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    lignItems: 'center', 
+    marginTop: 10, 
+    height: 50,
+    elevation: 5, 
+    shadowOffset: {width: 1, height: 1}, 
+    shadowColor: '#000',
     shadowOpacity: 0.4,
     shadowRadius: 3
   },

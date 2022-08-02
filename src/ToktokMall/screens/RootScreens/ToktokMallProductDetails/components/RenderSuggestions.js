@@ -14,36 +14,6 @@ import {clothfacemask, medicalfacemask, placeholder} from '../../../../assets';
 import { useNavigation } from '@react-navigation/core';
 import { useSelector } from 'react-redux';
 
-const testdata = [{
-  image: clothfacemask,
-  rating: 4,
-  price: 190,
-  stock: 35,
-  sold: 187,
-  label: "Cloth Face Mask"
-}, {
-  image: medicalfacemask,
-  rating: 3,
-  price: 80,
-  stock: 201,
-  sold: 407,
-  label: "Medical Face Mask"
-}, {
-  image: clothfacemask,
-  rating: 5,
-  price: 190,
-  stock: 35,
-  sold: 187,
-  label: "Cloth Face Mask"
-}, {
-  image: medicalfacemask,
-  rating: 2,
-  price: 190,
-  stock: 35,
-  sold: 187,
-  label: "Medical Face Mask"
-}]
-
 const RenderStars = ({value}) => {
   let orange = "#FFC833"
   let gray = "rgba(33, 37, 41, 0.1)"
@@ -72,24 +42,47 @@ const RenderItem = ({item}) => {
 
   return (
     <>
-      <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
+      <View style={styles.subContainer}>
                   
-        <TouchableOpacity activeOpacity={1} onPress={() => {
-          navigation.push("ToktokMallProductDetails", {Id: item.Id, itemname: item.itemname})
-        }} style={{padding: 5}}>
-          {item?.discountRate != "" && 
-          <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
-            <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
-          </View>}
+        <TouchableOpacity 
+          activeOpacity={1} 
+          onPress={() => {
+            navigation.push("ToktokMallProductDetails", 
+            {Id: item.Id, itemname: item.itemname})
+          }} 
+          style={{padding: 5}}
+        >
+
+          {
+            item?.discountRate != "" && 
+              <View style={styles.discountRateContainer}>
+                  <Text style={styles.discountRatetext}>
+                    {item?.discountRate}
+                  </Text>
+              </View>
+          }
+
           {
             item.promotions && item.promotions != null && 
-            <PromotionBanner label={item.promotions.name} content={item.promotions.duration} />
+            <PromotionBanner 
+              label={item.promotions.name} 
+              content={item.promotions.duration} 
+            />
           }
+
           <Image 
             source={getImageSource(item.images)} 
-            style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
+            style={styles.itemImages} 
           />
-          <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}} numberOfLines={2} ellipsizeMode="tail">{item.itemname}</Text>
+
+          <Text 
+            style={styles.itemTitle} 
+            numberOfLines={2} 
+            ellipsizeMode="tail"
+          >
+            {item.itemname}
+          </Text>
+          
           {/* <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
@@ -102,24 +95,31 @@ const RenderItem = ({item}) => {
               <Text style={{fontSize: 10}}>{item.soldCount || 0} sold</Text>
             </View>
           </View> */}
+
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 2.3}}>
-              <Text style={{fontSize: 12, color: "#F6841F"}}><Price amount={item.price} /></Text>
+              <Text style={{fontSize: 12, color: "#F6841F"}}>
+                <Price amount={item.price} />
+              </Text>
             </View>
+
             <View style={{flex: 2, justifyContent: 'center'}}>
-            {
+              {
                 item.discountRate && item.discountRate != "" || 
                 item.refComDiscountRate && item.refComDiscountRate != "" ?  
                 <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}>
                   {item.compareAtPrice == "" ? null : <Price amount={item.compareAtPrice} />}
-                  </Text> : <></>}
+                  </Text> : <></>
+              }
             </View>
-            <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
+
+            <View style={styles.itemStocks}>
               <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
             </View>
           </View>
           {
-            item.refComDiscountRate && item.refComDiscountRate != "" ? <RefComDiscountRate value={item.refComDiscountRate} /> : null
+            item.refComDiscountRate && item.refComDiscountRate != "" ? 
+            <RefComDiscountRate value={item.refComDiscountRate} /> : null
           }
         </TouchableOpacity>
       </View>
@@ -187,11 +187,15 @@ export const RenderSuggestions = ({data, lazyload, category}) => {
         <View style={styles.container}>
             <View style={styles.heading}>
               <View style={{flex: 8}}>
-                <Text style={styles.h1}>Suggestions for you</Text>
+                <Text style={styles.h1}>Discover</Text>
               </View>
-              <TouchableOpacity onPress={() => 
-            navigate("ToktokMallSearch", {searchValue: "Suggestions for you", origin: "relevant", data: data })}style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
-                <Text style={styles.link}>See all </Text>
+              <TouchableOpacity 
+                onPress={() => 
+                  navigate("ToktokMallSearch", {
+                    searchValue: "Discover", origin: "relevant", data: data 
+                })}
+                style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+                  <Text style={styles.link}>See all </Text>
               </TouchableOpacity>
               <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
                 <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
@@ -228,11 +232,72 @@ export const RenderSuggestions = ({data, lazyload, category}) => {
   }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, paddingVertical: 0},
-  heading: {paddingHorizontal: 15, paddingVertical: 20, flexDirection: 'row'},
-  h1: {fontSize: 14, fontFamily: FONT.BOLD},
-  link: {fontSize: 12, color: "#F6841F"},
-  image: {width: 50, height: 50, resizeMode: 'cover', alignSelf: 'center', borderRadius: 8},
-  label: {fontSize: 11, alignSelf: 'center'},
-  separator: {flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}
+  container: {
+    flex: 1, 
+    paddingVertical: 0
+  },
+  heading: {
+    paddingHorizontal: 15, 
+    paddingVertical: 20, 
+    flexDirection: 'row'
+  },
+  h1: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  link: {
+    fontSize: 12, 
+    color: "#F6841F"
+  },
+  image: {
+    width: 50, 
+    height: 50, 
+    resizeMode: 'cover', 
+    alignSelf: 'center', 
+    borderRadius: 8
+  },
+  label: {
+    fontSize: 11, 
+    alignSelf: 'center'
+  },
+  separator: {
+    flex: 0.5,
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  },
+  subContainer: {
+    flex: 2, backgroundColor: '#fff', margin: 5
+  },
+  discountRateContainer:{
+    position:'absolute', 
+    zIndex: 1, 
+    right: 0, 
+    backgroundColor: '#F6841F', 
+    borderBottomLeftRadius: 30
+  },
+  discountRatetext: {
+    fontSize: 8, 
+    paddingHorizontal: 4, 
+    paddingLeft: 8, 
+    paddingTop: 1, 
+    paddingBottom: 3, 
+    color: "#fff", 
+    fontFamily: FONT.BOLD
+  },
+  itemImages: {
+    resizeMode: 'cover', 
+    width: '100%', 
+    height: 120, 
+    borderRadius: 5
+  },
+  itemTitle: {
+    fontSize: 13, 
+    fontWeight: '500', 
+    paddingVertical: 5
+  },
+  itemStocks: {
+    flex: 1.3, 
+    justifyContent: 'center', 
+    alignItems: 'flex-end'
+  }
 })

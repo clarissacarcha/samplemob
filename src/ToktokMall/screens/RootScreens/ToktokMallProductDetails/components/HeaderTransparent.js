@@ -78,12 +78,13 @@ export const HeaderTransparent = ({value, outOfStock = false, animatedValue, car
           </View>
         </View>
         
-        {outOfStock && 
+        {/* {outOfStock && 
         <View style={{backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}}>
           <View style={{width: 150, height: 150, borderRadius: 150/2, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
             <Text style={{fontFamily: FONT.BOLD, fontSize: 18, color: "#fff"}}>OUT OF STOCK</Text>
           </View>
-        </View>}
+        </View>
+        } */}
 
       </Animated.View>
       <Animated.View style={[{height: 3, backgroundColor: '#F7F7FA'}, {opacity: translateOpacity}]} />

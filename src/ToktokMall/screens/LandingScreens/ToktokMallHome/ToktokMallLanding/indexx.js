@@ -110,7 +110,7 @@ export const ToktokMallLandingScreen = () => {
   );
 
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <View style={styles.container}>
       {/* <SectionList         
         renderSectionHeader={({section: {title}}) => (<View />)}
         sections={[
@@ -191,61 +191,36 @@ export const ToktokMallLandingScreen = () => {
       <Animated.View>
         <Animated.Image
           source={banner}
-          style={[
-            {
-              width: "100%",
-              resizeMode: "stretch",
-              width: '100%',
-            }, 
-            {
-              height: animateHeaderHeight
-            }
-          ]}
+          style={[styles.bannerImage, {height: animateHeaderHeight}]}
         />
-        <View style={[{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 35, position: 'absolute'}]}>
-          <View style={{flex: 0, alignItems: 'center', paddingHorizontal: 15, paddingTop: 8}}>
+        <View style={styles.subContainer}>
+          <View style={styles.leftContainer}>
             <FIcon5 name="chevron-left" color={COLOR.ORANGE} size={15}/>
           </View>
-          <View style={{flex: .5}}></View>
-          <View style={{flex: 10, alignItems: 'center', paddingTop: 15}}>
+          <View style={styles.margin1}></View>
+          <View style={styles.TTMHContainer}>
             <Animated.Image 
               source={toktokmallH} 
-              style={[
-                {
-                  width: '75%',
-                  height: 35,
-                  resizeMode: 'stretch'
-                },
-                {
-                  opacity:animateHeaderOpacity
-                }
-              ]} />
+              style={[styles.TTMHImage, {opacity:animateHeaderOpacity}]} />
           </View>
-          <View style={{flex: 2}} />
+          <View style={styles.margin2} />
         </View>
 
         <Animated.View 
-          style={[
-            {
-              flexDirection: 'row',
-              backgroundColor: '#fff', 
-              padding: 4, 
-              elevation: 8,
-              borderRadius: 6
-            }, 
+          style={[styles.searchContainer, 
             {
               top: translatey,
               width: translateWidth,
               left: translateLeft
             }
           ]}>
-          <TouchableOpacity style={{flex: 1,}} onPress ={onPress}>
-          <TouchableOpacity style={{flex: 0, paddingHorizontal: 8,  paddingVertical: 4}} onPress ={onPress}>
-            <AIcon name="search" color={COLOR.ORANGE} size={22}/>
-          </TouchableOpacity>
-          <TouchableOpacity style={{flex: 0, justifyContent: 'center', paddingVertical: 4}} onPress ={onPress}>
-            <Text style={{color: "darkgray", fontSize: 13}}>Search</Text>
-          </TouchableOpacity>
+          <TouchableOpacity style={styles.searchButton} onPress ={onPress}>
+            <TouchableOpacity style={styles.searchButton1} onPress ={onPress}>
+              <AIcon name="search" color={COLOR.ORANGE} size={22}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.searchButton2} onPress ={onPress}>
+              <Text style={styles.searchButtonText}>Search</Text>
+            </TouchableOpacity>
           </TouchableOpacity>
         </Animated.View>
 
@@ -285,5 +260,68 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     textAlign: 'center'
+  },
+  container: {
+    flex: 1, 
+    backgroundColor: '#fff'
+  },
+  bannerImage: {
+    width: "100%",
+    resizeMode: "stretch",
+    width: '100%',
+  },
+  subContainer: {
+    flex: 1, 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'flex-end', 
+    marginTop: 35, 
+    position: 'absolute'
+  },
+  leftContainer: {
+    flex: 0, 
+    alignItems: 'center', 
+    paddingHorizontal: 15, 
+    paddingTop: 8
+  },
+  margin1: {
+    flex: .5
+  },
+  TTMHContainer: {
+    flex: 10, 
+    alignItems: 'center', 
+    paddingTop: 15
+  },
+  TTMHImage: {
+    width: '75%',
+    height: 35,
+    resizeMode: 'stretch'
+  },
+  margin2: {
+    flex: 2
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#fff', 
+    padding: 4, 
+    elevation: 8,
+    borderRadius: 6
+  },
+  searchButton: {
+    flex: 1,
+  },
+  searchButton1: {
+    flex: 0, 
+    paddingHorizontal: 8, 
+    paddingVertical: 4
+  },
+  searchButton2: {
+    flex: 0, 
+    justifyContent: 'center', 
+    paddingVertical: 4
+  },
+  searchButtonText: {
+    color: "darkgray", 
+    fontSize: 13
   }
 })

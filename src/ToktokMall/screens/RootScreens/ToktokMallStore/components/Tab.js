@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {throttle} from 'lodash';
 
@@ -21,8 +21,8 @@ const ButtonTab = ({label, index, active, onPress}) => {
 
   return (
     <>
-      <TouchableOpacity onPress={onButtonPress} style={{ backgroundColor: bgcolor, borderRadius: 5, paddingHorizontal: 20, paddingVertical: 8}}>
-        <Text style={{fontSize: 12, color: txtcolor}}>{label}</Text>
+      <TouchableOpacity onPress={onButtonPress} style={styles.labelButton(bgcolor)}>
+        <Text style={styles.labelText(txtcolor)}>{label}</Text>
       </TouchableOpacity>
     </>
   )
@@ -41,8 +41,8 @@ export const Tab = (props) => {
 
 	return (
 		<>
-			<View style={{flexDirection: 'row', paddingBottom: 15, paddingHorizontal: 15}}>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12}}>
+			<View style={styles.container}>
+        <View style={styles.buttonTabContainer}>
           <ButtonTab 
             label="All Products"
             index={0}
@@ -67,9 +67,44 @@ export const Tab = (props) => {
           />
         </View>          */}
       </View>
-      <View style={{paddingHorizontal: 15}}>
-        <View style={{height: 2, backgroundColor: "#F7F7FA"}} />
+      <View style={styles.marginContainer}>
+        <View style={styles.margin1} />
       </View>
 		</>
 	)
 }
+
+const styles = StyleSheet.create({
+  labelButton: (bgcolor) => {
+    return {
+      backgroundColor: bgcolor, 
+      borderRadius: 5, 
+      paddingHorizontal: 20, 
+      paddingVertical: 8
+    }
+  },
+  labelText: (txtcolor) => {
+    return {
+      fontSize: 12, 
+      color: txtcolor
+    }
+  },
+  container: {
+    flexDirection: 'row', 
+    paddingBottom: 15, 
+    paddingHorizontal: 15
+  },
+  buttonTabContainer: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    paddingHorizontal: 12
+  },
+  marginContainer: {
+    paddingHorizontal: 15
+  },
+  margin1: {
+    height: 2, 
+    backgroundColor: "#F7F7FA"
+  }
+})

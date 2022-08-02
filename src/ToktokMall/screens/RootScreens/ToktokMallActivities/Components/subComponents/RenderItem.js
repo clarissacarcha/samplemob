@@ -8,35 +8,57 @@ import {
 } from 'react-native'
 import { 
     RenderStore,
-    RenderSummary
+    RenderSummary,
 } from './';
 import { 
     carIcon,
-    cancelledIcon
+    cancelledIcon,
+    deliveredIcon
 } from '../../../../../assets';
 import { Hairline } from '../../../../../../components/widgets';
 import { DisplayDateAndTime } from '../../../../../helpers';
-import CustomIcon from './.../../../../../../../Components/Icons';
+import { BuyAgainButton } from '../../../../../Components';
 
 export const RenderItem = (props) => {
     const { 
         onPressCard,
-        onPressBuy,
+        renderBuyAgain,
         fulldata,
     } = props;
 
     const {
         referenceNum,
+				unpaidOrder,
         status,
         orders
     } = fulldata;
     const cancelled = status.status === 5;
 
-    const date = DisplayDateAndTime(status.date);
+    //Return icon for the tabs.
+    const returnIcon = () => {
+        if(status.status !== 5 && status.status !== 4 && status.status !== 0) {
+            return <Image style={styles.renderItemFCLeftIcon} source={carIcon}/>
+        }
+
+        if(cancelled) {
+            return <Image style={styles.renderItemFCLeftIcon} source={cancelledIcon}/>
+        }
+
+        return <Image style={styles.renderItemFCLeftIcon} source={deliveredIcon}/>
+    }
+    
+    //Checker for description.
+    const descriptionChecker = () => {
+        if(status.status === 4) {
+            return "Order delivered"
+        }
+
+        return status.description
+    }
 
     return (
         <View style={styles.renderItemContainer}>
-            <View style={styles.shadowContainer}>
+            <View style={styles.shadowContainer(renderBuyAgain)}>
                 <TouchableOpacity
                     onPress={onPressCard}
                     style={styles.renderItemButtonContainer}
@@ -45,24 +67,19 @@ export const RenderItem = (props) => {
                         <View style={styles.renderItemFirstContainer}>
                             <View style={styles.renderItemFCRight}>
                                 <View style={styles.renderItemIDContainer}>
-                                <Text style={styles.renderItemIDText}>
-                                    Oder ID
-                                </Text>
-                                <Text style={styles.renderItemID}>{referenceNum}</Text>
+                                    <Text numberOfLines={1} adjustsFontSizeToFit style={styles.renderItemIDText}>
+                                        Order ID <Text style={styles.renderItemID}>{referenceNum}</Text>
+                                    </Text>
+                                    
                                 </View>
                                 
-                                <Text style={styles.renderItemPlaced}>{date}</Text>
+                                <Text style={styles.renderItemPlaced}>{DisplayDateAndTime(status.date)}</Text>
                             </View>
                             <View style={styles.renderItemFCLeft}>
                                 <View style={styles.iconContainer}>
-                                    {
-                                        status.status === 5 ?
-                                        <CustomIcon.MCIcon name="check-all" size={15} color={"#F6841F"} />
-                                        :
-                                        <Image style={styles.renderItemFCLeftIcon} source={cancelled ? cancelledIcon : carIcon}/>
-                                    }
+                                    {returnIcon()}
                                 </View>
-                                <Text style={styles.renderItemFCLeftText}>{status.description}</Text>
+                                <Text style={styles.renderItemFCLeftText}>{descriptionChecker()}</Text>
                             </View>
                         </View>
 
@@ -74,12 +91,11 @@ export const RenderItem = (props) => {
 
                         <RenderSummary data={fulldata}/>
 
-                        { onPressBuy && <TouchableOpacity style={styles.buyAgainButton} onPress={onPressBuy} >
-                            <Text style={styles.buyAgainText}>Buy Again</Text>
-                        </TouchableOpacity> }
+                        { renderBuyAgain && <BuyAgainButton data={fulldata}/> }
                     </View>
                 </TouchableOpacity>
             </View>
+
         </View>
     )
 }
@@ -138,8 +154,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     renderItemFCLeftIcon: {
-        height: 15, 
-        width: 15,
+        height: 20, 
+        width: 20,
         resizeMode: 'contain',
     },
     renderItemFCLeftText: {
@@ -165,11 +181,14 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "600"
     },
-    shadowContainer: {
-        backgroundColor: 'white',
-        shadowColor: '#470000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        elevation: 2,
+    shadowContainer: (renderBuyAgain) => {
+        return {
+            backgroundColor: 'white',
+            shadowColor: '#470000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.2,
+            elevation: 2,
+            paddingBottom: renderBuyAgain ? 0 : 16
+        }
     }
 })

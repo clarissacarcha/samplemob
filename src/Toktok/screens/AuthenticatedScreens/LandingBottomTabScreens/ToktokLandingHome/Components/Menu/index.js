@@ -20,6 +20,7 @@ import ToktokGoIcon from '../../../../../../../assets/toktok/icons/menu/GoServic
 import WalletIcon from '../../../../../../../assets/toktok/icons/menu/WalletService.png';
 import LoadIcon from '../../../../../../../assets/toktok/icons/menu/LoadService.png';
 import ToktokMallIcon from '../../../../../../../assets/toktok/icons/menu/MallService.png';
+import BillsIcon from '../../../../../../../assets/toktok/icons/menu/BillsService.png';
 import OthersIcon from '../../../../../../../assets/toktok/icons/menu/Others.png';
 
 import ProfileIcon from '../../../../../../../assets/toktok/icons/menu/ProfileService.png';
@@ -141,18 +142,19 @@ export const Menu = ({setUserLocation, constants}) => {
       isNew: true,
     },
     {
-      identifier: 'mall',
-      label: 'Mall',
-      icon: ToktokMallIcon,
-      onPress: () => navigation.push('ToktokMallSplashScreen'),
-    },
-    {
       identifier: `${Platform.OS}Mall`,
       label: 'Mall',
       icon: ToktokMallIcon,
       onPress: () => {
-        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokMallLanding');
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokMallSplashScreen');
       },
+    },
+    {
+      identifier: `${Platform.OS}Bills`,
+      label: 'Bills',
+      icon: BillsIcon,
+      onPress: () => navigation.push('ToktokBillsSplashScreen'),
+      isNew: true,
     },
     {
       identifier: `${Platform.OS}Promos`,
