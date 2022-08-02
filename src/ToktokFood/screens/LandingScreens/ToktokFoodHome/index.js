@@ -1,14 +1,21 @@
+/**
+ * @format
+ * @flow
+ */
+
 import React from 'react';
 import {StyleSheet, View, StatusBar} from 'react-native';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import HeaderSearchBox from 'toktokfood/components/HeaderSearchBox';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
+
 // Hooks
 import {useUserLocation} from 'toktokfood/hooks';
+
 // Components
 import {StickyView} from './components';
 
-const ToktokFoodHome = () => {
+const ToktokFoodHome = (): React$Node => {
   useUserLocation(); // user location hook
   // const [viewHeight, setViewHeight] = useState(100);
 

@@ -41,6 +41,24 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>54.248.55.236</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<string/>
+			</dict>
+			<key>ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 		<key>NSAllowsArbitraryLoadsInWebContent</key>
@@ -112,8 +130,18 @@
 		<string>Jost-Thin.ttf</string>
 		<string>Jost-ThinItalic.ttf</string>
 		<string>FiraSans-Bold.ttf</string>
-		<string>FiraSans-Regular.ttf</string>
 		<string>FiraSans-SemiBold.ttf</string>
+		<string>FiraSans-Regular.ttf</string>
+		<string>FiraSans-Black.ttf</string>
+		<string>FiraSans-BlackItalic.ttf</string>
+		<string>FiraSans-BoldItalic.ttf</string>
+		<string>FiraSans-ExtraBold.ttf</string>
+		<string>FiraSans-ExtraBoldItalic.ttf</string>
+		<string>FiraSans-Medium.ttf</string>
+		<string>FiraSans-MediumItalic.ttf</string>
+		<string>FiraSans-RegularItalic.ttf</string>
+		<string>FiraSans-SemiBold.ttf</string>
+		<string>FiraSans-SemiBoldItalic.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

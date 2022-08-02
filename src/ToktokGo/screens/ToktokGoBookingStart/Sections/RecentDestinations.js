@@ -4,13 +4,7 @@ import CONSTANTS from '../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import Data from '../../../components/BookingDummyData';
 import {LocationCard} from '../../../components';
-export const RecentDestinations = ({navigation}) => {
-  const onPressLocation = () => {
-    navigation.push('ToktokGoBookingConfirmPickup', {
-      popTo: 1,
-    });
-  };
-
+export const RecentDestinations = ({navigation, onPressRecentDestination, recentDestinationList}) => {
   return (
     <>
       <View
@@ -32,7 +26,7 @@ export const RecentDestinations = ({navigation}) => {
           Recent Destinations
         </Text>
         <TouchableOpacity onPress={() => navigation.push('ToktokGoRecentDestinations')}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
               style={{
                 fontSize: CONSTANTS.FONT_SIZE.M,
@@ -42,15 +36,15 @@ export const RecentDestinations = ({navigation}) => {
               See All
             </Text>
             <MIcon name={'keyboard-arrow-right'} size={23} color={CONSTANTS.COLOR.ORANGE} />
-          </View>
+          </View> */}
         </TouchableOpacity>
       </View>
 
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={Data.recentDestinations}
+        data={recentDestinationList}
         // keyExtractor={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressLocation} />}
+        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressRecentDestination} />}
       />
     </>
   );
