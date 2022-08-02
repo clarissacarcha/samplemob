@@ -42,7 +42,7 @@ export const PaymentMethodModal = ({
       <TouchableWithoutFeedback onPress={() => setViewSelectPaymentModal(false)}>
         <View style={styles.transparent}>
           <View style={styles.card}>
-            <TouchableOpacity onPress={() => setSelected(1)}>
+            <TouchableOpacity onPress={() => setSelected('TOKTOKWALLET')}>
               <View style={styles.container}>
                 <View style={styles.elementWrapper}>
                   <Image source={WalletIcon} resizeMode={'contain'} style={styles.walletIconStyle} />
@@ -70,7 +70,7 @@ export const PaymentMethodModal = ({
 
             <View style={styles.divider} />
 
-            <TouchableOpacity onPress={() => setSelected(2)}>
+            <TouchableOpacity onPress={() => setSelected('CASH')}>
               <View style={styles.container}>
                 <View style={styles.elementWrapper}>
                   <Image source={CashIcon} resizeMode={'contain'} style={styles.walletIconStyle} />
