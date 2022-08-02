@@ -76,7 +76,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     setAlertModal(true)
   }
 
-  const [checkItemFromCheckout] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
+  const [checkItemFromCheckoutx] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
     onCompleted: async (response) => {
@@ -124,6 +124,24 @@ const Component = ({route, navigation, createMyCartSession}) => {
     }
   })
 
+  const [checkItemFromCheckout] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',    
+    onCompleted: async (response) => {
+      const {invalidItems, validItems, payload} = response.checkItemFromCheckout
+  
+      if(invalidItems.length > 0){
+        onProductUnavailable(payload, "id")
+      }else{
+        await postCheckoutSetting(validItems);
+      }
+
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
   const [getCheckoutData, {error, loading}] = useLazyQuery(GET_CHECKOUT_DATA, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
@@ -133,12 +151,16 @@ const Component = ({route, navigation, createMyCartSession}) => {
         setAddressData(data.address)
         setFranchisee(data.consumer)        
         await setPaymentList(data.paymentMethods)
-        let shippingrates = await getShippingRates(data.shippingRatePayload, data.cartrawdata)
-        if(shippingrates.length > 0){
-          data.autoShippingPayload.cartitems = shippingrates    
-          await getAutoShipping(data.autoShippingPayload)
-          await getAutoApplyVouchers(data.promotionVoucherPayload)
-        }        
+
+        if(paramsData.length > 0){
+          let shippingrates = await getShippingRates(data.shippingRatePayload, data.cartrawdata)
+          if(shippingrates.length > 0){
+            data.autoShippingPayload.cartitems = shippingrates    
+            await getAutoShipping(data.autoShippingPayload)
+            await getAutoApplyVouchers(data.promotionVoucherPayload)
+          }
+        }
+
       }
       setInitialLoading(false)
     },
@@ -168,6 +190,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
     console.log("SHIPPING RATES PAYLOAD", JSON.stringify(payload))
     // console.log(JSON.stringify(raw))
     // console.log(JSON.stringify(payload.cart)) 
+    if(!payload) return
+
     let result = []
     const res = await ShippingApiCall("get_shipping_rate", payload, true)
     console.log("SHipping Rates", JSON.stringify(res.responseData))
@@ -368,9 +392,40 @@ const Component = ({route, navigation, createMyCartSession}) => {
       console.log(error)
       getToktokWalletData()
     }
-  })  
+  })
+  
+  const onProductUnavailable = (payload) => {
+    setIsLoading(false)
+    dispatch({
+      type: 'TOKTOK_MALL_OPEN_MODAL',
+      payload: {
+        type: 'Warning',
+        title: 'Unable to Place Order',
+        message: 'We’re sorry but some items in your cart is\ncurrently unavailable. Please try again another\ntime.',        
+        actions: [
+          {
+            name: 'OK',
+            type: 'fill',
+            onPress: async () => {
+              
+              console.log("NEW PARAMS PAYLOAD", JSON.stringify(payload))
+    
+              // return //used for debugging
+              EventRegister.emit("refreshToktokmallShoppingCart")
+    
+              navigation.replace("ToktokMallCheckout", {
+                ...route.params,
+                data: payload
+              })
+            },
+          }
+        ]
+        
+      },
+    });
+  }
 
-  const onProductUnavailable = (items, selector) => {
+  const onProductUnavailablex = (items, selector) => {
 
     setIsLoading(false)
 
@@ -664,6 +719,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
                     variables: {
                       input: {
                         productId: ids,
+                        payload: route.params.data
                       },
                     },
                   });
@@ -906,7 +962,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   useEffect(() => {
 
-    console.log("Checkout body data", route?.params?.data)
+    console.log("Checkout body data", JSON.stringify(route?.params?.data), route?.params)
 
     setParamsData(route?.params?.data)
     setNewCartData(route?.params.newCart)
@@ -1089,6 +1145,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
                variables: {
                  input: {
                    productId: ids,
+                   payload: route.params.data
                  },
                },
              });
