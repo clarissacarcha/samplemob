@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Platform, View, Text, TouchableOpacity, TextInput, BackHandler} from 'react-native';
-import {HeaderBack, HeaderTitle, HeaderRight, LoadingOverlay} from '../../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight} from '../../../../Components';
+import { AlertOverlay } from 'src/components'
 import {AddressFinderModal, CityAddressModalAndroid, AddressModal} from './Components';
 import Toast from 'react-native-simple-toast';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -362,7 +363,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
 
   return (
     <>
-      {isLoading && <LoadingOverlay isVisible={isLoading} />}
+      {isLoading && <AlertOverlay visible={isLoading} />}
 
       {confirmDeleteModal && (
         <AddressModal

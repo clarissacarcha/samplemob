@@ -6,7 +6,7 @@ import {moderateScale} from 'toktokbills/helper';
 
 const loading = require('src/assets/animations/loading.json');
 
-export const AlertOverlay = ({visible}) => {
+export const AlertOverlay = ({ visible, label="Processing" }) => {
   return (
     <>
       <Modal
@@ -19,7 +19,7 @@ export const AlertOverlay = ({visible}) => {
         <View style={styles.modalBody}>
           <View style={styles.content}>
             <LottieView source={loading} autoPlay loop style={styles.loading} resizeMode="cover" />
-            <Text style={styles.processing}>Processing</Text>
+            <Text style={styles.processing}>{label}</Text>
           </View>
         </View>
       </Modal>

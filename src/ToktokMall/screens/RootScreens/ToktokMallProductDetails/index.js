@@ -17,6 +17,7 @@ import {useSelector} from 'react-redux';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
 import AsyncStorage from '@react-native-community/async-storage';
 import { Badge, Tooltip } from 'react-native-elements';
+import { AlertOverlay } from 'src/components'
 
 import {
 
@@ -33,7 +34,6 @@ import {
   RenderSuggestions,
 
   VariationBottomSheet,
-  LoadingOverlay
 } from './components'
 
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
@@ -488,7 +488,7 @@ const Component =  ({
   // if(loading) {
   //   return (
   //     <>
-  //       <LoadingOverlay isVisible={loading} />
+  //       <AlertOverlay visible={loading} />
   //     </>
   //   )
   // }
@@ -507,7 +507,7 @@ const Component =  ({
       { isFetching ? <></> : <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} /> } */}
       { headerValue >= 250 ? <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} itemName = {route.params.itemname} /> : <></>}
       { headerValue < 250 ?  <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} />: <></>  }
-      <LoadingOverlay isVisible={isFetching} />
+      <AlertOverlay visible={isFetching} />
       
      <Animated.ScrollView
         scrollEventThrottle = {270}

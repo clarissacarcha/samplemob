@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput, ScrollView, BackHandler} from 'react-native';
-import {HeaderBack, HeaderTitle, HeaderRight, Header, LoadingOverlay} from '../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components';
+import { AlertOverlay } from 'src/components'
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import {otpicon, otpbg, otpicon2} from '../../../assets';
 import CustomIcon from '../../../Components/Icons';
@@ -189,8 +190,8 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
 
   return (
     <>
-      <LoadingOverlay label="Verifying" isVisible={validating}/>
-      <LoadingOverlay label="Processing" isVisible={processing} />
+      <AlertOverlay label="Verifying" visible={validating}/>
+      <AlertOverlay label="Processing" visible={processing} />
       {/* <AlertModal
         // navigation = {navigation}
         isVisible = {true}
