@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textStyle: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.BLACK,
     fontSize: CONSTANTS.FONT_SIZE.M,
     marginLeft: 10,

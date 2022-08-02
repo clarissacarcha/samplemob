@@ -94,6 +94,8 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         contacts: [...action.payload],
       };
+    case 'SET_TOKWA_TO_INITIAL_STATE':
+      return INITIAL_STATE;
     default:
       return state;
   }

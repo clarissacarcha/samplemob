@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import {VerifyContext} from '../components';
 
-import {getCartTotalAmountOrder, getResellerDiscount} from '../functions';
+import {getCartTotalAmountOrder, getResellerDiscount, getTotalResellerDiscount} from '../functions';
 
 import styles from '../styles';
 
@@ -23,7 +23,11 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
   const {promotionVoucher} = useSelector(state => state.toktokFood);
 
   const totalSumSF = totalDelivery + totalShipping;
-  const totalSF = totalSumSF > deliveryFee ? deliveryFee.toFixed(2) : totalSumSF.toFixed(2);
+  const totalSF = forDelivery
+    ? totalSumSF > deliveryFee
+      ? deliveryFee.toFixed(2)
+      : totalSumSF.toFixed(2)
+    : (0.0).toFixed(2);
   // const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
 
   useEffect(() => {
@@ -44,15 +48,13 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     const autoApply = groupPromo.filter(promo => promo.type === 'auto');
     const shipping = groupPromo.filter(promo => promo.type === 'shipping');
 
-    // console.log(temporaryCart, promotions, deal);
-
     if (promotions.length > 0 || deal.length > 0) {
       const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
       const deal = promotionVoucher.filter(promo => promo.type === 'deal');
-      const totalBasketAmount = await getCartTotalAmountOrder([...promotions, ...deal], temporaryCart.items);
-      // console.log(promotions, deal, totalBasketAmount, totalReseller);
-      setTotalBasket(totalBasketAmount);
-      setTotalReseller(0);
+      const totalBasketAmount = await getTotalResellerDiscount([...promotions, ...deal], temporaryCart.items);
+      // setTotalBasket(totalBasketAmount);
+      // console.log(totalBasketAmount, 'totalBasketAmount');
+      setTotalReseller(totalBasketAmount);
       // setTotalBasket(temporaryCart.totalAmountWithAddons);
     } else {
       setTotalBasket(
@@ -62,25 +64,28 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       setTotalReseller(temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount);
     }
 
-    if (promotions.length > 0) {
+    if (promotions.length > 0 || deal.length > 0) {
       // setTotalPromotions(promotions[0].discount_totalamount);
       const promotion = promotionVoucher.filter(promo => promo.type === 'promotion');
-      const totalResellerDisc = await getResellerDiscount(promotion, temporaryCart.items);
+      const deals = promotionVoucher.filter(promo => promo.type === 'deal');
+
+      const totalResellerDisc = await getResellerDiscount(promotion, deals, temporaryCart.items);
+      // console.log(totalResellerDisc, 'totalResellerDisc');
       setTotalPromotions(totalResellerDisc);
     } else {
       setTotalPromotions(0);
     }
-    if (deal.length > 0) {
-      // setTotalDeal(deal[0].discount_totalamount);
-      const deals = promotionVoucher.filter(promo => promo.type === 'deal');
-      const totalResellerDisc = await getResellerDiscount(deals, temporaryCart.items);
-      // console.log(totalResellerDisc)
-      setTotalDeal(totalResellerDisc);
-    } else {
-      setTotalDeal(0);
-    }
+    // if (deal.length > 0) {
+    //   // setTotalDeal(deal[0].discount_totalamount);
+    //   const deals = promotionVoucher.filter(promo => promo.type === 'deal');
+    //   const totalResellerDisc = await getResellerDiscount(deals, temporaryCart.items);
+    //   // console.log(totalResellerDisc)
+    //   setTotalDeal(totalResellerDisc);
+    // } else {
+    //   setTotalDeal(0);
+    // }
     if (shipping.length > 0) {
-      setTotalDelivery(shipping[0].amount);
+      setTotalDelivery(shipping[0].amount > 0 ? shipping[0].amount : deliveryFee);
     } else {
       setTotalDelivery(0);
     }
@@ -141,6 +146,11 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     setTotalBasket(temporaryCart.totalAmountWithAddons + totalReseller);
   }, [temporaryCart]);
 
+  const totalAmount = (totalBasket + deliveryFee - totalSumSF - totalReseller - (totalPromotions + totalDeal)).toFixed(
+    2,
+  );
+  const deliveryAmount = forDelivery && totalAmount > 0 ? totalAmount : deliveryFee;
+
   return (
     <View style={[styles.sectionContainer, styles.totalContainer]}>
       {/* {forDelivery && ( */}
@@ -152,7 +162,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       {(totalPromotions > 0 || totalDeal > 0) && (
         <View style={styles.header}>
           <Text>Item Discount</Text>
-          <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal).toFixed(2)}`}</Text>
+          <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal + totalReseller).toFixed(2)}`}</Text>
         </View>
       )}
 
@@ -175,7 +185,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
         </View>
       )}
 
-      {(totalDelivery > 0 || totalShipping > 0) && (
+      {forDelivery && (totalDelivery > 0 || totalShipping > 0) && (
         <View style={styles.header}>
           <Text>Delivery Fee Discount</Text>
           <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
@@ -188,13 +198,7 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       <View style={styles.header}>
         <Text style={styles.total}>Total</Text>
         {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${(
-            totalBasket +
-            deliveryFee -
-            totalSumSF -
-            totalReseller -
-            (totalPromotions + totalDeal)
-          ).toFixed(2)}`}</Text>
+          <Text style={styles.totalPrice}>{`PHP ${deliveryAmount}`}</Text>
         ) : (
           <Text style={styles.totalPrice}>{`PHP ${(
             totalBasket -

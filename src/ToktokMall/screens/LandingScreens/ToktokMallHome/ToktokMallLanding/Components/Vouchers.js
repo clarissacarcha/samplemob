@@ -22,16 +22,16 @@ const testdata = [{
 const Item = ({data}) => {
     return (
         <>
-          <View style={{flex: 0.5, height: 2, backgroundColor: '#F7F7FA'}} />  
-          <View style={{paddingVertical: 15, paddingHorizontal: 15, flexDirection: 'row'}}>
-            <View style={{flex: 2, justifyContent: 'center', alignItems: 'center'}}>
-              <View style={{height: 50, width: 50, backgroundColor: '#FCC442', alignItems: 'center', justifyContent: 'center', paddingVertical: 5, paddingHorizontal: 5}}>
-               <Text style={{textAlign: 'center', fontSize: 9, fontWeight: '600', color: "#fff", textTransform: 'uppercase'}}>{data.type}</Text> 
+          <View style={styles.itemMargin} />  
+          <View style={styles.itemContainer}>
+            <View style={styles.itemDataContainer}>
+              <View style={styles.itemDataSubContainer}>
+               <Text style={styles.itemDataText}>{data.type}</Text> 
               </View>
             </View>
-            <View style={{flex: 8, justifyContent: 'center'}}>
+            <View style={styles.itemLabelContainer}>
               <Text>{data.label}</Text>
-              <Text style={{color: "#9E9E9E", fontSize: 11}}>{data.description}</Text>
+              <Text style={styles.itemDescriptionText}>{data.description}</Text>
             </View>
           </View>
         </>
@@ -44,34 +44,130 @@ export const Vouchers = () => {
 
     return (
         <>
-          <View style={{flex: 1, paddingHorizontal: 15, paddingVertical: 0}}>
-          <View style={{paddingVertical: 20, flexDirection: 'row'}}>
-            <View style={{flex: 3}}>
+          <View style={styles.voucherMargin1}>
+          <View style={styles.voucherContainer}>
+            <View style={styles.voucherHeader}>
               <ImageBackground 
-                source={require("../../../../../../assets/toktokmall-assets/images/voucher-fill.png")} 
-                style={{width: "100%", alignItems: 'center', justifyContent: 'center'}} 
-                imageStyle={{resizeMode: 'cover'}}
+                source={require("../../../../../assets/images/voucher-fill.png")} 
+                style={styles.voucherHeaderImage} 
+                imageStyle={styles.voucherImageStyle}
               >
-                <Text style={{color: "#fff", fontSize: 14}}>Vouchers</Text>
+                <Text style={styles.voucherHeaderText}>Vouchers</Text>
               </ImageBackground>
             </View>
-            <View style={{flex: 6}}></View>
+            <View style={styles.voucherMargin2}></View>
             <TouchableOpacity onPress={() => {
               navigation.navigate("ToktokMallVouchersClaim")
-            }} style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
-              <Text style={{fontSize: 12, color: "#F6841F"}}>See all </Text>
+            }} style={styles.voucherClaimContainer}>
+              <Text style={styles.voucherSeeAllText}>See all </Text>
             </TouchableOpacity>
-            <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
+            <View style={styles.rightContainer}>
               <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
             </View>
           </View>
         </View>
         <View>
-          {testdata && testdata.map((item, i) => <Item data={item} />)}
+          {testdata && testdata.map((item, i) => <Item key={i} data={item} />)}
         </View>
-        <View style={{flex: 0.5, height: 2, backgroundColor: '#F7F7FA'}} />
-        <View style={{height: 15}}></View>
-        <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} />
+        <View style={styles.voucherMargin3} />
+        <View style={styles.voucherMargin4}></View>
+        <View style={styles.voucherMargin5} />
         </>
     )
 }
+
+const styles = StyleSheet.create({
+  itemMargin: {
+    flex: 0.5, 
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  },
+  itemContainer: {
+    paddingVertical: 15, 
+    paddingHorizontal: 15, 
+    flexDirection: 'row'
+  },
+  itemDataContainer: {
+    flex: 2, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
+  itemDataSubContainer: {
+    height: 50, 
+    width: 50, 
+    backgroundColor: '#FCC442', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    paddingVertical: 5, 
+    paddingHorizontal: 5
+  },
+  itemDataText: {
+    textAlign: 'center', 
+    fontSize: 9, 
+    fontWeight: '600', 
+    color: "#fff", 
+    textTransform: 'uppercase'
+  },
+  itemLabelContainer: {
+    flex: 8, 
+    justifyContent: 'center'
+  },
+  itemDescriptionText: {
+    color: "#9E9E9E", 
+    fontSize: 11
+  },
+  voucherMargin1: {
+    flex: 1, 
+    paddingHorizontal: 15, 
+    paddingVertical: 0
+  },
+  voucherContainer: {
+    paddingVertical: 20, 
+    flexDirection: 'row'
+  },
+  voucherHeader: {
+    flex: 3
+  },
+  voucherHeaderImage: {
+    width: "100%", 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  voucherImageStyle: {
+    resizeMode: 'cover'
+  },
+  voucherHeaderText: {
+    color: "#fff", 
+    fontSize: 14
+  },
+  voucherMargin2: {
+    flex: 6
+  },
+  voucherClaimContainer: {
+    flex: 2, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  voucherSeeAllText: {
+    fontSize: 12, 
+    color: "#F6841F"
+  },
+  rightContainer: {
+    flex: 0, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  voucherMargin3: {
+    flex: 0.5, 
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  },
+  voucherMargin4: {
+    height: 15
+  },
+  voucherMargin5: {
+    flex: 0.5, 
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  }
+})

@@ -14,8 +14,9 @@ export const CancelBookingModal = ({isVisible, setVisible, setViewCancelReasonMo
             <Text style={styles.modalTitle}>Cancel Booking</Text>
             <Text style={styles.modalSubTitle}>Cancellation Fee: ₱50.00</Text>
             <Text style={styles.modalDescription}>
-              You are cancelling <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> after getting a
-              driver. Cancellation Fee will be charged on you to compensate the driver. Are you sure you want to cancel?
+              You are cancelling <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD}}>5 minutes</Text> after
+              getting a driver. Cancellation Fee will be charged on you to compensate the driver. Are you sure you want
+              to cancel?
             </Text>
 
             <View style={styles.retryContainer}>
@@ -65,13 +66,13 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     color: CONSTANTS.COLOR.YELLOW,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 3,
     marginVertical: 20,
   },
   modalSubTitle: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.M,
     marginBottom: 8,
   },
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
   },
   textHighlight: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   buttonContainer: {
     marginTop: 20,
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
     borderColor: CONSTANTS.COLOR.ORANGE,
   },
   buttonText: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL,
     color: CONSTANTS.COLOR.WHITE,
   },
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: 'center',
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
   },
   retryButtonContainer: {
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
   cancelTextStyle: {
     textAlign: 'center',
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.WHITE,
   },
 });

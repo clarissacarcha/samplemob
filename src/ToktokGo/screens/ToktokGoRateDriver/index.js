@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,9 +8,10 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  ImageBackground,
-  Dimensions,
   StatusBar,
+  Keyboard,
+  Dimensions,
+  Platform,
 } from 'react-native';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
 import CONSTANTS from '../../../common/res/constants';
@@ -25,6 +26,8 @@ import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../res/const
 import {FeedbackModal} from './components';
 import {useDispatch} from 'react-redux';
 import ArrowLeft from '../../../assets/icons/arrow-left-icon.png';
+
+const Keyboard_Height = -(Dimensions.get('window').height * 0.1);
 
 const Star = ({onPress, color, isLast}) => {
   return <FAIcon onPress={onPress} name="star" size={35} style={{marginRight: isLast ? 0 : 25}} color={color} />;
@@ -62,6 +65,7 @@ const RateDriver = ({navigation, route}) => {
   const [rating, setRating] = useState(0);
   const [selected, setSelected] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [isKeyboadShown, setIsKeyboadShown] = useState(false);
   const [feedBack, setFeedback] = useState({
     text: '',
     textLength: 0,
@@ -109,6 +113,21 @@ const RateDriver = ({navigation, route}) => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
     navigation.replace('ToktokGoBookingStart');
   };
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboadShown(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboadShown(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
   return (
     <ScrollView style={styles.mainContainer}>
       <TouchableOpacity onPress={() => navigation.pop()}>
@@ -118,7 +137,8 @@ const RateDriver = ({navigation, route}) => {
           resizeMode={'contain'}
         />
       </TouchableOpacity>
-      <View style={styles.containerTitle}>
+
+      <View style={isKeyboadShown ? {marginTop: Keyboard_Height} : styles.containerTitle}>
         <Text style={styles.titleQuestion}>How was your driver?</Text>
         <Text style={styles.starStyle}>{starStatus()}</Text>
         <StarRating onChange={value => setRating(value)} />
@@ -183,9 +203,9 @@ const RateDriver = ({navigation, route}) => {
           multiline
           maxLength={320}
         />
-        <View style={{alignItems: 'flex-end'}}>
+        {/* <View style={{alignItems: 'flex-end'}}>
           <Text style={styles.textInputLength}>{feedBack.textLength}/320</Text>
-        </View>
+        </View> */}
       </View>
       <View style={styles.btnContainer}>
         <TouchableOpacity style={styles.btnConfirm} onPress={() => showBookingReason()}>
@@ -225,7 +245,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '39%',
   },
   btnTextSubmit: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL,
     color: CONSTANTS.COLOR.WHITE,
   },
@@ -258,12 +278,13 @@ const styles = StyleSheet.create({
     fontSize: CONSTANTS.FONT_SIZE.S,
   },
   titleQuestion: {
+    textAlign: 'center',
     fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
     fontSize: CONSTANTS.FONT_SIZE.XL + 1,
   },
   starStyle: {
     paddingTop: 40,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 1,
     paddingBottom: 10,
   },
@@ -285,6 +306,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   yourFeedbackText: {
+    textAlign: 'center',
     paddingVertical: 20,
     fontSize: CONSTANTS.FONT_SIZE.S,
   },

@@ -5,6 +5,7 @@ import {ApolloLink} from 'apollo-link';
 import {createHttpLink} from 'apollo-link-http';
 import ApolloClient from 'apollo-client';
 import {InMemoryCache} from 'apollo-cache-inmemory';
+import {createClient} from 'graphql-ws';
 
 import ENVIRONMENTS from '../../../common/res/environments';
 
@@ -15,7 +16,11 @@ const auth = {
   apiKey: ENVIRONMENTS.TOKTOKGO_X_API_KEY,
 };
 
-const httpLink = createHttpLink({uri: url});
+const websocketClient = createClient({
+  uri: url,
+});
+
+const httpLink = createHttpLink(websocketClient);
 
 const link = ApolloLink.from([
   createAuthLink({url, region, auth}),
