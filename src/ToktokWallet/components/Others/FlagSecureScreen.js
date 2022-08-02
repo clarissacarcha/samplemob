@@ -5,13 +5,22 @@ import { useNavigation , useFocusEffect  , useRoute} from '@react-navigation/nat
 import { useAccount } from 'toktokwallet/hooks'
 
 export const FlagSecureScreen = ({children , enable = true})=> {
-    const { tokwaAccount } = useAccount();
-    if(Platform.OS == "android" && tokwaAccount.constants.androidFlagSecure === 1){
-        enable ? FlagSecure.activate() : FlagSecure.deactivate()
-    }
-    return (
-        <View style={{flex: 1,}}>
-            {children}
-        </View>
-    )
+  const { tokwaAccount } = useAccount();
+
+  if(Platform.OS == "android" && tokwaAccount.constants.androidFlagSecure === 1){
+    enable ? FlagSecure.activate() : FlagSecure.deactivate()
+  }
+
+  // useFocusEffect(useCallback(()=>{
+  //     FlagSecure.activate();
+  //     return ()=> {
+  //         FlagSecure.deactivate();
+  //     }
+  // },[]))
+
+  return (
+    <View style={{flex: 1,}}>
+      {children}
+    </View>
+  )
 }

@@ -36,8 +36,8 @@ const Activities = () => {
           },
           shadowOpacity: 0.2,
           shadowRadius: 1.41,
-
           elevation: 2,
+          marginBottom: 3,
         }}>
         <Text style={{paddingVertical: 14, fontSize: FONT_SIZE.XL + 3}}>Activities</Text>
       </View>
@@ -87,7 +87,7 @@ const Activities = () => {
             },
           })}
         />
-        {true && (
+        {!hideGo && (
           <ActivitiesTopTab.Screen
             name="ToktokGoActivities"
             component={ToktokGoActivities}

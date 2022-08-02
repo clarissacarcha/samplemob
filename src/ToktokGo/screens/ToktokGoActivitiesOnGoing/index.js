@@ -54,6 +54,11 @@ const OnGoingActivities = ({navigation, session}) => {
     );
   }
 
+  const onClickActivity = () => {
+    navigation.pop();
+    navigation.push('ToktokGoLanding');
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -64,7 +69,7 @@ const OnGoingActivities = ({navigation, session}) => {
         renderItem={({item, index}) => (
           <ActivitiesCard
             booking={item}
-            onPress={() => navigation.push('SelectedBookingDetails', {booking: item})}
+            onPress={onClickActivity}
             lastItem={data.getTripsConsumer.length == index + 1 ? true : false}
           />
         )}
@@ -85,6 +90,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   center: {
+    backgroundColor: 'white',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

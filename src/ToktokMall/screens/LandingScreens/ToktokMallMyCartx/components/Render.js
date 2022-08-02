@@ -1,0 +1,171 @@
+import React, {useState, useEffect, useRef} from 'react';
+import {View, Text, StyleSheet, Platform, Dimensions, StatusBar, Image, TouchableOpacity, FlatList} from 'react-native';
+import CheckBox from 'react-native-check-box';
+import SwipeableView from 'react-native-swipeable-view';
+import Swipeable from 'react-native-swipeable';
+import CustomIcon from "../../../../Components/Icons";
+
+import {Item, Store} from './';
+
+export const RenderDetails = ({
+	item, 
+	storeIndex, 
+	allSelected, 
+	onPress, 
+	onStoreSelect, 
+	onItemSelect, 
+	onItemLongPress,
+	onItemDelete,
+	onChangeQuantity
+}) => {
+
+	const [storeitemselected, setstoreitemselected] = useState(allSelected ? true : false)
+	const [toggleRoot, setToggleRoot] = useState("")
+	const [superSelected, setSuperSelected] = useState(allSelected ? true : false)
+	const [uncheckedItems, setUncheckedItems] = useState([])
+	const [checkedItems, setCheckedItems] = useState([])	
+	const [itemsCheckIndex, setItemsCheckIndex] = useState(allSelected ? item.data.length : 0)
+
+	useEffect(() => {
+		setstoreitemselected(allSelected)
+		setSuperSelected(allSelected)
+	}, [allSelected])
+
+	const DeleteButton = ({onPress}) => {
+		return (
+		  <>
+			<TouchableOpacity
+			  onPress={onPress}
+			  activeOpacity={1}
+			  style={styles.deleteButton}>
+			  {/* <Text style={{fontSize: 14, color: '#fff'}}>Delete</Text> */}
+				<CustomIcon.FoIcon name="trash" size={20} color={"white"} />
+			</TouchableOpacity>
+		  </>
+		);
+	};
+
+	const HandleItemSelect = (raw, total) => {
+		
+		let currentCheckedItems = JSON.parse(JSON.stringify(checkedItems))
+
+		if(raw.checked){
+								
+			let exist = currentCheckedItems.findIndex( x => x.id == raw.item.Id)
+			if(exist == -1){
+				currentCheckedItems.push({id: raw.item.Id})
+				setCheckedItems(currentCheckedItems)
+
+				if(currentCheckedItems.length == item.data.length){
+					setstoreitemselected(true)
+				}else{
+					setstoreitemselected(false)
+				}
+				setCheckedItems(currentCheckedItems)
+
+				
+			}else{
+				setstoreitemselected(false)
+			}
+								
+		}else{
+								
+			let index = currentCheckedItems.findIndex( x => x.id == raw.item.Id)
+			currentCheckedItems = currentCheckedItems.splice(index, 1)
+			setCheckedItems(currentCheckedItems)
+
+			if(currentCheckedItems.length <= 1){
+				setstoreitemselected(false)
+			}
+
+			console.log(item.data.length, currentCheckedItems.length)
+
+		}
+
+		// setstoreitemselected(!storeitemselected)
+	}
+
+	return (
+		<>
+			<Store
+				state={storeitemselected}
+				data={item?.shop || {}}
+				storeIndex = {storeIndex}
+				onSelect={(raw) => {
+					onStoreSelect(raw)
+					setstoreitemselected(!storeitemselected)
+					setToggleRoot("shop")
+
+					if(!storeitemselected == true){
+						//to true
+						let items = JSON.parse(JSON.stringify(item.data))
+						let allitems = items.map((data) => {
+							return {id: data.id}
+						})
+						setCheckedItems(allitems)
+					}else{
+						setToggleRoot("shop")
+						setCheckedItems([])
+					}
+
+				}}
+				onPress={onPress}
+				uncheckedItems = {uncheckedItems}
+				setUncheckedItems = {setUncheckedItems}
+			/>
+				
+			{item && item.data.length > 0 && item.data.map((data, i) => {
+
+				return (
+				<Swipeable 
+					rightActionActivationDistance={30}
+					rightButtonWidth={75}
+					rightButtons={[<DeleteButton onPress={() => {
+						console.log("Product", data.product)
+						onItemDelete({
+							shop: item.shop,
+							product: data.product
+						})			
+					}} />]}
+				>
+					<Item
+						key={i}
+						index = {i}
+						storeIndex={storeIndex}
+						// state={toggleRoot == "shop" && storeitemselected || superSelected}
+						state = {storeitemselected}
+						data={data}
+						onHold={(raw) => {
+							setToggleRoot("item")
+							onItemLongPress(raw)
+							HandleItemSelect(raw, item.data.length)
+						}}
+						onSelect={(raw) => {
+							setToggleRoot("item")
+							onItemSelect(raw)
+							HandleItemSelect(raw, item.data.length)						
+						}}
+						item={item}
+						uncheckedItems={uncheckedItems}
+						setstoreitemselected={setstoreitemselected}
+						onChangeQuantity={onChangeQuantity}
+					/>
+				</Swipeable>
+				)}
+			)}
+			
+			{/* <View style={{height: 8, backgroundColor: '#F7F7FA'}} /> */}
+		</>
+	);
+}
+
+const styles = StyleSheet.create({
+	deleteButton: {
+		flex: 1, 
+		width: 75, 
+		backgroundColor: '#F6841F', 
+		alignItems: 'center', 
+		justifyContent: 'center'
+	},
+
+})

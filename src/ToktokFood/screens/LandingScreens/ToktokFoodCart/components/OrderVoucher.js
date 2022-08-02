@@ -24,9 +24,9 @@ import {deleteKeys, parseAmountComputation} from '../functions';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_PAYMENT_METHOD_VALIDATION, GET_VOUCHER_CODE} from 'toktokfood/graphql/toktokfood';
 
-const OrderVoucher = ({autoShipping, deliveryFee}) => {
+const OrderVoucher = ({autoShipping, deliveryFee, orderType}) => {
   const dispatch = useDispatch();
-  const {paymentMethod, shippingVoucher, setShippingVoucher, temporaryCart} = useContext(VerifyContext);
+  const {paymentMethod, shippingVoucher, temporaryCart} = useContext(VerifyContext);
   const {customerInfo, promotionVoucher} = useSelector(state => state.toktokFood);
 
   // State
@@ -47,7 +47,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
     onCompleted: ({getVoucherCode}) => {
       const {success, message} = getVoucherCode;
       // setShowInlineError(true);
-      // console.log(getVoucherCode);
+      console.log(getVoucherCode);
 
       if (!success) {
         setShowError(true);
@@ -65,25 +65,36 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
       } else {
         const {voucher} = getVoucherCode;
         const filterPromo = promotionVoucher.filter(promo => promo.id !== voucher.id);
-        const {amount, is_percentage} = voucher;
+        const {amount, is_percentage, on_top} = voucher;
         let totalDeliveryFee = 0;
-        if (amount > 0) {
-          const pAmount = is_percentage !== '0' ? (amount / 100) * deliveryFee : amount;
-          const totalFee = pAmount > deliveryFee ? deliveryFee : pAmount;
-          // let totalSF = deliveryFee - pAmount;
-          // totalSF = totalSF > 0 ? totalSF : 0;
-          totalDeliveryFee = totalFee;
+        const filterDeal = promotionVoucher.filter(promo => promo.type === 'deal');
+        // console.log(on_top, filterDeal)
+        if ((!on_top && !filterDeal.length) || (on_top && !filterDeal.length) || (on_top && filterDeal[0].on_top > 0)) {
+          if (amount > 0) {
+            const pAmount = is_percentage > 0 ? (amount / 100) * deliveryFee : amount;
+            const totalFee = pAmount > deliveryFee ? deliveryFee : pAmount;
+            // let totalSF = deliveryFee - pAmount;
+            // totalSF = totalSF > 0 ? totalSF : 0;
+            totalDeliveryFee = totalFee;
+          } else {
+            totalDeliveryFee = deliveryFee;
+          }
+
+          const voucherObj = [...filterPromo, {...voucher, origAmount: amount, amount: totalDeliveryFee}];
+          dispatch({
+            type: 'SET_TOKTOKFOOD_PROMOTIONS',
+            payload: voucherObj,
+          });
+          setShowError(false);
+          setShowInlineError(true);
         } else {
-          totalDeliveryFee = deliveryFee;
+          setShowError(true);
+          setVoucherError(
+            '* Oops! Voucher was not applied for this order. Please review details of voucher and try again.',
+          );
+          setShowInlineError(true);
         }
 
-        const voucherObj = [...filterPromo, {...voucher, origAmount: amount, amount: totalDeliveryFee}];
-        dispatch({
-          type: 'SET_TOKTOKFOOD_PROMOTIONS',
-          payload: voucherObj,
-        });
-        setShowError(false);
-        setShowInlineError(true);
         // setShowError(!showError);
         // setVoucherError(null);
         // if (type !== 'shipping') {
@@ -100,7 +111,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
     },
   });
 
-  const [getVoucherPaymentMethod, {loading: loadingVoucher}] = useLazyQuery(GET_PAYMENT_METHOD_VALIDATION, {
+  const [getVoucherPaymentMethod] = useLazyQuery(GET_PAYMENT_METHOD_VALIDATION, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: error => console.log('getAutoShipping', error.response),
@@ -129,7 +140,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
       //     shopid: items[0]?.shopid,
       //     code: voucher,
       //     region: items[0]?.shopRegion,
-      //     subtotal: temporaryCart.totalAmount,
+      //     subtotal: temporaryCart.totalAmount + temporaryCart.addonsTotalAmount,
       //     paymentMethod: paymentMethod,
       //     promoCount,
       //     orders,
@@ -143,7 +154,7 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
             shopid: items[0]?.shopid,
             code: voucher,
             region: items[0]?.shopRegion,
-            subtotal: temporaryCart.totalAmount,
+            subtotal: temporaryCart.totalAmount + temporaryCart.addonsTotalAmount,
             paymentMethod: paymentMethod,
             promoCount,
             orders,
@@ -169,6 +180,12 @@ const OrderVoucher = ({autoShipping, deliveryFee}) => {
       }
     }
   }, [autoShipping]);
+
+  useEffect(() => {
+    if (orderType !== '') {
+      dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
+    }
+  }, [orderType]);
 
   useEffect(() => {
     // if (!autoShipping?.success && voucher) {

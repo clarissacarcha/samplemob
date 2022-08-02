@@ -12,12 +12,15 @@ import ProgressiveImage from 'toktokfood/components/ProgressiveImage';
 // Data
 // import {foodData} from 'toktokfood/helper/strings';
 
-const DisplayAddons = ({addOns}) => {
+const DisplayAddons = ({addOns, itemStatus}) => {
   let addOnsList = addOns.map(item => item.addon_name).join(', ');
   let label = addOns.length > 1 ? 'Add-ons:' : 'Add-on:';
 
-   {/*#9E9E9E - REMOVED TEXT COLOR*/}
-  return <Text style={[styles.notes, {color: '#000'}]}>{`${label} ${addOnsList}`}</Text>;
+  if (itemStatus === 0) {
+    return <Text style={[styles.notes, {color: '#9E9E9E'}]}>{`${label} ${addOnsList}`}</Text>;
+  } else {
+    return <Text style={styles.notes}>{`${label} ${addOnsList}`}</Text>;
+  }
 };
 
 const OrderList = ({orderDetails}) => {
@@ -65,7 +68,7 @@ const OrderList = ({orderDetails}) => {
     [data],
   );
 
-  const FoodItemImage = ({item, forEdit}) => {
+  const FoodItemImage = ({item, itemStatus, isEdited}) => {
     return (
       <View style={styles.foodItemImageWrapper}>
         <ProgressiveImage
@@ -73,9 +76,14 @@ const OrderList = ({orderDetails}) => {
           source={item.productDetails.filename}
           placeholder={food_placeholder}
         />
-        {forEdit !== undefined && (
-          <View style={{...styles.modifiedFlag, backgroundColor: forEdit === true ? '#F5841F' : '#ED3A19'}}>
-            <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>{forEdit ? 'Edited' : 'Removed'}</Text>
+        {itemStatus === 0 && isEdited && (
+          <View style={{...styles.modifiedFlag, backgroundColor: '#ED3A19'}}>
+            <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>Removed</Text>
+          </View>
+        )}
+        {itemStatus === 1 && isEdited && (
+          <View style={{...styles.modifiedFlag, backgroundColor: '#F5841F'}}>
+            <Text style={{fontFamily: FONT.BOLD, color: '#FFFF'}}>Edited</Text>
           </View>
         )}
       </View>
@@ -85,6 +93,8 @@ const OrderList = ({orderDetails}) => {
   const Item = useMemo(
     () =>
       ({item}) => {
+        const {status} = item;
+        const {isModified} = item;
         let {parentProductId, itemname, parentProductName} = item.productDetails;
         let parseAddOns = item.addons.length > 0 ? JSON.parse(item.addons) : item.addons;
         let productName = parentProductId ? parentProductName : itemname;
@@ -93,27 +103,37 @@ const OrderList = ({orderDetails}) => {
         return (
           <View style={styles.listContainer}>
             <View style={styles.progressiveImageContainer}>
-              {item.productDetails.filename && <FoodItemImage item={item} />}
+              {item.productDetails.filename && <FoodItemImage item={item} itemStatus={status} isEdited={isModified} />}
             </View>
 
             <View style={styles.list}>
               <View style={styles.listInfo}>
-                <Text numberOfLines={1} style={[styles.listName, {color: '#000'}]}>
+                <Text numberOfLines={1} style={[styles.listName, {color: status === 0 ? '#9E9E9E' : '#000000'}]}>
                   {productName}
                 </Text>
                 {resellerDiscount > 0 ? (
                   <ResellerDiscountBadge item={item} />
                 ) : (
-                  <Text style={[styles.seeAll]}>{`PHP ${item.totalAmountWithAddons.toFixed(2)}`}</Text>
+                  <Text
+                    style={[
+                      styles.seeAll,
+                      {color: status === 0 ? '#9E9E9E' : '#FF6200'},
+                    ]}>{`PHP ${item.totalAmountWithAddons.toFixed(2)}`}</Text>
                 )}
               </View>
-              {/*#9E9E9E - REMOVED TEXT COLOR */}
               <View>
-                <Text style={[styles.notes, {color: '#000'}]}>x{item.quantity}</Text>
-                {parentProductId && <Text style={[styles.notes, {color: '#000'}]}>{`Variation: ${itemname}`}</Text>}
-                {!!parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} />}
+                <Text style={[styles.notes, {color: status === 0 ? '#9E9E9E' : '#000000'}]}>x{item.quantity}</Text>
+                {parentProductId && (
+                  <Text
+                    style={[
+                      styles.notes,
+                      {color: status === 0 ? '#9E9E9E' : '#000000'},
+                    ]}>{`Variation: ${itemname}`}</Text>
+                )}
+                {!!parseAddOns && parseAddOns.length > 0 && <DisplayAddons addOns={parseAddOns} itemStatus={status} />}
                 {!!item.notes && (
-                  <Text style={[styles.notes, {color: '#000'}]}>{`Note: ${JSON.parse(item.notes)}`}</Text>
+                  <Text
+                    style={[styles.notes, {color: status === 0 ? '#9E9E9E' : '#000000'}]}>{`Note: ${item.notes}`}</Text>
                 )}
               </View>
             </View>

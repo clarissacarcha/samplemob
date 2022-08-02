@@ -1,5 +1,7 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useContext, useCallback} from 'react';
+import _ from 'lodash';
 import {useRoute, useIsFocused} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -14,7 +16,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import _ from 'lodash';
+// import _ from 'lodash';
 
 import Loader from 'toktokfood/components/Loader';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
@@ -22,7 +24,7 @@ import OrderTypeSelection from 'toktokfood/components/OrderTypeSelection';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import Separator from 'toktokfood/components/Separator';
 import DialogMessage from 'toktokfood/components/DialogMessage';
-import AlertModal from 'toktokfood/components/AlertModal';
+// import AlertModal from 'toktokfood/components/AlertModal';
 
 import styles from './styles';
 import {COLOR} from 'res/variables';
@@ -40,7 +42,7 @@ import {
 import {
   deleteKeys,
   // getDeductedVoucher,
-  // getResellerDiscount,
+  getResellerDiscount,
   getTotalAmount,
   getTotalAmountOrder,
   // getTotalDiscountAmount,
@@ -69,6 +71,8 @@ import {
   REQUEST_TAKE_MONEY,
   VERIFY_PIN,
   GET_SHOP_STATUS,
+  GET_ALL_TEMPORARY_CART,
+  GET_SHOP_DETAILS,
 } from 'toktokfood/graphql/toktokfood';
 
 import moment from 'moment';
@@ -81,9 +85,10 @@ import {FONT, FONT_SIZE} from '../../../../res/variables';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 import {parseAmountComputation} from './functions';
+import {useQuery} from '@apollo/client';
 
 /*
-  This variable is used for identifier whether the user is able to checkout or not 
+  This variable is used for identifier whether the user is able to checkout or not
   if the user's toktokwallet is pending
 */
 const MINIMUM_CHECKOUT = 2000;
@@ -119,11 +124,13 @@ const MainComponent = () => {
   const [orderType, setOrderType] = useState('Delivery');
   const [refreshing, setRefreshing] = useState(false);
   const [checkShop, setCheckShop] = useState(null);
+  const [shopDetails, setShopDetails] = useState(null);
   const [showEnterPinCode, setShowEnterPinCode] = useState(false);
   const [toktokWalletCredit, setToktokWalletCredit] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [loadingWallet, setLoadingWallet] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showItemDisabled, setShowItemDisabled] = useState(false);
   const [closeShop, setShowCloseShop] = useState({visible: false, shopName: ''});
   const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
   const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({error: {}, visible: false});
@@ -133,6 +140,15 @@ const MainComponent = () => {
   const [closeInfo, setCloseInfo] = useState({visible: false, shopName: ''});
 
   const [diablePlaceOrder, setDisablePlaceOrder] = useState(true);
+
+  const [getShopDetails, {error: shopDetailsError, loading: shopDetailsLoading}] = useLazyQuery(GET_SHOP_DETAILS, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getShopDetails}) => {
+      setShopDetails(getShopDetails);
+    },
+    onError: error => console.log('getShopDetails', error),
+  });
 
   const [getAutoShipping, {loading: loadingShipping}] = useLazyQuery(GET_AUTO_SHIPPING, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -179,19 +195,21 @@ const MainComponent = () => {
           },
         },
       });
+      getShopDetails({
+        variables: {
+          input: {
+            shopId: temporaryCart.items[0]?.shopid.toString(),
+            userLongitude: location?.longitude,
+            userLatitude: location?.latitude,
+          },
+        },
+      });
     }
   }, [temporaryCart, location, isFocus]);
 
   useEffect(() => {
     onGetAutoApply();
   }, [paymentMethod]);
-
-  const checkShopOpenStatus = () => {
-    setLoadingWallet(true);
-    if (temporaryCart && temporaryCart.items.length > 0) {
-      getShopStatus({variables: {input: {shopId: temporaryCart.items[0]?.shopid}}});
-    }
-  };
 
   const [getDeliverFee] = useLazyQuery(GET_SHIPPING_FEE, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -327,7 +345,8 @@ const MainComponent = () => {
             dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
             setTimeout(() => {
               setShowLoader(false);
-              navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
+              // navigation.replace('ToktokFoodDriver', {referenceNum: checkoutOrder.referenceNum});
+              navigation.replace('ToktokFoodOrder', {referenceNum: checkoutOrder.referenceNum, orderStatus: 'p'});
             }, 5000);
           })
           .catch(() => {
@@ -387,9 +406,10 @@ const MainComponent = () => {
   }, [paymentMethod]);
 
   const fixOrderLogs = async () => {
-    const VOUCHER_FlAG =
-      shippingVoucher.length > 0 ? shippingVoucher[0]?.voucher?.handle_shipping_promo : autoShipping?.success ? 1 : 0;
-
+    const autoApply = promotionVoucher.filter(promo => promo.type === 'auto');
+    const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
+    const VOUCHER_FlAG = shipping.length > 0 ? shipping[0]?.handle_shipping_promo : autoApply[0]?.handle_shipping_promo ? 1 : 0;
+    // console.log(VOUCHER_FlAG, shippingVoucher, promotionVoucher);
     let orderLogs = {
       sys_shop: temporaryCart.items[0]?.shopid,
       branchid: temporaryCart.items[0]?.branchid,
@@ -423,7 +443,7 @@ const MainComponent = () => {
           total_amount: Number(totalAmount.toFixed(2)),
           quantity: item.quantity,
           order_type: 1,
-          notes: item.notes.replace(/[^a-z0-9_ ]/gi, ''),
+          notes: item.notes.replace(/[^a-z0-9 ]/gi, ''),
           addons: await fixAddOns(item.addonsDetails),
         };
         items.push(data);
@@ -453,7 +473,11 @@ const MainComponent = () => {
     const deliveryPrice = orderType === 'Delivery' ? delivery?.price : 0;
     const totalPrice =
       promotions.length > 0 || deals.length > 0
-        ? (await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)) + temporaryCart.addonsTotalAmount
+        ? await getResellerDiscount(promotions, deals, temporaryCart.items, true)
+        : temporaryCart?.totalAmountWithAddons;
+    const deductedPrice =
+      promotions.length > 0 || deals.length > 0
+        ? totalPrice + temporaryCart?.addonsTotalAmount
         : temporaryCart?.totalAmountWithAddons;
     // const totalPrice =
     //   promotions.length > 0 ? temporaryCart?.totalAmountWithAddons : temporaryCart?.totalAmountWithAddons;
@@ -464,7 +488,9 @@ const MainComponent = () => {
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
     //   : await handleShippingVouchers(shippingVoucher);
     const amount = await getTotalAmount(promotionVoucher, delivery?.price);
-    const parseAmount = Number((deliveryPrice + totalPrice - amount).toFixed(2));
+    const parseAmount = Number((deliveryPrice + deductedPrice - amount).toFixed(2));
+    // console.log(parseAmount, totalPrice, deliveryPrice, deductedPrice, amount, temporaryCart);
+
     // if (orderType === 'Delivery') {
     //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
     //   //   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
@@ -598,40 +624,40 @@ const MainComponent = () => {
   const placeCustomerOrderProcess = async (CUSTOMER_CART, WALLET) => {
     const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
     const deals = promotionVoucher.filter(promo => promo.type === 'deal');
+    // const promoDeals = _.unionBy(promotions, deals, 'id');
+    const {items} = temporaryCart;
+
     // const autoApply = promotionVoucher.filter(promo => promo.type === 'auto');
     // const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
     // const mergeShipping = _.merge(autoApply, shipping);
-    // console.log(mergeShipping);
-    // const totalPrice =
-    //   promotions.length > 0 ? await getTotalAmountOrder(promotions, temporaryCart.items) : temporaryCart?.totalAmount;
     const totalPrice =
       promotions.length > 0 || deals.length > 0
-        ? await getTotalAmountOrder([...promotions, ...deals], temporaryCart.items)
+        ? await getResellerDiscount(promotions, deals, temporaryCart.items, true)
         : temporaryCart?.totalAmount;
+    const deductedPrice = promotions.length > 0 || deals.length > 0 ? totalPrice : temporaryCart?.totalAmount;
     // const totalResellerDiscount =
     //   promotions.length > 0 ? (await getResellerDiscount(promotions, temporaryCart.items)).toFixed(2) : 0;
 
     const amount = await getTotalAmount(promotionVoucher, 0);
-    const parsedAmount = Number((totalPrice - amount).toFixed(2));
-    // console.log(temporaryCart?.totalAmount);
-    // console.log(amount, parsedAmount, totalPrice);
+    const parsedAmount = Number((deductedPrice - amount).toFixed(2));
+    // console.log('PLACE', amount, parsedAmount, deductedPrice, temporaryCart);
 
     const DELIVERY_RECEIVER =
-      receiver.contactPerson && receiver.contactPerson !== ''
+      receiver.contactPerson && receiver.contactPerson != null && receiver.contactPerson !== ''
         ? receiver.contactPerson
         : `${customerInfo.firstName} ${customerInfo.lastName}`;
-    
+
     const LAND_MARK = receiver.landmark && receiver.landmark !== '' ? receiver.landmark : '';
 
-    const replaceName = DELIVERY_RECEIVER.replace(/[^a-z0-9_ ]/gi, '');
-    const replaceLandMark = LAND_MARK.replace(/[^a-z0-9_ ]/gi, '');
+    const replaceName = DELIVERY_RECEIVER.replace(/[^a-z0-9 ]/gi, '');
+    const replaceLandMark = LAND_MARK.replace(/[^a-z0-9 ]/gi, '');
 
     const ORDER = {
       // total_amount: temporaryCart.totalAmount,
       // srp_totalamount: temporaryCart.totalAmount,
       total_amount: parsedAmount,
       srp_totalamount: temporaryCart?.srpTotalAmount,
-      notes: riderNotes.replace(/[^a-z0-9_ ]/gi, ''),
+      notes: riderNotes.replace(/[^a-z0-9 ]/gi, ''),
       order_isfor: orderType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       // order_type: 2,
       order_type: await getOrderType(customerFranchisee),
@@ -652,7 +678,7 @@ const MainComponent = () => {
       user_id: Number(customerInfo.userId),
       latitude: location.latitude,
       longitude: location.longitude,
-      regCode: '0',
+      regCode: items[0]?.shopRegion,
       provCode: '0',
       citymunCode: '0',
       shippingvouchers: await getShippingVoucher(promotionVoucher),
@@ -689,6 +715,23 @@ const MainComponent = () => {
     });
   };
 
+  const [getAllTemporaryCart, {loading, error}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
+    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: ({getAllTemporaryCart}) => {
+      const {items} = getAllTemporaryCart;
+      const evalDisabledResult = items.filter(item => item.isDisabled === true);
+      if (evalDisabledResult.length > 0) {
+        setLoadingWallet(false);
+        setShowItemDisabled(true);
+      } else {
+        if (temporaryCart && temporaryCart.items.length > 0) {
+          getShopStatus({variables: {input: {shopId: temporaryCart.items[0]?.shopid}}});
+        }
+      }
+    },
+  });
+
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} style={styles.container}>
       <HeaderImageBackground searchBox={false}>
@@ -707,9 +750,27 @@ const MainComponent = () => {
         }}
         onCloseBtn2={() => {
           setShowConfirmation(false);
-          checkShopOpenStatus();
+          setLoadingWallet(true);
+          getAllTemporaryCart({
+            variables: {
+              input: {
+                userId: customerInfo.userId,
+              },
+            },
+          });
         }}
         hasTwoButtons
+      />
+
+      <DialogMessage
+        visibility={showItemDisabled}
+        title="Currently Unavailable"
+        messages={`Some items in your cart is currently unavailable. Please remove for now to proceed.\nThank you.`}
+        type="warning"
+        btn1Title="OK"
+        onCloseModal={() => {
+          setShowItemDisabled(false);
+        }}
       />
 
       <DialogMessage
@@ -758,10 +819,10 @@ const MainComponent = () => {
           <DialogMessage
             visibility={tokWaPlaceOrderErr.visible}
             title={'Unavailable Products'}
-            messages="We're sorry. Some products in your cart are unavailable at the moment. Please try again another time."
+            messages={`Some items in your cart is currently unavailable. Please remove for now to proceed.\nThank you.`}
             type="warning"
             onCloseModal={() => {
-              navigation.goBack();
+              navigation.replace('ToktokFoodCart', {userId: customerInfo.userId});
               // setTokWaPlaceOrderErr({error: {}, visible: false});
             }}
             btnTitle="OK"
@@ -876,10 +937,10 @@ const MainComponent = () => {
           />
         )}
         <Separator />
-        {orderType === 'Delivery' && <ReceiverLocation cart={temporaryCart} />}
+        {orderType === 'Delivery' && <ReceiverLocation />}
         <Separator />
 
-        <MyOrderList />
+        <MyOrderList shopDetails={shopDetails} hasUnavailableItem={showItemDisabled} />
         <Separator />
 
         {/*  {orderType === 'Delivery' && (
@@ -888,7 +949,7 @@ const MainComponent = () => {
             <Separator />
           </>
         )} */}
-        <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} />
+        <OrderVoucher autoShipping={autoShipping} deliveryFee={delivery?.price} orderType={orderType} />
         <Separator />
 
         {/* <AlsoOrder /> */}
