@@ -87,7 +87,7 @@ const Activities = () => {
             },
           })}
         />
-        {!hideGo && (
+        {/* {!hideGo && (
           <ActivitiesTopTab.Screen
             name="ToktokGoActivities"
             component={ToktokGoActivities}
@@ -109,7 +109,7 @@ const Activities = () => {
               },
             })}
           />
-        )}
+        )} */}
         <ActivitiesTopTab.Screen
           name="ToktokLoadActivities"
           component={ToktokLoadActivities}
@@ -127,7 +127,7 @@ const Activities = () => {
             ),
           }}
         />
-        <ActivitiesTopTab.Screen
+        {/* <ActivitiesTopTab.Screen
           name="ToktokBillActivities"
           component={ToktokBillActivities}
           options={{
@@ -143,7 +143,7 @@ const Activities = () => {
               </Text>
             ),
           }}
-        />
+        /> */}
       </ActivitiesTopTab.Navigator>
     </>
   );
