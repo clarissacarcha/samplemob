@@ -24,11 +24,15 @@ import NoNetworkConnection from '../assets/images/NoNetworkConnection.png';
 import ToktokSuperApp from '../assets/images/ToktokLogo.png';
 import ServerDown from '../assets/images/ServerDown.png';
 import MaintenanceLogo from '../assets/images/MaintenanceLogo.png';
-import MaintenanceImage from '../assets/images/MaintenanceImage.png';
+import UpdateLogo from '../assets/images/ToktokUpdateImage.png';
+// import MaintenanceImage from '../assets/images/MaintenanceImage.png';
 import CONSTANTS from '../common/res/constants';
 import LoginBanner from '../assets/images/ToktokLogo.png';
 
 const imageWidth = Dimensions.get('window').width - 80;
+
+const bannerWidth = Dimensions.get('window').width * 0.8;
+const bannerHeight = Dimensions.get('window').height * 0.5;
 
 const mapKeyValueToObject = keyValueArray => {
   const result = {};
@@ -120,6 +124,7 @@ const Splash = ({setConstants, setAppServices}) => {
       });
 
       const {isCurrent, enabled} = result.data.getAppVersionStatus;
+      console.log(result.data.getAppVersionStatus);
 
       if (isCurrent && enabled) {
         setcheckPoint('A');
@@ -177,12 +182,18 @@ const Splash = ({setConstants, setAppServices}) => {
   // New Version Optional = SUGGEST
   if (checkPoint === 'S') {
     return (
-      <ImageBackground style={{flex: 1, alignItems: 'center'}} source={SplashImage} resizeMode={'cover'}>
+      <ImageBackground
+        style={{flex: 1, alignItems: 'center', justifyContent: 'space-between'}}
+        source={SplashImage}
+        resizeMode={'cover'}>
         <View style={{alignItems: 'center', marginHorizontal: 20}}>
-          <Image source={MaintenanceLogo} style={{width: 189, height: 183, marginTop: '50%'}} resizeMode="contain" />
+          <Image
+            source={UpdateLogo}
+            style={{width: bannerWidth, height: bannerHeight, marginTop: '20%'}}
+            resizeMode="contain"
+          />
           <Text
             style={{
-              marginTop: 54,
               color: CONSTANTS.COLOR.ORANGE,
               fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
               fontSize: CONSTANTS.FONT_SIZE.XL,
@@ -216,10 +227,15 @@ const Splash = ({setConstants, setAppServices}) => {
               </Text>
             </View>
           </TouchableHighlight>
-          <TouchableHighlight onPress={() => setcheckPoint('A')} underlayColor={COLOR} style={{marginTop: 25}}>
-            <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, color: CONSTANTS.COLOR.ORANGE}}>Skip</Text>
+          <TouchableHighlight onPress={() => setcheckPoint('A')} underlayColor={COLOR} style={styles.submitBox}>
+            <View style={styles.submit}>
+              <Text style={{color: COLOR, fontSize: 20}}>Update Later</Text>
+            </View>
           </TouchableHighlight>
         </View>
+        <Text style={{color: CONSTANTS.COLOR.ORANGE, marginBottom: 22, fontSize: CONSTANTS.FONT_SIZE.M}}>
+          v{APP_VERSION}
+        </Text>
       </ImageBackground>
     );
   }
@@ -227,12 +243,18 @@ const Splash = ({setConstants, setAppServices}) => {
   //New Version Required = BLOCK
   if (checkPoint == 'B') {
     return (
-      <ImageBackground style={{flex: 1, alignItems: 'center'}} source={SplashImage} resizeMode={'cover'}>
+      <ImageBackground
+        style={{flex: 1, alignItems: 'center', justifyContent: 'space-between'}}
+        source={SplashImage}
+        resizeMode={'cover'}>
         <View style={{alignItems: 'center', marginHorizontal: 20}}>
-          <Image source={MaintenanceLogo} style={{width: 189, height: 183, marginTop: '50%'}} resizeMode="contain" />
+          <Image
+            source={UpdateLogo}
+            style={{width: bannerWidth, height: bannerHeight, marginTop: '20%'}}
+            resizeMode="contain"
+          />
           <Text
             style={{
-              marginTop: 54,
               color: CONSTANTS.COLOR.ORANGE,
               fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
               fontSize: CONSTANTS.FONT_SIZE.XL,
@@ -267,6 +289,9 @@ const Splash = ({setConstants, setAppServices}) => {
             </View>
           </TouchableHighlight>
         </View>
+        <Text style={{color: CONSTANTS.COLOR.ORANGE, marginBottom: 22, fontSize: CONSTANTS.FONT_SIZE.M}}>
+          v{APP_VERSION}
+        </Text>
       </ImageBackground>
     );
   }
@@ -277,10 +302,10 @@ const Splash = ({setConstants, setAppServices}) => {
       <ImageBackground style={{flex: 1, alignItems: 'center'}} source={SplashImage} resizeMode={'cover'}>
         <Image
           source={LoginBanner}
-          style={{height: imageWidth - 200, width: imageWidth - 150, marginTop: 120}}
+          style={{height: imageWidth - 200, width: imageWidth - 150, marginTop: 80}}
           resizeMode="contain"
         />
-        <Image source={MaintenanceImage} style={{height: imageWidth - 30, width: imageWidth - 70}} resizeMode="cover" />
+        <Image source={MaintenanceLogo} style={{width: bannerWidth, height: bannerHeight}} resizeMode="contain" />
         <Text
           style={{
             color: CONSTANTS.COLOR.ORANGE,
@@ -290,8 +315,9 @@ const Splash = ({setConstants, setAppServices}) => {
           Katok ka ulit mamaya!
         </Text>
         <Text style={{marginHorizontal: 20, textAlign: 'center', marginTop: 8}}>
-          We are performing some maintenance to serve you better. We will be right back. Thank you.
+          We are performing some maintenance to serve you better.
         </Text>
+        <Text style={{marginHorizontal: 20, textAlign: 'center'}}>We will be right back. Thank you.</Text>
       </ImageBackground>
     );
   }

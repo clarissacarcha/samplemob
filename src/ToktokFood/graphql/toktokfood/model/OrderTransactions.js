@@ -105,6 +105,7 @@ const transaction = `
   }
 `;
 
+// Add this once back end merge - refundTotal
 const transactionRef = `
   id
   sysShop
@@ -154,6 +155,7 @@ const transactionRef = `
   promoDiscounts
   srpTotal
   resellerDiscountTotal
+  refundTotal
   shopDetails {
     id
     shopname
@@ -185,6 +187,7 @@ const transactionRef = `
     totalAmountWithAddons
     resellerDiscount
     resellerRate
+    isModified
     productDetails {
       Id
       itemname
@@ -211,6 +214,24 @@ const transactionRef = `
   deliveryLogs {
     status
     createdAt
+  }
+  rebooked
+  estimatedDistance
+  voucherDiscounts {
+    id
+    referenceNum
+    voucherId
+    voucherCode
+    voucherName
+    userId
+    shopId
+    productId
+    region
+    discountType
+    discountAmount
+    shoulderedBy
+    paymentMethod
+    status
   }
 `;
 

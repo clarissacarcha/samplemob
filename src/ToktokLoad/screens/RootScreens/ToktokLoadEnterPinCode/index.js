@@ -109,6 +109,7 @@ export const ToktokLoadEnterPinCode = ({navigation, route})=> {
     let {firstName, lastName} = user.person;
     let formattedMobile = user.username.substring(1, user.username.length);
     let input = {
+      hash: paymentSummary.hash,
       requestMoneyDetails: {
         requestTakeMoneyId: requestMoneyDetails.requestTakeMoneyId,
         TPIN: requestMoneyDetails.validator === "TPIN" ? pinCode : "",

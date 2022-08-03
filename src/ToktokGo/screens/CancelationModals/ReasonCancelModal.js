@@ -5,20 +5,85 @@ import {SheetManager} from 'react-native-actions-sheet';
 import {ThrottledOpacity} from '../../../components_section';
 export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
   const dropDownRef = useRef(null);
+  const scrollViewRef = useRef();
   const [selectedReason, setSelectedReason] = useState(null);
   const [typedReason, setTypedReason] = useState('');
   const [data, setData] = useState([
     {
-      label: 'Waited too long',
+      label: 'Driver took too long to arrive',
       value: '0',
     },
     {
-      label: 'Driver asked to cancel',
+      label: 'Found a cheaper option/Found another ride',
       value: '1',
     },
     {
-      label: 'Driver is rude',
+      label: 'Changed my mind',
       value: '2',
+    },
+    {
+      label: 'Want to change address',
+      value: '3',
+    },
+    {
+      label: 'Wrong address/Wrong pin/Wrong pick-up point',
+      value: '4',
+    },
+    {
+      label: 'Forgot to input promo code',
+      value: '5',
+    },
+    {
+      label: 'Driver is too far from pick-up point, not willing to wait',
+      value: '6',
+    },
+    {
+      label: "Driver doesn't accept cash/toktokwallet/e-mobile wallet",
+      value: '7           ',
+    },
+    {
+      label: 'Driver is asking for additional charge',
+      value: '8',
+    },
+    {
+      label: 'Driver asked to cancel',
+      value: '9',
+    },
+    {
+      label: 'The actual driver is different from the app',
+      value: '10',
+    },
+    {
+      label: 'Different unit arrived',
+      value: '11',
+    },
+    {
+      label: "Driver is not vaccinated/Doesn't follow safety protocols",
+      value: '12',
+    },
+    {
+      label: 'Driver is rude/inapprorpiate behavior',
+      value: '13',
+    },
+    {
+      label: 'The payment method I chose has a problem',
+      value: '14',
+    },
+    {
+      label: 'Chose the wrong service',
+      value: '15',
+    },
+    {
+      label: 'Chose the wrong vehicle',
+      value: '16',
+    },
+    {
+      label: 'Driver no-show',
+      value: '17',
+    },
+    {
+      label: 'Other, please state: ',
+      value: '18',
     },
   ]);
 
@@ -40,7 +105,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               <Text style={styles.headerText}>Reason for cancelling</Text>
             </View>
           </View>
-          <ScrollView style={styles.scrollview}>
+          <ScrollView style={styles.scrollview} ref={scrollViewRef}>
             {data.map((text, key) => {
               return (
                 <View style={styles.radioButtonContainer} key={key}>
@@ -48,6 +113,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
                     delay={500}
                     onPress={() => {
                       setSelectedReason(text);
+                      if (selectedReason?.value == '18') scrollViewRef.current.scrollToEnd({animated: true});
                     }}
                     style={styles.radioButton}>
                     <View
@@ -58,6 +124,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
                     delay={500}
                     onPress={() => {
                       setSelectedReason(text);
+                      if (selectedReason?.value == '18') scrollViewRef.current.scrollToEnd({animated: true});
                     }}>
                     <Text style={styles.radioButtonText}>{text.label}</Text>
                   </ThrottledOpacity>
@@ -65,17 +132,23 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               );
             })}
           </ScrollView>
-          {selectedReason?.value == '4' && (
-            <TextInput
-              ref={dropDownRef}
-              value={typedReason}
-              placeholder="Enter your reason"
-              keyboardType="default"
-              onChangeText={value => setTypedReason(value)}
-              style={styles.Input}
-              numberOfLines={5}
-              multiline
-            />
+          {selectedReason?.value == '18' && (
+            <View style={styles.containerTextInput}>
+              <TextInput
+                ref={dropDownRef}
+                value={typedReason}
+                placeholder="Enter your reason"
+                keyboardType="default"
+                onChangeText={value => setTypedReason(value)}
+                style={styles.Input}
+                numberOfLines={5}
+                maxLength={320}
+                multiline
+              />
+              {/* <View style={{alignItems: 'flex-end'}}>
+                <Text style={styles.textInputLength}>{typedReason.length}/320</Text>
+              </View> */}
+            </View>
           )}
           <View
             style={{
@@ -83,7 +156,11 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               justifyContent: 'center',
               flexDirection: 'row',
               paddingHorizontal: 25,
-              paddingTop: 20,
+
+              position: 'absolute',
+              bottom: 0,
+              paddingVertical: 0,
+              paddingBottom: 25,
             }}>
             <ThrottledOpacity
               delay={500}
@@ -97,10 +174,11 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
                 backgroundColor: CONSTANTS.COLOR.WHITE,
                 borderWidth: 1,
                 borderColor: CONSTANTS.COLOR.ORANGE,
+                margin: 10,
               }}>
               <Text
                 style={{
-                  fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                  fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
                   fontSize: CONSTANTS.FONT_SIZE.XL,
                   color: CONSTANTS.COLOR.ORANGE,
                 }}>
@@ -122,7 +200,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
               }}>
               <Text
                 style={{
-                  fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                  fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
                   fontSize: CONSTANTS.FONT_SIZE.XL,
                   color: CONSTANTS.COLOR.WHITE,
                 }}>
@@ -146,7 +224,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: CONSTANTS.COLOR.WHITE,
     borderRadius: 10,
-    paddingVertical: 30,
+    paddingTop: 30,
   },
   containerHeader: {
     justifyContent: 'flex-start',
@@ -163,7 +241,7 @@ const styles = StyleSheet.create({
     fontSize: CONSTANTS.FONT_SIZE.XL,
     lineHeight: 20,
     fontWeight: '600',
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   scrollview: {
     maxHeight: '75%',
@@ -171,9 +249,9 @@ const styles = StyleSheet.create({
   },
   radioButtonContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     paddingHorizontal: 23,
     paddingTop: 20,
+    marginRight: 10,
   },
   radioButton: {
     height: 16,
@@ -214,10 +292,36 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontSize: 11,
     padding: 8,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
     borderRadius: 5,
     width: '85%',
     marginHorizontal: 23,
     marginTop: 20,
+  },
+  Input: {
+    height: 69,
+    textAlignVertical: 'top',
+    borderColor: CONSTANTS.COLOR.MEDIUM_DARK,
+    borderWidth: 1,
+    fontSize: 11,
+    padding: 8,
+    backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
+    borderRadius: 5,
+    width: '100%',
+  },
+  containerTextInput: {
+    marginTop: -30,
+    marginHorizontal: 16,
+    backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: CONSTANTS.COLOR.MEDIUM_DARK,
+  },
+  textInputLength: {
+    marginRight: 15,
+    marginBottom: 10,
+    color: '#9E9E9E',
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    fontSize: CONSTANTS.FONT_SIZE.S,
   },
 });

@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import _ from 'lodash';
 
 export const arrangeAddons = addons => {
@@ -40,8 +41,11 @@ export const tokwaErrorBtnTitle = pinAttempt => {
 
 export const deleteKeys = data => {
   data.map(promo => {
-    if (promo.items.length) {
+    if (promo?.items && promo.items.length) {
       promo.items.map(i => delete i.__typename);
+    }
+    if (promo?.origAmount || promo.origAmount === 0) {
+      promo.amount = promo.origAmount;
     }
     delete promo.origAmount;
     return delete promo.__typename;
@@ -49,8 +53,96 @@ export const deleteKeys = data => {
   return data;
 };
 
-export const getResellerDiscount = async (promotions, cartItems) => {
+export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal = false) => {
+  let totalAmount = 0;
   let totalReseller = 0;
+  const productIds = [];
+  const deductedProducts = [];
+
+  return Promise.all(
+    promotions.map(item => {
+      const filteredId = item.product_id.split(',');
+      productIds.push(...filteredId);
+      // console.log(item, '=============');
+      if (
+        (Number(item?.on_top) && deals.length > 0) ||
+        (Number(item?.on_top) > 0 && !deals.length) ||
+        (Number(!item?.on_top) && !deals.length) ||
+        (item?.on_top === '0' && !deals.length)
+      ) {
+        cartItems.map(items => {
+          const filteredProd = _.includes(productIds, items.productid);
+          // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
+          // console.log(filteredProd, item, items);
+          if (filteredProd && totalReseller === 0) {
+            const {discounted_totalamount, voucher_code} = item;
+            const {basePrice, quantity, resellerDiscount} = items;
+            const totalItemsNotIncluded = (resellerDiscount || basePrice) * (quantity - 1);
+            const totalItemsResellerNotIncluded = (basePrice - resellerDiscount) * (quantity - 1);
+            const hasReseller = resellerDiscount ? totalItemsResellerNotIncluded : 0;
+            const deductedDiscount =
+              item?.discount_type === '3'
+                ? items?.basePrice - discounted_totalamount + (hasTotal ? totalItemsNotIncluded : 0)
+                : item?.discount_totalamount;
+            // console.log(deductedDiscount, totalItemsResellerNotIncluded, hasReseller);
+            totalReseller += deductedDiscount + hasReseller;
+            totalAmount += discounted_totalamount + (hasTotal ? totalItemsNotIncluded : 0);
+            deductedProducts.push({id: items.productid, amount: totalReseller, code: voucher_code});
+            // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
+          } else {
+            totalAmount += (items?.resellerDiscount ?? items?.basePrice) * items.quantity;
+            // console.log(items, totalAmount);
+          }
+        });
+      }
+    }),
+  ).then(async () => {
+    await deals.map(item => {
+      const filteredId = item.product_id.split(',');
+      productIds.push(...filteredId);
+      if (item?.on_top || !promotions.length) {
+        cartItems.map(items => {
+          const filteredProd = _.includes(productIds, items.productid);
+          const filteredDeductedProd = deductedProducts.filter(product => product.id === items.productid);
+          // const notEqualDeductedProd = deductedProducts.filter(product => product.id !== items.productid);
+          if (filteredProd && !filteredDeductedProd.length) {
+            const {discounted_totalamount} = item;
+            const deductedDiscount =
+              item?.discount_type === '3' ? items?.basePrice - discounted_totalamount : item?.discount_totalamount;
+            totalReseller += deductedDiscount;
+            totalAmount += discounted_totalamount;
+            // console.log(items?.basePrice, 'baseprice 2')
+            // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
+          }
+          if (filteredDeductedProd.length) {
+            const {basePrice, quantity} = items;
+            const {discount_totalamount, discounted_totalamount, vcode} = item;
+            const productTotalAmount = basePrice * quantity;
+            const deductedDiscount =
+              item?.discount_type === '3' ? basePrice - discounted_totalamount : discount_totalamount;
+            const totalDiscount = deductedDiscount + filteredDeductedProd[0].amount;
+            const discountVoucher = vcode !== filteredDeductedProd[0].code ? 0 : totalDiscount;
+            totalReseller += discountVoucher > productTotalAmount ? discounted_totalamount : discountVoucher;
+            totalAmount += discounted_totalamount;
+            // console.log(items?.basePrice, 'baseprice 3')
+          }
+
+          if (!filteredDeductedProd.length && !filteredProd) {
+            totalAmount += (items?.resellerDiscount ?? items?.basePrice) * items.quantity;
+          }
+          // else {
+          //   totalAmount += items?.resellerDiscount ?? items.basePrice;
+          //   // console.log(items?.basePrice, 'resellerDiscount 2')
+          // }
+        });
+      }
+    });
+    return hasTotal ? (totalAmount > 0 ? totalAmount : 0) : totalReseller;
+  });
+};
+
+export const getTotalResellerDiscount = async (promotions, cartItems) => {
+  let totalAmount = 0;
   const productIds = [];
   return Promise.all(
     promotions.map(item => {
@@ -60,22 +152,33 @@ export const getResellerDiscount = async (promotions, cartItems) => {
       cartItems.map(items => {
         const filteredProd = _.includes(productIds, items.productid);
         // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
-        if (filteredProd && totalReseller === 0) {
-          const deductedDiscount = item?.discount_type === '3' ? items?.basePrice - 1 : item?.discount_totalamount;
-          // console.log(items, deductedDiscount);
-          totalReseller += deductedDiscount;
+        const totalAmountWAddons = items.addonsTotalAmount * items.quantity;
+        // console.log(items, filteredProd);
+        if (filteredProd) {
+          // totalAmount += items?.basePrice - items?.resellerDiscount;
+          // console.log('ITEMS', items);
+          const deductedDiscount =
+            item?.discount_type === '3' ? item?.discount_totalamount : items?.basePrice - item?.discount_totalamount;
+          // const resellerDiscount = (items.quantity - 1) * (items?.resellerDiscount || items?.basePrice);
+          // totalAmount += items.basePrice + resellerDiscount + totalAmountWAddons;
           // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
+          // totalAmount += deductedDiscount;
+        } else {
+          // totalAmount += items?.basePrice - items?.resellerDiscount;
+          const resellerDiscount = items.quantity * (items?.basePrice - items?.resellerDiscount);
+          totalAmount += items?.resellerDiscount > 0 ? resellerDiscount : 0;
         }
       });
     }),
   ).then(() => {
-    return totalReseller;
+    return totalAmount;
   });
 };
 
 export const getTotalAmountOrder = async (promotions, cartItems) => {
   let totalAmount = 0;
   const productIds = [];
+  // console.log(cartItems);
   return Promise.all(
     promotions.map(item => {
       const filteredId = item.product_id.split(',');
@@ -85,11 +188,11 @@ export const getTotalAmountOrder = async (promotions, cartItems) => {
       cartItems.map(items => {
         const filteredProd = _.includes(productIds, items.productid);
         // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
-
         if (filteredProd) {
-          const deductedDiscount = item?.discount_type === '3' ? 1 : items?.basePrice - item?.discount_totalamount;
+          const deductedDiscount =
+            item?.discount_type === '3' ? item.discounted_totalamount : items?.basePrice - item?.discount_totalamount;
           const resellerDiscount = (items.quantity - 1) * (items?.resellerDiscount || items?.basePrice);
-
+          // console.log(deductedDiscount, resellerDiscount, items);
           if (totalReseller === 0) {
             totalAmount += deductedDiscount + resellerDiscount;
           } else {
@@ -99,7 +202,9 @@ export const getTotalAmountOrder = async (promotions, cartItems) => {
           // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
         } else {
           const resellerDiscount = items.quantity * (items?.resellerDiscount || items?.basePrice);
-          totalAmount += resellerDiscount;
+          const deductedDiscount = item?.discount_type === '3' ? item.discounted_totalamount : resellerDiscount;
+          // console.log(resellerDiscount);
+          totalAmount += deductedDiscount;
         }
       });
     }),
@@ -116,21 +221,23 @@ export const getCartTotalAmountOrder = async (promotions, cartItems) => {
       const filteredId = item.product_id.split(',');
       productIds.push(...filteredId);
 
-      cartItems.map(items => {
-        const filteredProd = _.includes(productIds, items.productid);
-        // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
-        const totalAmountWAddons = items.addonsTotalAmount * items.quantity;
-        if (filteredProd) {
-          const deductedDiscount = item?.discount_type === '3' ? 1 : items?.basePrice - item?.discount_totalamount;
+      if (item?.on_top) {
+        cartItems.map(items => {
+          const filteredProd = _.includes(productIds, items.productid);
+          // const filteredProd = items.filter(product => _.includes(productIds, items.productid))
+          const totalAmountWAddons = items.addonsTotalAmount * items.quantity;
+          if (filteredProd) {
+            const deductedDiscount = item?.discount_type === '3' ? 1 : items?.basePrice - item?.discount_totalamount;
 
-          const resellerDiscount = (items.quantity - 1) * (items?.resellerDiscount || items?.basePrice);
-          totalAmount += items.basePrice + resellerDiscount + totalAmountWAddons;
-          // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
-        } else {
-          const resellerDiscount = items.quantity * (items?.resellerDiscount || items?.basePrice);
-          totalAmount += resellerDiscount + totalAmountWAddons;
-        }
-      });
+            const resellerDiscount = (items.quantity - 1) * (items?.resellerDiscount || items?.basePrice);
+            totalAmount += items.basePrice + resellerDiscount + totalAmountWAddons;
+            // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
+          } else {
+            const resellerDiscount = items.quantity * (items?.resellerDiscount || items?.basePrice);
+            totalAmount += resellerDiscount + totalAmountWAddons;
+          }
+        });
+      }
     }),
   ).then(() => {
     return totalAmount;
@@ -143,7 +250,7 @@ export const getTotalAmount = async (promos, deliveryFee) => {
   let deals = promos.filter(promo => promo.type === 'deal');
   let promotions = promos.filter(promo => promo.type === 'promotion');
   let totalAmount = 0;
-
+  console.log(autoApply);
   await autoApply.map(async promo => {
     const deductedAmount = await getDeductedVoucher(promo, deliveryFee);
     totalAmount += deductedAmount;
@@ -208,7 +315,7 @@ export const getShippingVoucher = async promos => {
     return shippingObj;
   });
   shipping = await shipping.map(promo => {
-    let shippingObj = {...promo, amount: promo.origAmount};
+    let shippingObj = {...promo, amount: promo.origAmount ?? promo.amount};
     delete shippingObj.__typename;
     return shippingObj;
   });
@@ -217,7 +324,6 @@ export const getShippingVoucher = async promos => {
     delete promo.origAmount;
     delete promo.__typename;
   });
-  // console.log(autoApply, shipping)
   return [...autoApply, ...shipping];
 };
 
@@ -287,6 +393,7 @@ export const getTotalDeductedDeliveryFee = (promos, deliveryFee) => {
     .map((objs, key) => ({
       amount: _.sumBy(objs, 'amount'),
       discount_totalamount: _.sumBy(objs, 'discount_totalamount'),
+      sf_discount: _.sumBy(objs, 'sf_discount'),
       type: key,
     }))
     .value();
@@ -295,15 +402,15 @@ export const getTotalDeductedDeliveryFee = (promos, deliveryFee) => {
   const autoApply = groupPromo.filter(promo => promo.type === 'auto');
   const shipping = groupPromo.filter(promo => promo.type === 'shipping');
   let totalDeducted = 0;
-
   // if (promotions.length > 0) {
   //   totalDeducted += promotions[0].discount_totalamount;
   // }
   // if (deal.length > 0) {
   //   totalDeducted += deal[0].discount_totalamount;
   // }
+  // console.log(shipping);
   if (shipping.length > 0) {
-    totalDeducted += shipping[0].amount;
+    totalDeducted += Number(shipping[0].amount) || deliveryFee;
   }
   if (autoApply.length > 0) {
     const {amount} = autoApply[0];
@@ -313,6 +420,7 @@ export const getTotalDeductedDeliveryFee = (promos, deliveryFee) => {
       totalDeducted += deliveryFee;
     }
   }
+  // console.log(promos, shipping, deliveryFee, totalDeducted);
 
   return deliveryFee - totalDeducted;
 };

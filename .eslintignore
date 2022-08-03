@@ -1,0 +1,24 @@
+
+**/coverage/**
+
+node_modules/
+src/app
+src/assets
+src/common
+src/components
+src/components_section
+src/hooks
+src/graphql
+src/provider
+src/revamp
+src/screens
+src/store
+src/SuperApp
+src/Toktok
+src/ToktokBills
+# src/ToktokFood
+src/ToktokGo
+src/ToktokLoad
+src/ToktokMall
+src/ToktokWallet
+src/util

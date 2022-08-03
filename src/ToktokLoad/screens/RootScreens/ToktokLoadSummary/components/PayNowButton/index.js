@@ -47,7 +47,8 @@ export const PayNowButton = ({ loadDetails, mobileNumber }) => {
         loadDetails,
         tokwaBalance,
         mobileNumber,
-        requestMoneyDetails: postToktokWalletRequestMoney.data
+        requestMoneyDetails: postToktokWalletRequestMoney.data,
+        hash: postToktokWalletRequestMoney.hash
       }
       navigation.navigate("ToktokLoadEnterPinCode", { paymentSummary })
     }

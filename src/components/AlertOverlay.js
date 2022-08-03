@@ -1,52 +1,56 @@
 import React from 'react';
-import {View, Text, Modal, StyleSheet, ActivityIndicator} from 'react-native';
-import {COLOR, DARK} from '../res/constants';
+import {View, Text, Modal, StyleSheet, Dimensions} from 'react-native';
+import {COLOR, DARK, FONT, FONT_SIZE} from 'src/res/variables';
+import LottieView from 'lottie-react-native';
+import {moderateScale} from 'toktokbills/helper';
+
+const loading = require('src/assets/animations/loading.json');
 
 export const AlertOverlay = ({visible}) => {
   return (
-    <Modal transparent={true} visible={visible}>
-      <View style={styles.transparent}>
-        <View style={styles.labelRow}>
-          <View style={styles.labelBox}>
-            <Text style={{color: DARK}}>Processing...</Text>
-          </View>
-          <View style={styles.loaderBox}>
-            <ActivityIndicator color={COLOR} />
+    <>
+      <Modal
+        visible={visible}
+        transparent={true}
+        useNativeDriver={true}
+        style={styles.container}
+        animationIn={'fadeIn'}
+        animationOut={'fadeOut'}>
+        <View style={styles.modalBody}>
+          <View style={styles.content}>
+            <LottieView source={loading} autoPlay loop style={styles.loading} resizeMode="cover" />
+            <Text style={styles.processing}>Processing</Text>
           </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  transparent: {
+  container: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.75)',
-    padding: 20,
   },
-  labelRow: {
-    marginTop: 150,
-    marginBottom: 20,
-    height: 40,
-    flexDirection: 'row',
-  },
-  labelBox: {
+  modalBody: {
     flex: 1,
-    backgroundColor: COLOR,
-    borderRadius: 10,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    flexDirection: 'row',
-  },
-  loaderBox: {
-    marginLeft: 20,
-    width: 40,
-    height: 40,
-    backgroundColor: DARK,
-    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.75)',
+  },
+  content: {
+    backgroundColor: 'white',
+    borderRadius: moderateScale(10),
+    alignItems: 'center',
+  },
+  processing: {
+    color: COLOR.ORANGE,
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
+    paddingBottom: moderateScale(20),
+  },
+  loading: {
+    height: undefined,
+    width: moderateScale(170),
+    aspectRatio: 1.5,
   },
 });

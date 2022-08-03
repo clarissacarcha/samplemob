@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useContext, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
@@ -86,6 +87,7 @@ const PaymentDetails = ({deliveryFee, refreshing, orderType, loadingShipping}) =
 
   useEffect(() => {
     if (deliveryFee) {
+      let deliveryFeeTotal = deliveryFee ? deliveryFee : 0;
       let totalAmt = 0;
       const groupPromo = _(promotionVoucher)
         .groupBy('type')
@@ -97,13 +99,18 @@ const PaymentDetails = ({deliveryFee, refreshing, orderType, loadingShipping}) =
         .value();
       const promotions = groupPromo.filter(promo => promo.type === 'promotion');
       const deal = groupPromo.filter(promo => promo.type === 'deal');
+      const shipping = groupPromo.filter(promo => promo.type === 'shipping');
+
       if (promotions.length > 0) {
         totalAmt += promotions[0]?.discount_totalamount;
       }
       if (deal.length > 0) {
         totalAmt += deal[0]?.discount_totalamount;
       }
-      setTotalAmount(temporaryCart?.totalAmountWithAddons + deliveryFee - totalAmt);
+      if (shipping.length > 0) {
+        deliveryFeeTotal -= shipping[0]?.amount;
+      }
+      setTotalAmount(temporaryCart?.totalAmountWithAddons + deliveryFeeTotal - totalAmt);
     }
   }, [deliveryFee, promotionVoucher]);
 

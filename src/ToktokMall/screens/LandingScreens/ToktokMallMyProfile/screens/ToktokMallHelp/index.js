@@ -1,65 +1,82 @@
-import React from 'react'
-import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity} from 'react-native'
-import { HeaderBack, HeaderTitle, HeaderRight, Card } from '../../../../../Components';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  Dimensions,
+  StatusBar,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
+import {HeaderBack, HeaderTitle, HeaderRight, Card} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
-import { AlertOverlay} from '../../../../../../components';
-import { COLOR, FONT, FONT_SIZE } from '../../../../../../res/variables';
+import {AlertOverlay} from '../../../../../../components';
+import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
+import AIcons from 'react-native-vector-icons/dist/AntDesign'
+import {throttle, debounce} from 'lodash'
 
-export const ToktokMallHelp = ({navigation})=> {
+export const ToktokMallHelp = ({navigation}) => {
+  navigation.setOptions({
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitle label={['Help Centre', '']} />,
+    headerRight: () => <HeaderRight hidden={true} />,
+  });
 
-    navigation.setOptions({
-        headerLeft: () => <HeaderBack />,
-        headerTitle: () => <HeaderTitle label={['Help', '']} />,
-        headerRight: () => <HeaderRight hidden={true} />
-    });
-
-    return (
-        <>
-        <View style={styles.container}>
-            <View style={{flex: 1, paddingVertical: 30, paddingHorizontal: 15}}>              
-              <Card>
-                <View style={{flex: 0, padding: 15}}>
-                  <View style={{flex: 0, alignItems: 'center', justifyContent: 'center', paddingVertical: 10}}>
-                    <Text style={{fontSize: 24, fontFamily: FONT.BOLD, color: COLOR.ORANGE}}>Contact Us</Text>
-                  </View>
-                  <View style={{flex: 0, paddingVertical: 10, paddingHorizontal: 10}}>
-                    <Text style={{fontSize: 12}}>Email us with any of your inquiries or contact us with the contact information provided below. We will gladly discuss with you the best possible solution to your needs.</Text>
-                  </View>
-
-                  <View style={{flex: 0, paddingVertical: 0, paddingHorizontal: 10}}>
-                    <View style={{flexDirection: 'row'}}>
-                      <View style={{flex: 1, flexDirection: 'row'}}>
-                        <View style={{flex: 1, justifyContent: 'center'}}>
-                          <CustomIcon.FeIcon name="phone" size={25} color={COLOR.ORANGE} />
-                        </View>
-                        <View style={{flex: 3, justifyContent: 'center'}}>
-                          <Text>(632) 8424 8617</Text>
-                        </View>
-                      </View>
-                      <View style={{flex: 1, flexDirection: 'row'}}>
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}>
-                          <CustomIcon.FeIcon name="mail" size={25} color={COLOR.ORANGE} />
-                        </View>
-                        <View style={{flex: 3, justifyContent: 'center', alignItems: 'flex-end'}}>
-                          <Text>mall@toktok.ph</Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-
-                  {/* <View style={{height: 120}}></View> */}
-
-                </View>
-              </Card>
-            </View>
-        </View>
-        </>
-    )
-}
+  return (
+    <>
+      <View style={styles.container}>
+        <TouchableOpacity  onPress = {() => {
+          debounce(() => navigation.push('ToktokMallSecurity'))()
+        }} style = {styles.row}>
+          <Text style = {styles.textStyle}>Security and Privacy</Text>
+          <AIcons 
+            name = {'right'}
+            color = {COLOR.ORANGE}
+            size = {17}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress = {() => {
+          debounce(() => navigation.push('ToktokMallTermsAndConditions'))()
+        }} style = {styles.row}>
+          <Text style = {styles.textStyle}>Terms and Conditions</Text>
+          <AIcons 
+            name = {'right'}
+            color = {COLOR.ORANGE}
+            size = {17}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress = {() => {
+          debounce(() => navigation.push('ToktokMallContactUs'))()
+        }} style = {styles.row}>
+          <Text style = {styles.textStyle}>Contact Us</Text>
+          <AIcons 
+            name = {'right'}
+            color = {COLOR.ORANGE}
+            size = {17}
+          />
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: COLOR.WHITE
-    }
-})
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomColor: '#F4F4F4',
+    borderBottomWidth: 1
+  },
+  textStyle: {
+    fontFamily: FONT.REGULAR,
+    fontSize: 14
+  },
+});

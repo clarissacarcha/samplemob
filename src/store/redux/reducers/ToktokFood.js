@@ -11,8 +11,6 @@ const INITIAL_STATE = {
   shopLocation: {
     latitude: 0.0,
     longitude: 0.0,
-    shopName: null,
-    shopAddress: null,
   },
   cart: [],
   totalAmount: {},
@@ -28,6 +26,11 @@ const INITIAL_STATE = {
     minutesRemaining: 0,
     showError: false,
     duration: 0,
+  },
+  loader: {
+    isVisible: false,
+    text: '',
+    type: null,
   },
 };
 
@@ -61,6 +64,8 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, shippingVoucher: action.payload};
     case 'SET_TOKTOKFOOD_EXHAUST':
       return {...state, exhaust: action.payload};
+    case 'SET_TOKTOKFOOD_LOADER':
+      return {...state, loader: action.payload};
     default:
       return state;
   }

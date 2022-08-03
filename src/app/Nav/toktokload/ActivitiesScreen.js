@@ -1,27 +1,34 @@
 import React from 'react';
-import { Text, View, Image, StatusBar, StyleSheet } from 'react-native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { ToktokLandingDeliveries } from 'toktok/screens';
-import { COLOR, FONT_SIZE } from '../../../res/variables'
-import CONSTANTS from '../../../common/res/constants'
-import { ToktokLoadAllActivities, ToktokLoadFailedActivities, ToktokLoadPendingActivities, ToktokLoadSuccessActivities } from 'toktokload/screens';
+import {Text, View, Image, StatusBar, StyleSheet} from 'react-native';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {ToktokLandingDeliveries} from 'toktok/screens';
+import {COLOR, FONT_SIZE} from '../../../res/variables';
+import CONSTANTS from '../../../common/res/constants';
+import {
+  ToktokLoadAllActivities,
+  ToktokLoadFailedActivities,
+  ToktokLoadPendingActivities,
+  ToktokLoadSuccessActivities,
+} from 'toktokload/screens';
 
-const ToktokGoActivitiesTopTab = createMaterialTopTabNavigator();
+const ToktokLoadActivitiesTopTab = createMaterialTopTabNavigator();
 
 const ToktokLoadActivities = () => {
   return (
-    <ToktokGoActivitiesTopTab.Navigator
+    <ToktokLoadActivitiesTopTab.Navigator
+      lazy={true}
       tabBarOptions={{
-        style: { paddingHorizontal: 12 },
-        tabStyle: { width: 90 },
-        pressColor:'transparent',
+        style: {paddingHorizontal: 12},
+        tabStyle: {width: 90},
+        pressColor: 'transparent',
         indicatorStyle: {
-          width: 0, height: 0, elevation: 0,      
+          width: 0,
+          height: 0,
+          elevation: 0,
         },
-        scrollEnabled: true
-      }
-    }>
-      <ToktokGoActivitiesTopTab.Screen
+        scrollEnabled: true,
+      }}>
+      <ToktokLoadActivitiesTopTab.Screen
         name="ToktokLoadAllActivities"
         component={ToktokLoadAllActivities}
         options={{
@@ -29,10 +36,10 @@ const ToktokLoadActivities = () => {
             <View style={focused ? styles.viewFocused : styles.viewNotFocused}>
               <Text style={focused ? styles.textFocused : styles.textNotFocused}>All</Text>
             </View>
-          )
+          ),
         }}
       />
-      <ToktokGoActivitiesTopTab.Screen
+      <ToktokLoadActivitiesTopTab.Screen
         name="ToktokLoadSuccessActivities"
         component={ToktokLoadSuccessActivities}
         options={{
@@ -40,10 +47,10 @@ const ToktokLoadActivities = () => {
             <View style={focused ? styles.viewFocused : styles.viewNotFocused}>
               <Text style={focused ? styles.textFocused : styles.textNotFocused}>Success</Text>
             </View>
-          )
+          ),
         }}
       />
-      <ToktokGoActivitiesTopTab.Screen
+      <ToktokLoadActivitiesTopTab.Screen
         name="ToktokLoadFailedActivities"
         component={ToktokLoadFailedActivities}
         options={{
@@ -51,10 +58,10 @@ const ToktokLoadActivities = () => {
             <View style={focused ? styles.viewFocused : styles.viewNotFocused}>
               <Text style={focused ? styles.textFocused : styles.textNotFocused}>Failed</Text>
             </View>
-          )
+          ),
         }}
       />
-      <ToktokGoActivitiesTopTab.Screen
+      <ToktokLoadActivitiesTopTab.Screen
         name="ToktokLoadPendingActivities"
         component={ToktokLoadPendingActivities}
         options={{
@@ -62,10 +69,10 @@ const ToktokLoadActivities = () => {
             <View style={focused ? styles.viewFocused : styles.viewNotFocused}>
               <Text style={focused ? styles.textFocused : styles.textNotFocused}>Pending</Text>
             </View>
-          )
+          ),
         }}
       />
-    </ToktokGoActivitiesTopTab.Navigator>
+    </ToktokLoadActivitiesTopTab.Navigator>
   );
 };
 
@@ -73,27 +80,27 @@ export default ToktokLoadActivities;
 
 const styles = StyleSheet.create({
   viewFocused: {
-    borderWidth: 1, 
-    borderColor: COLOR.ORANGE, 
-    backgroundColor: COLOR.ORANGE, 
-    borderRadius: 10, 
-    width: 80
-  }, 
-  viewNotFocused: {
-    borderWidth: 1, 
+    borderWidth: 1,
     borderColor: COLOR.ORANGE,
-    backgroundColor: COLOR.WHITE, 
-    borderRadius: 10, 
-    width: 80
+    backgroundColor: COLOR.ORANGE,
+    borderRadius: 10,
+    width: 80,
   },
-  textFocused: { 
-    textAlign:'center',
-    fontSize: FONT_SIZE.S, 
+  viewNotFocused: {
+    borderWidth: 1,
+    borderColor: COLOR.ORANGE,
+    backgroundColor: COLOR.WHITE,
+    borderRadius: 10,
+    width: 80,
+  },
+  textFocused: {
+    textAlign: 'center',
+    fontSize: FONT_SIZE.S,
     color: COLOR.WHITE,
   },
-  textNotFocused: { 
-    textAlign:'center',
-    fontSize: FONT_SIZE.S, 
+  textNotFocused: {
+    textAlign: 'center',
+    fontSize: FONT_SIZE.S,
     color: COLOR.ORANGE,
-  }
+  },
 });
