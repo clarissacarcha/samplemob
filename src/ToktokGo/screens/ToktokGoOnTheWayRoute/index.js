@@ -26,6 +26,7 @@ import {
   GET_TRIPS_CONSUMER,
   TRIP_CHARGE_FINALIZE_PAYMENT,
   TRIP_CHARGE_INITIALIZE_PAYMENT,
+  GET_BOOKING_DRIVER,
 } from '../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
@@ -55,6 +56,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
   const [isViaTokwa, setIsViaTokwa] = useState(false);
+  const [driverData, setDriverData] = useState();
 
   const {driver, booking} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
@@ -116,6 +118,24 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
 
     return () => subscription.unsubscribe();
   }, [tripUpdateRetrySwitch]);
+
+  useEffect(() => {
+    getBookingDriver({
+      variables: {
+        input: {
+          driverUserId: parseInt(booking.driverUserId),
+        },
+      },
+    });
+  }, []);
+
+  const [getBookingDriver] = useLazyQuery(GET_BOOKING_DRIVER, {
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setDriverData(response.getBookingDriver.driver);
+    },
+    onError: onErrorAppSync,
+  });
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -315,8 +335,6 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     else return <DriverStatusDestination booking={booking} />;
   };
 
-  console.log('zion', tokwaAccount);
-
   const [tripChargeFinalizePayment] = useMutation(TRIP_CHARGE_FINALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
@@ -494,7 +512,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       <View style={styles.card}>
         {getHeader()}
         <View style={styles.divider} />
-        <DriverInfo booking={booking} />
+        <DriverInfo booking={booking} driverData={driverData} />
         {['ARRIVED', 'ACCEPTED'].includes(booking.status) && (
           <Actions
             callStop={callStop}
