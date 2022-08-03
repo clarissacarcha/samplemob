@@ -74,8 +74,8 @@ const ToktokLanding = () => (
     />
     <ToktokLandingBottomTab.Screen
       name="ToktokLandingNotifications"
-      // component={ToktokLandingNotifications}
-      component={NotificationsTopTab}
+      component={ToktokLandingNotifications}
+      // component={NotificationsTopTab}
       options={{
         tabBarLabel: ({focused}) => (
           <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Notifications</Text>
