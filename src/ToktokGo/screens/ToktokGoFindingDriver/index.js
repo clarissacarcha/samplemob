@@ -116,7 +116,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       setShowDriverFoundModal(true);
       setDriverData(response.getBookingDriver.driver);
     },
-    onError: err => console.log('zion', err),
+    onError: onErrorAppSync,
   });
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
