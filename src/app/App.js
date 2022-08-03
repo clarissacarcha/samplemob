@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 import React from 'react';
+import {MenuProvider as PopUpMenuProvider} from 'react-native-popup-menu';
 import {StatusBar, LogBox} from 'react-native';
 import Splash from './Splash';
 
@@ -21,15 +22,17 @@ const App = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
-      <ReduxProvider>
-        <ApolloProvider>
-          <AlertProvider>
-            <PromptProvider>
-              <Splash />
-            </PromptProvider>
-          </AlertProvider>
-        </ApolloProvider>
-      </ReduxProvider>
+      <PopUpMenuProvider>
+        <ReduxProvider>
+          <ApolloProvider>
+            <AlertProvider>
+              <PromptProvider>
+                <Splash />
+              </PromptProvider>
+            </AlertProvider>
+          </ApolloProvider>
+        </ReduxProvider>
+      </PopUpMenuProvider>
     </>
   );
 };
