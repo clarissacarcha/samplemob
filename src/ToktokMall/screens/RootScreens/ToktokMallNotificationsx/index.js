@@ -1,10 +1,7 @@
 import React from 'react'
-import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity} from 'react-native'
-import FIcon5 from 'react-native-vector-icons/FontAwesome5'
-import RNFS from 'react-native-fs'
+import { View,StyleSheet } from 'react-native'
 import { HeaderBack, HeaderTitle, HeaderRight } from '../../../Components'
-import { AlertOverlay} from '../../../../components';
-import { COLOR, FONT, FONT_SIZE } from '../../../../res/variables';
+import { COLOR } from '../../../../res/variables';
 
 export const ToktokMallNotificationsx = ({navigation})=> {
 

@@ -9,6 +9,7 @@ export const COLOR = {
   MEDIUM: '#D3D3D3', // Placeholder Color
   DARK: '#808080', // Text and Icons
   BLACK: '#222222', // Text and Icons
+  GRAY: '#9E9E9E',
   YELLOW: '#FDBA1C',
   ORANGE: '#F5841F',
   YELLOW_UNDERLAY: '#96641e', //TouchableHightlight underlayColor for YELLOW background
@@ -36,6 +37,7 @@ export const TOKFOODCOLOR = {
 export const FONT = {
   REGULAR: 'FiraSans-Regular',
   BOLD: 'FiraSans-Bold',
+  SEMI_BOLD: 'FiraSans-SemiBold',
 };
 
 export const FONT_SIZE = {

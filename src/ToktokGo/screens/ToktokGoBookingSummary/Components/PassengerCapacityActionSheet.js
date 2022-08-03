@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   title: {
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.XL + 3,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     margin: 20,
   },
   description: {

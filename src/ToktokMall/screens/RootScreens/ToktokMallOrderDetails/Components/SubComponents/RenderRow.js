@@ -6,16 +6,7 @@ import CustomIcon from "../../../../../Components/Icons";
 import { RenderDot } from './RenderDot';
 
 export const RenderRow = ({ rows, item, index }) => {
-    const statuses = [
-        "Order delivered",
-        "Order is ready to be delivered",
-        "Booking order is confirmed",
-        "Order is ready to be picked up",
-        "Preparing Order", 
-        "Order Confirmed",
-    ]
     const stateColor = item.date ? "#F6841F" : "#CCCCCC"
-
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center'}}>
             <View style={{ flexDirection: 'column', marginRight: 20}}>
@@ -40,7 +31,7 @@ export const RenderRow = ({ rows, item, index }) => {
                     fontSize: 12, color: item.date ? "#F6841F" : "#929191", 
                     fontFamily: item.date ? FONT.BOLD : FONT.REGULAR 
                 }}>
-                    {statuses[index]}
+                    {item.key}
                 </Text>
             </View>
             <View style={{ flex: 2, justifyContent: 'center', alignItems: 'flex-end' }}>

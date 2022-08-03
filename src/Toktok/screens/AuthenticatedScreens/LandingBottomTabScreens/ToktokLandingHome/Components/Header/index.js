@@ -26,22 +26,22 @@ export const Header = () => {
 
 const styles = StyleSheet.create({
   headerBox: {
-    position: 'absolute',
+    position: 'relative',
     width: '100%',
     backgroundColor: 'white',
     paddingVertical: 16,
-    shadowColor: '#000',
+    shadowColor: '#010',
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    marginBottom: -46,
 
     elevation: 5,
   },
   greetingBox: {
-    backgroundColor: 'red',
     marginTop: StatusBar.currentHeight,
     justifyContent: 'center',
     alignItems: 'center',

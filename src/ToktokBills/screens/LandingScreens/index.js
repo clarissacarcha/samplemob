@@ -1,3 +1,3 @@
-export * from "./ToktokBillsActivities";
-export * from "./ToktokBillsHome";
-export * from "./ToktokBillsNotifications";
+export * from './ToktokBillsMaintenance';
+export * from './ToktokBillsOnboarding';
+export * from './ToktokBillsSplashScreen';

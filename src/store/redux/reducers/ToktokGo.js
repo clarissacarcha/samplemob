@@ -61,7 +61,7 @@ const INITIAL_STATE = {
     },
     voucher: null,
     noteToDriver: null,
-    paymentMethod: 2,
+    paymentMethod: 'TOKTOKWALLET',
     passengerCount: 1,
   },
   routeDetails: {
@@ -86,7 +86,7 @@ const INITIAL_STATE = {
       steps: [],
     },
   },
-  paymentMethod: 'CASH',
+  paymentMethod: 'TOKTOKWALLET',
   booking: {
     id: null,
     dispatchHash: null,
@@ -142,7 +142,7 @@ const INITIAL_STATE = {
         },
       },
     },
-    paymentMethod: 'CASH',
+    paymentMethod: 'TOKTOKWALLET',
     consumer: {
       name: null,
       mobileNumber: null,

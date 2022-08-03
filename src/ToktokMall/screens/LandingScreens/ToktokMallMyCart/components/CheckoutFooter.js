@@ -10,16 +10,16 @@ export const CheckoutFooter = ({subtotal, onSubmit}) => {
     return (
         <>
             <View 
-                style={{flex: 1, backgroundColor: '#fff', position: 'absolute', bottom: 0, width: '100%'}}
+                style={styles.container}
             >
-                <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-                    <View style={{flex: 1, justifyContent: 'center'}}>
-                        <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Subtotal </Text>
-                        <Text style={{fontSize: 18, color: "#F6841F"}}><Price amount={subtotal} /></Text>
+                <View style={styles.subContainer}>
+                    <View style={styles.subTotalContainer}>
+                        <Text style={styles.subTotalTitle}>Subtotal </Text>
+                        <Text style={styles.subTotalText}><Price amount={subtotal} /></Text>
                     </View>
-                    <View style={{justifyContent: 'center'}}>
-                        <TouchableOpacity onPress={onSubmit} style={{backgroundColor: '#F6841F', paddingVertical: 15, paddingHorizontal: 40, borderRadius: 5}}>
-                            <Text style={{fontSize: 14, color: '#fff'}}>Checkout</Text>
+                    <View style={styles.checkoutContainer}>
+                        <TouchableOpacity onPress={onSubmit} style={styles.checkoutButton}>
+                            <Text style={styles.checkoutText}>Checkout</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -27,3 +27,46 @@ export const CheckoutFooter = ({subtotal, onSubmit}) => {
         </>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1, 
+        backgroundColor: '#fff', 
+        position: 'absolute', 
+        bottom: 0, 
+        width: '100%'
+    },
+    subContainer: {
+        flexDirection: 'row', 
+        paddingVertical: 15, 
+        paddingHorizontal: 15
+    },
+    subTotalContainer: {
+        flex: 1, 
+        justifyContent: 'center'
+    },
+    subTotalTitle: {
+        fontSize: 14, 
+        fontFamily: FONT.SEMI_BOLD, 
+        color: "#000000"
+    },
+    subTotalText: {
+        fontSize: 18, 
+        fontFamily: FONT.SEMI_BOLD, 
+        color: "#F6841F"
+    },
+    checkoutContainer: {
+        justifyContent: 'center'
+    },
+    checkoutButton: {
+        backgroundColor: '#F6841F', 
+        paddingVertical: 15, 
+        paddingHorizontal: 40, 
+        borderRadius: 5
+    },
+    checkoutText: {
+        fontSize: 14, 
+        color: '#fff', 
+        fontFamily: FONT.SEMI_BOLD
+    }
+})

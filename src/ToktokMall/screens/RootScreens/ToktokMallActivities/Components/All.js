@@ -5,7 +5,8 @@ import {
   Image, 
   FlatList, 
   RefreshControl, 
-  Dimensions
+  Dimensions,
+  StyleSheet
 } from 'react-native';
 import { 
   ProcessingItem,
@@ -14,6 +15,7 @@ import {
   CompletedItem,
   CancelledItem
 } from './'
+import { FONT_SIZE } from '../../../../../res/variables';
 import { Loading } from '../../../../Components';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
@@ -23,23 +25,27 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export const All = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getAccessToken = async () => { 
     const accessToken = await AsyncStorage.getItem('accessToken');
     return accessToken
   }
   
-  const [getOrders, {loading, error}] = useLazyQuery(GET_TRANSACTIONS, {
+  const [getOrders] = useLazyQuery(GET_TRANSACTIONS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    context: { headers: { authorization: "Bearer: " + getAccessToken() }},
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
     onCompleted: (response) => {
       if(response.getActivities) {
         setData(response.getActivities);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000)
       }
     },
     onError: (err) => {
-      console.log(err)
+      console.log(err);
+      setLoading(false);
     }
   });
 
@@ -75,6 +81,7 @@ export const All = () => {
   }
 
   const Fetch = async () => {
+    setLoading(true);
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw)
       if(data.userId){        
@@ -99,15 +106,13 @@ export const All = () => {
   if(!loading && data && data.length == 0){
     return (
       <>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Image source={emptyorders} style={{width: '80%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}} />
-          <View style={{height: 8}} />
-          <View style={{alignItems: 'center'}}>
-    				<Text style={{fontSize: 18, fontWeight: "600", color: "#F6841F", marginBottom: 8}}>No Orders</Text>
-    				<Text style={{fontSize: 13, fontWeight: "400", color: "#000000"}}>Go browse and checkout something you like</Text>
+        <View style={styles.noDataContainer}>
+          <Image source={emptyorders} style={styles.noDataImage} />
+          <View style={styles.noDataTextContainer}>
+            <Text style={styles.noDataTitle}>No Orders</Text>
+    				<Text style={styles.noDataBody}>Go browse and checkout something you like!</Text>
 		    	</View>
         </View>
-        <View style={{flex: 0.2}} />
       </>
     )
   }
@@ -116,6 +121,7 @@ export const All = () => {
     <>
       <FlatList 
         data={data}
+        contentContainerStyle={styles.flatlistStyle}
         renderItem={renderItem}
         refreshControl={
           <RefreshControl 
@@ -131,3 +137,34 @@ export const All = () => {
   );
 
 };
+
+const styles = StyleSheet.create({
+  flatlistStyle: {
+    paddingVertical: 8
+  },
+  noDataContainer: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  noDataImage: {
+    width: '80%', 
+    height: Dimensions.get("screen").height / 4, 
+    resizeMode: 'contain'
+  },
+  noDataTextContainer: {
+    alignItems: 'center',
+    marginTop: 8
+  },
+  noDataTitle: {
+    fontSize: FONT_SIZE.XL, 
+    fontWeight: "600", 
+    color: "#F6841F", 
+    marginBottom: 8
+  },
+  noDataBody: {
+    fontSize: FONT_SIZE.M, 
+    fontWeight: "400", 
+    color: "#000000"
+  }
+})

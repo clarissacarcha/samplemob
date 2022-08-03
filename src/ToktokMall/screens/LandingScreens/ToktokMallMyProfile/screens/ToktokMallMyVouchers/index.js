@@ -22,7 +22,7 @@ export const ToktokMallMyVouchers = ({navigation})=> {
     return (
         <>
         <View style={styles.container}>
-            <View style={{flex: 1}}>      
+            <View style={styles.flex1}>      
 
                 <Tab 
                     index={activeTabIndex}
@@ -31,14 +31,14 @@ export const ToktokMallMyVouchers = ({navigation})=> {
                     }}
                 />
 
-								<View style={{flexDirection: 'row'}}>
-									<View style={{flex: 0}}>
-										<CustomIcon.FA5Icon name="search" />
-									</View>
-									<View style={{flex: 3}}>
-										<TextInput placeholder="search" />
-									</View>
-								</View>
+                <View style={styles.searchContainer}>
+                    <View style={styles.flex0}>
+                        <CustomIcon.FA5Icon name="search" />
+                    </View>
+                    <View style={styles.flex3}>
+                        <TextInput placeholder="search" />
+                    </View>
+                </View>
 
                 {activeTabIndex == 0 && 
                 <View>
@@ -65,5 +65,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLOR.WHITE
-    }
+    },
+    flex1: {
+        flex: 1
+    },
+    searchContainer: {
+        flexDirection: 'row'
+    },
+    flex0: {
+        flex: 0
+    },
+    flex3: {
+        flex: 3
+    },
+
 })

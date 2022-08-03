@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Image, FlatList, ScrollView} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, ScrollView, RefreshControl, StyleSheet } from 'react-native';
 import { useLazyQuery } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
-import {HeaderBack, HeaderTitle, HeaderRight, Loading, LoadingOverlay} from '../../../Components';
-import {Renderer} from './Components';
+import { HeaderBack, HeaderTitle, HeaderRight, Loading, LoadingOverlay, BuyAgainButton } from '../../../Components';
 import { ApiCall } from '../../../helpers';
-import {connect, useSelector} from "react-redux"
-import {EventRegister} from 'react-native-event-listeners'
+import { connect, useSelector } from "react-redux"
+import { EventRegister } from 'react-native-event-listeners'
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql';
 import { GET_ACTIVIY_ORDER_DETAILS } from '../../../../graphql/toktokmall/model';
 import { getRefComAccountType } from '../../../helpers';
@@ -15,11 +14,10 @@ import {
   RenderOrderInfo,
   RenderStore,
   RenderSummary,
-  RenderDeliveryLog,
-  RenderBuyAgain
+  RenderDeliveryLog
 } from './Components'
 
-const Component = ({navigation, route, notificationCountSession, notifications}) => {
+const Component = ({ navigation, route, notificationCountSession, notifications }) => {
   
   navigation.setOptions({
     headerLeft: () => <HeaderBack onBack={() => {
@@ -45,7 +43,6 @@ const Component = ({navigation, route, notificationCountSession, notifications})
     fetchPolicy: 'network-only',    
     onCompleted: (response) => {
       if(response.getActivityOrderDetails){
-        // console.log('order details',response.getActivityOrderDetails)
         setData(response.getActivityOrderDetails)
       }
     },
@@ -57,16 +54,14 @@ const Component = ({navigation, route, notificationCountSession, notifications})
   const readNotification = async (payload) => {
     const req = await ApiCall(`read_notification`, payload, true)
     if(req.responseData && req.responseData.success){
-      console.log("read notification success")
+      // console.log("read notification success")
     }
   }
 
   useEffect(() => {
-    // console.log(route.params)
     AsyncStorage.getItem("ToktokMallUser").then((raw) => {
       let data = JSON.parse(raw)
       if(data.userId){
-        console.log(route.params.id)
         if(route.params.id){
           readNotification({id: route.params.id, userid: data.userId})
         }
@@ -74,14 +69,32 @@ const Component = ({navigation, route, notificationCountSession, notifications})
     })
   }, [])
 
-  useEffect(() => {    
-    getOrderDetails({variables: {
-      input: {
-        orderId: route.params.orderId,
-        refCom: getRefComAccountType({session})
-      }
-    }})
-  }, [])
+  const Fetch = async () => {
+    if(route.params?.unpaidOrder == 1){
+      //UNPAID ORDER
+      getOrderDetails({variables: {
+        input: {
+          orderId: -1,
+          referenceNum: route.params.referenceNum,
+          refCom: getRefComAccountType({session})
+        }
+      }})
+
+    }else{
+      //PAID ORDER
+      getOrderDetails({variables: {
+        input: {
+          orderId: route.params.id,
+          referenceNum: "",
+          refCom: getRefComAccountType({session})
+        }
+      }})
+    }
+  }
+
+  useEffect(() => {  
+    Fetch()
+  },[])
 
   const onPressBuy = () => {
     setapiloader(!apiloader);
@@ -93,18 +106,37 @@ const Component = ({navigation, route, notificationCountSession, notifications})
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        style={{
+          marginBottom: route.params.cancelled || 
+          data?.status?.status === 4 ? 70 : 10
+        }}
+        refreshControl={
+          <RefreshControl 
+            refreshing={loading}
+            onRefresh={() => {
+              Fetch()
+            }}
+          />
+        }
+      >
         <RenderOrderInfo data={data} />
-        <RenderStore data={data} />
-        <RenderSummary data={data} />
-        <RenderDeliveryLog data={data} />
-        <RenderBuyAgain 
+        <RenderStore 
           data={data} 
-          onPressBuy={onPressBuy}
           navigation={navigation}
         />
-        {apiloader && <LoadingOverlay isVisible={apiloader} />}
+        <RenderSummary data={data} />
+        <RenderDeliveryLog data={data} />
       </ScrollView>
+      
+      { data?.status?.status === 4 || data?.status?.status === 5 ?
+        <View style={styles.footer}>
+          <BuyAgainButton data={data} />
+        </View> : <></>
+      }
+      
+      {apiloader && <LoadingOverlay isVisible={apiloader} />}
     </View>
   );
 };
@@ -118,3 +150,19 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export const ToktokMallOrderDetails = connect(mapStateToProps, mapDispatchToProps)(Component);
+
+
+const styles = StyleSheet.create({
+  footer: {
+      borderTopWidth: .50,
+      borderTopColor: 'rgba(0, 0, 0, 0.25)',
+      paddingHorizontal: 16,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: 'white',
+      zIndex: 1,
+
+  }
+}) 

@@ -21,10 +21,6 @@ import constants from '../../../../common/res/constants';
 
 const EnterPassword = ({navigation, route, session}) => {
   const {userName} = route.params;
-  navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Change', 'Password']} />,
-  });
   const currentInputRef = useRef();
   // const newInputRef = useRef();
   // const confirmInputRef = useRef();
@@ -103,57 +99,55 @@ const EnterPassword = ({navigation, route, session}) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}}>
-      <Header navigation={navigation} />
+    <View style={styles.container}>
+      <Header title={'Change Password'} navigation={navigation} />
       {/* <AlertOverlay visible={loading} />
             {errorPassModalVissible && <IncorrectPasswordModal toggleErrorModal={toggleErrorModal}/>} */}
-      <View style={styles.container}>
-        <View style={{alignItems: 'center'}}>
-          <Image source={TokGoIcon} style={{width: 73, height: 87, marginBottom: 30}} />
-          <Text style={styles.header}>Enter Current Password</Text>
-          <View style={{marginVertical: 24}}>
-            <View
-              style={[
-                styles.textInput,
-                {
-                  borderWidth: onFocusCurrentPassword || invalidCurrentPassword ? 1 : 0,
-                  borderColor: onFocusCurrentPassword
-                    ? CONSTANTS.COLOR.ORANGE
-                    : invalidCurrentPassword
-                    ? CONSTANTS.COLOR.RED
-                    : '',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                },
-              ]}>
-              <TextInput
-                ref={currentInputRef}
-                style={styles.textInputWithContainer}
-                value={currentPassword}
-                onChangeText={value => handleValue(value)}
-                placeholder="Enter Current Password"
-                placeholderTextColor={constants.COLOR.DARK}
-                secureTextEntry={secureNewPassword}
-                autoCapitalize="none"
-                onFocus={() => {
-                  setOnFocusCurrentPassword(true);
-                }}
-                onBlur={() => {
-                  setOnFocusCurrentPassword(false);
-                }}
-                // onSubmitEditing={() => {
-                //     newInputRef.current.focus();
-                // }}
-              />
-              <TouchableOpacity onPress={() => setSecureNewPassword(!secureNewPassword)}>
-                <Image source={!secureNewPassword ? ShowPassword : HidePassword} style={styles.showPassword} />
-              </TouchableOpacity>
-            </View>
-            {invalidCurrentPassword && (
-              <Text style={{color: CONSTANTS.COLOR.RED, fontSize: CONSTANTS.FONT_SIZE.S}}>Password is incorrect</Text>
-            )}
+      <View style={{alignItems: 'center', paddingTop: 50}}>
+        <Image source={TokGoIcon} style={{width: 73, height: 87, marginBottom: 30}} />
+        <Text style={styles.header}>Enter Current Password</Text>
+        <View style={{marginVertical: 24}}>
+          <View
+            style={[
+              styles.textInput,
+              {
+                borderWidth: onFocusCurrentPassword || invalidCurrentPassword ? 1 : 0,
+                borderColor: onFocusCurrentPassword
+                  ? CONSTANTS.COLOR.ORANGE
+                  : invalidCurrentPassword
+                  ? CONSTANTS.COLOR.RED
+                  : '',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              },
+            ]}>
+            <TextInput
+              ref={currentInputRef}
+              style={styles.textInputWithContainer}
+              value={currentPassword}
+              onChangeText={value => handleValue(value)}
+              placeholder="Enter Current Password"
+              placeholderTextColor={constants.COLOR.DARK}
+              secureTextEntry={secureNewPassword}
+              autoCapitalize="none"
+              onFocus={() => {
+                setOnFocusCurrentPassword(true);
+              }}
+              onBlur={() => {
+                setOnFocusCurrentPassword(false);
+              }}
+              // onSubmitEditing={() => {
+              //     newInputRef.current.focus();
+              // }}
+            />
+            <TouchableOpacity onPress={() => setSecureNewPassword(!secureNewPassword)}>
+              <Image source={!secureNewPassword ? ShowPassword : HidePassword} style={styles.showPassword} />
+            </TouchableOpacity>
           </View>
+          {invalidCurrentPassword && (
+            <Text style={{color: CONSTANTS.COLOR.RED, fontSize: CONSTANTS.FONT_SIZE.S}}>Password is incorrect</Text>
+          )}
         </View>
         <View>
           <TouchableOpacity
@@ -165,15 +159,13 @@ const EnterPassword = ({navigation, route, session}) => {
           </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
-    alignItems: 'center',
     backgroundColor: CONSTANTS.COLOR.WHITE,
   },
   header: {
