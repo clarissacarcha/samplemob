@@ -19,21 +19,18 @@ const OrderTotal = ({
   deliveryFee = 0,
   forDelivery = true,
   onCartTotal,
-  onServiceFeeTotal,
-  pabiliShopDetails,
   onServiceFeeIconPress,
   navigation,
 }) => {
   // deliveryFee = deliveryFee ? deliveryFee : 0;
   // subtotal = subtotal ? subtotal : 0;
-  const {shippingVoucher, temporaryCart} = useContext(VerifyContext);
+  const {shippingVoucher, temporaryCart, pabiliShopDetails, pabiliShopServiceFee} = useContext(VerifyContext);
   const [totalBasket, setTotalBasket] = useState(temporaryCart.totalAmountWithAddons);
   const [totalShipping, setTotalShipping] = useState(0);
   const [totalPromotions, setTotalPromotions] = useState(0);
   const [totalDelivery, setTotalDelivery] = useState(0);
   const [totalReseller, setTotalReseller] = useState(temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount);
   const [totalDeal, setTotalDeal] = useState(0);
-  const [pabiliServiceFee, setPabiliServiceFee] = useState(0.0);
 
   const {promotionVoucher} = useSelector(state => state.toktokFood);
 
@@ -45,49 +42,9 @@ const OrderTotal = ({
     : (0.0).toFixed(2);
   // const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
 
-  const isPabiliMerchant = pabiliShopDetails?.isPabiliMerchant === 1;
-
-  const getServiceFeeInPercentage = (srp_amount, sf_value, quantity) => {
-    const val = srp_amount * sf_value;
-    return val * quantity;
-  };
-
-  const getServiceFeeInFixed = (sf_value, quantity) => {
-    return sf_value * quantity;
-  };
-
-  const initPabiliServiceFee = () => {
-    const cartItems = temporaryCart.items;
-    const mappedItems = _.mapValues(cartItems, item => {
-      const {basePrice, itemServiceFeeType, itemServiceFeeValue, quantity} = item;
-      if (itemServiceFeeType !== 0) {
-        if (itemServiceFeeType === 1) {
-          return getServiceFeeInPercentage(basePrice, itemServiceFeeValue, quantity);
-        } else if (itemServiceFeeType === 2) {
-          return getServiceFeeInFixed(itemServiceFeeValue, quantity);
-        }
-      } else {
-        const {shopServiceFeeType, shopServiceFeeValue} = pabiliShopDetails;
-        if (shopServiceFeeType === 1) {
-          return getServiceFeeInPercentage(basePrice, shopServiceFeeValue, quantity);
-        } else if (shopServiceFeeType === 2) {
-          return getServiceFeeInFixed(itemServiceFeeValue, quantity);
-        }
-      }
-    });
-    setPabiliServiceFee(parseFloat(_.sum(Object.values(mappedItems))));
-  };
-
   useEffect(() => {
     onCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
-    if (isPabiliMerchant) {
-      initPabiliServiceFee();
-    }
-  }, [shippingVoucher, totalBasket, totalShipping, pabiliShopDetails]);
-
-  useEffect(() => {
-    onServiceFeeTotal(pabiliServiceFee);
-  }, [pabiliServiceFee]);
+  }, [shippingVoucher, totalBasket, totalShipping]);
 
   const getVoucherFee = async () => {
     const groupPromo = _(promotionVoucher)
@@ -222,7 +179,7 @@ const OrderTotal = ({
   }, [temporaryCart]);
 
   const totalAmount = (
-    pabiliServiceFee +
+    pabiliShopServiceFee +
     totalBasket +
     deliveryFee -
     totalSumSF -
@@ -273,7 +230,7 @@ const OrderTotal = ({
           </View>
         )}
 
-        {isPabiliMerchant && (
+        {pabiliShopDetails.isShopPabiliMerchant && (
           <View style={styles.header}>
             <View style={styles.serviceFeeLabelWrapper}>
               <Text>Service Fee</Text>
@@ -282,7 +239,7 @@ const OrderTotal = ({
               </TouchableOpacity>
             </View>
             <Text style={styles.subtotal}>
-              {pabiliServiceFee > 0 ? `PHP ${pabiliServiceFee.toFixed(2)}` : 'WAIVED'}
+              {pabiliShopServiceFee > 0 ? `PHP ${pabiliShopServiceFee.toFixed(2)}` : 'WAIVED'}
             </Text>
           </View>
         )}
@@ -300,12 +257,12 @@ const OrderTotal = ({
               totalSumSF -
               totalReseller -
               (totalPromotions + totalDeal) +
-              pabiliServiceFee
+              pabiliShopServiceFee
             ).toFixed(2)}`}</Text>
           )}
         </View>
       </View>
-      {isPabiliMerchant && ModifiedAlert}
+      {pabiliShopDetails.isShopPabiliMerchant && ModifiedAlert}
     </>
   );
 };

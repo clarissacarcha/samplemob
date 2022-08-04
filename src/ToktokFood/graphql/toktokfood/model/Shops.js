@@ -212,14 +212,3 @@ export const GET_SHOP_BY_CATEGORY = gql`
     }
   }
 `;
-
-export const GET_SHOP_SERVICE_FEE_DETAILS = gql`
-  query getShopServiceFeeDetails($input: GetShopDetailsServiceFeeDetailsInput!) {
-    getShopServiceFeeDetails(input: $input) {
-      isPabiliMerchant
-      shopServiceFeeType
-      shopServiceFeeValue
-      shopTokfoodServiceFeeComm
-    }
-  }
-`;

@@ -78,7 +78,6 @@ import {
   GET_SHOP_STATUS,
   GET_ALL_TEMPORARY_CART,
   GET_SHOP_DETAILS,
-  GET_SHOP_SERVICE_FEE_DETAILS,
 } from 'toktokfood/graphql/toktokfood';
 
 import moment from 'moment';
@@ -120,6 +119,8 @@ const MainComponent = () => {
     setAutoShippingVoucher,
     setPaymentMethod,
     shippingVoucher,
+    pabiliShopDetails,
+    pabiliShopServiceFee,
   } = useContext(VerifyContext);
 
   const [autoShipping, setAutoShipping] = useState(0);
@@ -140,8 +141,6 @@ const MainComponent = () => {
   const [closeShop, setShowCloseShop] = useState({visible: false, shopName: ''});
   const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
   const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({error: {}, visible: false});
-  const [pabiliShopDetails, setPabiliShopDetails] = useState(null);
-  const [pabiliServiceFee, setPabiliServiceFee] = useState(0);
   const [showPabiliServiceFeeInfo, setShowPabiliServiceFeeInfo] = useState(false);
 
   const alert = useAlert();
@@ -150,18 +149,6 @@ const MainComponent = () => {
   const [closeInfo, setCloseInfo] = useState({visible: false, shopName: ''});
 
   const [diablePlaceOrder, setDisablePlaceOrder] = useState(true);
-
-  const [getShopPabiliDetails, {error: pabiliDetailsError, loading: pabiliDetailsLoading}] = useLazyQuery(
-    GET_SHOP_SERVICE_FEE_DETAILS,
-    {
-      client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-      fetchPolicy: 'network-only',
-      onCompleted: ({getShopServiceFeeDetails}) => {
-        setPabiliShopDetails(getShopServiceFeeDetails);
-      },
-      onError: error => console.log('getShopPabiliDetails', error),
-    },
-  );
 
   const [getShopDetails, {error: shopDetailsError, loading: shopDetailsLoading}] = useLazyQuery(GET_SHOP_DETAILS, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -223,13 +210,6 @@ const MainComponent = () => {
             shopId: temporaryCart.items[0]?.shopid.toString(),
             userLongitude: location?.longitude,
             userLatitude: location?.latitude,
-          },
-        },
-      });
-      getShopPabiliDetails({
-        variables: {
-          input: {
-            shopId: temporaryCart.items[0]?.shopid.toString(),
           },
         },
       });
@@ -518,7 +498,7 @@ const MainComponent = () => {
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
     //   : await handleShippingVouchers(shippingVoucher);
     const amount = await getTotalAmount(promotionVoucher, delivery?.price);
-    const parseAmount = Number((pabiliServiceFee + deliveryPrice + deductedPrice - amount).toFixed(2));
+    const parseAmount = Number((pabiliShopServiceFee + deliveryPrice + deductedPrice - amount).toFixed(2));
     // console.log(parseAmount, totalPrice, deliveryPrice, deductedPrice, amount, temporaryCart);
 
     // if (orderType === 'Delivery') {
@@ -686,7 +666,7 @@ const MainComponent = () => {
       // total_amount: temporaryCart.totalAmount,
       // srp_totalamount: temporaryCart.totalAmount,
       total_amount: parsedAmount,
-      srp_totalamount: pabiliServiceFee + temporaryCart?.srpTotalAmount,
+      srp_totalamount: pabiliShopServiceFee + temporaryCart?.srpTotalAmount,
       notes: riderNotes.replace(/[^a-z0-9 ]/gi, ''),
       order_isfor: orderType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       // order_type: 2,
@@ -719,9 +699,9 @@ const MainComponent = () => {
       discounted_totalamount: parsedAmount,
     };
 
-    if (pabiliShopDetails?.isPabiliMerchant === 1) {
+    if (pabiliShopDetails.isShopPabiliMerchant) {
       CUSTOMER.service_type = 'pabili';
-      CUSTOMER.service_fee = pabiliServiceFee;
+      CUSTOMER.service_fee = pabiliShopServiceFee;
     }
 
     const data = processData(WALLET, CUSTOMER, ORDER, []);
@@ -1010,11 +990,9 @@ const MainComponent = () => {
             subtotal={totalAmount}
             deliveryFee={delivery.price}
             forDelivery={orderType === 'Delivery'}
-            onServiceFeeTotal={serviceFeeTotal => setPabiliServiceFee(serviceFeeTotal)}
             onCartTotal={cartTotal =>
               customerWallet?.status === 2 && setDisablePlaceOrder(cartTotal > MINIMUM_CHECKOUT)
             }
-            pabiliShopDetails={pabiliShopDetails}
             onServiceFeeIconPress={() => setShowPabiliServiceFeeInfo(true)}
             navigation={navigation}
           />
