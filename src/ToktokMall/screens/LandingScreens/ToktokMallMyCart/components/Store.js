@@ -44,8 +44,8 @@ export const Store = ({data, storeIndex,  state = false, onSelect, onPress, disa
 
   return (
     <>
-      <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-        <View style={{flex: 1, justifyContent: 'center'}}>
+      <View style={styles.container}>
+        <View style={styles.checkBoxContainer}>
           <CheckBox
             disabled={checkIfDisabled("state")}
             isChecked={selected}
@@ -69,16 +69,55 @@ export const Store = ({data, storeIndex,  state = false, onSelect, onPress, disa
             }}
           />
         </View>
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Image source={getStoreLogo(data?.profileImages.logo || {})} style={{width: 18, height: 18, resizeMode: 'stretch'}} />
+        <View style={styles.storeLogoContainer}>
+          <Image source={getStoreLogo(data?.profileImages.logo || {})} style={styles.storeLogoImage} />
         </View>
-        <TouchableOpacity onPress={onPress} style={{flex: 9, justifyContent: 'center', flexDirection: 'row'}}>                        
-          <View style={{flex: 12, justifyContent: 'center'}}>
-            <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>{data.shopname}</Text>
+        <TouchableOpacity onPress={onPress} style={styles.shopNameButton}>                        
+          <View style={styles.shopNameContainer}>
+            <Text style={styles.shopNameText}>{data.shopname}</Text>
           </View>
         </TouchableOpacity>
       </View>
-      <View style={{height: 2, backgroundColor: '#F7F7FA'}} />			
+      <View style={styles.margin} />			
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row', 
+    paddingVertical: 15, 
+    paddingHorizontal: 15
+  },
+  checkBoxContainer: {
+    flex: 1, 
+    justifyContent: 'center'
+  },
+  storeLogoContainer: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
+  storeLogoImage: {
+    width: 18, 
+    height: 18, 
+    resizeMode: 'stretch'
+  },
+  shopNameButton: {
+    flex: 9, 
+    justifyContent: 'center', 
+    flexDirection: 'row'
+  },
+  shopNameContainer: {
+    flex: 12, 
+    justifyContent: 'center'
+  },
+  shopNameText: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  margin: {
+    height: 2, 
+    backgroundColor: '#F7F7FA'
+  }
+})

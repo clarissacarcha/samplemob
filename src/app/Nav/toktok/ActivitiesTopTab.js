@@ -10,6 +10,7 @@ import OnGoing from '../../../ToktokGo/screens/ToktokGoActivitiesOnGoing';
 import Completed from '../../../ToktokGo/screens/ToktokGoActivitiesCompleted';
 import Cancelled from '../../../ToktokGo/screens/ToktokGoActivitiesCancelled';
 import ToktokLoadActivities from '../toktokload/ActivitiesScreen';
+import ToktokBillActivities from '../toktokbills/ActivitiesScreen';
 
 const ActivitiesTopTab = createMaterialTopTabNavigator();
 const ToktokGoActivitiesTopTab = createMaterialTopTabNavigator();
@@ -24,6 +25,7 @@ const Activities = () => {
       <View
         style={{
           paddingTop: StatusBar.currentHeight,
+          height: Platform.select({android: 57 + StatusBar.currentHeight, ios: 50}),
           backgroundColor: 'white',
           justifyContent: 'center',
           alignItems: 'center',
@@ -34,10 +36,10 @@ const Activities = () => {
           },
           shadowOpacity: 0.2,
           shadowRadius: 1.41,
-
           elevation: 2,
+          marginBottom: 3,
         }}>
-        <Text style={{paddingVertical: 20, fontSize: FONT_SIZE.XL + 3}}>Activities</Text>
+        <Text style={{paddingVertical: 14, fontSize: FONT_SIZE.XL + 3}}>Activities</Text>
       </View>
       <ActivitiesTopTab.Navigator
         swipeEnabled={false}
@@ -85,7 +87,7 @@ const Activities = () => {
             },
           })}
         />
-        {true && (
+        {/* {!hideGo && (
           <ActivitiesTopTab.Screen
             name="ToktokGoActivities"
             component={ToktokGoActivities}
@@ -107,8 +109,8 @@ const Activities = () => {
               },
             })}
           />
-        )}
-        {/* <ActivitiesTopTab.Screen
+        )} */}
+        <ActivitiesTopTab.Screen
           name="ToktokLoadActivities"
           component={ToktokLoadActivities}
           options={{
@@ -120,7 +122,24 @@ const Activities = () => {
                   color: focused ? COLOR.ORANGE : COLOR.BLACK,
                   marginBottom: 5,
                 }}>
-                toktokload
+                Load
+              </Text>
+            ),
+          }}
+        />
+        {/* <ActivitiesTopTab.Screen
+          name="ToktokBillActivities"
+          component={ToktokBillActivities}
+          options={{
+            tabBarLabel: ({focused}) => (
+              <Text
+                style={{
+                  // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.Thin800,
+                  fontSize: FONT_SIZE.M,
+                  color: focused ? COLOR.ORANGE : COLOR.BLACK,
+                  marginBottom: 5,
+                }}>
+                Bills
               </Text>
             ),
           }}

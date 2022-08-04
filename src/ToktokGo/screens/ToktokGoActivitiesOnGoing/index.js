@@ -6,8 +6,8 @@ import {useFocusEffect} from '@react-navigation/native';
 import {COLOR, MEDIUM} from '../../../res/constants';
 import {ActivitiesCard} from '../../components';
 import {GET_DELIVERIES, TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
-import NoData from '../../../assets/images/NoData.png';
-import DummyData from '../../components/DummyData';
+import NoData from '../../../assets/images/NoTransactions.png';
+import CONSTANTS from '../../../common/res/constants';
 import {GET_TRIPS_CONSUMER} from '../../graphql';
 import {SomethingWentWrong} from 'src/components';
 import {onErrorAppSync} from '../../util';
@@ -48,9 +48,16 @@ const OnGoingActivities = ({navigation, session}) => {
     return (
       <View style={styles.center}>
         <Image source={NoData} style={styles.image} resizeMode={'contain'} />
+        <Text style={styles.headerText}>No Bookings</Text>
+        <Text>You don’t have bookings yet.</Text>
       </View>
     );
   }
+
+  const onClickActivity = () => {
+    navigation.pop();
+    navigation.push('ToktokGoLanding');
+  };
 
   return (
     <View style={styles.container}>
@@ -62,7 +69,7 @@ const OnGoingActivities = ({navigation, session}) => {
         renderItem={({item, index}) => (
           <ActivitiesCard
             booking={item}
-            onPress={() => navigation.push('SelectedBookingDetails', {booking: item})}
+            onPress={onClickActivity}
             lastItem={data.getTripsConsumer.length == index + 1 ? true : false}
           />
         )}
@@ -83,6 +90,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   center: {
+    backgroundColor: 'white',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -95,5 +103,11 @@ const styles = StyleSheet.create({
     color: MEDIUM,
     marginTop: 20,
     fontFamily: 'Rubik-Medium',
+  },
+  headerText: {
+    color: CONSTANTS.COLOR.ORANGE,
+    fontSize: CONSTANTS.FONT_SIZE.XL + 1,
+    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    marginBottom: 8,
   },
 });

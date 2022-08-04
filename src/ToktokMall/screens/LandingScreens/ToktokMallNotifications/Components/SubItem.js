@@ -25,12 +25,12 @@ export const SubItem = ({index, total, data, root, onSelect}) => {
 		}else if(content.includes("@link")){
 			return (
 				<>
-					<View style={{flexDirection: 'row'}}>
+					<View style={styles.linkContainer}>
 						<Text style={txtStyle}>{content.split("@link")[0]}</Text> 
 						<TouchableOpacity onPress={() => {
 							Linking.openURL(value.hasLink)
 						}}>
-							<Text style={{color: "#F6841F", fontSize: 12}}>Delivery Link</Text>	
+							<Text style={styles.deliveryLink}>Delivery Link</Text>	
 						</TouchableOpacity> 
 						<Text style={txtStyle}>{content.split("@link")[1]}</Text>
 					</View>
@@ -45,37 +45,37 @@ export const SubItem = ({index, total, data, root, onSelect}) => {
 
   return (
   	<>
-    	<View style={{flexDirection: 'row', backgroundColor: clicks == 0 ? bgcol : "white"}}>
-        <View style={{flex: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 15}}>
-          <View style={{flex: 1, backgroundColor: index == 0 ? 'transparent' : "#C4C4C4", width: '3%'}}></View>
-          <CustomIcon.MCIcon name="circle" size={9} color="#C4C4C4" style={{position: 'absolute'}} />
-          <View style={{flex: 1, backgroundColor: total - 1 == index ? "transparent" : "#C4C4C4", width: '3%'}}></View>
-        </View>
-        <TouchableOpacity onPress={() => {
-					// setToggle(true)
-					if(clicks == 0){
-						setClicks(clicks + 1)
-					}
-					onSelect()
-				}} style={{flex: 12, paddingHorizontal: 0, paddingTop: 15}}>
-          <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 4}}>
-              <Text style={{fontSize: 12, color: "#707171", textTransform: 'capitalize'}}>{data?.action}</Text>
-            </View>
-            <View style={{flex: 1, flexDirection: 'row-reverse', paddingHorizontal: 15}}>
-              <Text style={{color: "#9E9E9E", fontSize: 10}}>{data?.formatDate}</Text>
-            </View>
-          </View>
-          <View>
-            <View style={{paddingRight: 15}}>
-              {renderDescription(data?.content, data)}
-            </View>                            
-          </View>
-					<View style={{paddingTop: 15}}>
-						{index < total - 1 ? <View style={{ height: 1.5, backgroundColor: 'rgba(0, 0, 0, 0.02)'}} /> : null}
-					</View>  
-        </TouchableOpacity>				
-      </View>
+    	<View style={styles.container(clicks, bgcol)}>
+			<View style={styles.firstContainer}>
+				<View style={styles.margin1(index)}></View>
+					<CustomIcon.MCIcon name="circle" size={9} color="#C4C4C4" style={styles.circle} />
+				<View style={styles.margin2(total, index)}></View>
+			</View>
+			<TouchableOpacity onPress={() => {
+						// setToggle(true)
+						if(clicks == 0){
+							setClicks(clicks + 1)
+						}
+						onSelect()
+					}} style={styles.setClicks}>
+				<View style={styles.formContainer}>
+					<View style={styles.actionContainer}>
+						<Text style={styles.actionText}>{data?.action}</Text>
+					</View>
+					<View style={styles.dateContainer}>
+						<Text style={styles.dateText}>{data?.formatDate}</Text>
+					</View>
+				</View>
+				<View>
+					<View style={styles.contentContainer}>
+					{renderDescription(data?.content, data)}
+					</View>                            
+				</View>
+				<View style={styles.marginContainer}>
+					{index < total - 1 ? <View style={styles.margin3} /> : null}
+				</View>  
+			</TouchableOpacity>				
+		</View>
 			{/* <View style={{flexDirection: 'row'}}>
 				<View style={{flex: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 15, height: 0, backgroundColor: 'red'}}>
 
@@ -85,3 +85,77 @@ export const SubItem = ({index, total, data, root, onSelect}) => {
     </>
   )
 }
+
+const styles = StyleSheet.create({
+	linkContainer: {
+		flexDirection: 'row'
+	},
+	deliveryLink: {
+		color: "#F6841F", 
+		fontSize: 12
+	},
+	container: (clicks, bgcol) => {
+		return {
+			flexDirection: 'row', 
+			backgroundColor: clicks == 0 ? bgcol : "white"
+		}
+	},
+	firstContainer: {
+		flex: 2, 
+		alignItems: 'center', 
+		justifyContent: 'center', 
+		paddingHorizontal: 15
+	},
+	margin1: (index) => {
+		return {
+			flex: 1, 
+			backgroundColor: index == 0 ? 'transparent' : "#C4C4C4", 
+			width: '3%'
+		}
+	},
+	circle: {
+		position: 'absolute'
+	},
+	margin2: (total, index) => {
+		return {
+			flex: 1, 
+			backgroundColor: total - 1 == index ? "transparent" : "#C4C4C4", 
+			width: '3%'
+		}
+	},
+	setClicks: {
+		flex: 12, 
+		paddingHorizontal: 0, 
+		paddingTop: 15
+	},
+	formContainer: {
+		flexDirection: 'row'
+	},
+	actionContainer: {
+		flex: 4
+	},
+	actionText: {
+		fontSize: 12, 
+		color: "#707171", 
+		textTransform: 'capitalize'
+	},
+	dateContainer: {
+		flex: 1, 
+		flexDirection: 'row-reverse', 
+		paddingHorizontal: 15
+	},
+	dateText: {
+		color: "#9E9E9E", 
+		fontSize: 10
+	},
+	contentContainer: {
+		paddingRight: 15
+	},
+	marginContainer: {
+		paddingTop: 15
+	},
+	margin3: {
+		height: 1.5, 
+		backgroundColor: 'rgba(0, 0, 0, 0.02)'
+	}
+})

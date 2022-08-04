@@ -65,7 +65,7 @@ export const Categories = ({data}) => {
       <>
         <Image 
           source={item.image ? {uri: item.image} : placeholder} 
-          style={{width: 50, height: 50, resizeMode: 'cover', borderRadius: 5}} 
+          style={styles.setIcon} 
         />
       </>
     )
@@ -90,16 +90,16 @@ export const Categories = ({data}) => {
       <>
         <View style={styles.container}>
             <View style={styles.heading}>
-              <View style={{flex: 8}}>
+              <View style={styles.h1Container}>
                 <Text style={styles.h1}>Categories</Text>
               </View>
-              <TouchableOpacity style={{flex: 2, flexDirection: 'row'}} disabled ={loading} onPress={() => {
+              <TouchableOpacity style={styles.navigateButton} disabled ={loading} onPress={() => {
                 navigation.navigate("ToktokMallCategories")
               }}>
-                <View style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
+                <View style={styles.seeAllContainer}>
                   <Text style={styles.link}>See all </Text>
                 </View>
-                <View style={{flex: 0, alignItems: 'flex-end', justifyContent: 'center'}}>
+                <View style={styles.nextContainer}>
                   <CustomIcon.EIcon name="chevron-right" color="#F6841F" size={16} />
                 </View>
               </TouchableOpacity>              
@@ -130,18 +130,18 @@ export const Categories = ({data}) => {
               showsHorizontalScrollIndicator={false} 
             />             */}
 
-            <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+            <View style={styles.loadingContainer}>
 
             {/* Skeleton Loader */}
             {loading && [1,2,3,4,5].map((cat, i) => {
                   return (
                     <>
-                      <View style={{flex: 1}}>
-                        <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                          <View style={{width: 50, height: 50, backgroundColor: 'rgba(204, 204, 204, 0.2)', borderRadius: 5}} />
+                      <View style={styles.loading1}>
+                        <View style={styles.loading2}>
+                          <View style={styles.loading3} />
                         </View>
-                        <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 2}}>
-                          <View style={{height: 0}} />
+                        <View style={styles.loading4}>
+                          <View style={styles.loading5} />
                         </View>
                       </View>   
                     </>
@@ -151,11 +151,11 @@ export const Categories = ({data}) => {
               {!loading && categoriesArr.length > 0 && categoriesArr.map((cat, i) => {
                   return (
                     <>
-                      <TouchableOpacity onPress={() => navigation.navigate('ToktokMallCategories', {data: cat})} style={{flex: 1}}>
-                        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                      <TouchableOpacity onPress={() => navigation.navigate('ToktokMallCategories', {data: cat})} style={styles.button}>
+                        <View style={styles.icon}>
                           {setIcon(cat)}
                         </View>
-                        <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 4}}>
+                        <View style={styles.categoryText}>
                           <Text numberOfLines={2} ellipsizeMode="tail" style={styles.label}>{cat.parentCategoryName}</Text>
                         </View>
                       </TouchableOpacity>   
@@ -191,7 +191,7 @@ export const Categories = ({data}) => {
               </ContentLoader>           */}
 
             </View>
-            <View style={{height: 15}} />
+            <View style={styles.margin} />
 
           </View>
           <View style={styles.separator} />
@@ -200,11 +200,101 @@ export const Categories = ({data}) => {
   }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, paddingHorizontal: 15, paddingVertical: 0},
-  heading: {paddingVertical: 20, flexDirection: 'row'},
-  h1: {fontSize: 14, fontFamily: FONT.BOLD},
-  link: {fontSize: 12, color: "#F6841F"},
-  image: {width: 50, height: 50, resizeMode: 'cover', alignSelf: 'center', borderRadius: 8},
-  label: {fontSize: 10, alignSelf: 'center', textAlign: 'center'},
-  separator: {flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}
+  container: {
+    flex: 1, 
+    paddingHorizontal: 15, 
+    paddingVertical: 0
+  },
+  heading: {
+    paddingVertical: 20, 
+    flexDirection: 'row'
+  },
+  h1Container: {
+    flex: 8
+  },
+  h1: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  navigateButton: {
+    flex: 2, 
+    flexDirection: 'row'
+  },
+  seeAllContainer: {
+    flex: 2, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  link: {
+    fontSize: 12, 
+    color: "#F6841F"
+  },
+  image: {
+    width: 50, 
+    height: 50, 
+    resizeMode: 'cover', 
+    alignSelf: 'center', 
+    borderRadius: 8
+  },
+  label: {
+    fontSize: 10, 
+    alignSelf: 'center', 
+    textAlign: 'center'
+  },
+  separator: {
+    flex: 0.5, 
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  },
+  nextContainer: {
+    flex: 0, 
+    alignItems: 'flex-end', 
+    justifyContent: 'center'
+  },
+  loadingContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-around'
+  },
+  loading1: {
+    flex: 1
+  },
+  loading2: {
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  loading3: {
+    width: 50, 
+    height: 50, 
+    backgroundColor: 'rgba(204, 204, 204, 0.2)', 
+    borderRadius: 5
+  },
+  loading4: {
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    marginTop: 2
+  },
+  loading5: {
+    height: 0
+  },
+  button: {
+    flex: 1
+  },
+  icon: {
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  categoryText: {
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    marginTop: 4
+  },
+  setIcon: {
+    width: 50, 
+    height: 50, 
+    resizeMode: 'cover', 
+    borderRadius: 5
+  },
+  margin: {
+    height: 15
+  }
 })

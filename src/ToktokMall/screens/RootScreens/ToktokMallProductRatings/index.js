@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import {HeaderBack, HeaderRight, HeaderTitle} from '../../../Components';
 import CustomIcon from '../../../Components/Icons';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -74,7 +74,7 @@ export const ToktokMallProductRatings = ({navigation}) => {
 
 	return (
 		<>
-			<View style={{flex: 1, backgroundColor: "#fff"}}>
+			<View style={styles.container}>
 
 				<SliderTab index={activeTab} onTabChange={(index) => TabChangeHandler(index)} />		
 
@@ -84,3 +84,10 @@ export const ToktokMallProductRatings = ({navigation}) => {
 		</>
 	)
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1, 
+		backgroundColor: "#fff"
+	},
+})

@@ -67,6 +67,7 @@ export const GET_LOAD_TRANSACTIONS = gql`
 export const POST_TOKTOKWALLET_REQUEST_MONEY = gql`
   mutation postToktokWalletRequestMoney($input: PostToktokWalletRequestMoneyInput!) {
     postToktokWalletRequestMoney(input: $input) {
+      hash
       status
       data {
         message

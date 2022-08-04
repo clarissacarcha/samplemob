@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Text, View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {useSelector, useDispatch} from 'react-redux';
+import {InfoNote} from './components';
 import {Header, VehicleCard} from '../../components';
 
 const ToktokGoBookingVehicle = ({navigation, route}) => {
@@ -27,6 +28,7 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
   return (
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
       <Header navigation={navigation} title={'Select Vehicle'} />
+      <InfoNote />
       <FlatList
         style={{marginTop: 24}}
         showsVerticalScrollIndicator={false}
@@ -65,15 +67,16 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 16,
     bottom: 0,
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-
-    elevation: 3,
+    shadowRadius: 3.84,
+    shadowOpacity: 0.2,
+    elevation: 5,
+    borderTopColor: '#F8F8F8',
+    borderTopWidth: 2,
   },
   buttonStyle: {
     backgroundColor: CONSTANTS.COLOR.ORANGE,

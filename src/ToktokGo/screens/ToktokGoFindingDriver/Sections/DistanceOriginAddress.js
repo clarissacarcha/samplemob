@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   addressContainer: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.BLACK,
     marginTop: 2,

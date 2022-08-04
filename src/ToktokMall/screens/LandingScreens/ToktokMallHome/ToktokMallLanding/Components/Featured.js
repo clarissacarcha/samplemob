@@ -64,58 +64,37 @@ const Item = ({data}) => {
         onPress={() => {
           navigation.navigate('ToktokMallProductDetails', data), console.log(data);
         }}
-        style={{
-          flex: 2,
-          paddingBottom: 4,
-          marginHorizontal: 2,
-          alignItems: 'center',
-          backgroundColor: '#fff',
-          borderRadius: 5,
-        }}>
+        style={styles.button}>
         {data?.discountRate != '' && (
           <View
-            style={{position: 'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
+            style={styles.discountContainer}>
             <Text
-              style={{
-                fontSize: 8,
-                paddingHorizontal: 4,
-                paddingLeft: 8,
-                paddingTop: 1,
-                paddingBottom: 3,
-                color: '#fff',
-                fontFamily: FONT.BOLD,
-              }}>
+              style={styles.discountText}>
               {data?.discountRate}
             </Text>
           </View>
         )}
-        <View style={{height: 4}}></View>
+        <View style={styles.margin1}></View>
         <Image
           source={getImageSource(data?.images)}
-          style={{width: 100, height: 100, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}}
+          style={styles.itemImage}
         />
         <Text
-          style={{fontSize: 13, fontWeight: '500', paddingVertical: 5, width: 90}}
+          style={styles.itemNameText}
           numberOfLines={1}
           ellipsizeMode="tail">
           {data?.itemname}
         </Text>
-        <View style={{height: 2}}></View>
+        <View style={styles.margin2}></View>
         <Text
-          style={{fontSize: 14, fontWeight: '600', color: '#F6841F', alignSelf: 'flex-start', paddingHorizontal: 5}}>
+          style={styles.priceText}>
           <Price amount={data?.price} />
         </Text>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <View style={{flex: 2}}>
-            {data?.compareAtPrice != '0.00' ? (
+        <View style={styles.comparePriceContainer}>
+          <View style={styles.comparePriceSubContainer}>
+            {data?.compareAtPrice != '0.00' &&  data?.compareAtPrice != "" ? (
               <Text
-                style={{
-                  fontSize: 10,
-                  textDecorationLine: 'line-through',
-                  alignSelf: 'flex-start',
-                  paddingHorizontal: 5,
-                  color: '#9E9E9E',
-                }}>
+                style={styles.comparePriceText}>
                 <Price amount={data?.compareAtPrice} />
               </Text>
             ) : null}
@@ -131,7 +110,7 @@ const Item = ({data}) => {
         {data.refComDiscountRate && data.refComDiscountRate != '' ? (
           <>
             <RefComDiscountRate value={data.refComDiscountRate} w="80%" />
-            <View style={{height: 5}}></View>
+            <View style={styles.margin3}></View>
           </>
         ) : null}
       </TouchableOpacity>
@@ -143,18 +122,18 @@ const Empty = ({data}) => {
 
   return (
     <>
-      <View style={{flex: 2, paddingBottom: 4, marginHorizontal: 2, alignItems: 'center', backgroundColor: "rgba(255,255,255,0.4)", borderRadius: 5}}>
-        <View style={{height: 4}}></View>
-        <View style={{height: 120, width: 110, padding: 5 }} />
+      <View style={styles.emptyContainer}>
+        <View style={styles.margin4}></View>
+        <View style={styles.margin5} />
         {/* <Image source={getImageSource(data?.images)} style={{width: '100%', height: 120, resizeMode: 'stretch', alignSelf: 'center', borderRadius: 5}} /> */}
-        <View style={{height: 2}}></View>
-        <Text style={{fontSize: 14, fontWeight: '600', color: "#F6841F", alignSelf: 'flex-start', paddingHorizontal: 5}}></Text>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <View style={{flex: 2}}>
-            <Text style={{fontSize: 10, textDecorationLine: 'line-through', alignSelf: 'flex-start', paddingHorizontal: 5, color: "#9E9E9E"}}></Text>          
+        <View style={styles.margin6}></View>
+        <Text style={styles.emptyText1}></Text>
+        <View style={styles.emptyText2}>
+          <View style={styles.emptyText3Container}>
+            <Text style={styles.emptyText3}></Text>          
           </View>
-          <View style={{flex: 1}}>
-            <Text style={{fontSize: 9.5, alignSelf: 'center', color: "#FDBA1C"}}></Text>
+          <View style={styles.emptyText4Container}>
+            <Text style={styles.emptyText4}></Text>
           </View>
         </View>
       </View>
@@ -211,11 +190,11 @@ export const Featured = () => {
         <ImageBackground 
           source={flashsalebg}
           imageStyle={{resizeMode: 'cover'}}          
-          style={{flex: 1, paddingHorizontal: 15, paddingVertical: 0}}>
+          style={styles.imageBackground}>
           
-            <View style={{paddingVertical: 20, flexDirection: 'row'}}>
-              <View style={{flex: 1}}>
-                <Image source={featuredflash} style={{width: '38%', height: 40, resizeMode: 'stretch', justifyContent: 'center', alignSelf: 'flex-start'}} />
+            <View style={styles.imageBackgroundContainer}>
+              <View style={styles.featuredFlashContainer}>
+                <Image source={featuredflash} style={styles.featuredFlashImage} />
               </View>
               {/* <View style={{flex: 0, justifyContent: 'center', paddingHorizontal: 4}}>
                 <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Featured Items</Text>                
@@ -233,7 +212,7 @@ export const Featured = () => {
             </View>
             
             <View>            
-              <View style={{flex: 1, flexDirection: 'row'}}>
+              <View style={styles.flatListContainer}>
                 
 								{/* <Carousel
 									layout={'stack'} 
@@ -293,9 +272,158 @@ export const Featured = () => {
               </View>
             </View>
           
-          <View style={{height: 15}}></View>
+          <View style={styles.margin7}></View>
         </ImageBackground>
-        <View style={{flex: 0.5, height: 8, backgroundColor: '#F7F7FA'}} />
+        <View style={styles.margin8} />
         </>
     )
 }
+
+const styles = StyleSheet.create({ 
+  button: {
+    flex: 2,
+    paddingBottom: 4,
+    marginHorizontal: 2,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 5,
+  },
+  discountContainer: {
+    position: 'absolute', 
+    zIndex: 1, 
+    right: 0, 
+    backgroundColor: '#F6841F', 
+    borderBottomLeftRadius: 30
+  },
+  discountText: {
+    fontSize: 8,
+    paddingHorizontal: 4,
+    paddingLeft: 8,
+    paddingTop: 1,
+    paddingBottom: 3,
+    color: '#fff',
+    fontFamily: FONT.BOLD,
+  },
+  margin1: {
+    height: 4
+  },
+  itemImage: {
+    width: 100, 
+    height: 100, 
+    resizeMode: 'stretch', 
+    alignSelf: 'center', 
+    borderRadius: 5
+  },
+  itemNameText: {
+    fontSize: 13, 
+    fontWeight: '500', 
+    paddingVertical: 5, 
+    width: 90
+  },
+  margin2: {
+    height: 2
+  },
+  priceText: {
+    fontSize: 14, 
+    fontWeight: '600', 
+    color: '#F6841F', 
+    alignSelf: 'flex-start', 
+    paddingHorizontal: 5
+  },
+  comparePriceContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between'
+  },
+  comparePriceSubContainer: {
+    flex: 2
+  },
+  comparePriceText: {
+    fontSize: 10,
+    textDecorationLine: 'line-through',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 5,
+    color: '#9E9E9E',
+  },
+  margin3: {
+    height: 5
+  },
+  emptyContainer: {
+    flex: 2, 
+    paddingBottom: 4, 
+    marginHorizontal: 2, 
+    alignItems: 'center', 
+    backgroundColor: "rgba(255,255,255,0.4)", 
+    borderRadius: 5
+  },
+  margin4: {
+    height: 4
+  },
+  margin5: {
+    height: 120, 
+    width: 110, 
+    padding: 5 
+  },
+  margin6: {
+    height: 2
+  },
+  emptyText1: {
+    fontSize: 14, 
+    fontWeight: '600', 
+    color: "#F6841F", 
+    alignSelf: 'flex-start', 
+    paddingHorizontal: 5
+  },
+  emptyText2: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between'
+  },
+  emptyText3Container: {
+    flex: 2
+  },
+  emptyText3: {
+    fontSize: 10, 
+    textDecorationLine: 'line-through', 
+    alignSelf: 'flex-start', 
+    paddingHorizontal: 5, 
+    color: "#9E9E9E"
+  },
+  emptyText4Container: {
+    flex: 1
+  },
+  emptyText4: {
+    fontSize: 9.5, 
+    alignSelf: 'center', 
+    color: "#FDBA1C"
+  },
+  imageBackground: {
+    flex: 1, 
+    paddingHorizontal: 15, 
+    paddingVertical: 0
+  },
+  imageBackgroundContainer: {
+    paddingVertical: 20, 
+    flexDirection: 'row'
+  },
+  featuredFlashContainer: {
+    flex: 1
+  },
+  featuredFlashImage: {
+    width: '38%', 
+    height: 40, 
+    resizeMode: 'stretch', 
+    justifyContent: 'center', 
+    alignSelf: 'flex-start'
+  },
+  flatListContainer: {
+    flex: 1, 
+    flexDirection: 'row'
+  },
+  margin7: {
+    height: 15
+  },
+  margin8: {
+    flex: 0.5, 
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  }
+})

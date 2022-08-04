@@ -4,13 +4,8 @@ import CONSTANTS from '../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import Data from '../../../components/BookingDummyData';
 import {LocationCard} from '../../../components';
-export const FrequentlyUsed = ({navigation, popTo}) => {
-  const onPressLocation = () => {
-    navigation.push('ToktokGoBookingConfirmPickup', {
-      popTo: popTo + 1,
-    });
-  };
-
+import AsyncStorage from '@react-native-community/async-storage';
+export const FrequentlyUsed = ({navigation, popTo, recentSearchDataList, onPressRecentSearch}) => {
   return (
     <>
       <View
@@ -28,10 +23,10 @@ export const FrequentlyUsed = ({navigation, popTo}) => {
             color: CONSTANTS.COLOR.ORANGE,
             fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
           }}>
-          Frequently Used
+          Recent Search
         </Text>
         <TouchableOpacity onPress={() => navigation.push('ToktokGoFrequentlyUsed')}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
               style={{
                 fontSize: CONSTANTS.FONT_SIZE.M,
@@ -41,14 +36,14 @@ export const FrequentlyUsed = ({navigation, popTo}) => {
               See All
             </Text>
             <MIcon name={'keyboard-arrow-right'} size={23} color={CONSTANTS.COLOR.ORANGE} style={{marginRight: -7}} />
-          </View>
+          </View> */}
         </TouchableOpacity>
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={Data.frequentlyUsed}
+        data={recentSearchDataList}
         // keyExtractor={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressLocation} />}
+        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressRecentSearch} />}
       />
     </>
   );

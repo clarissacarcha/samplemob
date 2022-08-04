@@ -9,6 +9,7 @@ export * from "./ToktokWalletLoadLogs";
 export * from "./ToktokWalletMallLogs";
 export * from "./ToktokWalletMartLogs";
 export * from "./ToktokWalletPabiliDeliveryLogs";
+export * from "./ToktokWalletMerchantPaymentLogs";
 export * from "./ToktokWalletPaymentChart";
 export * from "./ToktokWalletRequestMoneyLogs";
 export * from "./ToktokWalletSendMoneyLogs";

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import {LandingSubHeader, Card, Product} from '../../../../Components';
 import { connect } from 'react-redux';
@@ -23,16 +23,16 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
 
 	return (
 		<>
-			<View style={{marginTop: 15, marginHorizontal: 15, borderColor: "#ECECEC", borderWidth: 1, borderRadius: 5}}>
-          <View style={{flexDirection: 'row', paddingVertical: 15, paddingHorizontal: 15}}>
-            <View style={{flex: 3.5, justifyContent: 'center'}}>
+			<View style={styles.container}>
+          <View style={styles.subContainer}>
+            <View style={styles.imageContainer}>
               <Image 
                 source={getShopLogo(data.profileImages?.logo ? data.profileImages?.logo : {})} 
-                style={{width: 50, height: 50, resizeMode: "stretch", borderRadius: 25}} />
+                style={styles.logoIcon} />
             </View>
-            <View style={{flex: 12, justifyContent: 'center'}}>
-              <Text style={{fontSize: 14}}>{data.shopname}</Text>
-              <Text style={{fontSize: 13, color: "#9E9E9E", paddingRight: 5}}>{data.address}</Text>
+            <View style={styles.shopNameContainer}>
+              <Text style={styles.shopNameText}>{data.shopname}</Text>
+              <Text style={styles.addressText}>{data.address}</Text>
             </View>
 
             {/* FOLLOW STORE BUTTON */}
@@ -83,3 +83,40 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export const Store = connect(mapStateToProps, mapDispatchToProps)(Component);
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 15, 
+    marginHorizontal: 15, 
+    borderColor: "#ECECEC", 
+    borderWidth: 1, 
+    borderRadius: 5
+  },
+  subContainer: {
+    flexDirection: 'row', 
+    paddingVertical: 15, 
+    paddingHorizontal: 15
+  },
+  imageContainer: {
+    flex: 3.5, 
+    justifyContent: 'center'
+  },
+  logoIcon: {
+    width: 50, 
+    height: 50, 
+    resizeMode: "stretch", 
+    borderRadius: 25
+  },
+  shopNameContainer: {
+    flex: 12, 
+    justifyContent: 'center'
+  },
+  shopNameText: {
+    fontSize: 14
+  },
+  addressText: {
+    fontSize: 13, 
+    color: "#9E9E9E", 
+    paddingRight: 5
+  }
+})

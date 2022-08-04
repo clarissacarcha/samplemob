@@ -95,6 +95,7 @@ export const LandingSubHeader = (props) => {
                 <TextInput 
                   ref={searchFieldRef}
                   placeholder={props.placeholder ? props.placeholder : "Search"}
+                  placeholderTextColor="#818181" 
                   value={searchValue}
                   autoFocus={props.focused ? props.focused : false}
                   onChangeText={(val) => handleOnSearch(val)}

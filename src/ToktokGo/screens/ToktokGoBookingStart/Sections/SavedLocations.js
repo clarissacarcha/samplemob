@@ -7,7 +7,7 @@ import Home from '../../../../assets/icons/home-address-icon.png';
 import Office from '../../../../assets/icons/office-address-icon.png';
 import {LocationCard} from '../../../components';
 
-export const SavedLocations = () => {
+export const SavedLocations = ({navigation, popTo, recentSearchDataList, onPressRecentSearch}) => {
   return (
     <>
       <View
@@ -26,10 +26,10 @@ export const SavedLocations = () => {
             fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
             marginLeft: 7,
           }}>
-          Saved Locations
+          Recent Search
         </Text>
         <TouchableOpacity onPress={() => console.log('trigger')}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
               style={{
                 fontSize: CONSTANTS.FONT_SIZE.M,
@@ -39,14 +39,14 @@ export const SavedLocations = () => {
               See All
             </Text>
             <MIcon name={'keyboard-arrow-right'} size={23} color={CONSTANTS.COLOR.ORANGE} />
-          </View>
+          </View> */}
         </TouchableOpacity>
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={Data.savedLocations}
+        data={recentSearchDataList}
         // keyExtractor={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} image={item.name === 'Home' ? Home : Office} />}
+        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressRecentSearch} />}
       />
     </>
   );
