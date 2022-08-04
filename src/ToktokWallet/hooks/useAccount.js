@@ -61,7 +61,7 @@ export const useAccount = (options)=> {
                 type: "SET_TOKTOKWALLET_ACCOUNT",
                 payload: getMyAccount
             })
-            await refreshWallet()
+            // await refreshWallet()
             await dispatch({
                 type: "SET_LOADING",
                 payload: false
