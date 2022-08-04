@@ -66,6 +66,7 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
   });
 
   const checkNotificationToNavigate = ({trip}) => {
+    console.log('action:', action, 'bookingId:', bookingId);
     if (currentBookingActions.includes(action)) {
       if (trip.id != bookingId) {
         navigation.push('SelectedBookingDetails', {
@@ -87,6 +88,7 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
     if (data) {
       if (date === moment(new Date()).format('MMM D, YYYY')) {
         navigation.replace('ToktokGoBookingStart');
+        checkNotificationToNavigate({trip: null});
       } else if (tokwaAccount.wallet.id) {
         navigation.replace('ToktokGoHealthCare');
       } else {
