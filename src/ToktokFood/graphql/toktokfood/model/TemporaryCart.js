@@ -27,6 +27,9 @@ const tempCart = `
     shopName
     orderInstructions
     isDisabled
+    itemServiceFeeType
+    itemServiceFeeValue
+    itemTokfoodServiceFeeComm
     addonsDetails {
       id
       optionName
@@ -108,6 +111,13 @@ export const GET_ALL_TEMPORARY_CART = gql`
   query getAllTemporaryCart($input: GetAllTemporaryCartInput) {
     getAllTemporaryCart(input: $input) {
       srpTotalAmount
+      pabiliShopServiceFee
+      pabiliShopDetails {
+        isShopPabiliMerchant
+        shopServiceFeeType
+        shopServiceFeeValue
+        shopTokfoodServiceFeeComm
+      }
       ${tempCart}
     }
   }

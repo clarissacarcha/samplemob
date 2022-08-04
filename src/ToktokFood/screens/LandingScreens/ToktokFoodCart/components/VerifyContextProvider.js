@@ -25,6 +25,8 @@ export const VerifyContextProvider = ({children}) => {
   const {user} = useSelector(state => state.session);
   const {userId} = routes.params;
   const [totalAmount, setTotalAmount] = useState(0);
+  const [pabiliShopServiceFee, setPabiliShopServiceFee] = useState(0);
+  const [pabiliShopDetails, setPabiliShopDetails] = useState(null);
   const [temporaryCart, setTemporaryCart] = useState({
     cartItemsLength: 0,
     totalAmount: 0,
@@ -40,8 +42,18 @@ export const VerifyContextProvider = ({children}) => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getAllTemporaryCart}) => {
-      let {items, srpTotalAmount, totalAmount, totalAmountWithAddons, addonsTotalAmount} = getAllTemporaryCart;
-      // console.log(getAllTemporaryCart, 'temp cart');
+      let {
+        items,
+        srpTotalAmount,
+        totalAmount,
+        totalAmountWithAddons,
+        addonsTotalAmount,
+        pabiliShopServiceFee,
+        pabiliShopDetails,
+      } = getAllTemporaryCart;
+      
+      setPabiliShopServiceFee(pabiliShopServiceFee);
+      setPabiliShopDetails(pabiliShopDetails);
       setTemporaryCart({
         cartItemsLength: items.length,
         srpTotalAmount,
@@ -94,6 +106,8 @@ export const VerifyContextProvider = ({children}) => {
         setShippingVoucher,
         autoShippingVoucher,
         setAutoShippingVoucher,
+        pabiliShopServiceFee,
+        pabiliShopDetails,
       }}>
       {children}
     </Provider>
