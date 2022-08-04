@@ -50,28 +50,14 @@ const Screen = ({navigation, constants, session, createSession}) => {
         }, 10);
         return;
       }
-      if (notification.additionalData.classification === 'toktokgo') {
-        console.log(notification.additionalData);
-        if (notification.additionalData.route === 'TOKTOKGO_HOME') {
-          setTimeout(() => {
-            navigation.navigate('ToktokGoLanding');
-          }, 10);
-          return;
-        }
-        if (notification.additionalData.route === 'TOKTOKGO_BOOKING') {
-          setTimeout(() => {
-            /* 
-              FIXME: Navigate to ToktokGoBookingStart then replace it with SelectedBookingDetails, 
-              because we cannot navigate first to ToktokGoLanding as that page will determine if theres an ongoing trip or not. 
-              CONFIRM THIS FIRST!
-            */
-            navigation.navigate('ToktokGoBookingStart');
-            navigation.replace('SelectedBookingDetails', {
-              bookingId: notification.additionalData.bookingId,
-            });
-          }, 10);
-          return;
-        }
+      if (notification.additionalData.service === 'GO') {
+        setTimeout(() => {
+          navigation.navigate('ToktokGoLanding', {
+            action: notification.additionalData.action,
+            bookingId: notification.additionalData.data.tripId,
+          });
+        }, 10);
+        return;
       }
       const type = notification.additionalData.type;
 
