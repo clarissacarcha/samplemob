@@ -110,6 +110,27 @@ vehicleType {
 }
 `;
 
+const DriverData = `
+driver {
+  licenseNumber
+  goAverageRating
+  overallAverageRating
+  user {
+    username
+    person {
+      firstName
+      middleName
+      lastName
+      mobileNumber
+      avatar
+      avatarThumbnail
+      covidVaccinationStatus {
+        description
+      }
+    }
+  }
+}`;
+
 export const TRIP_BOOK = gql`
   mutation tripBook($input: TripBookInput!) {
     tripBook(input: $input) {
@@ -138,6 +159,15 @@ export const GET_TRIP_CANCELLATION_CHARGE = gql`
     }
   }
 `;
+
+export const GET_BOOKING_DRIVER = gql`
+  query getBookingDriver($input: GetBookingDriverInput!) {
+    getBookingDriver(input: $input) {
+      ${DriverData}
+    }
+  }
+`;
+
 export const TRIP_CONSUMER_CANCEL = gql`
 mutation tripConsumerCancel ($input: TripConsumerCancelInput!){
   tripConsumerCancel (input: $input){
