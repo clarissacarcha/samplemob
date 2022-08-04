@@ -18,11 +18,3 @@ export const POST_CONSUMER_DELIVERY_RATING = gql`
     }
   }
 `;
-
-export const POST_GO_DRIVER_RATING = gql`
-  query postGoDriverRating($input: PostGoDriverRatingInput!) {
-    postGoDriverRating(input: $input) {
-      message
-    }
-  }
-`;

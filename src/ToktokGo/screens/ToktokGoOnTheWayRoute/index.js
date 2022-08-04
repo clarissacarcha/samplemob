@@ -295,6 +295,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     setmodal(false);
     navigation.replace('ToktokGoRateDriver', {
       popTo: popTo + 1,
+      booking,
     });
   };
   const onCancel = () => {
