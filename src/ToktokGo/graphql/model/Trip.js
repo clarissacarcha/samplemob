@@ -231,3 +231,11 @@ export const TRIP_CHARGE_FINALIZE_PAYMENT = gql`
     }
   }
 `;
+
+export const DRIVER_RATING = gql`
+  mutation postGoDriverRating($input: PostGoDriverRatingInput!) {
+    postGoDriverRating(input: $input) {
+      message
+    }
+  }
+`;
