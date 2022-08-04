@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, TouchableHighlight, Text, Image, Alert, ScrollView} from 'react-native';
+import {View, TouchableHighlight, Text, Image, Alert, ScrollView, SafeAreaView} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {connect, useDispatch} from 'react-redux';
 import {Landing, Header, OutstandingFee} from './Sections';
@@ -26,6 +26,7 @@ import {CancellationPaymentSuccesfullModal, NoShowPaymentSuccesfullModal} from '
 import {SavedLocations} from './Sections/SavedLocations';
 import {RecentDestinations} from './Sections/RecentDestinations';
 import AsyncStorage from '@react-native-community/async-storage';
+import {FlatList} from 'react-native-gesture-handler';
 
 const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   // const {popTo, selectInput} = route.params;
@@ -245,102 +246,110 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
-      <View style={{flex: 1}}>
-        <NoShowPaymentSuccesfullModal
-          isVissible={showNoShowPaymentSuccessfulModal}
-          setVissible={setShowNoShowPaymentSuccessfulModal}
-        />
-        <CancellationPaymentSuccesfullModal
-          isVissible={showCancellationPaymentSuccesfulModal}
-          setVissible={setCancellationShowPaymentSuccessfulModal}
-        />
-        <Header navigation={navigation} constants={constants} />
-        <Landing navigation={navigation} />
-        <ScrollView
-          contentContainerStyle={{flexGrow: 1}}
-          scrollEnabled={
-            tripConsumerPending.length > 0 || recentSearchDataList.length != 0 || recentDestinationList.length != 0
-          }>
-          {tripConsumerPending.length > 0 && (
-            <OutstandingFee
-              navigation={navigation}
-              tripChargeInitializePaymentFunction={tripChargeInitializePaymentFunction}
-              tripConsumerPending={tripConsumerPending}
-            />
-          )}
-          {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? (
-            <ToktokgoBeta />
-          ) : (
-            <View>
-              {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
-                <View>
-                  {recentSearchDataList.length == 0 ? null : (
-                    <SavedLocations
-                      navigation={navigation}
-                      // popTo={popTo}
-                      recentSearchDataList={recentSearchDataList}
-                      onPressRecentSearch={onPressRecentSearch}
-                    />
-                  )}
-                  {recentDestinationList.length == 0 ? null : (
-                    <View>
-                      {recentSearchDataList.length != 0 && (
-                        <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
-                      )}
-                      <RecentDestinations
-                        navigation={navigation}
-                        recentDestinationList={recentDestinationList}
-                        onPressRecentDestination={onPressRecentDestination}
-                      />
-                    </View>
-                  )}
-                </View>
-              )}
-              {recentSearchDataList.length == 3 && recentDestinationList.length == 3 ? null : <ToktokgoBeta />}
-            </View>
-          )}
-        </ScrollView>
-      </View>
-      <ThrottledOpacity
-        delay={500}
-        style={{
-          paddingHorizontal: CONSTANTS.SIZE.MARGIN,
-          backgroundColor: 'white',
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingVertical: 16,
-          borderTopColor: '#ECECEC',
-          // borderTopWidth: 1,
-          shadowColor: '#000000',
-          shadowOffset: {
-            width: 0,
-            height: 0,
-          },
-          shadowRadius: 5,
-          shadowOpacity: 0.3,
-          elevation: 10,
-        }}
-        onPress={() => {
-          navigation.push('ToktokGoBookingConfirmDestination', {
-            popTo: 1,
-          });
-        }}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {/* <FA5Icon name="map-marker-alt" size={15} color={CONSTANTS.COLOR.ORANGE} style={{marginRight: 10}} /> */}
-          <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
-
-          <Text
-            style={{
-              color: CONSTANTS.COLOR.ORANGE,
-              fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-              fontSize: CONSTANTS.FONT_SIZE.M,
-            }}>
-            Select via Map
-          </Text>
+    <SafeAreaView style={{flex: 1}}>
+      <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
+        <View style={{flex: 1}}>
+          <NoShowPaymentSuccesfullModal
+            isVissible={showNoShowPaymentSuccessfulModal}
+            setVissible={setShowNoShowPaymentSuccessfulModal}
+          />
+          <CancellationPaymentSuccesfullModal
+            isVissible={showCancellationPaymentSuccesfulModal}
+            setVissible={setCancellationShowPaymentSuccessfulModal}
+          />
+          <Header navigation={navigation} constants={constants} />
+          <Landing navigation={navigation} />
+          <FlatList
+            ListHeaderComponent={
+              <ScrollView
+                contentContainerStyle={{flexGrow: 1}}
+                scrollEnabled={
+                  tripConsumerPending.length > 0 ||
+                  recentSearchDataList.length != 0 ||
+                  recentDestinationList.length != 0
+                }>
+                {tripConsumerPending.length > 0 && (
+                  <OutstandingFee
+                    navigation={navigation}
+                    tripChargeInitializePaymentFunction={tripChargeInitializePaymentFunction}
+                    tripConsumerPending={tripConsumerPending}
+                  />
+                )}
+                {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? (
+                  <ToktokgoBeta />
+                ) : (
+                  <View>
+                    {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
+                      <View>
+                        {recentSearchDataList.length == 0 ? null : (
+                          <SavedLocations
+                            navigation={navigation}
+                            // popTo={popTo}
+                            recentSearchDataList={recentSearchDataList}
+                            onPressRecentSearch={onPressRecentSearch}
+                          />
+                        )}
+                        {recentDestinationList.length == 0 ? null : (
+                          <View>
+                            {recentSearchDataList.length != 0 && (
+                              <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+                            )}
+                            <RecentDestinations
+                              navigation={navigation}
+                              recentDestinationList={recentDestinationList}
+                              onPressRecentDestination={onPressRecentDestination}
+                            />
+                          </View>
+                        )}
+                      </View>
+                    )}
+                    {recentSearchDataList.length == 3 && recentDestinationList.length == 3 ? null : <ToktokgoBeta />}
+                  </View>
+                )}
+              </ScrollView>
+            }
+          />
         </View>
-      </ThrottledOpacity>
-    </View>
+        <ThrottledOpacity
+          delay={500}
+          style={{
+            paddingHorizontal: CONSTANTS.SIZE.MARGIN,
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 16,
+            borderTopColor: '#ECECEC',
+            // borderTopWidth: 1,
+            shadowColor: '#000000',
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowRadius: 5,
+            shadowOpacity: 0.3,
+            elevation: 10,
+          }}
+          onPress={() => {
+            navigation.push('ToktokGoBookingConfirmDestination', {
+              popTo: 1,
+            });
+          }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {/* <FA5Icon name="map-marker-alt" size={15} color={CONSTANTS.COLOR.ORANGE} style={{marginRight: 10}} /> */}
+            <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
+
+            <Text
+              style={{
+                color: CONSTANTS.COLOR.ORANGE,
+                fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+                fontSize: CONSTANTS.FONT_SIZE.M,
+              }}>
+              Select via Map
+            </Text>
+          </View>
+        </ThrottledOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 

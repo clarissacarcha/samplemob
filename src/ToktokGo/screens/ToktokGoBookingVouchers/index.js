@@ -240,26 +240,28 @@ const ToktokGoBookingVouchers = ({navigation}) => {
         </View>
       )}
       {!noResults && !noVouchers && (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={searchedDatas.length === 0 ? data : searchedDatas}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => {
-            const lastItem = index == data.length - 1 ? true : false;
-            return (
-              <View style={{marginVertical: 8}}>
-                <VoucherCard
-                  details={details}
-                  data={item}
-                  navigation={navigation}
-                  onPressActionButton={onApply}
-                  postCollectVoucher={postCollectVoucher}
-                  loading={PCVLoading}
-                />
-              </View>
-            );
-          }}
-        />
+        <View style={{marginTop: 11}}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={searchedDatas.length === 0 ? data : searchedDatas}
+            keyExtractor={item => item.id}
+            renderItem={({item, index}) => {
+              const lastItem = index == data.length - 1 ? true : false;
+              return (
+                <View style={{marginVertical: 8}}>
+                  <VoucherCard
+                    details={details}
+                    data={item}
+                    navigation={navigation}
+                    onPressActionButton={onApply}
+                    postCollectVoucher={postCollectVoucher}
+                    loading={PCVLoading}
+                  />
+                </View>
+              );
+            }}
+          />
+        </View>
       )}
     </View>
   );
