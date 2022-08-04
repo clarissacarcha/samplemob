@@ -1,5 +1,6 @@
 import React from 'react'
 import {ImageBackground,StyleSheet} from 'react-native'
+import {home} from 'toktokwallet/assets';
 
 export const HeaderImageBackground = ({children})=> {
 

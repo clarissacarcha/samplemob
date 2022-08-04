@@ -4,6 +4,7 @@ import NoDataImage from 'toktokwallet/assets/images/no-record.png';
 import NoNotifImage from 'toktokwallet/assets/images/no-notif.png';
 import {moderateScale} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
+import {empty_images} from 'toktokwallet/assets';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 const imageWidth = 200;
@@ -22,6 +23,8 @@ export const NoData = ({
     case 'notification':
       img = NoNotifImage;
       break;
+    case 'search':
+      img = empty_images.empty_search;
     default:
       break;
   }

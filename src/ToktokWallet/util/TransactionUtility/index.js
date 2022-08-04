@@ -24,6 +24,14 @@ export class TransactionUtility {
     const {graphQLErrors, networkError} = error;
 
     if (networkError) {
+      if (prompt) {
+        return prompt({
+          type: 'error',
+          title: 'No Internet Connection',
+          message: 'Network error occurred. Please check your internet connection.',
+          event: 'TOKTOKBILLSLOAD',
+        });
+      }
       return alert({message: 'Network error occurred. Please check your internet connection.'});
     }
 
