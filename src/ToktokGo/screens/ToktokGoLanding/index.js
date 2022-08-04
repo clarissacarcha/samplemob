@@ -15,7 +15,7 @@ import {useAccount} from 'toktokwallet/hooks';
 
 const ToktokGoLanding = ({navigation, session, route, constants}) => {
   const dispatch = useDispatch();
-  const {bookingId, action} = route.params;
+  const {bookingId, action} = route?.params ? route.params : {bookingId: null, action: null};
   const {routeDetails} = useSelector(state => state.toktokGo);
   const {tokwaAccount, getMyAccount} = useAccount();
 
