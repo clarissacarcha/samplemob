@@ -202,15 +202,15 @@ export const ToktokLandingMenu = ({navigation}) => {
               }}
             />
             {/*--------------- Referral ---------------*/}
-            <DrawerButton isNew label="Referral" onPress={onPressReferral} />
+            {/* <DrawerButton isNew label="Referral" onPress={onPressReferral} /> */}
             {/*--------------- Vouchers ---------------*/}
-            <DrawerButton
+            {/* <DrawerButton
               isNew
               label="Vouchers"
               onPress={() => {
                 navigation.push('VoucherScreen');
               }}
-            />
+            /> */}
 
             {/*--------------- TALK TO US ---------------*/}
             <Text
