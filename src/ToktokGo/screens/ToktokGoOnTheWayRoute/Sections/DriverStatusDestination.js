@@ -19,7 +19,7 @@ export const DriverStatusDestination = ({status, booking}) => {
             size={constants.FONT_SIZE.M}
             style={{color: constants.COLOR.YELLOW, paddingRight: 10}}
           />
-          <Text style={{fontSize: constants.FONT_SIZE.M, fontFamily: constants.FONT_FAMILY.BOLD}}>
+          <Text style={{fontSize: constants.FONT_SIZE.M, fontFamily: constants.FONT_FAMILY.SEMI_BOLD}}>
             {booking?.estimates?.dropOffTimeFrame}
           </Text>
         </View>

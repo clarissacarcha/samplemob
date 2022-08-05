@@ -4,7 +4,7 @@ import {COLOR, FONT, SIZE, FONT_SIZE} from '../../../../../res/variables';
 import {VectorIcon, ICON_SET} from '../../../../../revamp/';
 import {AUTH_CLIENT, END_USER_SESSION} from '../../../../../graphql';
 import {onError} from '../../../../../util/ErrorUtility';
-import {AlertOverlay} from '../../../../../components';
+import {AlertOverlay} from '../../../../../SuperApp/screens/Components';
 import {useMutation} from '@apollo/react-hooks';
 import CONSTANTS from '../../../../../common/res/constants';
 import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar, TouchableOpacity} from 'react-native';
@@ -16,9 +16,9 @@ import ToktokWashed from '../../../../../assets/images/ToktokWashed.png';
 import RightArrow from '../../../../../assets/icons/profileMenu-arrow-rightIcon.png';
 
 import {Header} from './Components';
-import { ToktokMallSession } from '../../../../../ToktokMall/util/session';
+import {ToktokMallSession} from '../../../../../ToktokMall/util/session';
 
-const DrawerButton = ({label, onPress, restrict}) => {
+const DrawerButton = ({isNew, label, onPress, restrict}) => {
   if (restrict && restrict != APP_FLAVOR) {
     return null;
   }
@@ -34,7 +34,25 @@ const DrawerButton = ({label, onPress, restrict}) => {
           size={16}
           style={{marginRight: 2}}
         /> */}
-        <Image source={RightArrow} style={{color: 'red', height: 12, width: 15}} resizeMode={'contain'} />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {isNew && (
+            <View style={{backgroundColor: COLOR.RED, borderRadius: 20}}>
+              <Text
+                style={{
+                  paddingHorizontal: 12,
+                  color: CONSTANTS.COLOR.WHITE,
+                  fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                }}>
+                New
+              </Text>
+            </View>
+          )}
+          <Image
+            source={RightArrow}
+            style={{color: 'red', height: 12, width: 15, marginLeft: 25}}
+            resizeMode={'contain'}
+          />
+        </View>
       </View>
     </TouchableHighlight>
   );
@@ -72,10 +90,21 @@ export const ToktokLandingMenu = ({navigation}) => {
     if (RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
     OneSignal.deleteTag('userId');
     dispatch({type: 'DESTROY_SESSION'});
+    dispatch({type: 'SET_TOKWA_TO_INITIAL_STATE'});
     ToktokMallSession.destroy();
     navigation.replace('UnauthenticatedStack', {
       screen: 'Login',
     });
+  };
+
+  const onPressReferral = () => {
+    if (!session.user.consumer.goReferralDriverCode) {
+      navigation.push('ReferralScreen', {
+        fromRegistration: false,
+      });
+    } else {
+      navigation.push('ReferralExistScreen');
+    }
   };
 
   return (
@@ -102,14 +131,14 @@ export const ToktokLandingMenu = ({navigation}) => {
                 <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, paddingTop: 3}}>
                   {session.user.username}
                 </Text>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={() => {
                     navigation.push('ToktokProfile');
                   }}>
                   <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, color: COLOR.ORANGE, paddingTop: 5}}>
                     View Profile
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             ) : (
               <View
@@ -135,8 +164,8 @@ export const ToktokLandingMenu = ({navigation}) => {
         <View style={{height: SIZE.MARGIN / 2, backgroundColor: COLOR.LIGHT}} />
 
         <View style={{flex: 1, backgroundColor: 'white'}}>
-          <Text style={{paddingLeft: 20, paddingTop: 20, paddingBottom: 15, fontFamily: FONT.BOLD}}> Account</Text>
           <ScrollView>
+            <Text style={{paddingLeft: 20, paddingTop: 20, paddingBottom: 15, fontFamily: FONT.BOLD}}> Account</Text>
             {/*--------------- MY DELIVERIES ---------------*/}
             {/* <DrawerButton
               label="Saved Addresses"
@@ -145,13 +174,25 @@ export const ToktokLandingMenu = ({navigation}) => {
               }}
               restrict="C"
             /> */}
-            {/*--------------- CHANGE PASSWORD ---------------*/}
             <DrawerButton
+              label="Personal Information"
+              onPress={() => {
+                navigation.push('ToktokProfile');
+              }}
+            />
+            <DrawerButton
+              label="Account Security"
+              onPress={() => {
+                navigation.push('AccountSecurity', {userName});
+              }}
+            />
+            {/*--------------- CHANGE PASSWORD ---------------*/}
+            {/* <DrawerButton
               label="Change Password"
               onPress={() => {
                 navigation.push('EnterPassword', {userName});
               }}
-            />
+            /> */}
 
             {/*--------------- ANNOUNCEMENTS ---------------*/}
             <DrawerButton
@@ -160,6 +201,17 @@ export const ToktokLandingMenu = ({navigation}) => {
                 navigation.push('ToktokAnnouncements');
               }}
             />
+            {/*--------------- Referral ---------------*/}
+            {/* <DrawerButton isNew label="Referral" onPress={onPressReferral} /> */}
+            {/*--------------- Vouchers ---------------*/}
+            {/* <DrawerButton
+              isNew
+              label="Vouchers"
+              onPress={() => {
+                navigation.push('VoucherScreen');
+              }}
+            /> */}
+
             {/*--------------- TALK TO US ---------------*/}
             <Text
               style={{
@@ -188,13 +240,11 @@ export const ToktokLandingMenu = ({navigation}) => {
                 fontFamily: FONT.BOLD,
               }}></View>
             <DrawerButton label="Log Out" onPress={endUserSession} />
+            <Text style={styles.appVersionStyle}>{APP_VERSION}</Text>
           </ScrollView>
         </View>
       </View>
       {/*--------------- SIGN OUT ---------------*/}
-      <View>
-        <Text style={styles.appVersionStyle}>{APP_VERSION}</Text>
-      </View>
     </View>
   );
 };
@@ -223,6 +273,7 @@ const styles = StyleSheet.create({
     lineHeight: FONT_SIZE.L,
   },
   appVersionStyle: {
+    marginTop: 16,
     paddingLeft: 16,
     paddingBottom: 12,
     color: CONSTANTS.COLOR.GRAY,

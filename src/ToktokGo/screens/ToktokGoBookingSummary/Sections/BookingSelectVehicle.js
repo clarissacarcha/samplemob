@@ -8,7 +8,7 @@ import InfoIcon from '../../../../assets/images/info.png';
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 import {ThrottledOpacity} from '../../../../components_section';
 
-export const BookingSelectVehicle = ({navigation, data, selectVehicle, selectedVehicle, setViewPriceNote}) => {
+export const BookingSelectVehicle = ({navigation, loading, data, selectVehicle, selectedVehicle, setViewPriceNote}) => {
   const {tempVehicleArr} = useSelector(state => state.toktokGo);
   return (
     <>
@@ -37,8 +37,18 @@ export const BookingSelectVehicle = ({navigation, data, selectVehicle, selectedV
         </ThrottledOpacity>
       </View>
 
-      <VehicleCard data={tempVehicleArr[0]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
-      <VehicleCard data={tempVehicleArr[1]} selectVehicle={selectVehicle} selectedVehicle={selectedVehicle} />
+      <VehicleCard
+        loading={loading}
+        data={tempVehicleArr[0]}
+        selectVehicle={selectVehicle}
+        selectedVehicle={selectedVehicle}
+      />
+      <VehicleCard
+        loading={loading}
+        data={tempVehicleArr[1]}
+        selectVehicle={selectVehicle}
+        selectedVehicle={selectedVehicle}
+      />
 
       <View style={styles.divider} />
     </>
@@ -58,7 +68,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textStyle: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
     fontSize: CONSTANTS.FONT_SIZE.M,
     marginRight: 8,

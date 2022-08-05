@@ -4,6 +4,7 @@ import {AlertModal} from '../components';
 
 //TOKTOKMALL
 import { PopupModal, ToktokMallModal } from '../ToktokMall/Components';
+import StyledLoader from 'toktokfood/components/StyledLoader';
 
 const initialState = {
   visible: false,
@@ -19,6 +20,8 @@ const {Provider} = AlertContext;
 const AlertProvider = ({children}) => {
   const [alertState, setAlertState] = useState(initialState);
   const {toktokMallModal, popupmodal} = useSelector((state) => state.toktokMall);
+  const {loader} = useSelector((state) => state.toktokFood);
+  const {isVisible, text, type} = loader;
 
   const alert = ({message, buttonLabel, actionButtons, title}) => {
     setAlertState({
@@ -39,7 +42,8 @@ const AlertProvider = ({children}) => {
       <Provider value={alert}>{children}</Provider>
       <AlertModal {...alertState} close={close} />
       {toktokMallModal?.visible && <ToktokMallModal />}
-      {popupmodal?.visible && <PopupModal {...popupmodal} />}
+      {popupmodal?.visible && <PopupModal {...popupmodal} />}      
+      <StyledLoader isVisible={isVisible} text={text} type={type} />
     </>
   );
 };

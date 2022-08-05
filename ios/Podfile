@@ -1,7 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '11.0'
+platform :ios, '12.0'
 
 target 'toktok' do
   config = use_native_modules!
@@ -41,6 +41,8 @@ target 'toktok' do
   pod 'react-native-google-maps', :path => rn_maps_path
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
+
+  pod 'react-native-location', :path => '../node_modules/react-native-location'
 
   target 'toktokTests' do
     inherit! :complete

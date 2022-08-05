@@ -25,7 +25,7 @@ const getStatus = status => {
       return {text: 'Pending', color: '#FDBA1C', iconName: 'remove-circle-outline'};
   }
 };
-export const ActivityCard = ({item, onPress, isLastItem = false}) => {
+export const ActivityCard = React.memo(({item, onPress, isLastItem = false}) => {
   let {amount, convenienceFee, createdAt, billerDetails, referenceNumber, destinationIdentifier, status} = item;
 
   let transactionDateTime = moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
@@ -42,16 +42,13 @@ export const ActivityCard = ({item, onPress, isLastItem = false}) => {
           <View style={styles.headerContainer}>
             <Text>
               <Text style={{fontFamily: FONT_FAMILY.BOLD}}>Service Reference Number </Text>
-              <Text style={{color: '#FDBA1C', fontFamily: FONT_FAMILY.BOLD}}>{referenceNumber}</Text>
+              <Text style={styles.referenceNo}>{referenceNumber}</Text>
             </Text>
             <Text style={styles.subText}>{transactionDateTime}</Text>
           </View>
           <View style={styles.rowAlignItemsCenter}>
             {statusData.text == 'Success' ? (
-              <Image
-                source={paper_airplane_icon}
-                style={{resizeMode: 'contain', height: moderateScale(15), width: moderateScale(15)}}
-              />
+              <Image source={paper_airplane_icon} style={styles.successIcon} />
             ) : (
               <VectorIcon
                 size={moderateScale(15)}
@@ -66,7 +63,7 @@ export const ActivityCard = ({item, onPress, isLastItem = false}) => {
 
         <View style={styles.detailTwoContainer}>
           <Image source={{uri: billerDetails?.logo}} style={styles.networkIcon} />
-          <View style={{paddingLeft: moderateScale(10), flexShrink: 1}}>
+          <View style={styles.billerContainer}>
             <Text>{billerDetails?.descriptions}</Text>
             <Text style={styles.subText}>{destinationIdentifier}</Text>
           </View>
@@ -82,7 +79,7 @@ export const ActivityCard = ({item, onPress, isLastItem = false}) => {
       </View>
     </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -136,8 +133,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   networkIcon: {
-    width: moderateScale(40),
-    height: moderateScale(20),
+    width: moderateScale(50),
+    height: moderateScale(50),
     resizeMode: 'contain',
   },
   divider: {
@@ -171,5 +168,18 @@ const styles = StyleSheet.create({
   },
   statusText: {
     paddingLeft: moderateScale(3),
+  },
+  successIcon: {
+    resizeMode: 'contain',
+    height: moderateScale(15),
+    width: moderateScale(15),
+  },
+  referenceNo: {
+    color: '#FDBA1C',
+    fontFamily: FONT_FAMILY.BOLD,
+  },
+  billerContainer: {
+    paddingLeft: moderateScale(10),
+    flexShrink: 1,
   },
 });

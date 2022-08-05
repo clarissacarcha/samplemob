@@ -1,5 +1,7 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions, ActivityIndicator} from 'react-native';
+import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions, Platform} from 'react-native';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 import CONSTANTS from '../../common/res/constants';
 import {numberFormat} from '../../helper';
 import SedanIMG from '../../assets/images/vehicleTypes/Sedan.png';
@@ -8,7 +10,8 @@ import LargeMpvIMG from '../../assets/images/vehicleTypes/LargeMPV.png';
 
 const ImageWidth = (Dimensions.get('window').width - 230) / 2;
 
-export const VehicleCard = ({type, data, selectVehicle, setDataVehicle, selectedVehicle, dataVehicle}) => {
+export const VehicleCard = ({type, loading, data, selectVehicle, setDataVehicle, selectedVehicle, dataVehicle}) => {
+  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   const render_image = () => {
     switch (data?.vehicleType?.imageClass) {
       case 'SEDAN': {
@@ -63,7 +66,7 @@ export const VehicleCard = ({type, data, selectVehicle, setDataVehicle, selected
           </View>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.surgeText}>Max Surge Charge</Text>
-            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>{'2.0'}</Text>
+            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}}>{'1.5 - 2.0'}</Text>
           </View>
         </View>
       );
@@ -85,7 +88,9 @@ export const VehicleCard = ({type, data, selectVehicle, setDataVehicle, selected
               <Text style={styles.descTextStlye}>{data?.vehicleType?.phrase}</Text>
             </View>
           </View>
-          <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
+          <ShimmerPlaceHolder style={{width: !loading ? (Platform.OS == 'ios' ? 60 : 75) : 45}} visible={!loading}>
+            <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
+          </ShimmerPlaceHolder>
         </View>
       </TouchableOpacity>
       {seeVehicleFees()}
@@ -120,13 +125,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   priceTextStyle: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.M,
     marginLeft: 10,
   },
   carTextStyle: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.M,
   },
   descTextStlye: {
@@ -141,25 +146,25 @@ const styles = StyleSheet.create({
     borderColor: CONSTANTS.COLOR.ORANGE,
   },
   kmText: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
     marginRight: 84,
   },
   durationText: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
     marginRight: 63.5,
   },
   surgeText: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
     marginRight: 28.5,
   },
   fareText: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
     marginRight: 72,

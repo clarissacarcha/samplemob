@@ -7,10 +7,13 @@ export const GET_TOKTOKFOOD_NOTIFICATIONS = gql`
       branchId
       shopId
       userId
+      declinedBy
       orderStatus
       orderIsfor
       referenceNum
       status
+      shopname
+      refundTotal
     }
   }
 `;

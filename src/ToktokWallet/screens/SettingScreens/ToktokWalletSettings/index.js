@@ -1,10 +1,11 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
+import React , {useState , useEffect} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView , Platform } from 'react-native';
 import FIcon from 'react-native-vector-icons/Feather';
 import {Separator, CheckIdleState} from 'toktokwallet/components';
 import {HeaderBack, HeaderTitle} from 'src/revamp';
 import {useSelector} from 'react-redux';
 import CONSTANTS from 'common/res/constants';
+import _ from "lodash";
 //SELF IMPORTS
 import {Biometrics} from './Components';
 
@@ -23,6 +24,116 @@ export const ToktokWalletSettings = ({navigation, route}) => {
     headerTitle: () => <HeaderTitle label={['Settings', '']} />,
   });
   const tokwaAccount = useSelector(state => state.toktokWallet);
+  const [menuData, setMenuData] = useState([]);
+  const menuDataConstant = [
+    {
+      label: 'Cash In',
+      route: "ToktokWalletCashInLogs",
+      identifier: "logCashIn",
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: 'Fund Transfer',
+      route: "ToktokWalletCashOutLogs",
+      identifier: "logFundTransfer",
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: "Cash Out",
+      route: "ToktokWalletCashOutOtcLogs",
+      identifier: `logCashOutOtc`,
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: 'Send Money',
+      route: "ToktokWalletSendMoneyLogs",
+      identifier: "logSendMoney",
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: 'Delivery',
+      route: "ToktokWalletPabiliDeliveryLogs",
+      identifier: "logToktok",
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: 'Food',
+      route: "ToktokWalletFoodLogs",
+      identifier: "logToktokFood",
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: 'QR Payment',
+      route: "ToktokWalletMerchantPaymentLogs",
+      identifier: "logMerchantQrPayment",
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: 'Load',
+      route: "ToktokWalletLoadLogs",
+      identifier: "logToktokLoad",
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: 'Request Money',
+      route: "ToktokWalletRequestMoneyLogs",
+      identifier: "logRequestMoney",
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: 'Bills',
+      route: "ToktokWalletBillsLogs",
+      identifier: "logToktokBills",
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: 'Mart',
+      route: "ToktokWalletMartLogs",
+      identifier: "logToktokMart",
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: 'Mall',
+      route: "ToktokWalletMallLogs",
+      identifier: "logToktokMall",
+      checkIfMerchantLinked: false,
+    },
+    {
+      label: "Settlement",
+      route: "ToktokWalletMerchantSettlementLogs",
+      identifier: `logMerchantSettlement`,
+      checkIfMerchantLinked: true,
+    }
+  ]
+
+  useEffect(()=>{
+    const appServicesObject = _.keyBy(tokwaAccount.appServiceLogs, 'identifier');
+    const filteredMenuData = menuDataConstant.filter(menuDataItem => {
+      const appService = appServicesObject[menuDataItem.identifier];
+
+      if (!appService) {
+        console.log(`Menu item ${menuDataItem.identifier} not set in App Services. Do not bypass this validation.`);
+        return false;
+      }
+
+      const isEnabled = appService.isEnabled;
+      const isEnabledInEarlyAccess = tokwaAccount.constants.isEarlyAccess === 'TRUE' && appService.isEarlyAccess;
+      const isDisplayed = isEnabled || isEnabledInEarlyAccess;
+
+      if (!isDisplayed) {
+        console.log(`Menu item ${menuDataItem.identifier} is hidden in App Services. Do not bypass this validation.`);
+        return false;
+      }
+
+      if(menuDataItem?.checkIfMerchantLinked && !tokwaAccount?.merchantSettlement){
+        console.log("No Merchant linked in tokwa account");
+        return false;
+      }
+
+      return true;
+    })
+    setMenuData(filteredMenuData);
+  },[])
 
   const SettingOption = ({route, params = {}, title}) => (
     <>
@@ -31,7 +142,6 @@ export const ToktokWalletSettings = ({navigation, route}) => {
           <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{title}</Text>
         </View>
         <View style={styles.arrowright}>
-          {/* <Text style={{fontSize: 16,color: "gray"}}>{'>'}</Text> */}
           <FIcon name="chevron-right" size={20} color={'#A6A8A9'} />
         </View>
       </TouchableOpacity>
@@ -64,17 +174,11 @@ export const ToktokWalletSettings = ({navigation, route}) => {
         <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us" />
         <Separator />
         <SettingHeaderTitle title="Logs" />
-        <SettingOption route="ToktokWalletCashInLogs" title="Cash In" />
-        <SettingOption route="ToktokWalletCashOutLogs" title="Fund Transfer" />
-        {/* <SettingOption route="ToktokWalletRequestMoneyLogs" title="Request Money"/> */}
-        <SettingOption route="ToktokWalletSendMoneyLogs" title="Send Money" />
-        <SettingOption route="ToktokWalletBillsLogs" title="Bills" />
-        <SettingOption route="ToktokWalletPabiliDeliveryLogs" title="Delivery" />
-        <SettingOption route="ToktokWalletFoodLogs" title="Food" />
-        {/* <SettingOption route="ToktokWalletLoadLogs" title="Load"/> */}
-        {/* <SettingOption route="ToktokWalletMartLogs" title="Mart"/>
-            <SettingOption route="ToktokWalletMallLogs" title="Mall"/> */}
-        <SettingOption route="ToktokWalletMerchantPaymentLogs" title="QR Payment" />
+            {
+              menuData.map((item,index)=>(
+                <SettingOption route={item.route} title={item.label}/>
+              ))
+            }
         <Separator />
         <SettingHeaderTitle title="Account Recovery" />
         <SettingOption route="ToktokWalletAccountRecoverySetup" title="Account Recovery Setup" />

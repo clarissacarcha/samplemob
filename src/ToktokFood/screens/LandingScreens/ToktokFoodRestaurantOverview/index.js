@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Modal, Text, TouchableOpacity, Dimensions} from 'react-native';
+import {Animated, View, ScrollView, StyleSheet, Modal, Text, TouchableOpacity, Dimensions} from 'react-native';
 import {verticalScale, getDeviceWidth} from 'toktokfood/helper/scale';
 
 const phoneDimensions = Dimensions.get('window');
@@ -8,6 +8,8 @@ const phoneDimensions = Dimensions.get('window');
 
 import {StickyView} from './components';
 import {FoodCart, VerifyContextProvider} from './components';
+import Header from 'toktokfood/components/Header';
+import StyledText from 'toktokfood/components/StyledText';
 
 import {GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
 import {COLOR, FONT, FONT_SIZE, SIZE} from 'res/variables';
@@ -20,76 +22,87 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
 const ToktokFoodRestaurantOverview = ({route}) => {
   const [showCart, setShowCart] = useState(false);
+  const scrollY = new Animated.Value(0);
+  const translateY = scrollY.interpolate({
+    inputRange: [0, 45],
+    outputRange: [0, -45],
+    extrapolate: 'clamp',
+    useNativeDriver: true,
+  });
 
-  // const {item} = route.params;
+  const bgColor = scrollY.interpolate({
+    inputRange: [0, 200],
+    outputRange: ['transparent', 'white'],
+    extrapolate: 'clamp',
+    useNativeDriver: true,
+  });
 
-  // const navigation = useNavigation();
-
-  // const {hasOpen, hasProduct, nextOperatingHrs, operatingHours} = item;
-  // const {fromTime, day: nxtDay} = nextOperatingHrs;
-  // const {fromTime: currFromTime} = operatingHours;
-
-  // const [showOverlay, setShowOverlay] = useState(hasOpen === false);
-  // const [showProductOverlay, setShowProductOverlay] = useState(hasProduct === false);
-
-  // const displayNextOpeningHours = () => {
-  //   const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
-  //   if (isAboutToOpen) {
-  //     return (
-  //       <Text style={styles.closeText}>
-  //         Restaurant is currently closed. {'\n'}Please comeback at {moment(fromTime, 'hh:mm:ss').format('LT')}
-  //       </Text>
-  //     );
-  //   }
-  //   return (
-  //     <Text style={styles.closeText}>
-  //       Restaurant is currently closed. {'\n'}Please comeback on {getWeekDay(nxtDay, true)},{' '}
-  //       {moment(fromTime, 'hh:mm:ss').add(1, 'day').format('MMMM DD')} at{' '}
-  //       {moment(fromTime, 'hh:mm:ss').format('hh:mm A')}.
-  //     </Text>
-  //   );
-  // };
-
-  // const onNavigate = () => {
-  //   setShowOverlay(false);
-  //   navigation.goBack();
-  // };
-
-  // const CloseOverlay = () => (
-  //   <Modal visible={showOverlay} transparent={true} animationType="fade" presentationStyle="overFullScreen">
-  //     <View style={styles.content}>
-  //       <View style={[styles.wrapper, styles.sheetBorder]}>
-  //         <View style={styles.sheet}>
-  //           {displayNextOpeningHours()}
-  //           <TouchableOpacity style={styles.closeButton} onPress={() => onNavigate()}>
-  //             <Text style={styles.buttonText}>OK</Text>
-  //           </TouchableOpacity>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   </Modal>
-  // );
-
-  // const ProductOverlay = (
-  //   <Modal visible={showProductOverlay} transparent={true} animationType="fade" presentationStyle="overFullScreen">
-  //     <View style={styles.content}>
-  //       <View style={[styles.wrapper, styles.sheetBorder]}>
-  //         <View style={styles.sheet}>
-  //           {displayNextOpeningHours()}
-  //           <TouchableOpacity style={styles.closeButton} onPress={() => onNavigate()}>
-  //             <Text style={styles.buttonText}>OK</Text>
-  //           </TouchableOpacity>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   </Modal>
-  // );
+  const DATA = [
+    {
+      id: 1,
+      title: 'The Hunger Games',
+    },
+    {
+      id: 2,
+      title: 'Harry Potter and the Order of the Phoenix',
+    },
+    {
+      id: 3,
+      title: 'To Kill a Mockingbird',
+    },
+    {
+      id: 4,
+      title: 'Pride and Prejudice',
+    },
+    {
+      id: 5,
+      title: 'Twilight',
+    },
+    {
+      id: 6,
+      title: 'The Book Thief',
+    },
+    {
+      id: 7,
+      title: 'The Chronicles of Narnia',
+    },
+    {
+      id: 8,
+      title: 'Animal Farm',
+    },
+    {
+      id: 9,
+      title: 'Gone with the Wind',
+    },
+    {
+      id: 10,
+      title: 'The Shadow of the Wind',
+    },
+    {
+      id: 11,
+      title: 'The Fault in Our Stars',
+    },
+    {
+      id: 12,
+      title: "The Hitchhiker's Guide to the Galaxy",
+    },
+    {
+      id: 13,
+      title: 'The Giving Tree',
+    },
+    {
+      id: 14,
+      title: 'Wuthering Heights',
+    },
+    {
+      id: 15,
+      title: 'The Da Vinci Code',
+    },
+  ];
 
   return (
     <>
       <VerifyContextProvider>
-        {/* <CloseOverlay /> */}
-        {/* <ProductOverlay /> */}
         <View style={styles.container}>
           <StickyView onCheckShop={v => setShowCart(v)} />
           {showCart && <FoodCart />}

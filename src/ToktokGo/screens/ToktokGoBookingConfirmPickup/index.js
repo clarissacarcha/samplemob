@@ -1,6 +1,6 @@
 import React, {useRef, useCallback, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
-import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, BackHandler} from 'react-native';
+import {Text, View, StyleSheet, StatusBar, KeyboardAvoidingView, Image, BackHandler} from 'react-native';
 import {Pickup, ConfirmPickupButton, NotesToDriver} from './Sections';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
@@ -13,6 +13,7 @@ import {decodeLegsPolyline, useDebounce} from '../../helpers';
 import {MAP_DELTA_LOW} from '../../../res/constants';
 import {throttle} from 'lodash';
 import {ThrottledOpacity} from '../../../components_section';
+import {AlertOverlay} from '../../../SuperApp/screens/Components';
 
 const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const {popTo, source} = route.params;
@@ -33,7 +34,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
         text: text,
       });
   };
-  const [getQuotation] = useLazyQuery(GET_QUOTATION, {
+  const [getQuotation, {loading}] = useLazyQuery(GET_QUOTATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
@@ -111,11 +112,12 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   };
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
+      <AlertOverlay visible={loading} />
       <ThrottledOpacity delay={500} style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </ThrottledOpacity>
       {origin?.place?.location?.latitude && <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
-      <View style={styles.card}>
+      <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : null} style={styles.card}>
         <NotesToDriver
           dropDownRef={dropDownRef}
           navigation={navigation}
@@ -126,7 +128,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
           notes={notes}
         />
         <ConfirmPickupButton onConfirm={onConfirm} />
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };

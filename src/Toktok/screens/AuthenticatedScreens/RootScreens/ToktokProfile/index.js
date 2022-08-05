@@ -1,5 +1,16 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableHighlight, TextInput, Alert, Image, Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableHighlight,
+  TextInput,
+  Alert,
+  Image,
+  Dimensions,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native';
 import {connect} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import validator from 'validator';
@@ -90,185 +101,197 @@ const ConsumerProfile = ({navigation, constants, session, createSession}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <AlertOverlay visible={loading} />
-      <InputScrollView showsVerticalScrollIndicator={false}>
-        <View style={{flexDirection: 'row', marginHorizontal: 10, justifyContent: 'space-between'}}>
-          {/*--------------- AVATAR ---------------*/}
-          <View style={{marginTop: 20, alignItems: 'center'}}>
-            {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
-              <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
-                <View
-                  style={{
-                    height: ImageWidth,
-                    width: ImageWidth,
-                    backgroundColor: MEDIUM,
-                    borderRadius: 10,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    position: 'relative',
-                  }}>
-                  <Image
-                    source={{uri: session.user.person.avatarThumbnail}}
-                    resizeMode={'cover'}
-                    style={{width: ImageWidth, height: ImageWidth, borderRadius: 10}}
-                  />
-                  <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
-                </View>
-              </TouchableHighlight>
-            ) : (
-              <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
-                <View
-                  style={{
-                    height: ImageWidth,
-                    width: ImageWidth,
-                    backgroundColor: '#333',
-                    borderRadius: 10,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    position: 'relative',
-                  }}>
-                  <Image
-                    source={ToktokWashed}
-                    resizeMode={'contain'}
-                    tintColor={MEDIUM}
-                    style={{width: 80, height: 80, borderRadius: 10}}
-                  />
-                  <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
-                </View>
-              </TouchableHighlight>
-            )}
+    <KeyboardAvoidingView
+      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={-100}
+      style={{
+        flex: 1,
+        justifyContent: 'space-between',
+      }}>
+      <View style={styles.container}>
+        <AlertOverlay visible={loading} />
+        <InputScrollView showsVerticalScrollIndicator={false}>
+          <View style={{flexDirection: 'row', marginHorizontal: 10, justifyContent: 'space-between'}}>
+            {/*--------------- AVATAR ---------------*/}
+            <View style={{marginTop: 20, alignItems: 'center'}}>
+              {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
+                <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
+                  <View
+                    style={{
+                      height: ImageWidth,
+                      width: ImageWidth,
+                      backgroundColor: MEDIUM,
+                      borderRadius: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      position: 'relative',
+                    }}>
+                    <Image
+                      source={{uri: session.user.person.avatarThumbnail}}
+                      resizeMode={'cover'}
+                      style={{width: ImageWidth, height: ImageWidth, borderRadius: 10}}
+                    />
+                    <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
+                  </View>
+                </TouchableHighlight>
+              ) : (
+                <TouchableHighlight onPress={onProfilePress} underlayColor={COLOR} style={{borderRadius: 10}}>
+                  <View
+                    style={{
+                      height: ImageWidth,
+                      width: ImageWidth,
+                      backgroundColor: '#333',
+                      borderRadius: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      position: 'relative',
+                    }}>
+                    <Image
+                      source={ToktokWashed}
+                      resizeMode={'contain'}
+                      tintColor={MEDIUM}
+                      style={{width: 80, height: 80, borderRadius: 10}}
+                    />
+                    <FAIcon name="edit" size={20} color={LIGHT} style={{position: 'absolute', bottom: 5, right: 5}} />
+                  </View>
+                </TouchableHighlight>
+              )}
+            </View>
+
+            {/*-------------------- QR CODE --------------------*/}
+            <View style={{marginTop: 20}}>
+              <View style={{alignItems: 'center'}}>
+                <QRCode
+                  value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
+                  size={ImageWidth}
+                  color={DARK}
+                  backgroundColor="transparent"
+                  // onPress={() => alert('Pressed')}
+                />
+              </View>
+            </View>
           </View>
 
-          {/*-------------------- QR CODE --------------------*/}
-          <View style={{marginTop: 20}}>
-            <View style={{alignItems: 'center'}}>
-              <QRCode
-                value={session.user.userId} //Give value when there's no session as it will throw an error if value is empty.
-                size={ImageWidth}
-                color={DARK}
-                backgroundColor="transparent"
-                // onPress={() => alert('Pressed')}
+          {/*-------------------- MOBILE NUMBER --------------------*/}
+          <Text style={styles.label}>Mobile Number</Text>
+          <View style={[styles.input, {justifyContent: 'center'}]}>
+            <Text style={{color: MEDIUM}}>{session.user.username}</Text>
+          </View>
+
+          {/*-------------------- FIRST NAME --------------------*/}
+          <Text style={styles.label}>First Name</Text>
+          <TextInput
+            value={firstName}
+            onChangeText={value => setFirstName(value)}
+            style={styles.input}
+            placeholder="First Name"
+            editable={session.user.toktokWalletAccountId == null}
+          />
+
+          {/*-------------------- LAST NAME --------------------*/}
+          <Text style={styles.label}>Last Name</Text>
+          <TextInput
+            value={lastName}
+            onChangeText={value => setLastName(value)}
+            style={styles.input}
+            placeholder="Last Name"
+            editable={session.user.toktokWalletAccountId == null}
+          />
+
+          {/*-------------------- EMAIL --------------------*/}
+          <Text style={styles.label}>Email Address</Text>
+          <TextInput
+            value={emailAddress}
+            onChangeText={value => setEmailAddress(value)}
+            style={styles.input}
+            placeholder="Email Address"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            caretHidden
+            placeholderTextColor={LIGHT}
+          />
+
+          {/*-------------------- REFERRAL CODE --------------------*/}
+          {session.user.consumer.referralCode ? (
+            <View>
+              <Text style={styles.label}>Referral Code</Text>
+              <View style={[styles.input, {justifyContent: 'center'}]}>
+                <Text style={{color: MEDIUM}}>{referralCode}</Text>
+              </View>
+            </View>
+          ) : (
+            <View>
+              <Text style={styles.label}>Referral Code</Text>
+              <TextInput
+                value={referralCode}
+                onChangeText={value => setReferralCode(value)}
+                style={styles.input}
+                placeholder="Referral Code"
+                placeholderTextColor={LIGHT}
               />
             </View>
-          </View>
-        </View>
+          )}
 
-        {/*-------------------- MOBILE NUMBER --------------------*/}
-        <Text style={styles.label}>Mobile Number</Text>
-        <View style={[styles.input, {justifyContent: 'center'}]}>
-          <Text style={{color: MEDIUM}}>{session.user.username}</Text>
-        </View>
-
-        {/*-------------------- FIRST NAME --------------------*/}
-        <Text style={styles.label}>First Name</Text>
-        <TextInput
-          value={firstName}
-          onChangeText={value => setFirstName(value)}
-          style={styles.input}
-          placeholder="First Name"
-          editable={session.user.toktokWalletAccountId == null}
-        />
-
-        {/*-------------------- LAST NAME --------------------*/}
-        <Text style={styles.label}>Last Name</Text>
-        <TextInput
-          value={lastName}
-          onChangeText={value => setLastName(value)}
-          style={styles.input}
-          placeholder="Last Name"
-          editable={session.user.toktokWalletAccountId == null}
-        />
-
-        {/*-------------------- EMAIL --------------------*/}
-        <Text style={styles.label}>Email Address</Text>
-        <TextInput
-          value={emailAddress}
-          onChangeText={value => setEmailAddress(value)}
-          style={styles.input}
-          placeholder="Email Address"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          caretHidden
-          placeholderTextColor={LIGHT}
-        />
-
-        {/*-------------------- REFERRAL CODE --------------------*/}
-        {session.user.consumer.referralCode ? (
-          <View>
-            <Text style={styles.label}>Referral Code</Text>
-            <View style={[styles.input, {justifyContent: 'center'}]}>
-              <Text style={{color: MEDIUM}}>{referralCode}</Text>
+          {/*-------------------- REFERRAL NAME --------------------*/}
+          {session.user.consumer.referralName && (
+            <View>
+              <Text style={styles.label}>Referral Name</Text>
+              <View style={[styles.input, {justifyContent: 'center'}]}>
+                <Text style={{color: MEDIUM}}>{session.user.consumer.referralName}</Text>
+              </View>
             </View>
-          </View>
-        ) : (
-          <View>
-            <Text style={styles.label}>Referral Code</Text>
-            <TextInput
-              value={referralCode}
-              onChangeText={value => setReferralCode(value)}
-              style={styles.input}
-              placeholder="Referral Code"
-              placeholderTextColor={LIGHT}
+          )}
+
+          {/*-------------------- FRANCHISEE CODE --------------------*/}
+          {session.user.consumer.franchiseeCode && (
+            <View>
+              <Text style={styles.label}>Franchisee Code</Text>
+              <View style={[styles.input, {justifyContent: 'center'}]}>
+                <Text style={{color: MEDIUM}}>{session.user.consumer.franchiseeCode}</Text>
+              </View>
+            </View>
+          )}
+
+          {/*-------------------- FRANCHISEE NAME --------------------*/}
+          {session.user.consumer.franchiseeCode && (
+            <View>
+              <Text style={styles.label}>Franchisee Name</Text>
+              <View style={[styles.input, {justifyContent: 'center'}]}>
+                <Text
+                  style={{
+                    color: MEDIUM,
+                  }}>{`${session.user.consumer.franchiseeFirstName}${session.user.consumer.franchiseeLastName}`}</Text>
+              </View>
+            </View>
+          )}
+
+          {/*-------------------- LINK ONLINE FRANCHISEE --------------------*/}
+          {!session.user.consumer.franchiseeCode && (
+            <BlackButton
+              onPress={onOnlineFranchiseeLogin}
+              label="Link toktok franchisee account"
+              touchableStyle={{marginHorizontal: 10, marginTop: 20}}
             />
-          </View>
-        )}
+          )}
 
-        {/*-------------------- REFERRAL NAME --------------------*/}
-        {session.user.consumer.referralName && (
-          <View>
-            <Text style={styles.label}>Referral Name</Text>
-            <View style={[styles.input, {justifyContent: 'center'}]}>
-              <Text style={{color: MEDIUM}}>{session.user.consumer.referralName}</Text>
-            </View>
-          </View>
-        )}
-
-        {/*-------------------- FRANCHISEE CODE --------------------*/}
-        {session.user.consumer.franchiseeCode && (
-          <View>
-            <Text style={styles.label}>Franchisee Code</Text>
-            <View style={[styles.input, {justifyContent: 'center'}]}>
-              <Text style={{color: MEDIUM}}>{session.user.consumer.franchiseeCode}</Text>
-            </View>
-          </View>
-        )}
-
-        {/*-------------------- FRANCHISEE NAME --------------------*/}
-        {session.user.consumer.franchiseeCode && (
-          <View>
-            <Text style={styles.label}>Franchisee Name</Text>
-            <View style={[styles.input, {justifyContent: 'center'}]}>
-              <Text
-                style={{
-                  color: MEDIUM,
-                }}>{`${session.user.consumer.franchiseeFirstName}${session.user.consumer.franchiseeLastName}`}</Text>
-            </View>
-          </View>
-        )}
-
-        {/*-------------------- LINK ONLINE FRANCHISEE --------------------*/}
-        {!session.user.consumer.franchiseeCode && (
+          {/*-------------------- UPDATE BUTTON --------------------*/}
           <BlackButton
-            onPress={onOnlineFranchiseeLogin}
-            label="Link toktok franchisee account"
+            onPress={onSubmit}
+            label="Update Profile"
             touchableStyle={{marginHorizontal: 10, marginTop: 20}}
           />
-        )}
 
-        {/*-------------------- UPDATE BUTTON --------------------*/}
-        <BlackButton onPress={onSubmit} label="Update Profile" touchableStyle={{marginHorizontal: 10, marginTop: 20}} />
+          <View style={{height: 20}} />
 
-        <View style={{height: 20}} />
-
-        {/*-------------------- CHANGE PASSWORD BUTTON --------------------*/}
-        {/* <BlackButton
-          onPress={() => navigation.push('ConsumerChangePassword')}
-          label="Change Password"
-          touchableStyle={{marginHorizontal: 10, marginTop: 20, marginBottom: 10}}
-        /> */}
-      </InputScrollView>
-    </View>
+          {/*-------------------- CHANGE PASSWORD BUTTON --------------------*/}
+          {/* <BlackButton
+              onPress={() => navigation.push('ConsumerChangePassword')}
+              label="Change Password"
+              touchableStyle={{marginHorizontal: 10, marginTop: 20, marginBottom: 10}}
+            /> */}
+        </InputScrollView>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

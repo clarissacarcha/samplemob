@@ -36,6 +36,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
         setTimeout(() => {
           // navigation.navigate('ToktokWalletHomePage');
           // navigation.replace('ToktokWalletHomePage');
+          // navigation.navigate('ToktokLandingNotifications');
         }, 10);
         return;
       }else if (notification.additionalData.classification === 'toktokmall') {
@@ -89,6 +90,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
   }, []);
 
   const [getUserHash] = useLazyQuery(GET_USER_HASH, {
+    fetchPolicy: 'network-only',
     onError,
     onCompleted: response => {
       const newSession = {...session};

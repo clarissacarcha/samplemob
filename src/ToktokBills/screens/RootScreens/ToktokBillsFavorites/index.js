@@ -129,8 +129,8 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   );
 
   useEffect(() => {
-    setIsMounted(true);
     handleGetFavoriteBills();
+    setIsMounted(true);
   }, []);
 
   const handleGetFavoriteBills = () => {
@@ -147,7 +147,6 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   useEffect(() => {
     if (!search) {
       handleGetFavoriteBills();
-      setFavorites([]);
     }
   }, [search]);
 
@@ -164,7 +163,6 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   };
 
   const fetchMoreData = () => {
-    console.log('sample');
     if (pageInfo.hasNextPage) {
       if (search) {
         fetchMoreSearchFavoriteBillsPaginate({
@@ -263,8 +261,10 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
 
   const ListEmptyComponent = () => {
     const emptyImage = search ? empty_search : empty_fave;
-    const emptyText = search ? 'Try to search something similar' : 'Check our products and add them to your favorites!';
-    const emptyLabel = search ? 'No Results Found' : "You don't have favorites yet";
+    const emptyText = search
+      ? 'Try to search something similar'
+      : 'Fill out your details and save it for easier transactions.';
+    const emptyLabel = search ? 'No Results Found' : 'No Favorites';
     if (searchLoading || getFavoritesLoading) return null;
     return <EmptyList imageSrc={emptyImage} label={emptyLabel} message={emptyText} />;
   };
@@ -280,14 +280,16 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
-        <SearchInput
-          search={search}
-          onChangeText={onSearchChange}
-          onClear={() => {
-            setSearch('');
-          }}
-          placeholder="Search Favorites"
-        />
+        {isMounted && favorites.length != 0 && (
+          <SearchInput
+            search={search}
+            onChangeText={onSearchChange}
+            onClear={() => {
+              setSearch('');
+            }}
+            placeholder="Search Favorites"
+          />
+        )}
       </View>
       {(searchLoading && filteredData.length === 0) ||
       (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (

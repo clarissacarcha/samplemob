@@ -9,7 +9,8 @@ import {
   ToktokFoodFavorites,
   ToktokFoodNotifications,
   ToktokFoodOrderTransactions,
-  ToktokFoodMe
+  ToktokFoodMe,
+  ToktokFoodActivities,
 } from 'toktokfood/screens';
 
 import {home, history, notifications, favorites, me} from 'toktokfood/assets/images';
@@ -34,6 +35,8 @@ const ToktokFoodLanding = () => (
       }}
     />
     <ToktokFoodLandingBottomTab.Screen
+      // name="ToktokFoodActivities"
+      // component={ToktokFoodActivities}
       name="ToktokFoodOrderTransactions"
       component={ToktokFoodOrderTransactions}
       options={{

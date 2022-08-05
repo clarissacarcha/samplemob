@@ -35,7 +35,7 @@ export const Header = ({billType, billItemSettings = {}, tokwaBalance = 0}) => {
             onLoadEnd={() => setImageLoading(false)}
           /> )}
         </View>
-        <Text style={styles.billerName}>{billItemSettings?.descriptions}</Text>
+        <Text style={billItemSettings?.logo ? styles.billerName : styles.billerNologo}>{billItemSettings?.descriptions}</Text>
       </View>
     </ImageBackground>
   );
@@ -55,5 +55,9 @@ const styles = StyleSheet.create({
   billerName: {
     fontSize: FONT_SIZE.M,
     marginTop: moderateScale(10),
+  },
+  billerNologo: {
+    paddingVertical: moderateScale(20),
+    fontSize: FONT_SIZE.M,
   },
 });

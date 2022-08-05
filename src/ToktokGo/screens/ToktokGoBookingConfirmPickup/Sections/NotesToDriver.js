@@ -34,7 +34,7 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote, no
         style={{
           color: '#525252',
           fontSize: constants.FONT_SIZE.M,
-          fontFamily: constants.FONT_FAMILY.BOLD,
+          fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
           paddingVertical: 10,
         }}>
         Notes to Driver
@@ -51,9 +51,9 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote, no
           maxLength={320}
           multiline
         />
-        <View style={{alignItems: 'flex-end'}}>
+        {/* <View style={{alignItems: 'flex-end'}}>
           <Text style={styles.textInputLength}>{notes.textLength}/320</Text>
-        </View>
+        </View> */}
       </View>
     </View>
   );

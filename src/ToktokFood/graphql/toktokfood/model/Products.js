@@ -69,6 +69,8 @@ export const GET_PRODUCT_CATEGORIES = gql`
     getProductCategories(input: $input) {
       id
       categoryName
+      key
+      title
     }
   }
 `;
