@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 import {HeaderBack, HeaderTitle, HeaderRight, Card} from '../../../../../Components';
 import CustomIcon from '../../../../../Components/Icons';
-import {MessageModal, LoadingOverlay} from '../../../../../Components'
+import { MessageModal } from '../../../../../Components'
+import { AlertOverlay } from 'src/components'
 import {COLOR, FONT, FONT_SIZE} from '../../../../../../res/variables';
 import * as  qs from 'qs'
 import {contactus} from '../../../../../assets';
@@ -149,7 +150,7 @@ export const ToktokMallContactUs = ({navigation}) => {
     <>
     <KeyboardAwareScrollView>
       <View style={styles.container}>
-        {loading && <LoadingOverlay isVisible={loading} />}
+        {loading && <AlertOverlay visible={loading} />}
         {messageModalShown && 
           <MessageModal 
             type="Success"
