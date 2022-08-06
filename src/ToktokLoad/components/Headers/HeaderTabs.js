@@ -1,27 +1,34 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity, Dimensions, TouchableHighlight} from 'react-native';
-import { LoadingIndicator } from 'src/ToktokLoad/components';
-import { COLOR, FONT, FONT_SIZE } from "src/res/variables"; 
+import {LoadingIndicator} from 'src/ToktokLoad/components';
+import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
 
 //HELPER
-import { moderateScale } from "toktokload/helper";
+import {moderateScale} from 'toktokload/helper';
 
 const {width, height} = Dimensions.get('window');
 let scrollPosition = 0;
 
-export const HeaderTabs = (props) => {
-
-  const {activeTab, setActiveTab, tabs, loading, fitToScreen = true, selectedLoad, subContainerStyle , overLap = true } = props;
+export const HeaderTabs = props => {
+  const {
+    activeTab,
+    setActiveTab,
+    tabs,
+    loading,
+    fitToScreen = true,
+    selectedLoad,
+    subContainerStyle,
+    overLap = true,
+  } = props;
   const [has25Chars, setHas25Chars] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const flatListRef = useRef();
-
-  const handleScroll = (event) => {
-    scrollPosition = event.nativeEvent.contentOffset.x;
-  };
 
   useEffect(() => {
     if (flatListRef.current) {
-      flatListRef.current.scrollToOffset({offset: scrollPosition, animated: false});
+      if (selectedIndex) {
+        flatListRef.current.scrollToIndex({animated: true, index: selectedIndex, viewPosition: 0.5});
+      }
     }
   }, [activeTab]);
 
@@ -32,31 +39,35 @@ export const HeaderTabs = (props) => {
   }, [loading]);
 
   const renderItem = ({item, index}) => {
-    const itemTabWidth = fitToScreen ? width / tabs.length : moderateScale(127);
+    const itemTabWidth = fitToScreen ? width / tabs.length : moderateScale(125);
     const tabName = item?.name ?? item?.categoryName;
 
-    if(tabName.length > 15){ setHas25Chars(true) }
+    if (tabName.length > 15) {
+      setHas25Chars(true);
+    }
     return (
-      <TouchableOpacity onPress={() => setActiveTab(item)}>
-        <View  style={[styles.textContainer, { width: itemTabWidth }, has25Chars && { height: moderateScale(65) }]}>
-          <Text style={[styles.tabText, { color: activeTab?.id == item?.id ? "#F6841F" : "#707070"} ]}>
-            { tabName }
-          </Text>
+      <TouchableOpacity
+        onPress={() => {
+          setSelectedIndex(index);
+          setActiveTab(item);
+        }}>
+        <View style={[styles.textContainer, {width: itemTabWidth}, has25Chars && {height: moderateScale(65)}]}>
+          <Text style={[styles.tabText, {color: activeTab?.id == item?.id ? '#F6841F' : '#707070'}]}>{tabName}</Text>
         </View>
         <View style={activeTab?.id == item?.id && styles.activeTabContainer} />
       </TouchableOpacity>
     );
   };
 
-  if(loading){
-    return(
+  if (loading) {
+    return (
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
       </View>
-    )
+    );
   }
   return (
-    <View style={[styles.mainContainer, subContainerStyle , {...(overLap ? {zIndex: 1} : {})}]}>
+    <View style={[styles.mainContainer, subContainerStyle, {...(overLap ? {zIndex: 1} : {})}]}>
       <View style={[styles.shadow]}>
         <FlatList
           extraData={props}
@@ -64,10 +75,9 @@ export const HeaderTabs = (props) => {
           data={tabs}
           renderItem={renderItem}
           showsHorizontalScrollIndicator={false}
-          onScroll={handleScroll}
           ref={flatListRef}
           keyExtractor={(val, index) => index.toString()}
-          contentContainerStyle={{ alignItems: "center" }}
+          contentContainerStyle={{alignItems: 'center'}}
         />
       </View>
     </View>
@@ -76,7 +86,7 @@ export const HeaderTabs = (props) => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    overflow: "hidden",
+    overflow: 'hidden',
     paddingBottom: 5,
   },
   container: {
@@ -94,7 +104,7 @@ const styles = StyleSheet.create({
     color: '#FFA700',
   },
   divider: {
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
@@ -103,24 +113,24 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
 
     elevation: 1,
-    height: 2
+    height: 2,
   },
   tabText: {
-    textAlign: "center",
+    textAlign: 'center',
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
     marginVertical: moderateScale(15),
-    flexShrink: 1
+    flexShrink: 1,
   },
   hitSlop: {
     top: moderateScale(30),
     bottom: moderateScale(30),
     left: moderateScale(30),
-    right: moderateScale(30)
+    right: moderateScale(30),
   },
   shadow: {
     backgroundColor: '#fff',
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -131,6 +141,6 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     paddingHorizontal: moderateScale(10),
-    justifyContent: "center" 
-  }
+    justifyContent: 'center',
+  },
 });

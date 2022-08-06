@@ -342,11 +342,9 @@ export const LoadList = memo(props => {
           </>
         )}
       </ScrollView>
-      {loads.length > 0 && (
-        <View style={{padding: moderateScale(16)}}>
-          <OrangeButton disabled={Object.keys(selectedLoad).length == 0} label="Next" onPress={() => onPressNext()} />
-        </View>
-      )}
+      <View style={{padding: moderateScale(16)}}>
+        <OrangeButton disabled={Object.keys(selectedLoad).length == 0} label="Next" onPress={() => onPressNext()} />
+      </View>
     </>
   );
 });
