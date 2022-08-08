@@ -1,21 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Platform,
-  FlatList,
-  Dimensions,
-  Image,
-  TouchableHighlight,
-  RefreshControl,
-} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
 
 //COMPONENTS
 import {
   HeaderBack,
   HeaderTitle,
-  Separator,
   SearchInput,
   LoadingIndicator,
   EmptyList,
@@ -30,19 +19,24 @@ import {empty_search, empty_list} from 'toktokbills/assets/images';
 import {moderateScale} from 'toktokbills/helper';
 
 //GRAPHQL & HOOKS
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_BILL_ITEMS, GET_SEARCH_BILL_ITEMS} from 'toktokbills/graphql/model';
-import {usePrompt, useThrottle} from 'src/hooks';
+import {
+  GET_BILL_ITEMS,
+  GET_SEARCH_BILL_ITEMS,
+  GET_SEARCH_ALL_BILL_ITEMS,
+  GET_ALL_BILL_ITEMS,
+} from 'toktokbills/graphql/model';
+// import {usePrompt} from 'src/hooks';
 import {useDebounce} from 'toktokwallet/hooks';
 
 //FONTS & COLORS
-import CONSTANTS from 'common/res/constants';
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
+// import CONSTANTS from 'common/res/constants';
+// const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
 
 export const ToktokBiller = ({navigation, route}) => {
   const {billType} = route.params;
-  const prompt = usePrompt();
+  // const prompt = usePrompt();
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -50,6 +44,9 @@ export const ToktokBiller = ({navigation, route}) => {
   });
 
   const [search, setSearch] = useState('');
+  const [allFilteredData, setAllFilteredData] = useState('');
+  const [allBillItems, setAllBillItems] = useState([]);
+  const [allPageInfo, setAllPageInfo] = useState({});
   const [filteredData, setFilteredData] = useState('');
   const [billItems, setBillItems] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -73,52 +70,102 @@ export const ToktokBiller = ({navigation, route}) => {
     },
   });
 
-  const [
-    getSearchBillItemsPaginate,
-    {loading: getSearchLoading, error: searchError, fetchMore: fetchMoreSearchBillItemsPaginate},
-  ] = useLazyQuery(GET_SEARCH_BILL_ITEMS, {
-    fetchPolicy: 'network-only',
-    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: () => {
-      setRefreshing(false);
-      setSearchLoading(false);
+  const [getAllBillItems, {loading: allBillItemsLoading, error: allBillItemsError, fetchMore: fetchMoreAllBillItems}] =
+    useLazyQuery(GET_ALL_BILL_ITEMS, {
+      fetchPolicy: 'network-only',
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onError: () => {
+        setRefreshing(false);
+      },
+      onCompleted: ({getAllBillItems}) => {
+        setAllBillItems(getAllBillItems.edges);
+        setAllPageInfo(getAllBillItems.pageInfo);
+        setRefreshing(false);
+      },
+    });
+
+  const [getSearchBillItemsPaginate, {error: searchError, fetchMore: fetchMoreSearchBillItemsPaginate}] = useLazyQuery(
+    GET_SEARCH_BILL_ITEMS,
+    {
+      fetchPolicy: 'network-only',
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onError: () => {
+        setRefreshing(false);
+        setSearchLoading(false);
+      },
+      onCompleted: ({getSearchBillItemsPaginate}) => {
+        setFilteredData(getSearchBillItemsPaginate.edges);
+        setPageInfo(getSearchBillItemsPaginate.pageInfo);
+        setRefreshing(false);
+        setSearchLoading(false);
+      },
     },
-    onCompleted: ({getSearchBillItemsPaginate}) => {
-      setFilteredData(getSearchBillItemsPaginate.edges);
-      setPageInfo(getSearchBillItemsPaginate.pageInfo);
-      setRefreshing(false);
-      setSearchLoading(false);
+  );
+
+  const [getSearchAllBillItems, {error: searchAllError, fetchMore: fetchMoreAllSearchBillItems}] = useLazyQuery(
+    GET_SEARCH_ALL_BILL_ITEMS,
+    {
+      fetchPolicy: 'network-only',
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onError: () => {
+        setRefreshing(false);
+        setSearchLoading(false);
+      },
+      onCompleted: ({getSearchAllBillItems}) => {
+        setAllFilteredData(getSearchAllBillItems.edges);
+        setAllPageInfo(getSearchAllBillItems.pageInfo);
+        setRefreshing(false);
+        setSearchLoading(false);
+      },
     },
-  });
+  );
 
   useEffect(() => {
     handleGetBillItems();
     setIsMounted(true);
-  }, []);
+  }, [handleGetBillItems]);
 
-  const handleGetBillItems = () => {
-    getBillItemsPaginate({
-      variables: {
-        input: {
-          billTypeId: billType.id,
-          afterCursorId: null,
-          afterCursorName: null,
+  const handleGetBillItems = useCallback(() => {
+    if (billType.name !== 'Billers') {
+      return getBillItemsPaginate({
+        variables: {
+          input: {
+            billTypeId: billType.id,
+            afterCursorId: null,
+            afterCursorName: null,
+          },
         },
-      },
-    });
-  };
+      });
+    } else {
+      return getAllBillItems({
+        variables: {
+          input: {
+            afterCursorId: null,
+            afterCursorName: null,
+          },
+        },
+      });
+    }
+  }, [billType, getBillItemsPaginate, getAllBillItems]);
 
   useEffect(() => {
     if (!search) {
       handleGetBillItems();
     }
-  }, [search]);
+  }, [search, handleGetBillItems]);
 
   const getData = () => {
     if (search) {
       return filteredData.length > 0 ? filteredData : [];
     }
     return billItems;
+  };
+  // FOR ALL TYPES OF BILLERS
+  const getAllData = () => {
+    if (search) {
+      return allFilteredData.length > 0 ? allFilteredData : [];
+    }
+    return allBillItems;
   };
 
   const onRefresh = () => {
@@ -178,9 +225,60 @@ export const ToktokBiller = ({navigation, route}) => {
       }
     }
   };
+  // FOR ALL TYPES OF BILLERS
+  const fetchAllMoreData = async () => {
+    if (allPageInfo.hasNextPage) {
+      if (search) {
+        await fetchMoreAllSearchBillItems({
+          variables: {
+            input: {
+              search,
+              afterCursorId: allPageInfo.endCursorId,
+              afterCursorName: allPageInfo.endCursorName,
+            },
+          },
+          updateQuery: (previousResult, {fetchMoreResult}) => {
+            if (!fetchMoreResult) {
+              return previousResult;
+            }
+            fetchMoreResult.getSearchAllBillItems.edges = [
+              ...previousResult.getSearchAllBillItems.edges,
+              ...fetchMoreResult.getSearchAllBillItems.edges,
+            ];
+            return fetchMoreResult;
+          },
+        }).then(({data}) => {
+          setAllPageInfo(data.getSearchAllBillItems.pageInfo);
+          setAllFilteredData(data.getSearchAllBillItems.edges);
+        });
+      } else {
+        await fetchMoreAllBillItems({
+          variables: {
+            input: {
+              afterCursorId: allPageInfo.endCursorId,
+              afterCursorName: allPageInfo.endCursorName,
+            },
+          },
+          updateQuery: (previousResult, {fetchMoreResult}) => {
+            if (!fetchMoreResult) {
+              return previousResult;
+            }
+            fetchMoreResult.getAllBillItems.edges = [
+              ...previousResult.getAllBillItems.edges,
+              ...fetchMoreResult.getAllBillItems.edges,
+            ];
+            return fetchMoreResult;
+          },
+        }).then(({data}) => {
+          setAllPageInfo(data.getAllBillItems.pageInfo);
+          setAllBillItems(data.getAllBillItems.edges);
+        });
+      }
+    }
+  };
 
   const onSearchChange = value => {
-    setFilteredData([]);
+    billType.name !== 'Billers' ? setFilteredData([]) : setAllFilteredData([]);
     setSearchLoading(value.length > 0);
     setSearch(value);
     debounceProcessSearch(value);
@@ -189,22 +287,37 @@ export const ToktokBiller = ({navigation, route}) => {
   const debounceProcessSearch = useDebounce(value => processSearch(value), 1000);
 
   const processSearch = value => {
-    getSearchBillItemsPaginate({
-      variables: {
-        input: {
-          billTypeId: billType.id,
-          afterCursorId: null,
-          afterCursorName: null,
-          search: value,
+    if (billType.name !== 'Billers') {
+      getSearchBillItemsPaginate({
+        variables: {
+          input: {
+            billTypeId: billType.id,
+            afterCursorId: null,
+            afterCursorName: null,
+            search: value,
+          },
         },
-      },
-    });
+      });
+    } else {
+      getSearchAllBillItems({
+        variables: {
+          input: {
+            afterCursorId: null,
+            afterCursorName: null,
+            search: value,
+          },
+        },
+      });
+    }
   };
 
   const ListFooterComponent = () => {
     return (
       <View style={{marginTop: moderateScale(15)}}>
-        <LoadingIndicator isLoading={pageInfo.hasNextPage} size="small" />
+        <LoadingIndicator
+          isLoading={billType.name !== 'Billers' ? pageInfo.hasNextPage : allPageInfo.hasNextPage}
+          size="small"
+        />
       </View>
     );
   };
@@ -217,10 +330,13 @@ export const ToktokBiller = ({navigation, route}) => {
     return <EmptyList imageSrc={emptyImage} label={emptyLabel} message={emptyText} />;
   };
 
-  if (billItemsError || searchError) {
+  if (billItemsError || searchError || allBillItemsError || searchAllError) {
     return (
       <View style={styles.container}>
-        <SomethingWentWrong onRefetch={onRefresh} error={billItemsError ?? searchError} />
+        <SomethingWentWrong
+          onRefetch={onRefresh}
+          error={billItemsError ?? searchError ?? allBillItemsError ?? searchAllError}
+        />
       </View>
     );
   }
@@ -229,7 +345,7 @@ export const ToktokBiller = ({navigation, route}) => {
     <>
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-          {isMounted && billItems.length != 0 && (
+          {isMounted && (allBillItems.length !== 0 || billItems.length !== 0) && (
             <SearchInput
               search={search}
               onChangeText={onSearchChange}
@@ -240,20 +356,22 @@ export const ToktokBiller = ({navigation, route}) => {
             />
           )}
         </View>
-        {(searchLoading && filteredData.length === 0) || (billItemsLoading && billItems.length === 0 && !refreshing) ? (
+        {(searchLoading && filteredData.length === 0) ||
+        (billItemsLoading && billItems.length === 0 && !refreshing) ||
+        (allBillItemsLoading && allBillItems.length === 0 && !refreshing) ? (
           <LoadingIndicator isLoading={true} isFlex />
         ) : (
           <FlatList
-            data={getData()}
+            data={billType.name !== 'Billers' ? getData() : getAllData()}
             renderItem={({item, index}) => <Biller item={item} index={index} />}
-            contentContainerStyle={getData().length === 0 ? {flexGrow: 1} : {}}
-            style={{flex: 1}}
+            contentContainerStyle={getData().length === 0 && getAllData().length === 0 && styles.contentStyle}
+            style={styles.billers}
             keyExtractor={(item, index) => index.toString()}
-            extraData={{filteredData, billItems}}
+            extraData={billType.name !== 'Billers' ? {filteredData, billItems} : {allFilteredData, allBillItems}}
             ListEmptyComponent={ListEmptyComponent}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             onEndReachedThreshold={0.02}
-            onEndReached={fetchMoreData}
+            onEndReached={billType.name !== 'Billers' ? fetchMoreData : fetchAllMoreData}
             ListFooterComponent={ListFooterComponent}
             getItemLayout={(data, index) => ({
               length: data.length,
@@ -274,6 +392,12 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     padding: moderateScale(16),
+  },
+  billers: {
+    flex: 1,
+  },
+  contentStyle: {
+    flexGrow: 1,
   },
   emptyContainer: {
     flex: 1,
