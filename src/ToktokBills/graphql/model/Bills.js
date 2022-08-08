@@ -51,27 +51,27 @@ export const GET_BILL_ITEMS = gql`
     }
   }
 `;
-// export const GET_SEARCH_ALL_BILL_ITEMS = gql`
-//   query getSearchAllBillItems($input: GetSearchAllBillItemsInput) {
-//     getSearchAllBillItems(input: $input) {
-//       edges {
-//         node {
-//           id
-//           name
-//           descriptions
-//           logo
-//         }
-//       }
-//       pageInfo {
-//         startCursorId
-//         endCursorId
-//         startCursorName
-//         endCursorName
-//         hasNextPage
-//       }
-//     }
-//   }
-// `;
+export const GET_SEARCH_ALL_BILL_ITEMS = gql`
+  query getSearchAllBillItems($input: GetSearchAllBillItemsInput) {
+    getSearchAllBillItems(input: $input) {
+      edges {
+        node {
+          id
+          name
+          descriptions
+          logo
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        startCursorName
+        endCursorName
+        hasNextPage
+      }
+    }
+  }
+`;
 export const GET_SEARCH_BILL_ITEMS = gql`
   query getSearchBillItemsPaginate($input: GetSearchBillItemsPaginateInput) {
     getSearchBillItemsPaginate(input: $input) {
