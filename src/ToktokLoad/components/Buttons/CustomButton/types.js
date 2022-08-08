@@ -13,4 +13,5 @@ export type PropsType = {
   btnColor?: string,
   delay?: number,
   hasShadow?: Boolean,
+  disabled?: Boolean,
 };

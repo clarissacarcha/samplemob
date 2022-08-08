@@ -24,7 +24,8 @@ export const Container: ComponentType<any> = styled.View`
 export const Button: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
   ...props,
 }))`
-  background-color: ${props => (props.btnColor ? props.btnColor : props.theme.color.orange)};
+  background-color: ${props =>
+    props.btnColor ? props.btnColor : props.disabled ? '#F6841F70' : props.theme.color.orange};
   height: ${moderateScale(40)}px;
   border-radius: 5px;
   align-items: center;
