@@ -22,7 +22,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel, naviga
   const scrollViewRef = useRef();
   const [selectedReason, setSelectedReason] = useState([]);
   const [typedReason, setTypedReason] = useState('');
-  const [pressIn, setPressIn] = useState(0);
+  const [pressIn, setPressIn] = useState(Platform.OS === 'ios' ? 55 : 0);
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
@@ -30,7 +30,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel, naviga
       console.log('open');
     });
     const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-      setPressIn(Platform.OS === 'ios' ? 50 : 0);
+      setPressIn(Platform.OS === 'ios' ? 55 : 0);
       console.log('close');
     });
 
@@ -218,7 +218,6 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel, naviga
                       justifyContent: 'center',
                       flexDirection: 'row',
                       paddingHorizontal: 25,
-
                       position: 'absolute',
                       bottom: 0,
                       paddingVertical: 0,
@@ -236,7 +235,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel, naviga
                         backgroundColor: CONSTANTS.COLOR.WHITE,
                         borderWidth: 1,
                         borderColor: CONSTANTS.COLOR.ORANGE,
-                        margin: 10,
+                        // margin: 5,
                       }}>
                       <Text
                         style={{
@@ -377,12 +376,12 @@ const styles = StyleSheet.create({
   },
   containerTextInput: {
     marginTop: 20,
-    marginHorizontal: 16,
+    marginHorizontal: 23,
     backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: CONSTANTS.COLOR.MEDIUM_DARK,
-    // marginBottom: 50,
+    // marginBottom: 30,
   },
   textInputLength: {
     marginRight: 15,
