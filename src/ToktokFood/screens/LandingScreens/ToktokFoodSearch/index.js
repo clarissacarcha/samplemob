@@ -257,8 +257,9 @@ const ToktokFoodSearch = ({route}) => {
         title="No result found"
         onCloseModal={() => setShowError(false)}
       />
+
       <HeaderImageBackground>
-        <HeaderTitle/>
+        <HeaderTitle backOnly />
         <View style={styles.searchBoxContainer}>
           <View style={[styles.textInputWrapper, styles.searchBoxShadow]}>
             <Image style={styles.searchBoxIcon} source={searchIcon} />

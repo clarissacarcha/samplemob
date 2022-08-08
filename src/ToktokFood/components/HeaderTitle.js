@@ -18,7 +18,14 @@ import {useIsFocused} from '@react-navigation/native';
 
 import {getNewInstall, removeSetInstall} from 'toktokfood/helper/PersistentLocation';
 
-const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = false, isFoodHome = false}) => {
+const HeaderTitle = ({
+  title = '',
+  searchBox = true,
+  backOnly = false,
+  isHome = false,
+  isFoodHome = false,
+  forFoodItem = false,
+}) => {
   const navigation = useNavigation();
   const {location} = useSelector(state => state.toktokFood);
   const [allTemporaryCart, setAllTemporaryCart] = useState({
@@ -92,13 +99,17 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
   );
 
   const onBack = () => {
-    if (isHome) {
-      return navigation.navigate('ToktokLandingHome');
+    if (forFoodItem) {
+      return navigation.goBack();
+    } else {
+      if (isHome) {
+        return navigation.navigate('ToktokLandingHome');
+      }
+      if (isFoodHome) {
+        return navigation.navigate('ToktokFoodHome');
+      }
+      return navigation.goBack();
     }
-    if (isFoodHome) {
-      return navigation.navigate('ToktokFoodHome');
-    }
-    return navigation.goBack();
   };
 
   const onPressCart = async () => {
@@ -120,7 +131,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
 
   if (backOnly) {
     return (
-      <View style={[styles.backContainer, {marginTop: getStatusbarHeight}]}>
+      <View style={[styles.backContainer, {marginTop: getStatusbarHeight, flex: searchBox ? 0.6 : 0}]}>
         <TouchableOpacity hitSlop={styles.hitSlop} onPress={onBack} style={styles.headerBack}>
           <FIcon5 name="chevron-left" size={15} />
         </TouchableOpacity>
@@ -135,7 +146,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
           {
             marginTop: getStatusbarHeight,
             paddingVertical: isHome
-              ? 0
+              ? 13
               : Platform.OS === 'android'
               ? moderateScale(20)
               : moderateScale(searchBox ? 20 : 10),
@@ -148,7 +159,7 @@ const HeaderTitle = ({title = '', searchBox = true, backOnly = false, isHome = f
           style={[styles.headerBack, {marginBottom: isHome ? 15 : 0}]}>
           <FIcon5 name="chevron-left" size={15} />
         </TouchableOpacity>
-        {isHome && (
+        {isHome && !forFoodItem && (
           <View style={styles.foodLogoWrapper}>
             <Image source={toktokfood_ic} style={styles.foodLogo} resizeMode="contain" />
           </View>
@@ -251,7 +262,7 @@ const styles = StyleSheet.create({
   foodLogoWrapper: {
     flex: 1,
     height: 35,
-    marginTop: 10,
+    marginTop: 3,
   },
   foodLogo: {
     height: '100%',
