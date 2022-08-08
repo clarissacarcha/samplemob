@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import constants from '../../../common/res/constants';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -32,6 +32,7 @@ import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {onErrorAppSync} from '../../util';
 import {AlertOverlay} from '../../../components';
+import {useFocusEffect} from '@react-navigation/native';
 
 const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const {popTo} = route.params;
@@ -48,6 +49,18 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
   const [driverData, setDriverData] = useState();
+
+  useFocusEffect(
+    useCallback(() => {
+      getTripsConsumer({
+        variables: {
+          input: {
+            tag: 'ONGOING',
+          },
+        },
+      });
+    }, []),
+  );
 
   useEffect(() => {
     console.log('[effect] Observe Trip Update!');
@@ -88,6 +101,13 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         //     setViewCancelBookingModal(true);
         //   }
         // }
+        getTripsConsumer({
+          variables: {
+            input: {
+              tag: 'ONGOING',
+            },
+          },
+        });
       },
       error => {
         console.log('[error] Trip Update:', error);
@@ -137,7 +157,14 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
           response.getTripsConsumer[0]?.tag == 'ONGOING' &&
           ['ACCEPTED', 'ARRIVED', 'PICKED_UP'].includes(response.getTripsConsumer[0]?.status)
         ) {
-          setShowDriverFoundModal(true);
+          // setShowDriverFoundModal(true);
+          getBookingDriver({
+            variables: {
+              input: {
+                driverUserId: parseInt(booking?.driverUserId),
+              },
+            },
+          });
         } else if (response.getTripsConsumer[0]?.status == 'EXPIRED') {
           setWaitingStatus(0);
           setWaitingText(6);
