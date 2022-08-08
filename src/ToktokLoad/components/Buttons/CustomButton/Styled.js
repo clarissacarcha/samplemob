@@ -4,20 +4,35 @@
 
 import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
-import {Text, TouchableOpacity, Platform} from 'react-native';
+import {Text, TouchableOpacity, Platform, View} from 'react-native';
 import {moderateScale} from 'toktokload/helper';
 
 import CONSTANTS from 'src/common/res/constants';
 const {FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
-export const Container: ComponentType<any> = styled.View`
+export const Container: ComponentType<any> = styled(View).attrs(props => ({
+  ...props,
+  elevation: 5,
+}))`
   ${({hasShadow}) =>
     hasShadow &&
     `
-     padding-horizontal: ${moderateScale(32)};
-     padding-vertical: ${moderateScale(16)};
-     background: #FFFFFF;
-     box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
+      padding-horizontal: ${moderateScale(32)};
+      padding-vertical: ${moderateScale(16)};
+      background: #FFFFFF;
+      shadow-color: #000;
+      shadow-offset: {width: 0, height: 1};
+      shadow-opacity: 0.1;
+      shadow-radius: 2;
+      elevation: 5;
+      background-color: #fff;
+      ${
+        Platform.OS === 'android' &&
+        `
+        border-top-color: #F8F8F8;
+        border-top-width: 2;
+        `
+      }
    `}
 `;
 
