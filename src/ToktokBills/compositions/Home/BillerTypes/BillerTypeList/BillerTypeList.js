@@ -6,22 +6,28 @@
 import React from 'react';
 
 import type {PropsType} from './types';
+import {useNavigation} from '@react-navigation/native';
+import {useThrottle} from 'src/hooks';
 import {Container, HeaderContainer, List, SeeAllContainer, SeeAllIcon, SeeAllText, Title} from './Styled';
 import BillerTypeItem from '../BillerTypeItem';
 
 const BillerTypeList = (props: PropsType): React$Node => {
+  const navigation = useNavigation();
   const {billTypes, showMore, setShowMore} = props;
-
-  const onPressSeeAll = () => {};
+  const onPressSeeAll = () => {
+    navigation.navigate('ToktokBiller', {billType: {name: 'Billers'}});
+  };
   const onPressItem = index => {
     setShowMore(false);
   };
 
+  const onThrottledPress = useThrottle(onPressSeeAll, 2000);
+
   return (
     <Container>
       <HeaderContainer>
-        <Title>Favorite Billers</Title>
-        <SeeAllContainer onPress={onPressSeeAll}>
+        <Title>Select Biller Type</Title>
+        <SeeAllContainer onPress={onThrottledPress}>
           <SeeAllText>See All</SeeAllText>
           <SeeAllIcon />
         </SeeAllContainer>
