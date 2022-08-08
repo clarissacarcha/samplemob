@@ -23,8 +23,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       if (data?.getPlaceByLocation) {
         dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: data?.getPlaceByLocation});
       }
-      navigation.pop();
-      navigation.pop();
+      navigation.pop(popTo);
       navigation.push('ToktokGoBookingConfirmPickup', {
         popTo: popTo + 1,
       });
