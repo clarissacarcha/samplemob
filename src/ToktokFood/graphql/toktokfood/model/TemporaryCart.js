@@ -27,9 +27,6 @@ const tempCart = `
     shopName
     orderInstructions
     isDisabled
-    itemServiceFeeType
-    itemServiceFeeValue
-    itemTokfoodServiceFeeComm
     addonsDetails {
       id
       optionName
