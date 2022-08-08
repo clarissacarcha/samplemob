@@ -37,7 +37,7 @@ export const LoadList = memo(props => {
     navigation,
     route,
     mobileNumber,
-    networkId,
+    network,
     processSearch,
     getSearchLoading,
     label,
@@ -167,7 +167,7 @@ export const LoadList = memo(props => {
       variables: {
         input: {
           loadVariantId,
-          networkId,
+          networkId: network.id,
         },
       },
     });
@@ -200,7 +200,7 @@ export const LoadList = memo(props => {
 
   const onPressNext = () => {
     if (Object.keys(selectedLoad).length > 0) {
-      navigation.navigate('ToktokLoadSummary', {loads: selectedLoad, mobileNumber});
+      navigation.navigate('ToktokLoadSummary', {loads: selectedLoad, mobileNumber, network});
     }
   };
 
