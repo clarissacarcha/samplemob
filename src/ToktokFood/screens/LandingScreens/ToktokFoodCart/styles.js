@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
 
     alignItems: 'center',
   },
-  modifiedIcon: {height: 22, width: 22, marginRight: 8, marginLeft: 5},
+  seviceFeeIcon: {marginLeft: 5},
   pabiliInfoWrapper: {paddingHorizontal: 12, paddingVertical: 25},
   pabiliInfoText: {textAlign: 'center', marginBottom: 22},
   pabiliSubInfoWrapper: {

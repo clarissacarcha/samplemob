@@ -1,17 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-nested-ternary */
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 import _ from 'lodash';
 
 import {VerifyContext} from '../components';
 
-import {getCartTotalAmountOrder, getResellerDiscount, getTotalResellerDiscount} from '../functions';
+import {getResellerDiscount, getTotalResellerDiscount} from '../functions';
 
 import styles from '../styles';
 
-import {info_ic, toktokwallet_ic} from 'toktokfood/assets/images';
+import {toktokwallet_ic} from 'toktokfood/assets/images';
+
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 const OrderTotal = ({
   autoShipping,
@@ -154,7 +156,7 @@ const OrderTotal = ({
     navigation.navigate('ToktokFoodTermsAndConditions');
   };
 
-  const ModifiedAlert = (
+  const ServiceInfoBanner = (
     <View style={styles.pabiliSubInfoWrapper}>
       <Image resizeMode="contain" source={toktokwallet_ic} style={styles.pabiliSubInfoWalletIcon} />
       <View style={{display: 'flex', flexDirection: 'row', maxWidth: '90%'}}>
@@ -235,7 +237,7 @@ const OrderTotal = ({
             <View style={styles.serviceFeeLabelWrapper}>
               <Text>Service Fee</Text>
               <TouchableOpacity onPress={() => onServiceFeeIconPress()}>
-                <Image resizeMode="center" source={info_ic} style={styles.modifiedIcon} />
+                <MIcon name="info-outline" color="#F6841F" size={22} style={styles.seviceFeeIcon} />
               </TouchableOpacity>
             </View>
             <Text style={styles.subtotal}>
@@ -262,7 +264,7 @@ const OrderTotal = ({
           )}
         </View>
       </View>
-      {pabiliShopDetails.isShopPabiliMerchant && ModifiedAlert}
+      {pabiliShopDetails.isShopPabiliMerchant && ServiceInfoBanner}
     </>
   );
 };
