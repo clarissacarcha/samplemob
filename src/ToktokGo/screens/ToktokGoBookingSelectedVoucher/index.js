@@ -15,7 +15,7 @@ const FULL_HEIGHT = Dimensions.get('window').height;
 const FULL_WIDTH = Dimensions.get('window').width;
 
 const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
-  const {id} = route.params;
+  const {id, onPress} = route.params;
   const [data, setData] = useState({});
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
 
@@ -66,8 +66,7 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
         },
       });
     } else {
-      navigation.pop(3);
-      navigation.push('ToktokGoLanding');
+      onPress();
     }
   };
 
