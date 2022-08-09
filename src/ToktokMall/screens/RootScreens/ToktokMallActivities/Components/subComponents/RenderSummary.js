@@ -17,7 +17,7 @@ export const RenderSummary = ({data}) => {
           {data.paymentMethod == "TOKTOKWALLET" ?
             <Image source={walletIcon} style={styles.summaryWalletIcon} />
             :
-            <Image source={paypandalogo} style={styles.summaryWalletIcon} />
+            <Image source={paypandalogo} style={[styles.summaryWalletIcon, {width: 80}]} />
           }
         </View>
         <View style={{...styles.summarySubContainer, alignItems: 'flex-end'}}>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
   },
   summarySubContainer: {
-    flex: 1
+    flex: 1,
   },
   summaryWalletIcon: {
     width: 100, 
