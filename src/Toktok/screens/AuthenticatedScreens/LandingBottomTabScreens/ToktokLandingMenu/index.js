@@ -36,7 +36,7 @@ const DrawerButton = ({isNew, label, onPress, restrict}) => {
         /> */}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {isNew && (
-            <View style={{backgroundColor: COLOR.RED, borderRadius: 20}}>
+            <View style={{backgroundColor: COLOR.RED, borderRadius: 20, marginVertical: -5}}>
               <Text
                 style={{
                   paddingHorizontal: 12,
@@ -202,15 +202,15 @@ export const ToktokLandingMenu = ({navigation}) => {
               }}
             />
             {/*--------------- Referral ---------------*/}
-            {/* <DrawerButton isNew label="Referral" onPress={onPressReferral} /> */}
+            <DrawerButton isNew label="Referral" onPress={onPressReferral} />
             {/*--------------- Vouchers ---------------*/}
-            {/* <DrawerButton
+            <DrawerButton
               isNew
               label="Vouchers"
               onPress={() => {
                 navigation.push('VoucherScreen');
               }}
-            /> */}
+            />
 
             {/*--------------- TALK TO US ---------------*/}
             <Text
