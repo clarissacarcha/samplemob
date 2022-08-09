@@ -109,6 +109,7 @@ export const GET_ALL_TEMPORARY_CART = gql`
     getAllTemporaryCart(input: $input) {
       srpTotalAmount
       pabiliShopServiceFee
+      pabiliShopResellerDiscount
       pabiliShopDetails {
         isShopPabiliMerchant
         shopServiceFeeType

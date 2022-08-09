@@ -42,6 +42,7 @@ const OrderTotal = ({
       ? deliveryFee.toFixed(2)
       : totalSumSF.toFixed(2)
     : (0.0).toFixed(2);
+  const {pabiliShopResellerDiscount = 0} = temporaryCart;
   // const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
 
   useEffect(() => {
@@ -71,11 +72,15 @@ const OrderTotal = ({
       setTotalReseller(totalBasketAmount);
       // setTotalBasket(temporaryCart.totalAmountWithAddons);
     } else {
+      const resellerDiscount = pabiliShopDetails.isShopPabiliMerchant
+        ? 0
+        : temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
       setTotalBasket(
         temporaryCart.totalAmountWithAddons + (temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount),
       );
+      setTotalReseller(resellerDiscount);
       // setTotalBasket(temporaryCart.totalAmountWithAddons + totalReseller);
-      setTotalReseller(temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount);
+      // setTotalReseller(temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount);
     }
 
     if (promotions.length > 0 || deal.length > 0) {
@@ -181,7 +186,8 @@ const OrderTotal = ({
   }, [temporaryCart]);
 
   const totalAmount = (
-    pabiliShopServiceFee +
+    pabiliShopServiceFee -
+    pabiliShopResellerDiscount +
     totalBasket +
     deliveryFee -
     totalSumSF -
@@ -233,17 +239,28 @@ const OrderTotal = ({
         )}
 
         {pabiliShopDetails.isShopPabiliMerchant && (
-          <View style={styles.header}>
-            <View style={styles.serviceFeeLabelWrapper}>
-              <Text>Service Fee</Text>
-              <TouchableOpacity onPress={() => onServiceFeeIconPress()}>
-                <MIcon name="info-outline" color="#F6841F" size={22} style={styles.seviceFeeIcon} />
-              </TouchableOpacity>
+          <>
+            <View style={styles.header}>
+              <View style={styles.serviceFeeLabelWrapper}>
+                <Text>Service Fee</Text>
+                <TouchableOpacity onPress={() => onServiceFeeIconPress()}>
+                  <MIcon name="info-outline" color="#F6841F" size={22} style={styles.seviceFeeIcon} />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.subtotal}>
+                {pabiliShopServiceFee > 0 ? `PHP ${pabiliShopServiceFee.toFixed(2)}` : 'WAIVED'}
+              </Text>
             </View>
-            <Text style={styles.subtotal}>
-              {pabiliShopServiceFee > 0 ? `PHP ${pabiliShopServiceFee.toFixed(2)}` : 'WAIVED'}
-            </Text>
-          </View>
+
+            <View style={styles.header}>
+              <View style={styles.serviceFeeLabelWrapper}>
+                <Text>Service Fee Discount (Reseller)</Text>
+              </View>
+              <Text style={styles.subtotal}>
+                {pabiliShopResellerDiscount > 0 ? `-PHP ${pabiliShopResellerDiscount.toFixed(2)}` : 'WAIVED'}
+              </Text>
+            </View>
+          </>
         )}
 
         <View style={styles.divider} />
