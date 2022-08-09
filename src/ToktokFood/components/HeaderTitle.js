@@ -262,7 +262,6 @@ const styles = StyleSheet.create({
   foodLogoWrapper: {
     flex: 1,
     height: 35,
-    marginTop: 3,
   },
   foodLogo: {
     height: '100%',
