@@ -176,7 +176,7 @@ const MainComponent = ({navigation, route}) => {
 export const ToktokLoadNetworks = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={'toktokload'} />,
+    headerTitle: () => <HeaderTitle isLogo />,
   });
 
   return (

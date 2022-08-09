@@ -19,6 +19,7 @@ export const HeaderTabs = props => {
     selectedLoad,
     subContainerStyle,
     overLap = true,
+    disabled = false,
   } = props;
   const [has25Chars, setHas25Chars] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -47,6 +48,7 @@ export const HeaderTabs = props => {
     }
     return (
       <TouchableOpacity
+        disabled={disabled}
         onPress={() => {
           setSelectedIndex(index);
           setActiveTab(item);
@@ -70,6 +72,7 @@ export const HeaderTabs = props => {
     <View style={[styles.mainContainer, subContainerStyle, {...(overLap ? {zIndex: 1} : {})}]}>
       <View style={[styles.shadow]}>
         <FlatList
+          scrollEnabled={!disabled}
           extraData={props}
           horizontal
           data={tabs}

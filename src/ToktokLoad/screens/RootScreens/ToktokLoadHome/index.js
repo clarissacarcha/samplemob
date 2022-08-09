@@ -10,6 +10,7 @@ import {
   ScrollView,
   StatusBar,
   RefreshControl,
+  Dimensions,
 } from 'react-native';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_LOAD_CATEGORIES, GET_LOAD_CATEGORY_NETWORKS} from 'toktokload/graphql';
@@ -41,7 +42,7 @@ import {BuyLoad, Favorites, VerifyContextProvider, VerifyContext, Advertisement,
 import CONSTANTS from 'common/res/constants';
 import {KeyboardAvoidingView} from 'react-native';
 const {COLOR, FONT_FAMILY: FONT, SIZE, FONT_SIZE, MARGIN, SHADOW} = CONSTANTS;
-
+const {width} = Dimensions.get('screen');
 const FavoritesNav = ({onPress}) => {
   return (
     <TouchableOpacity onPress={onPress} style={{paddingRight: 16}}>
@@ -51,10 +52,6 @@ const FavoritesNav = ({onPress}) => {
 };
 
 const MainComponent = ({navigation, route}) => {
-  // navigation.setOptions({
-  //   headerRight: ()=> <FavoritesNav onPress={goToFavorites}/>
-  // })
-
   const {
     adsActions,
     adsRegular,
@@ -155,7 +152,6 @@ const MainComponent = ({navigation, route}) => {
   }
   return (
     // <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "padding"} keyboardVerticalOffset={30}>
-
     <ScrollView
       style={styles.container}
       contentContainerStyle={{flexGrow: 1}}
@@ -167,8 +163,9 @@ const MainComponent = ({navigation, route}) => {
         accessible={false}
         animated={true}
         topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
-        displayInsets={{top: 10, bottom: 10, left: 10, right: Platform.OS === 'android' ? 5 : 10}}
-        backgroundColor="rgba(0,0,0,0.7)"
+        displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
+        contentStyle={{width: width - (Platform.OS === 'android' ? moderateScale(20) : moderateScale(30))}}
+        backgroundColor="rgba(0,0,0,0.6)"
         disableShadow={true}
         isVisible={onBoardingSteps === 1}
         content={
@@ -194,6 +191,7 @@ const MainComponent = ({navigation, route}) => {
           setActiveTab={setActiveTab}
           fitToScreen={false}
           overLap={false}
+          disabled={onBoardingSteps === 1}
         />
       </Tooltip>
       <LoadCategory
@@ -201,38 +199,14 @@ const MainComponent = ({navigation, route}) => {
         activeTab={activeTab?.id}
         activeCategory={() => getActiveCategoryName(activeTab)}
       />
-      <View style={{flex: 1, justifyContent: 'flex-end'}}>
-        {adHighlight.length > 0 && <Advertisement ads={adHighlight} />}
-        <CustomButton
-          label="Next"
-          disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
-          onPress={onPressNext}
-          hasShadow
-        />
-      </View>
-      {/* <ActionButton 
-          fixNativeFeedbackRadius={true} 
-          hideShadow={false} 
-          spacing={15} 
-          size={50} 
-          nativeFeedbackRippleColor="transparent" 
-          degrees={0} 
-          renderIcon={()=><Image style={{height: 30 ,width: 30}} resizeMode="contain" source={load}/>} 
-          buttonColor="white"
-          titleBgColor="transparent"
-          bgColor="rgba(0,0,0,0.5)"
-          offsetY={75}
-          offsetX={14}
-      >
-        <ActionButton.Item activeOpacity={0} size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="Activities" buttonColor="white" onPress={() => console.log("notes tapped!")}>
-          <Icon name="md-create" style={styles.actionButtonIcon} />
-        </ActionButton.Item>
-        <ActionButton.Item size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="toktokwallet" buttonColor="white" onPress={() => navigation.navigate("ToktokLoadFavorites" , {mobileErrorMessage , mobileNumber})}>
-          <Icon name="md-create" style={styles.actionButtonIcon} />
-        </ActionButton.Item>
-      </ActionButton> */}
+      {adHighlight.length > 0 && <Advertisement ads={adHighlight} />}
+      <CustomButton
+        label="Next"
+        disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
+        onPress={onPressNext}
+        hasShadow
+      />
     </ScrollView>
-
     // </KeyboardAvoidingView>
   );
 };

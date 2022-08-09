@@ -39,6 +39,7 @@ import {blank} from 'toktokload/assets/ads';
 import {Advertisement} from '../Advertisement';
 
 import {NetworkListModal} from '../NetworkListModal';
+import {Platform} from 'react-native';
 const width = Dimensions.get('window').width;
 
 export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
@@ -163,8 +164,9 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
         accessible={false}
         animated={true}
         topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
-        displayInsets={{top: 10, bottom: 10, left: 10, right: Platform.OS === 'android' ? 5 : 10}}
-        backgroundColor="rgba(0,0,0,0.7)"
+        displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
+        contentStyle={{width: width - (Platform.OS === 'android' ? moderateScale(20) : moderateScale(30))}}
+        backgroundColor="rgba(0,0,0,0.6)"
         disableShadow={true}
         isVisible={onBoardingSteps === 2}
         content={
@@ -189,6 +191,7 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
               Select {activeCategory()?.name ? activeCategory().name : ''}
             </Text>
             <TouchableOpacity
+              disabled={onBoardingSteps === 2}
               style={{
                 backgroundColor: '#F8F8F8',
                 height: moderateScale(40),
@@ -241,8 +244,9 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
             accessible={false}
             animated={true}
             topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
-            displayInsets={{top: 10, bottom: 10, left: 10, right: 10}}
-            backgroundColor="rgba(0,0,0,0.7)"
+            displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
+            contentStyle={{width: width - (Platform.OS === 'android' ? moderateScale(20) : moderateScale(30))}}
+            backgroundColor="rgba(0,0,0,0.6)"
             disableShadow={true}
             isVisible={onBoardingSteps === 3}
             content={
@@ -277,7 +281,7 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
                       onChangeText={onChangeText}
                       keyboardType={'number-pad'}
                       returnKeyType="done"
-                      maxLength={11}
+                      editable={false}
                     />
                   ) : (
                     <TextInput
@@ -290,8 +294,11 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
                     />
                   )}
                 </View>
-                {activeNetwork?.inputLength?.name.toLowerCase() === 'mobile number' && (
-                  <TouchableOpacity onPress={onPressContacts} style={styles.contactsContainer}>
+                {(activeNetwork?.inputLength?.name.toLowerCase() === 'mobile number' || onBoardingSteps === 3) && (
+                  <TouchableOpacity
+                    onPress={onPressContacts}
+                    style={styles.contactsContainer}
+                    disabled={onBoardingSteps === 3}>
                     <Image source={contact_icon} style={styles.icon} />
                   </TouchableOpacity>
                 )}
