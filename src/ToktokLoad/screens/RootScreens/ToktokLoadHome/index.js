@@ -152,7 +152,6 @@ const MainComponent = ({navigation, route}) => {
   }
   return (
     // <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "padding"} keyboardVerticalOffset={30}>
-
     <ScrollView
       style={styles.container}
       contentContainerStyle={{flexGrow: 1}}
@@ -208,7 +207,6 @@ const MainComponent = ({navigation, route}) => {
         hasShadow
       />
     </ScrollView>
-
     // </KeyboardAvoidingView>
   );
 };
@@ -216,7 +214,7 @@ const MainComponent = ({navigation, route}) => {
 export const ToktokLoadHome = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={'toktokload'} />,
+    headerTitle: () => <HeaderTitle isLogo />,
   });
 
   return (
