@@ -1,10 +1,14 @@
-import React from 'react'
-import {
-    ToktokWalletBalanceInfo
-} from 'toktokwallet/screens'
+import React from 'react';
+import {ToktokWalletBalanceInfo} from 'toktokwallet/screens';
 
 export default ({Navigator}) => (
-    <>
-    <Navigator.Screen name="ToktokWalletBalanceInfo" component={ToktokWalletBalanceInfo}/>
-    </>
+  <>
+    <Navigator.Screen
+      name="ToktokWalletBalanceInfo"
+      component={ToktokWalletBalanceInfo}
+      options={{
+        headerTitleAlign: 'center',
+      }}
+    />
+  </>
 );
