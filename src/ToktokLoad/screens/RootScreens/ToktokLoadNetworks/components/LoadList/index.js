@@ -10,7 +10,7 @@ import {VectorIcon, ICON_SET} from 'src/revamp';
 //COMPONENTS
 import {LoadDetails} from './LoadDetails';
 import {VerifyContext} from '../VerifyContextProvider';
-import {EmptyList, OrangeButton, LoadingIndicator, SearchInput, ToastModal} from 'src/ToktokLoad/components';
+import {EmptyList, CustomButton, LoadingIndicator, SearchInput, ToastModal} from 'src/ToktokLoad/components';
 import {SomethingWentWrong} from 'toktokload/components';
 import {SearchLoadingIndicator} from '../SearchLoadingIndicator';
 
@@ -37,7 +37,7 @@ export const LoadList = memo(props => {
     navigation,
     route,
     mobileNumber,
-    networkId,
+    network,
     processSearch,
     getSearchLoading,
     label,
@@ -167,7 +167,7 @@ export const LoadList = memo(props => {
       variables: {
         input: {
           loadVariantId,
-          networkId,
+          networkId: network.id,
         },
       },
     });
@@ -200,7 +200,7 @@ export const LoadList = memo(props => {
 
   const onPressNext = () => {
     if (Object.keys(selectedLoad).length > 0) {
-      navigation.navigate('ToktokLoadSummary', {loads: selectedLoad, mobileNumber});
+      navigation.navigate('ToktokLoadSummary', {loads: selectedLoad, mobileNumber, network});
     }
   };
 
@@ -342,9 +342,12 @@ export const LoadList = memo(props => {
           </>
         )}
       </ScrollView>
-      <View style={{padding: moderateScale(16)}}>
-        <OrangeButton disabled={Object.keys(selectedLoad).length == 0} label="Next" onPress={() => onPressNext()} />
-      </View>
+      <CustomButton
+        disabled={Object.keys(selectedLoad).length == 0}
+        label="Next"
+        onPress={() => onPressNext()}
+        hasShadow
+      />
     </>
   );
 });

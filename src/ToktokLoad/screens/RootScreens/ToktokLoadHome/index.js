@@ -34,7 +34,7 @@ import {
   LoadingIndicator,
   SomethingWentWrong,
   SplashHome,
-  OrangeButton,
+  CustomButton,
 } from 'src/ToktokLoad/components';
 import {BuyLoad, Favorites, VerifyContextProvider, VerifyContext, Advertisement, LoadCategory} from './components';
 
@@ -201,13 +201,13 @@ const MainComponent = ({navigation, route}) => {
         activeTab={activeTab?.id}
         activeCategory={() => getActiveCategoryName(activeTab)}
       />
-      <View style={{flex: 1, justifyContent: 'flex-end', padding: moderateScale(16)}}>
+      <View style={{flex: 1, justifyContent: 'flex-end'}}>
         {adHighlight.length > 0 && <Advertisement ads={adHighlight} />}
-        <View style={{marginTop: 15}} />
-        <OrangeButton
+        <CustomButton
           label="Next"
           disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
           onPress={onPressNext}
+          hasShadow
         />
       </View>
       {/* <ActionButton 
