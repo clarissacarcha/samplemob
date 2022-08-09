@@ -5,6 +5,7 @@ import {GET_ADVERTISEMENTS} from 'toktokload/graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {usePrompt} from 'src/hooks';
 import {ErrorUtility} from 'toktokload/util';
+import validator from 'validator';
 
 export const VerifyContext = createContext();
 const {Provider} = VerifyContext;
@@ -14,7 +15,6 @@ export const VerifyContextProvider = ({children, navigation}) => {
   const formattedMobile = user?.username.replace('+63', '0');
 
   const [activeTab, setActiveTab] = useState(1);
-  const [mobileErrorMessage, setMobileErrorMessage] = useState('');
   const [mobileNumber, setMobileNumber] = useState(formattedMobile);
   const [adHighlight, setAdHighlight] = useState([]);
   const [adsRegular, setAdsRegular] = useState([]);
@@ -22,6 +22,7 @@ export const VerifyContextProvider = ({children, navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const [activeNetwork, setActiveNetwork] = useState(null);
   const [onBoardingSteps, setOnboardingSteps] = useState(0);
+  const [errorMessages, setErrorMessages] = useState({selection: '', inputField: ''});
   const prompt = usePrompt();
 
   const [getAdvertisements, {loading, error}] = useLazyQuery(GET_ADVERTISEMENTS, {
@@ -59,13 +60,37 @@ export const VerifyContextProvider = ({children, navigation}) => {
     {id: 2, name: 'Favorites'},
   ];
 
+  const changeErrorMessages = (key, errorMessage) => {
+    setErrorMessages(oldstate => ({
+      ...oldstate,
+      [key]: errorMessage,
+    }));
+  };
+
+  const checkDynamicField = (value, activeNetwork) => {
+    if (value.length === 0) {
+      return checkFieldIsEmpty('inputField', value);
+    } else {
+      let errorMessage =
+        value.length != activeNetwork?.inputLength?.inputLength ? activeNetwork.inputLength.fieldPlaceholder : '';
+      changeErrorMessages('inputField', errorMessage);
+      return !errorMessage;
+    }
+  };
+
+  const checkFieldIsEmpty = (key, value, fieldType) => {
+    let message = fieldType === 'selection' ? 'Please make a selection' : 'This is a required field';
+    let errorMessage = validator.isEmpty(value, {ignore_whitespace: true}) || value === 'null' ? message : '';
+
+    changeErrorMessages(key, errorMessage);
+    return !errorMessage;
+  };
+
   return (
     <Provider
       value={{
         activeTab,
         setActiveTab,
-        mobileErrorMessage,
-        setMobileErrorMessage,
         mobileNumber,
         setMobileNumber,
         tabList,
@@ -79,6 +104,11 @@ export const VerifyContextProvider = ({children, navigation}) => {
         setActiveNetwork,
         onBoardingSteps,
         setOnboardingSteps,
+        errorMessages,
+        setErrorMessages,
+        checkFieldIsEmpty,
+        changeErrorMessages,
+        checkDynamicField,
       }}>
       {children}
     </Provider>

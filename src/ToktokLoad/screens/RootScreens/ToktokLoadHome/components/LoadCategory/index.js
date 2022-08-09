@@ -10,6 +10,7 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Dimensions,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {VectorIcon, ICON_SET} from 'src/revamp';
@@ -39,13 +40,11 @@ import {blank} from 'toktokload/assets/ads';
 import {Advertisement} from '../Advertisement';
 
 import {NetworkListModal} from '../NetworkListModal';
-import {Platform} from 'react-native';
+
 const width = Dimensions.get('window').width;
 
 export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
   const {
-    mobileErrorMessage,
-    setMobileErrorMessage,
     mobileNumber,
     setMobileNumber,
     setSubContainerStyle,
@@ -54,6 +53,8 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
     setActiveNetwork,
     onBoardingSteps,
     setOnboardingSteps,
+    errorMessages,
+    changeErrorMessages,
   } = useContext(VerifyContext);
 
   const [visible, setVisible] = useState(false);
@@ -85,7 +86,8 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
   }, [activeTab]);
 
   useEffect(() => {
-    setMobileErrorMessage('');
+    changeErrorMessages('inputField', '');
+    changeErrorMessages('selection', '');
     if (activeNetwork?.inputLength?.name.toLowerCase() === 'mobile number') setMobileNumber(formattedMobile);
   }, [activeNetwork]);
 
@@ -93,31 +95,17 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
     // let mobile = value.replace(/[$-/:-?{-~!"#^_`\[\] ]/g, "");
     const fieldFormat = activeNetwork?.inputLength?.fieldFormat;
     let mobile = fieldFormat == 2 ? value.replace(/[^A-Za-z0-9]/g, '') : value.replace(/[^0-9]/g, '');
-    let errMessage = activeNetwork.inputLength.fieldPlaceholder;
 
     if (activeNetwork?.inputLength?.name.toLowerCase() === 'mobile number') {
-      if (mobile.length != 0 && (mobile.substring(0, 2) != '09' || mobile.length != 11)) {
-        setMobileErrorMessage(errMessage);
-      } else {
-        setMobileErrorMessage('');
-      }
-
       if ((mobile.length == 1 || mobile.length == 2) && (mobileNumber.length == '' || mobileNumber.length == 1)) {
         setMobileNumber('09');
       } else {
         setMobileNumber(mobile);
       }
-      return;
-    }
-
-    if (mobile.length != 0 && mobile.length != activeNetwork?.inputLength?.inputLength) {
-      setMobileErrorMessage(errMessage);
     } else {
-      setMobileErrorMessage('');
+      setMobileNumber(mobile);
     }
-    setMobileNumber(mobile);
-
-    return;
+    changeErrorMessages('inputField', '');
   };
 
   const onPressNext = () => {
@@ -147,6 +135,7 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
     await saveViewOnboarding(user.id);
     setOnboardingSteps(0);
   };
+
   const ads = [{id: 1, image: blank}];
 
   return (
@@ -187,20 +176,12 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
         placement="bottom">
         <View style={onBoardingSteps === 2 && styles.onBoardingStyleSteps}>
           <View style={[{flexDirection: 'column'}]}>
-            <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>
+            <Text style={{fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.M, color: '#222222'}}>
               Select {activeCategory()?.name ? activeCategory().name : ''}
             </Text>
             <TouchableOpacity
               disabled={onBoardingSteps === 2}
-              style={{
-                backgroundColor: '#F8F8F8',
-                height: moderateScale(40),
-                borderRadius: moderateScale(5),
-                justifyContent: 'center',
-                flexDirection: 'row',
-                paddingHorizontal: moderateScale(10),
-                marginTop: 16,
-              }}
+              style={[styles.selection, !!errorMessages.selection && styles.borderError]}
               onPress={openNetworks}>
               <View style={{flex: 1, justifyContent: 'center'}}>
                 {activeNetwork && onBoardingSteps !== 3 ? (
@@ -226,15 +207,16 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
                     </Text>
                   </View>
                 ) : (
-                  <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>
+                  <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S, color: '#707070'}}>
                     Select {activeCategory()?.name ? activeCategory().name : ''}
                   </Text>
                 )}
               </View>
               <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
-                <VectorIcon size={15} iconSet={ICON_SET.Entypo} name="chevron-thin-down" />
+                <VectorIcon size={15} iconSet={ICON_SET.FontAwesome5} name="chevron-down" color={COLOR.ORANGE} />
               </View>
             </TouchableOpacity>
+            {!!errorMessages.selection && <Text style={styles.errorMessage}>{errorMessages.selection}</Text>}
           </View>
         </View>
       </Tooltip>
@@ -269,12 +251,12 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
               <Text
                 style={[
                   onBoardingSteps !== 3 && {marginTop: moderateScale(16)},
-                  {fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M},
+                  {fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.M, color: '#222222'},
                 ]}>
                 Buy Load For
               </Text>
               <View style={styles.inputContainer}>
-                <View style={styles.input}>
+                <View style={[styles.input, !!errorMessages.inputField && styles.borderError]}>
                   {!activeNetwork ? (
                     <TextInput
                       value={mobileNumber}
@@ -307,7 +289,7 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
           </Tooltip>
         </>
       )}
-      {mobileErrorMessage != '' && <Text style={styles.errorMessage}>{mobileErrorMessage}</Text>}
+      {!!errorMessages.inputField && <Text style={styles.errorMessage}>{errorMessages.inputField}</Text>}
     </View>
   );
 };
@@ -347,8 +329,8 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     fontSize: FONT_SIZE.S,
-    color: '#F93154',
-    paddingVertical: moderateScale(10),
+    color: '#ED3A19',
+    paddingTop: moderateScale(5),
   },
   icon: {
     width: moderateScale(20),
@@ -373,5 +355,18 @@ const styles = StyleSheet.create({
   tooltipTitle: {
     fontFamily: FONT.SEMI_BOLD,
     color: '#F6841F',
+  },
+  selection: {
+    backgroundColor: '#F8F8F8',
+    height: moderateScale(40),
+    borderRadius: moderateScale(5),
+    justifyContent: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: moderateScale(10),
+    marginTop: 16,
+  },
+  borderError: {
+    borderWidth: 1,
+    borderColor: '#ED3A19',
   },
 });
