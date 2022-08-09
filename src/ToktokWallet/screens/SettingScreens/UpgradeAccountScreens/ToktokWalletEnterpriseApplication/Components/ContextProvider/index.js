@@ -6,7 +6,6 @@ const { Provider } = ContextEnterpriseApplication
 
 
 export const ContextProvider = ({children}) => {
-
     const [forms,setForms] = useState([
         {name: "Business Permit", file: null , filename: "" , errorMessage: ""},
         {name: "DTI Certification of Registration or SEC", file: null, filename: "", errorMessage: ""},
@@ -42,17 +41,20 @@ export const ContextProvider = ({children}) => {
 
     const [pepInfo,setPepInfo] = useState({
         questionnaire: {
-            isPep: "",
-            pepPosition: "",
-            isFamilyPep: "",
-            familyPepPosition: "",
-            sourceOfIncomeId: "",
-            sourceOfIncomeDes: "",
-            sourceOfIncome: "",
-            sourceOfWealthId: "",
-            sourceOfWealthDes: "",
-            sourceOfWealth: ""
-        },
+            isPep: '',
+            pepPosition: '',
+            isFamilyPep: '',
+            familyPepPosition: '',
+            sourceOfIncomeId: [],
+            sourceOfIncomeDes: [],
+            sourceOfIncome: '',
+            selectedSourceOfIncome: [],
+            sourceOfWealthId: [],
+            sourceOfWealthDes: [],
+            sourceOfWealth: '',
+            selectedSourceOfWealth: [],
+            agreement: false,
+          },
     })
 
     const setFileUpload = (index,value)=> {
@@ -79,6 +81,9 @@ export const ContextProvider = ({children}) => {
         })
     }
 
+    // States for Steps rendering
+    const [currentIndex, setCurrentIndex] = useState(0);
+
     return (
         <Provider
             value={{
@@ -92,6 +97,9 @@ export const ContextProvider = ({children}) => {
                 setValidID2,
                 pepInfo,
                 setPepInfo,
+                // For rendering of Steps Component
+                currentIndex,
+                setCurrentIndex
             }}
         >
             {children}

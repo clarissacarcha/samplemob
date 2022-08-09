@@ -22,7 +22,7 @@ export const YellowButton = ({label, onPress, style, delay = 2000, labelStyle}) 
   return (
     <TouchableHighlight onPress={onPressThrottled} style={styles.blackButton} underlayColor={'white'}>
       <View style={[styles.blackButtonBox, style]}>
-        <Text style={[ styles.label, labelStyle ]}>{label}</Text>
+        <Text style={[styles.label, labelStyle]}>{label}</Text>
       </View>
     </TouchableHighlight>
   );
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   blackButtonBox: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50,
+    height: 40,
     backgroundColor: COLORS.YELLOW,
     borderRadius: 5,
   },

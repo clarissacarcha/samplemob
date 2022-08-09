@@ -1,3 +1,4 @@
+export const currencyCode = '₱';
 export const termsAndConditionsDetails = {
   WM_PARAGRAPH_1: {
     content: `Welcome to toktokwallet. The following T&Cs shall apply to all those who wish to use and access toktokwallet. These T&Cs shall govern the terms under which you may access and use the toktokwallet App, toktokwallet website, toktokwallet cash card, and the services associated with it (together “toktokwallet Service” or “toktokwallet Services”). By accessing, registering or using the toktokwallet Service, you hereby accept and agree to be legally bound by the T&Cs. If you do not understand and agree to be bound by any of these T&Cs, you should not access or use any of the toktokwallet services.`

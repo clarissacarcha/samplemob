@@ -27,7 +27,7 @@ export const Container: ComponentType<any> = styled(View).attrs(props => ({
       elevation: 5;
       background-color: #fff;
       ${
-        Platform.OS === 'android' &&
+        String(Platform.OS === 'android') &&
         `
         border-top-color: #F8F8F8;
         border-top-width: 2;
