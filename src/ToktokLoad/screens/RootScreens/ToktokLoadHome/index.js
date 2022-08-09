@@ -240,7 +240,7 @@ const MainComponent = ({navigation, route}) => {
 export const ToktokLoadHome = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={'toktokload'} />,
+    headerTitle: () => <HeaderTitle isLogo />,
   });
 
   return (
