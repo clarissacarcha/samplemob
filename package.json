@@ -128,6 +128,7 @@
     "react-native-uuid": "^1.4.9",
     "react-native-vector-icons": "^6.6.0",
     "react-native-view-shot": "^3.1.2",
+    "react-native-walkthrough-tooltip": "^1.4.0",
     "react-native-webview": "^10.3.1",
     "react-native-wheel-scrollview-picker": "^1.0.2",
     "react-redux": "^7.2.0",
