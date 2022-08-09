@@ -11,12 +11,12 @@ import {RefreshControl} from 'react-native';
 
 //SELF IMPORTS
 import {HeaderBack, HeaderTitle, LoadingIndicator, SomethingWentWrong} from 'toktokbills/components';
-import {BillerTypeList, FavoriteList} from 'toktokbills/compositions';
+import {BillerTypeList, FavoriteList, Advertisement} from 'toktokbills/compositions';
 
 //GRAPHQL & HOOKS
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_BILL_TYPES, GET_FAVORITES_BILLS_ITEMS} from 'toktokbills/graphql/model';
+import {GET_BILL_TYPES, GET_FAVORITES_BILLS_ITEMS, GET_ADVERTISEMENTS} from 'toktokbills/graphql/model';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 
 const ToktokBillsHome = (props: PropsType): React$Node => {
@@ -27,10 +27,35 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
     headerTitle: () => <HeaderTitle label={['toktokbills']} isLogo />,
   });
   const [billTypes, setBillTypes] = useState([]);
+  const [adsRegular, setAdsRegular] = useState([]);
   const [favoriteBills, setFavoriteBills] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [showMore, setShowMore] = useState(false);
+
+  const [getAdvertisements, {loading: getAdsLoading, error: getAdsError}] = useLazyQuery(GET_ADVERTISEMENTS, {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onCompleted: data => {
+      let adHighlight = [];
+      let adRegular = [];
+
+      data.getAdvertisements.map(ad => {
+        if (ad.type === '1') {
+          adHighlight.push(ad);
+        }
+        if (ad.type === '2') {
+          adRegular.push(ad);
+        }
+      });
+
+      setAdsRegular(adRegular);
+      setRefreshing(false);
+    },
+    onError: error => {
+      setRefreshing(false);
+    },
+  });
 
   const [getBillTypes, {loading, error}] = useLazyQuery(GET_BILL_TYPES, {
     fetchPolicy: 'network-only',
@@ -71,6 +96,13 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
   useFocusEffect(
     useCallback(
       function getData() {
+        getAdvertisements({
+          variables: {
+            input: {
+              service: 'BILLS',
+            },
+          },
+        });
         getBillTypes();
         getFavoriteBillsPaginate({
           variables: {
@@ -83,7 +115,7 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
         setShowMore(true);
         setIsMounted(true);
       },
-      [getBillTypes, getFavoriteBillsPaginate],
+      [getBillTypes, getAdvertisements, getFavoriteBillsPaginate],
     ),
   );
 
@@ -93,6 +125,13 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
   };
 
   const handleGetData = () => {
+    getAdvertisements({
+      variables: {
+        input: {
+          service: 'BILLS',
+        },
+      },
+    });
     getBillTypes();
     getFavoriteBillsPaginate({
       variables: {
@@ -106,13 +145,14 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
     setIsMounted(true);
   };
 
-  const ListFavoriteComponent = () => {
-    if (favoriteBills.length === 0) {
-      return null;
-    } else {
-      return <FavoriteList favoriteBills={favoriteBills} />;
-    }
-  };
+  const ListFavoriteComponent = useMemo(() => {
+    return (
+      <>
+        {adsRegular.length > 0 && <Advertisement autoplay ads={adsRegular} />}
+        {favoriteBills.length > 0 && <FavoriteList favoriteBills={favoriteBills} />}
+      </>
+    );
+  }, [adsRegular, favoriteBills]);
 
   const ListBillerTypesComponent = useMemo(() => {
     if (billTypes.length === 0) {
@@ -122,16 +162,18 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
     }
   }, [billTypes, showMore]);
 
-  if (error || getFavoritesError) {
+  if (error || getFavoritesError || getAdsError) {
     return (
       <Container>
-        <SomethingWentWrong onRefetch={handleGetData} error={error ?? getFavoritesError} />
+        <SomethingWentWrong onRefetch={handleGetData} error={error ?? getFavoritesError ?? getAdsError} />
       </Container>
     );
   }
   return (
     <BackgroundImage>
-      {((loading && billTypes.length === 0) || (getFavoritesLoading && favoriteBills.length === 0 && !isMounted)) &&
+      {((getAdsLoading && adsRegular.length === 0) ||
+        (loading && billTypes.length === 0) ||
+        (getFavoritesLoading && favoriteBills.length === 0 && !isMounted)) &&
       !refreshing ? (
         <LoadingContainer>
           <LoadingIndicator isLoading={true} />

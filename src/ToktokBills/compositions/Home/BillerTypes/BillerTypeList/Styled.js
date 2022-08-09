@@ -15,7 +15,7 @@ export const Container: ComponentType<any> = styled.View`
   background: #ffffff;
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
-  margin-bottom: ${moderateScale(16)};
+  margin: ${moderateScale(16)}px;
 `;
 export const HeaderContainer: ComponentType<any> = styled.View`
   flex-direction: row;
