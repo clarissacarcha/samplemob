@@ -87,7 +87,7 @@ const Activities = () => {
             },
           })}
         />
-        {/* {!hideGo && (
+        {true && (
           <ActivitiesTopTab.Screen
             name="ToktokGoActivities"
             component={ToktokGoActivities}
@@ -102,14 +102,14 @@ const Activities = () => {
                         color: focused ? COLOR.ORANGE : COLOR.BLACK,
                         marginBottom: 5,
                       }}>
-                      toktokgo
+                      Go
                     </Text>
                   </View>
                 );
               },
             })}
           />
-        )} */}
+        )}
         <ActivitiesTopTab.Screen
           name="ToktokLoadActivities"
           component={ToktokLoadActivities}
