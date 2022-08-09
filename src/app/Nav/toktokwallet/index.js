@@ -1,8 +1,9 @@
 import React from 'react';
-import {View,PanResponder} from 'react-native';
-import CashInScreens from "./CashInScreens";
-import CashOutScreens from "./CashOutScreens";
-import GlobalScreens from "./GlobalScreens";
+import {View, PanResponder} from 'react-native';
+import CashInScreens from './CashInScreens';
+import CashOutOTCScreens from './CashOutOTCScreens';
+import CashOutScreens from './CashOutScreens';
+import GlobalScreens from './GlobalScreens';
 import KYCScreens from './KYCScreens';
 import LandingScreens from './LandingScreens';
 import ScanQRScreens from './ScanQRScreens';
@@ -13,15 +14,16 @@ import TestingScreens from './TestingScreens';
 export default ({Navigator}) => {
   return (
     <>
-        {CashInScreens({Navigator})}
-        {CashOutScreens({Navigator})}
-        {GlobalScreens({Navigator})}
-        {KYCScreens({Navigator})}
-        {LandingScreens({Navigator})}
-        {ScanQRScreens({Navigator})}
-        {SendMoneyScreens({Navigator})}
-        {SettingScreens({Navigator})}
-        {TestingScreens({Navigator})}
+      {CashInScreens({Navigator})}
+      {CashOutOTCScreens({Navigator})}
+      {CashOutScreens({Navigator})}
+      {GlobalScreens({Navigator})}
+      {KYCScreens({Navigator})}
+      {LandingScreens({Navigator})}
+      {ScanQRScreens({Navigator})}
+      {SendMoneyScreens({Navigator})}
+      {SettingScreens({Navigator})}
+      {TestingScreens({Navigator})}
     </>
   );
 };
