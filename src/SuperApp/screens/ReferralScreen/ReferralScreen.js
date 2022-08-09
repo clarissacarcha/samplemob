@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Alert,
   BackHandler,
+  ActivityIndicator,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CONSTANTS from '../../../common/res/constants';
@@ -22,17 +23,19 @@ import TokIcon from '../../../assets/images/Promos/ToktokAppIcon.png';
 import voucherPaperDesign from '../../../assets/toktokgo/voucher-paper-design.png';
 import VoucherIMG from '../../../assets/images/Promos/VoucherImage.png';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
 import {
   AUTH_CLIENT,
   GET_USER_SESSION,
   PATCH_GO_REFERRAL_USER_ID,
   TOKTOK_WALLET_VOUCHER_CLIENT,
   POST_COLLECT_VOUCHER,
+  GET_VOUCHER,
 } from '../../../graphql';
 import {onError} from '../../../util/ErrorUtility';
 import {AlertOverlay} from '../../../SuperApp/screens/Components';
 import {connect} from 'react-redux';
+import {numberFormat} from '../../../helper';
 
 const decorHeight = Dimensions.get('window').height * 0.15;
 
@@ -43,8 +46,28 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
   const [invalidReferralCodeText, setInvalidReferralCodeText] = useState('');
   const [refCode, setRefCode] = useState('');
 
-  const [postCollectVoucher, {loading: PCVLoading}] = useMutation(POST_COLLECT_VOUCHER, {
+  const {
+    data = {getVoucher: {}},
+    loading: getVoucherLoading,
+    error,
+  } = useQuery(GET_VOUCHER, {
+    variables: {
+      input: {
+        key: 'GO_10K_NEW',
+      },
+    },
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: onError,
+  });
+
+  const getPromoVoucherTotal = () => {
+    const {discountValue, collectCount} = data.getVoucher;
+    const total = discountValue * collectCount;
+    return numberFormat(total);
+  };
+
+  const [patchGoReferralUserId, {loading}] = useMutation(PATCH_GO_REFERRAL_USER_ID, {
     onCompleted: () => {
       const storedUserId = session.user.id;
       setViewSuccesVoucherClaimedModal(true);
@@ -56,36 +79,11 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
             },
           },
         });
-      } else {
-        navigation.replace('UnauthenticatedStack');
       }
       setTimeout(() => {
         setViewSuccesVoucherClaimedModal(false);
-        setRefCode('');
-        if (fromRegistration) {
-          navigation.replace('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'ConsumerLanding',
-            },
-          });
-        } else {
-          navigation.pop();
-        }
+        navigation.pop();
       }, 1500);
-    },
-    onError: onError,
-  });
-
-  const [patchGoReferralUserId, {loading}] = useMutation(PATCH_GO_REFERRAL_USER_ID, {
-    onCompleted: () => {
-      postCollectVoucher({
-        variables: {
-          input: {
-            voucherId: parseInt(constants.toktokGo10K),
-          },
-        },
-      });
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -183,6 +181,22 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
 
   // return <View></View>;
 
+  if (getVoucherLoading) {
+    return (
+      <View style={styles.innerContainer}>
+        <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.innerContainer}>
+        <Text>Error on referral!</Text>
+      </View>
+    );
+  }
+
   return (
     <>
       <ThrottledOpacity style={styles.backButton} onPress={onBackPress}>
@@ -190,7 +204,7 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
       </ThrottledOpacity>
       <KeyboardAwareScrollView contentContainerStyle={{flex: 1}} extraScrollHeight={40}>
         <ImageBackground source={ReferralBG} style={styles.container}>
-          <AlertOverlay visible={loading || PCVLoading} />
+          <AlertOverlay visible={loading} />
           <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
 
           {fromRegistration && (
@@ -216,7 +230,7 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
               <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
               <View style={styles.voucherText}>
                 <Text style={styles.voucherName}>NEW USER VOUCHER</Text>
-                <Text style={styles.voucherAmount}>₱10,000.00</Text>
+                <Text style={styles.voucherAmount}>₱{getPromoVoucherTotal()}</Text>
               </View>
               <Image source={VoucherIMG} resizeMode={'contain'} style={styles.voucherImage} />
             </View>
