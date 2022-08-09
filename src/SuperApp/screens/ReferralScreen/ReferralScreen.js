@@ -248,7 +248,7 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
             {isValidDriverId && (
               <View style={{alignSelf: 'stretch', marginHorizontal: 82}}>
                 <Text style={{color: CONSTANTS.COLOR.RED, fontSize: CONSTANTS.FONT_SIZE.S}}>
-                  {invalidReferralCodeText}
+                  {invalidReferralCodeText.replace(/\./g, '')}
                 </Text>
               </View>
             )}
