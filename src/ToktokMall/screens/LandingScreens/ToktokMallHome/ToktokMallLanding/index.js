@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
   TTMHImage: {
     width: '75%',
     height: 35,
-    resizeMode: 'stretch'
+    resizeMode: 'cover'
   },
   margin2: {
     flex: 2
