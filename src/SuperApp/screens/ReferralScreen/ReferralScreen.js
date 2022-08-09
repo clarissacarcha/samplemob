@@ -47,7 +47,7 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
   const [refCode, setRefCode] = useState('');
 
   const {
-    data = {getVoucher: {}},
+    data = {getVoucher: {discountValue: 0, collectCount: 0}},
     loading: getVoucherLoading,
     error,
   } = useQuery(GET_VOUCHER, {
