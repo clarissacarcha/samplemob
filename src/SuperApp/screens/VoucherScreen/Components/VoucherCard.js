@@ -28,7 +28,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
   };
 
   return (
-    <ThrottledOpacity onPress={() => navigation.navigate('SelectedVoucherScreen', {id: data.id})}>
+    <>
       <View style={styles.card}>
         <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
         <Image source={VoucherImage} resizeMode={'contain'} style={styles.voucherImage} />
@@ -79,7 +79,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
           </ThrottledOpacity>
         </View>
       </View>
-    </ThrottledOpacity>
+    </>
   );
 };
 
