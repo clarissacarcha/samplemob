@@ -68,28 +68,28 @@ const ToktokGoPaymentDetails = ({navigation, route}) => {
           <View style={styles.elementWrapper}>
             <Text style={styles.textStyle}>Surge Charge</Text>
             <Text style={styles.textStyle}>₱{numberFormat(booking.fare.surgeCharge)}</Text>
-          </View> 
+          </View>
           <View style={styles.elementWrapper}>
             <Text style={styles.textStyle}>Outstanding Fee</Text>
             <Text style={styles.textStyle}>₱{numberFormat(50)}</Text>
-          </View> 
+          </View>
           <View style={styles.elementWrapper}>
             <Text style={styles.textStyle}>Cancellation Fee last Jan 7,2022</Text>
-          </View> 
+          </View>
           <View style={styles.elementWrapper}>
             <Text style={styles.textStyle}>Voucher</Text>
             <Text style={styles.voucherTextStyle}>-₱{numberFormat(50)}</Text>
-          </View> 
+          </View>
           <View style={styles.elementWrapper}>
             <Text style={styles.textStyle}>₱10k NEW USER</Text>
-          </View> 
-        </View> 
+          </View>
+        </View>
       ) : (
         <></>
       )}
       <View style={styles.divider} />
       <View style={styles.elementTotal}>
-        <Text style={styles.bottomTextStyle}>Total</Text>
+        <Text style={styles.bottomTextStyle}>₱{booking.tag == 'ONGOING' ? 'Total' : 'Total Paid'}</Text>
         <Text style={styles.bottomTextStyle}>
           ₱{booking.tag == 'CANCELLED' ? '0.00' : numberFormat(booking.fare.amount)}
         </Text>

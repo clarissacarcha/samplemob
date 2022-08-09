@@ -64,7 +64,9 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
         />
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
-          <Text style={styles.voucherDescription}>{data.description}</Text>
+          <Text style={styles.voucherDescription}>
+            {data?.description?.length < 30 ? `${data?.description}` : `${data?.description.substring(0, 30)}...`}
+          </Text>
           {data.endAt && <Text style={styles.voucherDescription}>Valid unitl {moment(data.endAt).format('LL')}</Text>}
           {data.voucherWallet?.total > 1 && (
             <>
