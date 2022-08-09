@@ -65,14 +65,14 @@ const MainComponent = ({navigation, route}) => {
     setActiveNetwork,
     onBoardingSteps,
     setOnboardingSteps,
+    checkFieldIsEmpty,
+    checkDynamicField,
   } = useContext(VerifyContext);
   const [categories, setCategories] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
   const prompt = usePrompt();
   const {user} = useSelector(state => state.session);
-
-  const goToFavorites = () => navigation.navigate('ToktokLoadFavorites', {mobileErrorMessage, mobileNumber});
 
   const [getLoadCategories, {loading, error}] = useLazyQuery(GET_LOAD_CATEGORIES, {
     fetchPolicy: 'network-only',
@@ -130,7 +130,12 @@ const MainComponent = ({navigation, route}) => {
   };
 
   const onPressNext = () => {
-    navigation.navigate('ToktokLoadNetworks', {mobileNumber, network: activeNetwork});
+    const isValidSelection = checkFieldIsEmpty('selection', JSON.stringify(activeNetwork), 'selection');
+    const isValidMobileNo = activeNetwork && checkDynamicField(mobileNumber, activeNetwork);
+
+    if (isValidSelection && isValidMobileNo) {
+      navigation.navigate('ToktokLoadNetworks', {mobileNumber, network: activeNetwork});
+    }
   };
 
   if (!showSplash && !refreshing && (loading || adsActions.loading)) {
@@ -202,7 +207,7 @@ const MainComponent = ({navigation, route}) => {
       {adHighlight.length > 0 && <Advertisement ads={adHighlight} />}
       <CustomButton
         label="Next"
-        disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
+        // disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
         onPress={onPressNext}
         hasShadow
       />
