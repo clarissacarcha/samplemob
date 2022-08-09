@@ -48,13 +48,15 @@ export const VerifyContextProvider = ({children}) => {
         totalAmount,
         totalAmountWithAddons,
         addonsTotalAmount,
+        pabiliShopResellerDiscount,
         pabiliShopServiceFee,
         pabiliShopDetails,
       } = getAllTemporaryCart;
-      
+      // console.log(getAllTemporaryCart);
       setPabiliShopServiceFee(pabiliShopServiceFee);
       setPabiliShopDetails(pabiliShopDetails);
       setTemporaryCart({
+        pabiliShopResellerDiscount,
         cartItemsLength: items.length,
         srpTotalAmount,
         totalAmount,
