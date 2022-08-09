@@ -66,21 +66,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: moderateScale(16),
   },
-  shadow: {
-    margin: 16,
-    padding: 10,
-    backgroundColor: 'white',
-    borderRadius: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 3.84,
-    elevation: 5,
-    flex: 1,
-  },
+
   boxContainer: {
     paddingHorizontal: 15,
     paddingVertical: 15,
