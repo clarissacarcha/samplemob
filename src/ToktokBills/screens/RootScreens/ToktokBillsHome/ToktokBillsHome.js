@@ -33,27 +33,29 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
   const [isMounted, setIsMounted] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
-
-
-  const [getAdvertisements, { loading: getAdsLoading, error: getAdsError }] = useLazyQuery(GET_ADVERTISEMENTS, {
-    fetchPolicy:"network-only",
+  const [getAdvertisements, {loading: getAdsLoading, error: getAdsError}] = useLazyQuery(GET_ADVERTISEMENTS, {
+    fetchPolicy: 'network-only',
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onCompleted: data => {
       let adHighlight = [];
       let adRegular = [];
 
-      data.getAdvertisements.map((ad)=> {
-          if(ad.type == 1) adHighlight.push(ad)
-          if(ad.type == 2) adRegular.push(ad)
-      })
+      data.getAdvertisements.map(ad => {
+        if (ad.type === '1') {
+          adHighlight.push(ad);
+        }
+        if (ad.type === '2') {
+          adRegular.push(ad);
+        }
+      });
 
       setAdsRegular(adRegular);
       setRefreshing(false);
     },
-    onError: (error)=> {
+    onError: error => {
       setRefreshing(false);
-    }
-  })
+    },
+  });
 
   const [getBillTypes, {loading, error}] = useLazyQuery(GET_BILL_TYPES, {
     fetchPolicy: 'network-only',
@@ -97,9 +99,9 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
         getAdvertisements({
           variables: {
             input: {
-              service: 'BILLS'
-            }
-          }
+              service: 'BILLS',
+            },
+          },
         });
         getBillTypes();
         getFavoriteBillsPaginate({
@@ -126,9 +128,9 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
     getAdvertisements({
       variables: {
         input: {
-          service: 'BILLS'
-        }
-      }
+          service: 'BILLS',
+        },
+      },
     });
     getBillTypes();
     getFavoriteBillsPaginate({
@@ -143,13 +145,14 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
     setIsMounted(true);
   };
 
-  const ListFavoriteComponent = () => {
-    if (favoriteBills.length === 0) {
-      return null;
-    } else {
-      return <FavoriteList favoriteBills={favoriteBills} />;
-    }
-  };
+  const ListFavoriteComponent = useMemo(() => {
+    return (
+      <>
+        {adsRegular.length > 0 && <Advertisement autoplay ads={adsRegular} />}
+        {favoriteBills.length > 0 && <FavoriteList favoriteBills={favoriteBills} />}
+      </>
+    );
+  }, [adsRegular, favoriteBills]);
 
   const ListBillerTypesComponent = useMemo(() => {
     if (billTypes.length === 0) {
@@ -159,17 +162,18 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
     }
   }, [billTypes, showMore]);
 
-  if (error || getFavoritesError) {
+  if (error || getFavoritesError || getAdsError) {
     return (
       <Container>
-        <SomethingWentWrong onRefetch={handleGetData} error={error ?? getFavoritesError} />
+        <SomethingWentWrong onRefetch={handleGetData} error={error ?? getFavoritesError ?? getAdsError} />
       </Container>
     );
   }
   return (
     <BackgroundImage>
-      {adsRegular.length > 0 && <Advertisement autoplay ads={adsRegular}/>}
-      {((loading && billTypes.length === 0) || (getFavoritesLoading && favoriteBills.length === 0 && !isMounted)) &&
+      {((getAdsLoading && adsRegular.length === 0) ||
+        (loading && billTypes.length === 0) ||
+        (getFavoritesLoading && favoriteBills.length === 0 && !isMounted)) &&
       !refreshing ? (
         <LoadingContainer>
           <LoadingIndicator isLoading={true} />
