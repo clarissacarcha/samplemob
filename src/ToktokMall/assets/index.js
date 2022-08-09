@@ -9,7 +9,7 @@ export const coppermask = require("../assets/images/coppermask.png")
 export const chair = require("../assets/images/chair.png")
 export const bottle = require("../assets/images/bottle.png")
 export const clothfacemask = require("../assets/images/Cloth-Face-Mask.png")
-export const medicalfacemask = require("../assets/images/Medical-Face-Mask.png") 
+export const medicalfacemask = require("../assets/images/Medical-Face-Mask.png")
 export const ads = require("../assets/images/ads.png")
 
 //STATICS
@@ -29,6 +29,8 @@ export const noHistoryFound = require("../assets/images/noHistoryFound.png")
 export const contactus = require("../assets/images/contact-us.png");
 export const walletIcon = require("../assets/images/tokwaicon.png");
 export const emptyPlaceOrder = require("../assets/images/empty_place_order.png");
+export const splashImage = require("../assets/images/toktokmall-splash-screen.png");
+export const newSplashImage = require("../assets/images/toktokmall-new-splash-screen.png");
 
 //ICONS
 export const successIcon = require("../assets/icons/success.png")
