@@ -666,7 +666,7 @@ const MainComponent = () => {
       // total_amount: temporaryCart.totalAmount,
       // srp_totalamount: temporaryCart.totalAmount,
       total_amount: parsedAmount,
-      srp_totalamount: pabiliShopServiceFee + temporaryCart?.srpTotalAmount,
+      srp_totalamount: pabiliShopServiceFee,
       notes: riderNotes.replace(/[^a-z0-9 ]/gi, ''),
       order_isfor: orderType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       // order_type: 2,
