@@ -1,8 +1,8 @@
-import React, {useState, useEffect, useContext, useCallback} from 'react';
+import React, {useState, useEffect, useContext, useRef, useCallback} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, BackHandler, Alert, EventEmitter } from 'react-native';
 import { COLOR, FONT } from '../../../../res/variables';
 import {HeaderBack, HeaderTitle, HeaderRight, PopupModalComponent} from '../../../Components';
-import { AddressForm, Button, Payment, Shops, Totals, Vouchers, CheckoutModal, MessageModal } from './Components';
+import { AddressForm, Button, Payment, Shops, Totals, Vouchers, TermsAndCondition, CheckoutModal, MessageModal } from './Components';
 import {connect, useDispatch} from 'react-redux'
 import { useSelector } from 'react-redux';
 import {useFocusEffect, CommonActions} from '@react-navigation/native'
@@ -39,7 +39,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
     headerRight: () => <HeaderRight hidden={true} />
   });
 
-  const [isVisible, setIsVisible] = useState(false)
+  const scrollViewRef = useRef(null);
+
+  const [isVisible, setIsVisible] = useState(false);
   // const [data, setData] = useState([])
   const [newCartData, setNewCartData] = useState([])
   const [paramsData, setParamsData] = useState([])
@@ -66,7 +68,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [walletmodal, setwalletmodal] = useState(false)
   const [customerData, setCustomerData] = useState({})
   const [shippingDiscounts, setShippingDiscounts] = useState([])
-  const [franchisee, setFranchisee] = useState({})
+  const [franchisee, setFranchisee] = useState({});
+  const [TCEnabled, setTCEnabled] = useState(false);
+  const [onPressPlaceOrder, setOnPressPlaceOrder] = useState(false);
 
   const [processingCheckout, setProcessingCheckout] = useState(false)
 
@@ -1034,9 +1038,19 @@ const Component = ({route, navigation, createMyCartSession}) => {
     return <Loading state={loading || initialLoading} />
   }
 
+  const onPressTCbutton = () => {
+    setOnPressPlaceOrder(false);
+    setTCEnabled(state => !state)
+  }
+
+  const onDoneFade = () => {
+    setOnPressPlaceOrder(false);
+  }
+
   return (
     <>
       <ScrollView 
+        ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
         removeClippedSubviews={true}
       >
@@ -1118,6 +1132,13 @@ const Component = ({route, navigation, createMyCartSession}) => {
             shippingDiscounts={shippingDiscounts}
             referral={franchisee}
           />
+          <TermsAndCondition 
+            onPressTCbutton={onPressTCbutton}
+            onDoneFade={onDoneFade}
+            onPressPlaceOrder={onPressPlaceOrder}
+            scrollViewRef={scrollViewRef}
+            TCEnabled={TCEnabled}
+          />
         </View>
       </ScrollView>
       <View style={styles.footer}>
@@ -1129,6 +1150,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
           shipping={addressData}
           shippingRates={shippingRates}
           onPress={async () => {
+            setOnPressPlaceOrder(true);
+            if (!TCEnabled) return;
 
             if (!isLoading) {
 

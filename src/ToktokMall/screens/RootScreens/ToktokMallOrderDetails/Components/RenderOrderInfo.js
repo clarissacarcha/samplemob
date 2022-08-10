@@ -22,10 +22,12 @@ export const RenderOrderInfo = ({ data }) => {
         <>
             <View style={styles.line} />
             <View style={styles.order}>
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                    <Text style={styles.orderInfo}>Order ID </Text>
-                    <Text style={[styles.refNum,styles.textBold]}>
-                        {data?.referenceNum}
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                    <Text numberOfLines={1} adjustsFontSizeToFit style={[styles.orderInfo, {paddingRight: 10}]}>
+                        Order ID
+                        <Text style={[styles.refNum, styles.textBold]}>
+                            {'\t  '}{data?.referenceNum}
+                        </Text>
                     </Text>
                 </View>
                 <View style={styles.imgView1}>
@@ -94,7 +96,6 @@ const styles = StyleSheet.create({
     },
     refNum: {
         color: "#FDBA1C",
-        paddingLeft: 10,
         fontSize: 13, 
         fontWeight: '600',
     },
