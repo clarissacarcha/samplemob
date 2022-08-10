@@ -107,6 +107,8 @@ export const ToktokLandingMenu = ({navigation}) => {
     }
   };
 
+  console.log('zion', session.user.person);
+
   return (
     <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'space-between'}}>
       <AlertOverlay visible={loading} />

@@ -20,7 +20,7 @@ import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {onErrorAppSync} from '../../util';
 
 const SelectedBookingDetails = ({navigation, session, createSession, route}) => {
-  const {delivery, bookingId} = route.params;
+  const {delivery, bookingId, driverData} = route.params;
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Booking Details', '']} />,
@@ -111,7 +111,7 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
         <BookingID booking={booking} />
         {booking.tag == 'ONGOING' && booking.driver && (
           <>
-            <BookingDriverDetails booking={booking} />
+            <BookingDriverDetails booking={booking} driverData={driverData} />
             <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
           </>
         )}

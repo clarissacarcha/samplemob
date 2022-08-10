@@ -524,7 +524,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             booking={booking}
           />
         )}
-        <SeeBookingDetails booking={booking} navigation={navigation} />
+        <SeeBookingDetails booking={booking} navigation={navigation} driverData={driverData} />
       </View>
     </View>
   );

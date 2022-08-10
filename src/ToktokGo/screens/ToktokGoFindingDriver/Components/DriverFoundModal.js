@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
     borderColor: CONSTANTS.COLOR.ORANGE,
   },
   profileName: {
+    textTransform: 'capitalized',
     marginVertical: 8,
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
