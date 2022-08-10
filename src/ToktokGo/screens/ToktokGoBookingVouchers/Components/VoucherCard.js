@@ -73,6 +73,7 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
                   overflow: 'hidden',
                   borderRadius: 10,
                   marginVertical: 8,
+                  marginRight: 15,
                 }}>
                 <Progress.Bar
                   height={3}
@@ -173,8 +174,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   voucherDescription: {
-    color: CONSTANTS.COLOR.GRAY,
+    color: '#000',
     fontSize: CONSTANTS.FONT_SIZE.S,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   voucherImage: {
     alignSelf: 'center',
