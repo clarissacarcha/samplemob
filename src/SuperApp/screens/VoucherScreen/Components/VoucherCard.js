@@ -46,6 +46,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
                 style={{
                   overflow: 'hidden',
                   borderRadius: 10,
+                  marginVertical: 8,
                 }}>
                 <Progress.Bar
                   height={3}
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 20,
     marginRight: 15,
+    top: 3,
   },
   computed: {
     color: CONSTANTS.COLOR.ORANGE,
@@ -118,11 +120,10 @@ const styles = StyleSheet.create({
   },
   voucherName: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-    marginBottom: 8,
+    bottom: 7,
   },
   voucherDescription: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-    // color: CONSTANTS.COLOR.GRAY,
     fontSize: CONSTANTS.FONT_SIZE.S,
     fontWeight: 'normal',
   },
