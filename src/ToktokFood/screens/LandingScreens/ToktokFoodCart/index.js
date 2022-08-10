@@ -498,8 +498,8 @@ const MainComponent = () => {
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
     //   : await handleShippingVouchers(shippingVoucher);
     const amount = await getTotalAmount(promotionVoucher, delivery?.price);
-    const parseAmount = Number((pabiliShopServiceFee + deliveryPrice + deductedPrice - amount).toFixed(2));
-    // console.log(parseAmount, totalPrice, deliveryPrice, deductedPrice, amount, temporaryCart);
+    const parseAmount = Number((deliveryPrice + deductedPrice - amount).toFixed(2));
+    // console.log(parseAmount, totalPrice, deliveryPrice, deductedPrice, amount);
 
     // if (orderType === 'Delivery') {
     //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
@@ -666,7 +666,7 @@ const MainComponent = () => {
       // total_amount: temporaryCart.totalAmount,
       // srp_totalamount: temporaryCart.totalAmount,
       total_amount: parsedAmount,
-      srp_totalamount: pabiliShopServiceFee,
+      srp_totalamount: temporaryCart?.srpTotalAmount,
       notes: riderNotes.replace(/[^a-z0-9 ]/gi, ''),
       order_isfor: orderType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       // order_type: 2,
@@ -701,10 +701,11 @@ const MainComponent = () => {
 
     if (pabiliShopDetails.isShopPabiliMerchant) {
       CUSTOMER.service_type = 'pabili';
-      CUSTOMER.service_fee = pabiliShopServiceFee;
+      CUSTOMER.service_fee = pabiliShopServiceFee - temporaryCart?.pabiliShopResellerDiscount;
     }
 
     const data = processData(WALLET, CUSTOMER, ORDER, []);
+    console.log('DATA', data);
     console.log('DATA', JSON.stringify(data));
     postCustomerOrder({
       variables: {
