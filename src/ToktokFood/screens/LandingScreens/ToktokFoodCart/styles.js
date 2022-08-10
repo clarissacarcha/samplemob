@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   pabiliSubInfoText: {fontSize: 11, color: '#F6841F'},
-  pabiliSubInfoWalletIcon: {height: 28, width: 28, marginRight: 8, marginLeft: 5},
+  pabiliSubInfoIcon: {marginRight: 6},
 });
 
 export default styles;

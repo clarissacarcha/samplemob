@@ -11,8 +11,6 @@ import {getResellerDiscount, getTotalResellerDiscount} from '../functions';
 
 import styles from '../styles';
 
-import {toktokwallet_ic} from 'toktokfood/assets/images';
-
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 const OrderTotal = ({
@@ -163,7 +161,8 @@ const OrderTotal = ({
 
   const ServiceInfoBanner = (
     <View style={styles.pabiliSubInfoWrapper}>
-      <Image resizeMode="contain" source={toktokwallet_ic} style={styles.pabiliSubInfoWalletIcon} />
+      {/* <Image resizeMode="contain" source={toktokwallet_ic} style={styles.pabiliSubInfoWalletIcon} /> */}
+      <MIcon name="info-outline" color="#F6841F" size={22} style={styles.pabiliSubInfoIcon} />
       <View style={{display: 'flex', flexDirection: 'row', maxWidth: '90%'}}>
         <Text style={styles.pabiliSubInfoText} numberOfLines={2}>
           Items prices and availability are subject to change without prior notice. Learn more about our{' '}
