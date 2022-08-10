@@ -6,7 +6,7 @@ import CustomIcon from '../../../../Components/Icons';
 import {placeholder} from '../../../../assets';
 import { useNavigation } from '@react-navigation/core';
 
-import { SwipeReloader, PromotionBanner } from '../../../../Components';
+import { SwipeReloader, PromotionBanner, RefComDiscountRate } from '../../../../Components';
 import { Price } from '../../../../helpers';
 
 const RenderStars = ({value}) => {
