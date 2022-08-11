@@ -71,7 +71,7 @@ export const PaymentMethod = ({loadDetails, onCashIn, isInsufficient}) => {
         </View>
         {user.toktokWalletAccountId ? displayCashIn() : displayNoToktokWalletAccount()}
       </View>
-      {isInsufficient && (
+      {isInsufficient && user.toktokWalletAccountId && (
         <View style={styles.insufficientContainer}>
           <Image style={styles.warningIcon} source={warning_icon} />
           <Text style={styles.insufficientText}>Insufficient balance</Text>
