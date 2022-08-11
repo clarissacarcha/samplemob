@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
     color: '#525252',
     fontSize: FONT_SIZE.L,
     paddingTop: 5,
+    fontFamily: FONT.SEMI_BOLD,
   },
   contactNumber: {
     color: '#525252',
