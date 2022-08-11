@@ -264,6 +264,7 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
                       keyboardType={'number-pad'}
                       returnKeyType="done"
                       editable={false}
+                      placeholderTextColor="#9E9E9E"
                     />
                   ) : (
                     <TextInput
@@ -273,6 +274,7 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
                       keyboardType={activeNetwork.inputLength.fieldFormat == 2 ? 'default' : 'number-pad'}
                       returnKeyType="done"
                       maxLength={+activeNetwork?.inputLength?.inputLength ?? 11}
+                      placeholderTextColor="#9E9E9E"
                     />
                   )}
                 </View>
