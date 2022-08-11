@@ -14,6 +14,7 @@ import RNFS from 'react-native-fs';
 import OneSignal from 'react-native-onesignal';
 import ToktokWashed from '../../../../../assets/images/ToktokWashed.png';
 import RightArrow from '../../../../../assets/icons/profileMenu-arrow-rightIcon.png';
+import User from '../../../../../assets/images/user-icon.png';
 
 import {Header} from './Components';
 import {ToktokMallSession} from '../../../../../ToktokMall/util/session';
@@ -107,6 +108,18 @@ export const ToktokLandingMenu = ({navigation}) => {
     }
   };
 
+  const imageRender = () => {
+    const splitBySlash = session.user.person.avatar.split('/');
+    const splitByQuestion = splitBySlash[3].split('?');
+    const extracted = splitByQuestion[0];
+
+    if (extracted == '15947868238644blank_avatar.png' || !session.user.person.avatarThumbnail) {
+      return User;
+    } else {
+      return {uri: session.user.person.avatarThumbnail};
+    }
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'space-between'}}>
       <AlertOverlay visible={loading} />
@@ -122,11 +135,7 @@ export const ToktokLandingMenu = ({navigation}) => {
                   alignItems: 'center',
                   flexDirection: 'column',
                 }}>
-                <Image
-                  source={{uri: session.user.person.avatarThumbnail}}
-                  resizeMode={'cover'}
-                  style={{width: 80, height: 80, backgroundColor: 'black', borderRadius: 50}}
-                />
+                <Image source={imageRender()} resizeMode={'cover'} style={{width: 80, height: 80, borderRadius: 50}} />
                 <Text style={{fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, paddingTop: 5}}>{fullName}</Text>
                 <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, paddingTop: 3}}>
                   {session.user.username}
