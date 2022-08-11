@@ -498,16 +498,14 @@ const MainComponent = () => {
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
     //   : await handleShippingVouchers(shippingVoucher);
     const amount = await getTotalAmount(promotionVoucher, delivery?.price);
-    const parseAmount = Number((deliveryPrice + deductedPrice - amount).toFixed(2));
+    let parseAmount = Number((deliveryPrice + deductedPrice - amount).toFixed(2));
     // console.log(parseAmount, totalPrice, deliveryPrice, deductedPrice, amount);
 
-    // if (orderType === 'Delivery') {
-    //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
-    //   //   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
-    //   // }
-    //   totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
-    // }
-    // console.log(parseAmount, totalPrice, amount, temporaryCart);
+    if (pabiliShopDetails.isShopPabiliMerchant) {
+      const pabiliServiceFee = temporaryCart?.pabiliShopResellerDiscount || pabiliShopServiceFee;
+      parseAmount += pabiliServiceFee;
+    }
+
     postResquestTakeMoney({
       variables: {
         input: {
@@ -700,8 +698,9 @@ const MainComponent = () => {
     };
 
     if (pabiliShopDetails.isShopPabiliMerchant) {
+      const pabiliServiceFee = temporaryCart?.pabiliShopResellerDiscount || pabiliShopServiceFee;
       CUSTOMER.service_type = 'pabili';
-      CUSTOMER.service_fee = pabiliShopServiceFee - temporaryCart?.pabiliShopResellerDiscount;
+      CUSTOMER.service_fee = pabiliServiceFee;
     }
 
     const data = processData(WALLET, CUSTOMER, ORDER, []);

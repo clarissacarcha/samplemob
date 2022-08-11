@@ -41,6 +41,7 @@ const OrderTotal = ({
       : totalSumSF.toFixed(2)
     : (0.0).toFixed(2);
   const {pabiliShopResellerDiscount = 0} = temporaryCart;
+  const pabiliServiceFee = pabiliShopResellerDiscount || pabiliShopServiceFee;
   // const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
 
   useEffect(() => {
@@ -185,8 +186,7 @@ const OrderTotal = ({
   }, [temporaryCart]);
 
   const totalAmount = (
-    pabiliShopServiceFee -
-    pabiliShopResellerDiscount +
+    pabiliServiceFee +
     totalBasket +
     deliveryFee -
     totalSumSF -
@@ -256,7 +256,9 @@ const OrderTotal = ({
                 <Text>Service Fee Discount (Reseller)</Text>
               </View>
               <Text style={styles.subtotal}>
-                {pabiliShopResellerDiscount > 0 ? `-PHP ${pabiliShopResellerDiscount.toFixed(2)}` : 'WAIVED'}
+                {pabiliShopResellerDiscount > 0
+                  ? `-PHP ${(pabiliShopServiceFee - pabiliShopResellerDiscount).toFixed(2)}`
+                  : 'WAIVED'}
               </Text>
             </View>
           </>
@@ -275,7 +277,7 @@ const OrderTotal = ({
               totalSumSF -
               totalReseller -
               (totalPromotions + totalDeal) +
-              pabiliShopServiceFee
+              pabiliServiceFee
             ).toFixed(2)}`}</Text>
           )}
         </View>
