@@ -251,16 +251,18 @@ const OrderTotal = ({
               </Text>
             </View>
 
-            <View style={styles.header}>
-              <View style={styles.serviceFeeLabelWrapper}>
-                <Text>Service Fee Discount (Reseller)</Text>
+            {pabiliShopResellerDiscount > 0 && (
+              <View style={styles.header}>
+                <View style={styles.serviceFeeLabelWrapper}>
+                  <Text>Service Fee Discount (Reseller)</Text>
+                </View>
+                <Text style={styles.subtotal}>
+                  {pabiliShopResellerDiscount > 0
+                    ? `-PHP ${(pabiliShopServiceFee - pabiliShopResellerDiscount).toFixed(2)}`
+                    : 'WAIVED'}
+                </Text>
               </View>
-              <Text style={styles.subtotal}>
-                {pabiliShopResellerDiscount > 0
-                  ? `-PHP ${(pabiliShopServiceFee - pabiliShopResellerDiscount).toFixed(2)}`
-                  : 'WAIVED'}
-              </Text>
-            </View>
+            )}
           </>
         )}
 
