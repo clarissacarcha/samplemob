@@ -4,6 +4,7 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import CONSTANTS from '../../../../common/res/constants';
 import InfoIcon from '../../../../assets/icons/InfoIcon.png';
+import moment from 'moment';
 import {numberFormat} from '../../../../helper';
 
 const screenWidth = Dimensions.get('window').width;
@@ -20,6 +21,25 @@ export const BookingBreakdown = ({selectedVehicle, loading, details}) => {
           </Text>
         </View>
       </ShimmerPlaceHolder>
+
+      {details?.rate?.charge && (
+        <View>
+          <View style={styles.rowContainer}>
+            <View style={styles.fee}>
+              <Text style={styles.title}>Outstanding Fee</Text>
+              <Image source={InfoIcon} resizeMode={'contain'} style={styles.iconDimensions} />
+            </View>
+            <Text>₱{numberFormat(details?.rate?.charge?.amount)}</Text>
+          </View>
+          <View style={styles.feeDate}>
+            <Text>
+              {details?.rate?.charge?.type == 'LATE_FEE' ? 'Cancellation Fee' : 'No Show Fee'} last{' '}
+              {moment(details?.rate?.charge?.createdAt).format('MMM D, YYYY')}
+            </Text>
+          </View>
+        </View>
+      )}
+
       {details?.rate?.tripFare?.discount > 0 && (
         <View style={styles.rowContainer}>
           <View>
@@ -36,26 +56,7 @@ export const BookingBreakdown = ({selectedVehicle, loading, details}) => {
           )}
         </View>
       )}
-      {/* todo: Condition here */}
-      {false && (
-        <View>
-          <View style={styles.rowContainer}>
-            <View style={styles.fee}>
-              <Text style={styles.title}>Outstanding Fee</Text>
-              <Image source={InfoIcon} resizeMode={'contain'} style={styles.iconDimensions} />
-            </View>
-            <Text>₱{' data here'}</Text>
-          </View>
-          <View style={styles.feeDate}>
-            <Text>Cancellation Fee last Jan 7, 2022</Text>
-          </View>
 
-          <View style={styles.rowContainer}>
-            <Text style={styles.title}>Voucher Applied</Text>
-            <Text style={styles.redText}>- ₱{' data here'}</Text>
-          </View>
-        </View>
-      )}
       <View style={styles.divider} />
     </View>
   );
