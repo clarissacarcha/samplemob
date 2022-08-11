@@ -26,6 +26,9 @@ fare {
   mileageFee
   surgeCharge
   total
+  vouchers{
+    name
+  }
 }
 id
 logs {
@@ -108,6 +111,7 @@ vehicleType {
   imageClass
   name
 }
+cancellationChargeStatus
 `;
 
 const DriverData = `
