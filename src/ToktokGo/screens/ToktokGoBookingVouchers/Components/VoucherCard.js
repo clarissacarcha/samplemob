@@ -79,14 +79,16 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
                   height={3}
                   progress={getPercentage()}
                   unfilledColor={'#FFF1D2'}
-                  color={CONSTANTS.COLOR.ORANGE}
+                  color={isApplicable ? CONSTANTS.COLOR.GRAY : CONSTANTS.COLOR.ORANGE}
                   borderRadius={0}
                   borderWidth={0}
                   width={null}
                   animationType={'timing'}
                 />
               </View>
-              <Text style={styles.computed}>₱{getComputed()} remaining</Text>
+              <Text style={isApplicable ? {color: CONSTANTS.COLOR.GRAY} : styles.computed}>
+                ₱{getComputed()} remaining
+              </Text>
             </>
           )}
         </View>

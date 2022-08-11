@@ -89,7 +89,7 @@ const ToktokGoPaymentDetails = ({navigation, route}) => {
       )}
       <View style={styles.divider} />
       <View style={styles.elementTotal}>
-        <Text style={styles.bottomTextStyle}>₱{booking.tag == 'ONGOING' ? 'Total' : 'Total Paid'}</Text>
+        <Text style={styles.bottomTextStyle}>{booking.tag == 'ONGOING' ? 'Total' : 'Total Paid'}</Text>
         <Text style={styles.bottomTextStyle}>
           ₱{booking.tag == 'CANCELLED' ? '0.00' : numberFormat(booking.fare.amount)}
         </Text>
