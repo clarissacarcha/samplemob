@@ -46,13 +46,14 @@ export const Advertisement = (props: PropsType): React$Node => {
           layout="default"
           data={ads}
           renderItem={({item, index}) => <DisplayImage item={item} index={index} />}
-          autoplay={true}
-          loop={true}
+          autoplay={ads.length > 1}
+          loop={ads.length > 1}
           autoplayDelay={0}
           autoplayInterval={5000}
         />
       ) : (
         <List
+          scrollEnabled={ads.length > 1}
           horizontal
           showsHorizontalScrollIndicator={false}
           data={ads}
