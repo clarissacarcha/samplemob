@@ -66,7 +66,7 @@ export const ToktokLoadSummary = ({navigation, route}) => {
   }, [getMyAccountLoading]);
 
   const onRefresh = () => {
-    getMyAccount();
+    if (user.toktokWalletAccountId) getMyAccount();
   };
 
   const onCashIn = ({balance}) => {

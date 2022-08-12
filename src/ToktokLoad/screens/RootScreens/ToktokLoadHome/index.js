@@ -73,6 +73,9 @@ const MainComponent = ({navigation, route}) => {
   const [showSplash, setShowSplash] = useState(true);
   const prompt = usePrompt();
   const {user} = useSelector(state => state.session);
+  const tooltipWidth = moderateScale(
+    width - (Platform.OS === 'android' ? moderateScale(36) : width > 375 ? moderateScale(36) : 0),
+  );
 
   const [getLoadCategories, {loading, error}] = useLazyQuery(GET_LOAD_CATEGORIES, {
     fetchPolicy: 'network-only',
@@ -169,7 +172,8 @@ const MainComponent = ({navigation, route}) => {
         animated={true}
         topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
         displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
-        contentStyle={{width: width - (Platform.OS === 'android' ? moderateScale(20) : moderateScale(30))}}
+        contentStyle={{width: Platform.OS === 'android' ? tooltipWidth : moderateScale(tooltipWidth - 36)}}
+        childrenWrapperStyle={{flex: 1}}
         backgroundColor="rgba(0,0,0,0.6)"
         disableShadow={true}
         isVisible={onBoardingSteps === 1}
@@ -189,15 +193,17 @@ const MainComponent = ({navigation, route}) => {
         closeOnChildInteraction={false}
         closeOnContentInteraction={false}
         placement="bottom">
-        <HeaderTabs
-          tabs={categories}
-          scrollEnabled={true}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          fitToScreen={false}
-          overLap={false}
-          disabled={onBoardingSteps === 1}
-        />
+        <View style={onBoardingSteps === 1 && {width: tooltipWidth}}>
+          <HeaderTabs
+            tabs={categories}
+            scrollEnabled={true}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            fitToScreen={false}
+            overLap={false}
+            disabled={onBoardingSteps === 1}
+          />
+        </View>
       </Tooltip>
       <LoadCategory
         navigation={navigation}
