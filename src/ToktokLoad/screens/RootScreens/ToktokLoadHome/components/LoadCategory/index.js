@@ -64,6 +64,9 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
   const prompt = usePrompt();
   const {user} = useSelector(state => state.session);
   const formattedMobile = user?.username.replace('+63', '0');
+  const tooltipWidth = moderateScale(
+    width - (Platform.OS === 'android' ? moderateScale(16 + 20) : moderateScale(16 + 20)),
+  );
 
   const [getLoadCategoryNetworks, {loading}] = useLazyQuery(GET_LOAD_CATEGORY_NETWORKS, {
     fetchPolicy: 'network-only',
@@ -154,7 +157,7 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
         animated={true}
         topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
         displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
-        contentStyle={{width: width - (Platform.OS === 'android' ? moderateScale(20) : moderateScale(30))}}
+        contentStyle={{width: tooltipWidth}}
         backgroundColor="rgba(0,0,0,0.6)"
         disableShadow={true}
         isVisible={onBoardingSteps === 2}
@@ -174,7 +177,7 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
         closeOnChildInteraction={false}
         closeOnContentInteraction={false}
         placement="bottom">
-        <View style={onBoardingSteps === 2 && styles.onBoardingStyleSteps}>
+        <View style={onBoardingSteps === 2 && [styles.onBoardingStyleSteps, {width: tooltipWidth}]}>
           <View style={[{flexDirection: 'column'}]}>
             <Text style={{fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.M, color: '#222222'}}>
               Select {activeCategory()?.name ? activeCategory().name : ''}
@@ -227,7 +230,7 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
             animated={true}
             topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
             displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
-            contentStyle={{width: width - (Platform.OS === 'android' ? moderateScale(20) : moderateScale(30))}}
+            contentStyle={{width: tooltipWidth}}
             backgroundColor="rgba(0,0,0,0.6)"
             disableShadow={true}
             isVisible={onBoardingSteps === 3}
@@ -247,7 +250,7 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
             closeOnChildInteraction={false}
             closeOnContentInteraction={false}
             placement="bottom">
-            <View style={onBoardingSteps === 3 && styles.onBoardingStyleSteps}>
+            <View style={onBoardingSteps === 3 && [styles.onBoardingStyleSteps, {width: tooltipWidth}]}>
               <Text
                 style={[
                   onBoardingSteps !== 3 && {marginTop: moderateScale(16)},
@@ -310,7 +313,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
     borderRadius: moderateScale(5),
-    width: moderateScale(width - 30),
     padding: moderateScale(10),
   },
   input: {
