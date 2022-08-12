@@ -230,8 +230,12 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       }
     },
     onCompleted: response => {
-      setCancellationState(response.tripConsumerCancel.cancellation);
-      SheetManager.show('cancel_booking');
+      if (chargeAmount) {
+        setCancellationState(response.tripConsumerCancel.cancellation);
+        SheetManager.show('cancel_booking');
+      } else {
+        setViewSuccessCancelBookingModal(true);
+      }
     },
   });
 
