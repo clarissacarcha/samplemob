@@ -73,7 +73,7 @@ const ToktokGoPaymentDetails = ({navigation, route}) => {
             <Text style={styles.textStyle}>Surge Charge</Text>
             <Text style={styles.textStyle}>₱{numberFormat(booking.fare.surgeCharge)}</Text>
           </View>
-          {booking.fare.vouchers > 0 && (
+          {booking.fare?.vouchers?.length > 0 && (
             <>
               <View style={styles.elementWrapper}>
                 <Text style={styles.higlighttextStyle}>Voucher</Text>
