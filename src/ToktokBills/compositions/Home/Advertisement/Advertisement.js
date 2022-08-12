@@ -46,8 +46,8 @@ export const Advertisement = (props: PropsType): React$Node => {
           layout="default"
           data={ads}
           renderItem={({item, index}) => <DisplayImage item={item} index={index} />}
-          autoplay={true}
-          loop={true}
+          autoplay={ads.length > 1 && true}
+          loop={ads.length > 1 && true}
           autoplayDelay={0}
           autoplayInterval={5000}
         />
