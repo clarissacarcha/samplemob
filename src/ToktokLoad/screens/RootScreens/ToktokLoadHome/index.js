@@ -255,6 +255,7 @@ const styles = StyleSheet.create({
   tooltipButtonText: {
     textAlign: 'center',
     color: COLOR.WHITE,
+    fontFamily: FONT.SEMI_BOLD,
   },
   tooltipTitle: {
     fontFamily: FONT.SEMI_BOLD,
