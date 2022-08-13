@@ -1,4 +1,4 @@
-export * from './DateModal';
+import DateModal from './DateModal';
 export * from './CustomBottomSheet';
 export * from './CancelModalPrompt';
 export * from './CustomModalBottomSheet';
@@ -11,3 +11,5 @@ export * from './PepRequestVideoCallModal';
 export * from './PromptModal';
 export * from './QuestionModal';
 export * from './SuccessfulModal';
+
+export {DateModal};

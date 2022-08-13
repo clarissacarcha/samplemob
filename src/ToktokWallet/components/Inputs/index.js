@@ -1,5 +1,5 @@
 import CustomTextInput from './CustomTextInput';
-export * from './CustomDateInput';
+import CustomDateInput from './CustomDateInput';
 export * from './CustomRadioButton';
 export * from './CustomSelectionList';
 export * from './InputAmount';
@@ -8,4 +8,4 @@ export * from './NumberInputBox';
 export * from './NumberPad';
 export * from './SearchInput';
 
-export {CustomTextInput};
+export {CustomTextInput, CustomDateInput};
