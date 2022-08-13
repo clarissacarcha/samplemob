@@ -20,5 +20,5 @@ src/ToktokBills
 src/ToktokGo
 src/ToktokLoad
 src/ToktokMall
-src/ToktokWallet
+# src/ToktokWallet
 src/util

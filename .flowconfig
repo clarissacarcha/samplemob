@@ -41,6 +41,7 @@ emoji=true
 
 module.name_mapper='^src/\(.*\)$' -> '<PROJECT_ROOT>/src/\1'
 module.name_mapper='^toktokfood/\(.*\)$' -> '<PROJECT_ROOT>/src/ToktokFood/\1'
+module.name_mapper='^toktokwallet/\(.*\)$' -> '<PROJECT_ROOT>/src/ToktokWallet/\1'
 module.file_ext=.js
 module.file_ext=.ts
 module.file_ext=.json

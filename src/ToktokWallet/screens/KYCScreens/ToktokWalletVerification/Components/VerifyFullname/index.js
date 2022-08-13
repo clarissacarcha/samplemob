@@ -236,8 +236,8 @@ export const VerifyFullname = () => {
               </View>
             </View>
             <View style={{marginTop: 20}}>
-              <Text style={styles.label}>First Name</Text>
               <CustomTextInput
+                label="First Name"
                 value={person.firstName}
                 onChangeText={value => {
                   changePersonInfo('firstName', value);
@@ -247,8 +247,8 @@ export const VerifyFullname = () => {
               />
             </View>
             <View style={{marginTop: 20}}>
-              <Text style={styles.label}>Middle Name</Text>
               <CustomTextInput
+                label="Middle Name"
                 value={person.middleName}
                 onChangeText={value => {
                   changePersonInfo('middleName', value);
@@ -274,8 +274,8 @@ export const VerifyFullname = () => {
             </View>
 
             <View style={{marginTop: 20}}>
-              <Text style={styles.label}>Last Name</Text>
               <CustomTextInput
+                label="Last Name"
                 value={person.lastName}
                 onChangeText={value => {
                   changePersonInfo('lastName', value);
@@ -299,8 +299,8 @@ export const VerifyFullname = () => {
               />
             </View>
             <View style={{marginTop: 20}}>
-              <Text style={styles.label}>Email</Text>
               <CustomTextInput
+                label="Email"
                 value={contactInfo.email}
                 onChangeText={value => {
                   changeContactInfo('email', value);
@@ -321,8 +321,8 @@ export const VerifyFullname = () => {
               />
             </View>
             <View style={{marginTop: 20}}>
-              <Text style={styles.label}>Place of Birth</Text>
               <CustomTextInput
+                label="Place of Birth"
                 value={birthInfo.birthPlace}
                 onChangeText={value => {
                   changeBirthInfo('birthPlace', value);
@@ -336,8 +336,8 @@ export const VerifyFullname = () => {
               <ModalNationality verifyFullNameErrors={verifyFullNameErrors} />
             </View>
             <View style={{marginTop: 20}}>
-              <Text style={styles.label}>Occupation</Text>
               <CustomTextInput
+                label="Occupation"
                 value={incomeInfo.occupation}
                 onChangeText={value => {
                   changeIncomeInfo('occupation', value);
