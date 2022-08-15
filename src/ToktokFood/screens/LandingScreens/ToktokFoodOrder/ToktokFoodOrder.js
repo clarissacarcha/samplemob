@@ -5,6 +5,7 @@
  */
 
 import React, {useEffect, useState, useCallback, useRef} from 'react';
+import {TouchableOpacity} from 'react-native';
 import type {PropsType} from './types';
 import {
   Container,
@@ -23,6 +24,7 @@ import {
   CancelledText,
   ReasonText,
   Image,
+  TCText,
 } from './Styled';
 import {useIsFocused, useRoute} from '@react-navigation/native';
 import {
@@ -88,7 +90,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onError: error => console.log('getOrderDetails', error),
     onCompleted: ({getTransactionByRefNum}) => {
-      const {orderStatus, orderIsfor, tDeliveryId} = getTransactionByRefNum;
+      const {orderStatus, orderIsfor, tDeliveryId, serviceType} = getTransactionByRefNum;
       const isDelivery = orderIsfor === 1;
       setState(getTransactionByRefNum);
       const isOrderCompletedOrCancelled = orderStatus === 'c' || orderStatus === 's';
@@ -100,16 +102,16 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       } else {
         startPolling(10000);
         setPolled(true);
-        if (orderStatus !== 'p') {
+        if (orderStatus !== 'p' && serviceType === 'toktokfood') {
           toCancelOrder && setIsAlertVisible(false);
           setIsCancelModalVisible(false);
         } else {
-          if (duration === 0 && !isNoResponseModalVisible) {
+          if (duration === 0 && !isNoResponseModalVisible && serviceType === 'toktokfood') {
             setDuration(5);
           }
         }
-        console.log('fetching orders...', orderStatus);
       }
+      console.log(getTransactionByRefNum);
       if (isDelivery && tDeliveryId) {
         fetchRiderDetails(tDeliveryId);
       }
@@ -156,6 +158,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       const payload = {...styledLoader, isVisible: false};
       dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
       setIsCancelledByCustomer(true);
+      console.log('cancelOrder', cancelOrder);
       setTimeout(() => setIsAlertVisible(true), 500);
     },
   });
@@ -182,7 +185,12 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       setIsExhausted(true);
     }
 
-    if (state?.orderStatus === 'p' && duration <= 0 && !isNoResponseModalVisible) {
+    if (
+      state?.orderStatus === 'p' &&
+      state?.serviceType === 'toktokfood' &&
+      duration <= 0 &&
+      !isNoResponseModalVisible
+    ) {
       setIsNoResponseModalVisible(true);
     }
 
@@ -215,29 +223,50 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
   };
 
   const renderModifiedTextComponent = (adjustSpacing = false) => {
-    return (
-      isOrderModified() && (
-        <ModifiedContainer adjustSpacing={adjustSpacing}>
-          {state?.paymentMethod.toLowerCase() === 'toktokwallet' ? (
-            <React.Fragment>
-              <Image source={toktokwallet_ic} />
-              <ModifiedText>
-                This order has been modified by merchant. Total amount of{' '}
-                <StyledText color={theme.color.orange} fontSize={11} mode="medium">
-                  &#x20B1;{parseFloat(state?.refundTotal).toFixed(2)}{' '}
-                </StyledText>
-                will be refunded to your toktokwallet account.
-              </ModifiedText>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <Icon name="info" size={14} color={theme.color.orange} />
-              <ModifiedText>Total amount for this order has been updated.</ModifiedText>
-            </React.Fragment>
-          )}
-        </ModifiedContainer>
-      )
-    );
+    if (state?.serviceType === 'toktokfood') {
+      return (
+        isOrderModified() && (
+          <ModifiedContainer adjustSpacing={adjustSpacing}>
+            {state?.paymentMethod.toLowerCase() === 'toktokwallet' ? (
+              <React.Fragment>
+                <Image source={toktokwallet_ic} />
+                <ModifiedText>
+                  This order has been modified by merchant. Total amount of{' '}
+                  <StyledText color={theme.color.orange} fontSize={11} mode="medium">
+                    &#x20B1;{parseFloat(state?.refundTotal).toFixed(2)}{' '}
+                  </StyledText>
+                  will be refunded to your toktokwallet account.
+                </ModifiedText>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <Icon name="info" size={14} color={theme.color.orange} />
+                <ModifiedText>Total amount for this order has been updated.</ModifiedText>
+              </React.Fragment>
+            )}
+          </ModifiedContainer>
+        )
+      );
+    }
+    if (state?.serviceType === 'pabili') {
+      return (
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => {
+            setShowOrderDetails(false);
+            navigation.navigate('ToktokFoodTermsAndConditions');
+          }}>
+          <ModifiedContainer adjustSpacing={adjustSpacing}>
+            <Icon name="info" size={14} color={theme.color.orange} pabili />
+            <ModifiedText>
+              Items prices and availability are subject to change without prior notice. Learn more about our{' '}
+              <TCText>Terms and Conditions</TCText>.
+            </ModifiedText>
+          </ModifiedContainer>
+        </TouchableOpacity>
+      );
+    }
+    return null;
   };
 
   const renderAlertComponent = () => {
@@ -254,8 +283,9 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
     if (isCancelledByCustomer) {
       title = 'Order Cancelled';
       type = 'success';
-      subtitle =
-        'Your order has been successfully cancelled. Cancelling orders multiple times will cause your next orders longer to be accepted by the merchant.';
+      subtitle = `Your order has been successfully cancelled. Cancelling orders multiple times will cause your next orders longer to be accepted ${
+        state?.serviceType === 'toktokfood' ? 'by the merchant.' : '.'
+      } `;
       buttonText = 'OK';
       // onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'});
       onPress = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
@@ -301,11 +331,17 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       if (isCancelled && !toCancelOrder) {
         return (
           <React.Fragment>
-            <CancelledText>
-              Sorry, your order has been {isDeclined ? 'declined' : 'cancelled'} and cannot be processed by{' '}
-              <StyledText mode="semibold">{state?.shopDetails?.shopname} </StyledText>
-              due to the following reason/s:{' '}
-            </CancelledText>
+            {state?.serviceType === 'toktokfood' ? (
+              <CancelledText>
+                Sorry, your order has been {isDeclined ? 'declined' : 'cancelled'} and cannot be processed by{' '}
+                <StyledText mode="semibold">{state?.shopDetails?.shopname} </StyledText>
+                due to the following reason/s:{' '}
+              </CancelledText>
+            ) : (
+              <CancelledText>
+                Sorry, your order has been cancelled by the driver due to the following reason/s:{' '}
+              </CancelledText>
+            )}
             <Divider />
             <ReasonText label>Reason</ReasonText>
             <ReasonText>{state?.declinedNote}</ReasonText>
@@ -348,6 +384,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
 
   const renderCancellationModalComponent = () => (
     <OrderCancellationModal
+      serviceType={state?.serviceType}
       isVisible={isCancelModalVisible}
       onCancel={() => {
         setIsCancelModalVisible(false);
@@ -358,6 +395,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         setTimeout(() => {
           const payload = {isVisible: true, text: 'Please wait', type: null};
           dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
+          console.log('input', state?.referenceNum, reason);
           postCancelOrder({
             variables: {
               input: {
@@ -374,7 +412,26 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
   const getAnimationContainerHeight = e => {
     const {height} = e.nativeEvent.layout;
     setAnimationContainerHeight(height);
-    console.log('test height', height);
+  };
+
+  const renderCancelOrderButton = () => {
+    if (
+      state?.orderStatus === 'p' ||
+      (state?.orderStatus === 'po' && state?.serviceType === 'pabili' && state?.deliveryLogs?.length === 1)
+    ) {
+      return (
+        <StyledButton
+          type="secondary"
+          onPress={() => {
+            setToCancelOrder(true);
+            setIsAlertVisible(true);
+          }}
+          buttonText="Cancel"
+          disabled={toCancelOrder}
+        />
+      );
+    }
+    return null;
   };
 
   const renderAnimationComponent = () => {
@@ -389,7 +446,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
                 state={{...state, riderDetails}}
                 animationContainerHeight={animationContainerHeight}
               />
-              <OrderAnimatedText state={{...state, riderDetails}} />
+              <OrderAnimatedText state={{...state, riderDetails, duration}} />
             </AnimationContainer>
 
             {/* Bottom Part */}
@@ -408,21 +465,12 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
               {/* Buttons for order details and cancel order */}
               <ButtonContainer>
                 <Button
+                  serviceType={state?.serviceType}
                   orderStatus={state?.orderStatus}
                   onPress={() => setShowOrderDetails(true)}
                   buttonText="See Order Details"
                 />
-                {state?.orderStatus === 'p' && (
-                  <StyledButton
-                    type="secondary"
-                    onPress={() => {
-                      setToCancelOrder(true);
-                      setIsAlertVisible(true);
-                    }}
-                    buttonText="Cancel"
-                    disabled={toCancelOrder}
-                  />
-                )}
+                {renderCancelOrderButton()}
               </ButtonContainer>
             </BottomContainer>
           </Container>
@@ -449,7 +497,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           <OrderReferenceNumber state={state} />
           {riderDetails?.driver && <OrderDriverDetails state={riderDetails} />}
           <Divider height={8} />
-          <OrderInformation state={{...state, riderDetails}} />
+          <OrderInformation state={{...state, riderDetails, duration}} />
           {renderModifiedTextComponent(true)}
           <OrderSummary state={state?.orderDetails} />
           {state?.notes?.length > 0 && <OrderNote state={state} />}

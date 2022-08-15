@@ -116,6 +116,7 @@ export const new_empty_shop_icon = require('./images/empty_icons/empty_result.pn
 //json animations
 export const restaurant_confirmation = require('./images/animations/restaurant-confirmation.gif');
 export const driver_on_the_way = require('./images/animations/driver-on-the-way.gif');
+export const no_driver_found = require('./images/animations/no-driver-found.png');
 export const ready_for_pick_up = require('./images/animations/ready-for-pickup.gif');
 export const preparing_order = require('./images/animations/preparing-order.gif');
 
@@ -128,6 +129,7 @@ export const toktokwallet_ic = require('./images/toktokwallet-ic.png');
 export const calendar_ic = require('./images/calendar-icon.png');
 export const map_ic = require('./images/map-icon.png');
 export const location_pin_ic = require('./images/location-pin-ic.png');
+export const clock_ic = require('./images/clock_ic.png');
 
 //alert images
 export const success_image = require('./images/prompts_icons/success.png');

@@ -217,6 +217,9 @@ const transactionRef = `
   }
   rebooked
   estimatedDistance
+  serviceType
+  totalServiceFee
+  pabiliShopResellerDiscount
   voucherDiscounts {
     id
     referenceNum

@@ -21,8 +21,19 @@ const CANCELLATION_REASONS = [
   {id: 8, reason: 'Merchant took so long to accept my order'},
 ];
 
+const CANCELLATION_REASONS_PABILI = [
+  {id: 1, reason: "I'd like to change my order"},
+  {id: 2, reason: "I'll use another food app"},
+  {id: 3, reason: "I'd like to change my delivery address"},
+  {id: 4, reason: 'I found a cheaper option'},
+  {id: 5, reason: "I'd like to add another order"},
+  {id: 6, reason: "I'd like to have my order delivered"},
+  {id: 7, reason: "I'd like to have my order picked up"},
+  {id: 8, reason: 'Driver took so long to accept my order'},
+];
+
 const OrderCancellationModal = (props: PropsType): React$Node => {
-  const {isVisible, onCancel, onConfirm} = props;
+  const {isVisible, onCancel, onConfirm, serviceType} = props;
   const [selectedReason, setSelectedReason] = useState('');
   const [showError, setShowError] = useState(false);
 
@@ -50,14 +61,23 @@ const OrderCancellationModal = (props: PropsType): React$Node => {
       </ModalHeader>
       <ModalBody>
         <Container />
-        {CANCELLATION_REASONS.map(reason => (
-          <Radio
-            key={reason.id}
-            title={reason.reason}
-            checked={reason.reason === selectedReason}
-            onPress={() => setSelectedReason(reason.reason)}
-          />
-        ))}
+        {serviceType === 'toktokfood'
+          ? CANCELLATION_REASONS.map(reason => (
+              <Radio
+                key={reason.id}
+                title={reason.reason}
+                checked={reason.reason === selectedReason}
+                onPress={() => setSelectedReason(reason.reason)}
+              />
+            ))
+          : CANCELLATION_REASONS_PABILI.map(reason => (
+              <Radio
+                key={reason.id}
+                title={reason.reason}
+                checked={reason.reason === selectedReason}
+                onPress={() => setSelectedReason(reason.reason)}
+              />
+            ))}
         {showError && <ErrorText>Please make a selection</ErrorText>}
         <ButtonContainer>
           <Column marginRight={15}>
