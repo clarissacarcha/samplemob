@@ -449,6 +449,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
         //   });
         const req = await ApiCall("delete_address", body, true)
       
+        console.log("response.data", req)
         if(req.responseData && req.responseData.success == 1){
           EventRegister.emit("refreshCheckoutData")
           console.log("response.data", response.data)
