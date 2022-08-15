@@ -21,12 +21,12 @@ export const HeaderContainer: ComponentType<any> = styled.View`
   flex-direction: row;
   align-content: center;
   justify-content: space-between;
-  border-bottom-width: 1;
+  border-bottom-width: 1px;
   border-bottom-color: #c4c4c436;
 `;
 export const Title: ComponentType<any> = styled.Text`
   font-family: ${FONT.BOLD};
-  font-size: ${FONT_SIZE.M};
+  font-size: ${FONT_SIZE.M}px;
   padding-horizontal: ${moderateScale(15)}px;
   padding-vertical: ${moderateScale(15)}px;
   color: ${props => props.theme.color.orange};
@@ -37,7 +37,7 @@ export const SeeAllContainer: ComponentType<any> = styled.TouchableOpacity`
   padding: ${moderateScale(16)}px;
 `;
 export const SeeAllText: ComponentType<any> = styled.Text`
-  font-size: ${FONT_SIZE.M};
+  font-size: ${FONT_SIZE.M}px;
   color: ${props => props.theme.color.orange};
 `;
 export const SeeAllIcon: ComponentType<any> = styled(VectorIcon).attrs(props => ({
