@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
   searchField: {
     zIndex: 1,
     backgroundColor: 'white',
+    flex: 1,
   },
   contactlist: {
     flex: 1,

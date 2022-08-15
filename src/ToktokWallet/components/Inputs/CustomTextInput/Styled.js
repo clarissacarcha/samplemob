@@ -14,7 +14,7 @@ export const Label: ComponentType<any> = styled(Text).attrs(props => ({
   ...props,
 }))`
   color: ${props => props.theme.color.darkgray};
-  font-size: ${FONT_SIZE.S};
+  font-size: ${FONT_SIZE.S}px;
   font-family: ${FONT.BOLD};
   margin-bottom: ${moderateScale(5)}px;
 `;
@@ -22,12 +22,12 @@ export const Label: ComponentType<any> = styled(Text).attrs(props => ({
 export const Input: ComponentType<any> = styled(TextInput).attrs(props => ({
   ...props,
 }))`
-  height: ${SIZE.FORM_HEIGHT};
-  border-radius: 5;
+  height: ${SIZE.FORM_HEIGHT}px;
+  border-radius: 5px;
   background-color: #f7f7fa;
-  margin-top: 5;
-  font-size: ${FONT_SIZE.M};
-  padding-horizontal: ${moderateScale(15)};
+  margin-top: 5px;
+  font-size: ${FONT_SIZE.M}px;
+  padding-horizontal: ${moderateScale(15)}px;
   ${({errorMessage, theme}) =>
     errorMessage !== '' &&
     `
@@ -40,6 +40,6 @@ export const Error: ComponentType<any> = styled(Text).attrs(props => ({
   ...props,
 }))`
   color: ${props => props.theme.color.red};
-  font-size: ${FONT_SIZE.S};
-  margin-top: 5;
+  font-size: ${FONT_SIZE.S}px;
+  margin-top: 5px;
 `;

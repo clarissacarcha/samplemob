@@ -31,5 +31,5 @@ export const CustomDatePicker: ComponentType<any> = styled(DatePicker).attrs(pro
   mode: 'date',
 }))`
   background-color: #f7f7fa;
-  width: ${width};
+  width: ${width}px;
 `;

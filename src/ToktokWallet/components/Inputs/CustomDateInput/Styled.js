@@ -14,11 +14,11 @@ const {FONT_SIZE, SIZE} = CONSTANTS;
 export const Button: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
   ...props,
 }))`
-  height: ${SIZE.FORM_HEIGHT};
+  height: ${SIZE.FORM_HEIGHT}px;
   border-radius: 5px;
   background-color: #f7f7fa;
   margin-top: 5px;
-  padding-horizontal: ${moderateScale(15)};
+  padding-horizontal: ${moderateScale(15)}px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -41,12 +41,12 @@ export const ButtonImage: ComponentType<any> = styled(Image).attrs(props => ({
   ...props,
   source: calendar_icon,
 }))`
-  width: ${moderateScale(20)};
-  height: ${moderateScale(20)};
+  width: ${moderateScale(20)}px;
+  height: ${moderateScale(20)}px;
 `;
 
 export const ErrorText: ComponentType<any> = styled.Text`
   color: ${props => props.theme.color.red};
-  font-size: ${FONT_SIZE.S};
+  font-size: ${FONT_SIZE.S}px;
   margin-top: 5px;
 `;

@@ -1,36 +1,30 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {Modal, View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, Platform} from 'react-native';
 import {VerifyContext} from '../VerifyContextProvider';
-import FIcon from 'react-native-vector-icons/FontAwesome5';
-import {Separator, SearchInput, CustomSelectionList} from 'toktokwallet/components';
+import {CustomSelectionList} from 'toktokwallet/components';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_COUNTRIES} from 'toktokwallet/graphql/virtual';
-import CONSTANTS from 'common/res/constants';
-import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
-import {NoData} from 'toktokwallet/components';
-
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 
 const ModalNationality = ({verifyFullNameErrors}) => {
-  const {setNationality, setNationalityId, changeAddress, nationality} = useContext(VerifyContext);
+  const {setNationality, setNationalityId, nationality} = useContext(VerifyContext);
   const [nationalities, setNationalities] = useState([]);
   const [filteredNationalities, setFilteredNationalities] = useState([]);
-  const [countryIndex, setCountryIndex] = useState(20);
+  // const [countryIndex, setCountryIndex] = useState(20);
   const [search, setSearch] = useState('');
 
-  const [getCountries, {data, error, loading}] = useLazyQuery(GET_COUNTRIES, {
+  const [getCountries] = useLazyQuery(GET_COUNTRIES, {
     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
       const countries = response.getCountries;
-      const nationality = 'Filipino';
+      const defaultNationality = 'Filipino';
 
       countries.sort((x, y) => {
         return x.nationality > y.nationality;
       });
       countries.sort((x, y) => {
-        return x.nationality === nationality ? -1 : y.nationality === nationality ? 1 : 0;
+        const sorted = y.nationality === defaultNationality ? 1 : 0;
+        return x.nationality === defaultNationality ? -1 : sorted;
       });
 
       //REMOVE UNITED STATES MINOR OUTLYING ISLANDS
@@ -46,10 +40,10 @@ const ModalNationality = ({verifyFullNameErrors}) => {
   });
 
   useEffect(() => {
-    if (search == '') {
+    if (search === '') {
       getCountries();
     }
-  }, [search]);
+  }, [search, getCountries]);
 
   const selectNationality = index => {
     const country = filteredNationalities[index];
@@ -64,10 +58,10 @@ const ModalNationality = ({verifyFullNameErrors}) => {
     setSearch(value);
   };
 
-  const setAdditionalCountries = () => {
-    setFilteredNationalities(state => [...state, ...nationalities.slice(countryIndex + 1, countryIndex + 20)]);
-    setCountryIndex(state => state + 20);
-  };
+  // const setAdditionalCountries = () => {
+  //   setFilteredNationalities(state => [...state, ...nationalities.slice(countryIndex + 1, countryIndex + 20)]);
+  //   setCountryIndex(state => state + 20);
+  // };
 
   const onSelectedValue = ({index}) => {
     selectNationality(index);
@@ -82,7 +76,7 @@ const ModalNationality = ({verifyFullNameErrors}) => {
       withSearch={true}
       onSearchValue={filterSearch}
       hasDefault={true}
-      defaultCondition={'nationality'}
+      defaultCondition={'Filipino'}
       selectedValue={nationality}
     />
   );
