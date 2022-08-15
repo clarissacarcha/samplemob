@@ -90,7 +90,10 @@ const OrderDeliveryLogs = (props: PropsType): React$Node => {
       {state?.deliveryImgurl ? renderDeliveryImageComponent(state?.deliveryImgurl) : renderDashComponent()}
       {renderLogsComponent('Preparing order', state?.dateBookingConfirmed)}
       {renderDashComponent()}
-      {renderLogsComponent('Finding driver', state?.dateOrderProcessed)}
+      {renderLogsComponent(
+        'Finding driver',
+        state?.serviceType === 'toktokfood' ? state?.dateOrderProcessed : state?.dateOrdered,
+      )}
       {renderDashComponent()}
       {renderLogsComponent('Order placed', state?.dateOrdered)}
     </React.Fragment>

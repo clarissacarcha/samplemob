@@ -15,4 +15,5 @@ export type StateTypes = {
   promoDiscounts: number,
   resellerDiscountTotal: number,
   voucherDiscounts: Array<any>,
+  pabiliShopResellerDiscount: number,
 };

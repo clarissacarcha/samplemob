@@ -25,7 +25,7 @@ const OrderExhaustTimer = (props: PropsType): React$Node => {
   const setPreparingText = () => {
     const isDelivery = state?.orderIsfor === 1;
     const dateBookingConfirmed = moment(isDelivery ? state?.dateBookingConfirmed : state?.dateOrderProcessed)
-      .add(3, 'minutes')
+      .add(45, 'minutes')
       .format('YYYY-MM-DD HH:mm:ss');
     const remainingMinutes = moment(dateBookingConfirmed).diff(moment(), 'minutes');
     if (remainingMinutes <= 0) {
@@ -67,6 +67,9 @@ const OrderExhaustTimer = (props: PropsType): React$Node => {
 
     switch (state?.orderStatus) {
       case 'po':
+        if (isExhausted) {
+          return null;
+        }
         if (state?.orderIsfor === 2 || (state?.orderIsfor === 1 && (state?.riderDetails?.driver || state?.rebooked))) {
           title = setPreparingText();
           subtitle = 'Preparing Order';
@@ -81,7 +84,7 @@ const OrderExhaustTimer = (props: PropsType): React$Node => {
         }
         return null;
       case 'f':
-        if (state?.orderIsfor === 1 && state?.deliveryLogs[4]?.createdAt) {
+        if (state?.orderIsfor === 1 && state?.deliveryLogs[4]?.createdAt && !isExhausted) {
           title = setDeliveringText();
           subtitle = 'Driver is on the way';
           return renderComponent(title, subtitle);

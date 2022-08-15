@@ -21,11 +21,13 @@ export const Row: ComponentType<any> = styled.View`
 export const DeliveryDistanceContainer: ComponentType<any> = styled.View`
   margin-top: 15px;
   margin-bottom: 5px;
+  flex-direction: row;
 `;
 
 export const IconTextContainer: ComponentType<any> = styled.View`
   align-items: center;
   flex-direction: row;
+  margin-right: 25px;
 `;
 
 export const Icon: ComponentType<any> = styled(Image).attrs(props => ({

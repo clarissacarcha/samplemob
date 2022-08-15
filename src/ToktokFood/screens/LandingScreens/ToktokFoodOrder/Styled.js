@@ -65,6 +65,15 @@ export const ModifiedText: ComponentType<any> = styled(StyledText).attrs(props =
   max-width: 90%;
 `;
 
+export const TCText: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
+  fontSize: 11,
+  color: props.theme.color.orange,
+}))`
+  text-decoration: underline;
+  text-decoration-color: ${props => props.theme.color.orange};
+`;
+
 export const BottomContainer: ComponentType<any> = styled.View`
   background-color: #ffffff;
   border-width: 3px;
@@ -101,13 +110,15 @@ export const ModifiedContainer: ComponentType<any> = styled.View`
 export const Button: ComponentType<any> = styled(StyledButton).attrs(props => ({
   ...props,
 }))`
-  margin-bottom: ${props => (props.orderStatus && props.orderStatus === 'p' ? 15 : 0)}px;
+  margin-bottom: ${props =>
+    props?.orderStatus === 'p' || (props?.orderStatus === 'po' && props?.serviceType === 'pabili') ? 15 : 0}px;
 `;
 
 export const Icon: ComponentType<any> = styled(FIcon).attrs(props => ({
   ...props,
 }))`
   margin-right: 10px;
+  top: ${props => (props.pabili ? -5 : 0)}px;
 `;
 
 export const CustomModal: ComponentType<any> = styled(Modal).attrs(props => ({
