@@ -178,7 +178,7 @@ const MainComponent = ({navigation, route}) => {
           topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
           displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
           contentStyle={{
-            width: Platform.OS === 'android' ? moderateScale(tooltipWidth - 20) : moderateScale(tooltipWidth - 36),
+            width: Platform.OS === 'android' ? moderateScale(tooltipWidth) : moderateScale(tooltipWidth - 36),
           }}
           childrenWrapperStyle={{flex: 1}}
           backgroundColor="rgba(0,0,0,0.6)"
@@ -200,7 +200,7 @@ const MainComponent = ({navigation, route}) => {
           closeOnChildInteraction={false}
           closeOnContentInteraction={false}
           placement="bottom">
-          <View style={onBoardingSteps === 1 && {width: tooltipWidth}}>
+          <View style={onBoardingSteps === 1 && {width: width}}>
             <HeaderTabs
               tabs={categories}
               scrollEnabled={true}
