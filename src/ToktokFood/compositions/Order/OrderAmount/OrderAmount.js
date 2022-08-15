@@ -8,6 +8,7 @@ import {TouchableOpacity} from 'react-native';
 import type {PropsType, StateTypes} from './types';
 import {Container, AmountContainer, AmountText, AmountBreakdownContainer, Loader, DiscountIcon} from './Styled';
 import {useTheme} from 'styled-components';
+import Alert from 'toktokfood/components/Alert';
 
 const OrderAmount = (props: PropsType): React$Node => {
   const {state, placement} = props;
@@ -24,7 +25,22 @@ const OrderAmount = (props: PropsType): React$Node => {
       : state.promoDetails?.amount || 0;
   const [showAmountBreakdown, setShowAmountBreakdown] = useState(false);
   const [showDiscountBreakdown, setShowDiscountBreakdown] = useState(false);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
   const theme = useTheme();
+
+  const renderAlertComponent = () => (
+    <Alert
+      isVisible={isAlertVisible}
+      // type={type}
+      // title={title}
+      subtitle="This fee is for us to continue providing
+      excellent delivery experience along with
+      better promos and to expand our
+      merchants selection."
+      buttonText="OK"
+      onPress={() => setIsAlertVisible(false)}
+    />
+  );
 
   const amountComponent = (type = '', title, amount, sign = '', icon, onPress): React$Node => {
     return (
@@ -119,7 +135,8 @@ const OrderAmount = (props: PropsType): React$Node => {
         <AmountBreakdownContainer>
           {amountComponent('', 'Subtotal', state?.srpTotal)}
           {state?.orderIsfor === 1 && amountComponent('', 'Delivery Fee', state?.originalShippingFee)}
-          {state?.serviceType === 'pabili' && amountComponent('', 'Service Fee', state?.totalServiceFee, '', 'info')}
+          {state?.serviceType === 'pabili' &&
+            amountComponent('', 'Service Fee', state?.totalServiceFee, '', 'info', () => setIsAlertVisible(true))}
           {renderDiscountComponent()}
         </AmountBreakdownContainer>
       );
@@ -129,6 +146,7 @@ const OrderAmount = (props: PropsType): React$Node => {
 
   return (
     <Container>
+      {renderAlertComponent()}
       {renderAmountBreakdownComponent()}
       {renderTotalAmountComponent()}
     </Container>
