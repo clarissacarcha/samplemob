@@ -69,9 +69,9 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     }    
   }
 
-  const getImageSource = (imgs) => {
-    if(imgs && typeof imgs == "string"){
-      return {uri: imgs}
+  const getImageSource = (images) => {
+    if(images && images.length > 0){
+      return {uri: images[0]?.filename}
     }else {
       return placeholder
     }
@@ -95,7 +95,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         return(
           <View style={styles.itemContainer}>
             <Image //source = {item.image} 
-            source = {getImageSource(product?.img?.filename)} 
+            source = {getImageSource(product?.images)} 
             style ={styles.itemImage}/>
             <View style = {styles.itemInfoContainer}>
               <Text style={styles.itemNameText}>{product?.name ? product?.name.trim() : product?.itemname.trim()}</Text>
