@@ -30,7 +30,7 @@ import {VerifyContext} from '../VerifyContextProvider';
 import {moderateScale, saveViewOnboarding} from 'toktokload/helper';
 
 //FONTS & COLORS
-import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
+import {COLOR, FONT, FONT_SIZE, SIZE} from 'src/res/variables';
 
 //IMAGES
 import {contact_icon} from 'toktokload/assets/icons';
@@ -317,15 +317,16 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#F8F8F8',
-    height: moderateScale(40),
+    height: moderateScale(SIZE.FORM_HEIGHT),
     borderRadius: moderateScale(5),
-    paddingHorizontal: moderateScale(10),
+    paddingHorizontal: moderateScale(16),
     justifyContent: 'center',
     flex: 1,
   },
   contactsContainer: {
     backgroundColor: '#F6841F',
-    padding: moderateScale(10),
+    height: moderateScale(SIZE.FORM_HEIGHT),
+    width: moderateScale(SIZE.FORM_HEIGHT),
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: moderateScale(5),
@@ -337,8 +338,8 @@ const styles = StyleSheet.create({
     paddingTop: moderateScale(5),
   },
   icon: {
-    width: moderateScale(20),
-    height: moderateScale(20),
+    width: moderateScale(25),
+    height: moderateScale(25),
     resizeMode: 'contain',
   },
   networkImage: {
@@ -363,7 +364,7 @@ const styles = StyleSheet.create({
   },
   selection: {
     backgroundColor: '#F8F8F8',
-    height: moderateScale(40),
+    height: moderateScale(SIZE.FORM_HEIGHT),
     borderRadius: moderateScale(5),
     justifyContent: 'center',
     flexDirection: 'row',

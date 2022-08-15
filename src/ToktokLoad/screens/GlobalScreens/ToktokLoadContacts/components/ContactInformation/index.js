@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, TouchableHighlight} from 'react-native';
 import CONSTANTS from 'common/res/constants';
 import {useThrottle} from 'src/hooks';
 
@@ -14,10 +14,15 @@ export const ContactInformation = ({item, index, setRecipient}) => {
         {item?.contacts.map(val => {
           return (
             <>
-              <TouchableOpacity style={[styles.contactContainer]} onPress={() => setRecipient(val)}>
-                <Text style={[styles.contactName]}>{val?.name}</Text>
-                <Text style={[styles.contactNumber]}>{val?.number}</Text>
-              </TouchableOpacity>
+              <TouchableHighlight
+                underlayColor="#FFFCF4"
+                style={[styles.contactContainer]}
+                onPress={() => setRecipient(val)}>
+                <>
+                  <Text style={[styles.contactName]}>{val?.name}</Text>
+                  <Text style={[styles.contactNumber]}>{val?.number}</Text>
+                </>
+              </TouchableHighlight>
               <View style={styles.divider} />
             </>
           );
