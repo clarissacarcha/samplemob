@@ -23,6 +23,7 @@ import {load} from 'toktokload/assets/images';
 import {heart_selected_fill_icon} from 'toktokload/assets/icons';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
+import _ from 'lodash';
 
 //UTIL
 import {moderateScale, checkViewOnboarding} from 'toktokload/helper';
@@ -71,6 +72,7 @@ const MainComponent = ({navigation, route}) => {
   const [categories, setCategories] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
+  const [categoryNames, setCategoryNames] = useState('');
   const prompt = usePrompt();
   const {user} = useSelector(state => state.session);
   const tooltipWidth = moderateScale(
@@ -84,9 +86,13 @@ const MainComponent = ({navigation, route}) => {
       setRefreshing(false);
     },
     onCompleted: ({getLoadCategories}) => {
+      console.log(getLoadCategories);
       setRefreshing(false);
       setActiveTab(getLoadCategories[0]);
       setCategories(getLoadCategories);
+      const names = _.map(getLoadCategories, 'name').join(', ');
+      console.log(names.replace(/,(?=[^,]*$)/, ' and'));
+      setCategoryNames(names.replace(/,(?=[^,]*$)/, ' and'));
     },
   });
 
@@ -160,64 +166,63 @@ const MainComponent = ({navigation, route}) => {
   }
   return (
     // <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "padding"} keyboardVerticalOffset={30}>
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{flexGrow: 1}}
-      showsVerticalScrollIndicator={false}
-      keyboardShouldPersistTaps="handled"
-      refreshControl={<RefreshControl refreshing={loading || adsActions.loading} onRefresh={onRefresh} />}>
-      {adsRegular.length > 0 && <Advertisement autoplay ads={adsRegular} />}
-      <Tooltip
-        accessible={false}
-        animated={true}
-        topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
-        displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
-        contentStyle={{width: Platform.OS === 'android' ? tooltipWidth : moderateScale(tooltipWidth - 36)}}
-        childrenWrapperStyle={{flex: 1}}
-        backgroundColor="rgba(0,0,0,0.6)"
-        disableShadow={true}
-        isVisible={onBoardingSteps === 1}
-        content={
-          <View style={{padding: 5}}>
-            <Text style={styles.tooltipTitle}>Load Categories</Text>
-            <Text style={{paddingVertical: moderateScale(10)}}>
-              Choose between the load categories: Telco, Broadband, and Entertainment.
-            </Text>
-            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-              <TouchableOpacity style={styles.tooltipButton} onPress={() => setOnboardingSteps(2)}>
-                <Text style={styles.tooltipButtonText}>Next</Text>
-              </TouchableOpacity>
+    <>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{flexGrow: 1}}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        refreshControl={<RefreshControl refreshing={loading || adsActions.loading} onRefresh={onRefresh} />}>
+        {adsRegular.length > 0 && <Advertisement autoplay ads={adsRegular} />}
+        <Tooltip
+          accessible={false}
+          animated={true}
+          topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
+          displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
+          contentStyle={{width: Platform.OS === 'android' ? tooltipWidth : moderateScale(tooltipWidth - 36)}}
+          childrenWrapperStyle={{flex: 1}}
+          backgroundColor="rgba(0,0,0,0.6)"
+          disableShadow={true}
+          isVisible={onBoardingSteps === 1}
+          content={
+            <View style={{padding: 5}}>
+              <Text style={styles.tooltipTitle}>Load Categories</Text>
+              <Text style={{paddingVertical: moderateScale(10)}}>
+                Choose between the load categories: {categoryNames}.
+              </Text>
+              <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                <TouchableOpacity style={styles.tooltipButton} onPress={() => setOnboardingSteps(2)}>
+                  <Text style={styles.tooltipButtonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
             </View>
+          }
+          closeOnChildInteraction={false}
+          closeOnContentInteraction={false}
+          placement="bottom">
+          <View style={onBoardingSteps === 1 && {width: tooltipWidth}}>
+            <HeaderTabs
+              tabs={categories}
+              scrollEnabled={true}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              fitToScreen={false}
+              overLap={false}
+              disabled={onBoardingSteps === 1}
+            />
           </View>
-        }
-        closeOnChildInteraction={false}
-        closeOnContentInteraction={false}
-        placement="bottom">
-        <View style={onBoardingSteps === 1 && {width: tooltipWidth}}>
-          <HeaderTabs
-            tabs={categories}
-            scrollEnabled={true}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            fitToScreen={false}
-            overLap={false}
-            disabled={onBoardingSteps === 1}
-          />
+        </Tooltip>
+        <LoadCategory
+          navigation={navigation}
+          activeTab={activeTab?.id}
+          activeCategory={() => getActiveCategoryName(activeTab)}
+        />
+        <View style={{padding: moderateScale(16)}}>
+          {adHighlight.length > 0 && <Advertisement ads={adHighlight} />}
         </View>
-      </Tooltip>
-      <LoadCategory
-        navigation={navigation}
-        activeTab={activeTab?.id}
-        activeCategory={() => getActiveCategoryName(activeTab)}
-      />
-      {adHighlight.length > 0 && <Advertisement ads={adHighlight} />}
-      <CustomButton
-        label="Next"
-        // disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
-        onPress={onPressNext}
-        hasShadow
-      />
-    </ScrollView>
+      </ScrollView>
+      <CustomButton label="Next" onPress={onPressNext} hasShadow />
+    </>
     // </KeyboardAvoidingView>
   );
 };

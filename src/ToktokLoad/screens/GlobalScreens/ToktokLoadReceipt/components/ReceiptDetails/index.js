@@ -49,7 +49,7 @@ export const ReceiptDetails = ({route}) => {
           <Text style={styles.description}>{loadDetails.networkDetails.name}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Transaction Date and Time </Text>
+          <Text style={styles.title}>Transaction Date </Text>
           <Text style={styles.description}>{transactionDateTime}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
@@ -68,7 +68,7 @@ export const ReceiptDetails = ({route}) => {
           </Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Service Fee </Text>
+          <Text style={styles.title}>Toktok Service Fee </Text>
           <Text style={styles.description}>
             {currencyCode}
             {numberFormat(convenienceFee)}

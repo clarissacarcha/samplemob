@@ -39,8 +39,8 @@ export const SummaryDetails = ({loadDetails, mobileNumber, discount = 0}) => {
       <View style={styles.line} />
       <View style={styles.totalAmountContainer}>
         <View style={styles.bodyContainer}>
-          <Text style={styles.totalAmount}>Total Amount</Text>
-          <Text style={styles.description}>
+          <Text style={styles.totalAmount}>Total</Text>
+          <Text style={styles.totalAmount}>
             {currencyCode}
             {numberFormat(totalAmount)}
           </Text>

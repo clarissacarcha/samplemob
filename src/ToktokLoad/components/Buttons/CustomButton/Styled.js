@@ -20,17 +20,13 @@ export const Container: ComponentType<any> = styled(View).attrs(props => ({
       padding-horizontal: ${moderateScale(32)};
       padding-vertical: ${moderateScale(16)};
       background: #FFFFFF;
-      shadow-color: #000;
-      shadow-offset: {width: 0, height: 1};
-      shadow-opacity: 0.1;
-      shadow-radius: 2;
-      elevation: 5;
+      ${Platform.OS === 'ios' ? 'box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15)' : 'elevation: 5'};
       background-color: #fff;
       ${
-        String(Platform.OS === 'android') &&
+        Platform.OS === 'android' &&
         `
         border-top-color: #F8F8F8;
-        border-top-width: 2;
+        border-top-width: 2px;
         `
       }
    `}
@@ -52,7 +48,7 @@ export const ButtonText: ComponentType<any> = styled(Text).attrs(props => ({
   ...props,
 }))`
   font-family: ${FONT.BOLD};
-  font-size: ${FONT_SIZE.L};
+  font-size: ${FONT_SIZE.L}px;
   color: ${props => (props.labelColor ? props.labelColor : props.theme.color.white)};
-  margin-bottom: ${Platform.OS === 'android' ? moderateScale(5) : 0};
+  margin-bottom: ${Platform.OS === 'android' ? moderateScale(5) : 0}px;
 `;
