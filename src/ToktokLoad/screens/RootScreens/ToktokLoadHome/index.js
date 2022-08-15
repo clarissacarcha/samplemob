@@ -76,7 +76,7 @@ const MainComponent = ({navigation, route}) => {
   const prompt = usePrompt();
   const {user} = useSelector(state => state.session);
   const tooltipWidth = moderateScale(
-    width - (Platform.OS === 'android' ? moderateScale(36) : width > 375 ? moderateScale(36) : 0),
+    width - (Platform.OS === 'android' ? moderateScale(16) : width > 375 ? moderateScale(36) : 0),
   );
 
   const [getLoadCategories, {loading, error}] = useLazyQuery(GET_LOAD_CATEGORIES, {
