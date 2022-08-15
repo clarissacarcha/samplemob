@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /**
  * @format
  * @flow
@@ -67,9 +68,21 @@ const OrderDeliveryLogs = (props: PropsType): React$Node => {
         {renderDashComponent()}
         {renderLogsComponent('Order placed', state?.dateOrdered)}
         {state?.isdeclined ? (
-          <DeclinedText>
-            Order was cancelled by <DeclinedText mode="semibold">{state?.shopDetails?.shopname}</DeclinedText>
-          </DeclinedText>
+          state?.isdeclined === 3 ? (
+            <DeclinedText mode="semibold">
+              Cancelled automatically by toktokfood’s system{'\n'}
+              <DeclinedText>
+                Total refund amount for this transaction should be credited to your toktokwallet account.{' '}
+              </DeclinedText>
+            </DeclinedText>
+          ) : (
+            <DeclinedText>
+              Order was cancelled by{' '}
+              <DeclinedText mode="semibold">
+                {state?.isdeclined === 4 ? 'driver' : state?.shopDetails?.shopname}
+              </DeclinedText>
+            </DeclinedText>
+          )
         ) : (
           <DeclinedText>You cancelled this order</DeclinedText>
         )}
