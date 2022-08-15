@@ -11,10 +11,18 @@ import {decodeLegsPolyline} from '../../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 import {onErrorAppSync} from '../../util';
+import {useAccount} from 'toktokwallet/hooks';
 
 const ToktokGoLanding = ({navigation, session, constants}) => {
   const dispatch = useDispatch();
   const {routeDetails} = useSelector(state => state.toktokGo);
+  const {tokwaAccount, getMyAccount} = useAccount();
+  useEffect(() => {
+    if (session.user.toktokWalletAccountId) {
+      getMyAccount();
+    }
+  }, []);
+
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -52,10 +60,18 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
 
   const healthCareAccept = async () => {
     const date = await AsyncStorage.getItem('ToktokGoHealthCare');
-    if (date === moment(new Date()).format('MMM D, YYYY')) {
-      navigation.replace('ToktokGoBookingStart');
+    const data = await AsyncStorage.getItem('ToktokGoOnBoardingBeta');
+
+    if (data) {
+      if (date === moment(new Date()).format('MMM D, YYYY')) {
+        navigation.replace('ToktokGoBookingStart');
+      } else if (tokwaAccount.wallet.id) {
+        navigation.replace('ToktokGoHealthCare');
+      } else {
+        navigation.replace('ToktokGoCreateTokwa');
+      }
     } else {
-      navigation.replace('ToktokGoHealthCare');
+      navigation.replace('ToktokGoOnBoardingBeta');
     }
   };
 

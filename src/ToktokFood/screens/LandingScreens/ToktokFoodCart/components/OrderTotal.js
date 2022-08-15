@@ -1,20 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-nested-ternary */
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 import _ from 'lodash';
 
 import {VerifyContext} from '../components';
 
-import {getCartTotalAmountOrder, getResellerDiscount, getTotalResellerDiscount} from '../functions';
+import {getResellerDiscount, getTotalResellerDiscount} from '../functions';
 
 import styles from '../styles';
 
-const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = true, oneCartTotal}) => {
+import MIcon from 'react-native-vector-icons/MaterialIcons';
+
+const OrderTotal = ({
+  autoShipping,
+  subtotal = 0,
+  deliveryFee = 0,
+  forDelivery = true,
+  onCartTotal,
+  onServiceFeeIconPress,
+  navigation,
+}) => {
   // deliveryFee = deliveryFee ? deliveryFee : 0;
   // subtotal = subtotal ? subtotal : 0;
-  const {shippingVoucher, temporaryCart} = useContext(VerifyContext);
+  const {shippingVoucher, temporaryCart, pabiliShopDetails, pabiliShopServiceFee} = useContext(VerifyContext);
   const [totalBasket, setTotalBasket] = useState(temporaryCart.totalAmountWithAddons);
   const [totalShipping, setTotalShipping] = useState(0);
   const [totalPromotions, setTotalPromotions] = useState(0);
@@ -30,10 +40,12 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       ? deliveryFee.toFixed(2)
       : totalSumSF.toFixed(2)
     : (0.0).toFixed(2);
+  const {pabiliShopResellerDiscount = 0} = temporaryCart;
+  const pabiliServiceFee = pabiliShopResellerDiscount || pabiliShopServiceFee;
   // const totalReseller = temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
 
   useEffect(() => {
-    oneCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
+    onCartTotal(temporaryCart.totalAmountWithAddons + deliveryFee - totalShipping);
   }, [shippingVoucher, totalBasket, totalShipping]);
 
   const getVoucherFee = async () => {
@@ -59,11 +71,15 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
       setTotalReseller(totalBasketAmount);
       // setTotalBasket(temporaryCart.totalAmountWithAddons);
     } else {
+      const resellerDiscount = pabiliShopDetails.isShopPabiliMerchant
+        ? 0
+        : temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount;
       setTotalBasket(
         temporaryCart.totalAmountWithAddons + (temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount),
       );
+      setTotalReseller(resellerDiscount);
       // setTotalBasket(temporaryCart.totalAmountWithAddons + totalReseller);
-      setTotalReseller(temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount);
+      // setTotalReseller(temporaryCart?.srpTotalAmount - temporaryCart?.totalAmount);
     }
 
     if (promotions.length > 0 || deal.length > 0) {
@@ -140,6 +156,27 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     // }
   };
 
+  const onTermsAndConditionsPress = () => {
+    navigation.navigate('ToktokFoodTermsAndConditions');
+  };
+
+  const ServiceInfoBanner = (
+    <View style={styles.pabiliSubInfoWrapper}>
+      {/* <Image resizeMode="contain" source={toktokwallet_ic} style={styles.pabiliSubInfoWalletIcon} /> */}
+      <MIcon name="info-outline" color="#F6841F" size={22} style={styles.pabiliSubInfoIcon} />
+      <View style={{display: 'flex', flexDirection: 'row', maxWidth: '90%'}}>
+        <Text style={styles.pabiliSubInfoText} numberOfLines={2}>
+          Items prices and availability are subject to change without prior notice. Learn more about our{' '}
+          <Text
+            onPress={() => onTermsAndConditionsPress()}
+            style={[styles.pabiliSubInfoText, {textDecorationLine: 'underline'}]}>
+            Terms and Conditions.
+          </Text>
+        </Text>
+      </View>
+    </View>
+  );
+
   useEffect(() => {
     getVoucherFee();
   }, [promotionVoucher, deliveryFee]);
@@ -148,69 +185,107 @@ const OrderTotal = ({autoShipping, subtotal = 0, deliveryFee = 0, forDelivery = 
     setTotalBasket(temporaryCart.totalAmountWithAddons + totalReseller);
   }, [temporaryCart]);
 
-  const totalAmount = (totalBasket + deliveryFee - totalSumSF - totalReseller - (totalPromotions + totalDeal)).toFixed(
-    2,
-  );
+  const totalAmount = (
+    pabiliServiceFee +
+    totalBasket +
+    deliveryFee -
+    totalSumSF -
+    totalReseller -
+    (totalPromotions + totalDeal)
+  ).toFixed(2);
   const deliveryAmount = forDelivery && totalAmount > 0 ? totalAmount : deliveryFee;
 
   return (
-    <View style={[styles.sectionContainer, styles.totalContainer]}>
-      {/* {forDelivery && ( */}
-      {/* <> */}
-      <View style={styles.header}>
-        <Text>Subtotal</Text>
-        <Text style={styles.subtotal}>{`PHP ${totalBasket?.toFixed(2)}`}</Text>
-      </View>
-      {(totalPromotions > 0 || totalDeal > 0) && (
+    <>
+      <View style={[styles.sectionContainer, styles.totalContainer]}>
+        {/* {forDelivery && ( */}
+        {/* <> */}
         <View style={styles.header}>
-          <Text>Item Discount</Text>
-          <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal + totalReseller).toFixed(2)}`}</Text>
+          <Text>Subtotal</Text>
+          <Text style={styles.subtotal}>{`PHP ${totalBasket?.toFixed(2)}`}</Text>
         </View>
-      )}
+        {(totalPromotions > 0 || totalDeal > 0) && (
+          <View style={styles.header}>
+            <Text>Item Discount</Text>
+            <Text style={styles.subtotal}>{`-PHP ${(totalPromotions + totalDeal + totalReseller).toFixed(2)}`}</Text>
+          </View>
+        )}
 
-      {totalPromotions === 0 && totalDeal === 0 && totalReseller > 0 && (
-        <View style={styles.header}>
-          <Text>Item Discount (Reseller)</Text>
-          <Text style={styles.subtotal}>{`-PHP ${totalReseller.toFixed(2)}`}</Text>
-        </View>
-      )}
+        {totalPromotions === 0 && totalDeal === 0 && totalReseller > 0 && (
+          <View style={styles.header}>
+            <Text>Item Discount (Reseller)</Text>
+            <Text style={styles.subtotal}>{`-PHP ${totalReseller.toFixed(2)}`}</Text>
+          </View>
+        )}
 
-      {forDelivery && (
-        <View style={styles.header}>
-          <Text>Delivery Fee</Text>
-          <View style={styles.deliveryFee}>
-            {/* {(autoShipping?.success || shippingVoucher.length > 0) && (
+        {forDelivery && (
+          <View style={styles.header}>
+            <Text>Delivery Fee</Text>
+            <View style={styles.deliveryFee}>
+              {/* {(autoShipping?.success || shippingVoucher.length > 0) && (
           <Text style={styles.deliveryFeeText}>{`\u20B1${deliveryFee.toFixed(2)}`}</Text>
         )} */}
-            <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
+              <Text style={styles.subtotal}>{`PHP ${deliveryFee.toFixed(2)}`}</Text>
+            </View>
           </View>
-        </View>
-      )}
-
-      {forDelivery && (totalDelivery > 0 || totalShipping > 0) && (
-        <View style={styles.header}>
-          <Text>Delivery Fee Discount</Text>
-          <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
-        </View>
-      )}
-
-      <View style={styles.divider} />
-      {/* </> */}
-      {/* )} */}
-      <View style={styles.header}>
-        <Text style={styles.total}>Total</Text>
-        {forDelivery ? (
-          <Text style={styles.totalPrice}>{`PHP ${deliveryAmount}`}</Text>
-        ) : (
-          <Text style={styles.totalPrice}>{`PHP ${(
-            totalBasket -
-            totalSumSF -
-            totalReseller -
-            (totalPromotions + totalDeal)
-          ).toFixed(2)}`}</Text>
         )}
+
+        {forDelivery && (totalDelivery > 0 || totalShipping > 0) && (
+          <View style={styles.header}>
+            <Text>Delivery Fee Discount</Text>
+            <Text style={styles.subtotal}>{`-PHP ${totalSF}`}</Text>
+          </View>
+        )}
+
+        {pabiliShopDetails.isShopPabiliMerchant && (
+          <>
+            <View style={styles.header}>
+              <View style={styles.serviceFeeLabelWrapper}>
+                <Text>Service Fee</Text>
+                <TouchableOpacity onPress={() => onServiceFeeIconPress()}>
+                  <MIcon name="info-outline" color="#F6841F" size={22} style={styles.seviceFeeIcon} />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.subtotal}>
+                {pabiliShopServiceFee > 0 ? `PHP ${pabiliShopServiceFee.toFixed(2)}` : 'WAIVED'}
+              </Text>
+            </View>
+
+            {pabiliShopResellerDiscount > 0 && (
+              <View style={styles.header}>
+                <View style={styles.serviceFeeLabelWrapper}>
+                  <Text>Service Fee Discount (Reseller)</Text>
+                </View>
+                <Text style={styles.subtotal}>
+                  {pabiliShopResellerDiscount > 0
+                    ? `-PHP ${(pabiliShopServiceFee - pabiliShopResellerDiscount).toFixed(2)}`
+                    : 'WAIVED'}
+                </Text>
+              </View>
+            )}
+          </>
+        )}
+
+        <View style={styles.divider} />
+        {/* </> */}
+        {/* )} */}
+        <View style={styles.header}>
+          <Text style={styles.total}>Total</Text>
+          {forDelivery ? (
+            <Text style={styles.totalPrice}>{`PHP ${deliveryAmount}`}</Text>
+          ) : (
+            <Text style={styles.totalPrice}>{`PHP ${(
+              totalBasket -
+              totalSumSF -
+              totalReseller -
+              (totalPromotions + totalDeal) +
+              pabiliServiceFee
+            ).toFixed(2)}`}</Text>
+          )}
+        </View>
       </View>
-    </View>
+      {pabiliShopDetails.isShopPabiliMerchant && ServiceInfoBanner}
+    </>
   );
 };
 

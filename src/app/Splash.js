@@ -23,8 +23,16 @@ import Maintenance from '../assets/images/Maintenance.png';
 import NoNetworkConnection from '../assets/images/NoNetworkConnection.png';
 import ToktokSuperApp from '../assets/images/ToktokLogo.png';
 import ServerDown from '../assets/images/ServerDown.png';
+import MaintenanceLogo from '../assets/images/MaintenanceLogo.png';
+import UpdateLogo from '../assets/images/ToktokUpdateImage.png';
+// import MaintenanceImage from '../assets/images/MaintenanceImage.png';
+import CONSTANTS from '../common/res/constants';
+import LoginBanner from '../assets/images/ToktokLogo.png';
 
 const imageWidth = Dimensions.get('window').width - 80;
+
+const bannerWidth = Dimensions.get('window').width * 0.8;
+const bannerHeight = Dimensions.get('window').height * 0.5;
 
 const mapKeyValueToObject = keyValueArray => {
   const result = {};
@@ -116,7 +124,7 @@ const Splash = ({setConstants, setAppServices}) => {
       });
 
       const {isCurrent, enabled} = result.data.getAppVersionStatus;
-      console.log(result.data.getAppVersionStatus)
+      console.log(result.data.getAppVersionStatus);
 
       if (isCurrent && enabled) {
         setcheckPoint('A');
@@ -174,13 +182,49 @@ const Splash = ({setConstants, setAppServices}) => {
   // New Version Optional = SUGGEST
   if (checkPoint === 'S') {
     return (
-      <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
-        <View style={styles.imageBox}>
-          <Image source={Maintenance} style={styles.image} resizeMode="contain" />
-          <Text style={styles.text}>We have added something new for you.</Text>
-          <TouchableHighlight onPress={() => Linking.openURL(deepLink)} underlayColor={COLOR} style={styles.submitBox}>
-            <View style={styles.submit}>
-              <Text style={{color: COLOR, fontSize: 20}}>Update Now</Text>
+      <ImageBackground
+        style={{flex: 1, alignItems: 'center', justifyContent: 'space-between'}}
+        source={SplashImage}
+        resizeMode={'cover'}>
+        <View style={{alignItems: 'center', marginHorizontal: 20}}>
+          <Image
+            source={UpdateLogo}
+            style={{width: bannerWidth, height: bannerHeight, marginTop: '20%'}}
+            resizeMode="contain"
+          />
+          <Text
+            style={{
+              color: CONSTANTS.COLOR.ORANGE,
+              fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+              fontSize: CONSTANTS.FONT_SIZE.XL,
+            }}>
+            Tutok lang ka-toktok!
+          </Text>
+          <Text style={{textAlign: 'center', marginTop: 8, fontSize: CONSTANTS.FONT_SIZE.M, marginHorizontal: 50}}>
+            We have added something new for you! Update now to continue enjoying the app.
+          </Text>
+          <TouchableHighlight
+            style={{marginTop: 32, borderRadius: 10, alignSelf: 'center', marginHorizontal: 10}}
+            onPress={() => Linking.openURL(deepLink)}
+            underlayColor={COLOR}>
+            <View
+              style={{
+                backgroundColor: '#F6841F',
+                height: 40,
+                borderRadius: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  color: CONSTANTS.COLOR.WHITE,
+                  fontSize: CONSTANTS.FONT_SIZE.M,
+                  fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                  paddingHorizontal: '35%',
+                  lineHeight: CONSTANTS.FONT_SIZE.L,
+                }}>
+                Update Now
+              </Text>
             </View>
           </TouchableHighlight>
           <TouchableHighlight onPress={() => setcheckPoint('A')} underlayColor={COLOR} style={styles.submitBox}>
@@ -189,6 +233,9 @@ const Splash = ({setConstants, setAppServices}) => {
             </View>
           </TouchableHighlight>
         </View>
+        <Text style={{color: CONSTANTS.COLOR.ORANGE, marginBottom: 22, fontSize: CONSTANTS.FONT_SIZE.M}}>
+          v{APP_VERSION}
+        </Text>
       </ImageBackground>
     );
   }
@@ -196,16 +243,55 @@ const Splash = ({setConstants, setAppServices}) => {
   //New Version Required = BLOCK
   if (checkPoint == 'B') {
     return (
-      <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
-        <View style={styles.imageBox}>
-          <Image source={Maintenance} style={styles.image} resizeMode="contain" />
-          <Text style={styles.text}>We have added something new for you.</Text>
-          <TouchableHighlight onPress={() => Linking.openURL(deepLink)} underlayColor={COLOR} style={styles.submitBox}>
-            <View style={styles.submit}>
-              <Text style={{color: COLOR, fontSize: 20}}>Update Now</Text>
+      <ImageBackground
+        style={{flex: 1, alignItems: 'center', justifyContent: 'space-between'}}
+        source={SplashImage}
+        resizeMode={'cover'}>
+        <View style={{alignItems: 'center', marginHorizontal: 20}}>
+          <Image
+            source={UpdateLogo}
+            style={{width: bannerWidth, height: bannerHeight, marginTop: '20%'}}
+            resizeMode="contain"
+          />
+          <Text
+            style={{
+              color: CONSTANTS.COLOR.ORANGE,
+              fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+              fontSize: CONSTANTS.FONT_SIZE.XL,
+            }}>
+            Tutok lang ka-toktok!
+          </Text>
+          <Text style={{textAlign: 'center', marginTop: 8, fontSize: CONSTANTS.FONT_SIZE.M, marginHorizontal: 50}}>
+            We have added something new for you! Update now to continue enjoying the app.
+          </Text>
+          <TouchableHighlight
+            style={{marginTop: 32, borderRadius: 10, alignSelf: 'center', marginHorizontal: 10}}
+            onPress={() => Linking.openURL(deepLink)}
+            underlayColor={COLOR}>
+            <View
+              style={{
+                backgroundColor: '#F6841F',
+                height: 40,
+                borderRadius: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  color: CONSTANTS.COLOR.WHITE,
+                  fontSize: CONSTANTS.FONT_SIZE.M,
+                  fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                  paddingHorizontal: '35%',
+                  lineHeight: CONSTANTS.FONT_SIZE.L,
+                }}>
+                Update Now
+              </Text>
             </View>
           </TouchableHighlight>
         </View>
+        <Text style={{color: CONSTANTS.COLOR.ORANGE, marginBottom: 22, fontSize: CONSTANTS.FONT_SIZE.M}}>
+          v{APP_VERSION}
+        </Text>
       </ImageBackground>
     );
   }
@@ -213,11 +299,25 @@ const Splash = ({setConstants, setAppServices}) => {
   // Maintenance/Server Issue
   if (checkPoint == 'MAINTENANCE') {
     return (
-      <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
-        <View style={styles.imageBox}>
-          <Image source={ServerDown} style={styles.image} resizeMode="contain" />
-          <Text style={styles.text}>Cannot connect to server. Come back again later.</Text>
-        </View>
+      <ImageBackground style={{flex: 1, alignItems: 'center'}} source={SplashImage} resizeMode={'cover'}>
+        <Image
+          source={LoginBanner}
+          style={{height: imageWidth - 200, width: imageWidth - 150, marginTop: 80}}
+          resizeMode="contain"
+        />
+        <Image source={MaintenanceLogo} style={{width: bannerWidth, height: bannerHeight}} resizeMode="contain" />
+        <Text
+          style={{
+            color: CONSTANTS.COLOR.ORANGE,
+            fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+            fontSize: CONSTANTS.FONT_SIZE.XL,
+          }}>
+          Katok ka ulit mamaya!
+        </Text>
+        <Text style={{marginHorizontal: 20, textAlign: 'center', marginTop: 8}}>
+          We are performing some maintenance to serve you better.
+        </Text>
+        <Text style={{marginHorizontal: 20, textAlign: 'center'}}>We will be right back. Thank you.</Text>
       </ImageBackground>
     );
   }

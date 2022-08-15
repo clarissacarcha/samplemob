@@ -250,7 +250,7 @@ const Component =  ({
 			<>
 				<View style={styles.container}>
 	        <Header label="Notifications" />
-					<View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
+					<View style={styles.margin1} />
 					<Loading state={loading} />
 				</View>
 			</>
@@ -262,15 +262,15 @@ const Component =  ({
       <>
         <View style={styles.container}>
 	        <Header label="Notifications" />
-					<View style={{ height: 8, backgroundColor: '#F7F7FA'}} />
-					<View style={{flex: 1, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center'}}>
-            <Image source={emptynotification} style={{width: '80%', height: Dimensions.get("screen").height / 4, resizeMode: 'contain'}} />
-            <View style={{height: 8}} />
+					<View style={styles.margin1} />
+					<View style={styles.emptyContainer}>
+            <Image source={emptynotification} style={styles.emptyImage} />
+            <View style={styles.margin2} />
             <View>
-    				  <Text style={{fontSize: 16, color: "#9E9E9E"}}>No notifications</Text>
+    				  <Text style={styles.emptyText}>No notifications</Text>
   		    	</View>
           </View>
-          <View style={{flex: 0.1}} />
+          <View style={styles.margin3} />
 				</View> 
       </>
     )
@@ -280,8 +280,8 @@ const Component =  ({
     <>
       <View style={styles.container}>
         <Header label="Notifications" />
-        <View style={{flex: 1}}>                    
-          <View style={{ height: 8, backgroundColor: '#F7F7FA'}} />               
+        <View style={styles.subContainer}>                    
+          <View style={styles.margin1} />               
             <FlatList
               ref={ref => flatlistRef = ref}
               keyExtractor={item => item.id}
@@ -328,5 +328,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.WHITE
+  },
+  subContainer: {
+    flex: 1
+  },
+  margin1: {
+     height: 8, 
+     backgroundColor: '#F7F7FA'
+    },
+  emptyContainer: {
+    flex: 1, 
+    backgroundColor: 'white', 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  emptyImage: {
+    width: '80%', 
+    height: Dimensions.get("screen").height / 4, 
+    resizeMode: 'contain'
+  },
+  margin2: {
+    height: 8
+  },
+  emptyText: {
+    fontSize: 16, 
+    color: "#9E9E9E"
+  },
+  margin3: {
+    flex: 0.1
   }
 })

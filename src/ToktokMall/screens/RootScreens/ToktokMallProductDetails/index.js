@@ -39,6 +39,39 @@ import {
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
 import { EventRegister } from 'react-native-event-listeners';
 
+const OutOfStockModalContent = () => (
+  <>
+    <Text
+      style={{
+        fontSize: 22,
+        textAlign: 'center',
+        marginVertical: 10,
+        width: 250,
+      }}>
+      {"We're sorry but this product is "}
+      <Text
+        style={{
+          color: '#F6841F',
+          fontSize: 22,
+          textAlign: 'center',
+          marginTop: 15,
+        }}>
+        SOLD OUT.
+      </Text>
+    </Text>
+    <Text
+      style={{
+        fontSize: 17,
+        textAlign: 'center',
+        marginTop: 15,
+        marginBottom: 10,
+        paddingHorizontal: 15
+      }}>
+      This item is currently out of stock.
+    </Text>
+  </>
+)
+
 const Component =  ({
   navigation,
   createMyFavorites,
@@ -143,7 +176,7 @@ const Component =  ({
       const onBackPress = () => {
         // navigation.pop(2)
         // alert(JSON.stringify(customModal.visible))
-        if(customModal.visible || customMessageModal.visible){
+        if(customModal?.visible || customMessageModal?.visible){
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
           dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
@@ -184,29 +217,42 @@ const Component =  ({
         setIsFetching(false)
         if(response.getProductDetails.enabled === 2){
           dispatch({
-            type: 'TOKTOK_MALL_OPEN_MODAL_2',
+            type: 'TOKTOK_MALL_OPEN_MODAL',
             payload: {
               type: 'Warning',
               title: 'Product not Available',
               message:
                 'We’re sorry but this product is no longer available. This product will be deleted upon refresh.',
-              btnTitle: 'OK',
-              onConfirm: () => navigation.goBack(),
+                actions: [
+                  {
+                    name: 'OK',
+                    type: 'fill',
+                    onPress: () => navigation.goBack()
+                  }
+                ]
             },
           });
         }
         if(response.getProductDetails.noOfStocks <= 0 &&
           response.getProductDetails.contSellingIsset == 0) {
           setisOutOfStock(true)
-          dispatch({type:'TOKTOK_MALL_OPEN_MESSAGE_MODAL', payload: {
-            action: {
-              onPress:() => {
-                navigation.navigate("ToktokMallHome")
-                dispatch({type: "TOKTOK_MALL_CLOSE_MESSAGE_MODAL"})
-              },
-              title: "Back to Home."
-            }
-          }})
+
+          dispatch({
+            type: 'TOKTOK_MALL_OPEN_MODAL',
+            payload: {
+              Content: OutOfStockModalContent,
+              actions: [
+                {
+                  onPress: () => {
+                    navigation.navigate('ToktokMallHome');
+                    dispatch({type: 'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'});
+                  },
+                  name: 'Back to Home',
+                },
+              ],
+              onCloseDisabled: true
+            },
+          });
         }
         console.log("Stock", response.getProductDetails.noOfStocks)
       }
@@ -348,8 +394,8 @@ const Component =  ({
 
       dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
         type: 'Success',
-        message: 'Item has been added to your cart.',
-        onCloseCallback: () => {
+        message: 'Item has been added to\nyour cart.',
+        onClose: () => {
           setMessageModalShown(true)
         }
       }})
@@ -454,7 +500,7 @@ const Component =  ({
       <CustomModal 
         type="Success"
         setIsVisible={(val) => setMessageModalShown(val)}
-        message="Item has been added to your cart."
+        message="Item has been added to\nyour cart.."
       />} */}
       
       {/* { isFetching ? <></> : <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} itemName = {route.params.itemname} /> }

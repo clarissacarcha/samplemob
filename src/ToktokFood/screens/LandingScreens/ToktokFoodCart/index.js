@@ -24,6 +24,11 @@ import OrderTypeSelection from 'toktokfood/components/OrderTypeSelection';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
 import Separator from 'toktokfood/components/Separator';
 import DialogMessage from 'toktokfood/components/DialogMessage';
+
+import {Modal} from 'toktokfood/components/Modal';
+import StyledButton from 'toktokfood/components/StyledButton';
+import StyledText from 'toktokfood/components/StyledText/StyledText';
+
 // import AlertModal from 'toktokfood/components/AlertModal';
 
 import styles from './styles';
@@ -114,6 +119,8 @@ const MainComponent = () => {
     setAutoShippingVoucher,
     setPaymentMethod,
     shippingVoucher,
+    pabiliShopDetails,
+    pabiliShopServiceFee,
   } = useContext(VerifyContext);
 
   const [autoShipping, setAutoShipping] = useState(0);
@@ -134,6 +141,8 @@ const MainComponent = () => {
   const [closeShop, setShowCloseShop] = useState({visible: false, shopName: ''});
   const [pinAttempt, setPinAttempt] = useState({show: false, message: ''});
   const [tokWaPlaceOrderErr, setTokWaPlaceOrderErr] = useState({error: {}, visible: false});
+  const [showPabiliServiceFeeInfo, setShowPabiliServiceFeeInfo] = useState(false);
+
   const alert = useAlert();
   const isFocus = useIsFocused();
 
@@ -408,7 +417,8 @@ const MainComponent = () => {
   const fixOrderLogs = async () => {
     const autoApply = promotionVoucher.filter(promo => promo.type === 'auto');
     const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
-    const VOUCHER_FlAG = shipping.length > 0 ? shipping[0]?.handle_shipping_promo : autoApply[0]?.handle_shipping_promo ? 1 : 0;
+    const VOUCHER_FlAG =
+      shipping.length > 0 ? shipping[0]?.handle_shipping_promo : autoApply[0]?.handle_shipping_promo ? 1 : 0;
     // console.log(VOUCHER_FlAG, shippingVoucher, promotionVoucher);
     let orderLogs = {
       sys_shop: temporaryCart.items[0]?.shopid,
@@ -488,16 +498,14 @@ const MainComponent = () => {
     //   ? await handleAutoShippingVouchers(autoShippingVoucher)
     //   : await handleShippingVouchers(shippingVoucher);
     const amount = await getTotalAmount(promotionVoucher, delivery?.price);
-    const parseAmount = Number((deliveryPrice + deductedPrice - amount).toFixed(2));
-    // console.log(parseAmount, totalPrice, deliveryPrice, deductedPrice, amount, temporaryCart);
+    let parseAmount = Number((deliveryPrice + deductedPrice - amount).toFixed(2));
+    // console.log(parseAmount, totalPrice, deliveryPrice, deductedPrice, amount);
 
-    // if (orderType === 'Delivery') {
-    //   // if (SHIPPING_VOUCHERS?.shippingvouchers.length) {
-    //   //   deductedFee = getDeductedVoucher(SHIPPING_VOUCHERS?.shippingvouchers[0], delivery?.price);
-    //   // }
-    //   totalPrice = temporaryCart.totalAmountWithAddons + (delivery.price - deductedFee);
-    // }
-    // console.log(parseAmount, totalPrice, amount, temporaryCart);
+    if (pabiliShopDetails.isShopPabiliMerchant) {
+      const pabiliServiceFee = temporaryCart?.pabiliShopResellerDiscount || pabiliShopServiceFee;
+      parseAmount += pabiliServiceFee;
+    }
+
     postResquestTakeMoney({
       variables: {
         input: {
@@ -688,8 +696,16 @@ const MainComponent = () => {
       referral_code: customerFranchisee?.franchiseeCode ? '' : customerFranchisee?.referralCode || '',
       discounted_totalamount: parsedAmount,
     };
+
+    if (pabiliShopDetails.isShopPabiliMerchant) {
+      const pabiliServiceFee = temporaryCart?.pabiliShopResellerDiscount || pabiliShopServiceFee;
+      CUSTOMER.service_type = 'pabili';
+      CUSTOMER.service_fee = pabiliServiceFee;
+    }
+
     const data = processData(WALLET, CUSTOMER, ORDER, []);
     console.log('DATA', data);
+    console.log('DATA', JSON.stringify(data));
     postCustomerOrder({
       variables: {
         input: data,
@@ -737,6 +753,17 @@ const MainComponent = () => {
       <HeaderImageBackground searchBox={false}>
         <HeaderTitle backOnly />
       </HeaderImageBackground>
+
+      {showPabiliServiceFeeInfo && (
+        <Modal isVisible={true} borderRadius={10} width={310} alignSelf="center">
+          <View style={styles.pabiliInfoWrapper}>
+            <StyledText mode="semibold" style={styles.pabiliInfoText}>
+              {`This fee is for us to continue providing\nexcellent delivery experience along with\nbetter promos and to expand our\n merchants selection.`}
+            </StyledText>
+            <StyledButton type="primary" onPress={() => setShowPabiliServiceFeeInfo(false)} buttonText="OK" />
+          </View>
+        </Modal>
+      )}
 
       <DialogMessage
         visibility={showConfirmation}
@@ -963,7 +990,11 @@ const MainComponent = () => {
             subtotal={totalAmount}
             deliveryFee={delivery.price}
             forDelivery={orderType === 'Delivery'}
-            oneCartTotal={v => customerWallet?.status === 2 && setDisablePlaceOrder(v > MINIMUM_CHECKOUT)}
+            onCartTotal={cartTotal =>
+              customerWallet?.status === 2 && setDisablePlaceOrder(cartTotal > MINIMUM_CHECKOUT)
+            }
+            onServiceFeeIconPress={() => setShowPabiliServiceFeeInfo(true)}
+            navigation={navigation}
           />
         )}
         <Separator />

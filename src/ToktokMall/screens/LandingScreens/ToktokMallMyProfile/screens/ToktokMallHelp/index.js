@@ -30,7 +30,7 @@ export const ToktokMallHelp = ({navigation}) => {
         <TouchableOpacity  onPress = {() => {
           debounce(() => navigation.push('ToktokMallSecurity'))()
         }} style = {styles.row}>
-          <Text style = {{fontFamily: FONT.REGULAR, fontSize: 14}}>Security and Privacy</Text>
+          <Text style = {styles.textStyle}>Security and Privacy</Text>
           <AIcons 
             name = {'right'}
             color = {COLOR.ORANGE}
@@ -40,7 +40,7 @@ export const ToktokMallHelp = ({navigation}) => {
         <TouchableOpacity onPress = {() => {
           debounce(() => navigation.push('ToktokMallTermsAndConditions'))()
         }} style = {styles.row}>
-          <Text style = {{fontFamily: FONT.REGULAR, fontSize: 14}}>Terms and Conditions</Text>
+          <Text style = {styles.textStyle}>Terms and Conditions</Text>
           <AIcons 
             name = {'right'}
             color = {COLOR.ORANGE}
@@ -50,7 +50,7 @@ export const ToktokMallHelp = ({navigation}) => {
         <TouchableOpacity onPress = {() => {
           debounce(() => navigation.push('ToktokMallContactUs'))()
         }} style = {styles.row}>
-          <Text style = {{fontFamily: FONT.REGULAR, fontSize: 14}}>Contact Us</Text>
+          <Text style = {styles.textStyle}>Contact Us</Text>
           <AIcons 
             name = {'right'}
             color = {COLOR.ORANGE}
@@ -74,5 +74,9 @@ const styles = StyleSheet.create({
     padding: 20,
     borderBottomColor: '#F4F4F4',
     borderBottomWidth: 1
-  }
+  },
+  textStyle: {
+    fontFamily: FONT.REGULAR,
+    fontSize: 14
+  },
 });

@@ -225,64 +225,28 @@ const Component = ({ myCart, createMyCartSession,}) => {
   // }, [])
 
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <View style={styles.container}>
       <Animated.View>
         <Animated.Image
           source={banner}
-          style={[
-            {
-              width: "100%",
-              resizeMode: "stretch",
-              width: '100%'
-            }, 
-            {
-              height: animateHeaderHeight
-            }
-          ]}
+          style={[styles.bannerImage, {height: animateHeaderHeight}]}
         />
-        <View style={[{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 35, position: 'absolute'}]}>
-          <TouchableOpacity style={{flex: 0, alignItems: 'center', paddingHorizontal: 15, paddingTop: 8}} onPress = {() => {navigation.pop(2)}}>
+        <View style={styles.subContainer}>
+          <TouchableOpacity style={styles.leftContainer} onPress = {() => {navigation.pop(2)}}>
             <FIcon5 name="chevron-left" color={COLOR.ORANGE} size={15}/>
           </TouchableOpacity>
-          <View style={{flex: .5}}></View>
-          <View style={{flex: 10, alignItems: 'center', paddingTop: 15}}>
+          <View style={styles.margin1}></View>
+          <View style={styles.TTMHcontainer}>
             <Animated.Image 
               source={toktokmallH} 
-              style={[
-                {
-                  width: '75%',
-                  height: 35,
-                  resizeMode: 'stretch'
-                },
-                {
-                  opacity: animateHeaderOpacity
-                }
-              ]} />
+              style={[styles.TTMHImage, {opacity: animateHeaderOpacity}]} />
           </View>
-          <View style={{flex: 2}} />
+          <View style={styles.margin2} />
         </View>
 
         <TouchableOpacity onPress ={onPress}>
         <Animated.View 
-          style={[
-            {
-              flexDirection: 'row',
-              backgroundColor: '#fff', 
-              alignItems: "center",
-              padding: 8, 
-              elevation: 8,
-              borderRadius: 6,
-              borderRadius: 4,
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 4,
-              overflow: Platform.OS === "ios" ? 'visible' : 'hidden',
-            }, 
+          style={[styles.searchContainer, 
             {
               top: translatey,
               width: translateWidth,
@@ -290,7 +254,7 @@ const Component = ({ myCart, createMyCartSession,}) => {
             }
           ]}>
             <AIcon name="search" color={COLOR.ORANGE} size={22}/>
-            <Text style={{color: "darkgray", fontSize: 13, paddingLeft: 5}}>Search</Text>
+            <Text style={styles.searchText}>Search</Text>
         </Animated.View>
           </TouchableOpacity>
 
@@ -367,5 +331,68 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     textAlign: 'center'
-  }
+  },
+  container: {
+    flex: 1, 
+    backgroundColor: '#fff'
+  },
+  bannerImage: {
+    width: "100%",
+    resizeMode: "stretch",
+    width: '100%'
+  },
+  subContainer: {
+    flex: 1, 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'flex-end', 
+    marginTop: 35, 
+    position: 'absolute'
+  },
+  leftContainer: {
+    flex: 0, 
+    alignItems: 'center', 
+    paddingHorizontal: 15, 
+    paddingTop: 8
+  },
+  margin1: {
+    flex: .5
+  },
+  TTMHcontainer: {
+    flex: 10, 
+    alignItems: 'center', 
+    paddingTop: 15
+  },
+  TTMHImage: {
+    width: '75%',
+    height: 35,
+    resizeMode: 'stretch'
+  },
+  margin2: {
+    flex: 2
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#fff', 
+    alignItems: "center",
+    padding: 8, 
+    elevation: 8,
+    borderRadius: 6,
+    borderRadius: 4,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 4,
+    overflow: Platform.OS === "ios" ? 'visible' : 'hidden',
+  },
+  searchText: {
+    color: "darkgray", 
+    fontSize: 13, 
+    paddingLeft: 5
+  },
+
 })

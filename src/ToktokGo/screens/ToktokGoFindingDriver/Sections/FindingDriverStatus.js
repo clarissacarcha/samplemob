@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   titleStyle: {
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.XL,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     marginTop: 24,
   },
 });

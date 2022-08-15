@@ -3,6 +3,7 @@ import {StyleSheet, View, Text, TouchableOpacity, Dimensions, Image} from 'react
 import {useDispatch, useSelector} from 'react-redux';
 import CustomIcon from '../Icons';
 import {successIcon, errorIcon, warningIcon, questionIcon} from '../../assets';
+import { FONT } from '../../../res/variables';
 const {width, height} = Dimensions.get('screen');
 
 export const Modal = () => {
@@ -41,6 +42,24 @@ export const Modal = () => {
           </View>
           <View style={{paddingVertical: 8}} />
           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+
+            {modal?.buttons && modal?.buttons.length > 0 &&
+              modal?.buttons.map((button) => {
+                return (
+                  <>
+                    <TouchableOpacity
+                      onPress={() => button.onPress()}
+                      style={button.type == "transparent" ? styles.transparentButton : styles.filledButton}>
+                      <Text style={button.type == "transparent" ? styles.transparentButtonText : styles.filledButtonText}>
+                        {button.title}
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )
+              })
+            }
+
+            {!modal?.buttons && 
             <TouchableOpacity
               onPress={onConfirm}
               style={{
@@ -52,7 +71,7 @@ export const Modal = () => {
                 borderRadius: 5,
               }}>
               <Text style={{fontSize: 13, color: '#fff'}}>{modal.btnTitle || "Confirm"}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
           </View>
         </View>
       </View>
@@ -68,5 +87,31 @@ const styles = StyleSheet.create({
     width: width,
     height: height,
     overflow: 'visible',
+  },
+  transparentButton: {
+    flex: 1,     
+    marginHorizontal: 5,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#F6841F'
+  },
+  transparentButtonText: {
+    fontSize: 14, color: '#F6841F', fontFamily: FONT.BOLD
+  },
+  filledButton: {
+    flex: 1,     
+    marginHorizontal: 5,
+    backgroundColor: '#F6841F',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    borderRadius: 5,
+  },
+  filledButtonText: {
+    fontSize: 14, color: '#fff', fontFamily: FONT.BOLD
   }
 });

@@ -98,7 +98,9 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
     if(req.responseData && req.responseData.success == 1){
       setValidating(false)
       if(transactionType && transactionType == "payment"){
-        await ProcessPayment()
+        // await ProcessPayment()
+        route.params.onSuccess(Context.value)
+        navigation.pop()
       }
     }else if(req.responseError && req.responseError.success == 0){
       // Toast.show(req.responseError.message, Toast.LONG)
@@ -119,13 +121,14 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
       Toast.show("Something went wrong", Toast.LONG)
     }
   }
-  console.log("Checkout body", route.params.data)
+  // console.log("Checkout body", route.params.data)
 
   const ProcessPayment = async () => {
 
     let checkoutBody = route.params.data
     checkoutBody.pin = Context.value
 
+    console.log("CHECKOUT BODY JSON", JSON.stringify(checkoutBody))
     
     setValidating(false)
     setProcessing(true)

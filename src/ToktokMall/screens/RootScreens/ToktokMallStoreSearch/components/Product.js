@@ -134,7 +134,7 @@ export const Product = ({data, lazyload}) => {
                 return (
                   <>
                     <RenderItem navigation={navigation} item={item} />
-                    <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}></View>
+                    <View style={styles.margin1} />
                   </>
                 )
               }                  
@@ -166,11 +166,41 @@ export const Product = ({data, lazyload}) => {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, paddingVertical: 10},
-  heading: {paddingHorizontal: 15, paddingVertical: 20, flexDirection: 'row'},
-  h1: {fontSize: 14, fontFamily: FONT.BOLD},
-  link: {fontSize: 12, color: "#F6841F"},
-  image: {width: 50, height: 50, resizeMode: 'cover', alignSelf: 'center', borderRadius: 8},
-  label: {fontSize: 11, alignSelf: 'center'},
-  separator: { height: 8, backgroundColor: '#F7F7FA'}
+  container: {
+    flex: 1, 
+    paddingVertical: 10
+  },
+  heading: {
+    paddingHorizontal: 15, 
+    paddingVertical: 20, 
+    flexDirection: 'row'
+  },
+  h1: {
+    fontSize: 14, 
+    fontFamily: FONT.BOLD
+  },
+  link: {
+    fontSize: 12, 
+    color: "#F6841F"
+  },
+  image: {
+    width: 50, 
+    height: 50, 
+    resizeMode: 'cover', 
+    alignSelf: 'center', 
+    borderRadius: 8
+  },
+  label: {
+    fontSize: 11, 
+    alignSelf: 'center'
+  },
+  separator: {
+    height: 8, 
+    backgroundColor: '#F7F7FA'
+  },
+  margin1: {
+    flex: 2, 
+    backgroundColor: '#fff',
+    margin: 5
+  }
 })

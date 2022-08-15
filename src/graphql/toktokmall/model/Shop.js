@@ -17,6 +17,7 @@ export const GET_SHOP_DETAILS = gql`
 				refComDiscountRate
 				compareAtPrice
 				noOfStocks
+				contSellingIsset
 				images {
 					arrangement
 					filename

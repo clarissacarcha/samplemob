@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View, Modal, Alert} from 'react-native';
-import {connect} from 'react-redux';
-import {RNCamera} from 'react-native-camera';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View, Modal } from 'react-native';
+import { connect } from 'react-redux';
+import { RNCamera } from 'react-native-camera';
 import Toast from "react-native-simple-toast"
 
 const Component = ({navigation, route}) => {
@@ -55,14 +55,7 @@ const Component = ({navigation, route}) => {
           }}
         />
         <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            position: 'absolute',
-            bottom: 0,
-            width: '100%',
-            marginBottom: 20,
-          }}>
+          style={styles.captureContainer}>
           <TouchableOpacity onPress={takePicture} style={styles.capture}>
             <View style={styles.inCapture} />
           </TouchableOpacity>
@@ -94,6 +87,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
+  },
+  captureContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    marginBottom: 20,
   },
   capture: {
     height: 60,

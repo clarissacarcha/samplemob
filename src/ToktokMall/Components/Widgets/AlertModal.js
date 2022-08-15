@@ -9,7 +9,7 @@ const Wrapper = ({children}) => {
   return Platform.OS === 'ios'? <>{children}</> : <View style={styles.centeredView}>{children}</View>
 }
 
-export const AlertModal = ({navigation, isVisible, setIsVisible, type, message}) => {
+export const AlertModal = ({navigation, isVisible, setIsVisible, onPress, type, message}) => {
   
   const [modalVisible, setModalVisible] = useState(false)
 
@@ -55,7 +55,16 @@ export const AlertModal = ({navigation, isVisible, setIsVisible, type, message})
                 <TouchableOpacity style = {styles.whiteButton} onPress = {() => {setIsVisible(false)}}>
                     <Text style = {styles.whiteButtonText}>No</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style = {styles.filledButton} onPress = {() => {setIsVisible(false), navigation.goBack()}}>
+                <TouchableOpacity style = {styles.filledButton} onPress = {() => {
+                  if(onPress){
+                    onPress()
+                    setIsVisible(false)
+                    navigation.goBack()
+                  }else{
+                    setIsVisible(false)
+                    navigation.goBack()
+                  }
+                }}>
                     <Text style = {styles.filledButtonText}>Yes</Text>
                 </TouchableOpacity>
               </View>

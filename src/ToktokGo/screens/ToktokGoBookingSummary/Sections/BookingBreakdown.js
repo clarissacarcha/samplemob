@@ -1,21 +1,41 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, Image, View, ActivityIndicator, Dimensions} from 'react-native';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 import CONSTANTS from '../../../../common/res/constants';
 import InfoIcon from '../../../../assets/icons/InfoIcon.png';
 import {numberFormat} from '../../../../helper';
 
-export const BookingBreakdown = ({selectedVehicle}) => {
+const screenWidth = Dimensions.get('window').width;
+
+export const BookingBreakdown = ({selectedVehicle, loading, details}) => {
+  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   return (
     <View style={styles.container}>
-      <View style={styles.rowContainer}>
-        <Text style={styles.title}>Ride Fare</Text>
-        {loading ? (
-          <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
-        ) : (
-          <Text>₱{numberFormat(selectedVehicle?.rate?.amount ? selectedVehicle?.rate?.amount : 0)}</Text>
-        )}
-      </View>
+      <ShimmerPlaceHolder style={{width: screenWidth / 1.08, marginBottom: 8}} visible={!loading}>
+        <View style={styles.rowContainer}>
+          <Text style={styles.title}>Ride Fare</Text>
+          <Text style={styles.rideFareText}>
+            ₱{numberFormat(selectedVehicle?.rate?.amount ? selectedVehicle?.rate?.amount : 0)}
+          </Text>
+        </View>
+      </ShimmerPlaceHolder>
+      {details?.rate?.tripFare?.discount > 0 && (
+        <View style={styles.rowContainer}>
+          <View>
+            <Text style={styles.title}>Voucher</Text>
+            <Text style={styles.voucherText}>{details?.voucher?.name}</Text>
+          </View>
 
+          {loading ? (
+            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+          ) : (
+            <Text style={styles.discountText}>
+              - ₱{numberFormat(details?.rate?.tripFare?.discount ? details?.rate?.tripFare?.discount : 0)}
+            </Text>
+          )}
+        </View>
+      )}
       {/* todo: Condition here */}
       {false && (
         <View>
@@ -48,12 +68,22 @@ const styles = StyleSheet.create({
   },
   title: {
     color: CONSTANTS.COLOR.ALMOST_BLACK,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+  },
+  voucherText: {
+    color: CONSTANTS.COLOR.BLACK,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    fontSize: CONSTANTS.FONT_SIZE.M,
+  },
+  rideFareText: {
+    color: CONSTANTS.COLOR.BLACK,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    fontSize: CONSTANTS.FONT_SIZE.M,
   },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   fee: {
     flexDirection: 'row',
@@ -73,7 +103,13 @@ const styles = StyleSheet.create({
     color: CONSTANTS.COLOR.RED,
   },
   divider: {
+    marginTop: 8,
     borderBottomWidth: 2,
     borderBottomColor: CONSTANTS.COLOR.LIGHT,
+  },
+  discountText: {
+    color: CONSTANTS.COLOR.RED,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    size: CONSTANTS.FONT_SIZE.M,
   },
 });

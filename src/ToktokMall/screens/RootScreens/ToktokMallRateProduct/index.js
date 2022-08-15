@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react'
-import {View, Text, TouchableOpacity, FlatList} from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, TouchableOpacity, FlatList } from 'react-native'
 import Toast from 'react-native-simple-toast'
 
 import {useNavigation} from '@react-navigation/native'
 
-import {HeaderBack, HeaderTitle, HeaderRight} from '../../../Components'
-import {Item} from './Components'
+import { HeaderBack, HeaderTitle, HeaderRight } from '../../../Components'
+import { Item } from './Components'
 import AsyncStorage from '@react-native-community/async-storage'
 import { ApiCall } from '../../../helpers'
 import { useSelector } from 'react-redux'
@@ -43,20 +43,6 @@ export const ToktokMallRateProduct = ({route, navigation}) => {
           images: [],
         }
       }])
-
-      // setDataWithRatings({
-      //   label: product.itemname,
-      //   originalPrice: parseFloat(product.compareAtPrice),
-      //   price: product.price,
-      //   variation: 'None',
-      //   image: '',
-      //   qty: 1,
-      //   rating: {
-      //     star: 0,
-      //     feedback: '',
-      //     images: [],
-      //   },
-      // })
 
     }
 

@@ -12,6 +12,7 @@ import {
   Dimensions,
   TouchableOpacity,
   StatusBar,
+  KeyboardAvoidingView,
 } from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -24,7 +25,7 @@ import {COLOR, DARK, APP_FLAVOR, FONT_SIZE, ORANGE, COLORS, FONTS, SIZES, ACCOUN
 import constants from '../../common/res/constants';
 import {FONT} from '../../res/variables';
 import {AUTH_CLIENT, VERIFY_LOGIN, FORGOT_PASSWORD} from '../../graphql';
-import {AlertOverlay} from '../../components';
+import {AlertOverlay} from '../../SuperApp/screens/Components';
 import {onError, onErrorAlert} from '../../util/ErrorUtility';
 import {useAlert} from '../../hooks/useAlert';
 import Splash from '../../assets/images/LinearGradiant.png';
@@ -37,6 +38,7 @@ import ArrowLeft from '../../assets/icons/arrow-left-icon.png';
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
 
 const imageWidth = Dimensions.get('window').width - 80;
+const screenheight = Dimensions.get('screen').height;
 
 const PasswordVerification = ({navigation, route, createSession, setAppServices}) => {
   const {mobile} = route.params;
@@ -61,8 +63,38 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
     onError: error => {
       console.log(error.message);
       // onErrorAlert({alert, error});
-      if (error.message === 'GraphQL error: Incorrect password.') {
-        setIncorrectPassword(true);
+      // if (error.message === 'GraphQL error: Incorrect password.') {
+      //   setIncorrectPassword(true);
+      // }
+      try {
+        const {graphQLErrors, networkError} = error;
+
+        if (networkError) {
+          alert({message: 'Network error occurred. Please check your internet connection.'});
+        } else if (graphQLErrors.length > 0) {
+          graphQLErrors.map(({message, locations, path, code}) => {
+            // temporary added for toktokwallet deactivated account
+            if (code === 'INTERNAL_SERVER_ERROR') {
+              alert({message: 'Something went wrong.'});
+            } else if (code === 'USER_INPUT_ERROR') {
+              alert({message});
+            } else if (code === 'BAD_USER_INPUT') {
+              if (message === 'Incorrect password.') {
+                setIncorrectPassword(true);
+              } else {
+                alert({message});
+              }
+            } else if (code === 'AUTHENTICATION_ERROR') {
+              // Do Nothing. Error handling should be done on the scren
+              alert({message});
+            } else {
+              alert({message: 'Something went wrong...'});
+            }
+          });
+        }
+      } catch (err) {
+        console.log('ON ERROR ALERT: ', err);
+        alert({message: 'Something went wrong...'});
       }
     },
 
@@ -157,88 +189,109 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
     forgotPassword();
   };
   return (
-    <ImageBackground
-      resizeMode="cover"
-      source={Splash}
+    <KeyboardAvoidingView
+      behavior="padding"
       style={{
         flex: 1,
         justifyContent: 'space-between',
       }}>
-      {/* <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}> */}
-      <AlertOverlay visible={loading} />
-      <TouchableOpacity onPress={() => navigation.pop()}>
-        <Image
-          style={{height: 15, width: 10, margin: 16, top: StatusBar.currentHeight - 10}}
-          source={ArrowLeft}
-          resizeMode={'contain'}
-        />
-      </TouchableOpacity>
-      <View style={{flex: 1, alignItems: 'center', marginTop: '30%'}}>
-        {/*-------------------- BANNER --------------------*/}
-        {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
-        <Image source={ToktokLogo} style={{height: imageWidth - 120, width: imageWidth - 170}} resizeMode="contain" />
-        {/*-------------------- PASSWORD INPUT --------------------*/}
-        {/* <Text style={styles.label}>Enter your password to continue</Text> */}
-        <View style={styles.containerInput}>
-          <TextInput
-            ref={inputRef}
-            value={password}
-            onChangeText={value => setPassword(value)}
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor={constants.COLOR.DARK}
-            secureTextEntry={!showPassword}
-            returnKeyType="done"
-            autoCapitalize="none"
-            onSubmitEditing={onSubmit}
+      <ImageBackground
+        resizeMode="cover"
+        source={Splash}
+        style={{
+          flex: 1,
+          justifyContent: 'space-between',
+        }}>
+        {/* <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}> */}
+        <AlertOverlay visible={loading} />
+        <TouchableOpacity onPress={() => navigation.pop()} style={{zIndex: 999}}>
+          <Image
+            style={{height: 15, width: 10, margin: 16, top: StatusBar.currentHeight - 10}}
+            source={ArrowLeft}
+            resizeMode={'contain'}
           />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <Image source={!showPassword ? HidePassword : ShowPassword} style={styles.showPassword} />
-          </TouchableOpacity>
-        </View>
-        <View style={{alignSelf: 'flex-start', marginHorizontal: 40}}>
-          {inCorrectPassword && (
-            <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED, top: -5}}>
-              Password is incorrect
-            </Text>
-          )}
-        </View>
-        {/*-------------------- SUBMIT INPUT --------------------*/}
-        <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
-          <View style={styles.submit}>
-            <Text
-              style={{
-                color: COLORS.WHITE,
-                fontSize: FONT_SIZE.M,
-                paddingHorizontal: '37%',
-                fontFamily: constants.FONT_FAMILY.BOLD,
-                lineHeight: SIZES.L,
-                fontWeight: '600',
-              }}>
-              Login
-            </Text>
-          </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
+        <View
+          style={{
+            flex: 1,
+            marginTop: screenheight > 700 ? 0 : '-15%',
+          }}>
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: screenheight > 735 ? 'flex-start' : 'center',
+              marginTop: screenheight > 735 ? '26%' : 0,
+            }}>
+            {/*-------------------- BANNER --------------------*/}
+            {/* <Image source={VerificationBanner} style={{height: 200, width: '100%'}} resizeMode="cover" /> */}
+            <Image
+              source={ToktokLogo}
+              style={{height: imageWidth - 120, width: imageWidth - 170}}
+              resizeMode="contain"
+            />
+            {/*-------------------- PASSWORD INPUT --------------------*/}
+            {/* <Text style={styles.label}>Enter your password to continue</Text> */}
+            <View style={[styles.containerInput, inCorrectPassword ? styles.incorrectPass : styles.normalPass]}>
+              <TextInput
+                ref={inputRef}
+                value={password}
+                onChangeText={value => setPassword(value)}
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor={constants.COLOR.DARK}
+                secureTextEntry={!showPassword}
+                returnKeyType="done"
+                autoCapitalize="none"
+                onSubmitEditing={onSubmit}
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <Image source={!showPassword ? HidePassword : ShowPassword} style={styles.showPassword} />
+              </TouchableOpacity>
+            </View>
+            <View style={{alignSelf: 'flex-start', marginHorizontal: 45}}>
+              {inCorrectPassword && (
+                <Text style={{fontSize: constants.FONT_SIZE.S, color: constants.COLOR.RED, top: -5, marginLeft: -2}}>
+                  Password is incorrect
+                </Text>
+              )}
+            </View>
+            {/*-------------------- SUBMIT INPUT --------------------*/}
+            <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
+              <View style={styles.submit}>
+                <Text
+                  style={{
+                    color: COLORS.WHITE,
+                    fontSize: FONT_SIZE.M,
+                    paddingHorizontal: '37%',
+                    fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
+                    lineHeight: SIZES.L,
+                  }}>
+                  Login
+                </Text>
+              </View>
+            </TouchableHighlight>
 
-        {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
-        <TouchableHighlight onPress={() => sendOTP()} underlayColor={COLOR.YELLOW} style={styles.autoFillBox}>
-          <View style={styles.autoFill}>
-            <Text
-              style={{
-                color: ORANGE,
-                fontSize: FONT_SIZE.M,
-                textDecorationLine: 'underline',
-                fontFamily: constants.FONT_FAMILY.BOLD,
-                lineHeight: SIZES.L,
-                fontWeight: '600',
-              }}>
-              Forgot Password?
-            </Text>
+            {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
+            <TouchableHighlight onPress={() => sendOTP()} underlayColor={COLOR.YELLOW} style={styles.autoFillBox}>
+              <View style={styles.autoFill}>
+                <Text
+                  style={{
+                    color: ORANGE,
+                    fontSize: FONT_SIZE.M,
+                    textDecorationLine: 'underline',
+                    fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
+                    lineHeight: SIZES.L,
+                  }}>
+                  Forgot Password?
+                </Text>
+              </View>
+            </TouchableHighlight>
           </View>
-        </TouchableHighlight>
-      </View>
-      {/* </View> */}
-    </ImageBackground>
+        </View>
+        {/* </View> */}
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -284,28 +337,36 @@ const styles = StyleSheet.create({
   },
   input: {
     marginHorizontal: 1,
-    borderWidth: 1,
     paddingLeft: 16,
     height: 50,
     color: constants.COLOR.BLACK,
     width: '100%',
-    borderRightColor: '#F8F8F8',
-    borderLeftColor: '#F8F8F8',
-    borderTopColor: '#F8F8F8',
-    borderBottomColor: '#F8F8F8',
   },
   containerInput: {
     marginHorizontal: '16%',
     backgroundColor: '#F8F8F8',
-    marginVertical: 2,
+    marginVertical: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 5,
+    borderWidth: 1,
   },
   showPassword: {
     marginRight: 16,
     height: 17,
     width: 17,
+  },
+  normalPass: {
+    borderRightColor: '#F8F8F8',
+    borderLeftColor: '#F8F8F8',
+    borderTopColor: '#F8F8F8',
+    borderBottomColor: '#F8F8F8',
+  },
+  incorrectPass: {
+    borderRightColor: constants.COLOR.RED,
+    borderLeftColor: constants.COLOR.RED,
+    borderTopColor: constants.COLOR.RED,
+    borderBottomColor: constants.COLOR.RED,
   },
 });

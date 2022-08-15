@@ -2,14 +2,8 @@ import React, {useRef, useEffect, useState} from 'react';
 import {View, StyleSheet, Image, Text} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {useSelector, useDispatch} from 'react-redux';
-import {COLOR, DARK, MEDIUM, LIGHT, MAP_DELTA_LOW} from '../../../../res/constants';
+import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
 
-import {GET_PLACE_BY_LOCATION} from '../../../graphql';
-import {useMutation, useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
-import {number} from 'prop-types';
 export const DestinationMap = ({onDragEndMarker, mapRegion}) => {
   return (
     <View style={styles.container}>
@@ -21,7 +15,7 @@ export const DestinationMap = ({onDragEndMarker, mapRegion}) => {
           onDragEndMarker(e);
         }}></MapView>
       <View style={{alignItems: 'center', zIndex: 999, alignContent: 'center', position: 'absolute'}}>
-        <FA5Icon name="map-marker-alt" size={20} color={CONSTANTS.COLOR.ORANGE} />
+        <Image source={DestinationIcon} style={{height: 20, width: 35}} resizeMode={'contain'} />
       </View>
     </View>
   );

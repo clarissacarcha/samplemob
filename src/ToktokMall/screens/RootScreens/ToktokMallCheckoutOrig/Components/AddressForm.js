@@ -1,0 +1,71 @@
+import React from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { FONT } from '../../../../../res/variables';
+
+import Address from '../../ToktokMallAddresses/ToktokMallAddressesMenu/components/Adress'
+
+export const AddressForm = ({data, onEdit}) => {
+    
+  return (
+    <>
+      <View style = {styles.container}>
+        <View style = {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+          <Text style={{fontSize: 14, fontFamily: FONT.BOLD}}>Delivery Address</Text>
+          <TouchableOpacity onPress={onEdit}>
+            <Text style={{color: '#F6841F'}}>Edit</Text>
+          </TouchableOpacity>
+        </View>
+        <View  style={styles.addressContainer}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+
+            {data && data?.receiverName ? 
+            <Text style={styles.addressfullName}>{data?.receiverName || ""}</Text>
+              :
+            <Text style={styles.addressdefaultText}>Please set your default address</Text>}            
+            
+          </View>
+          <Text style={styles.addresscontact_number}>{data?.receiverContact || ""}</Text>
+          <Text style={styles.addressText}>{data?.fullAddress || data?.address}</Text>
+        </View>
+      </View>  
+    </>
+    )
+}
+
+const styles = StyleSheet.create({
+  body: {
+    flex: 1, 
+    backgroundColor: '#F7F7FA', 
+  },
+  container: {
+    paddingVertical: 8, 
+    paddingHorizontal: 15, 
+    backgroundColor: 'white', 
+    marginTop: 0,  
+  },
+  addressContainer: {
+    borderRadius: 5, 
+    backgroundColor: '#F8F8F8', 
+    padding: 10, 
+    marginTop: 10, 
+    marginBottom: 10
+  },
+  addressdefaultText: {
+    color: '#F6841F'
+  },
+  addressfullName: {
+    textTransform: 'capitalize', 
+    fontSize: 14, 
+    fontFamily: FONT.REGULAR
+  },
+  addresscontact_number: {
+    color: '#9E9E9E'
+  },
+  addressText: {
+    marginTop: 10, 
+    fontSize: 13, 
+    textTransform: 'capitalize'
+  }
+})
+
+// export default AddressForm
