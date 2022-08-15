@@ -17,7 +17,7 @@ import {useAlert, useThrottle} from 'src/hooks';
 import {useSelector} from 'react-redux';
 
 //COMPONENTS
-import {OrangeButton, SplashLoading} from 'toktokbills/components';
+import {CustomButton, SplashLoading} from 'toktokbills/components';
 import {AlertOverlay} from 'src/components';
 
 //FONTS & COLORS & IMAGES
@@ -77,7 +77,7 @@ export const ConfirmButton = ({paymentData}) => {
   });
 
   const handleProcessProceed = ({pinCode, data}) => {
-    let {totalAmount, requestMoneyDetails, paymentData , hash} = data;
+    let {totalAmount, requestMoneyDetails, paymentData, hash} = data;
     let {firstName, lastName} = user.person;
 
     let input = {
@@ -151,9 +151,7 @@ export const ConfirmButton = ({paymentData}) => {
           <Text style={styles.footerText}>before you proceed with your transaction.</Text>
         </Text>
       </View>
-      <View style={styles.buttonContainer}>
-        <OrangeButton onPress={onPressThrottled} disabled={checkIsDisabled()} label="Confirm" />
-      </View>
+      <CustomButton onPress={onPressThrottled} disabled={checkIsDisabled()} label="Confirm" hasShadow />
     </>
   );
 };

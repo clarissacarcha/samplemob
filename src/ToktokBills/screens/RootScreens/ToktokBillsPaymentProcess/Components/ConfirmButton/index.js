@@ -18,7 +18,7 @@ import {ErrorUtility} from 'toktokbills/util';
 import validator from 'validator';
 
 //COMPONENTS
-import {OrangeButton} from 'toktokbills/components';
+import {CustomButton} from 'toktokbills/components';
 import {AlertOverlay} from 'src/components';
 
 //FONTS & COLORS & IMAGES
@@ -178,28 +178,9 @@ export const ConfirmButton = ({billType, billItemSettings = {}, tokwaBalance, sc
   };
 
   return (
-    <View style={styles.container}>
+    <>
       <AlertOverlay visible={loading} />
-      <OrangeButton onPress={onPressConfirm} label="Next" />
-    </View>
+      <CustomButton onPress={onPressConfirm} label="Next" hasShadow />
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'flex-end',
-    backgroundColor: 'white',
-    paddingHorizontal: moderateScale(32),
-    paddingVertical: moderateScale(20),
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 3.84,
-    elevation: 5,
-    borderTopColor: '#F8F8F8',
-    borderTopWidth: 2,
-  },
-});
