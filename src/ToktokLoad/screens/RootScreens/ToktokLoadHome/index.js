@@ -86,13 +86,11 @@ const MainComponent = ({navigation, route}) => {
       setRefreshing(false);
     },
     onCompleted: ({getLoadCategories}) => {
-      console.log(getLoadCategories);
+      const names = _.map(getLoadCategories, 'name').join(', ');
+      setCategoryNames(names.replace(/,(?=[^,]*$)/, ' and'));
       setRefreshing(false);
       setActiveTab(getLoadCategories[0]);
       setCategories(getLoadCategories);
-      const names = _.map(getLoadCategories, 'name').join(', ');
-      console.log(names.replace(/,(?=[^,]*$)/, ' and'));
-      setCategoryNames(names.replace(/,(?=[^,]*$)/, ' and'));
     },
   });
 
@@ -179,7 +177,9 @@ const MainComponent = ({navigation, route}) => {
           animated={true}
           topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
           displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
-          contentStyle={{width: Platform.OS === 'android' ? tooltipWidth : moderateScale(tooltipWidth - 36)}}
+          contentStyle={{
+            width: Platform.OS === 'android' ? moderateScale(tooltipWidth) : moderateScale(tooltipWidth - 36),
+          }}
           childrenWrapperStyle={{flex: 1}}
           backgroundColor="rgba(0,0,0,0.6)"
           disableShadow={true}
@@ -200,7 +200,7 @@ const MainComponent = ({navigation, route}) => {
           closeOnChildInteraction={false}
           closeOnContentInteraction={false}
           placement="bottom">
-          <View style={onBoardingSteps === 1 && {width: tooltipWidth}}>
+          <View style={onBoardingSteps === 1 && {width: width}}>
             <HeaderTabs
               tabs={categories}
               scrollEnabled={true}

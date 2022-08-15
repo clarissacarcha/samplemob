@@ -23,11 +23,10 @@ export const Container: ComponentType<any> = styled(View).attrs(props => ({
       ${Platform.OS === 'ios' ? 'box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15)' : 'elevation: 5'};
       background-color: #fff;
       ${
-        Platform.OS === 'android' &&
+        Platform.OS === 'android'
+          ? `border-top-color: #F8F8F8; border-top-width: 2px;
         `
-        border-top-color: #F8F8F8;
-        border-top-width: 2px;
-        `
+          : ''
       }
    `}
 `;
