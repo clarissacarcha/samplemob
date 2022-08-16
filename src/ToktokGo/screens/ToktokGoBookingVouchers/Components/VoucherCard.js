@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   voucherDescription: {
     color: '#000',
     fontSize: CONSTANTS.FONT_SIZE.S,
-    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
   },
   voucherImage: {
     alignSelf: 'center',

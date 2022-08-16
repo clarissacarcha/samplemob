@@ -298,6 +298,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
                               navigation={navigation}
                               recentDestinationList={recentDestinationList}
                               onPressRecentDestination={onPressRecentDestination}
+                              recentSearchDataList={recentSearchDataList}
                             />
                           </View>
                         )}
