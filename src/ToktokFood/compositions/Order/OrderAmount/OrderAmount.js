@@ -76,12 +76,11 @@ const OrderAmount = (props: PropsType): React$Node => {
 
   const renderDiscountComponent = () => {
     if (resellerDiscountTotal || promoDiscounts || shippingDiscount || pabiliShopResellerDiscount) {
+      const serviceFeeDiscount = state?.totalServiceFee - pabiliShopResellerDiscount;
       const totalDiscount =
         promoDiscounts +
         shippingDiscount +
-        (state?.serviceType === 'toktokfood'
-          ? resellerDiscountTotal
-          : state?.totalServiceFee - pabiliShopResellerDiscount);
+        (state?.serviceType === 'toktokfood' ? resellerDiscountTotal : serviceFeeDiscount);
       return (
         <React.Fragment>
           {amountComponent(
@@ -94,7 +93,7 @@ const OrderAmount = (props: PropsType): React$Node => {
           )}
           {showDiscountBreakdown && (
             <React.Fragment>
-              {resellerDiscountTotal > -1 &&
+              {resellerDiscountTotal > 0 &&
                 state?.serviceType === 'toktokfood' &&
                 amountComponent('Discount', 'Reseller', resellerDiscountTotal, '-')}
               {promoDiscounts > 0 &&
@@ -103,13 +102,9 @@ const OrderAmount = (props: PropsType): React$Node => {
                 )}
               {shippingDiscount > 0 &&
                 amountComponent('Discount', state?.promoDetails?.shippingDiscountName, shippingDiscount, '-')}
-              {state?.serviceType === 'pabili' &&
-                amountComponent(
-                  'Discount',
-                  'Service Fee (Reseller)',
-                  state?.totalServiceFee - pabiliShopResellerDiscount,
-                  '-',
-                )}
+              {serviceFeeDiscount > 0 &&
+                state?.serviceType === 'pabili' &&
+                amountComponent('Discount', 'Service Fee (Reseller)', serviceFeeDiscount, '-')}
             </React.Fragment>
           )}
         </React.Fragment>
