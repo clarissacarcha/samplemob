@@ -220,6 +220,7 @@ const transactionRef = `
   serviceType
   totalServiceFee
   pabiliShopResellerDiscount
+  declinedBy
   voucherDiscounts {
     id
     referenceNum

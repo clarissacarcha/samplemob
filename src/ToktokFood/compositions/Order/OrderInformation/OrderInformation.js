@@ -74,7 +74,7 @@ const OrderInformation = (props: PropsType): React$Node => {
       <Divider />
       <DeliveryDistanceContainer>
         {renderIconText(calendar_ic, state?.orderIsfor === 1 ? 'Delivery' : 'Pick up')}
-        {renderIconText(map_ic, `${state?.estimatedDistance} km`)}
+        {renderIconText(map_ic, `${state?.estimatedDistance ?? '0.00'} km`)}
         {renderTimerComponent()}
         {/* {state?.orderIsfor === 1 &&
           state?.riderDetails?.driver &&
