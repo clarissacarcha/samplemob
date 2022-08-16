@@ -6,10 +6,11 @@ import CONSTANTS from '../../../../common/res/constants';
 import InfoIcon from '../../../../assets/icons/InfoIcon.png';
 import moment from 'moment';
 import {numberFormat} from '../../../../helper';
+import {ThrottledOpacity} from '../../../../components_section';
 
 const screenWidth = Dimensions.get('window').width;
 
-export const BookingBreakdown = ({selectedVehicle, loading, details}) => {
+export const BookingBreakdown = ({selectedVehicle, loading, details, setViewOutstandingFeeInfoModal}) => {
   const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   return (
     <View style={styles.container}>
@@ -27,7 +28,12 @@ export const BookingBreakdown = ({selectedVehicle, loading, details}) => {
           <View style={styles.rowContainer}>
             <View style={styles.fee}>
               <Text style={styles.title}>Outstanding Fee</Text>
-              <Image source={InfoIcon} resizeMode={'contain'} style={styles.iconDimensions} />
+              <ThrottledOpacity
+                onPress={() => {
+                  setViewOutstandingFeeInfoModal(true);
+                }}>
+                <Image source={InfoIcon} resizeMode={'contain'} style={styles.iconDimensions} />
+              </ThrottledOpacity>
             </View>
             <Text>₱{numberFormat(details?.rate?.charge?.amount)}</Text>
           </View>

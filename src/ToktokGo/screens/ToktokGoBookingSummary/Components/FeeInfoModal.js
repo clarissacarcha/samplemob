@@ -2,17 +2,17 @@ import React from 'react';
 import {Text, StyleSheet, View, Modal, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const PricesNoteModal = ({viewPriceNote, setViewPriceNote}) => {
+export const FeeInfoModal = ({vissible, setVissible}) => {
   return (
-    <Modal animationType="fade" transparent={true} visible={viewPriceNote} style={StyleSheet.absoluteFill}>
+    <Modal animationType="fade" transparent={true} visible={vissible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
             <Text style={styles.modalDescription}>
-              Prices may vary depending on traffic condition. Subject to prevailing IATF guideline.
+              The unpaid amount charged due to no show or cancellation of booking.
             </Text>
 
-            <TouchableOpacity style={styles.buttonContainer} onPress={() => setViewPriceNote(false)}>
+            <TouchableOpacity style={styles.buttonContainer} onPress={() => setVissible(false)}>
               <Text style={styles.buttonText}>OK</Text>
             </TouchableOpacity>
           </View>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   modalDescription: {
-    textAlign: 'left',
+    textAlign: 'center',
     fontSize: CONSTANTS.FONT_SIZE.M,
     color: CONSTANTS.COLOR.BLACK,
   },

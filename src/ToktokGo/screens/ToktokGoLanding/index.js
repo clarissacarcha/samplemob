@@ -15,7 +15,7 @@ import {useAccount} from 'toktokwallet/hooks';
 
 const ToktokGoLanding = ({navigation, session, route, constants}) => {
   const dispatch = useDispatch();
-  const {bookingId, action} = route?.params ? route.params : {bookingId: null, action: null};
+  const {bookingId, action, voucherData} = route?.params ? route.params : {bookingId: null, action: null};
   const {routeDetails} = useSelector(state => state.toktokGo);
   const {tokwaAccount, getMyAccount} = useAccount();
 
@@ -87,7 +87,7 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
 
     if (data) {
       if (date === moment(new Date()).format('MMM D, YYYY')) {
-        navigation.replace('ToktokGoBookingStart');
+        navigation.replace('ToktokGoBookingStart', {voucherData});
         checkNotificationToNavigate({trip: null});
       } else if (tokwaAccount.wallet.id) {
         navigation.replace('ToktokGoHealthCare');
