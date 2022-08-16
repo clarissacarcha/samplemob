@@ -49,7 +49,7 @@ export const OTCPartnerDetails = React.memo(({item, index}) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '25%',
+    width: '33.3%',
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: SIZE.MARGIN / 2,
@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemLogo: {
-    height: moderateScale(35),
-    width: moderateScale(35),
+    height: moderateScale(60),
+    width: moderateScale(60),
   },
   itemName: {
     fontFamily: FONT.REGULAR,

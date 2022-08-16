@@ -1,48 +1,27 @@
-import React, {useContext, useState, useEffect, useRef} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Platform,
-  FlatList,
-  Dimensions,
-  Image,
-  ScrollView,
-  KeyboardAvoidingView,
-  RefreshControl,
-} from 'react-native';
+import React, {useContext, useEffect, useRef} from 'react';
+import {View, StyleSheet, Platform, ScrollView, KeyboardAvoidingView} from 'react-native';
 import {useHeaderHeight} from '@react-navigation/stack';
-import InputScrollView from 'react-native-input-scroll-view';
 import validator from 'validator';
 
 //HELPER & UTIL
 import {moderateScale, numberFormat, getStatusbarHeight} from 'toktokbills/helper';
-import {ErrorUtility} from 'toktokbills/util';
 
 //COMPONENTS
-import {HeaderBack, HeaderTitleRevamp, Separator, OrangeButton, LoadingIndicator} from 'toktokwallet/components';
+import {HeaderBack, HeaderTitleRevamp, OrangeButton, LoadingIndicator} from 'toktokwallet/components';
 import {VerifyContextProvider, VerifyContext, OTCPartnerForm, Header} from './components';
-import {AlertOverlay} from 'src/components';
 
 // FONTS AND COLORS
 import CONSTANTS from 'common/res/constants';
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
-const {width, height} = Dimensions.get('window');
-import {info_icon} from 'toktokwallet/assets';
+const {COLOR, FONT_SIZE} = CONSTANTS;
 
 //GRAPHQL & HOOKS
-import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
-import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useAccount} from 'toktokwallet/hooks';
 import {useSelector} from 'react-redux';
-import {usePrompt} from 'src/hooks';
 
 const MainComponent = ({navigation, route}) => {
   const scrollRef = useRef({});
   const headerHeight = useHeaderHeight();
 
-  const [isMounted, setIsMounted] = useState(false);
-  const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
   const {logo, description, maximumAmount, id} = route.params?.otcPartnerDetails;
 
   navigation.setOptions({
@@ -50,65 +29,35 @@ const MainComponent = ({navigation, route}) => {
     headerTitle: () => <HeaderTitleRevamp label={'Cash Out'} />,
   });
 
-  const prompt = usePrompt();
   const {user} = useSelector(state => state.session);
-  const {getMyAccountLoading, getMyAccount, getMyAccountError, tokwaAccount} = useAccount({isOnErrorAlert: false});
+  const {getMyAccountLoading, getMyAccount, tokwaAccount} = useAccount({isOnErrorAlert: false});
   const {firstName, middleName, lastName, mobileNumber} = user.person;
   const recipientName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
-  const recipientMobileNo = mobileNumber.replace('+63', '0');
 
-  const {
-    amount,
-    setAmount,
-    amountError,
-    setAmountError,
-    email,
-    setEmail,
-    emailError,
-    setEmailError,
-    firstField,
-    setFirstField,
-    isInsufficientBalance,
-    setIsInsufficientBalance,
-    secondField,
-    setSecondField,
-    dateOfClaim,
-    setDateOfClaim,
-    setDateOfClaimError,
-    dateOfClaimError,
-    purpose,
-    setPurpose,
-    providerServiceFee,
-    toktokServiceFee,
-  } = useContext(VerifyContext);
+  const {amount, setAmountError, email, setEmailError, purpose, setPurpose, providerServiceFee, toktokServiceFee} =
+    useContext(VerifyContext);
 
   useEffect(() => {
     if (user.toktokWalletAccountId) {
       getMyAccount();
     }
-  }, [user]);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  const onRefresh = () => {
-    getMyAccount();
-  };
+  }, [user, getMyAccount]);
 
   const checkEmail = () => {
-    if (email != '' && !validator.isEmail(email, {ignore_whitespace: true})) {
-      setEmailError('Invalid email address format');
-      return false;
-    } else {
-      setEmailError('');
-      return true;
+    let error = email === '' ? 'This is a required field' : '';
+    if (error === '' && !validator.isEmail(email, {ignore_whitespace: true})) {
+      error = 'Invalid email address format';
     }
+    setEmailError(error);
+    return !error;
   };
 
   const checkAmount = () => {
-    let error = amount == '' ? 'This is a required field' : '';
-    if (error == '') {
+    let error = amount === '' ? 'This is a required field' : '';
+    if (amount === '0') {
+      error = 'The minimum amount is ₱1';
+    }
+    if (error === '') {
       return checkInsufficientBalance();
     }
     setAmountError(error);
@@ -133,22 +82,14 @@ const MainComponent = ({navigation, route}) => {
     return !error;
   };
 
-  const checkDateOfClaim = () => {
-    let error = dateOfClaim == '' ? 'This is a required field' : '';
-    setDateOfClaimError(error);
-    return !error;
-  };
-
   const onPressProceed = () => {
     const isAmountValid = checkAmount();
-    const isDateOfClaimValid = checkDateOfClaim();
     const isValidEmail = checkEmail();
     if (isAmountValid && isValidEmail) {
       const transactionDetails = {
         recipientName,
-        recipientMobileNo,
+        recipientMobileNo: mobileNumber,
         email,
-        dateOfClaim,
         purpose: purpose.trim(),
         providerServiceFee,
         toktokServiceFee,
@@ -160,7 +101,7 @@ const MainComponent = ({navigation, route}) => {
         cashOutProviderPartnerId: +id,
         totalServiceFee: parseFloat(providerServiceFee) + parseFloat(toktokServiceFee),
       };
-      setPurpose(purpose.trim())
+      setPurpose(purpose.trim());
       navigation.navigate('ToktokWalletCashOutOTCPaymentSummary', {
         transactionDetails,
       });

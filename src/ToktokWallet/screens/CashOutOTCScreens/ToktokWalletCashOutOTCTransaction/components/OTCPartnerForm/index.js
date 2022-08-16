@@ -1,49 +1,27 @@
-import React, {useContext, useRef, useState} from 'react';
-import {View, Text, Dimensions, StyleSheet, TextInput, Image, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useThrottle} from 'src/hooks';
-import validator from 'validator';
+import React, {useContext} from 'react';
+import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {useSelector} from 'react-redux';
 
 //HELPER
-import {
-  moderateScale,
-  formatAmount,
-  numberFormat,
-  numericRegex,
-  alphanumericRegex,
-  maxLengthRegex,
-  minLengthRegex,
-  currencyCode,
-} from 'toktokbills/helper';
+import {moderateScale} from 'toktokbills/helper';
 
 //COMPONENTS
 import {VerifyContext} from '../VerifyContextProvider';
 
 // COLORS AND FONTS
 import CONSTANTS from 'common/res/constants';
-import {InputAmount, DateModal} from 'toktokwallet/components';
-import {calendar_icon} from 'toktokwallet/assets';
-import moment from 'moment';
+import {MobileNumberInput, CustomTextInput, CustomAmountInput} from 'toktokwallet/components';
 
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
-const {width, height} = Dimensions.get('window');
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 
 export const OTCPartnerForm = ({route}) => {
-  const {cashOutProviderFee, toktokServiceFee, maximumAmount} = route.params.otcPartnerDetails;
+  const {cashOutProviderFee, maximumAmount} = route.params.otcPartnerDetails;
 
   const {firstName, middleName, lastName, mobileNumber} = useSelector(state => state.session.user.person);
   const recipientName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
-  const recipientMobileNo = mobileNumber.replace('+63', '0');
+  const recipientMobileNo = mobileNumber.replace('+63', '');
 
-  const [showDateModal, setShowDateModal] = useState(false);
-
-  const navigation = useNavigation();
   const {
-    firstField,
-    setFirstField,
-    secondField,
-    setSecondField,
     amount,
     setAmount,
     email,
@@ -53,10 +31,6 @@ export const OTCPartnerForm = ({route}) => {
     amountError,
     setAmountError,
     setIsInsufficientBalance,
-    dateOfClaim,
-    setDateOfClaim,
-    setDateOfClaimError,
-    dateOfClaimError,
     purpose,
     setPurpose,
     setProviderServiceFee,
@@ -98,10 +72,16 @@ export const OTCPartnerForm = ({route}) => {
     setAmountError('');
     const num = value.replace(/[^0-9.]/g, '');
     const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
-    if (!checkFormat) return;
+    if (!checkFormat) {
+      return;
+    }
     let decimalValueArray = num.split('.');
-    if (decimalValueArray[0].length > 7) return;
-    if (num[0] == '.') return setAmount('0.');
+    if (decimalValueArray[0].length > 7) {
+      return;
+    }
+    if (num[0] === '.') {
+      return setAmount('0.');
+    }
     setAmount(num);
   };
 
@@ -119,82 +99,40 @@ export const OTCPartnerForm = ({route}) => {
           />
         </View>
         <View style={[{marginBottom: moderateScale(20)}]}>
-          <Text style={styles.label}>Recipient Mobile Number</Text>
-          <TextInput
-            style={[styles.input]}
-            value={recipientMobileNo}
-            keyboardType={'numeric'}
-            maxLength={11}
-            returnKeyType="done"
-            editable={false}
-          />
+          <MobileNumberInput label="Recipient Mobile Number" value={recipientMobileNo} editable={false} />
         </View>
         <View style={[{marginBottom: moderateScale(20)}]}>
-          <Text style={styles.label}>Email Address (optional)</Text>
-          <TextInput
-            style={[styles.input, !!emailError && styles.errorBorder]}
+          <CustomTextInput
+            label="Email Address"
             onChangeText={changeEmail}
             value={email}
             returnKeyType="done"
+            errorMessage={emailError}
           />
-          {!!emailError && <Text style={styles.error}>{emailError}</Text>}
         </View>
-        {/* <View style={[{marginBottom: moderateScale(20)}]}>
-          <Text style={styles.label}>Date of Claim</Text>
-          <TouchableOpacity
-            onPress={() => setShowDateModal(true)}
-            style={[
-              styles.input,
-              {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'},
-              !!dateOfClaimError && styles.errorBorder,
-            ]}>
-            {dateOfClaim == '' ? (
-              <Text style={{flex: 1, fontFamily: FONT.REGULAR, color: COLOR.DARK, fontSize: FONT_SIZE.M}}>
-                mm/dd/yy
-              </Text>
-            ) : (
-              <Text style={{flex: 1, fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>
-                {moment(dateOfClaim).format('MM/DD/YYYY')}
-              </Text>
-            )}
-            <Image source={calendar_icon} style={{width: moderateScale(20), height: moderateScale(20)}} />
-          </TouchableOpacity>
-          {!!dateOfClaimError && <Text style={styles.error}>{dateOfClaimError}</Text>}
-        </View> */}
         <View style={{marginBottom: moderateScale(20)}}>
-          <Text style={styles.label}>Enter Amount</Text>
-          <InputAmount errorMessage={amountError} amount={amount} changeAmount={changeAmount} />
-          {!!amountError && <Text style={styles.error}>{amountError}</Text>}
+          <CustomAmountInput
+            label={'Enter Amount'}
+            errorMessage={amountError}
+            value={amount}
+            onChangeText={changeAmount}
+          />
           <Text style={{fontSize: FONT_SIZE.S, marginTop: 5}}>
             Additional service fee will be charge for this transaction.
           </Text>
         </View>
         <View>
-          <Text style={styles.label}>Purpose (optional)</Text>
-          <TextInput
-            style={[styles.inputPurpose]}
+          <CustomTextInput
+            label="Purpose (optional)"
             value={purpose}
             maxLength={120}
             onChangeText={value => setPurpose(value)}
-            placeholderTextColor={COLOR.DARK}
             textAlignVertical="top"
             numberOfLines={4}
             multiline={true}
           />
         </View>
       </View>
-      {/* <DateModal
-        visible={showDateModal}
-        setVisible={setShowDateModal}
-        value={dateOfClaim}
-        isCurrentDate={true}
-        minDate={new Date()}
-        maxDate={new Date(moment().add(7, 'days'))}
-        onDateChange={date => {
-          setDateOfClaim(date);
-          setDateOfClaimError('');
-        }}
-      /> */}
     </>
   );
 };
@@ -227,7 +165,7 @@ const styles = StyleSheet.create({
   error: {
     fontSize: FONT_SIZE.S,
     marginTop: 5,
-    color: COLOR.RED,
+    color: '#ED3A19',
   },
   label: {
     fontSize: FONT_SIZE.S,
