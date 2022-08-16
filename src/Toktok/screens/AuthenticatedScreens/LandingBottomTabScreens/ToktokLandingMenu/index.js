@@ -222,6 +222,12 @@ export const ToktokLandingMenu = ({navigation}) => {
             />
 
             {/*--------------- TALK TO US ---------------*/}
+            <View
+              style={{
+                borderTopWidth: 5,
+                borderTopColor: '#F8F8F8',
+                fontFamily: FONT.BOLD,
+              }}></View>
             <Text
               style={{
                 paddingLeft: 20,
