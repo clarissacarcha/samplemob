@@ -205,12 +205,10 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
                         setImageLoading(false);
                       }}
                     />
-                    <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S, marginLeft: 5}}>
-                      {activeNetwork.name}
-                    </Text>
+                    <Text style={{fontFamily: FONT.REGULAR, marginLeft: 5}}>{activeNetwork.name}</Text>
                   </View>
                 ) : (
-                  <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S, color: '#707070'}}>
+                  <Text style={{fontFamily: FONT.REGULAR, color: '#707070'}}>
                     Select {activeCategory()?.name ? activeCategory().name : ''}
                   </Text>
                 )}
