@@ -20,6 +20,7 @@ import {
   PassengerCapacityActionSheet,
   OutstandingFeeModal,
   TokwaPaymentProcessedModal,
+  FeeInfoModal,
 } from './Components';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
@@ -38,19 +39,21 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const FULLSCREEN_HEIGHT = Dimensions.get('window').height;
+  const hasNotch = StatusBar.currentHeight > 24;
   const SNAP_ARR_NOTCH = [FULLSCREEN_HEIGHT - 78, FULLSCREEN_HEIGHT * 0.6];
   const SNAP_ARR = [FULLSCREEN_HEIGHT, FULLSCREEN_HEIGHT * 0.6];
+  const dispatch = useDispatch();
   const {popTo} = route.params;
   const {details, routeDetails, origin, destination, paymentMethod, tempVehicleArr} = useSelector(
     state => state.toktokGo,
   );
+
   const {tokwaAccount, getMyAccount, getMyAccountLoading, getMyAccountError} = useAccount();
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
   const [viewPaymenetSucessModal, setViewPaymenetSucessModal] = useState(false);
   const [viewOutstandingFeeModal, setViewOutstandingFeeModal] = useState(false);
   const [viewTokwaPaymentProcessedModal, setViewTokwaPaymentProcessedModal] = useState(false);
-  const dispatch = useDispatch();
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [selectedVouchers, setSelectedVouchers] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -62,11 +65,11 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [outstandingFee, setOutstandingFee] = useState();
   const [voucherRemovedVisible, setvoucherRemovedVisible] = useState(false);
   const [voucherTextMessage, setvoucherTextMessage] = useState('');
-  const hasNotch = StatusBar.currentHeight > 24;
   const [recentDestinationList, setrecentDestinationList] = useState([]);
   const [isNotVoucherApplicable, setIsNotVoucherApplicable] = useState(false);
   const [proceedBooking, setProceedBooking] = useState(false);
   const [bookingState, setBookingState] = useState(false);
+  const [viewOutstandingFeeInfoModal, setViewOutstandingFeeInfoModal] = useState(false);
 
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
@@ -449,7 +452,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         selectedPaymentMethod={selectedPaymentMethod}
         isNotVoucherApplicable={isNotVoucherApplicable}
       />
-      <BookingBreakdown selectedVehicle={selectedVehicle} loading={loading} details={details} />
+      <BookingBreakdown
+        selectedVehicle={selectedVehicle}
+        loading={loading}
+        details={details}
+        setViewOutstandingFeeInfoModal={setViewOutstandingFeeInfoModal}
+      />
       <BookingTotal loading={loading} details={details} />
       <View style={{height: FULLSCREEN_HEIGHT * 0.25}} />
     </View>
@@ -530,7 +538,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       <AlertOverlay visible={TIPLoading || TBLoading} />
       <TokwaPaymentProcessedModal
         viewTokwaPaymentProcessedModal={viewTokwaPaymentProcessedModal}
-        amount={details.rate.tripFare.total}
+        amount={details?.rate?.tripFare?.total}
         tokwaPaymentConfirmed={tokwaPaymentConfirmed}
       />
 
@@ -555,6 +563,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         viewPaymenetSucessModal={viewPaymenetSucessModal}
         setViewPaymenetSucessModal={setViewPaymenetSucessModal}
       />
+      <FeeInfoModal vissible={viewOutstandingFeeInfoModal} setVissible={setViewOutstandingFeeInfoModal} />
       <PricesNoteModal viewPriceNote={viewPriceNote} setViewPriceNote={setViewPriceNote} />
       <VoucherRemovedModal
         voucherRemovedVisible={voucherRemovedVisible}
@@ -579,7 +588,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           getMyAccountLoading={getMyAccountLoading}
           navigation={navigation}
         />
-        <BookingConfirmButton SheetManager={SheetManager} />
+        <BookingConfirmButton SheetManager={SheetManager} tokwaAccount={tokwaAccount} details={details} />
       </View>
     </View>
   );
