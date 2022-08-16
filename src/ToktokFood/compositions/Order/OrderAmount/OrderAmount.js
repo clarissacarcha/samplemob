@@ -55,9 +55,15 @@ const OrderAmount = (props: PropsType): React$Node => {
           </AmountContainer>
           {state && Object.keys(state).length > 0 ? (
             <AmountContainer>
-              <AmountText total={title === 'Total'} sign={sign} placement={placement}>
-                {sign} &#x20B1;{parseFloat(amount).toFixed(2)}
-              </AmountText>
+              {typeof amount === 'number' ? (
+                <AmountText total={title === 'Total'} sign={sign} placement={placement}>
+                  {sign} &#x20B1;{parseFloat(amount).toFixed(2)}
+                </AmountText>
+              ) : (
+                <AmountText total={title === 'Total'} sign={sign} placement={placement}>
+                  {amount}
+                </AmountText>
+              )}
               {icon && title === 'Total' && <DiscountIcon name={icon} color={theme.color.orange} size={18} />}
             </AmountContainer>
           ) : (
@@ -70,10 +76,11 @@ const OrderAmount = (props: PropsType): React$Node => {
 
   const renderDiscountComponent = () => {
     if (resellerDiscountTotal || promoDiscounts || shippingDiscount || pabiliShopResellerDiscount) {
+      const serviceFeeDiscount = state?.totalServiceFee - pabiliShopResellerDiscount;
       const totalDiscount =
         promoDiscounts +
         shippingDiscount +
-        (state?.serviceType === 'toktokfood' ? resellerDiscountTotal : pabiliShopResellerDiscount);
+        (state?.serviceType === 'toktokfood' ? resellerDiscountTotal : serviceFeeDiscount);
       return (
         <React.Fragment>
           {amountComponent(
@@ -95,9 +102,9 @@ const OrderAmount = (props: PropsType): React$Node => {
                 )}
               {shippingDiscount > 0 &&
                 amountComponent('Discount', state?.promoDetails?.shippingDiscountName, shippingDiscount, '-')}
-              {pabiliShopResellerDiscount > 0 &&
+              {serviceFeeDiscount > 0 &&
                 state?.serviceType === 'pabili' &&
-                amountComponent('Discount', 'Service Fee (Reseller)', pabiliShopResellerDiscount, '-')}
+                amountComponent('Discount', 'Service Fee (Reseller)', serviceFeeDiscount, '-')}
             </React.Fragment>
           )}
         </React.Fragment>
@@ -122,7 +129,7 @@ const OrderAmount = (props: PropsType): React$Node => {
       (state?.serviceType === 'toktokfood' ? state?.totalAmount : state?.srpTotalamount) +
         state?.originalShippingFee -
         shippingDiscount +
-        (state?.serviceType === 'pabili' ? state?.totalServiceFee - pabiliShopResellerDiscount : 0),
+        (state?.serviceType === 'pabili' ? pabiliShopResellerDiscount : 0),
       '',
       icon,
       () => setShowAmountBreakdown(!showAmountBreakdown),
@@ -136,7 +143,9 @@ const OrderAmount = (props: PropsType): React$Node => {
           {amountComponent('', 'Subtotal', state?.srpTotal)}
           {state?.orderIsfor === 1 && amountComponent('', 'Delivery Fee', state?.originalShippingFee)}
           {state?.serviceType === 'pabili' &&
-            amountComponent('', 'Service Fee', state?.totalServiceFee, '', 'info', () => setIsAlertVisible(true))}
+            amountComponent('', 'Service Fee', state?.totalServiceFee || 'WAIVED', '', 'info', () =>
+              setIsAlertVisible(true),
+            )}
           {renderDiscountComponent()}
         </AmountBreakdownContainer>
       );

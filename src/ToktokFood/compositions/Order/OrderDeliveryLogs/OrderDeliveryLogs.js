@@ -68,7 +68,7 @@ const OrderDeliveryLogs = (props: PropsType): React$Node => {
         {renderDashComponent()}
         {renderLogsComponent('Order placed', state?.dateOrdered)}
         {state?.isdeclined ? (
-          state?.isdeclined === 3 ? (
+          state?.declinedBy === 3 ? (
             <DeclinedText mode="semibold">
               Cancelled automatically by toktokfood’s system{'\n'}
               <DeclinedText>
@@ -79,7 +79,7 @@ const OrderDeliveryLogs = (props: PropsType): React$Node => {
             <DeclinedText>
               Order was cancelled by{' '}
               <DeclinedText mode="semibold">
-                {state?.isdeclined === 4 ? 'driver' : state?.shopDetails?.shopname}
+                {state?.declinedBy === 4 ? 'driver' : state?.shopDetails?.shopname}
               </DeclinedText>
             </DeclinedText>
           )
