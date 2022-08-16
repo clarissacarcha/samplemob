@@ -22,14 +22,17 @@ export const Label: ComponentType<any> = styled(Text).attrs(props => ({
 export const Input: ComponentType<any> = styled(TextInput).attrs(props => ({
   ...props,
 }))`
-  height: ${SIZE.FORM_HEIGHT}px;
+  ${({multiline}) =>
+    multiline
+      ? `height: ${moderateScale(90)}px; padding-top: ${moderateScale(15)}px; padding-bottom: ${moderateScale(15)}px;`
+      : `height: ${SIZE.FORM_HEIGHT}px;`}
   border-radius: 5px;
   background-color: #f7f7fa;
   margin-top: 5px;
   font-size: ${FONT_SIZE.M}px;
   padding-horizontal: ${moderateScale(15)}px;
-  ${({errorMessage, theme}) =>
-    errorMessage !== '' &&
+  ${({hasError, theme}) =>
+    hasError &&
     `
        border-color: ${theme.color.red};
        border-width: 1;

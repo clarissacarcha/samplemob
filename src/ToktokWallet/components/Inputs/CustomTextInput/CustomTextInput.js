@@ -27,6 +27,9 @@ const CustomTextInput = (props: PropsType): React$Node => {
     editable = true,
     errorMessage = '',
     label = '',
+    multiline = false,
+    numberOfLines,
+    textAlignVertical,
   } = props;
 
   return (
@@ -42,11 +45,14 @@ const CustomTextInput = (props: PropsType): React$Node => {
         editable={editable}
         maxLength={maxLength}
         keyboardType={keyboardType}
-        errorMessage={errorMessage}
+        hasError={errorMessage !== ''}
         onBlur={onBlur}
         onSubmitEditing={onSubmitEditing}
         onFocus={onFocus}
         caretHidden={caretHidden}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
+        textAlignVertical={textAlignVertical}
       />
       {errorMessage !== '' && <Error>{errorMessage}</Error>}
     </>
