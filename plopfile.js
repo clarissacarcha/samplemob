@@ -34,6 +34,7 @@ module.exports = function (plop) {
           'components/Inputs',
           'components/Modal',
           'components/Modals',
+          'components/Pages',
           'compositions',
           'compositions/Cart',
           'compositions/Order',

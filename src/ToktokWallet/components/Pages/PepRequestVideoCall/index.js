@@ -85,8 +85,8 @@ const MainComponent = props => {
           <View style={{marginBottom: 16}}>
             <Text style={{fontFamily: FONT.BOLD}}>Video Call Schedule</Text>
             <Text style={{paddingTop: 8, color: '#525252', fontSize: FONT_SIZE.S}}>
-              Select your preferred platform and schedule and be ready to be called by one of our team for identity
-              confirmation.{' '}
+              Select your preferred platform for video call and create a schedule. Make sure to be available by the time
+              our representative calls for identity confirmation.
             </Text>
           </View>
         )}
