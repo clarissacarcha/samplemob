@@ -17,7 +17,7 @@ export const ContextProvider = ({children, pepInfo}) => {
   });
   const [callChannels, setCallChannels] = useState('');
   const [numberOrLink, setNumberOrLink] = useState(
-    videocall.videoCallContactDetails ? videocall.videoCallContactDetails.replace('+63', '0') : '',
+    videocall.videoCallContactDetails ? videocall.videoCallContactDetails.replace('+63', '') : '',
   );
   const [dayPicked, setDayPicked] = useState({
     index: 0,
