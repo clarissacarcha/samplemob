@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect ,useRef} from 'react';
 import {View, Text, StyleSheet, RefreshControl, FlatList} from 'react-native';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_SEND_MONEY_TRANSACTIONS} from 'toktokwallet/graphql';
+import {GET_SEND_MONEY_TRANSACTIONS,GET_SEND_MONEY_TRANSACTIONS_PAGINATE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
 import {Separator, ModalPaginationLoading, CheckIdleState, SwipeDownToRefresh, NoData} from 'toktokwallet/components';
 import {HeaderBack, HeaderTitle} from 'src/revamp';
@@ -23,29 +23,70 @@ export const ToktokWalletSendMoneyLogs = ({navigation, route}) => {
   });
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
-  const [pageLoading, setPageLoading] = useState(false);
   const [records, setRecords] = useState([]);
+  const [pageInfo, setPageInfo] = useState({});
+  const onEndReachedCalledDuringMomentum = useRef(null);
+  const [refreshing, setRefreshing] = useState(false);
   const alert = useAlert();
 
-  const [getSendMoneyTransactions, {data, error, loading}] = useLazyQuery(GET_SEND_MONEY_TRANSACTIONS, {
+
+  const [getSendMoneyTransactionsPaginate , {date,error,loading,fetchMore}] = useLazyQuery(GET_SEND_MONEY_TRANSACTIONS_PAGINATE, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
+      setRefreshing(false);
       onErrorAlert({alert, error, navigation});
     },
-    onCompleted: ({getSendMoneyTransactions}) => {
-      setRecords(getSendMoneyTransactions);
+    onCompleted: ({getSendMoneyTransactionsPaginate}) => {
+      setRecords(getSendMoneyTransactionsPaginate.edges);
+      setPageInfo(getSendMoneyTransactionsPaginate.pageInfo);
+      setRefreshing(false);
     },
-  });
+  })
+
+  const handleGetTransactions = ()=> {
+    getSendMoneyTransactionsPaginate({
+      variables: {
+        input: {
+          afterCursorId: null,
+        },
+      },
+    })
+  }
+
+  const fetchMoreData = async () => {
+    if (pageInfo.hasNextPage) {
+      await fetchMore({
+        variables: {
+          input: {
+            afterCursorId: pageInfo.endCursorId,
+          },
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          fetchMoreResult.getSendMoneyTransactionsPaginate.edges = [
+            ...previousResult.getSendMoneyTransactionsPaginate.edges,
+            ...fetchMoreResult.getSendMoneyTransactionsPaginate.edges,
+          ];
+          return fetchMoreResult;
+        },
+      }).then(({data}) => {
+        setPageInfo(data.getSendMoneyTransactionsPaginate.pageInfo);
+        setRecords(data.getSendMoneyTransactionsPaginate.edges);
+      });
+    }
+  };
 
   const Refetch = () => {
-    getSendMoneyTransactions();
-    setPageLoading(loading);
+    handleGetTransactions();
+    setRefreshing(true);
   };
 
   useEffect(() => {
-    getSendMoneyTransactions();
-    setPageLoading(loading);
+    handleGetTransactions();
+    setRefreshing(loading);
   }, []);
 
   if (error) {
@@ -55,7 +96,7 @@ export const ToktokWalletSendMoneyLogs = ({navigation, route}) => {
   return (
     <CheckIdleState>
       <Separator />
-      <ModalPaginationLoading visible={pageLoading} />
+      <ModalPaginationLoading visible={refreshing} />
       <View style={styles.container}>
         <View style={styles.content}>
           <FlatList
@@ -76,9 +117,29 @@ export const ToktokWalletSendMoneyLogs = ({navigation, route}) => {
             data={records}
             keyExtractor={item => item.id}
             renderItem={({item, index}) => (
-              <SendMoneyLog key={`sendMoney-log${index}`} item={item} index={index} tokwaAccount={tokwaAccount} />
+              <SendMoneyLog key={`sendMoney-log${index}`} data={records} item={item} index={index} tokwaAccount={tokwaAccount} />
             )}
             contentContainerStyle={{flexGrow: 1}}
+            onEndReachedThreshold={0.01}
+            onEndReached={() => {
+              if (!onEndReachedCalledDuringMomentum.current) {
+                fetchMoreData();
+                onEndReachedCalledDuringMomentum.current = true;
+              }
+            }}
+            onMomentumScrollBegin={() => {
+              onEndReachedCalledDuringMomentum.current = false;
+            }}
+            scrollEnabled={true}
+            getItemLayout={
+              records.length <= 30
+                ? (data, index) => ({
+                    length: records.length,
+                    offset: records.length * index,
+                    index,
+                  })
+                : undefined
+            }
           />
         </View>
       </View>
@@ -96,7 +157,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    padding: 16,
+    // padding: 16,
     flex: 1,
   },
   filterType: {
