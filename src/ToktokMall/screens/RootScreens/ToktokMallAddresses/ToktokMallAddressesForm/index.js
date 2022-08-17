@@ -203,9 +203,19 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     if (type === 'reg') {
       setRegion(data.regDesc);
       setRegCode(data.regCode);
+      if (data.regCode === '13') {
+        setProvince('Select District');
+      } else {
+        setProvince('Select Province');
+      }
+      setProvCode('');
+      setCity('Select City');
+      setMunCode('');
     } else if (type === 'prov') {
       setProvince(data.provDesc);
       setProvCode(data.provCode);
+      setCity('Select City');
+      setMunCode('');
     } else if (type === 'city') {
       setCity(data.citymunDesc);
       setMunCode(data.citymunCode);
@@ -416,7 +426,19 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     if (city !== 'Select City') {
       removeError('city');
     }
-  }, [newAddressForm, city]);
+    if (region === 'Select Region') {
+      addError('region');
+    }
+    if (region !== 'Select Region') {
+      removeError('region');
+    }
+    if (province === 'Select Province') {
+      addError('province');
+    }
+    if (province !== 'Select Province') {
+      removeError('province');
+    }
+  }, [newAddressForm, city, region,province]);
 
   const onSubmitValidation = () => {
     setValidation(
@@ -458,11 +480,11 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
           setLongitude(parseFloat(data.geometry.location.lng));
         }}
       />
-      <CityAddressModalAndroid
+      {/* <CityAddressModalAndroid
         isVisible={modalProvinceVisible}
         setVisible={setModalProvinceVisible}
         setCity={(data) => onSelectCity(data)}
-      />
+      /> */}
 
       <SelectAddressModal
         isVisible={isVisible}
@@ -510,7 +532,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
                 style={[
                   styles.text,
                   {
-                    color: validation.validated && validation.errors?.includes('city') ? 'red' : 'black',
+                    color: validation.validated && validation.errors?.includes('region') ? 'red' : 'black',
                     textTransform: 'capitalize',
                   },
                 ]}>
@@ -531,7 +553,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
                 style={[
                   styles.text,
                   {
-                    color: validation.validated && validation.errors?.includes('city') ? 'red' : regCode ? 'black': 'gray',
+                    color: validation.validated && validation.errors?.includes('province') ? 'red' : regCode ? 'black': 'gray',
                     textTransform: 'capitalize',
                   },
                 ]}>

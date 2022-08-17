@@ -54,7 +54,7 @@ export const TermsAndCondition = (props) => {
                 {props.TCEnabled && <Icons.MIcon name="check" size={9} color="white"/> }
             </TouchableOpacity>
             <Text style={styles.tcText}>
-                I hereby confirm that all order details and delivery information are{'\n'}correctly entered. Furthermore, I have read and agreed with the <Text onPress={onNavigate} style={styles.tcUnderlineText}>Terms and Conditions</Text> of this service.
+                I hereby confirm that all order details and delivery information are correctly entered. Furthermore, I have read and agreed with the <Text onPress={onNavigate} style={styles.tcUnderlineText}>Terms and Conditions</Text> of this service.
             </Text>
         </View>
     )
