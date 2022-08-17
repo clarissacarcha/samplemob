@@ -1,7 +1,8 @@
 import React , {useState} from "react";
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import moment from 'moment'
-import { numberFormat ,MaskLeftZero } from 'toktokwallet/helper'
+import { numberFormat, moderateScale, getHeaderDateTitle } from 'toktokwallet/helper'
+import { Separator } from "toktokwallet/components";
 import { useThrottle } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -12,14 +13,20 @@ import Details from "./Details";
 export const CashInLog = ({
     item,
     tokwaAccount,
-    index
+    index,
+    data
 })=> {
 
     const [info,setInfo] = useState({})
-    const [openModal,setOpenModal] = useState(false)
+    const [openModal,setOpenModal] = useState(false);
+    const { upperText , lowerText } = getHeaderDateTitle({
+        refDate: item?.node?.createdAt,
+        data,
+        index
+    })
 
     let status
-    switch (item.status) {
+    switch (item?.node?.status) {
         case "0":
             status = "Requested"
             break;
@@ -34,13 +41,13 @@ export const CashInLog = ({
             break;
     }
 
-    const transaction = item.transaction
-    const requestNo = item.referenceNumber
+    const transaction = item?.node?.transaction
+    const requestNo = item?.node?.referenceNumber
     const refNo = transaction?.refNo ? transaction.refNo : null
-    const refDate = transaction ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A') : moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
-    const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.amount)}`
-    const provider = item.provider.name
-    const phrase = `through ${item.cashInPartnerTypeId ? item.cashInPartnerType.name : provider}`
+    const refDate = transaction ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A') : moment(item?.node?.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
+    const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item?.node?.amount)}`
+    const provider = item?.node?.provider.name
+    const phrase = `through ${item?.node?.cashInPartnerTypeId ? item?.node?.cashInPartnerType.name : provider}`
 
     const showDetails = ()=>{
         setInfo({
@@ -50,7 +57,7 @@ export const CashInLog = ({
             phrase,
             amount: transactionAmount,
             status,
-            details: item.details,
+            details: item?.node?.details,
             requestNo
         })
         setOpenModal(true);
@@ -65,6 +72,7 @@ export const CashInLog = ({
             visible={openModal}
             setVisible={setOpenModal}
         />
+          {!!upperText && <Text style={styles.dayTitle}>{upperText}</Text>}
         <TouchableOpacity
             style={styles.transaction}
             onPress={onthrottledPress}
@@ -78,6 +86,8 @@ export const CashInLog = ({
                 <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
             </View>
         </TouchableOpacity>
+        <Separator/>
+        {!!lowerText && <Text style={styles.dayTitle}>{lowerText}</Text>}
         </>
     )
 }
@@ -101,5 +111,10 @@ const styles = StyleSheet.create({
     transactionAmount: {
         flexBasis: "auto",
         alignItems: "flex-end"
-    }
+    },
+    dayTitle: {
+        fontFamily: FONT.BOLD,
+        marginTop: moderateScale(20),
+        paddingHorizontal: 16,
+    },
 })

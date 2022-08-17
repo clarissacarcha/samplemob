@@ -2,7 +2,7 @@ import React , {useState} from "react";
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import moment from 'moment'
 import { Separator } from "toktokwallet/components";
-import { numberFormat ,MaskLeftZero , moderateScale, dayTitle , sameDay , currencyCode } from 'toktokwallet/helper'
+import { numberFormat , moderateScale, currencyCode , getHeaderDateTitle} from 'toktokwallet/helper'
 import { useThrottle } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -18,23 +18,11 @@ export const SendMoneyLog = ({
 })=>{
     const [info,setInfo] = useState({})
     const [openModal,setOpenModal] = useState(false)
-    const referenceDate = moment(item?.node?.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
-    let nextItem = [];
-    let isSameDay = false;
-    let lowerText = '';
-    let upperText = '';
-
-    if (data) {
-        nextItem = data[index + 1] ? data[index + 1] : false;
-        if (index === 0) {
-          upperText = dayTitle(referenceDate);
-        }
-        if (nextItem) {
-          let dateNext = moment(nextItem?.node?.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
-          isSameDay = sameDay(referenceDate.toString(), dateNext.toString());
-          lowerText = !isSameDay ? dayTitle(dateNext) : '';
-        }
-      }
+    const { upperText , lowerText } = getHeaderDateTitle({
+        refDate: item?.node?.createdAt,
+        data,
+        index
+    })
 
     let status
     switch (item?.node?.status) {

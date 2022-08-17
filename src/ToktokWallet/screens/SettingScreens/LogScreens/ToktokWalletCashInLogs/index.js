@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useRef} from 'react';
 import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CASH_INS} from 'toktokwallet/graphql';
+import {GET_CASH_INS_PAGINATE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-import {Separator, ModalPaginationLoading, CheckIdleState, SwipeDownToRefresh, NoData} from 'toktokwallet/components';
+import {Separator, ModalPaginationLoading, CheckIdleState, NoData, LoadingIndicator} from 'toktokwallet/components';
 import {HeaderBack, HeaderTitle} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
@@ -23,51 +23,89 @@ export const ToktokWalletCashInLogs = ({navigation}) => {
   });
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [pageLoading, setPageLoading] = useState(false);
   const [records, setRecords] = useState([]);
+  const [pageInfo, setPageInfo] = useState({});
+  const onEndReachedCalledDuringMomentum = useRef(null);
+  const [refreshing, setRefreshing] = useState(false);
   const alert = useAlert();
 
-  const [getCashIns, {data, error, loading}] = useLazyQuery(GET_CASH_INS, {
+  const [getCashInsPaginate, {data, error, loading, fetchMore }] = useLazyQuery(GET_CASH_INS_PAGINATE, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
+      setRefreshing(false);
       onErrorAlert({alert, error, navigation});
     },
-    onCompleted: ({getCashIns}) => {
-      // setRecords(state=> {
-      //     return [...state, ...getCashIns]
-      // })
-      // setPageLoading(false)
-      setRecords(getCashIns);
+    onCompleted: ({getCashInsPaginate}) => {
+      setRecords(getCashInsPaginate.edges);
+      setPageInfo(getCashInsPaginate.pageInfo);
+      setRefreshing(false);
     },
   });
 
+  const handleGetTransactions = ()=> {
+    getCashInsPaginate({
+      variables: {
+        input: {
+          afterCursorId: null,
+        },
+      },
+    })
+  }
+
+  const fetchMoreData = async () => {
+    if (pageInfo.hasNextPage) {
+      await fetchMore({
+        variables: {
+          input: {
+            afterCursorId: pageInfo.endCursorId,
+          },
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          fetchMoreResult.getCashInsPaginate.edges = [
+            ...previousResult.getCashInsPaginate.edges,
+            ...fetchMoreResult.getCashInsPaginate.edges,
+          ];
+          return fetchMoreResult;
+        },
+      }).then(({data}) => {
+        setPageInfo(data.getCashInsPaginate.pageInfo);
+        setRecords(data.getCashInsPaginate.edges);
+      });
+    }
+  };
+
+
   const Refetch = () => {
-    getCashIns();
-    setPageLoading(loading);
+    handleGetTransactions();
+    setRefreshing(loading);
   };
 
   useEffect(() => {
-    getCashIns();
-    setPageLoading(loading);
+    handleGetTransactions();
+    setRefreshing(loading);
   }, []);
 
   if (error) {
     return <SomethingWentWrong onRefetch={Refetch} />;
   }
 
+  const ListFooterComponent = () => {
+    return (
+      <View style={{marginVertical: moderateScale(15)}}>
+        <LoadingIndicator isLoading={pageInfo.hasNextPage} size="small" />
+      </View>
+    );
+  };
+
   return (
     <CheckIdleState>
       <Separator />
-      {/* <SwipeDownToRefresh/> */}
-      <ModalPaginationLoading visible={pageLoading} />
+      <ModalPaginationLoading visible={refreshing} />
       {
-        // loading && pageIndex == 0
-        // ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        //     <ActivityIndicator size={24} color={COLOR.YELLOW} />
-        //    </View>
-        // :
         <View style={styles.container}>
           <View style={styles.content}>
             <FlatList
@@ -88,16 +126,30 @@ export const ToktokWalletCashInLogs = ({navigation}) => {
               data={records}
               keyExtractor={item => item.id}
               renderItem={({item, index}) => (
-                <CashInLog key={`cashin-log${index}`} item={item} index={index} tokwaAccount={tokwaAccount} />
+                <CashInLog key={`cashin-log${index}`} data={records} item={item} index={index} tokwaAccount={tokwaAccount} />
               )}
               contentContainerStyle={{flexGrow: 1}}
-              // onEndReached={()=>{
-              //   if(!pageLoading) {
-              //     console.log("REACH END")
-              //     setPageIndex(state=>state+1)
-              //   }
-              // }}
-              // onEndReachedThreshold={0.16}
+              onEndReachedThreshold={0.01}
+              onEndReached={() => {
+                if (!onEndReachedCalledDuringMomentum.current) {
+                  fetchMoreData();
+                  onEndReachedCalledDuringMomentum.current = true;
+                }
+              }}
+              onMomentumScrollBegin={() => {
+                onEndReachedCalledDuringMomentum.current = false;
+              }}
+              scrollEnabled={true}
+              getItemLayout={
+                records.length <= 30
+                  ? (data, index) => ({
+                      length: records.length,
+                      offset: records.length * index,
+                      index,
+                    })
+                  : undefined
+              }
+              ListFooterComponent={ListFooterComponent}
             />
           </View>
         </View>
@@ -116,7 +168,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    padding: 16,
     flex: 1,
   },
   filterType: {
