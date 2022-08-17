@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   tooltipButton: {
     justifyContent: 'center',
     backgroundColor: '#F6841F',
-    padding: moderateScale(4.5),
+    height: moderateScale(40),
     width: moderateScale(100),
     borderRadius: moderateScale(5),
   },
