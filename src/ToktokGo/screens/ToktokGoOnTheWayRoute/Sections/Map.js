@@ -4,7 +4,7 @@ import CONSTANTS from '../../../../common/res/constants';
 import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
-import Car from '../../../../assets/images/Car.png';
+import LocationIcon from '../../../../assets/images/locationIcon.png';
 import constants from '../../../../common/res/constants';
 export const Map = ({booking, decodedPolyline, originData}) => {
   const mapRef = useRef();
@@ -68,7 +68,7 @@ export const Map = ({booking, decodedPolyline, originData}) => {
         }}
         coordinate={originData ? INITIAL_REGION : TO}>
         <View style={{alignItems: 'center'}}>
-          <Image source={Car} style={{height: 36, width: 36}} resizeMode="contain" />
+          <Image source={LocationIcon} style={{height: 36, width: 36}} resizeMode="contain" />
         </View>
       </Marker>
     </MapView>
