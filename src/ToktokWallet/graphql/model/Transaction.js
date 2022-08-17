@@ -154,3 +154,22 @@ export const GET_SEND_MONEY_TRANSACTIONS = gql`
         }
     }
 `;
+
+export const GET_SEND_MONEY_TRANSACTIONS_PAGINATE = gql`
+  query getSendMoneyTransactionsPaginate($input:GetTransactionsPaginateInput!){
+    getSendMoneyTransactionsPaginate(input:$input) {
+      edges {
+        cursorId
+        cursorCreatedAt
+        node {
+          ${WalletTransactions}
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        hasNextPage
+      }
+    }
+  }
+`
