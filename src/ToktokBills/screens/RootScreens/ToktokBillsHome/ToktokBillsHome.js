@@ -148,7 +148,7 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
   const ListFavoriteComponent = useMemo(() => {
     return (
       <>
-        {adsRegular.length > 0 && <Advertisement autoplay ads={adsRegular} />}
+        {adsRegular.length > 0 && <Advertisement autoplay={adsRegular.length > 1} ads={adsRegular} />}
         {favoriteBills.length > 0 && <FavoriteList favoriteBills={favoriteBills} />}
       </>
     );
