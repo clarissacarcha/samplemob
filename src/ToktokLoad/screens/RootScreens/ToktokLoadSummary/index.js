@@ -95,7 +95,7 @@ export const ToktokLoadSummary = ({navigation, route}) => {
         <ImageBackground source={banner_bg} style={styles.headerContainer}>
           <Image
             source={{uri: network.iconUrl}}
-            style={{height: networkSize.height, width: networkSize.width}}
+            style={{height: moderateScale(45), width: moderateScale(70)}}
             resizeMode="contain"
           />
           <View style={styles.headerContentContainer}>
