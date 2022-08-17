@@ -50,6 +50,7 @@ export const Advertisement = ({
             sliderWidth={width}
             sliderHeight={height * 0.15}
             itemWidth={width}
+            scrollEnabled={ads.length > 1}
             autoplay={true}
             loop={true}
             autoplayDelay={0} 
@@ -59,6 +60,7 @@ export const Advertisement = ({
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
+            scrollEnabled={ads.length > 1}
             style={styles.container}
             data={ads}
             keyExtractor={item=>item.id}
