@@ -1,7 +1,6 @@
 import React , {useRef} from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image,ActivityIndicator,ScrollView} from 'react-native'
-import {HeaderBack, HeaderTitle} from 'toktokwallet/components';
-import { Separator, CheckIdleState } from 'toktokwallet/components';
+import { Separator, CheckIdleState, HeaderBack, HeaderTitleRevamp } from 'toktokwallet/components';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_GLOBAL_SETTING} from 'toktokwallet/graphql'
 import {useQuery} from '@apollo/react-hooks'
@@ -19,7 +18,7 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
 
     navigation.setOptions({
         headerLeft: () => <HeaderBack />,
-        headerTitle: () => <HeaderTitle label={'Terms and Conditions'} labelFont={FONT.REGULAR} headerStyle={{marginTop: 0}}/>,
+        headerTitle: () => <HeaderTitleRevamp label={'Terms and Conditions'}/>,
     });
 
     return (
