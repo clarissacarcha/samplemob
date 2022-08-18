@@ -118,6 +118,18 @@ const MyOrderList = props => {
     });
   };
 
+  const onRefetchCart = () => {
+    setTimeout(() => {
+      getAllTemporaryCart({
+        variables: {
+          input: {
+            userId: customerInfo.userId,
+          },
+        },
+      });
+    }, 1500);
+  };
+
   const roundedPercentage = (number, precision) => {
     const rounded = Math.pow(10, precision);
     return (Math.round(number * rounded) / rounded).toFixed(precision);
@@ -260,20 +272,17 @@ const MyOrderList = props => {
       }).then(({data}) => {
         let {status, message} = data.deleteTemporaryCartItem;
         if (status == 200) {
-          const totalAmountWithAddons = parseFloat(temporaryCart.totalAmountWithAddons) - parseFloat(itemTotalAmount);
-          const amount = parseFloat(temporaryCart.totalAmount) - parseFloat(totalAmount);
-          const addonsAmount = parseFloat(temporaryCart.addonsTotalAmount) - parseFloat(addonsTotalAmount);
+          // const totalAmountWithAddons = parseFloat(temporaryCart.totalAmountWithAddons) - parseFloat(itemTotalAmount);
+          // const amount = parseFloat(temporaryCart.totalAmount) - parseFloat(totalAmount);
+          // const addonsAmount = parseFloat(temporaryCart.addonsTotalAmount) - parseFloat(addonsTotalAmount);
           const index = temporaryCart.items.findIndex(val => val.id == item.id);
           temporaryCart.items.splice(index, 1);
-
-          getAllTemporaryCart({
-            variables: {
-              input: {
-                userId: customerInfo.userId,
-              },
-            },
-          });
-
+          onRefetchCart();
+          const isLastItem = temporaryCart.items.length == 0;
+          if (isLastItem) {
+            dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
+            return navigation.goBack();
+          }
           // setTemporaryCart({
           //   totalAmountWithAddons,
           //   totalAmount: amount,
@@ -281,11 +290,6 @@ const MyOrderList = props => {
           //   items: [...temporaryCart.items],
           //   // srpTotalAmount,
           // });
-          const isLastItem = temporaryCart.items.length == 0;
-          if (isLastItem) {
-            dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
-            return navigation.goBack();
-          }
         } else {
           setTimeout(() => {
             Alert.alert('', message);

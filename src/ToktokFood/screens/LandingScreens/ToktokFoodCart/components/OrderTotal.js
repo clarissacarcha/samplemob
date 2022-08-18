@@ -237,7 +237,7 @@ const OrderTotal = ({
           </View>
         )}
 
-        {pabiliShopDetails.isShopPabiliMerchant && (
+        {pabiliShopDetails && pabiliShopDetails?.isShopPabiliMerchant && (
           <>
             <View style={styles.header}>
               <View style={styles.serviceFeeLabelWrapper}>
