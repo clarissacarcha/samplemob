@@ -1,6 +1,6 @@
 import React , {useRef} from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image,ActivityIndicator,ScrollView} from 'react-native'
-import {YellowButton,HeaderBack, HeaderTitle, } from 'src/revamp';
+import {HeaderBack, HeaderTitle} from 'toktokwallet/components';
 import { Separator, CheckIdleState } from 'toktokwallet/components';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql'
 import {GET_GLOBAL_SETTING} from 'toktokwallet/graphql'
@@ -11,24 +11,21 @@ import CONSTANTS from 'common/res/constants'
 import { SomethingWentWrong } from 'src/components';
 import WebView from 'react-native-webview'
 import { ListContent, SectionContent } from './Components';
-import { termsAndConditionsDetails } from 'toktokwallet/helper';
+import { termsAndConditionsDetails, moderateScale, verticalScale } from 'toktokwallet/helper';
 
 const { FONT_FAMILY: FONT , FONT_SIZE , MARGIN , COLOR } = CONSTANTS
 
 export const ToktokWalletTermsConditions = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: () => <HeaderTitle label={['']} />,
+        headerLeft: () => <HeaderBack />,
+        headerTitle: () => <HeaderTitle label={'Terms and Conditions'} labelFont={FONT.REGULAR} headerStyle={{marginTop: 0}}/>,
     });
 
     return (
       <CheckIdleState>
-      <Separator/>
       <View style={styles.container}>
-        <View style={[styles.shadow]}>
-          <Text style={styles.title}>Terms and Conditions</Text>
-          <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.contentWrapper}>
               {/* <Text>{data.getGlobalSetting.keyValue}</Text> */}
               <SectionContent contents={termsAndConditionsDetails.WM_PARAGRAPH_1} />
@@ -65,7 +62,6 @@ export const ToktokWalletTermsConditions = ({navigation})=> {
               <ListContent contents={termsAndConditionsDetails.CUSTOMER_CARE}/>
             </View>
           </ScrollView>
-        </View>
       </View>
       </CheckIdleState>
     )
@@ -75,6 +71,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.WHITE,
+    padding: moderateScale(16),
   },
   checkIcon: {
     height: 98,
@@ -101,7 +98,8 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     flex: 1,
-    paddingBottom: 10,
+    margin: 6,
+    paddingBottom: verticalScale(10),
   },
   shadow: {
     margin: 16,
