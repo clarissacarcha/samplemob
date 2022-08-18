@@ -8,9 +8,8 @@ export const PricesNoteModal = ({viewPriceNote, setViewPriceNote}) => {
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
-            <Text style={styles.modalDescription}>
-              Prices may vary depending on traffic condition. Subject to prevailing IATF guideline.
-            </Text>
+            <Text style={styles.modalDescription}>Prices may vary depending on traffic condition.</Text>
+            <Text style={styles.modalDescription}>Subject to prevailing IATF guideline.</Text>
 
             <TouchableOpacity style={styles.buttonContainer} onPress={() => setViewPriceNote(false)}>
               <Text style={styles.buttonText}>OK</Text>

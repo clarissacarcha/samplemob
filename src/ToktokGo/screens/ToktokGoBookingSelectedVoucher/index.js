@@ -15,7 +15,7 @@ const FULL_HEIGHT = Dimensions.get('window').height;
 const FULL_WIDTH = Dimensions.get('window').width;
 
 const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
-  const {id, onPress} = route.params;
+  const {id, onPress, isApplicable} = route.params;
   const [data, setData] = useState({});
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
 
@@ -88,19 +88,21 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
         <Text style={{marginVertical: 16}}>{data.policies}</Text>
       </View>
 
-      <View style={styles.buttonContainer}>
-        {GVLoading ? (
-          <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{paddingVertical: 16}} />
-        ) : data?.collectable && !data?.voucherWallet ? (
-          <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPressSelected}>
-            <Text style={styles.claimText}>Claim</Text>
-          </ThrottledOpacity>
-        ) : (
-          <ThrottledOpacity style={styles.useButtonWrapper} onPress={onPressSelected}>
-            <Text style={styles.useText}>Use</Text>
-          </ThrottledOpacity>
-        )}
-      </View>
+      {!isApplicable && (
+        <View style={styles.buttonContainer}>
+          {GVLoading ? (
+            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{paddingVertical: 16}} />
+          ) : data?.collectable && !data?.voucherWallet ? (
+            <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPressSelected}>
+              <Text style={styles.claimText}>Claim</Text>
+            </ThrottledOpacity>
+          ) : (
+            <ThrottledOpacity style={styles.useButtonWrapper} onPress={onPressSelected}>
+              <Text style={styles.useText}>Use</Text>
+            </ThrottledOpacity>
+          )}
+        </View>
+      )}
     </View>
   );
 };

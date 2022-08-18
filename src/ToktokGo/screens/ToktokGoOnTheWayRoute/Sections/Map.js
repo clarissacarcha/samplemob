@@ -50,7 +50,7 @@ export const Map = ({booking, decodedPolyline, originData}) => {
     <MapView
       ref={mapRef}
       provider={PROVIDER_GOOGLE}
-      style={{height: '90%', width: '100%'}}
+      style={{height: '100%', width: '100%'}}
       initialRegion={INITIAL_REGION}
       onMapReady={onMapReady}>
       <Marker
@@ -59,7 +59,7 @@ export const Map = ({booking, decodedPolyline, originData}) => {
         }}
         coordinate={originData ? INITIAL_REGION : ORIGIN}>
         <View style={{alignItems: 'center'}}>
-          <FA5Icon name="map-pin" size={18} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 2}} />
+          <FA5Icon name="map-pin" size={34} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 2}} />
         </View>
       </Marker>
       <Marker

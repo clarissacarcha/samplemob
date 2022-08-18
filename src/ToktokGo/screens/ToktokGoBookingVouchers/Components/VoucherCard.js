@@ -115,9 +115,8 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
             </ThrottledOpacity>
           )}
           <ThrottledOpacity
-            onPress={() => navigation.navigate('ToktokGoBookingSelectedVoucher', {id: data.id, onPress})}
-            disabled={isApplicable}>
-            <Text style={isApplicable ? [styles.TandC, {color: CONSTANTS.COLOR.GRAY}] : styles.TandC}>T&C</Text>
+            onPress={() => navigation.navigate('ToktokGoBookingSelectedVoucher', {id: data.id, onPress, isApplicable})}>
+            <Text style={styles.TandC}>T&C</Text>
           </ThrottledOpacity>
         </View>
       </View>
