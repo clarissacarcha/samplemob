@@ -10,6 +10,15 @@ const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 // SELF IMPORTS
 import Details from "./Details";
 
+const RenderLowerText = (lowerText)=> {
+    return (
+        <>
+        <Separator/>
+        <Text style={styles.dayTitle}>{lowerText}</Text>
+        </>
+    )
+}
+
 export const SendMoneyLog = ({
     item,
     tokwaAccount,
@@ -86,9 +95,11 @@ export const SendMoneyLog = ({
                 <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
                 <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
             </View>
-        </TouchableOpacity>
-        <Separator/>
-        {!!lowerText && <Text style={styles.dayTitle}>{lowerText}</Text>}
+         </TouchableOpacity>
+        <View style={{paddingHorizontal: 16}}>
+            <View style={styles.divider}/>
+        </View>
+        {!!lowerText && RenderLowerText(lowerText)}
         </>
     )
 }

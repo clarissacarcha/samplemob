@@ -10,6 +10,15 @@ const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 // SELF IMPORTS
 import Details from "./Details";
 
+const RenderLowerText = (lowerText)=> {
+    return (
+        <>
+        <Separator/>
+        <Text style={styles.dayTitle}>{lowerText}</Text>
+        </>
+    )
+}
+
 export const CashInLog = ({
     item,
     tokwaAccount,
@@ -86,8 +95,10 @@ export const CashInLog = ({
                 <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
             </View>
         </TouchableOpacity>
-        <Separator/>
-        {!!lowerText && <Text style={styles.dayTitle}>{lowerText}</Text>}
+        <View style={{paddingHorizontal: 16}}>
+            <View style={styles.divider}/>
+        </View>
+        {!!lowerText && RenderLowerText(lowerText)}
         </>
     )
 }
@@ -97,7 +108,8 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderBottomWidth: .2,
         borderColor:"silver",
-        flexDirection: "row"
+        flexDirection: "row",
+        paddingHorizontal: 16,
     },
     transactionIcon: {
         flexBasis: 50,
@@ -111,6 +123,11 @@ const styles = StyleSheet.create({
     transactionAmount: {
         flexBasis: "auto",
         alignItems: "flex-end"
+    },
+    divider: {
+        height: 1,
+        width: '100%',
+        backgroundColor: COLOR.LIGHT,
     },
     dayTitle: {
         fontFamily: FONT.BOLD,

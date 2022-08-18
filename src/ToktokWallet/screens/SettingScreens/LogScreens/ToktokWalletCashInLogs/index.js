@@ -5,6 +5,7 @@ import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_CASH_INS_PAGINATE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
 import {Separator, ModalPaginationLoading, CheckIdleState, NoData, LoadingIndicator} from 'toktokwallet/components';
+import { moderateScale } from "toktokwallet/helper";
 import {HeaderBack, HeaderTitle} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
