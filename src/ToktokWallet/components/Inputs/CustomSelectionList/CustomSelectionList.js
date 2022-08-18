@@ -26,6 +26,8 @@ const CustomSelectionList = (props: PropsType): React$Node => {
     showList,
     setShowList,
     label = '',
+    multiple = false,
+    removeValue,
   } = props;
   const hasError = !!errorMessage;
   const [visible, setVisible] = useState(false);
@@ -51,6 +53,8 @@ const CustomSelectionList = (props: PropsType): React$Node => {
         hasDefault={hasDefault}
         defaultCondition={defaultCondition}
         searchPlaceholder={searchPlaceholder}
+        multiple={multiple}
+        removeValue={removeValue}
       />
       <SelectionInput onPress={() => onPressInput()} hasError={hasError}>
         <Placeholder hasValue={selectedValue !== ''}>{selectedValue !== '' ? selectedValue : placeholder}</Placeholder>

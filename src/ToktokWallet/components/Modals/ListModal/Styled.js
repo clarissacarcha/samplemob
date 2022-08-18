@@ -82,10 +82,14 @@ export const ItemSeparator: ComponentType<any> = styled.View`
 export const ItemDetailsContainer: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
   ...props,
 }))`
+  color: ${props => (props.isRemove ? '#525252' : '#525252')}
   padding: ${moderateScale(20)}px;
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
+`;
+export const Name: ComponentType<any> = styled.Text`
+  color: ${props => (props.disabled ? '#525252' : '#000000')};
 `;
 export const DefaultText: ComponentType<any> = styled.Text`
   color: #9e9e9e;

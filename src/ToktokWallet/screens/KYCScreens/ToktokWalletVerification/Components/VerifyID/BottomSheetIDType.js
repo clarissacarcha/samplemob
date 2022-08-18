@@ -29,7 +29,6 @@ const BottomSheetIDType = ({
     client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log('IDS', response);
       setFilteredValidID(response.getIdentificationCards);
     },
     onError: err => {
