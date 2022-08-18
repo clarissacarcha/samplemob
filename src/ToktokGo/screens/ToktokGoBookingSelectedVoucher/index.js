@@ -66,6 +66,7 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
         },
       });
     } else {
+      navigation.pop();
       onPress();
     }
   };

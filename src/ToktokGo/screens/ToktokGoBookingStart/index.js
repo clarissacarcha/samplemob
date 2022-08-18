@@ -30,7 +30,6 @@ import {FlatList} from 'react-native-gesture-handler';
 
 const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   // const {popTo, selectInput} = route.params;
-  const {details, voucherData} = route.params;
   const [selectedInput, setSelectedInput] = useState('D');
   const {tokwaAccount, getMyAccount} = useAccount();
   const [tripConsumerPending, setTripConsumerPending] = useState([]);
@@ -41,12 +40,6 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   const [recentDestinationList, setrecentDestinationList] = useState([]);
 
   useEffect(() => {
-    if (voucherData) {
-      dispatch({
-        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-        payload: {...details, voucher: voucherData},
-      });
-    }
     const subscribe = navigation.addListener('focus', async () => {
       await getSearchList();
       getRecentDestination();
@@ -208,10 +201,13 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   );
 
   const onPressRecentSearch = loc => {
-    dispatch({
-      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-      payload: {...details, voucher: voucherData, paymentMethod: 'TOKTOKWALLET'},
-    });
+    if (route?.params?.voucherData) {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+        payload: {...route.params.details, voucher: route.params.voucherData, paymentMethod: 'TOKTOKWALLET'},
+      });
+    }
+
     if (selectedInput == 'D') {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
     } else {
@@ -221,10 +217,12 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   };
 
   const onPressRecentDestination = loc => {
-    dispatch({
-      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-      payload: {...details, voucher: voucherData, paymentMethod: 'TOKTOKWALLET'},
-    });
+    if (route?.params?.voucherData) {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+        payload: {...route.params.details, voucher: route.params.voucherData, paymentMethod: 'TOKTOKWALLET'},
+      });
+    }
     if (selectedInput == 'D') {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
     } else {
@@ -273,7 +271,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
             setVissible={setCancellationShowPaymentSuccessfulModal}
           />
           <Header navigation={navigation} constants={constants} />
-          <Landing navigation={navigation} details={details} voucherData={voucherData} />
+          <Landing navigation={navigation} details={route?.params?.details} voucherData={route?.params?.voucherData} />
           <FlatList
             ListHeaderComponent={
               <ScrollView
