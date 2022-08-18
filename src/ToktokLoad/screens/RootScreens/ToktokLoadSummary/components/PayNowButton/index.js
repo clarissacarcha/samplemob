@@ -48,6 +48,7 @@ export const PayNowButton = ({loadDetails, mobileNumber, setInsufficient}) => {
         mobileNumber,
         requestMoneyDetails: postToktokWalletRequestMoney.data,
         hash: postToktokWalletRequestMoney.hash,
+        totalAmount: parseFloat(loadDetails.commissionRateDetails.systemServiceFee) + parseFloat(loadDetails.amount),
       };
       return navigation.navigate('ToktokWalletTPINValidator', {
         callBackFunc: handleProcessProceed,
@@ -64,7 +65,6 @@ export const PayNowButton = ({loadDetails, mobileNumber, setInsufficient}) => {
       ErrorUtility.StandardErrorHandling({
         error,
         navigation,
-        setErrorMessage,
         prompt,
       });
     },
@@ -93,11 +93,12 @@ export const PayNowButton = ({loadDetails, mobileNumber, setInsufficient}) => {
       senderWalletBalance: parseFloat(tokwaBalance),
       amount: parseFloat(loadDetails.amount),
       convenienceFee: parseFloat(loadDetails.commissionRateDetails.systemServiceFee),
-      senderWalletEndingBalance: parseFloat(tokwaBalance) - totalAmount,
+      senderWalletEndingBalance: parseFloat(tokwaBalance) - parseFloat(totalAmount),
       comRateId: loadDetails.comRateId,
       referralCode: user.consumer.referralCode,
       email: user.person.emailAddress,
     };
+
     postLoadTransaction({
       variables: {
         input,

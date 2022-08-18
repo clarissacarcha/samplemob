@@ -205,7 +205,7 @@ export const LoadList = memo(props => {
   };
 
   const onPressSeeAll = () => {
-    navigation.navigate('ToktokLoadFavorites', {mobileNumber, loadVariantId, processGetLoadItems});
+    navigation.navigate('ToktokLoadFavorites', {mobileNumber, loadVariantId, processGetLoadItems, network});
   };
 
   const processFavorite = action => {
