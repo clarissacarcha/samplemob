@@ -1,7 +1,8 @@
 import React , {useState} from "react";
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import moment from 'moment'
-import { numberFormat ,MaskLeftZero } from 'toktokwallet/helper'
+import { numberFormat, moderateScale, getHeaderDateTitle } from 'toktokwallet/helper'
+import { Separator } from "toktokwallet/components";
 import { useThrottle } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -9,13 +10,28 @@ const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 // SELF IMPORTS
 import Details from "./Details";
 
+const RenderLowerText = (lowerText)=> {
+  return (
+      <>
+      <Separator/>
+      <Text style={styles.dayTitle}>{lowerText}</Text>
+      </>
+  )
+}
+
 export const LogItem = ({
   item,
   tokwaAccount,
-  index
+  index,
+  data
 })=>{
   const [info,setInfo] = useState({})
   const [openModal,setOpenModal] = useState(false)
+  const { upperText , lowerText } = getHeaderDateTitle({
+    refDate: item?.createdAt,
+    data,
+    index
+})
 
   const refNo = item.transaction.refNo
   const refDateTime =  moment(item.transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
@@ -48,6 +64,7 @@ export const LogItem = ({
       visible={openModal}
       setVisible={setOpenModal}
     />
+    {!!upperText && <Text style={styles.dayTitle}>{upperText}</Text>}
     <TouchableOpacity
       style={styles.transaction}
       onPress={onthrottledPress}
@@ -61,6 +78,7 @@ export const LogItem = ({
         <Text style={{color: "#9E9E9E",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDateTime}</Text>
       </View>
     </TouchableOpacity>
+    {!!lowerText && RenderLowerText(lowerText)}
     </>
   )
 }
@@ -68,22 +86,33 @@ export const LogItem = ({
 
 const styles = StyleSheet.create({
   transaction: {
-    borderBottomWidth: .2,
-    borderColor:"silver",
-    flexDirection: "row",
-    padding: 20
+      paddingVertical: 10,
+      borderBottomWidth: .2,
+      borderColor:"silver",
+      flexDirection: "row",
+      paddingHorizontal: 16,
   },
   transactionIcon: {
-    flexBasis: 50,
-    justifyContent: "center",
-    alignItems: "flex-start",
-    paddingLeft: 5,
+      flexBasis: 50,
+      justifyContent: "center",
+      alignItems: "flex-start",
+      paddingLeft: 5,
   },
   transactionDetails: {
-    flex: 1,
+      flex: 1,
   },
   transactionAmount: {
-    flexBasis: "auto",
-    alignItems: "flex-end"
-  }
+      flexBasis: "auto",
+      alignItems: "flex-end"
+  },
+  divider: {
+      height: 1,
+      width: '100%',
+      backgroundColor: COLOR.LIGHT,
+  },
+  dayTitle: {
+      fontFamily: FONT.BOLD,
+      marginTop: moderateScale(20),
+      paddingHorizontal: 16,
+  },
 })

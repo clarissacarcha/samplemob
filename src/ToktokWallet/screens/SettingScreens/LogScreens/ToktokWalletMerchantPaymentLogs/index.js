@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useRef} from 'react';
 import {View, StyleSheet, ActivityIndicator, FlatList, RefreshControl, Dimensions} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_MERCHANT_PAYMENTS} from 'toktokwallet/graphql';
+import {GET_MERCHANT_PAYMENTS,GET_MERCHANT_PAYMENTS_PAGINATE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
 import {Separator, CheckIdleState, SwipeDownToRefresh, NoData} from 'toktokwallet/components';
 import {HeaderBack, HeaderTitle} from 'src/revamp';
@@ -25,28 +25,77 @@ export const ToktokWalletMerchantPaymentLogs = ({navigation}) => {
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
   const [records, setRecords] = useState([]);
+  const [pageInfo, setPageInfo] = useState({});
+  const onEndReachedCalledDuringMomentum = useRef(null);
+  const [refreshing, setRefreshing] = useState(false);
   const alert = useAlert();
 
-  const [getMerchantPayments, {data, error, loading}] = useLazyQuery(GET_MERCHANT_PAYMENTS, {
+  const [getMerchantPaymentsPaginate , {date,error,loading,fetchMore}] = useLazyQuery(GET_MERCHANT_PAYMENTS_PAGINATE, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
+      setRefreshing(false);
       onErrorAlert({alert, error, navigation});
     },
-    onCompleted: ({getMerchantPayments}) => {
-      setRecords(getMerchantPayments);
+    onCompleted: ({getMerchantPaymentsPaginate}) => {
+      setRecords(getMerchantPaymentsPaginate.edges);
+      setPageInfo(getMerchantPaymentsPaginate.pageInfo);
+      setRefreshing(false);
     },
-  });
+  })
+
+  const handleGetTransactions = ()=> {
+    getMerchantPaymentsPaginate({
+      variables: {
+        input: {
+          afterCursorId: null,
+        },
+      },
+    })
+  }
+  const fetchMoreData = async () => {
+    if (pageInfo.hasNextPage) {
+      await fetchMore({
+        variables: {
+          input: {
+            afterCursorId: pageInfo.endCursorId,
+          },
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          fetchMoreResult.getMerchantPaymentsPaginate.edges = [
+            ...previousResult.getMerchantPaymentsPaginate.edges,
+            ...fetchMoreResult.getMerchantPaymentsPaginate.edges,
+          ];
+          return fetchMoreResult;
+        },
+      }).then(({data}) => {
+        setPageInfo(data.getMerchantPaymentsPaginate.pageInfo);
+        setRecords(data.getMerchantPaymentsPaginate.edges);
+      });
+    }
+  };
 
   const Refetch = () => {
-    getMerchantPayments();
+    handleGetTransactions();
+    setRefreshing(true);
   };
 
   useEffect(() => {
-    getMerchantPayments();
+    handleGetTransactions();
+    setRefreshing(loading);
   }, []);
 
-  const renderSeparator = () => <View style={styles.separator} />;
+  const ListFooterComponent = () => {
+    return (
+      <View style={{marginVertical: moderateScale(15)}}>
+        <LoadingIndicator isLoading={pageInfo.hasNextPage} size="small" />
+      </View>
+    );
+  };
+
 
   if (error) {
     return <SomethingWentWrong onRefetch={Refetch} />;
@@ -76,15 +125,30 @@ export const ToktokWalletMerchantPaymentLogs = ({navigation}) => {
               data={records}
               keyExtractor={item => item.id}
               renderItem={({item, index}) => (
-                <LogItem key={index} item={item} index={index} tokwaAccount={tokwaAccount} />
+                <LogItem key={index} item={item} index={index} tokwaAccount={tokwaAccount} data={records}/>
               )}
-              ItemSeparatorComponent={renderSeparator}
-              ListFooterComponent={() => {
-                if (records.length == 0) return null;
-                if (loading) return null;
-                return <Separator />;
-              }}
               contentContainerStyle={{flexGrow: 1}}
+              onEndReachedThreshold={0.01}
+              onEndReached={() => {
+                if (!onEndReachedCalledDuringMomentum.current) {
+                  fetchMoreData();
+                  onEndReachedCalledDuringMomentum.current = true;
+                }
+              }}
+              onMomentumScrollBegin={() => {
+                onEndReachedCalledDuringMomentum.current = false;
+              }}
+              scrollEnabled={true}
+              getItemLayout={
+                records.length <= 30
+                  ? (data, index) => ({
+                      length: records.length,
+                      offset: records.length * index,
+                      index,
+                    })
+                  : undefined
+              }
+              ListFooterComponent={ListFooterComponent}
             />
           </View>
         </View>

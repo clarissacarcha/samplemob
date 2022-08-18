@@ -157,11 +157,12 @@ export const ToktokWalletCashOutOtcLogs = ({navigation}) => {
                     item={item.node}
                     index={index}
                     tokwaAccount={tokwaAccount}
+                    data={records}
                   />
                 )}
                 onEndReachedThreshold={0.02}
                 onEndReached={fetchMoreData}
-                ItemSeparatorComponent={renderSeparator}
+                // ItemSeparatorComponent={renderSeparator}
                 ListFooterComponent={() => {
                   if (records.length == 0) return null;
                   if (getCashOutOtcLoading) return null;
