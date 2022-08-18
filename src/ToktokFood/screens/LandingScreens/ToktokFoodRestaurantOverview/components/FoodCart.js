@@ -20,17 +20,32 @@ export const FoodCart = () => {
   const {id} = route.params.item;
   const {customerInfo} = useSelector(state => state.toktokFood);
   const isFocus = useIsFocused();
-  const {temporaryCart, setTemporaryCart, setFoodCartHeight} = useContext(VerifyContext);
+  const {temporaryCart, setTemporaryCart, setFoodCartHeight, setPabiliShopServiceFee, setPabiliShopDetails} = useContext(VerifyContext);
   const [getAllTemporaryCart, {loading: cartLoading}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getAllTemporaryCart}) => {
-      let {items, totalAmount, totalAmountWithAddons} = getAllTemporaryCart;
-      console.log('getAllTemporaryCart', getAllTemporaryCart);
-      setTemporaryCart({
-        cartItemsLength: items.length,
+      let {
+        addonsTotalAmount,
+        items,
+        srpTotalAmount,
         totalAmount,
+        totalAmountWithAddons,
+        pabiliShopResellerDiscount,
+        pabiliShopServiceFee,
+        pabiliShopDetails,
+      } = getAllTemporaryCart;
+      console.log('getAllTemporaryCart', getAllTemporaryCart);
+      setPabiliShopServiceFee(pabiliShopServiceFee);
+      setPabiliShopDetails(pabiliShopDetails);
+      setTemporaryCart({
+        ...temporaryCart,
+        addonsTotalAmount,
+        cartItemsLength: items.length,
         items: items,
+        pabiliShopResellerDiscount,
+        srpTotalAmount,
+        totalAmount,
         totalAmountWithAddons,
       });
     },

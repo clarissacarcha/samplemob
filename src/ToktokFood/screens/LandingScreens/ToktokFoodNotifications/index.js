@@ -37,7 +37,6 @@ const ToktokFoodNotifications = () => {
       },
     },
     onCompleted: ({getToktokFoodNotifications}) => {
-      // console.log(getToktokFoodNotifications);
       setNotification(getToktokFoodNotifications);
     },
   });
@@ -51,6 +50,11 @@ const ToktokFoodNotifications = () => {
   const getStatus = ({declinedBy, orderStatus, orderIsfor, referenceNum, shopname, refundTotal}) => {
     // return {title: 'null', desc: 'test'};
     switch (orderStatus) {
+      case 'lf':
+        return {
+          title: 'Looking for driver',
+          desc: `Your order ${referenceNum} has been confirmed.  We're now finding you a nearby driver!`,
+        };
       case 'c':
         if (declinedBy === 2) {
           return {title: 'Cancelled Order', desc: `Oh, snap! Your order ${referenceNum} has been cancelled`};
@@ -94,9 +98,8 @@ const ToktokFoodNotifications = () => {
           title: 'Edited Order',
           desc: `Heads-up, ka-toktok! Your order ${referenceNum} from ${shopname} has been modified.`,
         };
-      default: 
-        return {title: '', desc: ''}
- 
+      default:
+        return {title: '', desc: ''};
     }
   };
 
