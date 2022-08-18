@@ -328,7 +328,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       SheetManager.hide('passenger_capacity');
       setvoucherTextMessage('WrongPaymentMethod');
       setvoucherRemovedVisible(true);
-    } else if (selectedPaymentMethod == 'TOKTOKWALLET' && details.voucher.isCash == 1) {
+    } else if (selectedPaymentMethod == 'TOKTOKWALLET' && details.voucher.isTokwa == 0) {
       SheetManager.hide('passenger_capacity');
       setvoucherTextMessage('WrongPaymentMethod');
       setvoucherRemovedVisible(true);
