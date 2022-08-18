@@ -134,7 +134,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
           finishLabel={
             isLinkedBankAccount
               ? 'Your account has been successfully linked to your bank account.'
-              : 'Your application has been submitted. Please wait for your account to be verified within 5 business days.'
+              : 'Your Account Application has been submitted. Please wait for approval.'
           }
           imgSource={bank_icon}
         />
@@ -148,7 +148,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
           finishLabel={
             checkVcs.isPendingVcs
               ? 'Your schedule has been submitted. Kindly wait for our representative to call on the schedule provided.'
-              : 'Your video call requirement has been approved.'
+              : 'Your video call has been carefully reviewed and approved.'
           }
           imgSource={schedule_icon}
           checkVcs={checkVcs}

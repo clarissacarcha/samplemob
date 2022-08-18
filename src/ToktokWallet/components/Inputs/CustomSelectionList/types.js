@@ -24,4 +24,6 @@ export type PropsType = {
   onChangeValidation?: () => void,
   showList?: boolean,
   setShowList?: any,
+  multiple?: boolean,
+  removeValue?: string,
 };

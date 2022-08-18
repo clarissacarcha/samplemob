@@ -18,6 +18,7 @@ import {
   ItemDetailsContainer,
   ItemSeparator,
   List,
+  Name,
   SearchInputField,
 } from './Styled';
 import {NoData} from 'toktokwallet/components';
@@ -48,16 +49,29 @@ const checkDisplay = ({item, defaultCondition}) => {
   }
 };
 
-const ItemDetails = ({item, index, defaultCondition, hasDefault, onChangeSelect, setVisible, setSearch}) => {
+const ItemDetails = ({
+  item,
+  index,
+  defaultCondition,
+  hasDefault,
+  onChangeSelect,
+  setVisible,
+  setSearch,
+  removeValue,
+  multiple,
+}) => {
   const display = checkDisplay({item, defaultCondition});
+  const disabled = multiple && removeValue === display.name;
+
   return (
     <ItemDetailsContainer
+      disabled={disabled}
       onPress={() => {
         onChangeSelect({value: display.name, index});
         setVisible(false);
         setSearch('');
       }}>
-      <Text>{display.name}</Text>
+      <Name disabled={disabled}>{display.name}</Name>
       {display.defCon && hasDefault && <DefaultText>(Default)</DefaultText>}
     </ItemDetailsContainer>
   );
@@ -74,6 +88,8 @@ const ListModal = (props: PropsType): React$Node => {
     hasDefault,
     defaultCondition,
     searchPlaceholder,
+    multiple,
+    removeValue,
   } = props;
 
   const [search, setSearch] = useState('');
@@ -107,6 +123,8 @@ const ListModal = (props: PropsType): React$Node => {
             onChangeSelect={onChangeSelect}
             setVisible={setVisible}
             setSearch={setSearch}
+            multiple={multiple}
+            removeValue={removeValue}
           />
         )}
       />

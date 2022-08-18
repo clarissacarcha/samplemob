@@ -15,4 +15,6 @@ export type PropsType = {
   hasDefault?: boolean,
   defaultCondition?: string,
   searchPlaceholder: string,
+  multiple?: boolean,
+  removeValue?: string,
 };

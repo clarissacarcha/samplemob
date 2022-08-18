@@ -1,12 +1,11 @@
 import React, {useRef, useState, useContext, useEffect} from 'react';
-import {StyleSheet, View, Text, ActivityIndicator, ScrollView} from 'react-native';
+import {StyleSheet, ScrollView} from 'react-native';
 import {Separator, PageProgressBar} from 'toktokwallet/components';
-import {HeaderBack, HeaderTitle, VectorIcon, ICON_SET, YellowButton} from 'src/revamp';
+import {HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_ENTERPRISE_UPGRADE_REQUEST} from 'toktokwallet/graphql';
-import {useQuery, useLazyQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/react-hooks';
 import {SomethingWentWrong} from 'src/components';
-import {useNavigation} from '@react-navigation/native';
 import {useAlert} from 'src/hooks';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {AlertOverlay} from 'src/components';
@@ -22,6 +21,7 @@ import {
   HeaderReminders,
   PendingRequest,
   Resubmit,
+  ReviewAndConfirm,
   SetRequestRecords,
   UploadForms,
   TakePhotoID,
@@ -31,13 +31,13 @@ const {COLOR, FONT_SIZE, FONT_FAMILY: FONT} = CONSTANTS;
 
 export const ToktokWalletEnterpriseApplication = ({navigation}) => {
   navigation.setOptions({
-    headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['Enterprise', '']} />,
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitleRevamp label={'Upgrade Account'} />,
   });
 
   const MainComponent = () => {
     const {currentIndex} = useContext(ContextEnterpriseApplication);
-    const [screens, setScreens] = useState([<PepQuestionnaire />, <ApplicationComponent />]);
+    const [screens, setScreens] = useState([<PepQuestionnaire />, <ApplicationComponent />, <ReviewAndConfirm />]);
     const {setForms, validID1, validID2, pepInfo, setPepInfo} = useContext(ContextEnterpriseApplication);
     const IDTypeRef = useRef();
     const [idIndex, setIDIndex] = useState(1);
