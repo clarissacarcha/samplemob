@@ -3,39 +3,30 @@ import {View, Text, StyleSheet} from 'react-native';
 import CONSTANTS from 'common/res/constants';
 import {ContextChannelForm, modifyPlaceholderAccordingToChannel} from '../../components';
 import {useSelector} from 'react-redux';
-import {PreviousNextButton} from 'toktokwallet/components';
+import {PreviousNextButton, OrangeButton} from 'toktokwallet/components';
 import {AlertOverlay} from 'src/components';
 
 const {FONT_FAMILY: FONT, FONT_SIZE, COLOR, SHADOW, SIZE} = CONSTANTS;
 
-export const Submit = ({pepInfo, setPepInfo, setCurrentIndex}) => {
+export const Submit = ({pepInfo, setPepInfo, setCurrentIndex, hasPreviousButton, btnLabel = 'Next'}) => {
   const tokwaAccount = useSelector(state => state.toktokWallet);
-  const {
-    selectedCallChannel,
-    numberOrLink,
-    setNumberOrLink,
-    dayPicked,
-    setDayPicked,
-    timePicked,
-    setTimePicked,
-    errorMessage,
-    setErrorMessage,
-  } = useContext(ContextChannelForm);
+  const {selectedCallChannel, numberOrLink, dayPicked, timePicked, setErrorMessage} = useContext(ContextChannelForm);
 
   useEffect(() => {
     if (numberOrLink) {
       setErrorMessage('');
     }
-  }, [numberOrLink]);
+  }, [numberOrLink, setErrorMessage]);
 
   const onPressSubmit = () => {
     let noError = true;
     let {channelName} = selectedCallChannel;
-    let placeholder = modifyPlaceholderAccordingToChannel(channelName);
-    let isMobileNumber = channelName == 'Viber' || channelName == 'Whats App' || channelName == 'Telegram';
+    // let placeholder = modifyPlaceholderAccordingToChannel(channelName);
+    let isMobileNumber = channelName === 'Viber' || channelName === 'Whats App' || channelName === 'Telegram';
     if (numberOrLink !== '') {
       if (isMobileNumber) {
-        if (numberOrLink.length === 11) {
+        console.log(numberOrLink);
+        if (numberOrLink.length === 10) {
           setErrorMessage('');
           noError = true;
         } else {
@@ -44,7 +35,7 @@ export const Submit = ({pepInfo, setPepInfo, setCurrentIndex}) => {
         }
       }
     } else {
-      setErrorMessage(`This is a required field`);
+      setErrorMessage('This is a required field');
       noError = false;
     }
 
@@ -52,7 +43,7 @@ export const Submit = ({pepInfo, setPepInfo, setCurrentIndex}) => {
 
     let input = {
       accountTypeId: +tokwaAccount.person.accountType.level,
-      videoCallContactDetails: isMobileNumber ? numberOrLink.replace('0', '+63') : numberOrLink,
+      videoCallContactDetails: isMobileNumber ? numberOrLink.replace('9', '+639') : numberOrLink,
       callChannelId: selectedCallChannel.id,
       preferredVcsDayMin: dayPicked.min,
       preferredVcsDayMax: dayPicked.max,
@@ -83,24 +74,18 @@ export const Submit = ({pepInfo, setPepInfo, setCurrentIndex}) => {
   };
 
   return (
-    <PreviousNextButton
-      label="Previous"
-      labelTwo={'Next'}
-      hasShadow
-      onPressNext={onPressSubmit}
-      onPressPrevious={Previous}
-    />
+    <>
+      {hasPreviousButton ? (
+        <PreviousNextButton
+          label="Previous"
+          labelTwo={'Next'}
+          hasShadow
+          onPressNext={onPressSubmit}
+          onPressPrevious={Previous}
+        />
+      ) : (
+        <OrangeButton label={btnLabel} hasShadow onPress={onPressSubmit} />
+      )}
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    paddingHorizontal: 10,
-    height: SIZE.FORM_HEIGHT,
-    borderRadius: 5,
-    backgroundColor: '#F7F7FA',
-    marginTop: 15,
-    fontSize: FONT_SIZE.M,
-    fontFamily: FONT.REGULAR,
-  },
-});
