@@ -90,12 +90,12 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
         navigation.replace('ToktokGoBookingStart', {voucherData});
         checkNotificationToNavigate({trip: null});
       } else if (tokwaAccount.wallet.id) {
-        navigation.replace('ToktokGoHealthCare');
+        navigation.replace('ToktokGoHealthCare', {voucherData});
       } else {
-        navigation.replace('ToktokGoCreateTokwa');
+        navigation.replace('ToktokGoCreateTokwa', {voucherData});
       }
     } else {
-      navigation.replace('ToktokGoOnBoardingBeta');
+      navigation.replace('ToktokGoOnBoardingBeta', {voucherData});
     }
   };
 
