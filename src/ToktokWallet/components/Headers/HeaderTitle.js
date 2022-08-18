@@ -7,7 +7,7 @@ import { moderateScale } from 'toktokwallet/helper'
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
-export const HeaderTitle = ({isRightIcon, rightIcon = null, rightIconOnPress, isLogo, label , labelFont, labelColor = "black" , backButtonColor = "black" , headerBackLabel = "", headerStyle = {}})=> {
+export const HeaderTitle = ({isRightIcon, rightIcon = null, rightIconOnPress, isLogo, label ,labelColor = "black" , backButtonColor = "black" , headerBackLabel = "", headerStyle = {}})=> {
     const navigation = useNavigation();
     const leaveTokwa = ()=> navigation.pop(2);
     
@@ -17,11 +17,11 @@ export const HeaderTitle = ({isRightIcon, rightIcon = null, rightIconOnPress, is
                 {/* <HeaderBack onBack={leaveTokwa} color={backButtonColor} label={headerBackLabel}/> */}
                 <HeaderBack color={backButtonColor} label={headerBackLabel}/>
             </View>
-            <View style={{justifyContent:"center",alignItems:"center"}}>
+            <View style={{width: 150,justifyContent:"center",alignItems:"center"}}>
             {
                 isLogo
-                ? <Image resizeMode="contain" style={styles.logo} source={require('toktokwallet/assets/images/toktokwallet.png')} />
-                : <Text style={{fontSize: FONT_SIZE.L,fontFamily: labelFont ? labelFont : FONT.BOLD,color: labelColor}}>{label}</Text>
+                ? <Image resizeMode="contain" style={{height: 23,width: 130}} source={require('toktokwallet/assets/images/toktokwallet.png')} />
+                : <Text style={{fontSize: FONT_SIZE.L,fontFamily: FONT.BOLD,color: labelColor}}>{label}</Text>
             }
             </View>
             {
@@ -43,9 +43,5 @@ const styles = StyleSheet.create({
         height: moderateScale(24),
         width: "100%",
         flexDirection:"row"
-    },
-    logo: {
-        height: moderateScale(23),
-        width: moderateScale(130),
     },
 })
