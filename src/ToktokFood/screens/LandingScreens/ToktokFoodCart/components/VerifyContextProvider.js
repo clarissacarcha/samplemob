@@ -110,6 +110,8 @@ export const VerifyContextProvider = ({children}) => {
         setAutoShippingVoucher,
         pabiliShopServiceFee,
         pabiliShopDetails,
+        setPabiliShopServiceFee,
+        setPabiliShopDetails,
       }}>
       {children}
     </Provider>

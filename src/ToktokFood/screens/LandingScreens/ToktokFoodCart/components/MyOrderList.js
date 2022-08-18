@@ -31,7 +31,7 @@ const MyOrderList = props => {
   const navigation = useNavigation();
   // const {location, customerInfo, shopLocation} = useSelector(state => state.toktokFood, _.isEqual);
   const {customerInfo} = useSelector(state => state.toktokFood);
-  const {temporaryCart, setTemporaryCart} = useContext(VerifyContext);
+  const {temporaryCart, setTemporaryCart, setPabiliShopServiceFee, setPabiliShopDetails} = useContext(VerifyContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const swipeListViewRef = useRef(null);
 
@@ -43,14 +43,26 @@ const MyOrderList = props => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getAllTemporaryCart}) => {
-      let {items, srpTotalAmount, totalAmount, totalAmountWithAddons, addonsTotalAmount} = getAllTemporaryCart;
-      setTemporaryCart({
-        cartItemsLength: items.length,
+      let {
+        items,
         srpTotalAmount,
         totalAmount,
         totalAmountWithAddons,
         addonsTotalAmount,
+        pabiliShopResellerDiscount,
+        pabiliShopServiceFee,
+        pabiliShopDetails,
+      } = getAllTemporaryCart;
+      setPabiliShopServiceFee(pabiliShopServiceFee);
+      setPabiliShopDetails(pabiliShopDetails);
+      setTemporaryCart({
+        addonsTotalAmount,
+        cartItemsLength: items.length,
         items: items,
+        pabiliShopResellerDiscount,
+        srpTotalAmount,
+        totalAmount,
+        totalAmountWithAddons,
       });
     },
   });
