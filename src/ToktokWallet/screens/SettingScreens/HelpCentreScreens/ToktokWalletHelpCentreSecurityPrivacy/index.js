@@ -1,8 +1,8 @@
 import React from 'react'
 import {View,Text,StyleSheet,Platform,Dimensions,StatusBar,Image, TouchableOpacity} from 'react-native'
-import {YellowButton ,HeaderBack, HeaderTitle, } from 'src/revamp';
-import {Separator,CheckIdleState} from 'toktokwallet/components'
+import {Separator,CheckIdleState, HeaderBack, HeaderTitleRevamp ,} from 'toktokwallet/components'
 import CONSTANTS from 'common/res/constants'
+import { LayeredSecurityMoneyProtected } from "./Components";
 
 const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 
@@ -26,33 +26,15 @@ const Card = (props) => {
 export const ToktokWalletHelpCentreSecurityPrivacy = ({navigation})=> {
 
     navigation.setOptions({
-        headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: () => <HeaderTitle label={['Security and Privacy', '']} />,
+        headerLeft: () => <HeaderBack/>,
+        headerTitle: () => <HeaderTitleRevamp label={['Privacy and Policy', '']} />,
     });
 
     return (
         <CheckIdleState>
         <View style={styles.container}>
             <View style={{flex: 1}}>    
-                <Card
-                    title="Layered Security"
-                    content="Multi-layered protection prevents intrusions, keeping your money and data safe."
-                    imageSource={require('toktokwallet/assets/images/SecurityAndPrivacy/security.png')}
-                    onPress={() => navigation.navigate("ToktokWalletHelpCentreLayeredSecurity")}
-                />
-                <Card
-                    title="Money Protection"
-                    content="Your wallet balance is stored and protected."
-                    imageSource={require('toktokwallet/assets/images/SecurityAndPrivacy/money.png')}
-                    onPress={() => navigation.navigate("ToktokWalletHelpCentreMoneyProtected")}
-                />
-                {/* <Card
-                    title="Help within reach"
-                    content="Having issues? Contact us here."
-                    imageSource={require('toktokwallet/assets/images/SecurityAndPrivacy/HelpReach.png')}
-                    onPress={() => navigation.navigate("ToktokWalletHelpCentreContactUs")}
-                /> */}
-                <Separator />
+                <LayeredSecurityMoneyProtected/>
             </View>
         </View>
         </CheckIdleState>
