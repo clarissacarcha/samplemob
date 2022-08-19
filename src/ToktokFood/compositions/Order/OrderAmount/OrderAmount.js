@@ -114,6 +114,7 @@ const OrderAmount = (props: PropsType): React$Node => {
 
   const renderTotalAmountComponent = () => {
     let icon;
+    const serviceFeeDiscount = state?.totalServiceFee - pabiliShopResellerDiscount;
     if (
       resellerDiscountTotal ||
       promoDiscounts ||
@@ -129,7 +130,7 @@ const OrderAmount = (props: PropsType): React$Node => {
       (state?.serviceType === 'toktokfood' ? state?.totalAmount : state?.srpTotalamount) +
         state?.originalShippingFee -
         shippingDiscount +
-        (state?.serviceType === 'pabili' ? pabiliShopResellerDiscount : 0),
+        (state?.serviceType === 'pabili' ? serviceFeeDiscount : 0),
       '',
       icon,
       () => setShowAmountBreakdown(!showAmountBreakdown),

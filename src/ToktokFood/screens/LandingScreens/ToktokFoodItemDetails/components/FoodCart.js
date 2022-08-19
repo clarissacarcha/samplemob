@@ -201,6 +201,8 @@ export const FoodCart = ({loading, action}) => {
     if (required.length > 0) {
       Alert.alert(`${required[0]} is required.`);
     } else {
+      // checkItemToCartQuantity();
+      // console.log('temporary cart', temporaryCart);
       processAddToCart();
     }
   };
@@ -216,6 +218,24 @@ export const FoodCart = ({loading, action}) => {
     }
     return addons.sort();
   };
+
+  // const checkItemToCartQuantity = () => {
+  //   const productId = productDetails.variants.length > 0 ? selectedVariants?.Id : productDetails.Id;
+  //   if (temporaryCart?.items.length > 0) {
+  //     const hasThisItem = temporaryCart.items.find(item => {
+  //       return item.productid === productId;
+  //     });
+  //     if (hasThisItem && Object.keys(hasThisItem).length > 0) {
+  //       const totalItemQuantity = hasThisItem.quantity + count.quantity;
+  //       if (hasThisItem.maxQtyIsset > 0 && totalItemQuantity > hasThisItem.maxQty) {
+
+  //         return processAddToCart(hasThisItem.maxQty);
+  //       }
+        
+  //     }
+  //   }
+  //   return processAddToCart(count.quantity);
+  // };
 
   // PROCESS ADD TO CART
   const processAddToCart = async () => {
