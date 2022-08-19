@@ -86,3 +86,48 @@ export const POST_COMPUTE_PROCESSING_FEE = gql`
         }
     }
 `
+
+export const GET_CASH_INS_PAGINATE = gql`
+query getCashInsPaginate($input:GetCashInsPaginateInput){
+  getCashInsPaginate(input:$input){
+    edges {
+      cursorCreatedAt
+      cursorId
+      node {
+        id
+        amount
+        referenceNumber
+        providerReferenceNumber
+        status
+        accountId
+        currencyId
+        cashInProviderId
+        fatherId
+        createdAt
+        updatedAt
+        provider {
+            id
+            name
+        }
+        transaction {
+            id
+            refNo
+            createdAt
+        }
+        paymentMethod
+        cashInPartnerTypeId
+        cashInPartnerType {
+            id
+            name
+            transactionTypeId
+            status
+        }
+      }
+    }
+    pageInfo {
+      endCursorId
+      hasNextPage
+    }
+  }
+}
+`

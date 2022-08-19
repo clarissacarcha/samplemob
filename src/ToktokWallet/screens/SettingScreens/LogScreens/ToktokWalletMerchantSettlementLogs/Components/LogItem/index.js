@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import moment from 'moment';
-import {numberFormat, moderateScale} from 'toktokwallet/helper';
+import {numberFormat, moderateScale, getHeaderDateTitle, currencyCode} from 'toktokwallet/helper';
+import { Separator } from "toktokwallet/components";
 import {useThrottle} from 'src/hooks';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
@@ -9,11 +10,24 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 // SELF IMPORTS
 import Details from './Details';
 
-export const LogItem = ({item}) => {
+const RenderLowerText = (lowerText)=> {
+  return (
+      <>
+      <Separator/>
+      <Text style={styles.dayTitle}>{lowerText}</Text>
+      </>
+  )
+}
+
+export const LogItem = ({item,data,index}) => {
   const [info, setInfo] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const displayInfo = item.node.displayInfo;
-
+  const { upperText , lowerText } = getHeaderDateTitle({
+    refDate: item?.node?.createdAt,
+    data,
+    index
+  })
   const refNo = item.node.refNo;
   const refDateTime = moment(item.node.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
   const dayOfPayment = moment(item.node.createdAt).tz('Asia/Manila').format('MMM D, YYYY');
@@ -36,6 +50,7 @@ export const LogItem = ({item}) => {
   return (
     <>
       <Details settlement={info} visible={openModal} setVisible={setOpenModal} />
+      {!!upperText && <Text style={styles.dayTitle}>{upperText}</Text>}
       <TouchableOpacity style={styles.settlement} onPress={onthrottledPress}>
         <View style={styles.settlementDetails}>
           <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Reference # {refNo}</Text>
@@ -57,6 +72,10 @@ export const LogItem = ({item}) => {
           </Text>
         </View>
       </TouchableOpacity>
+      <View style={{paddingHorizontal: 16}}>
+            <View style={styles.divider}/>
+        </View>
+        {!!lowerText && RenderLowerText(lowerText)}
     </>
   );
 };
@@ -66,8 +85,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.2,
     borderColor: 'silver',
     flexDirection: 'row',
-    paddingHorizontal: moderateScale(30),
-    paddingVertical: moderateScale(20),
+    paddingHorizontal: 16,
+    paddingVertical: 10,
   },
   settlementDetails: {
     flex: 1,
@@ -75,5 +94,15 @@ const styles = StyleSheet.create({
   settlementAmount: {
     flexBasis: 'auto',
     alignItems: 'flex-end',
+  },
+  divider: {
+    height: 1,
+    width: '100%',
+    backgroundColor: COLOR.LIGHT,
+  },
+  dayTitle: {
+      fontFamily: FONT.BOLD,
+      marginTop: moderateScale(20),
+      paddingHorizontal: 16,
   },
 });
