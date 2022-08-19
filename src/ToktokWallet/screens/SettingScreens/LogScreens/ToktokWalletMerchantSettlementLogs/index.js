@@ -123,7 +123,7 @@ export const ToktokWalletMerchantSettlementLogs = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           data={records}
           keyExtractor={item => item.id}
-          renderItem={({item, index}) => <LogItem key={index} item={item} index={index} tokwaAccount={tokwaAccount} />}
+          renderItem={({item, index}) => <LogItem key={index} data={records} item={item} index={index} tokwaAccount={tokwaAccount} />}
           onEndReachedThreshold={0.02}
           onEndReached={fetchMoreData}
           ItemSeparatorComponent={renderSeparator}

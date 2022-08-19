@@ -1,7 +1,8 @@
 import React , {useState} from "react";
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import moment from 'moment'
-import { numberFormat ,MaskLeftZero } from 'toktokwallet/helper'
+import { numberFormat ,MaskLeftZero, currencyCode, moderateScale,getHeaderDateTitle} from 'toktokwallet/helper'
+import { Separator } from "toktokwallet/components";
 import { useThrottle } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
 const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -9,13 +10,28 @@ const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
 // SELF IMPORTS
 import Details from "./Details";
 
+const RenderLowerText = (lowerText)=> {
+    return (
+        <>
+        <Separator/>
+        <Text style={styles.dayTitle}>{lowerText}</Text>
+        </>
+    )
+}
+
 export const CashOutLog = ({
     item,
     tokwaAccount,
-    index
+    index,
+    data
 })=>{
     const [info,setInfo] = useState({})
     const [openModal,setOpenModal] = useState(false)
+    const { upperText , lowerText } = getHeaderDateTitle({
+        refDate: item?.createdAt,
+        data,
+        index
+    })
 
     let status
     switch (item.status) {
@@ -41,7 +57,7 @@ export const CashOutLog = ({
     const requestNo = item.referenceNumber ? item.referenceNumber : item.refNo
     const refNo = transaction?.refNo ? transaction.refNo : MaskLeftZero(item.id)
     const refDate = transaction ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A') : moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
-    const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(+item.amount + +item.providerServiceFee + +item.systemServiceFee)}`
+    const transactionAmount = `${currencyCode}${numberFormat(+item.amount + +item.providerServiceFee + +item.systemServiceFee)}`
     const convenienceFee =  `${numberFormat(+item.providerServiceFee + +item.systemServiceFee)}`
     const provider = item.provider.name
     let name = transaction?.name ? transaction.name : "Fund Transfer"
@@ -74,19 +90,24 @@ export const CashOutLog = ({
             visible={openModal}
             setVisible={setOpenModal}
         />
+        {!!upperText && <Text style={styles.dayTitle}>{upperText}</Text>}
         <TouchableOpacity
             style={styles.transaction}
             onPress={onthrottledPress}
         >
             <View style={styles.transactionDetails}>
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Request # {requestNo}</Text>
-                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
+                <Text style={{color: "#909294",fontSize: FONT_SIZE.S,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
             </View>
             <View style={styles.transactionAmount}>
-                <Text style={{color: "#FCB91A",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
+                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
                 <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
             </View>
         </TouchableOpacity>
+        <View style={{paddingHorizontal: 16}}>
+            <View style={styles.divider}/>
+        </View>
+        {!!lowerText && RenderLowerText(lowerText)}
         </>
     )
 }
@@ -97,7 +118,8 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderBottomWidth: .2,
         borderColor:"silver",
-        flexDirection: "row"
+        flexDirection: "row",
+        paddingHorizontal: 16,
     },
     transactionIcon: {
         flexBasis: 50,
@@ -111,5 +133,15 @@ const styles = StyleSheet.create({
     transactionAmount: {
         flexBasis: "auto",
         alignItems: "flex-end"
-    }
+    },
+    divider: {
+        height: 1,
+        width: '100%',
+        backgroundColor: COLOR.LIGHT,
+    },
+    dayTitle: {
+        fontFamily: FONT.BOLD,
+        marginTop: moderateScale(20),
+        paddingHorizontal: 16,
+    },
 })

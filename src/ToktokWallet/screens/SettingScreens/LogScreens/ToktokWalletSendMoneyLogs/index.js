@@ -2,9 +2,10 @@ import React, {useState, useEffect ,useRef} from 'react';
 import {View, Text, StyleSheet, RefreshControl, FlatList} from 'react-native';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_SEND_MONEY_TRANSACTIONS,GET_SEND_MONEY_TRANSACTIONS_PAGINATE} from 'toktokwallet/graphql';
+import {GET_SEND_MONEY_TRANSACTIONS_PAGINATE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-import {Separator, ModalPaginationLoading, CheckIdleState, SwipeDownToRefresh, NoData} from 'toktokwallet/components';
+import {Separator, ModalPaginationLoading, CheckIdleState, LoadingIndicator, NoData} from 'toktokwallet/components';
+import { moderateScale } from "toktokwallet/helper";
 import {HeaderBack, HeaderTitle} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
@@ -93,6 +94,14 @@ export const ToktokWalletSendMoneyLogs = ({navigation, route}) => {
     return <SomethingWentWrong onRefetch={Refetch} />;
   }
 
+  const ListFooterComponent = () => {
+    return (
+      <View style={{marginVertical: moderateScale(15)}}>
+        <LoadingIndicator isLoading={pageInfo.hasNextPage} size="small" />
+      </View>
+    );
+  };
+
   return (
     <CheckIdleState>
       <Separator />
@@ -140,6 +149,7 @@ export const ToktokWalletSendMoneyLogs = ({navigation, route}) => {
                   })
                 : undefined
             }
+            ListFooterComponent={ListFooterComponent}
           />
         </View>
       </View>

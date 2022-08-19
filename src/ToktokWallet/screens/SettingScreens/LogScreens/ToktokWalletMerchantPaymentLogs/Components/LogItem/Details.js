@@ -1,6 +1,7 @@
 import React , {useState} from "react";
 import { View, Text, StyleSheet ,Dimensions} from 'react-native';
 import { TransactionModal } from 'toktokwallet/components';
+import { moderateScale } from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -50,16 +51,16 @@ const Details = ({
       setVisible={setVisible}
     >
       <View>
-        <Text style={[styles.labelText, {fontFamily: FONT.BOLD}]}>{name}</Text>
+        <Text style={[styles.labelText, {fontFamily: FONT.BOLD,fontSize: moderateScale(18)}]}>{name}</Text>
         <Text style={[styles.labelText, {marginBottom: 20}]}>{phrase}</Text>
-        <Text style={styles.labelText}>Status: Success</Text>
-        <Text style={styles.labelText}>Customer Name: {tokwaAccount?.person?.firstName} {tokwaAccount?.person?.lastName}</Text>
-        <Text style={styles.labelText}>Customer Mobile No: {tokwaAccount?.mobileNumber}</Text>
-        <Text style={styles.labelText}>Reference No.: {refNo}</Text>
-        <Text style={styles.labelText}>Amount: {amount}</Text>
-        <Text style={styles.labelText}>Service Fee: {serviceFeeAmount}</Text>
-        <Text style={styles.labelText}>Total Amount: {totalAmount}</Text>
-        <Text style={styles.labelText}>Date & Time: {refDateTime}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Status:</Text> Success</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Customer Name:</Text> {tokwaAccount?.person?.firstName} {tokwaAccount?.person?.lastName}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Customer Mobile No:</Text> {tokwaAccount?.mobileNumber}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Reference No.:</Text> {refNo}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount:</Text> {amount}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Service Fee:</Text> {serviceFeeAmount}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Total Amount:</Text> {totalAmount}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Date & Time:</Text> {refDateTime}</Text>
         {/* <Text style={styles.labelText}>Date of Transaction: {refDate}</Text>
         <Text style={styles.labelText}>Time of Transaction: {refTime}</Text> */}
       </View>
@@ -80,6 +81,7 @@ const styles = StyleSheet.create({
   labelText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    marginBottom: 2,
   }
 })
 

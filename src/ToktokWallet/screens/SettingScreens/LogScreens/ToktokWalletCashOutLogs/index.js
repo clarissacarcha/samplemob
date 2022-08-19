@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useRef} from 'react';
 import {View, StyleSheet, ActivityIndicator, FlatList, RefreshControl, Dimensions} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CASH_OUTS} from 'toktokwallet/graphql';
+import {GET_FUND_TRANSFER} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-import {Separator, CheckIdleState, SwipeDownToRefresh, NoData} from 'toktokwallet/components';
+import {Separator, CheckIdleState, LoadingIndicator, NoData} from 'toktokwallet/components';
+import {moderateScale} from "toktokwallet/helper";
 import {HeaderBack, HeaderTitle} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
@@ -25,45 +26,87 @@ export const ToktokWalletCashOutLogs = ({navigation}) => {
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
   const [records, setRecords] = useState([]);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [pageLoading, setPageLoading] = useState(false);
+  const [pageInfo, setPageInfo] = useState({});
+  const onEndReachedCalledDuringMomentum = useRef(null);
+  const [refreshing, setRefreshing] = useState(false);
   const alert = useAlert();
 
-  const [getCashOuts, {data, error, loading}] = useLazyQuery(GET_CASH_OUTS, {
+
+  const [getFundTransfer, {data, error, loading, fetchMore }] = useLazyQuery(GET_FUND_TRANSFER, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
+      setRefreshing(false);
       onErrorAlert({alert, error, navigation});
     },
-    onCompleted: ({getCashOuts}) => {
-      // setRecords(state=> [...state , ...getCashOuts])
-      setRecords(getCashOuts);
-      setPageLoading(false);
+    onCompleted: ({getFundTransfer}) => {
+      setRecords(getFundTransfer.edges);
+      setPageInfo(getFundTransfer.pageInfo);
+      setRefreshing(false);
     },
   });
 
+  const handleGetTransactions = ()=> {
+    getFundTransfer({
+      variables: {
+        input: {
+          afterCursorId: null,
+        },
+      },
+    })
+  }
+  const fetchMoreData = async () => {
+    if (pageInfo.hasNextPage) {
+      await fetchMore({
+        variables: {
+          input: {
+            afterCursorId: pageInfo.endCursorId,
+          },
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          fetchMoreResult.getFundTransfer.edges = [
+            ...previousResult.getFundTransfer.edges,
+            ...fetchMoreResult.getFundTransfer.edges,
+          ];
+          return fetchMoreResult;
+        },
+      }).then(({data}) => {
+        setPageInfo(data.getFundTransfer.pageInfo);
+        setRecords(data.getFundTransfer.edges);
+      });
+    }
+  };
+
+ 
   const Refetch = () => {
-    getCashOuts();
+    handleGetTransactions();
+    setRefreshing(loading);
   };
 
   useEffect(() => {
-    getCashOuts();
+    handleGetTransactions();
+    setRefreshing(loading);
   }, []);
 
   if (error) {
     return <SomethingWentWrong onRefetch={Refetch} />;
   }
 
+  const ListFooterComponent = () => {
+    return (
+      <View style={{marginVertical: moderateScale(15)}}>
+        <LoadingIndicator isLoading={pageInfo.hasNextPage} size="small" />
+      </View>
+    );
+  };
+
   return (
     <CheckIdleState>
       <Separator />
-      {/* <SwipeDownToRefresh/> */}
       {
-        // loading
-        // ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        //     <ActivityIndicator size={24} color={COLOR.YELLOW} />
-        //    </View>
-        // :
         <View style={styles.container}>
           <View style={styles.content}>
             <FlatList
@@ -84,20 +127,32 @@ export const ToktokWalletCashOutLogs = ({navigation}) => {
               data={records}
               keyExtractor={item => item.id}
               renderItem={({item, index}) => (
-                <CashOutLog key={`cashin-log${index}`} item={item} index={index} tokwaAccount={tokwaAccount} />
+                <CashOutLog data={records} key={`cashin-log${index}`} item={item?.node} index={index} tokwaAccount={tokwaAccount} />
               )}
               contentContainerStyle={{flexGrow: 1}}
-              // onEndReached={()=>{
-              //     setPageLoading(true)
-              //     setPageIndex(state=>state+1)
-              // }}
-              // onEndReachedThreshold={10}
+              onEndReachedThreshold={0.01}
+              onEndReached={() => {
+                if (!onEndReachedCalledDuringMomentum.current) {
+                  fetchMoreData();
+                  onEndReachedCalledDuringMomentum.current = true;
+                }
+              }}
+              onMomentumScrollBegin={() => {
+                onEndReachedCalledDuringMomentum.current = false;
+              }}
+              scrollEnabled={true}
+              getItemLayout={
+                records.length <= 30
+                  ? (data, index) => ({
+                      length: records.length,
+                      offset: records.length * index,
+                      index,
+                    })
+                  : undefined
+              }
+              ListFooterComponent={ListFooterComponent}
             />
-            {pageLoading && (
-              <View style={{justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10}}>
-                <ActivityIndicator color={COLOR.YELLOW} />
-              </View>
-            )}
+          
           </View>
         </View>
       }
@@ -115,7 +170,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    padding: 16,
     flex: 1,
   },
   filterType: {
