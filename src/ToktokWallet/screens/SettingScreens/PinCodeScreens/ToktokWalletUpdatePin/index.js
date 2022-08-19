@@ -1,21 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableHighlight,
-  Alert,
-  BackHandler,
-  KeyboardAvoidingView,
-  Platform,
-  ImageBackground,
-} from 'react-native';
-import {AlertOverlay, HeaderTitle} from 'src/components';
+import {View, StyleSheet, TouchableHighlight, BackHandler, Platform, ImageBackground} from 'react-native';
+import {AlertOverlay} from 'src/components';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {PATCH_PIN_CODE} from 'toktokwallet/graphql';
 import {useMutation} from '@apollo/react-hooks';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import {Separator, LeavePromptModal, CheckIdleState} from 'toktokwallet/components';
+import {LeavePromptModal, CheckIdleState} from 'toktokwallet/components';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 import CONSTANTS from 'common/res/constants';
@@ -26,7 +16,7 @@ import {usePrompt} from 'src/hooks';
 //SELF IMPORTS
 import {ConfirmPin, NewPin, SuccessModal} from './Components';
 
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
+const {COLOR} = CONSTANTS;
 
 const HeaderBack = ({pageIndex, setPageIndex, navigation}) => {
   const backAction = () => {
@@ -35,7 +25,7 @@ const HeaderBack = ({pageIndex, setPageIndex, navigation}) => {
   };
 
   const closeScreen = () => {
-    pageIndex == 0 ? navigation.pop() : setPageIndex(oldstate => oldstate - 1);
+    pageIndex == 0 ? navigation.pop(1) : setPageIndex(oldstate => oldstate - 1);
   };
 
   useEffect(() => {
@@ -55,23 +45,11 @@ const HeaderBack = ({pageIndex, setPageIndex, navigation}) => {
 
 export const ToktokWalletUpdatePin = ({navigation, route}) => {
   navigation.setOptions({
-    // headerLeft: () => <HeaderBack pageIndex={pageIndex} setPageIndex={setPageIndex} navigation={navigation} />,
-    // // headerTitle: ()=> <HeaderTitle label={['Update PIN','']}/>,
-    // headerTitle: () => <HeaderTitle label={['', '']} />,
-    // headerStyle: {
-    //   elevation: 0,
-    //   shadowOpacity: 0,
-    // },
     headerShown: false,
   });
 
   const {otp, event} = route.params;
   const prompt = usePrompt();
-
-  const cancelSetup = () => {
-    console.log('Cancelling');
-    setLeaveModalVisible(true);
-  };
 
   const [pageIndex, setPageIndex] = useState(0);
   const [pinCode, setPinCode] = useState('');
@@ -136,7 +114,6 @@ export const ToktokWalletUpdatePin = ({navigation, route}) => {
   return (
     <CheckIdleState>
       <AlertOverlay visible={loading} />
-
       <ImageBackground source={backgrounds.gradient_tpin} style={styles.container}>
         <View style={{marginTop: Platform.OS === 'ios' ? moderateScale(10) : getStatusbarHeight + moderateScale(10)}}>
           <HeaderBack pageIndex={pageIndex} setPageIndex={setPageIndex} navigation={navigation} />
@@ -147,14 +124,7 @@ export const ToktokWalletUpdatePin = ({navigation, route}) => {
           onConfirm={() => navigation.pop(2)}
         />
         <SuccessModal modalVisible={successModalVisible} setModalVisible={setSuccessModalVisible} event={event} />
-        {/* <Separator /> */}
-        <View
-          style={{flex: 1}}
-          //  keyboardVerticalOffset={Platform.OS == "ios" ? 60 : 80}
-          //  behavior={Platform.OS == "ios" ? "padding" : "height"}
-        >
-          {DisplayComponent()}
-        </View>
+        <View style={{flex: 1}}>{DisplayComponent()}</View>
       </ImageBackground>
     </CheckIdleState>
   );
