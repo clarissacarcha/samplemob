@@ -93,7 +93,7 @@ export const VehicleCard = ({type, loading, data, selectVehicle, setDataVehicle,
               <ShimmerPlaceHolder
                 style={{width: !loading ? (Platform.OS == 'ios' ? '100%' : 75) : 45}}
                 visible={!loading}>
-                <Text style={styles.priceTextStyle}>₱{numberFormat(10000)}</Text>
+                <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
               </ShimmerPlaceHolder>
             </View>
           </View>
