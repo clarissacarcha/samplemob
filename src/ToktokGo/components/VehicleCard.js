@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.M,
+    alignSelf: 'flex-end',
   },
   carTextStyle: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
