@@ -52,7 +52,7 @@ export const VerifyContextProvider = ({children}) => {
         pabiliShopServiceFee,
         pabiliShopDetails,
       } = getAllTemporaryCart;
-      // console.log(getAllTemporaryCart);
+      console.log('second getAllTemporaryCart', getAllTemporaryCart);
       setPabiliShopServiceFee(pabiliShopServiceFee);
       setPabiliShopDetails(pabiliShopDetails);
       setTemporaryCart({
@@ -110,6 +110,8 @@ export const VerifyContextProvider = ({children}) => {
         setAutoShippingVoucher,
         pabiliShopServiceFee,
         pabiliShopDetails,
+        setPabiliShopServiceFee,
+        setPabiliShopDetails,
       }}>
       {children}
     </Provider>
