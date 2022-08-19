@@ -33,6 +33,7 @@ export const ToktokMallContactUs = ({navigation}) => {
   const dispatch = useDispatch()
   const [messageModalShown, setMessageModalShown] = useState(false)
   const [message, setMessage] = useState('')
+  const [processing, setProcessing] = useState(false)
 
   const [postInquiry, {loading}] = useMutation(POST_CONTACT_SUPPORT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -41,6 +42,7 @@ export const ToktokMallContactUs = ({navigation}) => {
         console.log("")
         sendMessage(postContactSupport.signature)
       }else{
+        setProcessing(false)
         Toast.show("Something went wrong.")
       }
     },
@@ -58,6 +60,7 @@ export const ToktokMallContactUs = ({navigation}) => {
         message: message
       }
       const {responseData: {success}} = await ApiCall("send_contact_message", body, true, "")
+      setProcessing(false)
       if(success == 1){
         setMessage('')
         dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
@@ -125,6 +128,7 @@ export const ToktokMallContactUs = ({navigation}) => {
       }else{
         
         console.log(`${user.firstName} ${user.lastName}`, user.emailAddress, session.user.username, message)
+        setProcessing(true)
         await postInquiry({
           variables: {
             input: {
@@ -150,7 +154,7 @@ export const ToktokMallContactUs = ({navigation}) => {
     <>
     <KeyboardAwareScrollView>
       <View style={styles.container}>
-        {loading && <AlertOverlay visible={loading} />}
+        {processing && <AlertOverlay visible={processing} />}
         {messageModalShown && 
           <MessageModal 
             type="Success"
