@@ -501,8 +501,9 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           <OrderInformation state={{...state, riderDetails, duration}} />
           {renderModifiedTextComponent(true)}
           <OrderSummary state={state?.orderDetails} />
-          {(state?.notes?.length > 0 && state?.orderStatus !== 's') ||
-            (state?.orderStatus !== 'c' && <OrderNote state={state} />)}
+          {state?.notes?.length > 0 && (state?.orderStatus !== 's' || state?.orderStatus !== 'c') && (
+            <OrderNote state={state} />
+          )}
           <OrderAddresses state={state} />
           <Divider />
           {/* Amount and its breakdown */}
