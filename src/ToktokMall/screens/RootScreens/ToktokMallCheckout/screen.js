@@ -643,7 +643,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
             if(errors[0]?.code == "BAD_USER_INPUT"){
 
               if(errors[0]?.message){
-                alert(errors[0]?.message)
+                // alert(errors[0]?.message)
               }
 
             }else{
