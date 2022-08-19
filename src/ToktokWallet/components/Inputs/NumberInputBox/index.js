@@ -12,7 +12,7 @@ const NumberBox = ({onPress, value, showPin, error}) => (
     style={{
       borderRadius: 10,
       marginHorizontal: 5,
-      ...(!error ? {} : {borderWidth: 1, borderRadius: 5, borderColor: COLOR.RED}),
+      ...(!error ? {} : {borderWidth: 1, borderRadius: 5, borderColor: '#ED3A19'}),
     }}>
     <View style={styles.inputView}>
       <Text style={{fontSize: showPin ? 25 : 40, fontFamily: FONT.REGULAR}}>
@@ -34,7 +34,6 @@ const NumberBoxes = ({pinCode, onNumPress, showPin, numberOfBox = 6, error = fal
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        marginBottom: 20,
         alignSelf: 'center',
       }}>
       {numberBoxes}
@@ -42,22 +41,30 @@ const NumberBoxes = ({pinCode, onNumPress, showPin, numberOfBox = 6, error = fal
   );
 };
 
-export const NumberInputBox = ({otpCode, onNumPress, errorMessage, callBackFunc, onChangeText}) => {
+export const NumberInputBox = ({
+  pinCode,
+  onNumPress,
+  errorMessage,
+  callBackFunc,
+  onChangeText,
+  numberOfBox = 6,
+  showPin,
+}) => {
   return (
-    <>
+    <View style={{marginBottom: 30}}>
       <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-        <NumberBoxes pinCode={otpCode} onNumPress={onNumPress} showPin={true} error={errorMessage} />
+        <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true} error={errorMessage} showPin={showPin} />
         <TextInput
           caretHidden
-          value={otpCode}
+          value={pinCode}
           style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
           keyboardType="numeric"
           returnKeyType="done"
           onSubmitEditing={() => {
-            if (otpCode.length == 6) callBackFunc();
+            if (pinCode.length == numberOfBox && callBackFunc) callBackFunc();
           }}
           onChangeText={value => {
-            if (value.length <= 6) {
+            if (value.length <= numberOfBox) {
               const replaceValue = value.replace(/[^0-9]/g, '');
               onChangeText(replaceValue);
             }
@@ -68,15 +75,15 @@ export const NumberInputBox = ({otpCode, onNumPress, errorMessage, callBackFunc,
         <Text
           style={{
             fontFamily: FONT.REGULAR,
-            color: 'red',
-            alignSelf: 'center',
+            color: '#ED3A19',
             fontSize: 12,
             textAlign: 'center',
+            marginTop: 10,
           }}>
           {errorMessage}
         </Text>
       )}
-    </>
+    </View>
   );
 };
 
