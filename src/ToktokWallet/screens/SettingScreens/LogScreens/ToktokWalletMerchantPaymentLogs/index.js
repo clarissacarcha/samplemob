@@ -2,14 +2,15 @@ import React, {useState, useEffect,useRef} from 'react';
 import {View, StyleSheet, ActivityIndicator, FlatList, RefreshControl, Dimensions} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_MERCHANT_PAYMENTS,GET_MERCHANT_PAYMENTS_PAGINATE} from 'toktokwallet/graphql';
+import {GET_MERCHANT_PAYMENTS_PAGINATE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-import {Separator, CheckIdleState, SwipeDownToRefresh, NoData} from 'toktokwallet/components';
+import {Separator, CheckIdleState, LoadingIndicator, NoData} from 'toktokwallet/components';
 import {HeaderBack, HeaderTitle} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 import {SomethingWentWrong} from 'src/components';
+import { moderateScale } from "toktokwallet/helper";
 
 //SELF IMPORT
 import {LogItem} from './Components';
@@ -125,7 +126,7 @@ export const ToktokWalletMerchantPaymentLogs = ({navigation}) => {
               data={records}
               keyExtractor={item => item.id}
               renderItem={({item, index}) => (
-                <LogItem key={index} item={item} index={index} tokwaAccount={tokwaAccount} data={records}/>
+                <LogItem key={index} item={item?.node} index={index} tokwaAccount={tokwaAccount} data={records}/>
               )}
               contentContainerStyle={{flexGrow: 1}}
               onEndReachedThreshold={0.01}

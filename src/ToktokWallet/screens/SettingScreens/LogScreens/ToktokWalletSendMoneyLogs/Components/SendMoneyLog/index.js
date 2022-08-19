@@ -89,7 +89,7 @@ export const SendMoneyLog = ({
         >
             <View style={styles.transactionDetails}>
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Reference # {refNo}</Text>
-                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{item?.node?.phrase}</Text>
+                <Text style={{color: "#909294",fontSize: FONT_SIZE.S,marginTop: 0,fontFamily: FONT.REGULAR}}>{item?.node?.phrase}</Text>
             </View>
             <View style={styles.transactionAmount}>
                 <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>

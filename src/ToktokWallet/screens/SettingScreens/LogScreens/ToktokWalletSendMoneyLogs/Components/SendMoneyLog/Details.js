@@ -1,6 +1,7 @@
 import React , {useState} from "react";
 import { View, Text, StyleSheet ,Dimensions} from 'react-native';
 import { TransactionModal } from 'toktokwallet/components';
+import { moderateScale } from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -48,14 +49,14 @@ const Details = ({
             setVisible={setVisible}
         >
             <View>
-                 <Text style={{fontFamily: FONT.BOLD,fontSize: FONT_SIZE.M}}>{name}</Text>
+                 <Text style={{fontFamily: FONT.BOLD,fontSize: moderateScale(18)}}>{name}</Text>
                  <Text style={styles.labelText}>{phrase}</Text>
                  {renderDetails({details})}
                  <View style={{marginTop: 15}}>
-                    <Text style={styles.labelText}>Status: Success</Text>
-                    <Text style={styles.labelText}>Amount: {amount}</Text>
-                    { refNo && <Text style={styles.labelText}>Ref No: {refNo}</Text>}
-                    { refDate && <Text style={styles.labelText}>Date & Time: {refDate}</Text>}
+                    <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Status:</Text> Success</Text>
+                    <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount:</Text> {amount}</Text>
+                    { refNo && <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Ref No:</Text> {refNo}</Text>}
+                    { refDate && <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Date & Time:</Text> {refDate}</Text>}
                 </View>
             </View>
         </TransactionModal>
@@ -75,6 +76,7 @@ const styles = StyleSheet.create({
     labelText: {
         fontFamily: FONT.REGULAR,
         fontSize: FONT_SIZE.M,
+        marginBottom: 2
     }
 })
 

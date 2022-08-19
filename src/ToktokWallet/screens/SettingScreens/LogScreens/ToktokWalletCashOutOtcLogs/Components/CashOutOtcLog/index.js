@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import moment from 'moment';
-import { numberFormat, moderateScale, getHeaderDateTitle } from 'toktokwallet/helper';
+import { numberFormat, moderateScale, getHeaderDateTitle, currencyCode } from 'toktokwallet/helper';
 import { Separator } from "toktokwallet/components";
 import {useThrottle} from 'src/hooks';
 import CONSTANTS from 'common/res/constants';
@@ -52,7 +52,7 @@ export const CashOutOtcLog = ({item, tokwaAccount, index, data }) => {
   const refDate = transaction
     ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
     : moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
-  const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.cashOut.amount)}`;
+  const transactionAmount = `${currencyCode}${numberFormat(item.cashOut.amount)}`;
   const provider = item.cashOutProviderPartner.description;
   const phrase = `Cash Out through ${item.cashOutProviderPartner ? item.cashOutProviderPartner.description : provider}`;
   const showDetails = () => {
@@ -80,7 +80,7 @@ export const CashOutOtcLog = ({item, tokwaAccount, index, data }) => {
       <TouchableOpacity style={styles.transaction} onPress={onthrottledPress}>
         <View style={styles.transactionDetails}>
           <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Reference #{requestNo}</Text>
-          <Text style={{color: '#909294', fontSize: FONT_SIZE.M, marginTop: 0, fontFamily: FONT.REGULAR}}>
+          <Text style={{color: '#909294', fontSize: FONT_SIZE.S, marginTop: 0, fontFamily: FONT.REGULAR}}>
             {status}
           </Text>
         </View>

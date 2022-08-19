@@ -1,7 +1,7 @@
 import React , {useState} from "react";
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import moment from 'moment'
-import { numberFormat, moderateScale, getHeaderDateTitle } from 'toktokwallet/helper'
+import { numberFormat, moderateScale, getHeaderDateTitle , currencyCode} from 'toktokwallet/helper'
 import { Separator } from "toktokwallet/components";
 import { useThrottle } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
@@ -37,7 +37,7 @@ export const LogItem = ({
   const refDateTime =  moment(item.transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
   const refDate = moment(item.transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY');
   const refTime = moment(item.transaction.createdAt).tz('Asia/Manila').format('hh:mm A');
-  const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item.transaction.amount)}`
+  const transactionAmount = `${currencyCode}${numberFormat(item.transaction.amount)}`
 
   const showDetails = ()=>{
     setInfo({
@@ -74,7 +74,7 @@ export const LogItem = ({
         <Text style={{color: "#9E9E9E",fontSize: FONT_SIZE.S,marginTop: 0,fontFamily: FONT.REGULAR}}>Success</Text>
       </View>
       <View style={styles.transactionAmount}>
-        <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>₱{numberFormat(item.transaction.amount)}</Text>
+        <Text style={{color: "#F6841F",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
         <Text style={{color: "#9E9E9E",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDateTime}</Text>
       </View>
     </TouchableOpacity>

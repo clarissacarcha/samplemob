@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
-import {SettingsLogModal} from 'toktokwallet/components';
+import {TransactionModal} from 'toktokwallet/components';
+import { moderateScale } from "toktokwallet/helper";
 import CONSTANTS from 'common/res/constants';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
@@ -10,17 +11,17 @@ const Details = ({settlement, visible, setVisible}) => {
   const {refNo, dayOfPayment, timeOfPayment, name, phrase, amount} = settlement;
 
   return (
-    <SettingsLogModal visible={visible} setVisible={setVisible}>
+    <TransactionModal visible={visible} setVisible={setVisible}>
       <View>
-        <Text style={[styles.labelText, {fontFamily: FONT.BOLD}]}>{name}</Text>
+        <Text style={[styles.labelText, {fontFamily: FONT.BOLD,fontSize: moderateScale(18)}]}>{name}</Text>
         <Text style={[styles.labelText, {marginBottom: 20}]}>{phrase}</Text>
-        <Text style={styles.labelText}>Status: Success</Text>
-        <Text style={styles.labelText}>Amount: {amount}</Text>
-        <Text style={styles.labelText}>Service Reference No.: {refNo}</Text>
-        <Text style={styles.labelText}>Day of Payment: {dayOfPayment}</Text>
-        <Text style={styles.labelText}>Time of Payment: {timeOfPayment}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Status:</Text> Success</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount:</Text> {amount}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Service Reference No.:</Text> {refNo}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Day of Payment:</Text> {dayOfPayment}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Time of Payment:</Text> {timeOfPayment}</Text>
       </View>
-    </SettingsLogModal>
+    </TransactionModal>
   );
 };
 
@@ -37,6 +38,7 @@ const styles = StyleSheet.create({
   labelText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    marginBottom: 2,
   },
 });
 

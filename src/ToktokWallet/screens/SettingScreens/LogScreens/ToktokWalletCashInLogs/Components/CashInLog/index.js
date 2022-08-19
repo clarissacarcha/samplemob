@@ -1,7 +1,7 @@
 import React , {useState} from "react";
 import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import moment from 'moment'
-import { numberFormat, moderateScale, getHeaderDateTitle } from 'toktokwallet/helper'
+import { numberFormat, moderateScale, getHeaderDateTitle, currencyCode } from 'toktokwallet/helper'
 import { Separator } from "toktokwallet/components";
 import { useThrottle } from 'src/hooks'
 import CONSTANTS from 'common/res/constants'
@@ -54,7 +54,7 @@ export const CashInLog = ({
     const requestNo = item?.node?.referenceNumber
     const refNo = transaction?.refNo ? transaction.refNo : null
     const refDate = transaction ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A') : moment(item?.node?.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
-    const transactionAmount = `${tokwaAccount.wallet.currency.code} ${numberFormat(item?.node?.amount)}`
+    const transactionAmount = `${currencyCode}${numberFormat(item?.node?.amount)}`
     const provider = item?.node?.provider.name
     const phrase = `through ${item?.node?.cashInPartnerTypeId ? item?.node?.cashInPartnerType.name : provider}`
 
@@ -88,10 +88,10 @@ export const CashInLog = ({
         >
             <View style={styles.transactionDetails}>
                 <Text style={{fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>Request # {requestNo}</Text>
-                <Text style={{color: "#909294",fontSize: FONT_SIZE.M,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
+                <Text style={{color: "#909294",fontSize: FONT_SIZE.S,marginTop: 0,fontFamily: FONT.REGULAR}}>{status}</Text>
             </View>
             <View style={styles.transactionAmount}>
-                <Text style={{color: "#FCB91A",fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
+                <Text style={{color: COLOR.ORANGE,fontSize: FONT_SIZE.M,fontFamily: FONT.REGULAR}}>{transactionAmount}</Text>
                 <Text style={{color: "#909294",fontSize: FONT_SIZE.S,alignSelf: "flex-end",marginTop: 0,fontFamily: FONT.REGULAR}}>{refDate}</Text>
             </View>
         </TouchableOpacity>

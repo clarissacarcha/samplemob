@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
-import {SettingsLogModal} from 'toktokwallet/components';
+import {TransactionModal} from 'toktokwallet/components';
+import { moderateScale } from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
@@ -29,20 +30,20 @@ const Details = ({transaction, visible, setVisible}) => {
   const {name, phrase, details, amount, refNo, refDate, time, date, status, requestNo} = transaction;
 
   return (
-    <SettingsLogModal visible={visible} setVisible={setVisible}>
+    <TransactionModal visible={visible} setVisible={setVisible}>
       <View>
-        <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>{name}</Text>
+        <Text style={{fontFamily: FONT.BOLD, fontSize: moderateScale(18)}}>{name}</Text>
         <Text style={styles.labelText}>{phrase}</Text>
         {renderDetails({details})}
         <View style={{marginTop: 15}}>
-          <Text style={styles.labelText}>Status: {status}</Text>
-          <Text style={styles.labelText}>Amount: {amount}</Text>
-          {requestNo && <Text style={styles.labelText}>Service Reference No.: {requestNo}</Text>}
-          {refNo && <Text style={styles.labelText}>Date of Payment {date}</Text>}
-          {refDate && <Text style={styles.labelText}>Time of Payment {time}</Text>}
+          <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Status:</Text> {status}</Text>
+          <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount:</Text> {amount}</Text>
+          {requestNo && <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Service Reference No.:</Text> {requestNo}</Text>}
+          {refNo && <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Date of Payment</Text> {date}</Text>}
+          {refDate && <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Time of Payment</Text> {time}</Text>}
         </View>
       </View>
-    </SettingsLogModal>
+    </TransactionModal>
   );
 };
 
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
   labelText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    marginBottom: 2
   },
 });
 
