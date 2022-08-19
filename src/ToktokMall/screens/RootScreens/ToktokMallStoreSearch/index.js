@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
   },
   noResultText1: {
     fontSize: 16, 
-    color: "#9E9E9E"
+    color: COLOR.ORANGE
   },
   noResultText2: {
     fontSize: 11, 
