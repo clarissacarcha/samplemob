@@ -1,7 +1,6 @@
 import React from 'react'
 import {View,Text,StyleSheet,ActivityIndicator,FlatList} from 'react-native'
-import { HeaderBack, HeaderTitle } from 'src/revamp'
-import { Separator , CheckIdleState } from 'toktokwallet/components'
+import { Separator , CheckIdleState, HeaderBack, HeaderTitleRevamp } from 'toktokwallet/components'
 import { TOKTOK_WALLET_GRAPHQL_CLIENT } from 'src/graphql'
 import { GET_ACCOUNT_TYPES } from 'toktokwallet/graphql'
 import {useQuery} from '@apollo/react-hooks'
@@ -83,7 +82,7 @@ const AccountTypeLimit = ({item,index})=> {
 
                     </View>
             </View>
-            <View style={{flexDirection:"row",height: 40,justifyContent:"center",alignItems:'center',padding: 10,backgroundColor:"#F7F7FA"}}>
+            <View style={{flexDirection:"row",height: 40,justifyContent:"center",alignItems:'center',padding: 10,backgroundColor: "transparent"}}>
                     <View style={{flex: 1}}>
 
                     </View>
@@ -109,8 +108,8 @@ export const ToktokWalletTransactionLimit = ({navigation})=> {
 
 
     navigation.setOptions({
-        headerLeft: ()=> <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: ()=> <HeaderTitle label={['User Level and','Transaction Limit']}/>,
+        headerLeft: ()=> <HeaderBack/>,
+        headerTitle: ()=> <HeaderTitleRevamp label={['User Level and','Transaction Limit']}/>,
     })
 
     const alert = useAlert()
@@ -138,7 +137,6 @@ export const ToktokWalletTransactionLimit = ({navigation})=> {
 
     return (
         <CheckIdleState>
-        <Separator/>
         <View style={styles.container}>
                 <FlatList 
                         showsVerticalScrollIndicator={false}
