@@ -63,12 +63,7 @@ export const ToktokWalletEnterpriseApplication = ({navigation}) => {
     }
 
     if (data?.getEnterpriseUpgradeRequest?.status == 2 || data?.getEnterpriseUpgradeRequest?.status == 5) {
-      return (
-        <>
-          <Separator />
-          <PendingRequest enterpriseRequest={data?.getEnterpriseUpgradeRequest} />
-        </>
-      );
+      return <PendingRequest enterpriseRequest={data?.getEnterpriseUpgradeRequest} />;
     }
 
     if (data?.getEnterpriseUpgradeRequest?.status == 3) {

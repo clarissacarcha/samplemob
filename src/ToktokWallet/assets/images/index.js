@@ -4,6 +4,8 @@ export const backgrounds = {
 };
 export const logos = {
   toktokwallet_logo: require('./toktokwallet.png'),
+  toktokwallet_logo2: require('./tokwa2.png'),
+  toktokwallet_logo3: require('./tokwa_splash.png'),
 };
 export const banner = {
   banner_logo: require('./banner.png'),

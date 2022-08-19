@@ -88,7 +88,7 @@ export const ToktokWalletOTPValidator = forwardRef(({navigation, route}, ref) =>
               {tokwaAccount.mobileNumber.substr(tokwaAccount.mobileNumber.length - 3)}.
             </Text>
             <NumberInputBox
-              otpCode={otpCode}
+              pinCode={otpCode}
               onNumPress={onNumPress}
               showPin={true}
               errorMessage={errorMessage}
