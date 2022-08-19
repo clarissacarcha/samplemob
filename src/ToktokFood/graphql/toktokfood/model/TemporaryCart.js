@@ -17,6 +17,8 @@ const tempCart = `
     productName
     productLogo
     notes
+    maxQty
+    maxQtyIsset
     shopLatitude
     shopLongitude
     shopCity
