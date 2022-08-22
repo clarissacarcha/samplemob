@@ -103,7 +103,6 @@ export const ToktokWalletCreatePin = ({navigation, route}) => {
         error,
         navigation,
         prompt,
-        onPress: () => navigation.navigate('ToktokWalletCashOutOTCHome'),
       });
     },
   });

@@ -20,7 +20,18 @@ import {
 import {NumberInputBox, OrangeButton} from 'toktokwallet/components';
 
 const EnterNewConfirmPinValidator = (props: PropsType): React$Node => {
-  const {label, type, pinCode, errorMessage, onConfirm, showPin, setShowPin, onChangeText, onNumPress} = props;
+  const {
+    label,
+    type,
+    pinCode,
+    errorMessage,
+    onConfirm,
+    showPin,
+    setShowPin,
+    onChangeText,
+    onNumPress,
+    numberOfBox = 6,
+  } = props;
 
   return (
     <Container>
@@ -36,9 +47,10 @@ const EnterNewConfirmPinValidator = (props: PropsType): React$Node => {
           errorMessage={errorMessage}
           onChangeText={onChangeText}
           onNumPress={onNumPress}
+          numberOfBox={numberOfBox}
         />
         <ShowTpinButton onPress={() => setShowPin(!showPin)}>
-          <ShowTpinText> {showPin ? 'Hide TPIN' : 'Show TPIN'}</ShowTpinText>
+          <ShowTpinText>{showPin ? `Hide ${type}` : `Show ${type}`}</ShowTpinText>
         </ShowTpinButton>
       </ContentContainer>
       <ButtonContainer>

@@ -14,4 +14,5 @@ export type PropsType = {
   setPinCode: any,
   onPressForgotPin: () => void,
   numberOfBox?: number,
+  type: string,
 };
