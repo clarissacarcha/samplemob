@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {moderateScale} from 'toktokwallet/helper';
 import {TransactionModal} from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
 
@@ -26,17 +27,17 @@ const renderDetails = ({details}) => {
 };
 
 const Details = ({transaction, visible, setVisible}) => {
-  const {name, phrase, details, amount, refNo, refDate, refTime, requestNo} = transaction;
+  const {name, phrase, details, amount, refNo, refDate, refTime, requestNo, externalReferenceNo} = transaction;
 
   return (
     <TransactionModal visible={visible} setVisible={setVisible}>
-      <View>
-        <Text style={styles.labelText}>Status of toktokbills: Success</Text>
-        <Text style={styles.labelText}>Amount: {amount}</Text>
-        <Text style={styles.labelText}>Amount Paid: {amount}</Text>
-        {refNo && <Text style={styles.labelText}>Reference No.: {refNo}</Text>}
-        {refDate && <Text style={styles.labelText}>toktokbills Date: {refDate}</Text>}
-        {refDate && <Text style={styles.labelText}>toktokbills Time: {refTime}</Text>}
+      <Text style={{fontFamily: FONT.BOLD,fontSize: moderateScale(18)}}>Load</Text>
+      <View style={{marginTop: 15}}>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Status:</Text> Success</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount Paid:</Text> {amount}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Service Reference Number:</Text> {externalReferenceNo}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Toktokwallet Reference Number:</Text> {refNo}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Transaction Date:</Text> {refDate} {refTime}</Text>
       </View>
     </TransactionModal>
   );
@@ -55,6 +56,7 @@ const styles = StyleSheet.create({
   labelText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    marginBottom: 2,
   },
 });
 
