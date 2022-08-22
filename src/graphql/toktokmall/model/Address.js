@@ -17,7 +17,9 @@ export const GET_CITY = gql`
             id
             citymunDesc
             citymunCode
+            provDesc
             provCode
+            regCode
             regDesc
             coordinates {
               lon

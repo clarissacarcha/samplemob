@@ -391,6 +391,12 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                         : setActiveToDeleteItem(prevState => ({...prevState, value: true}))
                     }
                     onPress={() => {
+                      if(route.params?.fromPlaceOrderScreen){
+                        route.params?.onGoBack(item.id)
+                        navigation.goBack()
+                        return true
+                      }
+
                       !deleting && navigation.navigate('ToktokMallAddressesForm', {item, update: true});
                       if(swiperRefs.current.length > 0){
                         swiperRefs.current.map((item, i) => {

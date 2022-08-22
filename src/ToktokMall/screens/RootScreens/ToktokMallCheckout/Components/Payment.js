@@ -259,8 +259,8 @@ const styles = StyleSheet.create({
   paymentMethodText: {
     marginLeft: 15, 
     marginTop: 15, 
-    fontSize: 14, 
-    fontFamily: FONT.BOLD
+    marginBottom: 5,
+    fontSize: 13, 
   },
   margin1: {
     paddingTop: 15

@@ -46,6 +46,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [newCartData, setNewCartData] = useState([])
   const [paramsData, setParamsData] = useState([])
   const [addressData, setAddressData] = useState([])
+
+  console.log("addressData",addressData)
   const [payment, setPaymentMethod] = useState("toktokwallet")
   const [paymentList, setPaymentList] = useState([])
   const [vouchers, setVouchers] = useState([])
@@ -169,7 +171,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       setInitialLoading(false)
     },
     onError: (err) => {
-      console.log(err)
+      console.log("addressData",err)
       setAddressData([]);
       setPaymentList([])
       setInitialLoading(false)
@@ -818,7 +820,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     // BackHandler.removeEventListener("hardwareBackPress", backAction)
   }
 
-  const init = async () => {
+  const init = async (id) => {
         
     await getMyAccount()
 
@@ -836,13 +838,20 @@ const Component = ({route, navigation, createMyCartSession}) => {
       
       CheckoutContextData.setShippingFeeRates([])
       CheckoutContextData.setUnserviceableShipping([])
+      console.log("addressData",JSON.stringify({
+        userId: userData.userId,
+        shops: shops,
+        refCom: getRefComAccountType({session: toktokSession}),
+        addressId: id
+      }))
       
       getCheckoutData({
         variables: {
           input: {
             userId: userData.userId,
             shops: shops,
-            refCom: getRefComAccountType({session: toktokSession})        
+            refCom: getRefComAccountType({session: toktokSession}),
+            addressId: id
           }
         }
       })
@@ -950,11 +959,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     (async () => {
       // console.log(JSON.stringify(route.params.data))
-      await init()
+      await init(0)
     })();
 
     if(isMounted){
-      EventRegister.addEventListener("ToktokMallrefreshCheckoutData", init)
+      EventRegister.addEventListener("ToktokMallrefreshCheckoutData", () => init(0))
       EventRegister.addEventListener("ToktokMallWalletRefreshAccountStatus", () => setWalletAccountStatus())
     }
 
@@ -1073,10 +1082,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
           <AddressForm
             data={addressData}
             onEdit={() => navigation.push("ToktokMallAddressesMenu", {
-              onGoBack: (data) => {
-                // setAddressData(data)
-                init()
-              }
+              onGoBack: (id) => {
+                console.log("addressData",id)
+                init(id)
+              },
+              fromPlaceOrderScreen: true
             })}
           />          
          {paramsData.length > 0 ? (

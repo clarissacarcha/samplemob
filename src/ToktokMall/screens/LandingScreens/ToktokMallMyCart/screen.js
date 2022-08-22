@@ -551,9 +551,7 @@ const Component = ({
   }
 
   const OnSubmitForCheckout = () => {
-    // if(itemsToCheckoutArr.length > 0){
-      
-    if(selectedItemsArr.length > 0){
+    // if(itemsToCheckoutArr.length > 0)
       
       let data = FormatCheckoutItems()
       // console.log(JSON.stringify(data))
@@ -565,10 +563,6 @@ const Component = ({
         newCart: [],
         vouchers: [],
       })
-
-    }else{
-      Toast.show("Please select items to checkout", Toast.LONG)
-    }
   }
 
   useFocusEffect(
@@ -756,6 +750,9 @@ const Component = ({
           {myCartData.length > 0 && !willDelete && (
             <CheckoutFooter
               onSubmit={async () => {
+                if(selectedItemsArr.length === 0){
+                  return Toast.show("Please select items to checkout", Toast.LONG)
+                }
                 setapiloader(true)
                 await getVerifyCheckout({variables: {
                   input: {

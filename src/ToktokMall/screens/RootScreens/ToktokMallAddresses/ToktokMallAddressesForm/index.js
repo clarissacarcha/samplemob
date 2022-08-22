@@ -129,9 +129,11 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     onCompleted: (response) => {
       if (response.getCity) {
         setCity(response.getCity.citymunDesc);
+        setRegion(response.getCity.regDesc);
+        setProvince(response.getCity.provDesc);
         setProvCode(response.getCity.provCode);
         setMunCode(response.getCity.citymunCode);
-        setRegCode(response.getCity.regDesc);
+        setRegCode(response.getCity.regCode);
         setIsLoading(false)
       }else{
         setIsLoading(false)
@@ -150,6 +152,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
       if(getCustomerAddressDetails){
         setLongitude(getCustomerAddressDetails.longitude);
         setLatitude(getCustomerAddressDetails.latitude);
+        console.log("getCustomerAddressDetails", getCustomerAddressDetails)
         getCity()
       }else{
         setIsLoading(false)

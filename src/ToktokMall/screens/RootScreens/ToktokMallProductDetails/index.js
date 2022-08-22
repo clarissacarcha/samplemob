@@ -384,10 +384,10 @@ const Component =  ({
     console.log(variables)
     const req = await ApiCall("insert_cart", variables, true)
 
+    EventRegister.emit('refreshToktokmallShoppingCart')
     if(req.responseData && req.responseData.success == 1){
       // createMyCartSession('push', raw)
       //setCartItems(CountCartItems)
-      EventRegister.emit('refreshToktokmallShoppingCart')
       // createMyCartCountSession("add", input.qty)
       setIsFetching(false)
       initCartItem()

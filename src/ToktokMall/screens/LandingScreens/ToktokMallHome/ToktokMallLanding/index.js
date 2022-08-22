@@ -276,8 +276,8 @@ const Component = ({ myCart, createMyCartSession,}) => {
         // }
         scrollEventThrottle = {16}
         showsVerticalScrollIndicator={false}
-        removeClippedSubviews={true}
-        nestedScrollEnabled={true}
+        // removeClippedSubviews={true}
+        // nestedScrollEnabled={true}
         onScroll = { 
           // Animated.event(
           //   [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
