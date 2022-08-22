@@ -181,26 +181,26 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
     }
     
   };
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        // navigation.pop(2)
-        // alert(JSON.stringify(customModal.visible))
-        if(customModal.visible){
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          return true
-        }
-        else{
-          // alert('not true')
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          return false
-        }
-        return true
-      }
-      BackHandler.addEventListener('hardwareBackPress', onBackPress)
-      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
-    }, [])
-  )
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const onBackPress = () => {
+  //       // navigation.pop(2)
+  //       // alert(JSON.stringify(customModal.visible))
+  //       if(customModal.visible){
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+  //         return true
+  //       }
+  //       else{
+  //         // alert('not true')
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+  //         return false
+  //       }
+  //       return true
+  //     }
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress)
+  //     return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+  //   }, [])
+  // )
 
   const renderAddressesx = () => {
     

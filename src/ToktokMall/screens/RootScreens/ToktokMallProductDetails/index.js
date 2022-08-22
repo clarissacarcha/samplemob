@@ -171,32 +171,32 @@ const Component =  ({
     }
   },[product])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        // navigation.pop(2)
-        // alert(JSON.stringify(customModal.visible))
-        if(customModal?.visible || customMessageModal?.visible){
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
-          setMessageModalShown(false)
-          return true
-        }
-        else{
-          // alert('not true')
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
-          setMessageModalShown(false)
-          return false
-        }
-        return true
-      }
-      BackHandler.addEventListener('hardwareBackPress', onBackPress)
-      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
-    }, [])
-  )
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const onBackPress = () => {
+  //       // navigation.pop(2)
+  //       // alert(JSON.stringify(customModal.visible))
+  //       if(customModal?.visible || customMessageModal?.visible){
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
+  //         setMessageModalShown(false)
+  //         return true
+  //       }
+  //       else{
+  //         // alert('not true')
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
+  //         setMessageModalShown(false)
+  //         return false
+  //       }
+  //       return true
+  //     }
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress)
+  //     return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+  //   }, [])
+  // )
 
   const [getProductDetails, {error, loading}] = useLazyQuery(GET_PRODUCT_DETAILS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,

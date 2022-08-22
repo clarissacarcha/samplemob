@@ -48,18 +48,18 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
 
   }, [route])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        if(modal.visible){
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
-          return true
-        }
-      }
-      BackHandler.addEventListener('hardwareBackPress', onBackPress)
-      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
-    }, [])
-  )
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const onBackPress = () => {
+  //       if(modal.visible){
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
+  //         return true
+  //       }
+  //     }
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress)
+  //     return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+  //   }, [])
+  // )
 
   // useEffect(() => {
   //   if(route?.params.unavailable.length > 0){
