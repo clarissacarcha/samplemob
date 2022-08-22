@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useRef} from 'react';
 import {View, StyleSheet, ActivityIndicator, FlatList, RefreshControl, Dimensions} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_ENTERPRISE_TRANSACTIONS} from 'toktokwallet/graphql';
+import {GET_ENTERPRISE_TRANSACTIONS_PAGINATE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-import {Separator, CheckIdleState, SwipeDownToRefresh, NoData} from 'toktokwallet/components';
+import {Separator, CheckIdleState, SwipeDownToRefresh, NoData,LoadingIndicator} from 'toktokwallet/components';
+import  {moderateScale } from 'toktokwallet/helper';
 import {HeaderBack, HeaderTitle} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
@@ -25,52 +26,88 @@ export const ToktokWalletPabiliDeliveryLogs = ({navigation}) => {
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
   const [records, setRecords] = useState([]);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [pageLoading, setPageLoading] = useState(false);
+  const [pageInfo, setPageInfo] = useState({});
+  const onEndReachedCalledDuringMomentum = useRef(null);
+  const [refreshing, setRefreshing] = useState(false);
   const alert = useAlert();
 
-  const [getEnterpriseTransactions, {data, error, loading}] = useLazyQuery(GET_ENTERPRISE_TRANSACTIONS, {
+  const [getEnterpriseTransactionsPaginate , {date,error,loading,fetchMore}] = useLazyQuery(GET_ENTERPRISE_TRANSACTIONS_PAGINATE, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-    variables: {
-      input: {
-        fatherName: 'toktok',
-      },
-    },
     onError: error => {
+      setRefreshing(false);
       onErrorAlert({alert, error, navigation});
     },
-    onCompleted: ({getEnterpriseTransactions}) => {
-      // setRecords(state=> [...state , ...getCashOuts])
-      setRecords(getEnterpriseTransactions);
-      setPageLoading(false);
+    onCompleted: ({getEnterpriseTransactionsPaginate}) => {
+      setRecords(getEnterpriseTransactionsPaginate.edges);
+      setPageInfo(getEnterpriseTransactionsPaginate.pageInfo);
+      setRefreshing(false);
     },
-  });
+  })
+
+  const handleGetTransactions = ()=> {
+    getEnterpriseTransactionsPaginate({
+      variables: {
+        input: {
+          afterCursorId: null,
+          fatherName: "toktok"
+        },
+      },
+    })
+  }
+
+  const fetchMoreData = async () => {
+    if (pageInfo.hasNextPage) {
+      await fetchMore({
+        variables: {
+          input: {
+            afterCursorId: pageInfo.endCursorId,
+            fatherName: "toktok"
+          },
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          fetchMoreResult.getEnterpriseTransactionsPaginate.edges = [
+            ...previousResult.getEnterpriseTransactionsPaginate.edges,
+            ...fetchMoreResult.getEnterpriseTransactionsPaginate.edges,
+          ];
+          return fetchMoreResult;
+        },
+      }).then(({data}) => {
+        setPageInfo(data.getEnterpriseTransactionsPaginate.pageInfo);
+        setRecords(data.getEnterpriseTransactionsPaginate.edges);
+      });
+    }
+  };
 
   const Refetch = () => {
-    getEnterpriseTransactions();
+    handleGetTransactions();
+    setRefreshing(true);
   };
 
   useEffect(() => {
-    getEnterpriseTransactions();
+    handleGetTransactions();
+    setRefreshing(loading);
   }, []);
-
-  const renderSeparator = () => <View style={styles.separator} />;
 
   if (error) {
     return <SomethingWentWrong onRefetch={Refetch} />;
   }
 
+  const ListFooterComponent = () => {
+    return (
+      <View style={{marginVertical: moderateScale(15)}}>
+        <LoadingIndicator isLoading={pageInfo.hasNextPage} size="small" />
+      </View>
+    );
+  };
+
   return (
     <CheckIdleState>
       <Separator />
-      {/* <SwipeDownToRefresh/> */}
       {
-        // loading
-        // ?  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        //     <ActivityIndicator size={24} color={COLOR.YELLOW} />
-        //    </View>
-        // :
         <View style={styles.container}>
           <View style={styles.content}>
             <FlatList
@@ -91,22 +128,32 @@ export const ToktokWalletPabiliDeliveryLogs = ({navigation}) => {
               data={records}
               keyExtractor={item => item.id}
               renderItem={({item, index}) => (
-                <LogItem key={index} item={item} index={index} tokwaAccount={tokwaAccount} />
+                <LogItem key={index} data={records} item={item?.node} index={index} tokwaAccount={tokwaAccount} />
               )}
-              ItemSeparatorComponent={renderSeparator}
-              ListFooterComponent={() => {
-                if (records.length == 0) return null;
-                if (loading) return null;
-                return <Separator />;
-              }}
               contentContainerStyle={{flexGrow: 1}}
-              // onEndReached={()=>{
-              //     setPageLoading(true)
-              //     setPageIndex(state=>state+1)
-              // }}
-              // onEndReachedThreshold={10}
+              onEndReachedThreshold={0.01}
+              onEndReached={() => {
+                if (!onEndReachedCalledDuringMomentum.current) {
+                  fetchMoreData();
+                  onEndReachedCalledDuringMomentum.current = true;
+                }
+              }}
+              onMomentumScrollBegin={() => {
+                onEndReachedCalledDuringMomentum.current = false;
+              }}
+              scrollEnabled={true}
+              getItemLayout={
+                records.length <= 30
+                  ? (data, index) => ({
+                      length: records.length,
+                      offset: records.length * index,
+                      index,
+                    })
+                  : undefined
+              }
+              ListFooterComponent={ListFooterComponent}
             />
-            {pageLoading && (
+            {refreshing && (
               <View style={{justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10}}>
                 <ActivityIndicator color={COLOR.YELLOW} />
               </View>

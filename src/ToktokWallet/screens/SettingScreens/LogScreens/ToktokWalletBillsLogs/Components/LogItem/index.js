@@ -26,7 +26,7 @@ export const LogItem = ({item, tokwaAccount, index, data}) => {
     refDate: item?.createdAt,
     data,
     index
-})
+  })
   // const refNo = MaskLeftZero(item.id)
   const requestNo = item.refNo;
   const refNo = item.refNo;
