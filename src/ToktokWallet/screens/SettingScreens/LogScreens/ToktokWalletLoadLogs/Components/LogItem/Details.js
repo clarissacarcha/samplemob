@@ -1,6 +1,7 @@
 import React , {useState} from "react";
 import { View, Text, StyleSheet ,Dimensions} from 'react-native';
 import { TransactionModal } from 'toktokwallet/components';
+import {moderateScale} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants'
 
 const { COLOR, FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS
@@ -39,22 +40,19 @@ const Details = ({
     refNo,
     refDate,
     refTime,
-    requestNo
+    requestNo,
+    externalReferenceNo
   } = transaction
 
   return (
-    <TransactionModal
-      visible={visible}
-      setVisible={setVisible}
-    >
-      <View>
-        <Text style={styles.labelText}>Status of toktokload: Success</Text>
-        {/* {renderDetails({details})} */}
-        <Text style={styles.labelText}>Amount: {amount}</Text>
-        <Text style={styles.labelText}>Amount Paid: {amount}</Text>
-        { refNo && <Text style={styles.labelText}>Reference No: {refNo}</Text>}
-        { refDate && <Text style={styles.labelText}>toktokload Date: {refDate}</Text>}
-        { refDate && <Text style={styles.labelText}>toktokload Time: {refTime}</Text>}
+    <TransactionModal visible={visible} setVisible={setVisible}>
+      <Text style={{fontFamily: FONT.BOLD,fontSize: moderateScale(18)}}>Load</Text>
+      <View style={{marginTop: 15}}>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Status:</Text> Success</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount Paid:</Text> {amount}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Service Reference Number:</Text> {externalReferenceNo}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Toktokwallet Reference Number:</Text> {refNo}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Transaction Date:</Text> {refDate} {refTime}</Text>
       </View>
     </TransactionModal>
   )
@@ -73,6 +71,7 @@ const styles = StyleSheet.create({
   labelText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    marginBottom: 2,
   }
 })
 
