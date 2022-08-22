@@ -248,7 +248,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         )
       );
     }
-    if (state?.serviceType === 'pabili') {
+    if (state?.serviceType === 'pabili' && (state?.orderStatus !== 's' || state?.orderStatus !== 'c')) {
       return (
         <TouchableOpacity
           activeOpacity={0.9}
@@ -501,9 +501,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           <OrderInformation state={{...state, riderDetails, duration}} />
           {renderModifiedTextComponent(true)}
           <OrderSummary state={state?.orderDetails} />
-          {state?.notes?.length > 0 && (state?.orderStatus !== 's' || state?.orderStatus !== 'c') && (
-            <OrderNote state={state} />
-          )}
+          {state?.notes?.length > 0 && <OrderNote state={state} />}
           <OrderAddresses state={state} />
           <Divider />
           {/* Amount and its breakdown */}
