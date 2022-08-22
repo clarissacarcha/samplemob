@@ -69,10 +69,10 @@ export const ToktokWalletUpdatePin = ({navigation, route}) => {
         onPress: () => {
           if (event) {
             navigation.pop(2);
-            return;
+          } else {
+            navigation.navigate('ToktokWalletHomePage');
+            navigation.replace('ToktokWalletHomePage');
           }
-          navigation.navigate('ToktokWalletHomePage');
-          navigation.replace('ToktokWalletHomePage');
         },
       });
     },

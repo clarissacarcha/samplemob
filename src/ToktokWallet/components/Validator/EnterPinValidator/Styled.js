@@ -60,9 +60,6 @@ export const Icon: ComponentType<any> = styled(VectorIcon).attrs(props => ({
 }))`
   margin-right: ${moderateScale(5)}px;
 `;
-export const NumPadContainer: ComponentType<any> = styled.View`
-  padding-vertical: ${moderateScale(10)}px;
-`;
 export const ForgotButton: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
   ...props,
 }))`
@@ -76,4 +73,5 @@ export const ErrorMessage: ComponentType<any> = styled.Text`
   margin-horizontal: ${moderateScale(16)}px;
   text-align: center;
   margin-top: ${moderateScale(10)}px;
+  font-size: ${FONT_SIZE.S}px;
 `;

@@ -15,4 +15,5 @@ export type PropsType = {
   setShowPin: any,
   onChangeText: any,
   onNumPress: any,
+  numberOfBox: number,
 };

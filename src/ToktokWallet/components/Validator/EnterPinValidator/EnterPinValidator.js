@@ -17,7 +17,6 @@ import {
   Icon,
   ForgotButton,
   ForgotText,
-  NumPadContainer,
   ErrorMessage,
 } from './Styled';
 import {Text} from 'react-native';
@@ -33,6 +32,7 @@ const EnterPinValidator = (props: PropsType): React$Node => {
     errorMessage,
     onPressForgotPin,
     numberOfBox,
+    type = 'TPIN',
   } = props;
   return (
     <BackgroundImage>
@@ -46,15 +46,13 @@ const EnterPinValidator = (props: PropsType): React$Node => {
         <Label>{label}</Label>
         <MessageContainer>
           <Icon />
-          <Text>Do not share your TPIN with anyone.</Text>
+          <Text>Do not share your {type} with anyone.</Text>
         </MessageContainer>
         <CircleIndicator pinCode={pinCode} showPin={showPin} error={!!errorMessage} numberOfBox={numberOfBox} />
         {!!errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-        <NumPadContainer>
-          <NumPad setPinCode={setPinCode} pinCode={pinCode} />
-        </NumPadContainer>
+        <NumPad setPinCode={setPinCode} pinCode={pinCode} numberOfBox={numberOfBox} />
         <ForgotButton onPress={onPressForgotPin}>
-          <ForgotText>Forgot TPIN?</ForgotText>
+          <ForgotText>Forgot {type}?</ForgotText>
         </ForgotButton>
       </ContentContainer>
     </BackgroundImage>

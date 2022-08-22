@@ -53,7 +53,13 @@ export const NumberInputBox = ({
   return (
     <View style={{marginBottom: 30}}>
       <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-        <NumberBoxes pinCode={pinCode} onNumPress={onNumPress} showPin={true} error={errorMessage} showPin={showPin} />
+        <NumberBoxes
+          numberOfBox={numberOfBox}
+          pinCode={pinCode}
+          onNumPress={onNumPress}
+          error={errorMessage}
+          showPin={showPin}
+        />
         <TextInput
           caretHidden
           value={pinCode}

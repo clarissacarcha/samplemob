@@ -19,7 +19,7 @@ import {EnterPinValidator} from 'toktokwallet/components';
 import {useAlert, usePrompt} from 'src/hooks';
 import {AlertOverlay} from 'src/components';
 import CONSTANTS from 'common/res/constants';
-import {TransactionUtility} from '../../../../../../util/TransactionUtility';
+import {TransactionUtility} from 'toktokwallet/util';
 
 const {FONT_FAMILY: FONT, FONT_SIZE, COLOR} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
@@ -41,11 +41,8 @@ export const VerifyPin = ({pageIndex, setPageIndex, setOldTPIN}) => {
   const prompt = usePrompt();
   const [showPin, setShowPin] = useState(false);
   const [pinCode, setPinCode] = useState('');
-  const inputRef = useRef();
   const navigation = useNavigation();
-  const alert = useAlert();
 
-  const [pinCodeAttempt, setPinCodeAttempt] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
 
   const [verifyPinCode, {data, error, loading}] = useLazyQuery(VERIFY_PIN_CODE, {
@@ -61,7 +58,6 @@ export const VerifyPin = ({pageIndex, setPageIndex, setOldTPIN}) => {
         error,
         navigation,
         prompt,
-        alert,
         setErrorMessage,
       });
     },
