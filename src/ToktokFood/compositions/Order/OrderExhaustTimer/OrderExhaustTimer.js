@@ -84,7 +84,7 @@ const OrderExhaustTimer = (props: PropsType): React$Node => {
         }
         return null;
       case 'f':
-        if (state?.orderIsfor === 1 && state?.deliveryLogs[4]?.createdAt && !isExhausted) {
+        if (state?.orderIsfor === 1 && state?.deliveryLogs[4]?.createdAt && state?.duration > 0) {
           title = setDeliveringText();
           subtitle = 'Driver is on the way';
           return renderComponent(title, subtitle);
