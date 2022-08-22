@@ -20,7 +20,7 @@ import CONSTANTS from 'common/res/constants';
 import {throttle} from 'lodash';
 
 //FONT & IMAGES
-import {circle_check} from 'toktokwallet/assets';
+import {circle_check, kyc_intructions} from 'toktokwallet/assets';
 
 //COMPONENTS
 import {PreviousNextButton} from 'toktokwallet/components';
@@ -66,7 +66,7 @@ const MainComponent = ({children, onPress, onPressBack}) => {
               <Text style={styles.selfieLabel}>Take a Selfie</Text>
               {children}
             </View>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
               <Text style={styles.benefitsText}>Reminders</Text>
               <View style={styles.benefitsContainer}>
                 <View style={styles.benefitsListContainer}>
@@ -80,6 +80,18 @@ const MainComponent = ({children, onPress, onPressBack}) => {
                 <View style={styles.benefitsListContainer}>
                   <Image style={styles.checkIcon} source={circle_check} />
                   <Text style={styles.benefitsListText}>Avoid blurry, grainy or shadows in the photo</Text>
+                </View>
+                <View style={styles.instructionsContainer}>
+                  <Image
+                    style={styles.instructionsPicture}
+                    source={kyc_intructions.selfie_correct}
+                    resizeMode="contain"
+                  />
+                  <Image
+                    style={styles.instructionsPicture}
+                    source={kyc_intructions.selfie_wrong}
+                    resizeMode="contain"
+                  />
                 </View>
               </View>
             </View>
@@ -204,7 +216,6 @@ const styles = StyleSheet.create({
   },
   mainInput: {
     flex: 1,
-    padding: moderateScale(30),
   },
   title: {
     fontSize: FONT_SIZE.M,
@@ -364,5 +375,16 @@ const styles = StyleSheet.create({
     zIndex: 1,
     height: '100%',
     width: '100%',
+  },
+  instructionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    marginTop: moderateScale(16),
+  },
+  instructionsPicture: {
+    height: moderateScale(189),
+    width: moderateScale(140),
+    marginHorizontal: moderateScale(5),
   },
 });
