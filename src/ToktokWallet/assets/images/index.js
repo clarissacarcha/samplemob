@@ -30,3 +30,14 @@ export const empty_images = {
   empty_search: require('./empty-screens/empty-search.png'),
   empty_fave: require('./empty-screens/empty-fave.png'),
 };
+
+export const kyc_intructions = {
+  id_good: require('./kyc-instructions/id-good.png'),
+  id_not_blurry: require('./kyc-instructions/id-not-blurry.png'),
+  id_not_cut: require('./kyc-instructions/id-not-cut.png'),
+  id_not_reflective: require('./kyc-instructions/id-not-reflective.png'),
+  selfie_correct: require('./kyc-instructions/selfie-correct.png'),
+  selfie_with_id_correct: require('./kyc-instructions/selfie-with-id-correct.png'),
+  selfie_with_id_wrong: require('./kyc-instructions/selfie-with-id-wrong.png'),
+  selfie_wrong: require('./kyc-instructions/selfie-wrong.png'),
+};
