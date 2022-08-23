@@ -56,14 +56,6 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
   };
 
   useEffect(() => {
-    const oldStatus = session.dummyStatus;
-    if (oldStatus == 4) {
-      const updateStatus = {
-        ...session,
-        dummyStatus: oldStatus + 1,
-      };
-      createSession(updateStatus);
-    }
     if (!booking) {
       getTrip({
         variables: {
@@ -74,31 +66,6 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
       });
     }
   }, []);
-
-  const declineBooking = () => {
-    console.log('DECLINED!');
-    setShowBookingModal(false);
-    setShowSuccessCancelBooking(true);
-  };
-
-  const onAccept = (paymentMethodSelected = false) => {
-    // setCaptchaVisible(false);
-    console.log('ON ACCPET DELIVERY');
-    const updateStatus = {
-      ...session,
-      dummyStatus: 2,
-    };
-    createSession(updateStatus);
-    // patchDeliveryAccepted({
-    //   variables: {
-    //     input: {
-    //       deliveryId: getDelivery.id,
-    //       driverId: session.user.driver.id,
-    //       userId: session.user.id,
-    //     },
-    //   },
-    // });
-  };
 
   if (loading || !booking) {
     console.log('loading', loading, 'booking', booking);

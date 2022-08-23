@@ -23,7 +23,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
       onPressActionButton({voucherId: data.id});
     } else {
       navigation.pop(2);
-      navigation.push('ToktokGoLanding');
+      navigation.push('ToktokGoLanding', {voucherData: data});
     }
   };
 

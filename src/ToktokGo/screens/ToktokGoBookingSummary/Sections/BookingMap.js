@@ -92,7 +92,7 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination})
               <Image source={ArrowRightIcon} resizeMode={'contain'} style={{height: 10, width: 10}} />
             </View>
           </View>
-          <Image source={LocationIcon} resizeMode={'contain'} style={{height: 26, width: 26}} />
+          <Image source={PinIcon} resizeMode={'contain'} style={{height: 26, width: 26}} />
         </View>
       </Marker>
 
@@ -111,7 +111,7 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination})
             </Text>
             <Image source={ArrowRightIcon} resizeMode={'contain'} style={{height: 10, width: 10}} />
           </View>
-          <Image source={PinIcon} resizeMode={'contain'} style={{height: 26, width: 26}} />
+          <Image source={LocationIcon} resizeMode={'contain'} style={{height: 26, width: 26}} />
         </View>
       </Marker>
 
