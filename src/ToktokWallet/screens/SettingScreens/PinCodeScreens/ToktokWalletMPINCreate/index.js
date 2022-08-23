@@ -48,17 +48,21 @@ export const ToktokWalletMPINCreate = ({navigation, route}) => {
   const [patchMPinCode, {loading}] = useMutation(PATCH_MPIN_CODE, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: () => {
-      prompt({
-        type: 'success',
-        title: 'MPIN Changed',
-        message: 'You have successfully changed your MPIN. Please do not share this with anyone.',
-        event: 'TOKTOKBILLSLOAD',
-        onPress: () => {
-          navigation.pop(3);
-          navigation.navigate('ToktokLandingHome');
-          navigation.push('ToktokWalletLoginPage');
-        },
-      });
+      if (tokwaAccount.mpinCode) {
+        prompt({
+          type: 'success',
+          title: 'MPIN Changed',
+          message: 'You have successfully changed your MPIN. Please do not share this with anyone.',
+          event: 'TOKTOKBILLSLOAD',
+          onPress: () => {
+            navigation.pop(3);
+            navigation.navigate('ToktokLandingHome');
+            navigation.push('ToktokWalletLoginPage');
+          },
+        });
+      } else {
+        setSuccessModalVisible(true);
+      }
     },
     onError: error => {
       TransactionUtility.StandardErrorHandling({

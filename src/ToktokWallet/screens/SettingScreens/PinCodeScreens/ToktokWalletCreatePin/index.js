@@ -26,6 +26,7 @@ export const ToktokWalletCreatePin = ({navigation, route}) => {
   const [newPinCode, setNewPinCode] = useState('');
   const [pageIndex, setPageIndex] = useState(tokwaAccount.pinCode ? 0 : 1);
   const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [successPinChange, setSuccessPinChange] = useState(false);
   const [LeaveModalvisible, setLeaveModalVisible] = useState(false);
   const prompt = usePrompt();
   const amount = route?.params?.amount ? route.params.amount : null;
@@ -61,42 +62,46 @@ export const ToktokWalletCreatePin = ({navigation, route}) => {
   }, [pageIndex]);
 
   useEffect(() => {
-    if (successModalVisible) {
+    if (successPinChange) {
       if (tokwaAccountLatest.pinCode && onCashIn) {
         if (navigation.canGoBack()) navigation.pop();
         navigation.push('ToktokWalletPaymentOptions', {
           amount: amount ? amount : 0,
           onCashIn: onCashIn,
         });
-        setSuccessModalVisible(false);
+        setSuccessPinChange(false);
       }
       if (tokwaAccountLatest.pinCode && setUpTpinCallBack) {
         setUpTpinCallBack();
         if (navigation.canGoBack()) navigation.pop();
-        setSuccessModalVisible(false);
+        setSuccessPinChange(false);
         return;
       }
       if (tokwaAccountLatest.pinCode && !onCashIn && !setUpTpinCallBack) {
         navigation.navigate('ToktokWalletHomePage');
-        setSuccessModalVisible(false);
+        setSuccessPinChange(false);
         return;
       }
     }
-  }, [tokwaAccountLatest, onCashIn, setUpTpinCallBack, navigation, amount, successModalVisible]);
+  }, [tokwaAccountLatest, onCashIn, setUpTpinCallBack, navigation, amount, successPinChange]);
 
   const [patchPinCode, {loading}] = useMutation(PATCH_PIN_CODE, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: () => {
-      prompt({
-        type: 'success',
-        title: 'TPIN Changed',
-        message: 'You have successfully changed your TPIN. Please do not share this with anyone.',
-        event: 'TOKTOKBILLSLOAD',
-        onPress: () => {
-          setSuccessModalVisible(true);
-          getMyAccount();
-        },
-      });
+      if (tokwaAccount.pinCode || onCashIn) {
+        prompt({
+          type: 'success',
+          title: 'TPIN Changed',
+          message: 'You have successfully changed your TPIN. Please do not share this with anyone.',
+          event: 'TOKTOKBILLSLOAD',
+          onPress: () => {
+            setSuccessPinChange(true);
+            getMyAccount();
+          },
+        });
+      } else {
+        setSuccessModalVisible(true);
+      }
     },
     onError: error => {
       TransactionUtility.StandardErrorHandling({
@@ -161,15 +166,14 @@ export const ToktokWalletCreatePin = ({navigation, route}) => {
         setVisible={setLeaveModalVisible}
         onConfirm={() => navigation.goBack()}
       />
-      {/* <SuccessfulModal
+      <SuccessfulModal
         amount={amount}
         setUpTpinCallBack={setUpTpinCallBack}
         onCashIn={onCashIn}
         modalVisible={successModalVisible}
         tokwaAccount={tokwaAccount}
         setSuccessModalVisible={setSuccessModalVisible}
-      /> */}
-      {/* <Separator /> */}
+      />
       <ImageBackground source={backgrounds.gradient_tpin} style={styles.container}>
         <View style={{marginTop: Platform.OS === 'ios' ? moderateScale(16) : getStatusbarHeight + moderateScale(16)}}>
           <HeaderBack onBack={backAction} />
