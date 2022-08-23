@@ -1,17 +1,13 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Modal,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {StyleSheet, View, Text, ScrollView, KeyboardAvoidingView} from 'react-native';
 import {getStatusbarHeight, moderateScale} from 'toktokwallet/helper';
-import {Separator, PolicyNote, PreviousNextButton, CustomTextInput, OrangeButton} from 'toktokwallet/components';
-import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
+import {
+  PolicyNote,
+  PreviousNextButton,
+  CustomTextInput,
+  OrangeButton,
+  CustomRadioButton,
+} from 'toktokwallet/components';
 import CheckBox from 'react-native-check-box';
 import {useHeaderHeight} from '@react-navigation/stack';
 
@@ -29,7 +25,6 @@ const Question = ({question, errorMessage, setErrorMessage, index, chooseAnswer,
     {value: '3', display: "I don't know", position: ''},
   ];
   const [answer, setAnswer] = useState(pepInfoAnswer);
-
   const onChangeText = text => {
     setErrorMessage(state => {
       state[index] = '';
@@ -48,6 +43,7 @@ const Question = ({question, errorMessage, setErrorMessage, index, chooseAnswer,
         ans: answer?.value,
         position: answer?.position,
         index: index,
+        selectedIndex: answer?.value,
       });
     }
   }, [answer]);
@@ -56,17 +52,17 @@ const Question = ({question, errorMessage, setErrorMessage, index, chooseAnswer,
     <View style={{marginTop: 10}}>
       <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.S, color: '#525252'}}>{question}</Text>
       <View style={{flexDirection: 'row', marginVertical: 10, justifyContent: 'space-between'}}>
-        {answers.map((ans, index) => (
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <CheckBox
-              isChecked={answer?.value == ans.value}
-              onClick={() => setAnswer(ans)}
-              checkBoxColor={COLOR.ORANGE}
-              checkedCheckBoxColor={COLOR.ORANGE}
-            />
-            <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M, marginLeft: 10}}>{ans.display}</Text>
-          </View>
-        ))}
+        <CustomRadioButton
+          data={answers}
+          multipleLabel={false}
+          onPress={(index, item) => {
+            setAnswer(item);
+          }}
+          selected={+answer?.value - 1}
+          buttonInnerColor={COLOR.ORANGE}
+          buttonOuterColor={COLOR.ORANGE}
+          horizontal
+        />
       </View>
       {answer?.value == '1' && (
         <>
@@ -94,7 +90,8 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
     callback();
   };
 
-  const chooseAnswer = ({ans, position, index}) => {
+  const chooseAnswer = ({ans, position, index, selectedIndex}) => {
+    // console.log(selectedIndex);
     if (index == 0) {
       setPepInfo(state => {
         return {

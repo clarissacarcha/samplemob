@@ -8,7 +8,12 @@ export const PepRequestVideoCall = () => {
 
   return (
     <View style={styles.container}>
-      <PepRequestVideoCallComponent pepInfo={pepInfo} setPepInfo={setPepInfo} setCurrentIndex={setCurrentIndex} />
+      <PepRequestVideoCallComponent
+        pepInfo={pepInfo}
+        setPepInfo={setPepInfo}
+        setCurrentIndex={setCurrentIndex}
+        hasPreviousButton
+      />
     </View>
   );
 };

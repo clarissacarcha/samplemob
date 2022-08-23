@@ -5,29 +5,43 @@ import CONSTANTS from 'common/res/constants';
 
 const {FONT_FAMILY: FONT, FONT_SIZE, COLOR, SHADOW, SIZE} = CONSTANTS;
 
-export const CustomRadioButton = ({onPress, data, selected}) => {
+export const CustomRadioButton = ({
+  onPress,
+  data,
+  selected,
+  multipleLabel = true,
+  buttonInnerColor = COLOR.YELLOW,
+  buttonOuterColor = COLOR.YELLOW,
+  horizontal = false,
+}) => {
   return (
-    <RadioForm animation={true}>
+    <RadioForm animation={true} style={horizontal && {flexDirection: 'row', flex: 1, justifyContent: 'space-between'}}>
       {/* To create radio buttons, loop through your array of options */}
-      {data.map((obj, i) => {
+      {data.map((item, index) => {
         return (
-          <RadioButton labelHorizontal={true} key={i} style={{alignItems: 'center', paddingVertical: 3}}>
+          <RadioButton labelHorizontal={true} key={index} style={{paddingVertical: 3}}>
             {/*  You can set RadioButtonLabel before RadioButtonInput */}
             <RadioButtonInput
-              obj={obj}
-              index={i}
-              isSelected={selected === i}
-              onPress={onPress}
+              obj={item}
+              index={index}
+              isSelected={selected === index}
+              onPress={() => onPress(index, item)}
               borderWidth={1}
-              buttonInnerColor={COLOR.YELLOW}
-              buttonOuterColor={COLOR.YELLOW}
+              buttonInnerColor={buttonInnerColor}
+              buttonOuterColor={buttonInnerColor}
               buttonSize={10}
               buttonOuterSize={15}
             />
-            <TouchableOpacity onPress={() => onPress(obj.value)} style={{flexDirection: 'row', flex: 1}}>
-              <Text style={{width: '50%', marginLeft: 10}}>{obj.label}</Text>
-              <Text style={{color: '#525252', textAlign: 'left'}}>{obj.description}</Text>
-            </TouchableOpacity>
+            {multipleLabel ? (
+              <TouchableOpacity onPress={() => onPress(item.value)} style={{flexDirection: 'row', flex: 1}}>
+                <Text style={{width: '50%', marginLeft: 10}}>{item.label}</Text>
+                <Text style={{color: '#525252', textAlign: 'left'}}>{item.description}</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => onPress(index, item)}>
+                <Text style={{marginLeft: 10}}>{item.display}</Text>
+              </TouchableOpacity>
+            )}
           </RadioButton>
         );
       })}
