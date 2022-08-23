@@ -18,7 +18,7 @@ const ToktokGoActivitiesTopTab = createMaterialTopTabNavigator();
 const Activities = () => {
   constants = useSelector(state => state.constants);
 
-  const hideGo = constants.hideGoActivities == 1 ? true : false;
+  const hideGoActivities = constants.hideGoActivities == 1 ? true : false;
 
   return (
     <>
@@ -80,14 +80,18 @@ const Activities = () => {
                       color: focused ? COLOR.ORANGE : COLOR.BLACK,
                       marginBottom: 5,
                     }}>
-                    toktokdelivery
+                    Delivery
                   </Text>
                 </View>
               );
             },
           })}
         />
-        {true && (
+        {/**
+         * DO NOT BYPASS THIS VALIDATION
+         * ASK VIR FOR HELP
+         */}
+        {!hideGoActivities && (
           <ActivitiesTopTab.Screen
             name="ToktokGoActivities"
             component={ToktokGoActivities}
