@@ -48,16 +48,23 @@ export const TermsAndCondition = (props) => {
     }
 
     return (
+      <TouchableOpacity onPress={onPressTC}>
         <View style={styles.tcContainer}>
-            <Animated.View style={[styles.tcSubContainer, {opacity: fadeAnim.current}]} />          
-            <TouchableOpacity onPress={onPressTC} style={[styles.tcButton, props.TCEnabled && {backgroundColor: '#F6841F'}]}>
-                {props.TCEnabled && <Icons.MIcon name="check" size={9} color="white"/> }
-            </TouchableOpacity>
-            <Text style={styles.tcText}>
-                I hereby confirm that all order details and delivery information are correctly entered. Furthermore, I have read and agreed with the <Text onPress={onNavigate} style={styles.tcUnderlineText}>Terms and Conditions</Text> of this service.
+          <Animated.View style={[styles.tcSubContainer, {opacity: fadeAnim.current}]} />
+          <View style={[styles.tcButton, props.TCEnabled && {backgroundColor: '#F6841F'}]}>
+            {props.TCEnabled && <Icons.MIcon name="check" size={9} color="white" />}
+          </View>
+          <Text style={styles.tcText}>
+            I hereby confirm that all order details and delivery information are correctly entered. Furthermore, I have
+            read and agreed with the{' '}
+            <Text onPress={onNavigate} style={styles.tcUnderlineText}>
+              Terms and Conditions
             </Text>
+            {' '}of this service.
+          </Text>
         </View>
-    )
+      </TouchableOpacity>
+    );
 }
 
 const styles = StyleSheet.create({

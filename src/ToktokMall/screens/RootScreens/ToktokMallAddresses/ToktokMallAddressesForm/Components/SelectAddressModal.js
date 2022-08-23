@@ -17,22 +17,17 @@ export const SelectAddressModal = ({isVisible, setIsVisible, type, setSelected, 
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
-    if (data) {
+    if (data && isVisible) {
       setFilteredData(data);
     } else {
       setFilteredData([]);
     }
-  }, [data]);
-
-  useEffect(() => {
-    if (!isVisible) {
-      setFilteredData([]);
-    }
-  }, [isVisible]);
+  }, [data,isVisible]);
 
   const onPress = item => {
     setSelected(item);
     setIsVisible(false);
+    setFilteredData([]);
   };
 
   const filterSearch = value => {
