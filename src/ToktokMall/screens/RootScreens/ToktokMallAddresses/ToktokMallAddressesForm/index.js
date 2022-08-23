@@ -87,6 +87,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
   });
 
   useEffect(() => {
+    setData([])
     if (type === 'reg') {
       getRegions();
     } else if (type === 'prov' && regCode) {
