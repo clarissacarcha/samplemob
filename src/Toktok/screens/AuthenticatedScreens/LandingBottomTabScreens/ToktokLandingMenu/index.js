@@ -37,7 +37,7 @@ const DrawerButton = ({isNew, label, onPress, restrict}) => {
         /> */}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {isNew && (
-            <View style={{backgroundColor: COLOR.RED, borderRadius: 20, marginVertical: -5}}>
+            <View style={{backgroundColor: '#ED3A19', borderRadius: 20, marginVertical: -5, left: 15}}>
               <Text
                 style={{
                   paddingHorizontal: 12,
@@ -124,31 +124,23 @@ export const ToktokLandingMenu = ({navigation}) => {
     <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'space-between'}}>
       <AlertOverlay visible={loading} />
       <View style={{flex: 1}}>
-        {/* <View style={{height: SIZE.MARGIN / 2, backgroundColor: COLOR.LIGHT}} /> */}
-
-        <View style={{flex: 1, backgroundColor: 'white'}}>
-          <ScrollView>
-            <Header>
-              <View style={{margin: SIZE.MARGIN}}>
-                {/*--------------- AVATAR ---------------*/}
-                {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
-                  <View
-                    style={{
-                      height: 80,
-                      borderRadius: 5,
-                      alignItems: 'center',
-                      flexDirection: 'column',
-                    }}>
-                    <Image
-                      source={imageRender()}
-                      resizeMode={'cover'}
-                      style={{width: 80, height: 80, borderRadius: 50}}
-                    />
-                    <Text style={{fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, paddingTop: 5}}>{fullName}</Text>
-                    <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, paddingTop: 3}}>
-                      {session.user.username}
-                    </Text>
-                    {/* <TouchableOpacity
+        <Header>
+          <View style={{margin: SIZE.MARGIN}}>
+            {/*--------------- AVATAR ---------------*/}
+            {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
+              <View
+                style={{
+                  height: 80,
+                  borderRadius: 5,
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                }}>
+                <Image source={imageRender()} resizeMode={'cover'} style={{width: 80, height: 80, borderRadius: 50}} />
+                <Text style={{fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, paddingTop: 5}}>{fullName}</Text>
+                <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, paddingTop: 3}}>
+                  {session.user.username}
+                </Text>
+                {/* <TouchableOpacity
                   onPress={() => {
                     navigation.push('ToktokProfile');
                   }}>
@@ -156,28 +148,32 @@ export const ToktokLandingMenu = ({navigation}) => {
                     View Profile
                   </Text>
                 </TouchableOpacity> */}
-                  </View>
-                ) : (
-                  <View
-                    style={{
-                      height: 80,
-                      width: 80,
-                      backgroundColor: '#333',
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Image
-                      source={ToktokWashed}
-                      resizeMode={'contain'}
-                      tintColor={MEDIUM}
-                      style={{width: 40, height: 40, borderRadius: 5}}
-                    />
-                  </View>
-                )}
-                {/*--------------- FULL NAME ---------------*/}
               </View>
-            </Header>
+            ) : (
+              <View
+                style={{
+                  height: 80,
+                  width: 80,
+                  backgroundColor: '#333',
+                  borderRadius: 5,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={ToktokWashed}
+                  resizeMode={'contain'}
+                  tintColor={MEDIUM}
+                  style={{width: 40, height: 40, borderRadius: 5}}
+                />
+              </View>
+            )}
+            {/*--------------- FULL NAME ---------------*/}
+          </View>
+        </Header>
+        <View style={{height: SIZE.MARGIN / 2, backgroundColor: COLOR.LIGHT}} />
+
+        <View style={{flex: 1, backgroundColor: 'white'}}>
+          <ScrollView>
             <Text style={{paddingLeft: 20, paddingTop: 20, paddingBottom: 15, fontFamily: FONT.BOLD}}> Account</Text>
             {/*--------------- MY DELIVERIES ---------------*/}
             {/* <DrawerButton
