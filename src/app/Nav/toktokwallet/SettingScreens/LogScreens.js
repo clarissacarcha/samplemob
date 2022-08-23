@@ -8,9 +8,10 @@ import {
   ToktokWalletLoadLogs,
   ToktokWalletMallLogs,
   ToktokWalletMartLogs,
-  ToktokWalletPabiliDeliveryLogs,
   ToktokWalletMerchantPaymentLogs,
   ToktokWalletMerchantSettlementLogs,
+  ToktokWalletPabiliDeliveryLogs,
+  ToktokWalletReceiveMoneyLogs,
   ToktokWalletRequestMoneyLogs,
   ToktokWalletSendMoneyLogs,
 } from 'toktokwallet/screens';
@@ -90,6 +91,13 @@ export default ({Navigator}) => (
     <Navigator.Screen
       name="ToktokWalletMerchantSettlementLogs"
       component={ToktokWalletMerchantSettlementLogs}
+      options={{
+        headerTitleAlign: 'center',
+      }}
+    />
+    <Navigator.Screen
+      name="ToktokWalletReceiveMoneyLogs"
+      component={ToktokWalletReceiveMoneyLogs}
       options={{
         headerTitleAlign: 'center',
       }}
