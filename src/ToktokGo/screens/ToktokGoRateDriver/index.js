@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,10 +8,12 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  ImageBackground,
-  Dimensions,
   StatusBar,
+  Keyboard,
+  Dimensions,
+  Platform,
 } from 'react-native';
+import {useMutation} from '@apollo/react-hooks';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
 import CONSTANTS from '../../../common/res/constants';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -25,12 +27,16 @@ import {COLOR, DARK, MEDIUM, LIGHT, ORANGE, APP_FLAVOR} from '../../../res/const
 import {FeedbackModal} from './components';
 import {useDispatch} from 'react-redux';
 import ArrowLeft from '../../../assets/icons/arrow-left-icon.png';
+import {DRIVER_RATING} from '../../graphql';
+import {onErrorAppSync} from '../../util';
+
+const Keyboard_Height = -(Dimensions.get('window').height * 0.1);
 
 const Star = ({onPress, color, isLast}) => {
   return <FAIcon onPress={onPress} name="star" size={35} style={{marginRight: isLast ? 0 : 25}} color={color} />;
 };
 const StarRating = ({onChange}) => {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(5);
 
   const onStarPress = index => {
     setRating(index);
@@ -57,14 +63,23 @@ const StarRating = ({onChange}) => {
 };
 
 const RateDriver = ({navigation, route}) => {
-  const {popTo} = route.params;
+  const {popTo, booking} = route.params;
   const dropDownRef = useRef(null);
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(5);
   const [selected, setSelected] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [isKeyboadShown, setIsKeyboadShown] = useState(false);
   const [feedBack, setFeedback] = useState({
     text: '',
     textLength: 0,
+  });
+
+  const [postGoDriverRating] = useMutation(DRIVER_RATING, {
+    onError: onErrorAppSync,
+    onCompleted: response => {
+      console.log(response, 'response');
+      setShowModal(!showModal);
+    },
   });
 
   const dispatch = useDispatch();
@@ -72,6 +87,7 @@ const RateDriver = ({navigation, route}) => {
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['', '']} />,
   });
+
   const starStatus = () => {
     if (rating == 1) {
       return 'Poor';
@@ -85,10 +101,20 @@ const RateDriver = ({navigation, route}) => {
       return 'Excellent';
     }
   };
-  const showBookingReason = () => {
-    setShowModal(!showModal);
-  };
 
+  const showBookingReason = () => {
+    postGoDriverRating({
+      variables: {
+        input: {
+          rating: rating,
+          feedback: feedBack.text,
+          feedbackIcon: selected.toString(),
+          bookingId: booking.id,
+          forTokDriverUserId: parseInt(booking.driverUserId),
+        },
+      },
+    });
+  };
   const onChangeValue = value => {
     if (selected.includes(value)) {
       let index = selected.indexOf(value);
@@ -109,6 +135,21 @@ const RateDriver = ({navigation, route}) => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
     navigation.replace('ToktokGoBookingStart');
   };
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboadShown(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboadShown(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
   return (
     <ScrollView style={styles.mainContainer}>
       <TouchableOpacity onPress={() => navigation.pop()}>
@@ -118,7 +159,8 @@ const RateDriver = ({navigation, route}) => {
           resizeMode={'contain'}
         />
       </TouchableOpacity>
-      <View style={styles.containerTitle}>
+
+      <View style={isKeyboadShown ? {marginTop: Keyboard_Height} : styles.containerTitle}>
         <Text style={styles.titleQuestion}>How was your driver?</Text>
         <Text style={styles.starStyle}>{starStatus()}</Text>
         <StarRating onChange={value => setRating(value)} />
@@ -126,22 +168,22 @@ const RateDriver = ({navigation, route}) => {
       </View>
       <View style={{flexDirection: 'column'}}>
         <View style={styles.containerFeedback1}>
-          <View style={{alignItems: 'center', opacity: selected.includes(1) ? 1 : 0.5}}>
-            <TouchableOpacity onPress={() => onChangeValue(1)}>
+          <View style={{alignItems: 'center', opacity: selected.includes('Winning Service') ? 1 : 0.5}}>
+            <TouchableOpacity onPress={() => onChangeValue('Winning Service')}>
               <Image source={Feedback1} style={{height: 70, width: 70}} />
             </TouchableOpacity>
             <Text style={styles.typesOfText}>Winning Service</Text>
           </View>
 
-          <View style={{alignItems: 'center', opacity: selected.includes(2) ? 1 : 0.5}}>
-            <TouchableOpacity onPress={() => onChangeValue(2)}>
+          <View style={{alignItems: 'center', opacity: selected.includes('Squeaky Clean') ? 1 : 0.5}}>
+            <TouchableOpacity onPress={() => onChangeValue('Squeaky Clean')}>
               <Image source={Feedback2} style={{height: 70, width: 70}} />
             </TouchableOpacity>
             <Text style={styles.typesOfText}>Squeaky Clean</Text>
           </View>
 
-          <View style={{alignItems: 'center', opacity: selected.includes(3) ? 1 : 0.5}}>
-            <TouchableOpacity onPress={() => onChangeValue(3)}>
+          <View style={{alignItems: 'center', opacity: selected.includes('Comfortable Ride') ? 1 : 0.5}}>
+            <TouchableOpacity onPress={() => onChangeValue('Comfortable Ride')}>
               <Image source={Feedback3} style={{height: 70, width: 70}} />
             </TouchableOpacity>
             <Text style={styles.typesOfText}>Comfortable Ride</Text>
@@ -149,22 +191,22 @@ const RateDriver = ({navigation, route}) => {
         </View>
 
         <View style={styles.containerFeedback2}>
-          <View style={{alignItems: 'center', opacity: selected.includes(4) ? 1 : 0.5}}>
-            <TouchableOpacity onPress={() => onChangeValue(4)}>
+          <View style={{alignItems: 'center', opacity: selected.includes('Friendly Driver') ? 1 : 0.5}}>
+            <TouchableOpacity onPress={() => onChangeValue('Friendly Driver')}>
               <Image source={Feedback4} style={{height: 70, width: 70}} />
             </TouchableOpacity>
             <Text style={styles.typesOfText}>Friendly Driver</Text>
           </View>
 
-          <View style={{alignItems: 'center', marginLeft: 20, opacity: selected.includes(5) ? 1 : 0.5}}>
-            <TouchableOpacity onPress={() => onChangeValue(5)}>
+          <View style={{alignItems: 'center', marginLeft: 20, opacity: selected.includes('Great Music') ? 1 : 0.5}}>
+            <TouchableOpacity onPress={() => onChangeValue('Great Music')}>
               <Image source={Feedback5} style={{height: 70, width: 70}} />
             </TouchableOpacity>
             <Text style={styles.typesOfText}>Great Music</Text>
           </View>
 
-          <View style={{alignItems: 'center', opacity: selected.includes(6) ? 1 : 0.5}}>
-            <TouchableOpacity onPress={() => onChangeValue(6)}>
+          <View style={{alignItems: 'center', opacity: selected.includes('Love the Amenities') ? 1 : 0.5}}>
+            <TouchableOpacity onPress={() => onChangeValue('Love the Amenities')}>
               <Image source={Feedback6} style={{height: 70, width: 70}} />
             </TouchableOpacity>
             <Text style={styles.typesOfText}>Love the Amenities</Text>
@@ -183,9 +225,9 @@ const RateDriver = ({navigation, route}) => {
           multiline
           maxLength={320}
         />
-        <View style={{alignItems: 'flex-end'}}>
+        {/* <View style={{alignItems: 'flex-end'}}>
           <Text style={styles.textInputLength}>{feedBack.textLength}/320</Text>
-        </View>
+        </View> */}
       </View>
       <View style={styles.btnContainer}>
         <TouchableOpacity style={styles.btnConfirm} onPress={() => showBookingReason()}>
@@ -225,7 +267,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '39%',
   },
   btnTextSubmit: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL,
     color: CONSTANTS.COLOR.WHITE,
   },
@@ -258,12 +300,13 @@ const styles = StyleSheet.create({
     fontSize: CONSTANTS.FONT_SIZE.S,
   },
   titleQuestion: {
+    textAlign: 'center',
     fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
     fontSize: CONSTANTS.FONT_SIZE.XL + 1,
   },
   starStyle: {
     paddingTop: 40,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 1,
     paddingBottom: 10,
   },
@@ -285,6 +328,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   yourFeedbackText: {
+    textAlign: 'center',
     paddingVertical: 20,
     fontSize: CONSTANTS.FONT_SIZE.S,
   },

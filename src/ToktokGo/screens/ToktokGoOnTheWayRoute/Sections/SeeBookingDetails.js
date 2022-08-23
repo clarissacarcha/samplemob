@@ -2,13 +2,14 @@ import React from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const SeeBookingDetails = ({booking, navigation}) => {
+export const SeeBookingDetails = ({booking, navigation, driverData}) => {
   return (
     <TouchableOpacity
       onPress={() => {
         navigation.push('SelectedBookingDetails', {
           booking: booking,
           label: ['Booking', 'Details'],
+          driverData,
         });
       }}
       style={styles.buttonWrapper}>
@@ -22,11 +23,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 12,
     alignItems: 'center',
-    marginVertical: 20,
+    marginBottom: 20,
   },
   confirmText: {
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.WHITE,
   },
 });

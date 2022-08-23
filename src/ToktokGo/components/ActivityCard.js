@@ -24,13 +24,12 @@ import Constants from '../../store/redux/reducers/Constants';
 import {numberFormat} from '../../helper';
 
 const getDisplayAddress = ({stop}) => {
-  console.log(stop);
   if (stop?.addressBreakdown) {
     const {city, province} = stop.addressBreakdown;
     const {formattedAddress} = stop;
     if (province) {
       return (
-        <View style={{width: 320}}>
+        <View style={{marginRight: 20}}>
           <Text>
             {city}, {province}
           </Text>
@@ -39,7 +38,7 @@ const getDisplayAddress = ({stop}) => {
       );
     } else {
       return (
-        <View style={{width: 320}}>
+        <View style={{marginRight: 20}}>
           <Text>{city}</Text>
           <Text style={{fontSize: 11, color: '#525252'}}>{formattedAddress}</Text>
         </View>
@@ -54,8 +53,17 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
   const onPressThrottled = throttle(onPress, 1000, {trailing: false});
 
   const getTotalAmount = () => {
-    return `₱${numberFormat(booking?.fare?.total)}`;
+    if (booking.tag == 'CANCELLED') {
+      if (booking.cancellationChargeStatus == 'PAID') {
+        return '₱50.0';
+      } else {
+        return '₱0.00';
+      }
+    } else {
+      return '₱' + numberFormat(booking.fare.total);
+    }
   };
+
   const headerDesign = () => {
     let design = styles.headerYellow;
     if (['ONGOING', 'COMPLETED'].includes(booking?.tag)) {
@@ -68,9 +76,18 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
   };
 
   const getTextStatus = () => {
-    //to do: replace returned text based on status
-    if (booking?.status == 'PICKED_UP') return 'Passenger picked up';
-    else if (booking?.tag == 'COMPLETED') return 'Completed';
+    if (booking?.tag == 'ONGOING') {
+      switch (booking.status) {
+        case 'ACCEPTED':
+          return 'Driver accepted';
+        case 'ARRIVED':
+          return 'Driver arrived at pick-up location';
+        case 'PICKED_UP':
+          return 'Passenger picked up';
+        default:
+          return '';
+      }
+    } else if (booking?.tag == 'COMPLETED') return 'Completed';
     else if (booking?.tag == 'CANCELLED') return 'Cancelled';
   };
 
@@ -114,17 +131,21 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                   style={{
                     marginLeft: 10,
                     justifyContent: 'flex-end',
-                    flex: 1,
+                    flex: 0.8,
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
-                  <Image source={getIconStatus()} style={{height: 14, width: 16}} resizeMode={'contain'} />
+                  <Image
+                    source={getIconStatus()}
+                    style={booking?.tag == 'ONGOING' ? {height: 16, width: 18} : {height: 14, width: 16}}
+                    resizeMode={'contain'}
+                  />
                   <Text
                     style={{
                       fontFamily: constants.FONT_FAMILY.REGULAR,
                       fontSize: constants.FONT_SIZE.M,
-                      color: booking?.status != 'COMPLETED' ? constants.COLOR.BLACK : constants.COLOR.RED,
-                      paddingLeft: 10,
+                      color: constants.COLOR.BLACK,
+                      paddingLeft: 15,
                       fontWeight: '400',
                     }}>
                     {getTextStatus()}
@@ -181,28 +202,28 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                         flex: 1,
                         marginBottom: 5,
                       }}>
-                      <Text
-                        style={{
-                          fontFamily: conditionalFontFamily,
-                          fontSize: constants.FONT_SIZE.S,
-                          color: blackFont,
-                          marginTop: 2,
-                        }}>
-                        {getDisplayAddress({stop: booking?.route?.origin})}
-                      </Text>
+                      {/* <Text
+                         style={{
+                           fontFamily: conditionalFontFamily,
+                           fontSize: constants.FONT_SIZE.S,
+                           color: blackFont,
+                           marginTop: 2,
+                         }}> */}
+                      {getDisplayAddress({stop: booking?.route?.origin})}
+                      {/* </Text> */}
                     </View>
 
                     {/*-------------------- RECIPIENT DETAILS --------------------*/}
                     <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 3}}>
-                      <Text
-                        style={{
-                          fontFamily: conditionalFontFamily,
-                          fontSize: constants.FONT_SIZE.S,
-                          color: blackFont,
-                          marginTop: 2,
-                        }}>
-                        {getDisplayAddress({stop: booking?.route?.destinations[0]})}
-                      </Text>
+                      {/* <Text
+                         style={{
+                           fontFamily: conditionalFontFamily,
+                           fontSize: constants.FONT_SIZE.S,
+                           color: blackFont,
+                           marginTop: 2,
+                         }}> */}
+                      {getDisplayAddress({stop: booking?.route?.destinations[0]})}
+                      {/* </Text> */}
                     </View>
                   </View>
                 </View>
@@ -215,7 +236,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
               <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                 {booking.paymentMethod == 'CASH' ? (
                   <>
-                    <Image source={CashIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
+                    <Image source={CashIcon} resizeMode="contain" style={{width: 30, height: 16, marginRight: 8}} />
                     <Text
                       style={{
                         fontFamily: constants.FONT_FAMILY.REGULAR,
@@ -239,7 +260,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
                       fontSize: constants.FONT_SIZE.M,
                       fontFamily: constants.FONT_FAMILY.BOLD,
                     }}>
-                    Total:
+                    {booking.tag == 'ONGOING' ? 'Total:' : 'Total Paid:'}
                   </Text>
                   <Text
                     style={{

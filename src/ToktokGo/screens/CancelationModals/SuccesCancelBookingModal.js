@@ -1,10 +1,84 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, Image, View, Modal, TouchableOpacity, Linking} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import SuccessIMG from '../../../assets/images/Sucess.png';
 import {ThrottledOpacity} from '../../../components_section';
 
-export const SuccesCancelBookingModal = ({visible, setVisible, type, chargeAmount, goBackAfterCancellation}) => {
+export const SuccesCancelBookingModal = ({
+  visible,
+  isViaTokwa,
+  cancellationState,
+  chargeAmount,
+  goBackAfterCancellation,
+}) => {
+  const getDescription = () => {
+    if (chargeAmount) {
+      if (cancellationState?.initiatedBy == 'CONSUMER') {
+        if (isViaTokwa) {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. We received your payment for Cancellation Fee of{' '}
+              <Text style={styles.textHighlight}>₱50.00</Text>. Your e-receipt was sent to your registered email.
+            </Text>
+          );
+        } else {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. Cancellation Fee will be charged in your next booking. You may read more
+              about our{' '}
+              <Text
+                onPress={() =>
+                  Linking.openURL(
+                    'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
+                  )
+                }
+                style={{
+                  color: CONSTANTS.COLOR.ORANGE,
+                  textDecorationLine: 'underline',
+                  textAlign: 'center',
+                }}>
+                Cancellation Policies
+              </Text>
+              .
+            </Text>
+          );
+        }
+      } else {
+        if (isViaTokwa) {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. We received your payment for No Show Fee of{' '}
+              <Text style={styles.textHighlight}>₱50.00</Text>. Your e-receipt was sent to your registered email.
+            </Text>
+          );
+        } else {
+          return (
+            <Text style={styles.modalDescription}>
+              Your booking has been cancelled. No Show Fee will be charged in your next booking. You may read more about
+              our{' '}
+              <Text
+                onPress={() =>
+                  Linking.openURL(
+                    'https://go.toktok.ph/terms-and-conditions?fbclid=IwAR0eg5yTuP_iszvbiIkq84kXdiy95YtzkxmHFRXZB_8TLN-TQqhJeWIkvGk',
+                  )
+                }
+                style={{
+                  color: CONSTANTS.COLOR.ORANGE,
+                  textDecorationLine: 'underline',
+                  textAlign: 'center',
+                }}>
+                Cancellation Policies
+              </Text>
+              .
+            </Text>
+          );
+        }
+      }
+    } else {
+      return <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>;
+    }
+  };
+
   return (
     <Modal animationType="fade" transparent={true} visible={visible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
@@ -12,19 +86,7 @@ export const SuccesCancelBookingModal = ({visible, setVisible, type, chargeAmoun
           <View style={styles.container}>
             <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
             <Text style={styles.modalTitle}>Booking Cancelled</Text>
-            {chargeAmount == 0 ? (
-              <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>
-            ) : (
-              <Text style={styles.modalDescription}>
-                Your booking has been cancelled. No show fee will be charged in your next booking. You may read more
-                about our{' '}
-                <Text style={{color: CONSTANTS.COLOR.ORANGE, textDecorationLine: 'underline'}}>
-                  Cancellation Policies
-                </Text>
-                .
-              </Text>
-            )}
-
+            {getDescription()}
             <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={goBackAfterCancellation}>
               <Text style={styles.buttonText}>OK</Text>
             </ThrottledOpacity>
@@ -55,7 +117,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 3,
     marginVertical: 20,
   },
@@ -70,7 +132,7 @@ const styles = StyleSheet.create({
   },
   textHighlight: {
     color: CONSTANTS.COLOR.ORANGE,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   buttonContainer: {
     marginTop: 20,
@@ -83,7 +145,7 @@ const styles = StyleSheet.create({
     borderColor: CONSTANTS.COLOR.ORANGE,
   },
   buttonText: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL,
     color: CONSTANTS.COLOR.WHITE,
   },

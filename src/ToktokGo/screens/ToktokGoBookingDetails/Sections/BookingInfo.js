@@ -30,7 +30,12 @@ export const BookingInfo = ({booking}) => {
 
               <View style={{flex: 1}}>
                 <Text style={{fontFamily: FONT.BOLD, fontSize: constants.FONT_SIZE.M}}>Booking Information</Text>
-                <Text style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
+                <Text
+                  style={{
+                    fontFamily: FONT.REGULAR,
+                    color: constants.COLOR.ALMOST_BLACK,
+                    fontSize: constants.FONT_SIZE.M,
+                  }}>
                   {moment(createdAtTime).format('MMM D, YYYY hh:mm A')}
                   {/* {(parseFloat(delivery.price) * parseFloat(delivery.comRate)).toFixed(2)} */}
                 </Text>
@@ -43,18 +48,28 @@ export const BookingInfo = ({booking}) => {
           {/*-------------------- ORDER DATE --------------------*/}
           <View>
             <Text style={{fontFamily: FONT.REGULAR, fontSize: constants.FONT_SIZE.M}}>Distance</Text>
-            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={MapIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
-              <Text style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
+              <Text
+                style={{
+                  fontFamily: FONT.REGULAR,
+                  color: constants.COLOR.ALMOST_BLACK,
+                  fontSize: constants.FONT_SIZE.M,
+                }}>
                 {booking.route.distance.kilometer} km
               </Text>
             </View>
           </View>
-          <View style={{flex: 1, marginLeft: 70}}>
+          <View style={{marginLeft: 60}}>
             <Text style={{fontFamily: FONT.REGULAR, fontSize: constants.FONT_SIZE.M}}>Estimated Time of Drop off</Text>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={ClockIcon} resizeMode="contain" style={{width: 16, height: 16, marginRight: 8}} />
-              <Text style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
+              <Text
+                style={{
+                  fontFamily: FONT.REGULAR,
+                  color: constants.COLOR.ALMOST_BLACK,
+                  fontSize: constants.FONT_SIZE.M,
+                }}>
                 {booking?.estimates?.dropOffTimeFrame}
               </Text>
             </View>
@@ -63,18 +78,23 @@ export const BookingInfo = ({booking}) => {
         <View style={{borderBottomWidth: 1, borderColor: constants.COLOR.LIGHT}} />
         <View style={styles.directionDetail}>
           {/*-------------------- ORDER DATE --------------------*/}
-          <View style={{flex: 1}}>
+          <View>
             <Text style={{fontFamily: FONT.REGULAR, fontSize: constants.FONT_SIZE.M}}>Vehicle type</Text>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={GoVehicle} resizeMode="contain" style={{width: 18, height: 15, marginRight: 8}} />
-              <Text>{booking?.vehicleType?.name}</Text>
+              <Text style={{color: constants.COLOR.ALMOST_BLACK}}>{booking?.vehicleType?.name}</Text>
             </View>
           </View>
-          <View style={{flex: 1}}>
+          <View style={{marginLeft: 63}}>
             <Text style={{fontFamily: FONT.REGULAR, fontSize: constants.FONT_SIZE.M}}>Passenger</Text>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
               <Image source={PassengerIcon} resizeMode="contain" style={{width: 17, height: 15, marginRight: 8}} />
-              <Text style={{fontFamily: FONT.REGULAR, color: constants.COLOR.DARK, fontSize: constants.FONT_SIZE.M}}>
+              <Text
+                style={{
+                  fontFamily: FONT.REGULAR,
+                  color: constants.COLOR.ALMOST_BLACK,
+                  fontSize: constants.FONT_SIZE.M,
+                }}>
                 {booking.passengerCount}
               </Text>
             </View>
@@ -96,6 +116,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     paddingVertical: 16,
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
   },
   directionsBox: {
     flex: 1,

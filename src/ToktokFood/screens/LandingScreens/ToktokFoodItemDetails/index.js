@@ -208,7 +208,7 @@ const MainComponent = () => {
   return (
     <View style={styles.container}>
       <HeaderImageBackground searchBox={false}>
-        <HeaderTitle />
+        <HeaderTitle/>
       </HeaderImageBackground>
       {productDetails === null || Object.entries(productDetails).length === 0 || getLoading || getError ? (
         <LoadingIndicator isLoading={true} isFlex />

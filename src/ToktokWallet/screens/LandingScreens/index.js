@@ -2,8 +2,5 @@ export * from "./ToktokWalletHomePage";
 export * from "./ToktokWalletLinkAccount";
 export * from "./ToktokWalletLoginPage";
 export * from "./ToktokWalletNotifications";
-export * from "./ToktokWalletOTPValidator";
 export * from "./ToktokWalletRestricted";
-export * from "./ToktokWalletReviewAndConfirm";
-export * from "./ToktokWalletTPINValidator";
 export * from "./ToktokWalletTransactions";

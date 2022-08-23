@@ -16,7 +16,7 @@ export const DriverCancelled = ({onDriverCancelled, cancel, cancellationState, t
               <Text style={styles.modalDescription}>Sorry but the driver can't make it to your pick-up location.</Text>
               <View style={styles.divider} />
 
-              <View style={{marginHorizontal: -25}}>
+              <View>
                 <Text style={{color: '#525252', fontSize: CONSTANTS.FONT_SIZE.S}}>Reason</Text>
                 <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, marginTop: 8}}>{cancellationState?.reason}</Text>
               </View>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
   },
   modalTitle: {
-    color: CONSTANTS.COLOR.ORANGE,
+    color: CONSTANTS.COLOR.YELLOW,
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
     fontSize: CONSTANTS.FONT_SIZE.XL + 3,
     marginVertical: 20,

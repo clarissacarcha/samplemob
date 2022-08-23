@@ -1,4 +1,6 @@
 export * from "./Confirm";
+export * from "./PepQuestionnaire";
+export * from "./PepRequestVideoCall";
 export * from "./VerifyAddress";
 export * from "./VerifyContextProvider";
 export * from "./VerifyFullname";

@@ -3,17 +3,25 @@ import {Text, View, TouchableHighlight, Image} from 'react-native';
 import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation} from './Sections';
 import CONSTANTS from '../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION} from '../../graphql';
-import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
+import {
+  GET_PLACE_AUTOCOMPLETE,
+  GET_PLACE_BY_ID,
+  GET_PLACE_BY_LOCATION,
+  GET_CONSUMER_RECENT_DESTINATION,
+} from '../../graphql';
+import {TOKTOK_QUOTATION_GRAPHQL_CLIENT, TOKTOK_GO_GRAPHQL_CLIENT} from 'src/graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
-import {throttle, debounce} from 'lodash';
+import {throttle, debounce, get} from 'lodash';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import {useDebounce} from '../../helpers';
 import {EmptyRecent, ToktokgoBeta} from '../../components';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
+import DestinationBC from '../../../assets/toktokgo/destination4.png';
 import {useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../helper';
 import {ThrottledHighlight} from '../../../components_section';
+import {onErrorAppSync} from '../../util';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const {popTo, selectInput} = route.params;
@@ -26,6 +34,20 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
   const [searchDestination, setSearchDestination] = useState(destination?.place?.formattedAddress);
   const [searchOrigin, setSearchOrigin] = useState(origin?.place?.formattedAddress);
+  const [recentSearchDataList, setrecentSearchDataList] = useState([]);
+  const [recentDestinationList, setrecentDestinationList] = useState([]);
+
+  useEffect(() => {
+    async function tempFunction() {
+      await getSearchList();
+      await getDestinationList();
+      getRecentDestination();
+    }
+
+    tempFunction();
+
+    return () => {};
+  }, []);
 
   const [getPlaceAutocomplete, {loading}] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
@@ -35,6 +57,15 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       setSearchResponse(response.getPlaceAutocomplete);
     },
     onError: error => console.log('getPlaceAutocomplete', error),
+  });
+
+  const [getRecentDestination] = useLazyQuery(GET_CONSUMER_RECENT_DESTINATION, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setrecentDestinationList(response.getConsumerPreviousDestinations);
+    },
+    onError: onErrorAppSync,
   });
 
   const [getPlaceById] = useLazyQuery(GET_PLACE_BY_ID, {
@@ -47,6 +78,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
         dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: response.getPlaceById});
       }
       onPressLocation();
+      addItemToList(response.getPlaceById);
     },
     onError: error => console.log('error', error),
   });
@@ -55,12 +87,31 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
+      console.log(response);
       const payload = response.getPlaceByLocation;
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
       setSearchOrigin(payload?.place?.formattedAddress);
     },
     onError: error => console.log('error', error),
   });
+
+  const onPressRecentSearch = loc => {
+    if (selectedInput == 'D') {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
+    } else {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
+    }
+    onPressLocation();
+  };
+
+  const onPressRecentDestination = loc => {
+    if (selectedInput == 'D') {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
+    } else {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
+    }
+    onPressLocation();
+  };
 
   const debouncedRequest = useDebounce(
     value =>
@@ -127,7 +178,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     }
   };
 
-  const onSelectPlace = value => {
+  const onSelectPlace = async value => {
     if (selectedInput == 'D') {
       setSearchDestination(value.formattedAddress);
     } else {
@@ -142,6 +193,68 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
         },
       },
     });
+  };
+
+  const addItemToList = async response => {
+    console.log(response);
+    try {
+      const data = await AsyncStorage.getItem('recentSearchList');
+      if (data === null) {
+        const searchList = JSON.stringify([response]);
+
+        await AsyncStorage.setItem('recentSearchList', searchList);
+      } else {
+        const recentList = JSON.parse(data);
+        if (recentList.length >= 3) {
+          let obj = recentList.find(o => o.place.formattedAddress === response.place.formattedAddress);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            setrecentSearchDataList([]);
+            const removedItem = recentList.slice(0, 2);
+            removedItem.unshift(response);
+            const searchList = JSON.stringify(removedItem);
+            await AsyncStorage.setItem('recentSearchList', searchList);
+          }
+        } else {
+          let obj = recentList.find(o => o.place.formattedAddress === response.place.formattedAddress);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            recentSearchDataList.push(response);
+            const searchList = JSON.stringify(recentSearchDataList);
+            await AsyncStorage.setItem('recentSearchList', searchList);
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getSearchList = async () => {
+    try {
+      const data = await AsyncStorage.getItem('recentSearchList');
+
+      const output = JSON.parse(data);
+      if (output != null) {
+        setrecentSearchDataList(output);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getDestinationList = async () => {
+    try {
+      const data = await AsyncStorage.getItem('recentDestinationList');
+
+      const output = JSON.parse(data);
+      if (output != null) {
+        setrecentDestinationList(output);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const onChangeSelectedInput = value => {
@@ -170,13 +283,57 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           loading={loading}
         />
         {searchResponse?.length == 0 ? (
-          // <View>
-          //   <FrequentlyUsed navigation={navigation} popTo={popTo} />
-          //   <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
-          //   <SavedLocations />
-          // </View>
-          <ToktokgoBeta />
+          <View>
+            {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? (
+              <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 110}}>
+                <Image source={DestinationBC} resizeMode={'contain'} style={{height: 200, width: 200}} />
+                <Text
+                  style={{
+                    fontSize: CONSTANTS.FONT_SIZE.L,
+                    color: CONSTANTS.COLOR.ORANGE,
+                    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                  }}>
+                  No Recent Destination
+                </Text>
+                <Text
+                  style={{
+                    fontSize: CONSTANTS.FONT_SIZE.M,
+                  }}>
+                  You don’t have recent destination yet.
+                </Text>
+              </View>
+            ) : (
+              <View>
+                {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
+                  <View>
+                    {recentSearchDataList.length == 0 ? null : (
+                      <FrequentlyUsed
+                        navigation={navigation}
+                        popTo={popTo}
+                        recentSearchDataList={recentSearchDataList}
+                        onPressRecentSearch={onPressRecentSearch}
+                      />
+                    )}
+                    {recentDestinationList.length == 0 ? null : (
+                      <View>
+                        {recentSearchDataList.length != 0 && (
+                          <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+                        )}
+                        <SavedLocations
+                          navigation={navigation}
+                          popTo={popTo}
+                          recentDestinationList={recentDestinationList}
+                          onPressRecentDestination={onPressRecentDestination}
+                        />
+                      </View>
+                    )}
+                  </View>
+                )}
+              </View>
+            )}
+          </View>
         ) : (
+          // <ToktokgoBeta />
           <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />
         )}
       </View>
@@ -205,9 +362,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
               width: 0,
               height: 0,
             },
-            shadowRadius: 50,
-            shadowOpacity: 1.0,
-            elevation: 20,
+            shadowRadius: 5,
+            shadowOpacity: 0.3,
+            elevation: 10,
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             {selectedInput == 'D' ? (
@@ -219,7 +376,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
             <Text
               style={{
                 color: selectedInput == 'D' ? CONSTANTS.COLOR.ORANGE : CONSTANTS.COLOR.YELLOW,
-                fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
                 fontSize: CONSTANTS.FONT_SIZE.M,
               }}>
               Select via Map

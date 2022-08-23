@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textStyle: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
     fontSize: CONSTANTS.FONT_SIZE.M,
   },
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     fontSize: CONSTANTS.FONT_SIZE.M,
   },
   cashIntextStyle: {
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.S,
   },
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   warningText: {
     fontSize: CONSTANTS.FONT_SIZE.S,
     marginLeft: 9,
-    color: CONSTANTS.COLOR.RED,
+    color: '#ED3A19',
   },
   noTokWa: {
     textAlign: 'center',

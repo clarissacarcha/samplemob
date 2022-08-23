@@ -23,8 +23,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       if (data?.getPlaceByLocation) {
         dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: data?.getPlaceByLocation});
       }
-      navigation.pop();
-      navigation.pop();
+      navigation.pop(popTo);
       navigation.push('ToktokGoBookingConfirmPickup', {
         popTo: popTo + 1,
       });
@@ -42,6 +41,9 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   const [getPlaceByLocation, {data}] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
+    onCompleted: response => {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: data.getPlaceByLocation});
+    },
     onError: error => console.log('error', error),
   });
 
@@ -88,7 +90,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
               textAlign: 'center',
             }}>
             <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
-            <Text>
+            <Text style={{paddingRight: 30}}>
               {destination?.place?.formattedAddress
                 ? destination.place.formattedAddress
                 : origin.place.formattedAddress}

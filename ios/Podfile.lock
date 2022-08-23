@@ -1,5 +1,7 @@
 PODS:
   - boost (1.76.0)
+  - BVLinearGradient (2.6.2):
+    - React-Core
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.66.1)
@@ -142,11 +144,11 @@ PODS:
     - GoogleMaps
   - Google-Maps-iOS-Utils/QuadTree (2.1.0):
     - GoogleMaps
-  - GoogleAPIClientForREST/Core (1.6.0):
-    - GTMSessionFetcher (>= 1.6.1)
-  - GoogleAPIClientForREST/Vision (1.6.0):
+  - GoogleAPIClientForREST/Core (1.7.0):
+    - GTMSessionFetcher (< 2.0, >= 1.6.1)
+  - GoogleAPIClientForREST/Vision (1.7.0):
     - GoogleAPIClientForREST/Core
-    - GTMSessionFetcher (>= 1.6.1)
+    - GTMSessionFetcher (< 2.0, >= 1.6.1)
   - GoogleAppMeasurement (6.9.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
     - GoogleUtilities/MethodSwizzler (~> 6.7)
@@ -191,11 +193,11 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.7.2):
     - GoogleUtilities/Logger
-  - GTMSessionFetcher (1.7.0):
-    - GTMSessionFetcher/Full (= 1.7.0)
-  - GTMSessionFetcher/Core (1.7.0)
-  - GTMSessionFetcher/Full (1.7.0):
-    - GTMSessionFetcher/Core (= 1.7.0)
+  - GTMSessionFetcher (1.7.2):
+    - GTMSessionFetcher/Full (= 1.7.2)
+  - GTMSessionFetcher/Core (1.7.2)
+  - GTMSessionFetcher/Full (1.7.2):
+    - GTMSessionFetcher/Core (= 1.7.2)
   - jail-monkey (2.6.0):
     - React-Core
   - libevent (2.1.12)
@@ -208,12 +210,25 @@ PODS:
   - libwebp/mux (1.2.1):
     - libwebp/demux
   - libwebp/webp (1.2.1)
+  - lottie-ios (3.2.3)
+  - lottie-react-native (5.1.3):
+    - lottie-ios (~> 3.2.3)
+    - React-Core
   - nanopb (1.30906.0):
     - nanopb/decode (= 1.30906.0)
     - nanopb/encode (= 1.30906.0)
   - nanopb/decode (1.30906.0)
   - nanopb/encode (1.30906.0)
-  - OneSignal (3.8.1)
+  - OneSignal (3.11.2):
+    - OneSignal/OneSignalCore (= 3.11.2)
+    - OneSignal/OneSignalExtension (= 3.11.2)
+    - OneSignal/OneSignalOutcomes (= 3.11.2)
+  - OneSignal/OneSignalCore (3.11.2)
+  - OneSignal/OneSignalExtension (3.11.2):
+    - OneSignal/OneSignalCore
+    - OneSignal/OneSignalOutcomes
+  - OneSignal/OneSignalOutcomes (3.11.2):
+    - OneSignal/OneSignalCore
   - OneSignalXCFramework (3.8.1)
   - OpenSSL-Universal (1.1.180)
   - Permission-Camera (2.2.2):
@@ -227,7 +242,7 @@ PODS:
   - Permission-PhotoLibrary (2.2.2):
     - RNPermissions
   - PromisesObjC (1.2.12)
-  - Protobuf (3.19.1)
+  - Protobuf (3.21.2)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -474,11 +489,15 @@ PODS:
   - react-native-onesignal (4.3.1):
     - OneSignalXCFramework (= 3.8.1)
     - React (< 1.0.0, >= 0.13.0)
+  - react-native-pager-view (5.4.25):
+    - React-Core
   - react-native-safe-area-context (0.7.3):
     - React
   - react-native-simple-toast (1.1.3):
     - React-Core
     - Toast (~> 4.0.0)
+  - react-native-spinkit (1.4.1):
+    - React
   - react-native-view-shot (3.1.2):
     - React
   - react-native-webview (10.10.2):
@@ -573,6 +592,8 @@ PODS:
     - React-Core
   - RNScreens (2.18.1):
     - React-Core
+  - RNShare (7.4.1):
+    - React-Core
   - RNSVG (12.1.1):
     - React
   - RNVectorIcons (6.7.0):
@@ -580,7 +601,7 @@ PODS:
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
   - SDWebImage/Core (5.11.1)
-  - SDWebImageWebPCoder (0.8.4):
+  - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - Toast (4.0.0)
@@ -595,6 +616,7 @@ PODS:
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
+  - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -624,6 +646,7 @@ DEPENDENCIES:
   - Google-Maps-iOS-Utils
   - GoogleMaps
   - jail-monkey (from `../node_modules/jail-monkey`)
+  - lottie-react-native (from `../node_modules/lottie-react-native`)
   - OneSignal (< 4.0, >= 3.0)
   - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera.podspec`)
   - Permission-Contacts (from `../node_modules/react-native-permissions/ios/Contacts.podspec`)
@@ -661,8 +684,10 @@ DEPENDENCIES:
   - react-native-maps (from `../node_modules/react-native-maps`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
+  - react-native-spinkit (from `../node_modules/react-native-spinkit`)
   - react-native-view-shot (from `../node_modules/react-native-view-shot`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -688,6 +713,7 @@ DEPENDENCIES:
   - RNQrGenerator (from `../node_modules/rn-qr-generator`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNShare (from `../node_modules/react-native-share`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - "toolbar-android (from `../node_modules/@react-native-community/toolbar-android`)"
@@ -724,6 +750,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - libevent
     - libwebp
+    - lottie-ios
     - nanopb
     - OneSignal
     - OneSignalXCFramework
@@ -739,6 +766,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
+  BVLinearGradient:
+    :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -749,6 +778,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   jail-monkey:
     :path: "../node_modules/jail-monkey"
+  lottie-react-native:
+    :path: "../node_modules/lottie-react-native"
   Permission-Camera:
     :path: "../node_modules/react-native-permissions/ios/Camera.podspec"
   Permission-Contacts:
@@ -815,10 +846,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-onesignal:
     :path: "../node_modules/react-native-onesignal"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-simple-toast:
     :path: "../node_modules/react-native-simple-toast"
+  react-native-spinkit:
+    :path: "../node_modules/react-native-spinkit"
   react-native-view-shot:
     :path: "../node_modules/react-native-view-shot"
   react-native-webview:
@@ -869,6 +904,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNShare:
+    :path: "../node_modules/react-native-share"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -880,6 +917,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
+  BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   FBLazyVector: 500821d196c3d1bd10e7e828bc93ce075234080f
@@ -904,18 +942,20 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 5337263514dd6f09803962437687240c5dc39aa4
   Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
-  GoogleAPIClientForREST: 5183df28e7bcb7b7b41ebd558e16083cfed60d99
+  GoogleAPIClientForREST: 2d4140915e2ec6d1bcb39c9df4a534c75706c595
   GoogleAppMeasurement: a6a3a066369828db64eda428cb2856dc1cdc7c4e
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
   GoogleMaps: 32ca02de09de357a10ac773f2c70f1986751392d
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
-  GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
+  GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
   jail-monkey: 07b83767601a373db876e939b8dbf3f5eb15f073
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
+  lottie-ios: c058aeafa76daa4cf64d773554bccc8385d0150e
+  lottie-react-native: a501112fa980529ccb80b9f3ee117a7f98c6af3a
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
-  OneSignal: b44755cd425704bdef8d8912030ed26619446773
+  OneSignal: 8861a1407c321ca1ae59d3adca6286eb7caf9d6e
   OneSignalXCFramework: cd6290d43d4f7dd0443d34e7be8b95996417644e
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   Permission-Camera: 5d2aaf95592660b6dcb5e8d1d90ed5d0156cad02
@@ -924,7 +964,7 @@ SPEC CHECKSUMS:
   Permission-Notifications: 9c6b5cc4f0e6599e9fc3395b77cebddc48f1be41
   Permission-PhotoLibrary: 8227a6ed9f6a971537afe63742d54f5f23a38fe2
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
-  Protobuf: 3724efa50cb2846d7ccebc8691c574e85fd74471
+  Protobuf: 818c6a87e44193a77f56b87c6a1c106efda7e062
   RCT-Folly: a21c126816d8025b547704b777a2ba552f3d9fa9
   RCTRequired: 3cc065b52aa18db729268b9bd78a2feffb4d0f91
   RCTTypeSafety: 3c4fc37d5dea452d2ef17324db5504ec2f05083a
@@ -953,8 +993,10 @@ SPEC CHECKSUMS:
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
   react-native-onesignal: d8d59d8df1e47231aec95e6392fea53eb0bcbac1
+  react-native-pager-view: da490aa1f902c9a5aeecf0909cc975ad0e92e53e
   react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
   react-native-simple-toast: bf002828cf816775a6809f7a9ec3907509bce11f
+  react-native-spinkit: da294fd828216ad211fe36a5c14c1e09f09e62db
   react-native-view-shot: 4475fde003fe8a210053d1f98fb9e06c1d834e1c
   react-native-webview: 0aa2cde4ee7e3e1c5fffdf64dbce9c709aa18155
   React-perflogger: fcac6090a80e3d967791b4c7f1b1a017f9d4a398
@@ -980,16 +1022,17 @@ SPEC CHECKSUMS:
   RNQrGenerator: 34beaf1996de4a2f2122c7019dccd1717b22d8d7
   RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
+  RNShare: 2074af48908436c310847c6c47ebb6129db1dc89
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 368d6d8b8301224e5ffb6254191f4f8876c2be0d
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
-  SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
+  SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   toolbar-android: 2a73856e98b750d7e71ce4644d3f41cc98211719
   Yoga: 2b4a01651f42a32f82e6cef3830a3ba48088237f
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: d6655afb1d84ddc9262f9b0bc3ff4bf9b63e8386
+PODFILE CHECKSUM: 7c255c81627b7a827209427e6b17a169beb2eeb4
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.3

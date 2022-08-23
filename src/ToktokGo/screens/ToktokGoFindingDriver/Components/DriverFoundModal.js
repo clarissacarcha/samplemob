@@ -7,7 +7,14 @@ import Star from '../../../../assets/images/star.png';
 
 const ImageWidth = (Dimensions.get('window').width - 190) / 2;
 
-export const DriverFoundModal = ({booking, showDriverFoundModal, setShowDriverFoundModal, navigation, route}) => {
+export const DriverFoundModal = ({
+  driverData,
+  booking,
+  showDriverFoundModal,
+  setShowDriverFoundModal,
+  navigation,
+  route,
+}) => {
   const {popTo, decodedPolyline} = route.params;
 
   const navigateTo = () => {
@@ -18,18 +25,28 @@ export const DriverFoundModal = ({booking, showDriverFoundModal, setShowDriverFo
     });
   };
 
+  const imageRender = () => {
+    if (driverData?.user?.person?.avatarThumbnail) {
+      return {uri: driverData?.user?.person?.avatarThumbnail};
+    } else {
+      return User;
+    }
+  };
+
   return (
     <Modal animationType="fade" transparent={true} visible={showDriverFoundModal} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={{alignItems: 'center'}}>
             <Text style={styles.modalTitle}>Driver Found</Text>
-            <Image source={User} style={styles.profileImage} resizeMode="cover" />
+            <Image source={imageRender()} style={styles.profileImage} resizeMode="cover" />
             <Text style={styles.profileName}>{booking.driver?.name}</Text>
             <View style={styles.iconContainer}>
-              <Text>{booking.driver?.rating}</Text>
+              <Text>{driverData?.overallAverageRating ? driverData.overallAverageRating : 'N/A'}</Text>
               <Image source={Star} style={styles.starStyles} resizeMode="contain" />
-              <Image source={Vaccinated} style={styles.vacineStyle} resizeMode="contain" />
+              {driverData?.user?.person?.covidVaccinationStatus?.description && (
+                <Image source={Vaccinated} style={styles.vacineStyle} resizeMode="contain" />
+              )}
             </View>
             <Text>
               {booking.driver?.vehicle?.make} {booking.driver?.vehicle?.model}{' '}
@@ -62,7 +79,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.XL + 3,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     marginBottom: 24,
   },
   profileImage: {
@@ -73,8 +90,9 @@ const styles = StyleSheet.create({
     borderColor: CONSTANTS.COLOR.ORANGE,
   },
   profileName: {
+    textTransform: 'capitalize',
     marginVertical: 8,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   starStyles: {
     height: 15,
@@ -104,7 +122,7 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: 'center',
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.WHITE,
   },
 });

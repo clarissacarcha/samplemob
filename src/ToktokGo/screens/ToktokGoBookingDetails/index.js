@@ -11,18 +11,20 @@ import {
   BookingMap,
 } from './Sections';
 import {ScrollView, StyleSheet, View, Dimensions} from 'react-native';
-import {HeaderBack, HeaderTitle} from '../../../components';
+import {AlertOverlay, HeaderBack, HeaderTitle} from '../../../components';
 import CONSTANTS from '../../../common/res/constants';
 import {connect, useSelector} from 'react-redux';
+import {GET_TRIP} from '../../graphql';
+import {useLazyQuery} from '@apollo/react-hooks';
+import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
+import {onErrorAppSync} from '../../util';
 
 const SelectedBookingDetails = ({navigation, session, createSession, route}) => {
-  const {delivery, booking} = route.params;
+  const {delivery, bookingId, driverData} = route.params;
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Booking Details', '']} />,
   });
-
-  // const {booking} = useSelector(state => state.toktokGo);
 
   const dropDownRef = useRef(null);
 
@@ -32,6 +34,16 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
   const [showReason, setShowReason] = useState(false);
   const [showSuccessfull, setShowSuccessfull] = useState(false);
   const [confirmed, setConfirmed] = useState('');
+  const [booking, setBooking] = useState(route.params.booking);
+
+  const [getTrip, {loading, error}] = useLazyQuery(GET_TRIP, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: onErrorAppSync,
+    onCompleted: response => {
+      setBooking(response.getTrip);
+    },
+  });
 
   const showBookingReason = () => {
     setShowReason(!showReason);
@@ -51,6 +63,15 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
         dummyStatus: oldStatus + 1,
       };
       createSession(updateStatus);
+    }
+    if (!booking) {
+      getTrip({
+        variables: {
+          input: {
+            id: bookingId,
+          },
+        },
+      });
     }
   }, []);
 
@@ -79,13 +100,18 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
     // });
   };
 
+  if (loading || !booking) {
+    console.log('loading', loading, 'booking', booking);
+    return <AlertOverlay visible={loading} />;
+  }
+
   return (
     <View style={{flex: 1}}>
       <ScrollView style={styles.container}>
         <BookingID booking={booking} />
         {booking.tag == 'ONGOING' && booking.driver && (
           <>
-            <BookingDriverDetails booking={booking} />
+            <BookingDriverDetails booking={booking} driverData={driverData} />
             <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
           </>
         )}

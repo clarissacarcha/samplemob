@@ -12,70 +12,36 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {useFocusEffect} from '@react-navigation/native';
-import {Separator, LeavePromptModal, FlagSecureScreen} from 'toktokwallet/components';
+import {Separator, QuestionModal, FlagSecureScreen, HeaderTitleRevamp} from 'toktokwallet/components';
 import RNFS from 'react-native-fs';
 import CONSTANTS from 'common/res/constants';
-
-//SELF IMPORTS
-import {
-  Confirm,
-  VerifyAddress,
-  VerifyContextProvider,
-  VerifyContext,
-  VerifyFullname,
-  VerifyID,
-  VerifySelfie,
-  VerifySelfieWithID,
-  VerifySourceOfIncome,
-} from './Components';
+import {VerifyContextProvider, VerifyContext} from './Components';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 const HeaderBackClose = ({currentIndex, setCurrentIndex, setPromptVisible}) => {
   const closeScreen = () => {
-    if (currentIndex == 0) {
-      PromptQuestionCloseMessage();
-    } else {
-      setCurrentIndex(oldstate => oldstate - 1);
-    }
-  };
-
-  const PromptQuestionCloseMessage = () => {
     setPromptVisible(true);
   };
 
-  useFocusEffect(
-    () => {
-      const backAction = () => {
-        closeScreen();
-        return true;
-      };
-
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-
-      return () => backHandler.remove();
-    },
-  );
+  useFocusEffect(() => {
+    const backAction = () => {
+      closeScreen();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  });
 
   return (
     <TouchableHighlight onPress={closeScreen} underlayColor={'white'} style={styles.button}>
-      <View style={styles.iconBox}>
-        <FIcon5 name={'chevron-left'} size={13} color={COLOR.YELLOW} />
-      </View>
+      <FIcon5 name={'chevron-left'} size={15} color={COLOR.ORANGE} />
     </TouchableHighlight>
   );
 };
 
-const HeaderTitle = ({label}) => {
-  return (
-    <View style={{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-      <Text style={{fontFamily: FONT.BOLD, fontSize: 16}}>{label}</Text>
-    </View>
-  );
-};
-
 const MainSetupComponent = () => {
-  const {currentIndex, setCurrentIndex} = useContext(VerifyContext);
+  const {currentIndex, setCurrentIndex, stepsScreens} = useContext(VerifyContext);
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
 
@@ -87,71 +53,38 @@ const MainSetupComponent = () => {
         setCurrentIndex={setCurrentIndex}
       />
     ),
-    headerTitle: () => <HeaderTitle label={'Verification'} />,
-    headerRight: () => (
-      <TouchableHighlight style={{paddingRight: 16}} underlayColor={'white'} onPress={cancelSetup}>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, color: '#929191'}}>Cancel</Text>
-        </View>
-      </TouchableHighlight>
-    ),
+    headerTitle: () => <HeaderTitleRevamp label={'Create Account'} />,
   });
-
-  const [screenSlides, setScreenSlides] = useState([
-    'Fullname',
-    'Address',
-    'IDPic',
-    'SelfiePic',
-    'SelfiePicWithID',
-    'Confirm',
-  ]);
-
-  const cancelSetup = () => {
-    console.log('Cancelling');
-    setVisible(true);
-  };
-
-  const DisplayComponents = () => {
-    switch (currentIndex) {
-      case 0:
-        return <VerifyFullname />;
-      case 1:
-        return <VerifyAddress />;
-      case 2:
-        return <VerifyID />;
-      case 3:
-        return <VerifySelfie />;
-      case 4:
-        return <VerifySelfieWithID />;
-      default:
-        return <Confirm />;
-    }
-  };
 
   return (
     <>
-      <LeavePromptModal
+      <QuestionModal
         visible={visible}
         setVisible={setVisible}
-        onConfirm={() => {
+        onPressYes={() => {
           if (RNFS.CachesDirectoryPath) RNFS.unlink(RNFS.CachesDirectoryPath);
           navigation.goBack();
         }}
+        title="Unsaved Changes"
+        message="You are about to close form with unsaved changes. Would you like to proceed?"
       />
-      <Separator />
+      {/* visible={visible}
+        setVisible={setVisible}
+        onPressNo={() => navigation.navigate('ToktokBillsHome')}
+        onPressYes={onPressFavorite} */}
+      {/* <Separator /> */}
       <View style={styles.container}>
         <View style={styles.progressBar}>
-          {screenSlides.map((item, index) => {
-            if (index < screenSlides.length - 1)
+          {stepsScreens.map((item, index) => {
+            if (index < stepsScreens.length)
               return (
                 <View
-                  style={[styles.progressBarItem, {backgroundColor: index < currentIndex ? '#F6841F' : 'transparent'}]}
+                  style={[styles.progressBarItem, {backgroundColor: index <= currentIndex ? '#F6841F' : 'transparent'}]}
                 />
               );
           })}
         </View>
-
-        {DisplayComponents()}
+        {stepsScreens[currentIndex]}
       </View>
     </>
   );
@@ -173,26 +106,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   progressBar: {
-    height: 2,
+    height: 10,
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: '#F7F7FA',
+    backgroundColor: '#FFF1D2',
   },
   progressBarItem: {
     flex: 1,
   },
   button: {
     borderRadius: 10,
-    marginLeft: 10,
+    marginHorizontal: 16,
     overflow: 'hidden',
-
-    height: 30,
-    width: 30,
-  },
-  iconBox: {
-    height: 30,
-    width: 30,
     justifyContent: 'center',
-    alignItems: 'center',
   },
 });

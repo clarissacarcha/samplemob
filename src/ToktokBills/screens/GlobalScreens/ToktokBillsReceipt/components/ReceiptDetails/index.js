@@ -1,104 +1,126 @@
-import React, {useContext, useEffect, useState} from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
-import { LoadingIndicator } from 'toktokbills/components';
+import React, {useContext, useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
+import {LoadingIndicator} from 'toktokbills/components';
 
 //UTIL
-import { moderateScale, numberFormat, currencyCode } from "toktokbills/helper";
+import {moderateScale, numberFormat, currencyCode} from 'toktokbills/helper';
+
+//COMPONENTS
+import {ReceiptSeparator} from '../../../../../components/Ui';
 
 //FONTS & COLORS & IMAGES
-import { COLOR, FONT, FONT_SIZE } from "src/res/variables";
-import moment from "moment";
+import {onboarding_toktokbills} from 'toktokbills/assets';
+import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
+import moment from 'moment';
+import DashedLine from 'react-native-dashed-line';
 
-export const ReceiptDetails = ({ route }) => {
-
-  const { receipt, paymentData } = route.params;
+export const ReceiptDetails = ({route}) => {
+  const {receipt, paymentData} = route.params;
   const {
     senderMobileNumber,
     destinationNumber,
     destinationIdentifier,
     amount,
-    email,
     billerDetails,
     convenienceFee,
     referenceNumber,
-    createdAt
+    createdAt,
+    toktokServiceCommission,
+    providerServiceFee,
+    systemServiceFee,
   } = receipt;
-  const { firstFieldName, secondFieldName } = paymentData.billItemSettings;
+  const {email, billItemSettings} = paymentData;
+  const {firstFieldName, secondFieldName} = billItemSettings;
   const totalAmount = parseInt(amount) + convenienceFee;
-  const [logo, setLogo] = useState({ height: 0, width: 0 });
+  const [logo, setLogo] = useState({height: 0, width: 0});
   const [imageLoading, setImageLoading] = useState(true);
+  const [footerHeight, setFooterHeight] = useState(80);
 
   useEffect(() => {
     Image.getSize(billerDetails.logo, (width, height) => {
       let size = height > width ? height - width : width - height;
-      if(size > 10){
-        if(width > moderateScale(80) || height > moderateScale(40)){
-          setLogo({ width: 80, height: 50 });
+      if (size > 10) {
+        if (width > moderateScale(80) || height > moderateScale(40)) {
+          setLogo({width: 80, height: 50});
         } else {
-          setLogo({ width, height });
+          setLogo({width, height});
         }
       } else {
-        setLogo({ width: 50, height: 50 });
+        setLogo({width: 50, height: 50});
       }
-    })
-  }, [])
+    });
+  }, []);
 
   return (
     <>
       <View style={styles.line} />
-      <View style={{ paddingHorizontal: moderateScale(30), marginTop: moderateScale(15) }}>
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Service Reference Number: </Text>
-          <Text style={styles.description}>{referenceNumber}</Text>
+      <View>
+        <View style={[styles.bodyContainer, styles.marginBottom15]}>
+          <Text style={styles.title}>Service Reference Number </Text>
+          <Text style={[styles.description, {color: COLOR.ORANGE, fontFamily: FONT.BOLD}]}>{referenceNumber}</Text>
         </View>
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Transaction Date and Time: </Text>
+        <View style={[styles.bodyContainer, styles.marginBottom15]}>
+          <Text style={styles.title}>Transaction Date and Time </Text>
           <Text style={styles.description}>{moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}</Text>
         </View>
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>{firstFieldName}: </Text>
+        <View style={[styles.bodyContainer, styles.marginBottom15]}>
+          <Text style={styles.title}>{firstFieldName}</Text>
           <Text style={styles.description}>{destinationNumber}</Text>
         </View>
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>{secondFieldName}: </Text>
+        <View style={[styles.bodyContainer, styles.marginBottom15]}>
+          <Text style={styles.title}>{secondFieldName} </Text>
           <Text style={styles.description}>{destinationIdentifier}</Text>
         </View>
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>toktokwallet Account Number: </Text>
-          <Text style={styles.description}>+{senderMobileNumber}</Text>
+        <View style={[styles.bodyContainer, styles.marginBottom15]}>
+          <Text style={styles.title}>Toktokwallet Account Number </Text>
+          <Text style={styles.description}>{senderMobileNumber}</Text>
         </View>
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Biller: </Text>
-          <View style={{ justifyContent: "flex-end" }}>
-            { imageLoading && (
-              <View style={{ position: "absolute", right: 0, bottom: 0, top: 0 }}>
-                <LoadingIndicator isLoading={true} size="small" />
-              </View>
-            )}
-            <Image
-              source={{ uri: billerDetails.logo }}
-              style={{ width: moderateScale(logo.width), height: moderateScale(logo.height), resizeMode: "contain" }}
-              onLoadStart={() => setImageLoading(true)}
-              onLoadEnd={() => setImageLoading(false)}
-            />
-          </View>
-        </View>
-      </View>
-      <View style={styles.line} />
-      <View style={{ paddingHorizontal: moderateScale(30), marginTop: moderateScale(15) }}>
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Payment amount: </Text>
-          <Text style={styles.description}>{currencyCode} {numberFormat(amount)}</Text>
-        </View>
-        { convenienceFee > 0 && (
-          <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-            <Text style={styles.title}>Convenience Fee: </Text>
-            <Text style={styles.description}>{currencyCode} {numberFormat(convenienceFee)}</Text>
+        {!!email && (
+          <View style={[styles.bodyContainer, styles.marginBottom15]}>
+            <Text style={styles.title}>Email Address </Text>
+            <Text style={styles.description}>{email}</Text>
           </View>
         )}
-        <View style={[ styles.bodyContainer, styles.marginBottom15 ]}>
-          <Text style={styles.title}>Total Amount: </Text>
-          <Text style={styles.description}>{currencyCode} {numberFormat(totalAmount)}</Text>
+        <View style={[styles.bodyContainer, styles.marginBottom15]}>
+          <Text style={styles.title}>Payment Amount </Text>
+          <Text style={styles.description}>
+            {currencyCode}
+            {numberFormat(amount)}
+          </Text>
+        </View>
+        <View style={[styles.bodyContainer, styles.marginBottom15]}>
+          <Text style={styles.title}>Convenience Fee </Text>
+          <Text style={styles.description}>
+            {currencyCode}
+            {numberFormat(providerServiceFee)}
+          </Text>
+        </View>
+        <View style={[styles.bodyContainer, styles.marginBottom15]}>
+          <Text style={styles.title}>Toktok Service Fee </Text>
+          <Text style={styles.description}>
+            {currencyCode}
+            {numberFormat(systemServiceFee)}
+          </Text>
+        </View>
+        <View style={[styles.bodyContainer, styles.marginBottom15]}>
+          <Text style={styles.title}>Total</Text>
+          <Text style={styles.description}>
+            {currencyCode}
+            {numberFormat(totalAmount)}
+          </Text>
+        </View>
+        <ReceiptSeparator bottomHeight={footerHeight} />
+        <View style={styles.brokenLine}>
+          <DashedLine dashColor={COLOR.ORANGE} dashThickness={1} />
+        </View>
+        <View
+          style={{alignItems: 'center'}}
+          onLayout={event => {
+            let {x, y, width, height} = event.nativeEvent.layout;
+            setFooterHeight(height);
+          }}>
+          <Text style={[styles.receiptNote]}>A copy of this receipt will be delivered on the email provided.</Text>
+          <Image source={onboarding_toktokbills} style={styles.logo} />
         </View>
       </View>
     </>
@@ -107,33 +129,52 @@ export const ReceiptDetails = ({ route }) => {
 
 const styles = StyleSheet.create({
   title: {
-    color: "#F6841F",
-    fontFamily: FONT.BOLD,
+    color: COLOR.BLACK,
+    fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
-    width: "50%"
+    width: '50%',
+    paddingRight: moderateScale(10),
+  },
+  receiptNote: {
+    marginHorizontal: moderateScale(16),
+    color: '#525252',
+    textAlign: 'center',
+    fontSize: FONT_SIZE.S,
+  },
+
+  logo: {
+    marginTop: moderateScale(16),
+    alignSelf: 'center',
+    width: moderateScale(102),
+    height: moderateScale(23),
   },
   description: {
-    color: "black",
+    color: COLOR.BLACK,
     fontSize: FONT_SIZE.M,
+    textAlign: 'right',
     flexShrink: 1,
-    textAlign: "right"
   },
   bodyContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   marginBottom15: {
-    marginBottom: moderateScale(15)
+    marginBottom: moderateScale(15),
   },
   line: {
-    height: 1,
-    backgroundColor: "#F6841F",
-    marginVertical: moderateScale(20)
+    height: 8,
+    marginHorizontal: -16,
+    backgroundColor: COLOR.LIGHT,
+    marginVertical: moderateScale(16),
+  },
+  brokenLine: {
+    marginVertical: moderateScale(20),
+    marginHorizontal: moderateScale(16),
   },
   logo: {
-    width: moderateScale(80),
-    height: moderateScale(50),
-    resizeMode: "contain"
-  }
-})
+    width: moderateScale(110),
+    height: moderateScale(80),
+    resizeMode: 'contain',
+  },
+});

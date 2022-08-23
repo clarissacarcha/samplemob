@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, TouchableHighlight, Text, Image, Alert} from 'react-native';
+import {View, TouchableHighlight, Text, Image, Alert, ScrollView, SafeAreaView} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {connect, useDispatch} from 'react-redux';
 import {Landing, Header, OutstandingFee} from './Sections';
@@ -9,6 +9,7 @@ import {
   GET_TRIPS_CONSUMER,
   TRIP_CHARGE_FINALIZE_PAYMENT,
   TRIP_CHARGE_INITIALIZE_PAYMENT,
+  GET_CONSUMER_RECENT_DESTINATION,
 } from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT, TOKTOK_QUOTATION_GRAPHQL_CLIENT} from '../../../graphql';
@@ -16,18 +17,53 @@ import {ToktokgoBeta, EmptyRecent} from '../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {currentLocation} from '../../../helper';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
-import {ThrottledHighlight} from '../../../components_section';
+import DestinationBC from '../../../assets/toktokgo/destination4.png';
+import {ThrottledHighlight, ThrottledOpacity} from '../../../components_section';
 import {useMutation} from '@apollo/client';
 import {onErrorAppSync} from '../../util';
-import {PaymentSuccesfullModal} from './Components';
-const ToktokGoBookingStart = ({navigation, constants, session}) => {
+import {useAccount} from 'toktokwallet/hooks';
+import {CancellationPaymentSuccesfullModal, NoShowPaymentSuccesfullModal} from './Components';
+import {SavedLocations} from './Sections/SavedLocations';
+import {RecentDestinations} from './Sections/RecentDestinations';
+import AsyncStorage from '@react-native-community/async-storage';
+import {FlatList} from 'react-native-gesture-handler';
+
+const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
+  // const {popTo, selectInput} = route.params;
+  const [selectedInput, setSelectedInput] = useState('D');
+  const {tokwaAccount, getMyAccount} = useAccount();
   const [tripConsumerPending, setTripConsumerPending] = useState([]);
-  const [showPaymentSuccesful, setShowPaymentSuccessful] = useState(false);
+  const [showCancellationPaymentSuccesfulModal, setCancellationShowPaymentSuccessfulModal] = useState(false);
+  const [showNoShowPaymentSuccessfulModal, setShowNoShowPaymentSuccessfulModal] = useState(false);
   const dispatch = useDispatch();
+  const [recentSearchDataList, setrecentSearchDataList] = useState([]);
+  const [recentDestinationList, setrecentDestinationList] = useState([]);
+
+  useEffect(() => {
+    const subscribe = navigation.addListener('focus', async () => {
+      await getSearchList();
+      getRecentDestination();
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      return subscribe;
+    });
+    const unsubscribe = navigation.addListener('blur', async () => {
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      return unsubscribe;
+    });
+  }, [navigation]);
 
   const setBookingInitialState = payload => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
   };
+
+  const [getRecentDestination] = useLazyQuery(GET_CONSUMER_RECENT_DESTINATION, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setrecentDestinationList(response.getConsumerPreviousDestinations);
+    },
+    onError: onErrorAppSync,
+  });
 
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
@@ -50,7 +86,11 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
       navigation.pop();
-      setShowPaymentSuccessful(true);
+      if (tripConsumerPending[0].cancellation.initiatedBy == 'CONSUMER') {
+        setCancellationShowPaymentSuccessfulModal(true);
+      } else {
+        setShowNoShowPaymentSuccessfulModal(true);
+      }
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -112,14 +152,24 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
     onError: onErrorAppSync,
   });
 
+  useEffect(() => {
+    if (session.user.toktokWalletAccountId) {
+      getMyAccount();
+    }
+  }, []);
+
   const tripChargeInitializePaymentFunction = () => {
-    tripChargeInitializePayment({
-      variables: {
-        input: {
-          tripId: tripConsumerPending[0].id,
+    if (tokwaAccount.wallet.id) {
+      tripChargeInitializePayment({
+        variables: {
+          input: {
+            tripId: tripConsumerPending[0].id,
+          },
         },
-      },
-    });
+      });
+    } else {
+      navigation.push('ToktokWalletLoginPage');
+    }
   };
 
   const setPlaceFunction = async () => {
@@ -149,36 +199,119 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
       });
     }, [navigation]),
   );
+
+  const onPressRecentSearch = loc => {
+    if (selectedInput == 'D') {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
+    } else {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
+    }
+    onPressLocation();
+  };
+
+  const onPressRecentDestination = loc => {
+    if (selectedInput == 'D') {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
+    } else {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
+    }
+    onPressLocation();
+  };
+
+  const onPressLocation = () => {
+    if (selectedInput == 'D') {
+      navigation.push('ToktokGoBookingConfirmDestination', {
+        popTo: 1,
+      });
+    } else {
+      navigation.pop();
+      navigation.push('ToktokGoBookingConfirmPickup', {
+        popTo: 1,
+        source: 'searchLocation',
+      });
+    }
+  };
+
+  const getSearchList = async () => {
+    try {
+      const data = await AsyncStorage.getItem('recentSearchList');
+
+      const output = JSON.parse(data);
+      if (output != null) {
+        setrecentSearchDataList(output);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
-    <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
-      <View>
-        <PaymentSuccesfullModal
-          showPaymentSuccesful={showPaymentSuccesful}
-          setShowPaymentSuccessful={setShowPaymentSuccessful}
-          tripConsumerPending={tripConsumerPending}
-        />
-        <Header navigation={navigation} constants={constants} />
-        <Landing navigation={navigation} />
-        {/* <RecentDestinations navigation={navigation} />
-        <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
-        <SavedLocations /> */}
-        {tripConsumerPending.length > 0 && (
-          <OutstandingFee
-            navigation={navigation}
-            tripChargeInitializePaymentFunction={tripChargeInitializePaymentFunction}
-            tripConsumerPending={tripConsumerPending}
+    <SafeAreaView style={{flex: 1}}>
+      <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
+        <View style={{flex: 1}}>
+          <NoShowPaymentSuccesfullModal
+            isVissible={showNoShowPaymentSuccessfulModal}
+            setVissible={setShowNoShowPaymentSuccessfulModal}
           />
-        )}
-        {<ToktokgoBeta />}
-      </View>
-      <ThrottledHighlight
-        delay={500}
-        onPress={() => {
-          navigation.push('ToktokGoBookingConfirmDestination', {
-            popTo: 1,
-          });
-        }}>
-        <View
+          <CancellationPaymentSuccesfullModal
+            isVissible={showCancellationPaymentSuccesfulModal}
+            setVissible={setCancellationShowPaymentSuccessfulModal}
+          />
+          <Header navigation={navigation} constants={constants} />
+          <Landing navigation={navigation} />
+          <FlatList
+            ListHeaderComponent={
+              <ScrollView
+                contentContainerStyle={{flexGrow: 1}}
+                scrollEnabled={
+                  tripConsumerPending.length > 0 ||
+                  recentSearchDataList.length != 0 ||
+                  recentDestinationList.length != 0
+                }>
+                {tripConsumerPending.length > 0 && (
+                  <OutstandingFee
+                    navigation={navigation}
+                    tripChargeInitializePaymentFunction={tripChargeInitializePaymentFunction}
+                    tripConsumerPending={tripConsumerPending}
+                  />
+                )}
+                {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? (
+                  <ToktokgoBeta />
+                ) : (
+                  <View>
+                    {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
+                      <View>
+                        {recentSearchDataList.length == 0 ? null : (
+                          <SavedLocations
+                            navigation={navigation}
+                            // popTo={popTo}
+                            recentSearchDataList={recentSearchDataList}
+                            onPressRecentSearch={onPressRecentSearch}
+                          />
+                        )}
+                        {recentDestinationList.length == 0 ? null : (
+                          <View>
+                            {recentSearchDataList.length != 0 && (
+                              <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+                            )}
+                            <RecentDestinations
+                              navigation={navigation}
+                              recentDestinationList={recentDestinationList}
+                              onPressRecentDestination={onPressRecentDestination}
+                            />
+                          </View>
+                        )}
+                      </View>
+                    )}
+                    {recentSearchDataList.length == 3 && recentDestinationList.length == 3 ? null : <ToktokgoBeta />}
+                  </View>
+                )}
+              </ScrollView>
+            }
+          />
+        </View>
+        <ThrottledOpacity
+          delay={500}
           style={{
             paddingHorizontal: CONSTANTS.SIZE.MARGIN,
             backgroundColor: 'white',
@@ -192,9 +325,14 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
               width: 0,
               height: 0,
             },
-            shadowRadius: 50,
-            shadowOpacity: 1.0,
-            elevation: 20,
+            shadowRadius: 5,
+            shadowOpacity: 0.3,
+            elevation: 10,
+          }}
+          onPress={() => {
+            navigation.push('ToktokGoBookingConfirmDestination', {
+              popTo: 1,
+            });
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             {/* <FA5Icon name="map-marker-alt" size={15} color={CONSTANTS.COLOR.ORANGE} style={{marginRight: 10}} /> */}
@@ -203,15 +341,15 @@ const ToktokGoBookingStart = ({navigation, constants, session}) => {
             <Text
               style={{
                 color: CONSTANTS.COLOR.ORANGE,
-                fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
                 fontSize: CONSTANTS.FONT_SIZE.M,
               }}>
               Select via Map
             </Text>
           </View>
-        </View>
-      </ThrottledHighlight>
-    </View>
+        </ThrottledOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 

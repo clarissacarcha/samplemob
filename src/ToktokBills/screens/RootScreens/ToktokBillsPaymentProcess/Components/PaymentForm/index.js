@@ -1,8 +1,8 @@
-import React, { useContext, useRef } from 'react'
-import { View, Text, Dimensions, StyleSheet, TextInput } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import { useThrottle } from 'src/hooks'
-import validator from 'validator'
+import React, {useContext, useRef} from 'react';
+import {View, Text, Dimensions, StyleSheet, TextInput} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useThrottle} from 'src/hooks';
+import validator from 'validator';
 
 //HELPER
 import {
@@ -13,43 +13,37 @@ import {
   alphanumericRegex,
   maxLengthRegex,
   minLengthRegex,
-  currencyCode
-} from 'toktokbills/helper'
+  currencyCode,
+} from 'toktokbills/helper';
 
 //COMPONENTS
-import { VerifyContext } from "../VerifyContextProvider";
+import {VerifyContext} from '../VerifyContextProvider';
 
 // COLORS AND FONTS
 import CONSTANTS from 'common/res/constants';
+import {InputAmount} from 'toktokbills/components';
 
-const {COLOR , FONT_FAMILY: FONT , FONT_SIZE , SHADOW, SIZE} = CONSTANTS
-const {width,height} = Dimensions.get("window")
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
+const {width, height} = Dimensions.get('window');
 
-const processErrorMessage = (fieldValue, fieldName, fieldWidth, fieldType, minWidth) => {
-  // 0 = min | 1 = exact | 2 = max 
-  if(fieldValue.length < minWidth){ 
-    return `${fieldName} must be minimum of ${minWidth} characters.`;
+const getConvenienceFeeText = ({convenienceFee, toktokSeviceFee}) => {
+  if (convenienceFee > 0 && toktokSeviceFee > 0) {
+    return `Additional ${currencyCode}${convenienceFee} convenience fee and ${currencyCode}${toktokSeviceFee} toktok service fee will be charge in this transaction.`;
+  } else if (convenienceFee > 0) {
+    return `Additional ${currencyCode}${convenienceFee} convenience fee will be charge in this transaction.`;
+  } else if (toktokSeviceFee > 0) {
+    return `Additional ${currencyCode}${toktokSeviceFee} toktok service fee will be charge in this transaction.`;
+  } else {
+    return 'Convenience Fee is waived for this transaction.';
   }
-  switch(fieldType){
-    case 0:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be minimum of ${fieldWidth} characters.` : "";
-    case 1:
-      return fieldValue.length < fieldWidth ? `${fieldName} must be ${fieldWidth} characters in length.` : "";
-    case 2:
-      return fieldValue.length > fieldWidth ? `${fieldName} length must be ${fieldWidth} characters or less.` : "";
-  
-    default:
-      return "";
-  }
-}
+};
 
 const processFieldValue = (fieldValue, fieldWidth, fieldType) => {
-  // 0 = min | 1 = exact | 2 = max 
+  // 0 = min | 1 = exact | 2 = max
   return fieldType != 0 ? maxLengthRegex(fieldValue, fieldWidth) : fieldValue;
-}
+};
 
-export const PaymentForm = ({ billItemSettings })=> {
-
+export const PaymentForm = ({billItemSettings}) => {
   const {
     firstFieldName,
     firstFieldFormat,
@@ -61,14 +55,14 @@ export const PaymentForm = ({ billItemSettings })=> {
     secondFieldWidth,
     secondFieldWidthType,
     secondFieldMinWidth,
-    commissionRateDetails
+    commissionRateDetails,
   } = billItemSettings;
-  
+
   //CONVENIENCE FEE
-  const convenienceFee = parseFloat(commissionRateDetails?.providerServiceFee) + parseFloat(commissionRateDetails?.systemServiceFee); 
-  const convenienceFeeText = convenienceFee > 0 ? (
-    `Additional ${currencyCode} ${numberFormat(convenienceFee)} convenience fee will be charged in this transaction`
-  ) : ("Convenience fee is waived for this transaction");
+  const convenienceFee = `${numberFormat(parseFloat(commissionRateDetails?.providerServiceFee))}`;
+  const toktokSeviceFee = `${numberFormat(parseFloat(commissionRateDetails?.systemServiceFee))}`;
+
+  const convenienceFeeText = getConvenienceFeeText({convenienceFee, toktokSeviceFee});
 
   const navigation = useNavigation();
   const {
@@ -87,124 +81,92 @@ export const PaymentForm = ({ billItemSettings })=> {
     emailError,
     setEmailError,
     amountError,
-    setAmountError
+    setAmountError,
+    setIsInsufficientBalance,
   } = useContext(VerifyContext);
-  const accountNameRef = useRef(null);
-  const amountRef = useRef(null);
-  const emailRef = useRef(null);
-  
-  const changeFirstField = (value)=> {
+
+  const changeFirstField = value => {
+    setFirstFieldError('');
     const fieldFormatValue = firstFieldFormat === 1 ? numericRegex(value) : alphanumericRegex(value);
-    const fieldValue = processFieldValue(fieldFormatValue, firstFieldWidth, firstFieldWidthType) 
+    const fieldValue = processFieldValue(fieldFormatValue, firstFieldWidth, firstFieldWidthType);
     setFirstField(fieldValue);
-    
-    //error
-    const errorMessage = processErrorMessage(fieldValue, firstFieldName, firstFieldWidth, firstFieldWidthType, firstFieldMinWidth);
-    fieldValue ? setFirstFieldError(errorMessage) : setFirstFieldError(`${firstFieldName} is required.`)
-  }
+  };
 
-  const changeSecondField = (value) => {
+  const changeSecondField = value => {
+    setSecondFieldError('');
     const fieldFormatValue = secondFieldFormat === 1 ? numericRegex(value) : alphanumericRegex(value);
-    const fieldValue = processFieldValue(fieldFormatValue, secondFieldWidth, secondFieldWidthType) 
+    const fieldValue = processFieldValue(fieldFormatValue, secondFieldWidth, secondFieldWidthType);
     setSecondField(fieldValue);
+  };
 
-    //error
-    const errorMessage = processErrorMessage(fieldValue, secondFieldName, secondFieldWidth, secondFieldWidthType, secondFieldMinWidth);
-    fieldValue ? setSecondFieldError(errorMessage) : setSecondFieldError(`${secondFieldName} is required.`)
-  }
+  const changeEmail = value => {
+    setEmailError('');
+    setEmail(value);
+  };
 
-  const changeEmail = (value) => {
-    if(value != "" && !validator.isEmail(value, {ignore_whitespace: true})){
-      setEmailError("Email format is invalid.")
-    } else {
-      setEmailError("")
-    }
-    setEmail(value)
-  }
-
-  const changeAmount = (value) => {
-    let pattern = /^\d+(\.\d{2})?$/;
-    let num = value.replace(/[^0-9.]/g, '')
-
-    if(num[0] == "0") return 
-    if(num[0] == ".") return
-
-    num ? setAmountError(!pattern.test(num) ? "Payment Amount format is invalid." : "")
-      : setAmountError(`Payment Amount is required.`)
-      
-    setAmount(num)
-  }
+  const changeAmount = value => {
+    setIsInsufficientBalance(false);
+    setAmountError('');
+    const num = value.replace(/[^0-9.]/g, '');
+    const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
+    if (!checkFormat) return;
+    let decimalValueArray = num.split('.');
+    if (decimalValueArray[0].length > 6) return;
+    if (num[0] == '.') return setAmount('0.');
+    setAmount(num);
+  };
 
   return (
     <View style={styles.searchField}>
-      <View style={[{ marginBottom: moderateScale(20) }]}>
+      <View style={[{marginBottom: moderateScale(20)}]}>
         <Text style={styles.label}>{firstFieldName}</Text>
-        <TextInput 
-          style={styles.input}
-          placeholder={`Enter ${firstFieldName.toLowerCase()}`}
+        <TextInput
+          style={[styles.input, !!firstFieldError && styles.errorBorder]}
+          // placeholder={`Enter ${firstFieldName.toLowerCase()}`}
           onChangeText={changeFirstField}
           value={firstField}
-          keyboardType={firstFieldFormat == 1 ? "numeric" : "default"}
+          keyboardType={firstFieldFormat == 1 ? 'numeric' : 'default'}
           maxLength={firstFieldWidthType == 1 || firstFieldWidthType == 2 ? firstFieldWidth : null}
-          returnKeyType="next"
-          onSubmitEditing={() => { accountNameRef.current.focus(); }}
-          blurOnSubmit={false}
-        />
-        { !!firstFieldError && <Text style={styles.error}>{firstFieldError}</Text>}
-      </View>
-      <View style={[{ marginBottom: moderateScale(20) }]}>
-        <Text style={styles.label}>{secondFieldName}</Text>
-        <TextInput 
-          style={styles.input}
-          placeholder={`Enter ${secondFieldName.toLowerCase()}`}
-          onChangeText={changeSecondField}
-          value={secondField}
-          keyboardType={secondFieldFormat == 1 ? "numeric" : "default"}
-          maxLength={secondFieldWidthType == 1 || secondFieldWidthType == 2 ? secondFieldWidth : null}
-          returnKeyType="next"
-          ref={(input) => { accountNameRef.current = input; }}
-          onSubmitEditing={() => { amountRef.current.focus(); }}
-          blurOnSubmit={false}
-        />
-        { !!secondFieldError && <Text style={styles.error}>{secondFieldError}</Text>}
-      </View>
-      <View style={[{ marginBottom: moderateScale(20) }]}>
-        <Text style={styles.label}>Payment Amount</Text>
-        <TextInput 
-          style={styles.input}
-          placeholder="Enter payment amount"
-          onChangeText={changeAmount}
-          value={amount}
-          keyboardType="numeric"
-          returnKeyType="next"
-          ref={(input) => { amountRef.current = input; }}
-          onSubmitEditing={() => { emailRef.current.focus(); }}
-          blurOnSubmit={false}
-        />
-        { !!amountError && <Text style={styles.error}>{amountError}</Text>}
-        <Text style={{ fontSize: FONT_SIZE.S, marginTop: 5 }}>
-          {convenienceFeeText}
-          </Text>
-      </View>
-      <View>
-        <Text style={styles.label}>Email Address (optional)</Text>
-        <TextInput 
-          style={styles.input}
-          placeholder="Enter email address"
-          onChangeText={changeEmail}
-          value={email}
-          ref={(input) => { emailRef.current = input; }}
           returnKeyType="done"
         />
-        { !!emailError && <Text style={styles.error}>{emailError}</Text>}
+        {!!firstFieldError && <Text style={styles.error}>{firstFieldError}</Text>}
+      </View>
+      <View style={[{marginBottom: moderateScale(20)}]}>
+        <Text style={styles.label}>{secondFieldName}</Text>
+        <TextInput
+          style={[styles.input, !!secondFieldError && styles.errorBorder]}
+          // placeholder={`Enter ${secondFieldName.toLowerCase()}`}
+          onChangeText={changeSecondField}
+          value={secondField}
+          keyboardType={secondFieldFormat == 1 ? 'numeric' : 'default'}
+          maxLength={secondFieldWidthType == 1 || secondFieldWidthType == 2 ? secondFieldWidth : null}
+          returnKeyType="done"
+        />
+        {!!secondFieldError && <Text style={styles.error}>{secondFieldError}</Text>}
+      </View>
+      <View style={[{marginBottom: moderateScale(20)}]}>
+        <Text style={styles.label}>Email Address (optional)</Text>
+        <TextInput
+          style={[styles.input, !!emailError && styles.errorBorder]}
+          onChangeText={changeEmail}
+          value={email}
+          returnKeyType="done"
+        />
+        {!!emailError && <Text style={styles.error}>{emailError}</Text>}
+      </View>
+      <View>
+        <Text style={styles.label}>Payment Amount</Text>
+        <InputAmount errorMessage={amountError} amount={amount} changeAmount={changeAmount} />
+        {!!amountError && <Text style={styles.error}>{amountError}</Text>}
+        <Text style={{fontSize: FONT_SIZE.S, marginTop: 5}}>{convenienceFeeText}</Text>
       </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   searchField: {
-    backgroundColor:"white",
+    backgroundColor: 'white',
     margin: moderateScale(16),
   },
   input: {
@@ -212,22 +174,28 @@ const styles = StyleSheet.create({
     height: SIZE.FORM_HEIGHT,
     fontSize: FONT_SIZE.M,
     borderRadius: 5,
-    backgroundColor:"#F7F7FA",
+    backgroundColor: '#F7F7FA',
     fontFamily: FONT.REGULAR,
   },
   icon: {
     height: moderateScale(25),
     width: moderateScale(40),
-    alignSelf: "center",
-    tintColor: "#F6841F"
+    alignSelf: 'center',
+    tintColor: '#F6841F',
   },
   error: {
     fontSize: FONT_SIZE.S,
     marginTop: 5,
-    color: COLOR.RED
+    color: COLOR.RED,
   },
   label: {
-    fontSize: FONT_SIZE.M,
-    marginBottom: moderateScale(5)
-  }
-})
+    fontSize: FONT_SIZE.S,
+    marginBottom: moderateScale(5),
+    fontFamily: FONT.SEMI_BOLD,
+    color: '#525252',
+  },
+  errorBorder: {
+    borderColor: COLOR.RED,
+    borderWidth: 1,
+  },
+});

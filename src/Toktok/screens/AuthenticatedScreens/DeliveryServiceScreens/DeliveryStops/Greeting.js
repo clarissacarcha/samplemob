@@ -19,7 +19,7 @@ const Greeting = ({session}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 

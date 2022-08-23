@@ -29,17 +29,26 @@ const Screen = ({navigation, constants, session, createSession}) => {
 
   const onNotificationOpened = ({notification}) => {
     try {
+
+      console.log("Notification", JSON.stringify(notification))
+
       if (notification.additionalData.classification === 'toktokwallet') {
         setTimeout(() => {
           // navigation.navigate('ToktokWalletHomePage');
           // navigation.replace('ToktokWalletHomePage');
+          // navigation.navigate('ToktokLandingNotifications');
+        }, 10);
+        return;
+      }else if (notification.additionalData.classification === 'toktokmall') {
+        setTimeout(() => {
+          navigation.navigate('ToktokMallSplashScreen');
         }, 10);
         return;
       }
 
       if (notification.additionalData.classification === 'toktokbills') {
         setTimeout(() => {
-          navigation.navigate('ToktokBillsNotifications');
+          navigation.navigate('ToktokLandingNotifications', {screen: 'ToktokBillsNotifications'});
         }, 10);
         return;
       }
@@ -47,6 +56,16 @@ const Screen = ({navigation, constants, session, createSession}) => {
       if (notification.additionalData.classification === 'toktokload') {
         setTimeout(() => {
           navigation.navigate('ToktokLandingNotifications', {screen: 'ToktokLoadNotifications'});
+        }, 10);
+        return;
+      }
+      if (notification.additionalData.service === 'GO') {
+        const notifData = JSON.parse(notification.additionalData.data);
+        setTimeout(() => {
+          navigation.navigate('ToktokGoLanding', {
+            action: notification.additionalData.action,
+            bookingId: notifData.tripId,
+          });
         }, 10);
         return;
       }
@@ -65,6 +84,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
         }, 10);
       }
     } catch (error) {
+      console.warn(error);
       console.warn('Notification no additional data.');
     }
   };
@@ -81,6 +101,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
   }, []);
 
   const [getUserHash] = useLazyQuery(GET_USER_HASH, {
+    fetchPolicy: 'network-only',
     onError,
     onCompleted: response => {
       const newSession = {...session};
