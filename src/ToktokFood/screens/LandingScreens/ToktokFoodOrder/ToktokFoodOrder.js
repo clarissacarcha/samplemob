@@ -248,7 +248,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         )
       );
     }
-    if (state?.serviceType === 'pabili' && (state?.orderStatus !== 's' || state?.orderStatus !== 'c')) {
+    if (state?.serviceType === 'pabili' && state?.orderStatus !== 's' && state?.orderStatus !== 'c') {
       return (
         <TouchableOpacity
           activeOpacity={0.9}
