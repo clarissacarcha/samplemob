@@ -81,7 +81,7 @@ export const SuccessfulModal = ({
 }) => {
   const navigation = useNavigation();
   const {getMyAccount, tokwaAccount: tokwaAccountLatest, getMyAccountLoading} = useAccount();
-  console.log(tokwaAccountLatest.pinCode && !onCashIn && !setUpTpinCallBack);
+
   useEffect(() => {
     if (modalVisible) {
       if (tokwaAccountLatest.pinCode && onCashIn) {

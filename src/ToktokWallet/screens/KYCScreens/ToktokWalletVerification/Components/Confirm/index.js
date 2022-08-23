@@ -251,26 +251,27 @@ export const Confirm = connect(
   return (
     <>
       <AlertOverlay visible={loading} />
-      <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
-        <View>
-          <Image
-            style={styles.policyIcon}
-            source={require('toktokwallet/assets/icons/walletVerify.png')}
-            resizeMode="contain"
-          />
-        </View>
-        <View style={styles.privacyPolicyContainer}>
-          <Text style={styles.detailsText}>
-            All your details are protected in accordance with our{' '}
-            <Text style={styles.privacyPolicy}>Privacy Policy.</Text>
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <View style={styles.content}>
-        <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, color: '#525252'}}>Review and Confirm</Text>
-          <Text style={{fontFamily: FONT.REGULAR, marginBottom: 10, fontSize: FONT_SIZE.M, color: '#525252'}}>
-            Review the details that you enter before clicking ‘Confirm’.
+
+      <ScrollView style={styles.mainInput} showsVerticalScrollIndicator={false}>
+        <TouchableOpacity onPress={ViewPrivacyPolicy} style={styles.policyView}>
+          <View>
+            <Image
+              style={styles.policyIcon}
+              source={require('toktokwallet/assets/icons/walletVerify.png')}
+              resizeMode="contain"
+            />
+          </View>
+          <View style={styles.privacyPolicyContainer}>
+            <Text style={styles.detailsText}>
+              All your details are protected in accordance with our{' '}
+              <Text style={styles.privacyPolicy}>Privacy Policy.</Text>
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.content}>
+          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD}}>Review and Confirm</Text>
+          <Text style={{fontFamily: FONT.REGULAR, marginVertical: 5, fontSize: FONT_SIZE.S, color: '#525252'}}>
+            Review all the details provided before clicking "Confirm".
           </Text>
           <Text style={styles.titleText}>Personal Information</Text>
           <UserInfo label="Mobile Number" value={VerifyUserData.contactInfo.mobile_number} />
@@ -281,6 +282,7 @@ export const Confirm = connect(
           />
           <UserInfo label="Last Name" value={VerifyUserData.person.lastName} />
           <UserInfo label="Gender" value={VerifyUserData.person.gender} />
+          <UserInfo label="Email Address" value={VerifyUserData.contactInfo.email} />
           <UserInfo label="Date of Birth" value={moment(VerifyUserData.birthInfo.birthdate).format('MMM DD, YYYY')} />
           <UserInfo label="Place of Birth" value={VerifyUserData.birthInfo.birthPlace} />
           <UserInfo label="Nationality" value={VerifyUserData.nationality} />
@@ -364,7 +366,7 @@ export const Confirm = connect(
             style={{
               flexDirection: 'row',
               alignItems: 'flex-start',
-              marginVertical: moderateScale(20),
+              marginTop: moderateScale(20),
             }}>
             <CheckBox
               isChecked={isCertify}
@@ -378,22 +380,16 @@ export const Confirm = connect(
               onPress={() => navigation.navigate('ToktokWalletTermsConditions')}
               style={{paddingLeft: 10, flexShrink: 1}}>
               <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>
-                I hereby certify that the above information is true and correct. I have also read, understand, and
-                accepts the{' '}
+                I hereby certify that the above information is true and correct. I have also read, understood, and
+                accept the{' '}
                 <Text style={{color: COLOR.ORANGE, fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>
                   Terms and Conditions.
                 </Text>
               </Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>
-
-        {/* <View style={styles.proceedBtn}>
-          <View style={{height: SIZE.FORM_HEIGHT}}>
-            {isCertify ? <YellowButton label="Confirm" onPress={confirm} /> : <DisabledButton label="Confirm" />}
-          </View>
-        </View> */}
-      </View>
+        </View>
+      </ScrollView>
       <PreviousNextButton
         label="Previous"
         labelTwo="Confirm"

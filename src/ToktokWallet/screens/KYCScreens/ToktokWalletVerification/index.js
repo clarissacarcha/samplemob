@@ -19,11 +19,7 @@ import {VerifyContextProvider, VerifyContext} from './Components';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
-const HeaderBackClose = ({currentIndex, setCurrentIndex, setPromptVisible}) => {
-  const closeScreen = () => {
-    setPromptVisible(true);
-  };
-
+const HeaderBackClose = ({currentIndex, setCurrentIndex, closeScreen}) => {
   useFocusEffect(() => {
     const backAction = () => {
       closeScreen();
@@ -41,14 +37,28 @@ const HeaderBackClose = ({currentIndex, setCurrentIndex, setPromptVisible}) => {
 };
 
 const MainSetupComponent = () => {
-  const {currentIndex, setCurrentIndex, stepsScreens} = useContext(VerifyContext);
+  const {currentIndex, setCurrentIndex, stepsScreens, person, birthInfo, incomeInfo} = useContext(VerifyContext);
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
 
   navigation.setOptions({
     headerLeft: () => (
       <HeaderBackClose
-        setPromptVisible={value => setVisible(true)}
+        closeScreen={() => {
+          if (
+            person.middleName ||
+            !person.hasMiddleName ||
+            person.gender ||
+            birthInfo.birthdate ||
+            birthInfo.birthPlace ||
+            incomeInfo.source ||
+            incomeInfo.occupation
+          ) {
+            setVisible(true);
+          } else {
+            navigation.goBack();
+          }
+        }}
         currentIndex={currentIndex}
         setCurrentIndex={setCurrentIndex}
       />

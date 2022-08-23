@@ -1,16 +1,12 @@
-import React, {useState, useRef, useContext, useEffect} from 'react';
+import React, {useState, useRef, useContext} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Modal,
   Dimensions,
-  Alert,
   Image,
   ScrollView,
-  TextInput,
-  FlatList,
   Platform,
   Linking,
   KeyboardAvoidingView,
@@ -20,7 +16,6 @@ import {VerifyContext} from '../VerifyContextProvider';
 import {useNavigation} from '@react-navigation/native';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
 import validator from 'validator';
 import CONSTANTS from 'common/res/constants';
 import ImageCropper from 'react-native-simple-image-cropper';
@@ -32,6 +27,7 @@ import BottomSheetIDType from './BottomSheetIDType';
 
 //HELPER
 import {moderateScale} from 'toktokwallet/helper';
+import {kyc_intructions} from 'toktokwallet/assets';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 
@@ -43,8 +39,6 @@ const CROP_AREA_HEIGHT = CROP_AREA_WIDTH - 60;
 export const VerifyID = () => {
   const {
     setCurrentIndex,
-    setModalCountryVisible,
-    changeIncomeInfo,
     verifyID,
     changeVerifyID,
     changeVerifyIDErrors,
@@ -54,23 +48,13 @@ export const VerifyID = () => {
     backImage,
     setBackImage,
     isBackRequired,
-    setIsbackRequired,
     setCacheImagesList,
-    identificationId,
   } = useContext(VerifyContext);
-  const [frontRequired, setFrontRequired] = useState(false);
-  const [backRequired, setBackRequired] = useState(false);
   const navigation = useNavigation();
   const scrollviewRef = useRef();
-  const IDTypeRef = useRef();
   const headerHeight = useHeaderHeight();
   const keyboardVerticalOffset = headerHeight + getStatusBarHeight() + 10;
   const [cropperParams, setCropperParams] = useState({});
-
-  const cropSize = {
-    width: CROP_AREA_WIDTH,
-    height: CROP_AREA_HEIGHT,
-  };
 
   const cropAreaSize = {
     width: Platform.OS === 'ios' ? CROP_AREA_WIDTH : CROP_AREA_WIDTH - 110,
@@ -151,7 +135,7 @@ export const VerifyID = () => {
     <TouchableOpacity
       onPress={() => onPressTakeAPhoto(placement)}
       style={[styles.chooseImage, {alignItems: 'center'}, borderColor]}>
-      <FIcon name="camera" color="#F6841F" size={30} />
+      <FIcon name="camera" color="#F6841F" size={25} />
       <Text style={styles.photoText}>Take a photo</Text>
     </TouchableOpacity>
   );
@@ -272,9 +256,21 @@ export const VerifyID = () => {
                 />
               </View>
             )}
-            <View style={{paddingTop: 20}}>
+            <View style={{paddingVertical: 20}}>
               <Text style={styles.label}>Photo of your ID</Text>
               {renderImageSetOptions()}
+            </View>
+            <View style={styles.instructionsContainer}>
+              <Image style={styles.instructionsPicture} source={kyc_intructions.id_good} resizeMode="contain" />
+              <Image style={styles.instructionsPicture} source={kyc_intructions.id_not_blurry} resizeMode="contain" />
+            </View>
+            <View style={styles.instructionsContainer}>
+              <Image style={styles.instructionsPicture} source={kyc_intructions.id_not_cut} resizeMode="contain" />
+              <Image
+                style={styles.instructionsPicture}
+                source={kyc_intructions.id_not_reflective}
+                resizeMode="contain"
+              />
             </View>
           </View>
         </ScrollView>
@@ -486,5 +482,16 @@ const styles = StyleSheet.create({
     zIndex: 1,
     height: '100%',
     width: '100%',
+  },
+  instructionsContainer: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center',
+    marginBottom: moderateScale(15),
+  },
+  instructionsPicture: {
+    height: moderateScale(90),
+    width: moderateScale(150),
+    marginHorizontal: moderateScale(5),
   },
 });

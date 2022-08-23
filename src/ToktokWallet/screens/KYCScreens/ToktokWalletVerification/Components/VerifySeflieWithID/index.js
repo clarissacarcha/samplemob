@@ -17,14 +17,13 @@ import {VerifyContext} from '../VerifyContextProvider';
 import {useNavigation} from '@react-navigation/native';
 import {moderateScale} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
-import ImageCropper from 'react-native-simple-image-cropper';
 import {throttle} from 'lodash';
 
 //COMPONENTS
 import {PreviousNextButton} from 'toktokwallet/components';
 
 //FONT & IMAGES
-import {circle_check} from 'toktokwallet/assets';
+import {circle_check, kyc_intructions} from 'toktokwallet/assets';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 const {width, height} = Dimensions.get('window');
@@ -99,12 +98,12 @@ const MainComponent = ({children, onPress, onPressBack}) => {
             <View style={styles.instructionsContainer}>
               <Image
                 style={styles.instructionsPicture}
-                source={require('toktokwallet/assets/images/correctWay.png')}
+                source={kyc_intructions.selfie_with_id_correct}
                 resizeMode="contain"
               />
               <Image
                 style={styles.instructionsPicture}
-                source={require('toktokwallet/assets/images/wrongWay.png')}
+                source={kyc_intructions.selfie_with_id_wrong}
                 resizeMode="contain"
               />
             </View>
@@ -223,8 +222,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainInput: {
-    flex: 1,
     marginHorizontal: moderateScale(30),
+    alignItems: 'center',
   },
   requiredText: {
     fontSize: FONT_SIZE.S,
@@ -251,17 +250,6 @@ const styles = StyleSheet.create({
   policyIcon: {
     height: 21,
     width: 21,
-    alignSelf: 'center',
-  },
-  instructionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignContent: 'center',
-    marginTop: moderateScale(16),
-  },
-  instructionsPicture: {
-    height: moderateScale(189),
-    width: moderateScale(140),
     alignSelf: 'center',
   },
   privacyPolicyContainer: {
@@ -392,5 +380,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
     opacity: 0.5,
+  },
+  instructionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    marginTop: moderateScale(16),
+  },
+  instructionsPicture: {
+    height: moderateScale(189),
+    width: moderateScale(140),
+    marginHorizontal: moderateScale(5),
   },
 });
