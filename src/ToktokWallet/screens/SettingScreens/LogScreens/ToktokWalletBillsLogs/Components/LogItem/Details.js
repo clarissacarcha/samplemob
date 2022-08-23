@@ -31,7 +31,7 @@ const Details = ({transaction, visible, setVisible}) => {
 
   return (
     <TransactionModal visible={visible} setVisible={setVisible}>
-      <Text style={{fontFamily: FONT.BOLD,fontSize: moderateScale(18)}}>Load</Text>
+      <Text style={{fontFamily: FONT.BOLD,fontSize: moderateScale(18)}}>Bills</Text>
       <View style={{marginTop: 15}}>
         <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Status:</Text> Success</Text>
         <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount Paid:</Text> {amount}</Text>
