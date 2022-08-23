@@ -85,7 +85,7 @@ const Component = ({ navigation, route, notificationCountSession, notifications 
       //PAID ORDER
       getOrderDetails({variables: {
         input: {
-          orderId: route.params.id,
+          orderId: route.params.orderId,
           referenceNum: "",
           refCom: getRefComAccountType({session})
         }
