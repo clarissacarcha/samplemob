@@ -142,7 +142,7 @@ export const ReviewAndConfirm = connect(
           </View>
           <View style={styles.privacyPolicyContainer}>
             <Text style={styles.detailsText}>
-              All your details are protected in accordance with our{' '}
+              Review all the details provided before clicking "Confirm".{' '}
               <Text style={styles.privacyPolicy}>Privacy Policy.</Text>
             </Text>
           </View>
@@ -218,11 +218,12 @@ export const ReviewAndConfirm = connect(
               onPress={() => navigation.navigate('ToktokWalletTermsConditions')}
               style={{paddingLeft: 10, flexShrink: 1}}>
               <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>
-                I hereby certify that the above information is true and correct. I have also read, understand, and
+                I hereby certify that the above information is true and correct. I have also read, understood, and
                 accepts the{' '}
                 <Text style={{color: COLOR.ORANGE, fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>
-                  Terms and Conditions.
+                  Terms and Conditions
                 </Text>
+                .
               </Text>
             </TouchableOpacity>
           </View>

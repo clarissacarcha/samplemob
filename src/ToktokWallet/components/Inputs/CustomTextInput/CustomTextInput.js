@@ -37,7 +37,7 @@ const CustomTextInput = (props: PropsType): React$Node => {
       {label !== '' && <Label>{label}</Label>}
       <Input
         style={style}
-        value={value}
+        defaultValue={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}

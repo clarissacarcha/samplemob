@@ -9,7 +9,7 @@ import {moderateScale} from 'toktokwallet/helper';
 import {calendar_icon} from 'toktokwallet/assets';
 
 import CONSTANTS from 'src/common/res/constants';
-const {FONT_SIZE, SIZE} = CONSTANTS;
+const {FONT_SIZE, SIZE, FONT_FAMILY: FONT} = CONSTANTS;
 
 export const Button: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
   ...props,
@@ -49,4 +49,13 @@ export const ErrorText: ComponentType<any> = styled.Text`
   color: ${props => props.theme.color.red};
   font-size: ${FONT_SIZE.S}px;
   margin-top: 5px;
+`;
+
+export const Label: ComponentType<any> = styled(Text).attrs(props => ({
+  ...props,
+}))`
+  color: ${props => props.theme.color.darkgray};
+  font-size: ${FONT_SIZE.S}px;
+  font-family: ${FONT.BOLD};
+  margin-bottom: ${moderateScale(5)}px;
 `;
