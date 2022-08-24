@@ -153,7 +153,9 @@ export const Menu = ({setUserLocation, constants}) => {
       identifier: `${Platform.OS}Bills`,
       label: 'Bills',
       icon: BillsIcon,
-      onPress: () => navigation.push('ToktokBillsSplashScreen'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokBillsSplashScreen');
+      },
       isNew: true,
     },
     {
