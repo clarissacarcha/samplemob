@@ -14,7 +14,7 @@ export const Header = ({children}) => {
         </View>
       </View>
       <View></View>
-      <ImageBackground style={{height: 192}} source={HeaderImage} resizeMode="cover">
+      <ImageBackground style={{height: 160}} source={HeaderImage} resizeMode="cover">
         {children}
       </ImageBackground>
     </View>
@@ -24,13 +24,13 @@ export const Header = ({children}) => {
 const styles = StyleSheet.create({
   headerBox: {
     backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.23,
+    // shadowRadius: 2.62,
     borderBottomWidth: 3,
     borderColor: '#F8F8F8',
     elevation: 4,

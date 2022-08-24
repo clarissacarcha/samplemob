@@ -4,7 +4,7 @@ import MIcons from 'react-native-vector-icons/MaterialIcons';
 import CONSTANTS from '../../../../common/res/constants';
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 
-export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummyStatus, navigation, booking}) => {
+export const AccordionBooking = ({titleText, titleAmount, subTexts = [], navigation, booking}) => {
   const [open, setOpen] = useState(false);
   return (
     <View>
@@ -74,10 +74,6 @@ export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummySt
               }}>
               {titleAmount}
             </Text>
-            {/* {
-                        (dummyStatus > 1) &&
-                        <MIcons name={!open ? "keyboard-arrow-down" : "keyboard-arrow-up"} style={{ fontFamily: CONSTANTS.FONT_FAMILY.BOLD, fontSize: CONSTANTS.FONT_SIZE.XL + 8,color:CONSTANTS.COLOR.ORANGE ,paddingTop:4}} />
-                    } */}
           </View>
         </View>
       </TouchableOpacity>
