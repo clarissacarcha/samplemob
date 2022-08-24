@@ -52,7 +52,7 @@ export const TermsAndCondition = (props) => {
         <View style={styles.tcContainer}>
           <Animated.View style={[styles.tcSubContainer, {opacity: fadeAnim.current}]} />
           <View style={[styles.tcButton, props.TCEnabled && {backgroundColor: '#F6841F'}]}>
-            {props.TCEnabled && <Icons.MIcon name="check" size={9} color="white" />}
+            {props.TCEnabled && <Icons.MIcon name="check" size={14} color="white" />}
           </View>
           <Text style={styles.tcText}>
             I hereby confirm that all order details and delivery information are correctly entered. Furthermore, I have
@@ -82,9 +82,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF3E8",
     },
     tcButton: {
-        height: 12,
-        width: 12,
-        borderWidth: 1,
+        height: 17,
+        width: 17,
+        borderWidth: 2,
         borderColor: "#F6841F",
         borderRadius: 2,
         marginRight: 11,
