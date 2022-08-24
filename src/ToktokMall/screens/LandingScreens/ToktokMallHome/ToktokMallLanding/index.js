@@ -42,8 +42,6 @@ const noWalletModalContent = () => (
       source={walletIcon}
       style={{width: 130, height: 120, resizeMode: 'stretch', overflow: 'hidden'}}
     />
-    <View style={{paddingVertical: 2}} />
-    <View style={{width: '95%'}}>
       <Text
         style={{
           fontSize: 20,
@@ -58,12 +56,9 @@ const noWalletModalContent = () => (
           fontSize: 14,
           textAlign: 'center',
           marginTop: 10,
-          marginBottom: 10,
-          minWidth: '70%'
         }}>
         Ordering from your favorite merchants just made easier with toktokmall! For faster transaction, use toktokwallet as your method of payment upon placing of order.
       </Text>
-    </View>
   </>
 )
 
@@ -183,21 +178,17 @@ const Component = ({ myCart, createMyCartSession,}) => {
       const {kycStatus} = getUserToktokWalletData
       console.log("kycStatus", kycStatus)
 
-      if(!kycStatus){
+      if(kycStatus){
         dispatch({
           type: 'TOKTOK_MALL_OPEN_MODAL',
           payload: {
             Content: noWalletModalContent,
             actions: [
               {
-                onPress: () => {
-                  dispatch({type: 'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'});
-                },
                 name: 'Browse'
               },
               {
                 onPress: () => {
-                  dispatch({type: 'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'});
                   navigation.push("ToktokWalletLoginPage")
                 },
                 type: 'fill',
