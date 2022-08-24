@@ -38,6 +38,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   const dispatch = useDispatch();
   const [recentSearchDataList, setrecentSearchDataList] = useState([]);
   const [recentDestinationList, setrecentDestinationList] = useState([]);
+  const [showNotEnoughBalanceModal, setShowNotEnoughBalanceModal] = useState(false);
 
   useEffect(() => {
     const subscribe = navigation.addListener('focus', async () => {
@@ -149,7 +150,28 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
         Alert.alert('', 'Something went wrong...');
       }
     },
-    onError: onErrorAppSync,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          console.log(errorType);
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', message);
+          } else if (errorType === 'BAD_USER_INPUT') {
+            setShowNotEnoughBalanceModal(true);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            Alert.alert('', message);
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
   });
 
   useEffect(() => {
@@ -286,6 +308,8 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
                     navigation={navigation}
                     tripChargeInitializePaymentFunction={tripChargeInitializePaymentFunction}
                     tripConsumerPending={tripConsumerPending}
+                    showNotEnoughBalanceModal={showNotEnoughBalanceModal}
+                    setShowNotEnoughBalanceModal={setShowNotEnoughBalanceModal}
                   />
                 )}
                 {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? (
