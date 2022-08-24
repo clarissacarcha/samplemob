@@ -7,7 +7,17 @@ import {onError} from '../../../../../util/ErrorUtility';
 import {AlertOverlay} from '../../../../../SuperApp/screens/Components';
 import {useMutation} from '@apollo/react-hooks';
 import CONSTANTS from '../../../../../common/res/constants';
-import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar, TouchableOpacity} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import RNFS from 'react-native-fs';
 
@@ -37,12 +47,24 @@ const DrawerButton = ({isNew, label, onPress, restrict}) => {
         /> */}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {isNew && (
-            <View style={{backgroundColor: '#ED3A19', borderRadius: 20, marginVertical: -5, left: 15}}>
+            <View
+              style={{
+                height: 18,
+                width: 40,
+                backgroundColor: '#ED3A19',
+                position: 'absolute',
+                top: -2.5,
+                right: 20,
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
               <Text
                 style={{
-                  paddingHorizontal: 12,
-                  color: CONSTANTS.COLOR.WHITE,
+                  fontSize: 10,
+                  color: 'white',
                   fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                  bottom: Platform.OS === 'ios' ? 0 : 1,
                 }}>
                 New
               </Text>
