@@ -9,6 +9,15 @@ const screenWidth = Dimensions.get('window').width;
 
 export const BookingTotal = ({loading, details}) => {
   const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
+
+  const getTotal = () => {
+    if (details?.rate?.charge) {
+      return details?.rate?.tripFare?.total + details?.rate?.charge?.amount;
+    } else {
+      return details?.rate?.tripFare?.total;
+    }
+  };
+
   return (
     <>
       <ShimmerPlaceHolder style={{width: screenWidth / 1.08, marginBottom: !loading ? 0 : 18}} visible={!loading}>
@@ -17,9 +26,7 @@ export const BookingTotal = ({loading, details}) => {
             <Text style={styles.textStyle}>Total</Text>
           </View>
           <View style={styles.elementWrapper}>
-            <Text style={styles.seeAlltextStyle}>
-              ₱{numberFormat(details?.rate?.tripFare?.total ? details?.rate?.tripFare?.total : 0)}
-            </Text>
+            <Text style={styles.seeAlltextStyle}>₱{numberFormat(details?.rate?.tripFare?.total ? getTotal() : 0)}</Text>
           </View>
         </View>
       </ShimmerPlaceHolder>

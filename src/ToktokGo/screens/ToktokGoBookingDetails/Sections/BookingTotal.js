@@ -37,7 +37,6 @@ export const BookingTotal = ({booking, navigation}) => {
                 {amount: `₱${numberFormat(booking.fare.mileageFee)}`, text: 'Distance', key: 2},
                 {amount: `₱${numberFormat(booking.fare.durationFee)}`, text: 'Duration', key: 2},
               ]}
-              dummyStatus={2}
               booking={booking}
             />
           </View>

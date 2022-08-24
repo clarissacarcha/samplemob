@@ -111,15 +111,6 @@ const StatusBar = ({label, log, number}) => {
 const Status = ({booking}) => {
   const mappedLogs = _.mapKeys(booking.logs, 'status');
   return (
-    /*-------------------- FOR FIDELITY --------------------*/
-    // <View>
-    //     <View style={{borderBottomWidth: 2, borderColor: constants.COLOR.LIGHT, marginVertical: 15, zIndex: 999}} />
-    //     <StatusBar number={1} label={"Arrived at destination"} log={session.dummyStatus >= 5 && mappedLogs['2']} />
-    //     <StatusBar number={3} label={"Passenger picked up"} log={session.dummyStatus >= 4 && mappedLogs['2']} />
-    //     <StatusBar number={2} label={"Driver arrived at pick-up location"} log={session.dummyStatus >= 3 && mappedLogs['2']} />
-    //     <StatusBar number={4} label={"Driver accepted"} log={session.dummyStatus >= 2 && mappedLogs['2']} />
-    // </View>
-
     /*-------------------- ON GOING --------------------*/
     <View>
       <View style={{borderBottomWidth: 2, borderColor: constants.COLOR.LIGHT, width: '100%', marginVertical: 15}} />
