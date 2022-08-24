@@ -66,7 +66,7 @@ export const TakePhotoID = ({onPress}) => {
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.formName}>Valid Government-Issued ID (2)</Text>
+        <Text style={styles.formName}>Valid Government ID (2)</Text>
         <ChooseIDType index={1} onPress={() => onPress(1)} />
         <ChooseIDType index={2} onPress={() => onPress(2)} />
       </View>

@@ -1,79 +1,57 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, ScrollView, Platform, KeyboardAvoidingView} from 'react-native';
 import {YellowButton} from 'src/revamp';
-import {BuildingBottom, DisabledButton} from 'toktokwallet/components';
+import {DisabledButton, CustomDateInput, OrangeButton, CustomTextInput, PolicyNote} from 'toktokwallet/components';
+import {getStatusbarHeight} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
+import {useHeaderHeight} from '@react-navigation/stack';
 import moment from 'moment';
-import calendar_icon from 'toktokwallet/assets/icons/calendar-icon.png';
-
-//SELF IMPORTS
-import DateBirthModal from './DateBirthModal';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 const screen = Dimensions.get('window');
 
-export const DisplayQuestion = ({question, answers, setAnswers, index}) => {
-  const [visible, setVisible] = useState(false);
+export const DisplayQuestion = ({question, answers, setAnswers, index, errorMessages, setErrorMessages}) => {
+  const onChangeText = value => {
+    setErrorMessages(state => {
+      state[index] = '';
+      return [...state];
+    });
 
-  const onChangeText = text => {
     setAnswers(state => {
-      if (text != '') {
+      if (value !== '') {
         state[index] = {
           accountRecoveryQuestionId: question.id,
-          answer: text,
+          answer: question.isDatepicker ? moment(value).format('YYYY-MM-DD') : value,
         };
       } else {
-        answers.splice(index, 1);
+        state[index] = undefined;
       }
 
       return [...state];
     });
-    setVisible(false);
   };
 
   return (
     <>
-      <DateBirthModal visible={visible} hidePicker={() => setVisible(false)} onDateSelect={onChangeText} />
       {question.isDatepicker ? (
         <View style={styles.ViewInput}>
-          <Text style={styles.labelText}>
-            {index + 1} ) {question.question}
-          </Text>
-          <TouchableOpacity onPress={() => setVisible(true)} style={[styles.input, styles.secondContainer]}>
-            {!answers[index]?.answer ? (
-              <Text style={styles.labelSmall}>Choose your answer..</Text>
-            ) : (
-              <Text style={[styles.labelSmall, {color: 'black'}]}>
-                {moment(answers[index].answer).tz('Asia/Manila').format('MMM DD, YYYY')}
-              </Text>
-            )}
-            <Image source={calendar_icon} style={{width: 20, height: 20}} />
-          </TouchableOpacity>
+          <CustomDateInput
+            label={question?.question}
+            onSelectedValue={onChangeText}
+            selectedValue={answers[index]?.answer ? answers[index]?.answer : ''}
+            errorMessage={errorMessages[index]}
+            dateFormat="MMM D, YYYY"
+          />
         </View>
       ) : (
         <View style={styles.ViewInput}>
-          <Text style={styles.labelText}>
-            {index + 1} ) {question.question}
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your answer.."
-            placeholderTextColor={COLOR.DARK}
-            value={answers[index]?.answer ? answers[index].answer : ''}
+          <CustomTextInput
+            label={question?.question}
             onChangeText={onChangeText}
+            value={answers[index]?.answer ? answers[index].answer : ''}
+            errorMessage={errorMessages[index]}
             returnKeyType="done"
-            maxLength={question.maxLength}
-            // onSubmitEditing={Proceed}
+            // maxLength={question.maxLength}
           />
         </View>
       )}
@@ -89,52 +67,57 @@ export const RenderNextButton = ({questions, btnEnabled, onPress}) => {
 
 const Questions = ({questions, answers, currentIndex, setCurrentIndex, setAnswers}) => {
   const [errorMessages, setErrorMessages] = useState([]);
-  const [btnEnabled, setBtnEnabled] = useState(false);
-
-  useEffect(() => {
-    setBtnEnabled(+answers.length === +questions.length);
-  }, [answers, questions]);
+  const headerHeight = useHeaderHeight();
+  const keyboardVerticalOffset = headerHeight + getStatusbarHeight;
 
   const onPress = () => {
-    answers.forEach((answer, index) => {
-      if (answer == '') {
-        setErrorMessages(state => {
-          state[index] = 'This is a required field.';
-          return [...state];
-        });
-      } else {
-        setErrorMessages(state => {
-          state[index] = '';
-          return [...state];
-        });
-      }
+    questions.forEach((item, index) => {
+      setErrorMessages(state => {
+        if (answers.length > 0) {
+          state[index] = answers[index] !== undefined ? '' : 'This is a required field';
+        } else {
+          state[index] = answers[index] !== undefined ? '' : 'This is a required field';
+        }
+        return [...state];
+      });
     });
+
     const [a, b, c] = [...answers];
-    if (a == '' || b == '' || c == '') return;
-    setCurrentIndex(value => value + 1);
+    if (a !== undefined && b !== undefined && c !== undefined) {
+      setCurrentIndex(value => value + 1);
+    }
   };
 
   return (
     <>
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.body}>
-          <Text style={styles.headerText}>
-            Account Recovery helps you recover your account once deactivated or locked due to forgotten MPIN.
-          </Text>
-          <Text style={styles.headerText}>
-            Answer the following Security Questions that will be used for authentication in your account recovery
-            process.
-          </Text>
-          {questions.map((question, index) => {
-            return <DisplayQuestion question={question} answers={answers} setAnswers={setAnswers} index={index} />;
-          })}
-          <Text style={[styles.headerText, {fontSize: FONT_SIZE.S}]}>Answers cannot be changed once saved.</Text>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? keyboardVerticalOffset : screen.height * 0.5}>
+        <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+          <PolicyNote note1="Account Recovery helps you recover your account once deactivated or locked due to forgotten MPIN." />
+          <View style={styles.body}>
+            <Text style={styles.headerText}>Security Questions</Text>
+            <Text style={styles.headerMessage}>
+              Answer the Security Questionnaire that will be used for authentication in your account recovery process.
+              Note that the answers cannot be edited or changed once saved.
+            </Text>
+            {questions.map((question, index) => {
+              return (
+                <DisplayQuestion
+                  question={question}
+                  answers={answers}
+                  setAnswers={setAnswers}
+                  index={index}
+                  errorMessages={errorMessages}
+                  setErrorMessages={setErrorMessages}
+                />
+              );
+            })}
+          </View>
         </ScrollView>
-        <View style={styles.btn}>
-          <RenderNextButton questions={questions} btnEnabled={btnEnabled} onPress={onPress} />
-        </View>
-        <BuildingBottom />
       </KeyboardAvoidingView>
+      <OrangeButton hasShadow onPress={onPress} label="Next" />
     </>
   );
 };
@@ -142,10 +125,11 @@ const Questions = ({questions, answers, currentIndex, setCurrentIndex, setAnswer
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    backgroundColor: 'white',
   },
   body: {
     flex: 1,
+    padding: 16,
   },
   btn: {
     height: 70,
@@ -153,12 +137,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   headerText: {
-    textAlign: 'center',
-    marginHorizontal: 10,
-    fontFamily: FONT.REGULAR,
-    fontSize: FONT_SIZE.M,
-    color: COLOR.ORANGE,
-    marginVertical: 10,
+    fontFamily: FONT.BOLD,
+  },
+  headerMessage: {
+    marginVertical: 5,
+    color: '#525252',
+    fontSize: FONT_SIZE.S,
   },
   labelText: {
     fontSize: FONT_SIZE.M,
@@ -171,7 +155,7 @@ const styles = StyleSheet.create({
     color: '#929191',
   },
   ViewInput: {
-    marginTop: 20,
+    marginTop: 10,
   },
   input: {
     paddingHorizontal: 10,

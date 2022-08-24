@@ -83,7 +83,7 @@ export const ToktokWalletMPINUpdate = ({navigation, route}) => {
       const title = event === 'ACCOUNT RECOVERY' && !category ? 'Account Recovery Successful' : 'MPIN Changed';
       const message =
         event === 'ACCOUNT RECOVERY' && !category
-          ? '"You have successfully recovered your account. Please do not forget your new MPIN and do not share this with anyone.'
+          ? 'You have successfully recovered your account. Please do not forget your new MPIN and do not share this with anyone.'
           : 'You have successfully changed your MPIN. Please do not share this with anyone.';
       prompt({
         type: 'success',

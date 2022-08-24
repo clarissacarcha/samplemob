@@ -9,4 +9,6 @@ export type PropsType = {
   selectedValue: string,
   onSelectedValue: string => void,
   errorMessage: string,
+  label?: string,
+  dateFormat?: string,
 };

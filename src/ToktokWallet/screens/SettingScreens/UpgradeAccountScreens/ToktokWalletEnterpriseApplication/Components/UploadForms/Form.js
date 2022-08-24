@@ -43,7 +43,7 @@ const Form = ({item, index, onPress, onPressRemove}) => {
       </View>
       {item.errorMessage !== '' && <Text style={styles.errorMessage}>{item.errorMessage}</Text>}
       {item.filename !== '' && (
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'center', marginHorizontal: 30}}>
           <View style={styles.filename}>
             <Text style={styles.filenameText}>{item.filename}</Text>
             <TouchableHighlight
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   filenameText: {
     marginRight: 10,
     color: '#525252',
+    flexShrink: 1,
   },
   errorMessage: {
     marginHorizontal: 16,

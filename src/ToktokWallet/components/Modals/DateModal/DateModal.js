@@ -24,7 +24,7 @@ const DateModal = (props: PropsType): React$Node => {
       <ButtonOpacity onPress={onPressClose}>
         <ButtonWithoutFeedback>
           <CustomDatePicker
-            date={value === '' ? initialDate : value}
+            date={value === '' ? initialDate : new Date(value)}
             onDateChange={date => {
               onDateChange(date);
             }}

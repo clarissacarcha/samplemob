@@ -19,7 +19,7 @@ export const CustomRadioButton = ({
       {/* To create radio buttons, loop through your array of options */}
       {data.map((item, index) => {
         return (
-          <RadioButton labelHorizontal={true} key={index} style={{paddingVertical: 3}}>
+          <RadioButton labelHorizontal={true} key={index} style={{paddingVertical: 3, alignItems: 'center'}}>
             {/*  You can set RadioButtonLabel before RadioButtonInput */}
             <RadioButtonInput
               obj={item}
