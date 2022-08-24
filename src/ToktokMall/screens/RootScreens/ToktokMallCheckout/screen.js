@@ -742,8 +742,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
       
       console.log("ERROR", error, error?.items)
       if(error?.items && error?.items.length > 0){
-        let formattedArr = error?.items.map((item) => {return {id: "", name: item}})
-        onProductUnavailable(formattedArr, "name")
+
+        let items = removeUnavailableItems(error?.items)
+        onProductUnavailable(items)
+
       }else if(error?.message && error?.message.includes("Invalid voucher") || error?.voucher_data){
         onVoucherInvalid(error)
       }
@@ -751,6 +753,26 @@ const Component = ({route, navigation, createMyCartSession}) => {
     }else if(req.responseError == null && req.responseData == null){
       Toast.show("Something went wrong", Toast.LONG)
     }    
+  }
+
+  const removeUnavailableItems = (items) => {
+
+    let result = []
+    let paramsCopy = ArrayCopy(route.params.data)
+    paramsCopy.map((shopitem) => {
+      let orders = shopitem.data[0]
+      let remainingOrders = orders.filter((order) => {
+        return items.findIndex((item) => item.productid === order.id)
+      })
+      if(remainingOrders.length > 0){
+        result.push({
+          ...shopitem,
+          data: [remainingOrders]
+        })
+      }      
+    })
+    console.log("REMOVE UNAVAILABLE ITEMS RESULT", result)
+    return result
   }
 
   const postOrderNotifications = async (payload) => {

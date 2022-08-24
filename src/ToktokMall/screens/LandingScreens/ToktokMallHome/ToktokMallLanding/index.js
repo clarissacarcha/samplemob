@@ -178,7 +178,7 @@ const Component = ({ myCart, createMyCartSession,}) => {
       const {kycStatus} = getUserToktokWalletData
       console.log("kycStatus", kycStatus)
 
-      if(kycStatus){
+      if(!kycStatus){
         dispatch({
           type: 'TOKTOK_MALL_OPEN_MODAL',
           payload: {
