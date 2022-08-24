@@ -21,6 +21,7 @@ export * from './EnterpriseUpgradeRequest';
 export * from './FullyVerifiedUpgradeRequest';
 export * from './GlobalSetting';
 export * from './IdentificationCard';
+export * from './RequestMoney';
 export * from './Merchant';
 export * from './PaymentChart';
 export * from './Pep';

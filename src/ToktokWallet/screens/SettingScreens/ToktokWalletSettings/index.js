@@ -75,9 +75,15 @@ export const ToktokWalletSettings = ({navigation, route}) => {
       checkIfMerchantLinked: false,
     },
     {
+      label: 'Receive Money',
+      route: "ToktokWalletReceiveMoneyLogs",
+      identifier: `${Platform.OS}LogRecieveMoney`,
+      checkIfMerchantLinked: false,
+    },
+    {
       label: 'Request Money',
       route: "ToktokWalletRequestMoneyLogs",
-      identifier: "logRequestMoney",
+      identifier: `${Platform.OS}LogRequestMoney`,
       checkIfMerchantLinked: false,
     },
     {
