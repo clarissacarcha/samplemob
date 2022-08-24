@@ -102,8 +102,7 @@ const OrderAmount = (props: PropsType): React$Node => {
                 )}
               {shippingDiscount > 0 &&
                 amountComponent('Discount', state?.promoDetails?.shippingDiscountName, shippingDiscount, '-')}
-              {serviceFeeDiscount > 0 &&
-                state?.serviceType === 'pabili' &&
+              {state?.serviceType === 'pabili' &&
                 amountComponent('Discount', 'Service Fee (Reseller)', serviceFeeDiscount, '-')}
             </React.Fragment>
           )}
