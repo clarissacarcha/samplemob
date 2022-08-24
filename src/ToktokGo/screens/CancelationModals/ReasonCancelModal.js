@@ -1,14 +1,45 @@
-import React, {useState, useRef} from 'react';
-import {Text, StyleSheet, ScrollView, View, Modal, TouchableOpacity, TextInput} from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
+import {
+  Text,
+  StyleSheet,
+  ScrollView,
+  View,
+  Modal,
+  TouchableOpacity,
+  TextInput,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Platform,
+} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {SheetManager} from 'react-native-actions-sheet';
 import {ThrottledOpacity} from '../../../components_section';
-export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
+import {FlatList} from 'react-native-gesture-handler';
+
+export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel, navigation}) => {
   const dropDownRef = useRef(null);
   const scrollViewRef = useRef();
-  const [selectedReason, setSelectedReason] = useState(null);
+  const [selectedReason, setSelectedReason] = useState([]);
   const [typedReason, setTypedReason] = useState('');
-  const [data, setData] = useState([
+  const [pressIn, setPressIn] = useState(Platform.OS === 'ios' ? 55 : 0);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setPressIn(120);
+      console.log('open');
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setPressIn(Platform.OS === 'ios' ? 55 : 0);
+      console.log('close');
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, [selectedReason]);
+  const data = [
     {
       label: 'Driver took too long to arrive',
       value: '0',
@@ -85,11 +116,24 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
       label: 'Other, please state: ',
       value: '18',
     },
-  ]);
+  ];
+
+  const cancelModal = () => {
+    setVisible(false);
+    setSelectedReason([]);
+    setTypedReason('');
+  };
 
   const confirm = () => {
     setVisible(!isVisible);
-    if (selectedReason == 4) {
+    // if (selectedReason == 4) {
+    //   finalizeCancel(typedReason);
+    // } else {
+    //   finalizeCancel(selectedReason.label);
+    // }
+
+    // eto yung bago
+    if (selectedReason.value == '18') {
       finalizeCancel(typedReason);
     } else {
       finalizeCancel(selectedReason.label);
@@ -97,120 +141,141 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel}) => {
   };
 
   return (
-    <Modal animationType="fade" transparent={true} visible={isVisible} style={StyleSheet.absoluteFill}>
-      <View style={styles.transparent}>
-        <View style={styles.card}>
-          <View style={styles.containerHeader}>
-            <View style={styles.titleHeader}>
-              <Text style={styles.headerText}>Reason for cancelling</Text>
-            </View>
-          </View>
-          <ScrollView style={styles.scrollview} ref={scrollViewRef}>
-            {data.map((text, key) => {
-              return (
-                <View style={styles.radioButtonContainer} key={key}>
-                  <ThrottledOpacity
-                    delay={500}
-                    onPress={() => {
-                      setSelectedReason(text);
-                      if (selectedReason?.value == '18') scrollViewRef.current.scrollToEnd({animated: true});
-                    }}
-                    style={styles.radioButton}>
-                    <View
-                      style={text.value == selectedReason?.value ? styles.radioButtonIcon : styles.radioButtonIcon1}
+    <View>
+      {isVisible && (
+        <Modal animationType="fade" transparent={true} visible={isVisible} style={StyleSheet.absoluteFill}>
+          <View style={styles.transparent}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              style={{flex: 1, justifyContent: 'center'}}>
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={styles.card}>
+                  <View style={styles.containerHeader}>
+                    <View style={styles.titleHeader}>
+                      <Text style={styles.headerText}>Reason for cancelling</Text>
+                    </View>
+                  </View>
+                  <View style={{maxHeight: '75%', color: 'red', marginBottom: pressIn}}>
+                    <FlatList
+                      data={data}
+                      ref={scrollViewRef}
+                      onLayout={() =>
+                        selectedReason.length == 0
+                          ? null
+                          : selectedReason.value == '18'
+                          ? scrollViewRef.current.scrollToEnd({animated: true})
+                          : null
+                      }
+                      renderItem={({item, index}) => (
+                        <View style={styles.radioButtonContainer}>
+                          <ThrottledOpacity
+                            delay={500}
+                            onPress={() => {
+                              setSelectedReason(item);
+                              if (item.value == '18') {
+                                scrollViewRef.current.scrollToEnd({animated: true});
+                              }
+                            }}
+                            style={styles.radioButton}>
+                            <View
+                              style={
+                                item.value == selectedReason.value ? styles.radioButtonIcon : styles.radioButtonIcon1
+                              }
+                            />
+                          </ThrottledOpacity>
+                          <ThrottledOpacity
+                            delay={500}
+                            onPress={() => {
+                              setSelectedReason(item);
+                              if (item.value == '18') {
+                                scrollViewRef.current.scrollToEnd({animated: true});
+                              }
+                            }}>
+                            <Text style={styles.radioButtonText}>{item.label}</Text>
+                          </ThrottledOpacity>
+                        </View>
+                      )}
                     />
-                  </ThrottledOpacity>
-                  <ThrottledOpacity
-                    delay={500}
-                    onPress={() => {
-                      setSelectedReason(text);
-                      if (selectedReason?.value == '18') scrollViewRef.current.scrollToEnd({animated: true});
+                    {selectedReason.length == 0 ? null : selectedReason.value == '18' ? (
+                      <View style={styles.containerTextInput}>
+                        <TextInput
+                          ref={dropDownRef}
+                          value={typedReason}
+                          placeholder="Enter your reason"
+                          keyboardType="default"
+                          onChangeText={value => setTypedReason(value)}
+                          style={styles.Input}
+                          numberOfLines={5}
+                          maxLength={320}
+                          multiline
+                        />
+                      </View>
+                    ) : null}
+                  </View>
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'row',
+                      paddingHorizontal: 25,
+                      position: 'absolute',
+                      bottom: 0,
+                      paddingVertical: 0,
+                      paddingBottom: 25,
                     }}>
-                    <Text style={styles.radioButtonText}>{text.label}</Text>
-                  </ThrottledOpacity>
+                    <ThrottledOpacity
+                      delay={500}
+                      onPress={() => cancelModal()}
+                      style={{
+                        flex: 1,
+                        paddingVertical: 10,
+                        marginRight: 24,
+                        alignItems: 'center',
+                        borderRadius: 5,
+                        backgroundColor: CONSTANTS.COLOR.WHITE,
+                        borderWidth: 1,
+                        borderColor: CONSTANTS.COLOR.ORANGE,
+                        // margin: 5,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+                          fontSize: CONSTANTS.FONT_SIZE.XL,
+                          color: CONSTANTS.COLOR.ORANGE,
+                        }}>
+                        Cancel
+                      </Text>
+                    </ThrottledOpacity>
+                    <ThrottledOpacity
+                      delay={500}
+                      disabled={selectedReason ? false : true}
+                      onPress={() => confirm()}
+                      style={{
+                        flex: 1,
+                        paddingVertical: 10,
+                        alignItems: 'center',
+                        borderRadius: 5,
+                        backgroundColor: CONSTANTS.COLOR.ORANGE,
+                        borderWidth: 1,
+                        borderColor: CONSTANTS.COLOR.ORANGE,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+                          fontSize: CONSTANTS.FONT_SIZE.XL,
+                          color: CONSTANTS.COLOR.WHITE,
+                        }}>
+                        Confirm
+                      </Text>
+                    </ThrottledOpacity>
+                  </View>
                 </View>
-              );
-            })}
-          </ScrollView>
-          {selectedReason?.value == '18' && (
-            <View style={styles.containerTextInput}>
-              <TextInput
-                ref={dropDownRef}
-                value={typedReason}
-                placeholder="Enter your reason"
-                keyboardType="default"
-                onChangeText={value => setTypedReason(value)}
-                style={styles.Input}
-                numberOfLines={5}
-                maxLength={320}
-                multiline
-              />
-              {/* <View style={{alignItems: 'flex-end'}}>
-                <Text style={styles.textInputLength}>{typedReason.length}/320</Text>
-              </View> */}
-            </View>
-          )}
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'row',
-              paddingHorizontal: 25,
-
-              position: 'absolute',
-              bottom: 0,
-              paddingVertical: 0,
-              paddingBottom: 25,
-            }}>
-            <ThrottledOpacity
-              delay={500}
-              onPress={() => setVisible(!isVisible)}
-              style={{
-                flex: 1,
-                paddingVertical: 10,
-                marginRight: 24,
-                alignItems: 'center',
-                borderRadius: 5,
-                backgroundColor: CONSTANTS.COLOR.WHITE,
-                borderWidth: 1,
-                borderColor: CONSTANTS.COLOR.ORANGE,
-                margin: 10,
-              }}>
-              <Text
-                style={{
-                  fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-                  fontSize: CONSTANTS.FONT_SIZE.XL,
-                  color: CONSTANTS.COLOR.ORANGE,
-                }}>
-                Cancel
-              </Text>
-            </ThrottledOpacity>
-            <ThrottledOpacity
-              delay={500}
-              disabled={selectedReason ? false : true}
-              onPress={() => confirm()}
-              style={{
-                flex: 1,
-                paddingVertical: 10,
-                alignItems: 'center',
-                borderRadius: 5,
-                backgroundColor: CONSTANTS.COLOR.ORANGE,
-                borderWidth: 1,
-                borderColor: CONSTANTS.COLOR.ORANGE,
-              }}>
-              <Text
-                style={{
-                  fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-                  fontSize: CONSTANTS.FONT_SIZE.XL,
-                  color: CONSTANTS.COLOR.WHITE,
-                }}>
-                Confirm
-              </Text>
-            </ThrottledOpacity>
+              </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
           </View>
-        </View>
-      </View>
-    </Modal>
+        </Modal>
+      )}
+    </View>
   );
 };
 
@@ -310,12 +375,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   containerTextInput: {
-    marginTop: -30,
-    marginHorizontal: 16,
+    marginTop: 20,
+    marginHorizontal: 23,
     backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: CONSTANTS.COLOR.MEDIUM_DARK,
+    // marginBottom: 30,
   },
   textInputLength: {
     marginRight: 15,

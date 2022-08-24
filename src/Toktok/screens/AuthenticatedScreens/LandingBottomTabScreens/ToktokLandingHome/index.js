@@ -59,6 +59,16 @@ const Screen = ({navigation, constants, session, createSession}) => {
         }, 10);
         return;
       }
+      if (notification.additionalData.service === 'GO') {
+        const notifData = JSON.parse(notification.additionalData.data);
+        setTimeout(() => {
+          navigation.navigate('ToktokGoLanding', {
+            action: notification.additionalData.action,
+            bookingId: notifData.tripId,
+          });
+        }, 10);
+        return;
+      }
       const type = notification.additionalData.type;
 
       if (type) {
@@ -74,6 +84,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
         }, 10);
       }
     } catch (error) {
+      console.warn(error);
       console.warn('Notification no additional data.');
     }
   };

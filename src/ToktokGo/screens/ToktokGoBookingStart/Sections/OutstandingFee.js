@@ -26,7 +26,7 @@ export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction,
   };
 
   return (
-    <View>
+    <View style={{marginBottom: 10}}>
       <UnpaidModal visible={unpaid} setVisible={setUnpaid} />
       <View
         style={{
@@ -39,7 +39,7 @@ export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction,
         <Text
           style={{
             fontSize: CONSTANTS.FONT_SIZE.M,
-            color: CONSTANTS.COLOR.BLACK,
+            color: CONSTANTS.COLOR.ALMOST_BLACK,
             fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
             marginLeft: 7,
           }}>

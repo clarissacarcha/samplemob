@@ -26,6 +26,9 @@ fare {
   mileageFee
   surgeCharge
   total
+  vouchers{
+    name
+  }
 }
 id
 logs {
@@ -108,7 +111,29 @@ vehicleType {
   imageClass
   name
 }
+cancellationChargeStatus
 `;
+
+const DriverData = `
+driver {
+  licenseNumber
+  goAverageRating
+  overallAverageRating
+  user {
+    username
+    person {
+      firstName
+      middleName
+      lastName
+      mobileNumber
+      avatar
+      avatarThumbnail
+      covidVaccinationStatus {
+        description
+      }
+    }
+  }
+}`;
 
 export const TRIP_BOOK = gql`
   mutation tripBook($input: TripBookInput!) {
@@ -119,6 +144,14 @@ export const TRIP_BOOK = gql`
       }
     }
   }
+`;
+
+export const GET_TRIP = gql`
+query getTrip($input: GetTripInput) {
+  getTrip(input: $input) {
+    ${trip}
+  }
+}
 `;
 
 export const GET_TRIPS_CONSUMER = gql`
@@ -138,6 +171,15 @@ export const GET_TRIP_CANCELLATION_CHARGE = gql`
     }
   }
 `;
+
+export const GET_BOOKING_DRIVER = gql`
+  query getBookingDriver($input: GetBookingDriverInput!) {
+    getBookingDriver(input: $input) {
+      ${DriverData}
+    }
+  }
+`;
+
 export const TRIP_CONSUMER_CANCEL = gql`
 mutation tripConsumerCancel ($input: TripConsumerCancelInput!){
   tripConsumerCancel (input: $input){
@@ -190,6 +232,14 @@ export const TRIP_CHARGE_FINALIZE_PAYMENT = gql`
       trip {
         ${trip}
       }
+    }
+  }
+`;
+
+export const DRIVER_RATING = gql`
+  mutation postGoDriverRating($input: PostGoDriverRatingInput!) {
+    postGoDriverRating(input: $input) {
+      message
     }
   }
 `;

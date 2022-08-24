@@ -321,11 +321,11 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           });
         }
       }, 500);
-    } else if (selectedPaymentMethod == 'CASH' && details.voucher.promoVoucher.isCash == 0) {
+    } else if (selectedPaymentMethod == 'CASH' && details.voucher.isCash == 0) {
       SheetManager.hide('passenger_capacity');
       setvoucherTextMessage('WrongPaymentMethod');
       setvoucherRemovedVisible(true);
-    } else if (selectedPaymentMethod == 'TOKTOKWALLET' && details.voucher.promoVoucher.isCash == 1) {
+    } else if (selectedPaymentMethod == 'TOKTOKWALLET' && details.voucher.isCash == 1) {
       SheetManager.hide('passenger_capacity');
       setvoucherTextMessage('WrongPaymentMethod');
       setvoucherRemovedVisible(true);
@@ -397,11 +397,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
   const closeOutstandingFeeModal = () => {
     setViewOutstandingFeeModal(false);
-    // navigation.replace('ToktokGoBookingStart', {
 
-    //   popTo: popTo + 1,
-    // });
-    navigation.pop(2);
+    dispatch({
+      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+      payload: {...details, paymentMethod: 'TOKTOKWALLET'},
+    });
+    navigation.pop();
   };
 
   const tokwaPaymentConfirmed = () => {
@@ -420,9 +421,9 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
   const checkPaymentMethod = () => {
     if (selectedVouchers) {
-      if (selectedVouchers?.promoVoucher?.isCash && !selectedVouchers?.promoVoucher?.isTokwa) {
+      if (selectedVouchers?.isCash && !selectedVouchers?.isTokwa) {
         selectedPaymentMethod == 'TOKTOKWALLET' ? setIsNotVoucherApplicable(false) : setIsNotVoucherApplicable(true);
-      } else if (!selectedVouchers?.promoVoucher?.isCash && selectedVouchers?.promoVoucher?.isTokwa) {
+      } else if (!selectedVouchers?.isCash && selectedVouchers?.isTokwa) {
         selectedPaymentMethod == 'CASH' ? setIsNotVoucherApplicable(false) : setIsNotVoucherApplicable(true);
       } else {
         setIsNotVoucherApplicable(false);

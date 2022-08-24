@@ -362,9 +362,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
               width: 0,
               height: 0,
             },
-            shadowRadius: 50,
-            shadowOpacity: 1.0,
-            elevation: 20,
+            shadowRadius: 5,
+            shadowOpacity: 0.3,
+            elevation: 10,
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             {selectedInput == 'D' ? (

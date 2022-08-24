@@ -26,6 +26,7 @@ import {
   GET_TRIPS_CONSUMER,
   TRIP_CHARGE_FINALIZE_PAYMENT,
   TRIP_CHARGE_INITIALIZE_PAYMENT,
+  GET_BOOKING_DRIVER,
 } from '../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
@@ -55,6 +56,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
   const [isViaTokwa, setIsViaTokwa] = useState(false);
+  const [driverData, setDriverData] = useState();
 
   const {driver, booking} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
@@ -116,6 +118,24 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
 
     return () => subscription.unsubscribe();
   }, [tripUpdateRetrySwitch]);
+
+  useEffect(() => {
+    getBookingDriver({
+      variables: {
+        input: {
+          driverUserId: parseInt(booking.driverUserId),
+        },
+      },
+    });
+  }, []);
+
+  const [getBookingDriver] = useLazyQuery(GET_BOOKING_DRIVER, {
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setDriverData(response.getBookingDriver.driver);
+    },
+    onError: onErrorAppSync,
+  });
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -210,8 +230,12 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       }
     },
     onCompleted: response => {
-      setCancellationState(response.tripConsumerCancel.cancellation);
-      SheetManager.show('cancel_booking');
+      if (chargeAmount) {
+        setCancellationState(response.tripConsumerCancel.cancellation);
+        SheetManager.show('cancel_booking');
+      } else {
+        setViewSuccessCancelBookingModal(true);
+      }
     },
   });
 
@@ -275,6 +299,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     setmodal(false);
     navigation.replace('ToktokGoRateDriver', {
       popTo: popTo + 1,
+      booking,
     });
   };
   const onCancel = () => {
@@ -314,8 +339,6 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     else if (booking.status == 'ARRIVED') return <Text style={styles.headerText}>Your driver has arrived</Text>;
     else return <DriverStatusDestination booking={booking} />;
   };
-
-  console.log('zion', tokwaAccount);
 
   const [tripChargeFinalizePayment] = useMutation(TRIP_CHARGE_FINALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -494,7 +517,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       <View style={styles.card}>
         {getHeader()}
         <View style={styles.divider} />
-        <DriverInfo booking={booking} />
+        <DriverInfo booking={booking} driverData={driverData} />
         {['ARRIVED', 'ACCEPTED'].includes(booking.status) && (
           <Actions
             callStop={callStop}
@@ -505,7 +528,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             booking={booking}
           />
         )}
-        <SeeBookingDetails booking={booking} navigation={navigation} />
+        <SeeBookingDetails booking={booking} navigation={navigation} driverData={driverData} />
       </View>
     </View>
   );
