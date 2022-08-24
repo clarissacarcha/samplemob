@@ -17,96 +17,44 @@ import {
 
 export default ({Navigator}) => (
   <>
-    <Navigator.Screen
-      name="ToktokWalletBillsLogs"
-      component={ToktokWalletBillsLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
-    />
-    <Navigator.Screen
-      name="ToktokWalletCashInLogs"
-      component={ToktokWalletCashInLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
-    />
-    <Navigator.Screen
-      name="ToktokWalletCashOutLogs"
-      component={ToktokWalletCashOutLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
-    />
-    <Navigator.Screen
-      name="ToktokWalletCashOutOtcLogs"
-      component={ToktokWalletCashOutOtcLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
-    />
-    <Navigator.Screen
-      name="ToktokWalletFoodLogs"
-      component={ToktokWalletFoodLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
-    />
-    <Navigator.Screen
-      name="ToktokWalletLoadLogs"
-      component={ToktokWalletLoadLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
-    />
-    <Navigator.Screen
-      name="ToktokWalletMallLogs"
-      component={ToktokWalletMallLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
-    />
-    <Navigator.Screen
-      name="ToktokWalletMartLogs"
-      component={ToktokWalletMartLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
-    />
+    <Navigator.Screen name="ToktokWalletBillsLogs" component={ToktokWalletBillsLogs} options={options} />
+    <Navigator.Screen name="ToktokWalletCashInLogs" component={ToktokWalletCashInLogs} options={options} />
+    <Navigator.Screen name="ToktokWalletCashOutLogs" component={ToktokWalletCashOutLogs} options={options} />
+    <Navigator.Screen name="ToktokWalletCashOutOtcLogs" component={ToktokWalletCashOutOtcLogs} options={options} />
+    <Navigator.Screen name="ToktokWalletFoodLogs" component={ToktokWalletFoodLogs} options={options} />
+    <Navigator.Screen name="ToktokWalletLoadLogs" component={ToktokWalletLoadLogs} options={options} />
+    <Navigator.Screen name="ToktokWalletMallLogs" component={ToktokWalletMallLogs} options={options} />
+    <Navigator.Screen name="ToktokWalletMartLogs" component={ToktokWalletMartLogs} options={options} />
     <Navigator.Screen
       name="ToktokWalletPabiliDeliveryLogs"
       component={ToktokWalletPabiliDeliveryLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
+      options={options}
     />
     <Navigator.Screen
       name="ToktokWalletMerchantPaymentLogs"
       component={ToktokWalletMerchantPaymentLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
+      options={options}
     />
     <Navigator.Screen
       name="ToktokWalletMerchantSettlementLogs"
       component={ToktokWalletMerchantSettlementLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
+      options={options}
     />
-    <Navigator.Screen
-      name="ToktokWalletRequestMoneyLogs"
-      component={ToktokWalletRequestMoneyLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
-    />
-    <Navigator.Screen
-      name="ToktokWalletSendMoneyLogs"
-      component={ToktokWalletSendMoneyLogs}
-      options={{
-        headerTitleAlign: 'center',
-      }}
-    />
+    <Navigator.Screen name="ToktokWalletRequestMoneyLogs" component={ToktokWalletRequestMoneyLogs} options={options} />
+    <Navigator.Screen name="ToktokWalletSendMoneyLogs" component={ToktokWalletSendMoneyLogs} options={options} />
   </>
 );
+
+const options = {
+  headerTitleAlign: 'center',
+  headerStyle: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+};
