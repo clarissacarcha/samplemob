@@ -49,8 +49,8 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const {popTo, decodedPolyline} = route.params;
   const {tokwaAccount, getMyAccount} = useAccount();
   const sheetRef = React.useRef(null);
-  const SNAP_ARR = [-500, 370];
-
+  const SNAPS_ANDROID = [0, 370];
+  const SNAPS_IOS = [0, 350];
   const [status, setStatus] = useState(5);
   const [action, setAction] = useState(true);
   const [modal, setmodal] = useState(false);
@@ -476,7 +476,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       <BottomSheet
         enabledContentGestureInteraction={false}
         ref={sheetRef}
-        snapPoints={SNAP_ARR}
+        snapPoints={Platform.OS === 'android' ? SNAPS_ANDROID : SNAPS_IOS}
         initialSnap={0}
         renderContent={renderContent}
         enabledBottomClamp={true}
@@ -539,7 +539,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         tripRebookFunc={tripRebookFunc}
       />
 
-      <TouchableOpacity style={styles.backButton} onPress={() => sheetRef.current.snapTo(1)}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
       <Map booking={booking} decodedPolyline={decodedPolyline} originData={originData} />
