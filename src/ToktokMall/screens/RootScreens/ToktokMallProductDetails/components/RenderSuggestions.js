@@ -114,7 +114,7 @@ const RenderItem = ({item}) => {
             </View>
 
             <View style={styles.itemStocks}>
-              <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
+              {/* <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text> */}
             </View>
           </View>
           {

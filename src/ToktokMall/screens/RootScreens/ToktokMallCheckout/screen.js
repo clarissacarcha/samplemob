@@ -1183,7 +1183,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           shippingRates={shippingRates}
           onPress={async () => {
             setOnPressPlaceOrder(true);
-            if (!TCEnabled) return;
+            // if (!TCEnabled) return;
 
             if (!isLoading) {
 

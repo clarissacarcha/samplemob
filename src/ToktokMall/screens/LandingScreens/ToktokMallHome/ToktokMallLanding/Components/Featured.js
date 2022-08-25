@@ -401,15 +401,15 @@ const styles = StyleSheet.create({
     paddingVertical: 0
   },
   imageBackgroundContainer: {
-    paddingVertical: 20, 
+    paddingVertical: 10, 
     flexDirection: 'row'
   },
   featuredFlashContainer: {
     flex: 1
   },
   featuredFlashImage: {
-    width: '38%', 
-    height: 40, 
+    width: 100, 
+    height: 50, 
     resizeMode: 'stretch', 
     justifyContent: 'center', 
     alignSelf: 'flex-start'

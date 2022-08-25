@@ -100,7 +100,7 @@ const RenderItem = ({item, navigation}) => {
                 )}
               </View>
               <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
-                <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
+                {/* <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text> */}
               </View>
             </View>
             {item.refComDiscountRate && item.refComDiscountRate != null ? (

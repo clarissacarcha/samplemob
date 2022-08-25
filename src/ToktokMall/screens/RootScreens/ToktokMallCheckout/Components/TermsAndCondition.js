@@ -48,12 +48,12 @@ export const TermsAndCondition = (props) => {
     }
 
     return (
-      <TouchableOpacity onPress={onPressTC}>
+    //   <TouchableOpacity onPress={onPressTC}>
         <View style={styles.tcContainer}>
           <Animated.View style={[styles.tcSubContainer, {opacity: fadeAnim.current}]} />
-          <View style={[styles.tcButton, props.TCEnabled && {backgroundColor: '#F6841F'}]}>
+          {/* <View style={[styles.tcButton, props.TCEnabled && {backgroundColor: '#F6841F'}]}>
             {props.TCEnabled && <Icons.MIcon name="check" size={14} color="white" />}
-          </View>
+          </View> */}
           <Text style={styles.tcText}>
             I hereby confirm that all order details and delivery information are correctly entered. Furthermore, I have
             read and agreed with the{' '}
@@ -63,7 +63,7 @@ export const TermsAndCondition = (props) => {
             {' '}of this service.
           </Text>
         </View>
-      </TouchableOpacity>
+    //   </TouchableOpacity>
     );
 }
 
