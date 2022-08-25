@@ -151,7 +151,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   useEffect(() => {
     const subscribe = navigation.addListener('focus', async () => {
       BackgroundTimer.runBackgroundTimer(async () => {
-        //code that will be called every 5 seconds
+        //code that will be called every 15 seconds
         updateDriverLoc({
           variables: {
             input: {

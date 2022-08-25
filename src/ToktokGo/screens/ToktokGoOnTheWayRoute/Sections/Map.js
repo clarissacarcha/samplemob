@@ -22,6 +22,11 @@ export const Map = ({booking, decodedPolyline, originData, driverLat, driverLong
   };
 
   const TO = {
+    latitude: booking.route.destinations[0].location.latitude,
+    longitude: booking.route.destinations[0].location.longitude,
+  };
+
+  const DRIVERLOC = {
     latitude: driverLat,
     longitude: driverLong,
   };
@@ -65,9 +70,18 @@ export const Map = ({booking, decodedPolyline, originData, driverLat, driverLong
       </Marker>
       <Marker
         key={key => {
-          2;
+          3;
         }}
         coordinate={originData ? INITIAL_REGION : TO}>
+        <View style={{alignItems: 'center'}}>
+          <Image source={LocationIcon} style={{height: 36, width: 36}} resizeMode="contain" />
+        </View>
+      </Marker>
+      <Marker
+        key={key => {
+          2;
+        }}
+        coordinate={DRIVERLOC}>
         <View style={{alignItems: 'center'}}>
           <Image source={CarImage} style={{height: 30, width: 30}} resizeMode="contain" />
         </View>
