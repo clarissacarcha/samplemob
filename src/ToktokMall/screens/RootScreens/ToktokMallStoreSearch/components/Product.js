@@ -154,9 +154,13 @@ export const Product = ({data, lazyload}) => {
                   <>
                     <RenderItem navigation={navigation} item={item} />
                     <View style={styles.margin1} />
+
+                    {/* USED TO FIX EXTENDED CARD */}
+                    <Text>&nbsp;</Text>
+
                   </>
                 )
-              }                  
+              }          
             }
             return <RenderItem navigation={navigation} item={item} />
           }}
