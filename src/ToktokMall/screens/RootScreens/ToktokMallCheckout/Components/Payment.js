@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     fontSize: 13, 
   },
   margin1: {
-    paddingTop: 15
+    paddingTop: 30
   },
   sorryContainer: {
     backgroundColor: '#FFFCF4', 
