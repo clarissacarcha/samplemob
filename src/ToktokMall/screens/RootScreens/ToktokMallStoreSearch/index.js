@@ -177,8 +177,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
   				  />
             <View style={styles.margin1} />
             <View style={styles.noResultContainer}>
-		    			<Text style={styles.noResultText1}>No results found</Text>
-              <Text style={styles.noResultText2}>Try to search something similar</Text>              
+		    			<Text style={styles.noResultText1}>No Results Found</Text>
+              <Text style={styles.noResultText2}>Try to search something similar.</Text>              
 	    			</View>
           </View>
           <View style={styles.flex02} />
@@ -345,7 +345,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   noResultText1: {
-    fontSize: 16, 
+    fontSize: 18, 
+    fontWeight: 'bold',
     color: COLOR.ORANGE
   },
   noResultText2: {
