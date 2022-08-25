@@ -15,29 +15,29 @@ export const TermsAndCondition = (props) => {
 
     const fadeAnim = useRef(new Animated.Value(0)); 
 
-    useEffect(() => {
-        if(props.onPressPlaceOrder) {
-            if(!props.TCEnabled) {
-                props?.scrollViewRef.current.scrollToEnd({ animated: true });
+    // useEffect(() => {
+    //     if(props.onPressPlaceOrder) {
+    //         if(!props.TCEnabled) {
+    //             props?.scrollViewRef.current.scrollToEnd({ animated: true });
 
-                Animated.timing(fadeAnim.current, {
-                    duration: 100,
-                    toValue: 1
-                }).start(res1 => {
-                    if(res1.finished) {
-                        setTimeout(() => {
-                            Animated.timing(fadeAnim.current, {
-                                duration: 1000,
-                                toValue: 0
-                            }).start(res2 => {
-                                if(res2.finished) props.onDoneFade();
-                            })
-                        }, 500)
-                    }
-                });
-            }
-        }
-    }, [props.onPressPlaceOrder])
+    //             Animated.timing(fadeAnim.current, {
+    //                 duration: 100,
+    //                 toValue: 1
+    //             }).start(res1 => {
+    //                 if(res1.finished) {
+    //                     setTimeout(() => {
+    //                         Animated.timing(fadeAnim.current, {
+    //                             duration: 1000,
+    //                             toValue: 0
+    //                         }).start(res2 => {
+    //                             if(res2.finished) props.onDoneFade();
+    //                         })
+    //                     }, 500)
+    //                 }
+    //             });
+    //         }
+    //     }
+    // }, [props.onPressPlaceOrder])
 
     const onPressTC = () => {
         props.onPressTCbutton();

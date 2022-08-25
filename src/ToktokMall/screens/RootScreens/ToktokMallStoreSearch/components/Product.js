@@ -35,7 +35,7 @@ const RenderItem = ({item, navigation}) => {
 
   return (
     <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
-      <TouchableOpacity onPress={() => navigation.navigate('ToktokMallProductDetails', item)}>
+      <TouchableOpacity onPress={() => navigation.push('ToktokMallProductDetails', item)}>
           <View style={{padding: 5}}>
             {item?.discountRate != '' && (
               <View
