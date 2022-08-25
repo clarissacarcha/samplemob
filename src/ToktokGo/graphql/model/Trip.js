@@ -243,3 +243,14 @@ export const DRIVER_RATING = gql`
     }
   }
 `;
+
+export const UPDATE_DRIVER_LOC = gql`
+  query getTripDriver($input: GetTripDriverInput!) {
+    getTripDriver(input: $input) {
+      location {
+        latitude
+        longitude
+      }
+    }
+  }
+`;

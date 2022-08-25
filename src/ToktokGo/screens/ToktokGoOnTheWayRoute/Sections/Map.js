@@ -6,7 +6,8 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
 import LocationIcon from '../../../../assets/images/locationIcon.png';
 import constants from '../../../../common/res/constants';
-export const Map = ({booking, decodedPolyline, originData}) => {
+import CarImage from '../../../../assets/images/car1.png';
+export const Map = ({booking, decodedPolyline, originData, driverLat, driverLong}) => {
   const mapRef = useRef();
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
@@ -21,8 +22,8 @@ export const Map = ({booking, decodedPolyline, originData}) => {
   };
 
   const TO = {
-    latitude: booking.route.destinations[0].location.latitude,
-    longitude: booking.route.destinations[0].location.longitude,
+    latitude: driverLat,
+    longitude: driverLong,
   };
 
   const onMapReady = async () => {
@@ -68,7 +69,7 @@ export const Map = ({booking, decodedPolyline, originData}) => {
         }}
         coordinate={originData ? INITIAL_REGION : TO}>
         <View style={{alignItems: 'center'}}>
-          <Image source={LocationIcon} style={{height: 36, width: 36}} resizeMode="contain" />
+          <Image source={CarImage} style={{height: 30, width: 30}} resizeMode="contain" />
         </View>
       </Marker>
     </MapView>

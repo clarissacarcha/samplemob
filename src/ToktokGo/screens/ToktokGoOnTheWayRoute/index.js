@@ -39,11 +39,14 @@ import {
   TRIP_CHARGE_FINALIZE_PAYMENT,
   TRIP_CHARGE_INITIALIZE_PAYMENT,
   GET_BOOKING_DRIVER,
+  UPDATE_DRIVER_LOC,
 } from '../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {onErrorAppSync} from '../../util';
 import {useAccount} from 'toktokwallet/hooks';
+import BackgroundTimer from 'react-native-background-timer';
+import CarImage from '../../../assets/images/car1.png';
 
 const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const {popTo, decodedPolyline} = route.params;
@@ -71,6 +74,8 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
   const [isViaTokwa, setIsViaTokwa] = useState(false);
   const [driverData, setDriverData] = useState();
+  const [driverLocLat, setDriverLocLat] = useState(14.5838);
+  const [driverLocLong, setDriverLocLong] = useState(121.0597);
 
   const {driver, booking} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
@@ -143,10 +148,43 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     });
   }, []);
 
+  useEffect(() => {
+    const subscribe = navigation.addListener('focus', async () => {
+      BackgroundTimer.runBackgroundTimer(async () => {
+        //code that will be called every 5 seconds
+        updateDriverLoc({
+          variables: {
+            input: {
+              tripId: booking.id,
+            },
+          },
+        });
+      }, 15000);
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      return subscribe;
+    });
+    const unsubscribe = navigation.addListener('blur', async () => {
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      BackgroundTimer.stopBackgroundTimer();
+      console.log('exit');
+      return unsubscribe;
+    });
+  }, [navigation]);
+
   const [getBookingDriver] = useLazyQuery(GET_BOOKING_DRIVER, {
     fetchPolicy: 'network-only',
     onCompleted: response => {
       setDriverData(response.getBookingDriver.driver);
+    },
+    onError: onErrorAppSync,
+  });
+
+  const [updateDriverLoc] = useLazyQuery(UPDATE_DRIVER_LOC, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setDriverLocLat(response.getTripDriver.location.latitude);
+      setDriverLocLong(response.getTripDriver.location.longitude);
     },
     onError: onErrorAppSync,
   });
@@ -542,7 +580,13 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      <Map booking={booking} decodedPolyline={decodedPolyline} originData={originData} />
+      <Map
+        booking={booking}
+        decodedPolyline={decodedPolyline}
+        originData={originData}
+        driverLat={driverLocLat}
+        driverLong={driverLocLong}
+      />
       <View style={styles.card}>
         {getHeader()}
         <View style={styles.divider} />
