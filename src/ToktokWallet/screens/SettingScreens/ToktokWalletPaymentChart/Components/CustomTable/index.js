@@ -13,9 +13,9 @@ const Header = ({headerData}) => {
       case 1:
         return '30%';
       case 2:
-        return '13%';
+        return '14%';
       case 3:
-        return '15%';
+        return '14%';
       case 4:
         return '17%';
     }
@@ -43,7 +43,9 @@ const PaymentChart = ({paymentChart}) => {
           <View
             style={{...styles.paymentChartSubContainer, ...{backgroundColor: index % 2 === 1 ? 'white' : '#FFF4EB'}}}>
             <View style={styles.cell25}>
-              <Text style={styles.paymentChartText}>{details.partnerName}</Text>
+              <Text numberOfLines={1} adjustsFontSizeToFit style={styles.paymentChartText}>
+                {details.partnerName}
+              </Text>
             </View>
             <View style={styles.cell100}>
               {details.paymentChartRanges.map((range, ind) => {
@@ -61,18 +63,21 @@ const PaymentChart = ({paymentChart}) => {
                         ₱{numFormatter(from)} - ₱{numFormatter(to)}
                       </Text>
                     </View>
-                    <View style={styles.cell13}>
-                      <Text style={styles.paymentChartText}>
+                    <View style={styles.cell14}>
+                      <Text numberOfLines={1} adjustsFontSizeToFit style={styles.paymentChartText}>
                         {details.partnerType.name === 'Over the Counter' ? `₱${computedFee}` : '--'}
                       </Text>
                     </View>
-                    <View style={styles.cell15}>
-                      <Text style={styles.paymentChartText}>
+                    <View style={styles.cell14}>
+                      <Text numberOfLines={1} adjustsFontSizeToFit style={styles.paymentChartText}>
                         {details.partnerType.name === 'Online Bank' ? `₱${computedFee}` : '--'}
                       </Text>
                     </View>
                     <View style={styles.cell17}>
-                      <Text style={{...styles.paymentChartText, ...styles.textCenter}}>
+                      <Text
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                        style={{...styles.paymentChartText, ...styles.textCenter}}>
                         {details.partnerType.name === 'Payment thru Mobile/E-Wallet' ? `₱${computedFee}` : '--'}
                       </Text>
                     </View>
@@ -92,7 +97,9 @@ export const CustomTable = ({headerData = [], rowsData = [], data = []}) => {
     <ScrollView style={styles.container}>
       {data.map(item => {
         const {paymentChart} = item;
-        if (paymentChart.length === 0) return null;
+        if (paymentChart.length === 0) {
+          return null;
+        }
         return (
           <View style={styles.contentContainer}>
             <Text style={styles.service}>{item.description}</Text>
@@ -159,16 +166,13 @@ const styles = StyleSheet.create({
   cell100: {
     width: '100%',
   },
-  cell13: {
-    width: '13%',
-  },
   cell17: {
     width: '17%',
   },
   cell30: {
     width: '30%',
   },
-  cell15: {
-    width: '15%',
+  cell14: {
+    width: '14%',
   },
 });
