@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, ActivityIndicator, FlatList, RefreshControl, Dimensions} from 'react-native';
+import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_MERCHANT_SETTLEMENT} from 'toktokwallet/graphql';
@@ -7,12 +7,12 @@ import {useSelector} from 'react-redux';
 import {
   Separator,
   CheckIdleState,
-  SwipeDownToRefresh,
   NoData,
   LoadingIndicator,
   SomethingWentWrong,
+  HeaderBack,
+  HeaderTitleRevamp,
 } from 'toktokwallet/components';
-import {HeaderBack, HeaderTitle} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
@@ -21,13 +21,12 @@ import {moderateScale} from 'toktokwallet/helper';
 //SELF IMPORT
 import {LogItem} from './Components';
 
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
-const imageWidth = Dimensions.get('window').width - 200;
+const {COLOR} = CONSTANTS;
 
 export const ToktokWalletMerchantSettlementLogs = ({navigation}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['Settlement', '']} />,
+    headerTitle: () => <HeaderTitleRevamp label={'Settlement'} />,
   });
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
@@ -123,7 +122,9 @@ export const ToktokWalletMerchantSettlementLogs = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           data={records}
           keyExtractor={item => item.id}
-          renderItem={({item, index}) => <LogItem key={index} data={records} item={item} index={index} tokwaAccount={tokwaAccount} />}
+          renderItem={({item, index}) => (
+            <LogItem key={index} data={records} item={item} index={index} tokwaAccount={tokwaAccount} />
+          )}
           onEndReachedThreshold={0.02}
           onEndReached={fetchMoreData}
           ItemSeparatorComponent={renderSeparator}

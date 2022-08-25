@@ -1,27 +1,32 @@
-import React, {useState, useEffect,useRef} from 'react';
-import {View, StyleSheet, ActivityIndicator, FlatList, RefreshControl, Dimensions} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_MERCHANT_PAYMENTS_PAGINATE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-import {Separator, CheckIdleState, LoadingIndicator, NoData} from 'toktokwallet/components';
-import {HeaderBack, HeaderTitle} from 'src/revamp';
+import {
+  Separator,
+  CheckIdleState,
+  LoadingIndicator,
+  NoData,
+  HeaderBack,
+  HeaderTitleRevamp,
+} from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
 import {SomethingWentWrong} from 'src/components';
-import { moderateScale } from "toktokwallet/helper";
+import {moderateScale} from 'toktokwallet/helper';
 
 //SELF IMPORT
 import {LogItem} from './Components';
 
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
-const imageWidth = Dimensions.get('window').width - 200;
+const {COLOR} = CONSTANTS;
 
 export const ToktokWalletMerchantPaymentLogs = ({navigation}) => {
   navigation.setOptions({
-    headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['QR Payment', '']} />,
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitleRevamp label={'QR Payment'} />,
   });
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
@@ -31,29 +36,32 @@ export const ToktokWalletMerchantPaymentLogs = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const alert = useAlert();
 
-  const [getMerchantPaymentsPaginate , {date,error,loading,fetchMore}] = useLazyQuery(GET_MERCHANT_PAYMENTS_PAGINATE, {
-    fetchPolicy: 'network-only',
-    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-    onError: error => {
-      setRefreshing(false);
-      onErrorAlert({alert, error, navigation});
+  const [getMerchantPaymentsPaginate, {date, error, loading, fetchMore}] = useLazyQuery(
+    GET_MERCHANT_PAYMENTS_PAGINATE,
+    {
+      fetchPolicy: 'network-only',
+      client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+      onError: error => {
+        setRefreshing(false);
+        onErrorAlert({alert, error, navigation});
+      },
+      onCompleted: ({getMerchantPaymentsPaginate}) => {
+        setRecords(getMerchantPaymentsPaginate.edges);
+        setPageInfo(getMerchantPaymentsPaginate.pageInfo);
+        setRefreshing(false);
+      },
     },
-    onCompleted: ({getMerchantPaymentsPaginate}) => {
-      setRecords(getMerchantPaymentsPaginate.edges);
-      setPageInfo(getMerchantPaymentsPaginate.pageInfo);
-      setRefreshing(false);
-    },
-  })
+  );
 
-  const handleGetTransactions = ()=> {
+  const handleGetTransactions = () => {
     getMerchantPaymentsPaginate({
       variables: {
         input: {
           afterCursorId: null,
         },
       },
-    })
-  }
+    });
+  };
   const fetchMoreData = async () => {
     if (pageInfo.hasNextPage) {
       await fetchMore({
@@ -97,7 +105,6 @@ export const ToktokWalletMerchantPaymentLogs = ({navigation}) => {
     );
   };
 
-
   if (error) {
     return <SomethingWentWrong onRefetch={Refetch} />;
   }
@@ -126,7 +133,7 @@ export const ToktokWalletMerchantPaymentLogs = ({navigation}) => {
               data={records}
               keyExtractor={item => item.id}
               renderItem={({item, index}) => (
-                <LogItem key={index} item={item?.node} index={index} tokwaAccount={tokwaAccount} data={records}/>
+                <LogItem key={index} item={item?.node} index={index} tokwaAccount={tokwaAccount} data={records} />
               )}
               contentContainerStyle={{flexGrow: 1}}
               onEndReachedThreshold={0.01}

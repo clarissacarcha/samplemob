@@ -1,12 +1,18 @@
-import React, {useState, useEffect,useRef} from 'react';
-import {View, StyleSheet, ActivityIndicator, FlatList, RefreshControl, Dimensions} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_FUND_TRANSFER} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-import {Separator, CheckIdleState, LoadingIndicator, NoData} from 'toktokwallet/components';
-import {moderateScale} from "toktokwallet/helper";
-import {HeaderBack, HeaderTitle} from 'src/revamp';
+import {
+  Separator,
+  CheckIdleState,
+  LoadingIndicator,
+  NoData,
+  HeaderBack,
+  HeaderTitleRevamp,
+} from 'toktokwallet/components';
+import {moderateScale} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
@@ -15,13 +21,12 @@ import {SomethingWentWrong} from 'src/components';
 //SELF IMPORT
 import {CashOutLog} from './Components';
 
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
-const imageWidth = Dimensions.get('window').width - 200;
+const {COLOR} = CONSTANTS;
 
 export const ToktokWalletCashOutLogs = ({navigation}) => {
   navigation.setOptions({
-    headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['Fund Transfer', '']} />,
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitleRevamp label={'Fund Transfer'} />,
   });
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
@@ -31,8 +36,7 @@ export const ToktokWalletCashOutLogs = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const alert = useAlert();
 
-
-  const [getFundTransfer, {data, error, loading, fetchMore }] = useLazyQuery(GET_FUND_TRANSFER, {
+  const [getFundTransfer, {data, error, loading, fetchMore}] = useLazyQuery(GET_FUND_TRANSFER, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
@@ -46,15 +50,15 @@ export const ToktokWalletCashOutLogs = ({navigation}) => {
     },
   });
 
-  const handleGetTransactions = ()=> {
+  const handleGetTransactions = () => {
     getFundTransfer({
       variables: {
         input: {
           afterCursorId: null,
         },
       },
-    })
-  }
+    });
+  };
   const fetchMoreData = async () => {
     if (pageInfo.hasNextPage) {
       await fetchMore({
@@ -80,7 +84,6 @@ export const ToktokWalletCashOutLogs = ({navigation}) => {
     }
   };
 
- 
   const Refetch = () => {
     handleGetTransactions();
     setRefreshing(loading);
@@ -127,7 +130,13 @@ export const ToktokWalletCashOutLogs = ({navigation}) => {
               data={records}
               keyExtractor={item => item.id}
               renderItem={({item, index}) => (
-                <CashOutLog data={records} key={`cashin-log${index}`} item={item?.node} index={index} tokwaAccount={tokwaAccount} />
+                <CashOutLog
+                  data={records}
+                  key={`cashin-log${index}`}
+                  item={item?.node}
+                  index={index}
+                  tokwaAccount={tokwaAccount}
+                />
               )}
               contentContainerStyle={{flexGrow: 1}}
               onEndReachedThreshold={0.01}
@@ -152,7 +161,6 @@ export const ToktokWalletCashOutLogs = ({navigation}) => {
               }
               ListFooterComponent={ListFooterComponent}
             />
-          
           </View>
         </View>
       }

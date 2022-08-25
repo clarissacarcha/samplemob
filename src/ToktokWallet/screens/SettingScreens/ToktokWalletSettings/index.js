@@ -1,13 +1,10 @@
-import React , {useState , useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView , Platform } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform} from 'react-native';
 import FIcon from 'react-native-vector-icons/Feather';
-import {Separator, CheckIdleState} from 'toktokwallet/components';
-import {HeaderBack, HeaderTitle} from 'src/revamp';
+import {Separator, CheckIdleState, HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
 import {useSelector} from 'react-redux';
 import CONSTANTS from 'common/res/constants';
-import _ from "lodash";
-//SELF IMPORTS
-import {Biometrics} from './Components';
+import _ from 'lodash';
 
 const {FONT_FAMILY: FONT, FONT_SIZE, COLOR} = CONSTANTS;
 const SettingHeaderTitle = ({title}) => {
@@ -20,99 +17,113 @@ const SettingHeaderTitle = ({title}) => {
 
 export const ToktokWalletSettings = ({navigation, route}) => {
   navigation.setOptions({
-    headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['Settings', '']} />,
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitleRevamp label={'Settings'} />,
   });
   const tokwaAccount = useSelector(state => state.toktokWallet);
   const [menuData, setMenuData] = useState([]);
   const menuDataConstant = [
     {
       label: 'Cash In',
-      route: "ToktokWalletCashInLogs",
-      identifier: "logCashIn",
+      route: 'ToktokWalletCashInLogs',
+      identifier: 'logCashIn',
       checkIfMerchantLinked: false,
+      service: 'internal',
     },
     {
       label: 'Fund Transfer',
-      route: "ToktokWalletCashOutLogs",
-      identifier: "logFundTransfer",
+      route: 'ToktokWalletCashOutLogs',
+      identifier: 'logFundTransfer',
       checkIfMerchantLinked: false,
+      service: 'internal',
     },
     {
-      label: "Cash Out",
-      route: "ToktokWalletCashOutOtcLogs",
-      identifier: `logCashOutOtc`,
+      label: 'Cash Out',
+      route: 'ToktokWalletCashOutOtcLogs',
+      identifier: 'logCashOutOtc',
       checkIfMerchantLinked: false,
+      service: 'internal',
     },
     {
       label: 'Send Money',
-      route: "ToktokWalletSendMoneyLogs",
-      identifier: "logSendMoney",
+      route: 'ToktokWalletSendMoneyLogs',
+      identifier: 'logSendMoney',
       checkIfMerchantLinked: false,
+      service: 'internal',
     },
     {
       label: 'Delivery',
-      route: "ToktokWalletPabiliDeliveryLogs",
-      identifier: "logToktok",
+      route: 'ToktokWalletPabiliDeliveryLogs',
+      identifier: 'logToktok',
       checkIfMerchantLinked: false,
+      service: 'external',
     },
     {
       label: 'Food',
-      route: "ToktokWalletFoodLogs",
-      identifier: "logToktokFood",
+      route: 'ToktokWalletFoodLogs',
+      identifier: 'logToktokFood',
       checkIfMerchantLinked: false,
+      service: 'external',
     },
     {
       label: 'QR Payment',
-      route: "ToktokWalletMerchantPaymentLogs",
-      identifier: "logMerchantQrPayment",
+      route: 'ToktokWalletMerchantPaymentLogs',
+      identifier: 'logMerchantQrPayment',
       checkIfMerchantLinked: false,
+      service: 'internal',
     },
     {
       label: 'Load',
-      route: "ToktokWalletLoadLogs",
-      identifier: "logToktokLoad",
+      route: 'ToktokWalletLoadLogs',
+      identifier: 'logToktokLoad',
       checkIfMerchantLinked: false,
+      service: 'external',
     },
     {
       label: 'Receive Money',
-      route: "ToktokWalletReceiveMoneyLogs",
+      route: 'ToktokWalletReceiveMoneyLogs',
       identifier: `${Platform.OS}LogRecieveMoney`,
       checkIfMerchantLinked: false,
+      service: 'internal',
     },
     {
       label: 'Request Money',
-      route: "ToktokWalletRequestMoneyLogs",
+      route: 'ToktokWalletRequestMoneyLogs',
       identifier: `${Platform.OS}LogRequestMoney`,
       checkIfMerchantLinked: false,
+      service: 'internal',
     },
     {
       label: 'Bills',
-      route: "ToktokWalletBillsLogs",
-      identifier: "logToktokBills",
+      route: 'ToktokWalletBillsLogs',
+      identifier: 'logToktokBills',
       checkIfMerchantLinked: false,
+      service: 'external',
     },
     {
       label: 'Mart',
-      route: "ToktokWalletMartLogs",
-      identifier: "logToktokMart",
+      route: 'ToktokWalletMartLogs',
+      identifier: 'logToktokMart',
       checkIfMerchantLinked: false,
+      service: 'external',
     },
     {
       label: 'Mall',
-      route: "ToktokWalletMallLogs",
-      identifier: "logToktokMall",
+      route: 'ToktokWalletMallLogs',
+      identifier: 'logToktokMall',
       checkIfMerchantLinked: false,
+      service: 'external',
     },
     {
-      label: "Settlement",
-      route: "ToktokWalletMerchantSettlementLogs",
-      identifier: `logMerchantSettlement`,
+      label: 'Settlement',
+      route: 'ToktokWalletMerchantSettlementLogs',
+      identifier: 'logMerchantSettlement',
       checkIfMerchantLinked: true,
-    }
-  ]
+      service: 'internal',
+    },
+  ];
 
-  useEffect(()=>{
+  useEffect(() => {
     const appServicesObject = _.keyBy(tokwaAccount.appServiceLogs, 'identifier');
     const filteredMenuData = menuDataConstant.filter(menuDataItem => {
       const appService = appServicesObject[menuDataItem.identifier];
@@ -131,15 +142,22 @@ export const ToktokWalletSettings = ({navigation, route}) => {
         return false;
       }
 
-      if(menuDataItem?.checkIfMerchantLinked && !tokwaAccount?.merchantSettlement){
-        console.log("No Merchant linked in tokwa account");
+      if (menuDataItem?.checkIfMerchantLinked && !tokwaAccount?.merchantSettlement) {
+        console.log('No Merchant linked in tokwa account');
         return false;
       }
 
       return true;
-    })
-    setMenuData(filteredMenuData);
-  },[])
+    });
+
+    const groupedItems = _(filteredMenuData)
+      .sortBy(item => item.label)
+      .groupBy(item => item.service)
+      .value();
+
+    setMenuData([...groupedItems.internal, ...groupedItems.external]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const SettingOption = ({route, params = {}, title}) => (
     <>
@@ -157,8 +175,10 @@ export const ToktokWalletSettings = ({navigation, route}) => {
 
   return (
     <CheckIdleState>
-      <Separator />
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
         <SettingHeaderTitle title="Security" />
         <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? 'Change' : 'Setup'} TPIN`} />
         <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN" />
@@ -168,11 +188,10 @@ export const ToktokWalletSettings = ({navigation, route}) => {
         <SettingHeaderTitle title="Account" />
         <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart" />
         <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit" />
-        {!tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3 ? (
+        {((!tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3) ||
+          (tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2)) && (
           <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account" />
-        ) : tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2 ? (
-          <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account" />
-        ) : null}
+        )}
         <Separator />
         <SettingHeaderTitle title="Help Centre" />
         <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy" />
@@ -180,11 +199,9 @@ export const ToktokWalletSettings = ({navigation, route}) => {
         <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us" />
         <Separator />
         <SettingHeaderTitle title="Logs" />
-            {
-              menuData.map((item,index)=>(
-                <SettingOption route={item.route} title={item.label}/>
-              ))
-            }
+        {menuData.map((item, index) => (
+          <SettingOption route={item.route} title={item.label} />
+        ))}
         <Separator />
         <SettingHeaderTitle title="Account Recovery" />
         <SettingOption route="ToktokWalletAccountRecoverySetup" title="Account Recovery Setup" />
@@ -196,6 +213,10 @@ export const ToktokWalletSettings = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
+  },
+  contentContainer: {
+    paddingVertical: 15,
   },
   settingoption: {
     padding: 16,
