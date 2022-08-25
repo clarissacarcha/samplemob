@@ -1,111 +1,192 @@
-import React, {useState, useRef, useEffect} from 'react';
-import {FlatList, Image, View, StyleSheet, Text, TouchableOpacity, Dimensions, Platform, RefreshControl} from 'react-native';
-import { LoadingIndicator, ActivityCard, SomethingWentWrong, EmptyList } from 'toktokload/components';
-import { COLOR, FONT, FONT_SIZE } from "src/res/variables"; 
+import React, {useState, useRef, useEffect, useMemo} from 'react';
+import {
+  FlatList,
+  Image,
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  Platform,
+  RefreshControl,
+} from 'react-native';
+import {LoadingIndicator, ActivityCard, SomethingWentWrong, EmptyList} from 'toktokload/components';
+import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
+import {useScrollToTop} from '@react-navigation/native';
 
 //HELPER
-import { moderateScale, numberFormat } from "toktokload/helper";
+import {moderateScale, numberFormat} from 'toktokload/helper';
 import moment from 'moment';
 
 //IMAGES
-import { wallet_icon } from "src/ToktokLoad/assets/icons";
-import { empty_activities } from "src/ToktokLoad/assets/images";
+import {wallet_icon} from 'src/ToktokLoad/assets/icons';
+import {empty_activities} from 'src/ToktokLoad/assets/images';
 
 //GRAPHQL & HOOKS
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
-import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
-import { GET_TRANSACTIONS_BY_STATUS } from 'toktokload/graphql/model';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
+import {GET_LOAD_TRANSACTIONS_PAGINATE} from 'toktokload/graphql';
 
 const {width, height} = Dimensions.get('window');
 
 const ListEmptyComponent = () => {
   return (
     <View style={styles.container}>
-      <EmptyList
-        imageSrc={empty_activities}
-        label="No Activities"
-        message="You have no activities at the moment."
-      />
+      <EmptyList imageSrc={empty_activities} label="No Activities" message="You have no activities at the moment." />
     </View>
-  )
-}
-export const ToktokLoadPendingActivities = ({ navigation }) => {
-
-  const [transactions, setTransactions] = useState([]);
-
-  const [getTransactionsByStatus, {loading, error}] = useLazyQuery(GET_TRANSACTIONS_BY_STATUS, {
-    fetchPolicy: "network-only",
-    variables: {
-      input: {
-        type: 2,
-        status: 2
-      }
-    },
-    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onCompleted:({ getTransactionsByStatus })=> {
-      setTransactions(getTransactionsByStatus)
-    }
-  });
-
-  useEffect(() => {
-    getTransactionsByStatus();
-  }, [])
-
-  const onPressActivityCard = (item) => {
-    navigation.navigate("ToktokLoadActivityDetails", { activityDetails: item })
-  }
-
-  if(error){
-    return (
-      <View style={styles.container}>
-        <SomethingWentWrong onRefetch={getTransactionsByStatus} error={error} />
-      </View>
-    )
-  }
-
-  return (
-    <FlatList
-      data={transactions}
-      renderItem={({ item, index }) => (
-        <ActivityCard
-          item={item}
-          onPress={() => onPressActivityCard(item)}
-          isLastItem={transactions.length - 1 ==  index}
-        />
-      )}
-      showsHorizontalScrollIndicator={false}
-      keyExtractor={(val, index) => index.toString()}
-      contentContainerStyle={styles.flatlistContainer}
-      refreshControl={
-        <RefreshControl
-          refreshing={loading}
-          onRefresh={getTransactionsByStatus}
-          colors={[COLOR.YELLOW]}
-          tintColor={COLOR.YELLOW}
-        />
-      }
-      ListEmptyComponent={ListEmptyComponent}
-    />
   );
 };
 
-const mapStateToProps = (state) => ({
-  session: state.session,
-});
+const ListFooterComponent = ({hasNextPage}) => {
+  return (
+    <View style={{marginTop: moderateScale(15)}}>
+      <LoadingIndicator isLoading={hasNextPage} size="small" />
+    </View>
+  );
+};
+
+export const ToktokLoadPendingActivities = ({navigation}) => {
+  const [transactions, setTransactions] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [pageInfo, setPageInfo] = useState({});
+  const listRef = useRef(null);
+
+  useScrollToTop(listRef); // scroll to top
+
+  const [getTransactionsPaginate, {loading, error, fetchMore}] = useLazyQuery(GET_LOAD_TRANSACTIONS_PAGINATE, {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: () => {
+      changeStates();
+    },
+    onCompleted: ({getTransactionsPaginate}) => {
+      setTransactions(getTransactionsPaginate.edges);
+      setPageInfo(getTransactionsPaginate.pageInfo);
+      changeStates();
+    },
+  });
+
+  useEffect(() => {
+    handleGetTransactionsPaginate();
+  }, []);
+
+  const changeStates = () => {
+    setRefreshing(false);
+    setIsMounted(true);
+  };
+
+  const onPressActivityCard = item => {
+    navigation.navigate('ToktokLoadActivityDetails', {activityDetails: item.node});
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    handleGetTransactionsPaginate();
+  };
+
+  const handleGetTransactionsPaginate = () => {
+    getTransactionsPaginate({
+      variables: {
+        input: {
+          service: 'LOAD',
+          status: 'PENDING',
+          afterCursorId: null,
+        },
+      },
+    });
+  };
+
+  const fetchMoreData = () => {
+    if (pageInfo.hasNextPage) {
+      fetchMore({
+        variables: {
+          input: {
+            service: 'LOAD',
+            status: 'PENDING',
+            afterCursorId: pageInfo.endCursorId,
+          },
+        },
+        updateQuery: (previousResult, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return previousResult;
+          }
+          fetchMoreResult.getTransactionsPaginate.edges = [
+            ...previousResult.getTransactionsPaginate.edges,
+            ...fetchMoreResult.getTransactionsPaginate.edges,
+          ];
+          return fetchMoreResult;
+        },
+      }).then(({data}) => {
+        setPageInfo(data.getTransactionsPaginate.pageInfo);
+        setTransactions(data.getTransactionsPaginate.edges);
+      });
+    }
+  };
+
+  const FailedActivities = useMemo(() => {
+    return (
+      <FlatList
+        data={transactions}
+        renderItem={({item, index}) => (
+          <ActivityCard
+            item={item.node}
+            onPress={() => onPressActivityCard(item)}
+            isLastItem={transactions.length - 1 == index}
+          />
+        )}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(val, index) => index.toString()}
+        contentContainerStyle={{...styles.flatlistContainer, ...(transactions.length == 0 ? {flexGrow: 1} : {})}}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[COLOR.YELLOW]}
+            tintColor={COLOR.YELLOW}
+          />
+        }
+        ListEmptyComponent={ListEmptyComponent}
+        ref={listRef}
+        ListFooterComponent={() => <ListFooterComponent hasNextPage={pageInfo.hasNextPage} />}
+        onEndReachedThreshold={0.02}
+        onEndReached={() => fetchMoreData()}
+        removeClippedSubviews={Platform.OS === 'android'}
+        maxToRenderPerBatch={10}
+      />
+    );
+  }, [transactions, refreshing, pageInfo]);
+
+  if ((loading && transactions.length == 0) || !isMounted) {
+    return (
+      <View style={styles.container}>
+        <LoadingIndicator isLoading={true} isFlex />
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <SomethingWentWrong onRefetch={onRefresh} error={error} />
+      </View>
+    );
+  }
+
+  return <View style={styles.container}>{FailedActivities}</View>;
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   flatlistContainer: {
     padding: moderateScale(16),
-    flexGrow: 1,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   shadow: {
     backgroundColor: '#fff',
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -116,10 +197,10 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     marginBottom: moderateScale(16),
-    borderRadius: moderateScale(5)
+    borderRadius: moderateScale(5),
   },
   tokwaButtonTextWrapper: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   toktokText: {
     color: COLOR.YELLOW,
@@ -133,37 +214,37 @@ const styles = StyleSheet.create({
   },
   detailOneContainer: {
     padding: moderateScale(16),
-    backgroundColor: "#FBFAE3"
+    backgroundColor: '#FBFAE3',
   },
   subText: {
-    color: "#525252",
-    fontSize: FONT_SIZE.S
+    color: '#525252',
+    fontSize: FONT_SIZE.S,
   },
   detailTwoContainer: {
     padding: moderateScale(16),
-    flexDirection: "row",
-    alignItems: "center"
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   networkIcon: {
     width: moderateScale(40),
     height: moderateScale(20),
-    resizeMode: "contain"
+    resizeMode: 'contain',
   },
   divider: {
-    backgroundColor: "#F8F8F8",
+    backgroundColor: '#F8F8F8',
     height: 2,
-    marginHorizontal: moderateScale(16)
+    marginHorizontal: moderateScale(16),
   },
   detailThreeContainer: {
     padding: moderateScale(16),
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between"
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   walletIcon: {
     width: moderateScale(20),
     height: moderateScale(20),
-    resizeMode: "contain"
+    resizeMode: 'contain',
   },
   totalAmount: {
     color: COLOR.ORANGE,
