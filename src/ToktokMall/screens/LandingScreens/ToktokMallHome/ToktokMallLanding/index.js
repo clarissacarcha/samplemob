@@ -2,8 +2,8 @@ import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, ImageBackground, Image, TouchableOpacity, FlatList, SectionList, StyleSheet, Dimensions, RefreshControl, BackHandler} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
-import { useQuery } from '@apollo/react-hooks';
+import {useDispatch, useSelector} from 'react-redux';
+import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 
 import { COLOR, FONT } from '../../../../../res/variables';
@@ -18,6 +18,8 @@ import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { GET_CUSTOMER_IF_EXIST } from '../../../../../graphql/toktokmall/model';
 import Spinner from 'react-native-spinkit';
 
+import { GET_MY_ACCOUNT, GET_WALLET, GET_USER_TOKTOK_WALLET_DATA } from 'toktokwallet/graphql'
+
 import { GeolocationUtility } from '../../../../util';
 import {useFocusEffect} from '@react-navigation/native'
 
@@ -30,7 +32,35 @@ import {Categories, Offers, FlashSale, Vouchers, Suggestions, Featured} from './
 import AsyncStorage from '@react-native-community/async-storage';
 import { Platform } from 'react-native';
 
+const walletIcon = require("src/assets/images/toktokwallet.png");
+
 const SCREEN_WIDTH = Dimensions.get('window').width;
+
+const noWalletModalContent = () => (
+  <>
+    <Image
+      source={walletIcon}
+      style={{width: 130, height: 120, resizeMode: 'stretch', overflow: 'hidden'}}
+    />
+      <Text
+        style={{
+          fontSize: 20,
+          fontFamily: FONT.BOLD,
+          textAlign: 'center',
+          minWidth: '70%',
+        }}>
+        Use toktokwallet as payment method for faster transaction    
+      </Text>
+      <Text
+        style={{
+          fontSize: 14,
+          textAlign: 'center',
+          marginTop: 10,
+        }}>
+        Hey ka toktok, before placing an order please sign up for your free toktokwallet now to enjoy full benefits of shopping from your favorite shops online using toktokmall.
+      </Text>
+  </>
+)
 
 // export const ToktokMallLandingScreen = () => {
 const Component = ({ myCart, createMyCartSession,}) => {
@@ -39,29 +69,14 @@ const Component = ({ myCart, createMyCartSession,}) => {
   const [scrolling, setScrolling] = useState(false)
   const [y] = useValues([0], [])
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const session = useSelector(state=> state.session)
   const [scrollendreached, setscrollendreached] = useState(false)
-  
-  // const {data, loading, error} = useQuery(GET_CUSTOMER_IF_EXIST, {
-  //   client: TOKTOK_MALL_GRAPHQL_CLIENT,
-  //   fetchPolicy: 'network-only',
-  //   variables: {
-  //     input: {
-  //       mobile: session.user.username,
-  //       email: session.user.person.emailAddress
-  //     },
-  //   },
-  // });
 
   useEffect(() => {
     console.log(session)
+    getWalletAccountStatus()
   }, [])
-
-  // const HandleOnScroll = (r) => {
-  //   let ypos = r.nativeEvent.contentOffset.y
-  //   if(ypos > 100) setScrolling(true)
-  //   else if (ypos <= 100) setScrolling(false)
-  // }
 
   useEffect(() => {
     AsyncStorage.getItem('MyCart').then((value) => {
@@ -145,75 +160,56 @@ const Component = ({ myCart, createMyCartSession,}) => {
     1000,
     {trailing: false},
   );
-
-  // if(loading) {
-  //   return (
-  //     <>
-  //       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-  //         <Spinner 
-  //           isVisible={loading}
-  //           type='Circle'
-  //           color={"#F6841F"}
-  //           size={35}
-  //         />
-  //       </View>
-  //     </>
-  //   )
-  // }
-
-  // if(error){
-  //   return (
-  //     <>
-  //       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-  //         <Text>Something went wrong...</Text>
-  //       </View>
-  //     </>
-  //   )
-  // }
   
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingBottom = 20;
-    // console.log(layoutMeasurement.height + contentOffset.y, contentSize.height - paddingBottom)
     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingBottom;
   }
 
-  const onScroll = (event) => {
-    // alert
-    // if(isCloseToBottom(event)){
-    //   alert('close to bottom')
-    // }
-    // console.log(event.nativeEvent)
-    if(isCloseToBottom(event)){
-      console.log('close to bottom')
-      alert('close to bottom')
-    }
-    // Animated.event(
-    //   [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
-    //   {useNativeDriver: false}
-    // )
-  }
-
-  const onRefreshData = async () => {
-    setRefreshing(true);
-    let sampleArr = []
-    if(suggestionsArr.length < 30){
-      for (let x = 0; suggestionsArr.length > x; x++){
-        sampleArr.push(suggestionsArr[x])
+  const  [getWalletAccountStatus] = useLazyQuery(GET_USER_TOKTOK_WALLET_DATA , {
+    fetchPolicy:"network-only",
+    variables: {
+      input: {
+        userId: session.user.id,
       }
-      for (let x = 0; suggestionsArr2.length > x; x++){
-        sampleArr.push(suggestionsArr2[x])
-      }
-    }
-    setSuggestionsArr(sampleArr)
-    console.log(sampleArr)
-    setRefreshing(false)
-  }
+    },
+    onCompleted: async ({getUserToktokWalletData})=> {
+      console.log(getUserToktokWalletData)
+      const {kycStatus} = getUserToktokWalletData
+      console.log("kycStatus", kycStatus)
 
-  const getLocation = async () => {
-    const currentLocation = await GeolocationUtility.getCurrentLocation();
-    const {coords} = currentLocation;
-    return coords;
-  }
+      if(!kycStatus){
+        dispatch({
+          type: 'TOKTOK_MALL_OPEN_MODAL',
+          payload: {
+            Content: noWalletModalContent,
+            actions: [
+              {
+                name: 'Browse'
+              },
+              {
+                onPress: () => {
+                  navigation.push("ToktokWalletLoginPage")
+                },
+                type: 'fill',
+                name: 'Create Account'
+              },
+            ],
+            onCloseDisabled: true
+          },
+        });
+      }     
+
+    },
+    onError: (error)=> console.log(error) 
+  })
+
+
+  // const getLocation = async () => {
+  //   const currentLocation = await GeolocationUtility.getCurrentLocation();
+  //   const {coords} = currentLocation;
+  //   return coords;
+  // }
 
   // useEffect(() => {
   //   getLocation().then(async (res) => {
@@ -271,8 +267,8 @@ const Component = ({ myCart, createMyCartSession,}) => {
         // }
         scrollEventThrottle = {16}
         showsVerticalScrollIndicator={false}
-        removeClippedSubviews={true}
-        nestedScrollEnabled={true}
+        // removeClippedSubviews={true}
+        // nestedScrollEnabled={true}
         onScroll = { 
           // Animated.event(
           //   [{nativeEvent: {contentOffset: {y: AnimatedHeaderValue}}}],
@@ -366,7 +362,7 @@ const styles = StyleSheet.create({
   TTMHImage: {
     width: '75%',
     height: 35,
-    resizeMode: 'stretch'
+    resizeMode: 'cover'
   },
   margin2: {
     flex: 2

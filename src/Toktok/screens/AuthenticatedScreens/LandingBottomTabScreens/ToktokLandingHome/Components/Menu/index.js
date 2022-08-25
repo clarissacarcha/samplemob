@@ -153,7 +153,9 @@ export const Menu = ({setUserLocation, constants}) => {
       identifier: `${Platform.OS}Bills`,
       label: 'Bills',
       icon: BillsIcon,
-      onPress: () => navigation.push('ToktokBillsSplashScreen'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokBillsSplashScreen');
+      },
       isNew: true,
     },
     {
@@ -165,7 +167,7 @@ export const Menu = ({setUserLocation, constants}) => {
       },
     },
     {
-      identifier: 'profile',
+      identifier: `${Platform.OS}Profile`,
       label: 'Profile',
       icon: ProfileIcon,
       onPress: () => {
@@ -173,7 +175,7 @@ export const Menu = ({setUserLocation, constants}) => {
       },
     },
     {
-      identifier: 'help',
+      identifier: `${Platform.OS}Help`,
       label: 'Help',
       icon: HelpIcon,
       onPress: () => {
@@ -187,10 +189,6 @@ export const Menu = ({setUserLocation, constants}) => {
     setAppServices(appServicesObject);
 
     const filteredMenuData = menuDataConstant.filter(menuDataItem => {
-      if (['profile', 'help'].includes(menuDataItem.identifier)) {
-        return true;
-      }
-
       const appService = appServicesObject[menuDataItem.identifier];
 
       /**

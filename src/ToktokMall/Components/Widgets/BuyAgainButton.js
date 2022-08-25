@@ -7,7 +7,7 @@ import { GET_BUY_AGAIN, CHECK_ITEM_FROM_CART  } from '../../../graphql/toktokmal
 import { ApiCall } from '../../helpers';
 import { EventRegister } from 'react-native-event-listeners';
 import AsyncStorage from '@react-native-community/async-storage';
-import { LoadingOverlay } from './LoadingOverlay';
+import { AlertOverlay } from 'src/components'
 import { useNavigation } from '@react-navigation/native';
 
 const getAccessToken = async () => { 
@@ -76,7 +76,7 @@ export const BuyAgainButton = ({ data }) => {
           <TouchableOpacity style={styles.buyAgainButton} onPress={onPressBuy} >
               <Text style={styles.buyAgainText}>Buy Again</Text>
           </TouchableOpacity>
-          <LoadingOverlay isVisible={isVisible} />
+          <AlertOverlay visible={isVisible} />
         </>
     )
 }

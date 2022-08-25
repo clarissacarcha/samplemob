@@ -7,13 +7,24 @@ import {onError} from '../../../../../util/ErrorUtility';
 import {AlertOverlay} from '../../../../../SuperApp/screens/Components';
 import {useMutation} from '@apollo/react-hooks';
 import CONSTANTS from '../../../../../common/res/constants';
-import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar, TouchableOpacity} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import RNFS from 'react-native-fs';
 
 import OneSignal from 'react-native-onesignal';
 import ToktokWashed from '../../../../../assets/images/ToktokWashed.png';
 import RightArrow from '../../../../../assets/icons/profileMenu-arrow-rightIcon.png';
+import User from '../../../../../assets/images/user-icon.png';
 
 import {Header} from './Components';
 import {ToktokMallSession} from '../../../../../ToktokMall/util/session';
@@ -36,12 +47,24 @@ const DrawerButton = ({isNew, label, onPress, restrict}) => {
         /> */}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {isNew && (
-            <View style={{backgroundColor: COLOR.RED, borderRadius: 20}}>
+            <View
+              style={{
+                height: 18,
+                width: 40,
+                backgroundColor: '#ED3A19',
+                position: 'absolute',
+                top: -2.5,
+                right: 20,
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
               <Text
                 style={{
-                  paddingHorizontal: 12,
-                  color: CONSTANTS.COLOR.WHITE,
+                  fontSize: 10,
+                  color: 'white',
                   fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                  bottom: Platform.OS === 'ios' ? 0 : 1,
                 }}>
                 New
               </Text>
@@ -107,6 +130,18 @@ export const ToktokLandingMenu = ({navigation}) => {
     }
   };
 
+  const imageRender = () => {
+    const splitBySlash = session.user.person.avatar.split('/');
+    const splitByQuestion = splitBySlash[3].split('?');
+    const extracted = splitByQuestion[0];
+
+    if (extracted == '15947868238644blank_avatar.png' || !session.user.person.avatarThumbnail) {
+      return User;
+    } else {
+      return {uri: session.user.person.avatarThumbnail};
+    }
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'space-between'}}>
       <AlertOverlay visible={loading} />
@@ -122,11 +157,7 @@ export const ToktokLandingMenu = ({navigation}) => {
                   alignItems: 'center',
                   flexDirection: 'column',
                 }}>
-                <Image
-                  source={{uri: session.user.person.avatarThumbnail}}
-                  resizeMode={'cover'}
-                  style={{width: 80, height: 80, backgroundColor: 'black', borderRadius: 50}}
-                />
+                <Image source={imageRender()} resizeMode={'cover'} style={{width: 80, height: 80, borderRadius: 50}} />
                 <Text style={{fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, paddingTop: 5}}>{fullName}</Text>
                 <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, paddingTop: 3}}>
                   {session.user.username}
@@ -202,17 +233,23 @@ export const ToktokLandingMenu = ({navigation}) => {
               }}
             />
             {/*--------------- Referral ---------------*/}
-            {/* <DrawerButton isNew label="Referral" onPress={onPressReferral} /> */}
+            <DrawerButton isNew label="Referral" onPress={onPressReferral} />
             {/*--------------- Vouchers ---------------*/}
-            {/* <DrawerButton
+            <DrawerButton
               isNew
               label="Vouchers"
               onPress={() => {
                 navigation.push('VoucherScreen');
               }}
-            /> */}
+            />
 
             {/*--------------- TALK TO US ---------------*/}
+            <View
+              style={{
+                borderTopWidth: 5,
+                borderTopColor: '#F8F8F8',
+                fontFamily: FONT.BOLD,
+              }}></View>
             <Text
               style={{
                 paddingLeft: 20,

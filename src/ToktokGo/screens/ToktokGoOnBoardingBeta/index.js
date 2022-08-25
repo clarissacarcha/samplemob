@@ -22,7 +22,8 @@ import {connect} from 'react-redux';
 
 const {width} = Dimensions.get('screen');
 
-const ImageDimension = Dimensions.get('screen').height / 2.5;
+const ImageDimension = Dimensions.get('screen').height * 0.3;
+const SCREEN_HEIGHT_MARGIN = Dimensions.get('screen').height * 0.1;
 
 const slides = [
   {
@@ -63,7 +64,8 @@ const Slide = ({item}) => {
   );
 };
 
-const ToktokGoOnBoardingBeta = ({navigation, session}) => {
+const ToktokGoOnBoardingBeta = ({navigation, session, route}) => {
+  const {voucherData} = route.params;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const ref = useRef();
   const {tokwaAccount, getMyAccount} = useAccount();
@@ -85,11 +87,11 @@ const ToktokGoOnBoardingBeta = ({navigation, session}) => {
     AsyncStorage.setItem('ToktokGoOnBoardingBeta', data);
 
     if (date === moment(new Date()).format('MMM D, YYYY')) {
-      navigation.replace('ToktokGoBookingStart');
+      navigation.replace('ToktokGoBookingStart', {voucherData});
     } else if (tokwaAccount.wallet.id) {
-      navigation.replace('ToktokGoHealthCare');
+      navigation.replace('ToktokGoHealthCare', {voucherData});
     } else {
-      navigation.replace('ToktokGoCreateTokwa');
+      navigation.replace('ToktokGoCreateTokwa', {voucherData});
     }
   };
 
@@ -149,7 +151,7 @@ const ToktokGoOnBoardingBeta = ({navigation, session}) => {
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
       <View style={{alignItems: 'center'}}>
-        <View style={{marginTop: StatusBar.currentHeight + 40}}>
+        <View style={{marginTop: StatusBar.currentHeight + SCREEN_HEIGHT_MARGIN}}>
           <Image source={ToktokgoIcon} resizeMode={'contain'} style={{height: 45, width: 190}} />
         </View>
         <FlatList

@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Alert,
   BackHandler,
+  ActivityIndicator,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CONSTANTS from '../../../common/res/constants';
@@ -22,17 +23,19 @@ import TokIcon from '../../../assets/images/Promos/ToktokAppIcon.png';
 import voucherPaperDesign from '../../../assets/toktokgo/voucher-paper-design.png';
 import VoucherIMG from '../../../assets/images/Promos/VoucherImage.png';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
 import {
   AUTH_CLIENT,
   GET_USER_SESSION,
   PATCH_GO_REFERRAL_USER_ID,
   TOKTOK_WALLET_VOUCHER_CLIENT,
   POST_COLLECT_VOUCHER,
+  GET_VOUCHER,
 } from '../../../graphql';
 import {onError} from '../../../util/ErrorUtility';
 import {AlertOverlay} from '../../../SuperApp/screens/Components';
 import {connect} from 'react-redux';
+import {numberFormat} from '../../../helper';
 
 const decorHeight = Dimensions.get('window').height * 0.15;
 
@@ -43,8 +46,28 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
   const [invalidReferralCodeText, setInvalidReferralCodeText] = useState('');
   const [refCode, setRefCode] = useState('');
 
-  const [postCollectVoucher, {loading: PCVLoading}] = useMutation(POST_COLLECT_VOUCHER, {
+  const {
+    data = {getVoucher: {discountValue: 0, collectCount: 0}},
+    loading: getVoucherLoading,
+    error,
+  } = useQuery(GET_VOUCHER, {
+    variables: {
+      input: {
+        key: 'GO_10K_NEW',
+      },
+    },
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: onError,
+  });
+
+  const getPromoVoucherTotal = () => {
+    const {discountValue, collectCount} = data.getVoucher;
+    const total = discountValue * collectCount;
+    return numberFormat(total);
+  };
+
+  const [patchGoReferralUserId, {loading}] = useMutation(PATCH_GO_REFERRAL_USER_ID, {
     onCompleted: () => {
       const storedUserId = session.user.id;
       setViewSuccesVoucherClaimedModal(true);
@@ -56,36 +79,11 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
             },
           },
         });
-      } else {
-        navigation.replace('UnauthenticatedStack');
       }
       setTimeout(() => {
         setViewSuccesVoucherClaimedModal(false);
-        setRefCode('');
-        if (fromRegistration) {
-          navigation.replace('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'ConsumerLanding',
-            },
-          });
-        } else {
-          navigation.pop();
-        }
+        navigation.pop();
       }, 1500);
-    },
-    onError: onError,
-  });
-
-  const [patchGoReferralUserId, {loading}] = useMutation(PATCH_GO_REFERRAL_USER_ID, {
-    onCompleted: () => {
-      postCollectVoucher({
-        variables: {
-          input: {
-            voucherId: parseInt(constants.toktokGo10K),
-          },
-        },
-      });
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -181,75 +179,95 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
     }
   };
 
+  // return <View></View>;
+
+  if (getVoucherLoading) {
+    return (
+      <View style={styles.innerContainer}>
+        <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.innerContainer}>
+        <Text>Error on referral!</Text>
+      </View>
+    );
+  }
+
   return (
-    <KeyboardAwareScrollView contentContainerStyle={{flex: 1}} extraScrollHeight={40}>
-      <ImageBackground source={ReferralBG} style={styles.container}>
-        <AlertOverlay visible={loading || PCVLoading} />
-        <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
-        <ThrottledOpacity style={styles.backButton} onPress={onBackPress}>
-          <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
-        </ThrottledOpacity>
+    <>
+      <ThrottledOpacity style={styles.backButton} onPress={onBackPress}>
+        <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
+      </ThrottledOpacity>
+      <KeyboardAwareScrollView contentContainerStyle={{flex: 1}} extraScrollHeight={40}>
+        <ImageBackground source={ReferralBG} style={styles.container}>
+          <AlertOverlay visible={loading} />
+          <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
 
-        {fromRegistration && (
-          <ThrottledOpacity style={styles.skipButton} onPress={onBackPress}>
-            <Text style={styles.skipButtonText}>Skip</Text>
-          </ThrottledOpacity>
-        )}
-
-        <View style={styles.innerContainer}>
-          <Image source={TokIcon} resizeMode={'contain'} style={{height: decorHeight}} />
-          <Text
-            style={{
-              marginTop: 42,
-              fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-              fontSize: CONSTANTS.FONT_SIZE.XL + 7,
-            }}>
-            Welcome ka-toktok!
-          </Text>
-          <Text style={{textAlign: 'center', marginTop: 12}}>Did a driver refer you? Enter Referral Code</Text>
-          <Text style={{textAlign: 'center', marginBottom: 28}}> below to claim New User Voucher!</Text>
-
-          <View style={styles.card}>
-            <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
-            <View style={styles.voucherText}>
-              <Text style={styles.voucherName}>NEW USER VOUCHER</Text>
-              <Text style={styles.voucherAmount}>₱10,000.00</Text>
-            </View>
-            <Image source={VoucherIMG} resizeMode={'contain'} style={styles.voucherImage} />
-          </View>
-
-          <View style={[styles.inputContainer, isValidDriverId && styles.inputContainerError]}>
-            <TextInput
-              style={styles.input}
-              placeholder="Referral Code"
-              value={refCode}
-              onChangeText={text => {
-                setRefCode(text), setIsValidDriverId(false);
-              }}
-            />
-          </View>
-          {isValidDriverId && (
-            <View style={{alignSelf: 'stretch', marginHorizontal: 82}}>
-              <Text style={{color: CONSTANTS.COLOR.RED, fontSize: CONSTANTS.FONT_SIZE.S}}>
-                {invalidReferralCodeText}
-              </Text>
-            </View>
+          {fromRegistration && (
+            <ThrottledOpacity style={styles.skipButton} onPress={onBackPress}>
+              <Text style={styles.skipButtonText}>Skip</Text>
+            </ThrottledOpacity>
           )}
 
-          <ThrottledOpacity style={styles.button} onPress={onPress} disabled={!refCode && true}>
-            <Text style={styles.buttonText}>Claim Now</Text>
-          </ThrottledOpacity>
+          <View style={styles.innerContainer}>
+            <Image source={TokIcon} resizeMode={'contain'} style={{height: decorHeight}} />
+            <Text
+              style={{
+                marginTop: 42,
+                fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+                fontSize: CONSTANTS.FONT_SIZE.XL + 7,
+              }}>
+              Welcome ka-toktok!
+            </Text>
+            <Text style={{textAlign: 'center', marginTop: 12}}>Did a driver refer you? Enter Referral Code</Text>
+            <Text style={{textAlign: 'center', marginBottom: 28}}> below to claim {data?.getVoucher?.name}!</Text>
 
-          <Text style={{marginTop: 24}}>Congratulations for signing up. Enjoy voucher worth</Text>
-          <Text>
-            ₱10,000 for <Text style={{color: CONSTANTS.COLOR.YELLOW}}>toktok</Text>
-            <Text style={{color: CONSTANTS.COLOR.ORANGE}}>go</Text> ride. Let's go ka-toktok!
-          </Text>
-        </View>
+            <View style={styles.card}>
+              <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
+              <View style={styles.voucherText}>
+                <Text style={styles.voucherName}>{data?.getVoucher?.name}</Text>
+                <Text style={styles.voucherAmount}>₱{getPromoVoucherTotal()}</Text>
+              </View>
+              <Image source={VoucherIMG} resizeMode={'contain'} style={styles.voucherImage} />
+            </View>
 
-        <Text style={styles.footer}>Toktok Terms and Conditions Apply</Text>
-      </ImageBackground>
-    </KeyboardAwareScrollView>
+            <View style={[styles.inputContainer, isValidDriverId && styles.inputContainerError]}>
+              <TextInput
+                style={styles.input}
+                placeholder="Referral Code"
+                value={refCode}
+                onChangeText={text => {
+                  setRefCode(text), setIsValidDriverId(false);
+                }}
+              />
+            </View>
+            {isValidDriverId && (
+              <View style={{alignSelf: 'stretch', marginHorizontal: 82}}>
+                <Text style={{color: CONSTANTS.COLOR.RED, fontSize: CONSTANTS.FONT_SIZE.S}}>
+                  {invalidReferralCodeText.replace(/\./g, '')}
+                </Text>
+              </View>
+            )}
+
+            <ThrottledOpacity style={styles.button} onPress={onPress} disabled={!refCode && true}>
+              <Text style={styles.buttonText}>Claim Now</Text>
+            </ThrottledOpacity>
+
+            <Text style={{marginTop: 24}}>Congratulations for signing up. Enjoy voucher worth</Text>
+            <Text>
+              ₱{getPromoVoucherTotal()} for <Text style={{color: CONSTANTS.COLOR.YELLOW}}>toktok</Text>
+              <Text style={{color: CONSTANTS.COLOR.ORANGE}}>go</Text> ride. Let's go ka-toktok!
+            </Text>
+          </View>
+
+          <Text style={styles.footer}>Toktok Terms and Conditions Apply</Text>
+        </ImageBackground>
+      </KeyboardAwareScrollView>
+    </>
   );
 };
 
@@ -320,6 +338,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
+    zIndex: 1,
     top: StatusBar.currentHeight + 23,
     left: 16,
     padding: 6,

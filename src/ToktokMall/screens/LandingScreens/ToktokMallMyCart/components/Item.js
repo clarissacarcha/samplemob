@@ -105,9 +105,9 @@ export const Item = ({
     
   }
 
-  const getImageSource = (imgs) => {
-    if(imgs && typeof imgs == "string"){
-      return {uri: imgs}
+  const getImageSource = (images) => {
+    if(images && images.length > 0){
+      return {uri: images[0]?.filename}
     }else {
       return placeholder
     }
@@ -270,7 +270,7 @@ export const Item = ({
           onPress = {() => {recenter()}}
         >
           <View style={styles.productImageContainer}>
-            <Image source={getImageSource(product?.img?.filename)} style={{width: 50, height: 65, resizeMode: 'stretch'}} />
+            <Image source={getImageSource(product?.images)} style={{width: 50, height: 65, resizeMode: 'stretch'}} />
           </View>
           <View style={styles.productDataContainer}>       
             <View style={styles.productNameContainer}>

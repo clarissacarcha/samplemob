@@ -23,18 +23,20 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
       onPressActionButton({voucherId: data.id});
     } else {
       navigation.pop(2);
-      navigation.push('ToktokGoLanding');
+      navigation.push('ToktokGoLanding', {voucherData: data});
     }
   };
 
   return (
-    <ThrottledOpacity onPress={() => navigation.navigate('SelectedVoucherScreen', {id: data.id})}>
+    <>
       <View style={styles.card}>
         <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
         <Image source={VoucherImage} resizeMode={'contain'} style={styles.voucherImage} />
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
-          <Text style={styles.voucherDescription}>{data.description}</Text>
+          <Text style={styles.voucherDescription}>
+            {data?.description?.length < 30 ? `${data?.description}` : `${data?.description.substring(0, 30)}...`}
+          </Text>
           {data.endAt && (
             <Text style={styles.voucherDescriptionDate}>Valid unitl {moment(data.endAt).format('MMM DD YYYY')}</Text>
           )}
@@ -44,6 +46,8 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
                 style={{
                   overflow: 'hidden',
                   borderRadius: 10,
+                  marginVertical: 8,
+                  marginRight: 15,
                 }}>
                 <Progress.Bar
                   height={3}
@@ -77,7 +81,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
           </ThrottledOpacity>
         </View>
       </View>
-    </ThrottledOpacity>
+    </>
   );
 };
 
@@ -108,7 +112,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     marginLeft: 20,
-    marginRight: 15,
+    // marginRight: 15,
+    top: 3,
   },
   computed: {
     color: CONSTANTS.COLOR.ORANGE,
@@ -116,11 +121,10 @@ const styles = StyleSheet.create({
   },
   voucherName: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-    marginBottom: 8,
+    bottom: 7,
   },
   voucherDescription: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-    // color: CONSTANTS.COLOR.GRAY,
     fontSize: CONSTANTS.FONT_SIZE.S,
     fontWeight: 'normal',
   },

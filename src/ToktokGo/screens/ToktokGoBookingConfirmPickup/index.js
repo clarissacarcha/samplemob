@@ -55,6 +55,10 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
 
   const onConfirm = throttle(
     () => {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+        payload: {...details, paymentMethod: 'TOKTOKWALLET'},
+      });
       if (!destination?.place?.formattedAddress) {
         navigation.pop();
         navigation.push('ToktokGoBookingSelectLocations', {
