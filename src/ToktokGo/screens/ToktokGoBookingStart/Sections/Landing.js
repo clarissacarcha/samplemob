@@ -9,7 +9,7 @@ import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
 import uuid from 'react-native-uuid';
 import {useDispatch} from 'react-redux';
 
-export const Landing = ({navigation}) => {
+export const Landing = ({navigation, voucherData, details}) => {
   const dispatch = useDispatch();
   return (
     <View>
@@ -27,6 +27,10 @@ export const Landing = ({navigation}) => {
             dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
             navigation.push('ToktokGoBookingSelectLocations', {
               popTo: 1,
+            });
+            dispatch({
+              type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+              payload: {...details, voucher: voucherData, paymentMethod: 'TOKTOKWALLET'},
             });
           }}
           delay={500}
