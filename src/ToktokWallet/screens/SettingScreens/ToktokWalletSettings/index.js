@@ -188,10 +188,10 @@ export const ToktokWalletSettings = ({navigation, route}) => {
         <SettingHeaderTitle title="Account" />
         <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart" />
         <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit" />
-        {((!tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3) ||
-          (tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2)) && (
+        {(!tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3) ||
+        (tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2) ? (
           <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account" />
-        )}
+        ) : null}
         <Separator />
         <SettingHeaderTitle title="Help Centre" />
         <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy" />
