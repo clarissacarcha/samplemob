@@ -596,17 +596,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
         console.log("SHIPPING VOUCHERS", shippingVouchers)
         console.log("CHECKOUT BODY FFFFF", JSON.stringify(checkoutBody))
 
-        // navigation.push("ToktokMallOTP", {
-        //   transaction: "payment", 
-        //   data: checkoutBody,          
-        //   onSuccess: async (pin) => {
-        //     // setTimeout(async () => {
-        //     //   await ProcessCheckout({...checkoutBody, pin})
-        //     // }, (60000 * 30))
-        //     await ProcessCheckout({...checkoutBody, pin})
-        //   }
-        // })
-
         // your logic or process after TPIN validation is successful
         const handleProcessProceed = async ({pinCode, data}) => {
           navigation.pop()
@@ -620,46 +609,35 @@ const Component = ({route, navigation, createMyCartSession}) => {
           data: checkoutBody, // additional data thats need to be process on your side
         });
 
-      }else if(req.responseData && req.responseData.success == 0){
-
-        const errors = JSON.parse(req.responseData.message)
-
-        if(req.responseData.message.includes("VALIDATORMAXREQUEST")){
-          navigation.navigate("ToktokMallOTP", {
-            transaction: "payment",
-            data: {},
-            error: true,
-            errorCode: "VALIDATORMAXREQUEST",
-            lockMessage: errors[0].message
-          })
-        }
-
       }else if(req.responseError){
 
-        let json = JSON.parse(req.responseError.message)
-        let errors = json.errors
-        console.log(errors[0])
-        if(errors.length > 0){
-
+        try{
+          let json = JSON.parse(req.responseError.message)
+          let errors = json.errors
           if(errors[0]){
-            if(errors[0]?.code == "BAD_USER_INPUT"){
+            if(errors[0].errorType == "PIN_CODE_MAX_ATTEMPT"){
 
-              if(errors[0]?.message){
-                // alert(errors[0]?.message)
-              }
+              dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
+                type: 'Warning',
+                title: "Max Attempts Reached",
+                message: errors[0]?.message,
+                onCloseDisabled: true,
+                actions: [                  
+                  {
+                    name: "OK",
+                    onPress: () => {
+                      dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL'})
+                    },
+                    type: "fill"
+                  }
+                ]
+              }})
 
-            }else{
-              // Toast.show(errors[0].message, Toast.LONG)
-              navigation.navigate("ToktokMallOTP", {
-                transaction: "payment",
-                data: {},
-                error: true,
-                errorCode: "VALIDATORMAXREQUEST",
-                lockMessage: errors[0].message
-              })
             }
           }
 
+        }catch(e){
+          console.log(e)
         }
         
       }else{
@@ -825,14 +803,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
       ]
     }})
 
-    // dispatch({type: "TOKTOK_MALL_OPEN_PLACE_ORDER_MODAL", payload: {
-    //   onConfirmAction: onGoToOrders,
-    //   onCancelAction: () => {
-    //     navigation.navigate("ToktokMallHome")
-    //     EventRegister.emit('refreshToktokmallShoppingCart')
-    //   }
-    // }})
-    // setIsVisible(true)
   }
 
   const onGoToOrders = () =>{

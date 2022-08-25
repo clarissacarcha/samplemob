@@ -57,7 +57,7 @@ const noWalletModalContent = () => (
           textAlign: 'center',
           marginTop: 10,
         }}>
-        Ordering from your favorite merchants just made easier with toktokmall! For faster transaction, use toktokwallet as your method of payment upon placing of order.
+        Hey ka toktok, before placing an order please sign up for your free toktokwallet now to enjoy full benefits of shopping from your favorite shops online using toktokmall.
       </Text>
   </>
 )

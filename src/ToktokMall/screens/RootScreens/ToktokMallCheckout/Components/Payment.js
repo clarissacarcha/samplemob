@@ -56,14 +56,11 @@ const RenderToktokWalletStatus = ({status}) => {
           <View style={styles.sorryContainer}>
             {status == null && 
             <Text style={styles.sorryText}>
-              Sorry! It seems that you don`t have a toktokwallet account yet. Please submit verification requirements to
-              proceed placing an order. Once you get approved, you will be able to enjoy full benefits of shopping from
-              your favorite shops online using toktokmall.
+              Hey ka toktok, before placing an order please sign up for your free toktokwallet now to enjoy full benefits of shopping from your favorite shops online using toktokmall.
             </Text>}
             {status == 0 && 
             <Text style={styles.sorryText}>
-              Sorry! It seems that you don’t have a toktokwallet account yet. Please submit verification requirements to proceed placing an order. 
-              Once you get approved, you will be able to enjoy full benefits of shopping  from your favorite shops online using toktokmall.
+              Hey ka toktok, before placing an order please sign up for your free toktokwallet now to enjoy full benefits of shopping from your favorite shops online using toktokmall.
             </Text>}
             {status == 2 && 
             <Text style={styles.sorryText}>
