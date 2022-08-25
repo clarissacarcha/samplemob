@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {HeaderBack, HeaderTitle} from '../../../components';
@@ -7,9 +7,12 @@ import CashIcon from '../../../assets/images/CashIcon.png';
 import InfoIcon from '../../../assets/images/info.png';
 import moment from 'moment';
 import ToktokWalletOutline from '../../../assets/images/toktok-wallet-outline.png';
+import {FeeInfoModal} from '../ToktokGoBookingSummary/Components';
+import {ThrottledOpacity} from '../../../components_section';
 
 const ToktokGoPaymentDetails = ({navigation, route}) => {
   const {booking} = route.params;
+  const [renderFeeInfoModal, setRenderInfoModal] = useState(false);
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Payment Details', '']} />,
@@ -19,6 +22,7 @@ const ToktokGoPaymentDetails = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
+      <FeeInfoModal vissible={renderFeeInfoModal} setVissible={setRenderInfoModal} />
       <View style={styles.elementWrapper}>
         <Text style={styles.textStyle}>Payment Method</Text>
         {booking.paymentMethod == 'CASH' ? (
@@ -115,7 +119,9 @@ const ToktokGoPaymentDetails = ({navigation, route}) => {
               <View style={styles.elementWrapper}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={styles.higlighttextStyle}>Outstanding Fee</Text>
-                  <Image source={InfoIcon} resizeMode={'contain'} style={styles.imgDimensions} />
+                  <ThrottledOpacity onPress={() => setRenderInfoModal(true)} delay={500}>
+                    <Image source={InfoIcon} resizeMode={'contain'} style={styles.imgDimensions} />
+                  </ThrottledOpacity>
                 </View>
                 <Text style={styles.textStyle}>₱{numberFormat(50)}</Text>
               </View>
