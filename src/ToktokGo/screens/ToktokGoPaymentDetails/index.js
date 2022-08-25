@@ -77,7 +77,7 @@ const ToktokGoPaymentDetails = ({navigation, route}) => {
             <>
               <View style={styles.elementWrapper}>
                 <Text style={styles.higlighttextStyle}>Voucher</Text>
-                <Text style={styles.voucherTextStyle}>-₱{numberFormat(booking.fare.discount)}</Text>
+                <Text style={styles.voucherTextStyle}>- ₱{numberFormat(booking.fare.discount)}</Text>
               </View>
 
               <View style={styles.elementWrapper}>

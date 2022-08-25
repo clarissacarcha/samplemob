@@ -224,12 +224,12 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
               Welcome ka-toktok!
             </Text>
             <Text style={{textAlign: 'center', marginTop: 12}}>Did a driver refer you? Enter Referral Code</Text>
-            <Text style={{textAlign: 'center', marginBottom: 28}}> below to claim New User Voucher!</Text>
+            <Text style={{textAlign: 'center', marginBottom: 28}}> below to claim {data?.getVoucher?.name}!</Text>
 
             <View style={styles.card}>
               <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
               <View style={styles.voucherText}>
-                <Text style={styles.voucherName}>NEW USER VOUCHER</Text>
+                <Text style={styles.voucherName}>{data?.getVoucher?.name}</Text>
                 <Text style={styles.voucherAmount}>₱{getPromoVoucherTotal()}</Text>
               </View>
               <Image source={VoucherIMG} resizeMode={'contain'} style={styles.voucherImage} />
@@ -259,7 +259,7 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
 
             <Text style={{marginTop: 24}}>Congratulations for signing up. Enjoy voucher worth</Text>
             <Text>
-              ₱10,000 for <Text style={{color: CONSTANTS.COLOR.YELLOW}}>toktok</Text>
+              ₱{getPromoVoucherTotal()} for <Text style={{color: CONSTANTS.COLOR.YELLOW}}>toktok</Text>
               <Text style={{color: CONSTANTS.COLOR.ORANGE}}>go</Text> ride. Let's go ka-toktok!
             </Text>
           </View>

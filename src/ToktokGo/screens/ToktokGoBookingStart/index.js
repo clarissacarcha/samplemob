@@ -201,6 +201,13 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   );
 
   const onPressRecentSearch = loc => {
+    if (route?.params?.voucherData) {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+        payload: {...route.params.details, voucher: route.params.voucherData, paymentMethod: 'TOKTOKWALLET'},
+      });
+    }
+
     if (selectedInput == 'D') {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
     } else {
@@ -210,6 +217,12 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   };
 
   const onPressRecentDestination = loc => {
+    if (route?.params?.voucherData) {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+        payload: {...route.params.details, voucher: route.params.voucherData, paymentMethod: 'TOKTOKWALLET'},
+      });
+    }
     if (selectedInput == 'D') {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
     } else {
@@ -258,7 +271,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
             setVissible={setCancellationShowPaymentSuccessfulModal}
           />
           <Header navigation={navigation} constants={constants} />
-          <Landing navigation={navigation} />
+          <Landing navigation={navigation} details={route?.params?.details} voucherData={route?.params?.voucherData} />
           <FlatList
             ListHeaderComponent={
               <ScrollView
@@ -298,6 +311,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
                               navigation={navigation}
                               recentDestinationList={recentDestinationList}
                               onPressRecentDestination={onPressRecentDestination}
+                              recentSearchDataList={recentSearchDataList}
                             />
                           </View>
                         )}

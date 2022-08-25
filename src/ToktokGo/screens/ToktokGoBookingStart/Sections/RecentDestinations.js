@@ -4,7 +4,12 @@ import CONSTANTS from '../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import Data from '../../../components/BookingDummyData';
 import {LocationCard} from '../../../components';
-export const RecentDestinations = ({navigation, onPressRecentDestination, recentDestinationList}) => {
+export const RecentDestinations = ({
+  navigation,
+  onPressRecentDestination,
+  recentDestinationList,
+  recentSearchDataList,
+}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <FlatList
@@ -16,6 +21,7 @@ export const RecentDestinations = ({navigation, onPressRecentDestination, recent
               alignItems: 'center',
               paddingHorizontal: 13,
               backgroundColor: CONSTANTS.COLOR.WHITE,
+              marginTop: recentSearchDataList.length == 0 ? 0 : 16,
               // paddingVertical: 10,
             }}>
             <Text

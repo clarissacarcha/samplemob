@@ -37,6 +37,14 @@ export const PaymentMethodModal = ({
     checkPaymentMethod();
   };
 
+  const isDisabled = () => {
+    if (details?.rate?.charge) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <Modal animationType="fade" transparent={true} visible={viewSelectPaymentModal} style={StyleSheet.absoluteFill}>
       <TouchableWithoutFeedback onPress={() => setViewSelectPaymentModal(false)}>
@@ -70,8 +78,8 @@ export const PaymentMethodModal = ({
 
             <View style={styles.divider} />
 
-            <TouchableOpacity onPress={() => setSelected('CASH')}>
-              <View style={styles.container}>
+            <TouchableOpacity onPress={() => setSelected('CASH')} disabled={isDisabled()}>
+              <View style={styles.container} opacity={isDisabled() ? 0.5 : 1}>
                 <View style={styles.elementWrapper}>
                   <Image source={CashIcon} resizeMode={'contain'} style={styles.walletIconStyle} />
                   <View style={{marginLeft: 8}}>

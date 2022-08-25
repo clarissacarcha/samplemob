@@ -20,7 +20,8 @@ import {useAccount} from 'toktokwallet/hooks';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 
-const ToktokGoCreateTokwa = ({navigation, session}) => {
+const ToktokGoCreateTokwa = ({navigation, session, route}) => {
+  const {voucherData} = route.params;
   const {tokwaAccount, getMyAccount} = useAccount();
 
   return (
@@ -84,7 +85,7 @@ const ToktokGoCreateTokwa = ({navigation, session}) => {
 
           <TouchableOpacity
             style={{marginBottom: 20, marginBottom: 50}}
-            onPress={() => navigation.replace('ToktokGoHealthCare')}>
+            onPress={() => navigation.replace('ToktokGoHealthCare', {voucherData})}>
             <Text style={{color: constants.COLOR.ORANGE}}>Skip</Text>
           </TouchableOpacity>
         </View>
