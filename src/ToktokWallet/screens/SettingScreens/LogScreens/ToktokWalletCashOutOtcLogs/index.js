@@ -1,40 +1,37 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
-import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_CASH_OUT_OTC} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
 import {
   Separator,
-  ModalPaginationLoading,
   CheckIdleState,
-  SwipeDownToRefresh,
   NoData,
   LoadingIndicator,
+  HeaderBack,
+  HeaderTitleRevamp,
 } from 'toktokwallet/components';
-import {HeaderBack, HeaderTitle} from 'src/revamp';
 
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
-import {SomethingWentWrong} from 'src/components';
 import {moderateScale} from 'toktokwallet/helper';
 
 //FONTS & COLORS & IMAGES
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
+const {COLOR} = CONSTANTS;
 
 //COMPONENTS
 import {CashOutOtcLog} from './Components';
 
 export const ToktokWalletCashOutOtcLogs = ({navigation}) => {
   navigation.setOptions({
-    headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['Cash Out', '']} />,
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitleRevamp label={'Cash Out'} />,
   });
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
   const [pageInfo, setPageInfo] = useState({});
-  const [pageLoading, setPageLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [records, setRecords] = useState([]);
   const alert = useAlert();

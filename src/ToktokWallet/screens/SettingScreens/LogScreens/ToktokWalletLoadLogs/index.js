@@ -4,9 +4,15 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_ENTERPRISE_TRANSACTIONS_PAGINATE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-import {Separator, CheckIdleState, NoData, LoadingIndicator} from 'toktokwallet/components';
-import {moderateScale} from "toktokwallet/helper";
-import {HeaderBack, HeaderTitle} from 'src/revamp';
+import {
+  Separator,
+  CheckIdleState,
+  NoData,
+  LoadingIndicator,
+  HeaderBack,
+  HeaderTitleRevamp,
+} from 'toktokwallet/components';
+import {moderateScale} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
@@ -15,13 +21,12 @@ import {SomethingWentWrong} from 'src/components';
 //SELF IMPORT
 import {LogItem} from './Components';
 
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
-const imageWidth = Dimensions.get('window').width - 200;
+const {COLOR} = CONSTANTS;
 
 export const ToktokWalletLoadLogs = ({navigation}) => {
   navigation.setOptions({
-    headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['Load', '']} />,
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitleRevamp label={'Load'} />,
   });
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
@@ -31,30 +36,33 @@ export const ToktokWalletLoadLogs = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const alert = useAlert();
 
-  const [getEnterpriseTransactionsPaginate , {date,error,loading,fetchMore}] = useLazyQuery(GET_ENTERPRISE_TRANSACTIONS_PAGINATE, {
-    fetchPolicy: 'network-only',
-    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-    onError: error => {
-      setRefreshing(false);
-      onErrorAlert({alert, error, navigation});
+  const [getEnterpriseTransactionsPaginate, {date, error, loading, fetchMore}] = useLazyQuery(
+    GET_ENTERPRISE_TRANSACTIONS_PAGINATE,
+    {
+      fetchPolicy: 'network-only',
+      client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+      onError: error => {
+        setRefreshing(false);
+        onErrorAlert({alert, error, navigation});
+      },
+      onCompleted: ({getEnterpriseTransactionsPaginate}) => {
+        setRecords(getEnterpriseTransactionsPaginate.edges);
+        setPageInfo(getEnterpriseTransactionsPaginate.pageInfo);
+        setRefreshing(false);
+      },
     },
-    onCompleted: ({getEnterpriseTransactionsPaginate}) => {
-      setRecords(getEnterpriseTransactionsPaginate.edges);
-      setPageInfo(getEnterpriseTransactionsPaginate.pageInfo);
-      setRefreshing(false);
-    },
-  })
+  );
 
-  const handleGetTransactions = ()=> {
+  const handleGetTransactions = () => {
     getEnterpriseTransactionsPaginate({
       variables: {
         input: {
           afterCursorId: null,
-          fatherName: "toktokload"
+          fatherName: 'toktokload',
         },
       },
-    })
-  }
+    });
+  };
 
   const fetchMoreData = async () => {
     if (pageInfo.hasNextPage) {
@@ -62,7 +70,7 @@ export const ToktokWalletLoadLogs = ({navigation}) => {
         variables: {
           input: {
             afterCursorId: pageInfo.endCursorId,
-            fatherName: "toktokload"
+            fatherName: 'toktokload',
           },
         },
         updateQuery: (previousResult, {fetchMoreResult}) => {

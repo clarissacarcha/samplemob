@@ -1,12 +1,19 @@
-import React, {useState, useEffect ,useRef} from 'react';
-import {View, Text, StyleSheet, RefreshControl, FlatList} from 'react-native';
-import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import React, {useState, useEffect, useRef} from 'react';
+import {View, StyleSheet, RefreshControl, FlatList} from 'react-native';
+import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_SEND_MONEY_TRANSACTIONS_PAGINATE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-import {Separator, ModalPaginationLoading, CheckIdleState, LoadingIndicator, NoData} from 'toktokwallet/components';
-import { moderateScale } from "toktokwallet/helper";
-import {HeaderBack, HeaderTitle} from 'src/revamp';
+import {
+  Separator,
+  ModalPaginationLoading,
+  CheckIdleState,
+  LoadingIndicator,
+  NoData,
+  HeaderBack,
+  HeaderTitleRevamp,
+} from 'toktokwallet/components';
+import {moderateScale} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
@@ -15,12 +22,12 @@ import {SomethingWentWrong} from 'src/components';
 //SELF IMPORT
 import {SendMoneyLog} from './Components';
 
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
+const {COLOR} = CONSTANTS;
 
 export const ToktokWalletSendMoneyLogs = ({navigation, route}) => {
   navigation.setOptions({
-    headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['Send Money', '']} />,
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitleRevamp label={'Send Money'} />,
   });
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
@@ -30,30 +37,32 @@ export const ToktokWalletSendMoneyLogs = ({navigation, route}) => {
   const [refreshing, setRefreshing] = useState(false);
   const alert = useAlert();
 
-
-  const [getSendMoneyTransactionsPaginate , {date,error,loading,fetchMore}] = useLazyQuery(GET_SEND_MONEY_TRANSACTIONS_PAGINATE, {
-    fetchPolicy: 'network-only',
-    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-    onError: error => {
-      setRefreshing(false);
-      onErrorAlert({alert, error, navigation});
+  const [getSendMoneyTransactionsPaginate, {date, error, loading, fetchMore}] = useLazyQuery(
+    GET_SEND_MONEY_TRANSACTIONS_PAGINATE,
+    {
+      fetchPolicy: 'network-only',
+      client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+      onError: error => {
+        setRefreshing(false);
+        onErrorAlert({alert, error, navigation});
+      },
+      onCompleted: ({getSendMoneyTransactionsPaginate}) => {
+        setRecords(getSendMoneyTransactionsPaginate.edges);
+        setPageInfo(getSendMoneyTransactionsPaginate.pageInfo);
+        setRefreshing(false);
+      },
     },
-    onCompleted: ({getSendMoneyTransactionsPaginate}) => {
-      setRecords(getSendMoneyTransactionsPaginate.edges);
-      setPageInfo(getSendMoneyTransactionsPaginate.pageInfo);
-      setRefreshing(false);
-    },
-  })
+  );
 
-  const handleGetTransactions = ()=> {
+  const handleGetTransactions = () => {
     getSendMoneyTransactionsPaginate({
       variables: {
         input: {
           afterCursorId: null,
         },
       },
-    })
-  }
+    });
+  };
 
   const fetchMoreData = async () => {
     if (pageInfo.hasNextPage) {
@@ -126,7 +135,13 @@ export const ToktokWalletSendMoneyLogs = ({navigation, route}) => {
             data={records}
             keyExtractor={item => item.id}
             renderItem={({item, index}) => (
-              <SendMoneyLog key={`sendMoney-log${index}`} data={records} item={item} index={index} tokwaAccount={tokwaAccount} />
+              <SendMoneyLog
+                key={`sendMoney-log${index}`}
+                data={records}
+                item={item}
+                index={index}
+                tokwaAccount={tokwaAccount}
+              />
             )}
             contentContainerStyle={{flexGrow: 1}}
             onEndReachedThreshold={0.01}

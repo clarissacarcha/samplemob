@@ -1,12 +1,19 @@
-import React, {useState, useEffect,useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
-import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_CASH_INS_PAGINATE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-import {Separator, ModalPaginationLoading, CheckIdleState, NoData, LoadingIndicator} from 'toktokwallet/components';
-import { moderateScale } from "toktokwallet/helper";
-import {HeaderBack, HeaderTitle} from 'src/revamp';
+import {
+  Separator,
+  ModalPaginationLoading,
+  CheckIdleState,
+  NoData,
+  LoadingIndicator,
+  HeaderBack,
+  HeaderTitleRevamp,
+} from 'toktokwallet/components';
+import {moderateScale} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
@@ -15,12 +22,12 @@ import {SomethingWentWrong} from 'src/components';
 //SELF IMPORTS
 import {CashInLog} from './Components';
 
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
+const {COLOR} = CONSTANTS;
 
 export const ToktokWalletCashInLogs = ({navigation}) => {
   navigation.setOptions({
-    headerLeft: () => <HeaderBack color={COLOR.YELLOW} />,
-    headerTitle: () => <HeaderTitle label={['Cash In', '']} />,
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitleRevamp label={'Cash In'} />,
   });
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
@@ -30,7 +37,7 @@ export const ToktokWalletCashInLogs = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const alert = useAlert();
 
-  const [getCashInsPaginate, {data, error, loading, fetchMore }] = useLazyQuery(GET_CASH_INS_PAGINATE, {
+  const [getCashInsPaginate, {data, error, loading, fetchMore}] = useLazyQuery(GET_CASH_INS_PAGINATE, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
@@ -44,15 +51,15 @@ export const ToktokWalletCashInLogs = ({navigation}) => {
     },
   });
 
-  const handleGetTransactions = ()=> {
+  const handleGetTransactions = () => {
     getCashInsPaginate({
       variables: {
         input: {
           afterCursorId: null,
         },
       },
-    })
-  }
+    });
+  };
 
   const fetchMoreData = async () => {
     if (pageInfo.hasNextPage) {
@@ -78,7 +85,6 @@ export const ToktokWalletCashInLogs = ({navigation}) => {
       });
     }
   };
-
 
   const Refetch = () => {
     handleGetTransactions();
@@ -127,7 +133,13 @@ export const ToktokWalletCashInLogs = ({navigation}) => {
               data={records}
               keyExtractor={item => item.id}
               renderItem={({item, index}) => (
-                <CashInLog key={`cashin-log${index}`} data={records} item={item} index={index} tokwaAccount={tokwaAccount} />
+                <CashInLog
+                  key={`cashin-log${index}`}
+                  data={records}
+                  item={item}
+                  index={index}
+                  tokwaAccount={tokwaAccount}
+                />
               )}
               contentContainerStyle={{flexGrow: 1}}
               onEndReachedThreshold={0.01}
