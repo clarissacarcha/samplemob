@@ -4,7 +4,7 @@ import {useRoute, useNavigation} from '@react-navigation/native';
 import {View, ImageBackground, Text, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
 import {useSelector} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
-import Alert from 'toktokfood/components/Alert';
+import DialogMessage from 'toktokfood/components/DialogMessage';
 import {FoodCart, Variations, VerifyContextProvider, VerifyContext, FoodImageSlider} from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
@@ -55,7 +55,7 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: error => {
-      console.log('errror', error);
+      // console.log('errror', error);
       // onErrorAlert({alert, error});
       setIsAlertVisible(true);
     },
@@ -243,13 +243,12 @@ const MainComponent = () => {
           <FoodCart loading={loading} basePrice={0} action={action} />
         </>
       )}
-      <Alert
-        isVisible={isAlertVisible}
+      <DialogMessage
+        visibility={isAlertVisible}
         type="warning"
         title="Product Unavailable"
-        subtitle="We're sorry but this product is no longer available. This product will be deleted upon refresh."
-        buttonText="OK"
-        onPress={() => {
+        messages="We're sorry but this product is no longer available. This product will be deleted upon refresh."
+        onCloseModal={() => {
           setIsAlertVisible(false);
           navigation.goBack();
         }}
