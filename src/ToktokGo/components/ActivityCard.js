@@ -55,7 +55,7 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
   const getTotalAmount = () => {
     if (booking.tag == 'CANCELLED') {
       if (booking.cancellationChargeStatus == 'PAID') {
-        return '₱50.0';
+        return '₱50.00';
       } else {
         return '₱0.00';
       }
