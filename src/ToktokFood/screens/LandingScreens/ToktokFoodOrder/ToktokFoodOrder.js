@@ -317,7 +317,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           // onPress2 = () => navigation.navigate('ToktokFoodHome');
         } else {
           title = state?.orderIsfor === 1 ? 'Order Delivered' : 'Order Picked Up';
-          subtitle = 'Yay! Craving satisfied. Thank you for ordering in toktokfood!';
+          subtitle = 'Yay! Cravings satisfied. Thank you for ordering in toktokfood!';
           type = 'success';
           buttonText = 'OK';
           // onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 's'});
