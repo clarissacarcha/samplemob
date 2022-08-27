@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react';
-import {StyleSheet, Text, View, Image, Dimensions, ActivityIndicator} from 'react-native';
+import {StyleSheet, Text, View, Image, Dimensions, ActivityIndicator, ScrollView} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {onError} from '../../../util/ErrorUtility';
@@ -76,17 +76,19 @@ export const SelectedVoucherScreen = ({navigation, route}) => {
       <AlertOverlay visible={PCVLoading} />
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
       <Header title={data.name} navigation={navigation} />
-      <View style={styles.container}>
-        <Image
-          source={GraphicsIMG}
-          resizeMode={'contain'}
-          style={{height: FULL_HEIGHT * 0.17, width: FULL_WIDTH - 32}}
-        />
-        <Text style={{marginVertical: 16}}>{data.description}</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <Image
+            source={GraphicsIMG}
+            resizeMode={'contain'}
+            style={{height: FULL_HEIGHT * 0.17, width: FULL_WIDTH - 32}}
+          />
+          <Text style={{marginVertical: 16}}>{data.description}</Text>
 
-        <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD}}>Promo Terms and Conditions</Text>
-        <Text style={{marginVertical: 16}}>{data.policies}</Text>
-      </View>
+          <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD}}>Promo Terms and Conditions</Text>
+          <Text style={{marginVertical: 16}}>{data.policies}</Text>
+        </View>
+      </ScrollView>
 
       <View style={styles.buttonContainer}>
         {GVLoading ? (
@@ -111,6 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   container: {
+    flex: 1,
     paddingHorizontal: 16,
     marginTop: 24,
   },
