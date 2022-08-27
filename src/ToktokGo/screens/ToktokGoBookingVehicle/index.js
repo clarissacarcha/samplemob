@@ -30,7 +30,7 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
       <Header navigation={navigation} title={'Select Vehicle'} />
       <InfoNote />
       <FlatList
-        style={{marginTop: 24}}
+        style={{paddingTop: 24}}
         showsVerticalScrollIndicator={false}
         data={data.vehicleTypeRates}
         // keyExtractor={item => item.id}

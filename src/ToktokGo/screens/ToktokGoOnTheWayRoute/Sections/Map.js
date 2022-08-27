@@ -16,13 +16,13 @@ export const Map = ({booking, decodedPolyline, originData}) => {
   };
 
   const ORIGIN = {
-    latitude: booking.route.origin.location.latitude,
-    longitude: booking.route.origin.location.longitude,
+    latitude: booking?.route?.origin?.location?.latitude,
+    longitude: booking?.route?.origin?.location?.longitude,
   };
 
   const TO = {
-    latitude: booking.route.destinations[0].location.latitude,
-    longitude: booking.route.destinations[0].location.longitude,
+    latitude: booking?.route?.destinations[0]?.location?.latitude,
+    longitude: booking?.route?.destinations[0]?.location?.longitude,
   };
 
   const onMapReady = async () => {
