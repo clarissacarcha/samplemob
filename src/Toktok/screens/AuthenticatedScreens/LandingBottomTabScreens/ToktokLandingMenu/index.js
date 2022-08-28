@@ -7,6 +7,7 @@ import {onError} from '../../../../../util/ErrorUtility';
 import {AlertOverlay} from '../../../../../SuperApp/screens/Components';
 import {useMutation} from '@apollo/react-hooks';
 import CONSTANTS from '../../../../../common/res/constants';
+import HeaderImage from '../../../../../assets/toktok/images/ProfileBackground.png';
 import {
   Image,
   ScrollView,
@@ -17,6 +18,7 @@ import {
   StatusBar,
   TouchableOpacity,
   Platform,
+  ImageBackground,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import RNFS from 'react-native-fs';
@@ -147,8 +149,9 @@ export const ToktokLandingMenu = ({navigation}) => {
       <AlertOverlay visible={loading} />
       <View style={{flex: 1}}>
         <View style={{flex: 1, backgroundColor: 'white'}}>
+          <Header />
           <ScrollView>
-            <Header>
+            <ImageBackground style={{height: 160}} source={HeaderImage} resizeMode="cover">
               <View style={{margin: SIZE.MARGIN}}>
                 {/*--------------- AVATAR ---------------*/}
                 {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
@@ -205,8 +208,7 @@ export const ToktokLandingMenu = ({navigation}) => {
                 )}
                 {/*--------------- FULL NAME ---------------*/}
               </View>
-            </Header>
-
+            </ImageBackground>
             <Text style={{paddingLeft: 20, paddingTop: 20, paddingBottom: 15, fontFamily: FONT.BOLD}}> Account</Text>
             {/*--------------- MY DELIVERIES ---------------*/}
             {/* <DrawerButton

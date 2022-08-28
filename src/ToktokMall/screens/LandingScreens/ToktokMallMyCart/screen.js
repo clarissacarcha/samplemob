@@ -7,7 +7,7 @@ import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import CheckBox from 'react-native-check-box';
 import Toast from 'react-native-simple-toast';
 
-import {MessageModal, LoadingOverlay} from '../../../Components';
+import { AlertOverlay } from 'src/components'
 import {DeleteFooter, CheckoutFooter, Item, Store, RenderDetails, RenderEmpty} from './components';
 import {MergeStoreProducts, ArrayCopy, getRefComAccountType} from '../../../helpers';
 import { create, map, set } from 'lodash';
@@ -551,9 +551,7 @@ const Component = ({
   }
 
   const OnSubmitForCheckout = () => {
-    // if(itemsToCheckoutArr.length > 0){
-      
-    if(selectedItemsArr.length > 0){
+    // if(itemsToCheckoutArr.length > 0)
       
       let data = FormatCheckoutItems()
       // console.log(JSON.stringify(data))
@@ -565,10 +563,6 @@ const Component = ({
         newCart: [],
         vouchers: [],
       })
-
-    }else{
-      Toast.show("Please select items to checkout", Toast.LONG)
-    }
   }
 
   useFocusEffect(
@@ -606,8 +600,8 @@ const Component = ({
         <Header label="Shopping Cart" />
         <View style={styles.margin1} />
         <View style={styles.subContainer}>
-          {loading && <LoadingOverlay isVisible={loading} />}
-          {apiloader && <LoadingOverlay isVisible={apiloader} />}
+          {loading && <AlertOverlay visible={loading} />}
+          {apiloader && <AlertOverlay visible={apiloader} />}
 
           {myCartData.length == 0 && !loading && !apiloader && <RenderEmpty />}
 
@@ -756,6 +750,9 @@ const Component = ({
           {myCartData.length > 0 && !willDelete && (
             <CheckoutFooter
               onSubmit={async () => {
+                if(selectedItemsArr.length === 0){
+                  return Toast.show("Please select items to checkout", Toast.LONG)
+                }
                 setapiloader(true)
                 await getVerifyCheckout({variables: {
                   input: {

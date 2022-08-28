@@ -64,17 +64,6 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
     }
   };
 
-  const headerDesign = () => {
-    let design = styles.headerYellow;
-    if (['ONGOING', 'COMPLETED'].includes(booking?.tag)) {
-      design = styles.headerWhite;
-    }
-    if (booking?.tag == 'CANCELLED') {
-      design = styles.headerGrey;
-    }
-    return design;
-  };
-
   const getTextStatus = () => {
     if (booking?.tag == 'ONGOING') {
       switch (booking.status) {

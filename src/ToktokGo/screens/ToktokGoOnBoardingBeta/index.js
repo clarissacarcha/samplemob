@@ -22,7 +22,8 @@ import {connect} from 'react-redux';
 
 const {width} = Dimensions.get('screen');
 
-const ImageDimension = Dimensions.get('screen').height / 2.5;
+const ImageDimension = Dimensions.get('screen').height * 0.3;
+const SCREEN_HEIGHT_MARGIN = Dimensions.get('screen').height * 0.1;
 
 const slides = [
   {
@@ -150,7 +151,7 @@ const ToktokGoOnBoardingBeta = ({navigation, session, route}) => {
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
       <View style={{alignItems: 'center'}}>
-        <View style={{marginTop: StatusBar.currentHeight + 40}}>
+        <View style={{marginTop: StatusBar.currentHeight + SCREEN_HEIGHT_MARGIN}}>
           <Image source={ToktokgoIcon} resizeMode={'contain'} style={{height: 45, width: 190}} />
         </View>
         <FlatList

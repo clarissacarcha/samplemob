@@ -221,17 +221,17 @@ const Component = ({
               {data.refComDiscountRate && data.refComDiscountRate != "" ? 
                 <RefComDiscountRate value={data.refComDiscountRate} w='40%' /> : null}
             </View>
+              <TouchableOpacity onPress={() => HandleShare()}>
+                <CustomIcon.FeIcon name="share" size={20} color="#9E9E9E" />
+              </TouchableOpacity>
 
           </View>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{flex: 1}}>{data.weeklySold || 0} sold</Text>
+            {/* <Text style={{flex: 1}}>{data.weeklySold || 0} sold</Text> */}
             <View style={styles.share}>
               {/* <TouchableOpacity style={{marginRight: 10}} onPress={() => HandleToggleFavorites()}>
                 {favorite ? <CustomIcon.EIcon name="heart" size={22} color="#F6841F" /> : <CustomIcon.EIcon name="heart-outlined" size={22} color="#9E9E9E" />}
               </TouchableOpacity> */}
-              <TouchableOpacity onPress={() => HandleShare()}>
-                <CustomIcon.FeIcon name="share" size={20} color="#9E9E9E" />
-              </TouchableOpacity>
             </View>
           </View>
         

@@ -54,3 +54,21 @@ export const ArrayCopy = (toCopy) => {
 
 
 export const FormatDateTime = (value) => moment(value, "YYYY-MM-DD h:m:s").format("MMM DD, YYYY hh:mm A") 
+
+
+export const ReplaceHtmlEntities = (s) => {
+  var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
+  var translate = {
+    'nbsp': String.fromCharCode(160), 
+    'amp' : '&', 
+    'quot': '"',
+    'lt'  : '<', 
+    'gt'  : '>'
+  };
+
+  var translator = function($0, $1) { 
+    return translate[$1]; 
+  }
+
+  return s.replace(translate_re, translator);
+}
