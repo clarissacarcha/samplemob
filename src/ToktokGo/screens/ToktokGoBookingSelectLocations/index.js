@@ -21,6 +21,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../helper';
 import {ThrottledHighlight} from '../../../components_section';
 import {onErrorAppSync} from '../../util';
+import {onError} from '../../../util/ErrorUtility';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
@@ -80,7 +81,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       onPressLocation();
       addItemToList(response.getPlaceById);
     },
-    onError: error => console.log('error', error),
+    onError: onError,
   });
 
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
@@ -92,7 +93,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
       setSearchOrigin(payload?.place?.formattedAddress);
     },
-    onError: error => console.log('error', error),
+    onError: onError,
   });
 
   const onPressRecentSearch = loc => {
