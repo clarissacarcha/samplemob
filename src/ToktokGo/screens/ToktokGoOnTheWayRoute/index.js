@@ -275,11 +275,13 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     });
   };
 
-  const goBackAfterCancellation = () => {
+  const goBackAfterCancellation = async () => {
+    navigation.pop();
+    await setViewCancelBookingModal(false);
     setOriginData(true);
-    setViewCancelBookingModal(false);
     setIsViaTokwa(false);
-    navigation.replace('ToktokGoBookingStart', {
+
+    return navigation.replace('ToktokGoBookingStart', {
       popTo: popTo + 1,
     });
   };
@@ -310,6 +312,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     setmodal(false);
   };
   const openRateDriver = () => {
+    setOriginData(true);
     setmodal(false);
     navigation.replace('ToktokGoRateDriver', {
       popTo: popTo + 1,
@@ -320,6 +323,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     setCancel(true);
   };
   const onConsumerAcceptDriverCancelled = () => {
+    navigation.pop();
     setOriginData(true);
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
@@ -437,7 +441,6 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       },
     });
   };
-
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
       getMyAccount();
@@ -524,6 +527,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         payFeeViaTokwa={payFeeViaTokwa}
       />
       <DriverArrivedModal
+        originData={originData}
         modal={modal}
         setmodal={setmodal}
         action={action}
