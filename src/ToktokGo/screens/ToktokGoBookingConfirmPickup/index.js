@@ -12,6 +12,7 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import {decodeLegsPolyline, useDebounce} from '../../helpers';
 import {MAP_DELTA_LOW} from '../../../res/constants';
 import {throttle} from 'lodash';
+import {onError} from '../../../util/ErrorUtility';
 import {ThrottledOpacity} from '../../../components_section';
 import {AlertOverlay} from '../../../SuperApp/screens/Components';
 
@@ -89,7 +90,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     onCompleted: response => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: response.getPlaceByLocation});
     },
-    onError: error => console.log('error', error),
+    onError: onError,
   });
 
   const debouncedRequest = useDebounce(
