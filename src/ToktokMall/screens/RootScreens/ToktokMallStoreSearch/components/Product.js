@@ -6,7 +6,7 @@ import CustomIcon from '../../../../Components/Icons';
 import {placeholder} from '../../../../assets';
 import { useNavigation } from '@react-navigation/core';
 
-import { SwipeReloader, PromotionBanner } from '../../../../Components';
+import { SwipeReloader, PromotionBanner, RefComDiscountRate } from '../../../../Components';
 import { Price } from '../../../../helpers';
 
 const RenderStars = ({value}) => {
@@ -34,29 +34,44 @@ const RenderItem = ({item, navigation}) => {
   }
 
   return (
-    <>
-      <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
-                  
-        <View style={{padding: 5}}>
-          {item?.discountRate != "" && 
-          <View style={{position:'absolute', zIndex: 1, right: 0, backgroundColor: '#F6841F', borderBottomLeftRadius: 30}}>
-            <Text style={{fontSize: 8, paddingHorizontal: 4, paddingLeft: 8, paddingTop: 1, paddingBottom: 3, color: "#fff", fontFamily: FONT.BOLD}}>{item?.discountRate}</Text>
-          </View>}
-          {
-            item.promotions && item.promotions != null &&
-            <PromotionBanner 
-              label={item.promotions.name}
-              content={item.promotions.duration}
+    <View style={{flex: 2, backgroundColor: '#fff', margin: 5}}>
+      <TouchableOpacity onPress={() => navigation.push('ToktokMallProductDetails', item)}>
+          <View style={{padding: 5}}>
+            {item?.discountRate != '' && (
+              <View
+                style={{
+                  position: 'absolute',
+                  zIndex: 1,
+                  right: 0,
+                  backgroundColor: '#F6841F',
+                  borderBottomLeftRadius: 30,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 8,
+                    paddingHorizontal: 4,
+                    paddingLeft: 8,
+                    paddingTop: 1,
+                    paddingBottom: 3,
+                    color: '#fff',
+                    fontFamily: FONT.BOLD,
+                  }}>
+                  {item?.discountRate}
+                </Text>
+              </View>
+            )}
+            {item.promotions && item.promotions != null && (
+              <PromotionBanner label={item.promotions.name} content={item.promotions.duration} />
+            )}
+            <Image
+              source={getImageSource(item?.images || [])}
+              style={{resizeMode: 'contain', width: '100%', height: 120, borderRadius: 5}}
             />
-          }
-          <Image 
-            source={getImageSource(item?.images || [])} 
-            style={{resizeMode: 'cover', width: '100%', height: 120, borderRadius: 5}} 
-          />
-          <TouchableOpacity onPress={() => navigation.navigate("ToktokMallProductDetails", item)}>
-            <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}}  numberOfLines={2} ellipsizeMode="tail">{item?.itemname || ""}</Text>
-          </TouchableOpacity>
-          {/* <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(item?.price).toFixed(2)}</Text>    
+            <Text style={{fontSize: 13, fontWeight: '500', paddingVertical: 5}} numberOfLines={2} ellipsizeMode="tail">
+              {item?.itemname || ''}
+            </Text>
+
+            {/* <Text style={{fontSize: 13, color: "#F6841F"}}>&#8369;{parseFloat(item?.price).toFixed(2)}</Text>    
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 7, flexDirection: 'row'}}>
               <RenderStars value={item?.rating} />
@@ -68,29 +83,33 @@ const RenderItem = ({item, navigation}) => {
               <Text style={{fontSize: 10}}>{item?.soldCount || 0} sold</Text>
             </View>
           </View> */}
-          <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 2.3}}>
-              <Text style={{fontSize: 13, color: "#F6841F"}}><Price amount={item.price} /></Text>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{flex: 2.3}}>
+                <Text style={{fontSize: 13, color: '#F6841F'}}>
+                  <Price amount={item.price} />
+                </Text>
+              </View>
+              <View style={{flex: 2, justifyContent: 'center'}}>
+                {(item.discountRate && item.discountRate != '') ||
+                (item.refComDiscountRate && item.refComDiscountRate != '') ? (
+                  <Text style={{fontSize: 9, color: '#9E9E9E', textDecorationLine: 'line-through'}}>
+                    {item.compareAtPrice == '' ? null : <Price amount={item.compareAtPrice} />}
+                  </Text>
+                ) : (
+                  <></>
+                )}
+              </View>
+              <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
+                {/* <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text> */}
+              </View>
             </View>
-            <View style={{flex: 2, justifyContent: 'center'}}>
-            {
-                item.discountRate && item.discountRate != "" || 
-                item.refComDiscountRate && item.refComDiscountRate != "" ?  
-                <Text style={{fontSize: 9, color: "#9E9E9E", textDecorationLine: 'line-through'}}>
-                  {item.compareAtPrice == "" ? null : <Price amount={item.compareAtPrice} />}
-                  </Text> : <></>}
-            </View>
-            <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
-              <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
-            </View>
-          </View>
-          {
-            item.refComDiscountRate && item.refComDiscountRate != null ? <RefComDiscountRate value={item.refComDiscountRate} /> : null
-          }
+            {item.refComDiscountRate && item.refComDiscountRate != null ? (
+              <RefComDiscountRate value={item.refComDiscountRate} />
+            ) : null}
         </View>
-      </View>
-    </>
-  )
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 export const Product = ({data, lazyload}) => {
@@ -135,9 +154,13 @@ export const Product = ({data, lazyload}) => {
                   <>
                     <RenderItem navigation={navigation} item={item} />
                     <View style={styles.margin1} />
+
+                    {/* USED TO FIX EXTENDED CARD */}
+                    <Text>&nbsp;</Text>
+
                   </>
                 )
-              }                  
+              }          
             }
             return <RenderItem navigation={navigation} item={item} />
           }}

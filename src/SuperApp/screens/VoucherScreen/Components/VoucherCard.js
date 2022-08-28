@@ -47,6 +47,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
                   overflow: 'hidden',
                   borderRadius: 10,
                   marginVertical: 8,
+                  marginRight: 15,
                 }}>
                 <Progress.Bar
                   height={3}
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     marginLeft: 20,
-    marginRight: 15,
+    // marginRight: 15,
     top: 3,
   },
   computed: {

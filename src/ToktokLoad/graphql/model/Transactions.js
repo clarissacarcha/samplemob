@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 const transaction = `
   id
@@ -49,21 +49,37 @@ const transaction = `
   comType
   createdAt
   toktokwalletReturnRefNo
-`
+`;
 export const GET_TRANSACTIONS_BY_STATUS = gql`
   query getTransactionsByStatus($input: GetTransactionsByStatusInput!) {
     getTransactionsByStatus(input: $input) {
       ${transaction}
     }
   }
-`
+`;
 export const GET_LOAD_TRANSACTIONS = gql`
   query getTransactions($input: GetTransactionsInput!) {
     getTransactions(input: $input) {
       ${transaction}
     }
   }
-`
+`;
+export const GET_LOAD_TRANSACTIONS_PAGINATE = gql`
+  query getTransactionsPaginate($input: GetTransactionsPaginateInput!) {
+    getTransactionsPaginate(input: $input) {
+      edges{
+        node {
+          ${transaction}
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        hasNextPage
+      }
+    }
+  }
+`;
 export const POST_TOKTOKWALLET_REQUEST_MONEY = gql`
   mutation postToktokWalletRequestMoney($input: PostToktokWalletRequestMoneyInput!) {
     postToktokWalletRequestMoney(input: $input) {
@@ -77,7 +93,7 @@ export const POST_TOKTOKWALLET_REQUEST_MONEY = gql`
       }
     }
   }
-`
+`;
 export const POST_LOAD_TRANSACTION = gql`
   mutation postLoadTransaction($input: PostTransactionInput!) {
     postLoadTransaction(input: $input) {
@@ -87,4 +103,4 @@ export const POST_LOAD_TRANSACTION = gql`
       }
     }
   }
-`
+`;

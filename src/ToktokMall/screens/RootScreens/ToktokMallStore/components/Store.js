@@ -3,6 +3,7 @@ import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import {LandingSubHeader, Card, Product} from '../../../../Components';
 import { connect } from 'react-redux';
+import { ReplaceHtmlEntities } from '../../../../helpers';
 
 const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, reduxStates: {myFollowing}}) => {
 
@@ -31,7 +32,7 @@ const Component = ({data, onToggleFollow, reduxActions: {updateMyFollowing}, red
                 style={styles.logoIcon} />
             </View>
             <View style={styles.shopNameContainer}>
-              <Text style={styles.shopNameText}>{data.shopname}</Text>
+              <Text style={styles.shopNameText}>{ReplaceHtmlEntities(data.shopname || "")}</Text>
               <Text style={styles.addressText}>{data.address}</Text>
             </View>
 

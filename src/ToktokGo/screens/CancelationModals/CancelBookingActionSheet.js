@@ -7,7 +7,7 @@ import tokWaIMG from '../../../assets/images/Wallet.png';
 import {ThrottledOpacity} from '../../../components_section';
 
 export const CancelBookingActionSheet = ({
-  SheetManager,
+  sheetRef,
   cancellationState,
   setViewSuccessCancelBookingModal,
   hastokwa,
@@ -16,17 +16,16 @@ export const CancelBookingActionSheet = ({
   const [selectedPayment, setSelectedPayment] = useState();
 
   const onConfirm = () => {
+    sheetRef.current.snapTo(0);
     if (selectedPayment == 'CASH') {
       setViewSuccessCancelBookingModal(true);
     } else {
       payFeeViaTokwa();
     }
-
-    SheetManager.hide('cancel_booking');
   };
 
   return (
-    <ActionSheet id="cancel_booking" overlayColor="none">
+    <View style={{backgroundColor: 'white'}}>
       <View style={styles.container}>
         <View style={{}}>
           <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD, color: CONSTANTS.COLOR.ALMOST_BLACK}}>
@@ -85,7 +84,7 @@ export const CancelBookingActionSheet = ({
       </View>
 
       <View style={{width: '100%', height: 10, backgroundColor: 'white', position: 'absolute', bottom: 0}} />
-    </ActionSheet>
+    </View>
   );
 };
 

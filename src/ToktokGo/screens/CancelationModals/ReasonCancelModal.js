@@ -140,6 +140,8 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel, naviga
     }
   };
 
+  console.log('zion', selectedReason);
+
   return (
     <View>
       {isVisible && (
@@ -248,7 +250,7 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel, naviga
                     </ThrottledOpacity>
                     <ThrottledOpacity
                       delay={500}
-                      disabled={selectedReason ? false : true}
+                      disabled={selectedReason.length == 0 ? true : false}
                       onPress={() => confirm()}
                       style={{
                         flex: 1,
