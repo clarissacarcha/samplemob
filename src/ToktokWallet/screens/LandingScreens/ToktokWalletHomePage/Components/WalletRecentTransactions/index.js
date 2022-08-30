@@ -1,25 +1,33 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator, FlatList, Dimensions} from 'react-native';
+import React, {useMemo, useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import CONSTANTS from 'common/res/constants';
 import {useNavigation} from '@react-navigation/native';
-import {Separator, WalletLog, TransactionLog, NoData, OrangeButton} from 'toktokwallet/components';
-import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
+import {TransactionLog, NoData, OrangeButton} from 'toktokwallet/components';
+import {VectorIcon, ICON_SET} from 'src/revamp';
 import {useAccount} from 'toktokwallet/hooks';
 import {moderateScale} from 'toktokwallet/helper';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
-const {height, width} = Dimensions.get('window');
 
 const WalletRecentTransactions = () => {
   const navigation = useNavigation();
   const {checkIfTpinIsSet, tokwaAccount} = useAccount();
+  const [transactions, setTransactions] = useState(null);
 
   const TopUpNow = () => {
     const tpinIsSet = checkIfTpinIsSet();
-    if (!tpinIsSet) return;
+    if (!tpinIsSet) {
+      return;
+    }
 
     return navigation.navigate('ToktokWalletPaymentOptions');
   };
+
+  useEffect(() => {
+    if (tokwaAccount?.wallet?.transactions) {
+      setTransactions(tokwaAccount?.wallet?.transactions);
+    }
+  }, [tokwaAccount]);
 
   const CashInNow = () => (
     <>
@@ -36,54 +44,50 @@ const WalletRecentTransactions = () => {
     </View>
   );
 
-  const RecentRecords = () => (
-    <>
-      <View style={{flexDirection: 'row'}}>
-        <View style={{flex: 1, alignItems: 'flex-start'}}>
-          <Text style={styles.title}>Recent Transactions</Text>
+  const RecentRecords = useMemo(() => {
+    return (
+      <>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1, alignItems: 'flex-start'}}>
+            <Text style={styles.title}>Recent Transactions</Text>
+          </View>
+          {transactions?.length > 5 && (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ToktokWalletTransactions')}
+              style={styles.seeAllContainer}>
+              <Text style={styles.seeAllText}>See All</Text>
+              <VectorIcon
+                iconSet={ICON_SET.FontAwesome5}
+                name="chevron-right"
+                size={11}
+                color={COLOR.ORANGE}
+                style={{
+                  alignSelf: 'center',
+                  marginLeft: 10,
+                }}
+              />
+            </TouchableOpacity>
+          )}
         </View>
-        {tokwaAccount?.wallet?.transactions?.length > 5 && (
-          <TouchableOpacity onPress={ViewTransactions} style={styles.seeAllContainer}>
-            <Text style={styles.seeAllText}>See All</Text>
-            <VectorIcon
-              iconSet={ICON_SET.FontAwesome5}
-              name="chevron-right"
-              size={11}
-              color={COLOR.ORANGE}
-              style={{
-                alignSelf: 'center',
-                marginLeft: 10,
-              }}
+
+        <View style={styles.transactions}>
+          {transactions?.slice(0, 5).map((item, index) => (
+            <TransactionLog
+              key={`recentLog${index}`}
+              transaction={item}
+              index={index}
+              data={transactions?.slice(0, 5)}
             />
-          </TouchableOpacity>
-        )}
-      </View>
+          ))}
+        </View>
+      </>
+    );
+  }, [navigation, transactions]);
 
-      <View style={styles.transactions}>
-        {tokwaAccount?.wallet?.transactions?.slice(0, 5).map((item, index) => (
-          <TransactionLog
-            key={`recentLog${index}`}
-            transaction={item}
-            itemsLength={tokwaAccount?.wallet?.recentTransactions}
-            index={index}
-            data={tokwaAccount?.wallet?.transactions?.slice(0, 5)}
-          />
-        ))}
-      </View>
-    </>
-  );
-
-  const ViewTransactions = () => {
-    return navigation.navigate('ToktokWalletTransactions', {allTransactions: tokwaAccount.wallet.allTransactions});
-  };
-
-  return (
-    <>
-      <View style={styles.container}>
-        {tokwaAccount?.wallet?.transactions?.length == 0 ? <CashInNow /> : <RecentRecords />}
-      </View>
-    </>
-  );
+  if (transactions == null) {
+    return <LoadingScreen />;
+  }
+  return <View style={styles.container}>{transactions?.length === 0 ? <CashInNow /> : RecentRecords}</View>;
 };
 
 const styles = StyleSheet.create({
