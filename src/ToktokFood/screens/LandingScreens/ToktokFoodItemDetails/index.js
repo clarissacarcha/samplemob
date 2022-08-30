@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useContext, useEffect} from 'react';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, useNavigation} from '@react-navigation/native';
 import {View, ImageBackground, Text, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
 import {useSelector} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
-
+import DialogMessage from 'toktokfood/components/DialogMessage';
 import {FoodCart, Variations, VerifyContextProvider, VerifyContext, FoodImageSlider} from './components';
 import HeaderTitle from 'toktokfood/components/HeaderTitle';
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
@@ -23,6 +23,7 @@ import {useAlert} from 'src/hooks';
 
 const MainComponent = () => {
   const routes = useRoute();
+  const navigation = useNavigation();
   const alert = useAlert();
   const {Id, parentProductId, selectedItemId, selectedAddons, selectedPrice, selectedQty, selectedNotes, action} =
     routes.params;
@@ -42,6 +43,7 @@ const MainComponent = () => {
     setBasePrice,
   } = useContext(VerifyContext);
   const [bannerLoaded, setBannerLoaded] = useState(true);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
   const stickyHeaderIndices = bannerLoaded ? [2] : [3];
 
   const [getProductDetails, {loading}] = useLazyQuery(GET_PRODUCT_DETAILS, {
@@ -53,7 +55,9 @@ const MainComponent = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: error => {
-      onErrorAlert({alert, error});
+      // console.log('errror', error);
+      // onErrorAlert({alert, error});
+      setIsAlertVisible(true);
     },
     onCompleted: ({getProductDetails}) => {
       // console.log(getProductDetails);
@@ -239,6 +243,16 @@ const MainComponent = () => {
           <FoodCart loading={loading} basePrice={0} action={action} />
         </>
       )}
+      <DialogMessage
+        visibility={isAlertVisible}
+        type="warning"
+        title="Product Unavailable"
+        messages="We're sorry but this product is no longer available. This product will be deleted upon refresh."
+        onCloseModal={() => {
+          setIsAlertVisible(false);
+          navigation.goBack();
+        }}
+      />
     </View>
   );
 };

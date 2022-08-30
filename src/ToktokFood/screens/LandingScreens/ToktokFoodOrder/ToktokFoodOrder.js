@@ -259,7 +259,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           <ModifiedContainer adjustSpacing={adjustSpacing}>
             <Icon name="info" size={14} color={theme.color.orange} pabili />
             <ModifiedText>
-              Items prices and availability are subject to change without prior notice. Learn more about our{' '}
+              Items' prices and availability are subject to change without prior notice. Learn more about our{' '}
               <TCText>Terms and Conditions</TCText>.
             </ModifiedText>
           </ModifiedContainer>
