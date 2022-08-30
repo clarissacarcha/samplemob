@@ -223,7 +223,7 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
               }}>
               Welcome ka-toktok!
             </Text>
-            <Text style={{textAlign: 'center', marginTop: 12}}>Did a driver refer you? Enter Referral Code</Text>
+            <Text style={{textAlign: 'center', marginTop: 12}}>Did a driver refer you? Enter Driver Referral Code</Text>
             <Text style={{textAlign: 'center', marginBottom: 28}}> below to claim {data?.getVoucher?.name}!</Text>
 
             <View style={styles.card}>
@@ -238,7 +238,7 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
             <View style={[styles.inputContainer, isValidDriverId && styles.inputContainerError]}>
               <TextInput
                 style={styles.input}
-                placeholder="Referral Code"
+                placeholder="Driver Referral Code"
                 value={refCode}
                 onChangeText={text => {
                   setRefCode(text), setIsValidDriverId(false);
