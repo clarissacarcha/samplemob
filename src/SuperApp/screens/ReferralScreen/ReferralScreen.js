@@ -103,7 +103,7 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
     fetchPolicy: 'network-only',
     onError: error => {
       const {graphQLErrors, networkError} = error;
-      console.log(error);
+      // console.log(error);
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
