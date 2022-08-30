@@ -40,7 +40,7 @@ import {numberFormat} from '../../../helper';
 const decorHeight = Dimensions.get('window').height * 0.15;
 
 const ReferralScreen = ({navigation, route, constants, session, createSession}) => {
-  const {fromRegistration} = route.params;
+  const {fromRegistration, voucherData} = route.params;
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [isValidDriverId, setIsValidDriverId] = useState(false);
   const [invalidReferralCodeText, setInvalidReferralCodeText] = useState('');
@@ -82,7 +82,11 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
       }
       setTimeout(() => {
         setViewSuccesVoucherClaimedModal(false);
-        navigation.pop();
+        if (fromRegistration) {
+          navigation.replace('ToktokGoHealthCare', {voucherData});
+        } else {
+          navigation.pop();
+        }
       }, 1500);
     },
     onError: error => {
@@ -174,6 +178,7 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
           screen: 'ConsumerLanding',
         },
       });
+      navigation.replace('ToktokGoHealthCare', {voucherData});
     } else {
       navigation.pop();
     }
@@ -199,7 +204,11 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
 
   return (
     <>
-      <ThrottledOpacity style={styles.backButton} onPress={onBackPress}>
+      <ThrottledOpacity
+        style={styles.backButton}
+        onPress={() => {
+          navigation.pop();
+        }}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </ThrottledOpacity>
       <KeyboardAwareScrollView contentContainerStyle={{flex: 1}} extraScrollHeight={40}>
@@ -208,7 +217,11 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
           <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
 
           {fromRegistration && (
-            <ThrottledOpacity style={styles.skipButton} onPress={onBackPress}>
+            <ThrottledOpacity
+              style={styles.skipButton}
+              onPress={() => {
+                navigation.replace('ToktokGoHealthCare', {voucherData});
+              }}>
               <Text style={styles.skipButtonText}>Skip</Text>
             </ThrottledOpacity>
           )}
