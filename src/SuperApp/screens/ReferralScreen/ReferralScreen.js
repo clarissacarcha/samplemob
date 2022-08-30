@@ -82,7 +82,11 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
       }
       setTimeout(() => {
         setViewSuccesVoucherClaimedModal(false);
-        navigation.pop();
+        if (fromRegistration) {
+          navigation.replace('ToktokGoHealthCare', {voucherData});
+        } else {
+          navigation.pop();
+        }
       }, 1500);
     },
     onError: error => {
