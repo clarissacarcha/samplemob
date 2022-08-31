@@ -90,7 +90,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         const {id, status, cancellation} = data?.onTripUpdate;
 
         if (id != booking.id) {
-          Alert.alert('', 'Hope you are enjoying your trip ka toktok!');
+          Alert.alert('', 'Magandang araw ka-toktok! Stay safe!');
           return;
         }
         if (id && status != 'CANCELLED' && cancellation?.initiatedBy == 'CONSUMER') {
@@ -113,10 +113,10 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             type: 'SET_TOKTOKGO_BOOKING',
             payload: data?.onTripUpdate,
           });
-          if (status == 'ARRIVED') {
+          if (status === 'ARRIVED') {
             setmodal(true);
           }
-          if (status == 'COMPLETED') {
+          if (status === 'COMPLETED') {
             setShowArrivedAtDestination(true);
           }
         }
