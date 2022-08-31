@@ -106,7 +106,6 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => {
         SheetManager.hide('homeMenu_Services'), navigation.push('TokTokFoodSplashScreen');
       },
-      isNew: true,
     },
     {
       identifier:
