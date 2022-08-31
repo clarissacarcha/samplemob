@@ -10,40 +10,20 @@ export const DriverArrivedModal = ({modal, booking, openModal, openRateDriver}) 
         <View style={styles.card}>
           <View style={styles.container}>
             <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
-            {booking.status == 'ARRIVED' ? (
-              <Text style={styles.modalTitle}>Driver Arrived</Text>
-            ) : (
-              <Text style={styles.modalTitle}>You’ve Arrived</Text>
-            )}
-
+            <Text style={styles.modalTitle}>Driver Arrived</Text>
             <View style={{marginHorizontal: 10}}>
-              {booking.status == 'ARRIVED' ? (
-                <Text style={styles.modalDescription}>
-                  Your driver has arrived. Please be in your pick-up location within{' '}
-                  <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> to avoid cancellation.
-                </Text>
-              ) : (
-                <Text style={styles.modalDescription}>Yay! You have arrived at your destination.</Text>
-              )}
+              <Text style={styles.modalDescription}>
+                Your driver has arrived. Please be in your pick-up location within{' '}
+                <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> to avoid cancellation.
+              </Text>
             </View>
-
-            {booking.status == 'ARRIVED' ? (
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={() => {
-                  openModal();
-                }}>
-                <Text style={styles.buttonText}>OK</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={() => {
-                  openRateDriver();
-                }}>
-                <Text style={styles.buttonText}>OK</Text>
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => {
+                openModal();
+              }}>
+              <Text style={styles.buttonText}>OK</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
