@@ -3,24 +3,21 @@ import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-nati
 import CONSTANTS from '../../../../common/res/constants';
 import SuccessIMG from '../../../../assets/images/Sucess.png';
 
-export const DriverArrivedModal = ({modal, booking, openModal, openRateDriver}) => {
+export const ArrivedAtDestination = ({showArrivedAtDestination, booking, openModal, openRateDriver}) => {
   return (
-    <Modal animationType="fade" transparent={true} visible={modal} style={StyleSheet.absoluteFill}>
+    <Modal animationType="fade" transparent={true} visible={showArrivedAtDestination} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
             <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
-            <Text style={styles.modalTitle}>Driver Arrived</Text>
+            <Text style={styles.modalTitle}>You’ve Arrived</Text>
             <View style={{marginHorizontal: 10}}>
-              <Text style={styles.modalDescription}>
-                Your driver has arrived. Please be in your pick-up location within{' '}
-                <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> to avoid cancellation.
-              </Text>
+              <Text style={styles.modalDescription}>Yay! You have arrived at your destination.</Text>
             </View>
             <TouchableOpacity
               style={styles.buttonContainer}
               onPress={() => {
-                openModal();
+                openRateDriver();
               }}>
               <Text style={styles.buttonText}>OK</Text>
             </TouchableOpacity>

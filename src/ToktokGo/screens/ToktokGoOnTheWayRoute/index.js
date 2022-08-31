@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import {Map, SeeBookingDetails, DriverStatus, DriverInfo, Actions, DriverStatusDestination} from './Sections';
-import {DriverArrivedModal} from './Components';
+import {DriverArrivedModal, ArrivedAtDestination} from './Components';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import {SheetManager} from 'react-native-actions-sheet';
@@ -54,6 +54,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [status, setStatus] = useState(5);
   const [action, setAction] = useState(true);
   const [modal, setmodal] = useState(false);
+  const [showArrivedAtDestination, setShowArrivedAtDestination] = useState(false);
   const [cancel, setCancel] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [actionSheetType, setActionSheetType] = useState(1);
@@ -87,6 +88,11 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       ({data}) => {
         console.log('[subscription] TripUpdate:', data);
         const {id, status, cancellation} = data?.onTripUpdate;
+
+        if (id != booking.id) {
+          Alert.alert('', 'Hope you are enjoying your trip ka toktok!');
+          return;
+        }
         if (id && status != 'CANCELLED' && cancellation?.initiatedBy == 'CONSUMER') {
           dispatch({
             type: 'SET_TOKTOKGO_BOOKING',
@@ -107,8 +113,11 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             type: 'SET_TOKTOKGO_BOOKING',
             payload: data?.onTripUpdate,
           });
-          if (['ARRIVED', 'COMPLETED'].includes(status)) {
+          if (status == 'ARRIVED') {
             setmodal(true);
+          }
+          if (status == 'COMPLETED') {
+            setShowArrivedAtDestination(true);
           }
         }
       },
@@ -470,6 +479,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
           driverCancel ||
           cancellationFee ||
           modal ||
+          showArrivedAtDestination ||
           cancel
             ? 'rgba(0,0,0,0.6)'
             : null
@@ -535,6 +545,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         openModal={openModal}
         openRateDriver={openRateDriver}
       />
+      <ArrivedAtDestination showArrivedAtDestination={showArrivedAtDestination} openRateDriver={openRateDriver} />
       <DriverCancelled
         cancel={cancel}
         onDriverCancelled={onConsumerAcceptDriverCancelled}
