@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.S,
     flexShrink: 1,
     paddingLeft: 15,
+    flex: 1,
   },
   fontBoldStyle: {
     fontFamily: FONT.BOLD,
