@@ -1,5 +1,5 @@
 import ToktokWalletPaymentChart from './ToktokWalletPaymentChart';
-export * from './ToktokWalletTransactionLimit';
+import ToktokWalletTransactionLimit from './ToktokWalletTransactionLimit';
 export * from './UpgradeAccountScreens';
 
-export {ToktokWalletPaymentChart};
+export {ToktokWalletPaymentChart, ToktokWalletTransactionLimit};
