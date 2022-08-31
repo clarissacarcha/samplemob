@@ -1,19 +1,18 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {StyleSheet, View, Text, ActivityIndicator} from 'react-native';
-import {CheckIdleState} from 'toktokwallet/components';
-import CONSTANTS from 'common/res/constants';
+//COMPONENTS
+import {CheckIdleState, SomethingWentWrong} from 'toktokwallet/components';
 import {NotFinishRequirement, FinishRequirement} from './components';
+import {HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
+//HOOKS & GRAPHQL
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_CHECK_FULLY_VERIFIED_UPGRADE_REQUEST, GET_CHECK_PENDING_DISBURSEMENT_ACCOUNT} from 'toktokwallet/graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {onErrorAlert} from 'src/util/ErrorUtility';
-import {useAlert} from 'src/hooks';
-import {SomethingWentWrong, AlertOverlay} from 'src/components';
-import {SuccessfulModal, HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
 import {useAccount} from 'toktokwallet/hooks';
 import {useDispatch} from 'react-redux';
+//ASSETS
 import {bank_icon, schedule_icon} from 'toktokwallet/assets';
-
+import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_SIZE, FONT_FAMILY: FONT} = CONSTANTS;
 
 const DisplayComponent = ({finishLabel, notFinishLabel, title, btnLabel, onPress, disabled, imgSource, checkVcs}) => {
@@ -30,7 +29,6 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
     headerTitle: () => <HeaderTitleRevamp label={'Upgrade Account'} />,
   });
 
-  const alert = useAlert();
   const [isLinkedBankAccount, setIsLinkedBankAccount] = useState(false);
   const [isPendingLinking, setIsPendingLinking] = useState(false);
   const [checkVcs, setCheckVcs] = useState({
@@ -38,7 +36,6 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
     isPendingVcs: false,
   });
   const {tokwaAccount, getMyAccountLoading, getMyAccount} = useAccount();
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const dispatch = useDispatch();
 
   const [checkHasVcs, {error: errorCheckVcs, loading: loadingCheckVcs}] = useLazyQuery(
@@ -46,9 +43,6 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
     {
       fetchPolicy: 'network-only',
       client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-      onError: error => {
-        onErrorAlert({alert, error});
-      },
       onCompleted: ({getCheckFullyVerifiedUpgradeRequest}) => {
         setCheckVcs(getCheckFullyVerifiedUpgradeRequest);
       },
@@ -61,9 +55,6 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
   ] = useLazyQuery(GET_CHECK_PENDING_DISBURSEMENT_ACCOUNT, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-    onError: error => {
-      onErrorAlert({alert, error});
-    },
     onCompleted: data => {
       setIsPendingLinking(data.getCheckPendingDisbursementAccount.result);
     },
@@ -74,17 +65,18 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
   }, [getCheckPendingDisbursementAccount, tokwaAccount.isLinked]);
 
   useEffect(() => {
-    getMyAccount();
-    checkHasLinkBankAccount();
-    checkHasVcs();
-    if (route.params) {
-      setShowSuccessModal(route.params.doneVcs);
-    }
-  }, [getMyAccount, checkHasLinkBankAccount, checkHasVcs, route]);
+    handleGetData();
+  }, [getMyAccount, checkHasLinkBankAccount, checkHasVcs, handleGetData]);
 
   useEffect(() => {
     checkHasLinkBankAccount();
   }, [tokwaAccount, checkHasLinkBankAccount]);
+
+  const handleGetData = useCallback(() => {
+    getMyAccount();
+    checkHasLinkBankAccount();
+    checkHasVcs();
+  }, [checkHasLinkBankAccount, checkHasVcs, getMyAccount]);
 
   const redirectLinking = () => {
     dispatch({
@@ -97,30 +89,29 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
     return navigation.navigate('ToktokWalletCashOutHomePage', {screenLabel: 'Link Account'});
   };
 
-  if (loadingCheckVcs || loadingCheckPendingDisbursement) {
+  if (loadingCheckVcs || loadingCheckPendingDisbursement || getMyAccountLoading) {
     return (
       <View style={styles.activityIndicator}>
-        <ActivityIndicator color={COLOR.YELLOW} size={24} />
+        <ActivityIndicator color={COLOR.ORANGE} size={'small'} />
       </View>
     );
   }
 
   if (errorCheckVcs || errorCheckPendingDisbursement) {
-    return <SomethingWentWrong />;
+    return <SomethingWentWrong error={errorCheckVcs ?? errorCheckPendingDisbursement} onRefetch={handleGetData} />;
   }
 
   return (
     <CheckIdleState>
-      <AlertOverlay visible={getMyAccountLoading} />
-      <SuccessfulModal
+      {/* <AlertOverlay visible={getMyAccountLoading} /> */}
+      {/* <SuccessfulModal
         visible={showSuccessModal}
         title="Success!"
         description={'Your schedule has been submitted.\nPlease wait for our representative to\nget in touch with you'}
         redirect={() => {
           setShowSuccessModal(false);
         }}
-      />
-
+      /> */}
       <View style={styles.container}>
         <Text style={styles.headerTitle}>Upgrade Account</Text>
         <Text style={styles.fontRegularStyle}>

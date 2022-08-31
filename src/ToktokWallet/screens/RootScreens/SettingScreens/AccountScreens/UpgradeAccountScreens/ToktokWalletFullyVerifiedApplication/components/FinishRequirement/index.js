@@ -57,7 +57,7 @@ export const FinishRequirement = ({finishLabel, btnLabel, onPress, disabled, img
     <>
       <View style={[styles.cardShadow, styles.cardStyle, !checkVcs?.request && {alignItems: 'center'}]}>
         <Image source={imgSource} style={styles.img} />
-        <View style={{marginLeft: 15, flexShrink: 1}}>
+        <View style={{marginLeft: 15, flexShrink: 1, flex: 1}}>
           <Text style={[styles.fontRegularStyle]}>{finishLabel}</Text>
           {checkVcs?.request && <RequestVideoCallSchedule />}
         </View>

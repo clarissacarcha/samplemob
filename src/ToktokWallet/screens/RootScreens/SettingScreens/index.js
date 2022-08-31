@@ -1,10 +1,6 @@
-export * from "./AccountRecoveryScreens";
-export * from "./HelpCentreScreens";
-export * from "./PinCodeScreens";
-export * from "./ToktokWalletPaymentChart";
-export * from "./ToktokWalletSettings";
-export * from "./ToktokWalletTermsConditions";
-export * from "./ToktokWalletTransactionLimit";
-export * from "./UpgradeAccountScreens";
-export * from "./LogScreens";
-
+export * from './AccountRecoveryScreens';
+export * from './AccountScreens';
+export * from './HelpCentreScreens';
+export * from './PinCodeScreens';
+export * from './ToktokWalletSettings';
+export * from './LogScreens';

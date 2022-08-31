@@ -27,7 +27,7 @@ const WalletRecentTransactions = () => {
     if (tokwaAccount?.wallet?.transactions) {
       setTransactions(tokwaAccount?.wallet?.transactions);
     }
-  }, [tokwaAccount]);
+  }, [tokwaAccount?.wallet?.transactions]);
 
   const CashInNow = () => (
     <>

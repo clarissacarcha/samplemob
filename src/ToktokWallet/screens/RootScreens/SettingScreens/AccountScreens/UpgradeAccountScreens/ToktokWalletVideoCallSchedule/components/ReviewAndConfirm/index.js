@@ -91,7 +91,7 @@ export const ReviewAndConfirm = () => {
           <Text>{pepInfo.videocall.selectedDay.description}</Text>
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 20}}>
-          <Text style={{color: '#525252', fontFamily: FONT.BOLD}}>{pepInfo.videocall.selectedTime.label}</Text>
+          <Text style={{color: '#525252', fontFamily: FONT.BOLD}}>Time</Text>
           <Text>{pepInfo.videocall.selectedTime.description}</Text>
         </View>
       </View>
