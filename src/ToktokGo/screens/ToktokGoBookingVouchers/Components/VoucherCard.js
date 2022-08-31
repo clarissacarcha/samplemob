@@ -48,9 +48,7 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
     checkPaymentMethod();
   }, []);
   return (
-    <ThrottledOpacity
-      onPress={() => navigation.navigate('SelectedVoucherScreen', {id: data.id})}
-      disabled={isApplicable}>
+    <>
       <View style={styles.card}>
         <Image
           source={isApplicable ? voucherPaperDesignDisabled : voucherPaperDesign}
@@ -64,7 +62,9 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
         />
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
-          <Text style={styles.voucherDescription}>{data.description}</Text>
+          <Text style={styles.voucherDescription} numberOfLines={1}>
+            {data?.description}
+          </Text>
           {data.endAt && <Text style={styles.voucherDescription}>Valid unitl {moment(data.endAt).format('LL')}</Text>}
           {data.voucherWallet?.total > 1 && (
             <>
@@ -73,19 +73,22 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
                   overflow: 'hidden',
                   borderRadius: 10,
                   marginVertical: 8,
+                  marginRight: 15,
                 }}>
                 <Progress.Bar
                   height={3}
                   progress={getPercentage()}
                   unfilledColor={'#FFF1D2'}
-                  color={CONSTANTS.COLOR.ORANGE}
+                  color={isApplicable ? CONSTANTS.COLOR.GRAY : CONSTANTS.COLOR.ORANGE}
                   borderRadius={0}
                   borderWidth={0}
                   width={null}
                   animationType={'timing'}
                 />
               </View>
-              <Text style={styles.computed}>₱{getComputed()} remaining</Text>
+              <Text style={isApplicable ? {color: CONSTANTS.COLOR.GRAY} : styles.computed}>
+                ₱{getComputed()} remaining
+              </Text>
             </>
           )}
         </View>
@@ -112,9 +115,8 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
             </ThrottledOpacity>
           )}
           <ThrottledOpacity
-            onPress={() => navigation.navigate('SelectedVoucherScreen', {id: data.id})}
-            disabled={isApplicable}>
-            <Text style={isApplicable ? [styles.TandC, {color: CONSTANTS.COLOR.GRAY}] : styles.TandC}>T&C</Text>
+            onPress={() => navigation.navigate('ToktokGoBookingSelectedVoucher', {id: data.id, onPress, isApplicable})}>
+            <Text style={styles.TandC}>T&C</Text>
           </ThrottledOpacity>
         </View>
       </View>
@@ -132,7 +134,7 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
           </Text>
         </View>
       )}
-    </ThrottledOpacity>
+    </>
   );
 };
 
@@ -173,8 +175,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   voucherDescription: {
-    color: CONSTANTS.COLOR.GRAY,
+    color: '#000',
     fontSize: CONSTANTS.FONT_SIZE.S,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
   },
   voucherImage: {
     alignSelf: 'center',

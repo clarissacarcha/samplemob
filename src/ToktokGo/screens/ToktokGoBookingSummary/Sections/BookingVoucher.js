@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   textStyles: {
+    marginRight: 16,
     color: CONSTANTS.COLOR.ORANGE,
   },
 });

@@ -48,7 +48,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       }else if(response && response.searchProduct.length > 0){
 
         temp = temp.concat(response.searchProduct)
-        setSearchedProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
+        setSearchedProducts(temp)
+        // setSearchedProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
         setEmptySearch(false)
         setSuggest(false)
         
@@ -136,7 +137,8 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
       }else if(response && response.searchProduct.length > 0){
 
         temp = temp.concat(response.searchProduct)
-        setSearchedProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
+        setSearchedProducts(temp)
+        // setSearchedProducts(temp.sort((a, b) => a.soldCount < b.soldCount ))
         setEmptySearch(false)
         setSuggest(false)
         
@@ -397,6 +399,7 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
           data={searchedProducts} 
           fetch={() => {
             setOffset(searchedProducts.length)
+            // setOffset(offset + 1)
             console.log({offset})
             searchProduct({
               variables: {
@@ -417,9 +420,9 @@ const Component = ({navigation, route, searchHistory, createSearchHistorySession
               'origin:', route.params?.origin ? route.params.origin : "all",
               'category:', route.params?.categoryId ? route.params?.categoryId : "null",
 
-            )
-            console.log("OFFSET", searchedProducts.length)
+            )            
             setOffset(searchedProducts.length)
+            console.log("OFFSET", offset)
 
             if( route.params?.origin === "suggestion"){
               getTopProducts({

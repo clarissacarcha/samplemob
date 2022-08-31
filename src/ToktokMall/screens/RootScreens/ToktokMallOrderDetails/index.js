@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, ScrollView, RefreshControl, StyleSheet } from 'react-native';
 import { useLazyQuery } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
-import { HeaderBack, HeaderTitle, HeaderRight, Loading, LoadingOverlay, BuyAgainButton } from '../../../Components';
+import { HeaderBack, HeaderTitle, HeaderRight, Loading, BuyAgainButton } from '../../../Components';
+import { AlertOverlay } from 'src/components'
 import { ApiCall } from '../../../helpers';
 import { connect, useSelector } from "react-redux"
 import { EventRegister } from 'react-native-event-listeners'
@@ -84,7 +85,7 @@ const Component = ({ navigation, route, notificationCountSession, notifications 
       //PAID ORDER
       getOrderDetails({variables: {
         input: {
-          orderId: route.params.id,
+          orderId: route.params.orderId,
           referenceNum: "",
           refCom: getRefComAccountType({session})
         }
@@ -136,7 +137,7 @@ const Component = ({ navigation, route, notificationCountSession, notifications 
         </View> : <></>
       }
       
-      {apiloader && <LoadingOverlay isVisible={apiloader} />}
+      {apiloader && <AlertOverlay visible={apiloader} />}
     </View>
   );
 };

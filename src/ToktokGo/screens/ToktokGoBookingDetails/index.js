@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   BookingID,
   BookingDriverDetails,
@@ -11,73 +11,51 @@ import {
   BookingMap,
 } from './Sections';
 import {ScrollView, StyleSheet, View, Dimensions} from 'react-native';
-import {HeaderBack, HeaderTitle} from '../../../components';
+import {AlertOverlay, HeaderBack, HeaderTitle} from '../../../components';
 import CONSTANTS from '../../../common/res/constants';
 import {connect, useSelector} from 'react-redux';
+import {GET_TRIP} from '../../graphql';
+import {useLazyQuery} from '@apollo/react-hooks';
+import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
+import {onErrorAppSync} from '../../util';
 
 const SelectedBookingDetails = ({navigation, session, createSession, route}) => {
-  const {delivery, booking} = route.params;
+  const {delivery, bookingId, driverData} = route.params;
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Booking Details', '']} />,
   });
 
-  // const {booking} = useSelector(state => state.toktokGo);
-
-  const dropDownRef = useRef(null);
-
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [showSuccessCancelBooking, setShowSuccessCancelBooking] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showReason, setShowReason] = useState(false);
   const [showSuccessfull, setShowSuccessfull] = useState(false);
-  const [confirmed, setConfirmed] = useState('');
+  const [booking, setBooking] = useState(route.params.booking);
 
-  const showBookingReason = () => {
-    setShowReason(!showReason);
-    setShowModal(!showModal);
-  };
-
-  const succefullCancel = () => {
-    setShowReason(!showReason);
-    setShowSuccessfull(!showSuccessfull);
-  };
+  const [getTrip, {loading, error}] = useLazyQuery(GET_TRIP, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: onErrorAppSync,
+    onCompleted: response => {
+      setBooking(response.getTrip);
+    },
+  });
 
   useEffect(() => {
-    const oldStatus = session.dummyStatus;
-    if (oldStatus == 4) {
-      const updateStatus = {
-        ...session,
-        dummyStatus: oldStatus + 1,
-      };
-      createSession(updateStatus);
+    if (!booking) {
+      getTrip({
+        variables: {
+          input: {
+            id: bookingId,
+          },
+        },
+      });
     }
   }, []);
 
-  const declineBooking = () => {
-    console.log('DECLINED!');
-    setShowBookingModal(false);
-    setShowSuccessCancelBooking(true);
-  };
-
-  const onAccept = (paymentMethodSelected = false) => {
-    // setCaptchaVisible(false);
-    console.log('ON ACCPET DELIVERY');
-    const updateStatus = {
-      ...session,
-      dummyStatus: 2,
-    };
-    createSession(updateStatus);
-    // patchDeliveryAccepted({
-    //   variables: {
-    //     input: {
-    //       deliveryId: getDelivery.id,
-    //       driverId: session.user.driver.id,
-    //       userId: session.user.id,
-    //     },
-    //   },
-    // });
-  };
+  if (loading || !booking) {
+    console.log('loading', loading, 'booking', booking);
+    return <AlertOverlay visible={loading} />;
+  }
 
   return (
     <View style={{flex: 1}}>
@@ -85,7 +63,7 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
         <BookingID booking={booking} />
         {booking.tag == 'ONGOING' && booking.driver && (
           <>
-            <BookingDriverDetails booking={booking} />
+            <BookingDriverDetails booking={booking} driverData={driverData} />
             <View style={{borderBottomWidth: 8, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
           </>
         )}

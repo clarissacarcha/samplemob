@@ -6,11 +6,12 @@ import constants from '../../../common/res/constants';
 import FAIcons from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
-const ToktokGoHealthCare = ({navigation}) => {
+const ToktokGoHealthCare = ({navigation, route}) => {
+  const {voucherData} = route.params;
   const onPress = () => {
     const date = moment(new Date()).format('MMM D, YYYY');
     AsyncStorage.setItem('ToktokGoHealthCare', date);
-    navigation.replace('ToktokGoBookingStart');
+    navigation.replace('ToktokGoBookingStart', {voucherData});
   };
   return (
     <ImageBackground source={GradientBackground} style={styles.container}>

@@ -53,17 +53,15 @@ export const ActivitiesCard = ({booking, onPress, lastItem = false}) => {
   const onPressThrottled = throttle(onPress, 1000, {trailing: false});
 
   const getTotalAmount = () => {
-    return `₱${numberFormat(booking?.fare?.total)}`;
-  };
-  const headerDesign = () => {
-    let design = styles.headerYellow;
-    if (['ONGOING', 'COMPLETED'].includes(booking?.tag)) {
-      design = styles.headerWhite;
+    if (booking.tag == 'CANCELLED') {
+      if (booking.cancellationChargeStatus == 'PAID') {
+        return '₱50.00';
+      } else {
+        return '₱0.00';
+      }
+    } else {
+      return '₱' + numberFormat(booking.fare.total);
     }
-    if (booking?.tag == 'CANCELLED') {
-      design = styles.headerGrey;
-    }
-    return design;
   };
 
   const getTextStatus = () => {

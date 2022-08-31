@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput, ScrollView, BackHandler} from 'react-native';
-import {HeaderBack, HeaderTitle, HeaderRight, Header, LoadingOverlay} from '../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../Components';
+import { AlertOverlay } from 'src/components'
 import {COLOR, FONT, FONT_SIZE} from '../../../../res/variables';
 import {otpicon, otpbg, otpicon2} from '../../../assets';
 import CustomIcon from '../../../Components/Icons';
@@ -47,18 +48,18 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
 
   }, [route])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        if(modal.visible){
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
-          return true
-        }
-      }
-      BackHandler.addEventListener('hardwareBackPress', onBackPress)
-      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
-    }, [])
-  )
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const onBackPress = () => {
+  //       if(modal.visible){
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
+  //         return true
+  //       }
+  //     }
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress)
+  //     return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+  //   }, [])
+  // )
 
   // useEffect(() => {
   //   if(route?.params.unavailable.length > 0){
@@ -189,8 +190,8 @@ const Component = ({navigation, route, otpAttempts, setAttempts}) => {
 
   return (
     <>
-      <LoadingOverlay label="Verifying" isVisible={validating}/>
-      <LoadingOverlay label="Processing" isVisible={processing} />
+      <AlertOverlay label="Verifying" visible={validating}/>
+      <AlertOverlay label="Processing" visible={processing} />
       {/* <AlertModal
         // navigation = {navigation}
         isVisible = {true}

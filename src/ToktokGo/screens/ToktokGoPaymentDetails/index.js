@@ -1,20 +1,28 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import {HeaderBack, HeaderTitle} from '../../../components';
 import {numberFormat} from '../../../helper';
 import CashIcon from '../../../assets/images/CashIcon.png';
+import InfoIcon from '../../../assets/images/info.png';
+import moment from 'moment';
 import ToktokWalletOutline from '../../../assets/images/toktok-wallet-outline.png';
+import {FeeInfoModal} from '../ToktokGoBookingSummary/Components';
+import {ThrottledOpacity} from '../../../components_section';
 
 const ToktokGoPaymentDetails = ({navigation, route}) => {
   const {booking} = route.params;
+  const [renderFeeInfoModal, setRenderInfoModal] = useState(false);
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Payment Details', '']} />,
   });
 
+  const cancelledStatus = booking.logs.find(item => item.status == 'CANCELLED');
+
   return (
     <View style={styles.container}>
+      <FeeInfoModal vissible={renderFeeInfoModal} setVissible={setRenderInfoModal} />
       <View style={styles.elementWrapper}>
         <Text style={styles.textStyle}>Payment Method</Text>
         {booking.paymentMethod == 'CASH' ? (
@@ -68,33 +76,71 @@ const ToktokGoPaymentDetails = ({navigation, route}) => {
           <View style={styles.elementWrapper}>
             <Text style={styles.textStyle}>Surge Charge</Text>
             <Text style={styles.textStyle}>₱{numberFormat(booking.fare.surgeCharge)}</Text>
-          </View> 
-          <View style={styles.elementWrapper}>
-            <Text style={styles.textStyle}>Outstanding Fee</Text>
-            <Text style={styles.textStyle}>₱{numberFormat(50)}</Text>
-          </View> 
-          <View style={styles.elementWrapper}>
-            <Text style={styles.textStyle}>Cancellation Fee last Jan 7,2022</Text>
-          </View> 
-          <View style={styles.elementWrapper}>
-            <Text style={styles.textStyle}>Voucher</Text>
-            <Text style={styles.voucherTextStyle}>-₱{numberFormat(50)}</Text>
-          </View> 
-          <View style={styles.elementWrapper}>
-            <Text style={styles.textStyle}>₱10k NEW USER</Text>
-          </View> 
-        </View> 
+          </View>
+          {booking.fare?.vouchers?.length > 0 && (
+            <>
+              <View style={styles.elementWrapper}>
+                <Text style={styles.higlighttextStyle}>Voucher</Text>
+                <Text style={styles.voucherTextStyle}>- ₱{numberFormat(booking.fare.discount)}</Text>
+              </View>
+
+              <View style={styles.elementWrapper}>
+                <Text style={styles.textStyle}>{booking.fare.vouchers[0].name}</Text>
+              </View>
+            </>
+          )}
+
+          <View style={styles.divider} />
+          {booking.cancellationChargeStatus == 'PAID' && (
+            <>
+              <View style={styles.elementWrapper}>
+                <Text style={styles.textStyle}>Outstanding Fee</Text>
+                <Text style={styles.textStyle}>₱{numberFormat(50)}</Text>
+              </View>
+              <View style={styles.elementWrapper}>
+                <Text style={styles.textStyle}>
+                  {booking.cancellation.initiatedBy == 'CONSUMER' ? 'Cancellation Fee' : 'No Show Fee'} last{' '}
+                  {moment(cancelledStatus.createdAt).format('MMM D, YYYY')}
+                </Text>
+              </View>
+            </>
+          )}
+          <View style={styles.elementTotal}>
+            <Text style={styles.bottomTextStyle}>{booking.tag == 'ONGOING' ? 'Total' : 'Total Paid'}</Text>
+
+            <Text style={styles.bottomTextStyle}>₱{numberFormat(booking.fare.total)}</Text>
+          </View>
+          <View style={styles.divider} />
+        </View>
       ) : (
-        <></>
+        <>
+          {booking.cancellationChargeStatus == 'PAID' && (
+            <>
+              <View style={styles.elementWrapper}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text style={styles.higlighttextStyle}>Outstanding Fee</Text>
+                  <ThrottledOpacity onPress={() => setRenderInfoModal(true)} delay={500}>
+                    <Image source={InfoIcon} resizeMode={'contain'} style={styles.imgDimensions} />
+                  </ThrottledOpacity>
+                </View>
+                <Text style={styles.textStyle}>₱{numberFormat(50)}</Text>
+              </View>
+              <View style={styles.elementWrapper}>
+                <Text style={styles.textStyle}>
+                  {booking.cancellation.initiatedBy == 'CONSUMER' ? 'Cancellation Fee' : 'No Show Fee'} last{' '}
+                  {moment(cancelledStatus.createdAt).format('MMM D, YYYY')}
+                </Text>
+              </View>
+            </>
+          )}
+          <View style={styles.divider} />
+          <View style={styles.elementTotal}>
+            <Text style={styles.bottomTextStyle}>{booking.tag == 'ONGOING' ? 'Total' : 'Total Paid'}</Text>
+            <Text style={styles.bottomTextStyle}>₱{booking.cancellationChargeStatus == 'PAID' ? '50.00' : '0.00'}</Text>
+          </View>
+          <View style={styles.divider} />
+        </>
       )}
-      <View style={styles.divider} />
-      <View style={styles.elementTotal}>
-        <Text style={styles.bottomTextStyle}>Total</Text>
-        <Text style={styles.bottomTextStyle}>
-          ₱{booking.tag == 'CANCELLED' ? '0.00' : numberFormat(booking.fare.amount)}
-        </Text>
-      </View>
-      <View style={styles.divider} />
     </View>
   );
 };
@@ -119,6 +165,10 @@ const styles = StyleSheet.create({
     color: CONSTANTS.COLOR.RED,
     fontSize: CONSTANTS.FONT_SIZE.M,
   },
+  higlighttextStyle: {
+    color: CONSTANTS.COLOR.ALMOST_BLACK,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+  },
   textStyle: {
     fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
     color: CONSTANTS.COLOR.BLACK,
@@ -139,5 +189,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 16,
+  },
+  imgDimensions: {
+    width: 13,
+    height: 13,
+    marginLeft: 8,
   },
 });

@@ -91,9 +91,9 @@ export const Item = ({ navigation, item }) => {
           </View>
 
           <View style={styles.sold}>
-            <Text style={{fontSize: 9}}>
+            {/* <Text style={{fontSize: 9}}>
               {item.weeklySold || item.soldCount || 0} sold
-            </Text>
+            </Text> */}
           </View>
 
         </View>
