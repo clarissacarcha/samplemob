@@ -17,12 +17,24 @@ import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import ToktokWalletIcon from '../../../assets/images/WalletLogo.png';
 import ToktokWalletImage from '../../../assets/images/creaTokwaAcc.png';
 import {useAccount} from 'toktokwallet/hooks';
+import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 
 const ToktokGoCreateTokwa = ({navigation, session, route}) => {
   const {voucherData} = route.params;
   const {tokwaAccount, getMyAccount} = useAccount();
+
+  const onSkip = () => {
+    if (!session?.user?.consumer?.goReferralDriverCode) {
+      navigation.replace('ReferralScreen', {
+        fromRegistration: true,
+        voucherData,
+      });
+    } else {
+      navigation.replace('ToktokGoHealthCare', {voucherData});
+    }
+  };
 
   return (
     <ImageBackground
@@ -83,9 +95,7 @@ const ToktokGoCreateTokwa = ({navigation, session, route}) => {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={{marginBottom: 20, marginBottom: 50}}
-            onPress={() => navigation.replace('ToktokGoHealthCare', {voucherData})}>
+          <TouchableOpacity style={{marginBottom: 20, marginBottom: 50}} onPress={onSkip}>
             <Text style={{color: constants.COLOR.ORANGE}}>Skip</Text>
           </TouchableOpacity>
         </View>
@@ -94,7 +104,13 @@ const ToktokGoCreateTokwa = ({navigation, session, route}) => {
   );
 };
 
-export default ToktokGoCreateTokwa;
+// export default ToktokGoCreateTokwa;
+
+const mapStateToProps = state => ({
+  session: state.session,
+});
+
+export default connect(mapStateToProps, null)(ToktokGoCreateTokwa);
 
 const styles = StyleSheet.create({
   subtitle: {

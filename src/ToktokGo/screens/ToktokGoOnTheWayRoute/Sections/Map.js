@@ -7,8 +7,12 @@ import {useSelector} from 'react-redux';
 import LocationIcon from '../../../../assets/images/locationIcon.png';
 import constants from '../../../../common/res/constants';
 import CarImage from '../../../../assets/images/car1.png';
-export const Map = ({booking, decodedPolyline, originData, driverLat, driverLong}) => {
+export const Map = ({booking, decodedPolyline, originData, driverLat, driverLong, driverCoordinates}) => {
   const mapRef = useRef();
+
+  console.log('zionn', driverLat);
+  console.log('zionn', driverLong);
+
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
     latitudeDelta: 19.887065883877668,
@@ -17,13 +21,13 @@ export const Map = ({booking, decodedPolyline, originData, driverLat, driverLong
   };
 
   const ORIGIN = {
-    latitude: booking.route.origin.location.latitude,
-    longitude: booking.route.origin.location.longitude,
+    latitude: booking?.route?.origin?.location?.latitude,
+    longitude: booking?.route?.origin?.location?.longitude,
   };
 
   const TO = {
-    latitude: booking.route.destinations[0].location.latitude,
-    longitude: booking.route.destinations[0].location.longitude,
+    latitude: booking?.route?.destinations[0]?.location?.latitude,
+    longitude: booking?.route?.destinations[0]?.location?.longitude,
   };
 
   const DRIVERLOC = {
@@ -77,15 +81,17 @@ export const Map = ({booking, decodedPolyline, originData, driverLat, driverLong
           <Image source={LocationIcon} style={{height: 36, width: 36}} resizeMode="contain" />
         </View>
       </Marker>
-      <Marker
-        key={key => {
-          2;
-        }}
-        coordinate={DRIVERLOC}>
-        <View style={{alignItems: 'center'}}>
-          <Image source={CarImage} style={{height: 30, width: 30}} resizeMode="contain" />
-        </View>
-      </Marker>
+      {driverLong && (
+        <Marker
+          key={key => {
+            2;
+          }}
+          coordinate={DRIVERLOC}>
+          <View style={{alignItems: 'center'}}>
+            <Image source={CarImage} style={{height: 30, width: 30}} resizeMode="contain" />
+          </View>
+        </Marker>
+      )}
     </MapView>
   );
 };

@@ -1,4 +1,4 @@
-import React, {useRef, useCallback, useState} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {Text, View, StyleSheet, StatusBar, KeyboardAvoidingView, Image, BackHandler} from 'react-native';
 import {Pickup, ConfirmPickupButton, NotesToDriver} from './Sections';
@@ -12,6 +12,7 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import {decodeLegsPolyline, useDebounce} from '../../helpers';
 import {MAP_DELTA_LOW} from '../../../res/constants';
 import {throttle} from 'lodash';
+import {onError} from '../../../util/ErrorUtility';
 import {ThrottledOpacity} from '../../../components_section';
 import {AlertOverlay} from '../../../SuperApp/screens/Components';
 
@@ -19,9 +20,14 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const {popTo, source} = route.params;
   const dispatch = useDispatch();
   const dropDownRef = useRef(null);
+  const INITIAL_REGION = {
+    latitude: 14.584027386653853,
+    longitude: 121.0634614077012,
+    ...MAP_DELTA_LOW,
+  };
   const {details, destination, origin} = useSelector(state => state.toktokGo);
   const [mapRegion, setMapRegion] = useState({...origin.place.location, ...MAP_DELTA_LOW});
-  const [initialRegionChange, setInitialRegionChange] = useState(true);
+  const [initialRegionChange, setInitialRegionChange] = useState(!mapRegion.latitude ? false : true);
   const [note, setNote] = useState('');
   const [notes, setNotes] = useState({
     text: '',
@@ -89,7 +95,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     onCompleted: response => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: response.getPlaceByLocation});
     },
-    onError: error => console.log('error', error),
+    onError: onError,
   });
 
   const debouncedRequest = useDebounce(
@@ -106,6 +112,12 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       }),
     1000,
   );
+
+  useEffect(() => {
+    if (!mapRegion.latitude) {
+      onDragEndMarker({...INITIAL_REGION});
+    }
+  }, []);
 
   const onDragEndMarker = e => {
     if (!initialRegionChange) {

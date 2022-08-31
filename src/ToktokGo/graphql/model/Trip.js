@@ -244,9 +244,9 @@ export const DRIVER_RATING = gql`
   }
 `;
 
-export const UPDATE_DRIVER_LOC = gql`
-  query getTripDriver($input: GetTripDriverInput!) {
-    getTripDriver(input: $input) {
+export const GET_TRIP_DRIVER = gql`
+  query getTripSupply($input: GetTripSupplyInput!) {
+    getTripSupply(input: $input) {
       location {
         latitude
         longitude

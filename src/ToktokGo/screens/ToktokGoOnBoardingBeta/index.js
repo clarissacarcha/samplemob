@@ -89,7 +89,14 @@ const ToktokGoOnBoardingBeta = ({navigation, session, route}) => {
     if (date === moment(new Date()).format('MMM D, YYYY')) {
       navigation.replace('ToktokGoBookingStart', {voucherData});
     } else if (tokwaAccount.wallet.id) {
-      navigation.replace('ToktokGoHealthCare', {voucherData});
+      if (!session.user.consumer.goReferralDriverCode) {
+        navigation.replace('ReferralScreen', {
+          fromRegistration: true,
+          voucherData,
+        });
+      } else {
+        navigation.replace('ToktokGoHealthCare', {voucherData});
+      }
     } else {
       navigation.replace('ToktokGoCreateTokwa', {voucherData});
     }

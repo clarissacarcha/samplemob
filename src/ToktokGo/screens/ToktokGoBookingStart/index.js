@@ -27,6 +27,7 @@ import {SavedLocations} from './Sections/SavedLocations';
 import {RecentDestinations} from './Sections/RecentDestinations';
 import AsyncStorage from '@react-native-community/async-storage';
 import {FlatList} from 'react-native-gesture-handler';
+import {onError} from '../../../util/ErrorUtility';
 
 const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   // const {popTo, selectInput} = route.params;
@@ -72,7 +73,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     onCompleted: response => {
       setBookingInitialState(response.getPlaceByLocation);
     },
-    onError: error => console.log('error', error),
+    onError: onError,
   });
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {

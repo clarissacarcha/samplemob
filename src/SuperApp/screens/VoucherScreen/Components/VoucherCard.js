@@ -34,9 +34,10 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
         <Image source={VoucherImage} resizeMode={'contain'} style={styles.voucherImage} />
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
-          <Text style={styles.voucherDescription}>
-            {data?.description?.length < 30 ? `${data?.description}` : `${data?.description.substring(0, 30)}...`}
+          <Text style={styles.voucherDescription} numberOfLines={1}>
+            {data?.description}
           </Text>
+
           {data.endAt && (
             <Text style={styles.voucherDescriptionDate}>Valid unitl {moment(data.endAt).format('MMM DD YYYY')}</Text>
           )}

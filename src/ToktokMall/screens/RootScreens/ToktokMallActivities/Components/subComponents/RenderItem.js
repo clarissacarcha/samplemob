@@ -13,7 +13,8 @@ import {
 import { 
     carIcon,
     cancelledIcon,
-    deliveredIcon
+    deliveredIcon,
+    waitingPaymentLogo
 } from '../../../../../assets';
 import { Hairline } from '../../../../../../components/widgets';
 import { DisplayDateAndTime } from '../../../../../helpers';
@@ -34,6 +35,8 @@ export const RenderItem = (props) => {
     } = fulldata;
     const cancelled = status.status === 5;
 
+    const showToPay = status.status === 0 && fulldata.paymentMethod !== "TOKTOKWALLET";
+
     //Return icon for the tabs.
     const returnIcon = () => {
         if(status.status !== 5 && status.status !== 4 && status.status !== 0) {
@@ -49,6 +52,12 @@ export const RenderItem = (props) => {
     
     //Checker for description.
     const descriptionChecker = () => {
+        if(showToPay) {
+            return "Order Confirmed";
+        }
+        if(status.status === 1) {
+            return "Order Confirmed";
+        }
         if(status.status === 4) {
             return "Order delivered"
         }
@@ -90,6 +99,18 @@ export const RenderItem = (props) => {
                         </View>
 
                         <RenderSummary data={fulldata}/>
+
+                        { showToPay && <View style={styles.waitingPaymentContainer}>
+                            <Image 
+                                style={styles.waitingPaymentLogo}
+                                source={waitingPaymentLogo}
+                            />   
+
+                            <Text style={styles.waitingPaymentText}>
+                                Waiting for payment
+                            </Text> 
+                        </View>
+                        }
 
                         { renderBuyAgain && <BuyAgainButton data={fulldata}/> }
                     </View>
@@ -190,5 +211,21 @@ const styles = StyleSheet.create({
             elevation: 2,
             paddingBottom: renderBuyAgain ? 0 : 16
         }
+    },
+    waitingPaymentContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginLeft: 16,
+        marginTop: 16
+    },
+    waitingPaymentLogo: {
+        height: 12,
+        width: 12,
+        resizeMode: 'contain',
+        marginRight: 8,
+    },
+    waitingPaymentText: {
+        color: "#F6841F",
+        fontSize: 11
     }
 })

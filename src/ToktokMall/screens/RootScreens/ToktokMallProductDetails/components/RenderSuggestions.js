@@ -114,7 +114,7 @@ const RenderItem = ({item}) => {
             </View>
 
             <View style={styles.itemStocks}>
-              <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text>
+              {/* <Text style={{fontSize: 9}}>{item.soldCount || 0} sold</Text> */}
             </View>
           </View>
           {
@@ -187,12 +187,12 @@ export const RenderSuggestions = ({data, lazyload, category}) => {
         <View style={styles.container}>
             <View style={styles.heading}>
               <View style={{flex: 8}}>
-                <Text style={styles.h1}>Discover</Text>
+                <Text style={styles.h1}>Similar Items</Text>
               </View>
               <TouchableOpacity 
                 onPress={() => 
                   navigate("ToktokMallSearch", {
-                    searchValue: "Discover", origin: "relevant", data: data 
+                    searchValue: "Similar Items", origin: "relevant", data: data 
                 })}
                 style={{flex: 2, alignItems: 'flex-end', justifyContent: 'center'}}>
                   <Text style={styles.link}>See all </Text>

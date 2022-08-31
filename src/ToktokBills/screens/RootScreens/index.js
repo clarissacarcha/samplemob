@@ -1,5 +1,7 @@
 export * from './ToktokBiller';
 export * from './ToktokBillsFavorites';
-export * from './ToktokBillsHome';
+import ToktokBillsHome from './ToktokBillsHome';
 export * from './ToktokBillsPaymentProcess';
 export * from './ToktokBillsPaymentSummary';
+
+export {ToktokBillsHome};
