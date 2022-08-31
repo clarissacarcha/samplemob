@@ -19,6 +19,9 @@ const Activities = () => {
   constants = useSelector(state => state.constants);
 
   const hideGoActivities = constants.hideGoActivities == 1 ? true : false;
+  const hideBillsActivities = constants?.hideBillsActivities 
+                              ? constants?.hideBillsActivities == 1 ? true : false 
+                              : true;
 
   return (
     <>
@@ -72,10 +75,10 @@ const Activities = () => {
           options={() => ({
             tabBarLabel: ({focused}) => {
               return (
-                <View style={{width: 100}}>
+                <View style={{width: 100, alignItems: 'center'}}>
                   <Text
                     style={{
-                      fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
+                      // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
                       fontSize: FONT_SIZE.M,
                       color: focused ? COLOR.ORANGE : COLOR.BLACK,
                       marginBottom: 5,
@@ -101,7 +104,7 @@ const Activities = () => {
                   <View style={{width: 90, alignItems: 'center'}}>
                     <Text
                       style={{
-                        fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
+                        // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
                         fontSize: FONT_SIZE.M,
                         color: focused ? COLOR.ORANGE : COLOR.BLACK,
                         marginBottom: 5,
@@ -121,7 +124,7 @@ const Activities = () => {
             tabBarLabel: ({focused}) => (
               <Text
                 style={{
-                  // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.Thin800,
+                  // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
                   fontSize: FONT_SIZE.M,
                   color: focused ? COLOR.ORANGE : COLOR.BLACK,
                   marginBottom: 5,
@@ -131,23 +134,25 @@ const Activities = () => {
             ),
           }}
         />
-        {/* <ActivitiesTopTab.Screen
-          name="ToktokBillActivities"
-          component={ToktokBillActivities}
-          options={{
-            tabBarLabel: ({focused}) => (
-              <Text
-                style={{
-                  // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.Thin800,
-                  fontSize: FONT_SIZE.M,
-                  color: focused ? COLOR.ORANGE : COLOR.BLACK,
-                  marginBottom: 5,
-                }}>
-                Bills
-              </Text>
-            ),
-          }}
-        /> */}
+       {!hideBillsActivities && (
+         <ActivitiesTopTab.Screen
+         name="ToktokBillActivities"
+         component={ToktokBillActivities}
+         options={{
+           tabBarLabel: ({focused}) => (
+             <Text
+               style={{
+                //  fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
+                 fontSize: FONT_SIZE.M,
+                 color: focused ? COLOR.ORANGE : COLOR.BLACK,
+                 marginBottom: 5,
+               }}>
+               Bills
+             </Text>
+           ),
+         }}
+       />
+       )}
       </ActivitiesTopTab.Navigator>
     </>
   );
