@@ -20,7 +20,7 @@ const Activities = () => {
 
   const hideGoActivities = constants.hideGoActivities == 1 ? true : false;
   const hideBillsActivities = constants?.hideBillsActivities 
-                              ? constants?.hideBillsActivitie == 1 ? true : false 
+                              ? constants?.hideBillsActivities == 1 ? true : false 
                               : true;
 
   return (
