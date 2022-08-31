@@ -7,11 +7,8 @@ import {useSelector} from 'react-redux';
 import LocationIcon from '../../../../assets/images/locationIcon.png';
 import constants from '../../../../common/res/constants';
 import CarImage from '../../../../assets/images/car1.png';
-export const Map = ({booking, decodedPolyline, originData, driverLat, driverLong, driverCoordinates}) => {
+export const Map = ({booking, originData, driverCoordinates}) => {
   const mapRef = useRef();
-
-  console.log('zionn', driverLat);
-  console.log('zionn', driverLong);
 
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
@@ -28,11 +25,6 @@ export const Map = ({booking, decodedPolyline, originData, driverLat, driverLong
   const TO = {
     latitude: booking?.route?.destinations[0]?.location?.latitude,
     longitude: booking?.route?.destinations[0]?.location?.longitude,
-  };
-
-  const DRIVERLOC = {
-    latitude: driverLat,
-    longitude: driverLong,
   };
 
   const onMapReady = async () => {
@@ -81,12 +73,12 @@ export const Map = ({booking, decodedPolyline, originData, driverLat, driverLong
           <Image source={LocationIcon} style={{height: 36, width: 36}} resizeMode="contain" />
         </View>
       </Marker>
-      {driverLong && (
+      {driverCoordinates && (
         <Marker
           key={key => {
             2;
           }}
-          coordinate={DRIVERLOC}>
+          coordinate={driverCoordinates}>
           <View style={{alignItems: 'center'}}>
             <Image source={CarImage} style={{height: 30, width: 30}} resizeMode="contain" />
           </View>

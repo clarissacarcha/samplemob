@@ -88,17 +88,23 @@ const ToktokGoOnBoardingBeta = ({navigation, session, route}) => {
 
     if (date === moment(new Date()).format('MMM D, YYYY')) {
       navigation.replace('ToktokGoBookingStart', {voucherData});
-    } else if (tokwaAccount.wallet.id) {
+    }
+    // if no tokwa acc; navigate to create TOKWA SCREEN
+    else if (!session.user.toktokWalletAccountId) {
+      navigation.replace('ToktokGoCreateTokwa', {voucherData});
+      // else navigate to next screen
+    } else {
+      // if no ref code; navigate to REF SCREEN
       if (!session.user.consumer.goReferralDriverCode) {
         navigation.replace('ReferralScreen', {
           fromRegistration: true,
           voucherData,
         });
-      } else {
+      }
+      // if has ref code; navigate to HEALTHCARE SCREEN
+      else {
         navigation.replace('ToktokGoHealthCare', {voucherData});
       }
-    } else {
-      navigation.replace('ToktokGoCreateTokwa', {voucherData});
     }
   };
 
