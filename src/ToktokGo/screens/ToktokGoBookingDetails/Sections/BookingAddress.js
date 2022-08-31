@@ -120,11 +120,11 @@ const DeliveryStop = ({booking, stop}) => {
           }}>
           {getDisplayAddress({stop: stop})}
         </Text>
-        {booking.tag == 'ONGOING' && (
+        {/* {booking.tag == 'ONGOING' && (
           <Text style={{fontSize: constants.FONT_SIZE.M, fontFamily: FONT.REGULAR, color: constants.COLOR.DARK}}>
             {stop.formattedAddress}
           </Text>
-        )}
+        )} */}
       </View>
       {/* {![1, 7].includes(delivery.status) && (
             <View style={{flex: 1, marginTop: 11, flexDirection: 'row', justifyContent: 'flex-end'}}>

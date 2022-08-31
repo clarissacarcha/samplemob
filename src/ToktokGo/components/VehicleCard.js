@@ -88,9 +88,15 @@ export const VehicleCard = ({type, loading, data, selectVehicle, setDataVehicle,
               <Text style={styles.descTextStlye}>{data?.vehicleType?.phrase}</Text>
             </View>
           </View>
-          <ShimmerPlaceHolder style={{width: !loading ? (Platform.OS == 'ios' ? 60 : 75) : 45}} visible={!loading}>
-            <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
-          </ShimmerPlaceHolder>
+          <View style={{flex: 1}}>
+            <View style={{alignSelf: 'flex-end'}}>
+              <ShimmerPlaceHolder
+                style={{width: !loading ? (Platform.OS == 'ios' ? '100%' : 75) : 45}}
+                visible={!loading}>
+                <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
+              </ShimmerPlaceHolder>
+            </View>
+          </View>
         </View>
       </TouchableOpacity>
       {seeVehicleFees()}
@@ -114,7 +120,6 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   container: {
-    justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
   },
@@ -128,7 +133,7 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.M,
-    marginLeft: 10,
+    alignSelf: 'flex-end',
   },
   carTextStyle: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,

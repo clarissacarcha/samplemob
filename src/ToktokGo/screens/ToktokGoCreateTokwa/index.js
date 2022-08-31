@@ -17,11 +17,24 @@ import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import ToktokWalletIcon from '../../../assets/images/WalletLogo.png';
 import ToktokWalletImage from '../../../assets/images/creaTokwaAcc.png';
 import {useAccount} from 'toktokwallet/hooks';
+import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 
-const ToktokGoCreateTokwa = ({navigation, session}) => {
+const ToktokGoCreateTokwa = ({navigation, session, route}) => {
+  const {voucherData} = route.params;
   const {tokwaAccount, getMyAccount} = useAccount();
+
+  const onSkip = () => {
+    if (!session?.user?.consumer?.goReferralDriverCode) {
+      navigation.replace('ReferralScreen', {
+        fromRegistration: true,
+        voucherData,
+      });
+    } else {
+      navigation.replace('ToktokGoHealthCare', {voucherData});
+    }
+  };
 
   return (
     <ImageBackground
@@ -41,7 +54,7 @@ const ToktokGoCreateTokwa = ({navigation, session}) => {
           <Image
             source={ToktokWalletImage}
             resizeMode={'contain'}
-            style={{height: 249, width: 275, marginTop: 49, marginBottom: 38}}
+            style={{height: 249, width: 275, marginTop: 35, marginBottom: 25}}
           />
           <Text
             style={{
@@ -54,7 +67,7 @@ const ToktokGoCreateTokwa = ({navigation, session}) => {
           </Text>
           <Text
             style={{
-              marginVertical: 20,
+              marginVertical: 15,
               fontSize: constants.FONT_SIZE.M + 1,
               textAlign: 'center',
               marginHorizontal: 55,
@@ -62,6 +75,7 @@ const ToktokGoCreateTokwa = ({navigation, session}) => {
             Convenient ride with toktokgo! For easier and cashless transactions, use toktokwallet as your payment
             method.
           </Text>
+
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('ToktokWalletLoginPage');
@@ -73,14 +87,15 @@ const ToktokGoCreateTokwa = ({navigation, session}) => {
                 paddingVertical: 11,
                 color: constants.COLOR.WHITE,
                 fontFamily: constants.FONT_FAMILY.SEMI_BOLD,
-                borderRadius: 5,
                 marginBottom: 20,
+                borderRadius: 5,
+                overflow: 'hidden',
               }}>
               Create Account
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.replace('ToktokGoHealthCare')}>
+          <TouchableOpacity style={{marginBottom: 20, marginBottom: 50}} onPress={onSkip}>
             <Text style={{color: constants.COLOR.ORANGE}}>Skip</Text>
           </TouchableOpacity>
         </View>
@@ -89,7 +104,13 @@ const ToktokGoCreateTokwa = ({navigation, session}) => {
   );
 };
 
-export default ToktokGoCreateTokwa;
+// export default ToktokGoCreateTokwa;
+
+const mapStateToProps = state => ({
+  session: state.session,
+});
+
+export default connect(mapStateToProps, null)(ToktokGoCreateTokwa);
 
 const styles = StyleSheet.create({
   subtitle: {

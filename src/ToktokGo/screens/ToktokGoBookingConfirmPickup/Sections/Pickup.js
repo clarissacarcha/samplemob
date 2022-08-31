@@ -9,29 +9,12 @@ export const Pickup = ({onDragEndMarker, mapRegion}) => {
   const {origin} = useSelector(state => state.toktokGo);
   const mapRef = useRef();
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     mapRef.current.fitToCoordinates(
-  //       [origin.place.location],
-  //       {
-  //         edgePadding: {
-  //           right: 100,
-  //           bottom: 100,
-  //           left: 100,
-  //           top: 100,
-  //         },
-  //       },
-  //       3000, // Animation duration in milliseconds.
-  //     );
-  //   }, 1000);
-  // }, [origin.place.location]);
-
   return (
     <View style={styles.container}>
       <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
-        style={{height: '90%', width: '100%'}}
+        style={{height: '100%', width: '100%'}}
         initialRegion={{...mapRegion}}
         onRegionChangeComplete={e => {
           onDragEndMarker(e);

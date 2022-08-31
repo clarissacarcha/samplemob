@@ -1,9 +1,10 @@
 import React from 'react';
-import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {Image, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import {HeaderBack, HeaderTitle} from '../../../../components';
 import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../../res/variables';
 import RightArrow from '../../../../assets/icons/profileMenu-arrow-rightIcon.png';
 import {useSelector} from 'react-redux';
+import {APP_FLAVOR, APP_VERSION} from '../../../../res/constants';
 
 const AccountSecurity = ({navigation}) => {
   const session = useSelector(state => state.session);
@@ -46,7 +47,7 @@ const AccountSecurity = ({navigation}) => {
             navigation.push('EnterPassword', {userName});
           }}
         />
-        {constants.showAccountDeletion == 1 && (
+        {constants.iosAccountDeletionVersion == APP_VERSION && Platform.OS == 'ios' && (
           <DrawerButton
             label="Account Deletion"
             onPress={() => {

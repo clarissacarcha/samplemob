@@ -62,6 +62,7 @@ export const GET_TRIP_FARE = gql`
       charge {
         amount
         type
+        createdAt
       }
       hash
       tripFare {

@@ -11,6 +11,7 @@ import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import {MAP_DELTA_LOW} from '../../../res/constants';
 import {useDebounce} from '../../helpers';
 import {throttle} from 'lodash';
+import {onError} from '../../../util/ErrorUtility';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 
 const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
@@ -23,8 +24,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       if (data?.getPlaceByLocation) {
         dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: data?.getPlaceByLocation});
       }
-      navigation.pop();
-      navigation.pop();
+      navigation.pop(popTo);
       navigation.push('ToktokGoBookingConfirmPickup', {
         popTo: popTo + 1,
       });
@@ -45,7 +45,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
     onCompleted: response => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: data.getPlaceByLocation});
     },
-    onError: error => console.log('error', error),
+    onError: onError,
   });
 
   const debouncedRequest = useDebounce(

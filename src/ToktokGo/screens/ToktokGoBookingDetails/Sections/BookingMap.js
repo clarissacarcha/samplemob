@@ -68,10 +68,10 @@ export const BookingMap = ({booking, routeDetails}) => {
             1;
           }}
           coordinate={{
-            latitude: booking.route.origin.location.latitude,
-            longitude: booking.route.origin.location.longitude,
+            latitude: booking?.route?.origin?.location?.latitude,
+            longitude: booking?.route?.origin?.location?.longitude,
           }}>
-          <Image source={LocationIcon} resizeMode={'contain'} style={{height: 36, width: 36}} />
+          <Image source={PinIcon} resizeMode={'contain'} style={{height: 36, width: 36}} />
         </Marker>
 
         <Marker
@@ -79,10 +79,10 @@ export const BookingMap = ({booking, routeDetails}) => {
             2;
           }}
           coordinate={{
-            latitude: booking.route.destinations[0].location.latitude,
-            longitude: booking.route.destinations[0].location.longitude,
+            latitude: booking?.route?.destinations[0]?.location?.latitude,
+            longitude: booking?.route?.destinations[0]?.location?.longitude,
           }}>
-          <Image source={PinIcon} resizeMode={'contain'} style={{height: 36, width: 36}} />
+          <Image source={LocationIcon} resizeMode={'contain'} style={{height: 36, width: 36}} />
         </Marker>
         {decodedPolyline && (
           <Polyline

@@ -18,7 +18,10 @@ const ToktokGoActivitiesTopTab = createMaterialTopTabNavigator();
 const Activities = () => {
   constants = useSelector(state => state.constants);
 
-  const hideGo = constants.hideGoActivities == 1 ? true : false;
+  const hideGoActivities = constants.hideGoActivities == 1 ? true : false;
+  const hideBillsActivities = constants?.hideBillsActivities 
+                              ? constants?.hideBillsActivitie == 1 ? true : false 
+                              : true;
 
   return (
     <>
@@ -72,22 +75,26 @@ const Activities = () => {
           options={() => ({
             tabBarLabel: ({focused}) => {
               return (
-                <View style={{width: 100}}>
+                <View style={{width: 100, alignItems: 'center'}}>
                   <Text
                     style={{
-                      fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
+                      // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
                       fontSize: FONT_SIZE.M,
                       color: focused ? COLOR.ORANGE : COLOR.BLACK,
                       marginBottom: 5,
                     }}>
-                    toktokdelivery
+                    Delivery
                   </Text>
                 </View>
               );
             },
           })}
         />
-        {/* {!hideGo && (
+        {/**
+         * DO NOT BYPASS THIS VALIDATION
+         * ASK VIR FOR HELP
+         */}
+        {!hideGoActivities && (
           <ActivitiesTopTab.Screen
             name="ToktokGoActivities"
             component={ToktokGoActivities}
@@ -97,19 +104,19 @@ const Activities = () => {
                   <View style={{width: 90, alignItems: 'center'}}>
                     <Text
                       style={{
-                        fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
+                        // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
                         fontSize: FONT_SIZE.M,
                         color: focused ? COLOR.ORANGE : COLOR.BLACK,
                         marginBottom: 5,
                       }}>
-                      toktokgo
+                      Go
                     </Text>
                   </View>
                 );
               },
             })}
           />
-        )} */}
+        )}
         <ActivitiesTopTab.Screen
           name="ToktokLoadActivities"
           component={ToktokLoadActivities}
@@ -117,7 +124,7 @@ const Activities = () => {
             tabBarLabel: ({focused}) => (
               <Text
                 style={{
-                  // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.Thin800,
+                  // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
                   fontSize: FONT_SIZE.M,
                   color: focused ? COLOR.ORANGE : COLOR.BLACK,
                   marginBottom: 5,
@@ -127,23 +134,25 @@ const Activities = () => {
             ),
           }}
         />
-        <ActivitiesTopTab.Screen
-          name="ToktokBillActivities"
-          component={ToktokBillActivities}
-          options={{
-            tabBarLabel: ({focused}) => (
-              <Text
-                style={{
-                  // fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.Thin800,
-                  fontSize: FONT_SIZE.M,
-                  color: focused ? COLOR.ORANGE : COLOR.BLACK,
-                  marginBottom: 5,
-                }}>
-                Bills
-              </Text>
-            ),
-          }}
-        />
+       {!hideBillsActivities && (
+         <ActivitiesTopTab.Screen
+         name="ToktokBillActivities"
+         component={ToktokBillActivities}
+         options={{
+           tabBarLabel: ({focused}) => (
+             <Text
+               style={{
+                //  fontFamily: focused ? CONSTANTS.FONT_FAMILY.BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
+                 fontSize: FONT_SIZE.M,
+                 color: focused ? COLOR.ORANGE : COLOR.BLACK,
+                 marginBottom: 5,
+               }}>
+               Bills
+             </Text>
+           ),
+         }}
+       />
+       )}
       </ActivitiesTopTab.Navigator>
     </>
   );

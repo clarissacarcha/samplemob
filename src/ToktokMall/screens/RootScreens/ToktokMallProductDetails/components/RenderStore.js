@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, FlatList, SectionList, ImageBackground, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { Header } from '../../../../Components';
-import {Price} from '../../../../helpers';
+import {Price, ReplaceHtmlEntities} from '../../../../helpers';
 import CustomIcon from '../../../../Components/Icons';
 import {coppermask, clothfacemask, voucherbg} from '../../../../assets';
 import { FONT } from '../../../../../res/variables';
@@ -58,7 +58,7 @@ export const RenderStore = ({data, loading, isOutOfStock}) => {
 					</View>
           <View style={{flex: 5, justifyContent: 'center'}}>
             <Text style={{fontSize: 13, fontFamily: FONT.BOLD}}>
-              {data?.shopname}
+              {ReplaceHtmlEntities(data?.shopname || "")}
             </Text>
             <Text style={{fontSize: 13, color: "#9E9E9E"}}>
               {data?.address}

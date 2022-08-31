@@ -9,14 +9,14 @@ import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
 import uuid from 'react-native-uuid';
 import {useDispatch} from 'react-redux';
 
-export const Landing = ({navigation}) => {
+export const Landing = ({navigation, voucherData, details}) => {
   const dispatch = useDispatch();
   return (
     <View>
       <ImageBackground source={BackgroundLanding} resizeMode={'cover'} style={{height: 112}}>
         <View style={{marginTop: 20, marginLeft: 20}}>
           <Text style={{color: CONSTANTS.COLOR.WHITE, fontSize: CONSTANTS.FONT_SIZE.XL}}>Hello ka-toktok!</Text>
-          <Text style={{color: CONSTANTS.COLOR.WHITE, fontSize: CONSTANTS.FONT_SIZE.M}}>May pupuntahan ka ba?</Text>
+          <Text style={{color: CONSTANTS.COLOR.WHITE, fontSize: CONSTANTS.FONT_SIZE.M}}>Saan tayo today?</Text>
         </View>
       </ImageBackground>
       <View style={styles.searchContainer}>
@@ -27,6 +27,10 @@ export const Landing = ({navigation}) => {
             dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
             navigation.push('ToktokGoBookingSelectLocations', {
               popTo: 1,
+            });
+            dispatch({
+              type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+              payload: {...details, voucher: voucherData, paymentMethod: 'TOKTOKWALLET'},
             });
           }}
           delay={500}

@@ -235,8 +235,9 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
             </Text>
           
         </View>
+        
+        <View style={styles.divider} />
       </View>
-      <View style={{height: 50}} />
     </>
   );
 };
@@ -247,7 +248,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F7FA'
   },
   container: {
-    padding: 15, 
+    paddingHorizontal: 15,
+    paddingTop: 15,
     backgroundColor: 'white', 
     marginTop: 8
   },
