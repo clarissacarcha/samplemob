@@ -1,3 +1,5 @@
-export * from './ToktokWalletHelpCentreContactUs';
-export * from './ToktokWalletHelpCentreSecurityPrivacy';
-export * from './ToktokWalletTermsConditions';
+import ToktokWalletHelpCentreContactUs from './ToktokWalletHelpCentreContactUs';
+import ToktokWalletHelpCentreSecurityPrivacy from './ToktokWalletHelpCentreSecurityPrivacy';
+import ToktokWalletTermsConditions from './ToktokWalletTermsConditions';
+
+export {ToktokWalletHelpCentreContactUs, ToktokWalletHelpCentreSecurityPrivacy, ToktokWalletTermsConditions};
