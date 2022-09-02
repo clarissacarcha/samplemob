@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal, Dimensions, ActivityIndicator} from 'react-native';
+import {Text, StyleSheet, Image, View, Modal, Dimensions, ActivityIndicator, Platform} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import {ThrottledOpacity} from '../../../../components_section';
 import * as Progress from 'react-native-progress';
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     bottom: 7,
   },
   voucherDescription: {
-    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+    fontFamily: Platform.OS === 'ios' ? CONSTANTS.FONT_FAMILY.SEMI_BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
     fontSize: CONSTANTS.FONT_SIZE.S,
     fontWeight: 'normal',
   },
