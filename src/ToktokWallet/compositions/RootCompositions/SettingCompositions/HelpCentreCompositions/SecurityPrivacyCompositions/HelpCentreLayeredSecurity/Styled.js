@@ -36,7 +36,7 @@ export const ContentTitle: ComponentType<any> = styled.Text`
   color: ${props => props.theme.color.orange};
 `;
 export const ContentDescription: ComponentType<any> = styled.Text`
-  font-size: ${FONT_SIZE.S}px;
+  font-size: ${FONT_SIZE.M}px;
   padding-top: ${moderateScale(3)}px;
 `;
 export const ContentSubContainer: ComponentType<any> = styled.View`
