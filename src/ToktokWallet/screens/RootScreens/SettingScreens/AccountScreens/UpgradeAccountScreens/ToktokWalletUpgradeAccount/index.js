@@ -85,7 +85,9 @@ export const ToktokWalletUpgradeAccount = ({navigation}) => {
           <Text style={styles.clickVerifyText}>
             Upgrade your Account from{' '}
             <Text style={{fontFamily: FONT.BOLD}}>
-              {tokwaAccount.person.accountType.level === 1 ? 'BASIC to FULLY VERIFIED' : 'FULLY VERIFIED to ENTERPRISE'}{' '}
+              {tokwaAccount.person.accountType.level === '1'
+                ? 'BASIC to FULLY VERIFIED'
+                : 'FULLY VERIFIED to ENTERPRISE'}{' '}
             </Text>
             to enjoy a higher transaction limit.
           </Text>
