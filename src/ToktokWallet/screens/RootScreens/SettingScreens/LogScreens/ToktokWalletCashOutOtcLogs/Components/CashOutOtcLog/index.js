@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import moment from 'moment';
-import { numberFormat, moderateScale, getHeaderDateTitle, currencyCode } from 'toktokwallet/helper';
-import { Separator } from "toktokwallet/components";
+import {numberFormat, moderateScale, getHeaderDateTitle, currencyCode} from 'toktokwallet/helper';
+import {Separator} from 'toktokwallet/components';
 import {useThrottle} from 'src/hooks';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
@@ -10,23 +10,23 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 // SELF IMPORTS
 import Details from './Details';
 
-const RenderLowerText = (lowerText)=> {
+const RenderLowerText = lowerText => {
   return (
-      <>
-      <Separator/>
+    <>
+      <Separator />
       <Text style={styles.dayTitle}>{lowerText}</Text>
-      </>
-  )
-}
+    </>
+  );
+};
 
-export const CashOutOtcLog = ({item, tokwaAccount, index, data }) => {
+export const CashOutOtcLog = ({item, tokwaAccount, index, data}) => {
   const [info, setInfo] = useState({});
   const [openModal, setOpenModal] = useState(false);
-  const { upperText , lowerText } = getHeaderDateTitle({
+  const {upperText, lowerText} = getHeaderDateTitle({
     refDate: item?.createdAt,
     data,
-    index
-})
+    index,
+  });
 
   let status;
   switch (item.status) {
@@ -45,7 +45,6 @@ export const CashOutOtcLog = ({item, tokwaAccount, index, data }) => {
   }
   const transaction = item.cashOut.transaction;
   const requestNo = item.cashOut.referenceNumber;
-  //   const refNo = item.cashOut.referenceNumber;
   const refNo = item.cashOut.referenceNumber;
   const date = moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY');
   const time = moment(item.createdAt).tz('Asia/Manila').format('hh:mm A');
@@ -101,7 +100,7 @@ export const CashOutOtcLog = ({item, tokwaAccount, index, data }) => {
         </View>
       </TouchableOpacity>
       <View style={{paddingHorizontal: 16}}>
-          <View style={styles.divider}/>
+        <View style={styles.divider} />
       </View>
       {!!lowerText && RenderLowerText(lowerText)}
     </>
@@ -110,33 +109,33 @@ export const CashOutOtcLog = ({item, tokwaAccount, index, data }) => {
 
 const styles = StyleSheet.create({
   transaction: {
-      paddingVertical: 10,
-      borderBottomWidth: .2,
-      borderColor:"silver",
-      flexDirection: "row",
-      paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 0.2,
+    borderColor: 'silver',
+    flexDirection: 'row',
+    paddingHorizontal: 16,
   },
   transactionIcon: {
-      flexBasis: 50,
-      justifyContent: "center",
-      alignItems: "flex-start",
-      paddingLeft: 5,
+    flexBasis: 50,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingLeft: 5,
   },
   transactionDetails: {
-      flex: 1,
+    flex: 1,
   },
   transactionAmount: {
-      flexBasis: "auto",
-      alignItems: "flex-end"
+    flexBasis: 'auto',
+    alignItems: 'flex-end',
   },
   divider: {
-      height: 1,
-      width: '100%',
-      backgroundColor: COLOR.LIGHT,
+    height: 1,
+    width: '100%',
+    backgroundColor: COLOR.LIGHT,
   },
   dayTitle: {
-      fontFamily: FONT.BOLD,
-      marginTop: moderateScale(20),
-      paddingHorizontal: 16,
+    fontFamily: FONT.BOLD,
+    marginTop: moderateScale(20),
+    paddingHorizontal: 16,
   },
-})
+});

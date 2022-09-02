@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform} from 'react-native';
-import FIcon from 'react-native-vector-icons/Feather';
+import FIcon from 'react-native-vector-icons/SimpleLineIcons';
 import {Separator, CheckIdleState, HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
 import {useSelector} from 'react-redux';
 import CONSTANTS from 'common/res/constants';
@@ -166,7 +166,7 @@ export const ToktokWalletSettings = ({navigation, route}) => {
           <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>{title}</Text>
         </View>
         <View style={styles.arrowright}>
-          <FIcon name="chevron-right" size={20} color={'#A6A8A9'} />
+          <FIcon name="arrow-right" size={13} color={'#222222'} />
         </View>
       </TouchableOpacity>
       <View style={styles.divider} />
@@ -180,23 +180,23 @@ export const ToktokWalletSettings = ({navigation, route}) => {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
         <SettingHeaderTitle title="Security" />
-        <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? 'Change' : 'Setup'} TPIN`} />
         <SettingOption route="ToktokWalletMPINCreate" title="Change MPIN" />
+        <SettingOption route="ToktokWalletCreatePin" title={`${tokwaAccount.pinCode ? 'Change' : 'Setup'} TPIN`} />
         {/* TEMPORARY DISABLE OR HIDE THIS FEATURE */}
         {/* <Biometrics/> */}
         <Separator />
         <SettingHeaderTitle title="Account" />
         <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart" />
-        <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit" />
         {(!tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3) ||
         (tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2) ? (
           <SettingOption route="ToktokWalletUpgradeAccount" title="Upgrade Account" />
         ) : null}
+        <SettingOption route="ToktokWalletTransactionLimit" title="User Level and Transaction Limit" />
         <Separator />
         <SettingHeaderTitle title="Help Centre" />
+        <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us" />
         <SettingOption route="ToktokWalletHelpCentreSecurityPrivacy" title="Security and Privacy" />
         <SettingOption route="ToktokWalletTermsConditions" title="Terms and Conditions" />
-        <SettingOption route="ToktokWalletHelpCentreContactUs" title="Contact Us" />
         <Separator />
         <SettingHeaderTitle title="Logs" />
         {menuData.map((item, index) => (
