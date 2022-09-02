@@ -32,7 +32,7 @@ const ContactUsHeader = (props: PropsType): React$Node => {
         concerns, you may reach us through the following details:
       </SubText>
       <SupportContainer>
-        <SupportDetails url="tel:(623) 8424 8617" logo={contact_us.phone} label="(632) 8424 8617" />
+        <SupportDetails url="tel:(02) 8424 8617" logo={contact_us.phone} label="(02) 8424 8617" />
         <SupportDetails
           url="mailto:support@toktokwallet.ph?subject=Talk%20To%20Us&body=How%20can%20we%20help%20you%20ka-toktok?"
           logo={contact_us.email}

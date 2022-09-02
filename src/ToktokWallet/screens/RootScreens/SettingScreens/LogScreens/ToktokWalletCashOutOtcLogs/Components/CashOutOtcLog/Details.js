@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
 import {TransactionModal} from 'toktokwallet/components';
-import { moderateScale } from 'toktokwallet/helper';
+import {moderateScale} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
@@ -36,11 +36,22 @@ const Details = ({transaction, visible, setVisible}) => {
         <Text style={styles.labelText}>{phrase}</Text>
         {renderDetails({details})}
         <View style={{marginTop: 15}}>
-          <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Status:</Text> {status}</Text>
-          <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount:</Text> {amount}</Text>
-          {requestNo && <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Service Reference No.:</Text> {requestNo}</Text>}
-          {refNo && <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Date of Payment</Text> {date}</Text>}
-          {refDate && <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Time of Payment</Text> {time}</Text>}
+          <Text style={styles.labelText}>
+            <Text style={{fontFamily: FONT.BOLD}}>Status:</Text> {status}
+          </Text>
+          <Text style={styles.labelText}>
+            <Text style={{fontFamily: FONT.BOLD}}>Amount:</Text> {amount}
+          </Text>
+          {refNo && (
+            <Text style={styles.labelText}>
+              <Text style={{fontFamily: FONT.BOLD}}>Service Reference Number:</Text> {refNo}
+            </Text>
+          )}
+          {refDate && (
+            <Text style={styles.labelText}>
+              <Text style={{fontFamily: FONT.BOLD}}>Transaction Date:</Text> {refDate}
+            </Text>
+          )}
         </View>
       </View>
     </TransactionModal>
@@ -60,7 +71,7 @@ const styles = StyleSheet.create({
   labelText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
-    marginBottom: 2
+    marginBottom: 2,
   },
 });
 

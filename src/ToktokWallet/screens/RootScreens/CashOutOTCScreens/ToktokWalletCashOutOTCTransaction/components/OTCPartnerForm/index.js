@@ -118,7 +118,7 @@ export const OTCPartnerForm = ({route}) => {
             onChangeText={changeAmount}
           />
           <Text style={{fontSize: FONT_SIZE.S, marginTop: 5}}>
-            Additional service fee will be charge for this transaction.
+            Additional service fee will be charged for this transaction.
           </Text>
         </View>
         <View>

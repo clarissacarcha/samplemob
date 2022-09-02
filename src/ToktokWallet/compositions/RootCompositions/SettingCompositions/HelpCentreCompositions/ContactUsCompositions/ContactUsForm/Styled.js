@@ -15,12 +15,14 @@ export const InputSubject: ComponentType<any> = styled(CustomTextInput).attrs(pr
   label: 'Subject',
   keyboardType: 'default',
   returnKeyType: 'done',
+  maxLength: 120,
 }))``;
 export const InputMessage: ComponentType<any> = styled(CustomTextInput).attrs(props => ({
   ...props,
   label: 'Message',
   multiline: true,
   textAlignVertical: 'top',
+  maxLength: 320,
 }))`
   height: ${moderateScale(120)}px;
 `;
