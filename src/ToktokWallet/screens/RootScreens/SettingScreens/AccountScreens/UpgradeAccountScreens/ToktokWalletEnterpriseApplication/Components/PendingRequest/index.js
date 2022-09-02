@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
   fontRegularStyle: {
     fontFamily: FONT.REGULAR,
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.M,
   },
   fontBoldStyle: {
     fontFamily: FONT.BOLD,

@@ -29,7 +29,7 @@ export const Input: ComponentType<any> = styled(TextInput).attrs(props => ({
   border-radius: 5px;
   background-color: #f7f7fa;
   margin-top: 5px;
-  font-size: ${FONT_SIZE.M}px;
+  font-size: ${FONT_SIZE.S}px;
   padding-horizontal: ${moderateScale(15)}px;
   ${({hasError, theme}) =>
     hasError &&
