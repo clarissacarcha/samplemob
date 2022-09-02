@@ -140,8 +140,6 @@ export const ReasonCancelModal = ({isVisible, setVisible, finalizeCancel, naviga
     }
   };
 
-  console.log('zion', selectedReason);
-
   return (
     <View>
       {isVisible && (

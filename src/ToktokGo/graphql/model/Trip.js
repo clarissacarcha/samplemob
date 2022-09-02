@@ -243,3 +243,14 @@ export const DRIVER_RATING = gql`
     }
   }
 `;
+
+export const GET_TRIP_SUPPLY = gql`
+  query getTripSupply($input: GetTripSupplyInput!) {
+    getTripSupply(input: $input) {
+      location {
+        latitude
+        longitude
+      }
+    }
+  }
+`;

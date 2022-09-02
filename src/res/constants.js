@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.36.2'; // Used for Version Check
+export const APP_VERSION = '1.36.4'; // Used for Version Check
 export const APP_FLAVOR = 'C'; // C = Customer | D = Driver
 export const ACCOUNT_TYPE = 1; // 1 = Customer | 2 = Driver
 export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
@@ -9,7 +9,7 @@ export const MAPS_API_KEY = 'AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs';
 /* LOCAL PORTS */
 
 export const PROTOCOL = 'https';
-export const HOST_PORT = 'graphql.toktok.ph:2096'; // Test
+export const HOST_PORT = 'graphql.toktok.ph:2096';
 
 export const COLORS = {
   YELLOW: '#FDBA1C',

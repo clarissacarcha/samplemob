@@ -6,8 +6,10 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
 import LocationIcon from '../../../../assets/images/locationIcon.png';
 import constants from '../../../../common/res/constants';
-export const Map = ({booking, decodedPolyline, originData}) => {
+import CarImage from '../../../../assets/images/car1.png';
+export const Map = ({booking, originData, driverCoordinates}) => {
   const mapRef = useRef();
+
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
     latitudeDelta: 19.887065883877668,
@@ -16,13 +18,13 @@ export const Map = ({booking, decodedPolyline, originData}) => {
   };
 
   const ORIGIN = {
-    latitude: booking.route.origin.location.latitude,
-    longitude: booking.route.origin.location.longitude,
+    latitude: booking?.route?.origin?.location?.latitude,
+    longitude: booking?.route?.origin?.location?.longitude,
   };
 
   const TO = {
-    latitude: booking.route.destinations[0].location.latitude,
-    longitude: booking.route.destinations[0].location.longitude,
+    latitude: booking?.route?.destinations[0]?.location?.latitude,
+    longitude: booking?.route?.destinations[0]?.location?.longitude,
   };
 
   const onMapReady = async () => {
@@ -64,13 +66,24 @@ export const Map = ({booking, decodedPolyline, originData}) => {
       </Marker>
       <Marker
         key={key => {
-          2;
+          3;
         }}
         coordinate={originData ? INITIAL_REGION : TO}>
         <View style={{alignItems: 'center'}}>
           <Image source={LocationIcon} style={{height: 36, width: 36}} resizeMode="contain" />
         </View>
       </Marker>
+      {driverCoordinates && (
+        <Marker
+          key={key => {
+            2;
+          }}
+          coordinate={driverCoordinates}>
+          <View style={{alignItems: 'center'}}>
+            <Image source={CarImage} style={{height: 30, width: 30}} resizeMode="contain" />
+          </View>
+        </Marker>
+      )}
     </MapView>
   );
 };
