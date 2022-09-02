@@ -65,7 +65,7 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
           <Text style={styles.voucherDescription} numberOfLines={1}>
             {data?.description}
           </Text>
-          {data.endAt && <Text style={styles.voucherDescription}>Valid unitl {moment(data.endAt).format('LL')}</Text>}
+          {data.endAt && <Text style={styles.voucherDescription}>Valid until {moment(data.endAt).format('LL')}</Text>}
           {data.voucherWallet?.total > 1 && (
             <>
               <View
@@ -175,9 +175,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   voucherDescription: {
-    color: '#000',
+    fontFamily: Platform.OS === 'ios' ? CONSTANTS.FONT_FAMILY.SEMI_BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
     fontSize: CONSTANTS.FONT_SIZE.S,
-    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    fontWeight: 'normal',
   },
   voucherImage: {
     alignSelf: 'center',
