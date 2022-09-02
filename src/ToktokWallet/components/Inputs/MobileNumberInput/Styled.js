@@ -27,7 +27,7 @@ export const Container: ComponentType<any> = styled(View).attrs(props => ({
   margin-top: 5px;
   border-radius: 5px;
   flex-direction: row;
-  font-size: ${FONT_SIZE.M}px;
+  font-size: ${FONT_SIZE.S}px;
   ${({errorMessage, theme}) =>
     errorMessage !== '' &&
     `
@@ -46,7 +46,7 @@ export const CountryCodeContainer: ComponentType<any> = styled(View).attrs(props
 export const CountryCodeText: ComponentType<any> = styled(Text).attrs(props => ({
   ...props,
 }))`
-  font-size: ${FONT_SIZE.M}px;
+  font-size: ${FONT_SIZE.S}px;
   align-self: center;
   padding-horizontal: ${moderateScale(13)}px;
 `;

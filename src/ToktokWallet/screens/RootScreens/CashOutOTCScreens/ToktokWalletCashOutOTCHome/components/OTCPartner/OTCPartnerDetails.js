@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontFamily: FONT.REGULAR,
-    fontSize: moderateScale(FONT_SIZE.S),
+    fontSize: moderateScale(FONT_SIZE.M),
     textAlign: 'center',
     marginTop: moderateScale(5),
     marginHorizontal: moderateScale(5),

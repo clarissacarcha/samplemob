@@ -18,7 +18,7 @@ export const NotFinishRequirement = ({notFinishLabel, btnLabel, onPress, disable
 const styles = StyleSheet.create({
   fontRegularStyle: {
     fontFamily: FONT.REGULAR,
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.M,
     flexShrink: 1,
     paddingLeft: 15,
     flex: 1,
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.M,
   },
   btnLabel: {
-    fontSize: FONT_SIZE.XS,
+    fontSize: FONT_SIZE.M,
     color: COLOR.ORANGE,
   },
   cardShadow: {

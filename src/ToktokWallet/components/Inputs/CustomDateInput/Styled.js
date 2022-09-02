@@ -35,6 +35,7 @@ export const ButtonText: ComponentType<any> = styled(Text).attrs(props => ({
 }))`
   flex: 1;
   ${({selectedValue, theme}) => !selectedValue && `color: ${theme.color.gray}`}
+  font-size: ${FONT_SIZE.S}px;
 `;
 
 export const ButtonImage: ComponentType<any> = styled(Image).attrs(props => ({

@@ -37,16 +37,16 @@ export const FinishRequirement = ({finishLabel, btnLabel, onPress, disabled, img
 
     return (
       <View style={{marginTop: 10}}>
-        <Text style={{fontSize: FONT_SIZE.S}}>
-          <Text style={{fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.S}}>{callChannel.channelName}: </Text>
+        <Text style={{fontSize: FONT_SIZE.M}}>
+          <Text style={{fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.M}}>{callChannel.channelName}: </Text>
           {videoCallContactDetails}
         </Text>
-        <Text style={{fontSize: FONT_SIZE.S}}>
-          <Text style={{fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.S}}>{dayTitle}: </Text>
+        <Text style={{fontSize: FONT_SIZE.M}}>
+          <Text style={{fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.M}}>{dayTitle}: </Text>
           {dayRange}
         </Text>
-        <Text style={{fontSize: FONT_SIZE.S}}>
-          <Text style={{fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.S}}>Time: </Text>
+        <Text style={{fontSize: FONT_SIZE.M}}>
+          <Text style={{fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.M}}>Time: </Text>
           {timeRange}
         </Text>
       </View>
@@ -69,14 +69,14 @@ export const FinishRequirement = ({finishLabel, btnLabel, onPress, disabled, img
 const styles = StyleSheet.create({
   fontRegularStyle: {
     fontFamily: FONT.REGULAR,
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.M,
   },
   fontBoldStyle: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
   },
   linkNow: {
-    fontSize: FONT_SIZE.XS,
+    fontSize: FONT_SIZE.M,
     color: COLOR.ORANGE,
   },
   cardShadow: {

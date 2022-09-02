@@ -27,7 +27,7 @@ export const Container: ComponentType<any> = styled(View).attrs(props => ({
   margin-top: 5px;
   border-radius: 5px;
   flex-direction: row;
-  font-size: ${FONT_SIZE.M}px;
+  font-size: ${FONT_SIZE.S}px;
   ${({errorMessage, theme}) =>
     errorMessage !== '' &&
     `

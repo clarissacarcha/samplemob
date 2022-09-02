@@ -115,7 +115,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
       <View style={styles.container}>
         <Text style={styles.headerTitle}>Upgrade Account</Text>
         <Text style={styles.fontRegularStyle}>
-          Meet the following requirements for upgrading your account to Fully Verifed
+          Meet the following requirements for upgrading your account to Fully Verified.
         </Text>
         <DisplayComponent
           onPress={redirectLinking} // Navigate here the screen for link bank account
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   },
   fontRegularStyle: {
     fontFamily: FONT.REGULAR,
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.M,
     marginBottom: 20,
   },
   activityIndicator: {
