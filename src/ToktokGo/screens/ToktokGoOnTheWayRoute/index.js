@@ -326,7 +326,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   };
 
   const goBackAfterCancellation = async () => {
-    navigation.pop();
+    // navigation.pop();
     await setViewCancelBookingModal(false);
     setOriginData(true);
     setIsViaTokwa(false);
@@ -373,7 +373,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     setCancel(true);
   };
   const onConsumerAcceptDriverCancelled = () => {
-    navigation.pop();
+    // navigation.pop();
     setOriginData(true);
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
@@ -468,7 +468,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       const data = response.tripChargeInitializePayment;
       console.log('DATA', data.hash);
       if (data.validator == 'TPIN') {
-        navigation.navigate('ToktokWalletTPINValidator', {
+        navigation.push('ToktokWalletTPINValidator', {
           callBackFunc: tripChargeFinalizePaymentFunction,
           data: {
             hash: data?.hash,
