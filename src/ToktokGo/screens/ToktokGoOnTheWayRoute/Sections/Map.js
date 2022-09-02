@@ -27,6 +27,34 @@ export const Map = ({booking, originData, driverCoordinates}) => {
     longitude: booking?.route?.destinations[0]?.location?.longitude,
   };
 
+  useEffect(() => {
+    if (booking.status == 'PICKED_UP') {
+      updateCurrentLoc();
+    }
+  }, [driverCoordinates]);
+
+  const updateCurrentLoc = () => {
+    mapRef.current?.fitToCoordinates(
+      [
+        {
+          longitude: 121.97818368673325,
+          longitudeDelta: 10.145791545510278,
+          ...driverCoordinates,
+        },
+      ],
+      {
+        edgePadding: {
+          right: 100,
+          bottom: 200,
+          left: 100,
+          top: 100,
+        },
+        animated: true,
+      },
+      500,
+    );
+  };
+
   const onMapReady = async () => {
     setTimeout(() => {
       try {
