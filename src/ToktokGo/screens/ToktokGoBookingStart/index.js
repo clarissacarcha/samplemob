@@ -9,7 +9,7 @@ import {
   GET_TRIPS_CONSUMER,
   TRIP_CHARGE_FINALIZE_PAYMENT,
   TRIP_CHARGE_INITIALIZE_PAYMENT,
-  GET_CONSUMER_RECENT_DESTINATION,
+  GET_TRIP_DESTINATIONS,
 } from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT, TOKTOK_QUOTATION_GRAPHQL_CLIENT} from '../../../graphql';
@@ -44,7 +44,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   useEffect(() => {
     const subscribe = navigation.addListener('focus', async () => {
       await getSearchList();
-      getRecentDestination();
+      getTripDestinations();
       // Return the function to unsubscribe from the event so it gets removed on unmount
       return subscribe;
     });
@@ -58,11 +58,11 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
   };
 
-  const [getRecentDestination] = useLazyQuery(GET_CONSUMER_RECENT_DESTINATION, {
+  const [getTripDestinations] = useLazyQuery(GET_TRIP_DESTINATIONS, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setrecentDestinationList(response.getConsumerPreviousDestinations);
+      setrecentDestinationList(response.getTripDestinations);
     },
     onError: onErrorAppSync,
   });

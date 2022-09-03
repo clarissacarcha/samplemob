@@ -3,12 +3,7 @@ import {Text, View, TouchableHighlight, Image} from 'react-native';
 import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation} from './Sections';
 import CONSTANTS from '../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {
-  GET_PLACE_AUTOCOMPLETE,
-  GET_PLACE_BY_ID,
-  GET_PLACE_BY_LOCATION,
-  GET_CONSUMER_RECENT_DESTINATION,
-} from '../../graphql';
+import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION, GET_TRIP_DESTINATIONS} from '../../graphql';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT, TOKTOK_GO_GRAPHQL_CLIENT} from 'src/graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {throttle, debounce, get} from 'lodash';
@@ -42,7 +37,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     async function tempFunction() {
       await getSearchList();
       await getDestinationList();
-      getRecentDestination();
+      getTripDestinations();
     }
 
     tempFunction();
@@ -60,11 +55,11 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     onError: error => console.log('getPlaceAutocomplete', error),
   });
 
-  const [getRecentDestination] = useLazyQuery(GET_CONSUMER_RECENT_DESTINATION, {
+  const [getTripDestinations] = useLazyQuery(GET_TRIP_DESTINATIONS, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setrecentDestinationList(response.getConsumerPreviousDestinations);
+      setrecentDestinationList(response.getTripDestinations);
     },
     onError: onErrorAppSync,
   });
