@@ -48,7 +48,7 @@ export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: FULLSCREEN_HEIGHT * 0.52,
+    height: 400,
     right: 4,
     width: '102%',
     borderWidth: 3,
