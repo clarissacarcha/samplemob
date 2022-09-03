@@ -4,7 +4,7 @@ import CONSTANTS from '../../../../common/res/constants';
 import {ThrottledOpacity} from '../../../../components_section';
 import * as Progress from 'react-native-progress';
 import voucherPaperDesign from '../../../../assets/toktokgo/voucher-paper-design.png';
-import VoucherImage from '../../../../assets/toktokgo/skrtskrt.png';
+import VoucherImage from '../../../../assets/toktokgo/voucherCar.png';
 import moment from 'moment';
 
 const decorHeight = Dimensions.get('window').height * 0.12;

@@ -38,8 +38,6 @@ const AllActivities = ({navigation, session}) => {
     );
   }
 
-  console.log('zion', data);
-
   if (error) {
     return <SomethingWentWrong />;
   }
