@@ -62,7 +62,15 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
         }
       }, 1000);
     },
-    onError: onErrorAppSync,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        navigation.replace('ToktokGoMaintance');
+      }
+    },
   });
 
   const checkNotificationToNavigate = ({trip}) => {

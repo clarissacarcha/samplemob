@@ -1,10 +1,10 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal, Dimensions, ActivityIndicator} from 'react-native';
+import {Text, StyleSheet, Image, View, Modal, Dimensions, ActivityIndicator, Platform} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import {ThrottledOpacity} from '../../../../components_section';
 import * as Progress from 'react-native-progress';
 import voucherPaperDesign from '../../../../assets/toktokgo/voucher-paper-design.png';
-import VoucherImage from '../../../../assets/toktokgo/voucher-sedan-image.png';
+import VoucherImage from '../../../../assets/toktokgo/voucherCar.png';
 import moment from 'moment';
 
 const decorHeight = Dimensions.get('window').height * 0.12;
@@ -31,7 +31,9 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
     <>
       <View style={styles.card}>
         <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
-        <Image source={VoucherImage} resizeMode={'contain'} style={styles.voucherImage} />
+        <View style={styles.carWrapper}>
+          <Image source={VoucherImage} resizeMode={'contain'} style={styles.voucherImage} />
+        </View>
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
           <Text style={styles.voucherDescription} numberOfLines={1}>
@@ -125,7 +127,7 @@ const styles = StyleSheet.create({
     bottom: 7,
   },
   voucherDescription: {
-    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+    fontFamily: Platform.OS === 'ios' ? CONSTANTS.FONT_FAMILY.SEMI_BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
     fontSize: CONSTANTS.FONT_SIZE.S,
     fontWeight: 'normal',
   },
@@ -135,9 +137,15 @@ const styles = StyleSheet.create({
     fontSize: CONSTANTS.FONT_SIZE.S,
     fontWeight: 'normal',
   },
+  carWrapper: {
+    backgroundColor: CONSTANTS.COLOR.TRANSPARENT_YELLOW,
+    borderRadius: 50,
+    marginVertical: 12,
+    justifyContent: 'center',
+    marginLeft: 18,
+  },
   voucherImage: {
     alignSelf: 'center',
-    marginLeft: 18,
     width: decorHeight - 20,
     height: decorHeight - 20,
   },

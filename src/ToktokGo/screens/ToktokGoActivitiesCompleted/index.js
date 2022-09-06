@@ -60,7 +60,7 @@ const CompletedActivities = ({navigation, session}) => {
         showsVerticalScrollIndicator={false}
         data={data.getTripsConsumer}
         keyExtractor={item => item.id}
-        refreshControl={<RefreshControl colors={[COLOR]} tintColor={COLOR} />}
+        refreshControl={<RefreshControl colors={[COLOR]} tintColor={COLOR} onRefresh={refetch} refreshing={loading} />}
         renderItem={({item, index}) => (
           <ActivitiesCard
             booking={item}
