@@ -280,7 +280,11 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     }
   }, [selectedVehicle, selectedVouchers]);
 
-  const tripBooking = ({pinCode, data}) => {
+  console.log('zion', details);
+
+  const tripBooking = ({pinCode, data}, headCount) => {
+    console.log('zion inside', details);
+
     if (!session.userHash) {
       return Alert.alert('', 'Please restart your application!');
     }
@@ -290,7 +294,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           userHash: session.userHash,
           tripFareHash: details?.rate?.hash,
           routeHash: routeDetails?.hash,
-          passengerCount: selectedSeatNum,
+          passengerCount: selectedPaymentMethod == 'CASH' ? headCount : selectedSeatNum,
           paymentMethod: selectedPaymentMethod,
           ...(selectedPaymentMethod == 'TOKTOKWALLET'
             ? {
@@ -313,7 +317,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       // setvoucherRemovedVisible(true);
       setTimeout(() => {
         if (selectedPaymentMethod == 'CASH') {
-          tripBooking({pinCode: null});
+          tripBooking({pinCode: null}, num);
         } else {
           tripInitializePayment({
             variables: {
@@ -338,7 +342,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       // setvoucherRemovedVisible(true);
       setTimeout(() => {
         if (selectedPaymentMethod == 'CASH') {
-          tripBooking({pinCode: null});
+          tripBooking({pinCode: null}, num);
         } else {
           tripInitializePayment({
             variables: {
@@ -362,7 +366,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   useEffect(() => {
     if (proceedBooking) {
       if (selectedPaymentMethod == 'CASH') {
-        tripBooking({pinCode: null});
+        tripBooking({pinCode: null}, selectedSeatNum);
       } else {
         tripInitializePayment({
           variables: {
