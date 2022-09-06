@@ -35,9 +35,9 @@ const ReferralExistScreen = ({navigation, session}) => {
         <View style={styles.inputContainer}>
           <Text style={styles.referralCode}>{session.user.consumer.goReferralDriverCode}</Text>
         </View>
-        <Text style={styles.refCodeText}>Referral Code</Text>
+        <Text style={styles.refCodeText}>Driver Referral Code</Text>
         <Text style={styles.congratsText}>
-          Congratulations for signing up. Thank you for using Driver’s Referral Code. Let's go ka-toktok!
+          Congratulations for signing up. Thank you for using Driver Referral Code. Let's go ka-toktok!
         </Text>
       </View>
     </ImageBackground>
