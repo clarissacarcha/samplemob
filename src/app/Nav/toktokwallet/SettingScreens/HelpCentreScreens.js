@@ -1,9 +1,8 @@
 import React from 'react';
 import {
   ToktokWalletHelpCentreContactUs,
-  ToktokWalletHelpCentreLayeredSecurity,
-  ToktokWalletHelpCentreMoneyProtected,
   ToktokWalletHelpCentreSecurityPrivacy,
+  ToktokWalletTermsConditions,
 } from 'toktokwallet/screens';
 
 export default ({Navigator}) => (
@@ -14,20 +13,11 @@ export default ({Navigator}) => (
       options={options}
     />
     <Navigator.Screen
-      name="ToktokWalletHelpCentreLayeredSecurity"
-      component={ToktokWalletHelpCentreLayeredSecurity}
-      options={options}
-    />
-    <Navigator.Screen
-      name="ToktokWalletHelpCentreMoneyProtected"
-      component={ToktokWalletHelpCentreMoneyProtected}
-      options={options}
-    />
-    <Navigator.Screen
       name="ToktokWalletHelpCentreSecurityPrivacy"
       component={ToktokWalletHelpCentreSecurityPrivacy}
       options={options}
     />
+    <Navigator.Screen name="ToktokWalletTermsConditions" component={ToktokWalletTermsConditions} options={options} />
   </>
 );
 
