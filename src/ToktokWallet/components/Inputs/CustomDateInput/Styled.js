@@ -35,7 +35,7 @@ export const ButtonText: ComponentType<any> = styled(Text).attrs(props => ({
 }))`
   flex: 1;
   ${({selectedValue, theme}) => !selectedValue && `color: ${theme.color.gray}`}
-  font-size: ${FONT_SIZE.S}px;
+  font-size: ${FONT_SIZE.M}px;
 `;
 
 export const ButtonImage: ComponentType<any> = styled(Image).attrs(props => ({
@@ -56,7 +56,7 @@ export const Label: ComponentType<any> = styled(Text).attrs(props => ({
   ...props,
 }))`
   color: ${props => props.theme.color.darkgray};
-  font-size: ${FONT_SIZE.S}px;
+  font-size: ${FONT_SIZE.M}px;
   font-family: ${FONT.BOLD};
   margin-bottom: ${moderateScale(5)}px;
 `;

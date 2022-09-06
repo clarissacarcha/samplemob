@@ -16,7 +16,7 @@ export const Label: ComponentType<any> = styled(Text).attrs(props => ({
   ...props,
 }))`
   color: ${props => props.theme.color.darkgray};
-  font-size: ${FONT_SIZE.S}px;
+  font-size: ${FONT_SIZE.M}px;
   font-family: ${FONT.BOLD};
   margin-bottom: ${moderateScale(5)}px;
 `;
@@ -28,7 +28,7 @@ export const SelectionInput: ComponentType<any> = styled(TouchableOpacity).attrs
   border-radius: ${moderateScale(5)}px;
   background-color: #fff;
   margin-top: ${moderateScale(5)}px;
-  font-size: ${FONT_SIZE.S}px;
+  font-size: ${FONT_SIZE.M}px;
   padding-horizontal: ${moderateScale(15)}px;
   flex-direction: row;
   justify-content: center;
@@ -45,7 +45,7 @@ export const Placeholder: ComponentType<any> = styled(Text).attrs(props => ({
   ...props,
 }))`
   flex: 1;
-  font-size: ${FONT_SIZE.S}px;
+  font-size: ${FONT_SIZE.M}px;
   color: ${props => (props.hasValue ? props.theme.color.black : props.theme.color.gray)};
 `;
 

@@ -22,7 +22,7 @@ export const Title: ComponentType<any> = styled.Text`
 `;
 export const SubText: ComponentType<any> = styled.Text`
   padding-horizontal: ${moderateScale(15)}px;
-  font-size: ${FONT_SIZE.S + 1}px;
+  font-size: ${FONT_SIZE.M}px;
   font-family: ${FONT.REGULAR};
   text-align: center;
 `;
@@ -51,4 +51,5 @@ export const SupportImage: ComponentType<any> = styled(Image).attrs(props => ({
 export const SupportLabel: ComponentType<any> = styled.Text`
   margin-left: ${moderateScale(7)}px;
   color: ${props => props.theme.color.darkgray};
+  font-size: ${FONT_SIZE.M}px;
 `;

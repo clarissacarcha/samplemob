@@ -14,7 +14,7 @@ export const Label: ComponentType<any> = styled(Text).attrs(props => ({
   ...props,
 }))`
   color: ${props => props.theme.color.darkgray};
-  font-size: ${FONT_SIZE.S}px;
+  font-size: ${FONT_SIZE.M}px;
   font-family: ${FONT.BOLD};
   margin-bottom: ${moderateScale(5)}px;
 `;
@@ -29,7 +29,7 @@ export const Input: ComponentType<any> = styled(TextInput).attrs(props => ({
   border-radius: 5px;
   background-color: #f7f7fa;
   margin-top: 5px;
-  font-size: ${FONT_SIZE.S}px;
+  font-size: ${FONT_SIZE.M}px;
   padding-horizontal: ${moderateScale(15)}px;
   ${({hasError, theme}) =>
     hasError &&

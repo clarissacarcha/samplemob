@@ -14,7 +14,7 @@ export const Label: ComponentType<any> = styled(Text).attrs(props => ({
   ...props,
 }))`
   color: ${props => props.theme.color.darkgray};
-  font-size: ${FONT_SIZE.S}px;
+  font-size: ${FONT_SIZE.M}px;
   font-family: ${FONT.BOLD};
   margin-bottom: ${moderateScale(5)}px;
 `;
@@ -27,7 +27,6 @@ export const Container: ComponentType<any> = styled(View).attrs(props => ({
   margin-top: 5px;
   border-radius: 5px;
   flex-direction: row;
-  font-size: ${FONT_SIZE.S}px;
   ${({errorMessage, theme}) =>
     errorMessage !== '' &&
     `
@@ -46,7 +45,7 @@ export const CountryCodeContainer: ComponentType<any> = styled(View).attrs(props
 export const CountryCodeText: ComponentType<any> = styled(Text).attrs(props => ({
   ...props,
 }))`
-  font-size: ${FONT_SIZE.S}px;
+  font-size: ${FONT_SIZE.M}px;
   align-self: center;
   padding-horizontal: ${moderateScale(13)}px;
 `;
@@ -58,6 +57,7 @@ export const Input: ComponentType<any> = styled(TextInput).attrs(props => ({
   height: 100%;
   width: 100%;
   margin-left: ${moderateScale(15)}px;
+  font-size: ${FONT_SIZE.M}px;
 `;
 
 export const Error: ComponentType<any> = styled(Text).attrs(props => ({
