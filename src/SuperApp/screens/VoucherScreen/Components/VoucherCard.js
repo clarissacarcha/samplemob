@@ -144,13 +144,14 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? CONSTANTS.FONT_FAMILY.SEMI_BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
     fontSize: CONSTANTS.FONT_SIZE.S,
     fontWeight: 'normal',
-    fontSize: normalize(13),
+    fontSize: normalize(11),
   },
   voucherDescriptionDate: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.GRAY,
     fontSize: CONSTANTS.FONT_SIZE.S,
     fontWeight: 'normal',
+    fontSize: normalize(11),
   },
   carWrapper: {
     justifyContent: 'center',
