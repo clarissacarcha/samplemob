@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import constants from '../../../../common/res/constants';
-import {AccordionBooking} from '../Components';
 import {numberFormat} from '../../../../helper';
 
 export const TotalBreakdown = ({booking}) => {
@@ -29,16 +28,6 @@ export const TotalBreakdown = ({booking}) => {
                 ₱{numberFormat(booking.fare.total)}
               </Text>
             </View>
-            {/* <AccordionBooking
-              titleText={'Total'}
-              titleAmount={'₱' + numberFormat(booking.fare.total)}
-              subTexts={[
-                {amount: `₱${numberFormat(booking.fare.flatRate)}`, text: 'Sedan', key: 1},
-                {amount: `₱${numberFormat(booking.fare.mileageFee)}`, text: 'Distance', key: 2},
-                {amount: `₱${numberFormat(booking.fare.durationFee)}`, text: 'Duration', key: 2},
-              ]}
-              dummyStatus={2}
-            /> */}
           </View>
         </View>
       </View>

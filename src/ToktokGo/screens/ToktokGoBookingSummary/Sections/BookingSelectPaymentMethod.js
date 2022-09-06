@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   warningText: {
     fontSize: CONSTANTS.FONT_SIZE.S,
     marginLeft: 9,
-    color: CONSTANTS.COLOR.RED,
+    color: '#ED3A19',
   },
   noTokWa: {
     textAlign: 'center',

@@ -46,6 +46,7 @@ export const SearchInput = ({
           onChangeText={onChangeText}
           onSubmitEditing={onSubmitEditing}
           returnKeyType={returnKeyType}
+          placeholderTextColor="#9E9E9E"
         />
         {search != '' && (
           <TouchableOpacity

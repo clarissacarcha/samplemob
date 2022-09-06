@@ -9,20 +9,17 @@ import {
   TouchableOpacity,
   ToastAndroid
 } from 'react-native';
-import {connect, useDispatch} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-import SplashImage from '../assets/images/toktokmall-splash-screen.png';
-import {useSelector} from 'react-redux';
-import { useLazyQuery, useQuery } from '@apollo/react-hooks';
+import { connect, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../graphql';
-import { TOKTOK_MALL_AUTH_GRAPHQL_CLIENT } from '../../graphql';
 import { GET_CUSTOMER_IF_EXIST, GET_CUSTOMER_RECORDS, GET_MY_CART, GET_ORDERS_NOTIFICATION } from '../../graphql/toktokmall/model';
-import {DynamicApiCall} from '../helpers'
-import {GET_SIGNATURE} from '../../graphql/toktokmall/virtual';
-import axios from 'axios';
+import { DynamicApiCall } from '../helpers';
+import { splashImage, newSplashImage } from '../assets';
+import CONSTANTS from '../../common/res/constants';
 import moment from 'moment';
 import AsyncStorage from '@react-native-community/async-storage';
-import { EventRegister } from 'react-native-event-listeners';
 
 const imageWidth = Dimensions.get('screen').width;
 const imageHeight = Dimensions.get('screen').height;
@@ -345,11 +342,16 @@ const Splash = ({
 
   return (
     <View style={styles.container}>
-      <Image 
-				source={SplashImage} 
+      {/* <Image 
+				source={splashImage} 
 				style={styles.splashImage} 
 				resizeMode="cover" 
-			/>
+			/> */}
+
+      <Image 
+        source={newSplashImage}
+        style={styles.newSplashImage}
+      />
 
       {failed && 
       <View style={styles.subContainer}>
@@ -380,11 +382,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1, 
     justifyContent:'center', 
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: CONSTANTS.COLOR.BACKGROUND_YELLOW
   },
   splashImage: {
     height: '100%', 
     width: '100%' 
+  },
+  newSplashImage: {
+    height: 150,
+    resizeMode: 'contain'
   },
   subContainer: {
     position:'absolute', 
@@ -403,6 +410,6 @@ const styles = StyleSheet.create({
   tryAgainButton: {
     fontSize: 14, 
     color: "#F6841F"
-  }
+  },
 })
 

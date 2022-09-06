@@ -58,7 +58,6 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
           });
           return;
         }
-        getUserSession.dummyStatus = 1;
 
         createSession(getUserSession);
         setAppServices(serviceAccess);

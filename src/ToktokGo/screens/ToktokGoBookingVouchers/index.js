@@ -199,68 +199,76 @@ const ToktokGoBookingVouchers = ({navigation}) => {
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
       <Header navigation={navigation} title={'Vouchers'} />
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
-      {/* ========= ENTER VOUCHER CODE FOR NEXT RELEASE */}
-      {/* <View style={styles.enterVoucherGroup}>
+      <FlatList
+        ListHeaderComponent={
+          <ScrollView>
+            {/* ========= ENTER VOUCHER CODE FOR NEXT RELEASE */}
+            {/* <View style={styles.enterVoucherGroup}>
         <TextInput style={styles.enterVoucherInput} placeholder={'Enter voucher code'} />
         <TouchableOpacity>
           <Text style={styles.enterVoucherApply}>Apply</Text>
         </TouchableOpacity>
       </View> */}
-      <View style={styles.containerInput}>
-        <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} />
-        <TextInput
-          //   ref={inputRef}
-          onChangeText={value => onChange(value)}
-          style={styles.input}
-          placeholder={'Enter voucher code'}
-          value={search}
-          onSubmitEditing={searchVoucher}
-        />
-        {search ? (
-          <ThrottledOpacity onPress={clearSearch}>
-            <Image source={XICN} resizeMode={'contain'} style={{width: 15, height: 15, marginRight: 20}} />
-          </ThrottledOpacity>
-        ) : null}
-      </View>
+            <View style={styles.containerInput}>
+              <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} />
+              <TextInput
+                //   ref={inputRef}
+                onChangeText={value => onChange(value)}
+                style={styles.input}
+                placeholder={'Enter voucher code'}
+                value={search}
+                onSubmitEditing={searchVoucher}
+              />
+              {search ? (
+                <ThrottledOpacity onPress={clearSearch}>
+                  <Image source={XICN} resizeMode={'contain'} style={{width: 15, height: 15, marginRight: 20}} />
+                </ThrottledOpacity>
+              ) : null}
+            </View>
 
-      {noVouchers && (
-        <View style={styles.noResultsContainer}>
-          <Image source={NoVouchers} resizeMode={'contain'} style={styles.noResultsIMG} />
-          <Text style={styles.noResultsTitle}>No Vouchers</Text>
-          <Text>We are preparing the best deals for you.</Text>
-          <Text>Stay tuned!</Text>
-        </View>
-      )}
+            {noVouchers && (
+              <View style={styles.noResultsContainer}>
+                <Image source={NoVouchers} resizeMode={'contain'} style={styles.noResultsIMG} />
+                <Text style={styles.noResultsTitle}>No Vouchers</Text>
+                <Text>We are preparing the best deals for you.</Text>
+                <Text>Stay tuned!</Text>
+              </View>
+            )}
 
-      {noResults && (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Image source={NoFound} resizeMode={'contain'} style={{width: decorWidth, height: decorWidth}} />
-          <Text style={styles.noResultsTitle}>No Results Found</Text>
-          <Text>Try to search something similar.</Text>
-        </View>
-      )}
-      {!noResults && !noVouchers && (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={searchedDatas.length === 0 ? data : searchedDatas}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => {
-            const lastItem = index == data.length - 1 ? true : false;
-            return (
-              <View style={{marginVertical: 8}}>
-                <VoucherCard
-                  details={details}
-                  data={item}
-                  navigation={navigation}
-                  onPressActionButton={onApply}
-                  postCollectVoucher={postCollectVoucher}
-                  loading={PCVLoading}
+            {noResults && (
+              <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Image source={NoFound} resizeMode={'contain'} style={{width: decorWidth, height: decorWidth}} />
+                <Text style={styles.noResultsTitle}>No Results Found</Text>
+                <Text>Try to search something similar.</Text>
+              </View>
+            )}
+            {!noResults && !noVouchers && (
+              <View style={{marginTop: 11}}>
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  data={searchedDatas.length === 0 ? data : searchedDatas}
+                  keyExtractor={item => item.id}
+                  renderItem={({item, index}) => {
+                    const lastItem = index == data.length - 1 ? true : false;
+                    return (
+                      <View style={{marginVertical: 8}}>
+                        <VoucherCard
+                          details={details}
+                          data={item}
+                          navigation={navigation}
+                          onPressActionButton={onApply}
+                          postCollectVoucher={postCollectVoucher}
+                          loading={PCVLoading}
+                        />
+                      </View>
+                    );
+                  }}
                 />
               </View>
-            );
-          }}
-        />
-      )}
+            )}
+          </ScrollView>
+        }
+      />
     </View>
   );
 };

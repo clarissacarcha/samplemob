@@ -6,22 +6,28 @@ import {
     cancelledIcon, 
     deliveredIcon, 
     walletIcon,
-    paypandalogo
+    paypandalogo,
+    waitingPaymentLogo
 } from './../../../../assets';
 import { DisplayDateAndTime } from '../../../../helpers';
 
 export const RenderOrderInfo = ({ data }) => {
   
-    const status = ['To Pay', 'Confirmed', 'To Ship', 'To Receive', 'Delivered', 'Cancelled']
+    // const status = ['To Pay', 'Confirmed', 'To Ship', 'To Receive', 'Delivered', 'Cancelled']
+    const status = ['Order Confirmed', 'Order Confirmed', 'To Ship', 'To Receive', 'Delivered', 'Cancelled'];
+
+    const showToPay = data?.status?.status === 0 && data?.paymentMethod !== "TOKTOKWALLET";
 
     return (
         <>
             <View style={styles.line} />
             <View style={styles.order}>
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                    <Text style={styles.orderInfo}>Order ID </Text>
-                    <Text style={[styles.refNum,styles.textBold]}>
-                        {data?.referenceNum}
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                    <Text numberOfLines={1} adjustsFontSizeToFit style={[styles.orderInfo, {paddingRight: 10}]}>
+                        Order ID
+                        <Text style={[styles.refNum, styles.textBold]}>
+                            {'\t  '}{data?.referenceNum}
+                        </Text>
                     </Text>
                 </View>
                 <View style={styles.imgView1}>
@@ -51,9 +57,20 @@ export const RenderOrderInfo = ({ data }) => {
                         style={styles.img2}
                         source={data?.paymentMethod == "TOKTOKWALLET" ? walletIcon : paypandalogo}
                     />
-                    {/* <Text style={[styles.subText, { color: "#F6841F" } ]}>
-                            Waiting for payment
-                        </Text> */}
+                    {
+                        showToPay && 
+                        <View style={styles.waitingPaymentContainer}>
+                            <Image 
+                                style={styles.waitingPaymentLogo}
+                                source={waitingPaymentLogo}
+                            />   
+
+                            <Text style={styles.waitingPaymentText}>
+                                Waiting for payment
+                            </Text> 
+                        </View>
+                    }
+                    
                 </View>
             </View>
             <View style={[ styles.line, { marginHorizontal:16 } ]} />
@@ -79,7 +96,6 @@ const styles = StyleSheet.create({
     },
     refNum: {
         color: "#FDBA1C",
-        paddingLeft: 10,
         fontSize: 13, 
         fontWeight: '600',
     },
@@ -115,4 +131,19 @@ const styles = StyleSheet.create({
         width: 90, 
         resizeMode: 'contain'
     },
+    waitingPaymentContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 8
+    },
+    waitingPaymentLogo: {
+        height: 12,
+        width: 12,
+        resizeMode: 'contain',
+        marginRight: 8,
+    },
+    waitingPaymentText: {
+        color: "#F6841F",
+        fontSize: 11
+    }
   }) 

@@ -4,10 +4,12 @@ import CONSTANTS from '../../../../common/res/constants';
 import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
-import Car from '../../../../assets/images/Car.png';
+import LocationIcon from '../../../../assets/images/locationIcon.png';
 import constants from '../../../../common/res/constants';
-export const Map = ({booking, decodedPolyline, originData}) => {
+import CarImage from '../../../../assets/images/car1.png';
+export const Map = ({booking, originData, driverCoordinates}) => {
   const mapRef = useRef();
+
   const INITIAL_REGION = {
     latitude: 11.22309004847093,
     latitudeDelta: 19.887065883877668,
@@ -16,13 +18,41 @@ export const Map = ({booking, decodedPolyline, originData}) => {
   };
 
   const ORIGIN = {
-    latitude: booking.route.origin.location.latitude,
-    longitude: booking.route.origin.location.longitude,
+    latitude: booking?.route?.origin?.location?.latitude,
+    longitude: booking?.route?.origin?.location?.longitude,
   };
 
   const TO = {
-    latitude: booking.route.destinations[0].location.latitude,
-    longitude: booking.route.destinations[0].location.longitude,
+    latitude: booking?.route?.destinations[0]?.location?.latitude,
+    longitude: booking?.route?.destinations[0]?.location?.longitude,
+  };
+
+  useEffect(() => {
+    if (booking.status == 'PICKED_UP') {
+      updateCurrentLoc();
+    }
+  }, [driverCoordinates]);
+
+  const updateCurrentLoc = () => {
+    mapRef.current?.fitToCoordinates(
+      [
+        {
+          longitude: 121.97818368673325,
+          longitudeDelta: 10.145791545510278,
+          ...driverCoordinates,
+        },
+      ],
+      {
+        edgePadding: {
+          right: 100,
+          bottom: 200,
+          left: 100,
+          top: 100,
+        },
+        animated: true,
+      },
+      500,
+    );
   };
 
   const onMapReady = async () => {
@@ -50,7 +80,7 @@ export const Map = ({booking, decodedPolyline, originData}) => {
     <MapView
       ref={mapRef}
       provider={PROVIDER_GOOGLE}
-      style={{height: '90%', width: '100%'}}
+      style={{height: '100%', width: '100%'}}
       initialRegion={INITIAL_REGION}
       onMapReady={onMapReady}>
       <Marker
@@ -59,18 +89,29 @@ export const Map = ({booking, decodedPolyline, originData}) => {
         }}
         coordinate={originData ? INITIAL_REGION : ORIGIN}>
         <View style={{alignItems: 'center'}}>
-          <FA5Icon name="map-pin" size={18} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 2}} />
+          <FA5Icon name="map-pin" size={34} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 2}} />
         </View>
       </Marker>
       <Marker
         key={key => {
-          2;
+          3;
         }}
         coordinate={originData ? INITIAL_REGION : TO}>
         <View style={{alignItems: 'center'}}>
-          <Image source={Car} style={{height: 36, width: 36}} resizeMode="contain" />
+          <Image source={LocationIcon} style={{height: 36, width: 36}} resizeMode="contain" />
         </View>
       </Marker>
+      {driverCoordinates && (
+        <Marker
+          key={key => {
+            2;
+          }}
+          coordinate={driverCoordinates}>
+          <View style={{alignItems: 'center'}}>
+            <Image source={CarImage} style={{height: 30, width: 30}} resizeMode="contain" />
+          </View>
+        </Marker>
+      )}
     </MapView>
   );
 };

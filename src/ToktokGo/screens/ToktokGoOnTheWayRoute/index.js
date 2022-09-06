@@ -1,7 +1,18 @@
-import React, {useRef, useCallback, useState, useEffect} from 'react';
-import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, Linking, Platform, Alert} from 'react-native';
+import React, {useCallback, useState, useEffect} from 'react';
+import {
+  Dimensions,
+  Text,
+  View,
+  StyleSheet,
+  StatusBar,
+  TouchableOpacity,
+  Image,
+  Linking,
+  Platform,
+  Alert,
+} from 'react-native';
 import {Map, SeeBookingDetails, DriverStatus, DriverInfo, Actions, DriverStatusDestination} from './Sections';
-import {DriverArrivedModal} from './Components';
+import {DriverArrivedModal, ArrivedAtDestination} from './Components';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
 import {SheetManager} from 'react-native-actions-sheet';
@@ -16,6 +27,7 @@ import {
   FailedChargePaymentModal,
 } from '../CancelationModals';
 import {connect, useDispatch, useSelector} from 'react-redux';
+import BottomSheet from 'reanimated-bottom-sheet';
 import {useSubscription} from '@apollo/client';
 import {
   ON_TRIP_UPDATE,
@@ -26,19 +38,26 @@ import {
   GET_TRIPS_CONSUMER,
   TRIP_CHARGE_FINALIZE_PAYMENT,
   TRIP_CHARGE_INITIALIZE_PAYMENT,
+  GET_BOOKING_DRIVER,
+  GET_TRIP_SUPPLY,
 } from '../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {onErrorAppSync} from '../../util';
 import {useAccount} from 'toktokwallet/hooks';
+import BackgroundTimer from 'react-native-background-timer';
+import CarImage from '../../../assets/images/car1.png';
 
 const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const {popTo, decodedPolyline} = route.params;
   const {tokwaAccount, getMyAccount} = useAccount();
-
+  const sheetRef = React.useRef(null);
+  const SNAPS_ANDROID = [0, 370];
+  const SNAPS_IOS = [0, 350];
   const [status, setStatus] = useState(5);
   const [action, setAction] = useState(true);
   const [modal, setmodal] = useState(false);
+  const [showArrivedAtDestination, setShowArrivedAtDestination] = useState(false);
   const [cancel, setCancel] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [actionSheetType, setActionSheetType] = useState(1);
@@ -55,6 +74,8 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
   const [isViaTokwa, setIsViaTokwa] = useState(false);
+  const [driverData, setDriverData] = useState();
+  const [driverCoordinates, setDriverCoordinates] = useState();
 
   const {driver, booking} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
@@ -71,6 +92,11 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       ({data}) => {
         console.log('[subscription] TripUpdate:', data);
         const {id, status, cancellation} = data?.onTripUpdate;
+
+        if (id != booking.id) {
+          Alert.alert('', 'Magandang araw ka-toktok! Stay safe!');
+          return;
+        }
         if (id && status != 'CANCELLED' && cancellation?.initiatedBy == 'CONSUMER') {
           dispatch({
             type: 'SET_TOKTOKGO_BOOKING',
@@ -91,8 +117,11 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             type: 'SET_TOKTOKGO_BOOKING',
             payload: data?.onTripUpdate,
           });
-          if (['ARRIVED', 'COMPLETED'].includes(status)) {
+          if (status === 'ARRIVED') {
             setmodal(true);
+          }
+          if (status === 'COMPLETED') {
+            setShowArrivedAtDestination(true);
           }
         }
       },
@@ -116,6 +145,61 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
 
     return () => subscription.unsubscribe();
   }, [tripUpdateRetrySwitch]);
+
+  useEffect(() => {
+    getBookingDriver({
+      variables: {
+        input: {
+          driverUserId: parseInt(booking.driverUserId),
+        },
+      },
+    });
+  }, []);
+
+  const getDriverlocation = () => {
+    getTripSupply({
+      variables: {
+        input: {
+          tripId: booking.id,
+        },
+      },
+    });
+  };
+
+  useEffect(() => {
+    const subscribe = navigation.addListener('focus', async () => {
+      getDriverlocation();
+      //code that will be called every 20 seconds
+      BackgroundTimer.runBackgroundTimer(async () => {
+        getDriverlocation();
+      }, 20000);
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      return subscribe;
+    });
+    const unsubscribe = navigation.addListener('blur', async () => {
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      BackgroundTimer.stopBackgroundTimer();
+      console.log('exit');
+      return unsubscribe;
+    });
+  }, [navigation]);
+
+  const [getBookingDriver] = useLazyQuery(GET_BOOKING_DRIVER, {
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setDriverData(response.getBookingDriver.driver);
+    },
+    onError: onErrorAppSync,
+  });
+
+  const [getTripSupply] = useLazyQuery(GET_TRIP_SUPPLY, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setDriverCoordinates(response?.getTripSupply?.location);
+    },
+    onError: onErrorAppSync,
+  });
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -210,8 +294,12 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       }
     },
     onCompleted: response => {
-      setCancellationState(response.tripConsumerCancel.cancellation);
-      SheetManager.show('cancel_booking');
+      if (chargeAmount) {
+        setCancellationState(response.tripConsumerCancel.cancellation);
+        sheetRef.current.snapTo(1);
+      } else {
+        setViewSuccessCancelBookingModal(true);
+      }
     },
   });
 
@@ -237,11 +325,13 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     });
   };
 
-  const goBackAfterCancellation = () => {
+  const goBackAfterCancellation = async () => {
+    // navigation.pop();
+    await setViewCancelBookingModal(false);
     setOriginData(true);
-    setViewCancelBookingModal(false);
     setIsViaTokwa(false);
-    navigation.replace('ToktokGoBookingStart', {
+
+    return navigation.replace('ToktokGoBookingStart', {
       popTo: popTo + 1,
     });
   };
@@ -272,15 +362,19 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     setmodal(false);
   };
   const openRateDriver = () => {
+    navigation.pop();
+    setOriginData(true);
     setmodal(false);
     navigation.replace('ToktokGoRateDriver', {
       popTo: popTo + 1,
+      booking,
     });
   };
   const onCancel = () => {
     setCancel(true);
   };
   const onConsumerAcceptDriverCancelled = () => {
+    // navigation.pop();
     setOriginData(true);
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
@@ -314,8 +408,6 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     else if (booking.status == 'ARRIVED') return <Text style={styles.headerText}>Your driver has arrived</Text>;
     else return <DriverStatusDestination booking={booking} />;
   };
-
-  console.log('zion', tokwaAccount);
 
   const [tripChargeFinalizePayment] = useMutation(TRIP_CHARGE_FINALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
@@ -377,7 +469,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       const data = response.tripChargeInitializePayment;
       console.log('DATA', data.hash);
       if (data.validator == 'TPIN') {
-        navigation.navigate('ToktokWalletTPINValidator', {
+        navigation.push('ToktokWalletTPINValidator', {
           callBackFunc: tripChargeFinalizePaymentFunction,
           data: {
             hash: data?.hash,
@@ -400,12 +492,24 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       },
     });
   };
-
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
       getMyAccount();
     }
   }, []);
+
+  const renderContent = () => {
+    return (
+      <CancelBookingActionSheet
+        hastokwa={tokwaAccount.wallet.id ? true : false}
+        setViewSuccessCancelBookingModal={setViewSuccessCancelBookingModal}
+        setVisible={setViewSuccessCancelBookingModal}
+        sheetRef={sheetRef}
+        cancellationState={cancellationState}
+        payFeeViaTokwa={payFeeViaTokwa}
+      />
+    );
+  };
 
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
@@ -417,11 +521,22 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
           driverCancel ||
           cancellationFee ||
           modal ||
+          showArrivedAtDestination ||
           cancel
             ? 'rgba(0,0,0,0.6)'
             : null
         }
       />
+
+      <BottomSheet
+        enabledContentGestureInteraction={false}
+        ref={sheetRef}
+        snapPoints={Platform.OS === 'android' ? SNAPS_ANDROID : SNAPS_IOS}
+        initialSnap={0}
+        renderContent={renderContent}
+        enabledBottomClamp={true}
+      />
+
       <CancelBookingNoFeeModal
         isVisible={viewCancelBookingModal}
         setVisible={setViewCancelBookingModal}
@@ -464,6 +579,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         payFeeViaTokwa={payFeeViaTokwa}
       />
       <DriverArrivedModal
+        originData={originData}
         modal={modal}
         setmodal={setmodal}
         action={action}
@@ -471,6 +587,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         openModal={openModal}
         openRateDriver={openRateDriver}
       />
+      <ArrivedAtDestination showArrivedAtDestination={showArrivedAtDestination} openRateDriver={openRateDriver} />
       <DriverCancelled
         cancel={cancel}
         onDriverCancelled={onConsumerAcceptDriverCancelled}
@@ -478,23 +595,15 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         cancellationState={cancellationState}
         tripRebookFunc={tripRebookFunc}
       />
-      {/* <SuccesCancelBookingModal /> */}
-      <CancelBookingActionSheet
-        hastokwa={tokwaAccount.wallet.id ? true : false}
-        setViewSuccessCancelBookingModal={setViewSuccessCancelBookingModal}
-        setVisible={setViewSuccessCancelBookingModal}
-        SheetManager={SheetManager}
-        cancellationState={cancellationState}
-        payFeeViaTokwa={payFeeViaTokwa}
-      />
+
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      <Map booking={booking} decodedPolyline={decodedPolyline} originData={originData} />
+      <Map booking={booking} originData={originData} driverCoordinates={driverCoordinates} />
       <View style={styles.card}>
         {getHeader()}
         <View style={styles.divider} />
-        <DriverInfo booking={booking} />
+        <DriverInfo booking={booking} driverData={driverData} />
         {['ARRIVED', 'ACCEPTED'].includes(booking.status) && (
           <Actions
             callStop={callStop}
@@ -505,7 +614,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             booking={booking}
           />
         )}
-        <SeeBookingDetails booking={booking} navigation={navigation} />
+        <SeeBookingDetails booking={booking} navigation={navigation} driverData={driverData} />
       </View>
     </View>
   );
@@ -518,6 +627,28 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, null)(ToktokGoOnTheWayRoute);
 
 const styles = StyleSheet.create({
+  bottomSheetHeader: {
+    alignItems: 'center',
+    backgroundColor: constants.COLOR.WHITE,
+    paddingTop: 3,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    borderTopWidth: 3,
+    borderRightWidth: 3,
+    borderLeftWidth: 3,
+    borderTopColor: constants.COLOR.ORANGE,
+    borderLeftColor: constants.COLOR.ORANGE,
+    borderRightColor: constants.COLOR.ORANGE,
+    left: -3,
+    width: '102%',
+  },
+  orangeLine: {
+    width: '15%',
+    height: 4,
+    borderRadius: 50,
+    backgroundColor: '#FFE1C7',
+    marginTop: 3,
+  },
   card: {
     right: -4.5,
     width: '102%',

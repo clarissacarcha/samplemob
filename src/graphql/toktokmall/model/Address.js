@@ -17,7 +17,9 @@ export const GET_CITY = gql`
             id
             citymunDesc
             citymunCode
+            provDesc
             provCode
+            regCode
             regDesc
             coordinates {
               lon
@@ -55,4 +57,54 @@ export const GET_CUSTOMER_ADDRESS_DETAILS = gql`
       defaultAdd      
     }
   }
+`
+
+
+export const GET_REGIONS = gql`
+	query getRegions {
+		getRegions {
+            id
+            psgcCode
+            regDesc
+            regCode
+        }
+	}
+`
+
+
+export const GET_PROVINCES_BY_REGIONS = gql`
+	query getProvincesByRegion($input: getProvincesByRegionInput) {
+		getProvincesByRegion(input: $input) {
+            regDesc
+            regCode
+            data {
+              id
+              psgcCode
+              provDesc
+              regCode
+              provCode
+            }
+        }
+	}
+`
+
+export const GET_CITIES_BY_PROVINCES = gql`
+	query getCitiesByProvinces ($input: getCitiesByProvincesInput){
+		getCitiesByProvinces(input: $input) {
+            provDesc
+            provCode
+            data {
+              id
+              psgcCode
+              citymunDesc
+              regDesc
+              provCode
+              citymunCode
+              coordinates {
+                lon
+                lat
+              }
+            }
+        }
+	}
 `

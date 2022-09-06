@@ -17,6 +17,7 @@ import {useSelector} from 'react-redux';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../helpers";
 import AsyncStorage from '@react-native-community/async-storage';
 import { Badge, Tooltip } from 'react-native-elements';
+import { AlertOverlay } from 'src/components'
 
 import {
 
@@ -33,7 +34,6 @@ import {
   RenderSuggestions,
 
   VariationBottomSheet,
-  LoadingOverlay
 } from './components'
 
 import Animated, {interpolate, Extrapolate, useCode, set, greaterThan} from 'react-native-reanimated'
@@ -171,32 +171,32 @@ const Component =  ({
     }
   },[product])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        // navigation.pop(2)
-        // alert(JSON.stringify(customModal.visible))
-        if(customModal?.visible || customMessageModal?.visible){
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
-          setMessageModalShown(false)
-          return true
-        }
-        else{
-          // alert('not true')
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
-          dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
-          setMessageModalShown(false)
-          return false
-        }
-        return true
-      }
-      BackHandler.addEventListener('hardwareBackPress', onBackPress)
-      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
-    }, [])
-  )
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const onBackPress = () => {
+  //       // navigation.pop(2)
+  //       // alert(JSON.stringify(customModal.visible))
+  //       if(customModal?.visible || customMessageModal?.visible){
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
+  //         setMessageModalShown(false)
+  //         return true
+  //       }
+  //       else{
+  //         // alert('not true')
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MESSAGE_MODAL'})
+  //         dispatch({type:'TOKTOK_MALL_CLOSE_MODAL_2'})
+  //         setMessageModalShown(false)
+  //         return false
+  //       }
+  //       return true
+  //     }
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress)
+  //     return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+  //   }, [])
+  // )
 
   const [getProductDetails, {error, loading}] = useLazyQuery(GET_PRODUCT_DETAILS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -384,10 +384,10 @@ const Component =  ({
     console.log(variables)
     const req = await ApiCall("insert_cart", variables, true)
 
+    EventRegister.emit('refreshToktokmallShoppingCart')
     if(req.responseData && req.responseData.success == 1){
       // createMyCartSession('push', raw)
       //setCartItems(CountCartItems)
-      EventRegister.emit('refreshToktokmallShoppingCart')
       // createMyCartCountSession("add", input.qty)
       setIsFetching(false)
       initCartItem()
@@ -488,7 +488,7 @@ const Component =  ({
   // if(loading) {
   //   return (
   //     <>
-  //       <LoadingOverlay isVisible={loading} />
+  //       <AlertOverlay visible={loading} />
   //     </>
   //   )
   // }
@@ -507,7 +507,7 @@ const Component =  ({
       { isFetching ? <></> : <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} /> } */}
       { headerValue >= 250 ? <HeaderPlain animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} itemName = {route.params.itemname} /> : <></>}
       { headerValue < 250 ?  <HeaderTransparent animatedValue={animatedHeaderValueRef} cartItems={cartNoOfItems} />: <></>  }
-      <LoadingOverlay isVisible={isFetching} />
+      <AlertOverlay visible={isFetching} />
       
      <Animated.ScrollView
         scrollEventThrottle = {270}

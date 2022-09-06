@@ -53,9 +53,9 @@ export const GET_PLACE_BY_LOCATION = gql`
   }
 `;
 
-export const GET_CONSUMER_RECENT_DESTINATION = gql`
+export const GET_TRIP_DESTINATIONS = gql`
   query {
-    getConsumerPreviousDestinations {
+    getTripDestinations {
       hash
       place {
         addressBreakdown {

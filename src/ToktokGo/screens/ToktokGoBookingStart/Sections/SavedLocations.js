@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, FlatList, TouchableOpacity} from 'react-native';
+import {Text, View, FlatList, TouchableOpacity, SafeAreaView} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import Data from '../../../components/BookingDummyData';
@@ -9,45 +9,36 @@ import {LocationCard} from '../../../components';
 
 export const SavedLocations = ({navigation, popTo, recentSearchDataList, onPressRecentSearch}) => {
   return (
-    <>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingHorizontal: 13,
-          backgroundColor: CONSTANTS.COLOR.WHITE,
-          // paddingVertical: 10,
-        }}>
-        <Text
-          style={{
-            fontSize: CONSTANTS.FONT_SIZE.M,
-            color: CONSTANTS.COLOR.ORANGE,
-            fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
-            marginLeft: 7,
-          }}>
-          Recent Search
-        </Text>
-        <TouchableOpacity onPress={() => console.log('trigger')}>
-          {/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    <SafeAreaView style={{flex: 1}}>
+      <FlatList
+        ListHeaderComponent={
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingHorizontal: 13,
+              backgroundColor: CONSTANTS.COLOR.WHITE,
+              // paddingVertical: 10,
+            }}>
             <Text
               style={{
                 fontSize: CONSTANTS.FONT_SIZE.M,
                 color: CONSTANTS.COLOR.ORANGE,
-                fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+                fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                marginLeft: 7,
               }}>
-              See All
+              Recent Search
             </Text>
-            <MIcon name={'keyboard-arrow-right'} size={23} color={CONSTANTS.COLOR.ORANGE} />
-          </View> */}
-        </TouchableOpacity>
-      </View>
-      <FlatList
+            <TouchableOpacity onPress={() => console.log('trigger')}></TouchableOpacity>
+          </View>
+        }
         showsVerticalScrollIndicator={false}
         data={recentSearchDataList}
         // keyExtractor={item => item.id}
+        listKey={item => item.id}
         renderItem={({item, index}) => <LocationCard item={item} onPress={onPressRecentSearch} />}
       />
-    </>
+    </SafeAreaView>
   );
 };

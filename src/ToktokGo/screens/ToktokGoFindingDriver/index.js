@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import constants from '../../../common/res/constants';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -26,11 +26,13 @@ import {
   TRIP_CONSUMER_CANCEL,
   TRIP_REBOOK_INITIALIZE_PAYMENT,
   GET_TRIPS_CONSUMER,
+  GET_BOOKING_DRIVER,
 } from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {onErrorAppSync} from '../../util';
 import {AlertOverlay} from '../../../components';
+import {useFocusEffect} from '@react-navigation/native';
 
 const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const {popTo} = route.params;
@@ -46,6 +48,19 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [viewCancelBookingWithCharge, setViewCancelBookingWithCharge] = useState(false);
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
+  const [driverData, setDriverData] = useState();
+
+  useFocusEffect(
+    useCallback(() => {
+      getTripsConsumer({
+        variables: {
+          input: {
+            tag: 'ONGOING',
+          },
+        },
+      });
+    }, []),
+  );
 
   useEffect(() => {
     console.log('[effect] Observe Trip Update!');
@@ -65,7 +80,13 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
           });
         }
         if (data?.onTripUpdate?.status == 'ACCEPTED') {
-          setShowDriverFoundModal(true);
+          getBookingDriver({
+            variables: {
+              input: {
+                driverUserId: parseInt(data?.onTripUpdate?.driverUserId),
+              },
+            },
+          });
         }
         if (data?.onTripUpdate?.status == 'EXPIRED') {
           setWaitingStatus(0);
@@ -80,6 +101,13 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         //     setViewCancelBookingModal(true);
         //   }
         // }
+        getTripsConsumer({
+          variables: {
+            input: {
+              tag: 'ONGOING',
+            },
+          },
+        });
       },
       error => {
         console.log('[error] Trip Update:', error);
@@ -102,6 +130,15 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     return () => subscription.unsubscribe();
   }, [tripUpdateRetrySwitch]);
 
+  const [getBookingDriver] = useLazyQuery(GET_BOOKING_DRIVER, {
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setShowDriverFoundModal(true);
+      setDriverData(response.getBookingDriver.driver);
+    },
+    onError: onErrorAppSync,
+  });
+
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -120,7 +157,14 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
           response.getTripsConsumer[0]?.tag == 'ONGOING' &&
           ['ACCEPTED', 'ARRIVED', 'PICKED_UP'].includes(response.getTripsConsumer[0]?.status)
         ) {
-          setShowDriverFoundModal(true);
+          // setShowDriverFoundModal(true);
+          getBookingDriver({
+            variables: {
+              input: {
+                driverUserId: parseInt(booking?.driverUserId),
+              },
+            },
+          });
         } else if (response.getTripsConsumer[0]?.status == 'EXPIRED') {
           setWaitingStatus(0);
           setWaitingText(6);
@@ -419,6 +463,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         setVisible={setViewCancelReasonModal}
         setNextModal={setViewSuccessCancelBookingModal}
         finalizeCancel={finalizeCancel}
+        navigation={navigation}
       />
       <SuccesCancelBookingModal
         visible={viewSuccessCancelBookingModal}
@@ -427,6 +472,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         goBackAfterCancellation={goBackAfterCancellation}
       />
       <DriverFoundModal
+        driverData={driverData}
         showDriverFoundModal={showDriverFoundModal}
         setShowDriverFoundModal={setShowDriverFoundModal}
         navigation={navigation}

@@ -25,9 +25,9 @@ const Component = ({route, navigation, createMyCartSession}) => {
   )
 
   useEffect(() => {
-    console.log("ROUTE PARAMS", route.params.data)
+    console.log("ROUTE PARAMS", JSON.stringify(route.params.data))
     setTimeout(() => {
-      navigation.replace("ToktokMallCheckout", route.params.data)
+      navigation.replace("ToktokMallCheckout", route.params)
     }, 300) 
   }, [route.params])
 

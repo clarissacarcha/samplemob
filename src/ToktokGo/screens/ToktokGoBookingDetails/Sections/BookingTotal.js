@@ -9,6 +9,18 @@ import {AccordionBooking} from '.';
 import {numberFormat} from '../../../../helper';
 
 export const BookingTotal = ({booking, navigation}) => {
+  const getTotal = () => {
+    if (booking.tag == 'CANCELLED') {
+      if (booking.cancellationChargeStatus == 'PAID') {
+        return '₱50.00';
+      } else {
+        return '₱0.00';
+      }
+    } else {
+      return '₱' + numberFormat(booking.fare.total);
+    }
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.directionsBox}>
@@ -19,13 +31,12 @@ export const BookingTotal = ({booking, navigation}) => {
             <AccordionBooking
               navigation={navigation}
               titleText={booking.tag == 'ONGOING' ? 'Total' : 'Total Paid'}
-              titleAmount={booking.tag == 'CANCELLED' ? '₱0.00' : '₱' + numberFormat(booking.fare.total)}
+              titleAmount={getTotal()}
               subTexts={[
                 {amount: `₱${numberFormat(booking.fare.flatRate)}`, text: 'Sedan', key: 1},
                 {amount: `₱${numberFormat(booking.fare.mileageFee)}`, text: 'Distance', key: 2},
                 {amount: `₱${numberFormat(booking.fare.durationFee)}`, text: 'Duration', key: 2},
               ]}
-              dummyStatus={2}
               booking={booking}
             />
           </View>
