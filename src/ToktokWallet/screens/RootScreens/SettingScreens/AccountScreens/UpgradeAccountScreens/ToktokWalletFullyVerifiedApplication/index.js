@@ -115,7 +115,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
       <View style={styles.container}>
         <Text style={styles.headerTitle}>Upgrade Account</Text>
         <Text style={styles.fontRegularStyle}>
-          Meet the following requirements for upgrading your account to Fully Verified.
+          Choose from either of the two (2) requirements for upgrading your account to Fully Verified.
         </Text>
         <DisplayComponent
           onPress={redirectLinking} // Navigate here the screen for link bank account
@@ -124,7 +124,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
           btnLabel="Link Now"
           finishLabel={
             isLinkedBankAccount
-              ? 'Your account has been successfully linked to your bank account.'
+              ? 'Link your toktokwallet account to your bank account via fund transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified.'
               : 'Your Account Application has been submitted. Please wait for approval.'
           }
           imgSource={bank_icon}
@@ -134,7 +134,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
             navigation.navigate('ToktokWalletVideoCallSchedule');
           }}
           disabled={checkVcs.hasVcs}
-          notFinishLabel="Request a video call for verification."
+          notFinishLabel="Request a video call for verification. The Customer Service Representative will assess your chosen schedule and contact you within 24hrs for verification and approval of your request for a fully verified account."
           btnLabel="Schedule Now"
           finishLabel={
             checkVcs.isPendingVcs
