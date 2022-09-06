@@ -280,11 +280,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     }
   }, [selectedVehicle, selectedVouchers]);
 
-  console.log('zion', details);
-
   const tripBooking = ({pinCode, data}, headCount) => {
-    console.log('zion inside', details);
-
     if (!session.userHash) {
       return Alert.alert('', 'Please restart your application!');
     }
