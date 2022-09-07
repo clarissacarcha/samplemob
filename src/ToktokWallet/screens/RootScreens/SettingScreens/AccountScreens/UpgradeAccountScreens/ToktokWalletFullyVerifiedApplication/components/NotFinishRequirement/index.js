@@ -15,7 +15,7 @@ export const NotFinishRequirement = ({notFinishLabel, btnLabel, onPress, disable
         ? notFinishComponent()
         : <Text style={[styles.fontRegularStyle]}>{notFinishLabel}</Text>
       }
-      <TouchableOpacity style={styles.buttonStyle} onPress={onPress}>
+      <TouchableOpacity style={[styles.buttonStyle]} onPress={onPress}>
         <Text style={[styles.btnLabel]}>{btnLabel}</Text>
       </TouchableOpacity> 
     </View>
