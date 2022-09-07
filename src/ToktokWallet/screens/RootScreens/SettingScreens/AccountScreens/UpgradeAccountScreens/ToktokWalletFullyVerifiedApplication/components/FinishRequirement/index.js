@@ -5,7 +5,7 @@ import moment from 'moment';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_SIZE, FONT_FAMILY: FONT} = CONSTANTS;
 
-export const FinishRequirement = ({finishLabel, btnLabel, onPress, disabled, imgSource, checkVcs}) => {
+export const FinishRequirement = ({finishLabel, btnLabel, onPress, disabled, imgSource, checkVcs , headerTitle}) => {
   const RequestVideoCallSchedule = () => {
     const {
       preferredVcsDayMin,
@@ -56,11 +56,14 @@ export const FinishRequirement = ({finishLabel, btnLabel, onPress, disabled, img
   return (
     <>
       <View style={[styles.cardShadow, styles.cardStyle, !checkVcs?.request && {alignItems: 'center'}]}>
-        <Image source={imgSource} style={styles.img} />
-        <View style={{marginLeft: 15, flexShrink: 1, flex: 1}}>
+      <View style={styles.cardHeader}>
+          <Image source={imgSource} style={styles.img} />
+          <Text style={[styles.fontBoldStyle,{marginLeft: 15}]}>{headerTitle}</Text>
+      </View>
+      <View style={{flexShrink: 1,marginTop: 10}}>
           <Text style={[styles.fontRegularStyle]}>{finishLabel}</Text>
           {checkVcs?.request && <RequestVideoCallSchedule />}
-        </View>
+      </View>
       </View>
     </>
   );
@@ -93,9 +96,13 @@ const styles = StyleSheet.create({
   cardStyle: {
     padding: 20,
     marginBottom: 20,
+    alignItems: 'flex-start',
     justifyContent: 'center',
-    flexDirection: 'row',
   },
+  cardHeader: {
+    flexDirection:"row",
+    alignItems: "center"
+  },  
   buttonStyle: {
     borderRadius: 5,
     paddingVertical: 5,
