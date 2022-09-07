@@ -19,7 +19,7 @@ const ToktokLoadActivities = () => {
       lazy={true}
       tabBarOptions={{
         style: {paddingHorizontal: 12},
-        tabStyle: {width: 90},
+        tabStyle: {width: 85},
         pressColor: 'transparent',
         indicatorStyle: {
           width: 0,

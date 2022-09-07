@@ -6,12 +6,12 @@ import CONSTANTS from '../../../../common/res/constants';
 import PhoneIcon from '../../../../assets/images/phoneIcon.png';
 import MessageIcon from '../../../../assets/images/messageIcon.png';
 import NavigateIcon from '../../../../assets/images/navigateIcon.png';
-import ProfileImagePlaceHolder from '../../../../assets/icons/ProfileIcon.png';
+import User from '../../../../assets/images/user-icon.png';
 import VaccinatedIcon from '../../../../assets/images/vaccinated.png';
 import StarIcon from '../../../../assets/images/star.png';
 import {ThrottledOpacity} from '../../../../components_section';
 
-export const BookingDriverDetails = ({booking}) => {
+export const BookingDriverDetails = ({booking, driverData}) => {
   // const navigateToStop = () => {
   //   const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
   //   const latLng = `${stop.latitude},${stop.longitude}`;
@@ -37,8 +37,11 @@ export const BookingDriverDetails = ({booking}) => {
   };
 
   const imageRender = () => {
-    // to do: condition, 1driver image here
-    return ProfileImagePlaceHolder;
+    if (driverData?.user?.person?.avatarThumbnail) {
+      return {uri: driverData?.user?.person?.avatarThumbnail};
+    } else {
+      return User;
+    }
   };
 
   return (
@@ -56,9 +59,11 @@ export const BookingDriverDetails = ({booking}) => {
             {booking.driver?.vehicle?.plateNumber}
           </Text>
           <View style={styles.ratingContainer}>
-            <Text>{booking.driver?.rating}</Text>
+            <Text>{driverData?.overallAverageRating ? driverData.overallAverageRating : 'N/A'}</Text>
             <Image source={StarIcon} resizeMode={'contain'} style={styles.starIconDetail} />
-            <Image source={VaccinatedIcon} resizeMode={'contain'} style={styles.vaccinatedIconDetail} />
+            {driverData?.user?.person?.covidVaccinationStatus?.description && (
+              <Image source={VaccinatedIcon} resizeMode={'contain'} style={styles.vaccinatedIconDetail} />
+            )}
           </View>
         </View>
         <View style={styles.iconsContainer}>
@@ -99,6 +104,7 @@ const styles = StyleSheet.create({
   detailName: {
     fontSize: CONSTANTS.FONT_SIZE.M,
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    textTransform: 'capitalize',
   },
   detailVehicle: {
     fontSize: CONSTANTS.FONT_SIZE.M,

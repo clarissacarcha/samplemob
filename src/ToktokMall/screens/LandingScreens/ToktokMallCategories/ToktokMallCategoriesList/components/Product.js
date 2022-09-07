@@ -54,7 +54,7 @@ const RenderItem = ({navigation, item}) => {
               <Text style={styles.renderItemNoStockText}>({item?.noOfStocks || 0})</Text>
             </View>
             <View style={styles.renderItemSoldContainer}>
-              <Text style={styles.renderItemSoldText}>{item?.soldCount || 0} sold</Text>
+              {/* <Text style={styles.renderItemSoldText}>{item?.soldCount || 0} sold</Text> */}
             </View>
           </View>
           

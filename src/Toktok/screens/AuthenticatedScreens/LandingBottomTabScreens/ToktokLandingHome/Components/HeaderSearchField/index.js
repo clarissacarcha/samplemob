@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, StatusBar, Image} from 'react-native';
+import {View, Text, StyleSheet, TextInput, StatusBar, Image, Platform} from 'react-native';
 import {useSelector} from 'react-redux';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {Shadow} from '../../../../../../../revamp';
@@ -100,11 +100,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: SIZE.MARGIN,
   },
   greetingText: {
-    marginTop: 24,
+    marginTop: Platform.OS === 'ios' ? 24 : -5,
     marginBottom: 16,
     color: COLOR.ORANGE,
     fontSize: FONT_SIZE.XL,
     fontFamily: FONT.BOLD,
+    textTransform: 'capitalize',
   },
   searchBox: {
     bottom: 5,

@@ -13,7 +13,7 @@ const COLOR = {
   WHITE_UNDERLAY: '#FDBA1C', //TouchableHightlight underlayColor for WHITE background
   TRANSPARENT_YELLOW: 'rgba(256,186,28, 0.15)',
   TRANSPARENT_ORANGE: 'rgba(245,132,31, 0.15)',
-  RED: '#F93154',
+  RED: '#ED3A19',
   GREEN: '#198754',
   BACKGROUND_YELLOW: '#FBFAE3',
   GRAY: '#9E9E9E',

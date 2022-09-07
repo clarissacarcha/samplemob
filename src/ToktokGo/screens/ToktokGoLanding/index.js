@@ -13,10 +13,15 @@ import moment from 'moment';
 import {onErrorAppSync} from '../../util';
 import {useAccount} from 'toktokwallet/hooks';
 
-const ToktokGoLanding = ({navigation, session, constants}) => {
+const ToktokGoLanding = ({navigation, session, route, constants}) => {
   const dispatch = useDispatch();
+  const {bookingId, action, voucherData} = route?.params ? route.params : {bookingId: null, action: null};
   const {routeDetails} = useSelector(state => state.toktokGo);
   const {tokwaAccount, getMyAccount} = useAccount();
+
+  const currentBookingActions = ['ACCEPTED', 'ARRIVED', 'PICKED_UP', 'COMPLETED'];
+  const bookingDetailsActions = ['CANCELLED', 'EXPIRED'];
+
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
       getMyAccount();
@@ -29,34 +34,63 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
     onCompleted: response => {
       if (response.getTripsConsumer.length > 0) {
         dispatchToSession(response.getTripsConsumer[0]);
+
+        setTimeout(() => {
+          console.log('HERE:', response.getTripsConsumer[0]?.status);
+          if (
+            response.getTripsConsumer[0]?.tag == 'ONGOING' &&
+            ['BOOKED', 'DISPATCHED'].includes(response.getTripsConsumer[0]?.status)
+          ) {
+            const decodedPolyline = decodeLegsPolyline(response.getTripsConsumer[0]?.route.legs);
+            navigation.replace('ToktokGoFindingDriver', {
+              popTo: 1,
+              decodedPolyline,
+            });
+            checkNotificationToNavigate({trip: response.getTripsConsumer[0]});
+          } else if (
+            response.getTripsConsumer[0]?.tag == 'ONGOING' &&
+            ['ACCEPTED', 'ARRIVED', 'PICKED_UP'].includes(response.getTripsConsumer[0]?.status)
+          ) {
+            const decodedPolyline = decodeLegsPolyline(response.getTripsConsumer[0]?.route.legs);
+            navigation.replace('ToktokGoOnTheWayRoute', {
+              popTo: 1,
+              decodedPolyline,
+            });
+            checkNotificationToNavigate({trip: response.getTripsConsumer[0]});
+          } else {
+            healthCareAccept();
+          }
+        }, 1000);
+      } else {
+        healthCareAccept();
       }
-      setTimeout(() => {
-        console.log('HERE:', response.getTripsConsumer[0]?.status);
-        if (
-          response.getTripsConsumer[0]?.tag == 'ONGOING' &&
-          ['BOOKED', 'DISPATCHED'].includes(response.getTripsConsumer[0]?.status)
-        ) {
-          const decodedPolyline = decodeLegsPolyline(response.getTripsConsumer[0]?.route.legs);
-          navigation.replace('ToktokGoFindingDriver', {
-            popTo: 1,
-            decodedPolyline,
-          });
-        } else if (
-          response.getTripsConsumer[0]?.tag == 'ONGOING' &&
-          ['ACCEPTED', 'ARRIVED', 'PICKED_UP'].includes(response.getTripsConsumer[0]?.status)
-        ) {
-          const decodedPolyline = decodeLegsPolyline(response.getTripsConsumer[0]?.route.legs);
-          navigation.replace('ToktokGoOnTheWayRoute', {
-            popTo: 1,
-            decodedPolyline,
-          });
-        } else {
-          healthCareAccept();
-        }
-      }, 1000);
     },
-    onError: onErrorAppSync,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      console.log(graphQLErrors);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        navigation.replace('ToktokGoMaintance');
+      }
+    },
   });
+
+  const checkNotificationToNavigate = ({trip}) => {
+    console.log('action:', action, 'bookingId:', bookingId);
+    if (currentBookingActions.includes(action)) {
+      if (trip.id != bookingId) {
+        navigation.push('SelectedBookingDetails', {
+          bookingId,
+        });
+      }
+    }
+    if (bookingDetailsActions.includes(action)) {
+      navigation.push('SelectedBookingDetails', {
+        bookingId,
+      });
+    }
+  };
 
   const healthCareAccept = async () => {
     const date = await AsyncStorage.getItem('ToktokGoHealthCare');
@@ -64,14 +98,15 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
 
     if (data) {
       if (date === moment(new Date()).format('MMM D, YYYY')) {
-        navigation.replace('ToktokGoBookingStart');
-      } else if (tokwaAccount.wallet.id) {
-        navigation.replace('ToktokGoHealthCare');
+        navigation.replace('ToktokGoBookingStart', {voucherData});
+        checkNotificationToNavigate({trip: null});
+      } else if (!session.user.toktokWalletAccountId) {
+        navigation.replace('ToktokGoCreateTokwa', {voucherData});
       } else {
-        navigation.replace('ToktokGoCreateTokwa');
+        navigation.replace('ToktokGoHealthCare', {voucherData});
       }
     } else {
-      navigation.replace('ToktokGoOnBoardingBeta');
+      navigation.replace('ToktokGoOnBoardingBeta', {voucherData});
     }
   };
 
@@ -95,7 +130,6 @@ const ToktokGoLanding = ({navigation, session, constants}) => {
 
   useEffect(() => {
     checkOngoingTrip();
-    // navigation.replace('ToktokGoHealthCare');
   }, []);
 
   return (

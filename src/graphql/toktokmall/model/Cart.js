@@ -50,6 +50,9 @@ export const GET_MY_CART =  gql`
 						img {
 							filename
 						}
+						images {
+							filename
+						}
 						enabled
 						promotions {
 							promoType

@@ -91,6 +91,7 @@ const INITIAL_STATE = {
     id: null,
     dispatchHash: null,
     status: null,
+    driverUserId: null,
     tag: null,
     notes: null,
     route: {

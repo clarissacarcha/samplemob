@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import {View, Text, StyleSheet, Platform, ImageBackground, Dimensions, StatusBar, Image, TouchableOpacity, FlatList, TextInput, ScrollView} from 'react-native';
-import {HeaderBack, HeaderTitle, HeaderRight, Header, LoadingOverlay} from '../../../../Components';
+import {HeaderBack, HeaderTitle, HeaderRight, Header} from '../../../../Components';
 import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables';
 import {otpicon, otpbg, otpicon2} from '../../../../assets';
 import CustomIcon from '../../../../Components/Icons';

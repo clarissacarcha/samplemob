@@ -3,9 +3,31 @@ import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import FIcon from 'react-native-vector-icons/Fontisto';
 
-export const BookingConfirmButton = ({SheetManager}) => {
+export const BookingConfirmButton = ({SheetManager, tokwaAccount, details}) => {
+  const {wallet, id} = tokwaAccount;
+
+  const isDisabled = () => {
+    let total = 0;
+    if (details?.rate?.charge) {
+      total = details?.rate?.tripFare?.total + details?.rate?.charge?.amount;
+    } else {
+      total = details?.rate?.tripFare?.total;
+    }
+
+    if (details.paymentMethod == 'TOKTOKWALLET' && !id) {
+      return true;
+    } else if (details.paymentMethod == 'TOKTOKWALLET' && id && wallet.balance < total) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
-    <TouchableOpacity style={styles.buttonWrapper} onPress={() => SheetManager.show('passenger_capacity')}>
+    <TouchableOpacity
+      disabled={isDisabled()}
+      style={styles.buttonWrapper}
+      onPress={() => SheetManager.show('passenger_capacity')}>
       <Text style={styles.confirmText}>Confirm Booking</Text>
     </TouchableOpacity>
   );

@@ -14,7 +14,7 @@ export const RefComDiscountRate = ({value, w = '50%'}) => {
       <View style={{width: w, marginTop: 5}}>
         <Text
           style={{
-            height: 15,
+            height: 16,
             fontSize: 9,
             fontWeight: '700',
             backgroundColor: '#FDBA1C',
@@ -26,8 +26,10 @@ export const RefComDiscountRate = ({value, w = '50%'}) => {
           }}
         />
         <Text
+          numberOfLines={1}
+          adjustsFontSizeToFit
           style={{
-            height: 15,
+            height: 16,
             fontSize: 9,
             fontWeight: '700',
             color: '#fff',

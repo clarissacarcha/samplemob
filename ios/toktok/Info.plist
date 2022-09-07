@@ -41,12 +41,16 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>54.248.55.236</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<string/>
+				<string></string>
 			</dict>
 			<key>ec2-18-176-178-106.ap-northeast-1.compute.amazonaws.com</key>
 			<dict>
@@ -59,10 +63,6 @@
 				<true/>
 			</dict>
 		</dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-		<key>NSAllowsArbitraryLoadsInWebContent</key>
-		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to take images for profile and deliveries.</string>
