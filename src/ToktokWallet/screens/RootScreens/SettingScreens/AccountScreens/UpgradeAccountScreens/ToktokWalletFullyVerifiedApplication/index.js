@@ -112,7 +112,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
           setShowSuccessModal(false);
         }}
       /> */}
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <Text style={styles.headerTitle}>Upgrade Account</Text>
         <Text style={styles.fontRegularStyle}>
           Choose your preferred verification method below to upgrade your account to Fully Verified.
@@ -122,8 +122,8 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
           disabled={isLinkedBankAccount || isPendingLinking}
           headerTitle={!isLinkedBankAccount ? "Link Account via Fund Transfer" : "Account Linked"}
           notFinishLabel="Link your toktokwallet account to your bank account via fund transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified."
-          notFinishComponent={()=> <Text style={[styles.fontRegularStyle,{marginTop: 10}]}>
-            Link your <Text style={[styles.fontRegularStyle,{color: "#FDBA1C"}]}>toktok</Text><Text style={[styles.fontRegularStyle,{color: "#F6841F"}]}>wallet</Text> account to your bank account via fund transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified.
+          notFinishComponent={()=> <Text style={[styles.fontRegularStyle,{marginTop: 10,marginBottom: 0}]}>
+            Link your <Text style={{color: "#FDBA1C"}}>toktok</Text><Text style={{color: "#F6841F"}}>wallet</Text> account to your bank account via fund transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified.
           </Text>}
           btnLabel="Link Now"
           finishLabel={
@@ -149,7 +149,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
           imgSource={schedule_icon}
           checkVcs={checkVcs}
         />
-      </ScrollView>
+      </View>
     </CheckIdleState>
   );
 };
