@@ -6,3 +6,4 @@ export * from './Totals';
 export * from './Vouchers';
 export * from './CheckoutModal';
 export * from './MessageModal';
+export * from './TermsAndCondition';

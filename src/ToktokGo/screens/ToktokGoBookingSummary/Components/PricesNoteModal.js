@@ -1,8 +1,6 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, View, Modal, TouchableOpacity} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
-import SucessIMG from '../../../../assets/images/Sucess.png';
-import WalletIcon from '../../../../assets/images/Wallet.png';
 
 export const PricesNoteModal = ({viewPriceNote, setViewPriceNote}) => {
   return (
@@ -10,9 +8,8 @@ export const PricesNoteModal = ({viewPriceNote, setViewPriceNote}) => {
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
-            <Text style={styles.modalDescription}>
-              Prices may vary depending on traffic condition. Subject to prevailing IATF guideline.
-            </Text>
+            <Text style={styles.modalDescription}>Prices may vary depending on traffic condition.</Text>
+            <Text style={styles.modalDescription}>Subject to prevailing IATF guideline.</Text>
 
             <TouchableOpacity style={styles.buttonContainer} onPress={() => setViewPriceNote(false)}>
               <Text style={styles.buttonText}>OK</Text>
@@ -27,7 +24,6 @@ export const PricesNoteModal = ({viewPriceNote, setViewPriceNote}) => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
-    alignItems: 'center',
     flexDirection: 'column',
   },
   transparent: {

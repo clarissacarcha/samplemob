@@ -44,8 +44,8 @@ export const Processing = ({id, email}) => {
     fetchPolicy: 'no-cache',    
     onCompleted: (response) => {
       if(response.getActivities){     
-        const newActivities = [...response.getActivities.filter(activity => activity.status.status === 1)];
-        setData(newActivities);
+        // const newActivities = [...response.getActivities.filter(activity => activity.status.status === 1)];
+        setData(response.getActivities);
         setLoading(false);
       }
     },

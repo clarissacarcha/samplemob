@@ -41,7 +41,7 @@ export const ActivityCard = React.memo(({item, onPress, isLastItem = false}) => 
         <View style={styles.detailOneContainer}>
           <View style={styles.headerContainer}>
             <Text>
-              <Text style={{fontFamily: FONT_FAMILY.BOLD}}>Service Reference Number </Text>
+              <Text>Service Reference Number </Text>
               <Text style={styles.referenceNo}>{referenceNumber}</Text>
             </Text>
             <Text style={styles.subText}>{transactionDateTime}</Text>

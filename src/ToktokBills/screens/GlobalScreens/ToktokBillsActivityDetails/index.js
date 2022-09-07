@@ -30,7 +30,7 @@ const getStatus = status => {
 export const ToktokBillsActivityDetails = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={'Bill Details'} labelStyle={{fontSize: moderateScale(FONT_SIZE.XL + 3)}}/>,
+    headerTitle: () => <HeaderTitle label={'Bill Details'} labelStyle={{fontSize: moderateScale(FONT_SIZE.XL + 3)}} />,
   });
 
   const {
@@ -218,10 +218,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   networkContainer: {
-    padding: moderateScale(16),
+    paddingVertical: moderateScale(16),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   headerContainer: {
     flexShrink: 1,

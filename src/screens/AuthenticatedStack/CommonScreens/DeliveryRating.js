@@ -17,12 +17,12 @@ const StarButton = ({onPress, color, isLast}) => {
 const StarRating = ({onChange}) => {
   const [rating, setRating] = useState(0);
 
-  const onStarPress = (index) => {
+  const onStarPress = index => {
     setRating(index);
     onChange(index);
   };
 
-  const starColor = (index) => {
+  const starColor = index => {
     if (index <= rating) {
       return COLOR;
     } else {
@@ -134,7 +134,7 @@ const RateDelivery = ({navigation, route}) => {
           </View>
         </View>
         <View style={{padding: 20}}>
-          <StarRating onChange={(value) => setRating(value)} />
+          <StarRating onChange={value => setRating(value)} />
         </View>
       </View>
 
@@ -159,7 +159,7 @@ const RateDelivery = ({navigation, route}) => {
         </View>
         <TextInput
           value={feedback}
-          onChangeText={(value) => setFeedback(value)}
+          onChangeText={value => setFeedback(value)}
           style={{margin: 20}}
           placeholder={`Share your ${APP_FLAVOR === 'C' ? 'POGI ' : ''}experience with this delivery.`}
           placeholderTextColor={LIGHT}

@@ -9,13 +9,13 @@ export const coppermask = require("../assets/images/coppermask.png")
 export const chair = require("../assets/images/chair.png")
 export const bottle = require("../assets/images/bottle.png")
 export const clothfacemask = require("../assets/images/Cloth-Face-Mask.png")
-export const medicalfacemask = require("../assets/images/Medical-Face-Mask.png") 
+export const medicalfacemask = require("../assets/images/Medical-Face-Mask.png")
 export const ads = require("../assets/images/ads.png")
 
 //STATICS
 export const placeholder = require("../assets/images/placeholder.png")
 export const flashsalebg = require("../assets/images/flash-sale-bg.png")
-export const featuredflash = require("../assets/images/featuredflash.png")
+export const featuredflash = require("../assets/images/Featured.png")
 export const flashsale = require("../assets/images/Flash-Sale.png")
 export const banner = require("../assets/images/banner.png")
 export const toktokmallH = require("../assets/images/toktokmall-h.png")
@@ -29,6 +29,8 @@ export const noHistoryFound = require("../assets/images/noHistoryFound.png")
 export const contactus = require("../assets/images/contact-us.png");
 export const walletIcon = require("../assets/images/tokwaicon.png");
 export const emptyPlaceOrder = require("../assets/images/empty_place_order.png");
+export const splashImage = require("../assets/images/toktokmall-splash-screen.png");
+export const newSplashImage = require("../assets/images/toktokmall-new-splash-screen.png");
 
 //ICONS
 export const successIcon = require("../assets/icons/success.png")
@@ -51,7 +53,8 @@ export const destination = require("../assets/icons/destination.png");
 export const origin = require("../assets/icons/origin.png");
 export const cancelledIcon = require("./icons/cancelled.png")
 export const deliveredIcon = require("../assets/icons/double-check.png");
-export const paypandalogo = require("./icons/paypandalogo.png")
+export const paypandalogo = require("./icons/paypandalogo.png");
+export const waitingPaymentLogo = require("./icons/waiting-payment.png")
 
 //LOTIE
 export const loadingLottie = require("./lottie/loading.json");

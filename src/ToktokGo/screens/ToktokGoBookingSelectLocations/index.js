@@ -3,12 +3,7 @@ import {Text, View, TouchableHighlight, Image} from 'react-native';
 import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation} from './Sections';
 import CONSTANTS from '../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {
-  GET_PLACE_AUTOCOMPLETE,
-  GET_PLACE_BY_ID,
-  GET_PLACE_BY_LOCATION,
-  GET_CONSUMER_RECENT_DESTINATION,
-} from '../../graphql';
+import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION, GET_TRIP_DESTINATIONS} from '../../graphql';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT, TOKTOK_GO_GRAPHQL_CLIENT} from 'src/graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {throttle, debounce, get} from 'lodash';
@@ -21,6 +16,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../helper';
 import {ThrottledHighlight} from '../../../components_section';
 import {onErrorAppSync} from '../../util';
+import {onError} from '../../../util/ErrorUtility';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
@@ -41,7 +37,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     async function tempFunction() {
       await getSearchList();
       await getDestinationList();
-      getRecentDestination();
+      getTripDestinations();
     }
 
     tempFunction();
@@ -59,11 +55,11 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     onError: error => console.log('getPlaceAutocomplete', error),
   });
 
-  const [getRecentDestination] = useLazyQuery(GET_CONSUMER_RECENT_DESTINATION, {
+  const [getTripDestinations] = useLazyQuery(GET_TRIP_DESTINATIONS, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setrecentDestinationList(response.getConsumerPreviousDestinations);
+      setrecentDestinationList(response.getTripDestinations);
     },
     onError: onErrorAppSync,
   });
@@ -80,7 +76,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       onPressLocation();
       addItemToList(response.getPlaceById);
     },
-    onError: error => console.log('error', error),
+    onError: onError,
   });
 
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
@@ -92,7 +88,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
       setSearchOrigin(payload?.place?.formattedAddress);
     },
-    onError: error => console.log('error', error),
+    onError: onError,
   });
 
   const onPressRecentSearch = loc => {
@@ -362,9 +358,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
               width: 0,
               height: 0,
             },
-            shadowRadius: 50,
-            shadowOpacity: 1.0,
-            elevation: 20,
+            shadowRadius: 5,
+            shadowOpacity: 0.3,
+            elevation: 10,
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             {selectedInput == 'D' ? (

@@ -1,40 +1,58 @@
-import React, {useContext, useEffect, useMemo, useState} from "react";
-import {View, Text, StyleSheet, Platform,Image, TouchableOpacity, ScrollView, RefreshControl} from "react-native";
-import { TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT } from 'src/graphql';
-import { GET_LOAD_CATEGORIES , GET_LOAD_CATEGORY_NETWORKS } from 'toktokload/graphql';
-import { useLazyQuery } from '@apollo/react-hooks'
-import { usePrompt } from 'src/hooks'
-import { ErrorUtility } from 'toktokload/util';
-import {load} from 'toktokload/assets/images'
-import { heart_selected_fill_icon } from 'toktokload/assets/icons'
+import React, {useContext, useEffect, useMemo, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  StatusBar,
+  RefreshControl,
+  Dimensions,
+} from 'react-native';
+import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
+import {GET_LOAD_CATEGORIES, GET_LOAD_CATEGORY_NETWORKS} from 'toktokload/graphql';
+import {useLazyQuery} from '@apollo/react-hooks';
+import Tooltip from 'react-native-walkthrough-tooltip';
+import {usePrompt} from 'src/hooks';
+import {useSelector} from 'react-redux';
+import {ErrorUtility} from 'toktokload/util';
+import {load} from 'toktokload/assets/images';
+import {heart_selected_fill_icon} from 'toktokload/assets/icons';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
+import _ from 'lodash';
 
 //UTIL
-import { moderateScale } from "toktokload/helper";
+import {moderateScale, checkViewOnboarding} from 'toktokload/helper';
 
 //components
-import { HeaderBack, HeaderTitle, HeaderTabs, LoadingIndicator, SomethingWentWrong, SplashHome, OrangeButton } from "src/ToktokLoad/components";
-import { BuyLoad, Favorites, VerifyContextProvider, VerifyContext, Advertisement , LoadCategory } from "./components";
+import {
+  HeaderBack,
+  HeaderTitle,
+  HeaderTabs,
+  LoadingIndicator,
+  SomethingWentWrong,
+  SplashHome,
+  CustomButton,
+} from 'src/ToktokLoad/components';
+import {BuyLoad, Favorites, VerifyContextProvider, VerifyContext, Advertisement, LoadCategory} from './components';
 
-import CONSTANTS from 'common/res/constants'
-import { KeyboardAvoidingView } from "react-native";
-const { COLOR , FONT_FAMILY: FONT , SIZE , FONT_SIZE , MARGIN , SHADOW } = CONSTANTS
-
-const FavoritesNav = ({onPress})=> {
+import CONSTANTS from 'common/res/constants';
+import {KeyboardAvoidingView} from 'react-native';
+const {COLOR, FONT_FAMILY: FONT, SIZE, FONT_SIZE, MARGIN, SHADOW} = CONSTANTS;
+const {width} = Dimensions.get('screen');
+const FavoritesNav = ({onPress}) => {
   return (
     <TouchableOpacity onPress={onPress} style={{paddingRight: 16}}>
-          <Image style={{height: 20,width: 20}} resizeMode="contain" source={heart_selected_fill_icon}/>
+      <Image style={{height: 20, width: 20}} resizeMode="contain" source={heart_selected_fill_icon} />
     </TouchableOpacity>
-  )
-}
+  );
+};
 
-const MainComponent = ({ navigation, route }) => {
-
-  // navigation.setOptions({
-  //   headerRight: ()=> <FavoritesNav onPress={goToFavorites}/>
-  // })
-
+const MainComponent = ({navigation, route}) => {
   const {
     adsActions,
     adsRegular,
@@ -45,142 +63,174 @@ const MainComponent = ({ navigation, route }) => {
     setRefreshing,
     adHighlight,
     activeNetwork,
-    setActiveNetwork
+    setActiveNetwork,
+    onBoardingSteps,
+    setOnboardingSteps,
+    checkFieldIsEmpty,
+    checkDynamicField,
   } = useContext(VerifyContext);
-  const [categories, setCategories]= useState([]);
+  const [categories, setCategories] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
+  const [categoryNames, setCategoryNames] = useState('');
   const prompt = usePrompt();
+  const {user} = useSelector(state => state.session);
+  const tooltipWidth = moderateScale(
+    width - (Platform.OS === 'android' ? moderateScale(16) : width > 375 ? moderateScale(36) : 0),
+  );
 
-  const goToFavorites = ()=> navigation.navigate("ToktokLoadFavorites", {mobileErrorMessage,mobileNumber})
-
-  const [getLoadCategories , {loading, error}] = useLazyQuery(GET_LOAD_CATEGORIES , {
-    fetchPolicy:"network-only",
+  const [getLoadCategories, {loading, error}] = useLazyQuery(GET_LOAD_CATEGORIES, {
+    fetchPolicy: 'network-only',
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: (error) => {
+    onError: error => {
       setRefreshing(false);
     },
-    onCompleted: ({getLoadCategories})=> {
+    onCompleted: ({getLoadCategories}) => {
+      const names = _.map(getLoadCategories, 'name').join(', ');
+      setCategoryNames(names.replace(/,(?=[^,]*$)/, ' and'));
       setRefreshing(false);
-      setActiveTab(getLoadCategories[0])
-      setCategories(getLoadCategories)
-    }
-  })
+      setActiveTab(getLoadCategories[0]);
+      setCategories(getLoadCategories);
+    },
+  });
 
   navigation.setOptions({
     headerShown: !showSplash,
-  })
+  });
 
-  const getActiveCategoryName = (activeTab)=> {
-    return categories.filter(tab=>tab?.id===activeTab?.id)[0]
-  }
+  const getActiveCategoryName = activeTab => {
+    return categories.filter(tab => tab?.id === activeTab?.id)[0];
+  };
 
-  useEffect(()=>{
-    setTimeout(() => {
-      setShowSplash(false);
-    }, 1500)
-  },[])
-
-  useEffect(()=>{
+  const showOnboarding = async () => {
+    let isViewOnboarding = await checkViewOnboarding(user.id);
+    if (!isViewOnboarding) {
+      prompt({
+        type: 'onboarding',
+        title: 'Buy Load!',
+        message:
+          'Learn how to navigate through the app by clicking the button below in order to start the walkthrough.',
+        event: 'TOKTOKBILLSLOAD',
+        onPress: () => setOnboardingSteps(1),
+      });
+    }
+  };
+  useEffect(() => {
     getDataList();
-  },[])
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      showOnboarding();
+      setShowSplash(false);
+    }, 1500);
+  }, [user]);
 
   const getDataList = () => {
     getLoadCategories();
     getAdvertisements();
-  }
+  };
 
   const onRefresh = () => {
     setRefreshing(true);
     getDataList();
-  }
+  };
 
   const onPressNext = () => {
-    navigation.navigate("ToktokLoadNetworks", { mobileNumber , network: activeNetwork });
-  }
+    const isValidSelection = checkFieldIsEmpty('selection', JSON.stringify(activeNetwork), 'selection');
+    const isValidMobileNo = activeNetwork && checkDynamicField(mobileNumber, activeNetwork);
 
-  if(!showSplash && !refreshing && (loading || adsActions.loading)){
-    return <View style={styles.container}>
-            <LoadingIndicator isLoading={true} isFlex />
-          </View>
+    if (isValidSelection && isValidMobileNo) {
+      navigation.navigate('ToktokLoadNetworks', {mobileNumber, network: activeNetwork});
+    }
+  };
+
+  if (!showSplash && !refreshing && (loading || adsActions.loading)) {
+    return (
+      <View style={styles.container}>
+        <LoadingIndicator isLoading={true} isFlex />
+      </View>
+    );
   }
-  if(showSplash || ((loading || adsActions.loading) && !refreshing)){
-    return <SplashHome />
+  if (showSplash || ((loading || adsActions.loading) && !refreshing)) {
+    return <SplashHome />;
   }
-  if(error || adsActions.error){
-    return <View style={styles.container}>
-            <SomethingWentWrong error={error ?? adsActions.error} onRefetch={getDataList} />
-          </View>
+  if (error || adsActions.error) {
+    return (
+      <View style={styles.container}>
+        <SomethingWentWrong error={error ?? adsActions.error} onRefetch={getDataList} />
+      </View>
+    );
   }
   return (
     // <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "padding"} keyboardVerticalOffset={30}>
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ flexGrow: 1 }}
-      showsVerticalScrollIndicator={false}
-      keyboardShouldPersistTaps="handled"
-      refreshControl={
-        <RefreshControl
-          refreshing={loading || adsActions.loading}
-          onRefresh={onRefresh}
+    <>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{flexGrow: 1}}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        refreshControl={<RefreshControl refreshing={loading || adsActions.loading} onRefresh={onRefresh} />}>
+        {adsRegular.length > 0 && <Advertisement autoplay ads={adsRegular} />}
+        <Tooltip
+          accessible={false}
+          animated={true}
+          topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
+          displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
+          contentStyle={{
+            width: Platform.OS === 'android' ? moderateScale(tooltipWidth) : moderateScale(tooltipWidth - 36),
+          }}
+          childrenWrapperStyle={{flex: 1}}
+          backgroundColor="rgba(0,0,0,0.6)"
+          disableShadow={true}
+          isVisible={onBoardingSteps === 1}
+          content={
+            <View style={{padding: 5}}>
+              <Text style={styles.tooltipTitle}>Load Categories</Text>
+              <Text style={{paddingVertical: moderateScale(10)}}>
+                Choose between the load categories: {categoryNames}.
+              </Text>
+              <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                <TouchableOpacity style={styles.tooltipButton} onPress={() => setOnboardingSteps(2)}>
+                  <Text style={styles.tooltipButtonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          }
+          closeOnChildInteraction={false}
+          closeOnContentInteraction={false}
+          placement="bottom">
+          <View style={onBoardingSteps === 1 && {width: width}}>
+            <HeaderTabs
+              tabs={categories}
+              scrollEnabled={true}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              fitToScreen={false}
+              overLap={false}
+              disabled={onBoardingSteps === 1}
+            />
+          </View>
+        </Tooltip>
+        <LoadCategory
+          navigation={navigation}
+          activeTab={activeTab?.id}
+          activeCategory={() => getActiveCategoryName(activeTab)}
         />
-      }
-    >
-      { adsRegular.length > 0 && <Advertisement autoplay ads={adsRegular}/>}
-      <HeaderTabs
-        tabs={categories}
-        scrollEnabled={true}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        fitToScreen={false}
-        overLap={false}
-      />
-      <LoadCategory 
-        navigation={navigation}
-        activeTab={activeTab?.id}
-        activeCategory={()=>getActiveCategoryName(activeTab)}
-      />
-      <View style={{ flex: 1, justifyContent: "flex-end", padding: moderateScale(16) }}>
-        { adHighlight.length > 0 && <Advertisement ads={adHighlight}/> }
-        <View style={{marginTop: 15}}/>
-        <OrangeButton
-          label="Next"
-          disabled={!mobileNumber || mobileErrorMessage || !activeNetwork}
-          onPress={onPressNext}
-        />
-      </View>
-      {/* <ActionButton 
-          fixNativeFeedbackRadius={true} 
-          hideShadow={false} 
-          spacing={15} 
-          size={50} 
-          nativeFeedbackRippleColor="transparent" 
-          degrees={0} 
-          renderIcon={()=><Image style={{height: 30 ,width: 30}} resizeMode="contain" source={load}/>} 
-          buttonColor="white"
-          titleBgColor="transparent"
-          bgColor="rgba(0,0,0,0.5)"
-          offsetY={75}
-          offsetX={14}
-      >
-        <ActionButton.Item activeOpacity={0} size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="Activities" buttonColor="white" onPress={() => console.log("notes tapped!")}>
-          <Icon name="md-create" style={styles.actionButtonIcon} />
-        </ActionButton.Item>
-        <ActionButton.Item size={40} hideLabelShadow={true} textContainerStyle={{backgroundColor:"transparent",border: 0,borderColor:"transparent"}} textStyle={{backgroundColor:"transparent",color:"white"}} title="toktokwallet" buttonColor="white" onPress={() => navigation.navigate("ToktokLoadFavorites" , {mobileErrorMessage , mobileNumber})}>
-          <Icon name="md-create" style={styles.actionButtonIcon} />
-        </ActionButton.Item>
-      </ActionButton> */}
-    </ScrollView>
-      
+        <View style={{padding: moderateScale(16)}}>
+          {adHighlight.length > 0 && <Advertisement ads={adHighlight} />}
+        </View>
+      </ScrollView>
+      <CustomButton label="Next" onPress={onPressNext} hasShadow />
+    </>
     // </KeyboardAvoidingView>
   );
 };
 
-export const ToktokLoadHome = ({ navigation, route }) => {
-
+export const ToktokLoadHome = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={"toktokload"} />,
+    headerTitle: () => <HeaderTitle isLogo />,
   });
 
   return (
@@ -193,13 +243,27 @@ export const ToktokLoadHome = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white"
+    backgroundColor: 'white',
   },
   actionButtonIcon: {
     fontSize: 20,
     height: 22,
     color: 'orange',
   },
-})
-
-
+  tooltipButton: {
+    justifyContent: 'center',
+    backgroundColor: '#F6841F',
+    height: moderateScale(40),
+    width: moderateScale(100),
+    borderRadius: moderateScale(5),
+  },
+  tooltipButtonText: {
+    textAlign: 'center',
+    color: COLOR.WHITE,
+    fontFamily: FONT.SEMI_BOLD,
+  },
+  tooltipTitle: {
+    fontFamily: FONT.SEMI_BOLD,
+    color: '#F6841F',
+  },
+});

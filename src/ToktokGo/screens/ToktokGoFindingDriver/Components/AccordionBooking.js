@@ -5,6 +5,7 @@ import ArrowDown from '../../../../assets/icons/arrow-down-icon.png';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
 import CONSTANTS from '../../../../common/res/constants';
 
+// UNUSED COMPONENT
 export const AccordionBooking = ({titleText, titleAmount, subTexts = [], dummyStatus}) => {
   const [open, setOpen] = useState(false);
   return (

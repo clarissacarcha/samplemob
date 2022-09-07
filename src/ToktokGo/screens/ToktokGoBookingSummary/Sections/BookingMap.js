@@ -60,6 +60,22 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination})
     }, 1000);
   };
 
+  const getTime = num => {
+    if (num > 60) {
+      var hours = num / 60;
+      var rhours = Math.floor(hours);
+      var minutes = (hours - rhours) * 60;
+      var rminutes = Math.round(minutes);
+      if (rhours > 1) {
+        return rhours + ' hrs ' + rminutes + ' mins';
+      } else {
+        return rhours + ' hr ' + rminutes + ' mins';
+      }
+    } else {
+      return num + ' mins';
+    }
+  };
+
   if (!destination?.place?.location?.latitude) {
     return <ActivityIndicator color={CONSTANTS.COLOR.YELLOW} />;
   }
@@ -79,10 +95,6 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination})
         coordinate={origin?.place?.location}>
         <View style={{alignItems: 'center'}}>
           <View style={styles.originLocation}>
-            {/* <View style={{flexDirection: 'row'}}>
-                <Image source={OfficeIcon} resizeMode={'contain'} style={{height: 20, width: 15, marginRight: 5}} />
-                <Text style={{fontSize: CONSTANTS.FONT_SIZE.S, color: CONSTANTS.COLOR.ORANGE}}>Office</Text>
-              </View> */}
             <View
               style={{
                 flexDirection: 'row',
@@ -96,7 +108,7 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination})
               <Image source={ArrowRightIcon} resizeMode={'contain'} style={{height: 10, width: 10}} />
             </View>
           </View>
-          <Image source={LocationIcon} resizeMode={'contain'} style={{height: 26, width: 26}} />
+          <Image source={PinIcon} resizeMode={'contain'} style={{height: 26, width: 26}} />
         </View>
       </Marker>
 
@@ -107,15 +119,26 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination})
         }}
         coordinate={destination?.place?.location}>
         <View style={{flexDirection: 'column', alignItems: 'center'}}>
-          <View style={styles.pinLocation}>
-            <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}} numberOfLines={1}>
-              {destination?.place?.formattedAddress?.length < 20
-                ? `${destination?.place?.formattedAddress}...`
-                : `${destination?.place?.formattedAddress?.substring(0, 20)}...`}
-            </Text>
-            <Image source={ArrowRightIcon} resizeMode={'contain'} style={{height: 10, width: 10}} />
+          <View style={styles.destinationContainer}>
+            <View style={styles.pinLocation}>
+              <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}} numberOfLines={1}>
+                {destination?.place?.formattedAddress?.length < 20
+                  ? `${destination?.place?.formattedAddress}...`
+                  : `${destination?.place?.formattedAddress?.substring(0, 20)}...`}
+              </Text>
+              <Image source={ArrowRightIcon} resizeMode={'contain'} style={{height: 10, width: 10}} />
+            </View>
+            <View style={[styles.pinLocation, {alignSelf: 'flex-start'}]}>
+              <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}} numberOfLines={1}>
+                {getTime(routeDetails?.duration?.minute)}
+              </Text>
+              <View style={styles.separator} />
+              <Text style={{fontSize: CONSTANTS.FONT_SIZE.S}} numberOfLines={1}>
+                {routeDetails?.distance?.kilometer} km
+              </Text>
+            </View>
           </View>
-          <Image source={PinIcon} resizeMode={'contain'} style={{height: 26, width: 26}} />
+          <Image source={LocationIcon} resizeMode={'contain'} style={{height: 26, width: 26}} />
         </View>
       </Marker>
 
@@ -129,17 +152,15 @@ export const BookingMap = ({decodedPolyline, routeDetails, origin, destination})
 };
 
 const styles = StyleSheet.create({
-  pinLocation: {
+  destinationContainer: {
+    paddingVertical: 8,
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, .1)',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: CONSTANTS.COLOR.WHITE,
-    paddingVertical: 6,
-    paddingHorizontal: 8,
-    marginBottom: 4,
 
-    borderRadius: 2,
+    borderRadius: 5,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -147,6 +168,18 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
+  },
+  separator: {
+    width: 5,
+    height: 5,
+    backgroundColor: '#cccccc',
+    borderRadius: 50,
+    marginHorizontal: 5,
+  },
+  pinLocation: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
   },
   originLocation: {
     borderWidth: 1,
@@ -157,15 +190,13 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     paddingVertical: 6,
     paddingHorizontal: 8,
-    borderRadius: 2,
+    borderRadius: 5,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 12,
+      height: 2,
     },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-
-    elevation: 24,
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
   },
 });

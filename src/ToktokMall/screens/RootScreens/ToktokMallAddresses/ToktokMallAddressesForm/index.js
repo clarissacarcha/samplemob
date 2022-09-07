@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Platform, View, Text, TouchableOpacity, TextInput, BackHandler} from 'react-native';
-import {HeaderBack, HeaderTitle, HeaderRight, LoadingOverlay} from '../../../../Components';
-import {AddressFinderModal, CityAddressModalAndroid, AddressModal} from './Components';
+import {HeaderBack, HeaderTitle, HeaderRight} from '../../../../Components';
+import { AlertOverlay } from 'src/components'
+import {AddressFinderModal, CityAddressModalAndroid, AddressModal, SelectAddressModal} from './Components';
 import Toast from 'react-native-simple-toast';
 import ToggleSwitch from 'toggle-switch-react-native';
 import CustomIcon from '../../../../Components/Icons';
@@ -10,7 +11,7 @@ import {EventRegister} from 'react-native-event-listeners';
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useLazyQuery} from '@apollo/react-hooks';
-import {GET_CITY, GET_CUSTOMER_ADDRESS_DETAILS} from '../../../../../graphql/toktokmall/model/Address';
+import {GET_CITIES_BY_PROVINCES, GET_CITY, GET_CUSTOMER_ADDRESS_DETAILS, GET_PROVINCES_BY_REGIONS, GET_REGIONS} from '../../../../../graphql/toktokmall/model/Address';
 import { ApiCall, ArrayCopy } from '../../../../helpers';
 import {TOKTOK_MALL_GRAPHQL_CLIENT} from '../../../../../graphql';
 import {connect, useDispatch} from 'react-redux';
@@ -28,18 +29,85 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
   const [messageModal, setMessageModal] = useState(false);
   const [deletedModal, setDeletedModal] = useState(false);
   const [modalProvinceVisible, setModalProvinceVisible] = useState(false);
-  const [city, setCity] = useState('Select City');
   const [provCode, setProvCode] = useState(0);
   const [munCode, setMunCode] = useState(0);
   const [regCode, setRegCode] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [latitude, setLatitude] = useState(0);
+
+  
+  const [region, setRegion] = useState('Select Region');
+  const [province, setProvince] = useState('Select Province');
+  const [city, setCity] = useState('Select City');
+
+  //for address
+  const [isVisible, setIsVisible] = useState(false)
+  const [type, setType] = useState("reg")
+  const [data, setData] = useState([])
+
   const [validation, setValidation] = useStateCallback({
     validated: false,
     errors: [],
   });
   const [addressFinderModal, setAddressFinderModal] = useState(false);
   const dispatch = useDispatch()
+
+
+  const [getRegions] = useLazyQuery(GET_REGIONS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setData(response.getRegions);
+    },
+    onError: err => {
+      console.log(err);
+    },
+  });
+
+  const [getProvincesByRegion] = useLazyQuery(GET_PROVINCES_BY_REGIONS, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setData(response.getProvincesByRegion.data);
+    },
+    onError: err => {
+      console.log(err);
+    },
+  });
+
+  const [getCitiesByProvinces] = useLazyQuery(GET_CITIES_BY_PROVINCES, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setData(response.getCitiesByProvinces.data);
+    },
+    onError: err => {
+      console.log(err);
+    },
+  });
+
+  useEffect(() => {
+    setData([])
+    if (type === 'reg') {
+      getRegions();
+    } else if (type === 'prov' && regCode) {
+      getProvincesByRegion({
+        variables: {
+          input: {
+            regCode: `${regCode}`,
+          },
+        },
+      });
+    } else if (type === 'city' && provCode) {
+      getCitiesByProvinces({
+        variables: {
+          input: {
+            provCode: `${provCode}`,
+          },
+        },
+      });
+    }
+  }, [type, regCode, provCode]);
 
   const onChangeText = (name, value) => {
     setNewAddressForm((prevState) => ({
@@ -62,9 +130,11 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     onCompleted: (response) => {
       if (response.getCity) {
         setCity(response.getCity.citymunDesc);
+        setRegion(response.getCity.regDesc);
+        setProvince(response.getCity.provDesc);
         setProvCode(response.getCity.provCode);
         setMunCode(response.getCity.citymunCode);
-        setRegCode(response.getCity.regDesc);
+        setRegCode(response.getCity.regCode);
         setIsLoading(false)
       }else{
         setIsLoading(false)
@@ -83,6 +153,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
       if(getCustomerAddressDetails){
         setLongitude(getCustomerAddressDetails.longitude);
         setLatitude(getCustomerAddressDetails.latitude);
+        console.log("getCustomerAddressDetails", getCustomerAddressDetails)
         getCity()
       }else{
         setIsLoading(false)
@@ -132,10 +203,27 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
   };
 
   const onSelectCity = (data) => {
-    setCity(data.city);
-    setProvCode(data.provCode);
-    setMunCode(data.munCode);
-    setRegCode(data.regCode);
+    console.log('response.getProvincesByRegion.data', data);
+    if (type === 'reg') {
+      setRegion(data.regDesc);
+      setRegCode(data.regCode);
+      if (data.regCode === '13') {
+        setProvince('Select District');
+      } else {
+        setProvince('Select Province');
+      }
+      setProvCode('');
+      setCity('Select City');
+      setMunCode('');
+    } else if (type === 'prov') {
+      setProvince(data.provDesc);
+      setProvCode(data.provCode);
+      setCity('Select City');
+      setMunCode('');
+    } else if (type === 'city') {
+      setCity(data.citymunDesc);
+      setMunCode(data.citymunCode);
+    }
   };
   
   var hasNumber = /\d/;
@@ -342,7 +430,19 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
     if (city !== 'Select City') {
       removeError('city');
     }
-  }, [newAddressForm, city]);
+    if (region === 'Select Region') {
+      addError('region');
+    }
+    if (region !== 'Select Region') {
+      removeError('region');
+    }
+    if (province === 'Select Province') {
+      addError('province');
+    }
+    if (province !== 'Select Province') {
+      removeError('province');
+    }
+  }, [newAddressForm, city, region,province]);
 
   const onSubmitValidation = () => {
     setValidation(
@@ -362,7 +462,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
 
   return (
     <>
-      {isLoading && <LoadingOverlay isVisible={isLoading} />}
+      {isLoading && <AlertOverlay visible={isLoading} />}
 
       {confirmDeleteModal && (
         <AddressModal
@@ -384,10 +484,18 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
           setLongitude(parseFloat(data.geometry.location.lng));
         }}
       />
-      <CityAddressModalAndroid
+      {/* <CityAddressModalAndroid
         isVisible={modalProvinceVisible}
         setVisible={setModalProvinceVisible}
         setCity={(data) => onSelectCity(data)}
+      /> */}
+
+      <SelectAddressModal
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        setSelected={onSelectCity}
+        type={type}
+        data={data}
       />
       <View style={styles.container}>
         <View style={styles.partition1}>
@@ -419,6 +527,67 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
             />
           <TouchableOpacity
             onPress={() => {
+              setType("reg")
+              setIsVisible(true);
+            }}
+            >
+            <View style={styles.textinputContainerRow}>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    color: validation.validated && validation.errors?.includes('region') ? 'red' : 'black',
+                    textTransform: 'capitalize',
+                  },
+                ]}>
+                {region}
+              </Text>
+              <CustomIcon.EIcon name={'chevron-down'} size={20} color={'#9E9E9E'} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setType("prov")
+              setIsVisible(true);
+            }}
+            disabled={!regCode}
+            >
+            <View style={styles.textinputContainerRow}>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    color: validation.validated && validation.errors?.includes('province') ? 'red' : regCode ? 'black': 'gray',
+                    textTransform: 'capitalize',
+                  },
+                ]}>
+                {province}
+              </Text>
+              <CustomIcon.EIcon name={'chevron-down'} size={20} color={'#9E9E9E'} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setType("city")
+              setIsVisible(true);
+            }}
+            disabled={!provCode}>
+            <View style={styles.textinputContainerRow}>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    color: validation.validated && validation.errors?.includes('city') ? 'red' : provCode ? 'black': 'gray',
+                    textTransform: 'capitalize',
+                  },
+                ]}>
+                {city}
+              </Text>
+              <CustomIcon.EIcon name={'chevron-down'} size={20} color={'#9E9E9E'} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
               setAddressFinderModal(true);
             }}>
             <View style={styles.textinputContainerRow}>
@@ -432,24 +601,6 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
                 ]}>
                 {!newAddressForm.address ? 'Address(House #, Street, Village)' : newAddressForm.address}
               </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setModalProvinceVisible(true);
-            }}>
-            <View style={styles.textinputContainerRow}>
-              <Text
-                style={[
-                  styles.text,
-                  {
-                    color: validation.validated && validation.errors?.includes('city') ? 'red' : 'gray',
-                    textTransform: 'capitalize',
-                  },
-                ]}>
-                {city}
-              </Text>
-              <CustomIcon.EIcon name={'chevron-down'} size={20} color={'#9E9E9E'} />
             </View>
           </TouchableOpacity>
             <TextInput

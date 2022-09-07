@@ -63,7 +63,8 @@ export const ToktokMallModal = () => {
               backgroundColor: 'white',
               minWidth: '70%',
               paddingVertical: 20,
-              paddingHorizontal: 40,
+              paddingHorizontal: 35,
+              marginHorizontal: 20,
               borderRadius: 5,
             }}>
             <View
