@@ -45,7 +45,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     fetchPolicy: 'network-only',
     onCompleted: response => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ROUTE', payload: response.getQuotation.quotation.route});
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, noteToDriver: note}});
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, noteToDriver: notes.text}});
       dispatch({
         type: 'SET_TOKTOKGO_TEMP_VEHICLE_LIST',
         payload: response.getQuotation.quotation.vehicleTypeRates.slice(0, 2),

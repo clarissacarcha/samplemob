@@ -4,8 +4,10 @@ import CONSTANTS from '../../../../common/res/constants';
 import {ThrottledOpacity} from '../../../../components_section';
 import * as Progress from 'react-native-progress';
 import voucherPaperDesign from '../../../../assets/toktokgo/voucher-paper-design.png';
-import VoucherImage from '../../../../assets/toktokgo/voucherCar.png';
+import voucherPaperDesign2 from '../../../../assets/toktokgo/VectorShadow.png';
+import VoucherImage from '../../../../assets/toktokgo/newCarIcon.png';
 import moment from 'moment';
+import normalize from 'react-native-normalize';
 
 const decorHeight = Dimensions.get('window').height * 0.12;
 
@@ -31,17 +33,22 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
     <>
       <View style={styles.card}>
         <Image source={voucherPaperDesign} resizeMode={'contain'} style={styles.floatingImage} />
+        <Image source={voucherPaperDesign2} resizeMode={'contain'} style={styles.floatingImage2} />
         <View style={styles.carWrapper}>
           <Image source={VoucherImage} resizeMode={'contain'} style={styles.voucherImage} />
         </View>
         <View style={styles.voucherText}>
-          <Text style={styles.voucherName}>{data.name}</Text>
-          <Text style={styles.voucherDescription} numberOfLines={1}>
-            {data?.description}
+          <Text style={styles.voucherName} numberOfLines={1}>
+            {data.name}
           </Text>
+          <View style={{width: normalize(155)}}>
+            <Text style={styles.voucherDescription} numberOfLines={1}>
+              {data?.description}
+            </Text>
+          </View>
 
           {data.endAt && (
-            <Text style={styles.voucherDescriptionDate}>Valid unitl {moment(data.endAt).format('MMM DD YYYY')}</Text>
+            <Text style={styles.voucherDescriptionDate}>Valid until {moment(data.endAt).format('MMM DD YYYY')}</Text>
           )}
           {data.voucherWallet?.total > 1 && (
             <>
@@ -91,7 +98,7 @@ export const VoucherCard = ({data, navigation, onPressActionButton, loading}) =>
 const styles = StyleSheet.create({
   card: {
     borderRadius: 5,
-    height: decorHeight,
+    height: normalize(95),
     marginHorizontal: 16,
     backgroundColor: CONSTANTS.COLOR.WHITE,
     flexDirection: 'row',
@@ -107,47 +114,53 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   floatingImage: {
-    height: decorHeight,
+    height: normalize(95),
     position: 'absolute',
     left: -20,
+  },
+  floatingImage2: {
+    height: normalize(95),
+    position: 'absolute',
+    right: -45,
   },
   voucherText: {
     flex: 1,
     justifyContent: 'center',
-    marginLeft: 20,
+    marginLeft: 15,
     // marginRight: 15,
     top: 3,
   },
   computed: {
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.S,
+    fontSize: normalize(11),
   },
   voucherName: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     bottom: 7,
+    fontSize: normalize(13),
   },
   voucherDescription: {
     fontFamily: Platform.OS === 'ios' ? CONSTANTS.FONT_FAMILY.SEMI_BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
     fontSize: CONSTANTS.FONT_SIZE.S,
     fontWeight: 'normal',
+    fontSize: normalize(11),
   },
   voucherDescriptionDate: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.GRAY,
     fontSize: CONSTANTS.FONT_SIZE.S,
     fontWeight: 'normal',
+    fontSize: normalize(11),
   },
   carWrapper: {
-    backgroundColor: CONSTANTS.COLOR.TRANSPARENT_YELLOW,
-    borderRadius: 50,
-    marginVertical: 12,
     justifyContent: 'center',
     marginLeft: 18,
   },
   voucherImage: {
     alignSelf: 'center',
-    width: decorHeight - 20,
-    height: decorHeight - 20,
+    width: normalize(73),
+    height: normalize(73),
   },
   claimButton: {
     marginTop: 20,
@@ -188,5 +201,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ORANGE,
+    fontSize: normalize(11),
   },
 });

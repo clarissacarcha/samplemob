@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   lower: {
     flex: 1,
     flexDirection: 'row',
-    marginHorizontal: 20,
+    // marginHorizontal: 20,
   },
   iconStyle: {
     justifyContent: 'center',
