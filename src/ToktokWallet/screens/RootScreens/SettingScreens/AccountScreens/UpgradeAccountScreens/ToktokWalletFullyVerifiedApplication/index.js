@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {StyleSheet, View, Text, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, Text, ActivityIndicator , ScrollView} from 'react-native';
 //COMPONENTS
 import {CheckIdleState, SomethingWentWrong} from 'toktokwallet/components';
 import {NotFinishRequirement, FinishRequirement} from './components';
@@ -15,12 +15,12 @@ import {bank_icon, schedule_icon} from 'toktokwallet/assets';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_SIZE, FONT_FAMILY: FONT} = CONSTANTS;
 
-const DisplayComponent = ({finishLabel, notFinishLabel, title, btnLabel, onPress, disabled, imgSource, checkVcs}) => {
+const DisplayComponent = ({finishLabel, notFinishLabel, title, btnLabel, onPress, disabled, imgSource, checkVcs, headerTitle, notFinishComponent}) => {
   if (disabled) {
-    return <FinishRequirement finishLabel={finishLabel} imgSource={imgSource} checkVcs={checkVcs} />;
+    return <FinishRequirement finishLabel={finishLabel} imgSource={imgSource} checkVcs={checkVcs} headerTitle={headerTitle}/>;
   }
   return (
-    <NotFinishRequirement notFinishLabel={notFinishLabel} btnLabel={btnLabel} onPress={onPress} imgSource={imgSource} />
+    <NotFinishRequirement notFinishComponent={notFinishComponent} notFinishLabel={notFinishLabel} btnLabel={btnLabel} onPress={onPress} imgSource={imgSource} headerTitle={headerTitle} />
   );
 };
 export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
@@ -112,20 +112,24 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
           setShowSuccessModal(false);
         }}
       /> */}
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text style={styles.headerTitle}>Upgrade Account</Text>
         <Text style={styles.fontRegularStyle}>
-          Choose from either of the two (2) requirements for upgrading your account to Fully Verified.
+          Choose your preferred verification method below to upgrade your account to Fully Verified.
         </Text>
         <DisplayComponent
           onPress={redirectLinking} // Navigate here the screen for link bank account
           disabled={isLinkedBankAccount || isPendingLinking}
-          notFinishLabel="Link your toktokwallet account to one bank account."
+          headerTitle={!isLinkedBankAccount ? "Link Account via Fund Transfer" : "Account Linked"}
+          notFinishLabel="Link your toktokwallet account to your bank account via fund transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified."
+          notFinishComponent={()=> <Text style={[styles.fontRegularStyle,{marginTop: 10}]}>
+            Link your <Text style={[styles.fontRegularStyle,{color: "#FDBA1C"}]}>toktok</Text><Text style={[styles.fontRegularStyle,{color: "#F6841F"}]}>wallet</Text> account to your bank account via fund transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified.
+          </Text>}
           btnLabel="Link Now"
           finishLabel={
             isLinkedBankAccount
-              ? 'Link your toktokwallet account to your bank account via fund transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified.'
-              : 'Your Account Application has been submitted. Please wait for approval.'
+              ? 'Your application has been approved. Your link account has been verified.'
+              : 'Linking your toktokwallet account to your bank account is in progress.'
           }
           imgSource={bank_icon}
         />
@@ -134,7 +138,8 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
             navigation.navigate('ToktokWalletVideoCallSchedule');
           }}
           disabled={checkVcs.hasVcs}
-          notFinishLabel="Request a video call for verification. The Customer Service Representative will assess your chosen schedule and contact you within 24hrs for verification and approval of your request for a fully verified account."
+          headerTitle={!checkVcs.hasVcs ? "Request Video Call" : checkVcs.isPendingVcs ? "Video Call Requested" : "Video Call Approved"}
+          notFinishLabel="The Customer Service Representative will assess your chosen schedule and contact you within 24hrs for verification and approval of your request for a fully verified account."
           btnLabel="Schedule Now"
           finishLabel={
             checkVcs.isPendingVcs
@@ -144,7 +149,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
           imgSource={schedule_icon}
           checkVcs={checkVcs}
         />
-      </View>
+      </ScrollView>
     </CheckIdleState>
   );
 };
