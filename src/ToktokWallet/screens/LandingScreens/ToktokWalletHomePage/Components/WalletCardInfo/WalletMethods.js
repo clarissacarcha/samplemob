@@ -70,6 +70,13 @@ const WalletMethods = () => {
       isEnabled: true,
       identifier: `cashOut`,
     },
+    {
+      label: 'Request Money',
+      icon: require('toktokwallet/assets/icons/services/send-money.png'),
+      onPress: () => onPressThrottled('ToktokWalletRequestMoney'),
+      isEnabled: true,
+      identifier: `requestMoney`,
+    },
   ];
 
   useEffect(()=>{
@@ -95,7 +102,7 @@ const WalletMethods = () => {
 
       return true;
     })
-
+    
     console.log(JSON.stringify({filteredMenuData}, null, 2));
 
     setMenuData(filteredMenuData);

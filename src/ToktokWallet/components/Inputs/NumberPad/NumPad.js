@@ -63,13 +63,13 @@ const RowPad = ({first, second, third, onPress, pinCode}) => {
   );
 };
 
-export const NumPad = ({setPinCode, pinCode, buttonColor = null, textColor = null}) => {
+export const NumPad = ({setPinCode, pinCode, buttonColor = null, textColor = null, numberOfBox = 6}) => {
   const onPress = value => {
     if (value == 'remove') {
       setPinCode(oldstate => oldstate.slice(0, -1));
       return;
     }
-    if (pinCode.length != 6) {
+    if (pinCode.length != numberOfBox) {
       setPinCode(oldstate => oldstate + value);
     }
   };

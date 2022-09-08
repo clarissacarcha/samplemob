@@ -147,6 +147,25 @@ export const GET_ENTERPRISE_TRANSACTIONS = gql`
     }
 `;
 
+export const GET_ENTERPRISE_TRANSACTIONS_PAGINATE = gql`
+   query getEnterpriseTransactionsPaginate($input:GetEnterpriseTransactionsPaginateInput){
+        getEnterpriseTransactionsPaginate(input:$input){
+          edges {
+            cursorCreatedAt
+            cursorId
+            node {
+              ${WalletTransactions}
+            }
+          }
+          pageInfo {
+            startCursorId
+            endCursorId
+            hasNextPage
+          }
+        }
+      }
+   `;
+
 export const GET_SEND_MONEY_TRANSACTIONS = gql`
     query {
         getSendMoneyTransactions {
@@ -154,3 +173,22 @@ export const GET_SEND_MONEY_TRANSACTIONS = gql`
         }
     }
 `;
+
+export const GET_SEND_MONEY_TRANSACTIONS_PAGINATE = gql`
+  query getSendMoneyTransactionsPaginate($input:GetTransactionsPaginateInput!){
+    getSendMoneyTransactionsPaginate(input:$input) {
+      edges {
+        cursorId
+        cursorCreatedAt
+        node {
+          ${WalletTransactions}
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        hasNextPage
+      }
+    }
+  }
+`

@@ -22,7 +22,7 @@ const mapDispatchtoProps = dispatch => ({
 export const WalletLandingPage = connect(
   null,
   mapDispatchtoProps,
-)(({refreshing, onRefresh}) => {
+)(({refreshing = false, onRefresh}) => {
   return (
     <View style={styles.container}>
       <ScrollView

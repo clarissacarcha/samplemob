@@ -31,8 +31,12 @@ module.exports = function (plop) {
         default: 'components',
         choices: [
           'components',
+          'components/Inputs',
           'components/Buttons',
           'components/Modal',
+          'components/Modals',
+          'components/Pages',
+          'components/Validator',
           'compositions',
           'compositions/Cart',
           'compositions/Home',
