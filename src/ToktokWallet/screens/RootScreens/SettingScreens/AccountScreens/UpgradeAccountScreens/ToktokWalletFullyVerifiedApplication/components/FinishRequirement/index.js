@@ -60,7 +60,7 @@ export const FinishRequirement = ({finishLabel, btnLabel, onPress, disabled, img
           <Image source={imgSource} style={styles.img} />
           <Text style={[styles.fontBoldStyle,{marginLeft: 15}]}>{headerTitle}</Text>
       </View>
-      <View style={{flexShrink: 1,marginTop: 10}}>
+      <View style={{flexShrink: 1,marginTop: 10,width:'100%'}}>
           <Text style={[styles.fontRegularStyle]}>{finishLabel}</Text>
           {checkVcs?.request && <RequestVideoCallSchedule />}
       </View>
@@ -100,8 +100,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardHeader: {
+    width:"100%",
     flexDirection:"row",
-    alignItems: "center"
+    alignItems: "center",
   },  
   buttonStyle: {
     borderRadius: 5,
