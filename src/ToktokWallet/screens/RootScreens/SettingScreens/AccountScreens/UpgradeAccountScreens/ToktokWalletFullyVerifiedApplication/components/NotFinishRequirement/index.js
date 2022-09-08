@@ -3,21 +3,25 @@ import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_SIZE, FONT_FAMILY: FONT} = CONSTANTS;
 
-export const NotFinishRequirement = ({notFinishLabel, btnLabel, onPress, disabled, imgSource, headerTitle, notFinishComponent }) => {
+export const NotFinishRequirement = ({
+  notFinishLabel,
+  btnLabel,
+  onPress,
+  disabled,
+  imgSource,
+  headerTitle,
+  notFinishComponent,
+}) => {
   return (
     <View style={[styles.cardShadow, styles.cardStyle]}>
       <View style={styles.cardHeader}>
-          <Image source={imgSource} style={styles.img} />
-          <Text style={[styles.fontBoldStyle,{marginLeft: 15}]}>{headerTitle}</Text>
+        <Image source={imgSource} style={styles.img} />
+        <Text style={[styles.fontBoldStyle, {marginLeft: 15}]}>{headerTitle}</Text>
       </View>
-      {
-        notFinishComponent
-        ? notFinishComponent()
-        : <Text style={[styles.fontRegularStyle]}>{notFinishLabel}</Text>
-      }
+      {notFinishComponent ? notFinishComponent() : <Text style={[styles.fontRegularStyle]}>{notFinishLabel}</Text>}
       <TouchableOpacity style={[styles.buttonStyle]} onPress={onPress}>
         <Text style={[styles.btnLabel]}>{btnLabel}</Text>
-      </TouchableOpacity> 
+      </TouchableOpacity>
     </View>
   );
 };
@@ -57,9 +61,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardHeader: {
-    flexDirection:"row",
-    alignItems: "center"
-  },  
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   buttonStyle: {
     borderRadius: 5,
     paddingVertical: 5,
@@ -67,11 +71,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLOR.ORANGE,
     marginTop: 10,
-    alignSelf:"flex-end"
+    alignSelf: 'flex-end',
   },
   img: {
     resizeMode: 'contain',
-    width: 35,
-    height: 35,
+    width: 25,
+    height: 25,
   },
 });

@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {StyleSheet, View, Text, ActivityIndicator , ScrollView} from 'react-native';
+import {StyleSheet, View, Text, ActivityIndicator, ScrollView} from 'react-native';
 //COMPONENTS
 import {CheckIdleState, SomethingWentWrong} from 'toktokwallet/components';
 import {NotFinishRequirement, FinishRequirement} from './components';
@@ -15,12 +15,37 @@ import {bank_icon, schedule_icon} from 'toktokwallet/assets';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_SIZE, FONT_FAMILY: FONT} = CONSTANTS;
 
-const DisplayComponent = ({finishLabel, notFinishLabel, title, btnLabel, onPress, disabled, imgSource, checkVcs, headerTitle, notFinishComponent}) => {
+const DisplayComponent = ({
+  finishLabel,
+  notFinishLabel,
+  title,
+  btnLabel,
+  onPress,
+  disabled,
+  imgSource,
+  checkVcs,
+  headerTitle,
+  notFinishComponent,
+}) => {
   if (disabled) {
-    return <FinishRequirement finishLabel={finishLabel} imgSource={imgSource} checkVcs={checkVcs} headerTitle={headerTitle}/>;
+    return (
+      <FinishRequirement
+        finishLabel={finishLabel}
+        imgSource={imgSource}
+        checkVcs={checkVcs}
+        headerTitle={headerTitle}
+      />
+    );
   }
   return (
-    <NotFinishRequirement notFinishComponent={notFinishComponent} notFinishLabel={notFinishLabel} btnLabel={btnLabel} onPress={onPress} imgSource={imgSource} headerTitle={headerTitle} />
+    <NotFinishRequirement
+      notFinishComponent={notFinishComponent}
+      notFinishLabel={notFinishLabel}
+      btnLabel={btnLabel}
+      onPress={onPress}
+      imgSource={imgSource}
+      headerTitle={headerTitle}
+    />
   );
 };
 export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
@@ -120,11 +145,16 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
         <DisplayComponent
           onPress={redirectLinking} // Navigate here the screen for link bank account
           disabled={isLinkedBankAccount || isPendingLinking}
-          headerTitle={!isLinkedBankAccount ? "Link Account via Fund Transfer" : "Account Linked"}
+          headerTitle={!isLinkedBankAccount ? 'Link Account via Fund Transfer' : 'Account Linked'}
           notFinishLabel="Link your toktokwallet account to your bank account via fund transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified."
-          notFinishComponent={()=> <Text style={[styles.fontRegularStyle,{marginTop: 10,marginBottom: 0}]}>
-            Link your <Text style={{color: "#FDBA1C"}}>toktok</Text><Text style={{color: "#F6841F"}}>wallet</Text> account to your bank account via fund transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified.
-          </Text>}
+          notFinishComponent={() => (
+            <Text style={[styles.fontRegularStyle, {marginTop: 10, marginBottom: 0}]}>
+              Link your <Text style={{color: '#FDBA1C'}}>toktok</Text>
+              <Text style={{color: '#F6841F'}}>wallet</Text> account to your bank account via fund transfer. It is a
+              faster and easier way to verify your account. One successful transfer will automatically upgrade your
+              account from basic to fully verified.
+            </Text>
+          )}
           btnLabel="Link Now"
           finishLabel={
             isLinkedBankAccount
@@ -138,7 +168,13 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
             navigation.navigate('ToktokWalletVideoCallSchedule');
           }}
           disabled={checkVcs.hasVcs}
-          headerTitle={!checkVcs.hasVcs ? "Request Video Call" : checkVcs.isPendingVcs ? "Video Call Requested" : "Video Call Approved"}
+          headerTitle={
+            !checkVcs.hasVcs
+              ? 'Request Video Call'
+              : checkVcs.isPendingVcs
+              ? 'Video Call Requested'
+              : 'Video Call Approved'
+          }
           notFinishLabel="The Customer Service Representative will assess your chosen schedule and contact you within 24hrs for verification and approval of your request for a fully verified account."
           btnLabel="Schedule Now"
           finishLabel={
@@ -164,6 +200,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
     marginBottom: 20,
+    color: '#525252',
   },
   activityIndicator: {
     flex: 1,
