@@ -148,7 +148,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
           headerTitle={!isLinkedBankAccount ? 'Link Account via Fund Transfer' : 'Account Linked'}
           notFinishLabel="Link your toktokwallet account to your bank account via fund transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified."
           notFinishComponent={() => (
-            <Text style={[styles.fontRegularStyle, {marginTop: 10, marginBottom: 0}]}>
+            <Text style={{marginTop: 10, marginBottom: 0}}>
               Link your <Text style={{color: '#FDBA1C'}}>toktok</Text>
               <Text style={{color: '#F6841F'}}>wallet</Text> account to your bank account via fund transfer. It is a
               faster and easier way to verify your account. One successful transfer will automatically upgrade your
