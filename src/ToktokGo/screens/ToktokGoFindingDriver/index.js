@@ -33,6 +33,7 @@ import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {onErrorAppSync} from '../../util';
 import {AlertOverlay} from '../../../components';
 import {useFocusEffect} from '@react-navigation/native';
+import {useAlertGO} from '../../hooks';
 
 const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const {popTo} = route.params;
@@ -49,6 +50,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
   const [driverData, setDriverData] = useState();
+  const alertGO = useAlertGO();
 
   useFocusEffect(
     useCallback(() => {
@@ -207,13 +209,13 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'TRIP_EXPIRED') {
             dispatch({
               type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
@@ -223,7 +225,8 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
             });
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
@@ -244,13 +247,13 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'TRIP_EXPIRED') {
             dispatch({
               type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
@@ -260,7 +263,8 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
             });
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
@@ -277,20 +281,23 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           console.log('ERROR TYPE:', errorType, 'MESSAGE:', message);
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
-            Alert.alert('', JSON.parse(message).message);
+            // Alert.alert('', JSON.parse(message).message);
+            alertGO({message: JSON.parse(message).message});
           } else if (errorType === 'WALLET_INVALID_PIN_CODE') {
-            Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+            // Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+            alertGO({message: `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`});
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
@@ -320,18 +327,20 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message.message);
+            alertGO({message: message.message});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
-            Alert.alert('', JSON.parse(message).message);
+            // Alert.alert('', JSON.parse(message).message);
+            alertGO({message: JSON.parse(message).message});
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
