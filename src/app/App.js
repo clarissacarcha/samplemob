@@ -15,6 +15,7 @@ import {
   // SubscriptionProvider,
 } from '../provider';
 import AlertProvider from '../provider/AlertProvider';
+import {PromptProviderGo} from '../ToktokGo/Provider';
 
 LogBox.ignoreAllLogs();
 
@@ -27,7 +28,9 @@ const App = () => {
           <ApolloProvider>
             <AlertProvider>
               <PromptProvider>
-                <Splash />
+                <PromptProviderGo>
+                  <Splash />
+                </PromptProviderGo>
               </PromptProvider>
             </AlertProvider>
           </ApolloProvider>

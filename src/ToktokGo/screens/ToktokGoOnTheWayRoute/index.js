@@ -47,8 +47,10 @@ import {onErrorAppSync} from '../../util';
 import {useAccount} from 'toktokwallet/hooks';
 import BackgroundTimer from 'react-native-background-timer';
 import CarImage from '../../../assets/images/car1.png';
+import {useAlertGO} from '../../hooks';
 
 const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
+  const alertGO = useAlertGO();
   const {popTo, decodedPolyline} = route.params;
   const {tokwaAccount, getMyAccount} = useAccount();
   const sheetRef = React.useRef(null);
@@ -237,13 +239,13 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'TRIP_EXPIRED') {
             dispatch({
               type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
@@ -253,7 +255,8 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             });
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
@@ -270,15 +273,15 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'CANCELLATION_CHARGE_UNACKNOWLEDGED') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'TRIP_EXPIRED') {
             dispatch({
               type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
@@ -288,7 +291,8 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             });
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
@@ -426,24 +430,27 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
             setViewFailedCancelBookingModal(true);
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
             setViewFailedCancelBookingModal(true);
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
-            Alert.alert('', JSON.parse(message).message);
+            // Alert.alert('', JSON.parse(message).message);
+            alertGO({message: JSON.parse(message).message});
           } else if (errorType === 'WALLET_PIN_CODE_INVALID') {
-            Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+            // Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+            alertGO({message: `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             setViewFailedCancelBookingModal(true);
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
             setViewFailedCancelBookingModal(true);
-            Alert.alert('', message);
+            alertGO({message});
           } else {
             setViewFailedCancelBookingModal(true);
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
