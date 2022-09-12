@@ -31,7 +31,7 @@ const MainComponent = ({navigation, route}) => {
 
   const {user} = useSelector(state => state.session);
   const {getMyAccountLoading, getMyAccount, tokwaAccount} = useAccount({isOnErrorAlert: false});
-  const {firstName, middleName, lastName, mobileNumber} = user.person;
+  const {firstName, middleName, lastName} = tokwaAccount.person;
   const recipientName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
 
   const {amount, setAmountError, email, setEmailError, purpose, setPurpose, providerServiceFee, toktokServiceFee} =
@@ -88,7 +88,7 @@ const MainComponent = ({navigation, route}) => {
     if (isAmountValid && isValidEmail) {
       const transactionDetails = {
         recipientName,
-        recipientMobileNo: mobileNumber,
+        recipientMobileNo: tokwaAccount.mobileNumber,
         email,
         purpose: purpose.trim(),
         providerServiceFee,
@@ -131,7 +131,7 @@ const MainComponent = ({navigation, route}) => {
         keyboardVerticalOffset={Platform.OS === 'ios' && moderateScale(headerHeight + getStatusbarHeight)}>
         <ScrollView>
           <Header route={route} />
-          <OTCPartnerForm route={route} />
+          <OTCPartnerForm route={route} tokwaAccount={tokwaAccount} />
         </ScrollView>
       </KeyboardAvoidingView>
       <View style={styles.buttonContainer}>
