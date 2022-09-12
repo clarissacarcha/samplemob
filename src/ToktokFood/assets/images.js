@@ -79,6 +79,7 @@ export const burger_king = require('./images/sample_banners/burger_king.jpeg');
 export const splash = require('./images/splash.png');
 export const splash_new = require('./images/splash_new.png');
 export const starbucks_banner = require('./images/starbucks_banner.png');
+export const home_bg = require('./images/home-background.png');
 
 // Test Rider
 export const rider1 = require('./images/riders/rider1.png');
