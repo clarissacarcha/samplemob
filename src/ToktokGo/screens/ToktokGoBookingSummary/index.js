@@ -327,7 +327,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           tripInitializePayment({
             variables: {
               input: {
-                tripFareHash: '',
+                tripFareHash: details?.rate?.hash,
               },
             },
           });
