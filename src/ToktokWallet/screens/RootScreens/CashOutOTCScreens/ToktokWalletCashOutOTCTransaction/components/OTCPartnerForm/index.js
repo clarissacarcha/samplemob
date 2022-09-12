@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -16,7 +16,7 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 
 export const OTCPartnerForm = ({route, tokwaAccount}) => {
   const {cashOutProviderFee, maximumAmount} = route.params.otcPartnerDetails;
-  const {firstName, middleName, lastName} = tokwaAccount.person;
+  const {firstName, middleName, lastName, emailAddress} = tokwaAccount.person;
   const recipientName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
   const recipientMobileNo = tokwaAccount.mobileNumber.replace('+63', '');
 
@@ -35,6 +35,10 @@ export const OTCPartnerForm = ({route, tokwaAccount}) => {
     setProviderServiceFee,
     setToktokServiceFee,
   } = useContext(VerifyContext);
+
+  useEffect(()=>{
+    setEmail(emailAddress)
+  },[])
 
   const changeEmail = value => {
     setEmailError('');
