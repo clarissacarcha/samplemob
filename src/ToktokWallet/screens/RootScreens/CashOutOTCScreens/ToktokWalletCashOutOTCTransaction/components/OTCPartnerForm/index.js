@@ -14,12 +14,11 @@ import {MobileNumberInput, CustomTextInput, CustomAmountInput} from 'toktokwalle
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
 
-export const OTCPartnerForm = ({route}) => {
+export const OTCPartnerForm = ({route, tokwaAccount}) => {
   const {cashOutProviderFee, maximumAmount} = route.params.otcPartnerDetails;
-
-  const {firstName, middleName, lastName, mobileNumber} = useSelector(state => state.session.user.person);
+  const {firstName, middleName, lastName} = tokwaAccount.person;
   const recipientName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
-  const recipientMobileNo = mobileNumber.replace('+63', '');
+  const recipientMobileNo = tokwaAccount.mobileNumber.replace('+63', '');
 
   const {
     amount,
