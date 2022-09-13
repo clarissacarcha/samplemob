@@ -26,6 +26,9 @@ const trip = `
       mileageFee
       surgeCharge
       total
+      vouchers{
+        name
+      }
     }
     id
     logs{
