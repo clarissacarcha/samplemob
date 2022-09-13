@@ -18,7 +18,7 @@ export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
       return (
         <View style={{alignItems: 'center'}}>
           <View style={styles.divider} />
-          <ThrottledOpacity delay={500} onPress={() => confirmBooking(index + 1)} key={index}>
+          <ThrottledOpacity delay={4000} onPress={() => confirmBooking(index + 1)} key={index}>
             <Text>{value}</Text>
           </ThrottledOpacity>
           {lastItem && <View style={styles.divider} />}

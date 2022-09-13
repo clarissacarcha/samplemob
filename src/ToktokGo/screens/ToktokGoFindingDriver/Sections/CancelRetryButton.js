@@ -16,7 +16,7 @@ export const CancelRetryButton = ({waitingStatus, initiateCancel, dismissBooking
             <Text style={styles.textStyle}>Cancel</Text>
           </ThrottledOpacity>
 
-          <ThrottledOpacity delay={500} style={styles.retryButtonContainer} onPress={tripRebookFunc}>
+          <ThrottledOpacity delay={4000} style={styles.retryButtonContainer} onPress={tripRebookFunc}>
             <Text style={styles.cancelTextStyle}>Retry</Text>
           </ThrottledOpacity>
         </View>
