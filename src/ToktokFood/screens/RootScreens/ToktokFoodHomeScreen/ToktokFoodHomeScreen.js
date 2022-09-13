@@ -13,8 +13,8 @@ import {Container} from './Styled';
 // Components
 // import Header from 'toktokfood/components/Header';
 // import StyledText from 'toktokfood/components/StyledText';
-import HomeHeader from 'toktokfood/compositions/Home/HomeHeader/HomeHeader';
-
+import HomeHeader from 'toktokfood/compositions/Home/HomeHeader';
+import HomeSearchBar from 'toktokfood/compositions/Home/HomeSearchBar';
 // Hooks
 // import {useUserLocation} from 'toktokfood/hooks';
 
@@ -24,6 +24,7 @@ const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
   return (
     <Container>
       <HomeHeader />
+      <HomeSearchBar />
     </Container>
   );
 };

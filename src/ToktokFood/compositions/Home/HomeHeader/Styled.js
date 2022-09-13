@@ -8,7 +8,7 @@ import {Icon} from 'react-native-elements';
 import ContentLoader from 'react-native-easy-content-loader';
 
 export const Container: ComponentType<any> = styled.View`
-  flex: 1;
+  /* flex: 1; */
 `;
 
 export const AddressContainer: ComponentType<any> = styled.View`
