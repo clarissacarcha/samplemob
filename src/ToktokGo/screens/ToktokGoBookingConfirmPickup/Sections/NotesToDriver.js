@@ -42,7 +42,7 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote, no
       <View style={styles.containerTextInput}>
         <TextInput
           ref={dropDownRef}
-          // value={note}
+          defaultValue={notes.text}
           placeholder="e.g. I have two luggage"
           keyboardType="default"
           onChangeText={value => notesToDriver(value)}
