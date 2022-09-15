@@ -32,6 +32,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const [searchOrigin, setSearchOrigin] = useState(origin?.place?.formattedAddress);
   const [recentSearchDataList, setrecentSearchDataList] = useState([]);
   const [recentDestinationList, setrecentDestinationList] = useState([]);
+  const [loadingAutoComplete, setLoadingAutoComplete] = useState(false);
 
   useEffect(() => {
     async function tempFunction() {
@@ -51,8 +52,12 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     onCompleted: response => {
       console.log('COMPLETED');
       setSearchResponse(response.getPlaceAutocomplete);
+      setLoadingAutoComplete(false);
     },
-    onError: error => console.log('getPlaceAutocomplete', error),
+    onError: error => {
+      setLoadingAutoComplete(false);
+      console.log('getPlaceAutocomplete', error);
+    },
   });
 
   const [getTripDestinations] = useLazyQuery(GET_TRIP_DESTINATIONS, {
@@ -277,6 +282,8 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           setSearchDestination={setSearchDestination}
           setSearchOrigin={setSearchOrigin}
           loading={loading}
+          setLoadingAutoComplete={setLoadingAutoComplete}
+          loadingAutoComplete={loadingAutoComplete}
         />
         {searchResponse?.length == 0 ? (
           <View>
