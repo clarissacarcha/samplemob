@@ -230,6 +230,10 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   );
 
   const onPressRecentSearch = loc => {
+    dispatch({
+      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+      payload: {...route.params.details, noteToDriver: ''},
+    });
     if (route?.params?.voucherData) {
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING_DETAILS',
@@ -246,6 +250,10 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   };
 
   const onPressRecentDestination = loc => {
+    dispatch({
+      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+      payload: {...route.params.details, noteToDriver: ''},
+    });
     if (route?.params?.voucherData) {
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING_DETAILS',
