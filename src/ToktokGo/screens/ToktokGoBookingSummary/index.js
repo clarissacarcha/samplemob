@@ -150,8 +150,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
               setvoucherTextMessage('Daily limit is reached.');
               setvoucherRemovedVisible(true);
             } else {
-              setvoucherTextMessage('Daily limit is reached.');
-              setvoucherRemovedVisible(true);
+              alertGO({message});
             }
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren

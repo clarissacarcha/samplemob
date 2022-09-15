@@ -8,6 +8,7 @@ import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
 import {isEmpty} from 'lodash';
 import {ThrottledOpacity} from '../../../../components_section';
 import {useDispatch} from 'react-redux';
+import {set} from 'react-native-reanimated';
 export const Location = ({
   onChange,
   inputRef,
@@ -19,9 +20,10 @@ export const Location = ({
   setSearchDestination,
   setSearchOrigin,
   loading,
+  setLoadingAutoComplete,
+  loadingAutoComplete,
 }) => {
   const dispatch = useDispatch();
-
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, paddingHorizontal: 16, marginBottom: 15}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -36,7 +38,11 @@ export const Location = ({
               value={titleOrigin}
             />
           ) : (
-            <ThrottledOpacity delay={500} onPress={() => onChangeSelectedInput('P')}>
+            <ThrottledOpacity
+              delay={500}
+              onPress={() => {
+                onChangeSelectedInput('P'), setLoadingAutoComplete(true);
+              }}>
               <Text
                 numberOfLines={1}
                 style={{
@@ -48,20 +54,19 @@ export const Location = ({
               </Text>
             </ThrottledOpacity>
           )}
-          {loading && selectedInput == 'P' ? (
-            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
-          ) : (
-            !isEmpty(titleOrigin) &&
-            selectedInput == 'P' && (
-              <ThrottledOpacity
-                delay={500}
-                onPress={() => {
-                  setSearchOrigin(null);
-                  dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: null});
-                }}>
+          {selectedInput == 'P' && !isEmpty(titleOrigin) && (
+            <ThrottledOpacity
+              delay={500}
+              onPress={() => {
+                setSearchOrigin(null);
+                dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: null});
+              }}>
+              {loadingAutoComplete == true ? (
+                <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+              ) : (
                 <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
-              </ThrottledOpacity>
-            )
+              )}
+            </ThrottledOpacity>
           )}
         </View>
       </View>
