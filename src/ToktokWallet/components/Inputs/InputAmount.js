@@ -17,7 +17,7 @@ export const InputAmount = ({
   const [isFocus, setIsFocus] = useState(false);
 
   return (
-    <View style={[styles.input, {borderWidth: 1, borderColor: errorMessage == '' ? 'transparent' : COLOR.RED}]}>
+    <View style={[styles.input, {borderWidth: 1, borderColor: errorMessage == '' ? 'transparent' : '#ED3A19'}]}>
       {currency && (
         <View style={{borderRightWidth: 1, borderRightColor: '#CCCCCC', justifyContent: 'center'}}>
           <Text

@@ -28,6 +28,7 @@ import {RecentDestinations} from './Sections/RecentDestinations';
 import AsyncStorage from '@react-native-community/async-storage';
 import {FlatList} from 'react-native-gesture-handler';
 import {onError} from '../../../util/ErrorUtility';
+import {useAlertGO} from '../../hooks';
 
 const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   // const {popTo, selectInput} = route.params;
@@ -40,6 +41,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   const [recentSearchDataList, setrecentSearchDataList] = useState([]);
   const [recentDestinationList, setrecentDestinationList] = useState([]);
   const [showNotEnoughBalanceModal, setShowNotEnoughBalanceModal] = useState(false);
+  const alertGO = useAlertGO();
 
   useEffect(() => {
     const subscribe = navigation.addListener('focus', async () => {
@@ -102,20 +104,23 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
-            Alert.alert('', JSON.parse(message).message);
+            // Alert.alert('', JSON.parse(message).message);
+            alertGO({message: JSON.parse(message).message});
           } else if (errorType === 'WALLET_PIN_CODE_INVALID') {
-            Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+            // Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+            alertGO({message: `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
@@ -159,16 +164,17 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           console.log(errorType);
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
             setShowNotEnoughBalanceModal(true);
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }

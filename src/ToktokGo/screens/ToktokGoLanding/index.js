@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 import {onErrorAppSync} from '../../util';
 import {useAccount} from 'toktokwallet/hooks';
+import {useAlertGO} from '../../hooks';
 
 const ToktokGoLanding = ({navigation, session, route, constants}) => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
 
   const currentBookingActions = ['ACCEPTED', 'ARRIVED', 'PICKED_UP', 'COMPLETED'];
   const bookingDetailsActions = ['CANCELLED', 'EXPIRED'];
+  const alertGO = useAlertGO();
 
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
@@ -69,7 +71,7 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
       const {graphQLErrors, networkError} = error;
       console.log(graphQLErrors);
       if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+        alertGO({message: 'Network error occurred. Please check your internet connection.'});
       } else if (graphQLErrors.length > 0) {
         navigation.replace('ToktokGoMaintance');
       }

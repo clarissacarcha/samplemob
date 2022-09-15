@@ -1,8 +1,8 @@
 import React, {useState, useContext} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList, TextInput, Image} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import CONSTANTS from 'common/res/constants';
 import {ContextChannelForm} from '../../components';
-import {CustomRadioButton} from 'toktokwallet/components';
+import {CustomRadioButton, MobileNumberInput} from 'toktokwallet/components';
 import {YellowButton} from 'src/revamp';
 const {FONT_FAMILY: FONT, FONT_SIZE, COLOR, SHADOW, SIZE} = CONSTANTS;
 
@@ -12,8 +12,8 @@ const DAY_LIST = [
 ];
 
 const TIME_LIST = [
-  {label: 'Morning', description: '8:00 AM - 12:00 PM', value: 0},
-  {label: 'Afternoon', description: '1:00 PM - 5:00 PM', value: 1},
+  {label: 'Morning', description: '08:00 AM - 12:00 PM', value: 0},
+  {label: 'Afternoon', description: '01:00 PM - 5:00 PM', value: 1},
 ];
 
 export const modifyPlaceholderAccordingToChannel = channelName => {
@@ -82,9 +82,9 @@ export const ChannelForm = ({data, setPepInfo, pepInfo}) => {
   const changeNumberOrLink = value => {
     if (isMobileNumber) {
       let mobile = value.replace(/[^0-9]/g, '');
-      if (mobile.length > 11) return;
-      if (value[0] != '0' || value[1] != '9') {
-        setNumberOrLink('09');
+      if (mobile.length > 10) return;
+      if (value[0] !== '9') {
+        setNumberOrLink('9');
       } else {
         setNumberOrLink(mobile);
       }
@@ -95,21 +95,14 @@ export const ChannelForm = ({data, setPepInfo, pepInfo}) => {
 
   return (
     <View style={styles.containerShadow}>
-      <TextInput
+      <MobileNumberInput
         keyboardType={isMobileNumber ? 'number-pad' : 'default'}
         value={numberOrLink}
         placeholder={`Enter ${placeholder}`}
-        style={[styles.input, {borderWidth: 1, borderColor: errorMessage == '' ? 'transparent' : COLOR.RED}]}
         onChangeText={changeNumberOrLink}
-        returnKeyType="done"
-        placeholderTextColor="#9E9E9E"
-        maxLength={isMobileNumber ? 11 : null}
+        maxLength={isMobileNumber ? 10 : null}
+        errorMessage={errorMessage}
       />
-      {errorMessage != '' && (
-        <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S, color: COLOR.RED, marginTop: 5}}>
-          {errorMessage}
-        </Text>
-      )}
       <Text style={{marginTop: 15, marginBottom: 5, fontFamily: FONT.SEMI_BOLD, fontSize: FONT_SIZE.M}}>
         Pick Day and Time
       </Text>

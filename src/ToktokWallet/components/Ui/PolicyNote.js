@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, Text} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image, Text, Platform} from 'react-native';
 
 //HELPER
 import {moderateScale} from 'toktokwallet/helper';
@@ -32,12 +32,12 @@ const styles = StyleSheet.create({
   },
   noteText: {
     color: '#F6841F',
-    fontSize: FONT_SIZE.S,
+    fontSize: FONT_SIZE.M,
     marginHorizontal: moderateScale(10),
   },
   noteLogo: {
     height: moderateScale(12),
     width: moderateScale(12),
-    marginTop: Platform.OS == 'android' ? moderateScale(3) : 0,
+    marginTop: Platform.OS === 'android' ? moderateScale(3) : 0,
   },
 });
