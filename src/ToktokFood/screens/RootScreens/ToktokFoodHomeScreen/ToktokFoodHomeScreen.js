@@ -15,6 +15,7 @@ import {Container} from './Styled';
 // import StyledText from 'toktokfood/components/StyledText';
 import HomeHeader from 'toktokfood/compositions/Home/HomeHeader';
 import HomeSearchBar from 'toktokfood/compositions/Home/HomeSearchBar';
+import HomeFab from 'toktokfood/compositions/Home/HomeFab';
 // Hooks
 // import {useUserLocation} from 'toktokfood/hooks';
 
@@ -25,6 +26,7 @@ const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
     <Container>
       <HomeHeader />
       <HomeSearchBar />
+      <HomeFab />
     </Container>
   );
 };
