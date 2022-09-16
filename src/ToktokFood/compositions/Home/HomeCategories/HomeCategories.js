@@ -34,8 +34,6 @@ const HomeCategories = (props: PropsType): React$Node => {
     fetchPolicy: 'network-only',
   });
 
-  console.log(data);
-
   const renderItem = ({item}) => {
     let image = item.filename ? {uri: item.filename} : fastfood;
     return (

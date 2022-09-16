@@ -4,9 +4,10 @@
  */
 
 import React, {useState} from 'react';
+import {Avatar, withBadge} from 'react-native-elements';
 
 import type {PropsType} from './types';
-import {CloseIcon, FAB, FABIcon} from './Styled';
+import {BadgeContainer, CloseIcon, FAB, FABIcon} from './Styled';
 
 // Assets
 import {fab_activities, fab_food, fab_notification, fab_wallet} from 'toktokfood/assets/images';
@@ -20,11 +21,22 @@ const fabItems = [
 const HomeFab = (props: PropsType): React$Node => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const BadgedIcon = withBadge(' ')(Avatar);
+
+  const Badge = () => (
+    <BadgeContainer>
+      <BadgedIcon imageProps={{resizeMode: 'contain'}} source={fab_food} size="small" />
+      {/* <Avatar rounded imageProps={{resizeMode: 'contain'}} source={fab_food} size="small" /> */}
+      {/* <IconBadge /> */}
+      {/* <Badge status="success" /> */}
+    </BadgeContainer>
+  );
+
   const renderItemIcon = item => <FABIcon source={item.image} />;
 
   const renderMenuIcon = menuState => {
     const {dimmerActive} = menuState;
-    return dimmerActive ? <CloseIcon /> : <FABIcon source={fab_food} />;
+    return dimmerActive ? <CloseIcon /> : <Badge />;
   };
 
   return (

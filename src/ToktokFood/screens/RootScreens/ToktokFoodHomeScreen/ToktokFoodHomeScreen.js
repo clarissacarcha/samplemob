@@ -4,19 +4,17 @@
  */
 
 import React from 'react';
-// import {useDispatch, useSelector} from 'react-redux';
 // import {useTheme} from 'styled-components';
 
 import type {PropsType} from './types';
-import {Container} from './Styled';
+import {Container, ScrollContainer} from './Styled';
 
 // Components
-// import Header from 'toktokfood/components/Header';
-// import StyledText from 'toktokfood/components/StyledText';
 import HomeHeader from 'toktokfood/compositions/Home/HomeHeader';
 import HomeSearchBar from 'toktokfood/compositions/Home/HomeSearchBar';
 import HomeFab from 'toktokfood/compositions/Home/HomeFab';
 import HomeCategories from 'toktokfood/compositions/Home/HomeCategories';
+import HomeBanner from 'toktokfood/compositions/Home/HomeBanner/HomeBanner';
 // Hooks
 // import {useUserLocation} from 'toktokfood/hooks';
 
@@ -25,9 +23,13 @@ const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
 
   return (
     <Container>
-      <HomeHeader />
-      <HomeSearchBar />
-      <HomeCategories />
+      <ScrollContainer>
+        <HomeHeader />
+        <HomeSearchBar />
+        <HomeBanner />
+        <HomeCategories />
+      </ScrollContainer>
+
       <HomeFab />
     </Container>
   );

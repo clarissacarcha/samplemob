@@ -12,6 +12,9 @@ import {getDeviceWidth, scale} from 'toktokfood/helper/scale';
 
 export const Container: ComponentType<any> = styled.View`
   padding-horizontal: ${scale(15)};
+  background-color: ${props => props.theme.color.white};
+  border-width: 1px;
+  margin-bottom: 10px;
 `;
 
 export const TitleContainer: ComponentType<any> = styled.View`
