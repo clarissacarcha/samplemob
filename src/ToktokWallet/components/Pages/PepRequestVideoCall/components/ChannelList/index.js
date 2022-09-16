@@ -4,9 +4,17 @@ import {HeaderBack, HeaderTitle} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 import {ChannelForm, ContextChannelForm} from '../../components';
 import {YellowButton} from 'src/revamp';
-import {messenger, skype, telegram, viber, whatsApp} from 'toktokwallet/assets/icons/contacts-platform';
+import {messenger, skype, telegram, viber, whatsApp, phone} from 'toktokwallet/assets/icons/contacts-platform';
 
-const staticLogo = [viber, whatsApp, telegram, skype, messenger];
+// const staticLogo = [viber, whatsApp, telegram, skype, messenger];
+const staticLogo = {
+  "Viber": viber,
+  "Whats App": whatsApp,
+  "Telegram": telegram,
+  "Skype": skype,
+  "Messenger": messenger,
+  "Phone Call": phone,
+}
 
 const {FONT_FAMILY: FONT, FONT_SIZE, COLOR, SHADOW, SIZE} = CONSTANTS;
 
@@ -25,7 +33,7 @@ export const ChannelList = ({item, onPress, index, setPepInfo, pepInfo}) => {
     <View style={{marginBottom: 15}}>
       <TouchableOpacity activeOpacity={1} style={[styles.cardShadow, borderColor]} onPress={onItemPress}>
         <View style={{flexDirection: 'row', alignItems: 'center', height: SIZE.FORM_HEIGHT, paddingHorizontal: 10}}>
-          <Image source={staticLogo[index]} style={{resizeMode: 'contain', height: 30, width: 30}} />
+          <Image source={staticLogo[item.channelName]} style={{resizeMode: 'contain', height: 30, width: 30}} />
           <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.SEMI_BOLD, paddingHorizontal: 16}}>{channelName}</Text>
         </View>
       </TouchableOpacity>

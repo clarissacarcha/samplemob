@@ -16,7 +16,7 @@ export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
     return showSeatsArray.map((value, index) => {
       const lastItem = index == showSeatsArray.length - 1 ? true : false;
       return (
-        <View style={{alignItems: 'center'}}>
+        <View style={{alignItems: 'center'}} key={index}>
           <View style={styles.divider} />
           <ThrottledOpacity delay={4000} onPress={() => confirmBooking(index + 1)} key={index}>
             <Text>{value}</Text>
