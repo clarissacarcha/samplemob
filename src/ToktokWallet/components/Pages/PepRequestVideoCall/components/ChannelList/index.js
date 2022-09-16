@@ -4,7 +4,7 @@ import {HeaderBack, HeaderTitle} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 import {ChannelForm, ContextChannelForm} from '../../components';
 import {YellowButton} from 'src/revamp';
-import {messenger, skype, telegram, viber, whatsApp} from 'toktokwallet/assets/icons/contacts-platform';
+import {messenger, skype, telegram, viber, whatsApp, phone} from 'toktokwallet/assets/icons/contacts-platform';
 
 // const staticLogo = [viber, whatsApp, telegram, skype, messenger];
 const staticLogo = {
@@ -13,7 +13,7 @@ const staticLogo = {
   "Telegram": telegram,
   "Skype": skype,
   "Messenger": messenger,
-  "Phone Call": null,
+  "Phone Call": phone,
 }
 
 const {FONT_FAMILY: FONT, FONT_SIZE, COLOR, SHADOW, SIZE} = CONSTANTS;
