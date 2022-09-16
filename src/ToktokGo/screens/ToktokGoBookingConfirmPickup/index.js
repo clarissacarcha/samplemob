@@ -30,7 +30,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const [initialRegionChange, setInitialRegionChange] = useState(!mapRegion.latitude ? false : true);
   const [note, setNote] = useState('');
   const [notes, setNotes] = useState({
-    text: '',
+    text: details?.noteToDriver ? details.noteToDriver : '',
     textLength: 0,
   });
   const notesToDriver = text => {
@@ -67,6 +67,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       });
       if (!destination?.place?.formattedAddress) {
         navigation.pop();
+        dispatch({type: 'SET_TOKTOKGO_BOOKING_DETAILS', payload: {...details, noteToDriver: notes.text}});
         navigation.push('ToktokGoBookingSelectLocations', {
           popTo: 1,
         });
