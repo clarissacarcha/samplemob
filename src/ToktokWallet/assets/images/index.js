@@ -41,3 +41,7 @@ export const kyc_intructions = {
   selfie_with_id_wrong: require('./kyc-instructions/selfie-with-id-wrong.png'),
   selfie_wrong: require('./kyc-instructions/selfie-wrong.png'),
 };
+
+export const cash_in = {
+  jc_wallet: require('./cash-in-providers/jcwallet.png'),
+};

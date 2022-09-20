@@ -27,13 +27,13 @@ const renderDetails = ({details}) => {
 };
 
 const Details = ({transaction, visible, setVisible}) => {
-  const {name, phrase, details, amount, refNo, refDate, status, requestNo} = transaction;
+  const {name, phrase, details, amount, refDate, status, serviceRefNo, tokwaRefNo} = transaction;
 
   return (
     <TransactionModal visible={visible} setVisible={setVisible}>
       <View>
         <Text style={{fontFamily: FONT.BOLD, fontSize: moderateScale(18)}}>{name}</Text>
-        <Text style={styles.labelText}>{phrase}</Text>
+        <Text style={styles.labelText}>Cash In {phrase}</Text>
         {renderDetails({details})}
         <View style={{marginTop: 15}}>
           <Text style={styles.labelText}>
@@ -42,14 +42,14 @@ const Details = ({transaction, visible, setVisible}) => {
           <Text style={styles.labelText}>
             <Text style={{fontFamily: FONT.BOLD}}>Amount:</Text> {amount}
           </Text>
-          {requestNo && (
+          {serviceRefNo && (
             <Text style={styles.labelText}>
-              <Text style={{fontFamily: FONT.BOLD}}>Request Number:</Text> {requestNo}
+              <Text style={{fontFamily: FONT.BOLD}}>Service Reference Number:</Text> {serviceRefNo}
             </Text>
           )}
-          {refNo && (
+          {tokwaRefNo && (
             <Text style={styles.labelText}>
-              <Text style={{fontFamily: FONT.BOLD}}>Service Reference Number:</Text> {refNo}
+              <Text style={{fontFamily: FONT.BOLD}}>Toktokwallet Reference Number:</Text> {tokwaRefNo}
             </Text>
           )}
           {refDate && (

@@ -22,7 +22,7 @@ export const HeaderBack = ({onBack, color = '#F6841F', label, styleContainer = {
   );
 
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.backContainer, styleContainer]}>
+    <TouchableOpacity hitSlop={styles.hitSlop} onPress={onPress} style={[styles.backContainer, styleContainer]}>
       <FIcon5 name="chevron-left" color={color} size={moderateScale(16)} />
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
@@ -40,5 +40,11 @@ const styles = StyleSheet.create({
     fontFamily: FONT.BOLD,
     fontSize: moderateScale(14),
     marginLeft: moderateScale(5),
+  },
+  hitSlop: {
+    top: moderateScale(10),
+    bottom: moderateScale(10),
+    left: moderateScale(10),
+    right: moderateScale(10),
   },
 });
