@@ -27,7 +27,7 @@ const renderDetails = ({details}) => {
 };
 
 const Details = ({transaction, visible, setVisible}) => {
-  const {name, phrase, details, amount, refDate, status, serviceRefNo} = transaction;
+  const {name, phrase, details, amount, refDate, status, serviceRefNo, tokwaRefNo} = transaction;
 
   return (
     <TransactionModal visible={visible} setVisible={setVisible}>
@@ -45,6 +45,11 @@ const Details = ({transaction, visible, setVisible}) => {
           {serviceRefNo && (
             <Text style={styles.labelText}>
               <Text style={{fontFamily: FONT.BOLD}}>Service Reference Number:</Text> {serviceRefNo}
+            </Text>
+          )}
+          {tokwaRefNo && (
+            <Text style={styles.labelText}>
+              <Text style={{fontFamily: FONT.BOLD}}>Toktokwallet Reference Number:</Text> {tokwaRefNo}
             </Text>
           )}
           {refDate && (

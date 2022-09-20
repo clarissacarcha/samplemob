@@ -46,6 +46,7 @@ export const CashInLog = ({item, tokwaAccount, index, data}) => {
 
   const transaction = item?.node?.transaction;
   const serviceRefNo = item?.node?.referenceNumber;
+  const tokwaRefNo = transaction?.refNo;
   const refDate = transaction
     ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
     : moment(item?.node?.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
@@ -62,6 +63,7 @@ export const CashInLog = ({item, tokwaAccount, index, data}) => {
       amount: transactionAmount,
       status,
       details: item?.node?.details,
+      tokwaRefNo,
     });
     setOpenModal(true);
   };
@@ -74,7 +76,7 @@ export const CashInLog = ({item, tokwaAccount, index, data}) => {
       {!!upperText && <Text style={styles.dayTitle}>{upperText}</Text>}
       <TouchableOpacity style={styles.transaction} onPress={onthrottledPress}>
         <View style={styles.transactionDetails}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Reference #{serviceRefNo}</Text>
+          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Service Reference Number {serviceRefNo}</Text>
           {/* <Text style={{color: '#909294', fontSize: FONT_SIZE.S, marginTop: 0, fontFamily: FONT.REGULAR}}>
             {status}
           </Text> */}
