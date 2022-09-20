@@ -74,9 +74,9 @@ export const ToktokWalletPayPandaWebView = ({navigation, route}) => {
 
   useEffect(() => {
     if (mounted && donetransaction) {
-      navigation.navigate('ToktokWalletDpCashInReceipt', {transactionDetails: cashInLogParams});
+      navigation.replace('ToktokWalletDpCashInReceipt', {transactionDetails: cashInLogParams, onCashIn});
     }
-  }, [cashInLogParams, donetransaction, mounted, navigation]);
+  }, [cashInLogParams, donetransaction, mounted, navigation, onCashIn]);
 
   const LoadingIndicator = () => (
     <View
