@@ -64,10 +64,7 @@ export const LoadCategory = ({navigation, activeCategory, activeTab}) => {
   const prompt = usePrompt();
   const {user} = useSelector(state => state.session);
   const formattedMobile = user?.username.replace('+63', '0');
-  const tooltipWidth = moderateScale(
-    width - (Platform.OS === 'android' ? moderateScale(16 + 20) : moderateScale(16 + 20)),
-  );
-
+  const tooltipWidth = width - 36;
   const [getLoadCategoryNetworks, {loading}] = useLazyQuery(GET_LOAD_CATEGORY_NETWORKS, {
     fetchPolicy: 'network-only',
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
