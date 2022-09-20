@@ -1,3 +1,4 @@
+import normalize from 'react-native-normalize';
 const COLOR = {
   WHITE: '#FFFFFF', // View backgroundColor
   LIGHT: '#F7F7FA', // Form backgroundColor and item separator
@@ -27,11 +28,11 @@ const FONT_FAMILY = {
 };
 
 const FONT_SIZE = {
-  XS: 9,
-  S: 11,
-  M: 13,
-  L: 15,
-  XL: 17,
+  XS: normalize(9),
+  S: normalize(11),
+  M: normalize(13),
+  L: normalize(15),
+  XL: normalize(17),
 };
 
 export const SIZE = {

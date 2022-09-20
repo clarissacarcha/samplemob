@@ -10,13 +10,17 @@ export const onError = error => {
   if (networkError) {
     Alert.alert('', 'Network error occurred. Please check your internet connection.');
   } else if (graphQLErrors.length > 0) {
-    graphQLErrors.map(({message, locations, path, code}) => {
+    graphQLErrors.map(({message, locations, path, code, errorType}) => {
       if (code === 'INTERNAL_SERVER_ERROR') {
         alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
       } else if (code === 'USER_INPUT_ERROR') {
         alertGO({message});
       } else if (code === 'BAD_USER_INPUT') {
-        alertGO({message});
+        if (errorType === 'AREA_UNSERVICEABLE') {
+          console.log('ERRRRROOOORRRR');
+        } else {
+          alertGO({message});
+        }
       } else if (code === 'AUTHENTICATION_ERROR') {
         // Do Nothing. Error handling should be done on the scren
       } else {
