@@ -1,30 +1,20 @@
 import React, {useContext, useEffect, useState, useRef} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Dimensions,
-  StatusBar,
-  BackHandler,
-  ImageBackground,
-  Platform,
-} from 'react-native';
-import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
-import ViewShot, {captureScreen, releaseCapture} from 'react-native-view-shot';
-import {useHeaderHeight} from '@react-navigation/stack';
+import {View, StyleSheet, ScrollView, Dimensions, ImageBackground, Platform} from 'react-native';
+import ViewShot from 'react-native-view-shot';
 import CONSTANTS from 'common/res/constants';
+import {useAccount} from 'toktokwallet/hooks';
+
+//GRAPHQL
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+import {GET_WALLET} from 'toktokwallet/graphql';
+import {useLazyQuery} from '@apollo/react-hooks';
 
 //COMPONENTS
 import {OrangeButton, HeaderTitleRevamp, HeaderDownloadReceipt} from 'toktokwallet/components';
-import {HeaderBack, HeaderTitle} from 'src/revamp';
 import {Header, ReceiptDetails} from './components';
 
 //UTIL
-import {moderateScale, numberFormat, getStatusbarHeight} from 'toktokwallet/helper';
-const {width, height} = Dimensions.get('window');
+import {moderateScale} from 'toktokwallet/helper';
 
 //FONTS & COLORS & IMAGES
 import LinearGradient from 'toktokwallet/assets/images/screen-bg.png';
@@ -57,6 +47,8 @@ const ReceiptDownload = ({route, onCapturingScreen}) => {
 export const ToktokWalletDpCashInReceipt = ({navigation, route}) => {
   const [onCapturingScreen, setOnCapturingScreen] = useState(false);
   const viewshotRef = useRef();
+  const {refreshWallet} = useAccount();
+  const onCashIn = route.params.onCashIn;
 
   navigation.setOptions({
     headerLeft: () => null,
@@ -71,6 +63,29 @@ export const ToktokWalletDpCashInReceipt = ({navigation, route}) => {
       />
     ),
   });
+
+  const [getWallet] = useLazyQuery(GET_WALLET, {
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: error => onErrorAlert({alert, error}),
+    onCompleted: ({getWallet}) => {
+      refreshWallet();
+      onCashIn({
+        balance: getWallet.totalBalance,
+      });
+      return navigation.pop(4);
+    },
+  });
+
+  const Proceed = () => {
+    // navigation.pop(4)
+    if (onCashIn) {
+      getWallet();
+    } else {
+      navigation.navigate('ToktokWalletHomePage');
+      navigation.replace('ToktokWalletHomePage');
+    }
+  };
 
   return (
     <>
@@ -90,7 +105,7 @@ export const ToktokWalletDpCashInReceipt = ({navigation, route}) => {
         </ScrollView>
       </ImageBackground>
       <View style={styles.buttonContainer}>
-        <OrangeButton label="OK" onPress={() => navigation.navigate('ToktokWalletHomePage')} />
+        <OrangeButton label="OK" onPress={Proceed} />
       </View>
     </>
   );
