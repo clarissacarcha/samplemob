@@ -15,8 +15,9 @@ import DestinationBC from '../../../assets/toktokgo/destination4.png';
 import {useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../helper';
 import {ThrottledHighlight} from '../../../components_section';
-import {onErrorAppSync} from '../../util';
-import {onError} from '../../../util/ErrorUtility';
+import {onErrorAppSync, onError} from '../../util';
+// import {onError} from '../../../util/ErrorUtility';
+import {NoRecordFound} from './Components';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
@@ -33,6 +34,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const [recentSearchDataList, setrecentSearchDataList] = useState([]);
   const [recentDestinationList, setrecentDestinationList] = useState([]);
   const [loadingAutoComplete, setLoadingAutoComplete] = useState(false);
+  const [noRecordVisible, setNoRecordVisible] = useState(false);
 
   useEffect(() => {
     async function tempFunction() {
@@ -50,12 +52,19 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log('COMPLETED');
-      setSearchResponse(response.getPlaceAutocomplete);
-      setLoadingAutoComplete(false);
+      if (response.getPlaceAutocomplete.length == 0) {
+        setNoRecordVisible(true);
+      } else {
+        console.log('COMPLETED');
+        setNoRecordVisible(false);
+        setSearchResponse(response.getPlaceAutocomplete);
+        setLoadingAutoComplete(false);
+        console.log(response);
+      }
     },
     onError: error => {
       setLoadingAutoComplete(false);
+      setNoRecordVisible(false);
       console.log('getPlaceAutocomplete', error);
     },
   });
@@ -309,25 +318,31 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
               <View>
                 {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
                   <View>
-                    {recentSearchDataList.length == 0 ? null : (
-                      <FrequentlyUsed
-                        navigation={navigation}
-                        popTo={popTo}
-                        recentSearchDataList={recentSearchDataList}
-                        onPressRecentSearch={onPressRecentSearch}
-                      />
-                    )}
-                    {recentDestinationList.length == 0 ? null : (
+                    {noRecordVisible == true ? (
+                      <NoRecordFound />
+                    ) : (
                       <View>
-                        {recentSearchDataList.length != 0 && (
-                          <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+                        {recentSearchDataList.length == 0 ? null : (
+                          <FrequentlyUsed
+                            navigation={navigation}
+                            popTo={popTo}
+                            recentSearchDataList={recentSearchDataList}
+                            onPressRecentSearch={onPressRecentSearch}
+                          />
                         )}
-                        <SavedLocations
-                          navigation={navigation}
-                          popTo={popTo}
-                          recentDestinationList={recentDestinationList}
-                          onPressRecentDestination={onPressRecentDestination}
-                        />
+                        {recentDestinationList.length == 0 ? null : (
+                          <View>
+                            {recentSearchDataList.length != 0 && (
+                              <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+                            )}
+                            <SavedLocations
+                              navigation={navigation}
+                              popTo={popTo}
+                              recentDestinationList={recentDestinationList}
+                              onPressRecentDestination={onPressRecentDestination}
+                            />
+                          </View>
+                        )}
                       </View>
                     )}
                   </View>
