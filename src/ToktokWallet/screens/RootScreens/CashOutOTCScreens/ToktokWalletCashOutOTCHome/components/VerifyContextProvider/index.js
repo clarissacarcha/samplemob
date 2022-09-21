@@ -1,45 +1,47 @@
 import React, {createContext, useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import _ from 'lodash';
 
 //GRAPHQL & HOOKS
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CASH_OUT_PROVIDER_PARTNERS} from 'toktokwallet/graphql';
+import {GET_CASH_OUT_PROVIDER_PARTNERS_HIGHLIGHTED} from 'toktokwallet/graphql';
 
 export const VerifyContext = createContext();
 const {Provider} = VerifyContext;
 
-const citiesList = [];
-
 export const VerifyContextProvider = ({children}) => {
-  const [cashOutProviderPartners, setCashOutProviderPartners] = useState([]);
+  const [cashOutProviderPartnersHighlighted, setCashOutProviderPartnersHighlighted] = useState([]);
 
   const [
-    getCashOutProviderPartners,
-    {loading: getCashOutProviderPartnersLoading, error: getCashOutProviderPartnersError},
-  ] = useLazyQuery(GET_CASH_OUT_PROVIDER_PARTNERS, {
+    getCashOutProviderPartnersHighlighted,
+    {loading: getHighlightedPartnersLoading, error: getHighlightedPartnersError},
+  ] = useLazyQuery(GET_CASH_OUT_PROVIDER_PARTNERS_HIGHLIGHTED, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
       // setRefreshing(false);
       console.log(error);
     },
-    onCompleted: ({getCashOutProviderPartners}) => {
-      setCashOutProviderPartners(getCashOutProviderPartners);
+    onCompleted: data => {
+      const groupData = _(data.getCashOutProviderPartnersHighlighted)
+        .sortBy(item => item.description)
+        .groupBy(item => (item.category === 2 ? 'Bank Partners' : 'Non-bank Partners'))
+        .value();
+      setCashOutProviderPartnersHighlighted([groupData]);
     },
   });
 
   useEffect(() => {
-    getCashOutProviderPartners();
-  }, []);
+    getCashOutProviderPartnersHighlighted();
+  }, [getCashOutProviderPartnersHighlighted]);
 
   return (
     <Provider
       value={{
-        cashOutProviderPartners,
-        getCashOutProviderPartners,
-        getCashOutProviderPartnersLoading,
-        getCashOutProviderPartnersError,
+        cashOutProviderPartnersHighlighted,
+        getCashOutProviderPartnersHighlighted,
+        getHighlightedPartnersLoading,
+        getHighlightedPartnersError,
       }}>
       {children}
     </Provider>

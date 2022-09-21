@@ -55,7 +55,7 @@ const MainComponent = ({navigation, route}) => {
   const checkAmount = () => {
     let error = amount === '' ? 'This is a required field' : '';
     if (+amount < 1) {
-      error = 'The minimum amount is ₱1';
+      error = 'The minimum amount allowed to cash out is ₱1';
     }
     if (error === '') {
       return checkInsufficientBalance();
@@ -67,12 +67,12 @@ const MainComponent = ({navigation, route}) => {
   const checkInsufficientBalance = () => {
     let totalServiceFee = parseFloat(toktokServiceFee) + parseFloat(providerServiceFee);
     let totalAmount = totalServiceFee + parseFloat(amount);
-    let isInsufficientBalance = parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.balance);
+    let isInsufficientBalance = parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.transferableBalance);
     let isMaxAmount = parseFloat(amount) > parseFloat(maximumAmount);
     let error = '';
 
     if (isMaxAmount) {
-      error = `The maximum amount is up to ₱${numberFormat(maximumAmount).replace('.00', '')} only`;
+      error = `The maximum amount allowed to cash out is up to ₱${numberFormat(maximumAmount).replace('.00', '')}`;
     } else if (isInsufficientBalance) {
       error = `You have insufficient balance. ₱${totalServiceFee} service fee is added to this transaction. Kindly cash in or edit the amount.`;
     } else {

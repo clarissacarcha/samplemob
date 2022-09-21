@@ -1,34 +1,33 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {Dimensions, StyleSheet, Text, View, ImageBackground} from 'react-native';
+import React, {useContext} from 'react';
+import {StyleSheet, ImageBackground} from 'react-native';
 
 //COMPONENTS
-import {HeaderBack, HeaderTitleRevamp, LoadingIndicator, SomethingWentWrong} from 'toktokwallet/components';
-import {OTCPartner, TransferableAndNonTransferableBalance, VerifyContext, VerifyContextProvider} from './components';
-
-//GRAPHQL & HOOKS
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CASH_OUT_PROVIDER_PARTNERS} from 'toktokwallet/graphql';
+import {
+  HeaderBack,
+  HeaderTitleRevamp,
+  TransferableAndNonTransferableBalance,
+  SomethingWentWrong,
+} from 'toktokwallet/components';
+import {OTCPartner, VerifyContext, VerifyContextProvider} from './components';
 
 //HELPER
 import {moderateScale} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
-const {height, width} = Dimensions.get('window');
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 //IMAGES
 import {backgrounds} from 'toktokwallet/assets';
 
 const MainComponent = ({navigation}) => {
-  const {getCashOutProviderPartnersError, getCashOutProviderPartners} = useContext(VerifyContext);
+  const {getHighlightedPartnersError, getCashOutProviderPartnersHighlighted} = useContext(VerifyContext);
 
-  if (getCashOutProviderPartnersError) {
-    return <SomethingWentWrong onRefetch={getCashOutProviderPartners} error={getCashOutProviderPartnersError} />;
+  if (getHighlightedPartnersError) {
+    return <SomethingWentWrong onRefetch={getCashOutProviderPartnersHighlighted} error={getHighlightedPartnersError} />;
   }
   return (
     <ImageBackground style={styles.container} source={backgrounds.gradient_bg} resizeMode="cover">
       <TransferableAndNonTransferableBalance />
-      <OTCPartner />
+      <OTCPartner navigation={navigation} />
     </ImageBackground>
   );
 };
@@ -41,7 +40,7 @@ export const ToktokWalletCashOutOTCHome = ({navigation}) => {
 
   return (
     <VerifyContextProvider>
-      <MainComponent />
+      <MainComponent navigation={navigation} />
     </VerifyContextProvider>
   );
 };
