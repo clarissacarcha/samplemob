@@ -37,6 +37,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const [noRecordVisible, setNoRecordVisible] = useState(false);
   const [serviceableAreVisible, setServiceableAreVisible] = useState(false);
   const [serviceableAreaScreen, setServiceableAreaScreen] = useState(false);
+  const [serviceableAreaList, setServiceableAreaList] = useState('');
 
   useEffect(() => {
     async function tempFunction() {
@@ -97,7 +98,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       if (networkError) {
         alertGO({message: 'Network error occurred. Please check your internet connection.'});
       } else if (graphQLErrors.length > 0) {
-        console.log(graphQLErrors);
         graphQLErrors.map(({message, locations, path, code, errorType}) => {
           if (code === 'INTERNAL_SERVER_ERROR') {
             alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
@@ -142,7 +142,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       if (networkError) {
         alertGO({message: 'Network error occurred. Please check your internet connection.'});
       } else if (graphQLErrors.length > 0) {
-        graphQLErrors.map(({message, locations, path, code, errorType}) => {
+        graphQLErrors.map(({message, locations, path, code, errorType, serviceableArea}) => {
           if (code === 'INTERNAL_SERVER_ERROR') {
             alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           } else if (code === 'USER_INPUT_ERROR') {
@@ -150,6 +150,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           } else if (code === 'BAD_USER_INPUT') {
             if (errorType === 'AREA_UNSERVICEABLE') {
               setServiceableAreaScreen(true);
+              setServiceableAreaList(serviceableArea);
             } else if (errorType === 'PLACE_NOT_FOUND') {
               alertGO({
                 title: 'Location Not Available',
@@ -341,10 +342,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     }
   };
 
-  const openServiceableAreaModal = () => {
-    setServiceableAreVisible(true);
-  };
-
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
       <View>
@@ -389,6 +386,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
                   <OutsideServiceableArea
                     setServiceableAreVisible={setServiceableAreVisible}
                     serviceableAreVisible={serviceableAreVisible}
+                    serviceableAreaList={serviceableAreaList}
                   />
                 ) : (
                   <View>
@@ -434,6 +432,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
               <OutsideServiceableArea
                 setServiceableAreVisible={setServiceableAreVisible}
                 serviceableAreVisible={serviceableAreVisible}
+                serviceableAreaList={serviceableAreaList}
               />
             ) : (
               <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />

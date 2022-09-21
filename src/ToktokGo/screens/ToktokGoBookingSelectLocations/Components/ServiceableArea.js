@@ -7,45 +7,10 @@ import {numberFormat} from '../../../../helper';
 import normalize from 'react-native-normalize';
 import {color} from 'react-native-reanimated';
 
-export const ServiceableArea = ({isVissible, setVissible}) => {
+export const ServiceableArea = ({isVissible, setVissible, serviceableAreaList}) => {
   const ItemSeperatorView = () => {
     return <View style={styles.itemSeperatorStyle} />;
   };
-  const data = [
-    {
-      name: 'Location name',
-    },
-    {
-      name: 'Location name',
-    },
-    {
-      name: 'Location name',
-    },
-    {
-      name: 'Location name',
-    },
-    {
-      name: 'Location name',
-    },
-    {
-      name: 'Location name',
-    },
-    {
-      name: 'Location name',
-    },
-    {
-      name: 'Location name',
-    },
-    {
-      name: 'Location name',
-    },
-    {
-      name: 'Location name',
-    },
-    {
-      name: 'Location name',
-    },
-  ];
   return (
     <Modal animationType="fade" transparent={true} visible={isVissible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
@@ -64,10 +29,10 @@ export const ServiceableArea = ({isVissible, setVissible}) => {
             <ItemSeperatorView />
             <FlatList
               showsVerticalScrollIndicator={false}
-              data={data}
+              data={serviceableAreaList}
               renderItem={({item}) => (
                 <View style={{marginTop: 20, marginLeft: 25}}>
-                  <Text>{item.name}</Text>
+                  <Text>{item}</Text>
                 </View>
               )}
             />
