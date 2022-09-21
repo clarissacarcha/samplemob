@@ -4,11 +4,21 @@
  */
 
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {useTheme} from 'styled-components';
 import {useQuery} from '@apollo/react-hooks';
 
 import type {PropsType} from './types';
-import {Container, CategoryList, CategoryText, CategoryImg, CategoryTouchable, TitleContainer} from './Styled';
+import {
+  Container,
+  CategoryList,
+  CategoryText,
+  CategoryImg,
+  CategoryTouchable,
+  RightIcon,
+  SeeAllContainer,
+  TitleContainer,
+} from './Styled';
 
 import StyledText from 'toktokfood/components/StyledText';
 
@@ -19,6 +29,7 @@ import {GET_CATEGORIES_BY_LIMIT} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
 const HomeCategories = (props: PropsType): React$Node => {
+  const navigation = useNavigation();
   const theme = useTheme();
 
   // fetch data in categoties
@@ -47,11 +58,16 @@ const HomeCategories = (props: PropsType): React$Node => {
     );
   };
 
+  const onSeeAll = () => navigation.navigate('ToktokFoodCategoriesScreen');
+
   return (
     <Container>
       <TitleContainer>
         <StyledText>Categories</StyledText>
-        <StyledText color={theme.color.orange}>See All</StyledText>
+        <SeeAllContainer onPress={onSeeAll}>
+          <StyledText color={theme.color.orange}>See All</StyledText>
+          <RightIcon />
+        </SeeAllContainer>
       </TitleContainer>
 
       <CategoryList data={data?.getCategoriesByLimit || []} renderItem={renderItem} />

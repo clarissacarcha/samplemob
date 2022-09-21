@@ -18,7 +18,7 @@ export const Container: ComponentType<any> = styled.View`
   background-color: ${props => props.theme.color.white};
   /* height: 200px; */
   /* align-items: center; */
-  flex: 1;
+  /* flex: 1; */
 `;
 
 export const Banner: ComponentType<any> = styled(SliderBox).attrs(props => ({
