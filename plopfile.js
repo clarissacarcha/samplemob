@@ -35,6 +35,7 @@ module.exports = function (plop) {
           'components/Buttons',
           'components/Modal',
           'components/Modals',
+          'components/Others',
           'components/Pages',
           'components/Validator',
           'compositions',
