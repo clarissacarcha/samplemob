@@ -137,3 +137,26 @@ export const GET_CASH_OUT_OTC = gql`
     }
   }
 `;
+
+export const GET_CASH_OUT_SEARCH_PROVIDER_PARTNERS = gql`
+  query getCashOutSearchProviderPartners($input: GetCashOutSearchProviderPartnersInput) {
+    getCashOutSearchProviderPartners(input: $input) {
+      edges {
+        node {
+          id
+          name
+          category
+          logo
+          description
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        startCursorName
+        endCursorName
+        hasNextPage
+      }
+    }
+  }
+`;

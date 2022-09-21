@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ToktokWalletCashOutOTCHome,
+  ToktokWalletCashOutOtcPartners,
   ToktokWalletCashOutOTCPaymentSummary,
   ToktokWalletCashOutOTCReceipt,
   ToktokWalletCashOutOtcSeeNearby,
@@ -10,6 +11,11 @@ import {
 export default ({Navigator}) => (
   <>
     <Navigator.Screen name="ToktokWalletCashOutOTCHome" component={ToktokWalletCashOutOTCHome} options={options} />
+    <Navigator.Screen
+      name="ToktokWalletCashOutOtcPartners"
+      component={ToktokWalletCashOutOtcPartners}
+      options={options}
+    />
     <Navigator.Screen
       name="ToktokWalletCashOutOTCPaymentSummary"
       component={ToktokWalletCashOutOTCPaymentSummary}

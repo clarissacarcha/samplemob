@@ -27,7 +27,7 @@ const MainComponent = ({navigation}) => {
   return (
     <ImageBackground style={styles.container} source={backgrounds.gradient_bg} resizeMode="cover">
       <TransferableAndNonTransferableBalance />
-      <OTCPartner />
+      <OTCPartner navigation={navigation} />
     </ImageBackground>
   );
 };
@@ -40,7 +40,7 @@ export const ToktokWalletCashOutOTCHome = ({navigation}) => {
 
   return (
     <VerifyContextProvider>
-      <MainComponent />
+      <MainComponent navigation={navigation} />
     </VerifyContextProvider>
   );
 };

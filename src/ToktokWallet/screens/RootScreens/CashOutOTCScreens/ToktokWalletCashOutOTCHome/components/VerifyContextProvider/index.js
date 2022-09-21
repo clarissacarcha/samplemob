@@ -4,7 +4,7 @@ import _ from 'lodash';
 //GRAPHQL & HOOKS
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CASH_OUT_PROVIDER_PARTNERS, GET_CASH_OUT_PROVIDER_PARTNERS_HIGHLIGHTED} from 'toktokwallet/graphql';
+import {GET_CASH_OUT_PROVIDER_PARTNERS_HIGHLIGHTED} from 'toktokwallet/graphql';
 
 export const VerifyContext = createContext();
 const {Provider} = VerifyContext;
@@ -33,7 +33,7 @@ export const VerifyContextProvider = ({children}) => {
 
   useEffect(() => {
     getCashOutProviderPartnersHighlighted();
-  }, []);
+  }, [getCashOutProviderPartnersHighlighted]);
 
   return (
     <Provider

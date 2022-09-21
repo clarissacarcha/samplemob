@@ -1,5 +1,5 @@
 import React, {useMemo, useContext} from 'react';
-import {StyleSheet, Text, View, Animated} from 'react-native';
+import {StyleSheet, Text, View, Animated, TouchableOpacity} from 'react-native';
 
 //COMPONENTS
 import {LoadingIndicator} from 'toktokwallet/components';
@@ -8,10 +8,12 @@ import {VerifyContext} from '../VerifyContextProvider';
 
 import {moderateScale} from 'toktokwallet/helper';
 
+//ASSETS
+import {VectorIcon, ICON_SET} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
-export const OTCPartner = () => {
+export const OTCPartner = ({navigation}) => {
   const {cashOutProviderPartnersHighlighted, getHighlightedPartnersLoading} = useContext(VerifyContext);
 
   const ListOTCPartnerComponent = useMemo(() => {
@@ -33,7 +35,15 @@ export const OTCPartner = () => {
   return (
     <View style={styles.container}>
       <Animated.View style={styles.shadowContainer}>
-        <Text style={[styles.title, styles.lineSeperator]}>Select OTC Partner</Text>
+        <View style={styles.lineSeperator}>
+          <Text style={[styles.title]}>Select OTC Partner</Text>
+          <TouchableOpacity
+            style={{flexDirection: 'row'}}
+            onPress={() => navigation.navigate('ToktokWalletCashOutOtcPartners')}>
+            <Text style={[styles.seeAllText]}>See All</Text>
+            <VectorIcon color={COLOR.ORANGE} size={moderateScale(15)} iconSet={ICON_SET.Entypo} name="chevron-right" />
+          </TouchableOpacity>
+        </View>
         {getHighlightedPartnersLoading ? (
           <LoadingIndicator isLoading={true} style={{marginVertical: moderateScale(30)}} size="small" />
         ) : (
@@ -68,13 +78,15 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
-    paddingHorizontal: moderateScale(15),
-    paddingVertical: moderateScale(15),
     color: COLOR.ORANGE,
   },
   lineSeperator: {
     borderWidth: 1,
     borderColor: '#C4C4C436',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: moderateScale(15),
+    paddingVertical: moderateScale(15),
   },
   loadingContainer: {
     flex: 1,
