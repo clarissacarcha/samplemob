@@ -8,7 +8,7 @@ export const onError = error => {
   const {graphQLErrors, networkError} = error;
 
   if (networkError) {
-    Alert.alert('', 'Network error occurred. Please check your internet connection.');
+    alertGO({message: 'Network error occurred. Please check your internet connection.'});
   } else if (graphQLErrors.length > 0) {
     graphQLErrors.map(({message, locations, path, code, errorType}) => {
       if (code === 'INTERNAL_SERVER_ERROR') {
@@ -17,7 +17,12 @@ export const onError = error => {
         alertGO({message});
       } else if (code === 'BAD_USER_INPUT') {
         if (errorType === 'AREA_UNSERVICEABLE') {
-          console.log('ERRRRROOOORRRR');
+          console.log('unserviceable area');
+        } else if (errorType === 'PLACE_NOT_FOUND') {
+          alertGO({
+            title: 'Location Not Available',
+            message: 'Location is no longer available. Please select another location.',
+          });
         } else {
           alertGO({message});
         }
