@@ -3,6 +3,7 @@ import {
   ToktokWalletCashOutOTCHome,
   ToktokWalletCashOutOTCPaymentSummary,
   ToktokWalletCashOutOTCReceipt,
+  ToktokWalletCashOutOtcSeeNearby,
   ToktokWalletCashOutOTCTransaction,
 } from 'toktokwallet/screens';
 
@@ -17,6 +18,11 @@ export default ({Navigator}) => (
     <Navigator.Screen
       name="ToktokWalletCashOutOTCReceipt"
       component={ToktokWalletCashOutOTCReceipt}
+      options={options}
+    />
+    <Navigator.Screen
+      name="ToktokWalletCashOutOtcSeeNearby"
+      component={ToktokWalletCashOutOtcSeeNearby}
       options={options}
     />
     <Navigator.Screen
