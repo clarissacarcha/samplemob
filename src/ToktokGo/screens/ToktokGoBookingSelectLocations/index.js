@@ -95,8 +95,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       const {graphQLErrors, networkError} = error;
 
       if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+        alertGO({message: 'Network error occurred. Please check your internet connection.'});
       } else if (graphQLErrors.length > 0) {
+        console.log(graphQLErrors);
         graphQLErrors.map(({message, locations, path, code, errorType}) => {
           if (code === 'INTERNAL_SERVER_ERROR') {
             alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
@@ -106,6 +107,11 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
             if (errorType === 'AREA_UNSERVICEABLE') {
               setServiceableAreaScreen(true);
               setSearchResponse(null);
+            } else if (errorType === 'PLACE_NOT_FOUND') {
+              alertGO({
+                title: 'Location Not Available',
+                message: 'Location is no longer available. Please select another location.',
+              });
             } else {
               alertGO({message});
               setServiceableAreaScreen(false);
@@ -134,7 +140,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       const {graphQLErrors, networkError} = error;
 
       if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+        alertGO({message: 'Network error occurred. Please check your internet connection.'});
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, code, errorType}) => {
           if (code === 'INTERNAL_SERVER_ERROR') {
@@ -144,6 +150,11 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           } else if (code === 'BAD_USER_INPUT') {
             if (errorType === 'AREA_UNSERVICEABLE') {
               setServiceableAreaScreen(true);
+            } else if (errorType === 'PLACE_NOT_FOUND') {
+              alertGO({
+                title: 'Location Not Available',
+                message: 'Location is no longer available. Please select another location.',
+              });
             } else {
               alertGO({message});
               setServiceableAreaScreen(false);
