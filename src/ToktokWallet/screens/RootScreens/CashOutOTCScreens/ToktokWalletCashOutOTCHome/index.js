@@ -19,10 +19,10 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 import {backgrounds} from 'toktokwallet/assets';
 
 const MainComponent = ({navigation}) => {
-  const {getCashOutProviderPartnersError, getCashOutProviderPartners} = useContext(VerifyContext);
+  const {getHighlightedPartnersError, getCashOutProviderPartnersHighlighted} = useContext(VerifyContext);
 
-  if (getCashOutProviderPartnersError) {
-    return <SomethingWentWrong onRefetch={getCashOutProviderPartners} error={getCashOutProviderPartnersError} />;
+  if (getHighlightedPartnersError) {
+    return <SomethingWentWrong onRefetch={getCashOutProviderPartnersHighlighted} error={getHighlightedPartnersError} />;
   }
   return (
     <ImageBackground style={styles.container} source={backgrounds.gradient_bg} resizeMode="cover">

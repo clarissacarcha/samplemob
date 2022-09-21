@@ -1,44 +1,40 @@
-import React, {useEffect, useMemo, useState, useContext} from 'react';
-import {Dimensions, StyleSheet, Text, View, Animated, FlatList} from 'react-native';
+import React, {useMemo, useContext} from 'react';
+import {StyleSheet, Text, View, Animated} from 'react-native';
 
 //COMPONENTS
-import {HeaderBack, HeaderTitle} from 'src/revamp';
-import {LoadingIndicator, SomethingWentWrong} from 'toktokwallet/components';
+import {LoadingIndicator} from 'toktokwallet/components';
 import {OTCPartnerDetails} from './OTCPartnerDetails';
 import {VerifyContext} from '../VerifyContextProvider';
-
-//GRAPHQL & HOOKS
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CASH_OUT_PROVIDER_PARTNERS} from 'toktokwallet/graphql';
-import {useAccount} from 'toktokwallet/hooks';
 
 import {moderateScale} from 'toktokwallet/helper';
 
 import CONSTANTS from 'common/res/constants';
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
-const {height, width} = Dimensions.get('window');
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
-export const OTCPartner = ({data}) => {
-  const {cashOutProviderPartners, getCashOutProviderPartnersLoading} = useContext(VerifyContext);
+export const OTCPartner = () => {
+  const {cashOutProviderPartnersHighlighted, getHighlightedPartnersLoading} = useContext(VerifyContext);
 
   const ListOTCPartnerComponent = useMemo(() => {
     return (
       <View style={styles.billerTypesContainer}>
-        <FlatList
-          data={cashOutProviderPartners}
-          renderItem={({item, index}) => <OTCPartnerDetails item={item} index={index} />}
-          numColumns={4}
-        />
+        {cashOutProviderPartnersHighlighted.map((content, contentIndex) => {
+          return (
+            <OTCPartnerDetails
+              content={content}
+              contentIndex={contentIndex}
+              title={Object.keys(content)[contentIndex]}
+            />
+          );
+        })}
       </View>
     );
-  }, [cashOutProviderPartners]);
+  }, [cashOutProviderPartnersHighlighted]);
 
   return (
     <View style={styles.container}>
       <Animated.View style={styles.shadowContainer}>
         <Text style={[styles.title, styles.lineSeperator]}>Select OTC Partner</Text>
-        {getCashOutProviderPartnersLoading ? (
+        {getHighlightedPartnersLoading ? (
           <LoadingIndicator isLoading={true} style={{marginVertical: moderateScale(30)}} size="small" />
         ) : (
           ListOTCPartnerComponent

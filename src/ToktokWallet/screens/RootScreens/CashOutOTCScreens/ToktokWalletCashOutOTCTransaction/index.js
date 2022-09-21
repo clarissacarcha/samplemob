@@ -67,7 +67,7 @@ const MainComponent = ({navigation, route}) => {
   const checkInsufficientBalance = () => {
     let totalServiceFee = parseFloat(toktokServiceFee) + parseFloat(providerServiceFee);
     let totalAmount = totalServiceFee + parseFloat(amount);
-    let isInsufficientBalance = parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.balance);
+    let isInsufficientBalance = parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.transferableBalance);
     let isMaxAmount = parseFloat(amount) > parseFloat(maximumAmount);
     let error = '';
 

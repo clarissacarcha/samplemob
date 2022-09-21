@@ -49,8 +49,8 @@ const TransferableAndNonTransferableBalance = (props: PropsType): React$Node => 
           <CurrencyCodeContainer>
             <CurrencyCode>{currencyCode}</CurrencyCode>
           </CurrencyCodeContainer>
+          <Label>Transferable and Non-transferable Balance</Label>
         </ButtonTitleContainer>
-        <Label>Transferable and Non-transferable Balance</Label>
         {showDetails ? <ArrowDown /> : <ArrowRight />}
       </Button>
       {showDetails && (

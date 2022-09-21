@@ -26,6 +26,7 @@ export const Button: ComponentType<any> = styled(TouchableOpacity).attrs(props =
   border-top-left-radius: ${moderateScale(5)}px;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 `;
 
 export const ButtonTitleContainer: ComponentType<any> = styled.View`
