@@ -4,7 +4,7 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import validator from 'validator';
 
 //HELPER & UTIL
-import {moderateScale, numberFormat, getStatusbarHeight} from 'toktokbills/helper';
+import {moderateScale, numberFormat, getStatusbarHeight, AmountLimitHelper} from 'toktokwallet/helper';
 
 //COMPONENTS
 import {HeaderBack, HeaderTitleRevamp, OrangeButton, LoadingIndicator} from 'toktokwallet/components';
@@ -82,10 +82,18 @@ const MainComponent = ({navigation, route}) => {
     return !error;
   };
 
-  const onPressProceed = () => {
+  const onPressProceed = async () => {
     const isAmountValid = checkAmount();
     const isValidEmail = checkEmail();
-    if (isAmountValid && isValidEmail) {
+
+    const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+      amount,
+      setErrorMessage: value => {
+        setAmountError(value);
+      },
+    });
+
+    if (isAmountValid && isValidEmail && checkLimit) {
       const transactionDetails = {
         recipientName,
         recipientMobileNo: tokwaAccount.mobileNumber,

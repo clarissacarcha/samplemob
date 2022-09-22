@@ -1,11 +1,11 @@
-## CashOutOtcPartnerDetails
+## BankTransferAllBanks
 
-CashOutOtcPartnerDetails component.
+BankTransferAllBanks component.
 
 # Usage
 
 ```js
-import CashOutOtcPartnerDetails from '@compositions/RootCompositions/CashOutOtcCompositions/OtcPartners/CashOutOtcPartnerDetails';
+import BankTransferAllBanks from '@compositions/RootCompositions/BankTransferCompositions/BanksCompositions/BankTransferAllBanks';
 
 # Props
 ```
