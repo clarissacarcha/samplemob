@@ -7,6 +7,7 @@ import {FlatList, Image} from 'react-native';
 import styled from 'styled-components/native';
 import {Icon} from 'react-native-elements';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ContentLoader from 'react-native-easy-content-loader';
 
 import StyledText from 'toktokfood/components/StyledText';
 
@@ -108,5 +109,31 @@ export const NearYouList: ComponentType<any> = styled(FlatList).attrs(props => (
     borderWidth: 1,
     // alignItems: 'center',
     // paddingVertical: 5,
+  },
+}))``;
+
+// Loader
+export const ContentLoading: ComponentType<any> = styled(ContentLoader).attrs(props => ({
+  ...props,
+  active: true,
+  title: false,
+  pRows: 1,
+  pHeight: [180],
+  pWidth: ['90%', '10%', '30%'],
+  // primaryColor: props.theme.color.yellow,
+  // secondaryColor: 'rgba(256,186,28,0.4)',
+  aShape: 'square',
+  aSize: 180,
+  avatar: true,
+  listSize: 5,
+  // loading: false,
+  containerStyles: {
+    // borderWidth: 1,
+    marginHorizontal: 7,
+  },
+  paragraphStyles: {
+    // borderWidth: 1,
+    bottom: 5,
+    marginLeft: 3,
   },
 }))``;

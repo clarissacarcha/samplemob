@@ -44,6 +44,7 @@ export const CategoryTouchable: ComponentType<any> = styled(TouchableOpacity).at
 }))`
   margin-right: ${scale(11)};
   width: ${(getDeviceWidth - scale(60)) / 4 - 1};
+  /* height: 80px; */
 `;
 
 export const CategoryImg: ComponentType<any> = styled(Image).attrs(props => ({

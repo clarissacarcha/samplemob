@@ -5,7 +5,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {useTheme} from 'styled-components';
+// import {useTheme} from 'styled-components';
 import {useSelector} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import _ from 'lodash';
@@ -13,14 +13,15 @@ import _ from 'lodash';
 import type {PropsType} from './types';
 import {
   Container,
+  ContentLoading,
   ListContainer,
   ListImg,
   ListInfo,
   ListInfoText,
   ListWrapper,
   MapIcon,
-  SeeAllContainer,
-  RightIcon,
+  // SeeAllContainer,
+  // RightIcon,
   Row,
   TitleContainer,
   TimeImg,
@@ -36,7 +37,7 @@ import {shop_noimage} from 'toktokfood/assets/images';
 
 const HomeNearYou = (props: PropsType): React$Node => {
   const {page, setLoadMore} = props;
-  const theme = useTheme();
+  // const theme = useTheme();
   const {location} = useSelector(state => state.toktokFood);
 
   const variableInput = {
@@ -49,7 +50,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
   };
 
   // data fetching for shops
-  const [getShops, {data, fetchMore}] = useLazyQuery(GET_SHOPS, {
+  const [getShops, {data, loading, fetchMore}] = useLazyQuery(GET_SHOPS, {
     // onError: () => {
     //   setRefreshing(false);
     // },
@@ -123,18 +124,23 @@ const HomeNearYou = (props: PropsType): React$Node => {
     <Container>
       <TitleContainer>
         <StyledText>Near You</StyledText>
-        <SeeAllContainer>
+        {/* <SeeAllContainer>
           <StyledText color={theme.color.orange}>See All</StyledText>
           <RightIcon />
-        </SeeAllContainer>
+        </SeeAllContainer> */}
       </TitleContainer>
 
-      {data && data?.getShops && (
-        <ListWrapper>
-          {data?.getShops.map(item => (
-            <RestaurantList item={item} />
-          ))}
-        </ListWrapper>
+      {loading ? (
+        <ContentLoading />
+      ) : (
+        data &&
+        data?.getShops && (
+          <ListWrapper>
+            {data?.getShops.map(item => (
+              <RestaurantList item={item} />
+            ))}
+          </ListWrapper>
+        )
       )}
     </Container>
   );

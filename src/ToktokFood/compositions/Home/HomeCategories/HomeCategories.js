@@ -7,6 +7,7 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from 'styled-components';
 import {useQuery} from '@apollo/react-hooks';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 import type {PropsType} from './types';
 import {
@@ -28,12 +29,14 @@ import {fastfood} from 'toktokfood/assets/images';
 import {GET_CATEGORIES_BY_LIMIT} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
+import {getDeviceWidth, scale} from 'toktokfood/helper/scale';
+
 const HomeCategories = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const theme = useTheme();
 
   // fetch data in categoties
-  const {data} = useQuery(GET_CATEGORIES_BY_LIMIT, {
+  const {data, loading} = useQuery(GET_CATEGORIES_BY_LIMIT, {
     variables: {
       input: {
         page: 0,
@@ -44,6 +47,21 @@ const HomeCategories = (props: PropsType): React$Node => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
   });
+
+  const Loader = () => (
+    <SkeletonPlaceholder backgroundColor="rgba(220, 220, 220, 1)">
+      <SkeletonPlaceholder.Item paddingVertical={10} flexDirection="row" alignItems="center">
+        {[1, 2, 3, 4].map(() => (
+          <SkeletonPlaceholder.Item
+            width={(getDeviceWidth - scale(60)) / 4 - 1}
+            height={80}
+            marginRight={10}
+            borderRadius={10}
+          />
+        ))}
+      </SkeletonPlaceholder.Item>
+    </SkeletonPlaceholder>
+  );
 
   const renderItem = ({item}) => {
     let image = item.filename ? {uri: item.filename} : fastfood;
@@ -69,8 +87,7 @@ const HomeCategories = (props: PropsType): React$Node => {
           <RightIcon />
         </SeeAllContainer>
       </TitleContainer>
-
-      <CategoryList data={data?.getCategoriesByLimit || []} renderItem={renderItem} />
+      {loading ? <Loader /> : <CategoryList data={data?.getCategoriesByLimit || []} renderItem={renderItem} />}
     </Container>
   );
 };
