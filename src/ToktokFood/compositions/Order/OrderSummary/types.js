@@ -7,4 +7,6 @@ export type PropsType = {
   accessibilityLabel?: string,
   theme?: Object,
   state: Array<Object>,
+  placement?: 'Cart' | 'OrderDetails',
+  cartRefetch?: any,
 };

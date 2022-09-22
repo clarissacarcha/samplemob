@@ -28,6 +28,7 @@ export const LIGHT_THEME = {
     lightYellow: '#FFFCF4',
     orangedisabled: '#F6841F', // opacity 50%
     yellow: '#FDBA1C',
+    highlight: '#FFF6E3',
   },
   divider: {
     active: '#F7F7FA',

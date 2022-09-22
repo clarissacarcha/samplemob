@@ -520,6 +520,7 @@ const MainComponent = () => {
     }).then(({data}) => {
       // console.log(data);
       let {success, message} = data.postRequestTakeMoney;
+      console.log('eto yon', data.postRequestTakeMoney);
       if (success == 1) {
         let {requestTakeMoneyId, validator} = data.postRequestTakeMoney.data;
         setShowEnterPinCode(true);
@@ -704,7 +705,7 @@ const MainComponent = () => {
     }
 
     const data = processData(WALLET, CUSTOMER, ORDER, []);
-    console.log('DATA', data);
+    // console.log('DATA', data);
     console.log('DATA', JSON.stringify(data));
     postCustomerOrder({
       variables: {

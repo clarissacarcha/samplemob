@@ -6,7 +6,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_ORDER_TRANSACTIONS} from 'toktokfood/graphql/toktokfood';
 import {useSelector} from 'react-redux';
 
-export const useGetActivities = orderStatus => {
+export const useGetActivities = (orderStatus, limit) => {
   const {customerInfo} = useSelector(s => s.toktokFood);
 
   const [getOrders, {data, error, refetch, loading, fetchMore}] = useLazyQuery(GET_ORDER_TRANSACTIONS, {
@@ -15,7 +15,7 @@ export const useGetActivities = orderStatus => {
         userId: `${customerInfo.userId}`,
         orderStatus,
         page: 0,
-        limit: 10,
+        limit,
       },
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,

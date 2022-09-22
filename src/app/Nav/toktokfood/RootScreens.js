@@ -20,6 +20,7 @@ import {
   ToktokFoodContactUs,
   ToktokFoodEmptyCart,
   ToktokFoodOrder,
+  ToktokFoodPlaceOrder,
 } from 'toktokfood/screens';
 
 export default ({Navigator}) => (
@@ -27,6 +28,7 @@ export default ({Navigator}) => (
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodCart" component={ToktokFoodCart} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodDriver" component={ToktokFoodDriver} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodOrder" component={ToktokFoodOrder} />
+    <Navigator.Screen options={{headerShown: false}} name="ToktokFoodPlaceOrder" component={ToktokFoodPlaceOrder} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodSearch" component={ToktokFoodSearch} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokRiderRating" component={ToktokRiderRating} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodMapSearch" component={ToktokFoodMapSearch} />

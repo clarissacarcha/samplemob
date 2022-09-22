@@ -12,4 +12,5 @@ export type PropsType = {
   onPress: () => void,
   style?: Object,
   disabled?: boolean,
+  textStyle?: Object,
 };

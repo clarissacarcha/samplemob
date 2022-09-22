@@ -19,6 +19,7 @@ const tempCart = `
     notes
     maxQty
     maxQtyIsset
+    shopAddress
     shopLatitude
     shopLongitude
     shopCity
@@ -36,7 +37,6 @@ const tempCart = `
       status
       optionDetailsId
       optionDetailsName
-    }
   }
 `;
 

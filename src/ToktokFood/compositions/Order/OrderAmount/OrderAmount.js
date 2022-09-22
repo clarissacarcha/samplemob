@@ -31,8 +31,6 @@ const OrderAmount = (props: PropsType): React$Node => {
   const renderAlertComponent = () => (
     <Alert
       isVisible={isAlertVisible}
-      // type={type}
-      // title={title}
       subtitle="This fee is for us to continue providing
       excellent delivery experience along with
       better promos and to expand our
