@@ -310,6 +310,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
           <Header navigation={navigation} constants={constants} />
           <Landing navigation={navigation} details={route?.params?.details} voucherData={route?.params?.voucherData} />
           <FlatList
+            showsVerticalScrollIndicator={false}
             ListHeaderComponent={
               <ScrollView
                 contentContainerStyle={{flexGrow: 1}}

@@ -8,11 +8,15 @@ import {ServiceableArea} from '../Components';
 
 const windowWidth = Dimensions.get('window').width;
 
-export const OutsideServiceableArea = ({setServiceableAreVisible, serviceableAreVisible}) => {
+export const OutsideServiceableArea = ({setServiceableAreVisible, serviceableAreVisible, serviceableAreaList}) => {
   return (
     <>
       <View style={{alignItems: 'center', marginVertical: 40}}>
-        <ServiceableArea isVissible={serviceableAreVisible} setVissible={setServiceableAreVisible} />
+        <ServiceableArea
+          isVissible={serviceableAreVisible}
+          setVissible={setServiceableAreVisible}
+          serviceableAreaList={serviceableAreaList}
+        />
         <Image source={EmptyImage} style={{height: normalize(220), width: normalize(220)}} resizeMode={'contain'} />
         <View style={{flexDirection: 'column'}}>
           <Text
