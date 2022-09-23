@@ -13,31 +13,34 @@ import {ButtonContainer, Description, LoadingContainer, LogoContainer, LogoImage
 const BankTransferBankItem = (props: PropsType): React$Node => {
   const [imageLoading, setImageLoading] = useState(true);
 
-  const {index, item, onPressItem} = props;
-  const {icon, name} = item;
+  const {item, onPressItem} = props;
+  // const {icon, name} = item;
 
   const onPress = () => {
-    onPressItem(index);
+    onPressItem(item);
   };
 
   const onThrottledPress = useThrottle(onPress, 2000);
 
+  // return null;
   return (
     <ButtonContainer onPress={onThrottledPress}>
       <LogoContainer>
-        {imageLoading && (
+        {item?.image && imageLoading && (
           <LoadingContainer>
             <LoadingIndicator isLoading={true} size="small" />
           </LoadingContainer>
         )}
-        <LogoImage
-          source={{uri: icon}}
-          resizeMode={FastImage.resizeMode.contain}
-          onLoadStart={() => setImageLoading(true)}
-          onLoadEnd={() => setImageLoading(false)}
-        />
+        {item?.image && (
+          <LogoImage
+            source={{uri: item?.image}}
+            resizeMode={FastImage.resizeMode.contain}
+            onLoadStart={() => setImageLoading(true)}
+            onLoadEnd={() => setImageLoading(false)}
+          />
+        )}
       </LogoContainer>
-      <Description>{name}</Description>
+      <Description>{item.name}</Description>
     </ButtonContainer>
   );
 };

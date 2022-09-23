@@ -18,7 +18,9 @@ const BankTransferBankList = (props: PropsType): React$Node => {
   const onPressSeeAll = () => {
     navigation.navigate('ToktokWalletBankTransferBanks');
   };
-  const onPressItem = index => {};
+  const onPressItem = item => {
+    navigation.navigate('ToktokWalletBankTransferTransaction', {bankDetails: item});
+  };
 
   const onThrottledPress = useThrottle(onPressSeeAll, 2000);
 

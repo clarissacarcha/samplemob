@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, {useMemo, useState, useCallback} from 'react';
+import React, {useMemo, useState, useCallback, useEffect} from 'react';
 
 import type {PropsType} from './types';
 import {BackgroundImage, Container, LoadingContainer, List, ReminderContainer} from './Styled';
@@ -24,7 +24,8 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_BILL_TYPES, GET_FAVORITES_BILLS_ITEMS} from 'toktokbills/graphql/model';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
-
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+import {GET_HIGHLIGHTED_BANKS} from 'toktokwallet/graphql';
 const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   const navigation = useNavigation();
 
@@ -36,20 +37,13 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   const [favoriteBills, setFavoriteBills] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [showMore, setShowMore] = useState(false);
+  const [banks, setBanks] = useState([]);
 
-  const [getBillTypes, {loading, error}] = useLazyQuery(GET_BILL_TYPES, {
+  const [getHighlightedBanks, {error: banksError, loading: banksLoading}] = useLazyQuery(GET_HIGHLIGHTED_BANKS, {
     fetchPolicy: 'network-only',
-    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
-    onError: () => {
-      setRefreshing(false);
-    },
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: data => {
-      let result = data.getBillTypes.filter(o1 => !billTypes.some(o2 => o1.id === o2.id));
-      if (result.length > 0 || data.getBillTypes.length !== billTypes.length) {
-        setBillTypes(data.getBillTypes.splice(0, 9));
-      }
-      setRefreshing(false);
+      setBanks(data.getHighlightedBanks);
     },
   });
 
@@ -77,7 +71,7 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   useFocusEffect(
     useCallback(
       function getData() {
-        getBillTypes();
+        getHighlightedBanks();
         getFavoriteBillsPaginate({
           variables: {
             input: {
@@ -88,7 +82,7 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
         });
         setIsMounted(true);
       },
-      [getBillTypes, getFavoriteBillsPaginate],
+      [getHighlightedBanks, getFavoriteBillsPaginate],
     ),
   );
 
@@ -98,7 +92,7 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   };
 
   const handleGetData = () => {
-    getBillTypes();
+    getHighlightedBanks();
     getFavoriteBillsPaginate({
       variables: {
         input: {
@@ -107,7 +101,6 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
         },
       },
     });
-    setShowMore(true);
     setIsMounted(true);
   };
 
@@ -123,30 +116,30 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   }, [favoriteBills]);
 
   const ListBillerTypesComponent = useMemo(() => {
-    if (billTypes.length === 0) {
+    if (banks.length === 0) {
       return null;
     } else {
-      return <BankTransferBankList billTypes={billTypes} showMore={showMore} setShowMore={setShowMore} />;
+      return <BankTransferBankList billTypes={banks} navigation={navigation} />;
     }
-  }, [billTypes, showMore]);
+  }, [banks, navigation]);
 
-  if (error || getFavoritesError) {
+  if (banksError || getFavoritesError) {
     return (
       <Container>
-        <SomethingWentWrong onRefetch={handleGetData} error={error ?? getFavoritesError} />
+        <SomethingWentWrong onRefetch={handleGetData} error={banksError ?? getFavoritesError} />
       </Container>
     );
   }
   return (
     <BackgroundImage>
-      {((loading && billTypes.length === 0) || (getFavoritesLoading && favoriteBills.length === 0 && !isMounted)) &&
+      {((banksLoading && banks.length === 0) || (getFavoritesLoading && favoriteBills.length === 0 && !isMounted)) &&
       !refreshing ? (
         <LoadingContainer>
           <LoadingIndicator isLoading={true} />
         </LoadingContainer>
       ) : (
         <List
-          extraData={[favoriteBills, billTypes]}
+          extraData={[favoriteBills, banks]}
           ListHeaderComponent={ListFavoriteComponent}
           ListFooterComponent={ListBillerTypesComponent}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
