@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ToktokWalletBankTransferBanks,
   ToktokWalletBankTransferHome,
+  ToktokWalletBankTransferPaymentSummary,
   ToktokWalletBankTransferTransaction,
 } from 'toktokwallet/screens';
 
@@ -13,6 +14,12 @@ export default ({Navigator}) => (
       options={options}
     />
     <Navigator.Screen name="ToktokWalletBankTransferHome" component={ToktokWalletBankTransferHome} options={options} />
+    <Navigator.Screen
+      name="ToktokWalletBankTransferPaymentSummary"
+      component={ToktokWalletBankTransferPaymentSummary}
+      options={options}
+    />
+
     <Navigator.Screen
       name="ToktokWalletBankTransferTransaction"
       component={ToktokWalletBankTransferTransaction}

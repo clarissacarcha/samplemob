@@ -48,6 +48,7 @@ module.exports = function (plop) {
           'compositions/ShopOverview',
           'compositions/RootCompositions/BankTransferCompositions/HomeCompositions/BanksCompositions',
           'compositions/RootCompositions/BankTransferCompositions/HomeCompositions/FavoritesCompositions',
+          'compositions/RootCompositions/BankTransferCompositions/PaymentSummaryCompositions',
           'compositions/RootCompositions/BankTransferCompositions/TransactionCompositions',
           'screens/LandingScreens',
           'screens/LandingScreens/ToktokFoodActivities/tabs',

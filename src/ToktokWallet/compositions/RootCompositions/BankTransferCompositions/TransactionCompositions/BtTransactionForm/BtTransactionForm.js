@@ -93,7 +93,7 @@ const BtTransactionForm = (props: PropsType): React$Node => {
           errorMessage={errorMessages.amount}
           onBlur={computeConvenienceFee}
         />
-        {fees.feeInformation !== '' && computeLoading && <FeeInformation>{fees.feeInformation}</FeeInformation>}
+        {fees.feeInformation !== '' && !computeLoading && <FeeInformation>{fees.feeInformation}</FeeInformation>}
       </InputContainer>
       <InputContainer>
         <CustomTextInput

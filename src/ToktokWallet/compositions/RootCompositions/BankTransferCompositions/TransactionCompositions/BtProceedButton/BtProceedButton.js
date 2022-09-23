@@ -101,10 +101,11 @@ const BtProceedButton = (props: PropsType): React$Node => {
         providerServiceFee: fees.providerServiceFee,
         systemServiceFee: fees.systemServiceFee,
         totalServiceFee: fees.totalServiceFee,
+        type: fees.type,
         amount: parseFloat(amount),
       };
       changeDataValue('purpose', purpose.trim());
-      navigation.navigate('ToktokWalletCashOutOTCPaymentSummary', {
+      navigation.navigate('ToktokWalletBankTransferPaymentSummary', {
         transactionDetails,
       });
     }
