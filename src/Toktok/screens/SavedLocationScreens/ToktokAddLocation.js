@@ -243,13 +243,6 @@ const AddLocation = ({navigation, route, session}) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => selectAddressLabel('Work')}>
-            <View style={[styles.labelBox, numLabelSelected == 2 ? styles.labelSelected : null]}>
-              <Image source={WorkIcon} resizeMode={'contain'} style={styles.labelIcon} />
-              <Text>Work</Text>
-            </View>
-          </TouchableOpacity>
-
           <TouchableOpacity onPress={() => selectAddressLabel('Office')}>
             <View style={[styles.labelBox, numLabelSelected == 3 ? styles.labelSelected : null]}>
               <Image source={OfficeIcon} resizeMode={'contain'} style={styles.labelIcon} />
@@ -302,64 +295,25 @@ const AddLocation = ({navigation, route, session}) => {
           </>
         )}
 
-        <Text style={styles.label}>Contact Name</Text>
-        <TextInput
-          // value={locationName}
-          // onChangeText={value => setLocationName(value)}
-          style={styles.input}
-          placeholder="Contact Name"
-          placeholderTextColor={LIGHT}
-          returnKeyType="done"
-        />
-
-        <Text style={styles.label}>Mobile Number</Text>
-        <TextInput
-          // value={locationName}
-          // onChangeText={value => setLocationName(value)}
-          style={styles.input}
-          placeholder="Mobile Number"
-          placeholderTextColor={LIGHT}
-          returnKeyType="done"
-        />
+        {/*-------ON PRESS: NAVIGATE TO PIN ADDRESS SCREEN----*/}
 
         <Text style={styles.label}>Address</Text>
-        {/*-------ON PRESS: NAVIGATE TO PIN ADDRESS SCREEN----*/}
         <Pressable onPress={onSearchMap}>
           <View pointerEvents="none">
             <TextInput value={searchText} onChangeText={onChangeText} style={styles.input} />
           </View>
         </Pressable>
 
-        {/* <View style={{height: 10}} />
-        {!searchLoading && searchText !== '' && (
-          <AutocompleteResult
-            searchResult={searchResult}
-            sessionToken={sessionToken}
-            setSessionToken={setSessionToken}
-            onLocationSelect={onLocationSelect}
-            setSearchText={setSearchText}
-          />
-        )}
-        {searchLoading && searchText !== '' && <SearchLoadingIndicator />} */}
-
-        <Text style={styles.label}>Postal Code (optional)</Text>
-        <TextInput
-          // value={locationName}
-          // onChangeText={value => setLocationName(value)}
-          style={styles.input}
-          placeholder="Contact Name"
-          placeholderTextColor={LIGHT}
-          returnKeyType="done"
-        />
-
-        <Text style={styles.label}>Landmark</Text>
+        <Text style={styles.label}>Landmark (optional)</Text>
+        <Text style={styles.sublabel}>
+          Complete address or landmark of nearby location for accurate and faster delivery.
+        </Text>
         <TextInput
           // value={locationName}
           // onChangeText={value => setLocationName(value)}
           style={[styles.input, {}]}
           multiline={true}
-          placeholder="Complete address for accurate and faster delivery/
-        Landmark nearby location"
+          placeholder="e.g. In front of sari-sari station "
           placeholderTextColor={LIGHT}
         />
 
@@ -375,7 +329,43 @@ const AddLocation = ({navigation, route, session}) => {
             // onToggle={toggleOnlineStatus}
           />
         </View>
-        <View style={styles.lineDivider} />
+        <View style={styles.bottomlineDivider} />
+
+        <Text style={[styles.label, {marginBottom: 0, color: 'black'}]}> Contact Details (optional)</Text>
+        <View style={[styles.lineDivider, {marginHorizontal: 16, marginBottom: 0}]} />
+        <Text style={styles.label}>Contact Name</Text>
+        <TextInput
+          // value={locationName}
+          // onChangeText={value => setLocationName(value)}
+          style={styles.input}
+          placeholder="Contact Name"
+          placeholderTextColor={LIGHT}
+          returnKeyType="done"
+        />
+
+        <Text style={styles.label}>Mobile Number</Text>
+        <View style={styles.input}>
+          <TextInput
+            // value={locationName}
+            // onChangeText={value => setLocationName(value)}
+
+            placeholder="Mobile Number"
+            placeholderTextColor={LIGHT}
+            returnKeyType="done"
+          />
+        </View>
+
+        {/* <View style={{height: 10}} />
+        {!searchLoading && searchText !== '' && (
+          <AutocompleteResult
+            searchResult={searchResult}
+            sessionToken={sessionToken}
+            setSessionToken={setSessionToken}
+            onLocationSelect={onLocationSelect}
+            setSearchText={setSearchText}
+          />
+        )}
+        {searchLoading && searchText !== '' && <SearchLoadingIndicator />} */}
       </ScrollView>
       <View style={styles.submitContainer}>
         <TouchableHighlight onPress={onSave} underlayColor={COLOR} style={{borderRadius: 10}}>
@@ -424,19 +414,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'white',
-
+    marginRight: 16,
+    marginBottom: 4,
     borderRadius: 5,
     paddingHorizontal: 15,
     paddingVertical: 6,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
 
-    elevation: 2,
+    elevation: 5,
   },
   labelIcon: {
     width: 12,
@@ -446,7 +437,6 @@ const styles = StyleSheet.create({
   labelContainer: {
     marginHorizontal: 16,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 24,
   },
@@ -490,11 +480,18 @@ const styles = StyleSheet.create({
     padding: 16,
     color: DARK,
   },
+  sublabel: {
+    marginBottom: 8,
+    marginHorizontal: 16,
+    fontSize: CONSTANTS.FONT_SIZE.S,
+    color: MEDIUM,
+    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+  },
   label: {
     marginHorizontal: 16,
     marginTop: 20,
     marginBottom: 8,
-    fontSize: CONSTANTS.FONT_SIZE.S,
+    fontSize: CONSTANTS.FONT_SIZE.M,
     color: MEDIUM,
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
   },
@@ -549,5 +546,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: CONSTANTS.COLOR.ORANGE,
     backgroundColor: CONSTANTS.COLOR.WHITE,
+  },
+  bottomlineDivider: {
+    marginTop: 16,
+    marginHorizontal: -16,
+    borderBottomWidth: 8,
+    borderBottomColor: CONSTANTS.COLOR.LIGHT,
   },
 });
