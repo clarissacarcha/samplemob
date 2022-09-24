@@ -73,7 +73,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
         },
       });
     }
-  }, [getShops, location]);
+  }, [location]);
 
   useEffect(() => {
     if (page !== 0 && data && data.getShops.length > 0) {

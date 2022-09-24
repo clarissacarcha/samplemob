@@ -6,6 +6,7 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
 import {useTheme} from 'styled-components';
+import {useNavigation} from '@react-navigation/native';
 
 import type {PropsType} from './types';
 import {AddressContainer, Container, DownIcon, Loader, StyledIcon, Row} from './Styled';
@@ -35,12 +36,15 @@ const containerStyle = {
 const HomeHeader = (props: PropsType): React$Node => {
   useUserLocation();
 
+  const navigation = useNavigation();
   const theme = useTheme();
   const {location} = useSelector(state => state.toktokFood);
 
+  const onSetLocationDetails = () => navigation.navigate('ToktokFoodAddressDetails');
+
   const AddressDetails = () => {
     return (
-      <AddressContainer>
+      <AddressContainer onPress={onSetLocationDetails}>
         <Row>
           <StyledText mode="bold" fontSize={13}>
             Home

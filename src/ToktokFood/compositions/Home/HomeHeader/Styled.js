@@ -11,7 +11,7 @@ export const Container: ComponentType<any> = styled.View`
   /* flex: 1; */
 `;
 
-export const AddressContainer: ComponentType<any> = styled.View`
+export const AddressContainer: ComponentType<any> = styled.TouchableOpacity`
   flex: 1;
   align-self: flex-start;
 `;
