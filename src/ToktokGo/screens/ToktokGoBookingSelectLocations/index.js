@@ -19,8 +19,10 @@ import {onErrorAppSync, onError} from '../../util';
 // import {onError} from '../../../util/ErrorUtility';
 import {NoRecordFound, ServiceableArea} from './Components';
 import AsyncStorage from '@react-native-community/async-storage';
+import {useAlertGO} from '../../hooks';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
+  const alertGO = useAlertGO();
   const {popTo, selectInput} = route.params;
   const [selectedInput, setSelectedInput] = useState('D');
   const [searchResponse, setSearchResponse] = useState([]);
@@ -56,7 +58,10 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     fetchPolicy: 'network-only',
     onCompleted: response => {
       if (response.getPlaceAutocomplete.length == 0) {
-        setNoRecordVisible(true);
+        alertGO({
+          title: 'Location Not Available',
+          message: 'Location is no longer available. Please select another location.',
+        });
       } else {
         setNoRecordVisible(false);
         setSearchResponse(response.getPlaceAutocomplete);
@@ -392,31 +397,25 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
                   <View>
                     {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
                       <View>
-                        {noRecordVisible == true ? (
-                          <NoRecordFound />
-                        ) : (
+                        {recentSearchDataList.length == 0 ? null : (
+                          <FrequentlyUsed
+                            navigation={navigation}
+                            popTo={popTo}
+                            recentSearchDataList={recentSearchDataList}
+                            onPressRecentSearch={onPressRecentSearch}
+                          />
+                        )}
+                        {recentDestinationList.length == 0 ? null : (
                           <View>
-                            {recentSearchDataList.length == 0 ? null : (
-                              <FrequentlyUsed
-                                navigation={navigation}
-                                popTo={popTo}
-                                recentSearchDataList={recentSearchDataList}
-                                onPressRecentSearch={onPressRecentSearch}
-                              />
+                            {recentSearchDataList.length != 0 && (
+                              <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
                             )}
-                            {recentDestinationList.length == 0 ? null : (
-                              <View>
-                                {recentSearchDataList.length != 0 && (
-                                  <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
-                                )}
-                                <SavedLocations
-                                  navigation={navigation}
-                                  popTo={popTo}
-                                  recentDestinationList={recentDestinationList}
-                                  onPressRecentDestination={onPressRecentDestination}
-                                />
-                              </View>
-                            )}
+                            <SavedLocations
+                              navigation={navigation}
+                              popTo={popTo}
+                              recentDestinationList={recentDestinationList}
+                              onPressRecentDestination={onPressRecentDestination}
+                            />
                           </View>
                         )}
                       </View>

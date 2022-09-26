@@ -140,7 +140,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
     getSearchVoucher({
       variables: {
         input: {
-          type: 'promo',
+          // type: 'promo',
           search: value,
           service: 'GO',
         },
@@ -184,6 +184,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
           placeholder={'Enter voucher code'}
           value={search}
           onSubmitEditing={searchVoucher}
+          placeholderTextColor={'gray'}
         />
         {search ? (
           <ThrottledOpacity onPress={() => setSearch('')}>
@@ -218,6 +219,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
                 placeholder={'Enter voucher code'}
                 value={search}
                 onSubmitEditing={searchVoucher}
+                placeholderTextColor={'gray'}
               />
               {search ? (
                 <ThrottledOpacity onPress={clearSearch}>
