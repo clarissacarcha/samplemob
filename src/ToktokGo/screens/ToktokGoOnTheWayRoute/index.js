@@ -430,10 +430,10 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
             setViewFailedCancelBookingModal(true);
-            alertGO({message});
+            // alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
             setViewFailedCancelBookingModal(true);
-            alertGO({message});
+            // alertGO({message});
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
             // Alert.alert('', JSON.parse(message).message);
             alertGO({message: JSON.parse(message).message});
@@ -445,11 +445,10 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
             setViewFailedCancelBookingModal(true);
-            alertGO({message});
+            // alertGO({message});
           } else {
-            setViewFailedCancelBookingModal(true);
+            // setViewFailedCancelBookingModal(true);
             console.log('ELSE ERROR:', error);
-            // Alert.alert('', 'Something went wrong...');
             alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
