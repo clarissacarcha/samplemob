@@ -45,3 +45,7 @@ export const kyc_intructions = {
 export const cash_in = {
   jc_wallet: require('./cash-in-providers/jcwallet.png'),
 };
+export const cash_out_providers = {
+  instapay: require('./cash-out-providers/instapay.png'),
+  pesonet: require('./cash-out-providers/pesonet.png'),
+};

@@ -14,7 +14,7 @@ const CustomTextInput = (props: PropsType): React$Node => {
   const {
     style,
     placeholder,
-    placeholderTextColor = COLOR.DARK,
+    placeholderTextColor = '#9E9E9E',
     value,
     onChangeText,
     returnKeyType = 'done',
@@ -37,6 +37,7 @@ const CustomTextInput = (props: PropsType): React$Node => {
       {label !== '' && <Label>{label}</Label>}
       <Input
         style={style}
+        value={value}
         defaultValue={value}
         onChangeText={onChangeText}
         placeholder={placeholder}

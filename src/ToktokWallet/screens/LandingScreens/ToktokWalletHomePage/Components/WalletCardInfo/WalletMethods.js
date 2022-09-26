@@ -1,4 +1,4 @@
-import React, {useContext, useState , useEffect} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Alert, FlatList, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {APP_FLAVOR, ACCOUNT_TYPE} from 'src/res/constants';
@@ -6,7 +6,7 @@ import {useThrottle} from 'src/hooks';
 import {useDispatch} from 'react-redux';
 import {useAccount} from 'toktokwallet/hooks';
 import {moderateScale} from 'toktokwallet/helper';
-import _ from "lodash";
+import _ from 'lodash';
 
 //COMPONENTS
 import {CustomBottomSheet} from 'toktokwallet/components';
@@ -30,7 +30,7 @@ const WalletMethods = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {checkIfTpinIsSet, tokwaAccount} = useAccount();
-  const [appServices,setAppServices] = useState([]);
+  const [appServices, setAppServices] = useState([]);
   const [menuData, setMenuData] = useState([]);
 
   const [visibleMoreServices, setVisibleMoreServices] = useState(false);
@@ -40,28 +40,28 @@ const WalletMethods = () => {
       icon: require('toktokwallet/assets/icons/services/cash-in.png'),
       onPress: () => onPressThrottled('ToktokWalletPaymentOptions'),
       isEnabled: true,
-      identifier: "cashIn",
+      identifier: 'cashIn',
     },
     {
-      label: 'Fund Transfer',
+      label: 'Bank Transfer',
       icon: require('toktokwallet/assets/icons/services/fund-transfer.png'),
-      onPress: () => onPressThrottled('ToktokWalletCashOutHomePage'),
+      onPress: () => onPressThrottled('ToktokWalletBankTransferHome'),
       isEnabled: tokwaAccount.constants.isFundTransferEnabled == '1',
-      identifier: "fundTransfer",
+      identifier: 'fundTransfer',
     },
     {
       label: 'Send Money',
       icon: require('toktokwallet/assets/icons/services/send-money.png'),
       onPress: () => onPressThrottled('ToktokWalletSendMoney'),
       isEnabled: true,
-      identifier: "sendMoney",
+      identifier: 'sendMoney',
     },
     {
       label: 'Scan QR',
       icon: require('toktokwallet/assets/icons/services/qr-code-scan.png'),
       onPress: () => onPressThrottled('ToktokWalletScanQrHome'),
       isEnabled: true,
-      identifier: "scanQR",
+      identifier: 'scanQR',
     },
     {
       label: 'Cash Out',
@@ -79,7 +79,7 @@ const WalletMethods = () => {
     },
   ];
 
-  useEffect(()=>{
+  useEffect(() => {
     const appServicesObject = _.keyBy(tokwaAccount.appServices, 'identifier');
     setAppServices(appServicesObject);
 
@@ -101,12 +101,12 @@ const WalletMethods = () => {
       }
 
       return true;
-    })
-    
+    });
+
     console.log(JSON.stringify({filteredMenuData}, null, 2));
 
     setMenuData(filteredMenuData);
-  },[])
+  }, []);
 
   const onPress = route => {
     if (APP_FLAVOR == 'D' && ACCOUNT_TYPE == 2) {
