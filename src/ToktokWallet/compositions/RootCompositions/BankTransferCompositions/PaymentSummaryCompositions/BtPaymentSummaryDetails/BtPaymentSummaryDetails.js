@@ -34,7 +34,6 @@ const BtPaymentSummaryDetails = (props: PropsType): React$Node => {
     route.params.transactionDetails;
   const {image, name} = bankDetails;
   const [imageLoading, setImageLoading] = useState(true);
-  console.log(route.params);
 
   return (
     <>
@@ -79,7 +78,7 @@ const BtPaymentSummaryDetails = (props: PropsType): React$Node => {
         </DetailsContainer>
         {purpose !== '' && (
           <DetailsContainer>
-            <Label>Purpise</Label>
+            <Label>Purpose</Label>
             <Value>{purpose}</Value>
           </DetailsContainer>
         )}

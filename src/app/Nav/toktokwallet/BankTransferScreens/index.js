@@ -3,6 +3,7 @@ import {
   ToktokWalletBankTransferBanks,
   ToktokWalletBankTransferHome,
   ToktokWalletBankTransferPaymentSummary,
+  ToktokWalletBankTransferReceipt,
   ToktokWalletBankTransferTransaction,
 } from 'toktokwallet/screens';
 
@@ -19,7 +20,11 @@ export default ({Navigator}) => (
       component={ToktokWalletBankTransferPaymentSummary}
       options={options}
     />
-
+    <Navigator.Screen
+      name="ToktokWalletBankTransferReceipt"
+      component={ToktokWalletBankTransferReceipt}
+      options={options}
+    />
     <Navigator.Screen
       name="ToktokWalletBankTransferTransaction"
       component={ToktokWalletBankTransferTransaction}

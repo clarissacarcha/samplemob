@@ -46,6 +46,7 @@ module.exports = function (plop) {
           'compositions/OrderDetails',
           'compositions/OrderStatus',
           'compositions/ShopOverview',
+          'compositions/GlobalCompositions/ReceiptCompositions',
           'compositions/RootCompositions/BankTransferCompositions/HomeCompositions/BanksCompositions',
           'compositions/RootCompositions/BankTransferCompositions/HomeCompositions/FavoritesCompositions',
           'compositions/RootCompositions/BankTransferCompositions/PaymentSummaryCompositions',

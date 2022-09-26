@@ -49,17 +49,23 @@ const BtPaymentSummaryConfirm = (props: PropsType): React$Node => {
   const [postCashOutOtherBank, {loading: cashOutOtherBankLoading}] = useMutation(POST_CASH_OUT_OTHER_BANKS, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: data => {
-      // setCashoutLogParams({
-      //   ...transactionDetails,
-      //   ...postCashOutOtherBank,
-      // });
+      const receipt = {
+        headerDetails: bankDetails,
+        accountName,
+        accountNumber,
+        emailAddress,
+        amount,
+        purpose,
+        ...data.postCashOutOtherBank,
+      };
+      navigation.navigate('ToktokWalletBankTransferReceipt', {receipt});
     },
     onError: error => {
       TransactionUtility.StandardErrorHandling({
         error,
         navigation,
         prompt,
-        event: 'fundTransfer',
+        isNewFt: true,
       });
     },
   });
