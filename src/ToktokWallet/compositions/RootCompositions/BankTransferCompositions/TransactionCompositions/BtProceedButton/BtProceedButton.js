@@ -21,7 +21,7 @@ const BtProceedButton = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const {tokwaAccount} = useAccount({isOnErrorAlert: false});
   const {bankDetails} = props;
-  const {data, fees, changeDataValue, changeErrorMessages} = useContext(BtVerifyContext);
+  const {data, fees, changeDataValue, changeErrorMessages, computeConvenienceFeeLoading} = useContext(BtVerifyContext);
   const {amount, emailAddress, accountName, accountNumber, purpose} = data;
 
   const isRequired = (key, value) => {
@@ -91,7 +91,14 @@ const BtProceedButton = (props: PropsType): React$Node => {
       },
     });
 
-    if (isAccountNameValid && isAccountNumValid && isAmountValid && isValidEmail && checkLimit) {
+    if (
+      isAccountNameValid &&
+      isAccountNumValid &&
+      isAmountValid &&
+      isValidEmail &&
+      checkLimit &&
+      !computeConvenienceFeeLoading
+    ) {
       const transactionDetails = {
         accountName,
         accountNumber,
