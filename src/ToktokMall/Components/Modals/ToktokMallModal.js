@@ -12,7 +12,18 @@ export const ToktokMallModal = () => {
   const backhandler = useRef(null);
 
   const {
-    toktokMallModal: {type, onClose, title, message, actions = [], Content, onCloseDisabled},
+    toktokMallModal: {
+      type,
+      onClose,
+      title,
+      message,
+      actions = [],
+      Content,
+      onCloseDisabled,
+      ModalContent,
+      autoCloseEnabled,
+      autoCloseTimer,
+    },
   } = useSelector(state => state.toktokMall);
 
   useEffect(() => {
@@ -31,6 +42,14 @@ export const ToktokMallModal = () => {
     onClose?.();
     return true;
   }
+
+  useEffect(() => {
+    if(autoCloseEnabled){
+      setTimeout(() => {
+        dispatch({type: 'TOKTOK_MALL_CLOSE_MODAL'});
+      }, autoCloseTimer || 1000);
+    }
+  },[autoCloseEnabled])
 
   const getIconByType =
     type == 'Success'
@@ -56,15 +75,15 @@ export const ToktokMallModal = () => {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.25)',
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
           }}>
-          <View
+          {
+            ModalContent ? <ModalContent/> : <View
             style={{
               backgroundColor: 'white',
               minWidth: '70%',
               paddingVertical: 20,
-              paddingHorizontal: 35,
-              marginHorizontal: 20,
+              paddingHorizontal: 40,
               borderRadius: 5,
             }}>
             <View
@@ -130,6 +149,7 @@ export const ToktokMallModal = () => {
               </View>
             </View>
           </View>
+          }
         </View>
       </TouchableWithoutFeedback>
     </View>
