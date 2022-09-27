@@ -8,7 +8,7 @@ export const SavedLocation = ({location, deleteSavedLocation}) => {
     <TouchableHighlight underlayColor={CONSTANTS.COLOR.WHITE_UNDERLAY} style={styles.container}>
       <View style={styles.cardShadow}>
         <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>{location.name}</Text>
+          {/* <Text style={styles.headerText}>{location.name}</Text> */}
           {/* to do: condition here */}
           {true && <Text style={styles.headerDefaultText}>Default</Text>}
         </View>
@@ -16,7 +16,7 @@ export const SavedLocation = ({location, deleteSavedLocation}) => {
         <View style={styles.contentContainer}>
           <Text style={styles.contactNameText}>Contact Name Here</Text>
           <Text style={styles.mobNumberText}>Mobile Number Here</Text>
-          <Text style={styles.addressText}>{location.formattedAddress}</Text>
+          {/* <Text style={styles.addressText}>{location.formattedAddress}</Text> */}
         </View>
       </View>
     </TouchableHighlight>

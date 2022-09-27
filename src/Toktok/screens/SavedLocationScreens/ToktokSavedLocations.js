@@ -14,6 +14,7 @@ import {COLOR, DARK, LIGHT, MEDIUM, ORANGE, COLORS} from '../../../res/constants
 import {DELETE_SAVED_LOCATION, GET_SAVED_LOCATIONS} from '../../../graphql';
 import {HeaderBack, HeaderTitle} from '../../../components';
 import React, {useEffect, useState} from 'react';
+import CONSTANTS from '../../../common/res/constants';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {SavedLocation} from './Components';
 
@@ -75,7 +76,7 @@ const SavedLocations = ({navigation, session}) => {
     );
   }
 
-  if (savedLocations.length === 0) {
+  if (false) {
     return (
       <View style={{flex: 1}}>
         <TouchableHighlight
@@ -97,25 +98,26 @@ const SavedLocations = ({navigation, session}) => {
 
   return (
     <View style={{flex: 1}}>
-      <TouchableHighlight
-        onPress={() => {
-          navigation.push('ToktokAddLocation', {onSavedLocationAdded});
+      <SavedLocation />
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={savedLocations}
+        keyExtractor={item => item.id}
+        renderItem={({item, index}) => {
+          return <SavedLocation location={item} deleteSavedLocation={deleteSavedLocation} />;
         }}
-        style={styles.submitBox}>
-        <View style={styles.submit}>
-          <Text style={styles.addLocText}>Add new Address</Text>
-          <Image source={AddIcon} style={styles.addLocIcon} resizeMode={'contain'} />
-        </View>
-      </TouchableHighlight>
-      <View style={styles.container}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={savedLocations}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => {
-            return <SavedLocation location={item} deleteSavedLocation={deleteSavedLocation} />;
+      />
+      <View style={styles.submitContainer}>
+        <TouchableHighlight
+          onPress={() => {
+            navigation.push('LocationAccess', {onSavedLocationAdded});
           }}
-        />
+          underlayColor={COLOR}
+          style={{borderRadius: 10}}>
+          <View style={styles.submit}>
+            <Text style={styles.submitText}>Add Address</Text>
+          </View>
+        </TouchableHighlight>
       </View>
     </View>
   );
@@ -173,5 +175,30 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  submit: {
+    backgroundColor: CONSTANTS.COLOR.ORANGE,
+    height: 50,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  submitContainer: {
+    paddingHorizontal: 32,
+    paddingVertical: 15,
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.0,
+    elevation: 24,
+  },
+  submitText: {
+    color: CONSTANTS.COLOR.WHITE,
+    fontSize: CONSTANTS.FONT_SIZE.L,
+    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
   },
 });

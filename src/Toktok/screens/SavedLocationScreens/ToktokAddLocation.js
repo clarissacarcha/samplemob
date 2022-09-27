@@ -20,6 +20,7 @@ import {AutocompleteResult} from './AutocompleteResult';
 import {SearchLoadingIndicator} from './SearchLoadingIndicator';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 
+import ContactIcon from '../../../assets/icons/contacts.png';
 import HomeIcon from '../../../assets/icons/home-address-icon.png';
 import WorkIcon from '../../../assets/icons/work-address-icon.png';
 import OfficeIcon from '../../../assets/icons/office-address-icon.png';
@@ -53,6 +54,7 @@ const AddLocation = ({navigation, route, session}) => {
 
   const [labelSelected, setLabelSelected] = useState('Home');
   const [numLabelSelected, setNumLabelSelected] = useState(1);
+  const [contactNumber, setContactNumber] = useState('');
   const [isHomeSelected, setIsHomeSelected] = useState(true);
   const [isWorkSelected, setIsWorkSelected] = useState(false);
   const [isOfficeSelected, setIsOfficeSelected] = useState(false);
@@ -230,6 +232,15 @@ const AddLocation = ({navigation, route, session}) => {
     }
   };
 
+  const onSelectContact = number => {
+    setContactNumber(number);
+    // console.log('zionnn', number);
+  };
+
+  const onPressContacts = () => {
+    navigation.push('ToktokLoadContacts', {onSelectContact});
+  };
+
   return (
     <>
       <ScrollView style={{flex: 1, backgroundColor: '#FFF'}}>
@@ -338,21 +349,50 @@ const AddLocation = ({navigation, route, session}) => {
           // value={locationName}
           // onChangeText={value => setLocationName(value)}
           style={styles.input}
-          placeholder="Contact Name"
           placeholderTextColor={LIGHT}
           returnKeyType="done"
         />
 
         <Text style={styles.label}>Mobile Number</Text>
-        <View style={styles.input}>
-          <TextInput
-            // value={locationName}
-            // onChangeText={value => setLocationName(value)}
+        <View
+          style={{
+            marginHorizontal: 16,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
+              flex: 1,
+              flexDirection: 'row',
+              marginRight: 16,
+              borderRadius: 10,
+            }}>
+            <View
+              style={{
+                borderRightColor: '#CCCCCC',
+                borderRightWidth: 2,
+                padding: 16,
+                justifyContent: 'center',
+              }}>
+              <Text>+63</Text>
+            </View>
 
-            placeholder="Mobile Number"
-            placeholderTextColor={LIGHT}
-            returnKeyType="done"
-          />
+            <TextInput
+              // value={locationName}
+              // onChangeText={value => setLocationName(value)}
+              defaultValue={contactNumber ? contactNumber : ''}
+              style={{padding: 16, flex: 1}}
+              placeholderTextColor={LIGHT}
+              returnKeyType="done"
+            />
+          </View>
+          <TouchableOpacity onPress={() => onPressContacts()}>
+            <View
+              style={{backgroundColor: CONSTANTS.COLOR.ORANGE, padding: 10, borderRadius: 5, alignSelf: 'flex-end'}}>
+              <Image source={ContactIcon} resizeMode={'contain'} style={{height: 35, width: 35}} />
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* <View style={{height: 10}} />
