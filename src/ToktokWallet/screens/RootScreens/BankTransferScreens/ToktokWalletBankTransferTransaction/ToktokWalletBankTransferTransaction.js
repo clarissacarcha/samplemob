@@ -31,12 +31,11 @@ import {useMutation} from '@apollo/react-hooks';
 import {usePrompt} from 'src/hooks';
 import {TransactionUtility} from 'toktokwallet/util';
 
-const MainComponent = () => {
+const MainComponent = ({route, favoriteDetails}) => {
   const navigation = useNavigation();
-  const route = useRoute();
   const headerHeight = useHeaderHeight();
   const prompt = usePrompt();
-  const [favoriteId, setFavoriteId] = useState(0);
+  const [favoriteId, setFavoriteId] = useState(favoriteDetails ? favoriteDetails.id : 0);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
 
   navigation.setOptions({
@@ -158,9 +157,12 @@ const MainComponent = () => {
 };
 
 const ToktokWalletBankTransferTransaction = (props: PropsType): React$Node => {
+  const route = useRoute();
+  const favoriteDetails = route.params?.favoriteDetails ? route.params.favoriteDetails : null;
+
   return (
-    <BtVerifyContextProvider>
-      <MainComponent />
+    <BtVerifyContextProvider favoriteDetails={favoriteDetails}>
+      <MainComponent route={route} favoriteDetails={favoriteDetails} />
     </BtVerifyContextProvider>
   );
 };

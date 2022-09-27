@@ -6,5 +6,5 @@ export type PropsType = {
   testID?: string,
   accessibilityLabel?: string,
   theme?: Object,
-  favoriteBills: Array<Object>,
+  data: Array<Object>,
 };

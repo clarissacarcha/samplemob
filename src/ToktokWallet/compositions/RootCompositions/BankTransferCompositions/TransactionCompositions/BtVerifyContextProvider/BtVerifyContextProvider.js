@@ -19,11 +19,11 @@ const {Provider} = BtVerifyContext;
 
 export const BtVerifyContextProvider = (props: PropsType): React$Node => {
   const {tokwaAccount} = useAccount();
-  const {children} = props;
+  const {children, favoriteDetails} = props;
 
   const [data, setData] = useState({
-    accountName: '',
-    accountNumber: '',
+    accountName: favoriteDetails ? favoriteDetails.accountName : '',
+    accountNumber: favoriteDetails ? favoriteDetails.accountNumber : '',
     amount: '',
     emailAddress: tokwaAccount.person.emailAddress,
     purpose: '',

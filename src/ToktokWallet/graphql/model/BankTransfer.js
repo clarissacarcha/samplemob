@@ -42,3 +42,35 @@ export const GET_SEARCH_BANKS_PAGINATE = gql`
     }
   }
 `;
+
+export const GET_BANK_ACCOUNTS_PAGINATE = gql`
+  query getBankAccountsPaginate($input: GetBankAccountsPaginateInput) {
+    getBankAccountsPaginate(input: $input) {
+      edges {
+        node {
+          id
+          accountName
+          accountNumber
+          nickName
+          address
+          type
+          accountId
+          cashOutBankId
+          bank {
+            id
+            name
+            image
+            isHighlight
+          }
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        startCursorName
+        endCursorName
+        hasNextPage
+      }
+    }
+  }
+`;

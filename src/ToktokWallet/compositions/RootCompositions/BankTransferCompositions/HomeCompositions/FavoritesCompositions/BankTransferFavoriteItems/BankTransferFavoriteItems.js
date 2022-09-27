@@ -26,17 +26,16 @@ const BankTransferFavoriteItems = (props: PropsType): React$Node => {
   const [imageLoading, setImageLoading] = useState(true);
 
   const {item} = props;
-  const {billItemId, billItem, id, firstFieldValue, secondFieldValue} = item.node;
-  const {descriptions, logo, billType} = billItem;
+  const {accountName, accountNumber, bank, id} = item.node;
+  const {name, image} = bank;
 
   const onPress = () => {
-    navigation.navigate('ToktokBillsPaymentProcess', {
-      billItemId: billItemId,
-      billType: billType,
+    navigation.navigate('ToktokWalletBankTransferTransaction', {
+      bankDetails: bank,
       favoriteDetails: {
         id,
-        firstFieldValue,
-        secondFieldValue,
+        accountName,
+        accountNumber,
       },
     });
   };
@@ -47,22 +46,22 @@ const BankTransferFavoriteItems = (props: PropsType): React$Node => {
     <ButtonContainer onPress={onThrottledPress}>
       <ContentContainer>
         <LogoContainer>
-          {imageLoading && logo && (
+          {imageLoading && image && (
             <LoadingContainer>
               <LoadingIndicator isLoading={true} size="small" />
             </LoadingContainer>
           )}
           <LogoImage
-            source={{uri: logo}}
+            source={{uri: image}}
             resizeMode={FastImage.resizeMode.contain}
             onLoadStart={() => setImageLoading(true)}
             onLoadEnd={() => setImageLoading(false)}
           />
         </LogoContainer>
         <DetailsContainer>
-          <Title>{descriptions}</Title>
-          <Description>{secondFieldValue}</Description>
-          <Description>{firstFieldValue}</Description>
+          <Title>{name}</Title>
+          <Description>{accountName}</Description>
+          <Description>{accountNumber}</Description>
         </DetailsContainer>
       </ContentContainer>
     </ButtonContainer>

@@ -10,7 +10,7 @@ import {Container, HeaderContainer, List, SeeAllContainer, SeeAllIcon, SeeAllTex
 import BankTransferFavoriteItems from '../BankTransferFavoriteItems';
 
 const BankTransferFavoriteList = (props: PropsType): React$Node => {
-  const {favoriteBills} = props;
+  const {data} = props;
   const navigation = useNavigation();
 
   const onPressSeeAll = () => {
@@ -20,15 +20,15 @@ const BankTransferFavoriteList = (props: PropsType): React$Node => {
   return (
     <Container>
       <HeaderContainer>
-        <Title>Favorite Billers</Title>
-        {favoriteBills.length > 3 && (
+        <Title>Favorite Banks</Title>
+        {data.length > 3 && (
           <SeeAllContainer onPress={onPressSeeAll}>
             <SeeAllText>See All</SeeAllText>
             <SeeAllIcon />
           </SeeAllContainer>
         )}
       </HeaderContainer>
-      <List data={favoriteBills.slice(0, 3)} renderItem={({item}) => <BankTransferFavoriteItems item={item} />} />
+      <List data={data.slice(0, 3)} renderItem={({item}) => <BankTransferFavoriteItems item={item} />} />
     </Container>
   );
 };
