@@ -26,7 +26,7 @@ const {COLOR} = CONSTANTS;
 export const ToktokWalletCashOutLogs = ({navigation}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitleRevamp label={'Fund Transfer'} />,
+    headerTitle: () => <HeaderTitleRevamp label={'Bank Transfer'} />,
   });
 
   const tokwaAccount = useSelector(state => state.toktokWallet);
