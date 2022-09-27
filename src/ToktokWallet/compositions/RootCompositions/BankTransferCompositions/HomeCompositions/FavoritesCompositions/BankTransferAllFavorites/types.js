@@ -6,6 +6,7 @@ export type PropsType = {
   testID?: string,
   accessibilityLabel?: string,
   theme?: Object,
-  data: Array<Object>,
+  item: Object,
+  onPressFavorite: any,
   onRefreshFavorite: any,
 };

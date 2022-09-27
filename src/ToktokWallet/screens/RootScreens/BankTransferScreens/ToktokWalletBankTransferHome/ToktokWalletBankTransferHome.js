@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, {useMemo, useState, useCallback, useEffect} from 'react';
+import React, {useMemo, useState, useCallback} from 'react';
 
 import type {PropsType} from './types';
 import {BackgroundImage, Container, LoadingContainer, List, ReminderContainer} from './Styled';
@@ -21,10 +21,10 @@ import {BankTransferBankList, BankTransferFavoriteList} from 'toktokwallet/compo
 
 //GRAPHQL & HOOKS
 import {useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_HIGHLIGHTED_BANKS, GET_BANK_ACCOUNTS_PAGINATE} from 'toktokwallet/graphql';
+
 const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   const navigation = useNavigation();
 
@@ -91,10 +91,12 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
     ),
   );
 
-  const onRefresh = () => {
+  const onRefresh = useCallback(() => {
+    console.log('HAHAHAHA');
     setRefreshing(true);
     handleGetData();
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleGetData = () => {
     getHighlightedBanks();
@@ -115,10 +117,12 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
         <ReminderContainer>
           <TransferableAndNonTransferableBalance />
         </ReminderContainer>
-        {favoriteBankAccounts.length > 0 && <BankTransferFavoriteList data={favoriteBankAccounts} />}
+        {favoriteBankAccounts.length > 0 && (
+          <BankTransferFavoriteList data={favoriteBankAccounts} onRefreshFavorite={onRefresh} />
+        )}
       </>
     );
-  }, [favoriteBankAccounts]);
+  }, [favoriteBankAccounts, onRefresh]);
 
   const ListBillerTypesComponent = useMemo(() => {
     if (banks.length === 0) {

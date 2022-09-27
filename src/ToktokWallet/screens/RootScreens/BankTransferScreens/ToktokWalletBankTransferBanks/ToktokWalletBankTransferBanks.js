@@ -34,7 +34,6 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
     headerTitle: () => <HeaderTitleRevamp label={'Banks'} />,
   });
 
-  const [cashOutProviderPartners, setCashOutProviderPartners] = useState([]);
   const [banks, setBanks] = useState([]);
   const [search, setSearch] = useState('');
   const [isMounted, setIsMounted] = useState([]);
@@ -188,47 +187,25 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
   };
 
   const DisplayContent = useMemo(() => {
-    if (search === '') {
-      return (
-        <List
-          data={banks}
-          renderItem={({item, index}) => <BankTransferAllBanks item={item.node} />}
-          keyExtractor={(item, index) => index.toString()}
-          ListEmptyComponent={ListEmptyComponent}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-          extraData={banks}
-          onEndReachedThreshold={0.02}
-          onEndReached={() => fetchMoreData()}
-          ListFooterComponent={ListFooterComponent}
-          getItemLayout={(data, index) => ({
-            length: data.length,
-            offset: data.length * index,
-            index,
-          })}
-        />
-      );
-    } else {
-      return (
-        <List
-          data={filteredData}
-          renderItem={({item, index}) => <BankTransferAllBanks item={item.node} isSearch />}
-          // eslint-disable-next-line react-native/no-inline-styles
-          contentContainerStyle={filteredData.length === 0 && {flexGrow: 1}}
-          keyExtractor={(item, index) => index.toString()}
-          extraData={[filteredData, pageInfo]}
-          ListEmptyComponent={ListEmptyComponent}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-          onEndReachedThreshold={0.02}
-          onEndReached={() => fetchMoreData()}
-          ListFooterComponent={ListFooterComponent}
-          getItemLayout={(data, index) => ({
-            length: data.length,
-            offset: data.length * index,
-            index,
-          })}
-        />
-      );
-    }
+    return (
+      <List
+        data={search === '' ? banks : filteredData}
+        renderItem={({item, index}) => <BankTransferAllBanks item={item.node} />}
+        keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent={ListEmptyComponent}
+        contentContainerStyle={filteredData.length === 0 && {flexGrow: 1}}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
+        extraData={banks}
+        onEndReachedThreshold={0.02}
+        onEndReached={() => fetchMoreData()}
+        ListFooterComponent={ListFooterComponent}
+        getItemLayout={(data, index) => ({
+          length: data.length,
+          offset: data.length * index,
+          index,
+        })}
+      />
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [banks, filteredData, refreshing, search]);
 

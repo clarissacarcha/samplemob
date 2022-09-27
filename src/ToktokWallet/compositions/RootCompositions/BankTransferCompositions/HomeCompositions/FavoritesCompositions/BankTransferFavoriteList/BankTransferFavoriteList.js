@@ -10,11 +10,11 @@ import {Container, HeaderContainer, List, SeeAllContainer, SeeAllIcon, SeeAllTex
 import BankTransferFavoriteItems from '../BankTransferFavoriteItems';
 
 const BankTransferFavoriteList = (props: PropsType): React$Node => {
-  const {data} = props;
+  const {data, onRefreshFavorite} = props;
   const navigation = useNavigation();
 
   const onPressSeeAll = () => {
-    navigation.navigate('ToktokBillsFavorites');
+    navigation.navigate('ToktokWalletBankTransferFavorites');
   };
 
   return (
@@ -28,7 +28,10 @@ const BankTransferFavoriteList = (props: PropsType): React$Node => {
           </SeeAllContainer>
         )}
       </HeaderContainer>
-      <List data={data.slice(0, 3)} renderItem={({item}) => <BankTransferFavoriteItems item={item} />} />
+      <List
+        data={data.slice(0, 3)}
+        renderItem={({item}) => <BankTransferFavoriteItems item={item} onRefreshFavorite={onRefreshFavorite} />}
+      />
     </Container>
   );
 };

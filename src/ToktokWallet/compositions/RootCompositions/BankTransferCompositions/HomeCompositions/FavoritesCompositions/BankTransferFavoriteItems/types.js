@@ -7,4 +7,5 @@ export type PropsType = {
   accessibilityLabel?: string,
   theme?: Object,
   item: Object,
+  onRefreshFavorite: any,
 };

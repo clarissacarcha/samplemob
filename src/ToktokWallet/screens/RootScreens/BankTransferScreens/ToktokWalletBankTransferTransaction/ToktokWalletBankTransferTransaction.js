@@ -37,6 +37,7 @@ const MainComponent = ({route, favoriteDetails}) => {
   const prompt = usePrompt();
   const [favoriteId, setFavoriteId] = useState(favoriteDetails ? favoriteDetails.id : 0);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
+  const onRefreshFavorite = route.params?.onRefreshFavorite ? route.params.onRefreshFavorite : null;
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -52,6 +53,9 @@ const MainComponent = ({route, favoriteDetails}) => {
   const [postCashOutBankAccount, {loading: postCashOutBankAccountLoading}] = useMutation(POST_CASH_OUT_BANK_ACCOUNT, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: details => {
+      if (onRefreshFavorite) {
+        onRefreshFavorite();
+      }
       setFavoriteId(details.postCashOutBankAccount.id);
       setFavoriteModal({show: true, message: 'Added to your Favorites'});
     },
@@ -71,6 +75,9 @@ const MainComponent = ({route, favoriteDetails}) => {
     onCompleted: details => {
       setFavoriteId(0);
       setFavoriteModal({show: true, message: 'Removed from your Favorites'});
+      if (onRefreshFavorite) {
+        onRefreshFavorite();
+      }
     },
     onError: error => {
       TransactionUtility.StandardErrorHandling({
