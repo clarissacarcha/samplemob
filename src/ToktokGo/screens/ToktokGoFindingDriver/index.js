@@ -50,6 +50,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
   const [driverData, setDriverData] = useState();
+  const [textValue, setTextValue] = useState('');
   const alertGO = useAlertGO();
 
   useFocusEffect(
@@ -92,7 +93,8 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         }
         if (data?.onTripUpdate?.status == 'EXPIRED') {
           setWaitingStatus(0);
-          setWaitingText(6);
+          changeTextValue();
+          setWaitingText(8);
         }
         // if (data?.onTripUpdate?.status == 'CANCELLED') {
         //   setChargeAmount(data?.onTripUpdate?.cancellation?.charge?.amount);
@@ -130,7 +132,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     );
 
     return () => subscription.unsubscribe();
-  }, [tripUpdateRetrySwitch]);
+  }, [tripUpdateRetrySwitch, changeTextValue]);
 
   const [getBookingDriver] = useLazyQuery(GET_BOOKING_DRIVER, {
     fetchPolicy: 'network-only',
@@ -152,7 +154,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         });
       } else {
         setWaitingStatus(0);
-        setWaitingText(6);
+        setWaitingText(8);
       }
       setTimeout(() => {
         if (
@@ -169,22 +171,23 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
           });
         } else if (response.getTripsConsumer[0]?.status == 'EXPIRED') {
           setWaitingStatus(0);
-          setWaitingText(6);
+          changeTextValue();
+          setWaitingText(8);
         }
       }, 1000);
     },
     onError: onErrorAppSync,
   });
   useEffect(() => {
-    if (waitingText <= 5 && waitingStatus) {
+    if (waitingText <= 7 && waitingStatus) {
       const interval = setTimeout(() => {
         setWaitingText(waitingText + 1);
       }, 10000);
       return () => clearInterval(interval);
-    } else if (waitingText > 5 && waitingStatus) {
+    } else if (waitingText > 7 && waitingStatus) {
       setWaitingText(1);
     } else {
-      setWaitingText(6);
+      setWaitingText(8);
     }
   }, [waitingText]);
 
@@ -434,24 +437,54 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const renderStatus = type => {
     switch (type) {
       case 1: {
-        return 'Looking for your nearby driver!';
+        return 'Kaunti nalang ka-toktok! Paparating na ang iyong toktok driver!';
       }
       case 2: {
-        return "We're finding you a nearby driver.";
+        return 'Chill ka muna, while we look for your driver.';
       }
       case 3: {
-        return 'Getting ready for your driver.';
+        return 'Ka-toktok, please wear your mask before you ride para safe tayo. Ingat!';
       }
       case 4: {
-        return 'Patience is a virtue!';
+        return 'Ready ka na ba? Malapit na mag-accept ang ating mga toktok drivers!';
       }
       case 5: {
-        return "Let's wait for your driver to arrive!";
+        return 'Ka-toktok, pwede ka muna mag check ng aming other services while we look for your toktok driver!';
       }
       case 6: {
-        return 'We’re sorry ka-toktok, our drivers are busy at the moment. Please retry.';
+        return 'Did you know you can pay less with toktokwallet?';
+      }
+      case 7: {
+        return 'Maghintay ka lamang, ako’y darating - toktok driver';
+      }
+      case 8: {
+        return 'Kaunti na lang, ka-toktok! Paparating na ang toktok driver!';
       }
     }
+  };
+
+  const dataTitle = [
+    {
+      title: 'Find Driver Again',
+      body: 'Kaunti na lang, ka-toktok! Paparating na ang toktok driver!',
+    },
+    {
+      title: 'Drivers are Busy at the Moment',
+      body: 'Try lang nang try mag-book ka-toktok! Toktok driver naman ang susundo sayo!',
+    },
+    {
+      title: 'Book Again',
+      body: 'Wait lang po. We are still looking for drivers, pa-wait lang po ng few minutes, please?',
+    },
+    {
+      title: 'Wait lang po',
+      body: 'Drivers are busy at the moment, try ulit natin?',
+    },
+  ];
+
+  const changeTextValue = () => {
+    const len = dataTitle.length;
+    setTextValue(dataTitle[Math.floor(Math.random() * len)]);
   };
 
   return (
@@ -489,7 +522,12 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         booking={booking}
       />
       <BackButton navigation={navigation} popTo={popTo} />
-      <FindingDriverStatus waitingStatus={waitingStatus} renderStatus={renderStatus} waitingText={waitingText} />
+      <FindingDriverStatus
+        waitingStatus={waitingStatus}
+        renderStatus={renderStatus}
+        waitingText={waitingText}
+        textValue={textValue}
+      />
 
       <View style={styles.card}>
         <BookingDistanceTime booking={booking} />

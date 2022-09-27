@@ -78,6 +78,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   const [isViaTokwa, setIsViaTokwa] = useState(false);
   const [driverData, setDriverData] = useState();
   const [driverCoordinates, setDriverCoordinates] = useState();
+  const [driverArrivedState, setDriverArrivedState] = useState(false);
 
   const {driver, booking} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
@@ -329,15 +330,25 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     });
   };
 
-  const goBackAfterCancellation = async () => {
-    // navigation.pop();
-    await setViewCancelBookingModal(false);
-    setOriginData(true);
-    setIsViaTokwa(false);
+  const goBackAfterCancellation = () => {
+    if (driverArrivedState == true) {
+      navigation.pop();
+      setViewCancelBookingModal(false);
+      setOriginData(true);
+      setIsViaTokwa(false);
 
-    return navigation.replace('ToktokGoBookingStart', {
-      popTo: popTo + 1,
-    });
+      return navigation.replace('ToktokGoBookingStart', {
+        popTo: popTo + 1,
+      });
+    } else {
+      setViewCancelBookingModal(false);
+      setOriginData(true);
+      setIsViaTokwa(false);
+
+      return navigation.replace('ToktokGoBookingStart', {
+        popTo: popTo + 1,
+      });
+    }
   };
 
   const initiateCancel = () => {
@@ -366,27 +377,47 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     setmodal(false);
   };
   const openRateDriver = () => {
-    // navigation.pop();
-    setOriginData(true);
-    setmodal(false);
-    navigation.replace('ToktokGoRateDriver', {
-      popTo: popTo + 1,
-      booking,
-    });
+    if (driverArrivedState == true) {
+      navigation.pop();
+      setOriginData(true);
+      setmodal(false);
+      navigation.replace('ToktokGoRateDriver', {
+        popTo: popTo + 1,
+        booking,
+      });
+    } else {
+      setOriginData(true);
+      setmodal(false);
+      navigation.replace('ToktokGoRateDriver', {
+        popTo: popTo + 1,
+        booking,
+      });
+    }
   };
   const onCancel = () => {
     setCancel(true);
   };
   const onConsumerAcceptDriverCancelled = () => {
-    // navigation.pop();
-    setOriginData(true);
-    dispatch({
-      type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
-    });
-    navigation.replace('ToktokGoBookingStart', {
-      popTo: popTo + 1,
-    });
-    setmodal(false);
+    if (driverArrivedState == true) {
+      navigation.pop();
+      setOriginData(true);
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+      });
+      navigation.replace('ToktokGoBookingStart', {
+        popTo: popTo + 1,
+      });
+      setmodal(false);
+    } else {
+      setOriginData(true);
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
+      });
+      navigation.replace('ToktokGoBookingStart', {
+        popTo: popTo + 1,
+      });
+      setmodal(false);
+    }
   };
   const onCancelWithFee = () => {
     setCancel(false);
@@ -620,7 +651,12 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
             booking={booking}
           />
         )}
-        <SeeBookingDetails booking={booking} navigation={navigation} driverData={driverData} />
+        <SeeBookingDetails
+          booking={booking}
+          navigation={navigation}
+          driverData={driverData}
+          setDriverArrivedState={setDriverArrivedState}
+        />
       </View>
     </View>
   );
