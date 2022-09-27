@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   labelText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
-    marginBottom: 2,
+    marginBottom: 5,
   },
 });
 

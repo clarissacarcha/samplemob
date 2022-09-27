@@ -24,7 +24,7 @@ import {useDebounce} from 'toktokwallet/hooks';
 //GRAPHQL & HOOKS
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CASH_OUT_PROVIDER_PARTNERS, GET_CASH_OUT_SEARCH_PROVIDER_PARTNERS} from 'toktokwallet/graphql';
+import {GET_BANKS_PAGINATE, GET_SEARCH_BANKS_PAGINATE} from 'toktokwallet/graphql';
 
 const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
   const navigation = useNavigation();
@@ -34,7 +34,7 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
     headerTitle: () => <HeaderTitleRevamp label={'Banks'} />,
   });
 
-  const [cashOutProviderPartners, setCashOutProviderPartners] = useState([]);
+  const [banks, setBanks] = useState([]);
   const [search, setSearch] = useState('');
   const [isMounted, setIsMounted] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -43,56 +43,64 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
   const [searchLoading, setSearchLoading] = useState(false);
 
   const [
-    getCashOutProviderPartners,
-    {loading: getCashOutProviderPartnersLoading, error: getCashOutProviderPartnersError},
-  ] = useLazyQuery(GET_CASH_OUT_PROVIDER_PARTNERS, {
+    getBanksPaginate,
+    {loading: getBanksPaginateLoading, error: getBanksPaginateError, fetchMore: fetchMoreBanks},
+  ] = useLazyQuery(GET_BANKS_PAGINATE, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
       setRefreshing(false);
-      console.log(error);
     },
     onCompleted: data => {
-      setCashOutProviderPartners(data.getCashOutProviderPartners);
+      setBanks(data.getBanksPaginate.edges);
+      setPageInfo(data.getBanksPaginate.pageInfo);
       setRefreshing(false);
     },
   });
 
-  const [
-    getCashOutSearchProviderPartners,
-    {error: getCashOutSearchProviderPartnersError, fetchMore: fetchMoreCashOutSearchProviderPartners},
-  ] = useLazyQuery(GET_CASH_OUT_SEARCH_PROVIDER_PARTNERS, {
-    fetchPolicy: 'network-only',
-    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-    onError: error => {
-      console.log(error);
-      setRefreshing(false);
-      setSearchLoading(false);
-    },
-    onCompleted: data => {
-      setPageInfo(data.getCashOutSearchProviderPartners.pageInfo);
-      setFilteredData(data.getCashOutSearchProviderPartners.edges);
-      setRefreshing(false);
-      setSearchLoading(false);
-    },
-  });
+  const [getSearchBanksPaginate, {error: getSearchBanksPaginateError, fetchMore: fetchMoreSearchBanksPaginate}] =
+    useLazyQuery(GET_SEARCH_BANKS_PAGINATE, {
+      fetchPolicy: 'network-only',
+      client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+      onError: error => {
+        setRefreshing(false);
+        setSearchLoading(false);
+      },
+      onCompleted: data => {
+        setPageInfo(data.getSearchBanksPaginate.pageInfo);
+        setFilteredData(data.getSearchBanksPaginate.edges);
+        setRefreshing(false);
+        setSearchLoading(false);
+      },
+    });
 
   useEffect(() => {
-    getCashOutProviderPartners();
+    handleGetBanks();
     setIsMounted(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onRefreshFavorite = () => {
     setRefreshing(true);
-    search ? processSearch(search) : getCashOutProviderPartners();
+    search ? processSearch(search) : handleGetBanks();
+  };
+
+  const handleGetBanks = () => {
+    getBanksPaginate({
+      variables: {
+        input: {
+          afterCursorId: null,
+          afterCursorName: null,
+        },
+      },
+    });
   };
 
   const ListEmptyComponent = () => {
     const type = search !== '' ? 'search' : 'data';
     const emptyText = search !== '' ? 'Try to search something similar.' : '';
     const emptyLabel = search ? 'No Results Found' : 'No OTC Partners';
-    if (searchLoading || getCashOutProviderPartnersLoading) {
+    if (searchLoading || getBanksPaginateLoading) {
       return null;
     }
     return <NoData type={type} title={emptyLabel} label={emptyText} />;
@@ -108,7 +116,7 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
   const debounceProcessSearch = useDebounce(value => processSearch(value), 1000);
 
   const processSearch = value => {
-    getCashOutSearchProviderPartners({
+    getSearchBanksPaginate({
       variables: {
         input: {
           search: value,
@@ -122,7 +130,7 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
   const fetchMoreData = () => {
     if (pageInfo.hasNextPage) {
       if (search) {
-        fetchMoreCashOutSearchProviderPartners({
+        fetchMoreSearchBanksPaginate({
           variables: {
             input: {
               search,
@@ -134,15 +142,37 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
             if (!fetchMoreResult) {
               return previousResult;
             }
-            fetchMoreResult.getCashOutSearchProviderPartners.edges = [
-              ...previousResult.getCashOutSearchProviderPartners.edges,
-              ...fetchMoreResult.getCashOutSearchProviderPartners.edges,
+            fetchMoreResult.getSearchBanksPaginate.edges = [
+              ...previousResult.getSearchBanksPaginate.edges,
+              ...fetchMoreResult.getSearchBanksPaginate.edges,
             ];
             return fetchMoreResult;
           },
         }).then(({data}) => {
-          setPageInfo(data.getCashOutSearchProviderPartners.pageInfo);
-          setFilteredData(data.getCashOutSearchProviderPartners.edges);
+          setPageInfo(data.getSearchBanksPaginate.pageInfo);
+          setFilteredData(data.getSearchBanksPaginate.edges);
+        });
+      } else {
+        fetchMoreBanks({
+          variables: {
+            input: {
+              afterCursorId: pageInfo.endCursorId,
+              afterCursorName: pageInfo.endCursorName,
+            },
+          },
+          updateQuery: (previousResult, {fetchMoreResult}) => {
+            if (!fetchMoreResult) {
+              return previousResult;
+            }
+            fetchMoreResult.getBanksPaginate.edges = [
+              ...previousResult.getBanksPaginate.edges,
+              ...fetchMoreResult.getBanksPaginate.edges,
+            ];
+            return fetchMoreResult;
+          },
+        }).then(({data}) => {
+          setPageInfo(data.getBanksPaginate.pageInfo);
+          setBanks(data.getBanksPaginate.edges);
         });
       }
     }
@@ -157,56 +187,39 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
   };
 
   const DisplayContent = useMemo(() => {
-    if (search === '') {
-      return (
-        <List
-          data={cashOutProviderPartners}
-          renderItem={({item, index}) => <BankTransferAllBanks item={item} title={Object.keys(item)[index]} />}
-          keyExtractor={(item, index) => index.toString()}
-          ListEmptyComponent={ListEmptyComponent}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-          extraData={cashOutProviderPartners}
-        />
-      );
-    } else {
-      return (
-        <List
-          data={filteredData}
-          renderItem={({item, index}) => <BankTransferAllBanks item={item.node} isSearch />}
-          // eslint-disable-next-line react-native/no-inline-styles
-          contentContainerStyle={filteredData.length === 0 && {flexGrow: 1}}
-          keyExtractor={(item, index) => index.toString()}
-          extraData={[filteredData, cashOutProviderPartners, pageInfo]}
-          ListEmptyComponent={ListEmptyComponent}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-          onEndReachedThreshold={0.02}
-          onEndReached={() => fetchMoreData()}
-          ListFooterComponent={ListFooterComponent}
-          getItemLayout={(data, index) => ({
-            length: data.length,
-            offset: data.length * index,
-            index,
-          })}
-        />
-      );
-    }
+    return (
+      <List
+        data={search === '' ? banks : filteredData}
+        renderItem={({item, index}) => <BankTransferAllBanks item={item.node} />}
+        keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent={ListEmptyComponent}
+        contentContainerStyle={filteredData.length === 0 && {flexGrow: 1}}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
+        extraData={banks}
+        onEndReachedThreshold={0.02}
+        onEndReached={() => fetchMoreData()}
+        ListFooterComponent={ListFooterComponent}
+        getItemLayout={(data, index) => ({
+          length: data.length,
+          offset: data.length * index,
+          index,
+        })}
+      />
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cashOutProviderPartners, filteredData, refreshing, search]);
+  }, [banks, filteredData, refreshing, search]);
 
-  if (getCashOutProviderPartnersError || getCashOutSearchProviderPartnersError) {
+  if (getBanksPaginateError || getSearchBanksPaginateError) {
     return (
       <Container>
-        <SomethingWentWrong
-          onRefetch={getCashOutProviderPartners}
-          error={getCashOutProviderPartnersError ?? getCashOutSearchProviderPartnersError}
-        />
+        <SomethingWentWrong onRefetch={handleGetBanks} error={getBanksPaginateError ?? getSearchBanksPaginateError} />
       </Container>
     );
   }
   return (
     <Container>
       <SearchContainer>
-        {isMounted && cashOutProviderPartners.length !== 0 && (
+        {isMounted && banks.length !== 0 && (
           <SearchInput
             search={search}
             onChangeText={onSearchChange}
@@ -218,7 +231,7 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
         )}
       </SearchContainer>
       {(searchLoading && filteredData.length === 0) ||
-      (getCashOutProviderPartnersLoading && cashOutProviderPartners.length === 0 && !refreshing) ? (
+      (getBanksPaginateLoading && banks.length === 0 && !refreshing) ? (
         <LoadingIndicator isLoading={true} isFlex />
       ) : (
         DisplayContent

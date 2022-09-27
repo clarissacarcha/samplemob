@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, {useMemo, useState, useCallback, useEffect} from 'react';
+import React, {useMemo, useState, useCallback} from 'react';
 
 import type {PropsType} from './types';
 import {BackgroundImage, Container, LoadingContainer, List, ReminderContainer} from './Styled';
@@ -21,11 +21,10 @@ import {BankTransferBankList, BankTransferFavoriteList} from 'toktokwallet/compo
 
 //GRAPHQL & HOOKS
 import {useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_BILL_TYPES, GET_FAVORITES_BILLS_ITEMS} from 'toktokbills/graphql/model';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_HIGHLIGHTED_BANKS} from 'toktokwallet/graphql';
+import {GET_HIGHLIGHTED_BANKS, GET_BANK_ACCOUNTS_PAGINATE} from 'toktokwallet/graphql';
+
 const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   const navigation = useNavigation();
 
@@ -33,35 +32,41 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitleRevamp label={'Bank Transfer'} />,
   });
-  const [billTypes, setBillTypes] = useState([]);
-  const [favoriteBills, setFavoriteBills] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [banks, setBanks] = useState([]);
+  const [favoriteBankAccounts, setFavoriteBankAccounts] = useState([]);
 
   const [getHighlightedBanks, {error: banksError, loading: banksLoading}] = useLazyQuery(GET_HIGHLIGHTED_BANKS, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onError: () => {
+      setRefreshing(false);
+    },
     onCompleted: data => {
-      setBanks(data.getHighlightedBanks);
+      let result = data.getHighlightedBanks.filter(o1 => !banks.some(o2 => o1.id === o2.id));
+      if (result.length > 0 || data.getHighlightedBanks.length !== banks.length) {
+        setBanks(data.getHighlightedBanks);
+      }
+      setRefreshing(false);
     },
   });
 
-  const [getFavoriteBillsPaginate, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(
-    GET_FAVORITES_BILLS_ITEMS,
+  const [getBankAccountsPaginate, {loading: getFavoritesLoading, error: getFavoritesError}] = useLazyQuery(
+    GET_BANK_ACCOUNTS_PAGINATE,
     {
       fetchPolicy: 'network-only',
-      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      client: TOKTOK_WALLET_GRAPHQL_CLIENT,
       onError: () => {
         setRefreshing(false);
       },
       onCompleted: data => {
-        let result = data.getFavoriteBillsPaginate.edges.filter(
-          o1 => !favoriteBills.some(o2 => o1.node.id === o2.node.id),
+        let result = data.getBankAccountsPaginate.edges.filter(
+          o1 => !favoriteBankAccounts.some(o2 => o1.node.id === o2.node.id),
         );
 
-        if (result.length > 0 || data.getFavoriteBillsPaginate.edges.length !== favoriteBills.length) {
-          setFavoriteBills(data.getFavoriteBillsPaginate.edges);
+        if (result.length > 0 || data.getBankAccountsPaginate.edges.length !== favoriteBankAccounts.length) {
+          setFavoriteBankAccounts(data.getBankAccountsPaginate.edges);
         }
         setRefreshing(false);
       },
@@ -72,32 +77,34 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
     useCallback(
       function getData() {
         getHighlightedBanks();
-        getFavoriteBillsPaginate({
+        getBankAccountsPaginate({
           variables: {
             input: {
               afterCursorId: null,
-              afterCursorUpdatedAt: null,
+              afterCursorName: null,
             },
           },
         });
         setIsMounted(true);
       },
-      [getHighlightedBanks, getFavoriteBillsPaginate],
+      [getHighlightedBanks, getBankAccountsPaginate],
     ),
   );
 
-  const onRefresh = () => {
+  const onRefresh = useCallback(() => {
+    console.log('HAHAHAHA');
     setRefreshing(true);
     handleGetData();
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleGetData = () => {
     getHighlightedBanks();
-    getFavoriteBillsPaginate({
+    getBankAccountsPaginate({
       variables: {
         input: {
           afterCursorId: null,
-          afterCursorUpdatedAt: null,
+          afterCursorName: null,
         },
       },
     });
@@ -110,10 +117,12 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
         <ReminderContainer>
           <TransferableAndNonTransferableBalance />
         </ReminderContainer>
-        {favoriteBills.length > 0 && <BankTransferFavoriteList favoriteBills={favoriteBills} />}
+        {favoriteBankAccounts.length > 0 && (
+          <BankTransferFavoriteList data={favoriteBankAccounts} onRefreshFavorite={onRefresh} />
+        )}
       </>
     );
-  }, [favoriteBills]);
+  }, [favoriteBankAccounts, onRefresh]);
 
   const ListBillerTypesComponent = useMemo(() => {
     if (banks.length === 0) {
@@ -132,14 +141,15 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   }
   return (
     <BackgroundImage>
-      {((banksLoading && banks.length === 0) || (getFavoritesLoading && favoriteBills.length === 0 && !isMounted)) &&
+      {((banksLoading && banks.length === 0) ||
+        (getFavoritesLoading && favoriteBankAccounts.length === 0 && !isMounted)) &&
       !refreshing ? (
         <LoadingContainer>
           <LoadingIndicator isLoading={true} />
         </LoadingContainer>
       ) : (
         <List
-          extraData={[favoriteBills, banks]}
+          extraData={[favoriteBankAccounts, banks]}
           ListHeaderComponent={ListFavoriteComponent}
           ListFooterComponent={ListBillerTypesComponent}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}

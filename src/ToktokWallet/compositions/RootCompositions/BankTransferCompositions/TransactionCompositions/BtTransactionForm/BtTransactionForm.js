@@ -9,34 +9,12 @@ import type {PropsType} from './types';
 import {Container, FeeInformation, InputContainer} from './Styled';
 import {CustomTextInput, CustomAmountInput} from 'toktokwallet/components';
 import {BtVerifyContext} from '../BtVerifyContextProvider';
-import {alphanumericRegex, numericRegex, numberFormat, currencyCode} from 'toktokwallet/helper';
-//GRAPHQL & HOOKS
-import {useMutation} from '@apollo/react-hooks';
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {POST_COMPUTE_CONVENIENCE_FEE} from 'toktokwallet/graphql';
+import {alphanumericRegex, numericRegex} from 'toktokwallet/helper';
 
 const BtTransactionForm = (props: PropsType): React$Node => {
-  const {data, fees, errorMessages, changeDataValue, changeErrorMessages, changeFeesValue} =
+  const {data, fees, errorMessages, changeDataValue, changeErrorMessages, changeFeesValue, postComputeConvenienceFee} =
     useContext(BtVerifyContext);
   const {bankDetails} = props;
-
-  const [postComputeConvenienceFee, {loading: computeLoading}] = useMutation(POST_COMPUTE_CONVENIENCE_FEE, {
-    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-    // onError: (error)=> onErrorAlert({alert,error}),
-    onCompleted: fee => {
-      const {providerServiceFee, systemServiceFee, type} = fee.postComputeConvenienceFee;
-      const totalSF = providerServiceFee + systemServiceFee;
-      const feeInformation =
-        totalSF > 0
-          ? `Additional ${currencyCode}${numberFormat(totalSF)} convenience fee will be charged for this transaction.`
-          : 'Convenience fee is waived for this transaction.';
-      changeFeesValue('systemServiceFee', systemServiceFee);
-      changeFeesValue('providerServiceFee', providerServiceFee);
-      changeFeesValue('totalServiceFee', totalSF);
-      changeFeesValue('type', type === 'pesonet' ? 'Pesonet' : 'Instapay');
-      changeFeesValue('feeInformation', feeInformation);
-    },
-  });
 
   const computeConvenienceFee = () => {
     if (data.amount !== '' && +data.amount > 0) {
@@ -52,6 +30,19 @@ const BtTransactionForm = (props: PropsType): React$Node => {
       changeFeesValue('feeInformation', '');
     }
   };
+
+  useEffect(() => {
+    if (data.amount !== '' && bankDetails.id > 0) {
+      postComputeConvenienceFee({
+        variables: {
+          input: {
+            amount: +data.amount,
+            cashOutBankId: bankDetails.id,
+          },
+        },
+      });
+    }
+  }, [bankDetails, data.amount, postComputeConvenienceFee]);
 
   return (
     <Container>
@@ -93,7 +84,7 @@ const BtTransactionForm = (props: PropsType): React$Node => {
           errorMessage={errorMessages.amount}
           onBlur={computeConvenienceFee}
         />
-        {fees.feeInformation !== '' && !computeLoading && <FeeInformation>{fees.feeInformation}</FeeInformation>}
+        {fees.feeInformation !== '' && <FeeInformation>{fees.feeInformation}</FeeInformation>}
       </InputContainer>
       <InputContainer>
         <CustomTextInput

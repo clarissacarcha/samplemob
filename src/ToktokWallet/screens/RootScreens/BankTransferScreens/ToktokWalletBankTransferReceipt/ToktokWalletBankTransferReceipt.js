@@ -36,8 +36,8 @@ const ToktokWalletBankTransferReceipt = (props: PropsType): React$Node => {
         <Value isRefNum>{referenceNumber}</Value>
       </Container>
       <Container>
-        <Label>Trace Number</Label>
-        <Value>{cashOutUbApiLog.traceNumber}</Value>
+        <Label>{cashOutUbApiLog.traceNumber ? 'Trace Number' : 'Remittance ID'}</Label>
+        <Value>{cashOutUbApiLog.traceNumber ? cashOutUbApiLog.traceNumber : cashOutUbApiLog.remittanceId}</Value>
       </Container>
       <Container>
         <Label>Transaction Date</Label>

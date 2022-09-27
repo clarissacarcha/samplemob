@@ -15,19 +15,22 @@ import {
   ContentContainer,
   Description,
   DetailsContainer,
+  HeartButton,
+  HeartIcon,
   LoadingContainer,
   LogoContainer,
   LogoImage,
   Title,
 } from './Styled';
 
-const BankTransferFavoriteItems = (props: PropsType): React$Node => {
+const BankTransferAllFavorites = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const [imageLoading, setImageLoading] = useState(true);
 
-  const {item, onRefreshFavorite} = props;
+  const {item, onPressFavorite, onRefreshFavorite} = props;
   const {accountName, accountNumber, bank, id} = item.node;
   const {name, image} = bank;
+  const isFavorite = true;
 
   const onPress = () => {
     navigation.navigate('ToktokWalletBankTransferTransaction', {
@@ -65,7 +68,10 @@ const BankTransferFavoriteItems = (props: PropsType): React$Node => {
           <Description>{accountNumber}</Description>
         </DetailsContainer>
       </ContentContainer>
+      <HeartButton onPress={onPressFavorite}>
+        <HeartIcon isFavorite={isFavorite} />
+      </HeartButton>
     </ButtonContainer>
   );
 };
-export default BankTransferFavoriteItems;
+export default BankTransferAllFavorites;

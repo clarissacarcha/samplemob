@@ -31,14 +31,12 @@ const BankTransferBankItem = (props: PropsType): React$Node => {
             <LoadingIndicator isLoading={true} size="small" />
           </LoadingContainer>
         )}
-        {item?.image && (
-          <LogoImage
-            source={{uri: item?.image}}
-            resizeMode={FastImage.resizeMode.contain}
-            onLoadStart={() => setImageLoading(true)}
-            onLoadEnd={() => setImageLoading(false)}
-          />
-        )}
+        <LogoImage
+          source={{uri: item?.image}}
+          resizeMode={FastImage.resizeMode.contain}
+          onLoadStart={() => setImageLoading(true)}
+          onLoadEnd={() => setImageLoading(false)}
+        />
       </LogoContainer>
       <Description>{item.name}</Description>
     </ButtonContainer>

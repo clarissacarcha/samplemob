@@ -76,7 +76,11 @@ export const CashInLog = ({item, tokwaAccount, index, data}) => {
       {!!upperText && <Text style={styles.dayTitle}>{upperText}</Text>}
       <TouchableOpacity style={styles.transaction} onPress={onthrottledPress}>
         <View style={styles.transactionDetails}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Service Reference Number {serviceRefNo}</Text>
+          <Text
+            style={{
+              fontSize: FONT_SIZE.M,
+              fontFamily: FONT.REGULAR,
+            }}>{`Service Reference Number\n${serviceRefNo}`}</Text>
           {/* <Text style={{color: '#909294', fontSize: FONT_SIZE.S, marginTop: 0, fontFamily: FONT.REGULAR}}>
             {status}
           </Text> */}

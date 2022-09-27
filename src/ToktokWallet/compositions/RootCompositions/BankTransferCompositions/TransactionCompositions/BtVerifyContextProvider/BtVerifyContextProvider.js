@@ -8,17 +8,22 @@ import React, {createContext, useState} from 'react';
 import type {PropsType} from './types';
 import {} from './Styled';
 import {useAccount} from 'toktokwallet/hooks';
+import {numberFormat, currencyCode} from 'toktokwallet/helper';
 
+//GRAPHQL & HOOKS
+import {useMutation} from '@apollo/react-hooks';
+import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
+import {POST_COMPUTE_CONVENIENCE_FEE} from 'toktokwallet/graphql';
 export const BtVerifyContext: React$Context<any> = createContext<any>();
 const {Provider} = BtVerifyContext;
 
 export const BtVerifyContextProvider = (props: PropsType): React$Node => {
   const {tokwaAccount} = useAccount();
-  const {children} = props;
+  const {children, favoriteDetails} = props;
 
   const [data, setData] = useState({
-    accountName: '',
-    accountNumber: '',
+    accountName: favoriteDetails ? favoriteDetails.accountName : '',
+    accountNumber: favoriteDetails ? favoriteDetails.accountNumber : '',
     amount: '',
     emailAddress: tokwaAccount.person.emailAddress,
     purpose: '',
@@ -54,11 +59,34 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
   };
 
   const changeFeesValue = (key, value) => {
-    setFees(oldstate => ({
-      ...oldstate,
-      [key]: value,
-    }));
+    setFees(oldstate => ({...oldstate, [key]: value}));
   };
+
+  const [postComputeConvenienceFee, {loading: computeConvenienceFeeLoading}] = useMutation(
+    POST_COMPUTE_CONVENIENCE_FEE,
+    {
+      client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+      // onError: (error)=> onErrorAlert({alert,error}),
+      onCompleted: fee => {
+        const {providerServiceFee, systemServiceFee, type} = fee.postComputeConvenienceFee;
+        const totalServiceFee = providerServiceFee + systemServiceFee;
+        const feeInformation =
+          totalServiceFee > 0
+            ? `Additional ${currencyCode}${numberFormat(
+                totalServiceFee,
+              )} convenience fee will be charged for this transaction.`
+            : 'Convenience fee is waived for this transaction.';
+
+        setFees({
+          systemServiceFee,
+          providerServiceFee,
+          totalServiceFee,
+          feeInformation,
+          type: type === 'pesonet' ? 'Pesonet' : 'Instapay',
+        });
+      },
+    },
+  );
 
   return (
     <Provider
@@ -70,6 +98,8 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
         changeDataValue,
         fees,
         changeFeesValue,
+        postComputeConvenienceFee,
+        computeConvenienceFeeLoading,
       }}>
       {children}
     </Provider>

@@ -7,18 +7,24 @@ import styled from 'styled-components/native';
 import {Text, TouchableOpacity} from 'react-native';
 import {moderateScale} from 'toktokwallet/helper';
 import FastImage from 'react-native-fast-image';
+import FIcon5 from 'react-native-vector-icons/FontAwesome';
 
 import CONSTANTS from 'src/common/res/constants';
 const {FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 export const ButtonContainer: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
   ...props,
-}))``;
+}))`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-horizontal: ${moderateScale(16)}px;
+`;
 export const ContentContainer: ComponentType<any> = styled.View`
   flex-direction: row;
   align-items: center;
-  padding-horizontal: ${moderateScale(25)}px;
   padding-vertical: ${moderateScale(10)}px;
+  flex-shrink: 1;
 `;
 export const LogoContainer: ComponentType<any> = styled.View`
   justify-content: center;
@@ -53,3 +59,14 @@ export const Description: ComponentType<any> = styled.Text`
   color: #525252;
   font-size: ${FONT_SIZE.S};
 `;
+export const HeartButton: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
+  ...props,
+}))`
+  padding-left: ${moderateScale(15)}px;
+`;
+export const HeartIcon: ComponentType<any> = styled(FIcon5).attrs(props => ({
+  ...props,
+  name: props.isFavorite ? 'heart' : 'heart-o',
+  size: moderateScale(17),
+  color: props.theme.color.orange,
+}))``;

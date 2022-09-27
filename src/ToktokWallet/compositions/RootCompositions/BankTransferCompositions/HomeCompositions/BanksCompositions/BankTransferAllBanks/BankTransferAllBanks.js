@@ -28,34 +28,32 @@ const BankTransferAllBanks = (props: PropsType): React$Node => {
   const {item} = props;
 
   const onPress = () => {
-    navigation.navigate('ToktokWalletCashOutOTCTransaction', {otcPartnerDetails: item});
+    navigation.navigate('ToktokWalletBankTransferTransaction', {bankDetails: item});
   };
 
   const onThrottledPress = useThrottle(onPress, 2000);
 
   return (
-    <View>
-      <ButtonContainer onPress={onThrottledPress}>
-        <ContentContainer>
-          <LogoContainer>
-            {imageLoading && item.logo && (
-              <LoadingContainer>
-                <LoadingIndicator isLoading={true} size="small" />
-              </LoadingContainer>
-            )}
-            <LogoImage
-              source={{uri: item.logo}}
-              resizeMode={FastImage.resizeMode.contain}
-              onLoadStart={() => setImageLoading(true)}
-              onLoadEnd={() => setImageLoading(false)}
-            />
-          </LogoContainer>
-          <DetailsContainer>
-            <Title>{item.description}</Title>
-          </DetailsContainer>
-        </ContentContainer>
-      </ButtonContainer>
-    </View>
+    <ButtonContainer onPress={onThrottledPress}>
+      <ContentContainer>
+        <LogoContainer>
+          {imageLoading && item.image && (
+            <LoadingContainer>
+              <LoadingIndicator isLoading={true} size="small" />
+            </LoadingContainer>
+          )}
+          <LogoImage
+            source={{uri: item.image}}
+            resizeMode={FastImage.resizeMode.contain}
+            onLoadStart={() => setImageLoading(true)}
+            onLoadEnd={() => setImageLoading(false)}
+          />
+        </LogoContainer>
+        <DetailsContainer>
+          <Title>{item.name}</Title>
+        </DetailsContainer>
+      </ContentContainer>
+    </ButtonContainer>
   );
 };
 export default BankTransferAllBanks;
