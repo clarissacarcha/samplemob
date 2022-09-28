@@ -103,7 +103,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       if (networkError) {
         alertGO({message: 'Network error occurred. Please check your internet connection.'});
       } else if (graphQLErrors.length > 0) {
-        graphQLErrors.map(({message, locations, path, code, errorType}) => {
+        graphQLErrors.map(({message, locations, path, code, errorType, serviceableArea}) => {
           if (code === 'INTERNAL_SERVER_ERROR') {
             alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           } else if (code === 'USER_INPUT_ERROR') {
@@ -112,6 +112,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
             if (errorType === 'AREA_UNSERVICEABLE') {
               setServiceableAreaScreen(true);
               setSearchResponse(null);
+              setServiceableAreaList(serviceableArea);
             } else if (errorType === 'PLACE_NOT_FOUND') {
               alertGO({
                 title: 'Location Not Available',
