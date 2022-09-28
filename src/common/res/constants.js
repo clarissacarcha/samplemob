@@ -28,11 +28,11 @@ const FONT_FAMILY = {
 };
 
 const FONT_SIZE = {
-  XS: normalize(9),
-  S: normalize(11),
-  M: normalize(13),
-  L: normalize(15),
-  XL: normalize(17),
+  XS: 9,
+  S: 11,
+  M: 13,
+  L: 15,
+  XL: 17,
 };
 
 export const SIZE = {
