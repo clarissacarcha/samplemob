@@ -17,9 +17,11 @@ export const BackgroundImage: ComponentType<any> = styled(ImageBackground).attrs
 `;
 export const ScrollViewContainer: ComponentType<any> = styled(ScrollView).attrs(props => ({
   ...props,
+  contentContainerStyle: {
+    padding: props.onCapturingScreen ? 0 : moderateScale(16),
+  },
 }))`
   flex: 1;
-  padding: ${({onCapturingScreen}) => (onCapturingScreen ? 0 : moderateScale(16))}px;
 `;
 export const ReceiptDownloadContainer: ComponentType<any> = styled(ImageBackground).attrs(props => ({
   ...props,
@@ -31,9 +33,8 @@ export const ReceiptDownloadContainer: ComponentType<any> = styled(ImageBackgrou
 export const ContentContainer: ComponentType<any> = styled(View).attrs(props => ({
   ...props,
 }))`
-  background-color: ${props => props.theme.color.white};
-  // padding-horizontal: ${moderateScale(16)}px;
+  background: ${props => props.theme.color.white};
   ${Platform.OS === 'android' ? 'elevation: 3;' : 'box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);'}
   ${({onCapturingScreen}) =>
-    onCapturingScreen && Platform.OS === 'android' ? 'borderColor: #F8F8F8; borderWidth: 2px;' : ''}
+    onCapturingScreen && Platform.OS === 'android' ? 'border-color: #F8F8F8; border-Width: 2px;' : ''}
 `;

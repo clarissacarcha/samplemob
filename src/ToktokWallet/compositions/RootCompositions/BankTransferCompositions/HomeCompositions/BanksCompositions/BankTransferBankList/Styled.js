@@ -3,7 +3,7 @@
  */
 
 import type {ComponentType} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, Platform} from 'react-native';
 import styled from 'styled-components/native';
 import {moderateScale} from 'toktokwallet/helper';
 import {VectorIcon, ICON_SET} from 'src/revamp';
@@ -13,7 +13,7 @@ const {FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 export const Container: ComponentType<any> = styled.View`
   background: #ffffff;
-  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);
+  ${Platform.OS === 'android' ? 'elevation: 3;' : 'box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);'}
   border-radius: 5px;
   margin: ${moderateScale(16)}px;
 `;
