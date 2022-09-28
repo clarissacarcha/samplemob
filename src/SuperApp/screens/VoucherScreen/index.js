@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import CONSTANTS from '../../../common/res/constants';
+import {MEDIUM} from '../../res/constants';
 import {ThrottledOpacity} from '../../../components_section';
 import {SuccessVoucherClaimedModal, VoucherCard} from './Components';
 import {Header} from '../Components';
@@ -114,7 +115,6 @@ export const VoucherScreen = ({navigation}) => {
     getSearchVoucher({
       variables: {
         input: {
-          type: 'promo',
           search: search,
         },
       },
@@ -147,7 +147,6 @@ export const VoucherScreen = ({navigation}) => {
     getSearchVoucher({
       variables: {
         input: {
-          type: 'promo',
           search: value,
         },
       },
@@ -180,6 +179,7 @@ export const VoucherScreen = ({navigation}) => {
           placeholder={'Enter voucher code'}
           value={search}
           onSubmitEditing={searchVoucher}
+          placeholderTextColor={MEDIUM}
         />
         {search ? (
           <ThrottledOpacity onPress={clearSearch}>
