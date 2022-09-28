@@ -338,7 +338,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
                               if (activeToDeleteItem.value) {
                                 await deleteMultipleAddress();
                               } else {
-                                await deleteAddress(singleItemDelete);
+                                await deleteAddress(item.id);
                               }
                               setTimeout(() => {
                                 dispatch({type:'TOKTOK_MALL_OPEN_MODAL', payload: {
@@ -458,7 +458,7 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
         console.log("response.data", req)
         if(req.responseData && req.responseData.success == 1){
           EventRegister.emit("refreshCheckoutData")
-          console.log("response.data", response.data)
+          // console.log("response.data", response.data)
         }else if(req.responseError && req.responseError.success == 0){
           Toast.show(req.responseError.message, Toast.LONG)
         }else if(req.responseError){
