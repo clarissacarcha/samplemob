@@ -10,7 +10,7 @@ import type {PropsType} from './types';
 import {Container} from './Styled';
 import {WebView} from 'react-native-webview';
 import {useRoute, useNavigation} from '@react-navigation/native';
-import {HeaderBack, HeaderTitleRevamp, PolicyNote} from 'toktokwallet/components';
+import {HeaderBack, HeaderTitleRevamp, PolicyNote, CheckIdleState} from 'toktokwallet/components';
 import {locationPermission} from 'toktokwallet/helper';
 
 const ToktokWalletCashOutOtcSeeNearby = (props: PropsType): React$Node => {
@@ -32,26 +32,28 @@ const ToktokWalletCashOutOtcSeeNearby = (props: PropsType): React$Node => {
   const getCurrentLocation = async () => {
     const location = await locationPermission({showsReverseGeocode: false});
     if (location) {
-      setMapUrl(`https://www.google.com/maps/search/${otcPartner}/@${location.latitude},${location.longitude},11z`);
+      setMapUrl(`https://www.google.com/maps/search/${otcPartner}/@${location.latitude},${location.longitude},12z`);
     }
   };
 
   return (
-    <Container>
-      <PolicyNote note1="Access to the nearby cash-out outlet map requires mobile data. Data charges may apply here. Also, ensure that your Location Services is set to High Accuracy mode." />
-      <WebView
-        originWhitelist={['*']}
-        scalesPageToFit={true}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        startInLoadingState={true}
-        ignoreSslError={true}
-        allowUniversalAccessFromFileURLs={true}
-        source={{
-          uri: mapUrl !== '' ? mapUrl : `https://www.google.com/maps/search/${otcPartner}`,
-        }}
-      />
-    </Container>
+    <CheckIdleState>
+      <Container>
+        <PolicyNote note1="Access to the nearby cash-out outlet map requires mobile data. Data charges may apply here. Also, ensure that your Location Services is set to High Accuracy mode." />
+        <WebView
+          originWhitelist={['*']}
+          scalesPageToFit={true}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          startInLoadingState={true}
+          ignoreSslError={true}
+          allowUniversalAccessFromFileURLs={true}
+          source={{
+            uri: mapUrl !== '' ? mapUrl : `https://www.google.com/maps/search/${otcPartner}`,
+          }}
+        />
+      </Container>
+    </CheckIdleState>
   );
 };
 

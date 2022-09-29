@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, Text, View, ScrollView} from 'react-native';
 
 //COMPONENTS
-import {HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
+import {CheckIdleState, HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
 import {ConfirmButton, PaymentDetails} from './Components';
 
 import CONSTANTS from 'common/res/constants';
@@ -16,14 +16,14 @@ export const ToktokWalletDpCashInPaymentSummary = ({navigation, route}) => {
   });
 
   return (
-    <>
+    <CheckIdleState>
       <View style={styles.container}>
         <ScrollView keyboardShouldPersistTaps="handled">
           <PaymentDetails route={route} navigation={navigation} />
         </ScrollView>
         <ConfirmButton route={route} />
       </View>
-    </>
+    </CheckIdleState>
   );
 };
 

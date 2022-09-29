@@ -8,4 +8,5 @@ export type PropsType = {
   theme?: Object,
   data: Array<Object>,
   onRefreshFavorite: any,
+  screenLabel: string,
 };

@@ -67,8 +67,8 @@ export const GET_BANK_ACCOUNTS_PAGINATE = gql`
       pageInfo {
         startCursorId
         endCursorId
-        startCursorName
-        endCursorName
+        startCursorUpdatedAt
+        endCursorUpdatedAt
         hasNextPage
       }
     }

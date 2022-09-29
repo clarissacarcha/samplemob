@@ -7,6 +7,7 @@ import {
   HeaderTitleRevamp,
   TransferableAndNonTransferableBalance,
   SomethingWentWrong,
+  CheckIdleState,
 } from 'toktokwallet/components';
 import {OTCPartner, VerifyContext, VerifyContextProvider} from './components';
 
@@ -39,9 +40,11 @@ export const ToktokWalletCashOutOTCHome = ({navigation}) => {
   });
 
   return (
-    <VerifyContextProvider>
-      <MainComponent navigation={navigation} />
-    </VerifyContextProvider>
+    <CheckIdleState>
+      <VerifyContextProvider>
+        <MainComponent navigation={navigation} />
+      </VerifyContextProvider>
+    </CheckIdleState>
   );
 };
 

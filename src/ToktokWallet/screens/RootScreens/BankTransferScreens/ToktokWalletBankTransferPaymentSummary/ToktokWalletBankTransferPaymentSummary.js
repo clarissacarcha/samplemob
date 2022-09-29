@@ -12,7 +12,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {ScrollView} from 'react-native';
 //COMPONENTS
 import {BtPaymentSummaryConfirm, BtPaymentSummaryDetails} from 'toktokwallet/compositions';
-import {HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
+import {CheckIdleState, HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
 
 const ToktokWalletBankTransferPaymentSummary = (props: PropsType): React$Node => {
   const navigation = useNavigation();
@@ -24,12 +24,14 @@ const ToktokWalletBankTransferPaymentSummary = (props: PropsType): React$Node =>
   });
 
   return (
-    <Container>
-      <ScrollView keyboardShouldPersistTaps="handled">
-        <BtPaymentSummaryDetails route={route} navigation={navigation} />
-      </ScrollView>
-      <BtPaymentSummaryConfirm route={route} navigation={navigation} />
-    </Container>
+    <CheckIdleState>
+      <Container>
+        <ScrollView keyboardShouldPersistTaps="handled">
+          <BtPaymentSummaryDetails route={route} navigation={navigation} />
+        </ScrollView>
+        <BtPaymentSummaryConfirm route={route} navigation={navigation} />
+      </Container>
+    </CheckIdleState>
   );
 };
 

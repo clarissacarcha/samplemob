@@ -40,6 +40,7 @@ const Receipt = (props: PropsType): React$Node => {
   const route = useRoute();
   const [onCapturingScreen, setOnCapturingScreen] = useState(false);
   const viewshotRef = useRef();
+  const screenLabel = route.params?.screenLabel ? route.params.screenLabel : 'Bank Transfer';
 
   navigation.setOptions({
     headerLeft: () => null,
@@ -54,6 +55,32 @@ const Receipt = (props: PropsType): React$Node => {
       />
     ),
   });
+
+  let status;
+  switch (route.params.receipt.status) {
+    case '0':
+      status = 'Pending';
+      break;
+    case '1':
+      status = 'Successful';
+      break;
+    case '2':
+      status = 'Pending';
+      break;
+    default:
+      status = 'Rejected';
+      break;
+  }
+
+  const onPressOk = () => {
+    if (screenLabel !== 'Bank Transfer' && status !== 'Successful') {
+      navigation.navigate('ToktokWalletFullyVerifiedApplication');
+      navigation.replace('ToktokWalletFullyVerifiedApplication');
+    } else {
+      navigation.navigate('ToktokWalletHomePage');
+      navigation.replace('ToktokWalletHomePage');
+    }
+  };
 
   return (
     <>
@@ -73,7 +100,7 @@ const Receipt = (props: PropsType): React$Node => {
           </ViewShot>
         </ScrollViewContainer>
       </BackgroundImage>
-      <OrangeButton label="OK" onPress={() => navigation.navigate('ToktokWalletHomePage')} hasShadow />
+      <OrangeButton label="OK" onPress={onPressOk} hasShadow />
     </>
   );
 };

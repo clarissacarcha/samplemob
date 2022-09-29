@@ -46,10 +46,10 @@ export const Title: ComponentType<any> = styled(Text).attrs(props => ({
   ellipsizeMode: 'tail',
 }))`
   color: #525252;
-  font-size: ${FONT_SIZE.M};
+  font-size: ${FONT_SIZE.M}px;
   font-family: ${FONT.BOLD};
 `;
 export const Description: ComponentType<any> = styled.Text`
   color: #525252;
-  font-size: ${FONT_SIZE.S};
+  font-size: ${FONT_SIZE.S}px;
 `;

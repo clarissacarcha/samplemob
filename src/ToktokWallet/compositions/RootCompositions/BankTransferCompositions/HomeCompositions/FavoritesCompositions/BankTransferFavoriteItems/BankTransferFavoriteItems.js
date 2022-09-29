@@ -25,7 +25,7 @@ const BankTransferFavoriteItems = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const [imageLoading, setImageLoading] = useState(true);
 
-  const {item, onRefreshFavorite} = props;
+  const {item, onRefreshFavorite, screenLabel} = props;
   const {accountName, accountNumber, bank, id} = item.node;
   const {name, image} = bank;
 
@@ -38,6 +38,7 @@ const BankTransferFavoriteItems = (props: PropsType): React$Node => {
         accountNumber,
       },
       onRefreshFavorite,
+      screenLabel,
     });
   };
 

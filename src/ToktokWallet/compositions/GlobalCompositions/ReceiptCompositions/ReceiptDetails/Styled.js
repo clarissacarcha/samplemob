@@ -44,7 +44,7 @@ export const FooterText: ComponentType<any> = styled.Text`
   margin-horizontal: ${moderateScale(16)}px;
   color: #525252;
   text-align: center;
-  font-size: ${FONT_SIZE.S};
+  font-size: ${FONT_SIZE.S}px;
 `;
 export const Logo: ComponentType<any> = styled(Image).attrs(props => ({
   ...props,

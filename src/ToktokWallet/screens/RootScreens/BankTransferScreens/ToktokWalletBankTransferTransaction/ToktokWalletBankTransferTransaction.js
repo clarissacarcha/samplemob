@@ -18,7 +18,7 @@ import {
   BtTransactionForm,
   BtVerifyContext,
 } from 'toktokwallet/compositions';
-import {HeaderBack, HeaderTitleRevamp, HeaderRight, LoadingIndicator} from 'toktokwallet/components';
+import {HeaderBack, HeaderTitleRevamp, HeaderRight, LoadingIndicator, CheckIdleState} from 'toktokwallet/components';
 import {ToastModal} from 'toktokbills/components';
 import {AlertOverlay} from 'src/components';
 //HOOKS
@@ -38,10 +38,11 @@ const MainComponent = ({route, favoriteDetails}) => {
   const [favoriteId, setFavoriteId] = useState(favoriteDetails ? favoriteDetails.id : 0);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
   const onRefreshFavorite = route.params?.onRefreshFavorite ? route.params.onRefreshFavorite : null;
+  const screenLabel = route.params?.screenLabel ? route.params.screenLabel : 'Bank Transfer';
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitleRevamp label={'Bank Transfer'} />,
+    headerTitle: () => <HeaderTitleRevamp label={screenLabel} />,
     headerRight: () => <HeaderRight onPress={onPressFavorite} isFavorite={favoriteId !== 0} />,
   });
 
@@ -158,7 +159,7 @@ const MainComponent = ({route, favoriteDetails}) => {
           <BtTransactionForm bankDetails={bankDetails} />
         </KeyboardAvoidingViewContainer>
       </Container>
-      <BtProceedButton bankDetails={bankDetails} />
+      <BtProceedButton bankDetails={bankDetails} screenLabel={screenLabel} />
     </Container>
   );
 };
@@ -168,9 +169,11 @@ const ToktokWalletBankTransferTransaction = (props: PropsType): React$Node => {
   const favoriteDetails = route.params?.favoriteDetails ? route.params.favoriteDetails : null;
 
   return (
-    <BtVerifyContextProvider favoriteDetails={favoriteDetails}>
-      <MainComponent route={route} favoriteDetails={favoriteDetails} />
-    </BtVerifyContextProvider>
+    <CheckIdleState>
+      <BtVerifyContextProvider favoriteDetails={favoriteDetails}>
+        <MainComponent route={route} favoriteDetails={favoriteDetails} />
+      </BtVerifyContextProvider>
+    </CheckIdleState>
   );
 };
 

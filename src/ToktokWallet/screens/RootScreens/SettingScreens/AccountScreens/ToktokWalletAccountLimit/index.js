@@ -1,41 +1,34 @@
-import React from "react";
-import { StyleSheet , ScrollView ,View} from "react-native";
-import {HeaderBack, HeaderTitle } from 'src/revamp';
-import { FlagSecureScreen, CheckIdleState, Separator} from "toktokwallet/components";
+import React from 'react';
+import {StyleSheet, ScrollView, View} from 'react-native';
+import {FlagSecureScreen, CheckIdleState, HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
-//SELF IMPORTS 
-import {
-    Header,
-    Limits,
-    TransactionHistory,
-} from "./Components";
-const { COLOR , FONT_FAMILY: FONT , FONT_SIZE } = CONSTANTS;
+//SELF IMPORTS
+import {Header, Limits, TransactionHistory} from './Components';
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
-export const ToktokWalletAccountLimit = ({navigation})=> {
-
-
-    navigation.setOptions({
-        headerLeft: () => <HeaderBack color={COLOR.YELLOW}/>,
-        headerTitle: () => <HeaderTitle label={['Account Summary Limits', '']} />,
-    });
-    return (
-        <FlagSecureScreen>
-            {/* <CheckIdleState> */}
-                {/* <Separator/> */}
-                <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-                    <Header/>
-                    <Limits/>
-                    <TransactionHistory/>
-                    <View style={{marginBottom: 40,}}/>
-                </ScrollView>
-            {/* </CheckIdleState> */}
-        </FlagSecureScreen>
-    )
-}
+export const ToktokWalletAccountLimit = ({navigation}) => {
+  navigation.setOptions({
+    headerLeft: () => <HeaderBack />,
+    headerTitle: () => <HeaderTitleRevamp label={['Account Summary Limits', '']} />,
+  });
+  return (
+    <FlagSecureScreen>
+      <CheckIdleState>
+        {/* <Separator/> */}
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+          <Header />
+          <Limits />
+          <TransactionHistory />
+          <View style={{marginBottom: 40}} />
+        </ScrollView>
+      </CheckIdleState>
+    </FlagSecureScreen>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 16,
-        backgroundColor:"white", 
-    }
-})
+  container: {
+    padding: 16,
+    backgroundColor: 'white',
+  },
+});

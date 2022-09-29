@@ -9,7 +9,7 @@ import type {PropsType} from './types';
 import {} from './Styled';
 import validator from 'validator';
 //HELPER & UTIL
-import {AmountLimitHelper, numberFormat} from 'toktokwallet/helper';
+import {AmountLimitHelper} from 'toktokwallet/helper';
 //COMPONENTS
 import {OrangeButton} from 'toktokwallet/components';
 import {BtVerifyContext} from '../BtVerifyContextProvider';
@@ -20,7 +20,7 @@ import {useNavigation} from '@react-navigation/native';
 const BtProceedButton = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const {tokwaAccount} = useAccount({isOnErrorAlert: false});
-  const {bankDetails} = props;
+  const {bankDetails, screenLabel} = props;
   const {data, fees, changeDataValue, changeErrorMessages, computeConvenienceFeeLoading} = useContext(BtVerifyContext);
   const {amount, emailAddress, accountName, accountNumber, purpose} = data;
 
@@ -114,6 +114,7 @@ const BtProceedButton = (props: PropsType): React$Node => {
       changeDataValue('purpose', purpose.trim());
       navigation.navigate('ToktokWalletBankTransferPaymentSummary', {
         transactionDetails,
+        screenLabel,
       });
     }
   };

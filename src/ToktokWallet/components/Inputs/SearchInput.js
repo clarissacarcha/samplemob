@@ -31,13 +31,7 @@ export const SearchInput = ({
   return (
     <View style={[styles.searchField, containerStyle]}>
       <View style={[styles.inputContainer]}>
-        <VectorIcon
-          iconSet={ICON_SET.Fontisto}
-          color={COLOR.DARK}
-          name="search"
-          color={COLOR.ORANGE}
-          size={moderateScale(15)}
-        />
+        <VectorIcon iconSet={ICON_SET.Fontisto} name="search" color={COLOR.ORANGE} size={moderateScale(15)} />
         <TextInput
           defaultValue={search}
           style={styles.input}
@@ -46,7 +40,7 @@ export const SearchInput = ({
           returnKeyType={returnKeyType}
           placeholderTextColor="#9E9E9E"
         />
-        {search != '' && (
+        {search !== '' && (
           <TouchableOpacity
             onPress={onClear}
             hitSlop={{top: 20, right: 20, bottom: 20, left: 20}}
@@ -62,11 +56,6 @@ export const SearchInput = ({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-  },
-  center: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
   },
   searchField: {
     zIndex: 1,
