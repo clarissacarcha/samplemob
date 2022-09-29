@@ -13,13 +13,13 @@ import BankTransferBankItem from '../BankTransferBankItem';
 
 const BankTransferBankList = (props: PropsType): React$Node => {
   const navigation = useNavigation();
-  const {billTypes} = props;
+  const {data, screenLabel} = props;
 
   const onPressSeeAll = () => {
-    navigation.navigate('ToktokWalletBankTransferBanks');
+    navigation.navigate('ToktokWalletBankTransferBanks', {screenLabel});
   };
   const onPressItem = item => {
-    navigation.navigate('ToktokWalletBankTransferTransaction', {bankDetails: item});
+    navigation.navigate('ToktokWalletBankTransferTransaction', {bankDetails: item, screenLabel});
   };
 
   const onThrottledPress = useThrottle(onPressSeeAll, 2000);
@@ -34,7 +34,7 @@ const BankTransferBankList = (props: PropsType): React$Node => {
         </SeeAllContainer>
       </HeaderContainer>
       <List
-        data={billTypes}
+        data={data}
         renderItem={({item, index}) => <BankTransferBankItem item={item} onPressItem={onPressItem} index={index} />}
         keyExtractor={(val, index) => index.toString()}
       />

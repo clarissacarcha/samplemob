@@ -23,6 +23,7 @@ const BtPaymentSummaryConfirm = (props: PropsType): React$Node => {
   const prompt = usePrompt();
   const {tokwaAccount} = useAccount();
   const {bankDetails, accountName, accountNumber, emailAddress, amount, purpose} = route.params.transactionDetails;
+  const screenLabel = route.params?.screenLabel ? route.params.screenLabel : 'Bank Transfer';
 
   const [postRequestCashOut, {loading: requestLoading}] = useMutation(POST_REQUEST_CASH_OUT, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -58,7 +59,7 @@ const BtPaymentSummaryConfirm = (props: PropsType): React$Node => {
         purpose,
         ...data.postCashOutOtherBank,
       };
-      navigation.navigate('ToktokWalletBankTransferReceipt', {receipt});
+      navigation.navigate('ToktokWalletBankTransferReceipt', {receipt, screenLabel});
     },
     onError: error => {
       TransactionUtility.StandardErrorHandling({

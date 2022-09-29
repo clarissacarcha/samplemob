@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useState, useMemo, useRef} from 'react';
 
 import type {PropsType} from './types';
 import {Container, SearchContainer, List} from './Styled';
@@ -56,6 +56,7 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
   const [isMounted, setIsMounted] = useState(false);
+  const onEndReachedCalledDuringMomentum = useRef(null);
 
   const [
     getBankAccountsPaginate,
@@ -117,7 +118,7 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
       variables: {
         input: {
           afterCursorId: null,
-          afterCursorName: null,
+          afterCursorUpdatedAt: null,
         },
       },
     });
@@ -172,7 +173,7 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
           variables: {
             input: {
               afterCursorId: pageInfo.endCursorId,
-              afterCursorName: pageInfo.endCursorName,
+              afterCursorUpdatedAt: pageInfo.endCursorUpdatedAt,
             },
           },
           updateQuery: (previousResult, {fetchMoreResult}) => {
@@ -267,20 +268,32 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={getData().length === 0 ? {flexGrow: 1} : {}}
-        extraData={[filteredData, favorites, pageInfo]}
+        extraData={[filteredData, favorites, pageInfo, search]}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-        onEndReachedThreshold={0.02}
-        onEndReached={() => fetchMoreData()}
+        onEndReachedThreshold={0.03}
         ListFooterComponent={ListFooterComponent}
-        getItemLayout={(data, index) => ({
-          length: getData().length,
-          offset: getData().length * index,
-          index,
-        })}
+        onEndReached={() => {
+          if (!onEndReachedCalledDuringMomentum.current) {
+            fetchMoreData();
+            onEndReachedCalledDuringMomentum.current = true;
+          }
+        }}
+        onMomentumScrollBegin={() => {
+          onEndReachedCalledDuringMomentum.current = false;
+        }}
+        getItemLayout={
+          getData().length <= 30
+            ? (data, index) => ({
+                length: getData().length,
+                offset: getData().length * index,
+                index,
+              })
+            : undefined
+        }
       />
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [favorites, filteredData, refreshing, search, pageInfo, onRefreshFavorite, fetchMoreData]);
+  }, [favorites, filteredData, refreshing, search, pageInfo, onRefreshFavorite, fetchMoreData, ListFooterComponent]);
 
   if (getFavoritesError || getSearchError) {
     return (

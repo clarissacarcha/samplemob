@@ -9,4 +9,5 @@ export type PropsType = {
   item: any,
   title?: string,
   isSearch: Boolean,
+  screenLabel: string,
 };

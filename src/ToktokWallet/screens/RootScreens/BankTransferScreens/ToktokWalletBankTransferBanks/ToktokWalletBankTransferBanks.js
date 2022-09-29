@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useRef} from 'react';
 import {useEffect} from 'react';
 
 import type {PropsType} from './types';
@@ -34,6 +34,7 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
     headerTitle: () => <HeaderTitleRevamp label={'Banks'} />,
   });
 
+  const onEndReachedCalledDuringMomentum = useRef(null);
   const [banks, setBanks] = useState([]);
   const [search, setSearch] = useState('');
   const [isMounted, setIsMounted] = useState([]);
@@ -79,6 +80,13 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
     setIsMounted(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!search) {
+      handleGetBanks();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   const onRefreshFavorite = () => {
     setRefreshing(true);
@@ -178,6 +186,13 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
     }
   };
 
+  const getData = () => {
+    if (search) {
+      return filteredData.length > 0 ? filteredData : [];
+    }
+    return banks;
+  };
+
   const ListFooterComponent = () => {
     return (
       <LoadMoreContainer>
@@ -195,19 +210,31 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
         ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={filteredData.length === 0 && {flexGrow: 1}}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-        extraData={banks}
-        onEndReachedThreshold={0.02}
-        onEndReached={() => fetchMoreData()}
+        extraData={[filteredData, search, banks]}
+        onEndReachedThreshold={0.03}
         ListFooterComponent={ListFooterComponent}
-        getItemLayout={(data, index) => ({
-          length: data.length,
-          offset: data.length * index,
-          index,
-        })}
+        onEndReached={() => {
+          if (!onEndReachedCalledDuringMomentum.current) {
+            fetchMoreData();
+            onEndReachedCalledDuringMomentum.current = true;
+          }
+        }}
+        onMomentumScrollBegin={() => {
+          onEndReachedCalledDuringMomentum.current = false;
+        }}
+        getItemLayout={
+          getData().length <= 30
+            ? (data, index) => ({
+                length: getData().length,
+                offset: getData().length * index,
+                index,
+              })
+            : undefined
+        }
       />
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [banks, filteredData, refreshing, search]);
+  }, [banks, filteredData, refreshing, search, pageInfo, onRefreshFavorite, fetchMoreData, ListFooterComponent]);
 
   if (getBanksPaginateError || getSearchBanksPaginateError) {
     return (

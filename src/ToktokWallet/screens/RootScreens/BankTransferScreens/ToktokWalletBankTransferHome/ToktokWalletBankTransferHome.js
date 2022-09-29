@@ -21,16 +21,18 @@ import {BankTransferBankList, BankTransferFavoriteList} from 'toktokwallet/compo
 
 //GRAPHQL & HOOKS
 import {useLazyQuery} from '@apollo/react-hooks';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {useNavigation, useFocusEffect, useRoute} from '@react-navigation/native';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_HIGHLIGHTED_BANKS, GET_BANK_ACCOUNTS_PAGINATE} from 'toktokwallet/graphql';
 
 const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const screenLabel = route.params?.screenLabel ? route.params.screenLabel : 'Bank Transfer';
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitleRevamp label={'Bank Transfer'} />,
+    headerTitle: () => <HeaderTitleRevamp label={screenLabel} />,
   });
   const [refreshing, setRefreshing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -81,7 +83,7 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
           variables: {
             input: {
               afterCursorId: null,
-              afterCursorName: null,
+              afterCursorUpdatedAt: null,
             },
           },
         });
@@ -92,7 +94,6 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   );
 
   const onRefresh = useCallback(() => {
-    console.log('HAHAHAHA');
     setRefreshing(true);
     handleGetData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,7 +105,7 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
       variables: {
         input: {
           afterCursorId: null,
-          afterCursorName: null,
+          afterCursorUpdatedAt: null,
         },
       },
     });
@@ -118,19 +119,23 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
           <TransferableAndNonTransferableBalance />
         </ReminderContainer>
         {favoriteBankAccounts.length > 0 && (
-          <BankTransferFavoriteList data={favoriteBankAccounts} onRefreshFavorite={onRefresh} />
+          <BankTransferFavoriteList
+            data={favoriteBankAccounts}
+            onRefreshFavorite={onRefresh}
+            screenLabel={screenLabel}
+          />
         )}
       </>
     );
-  }, [favoriteBankAccounts, onRefresh]);
+  }, [favoriteBankAccounts, onRefresh, screenLabel]);
 
   const ListBillerTypesComponent = useMemo(() => {
     if (banks.length === 0) {
       return null;
     } else {
-      return <BankTransferBankList billTypes={banks} navigation={navigation} />;
+      return <BankTransferBankList data={banks} navigation={navigation} screenLabel={screenLabel} />;
     }
-  }, [banks, navigation]);
+  }, [banks, navigation, screenLabel]);
 
   if (banksError || getFavoritesError) {
     return (

@@ -38,10 +38,11 @@ const MainComponent = ({route, favoriteDetails}) => {
   const [favoriteId, setFavoriteId] = useState(favoriteDetails ? favoriteDetails.id : 0);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
   const onRefreshFavorite = route.params?.onRefreshFavorite ? route.params.onRefreshFavorite : null;
+  const screenLabel = route.params?.screenLabel ? route.params.screenLabel : 'Bank Transfer';
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitleRevamp label={'Bank Transfer'} />,
+    headerTitle: () => <HeaderTitleRevamp label={screenLabel} />,
     headerRight: () => <HeaderRight onPress={onPressFavorite} isFavorite={favoriteId !== 0} />,
   });
 
@@ -158,7 +159,7 @@ const MainComponent = ({route, favoriteDetails}) => {
           <BtTransactionForm bankDetails={bankDetails} />
         </KeyboardAvoidingViewContainer>
       </Container>
-      <BtProceedButton bankDetails={bankDetails} />
+      <BtProceedButton bankDetails={bankDetails} screenLabel={screenLabel} />
     </Container>
   );
 };

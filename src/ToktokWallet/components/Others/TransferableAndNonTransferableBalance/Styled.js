@@ -32,6 +32,7 @@ export const Button: ComponentType<any> = styled(TouchableOpacity).attrs(props =
 export const ButtonTitleContainer: ComponentType<any> = styled.View`
   flex-direction: row;
   align-items: center;
+  flex-shrink: 1;
 `;
 
 export const CurrencyCodeContainer: ComponentType<any> = styled.View`

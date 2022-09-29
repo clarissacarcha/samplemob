@@ -11,16 +11,16 @@ import {useDebounce} from 'toktokwallet/hooks';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
 
 const inputAmountLength = {
-  0: 80,
-  1: 80,
-  2: 80,
-  3: 80,
-  4: 100,
+  0: 90,
+  1: 90,
+  2: 90,
+  3: 90,
+  4: 90,
   5: 120,
-  6: 130,
-  7: 140,
-  8: 155,
-  9: 170,
+  6: 140,
+  7: 150,
+  8: 165,
+  9: 175,
 };
 
 export const DragonPayCashIn = ({navigation, route, transactionType, remainingCashIn}) => {
@@ -170,8 +170,7 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
           <View style={styles.amountcontent}>
             <View style={{flexDirection: 'row'}}>
               <View style={styles.input}>
-                <Text style={{fontSize: 40}}>{currencyCode}</Text>
-
+                <Text style={{fontSize: 40, marginRight: 10}}>{currencyCode}</Text>
                 {!isFocus && amount != '' && (
                   <Text style={{fontSize: 40, marginLeft: 10}}>{amount ? numberFormat(amount) : '0.00'}</Text>
                 )}
@@ -267,7 +266,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderRadius: 5,
-    height: 60,
+    height: 70,
     flex: 1,
     justifyContent: 'center',
     ...(Platform.OS === 'ios' ? {alignItems: 'center'} : {}),

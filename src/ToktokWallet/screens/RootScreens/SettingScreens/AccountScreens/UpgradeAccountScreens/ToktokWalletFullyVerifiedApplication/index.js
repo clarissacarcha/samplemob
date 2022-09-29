@@ -111,7 +111,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
         value: true,
       },
     });
-    return navigation.navigate('ToktokWalletCashOutHomePage', {screenLabel: 'Link Account'});
+    return navigation.navigate('ToktokWalletBankTransferHome', {screenLabel: 'Link Account'});
   };
 
   if (loadingCheckVcs || loadingCheckPendingDisbursement || getMyAccountLoading) {

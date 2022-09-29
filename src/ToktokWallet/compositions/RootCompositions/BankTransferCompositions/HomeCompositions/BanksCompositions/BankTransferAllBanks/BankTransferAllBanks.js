@@ -6,7 +6,6 @@
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useThrottle} from 'src/hooks';
-import {View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 import {LoadingIndicator} from 'toktokbills/components';
@@ -25,10 +24,10 @@ const BankTransferAllBanks = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const [imageLoading, setImageLoading] = useState(true);
 
-  const {item} = props;
+  const {item, screenLabel} = props;
 
   const onPress = () => {
-    navigation.navigate('ToktokWalletBankTransferTransaction', {bankDetails: item});
+    navigation.navigate('ToktokWalletBankTransferTransaction', {bankDetails: item, screenLabel});
   };
 
   const onThrottledPress = useThrottle(onPress, 2000);

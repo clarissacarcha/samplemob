@@ -32,7 +32,7 @@ const ToktokWalletCashOutOtcSeeNearby = (props: PropsType): React$Node => {
   const getCurrentLocation = async () => {
     const location = await locationPermission({showsReverseGeocode: false});
     if (location) {
-      setMapUrl(`https://www.google.com/maps/search/${otcPartner}/@${location.latitude},${location.longitude},11z`);
+      setMapUrl(`https://www.google.com/maps/search/${otcPartner}/@${location.latitude},${location.longitude},12z`);
     }
   };
 
