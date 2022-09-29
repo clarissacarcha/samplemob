@@ -17,6 +17,7 @@ import {
   SearchInput,
   LoadingIndicator,
   NoData,
+  CheckIdleState,
 } from 'toktokwallet/components';
 import {CashOutOtcPartnerDetails} from 'toktokwallet/compositions';
 import _ from 'lodash';
@@ -209,26 +210,28 @@ const ToktokWalletCashOutOtcPartners = (props: PropsType): React$Node => {
     );
   }
   return (
-    <Container>
-      <SearchContainer>
-        {isMounted && cashOutProviderPartners.length !== 0 && (
-          <SearchInput
-            search={search}
-            onChangeText={onSearchChange}
-            onClear={() => {
-              setSearch('');
-            }}
-            placeholder="Search OTC Partner"
-          />
+    <CheckIdleState>
+      <Container>
+        <SearchContainer>
+          {isMounted && cashOutProviderPartners.length !== 0 && (
+            <SearchInput
+              search={search}
+              onChangeText={onSearchChange}
+              onClear={() => {
+                setSearch('');
+              }}
+              placeholder="Search OTC Partner"
+            />
+          )}
+        </SearchContainer>
+        {(searchLoading && filteredData.length === 0) ||
+        (getCashOutProviderPartnersLoading && cashOutProviderPartners.length === 0 && !refreshing) ? (
+          <LoadingIndicator isLoading={true} isFlex />
+        ) : (
+          DisplayContent
         )}
-      </SearchContainer>
-      {(searchLoading && filteredData.length === 0) ||
-      (getCashOutProviderPartnersLoading && cashOutProviderPartners.length === 0 && !refreshing) ? (
-        <LoadingIndicator isLoading={true} isFlex />
-      ) : (
-        DisplayContent
-      )}
-    </Container>
+      </Container>
+    </CheckIdleState>
   );
 };
 

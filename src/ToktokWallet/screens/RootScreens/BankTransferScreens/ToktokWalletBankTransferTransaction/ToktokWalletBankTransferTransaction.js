@@ -18,7 +18,7 @@ import {
   BtTransactionForm,
   BtVerifyContext,
 } from 'toktokwallet/compositions';
-import {HeaderBack, HeaderTitleRevamp, HeaderRight, LoadingIndicator} from 'toktokwallet/components';
+import {HeaderBack, HeaderTitleRevamp, HeaderRight, LoadingIndicator, CheckIdleState} from 'toktokwallet/components';
 import {ToastModal} from 'toktokbills/components';
 import {AlertOverlay} from 'src/components';
 //HOOKS
@@ -169,9 +169,11 @@ const ToktokWalletBankTransferTransaction = (props: PropsType): React$Node => {
   const favoriteDetails = route.params?.favoriteDetails ? route.params.favoriteDetails : null;
 
   return (
-    <BtVerifyContextProvider favoriteDetails={favoriteDetails}>
-      <MainComponent route={route} favoriteDetails={favoriteDetails} />
-    </BtVerifyContextProvider>
+    <CheckIdleState>
+      <BtVerifyContextProvider favoriteDetails={favoriteDetails}>
+        <MainComponent route={route} favoriteDetails={favoriteDetails} />
+      </BtVerifyContextProvider>
+    </CheckIdleState>
   );
 };
 

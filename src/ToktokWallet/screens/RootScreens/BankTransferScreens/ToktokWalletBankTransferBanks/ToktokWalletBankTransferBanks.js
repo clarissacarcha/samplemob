@@ -11,6 +11,7 @@ import {Container, SearchContainer, List, LoadMoreContainer} from './Styled';
 import {RefreshControl} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {
+  CheckIdleState,
   HeaderBack,
   HeaderTitleRevamp,
   SomethingWentWrong,
@@ -244,26 +245,28 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
     );
   }
   return (
-    <Container>
-      <SearchContainer>
-        {isMounted && banks.length !== 0 && (
-          <SearchInput
-            search={search}
-            onChangeText={onSearchChange}
-            onClear={() => {
-              setSearch('');
-            }}
-            placeholder="Search OTC Partner"
-          />
+    <CheckIdleState>
+      <Container>
+        <SearchContainer>
+          {isMounted && banks.length !== 0 && (
+            <SearchInput
+              search={search}
+              onChangeText={onSearchChange}
+              onClear={() => {
+                setSearch('');
+              }}
+              placeholder="Search OTC Partner"
+            />
+          )}
+        </SearchContainer>
+        {(searchLoading && filteredData.length === 0) ||
+        (getBanksPaginateLoading && banks.length === 0 && !refreshing) ? (
+          <LoadingIndicator isLoading={true} isFlex />
+        ) : (
+          DisplayContent
         )}
-      </SearchContainer>
-      {(searchLoading && filteredData.length === 0) ||
-      (getBanksPaginateLoading && banks.length === 0 && !refreshing) ? (
-        <LoadingIndicator isLoading={true} isFlex />
-      ) : (
-        DisplayContent
-      )}
-    </Container>
+      </Container>
+    </CheckIdleState>
   );
 };
 

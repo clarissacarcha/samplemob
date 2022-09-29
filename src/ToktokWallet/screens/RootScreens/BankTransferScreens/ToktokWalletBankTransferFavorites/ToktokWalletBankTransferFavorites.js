@@ -13,14 +13,14 @@ import {useNavigation} from '@react-navigation/native';
 
 //COMPONENTS
 import {
+  CheckIdleState,
   HeaderBack,
-  HeaderTitle,
+  HeaderTitleRevamp,
   SearchInput,
   LoadingIndicator,
-  EmptyList,
   SomethingWentWrong,
-  ToastModal,
-} from 'toktokbills/components';
+} from 'toktokwallet/components';
+import {ToastModal, EmptyList} from 'toktokbills/components';
 import {BankTransferAllFavorites} from 'toktokwallet/compositions';
 import {AlertOverlay} from 'src/components';
 
@@ -44,7 +44,7 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={'Favorites'} />,
+    headerTitle: () => <HeaderTitleRevamp label={'Favorites'} />,
   });
 
   const [search, setSearch] = useState('');
@@ -303,53 +303,30 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
     );
   }
   return (
-    <Container>
-      <AlertOverlay visible={patchRemoveAccountLoading} />
-      <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
-      <SearchContainer>
-        {isMounted && favorites.length !== 0 && (
-          <SearchInput
-            search={search}
-            onChangeText={onSearchChange}
-            onClear={() => {
-              setSearch('');
-            }}
-            placeholder="Search Favorites"
-          />
+    <CheckIdleState>
+      <Container>
+        <AlertOverlay visible={patchRemoveAccountLoading} />
+        <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
+        <SearchContainer>
+          {isMounted && favorites.length !== 0 && (
+            <SearchInput
+              search={search}
+              onChangeText={onSearchChange}
+              onClear={() => {
+                setSearch('');
+              }}
+              placeholder="Search Favorites"
+            />
+          )}
+        </SearchContainer>
+        {(searchLoading && filteredData.length === 0) ||
+        (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (
+          <LoadingIndicator isLoading={true} isFlex />
+        ) : (
+          DisplayContent
         )}
-      </SearchContainer>
-      {(searchLoading && filteredData.length === 0) ||
-      (getFavoritesLoading && favorites.length === 0 && !refreshing) ? (
-        <LoadingIndicator isLoading={true} isFlex />
-      ) : (
-        DisplayContent
-        // <FlatList
-        //   data={getData()}
-        //   renderItem={({item, index}) => (
-        //     <FavoriteDetails
-        //       item={item}
-        //       index={index}
-        //       onRefreshFavorite={onRefreshFavorite}
-        //       onPressFavorite={() => onPressFavorite(item, index)}
-        //     />
-        //   )}
-        //   contentContainerStyle={getData().length === 0 ? styles.listContainer : {}}
-        //   style={{flex: 1}}
-        //   keyExtractor={(item, index) => index.toString()}
-        //   extraData={[filteredData, favorites, pageInfo]}
-        //   ListEmptyComponent={ListEmptyComponent}
-        //   refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-        //   onEndReachedThreshold={0.02}
-        //   onEndReached={() => fetchMoreData()}
-        //   ListFooterComponent={ListFooterComponent}
-        //   getItemLayout={(data, index) => ({
-        //     length: data.length,
-        //     offset: data.length * index,
-        //     index,
-        //   })}
-        // />
-      )}
-    </Container>
+      </Container>
+    </CheckIdleState>
   );
 };
 

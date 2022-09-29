@@ -7,7 +7,7 @@ import validator from 'validator';
 import {moderateScale, numberFormat, getStatusbarHeight, AmountLimitHelper} from 'toktokwallet/helper';
 
 //COMPONENTS
-import {HeaderBack, HeaderTitleRevamp, OrangeButton, LoadingIndicator} from 'toktokwallet/components';
+import {HeaderBack, HeaderTitleRevamp, OrangeButton, LoadingIndicator, CheckIdleState} from 'toktokwallet/components';
 import {VerifyContextProvider, VerifyContext, OTCPartnerForm, Header} from './components';
 
 // FONTS AND COLORS
@@ -150,9 +150,11 @@ const MainComponent = ({navigation, route}) => {
 };
 export const ToktokWalletCashOutOTCTransaction = ({navigation, route}) => {
   return (
-    <VerifyContextProvider>
-      <MainComponent navigation={navigation} route={route} />
-    </VerifyContextProvider>
+    <CheckIdleState>
+      <VerifyContextProvider>
+        <MainComponent navigation={navigation} route={route} />
+      </VerifyContextProvider>
+    </CheckIdleState>
   );
 };
 

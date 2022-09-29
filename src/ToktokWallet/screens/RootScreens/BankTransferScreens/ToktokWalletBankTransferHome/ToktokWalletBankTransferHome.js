@@ -11,6 +11,7 @@ import {RefreshControl} from 'react-native';
 
 //SELF IMPORTS
 import {
+  CheckIdleState,
   HeaderBack,
   HeaderTitleRevamp,
   LoadingIndicator,
@@ -145,22 +146,24 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
     );
   }
   return (
-    <BackgroundImage>
-      {((banksLoading && banks.length === 0) ||
-        (getFavoritesLoading && favoriteBankAccounts.length === 0 && !isMounted)) &&
-      !refreshing ? (
-        <LoadingContainer>
-          <LoadingIndicator isLoading={true} />
-        </LoadingContainer>
-      ) : (
-        <List
-          extraData={[favoriteBankAccounts, banks]}
-          ListHeaderComponent={ListFavoriteComponent}
-          ListFooterComponent={ListBillerTypesComponent}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        />
-      )}
-    </BackgroundImage>
+    <CheckIdleState>
+      <BackgroundImage>
+        {((banksLoading && banks.length === 0) ||
+          (getFavoritesLoading && favoriteBankAccounts.length === 0 && !isMounted)) &&
+        !refreshing ? (
+          <LoadingContainer>
+            <LoadingIndicator isLoading={true} />
+          </LoadingContainer>
+        ) : (
+          <List
+            extraData={[favoriteBankAccounts, banks]}
+            ListHeaderComponent={ListFavoriteComponent}
+            ListFooterComponent={ListBillerTypesComponent}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          />
+        )}
+      </BackgroundImage>
+    </CheckIdleState>
   );
 };
 

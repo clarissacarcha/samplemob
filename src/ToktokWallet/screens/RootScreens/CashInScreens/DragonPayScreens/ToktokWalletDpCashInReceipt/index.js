@@ -10,7 +10,7 @@ import {GET_WALLET} from 'toktokwallet/graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 
 //COMPONENTS
-import {OrangeButton, HeaderTitleRevamp, HeaderDownloadReceipt} from 'toktokwallet/components';
+import {CheckIdleState, OrangeButton, HeaderTitleRevamp, HeaderDownloadReceipt} from 'toktokwallet/components';
 import {Header, ReceiptDetails} from './components';
 
 //UTIL
@@ -88,7 +88,7 @@ export const ToktokWalletDpCashInReceipt = ({navigation, route}) => {
   };
 
   return (
-    <>
+    <CheckIdleState>
       <ImageBackground source={LinearGradient} resizeMode="cover" style={styles.container}>
         <ScrollView
           style={styles.container}
@@ -107,7 +107,7 @@ export const ToktokWalletDpCashInReceipt = ({navigation, route}) => {
       <View style={styles.buttonContainer}>
         <OrangeButton label="OK" onPress={Proceed} />
       </View>
-    </>
+    </CheckIdleState>
   );
 };
 
