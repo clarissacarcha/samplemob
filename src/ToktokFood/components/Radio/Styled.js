@@ -4,25 +4,44 @@
 
 import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
-import {CheckBox} from 'react-native-elements';
+import StyledText from 'toktokfood/components/StyledText';
 
-export const RadioButton: ComponentType<any> = styled(CheckBox).attrs(props => ({
+export const RadioContainer: ComponentType<any> = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const ActiveContainer: ComponentType<any> = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const RightContainer: ComponentType<any> = styled.View`
+  flex-direction: column;
+  justify-content: center;
+`;
+
+export const OuterContainer: ComponentType<any> = styled.View`
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  border-width: 1px;
+  border-color: ${props => (props.disabled ? props.theme.color.gray : props.theme.color.yellow)};
+  border-radius: 50px;
+  padding: 1px;
+`;
+
+export const InnerContainer: ComponentType<any> = styled.View`
+  width: 100%;
+  height: 100%;
+  background-color: ${props => (props.checked ? props.theme.color.yellow : props.theme.color.white)};
+  border-radius: 50px;
+`;
+
+export const RadioLabel: ComponentType<any> = styled(StyledText).attrs(props => ({
   ...props,
-  checkedIcon: 'dot-circle-o',
-  uncheckedIcon: 'circle-thin',
-  checkedColor: props.theme.color.yellow,
-  uncheckedColor: props.theme.color.yellow,
-  textStyle: {
-    fontWeight: '400',
-    marginLeft: 15,
-  },
-  containerStyle: {
-    padding: 0,
-    margin: 0,
-    backgroundColor: props.theme.color.white,
-    borderWidth: 0,
-    marginVertical: 10,
-    marginLeft: 0,
-  },
-  size: 18,
-}))``;
+  color: props.disabled ? props.theme.color.gray : props.theme.color.black,
+}))`
+  line-height: 30px;
+`;

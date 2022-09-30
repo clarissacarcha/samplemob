@@ -14,7 +14,7 @@ const StyledLoader = (props: PropsType): React$Node => {
   const dispatch = useDispatch();
   const {loader} = useSelector(select => select.toktokFood);
   // const {setIsLoaderVisible} = useLoader();
-  const {isVisible, text = '', type} = props;
+  const {isVisible = false, text = '', type = null} = props;
   const [isLoaderVisible, setIsLoaderVisible] = useState(false);
   const timer = useRef(null);
 
@@ -23,11 +23,11 @@ const StyledLoader = (props: PropsType): React$Node => {
   }, [isVisible]);
 
   useEffect(() => {
-    if (type && isVisible) {
+    if (type !== null && isVisible) {
       timer.current = setTimeout(() => {
         const payload = {...loader, isVisible: false};
         dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
-      }, 2000);
+      }, 3000);
     }
 
     return () => {
@@ -40,13 +40,14 @@ const StyledLoader = (props: PropsType): React$Node => {
   return (
     <Modal
       isVisible={isLoaderVisible}
+      backdropTransitionOutTiming={0}
       borderRadius={10}
       // flex={0}
       alignSelf="center"
       animationIn="zoomIn"
       animationOut="zoomOut">
       <Container>
-        <ImageContainer type={type}>
+        <ImageContainer type={type} text={text}>
           {type ? (
             <Image source={type === 'success' ? success_mini_image : success_mini_image} size={80} />
           ) : (

@@ -53,7 +53,13 @@ const OrderCancellationModal = (props: PropsType): React$Node => {
   };
 
   return (
-    <CancelModal isVisible={isVisible} hideModalContentWhileAnimating={true} borderRadius={15}>
+    <CancelModal
+      animationIn="fadeIn"
+      animationOut="fadeOut"
+      backdropTransitionOutTiming={0}
+      hideModalContentWhileAnimating={true}
+      isVisible={isVisible}
+      borderRadius={15}>
       <ModalHeader>
         <ModalTitle align="left" size={18}>
           Reason for cancelling
