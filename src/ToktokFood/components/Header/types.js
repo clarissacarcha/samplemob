@@ -11,6 +11,7 @@ export type PropsType = {
   containerStyle?: Object,
   centerContainerStyle?: Object,
   leftContainerStyle?: Object,
+  rightContainerStyle?: Object,
   title?: string,
   titleStyle?: Object,
   CenterComponent?: ComponentType<any>,
