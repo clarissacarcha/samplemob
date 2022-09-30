@@ -13,8 +13,8 @@ export const DriverArrivedModal = ({modal, booking, openModal, openRateDriver}) 
             <Text style={styles.modalTitle}>Driver Arrived</Text>
             <View style={{marginHorizontal: 10}}>
               <Text style={styles.modalDescription}>
-                Your driver has arrived. Please be in your pick-up location within{' '}
-                <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> to avoid cancellation.
+                Your toktok driver has arrived, ka-toktok! Please be at the pick-up location within{' '}
+                <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> Ingat!
               </Text>
             </View>
             <TouchableOpacity

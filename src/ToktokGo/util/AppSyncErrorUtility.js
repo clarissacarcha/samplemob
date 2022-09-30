@@ -9,7 +9,7 @@ export const onErrorAppSync = error => {
   const {graphQLErrors, networkError} = error;
   console.log(graphQLErrors);
   if (networkError) {
-    Alert.alert('', 'Network error occurred. Please check your internet connection.');
+    alertGO({message: 'Network error occurred. Please check your internet connection.'});
   } else if (graphQLErrors.length > 0) {
     graphQLErrors.map(({message, locations, path, errorType}) => {
       if (errorType === 'INTERNAL_SERVER_ERROR') {

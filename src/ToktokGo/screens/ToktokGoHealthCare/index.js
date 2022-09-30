@@ -1,11 +1,12 @@
 import React from 'react';
-import {Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View, Dimensions} from 'react-native';
 import GradientBackground from '../../../assets/toktokgo/toktokgo-gradient-background.png';
 import Graphics from '../../../assets/toktokgo/toktokgo-health-care-graphics.png';
 import constants from '../../../common/res/constants';
 import FAIcons from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
+const windowWidth = Dimensions.get('window').width;
 const ToktokGoHealthCare = ({navigation, route}) => {
   const {voucherData} = route.params;
   const onPress = () => {
@@ -17,7 +18,7 @@ const ToktokGoHealthCare = ({navigation, route}) => {
     <ImageBackground source={GradientBackground} style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <Image source={Graphics} style={{flex: 0.6, width: undefined, height: undefined}} resizeMode={'contain'} />
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, width: windowWidth * 0.9}}>
           <Text style={[styles.textBase, {color: constants.COLOR.BLACK}]}>
             <Text style={[styles.textBase, {color: constants.COLOR.YELLOW}]}>
               toktok<Text style={[styles.textBase, {color: constants.COLOR.ORANGE}]}>go</Text>
@@ -35,23 +36,23 @@ const ToktokGoHealthCare = ({navigation, route}) => {
             follow the guidelines:
           </Text>
           <View style={styles.textContainer}>
-            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 8}} />
+            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 6}} />
             <Text style={styles.textContent}>Face mask is a must</Text>
           </View>
           <View style={styles.textContainer}>
-            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 8}} />
+            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 6}} />
             <Text style={styles.textContent}>
               If in case you feel sick or rather not feeling well better to stay at home to avoid spreading the virus
             </Text>
           </View>
           <View style={styles.textContainer}>
-            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 8}} />
+            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 6}} />
             <Text style={styles.textContent}>
               Vaccination card and/or travel pass shall always be readily available
             </Text>
           </View>
           <View style={styles.textContainer}>
-            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 8}} />
+            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 6}} />
             <Text style={styles.textContent}>
               Make sure that all of your colleagues that will ride the vehicle are fully vaccinated
             </Text>
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     color: constants.COLOR.BLACK,
   },
   textContainer: {
-    marginLeft: 16,
+    marginLeft: 10,
     marginTop: 16,
     flexDirection: 'row',
   },

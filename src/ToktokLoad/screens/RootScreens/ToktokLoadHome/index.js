@@ -75,9 +75,7 @@ const MainComponent = ({navigation, route}) => {
   const [categoryNames, setCategoryNames] = useState('');
   const prompt = usePrompt();
   const {user} = useSelector(state => state.session);
-  const tooltipWidth = moderateScale(
-    width - (Platform.OS === 'android' ? moderateScale(16) : width > 375 ? moderateScale(36) : 0),
-  );
+  const tooltipWidth = width - (Platform.OS === 'android' ? 16 : width > 375 ? 36 : 0);
 
   const [getLoadCategories, {loading, error}] = useLazyQuery(GET_LOAD_CATEGORIES, {
     fetchPolicy: 'network-only',
@@ -178,7 +176,7 @@ const MainComponent = ({navigation, route}) => {
           topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
           displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
           contentStyle={{
-            width: Platform.OS === 'android' ? moderateScale(tooltipWidth) : moderateScale(tooltipWidth - 36),
+            width: Platform.OS === 'android' ? tooltipWidth : tooltipWidth - 36,
           }}
           childrenWrapperStyle={{flex: 1}}
           backgroundColor="rgba(0,0,0,0.6)"

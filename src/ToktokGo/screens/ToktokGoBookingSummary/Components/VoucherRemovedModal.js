@@ -4,6 +4,7 @@ import CONSTANTS from '../../../../common/res/constants';
 import SucessIMG from '../../../../assets/images/Sucess.png';
 import WalletIcon from '../../../../assets/images/Wallet.png';
 import Warning from '../../../../assets/images/warning.png';
+import normalize from 'react-native-normalize';
 
 export const VoucherRemovedModal = ({
   voucherRemovedVisible,
@@ -22,19 +23,19 @@ export const VoucherRemovedModal = ({
             {voucherTextMessage == 'Promo Voucher Expired.' ? (
               <View style={styles.modalTitleContainer}>
                 <Text style={styles.modalDescription}>
-                  We're sorry but the voucher you used has already expired. Would you like to proceed and remove
-                  voucher?
+                  Sorry ka-toktok, pero ang voucher ay expired na.Meron pa kaming ibang voucher for you, Check mo na!
+                  Would you like to proceed and remove the voucher?
                 </Text>
               </View>
             ) : voucherTextMessage == 'Daily limit is reached.' ? (
               <Text style={styles.modalDescription}>
-                We're sorry but the voucher you used has already reached its maximum redemption limit. Would you like to
-                proceed and remove voucher?
+                Hello, ka-toktok! The voucher reached the maximum redemption limit. You may try other voucher naman
+                lods! Would you like to proceed and remove the voucher?
               </Text>
             ) : voucherTextMessage == 'WrongPaymentMethod' ? (
               <Text style={styles.modalDescription}>
-                We're sorry but the voucher you used is not applicable to selected payment method. Would you like to
-                proceed and remove voucher?
+                Pasensya ka na, ka-toktok, but the voucher you used is not applicable to your selected payment method.
+                Gusto mo ba tanggalin or magswitch nalang ng payment method?
               </Text>
             ) : null}
             <View style={{flexDirection: 'row'}}>
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
   },
   modalDescription: {
     textAlign: 'center',
-    fontSize: CONSTANTS.FONT_SIZE.M,
+    fontSize: normalize(CONSTANTS.FONT_SIZE.M + 1),
     color: CONSTANTS.COLOR.BLACK,
   },
   imageDimensions: {

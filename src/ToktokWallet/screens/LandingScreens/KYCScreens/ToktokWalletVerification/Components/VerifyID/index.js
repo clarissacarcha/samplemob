@@ -229,8 +229,7 @@ export const VerifyID = () => {
           <View style={styles.mainInput}>
             <Text style={styles.title}>Upload Valid ID</Text>
             <Text style={styles.information}>
-              Help us verify your identity with a photo of your valid government-issued ID. Make sure your valid ID is
-              not expired.
+            Help us verify your identity with a photo of your valid government-issued ID.  Make sure your valid ID has at least six (6) months of validity.
             </Text>
 
             <View style={{marginTop: 20}}>

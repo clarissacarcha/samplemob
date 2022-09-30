@@ -12,7 +12,10 @@ export const ArrivedAtDestination = ({showArrivedAtDestination, booking, openMod
             <Image source={SuccessIMG} resizeMode={'contain'} style={styles.imageDimensions} />
             <Text style={styles.modalTitle}>You’ve Arrived</Text>
             <View style={{marginHorizontal: 10}}>
-              <Text style={styles.modalDescription}>Yay! You have arrived at your destination.</Text>
+              <Text style={styles.modalDescription}>
+                We're here at your destination! I-check ang gamit kung may naiwan, okay lang ang driver ang maiwan.
+                Sanay na yan. ;)
+              </Text>
             </View>
             <TouchableOpacity
               style={styles.buttonContainer}

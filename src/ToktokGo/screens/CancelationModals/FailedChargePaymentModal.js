@@ -27,12 +27,15 @@ export const FailedChargePaymentModal = ({
           <View style={styles.container}>
             <Image source={FailedIMG} resizeMode={'contain'} style={styles.imageDimensions} />
             <Text style={styles.modalTitle}>Payment Failed</Text>
-            <Text style={styles.modalDescription}>
-              Your payment for the {cancellationState?.initiatedBy == 'DRIVER' ? 'No Show Fee' : 'Cancellation Fee'} Fee
+            {/* <Text style={styles.modalDescription}>
+              Your payment for the {cancellationState?.initiatedBy == 'DRIVER' ? 'No Show Fee' : 'Cancellation Fee'}
               of <Text style={styles.textHighlight}>₱50.00</Text> cannot be completed at this time. Please try again
               later.
+            </Text> */}
+            <Text style={styles.modalDescription}>
+              Your payment didn't push through, ka-toktok. You may use other payment methods or try again. Try lang nang
+              try!
             </Text>
-
             <View style={styles.retryContainer}>
               <ThrottledOpacity delay={500} style={styles.retryButtonContainer} onPress={handleClose}>
                 <Text style={styles.cancelTextStyle}>OK</Text>
