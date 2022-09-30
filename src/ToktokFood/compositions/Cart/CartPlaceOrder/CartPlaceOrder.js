@@ -58,7 +58,7 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     cartDeliveryInfo = {},
     userWallet = {},
     setIsInsufficientBalance = bool => null,
-    cartRefetch = () => {},
+    cartRefetch = ({}) => {},
   } = props;
   const {promotionVoucher, customerInfo, location, loader, customerFranchisee, customerWallet} = useSelector(
     state => state.toktokFood,
@@ -85,7 +85,7 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
       const deductedFee = getTotalDeductedDeliveryFee(promotionVoucher, cartDeliveryInfo?.price);
       const DEDUCTVOUCHER = {
         ...ORDER,
-        order_logs: [{...ORDER.order_logs[0], delivery_amount: deductedFee}],
+        order_logs: [{...ORDER.order_logs[0]}],
       };
       return WALLET
         ? {...WALLET, ...CUSTOMER, ...DEDUCTVOUCHER, ...SHIPPING_VOUCHERS}
@@ -109,12 +109,14 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     const amount = await getTotalAmount(promotionVoucher, 0);
     const parsedAmount = Number((deductedPrice - amount).toFixed(2));
 
+    // console.log('totalPrice', totalPrice);
+
     const replaceName = deliveryReceiver.replace(/[^a-z0-9 ]/gi, '');
     const replaceLandMark = receiverLandmark.replace(/[^a-z0-9 ]/gi, '');
 
     const ORDER_DATA = {
-      total_amount: parsedAmount,
-      srp_totalamount: cartData?.srpTotalAmount,
+      total_amount: promotions.length > 0 || deals.length > 0 ? parsedAmount : cartData?.totalAmount,
+      srp_totalamount: cartData?.totalAmountWithAddons,
       notes: cartDriverNote.replace(/[^a-z0-9 ]/gi, ''),
       order_isfor: cartServiceType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       order_type: await getOrderType(customerFranchisee),
@@ -141,12 +143,18 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
       reseller_account_type: customerFranchisee?.franchiseeAccountType || '',
       reseller_code: customerFranchisee?.franchiseeCode || '',
       referral_code: customerFranchisee?.franchiseeCode ? '' : customerFranchisee?.referralCode || '',
-      discounted_totalamount: parsedAmount,
+      discounted_totalamount: promotions.length > 0 || deals.length > 0 ? parsedAmount : cartData?.totalAmount,
       service_type: 'toktokfood',
       service_fee: 0,
     };
 
     if (cartData?.pabiliShopDetails?.isShopPabiliMerchant) {
+      console.log(
+        'service',
+        cartData?.pabiliShopResellerDiscount,
+        cartData?.pabiliShopServiceFee,
+        cartData?.pabiliShopDetails,
+      );
       const pabiliServiceFee = cartData?.pabiliShopResellerDiscount || cartData?.pabiliShopServiceFee;
       CUSTOMER_DATA.service_type = 'pabili';
       CUSTOMER_DATA.service_fee = pabiliServiceFee;
@@ -161,10 +169,12 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
     const VOUCHER_FlAG =
       shipping.length > 0 ? shipping[0]?.handle_shipping_promo : autoApply[0]?.handle_shipping_promo ? 1 : 0;
+    const deliveryFeeDiscount = cartDeliveryInfo?.deliveryFeeDiscount || 0;
+    const deliveryFee = cartDeliveryInfo?.price - deliveryFeeDiscount;
     const orderLogs = {
       sys_shop: cartData?.items[0]?.shopid,
       branchid: cartData?.items[0]?.branchid,
-      delivery_amount: cartDeliveryInfo?.price || 0,
+      delivery_amount: deliveryFee || 0,
       hash: cartDeliveryInfo?.hash || '',
       hash_delivery_amount: cartDeliveryInfo?.hash_price || '',
       original_shipping_fee: cartDeliveryInfo?.price || 0,
@@ -200,18 +210,21 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
       console.log('postCustomerOrder', JSON.stringify(error));
     },
     onCompleted: async ({checkoutOrder}) => {
+      console.log('checkoutOrder', checkoutOrder);
       if (checkoutOrder.status === '200') {
         setReferenceNumber(checkoutOrder?.referenceNum);
         deleteShopTemporaryCart();
       } else {
+        const payload = {...loader, isVisible: false};
+        dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
       }
     },
   });
 
   const handleProcessProceed = async ({pinCode, data}) => {
     navigation.goBack();
-    // const payload = {isVisible: true, text: 'Placing Order', type: null};
-    // dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
+    const payload = {isVisible: true, text: 'Placing Order', type: null};
+    dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
     const CUSTOMER_CART = await getCustomerCart();
     const WALLET = {
       pin: pinCode,
@@ -295,8 +308,8 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
   const onToktokWalletPlaceOrder = async () => {
     const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
     const deals = promotionVoucher.filter(promo => promo.type === 'deal');
-
-    const deliveryPrice = cartDeliveryInfo?.price || 0;
+    const deliveryFeeDiscount = cartDeliveryInfo?.deliveryFeeDiscount || 0;
+    const deliveryPrice = cartDeliveryInfo?.price - deliveryFeeDiscount || 0;
     const totalPrice =
       promotions.length > 0 || deals.length > 0
         ? await getResellerDiscount(promotions, deals, cartData?.items, true)
@@ -306,13 +319,18 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
         ? totalPrice + cartData?.addonsTotalAmount
         : cartData?.totalAmountWithAddons;
 
-    const amount = await getTotalAmount(promotionVoucher, deliveryPrice);
-    let parseAmount = Number((deliveryPrice + deductedPrice - amount).toFixed(2));
+    const amount = await getTotalAmount(promotionVoucher, cartDeliveryInfo?.price || 0);
+    let parseAmount = parseFloat(((cartDeliveryInfo?.price || 0) + deductedPrice - amount).toFixed(2));
 
     if (cartData?.pabiliShopDetails?.isShopPabiliMerchant) {
       const pabiliServiceFee = cartData?.pabiliShopResellerDiscount || cartData?.pabiliShopServiceFee;
       parseAmount += pabiliServiceFee;
     }
+
+    console.log('parseAmount', parseAmount);
+    console.log('totalPrice', totalPrice);
+    console.log('deductedPrice', deductedPrice);
+    console.log('amount', amount);
 
     requestTakeMoney({
       variables: {
@@ -356,7 +374,13 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     onCompleted: ({getShopStatus}) => {
       setShopStatus(getShopStatus);
       if (getShopStatus.status === 'open') {
-        cartRefetch();
+        cartRefetch({
+          variables: {
+            input: {
+              userId: customerInfo.userId,
+            },
+          },
+        });
         setTimeout(async () => {
           const evalDisabledResult = cartData?.items.filter(item => item.isDisabled === true);
           console.log('evalDisabledResult', evalDisabledResult, cartData?.items);
@@ -372,6 +396,7 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
             } else {
               const CUSTOMER_CART = await getCustomerCart();
               const result = await getOrderData(CUSTOMER_CART);
+              console.log('RESULT', JSON.stringify(result));
               postCustomerOrder({
                 variables: {
                   input: result,

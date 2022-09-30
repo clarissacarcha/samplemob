@@ -32,7 +32,7 @@ import StyledText from 'toktokfood/components/StyledText';
 import {useTheme} from 'styled-components';
 import Divider from 'toktokfood/components/Divider';
 import FA5Icon from 'react-native-vector-icons/Entypo';
-import {SwipeRow} from 'react-native-swipe-list-view';
+import {SwipeRow, SwipeListView} from 'react-native-swipe-list-view';
 import {TouchableOpacity} from 'react-native';
 import {delete_ic} from 'toktokfood/assets/images';
 import {DELETE_TEMPORARY_CART_ITEM} from 'toktokfood/graphql/toktokfood';
@@ -42,8 +42,8 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 
 const OrderSummary = (props: PropsType): React$Node => {
-  const {state, placement = 'Cart', cartRefetch = () => {}} = props;
-  const {loader} = useSelector(s => s.toktokFood);
+  const {state, placement = 'Cart', cartRefetch = ({}) => {}} = props;
+  const {loader, customerInfo} = useSelector(s => s.toktokFood);
   const theme = useTheme();
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -61,7 +61,13 @@ const OrderSummary = (props: PropsType): React$Node => {
       if (status === 200) {
         const index = state?.findIndex(val => val.id === selectedItem.id);
         state?.splice(index, 1);
-        cartRefetch();
+        cartRefetch({
+          variables: {
+            input: {
+              userId: customerInfo.userId,
+            },
+          },
+        });
         const payload = {...loader, type: 'success', text: 'Item Removed'};
         dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
         setTimeout(() => {
@@ -107,6 +113,7 @@ const OrderSummary = (props: PropsType): React$Node => {
       notes,
       orderInstructions,
     } = item;
+    dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
     const totalAmountWithAddons = totalAmount + addonsTotalAmount;
     navigation.navigate('ToktokFoodItemDetails', {
       Id: productid,
@@ -151,10 +158,10 @@ const OrderSummary = (props: PropsType): React$Node => {
   const renderAddonsComponent = addons => {
     if (isJSON(addons)) {
       const parsedAddons = JSON.parse(addons);
-      return parsedAddons.map(item => <AddOnText>{item.addon_name}</AddOnText>);
+      return parsedAddons.map(item => <AddOnText>{item.addon_name.trim()}</AddOnText>);
     }
 
-    return addons.map(item => <AddOnText>{item.optionName}</AddOnText>);
+    return addons.map(item => <AddOnText>{item.optionName.trim()}</AddOnText>);
   };
 
   const renderModifiedComponent = (uri, color, text) => (

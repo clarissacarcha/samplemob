@@ -105,6 +105,8 @@ const CartVoucher = (props: PropsType): React$Node => {
           setErrorVoucherMessage(
             '* Oops! Voucher was not applied for this order. Please review details of voucher and try again.',
           );
+          const payload = {...loader, isVisible: false};
+          dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
         }
       }
       setVoucherCode('');
@@ -144,9 +146,9 @@ const CartVoucher = (props: PropsType): React$Node => {
     setTimeout(() => {
       const filterData = promotionVoucher.filter(item => item.id !== id);
       if (filterData.length < promotionVoucher.length) {
-        dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: filterData});
-        const payload = {...loader, text: 'Voucher Removed', type: 'success'};
+        const payload = {isVisible: true, text: 'Voucher Removed', type: 'success'};
         dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
+        dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: filterData});
       }
     }, 2000);
   };
@@ -178,11 +180,12 @@ const CartVoucher = (props: PropsType): React$Node => {
       <Row apply>
         <Column>
           <Input
+            autoCapitalize="characters"
             placeholder="Enter voucher code (optional)"
             value={voucherCode}
             onChangeText={text => {
               setErrorVoucherMessage('');
-              setVoucherCode(text);
+              setVoucherCode(text.toUpperCase());
             }}
             error={errorVoucherMessage}
             onSubmitEditing={onApplyVoucher}

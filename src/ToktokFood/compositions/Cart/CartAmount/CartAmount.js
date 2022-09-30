@@ -98,9 +98,10 @@ const CartAmount = (props: PropsType): React$Node => {
 
   const getGrossTotal = useCallback(() => {
     let TOTAL = 0;
-    const serviceFeeDiscount = pabiliShopDetails?.isShopPabiliMerchant
-      ? pabiliShopServiceFee - pabiliShopResellerDiscount
-      : resellerDiscount;
+    const serviceFeeDiscount =
+      pabiliShopDetails?.isShopPabiliMerchant && pabiliShopResellerDiscount > 0
+        ? pabiliShopServiceFee - pabiliShopResellerDiscount
+        : resellerDiscount;
     const shippingFee = getGrossDeliveryFee();
     const sfAmount = shippingType === 'Delivery' ? state?.price - shippingFee : 0;
     TOTAL = cartSubTotalAmount + pabiliShopServiceFee + sfAmount - serviceFeeDiscount - totalPromotions;
@@ -123,7 +124,7 @@ const CartAmount = (props: PropsType): React$Node => {
 
   useEffect(() => {
     getVoucherDiscounts();
-  }, [getVoucherDiscounts]);
+  }, [getVoucherDiscounts, cartItems]);
 
   useEffect(() => {
     setCartTotalAmount(getGrossTotal());
@@ -131,11 +132,11 @@ const CartAmount = (props: PropsType): React$Node => {
 
   useEffect(() => {
     if (shippingType === 'Delivery') {
-      setCartDeliveryInfo(state);
+      setCartDeliveryInfo({...state, deliveryFeeDiscount: getGrossDeliveryFee()});
     } else {
       setCartDeliveryInfo({});
     }
-  }, [setCartDeliveryInfo, shippingType, state]);
+  }, [getGrossDeliveryFee, setCartDeliveryInfo, shippingType, state]);
 
   const renderAmountComponent = (type = '', sign = '', title, amount, icon, onPress) => (
     <TouchableOpacity activeOpacity={0.9} disabled={icon ? false : true} onPress={onPress}>
@@ -164,9 +165,11 @@ const CartAmount = (props: PropsType): React$Node => {
   );
 
   const renderDiscountComponent = () => {
-    const serviceFeeDiscount = pabiliShopDetails?.isShopPabiliMerchant
-      ? pabiliShopServiceFee - pabiliShopResellerDiscount
-      : resellerDiscount;
+    const serviceFeeDiscount =
+      pabiliShopDetails?.isShopPabiliMerchant && pabiliShopResellerDiscount > 0
+        ? pabiliShopServiceFee - pabiliShopResellerDiscount
+        : resellerDiscount;
+
     const discountTotal = totalPromotions + serviceFeeDiscount + getGrossDeliveryFee();
     if (discountTotal > 0) {
       return (
@@ -184,7 +187,7 @@ const CartAmount = (props: PropsType): React$Node => {
               {resellerDiscount > 0 &&
                 !pabiliShopDetails?.isShopPabiliMerchant &&
                 renderAmountComponent('discount', '-', 'Reseller', serviceFeeDiscount)}
-              {(totalPromotions > 0 || totalShipping > 0) &&
+              {(totalPromotions > 0 || totalDelivery > 0 || totalShipping > 0) &&
                 promotionVoucher.map(activeVoucher =>
                   renderAmountComponent(
                     'discount',

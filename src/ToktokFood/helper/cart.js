@@ -104,8 +104,9 @@ export const getDeductedVoucher = (shipping, deliveryFee) => {
   let totalDelivery = 0;
   if (shipping?.amount > 0) {
     const {amount, is_percentage} = shipping;
-    const pAmount = is_percentage !== 0 ? (amount / 100) * deliveryFee : amount;
-    totalDelivery = pAmount > deliveryFee ? deliveryFee : pAmount;
+    // const pAmount = is_percentage !== 0 ? (amount / 100) * deliveryFee : amount;
+    // totalDelivery = pAmount > deliveryFee ? deliveryFee : pAmount;
+    totalDelivery = amount;
   } else {
     totalDelivery = deliveryFee;
   }

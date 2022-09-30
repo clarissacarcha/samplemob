@@ -49,10 +49,10 @@ export const useGetDeliveryFee = (shippingType, items, totalAmount, paymentMetho
 
   const [getPaymentMethodValidation, {data, error, refetch, loading}] = useLazyQuery(GET_PAYMENT_METHOD_VALIDATION, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
     onCompleted: ({getPaymentValidation}) => {
-      const {message, voucher} = getPaymentValidation;
-      if (message) {
+      const {message, voucher, success} = getPaymentValidation;
+      if (success && message === 'Available vouchers') {
         dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: voucher});
       }
     },
@@ -81,11 +81,14 @@ export const useGetDeliveryFee = (shippingType, items, totalAmount, paymentMetho
           dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: filterPromo});
         }
       }
+
       const payload = {...loader, isVisible: false};
       dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
 
       const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
       const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+
+      console.log(shipping);
 
       if (shipping.length > 0 || promotions.length > 0) {
         getPaymentMethodValidation({

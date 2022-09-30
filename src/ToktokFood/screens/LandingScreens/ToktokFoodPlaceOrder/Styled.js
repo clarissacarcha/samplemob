@@ -17,6 +17,11 @@ export const ComponentContainer: ComponentType<any> = styled.View`
   background-color: ${props => props.theme.color.white};
 `;
 
+export const PabiliTCContainer: ComponentType<any> = styled.View`
+  padding: 20px;
+  padding-top: 0px;
+`;
+
 export const DividerContainer: ComponentType<any> = styled.View`
   padding-horizontal: 20px;
 `;

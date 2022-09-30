@@ -5,7 +5,14 @@
 
 import React, {useState, useRef} from 'react';
 import type {PropsType} from './types';
-import {Container, ComponentContainer, HeaderContainer, PlaceOrderHeader, DividerContainer} from './Styled';
+import {
+  Container,
+  ComponentContainer,
+  HeaderContainer,
+  PlaceOrderHeader,
+  DividerContainer,
+  PabiliTCContainer,
+} from './Styled';
 import {
   CartEmpty,
   CartIconText,
@@ -84,7 +91,12 @@ const ToktokFoodPlaceOrder = (props: PropsType): React$Node => {
 
   const renderCustomerInfoComponent = () => (
     <React.Fragment>
-      {renderCartIconTextComponent(1, location_pin_ic, cartData?.items[0]?.shopName, cartData?.items[0].shopAddress)}
+      {renderCartIconTextComponent(
+        1,
+        location_pin_ic,
+        shopDetails?.getShopDetails?.shopname,
+        shopDetails?.getShopDetails?.address,
+      )}
       {cartServiceType === 'Delivery' &&
         renderCartIconTextComponent(
           2,
@@ -132,7 +144,7 @@ const ToktokFoodPlaceOrder = (props: PropsType): React$Node => {
             <CartServiceType
               cartServiceType={cartServiceType}
               setCartServiceType={setCartServiceType}
-              allowPickup={shopDetails?.allowPickup}
+              allowPickup={shopDetails?.getShopDetails?.allowPickup}
               isPabiliMerchant={cartData?.pabiliShopDetails?.isShopPabiliMerchant}
             />
           </ComponentContainer>
@@ -180,7 +192,7 @@ const ToktokFoodPlaceOrder = (props: PropsType): React$Node => {
           )}
           {cartData?.pabiliShopDetails?.isShopPabiliMerchant && (
             <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('ToktokFoodTermsAndConditions')}>
-              <ComponentContainer marginTop={0}>
+              <PabiliTCContainer>
                 <StyledText color={theme.color.darkgray} fontSize={11}>
                   Prices and availability are subject to change without prior notice. By placing this order, you agree
                   with{' '}
@@ -188,7 +200,7 @@ const ToktokFoodPlaceOrder = (props: PropsType): React$Node => {
                     Terms & Conditions.
                   </StyledText>
                 </StyledText>
-              </ComponentContainer>
+              </PabiliTCContainer>
             </TouchableOpacity>
           )}
         </KeyboardAwareScrollView>
