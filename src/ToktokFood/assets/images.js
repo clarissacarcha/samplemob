@@ -126,12 +126,18 @@ export const preparing_order = require('./images/animations/preparing-order.gif'
 export const carbon_delivery = require('./images/carbon-delivery.png');
 export const carbon_check = require('./images/carbon-check.png');
 export const carbon_x = require('./images/carbon-x.png');
+export const carbon_user_filled = require('./images/carbon-user-filled.png');
+export const carbon_marker_filled = require('./images/carbon-marker-filled.png');
 export const cash_ic = require('./images/cash-ic.png');
 export const toktokwallet_ic = require('./images/toktokwallet-ic.png');
 export const calendar_ic = require('./images/calendar-icon.png');
 export const map_ic = require('./images/map-icon.png');
 export const location_pin_ic = require('./images/location-pin-ic.png');
 export const clock_ic = require('./images/clock_ic.png');
+
+//cart icons
+export const carbon_voucher_ticket = require('./images/carbon-voucher-ticket.png');
+export const carbon_empty_cart = require('./images/carbon-empty-cart.png');
 
 //alert images
 export const success_image = require('./images/prompts_icons/success.png');

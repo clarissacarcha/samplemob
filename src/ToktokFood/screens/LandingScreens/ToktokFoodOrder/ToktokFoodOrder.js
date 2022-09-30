@@ -204,8 +204,8 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
   const onBackOrderDetails = () => {
     if (state?.orderStatus === 'c' || state?.orderStatus === 's') {
       setShowOrderDetails(false);
-      // navigation.navigate('ToktokFoodActivities');
-      navigation.navigate('ToktokFoodOrderTransactions');
+      navigation.navigate('ToktokFoodActivities');
+      // navigation.navigate('ToktokFoodOrderTransactions');
     } else {
       setShowOrderDetails(false);
     }
@@ -487,6 +487,8 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         isVisible={showOrderDetails}
         customBackdrop={<Container />}
         onBackButtonPress={onBackOrderDetails}
+        backdropTransitionOutTiming={0}
+        hideModalContentWhileAnimating={true}
         flex={1}
         coverScreen={true}
         animationIn={animationIn}
@@ -500,7 +502,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           <Divider height={8} />
           <OrderInformation state={{...state, riderDetails, duration}} />
           {renderModifiedTextComponent(true)}
-          <OrderSummary state={state?.orderDetails} />
+          <OrderSummary state={state?.orderDetails} placement="OrderDetails" />
           {state?.notes?.length > 0 && <OrderNote state={state} />}
           <OrderAddresses state={state} />
           <Divider />

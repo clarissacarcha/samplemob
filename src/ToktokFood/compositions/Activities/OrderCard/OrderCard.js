@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /**
  * @format
  * @flow
@@ -133,12 +134,21 @@ const OrderCard = (props: PropsType): React$Node => {
   };
 
   const renderPaymentMethodComponent = () => {
+    const serviceFee =
+      data?.pabiliShopResellerDiscount > 0
+        ? data?.pabiliShopResellerDiscount
+        : data?.totalServiceFee
+        ? data?.totalServiceFee
+        : 0;
+    const deliveryFee = data?.deliveryAmount;
+    const total = data?.totalAmount;
+    const totalAmount = parseFloat(total + deliveryFee + serviceFee).toFixed(2);
     if (isLoaded) {
       return (
         <Row justifyContent="space-between">
           <OrderPaymentMethod type={data?.paymentMethod?.toLowerCase()} />
           <StyledText mode="semibold" color={theme.color.orange}>
-            Total: &#x20B1;{parseFloat(data?.totalAmount + data?.originalShippingFee).toFixed(2)}
+            Total: &#x20B1;{totalAmount}
           </StyledText>
         </Row>
       );

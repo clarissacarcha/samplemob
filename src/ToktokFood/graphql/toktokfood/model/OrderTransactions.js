@@ -103,6 +103,9 @@ const transaction = `
     status
     createdAt
   }
+  serviceType
+  totalServiceFee
+  pabiliShopResellerDiscount
 `;
 
 // Add this once back end merge - refundTotal

@@ -19,6 +19,7 @@ const tempCart = `
     notes
     maxQty
     maxQtyIsset
+    shopAddress
     shopLatitude
     shopLongitude
     shopCity
@@ -72,6 +73,8 @@ const voucherType = `
   voucher_code
   voucher_name
   vcode_isset
+  reimburse_amount
+  service_fee_discount
   discounted_totalamount
   discount_totalamount
   discount_type

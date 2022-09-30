@@ -37,6 +37,7 @@ export const ButtonText: ComponentType<any> = styled(StyledText).attrs(props => 
   ...props,
   mode: 'medium',
   fontSize: 15,
+  style: {...props.textStyle},
 }))`
   color: ${props =>
     props.type === 'primary'

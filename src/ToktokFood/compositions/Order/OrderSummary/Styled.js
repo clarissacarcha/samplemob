@@ -12,9 +12,45 @@ export const Container: ComponentType<any> = styled.View`
   padding-horizontal: 20px;
 `;
 
+export const HiddenContainer: ComponentType<any> = styled.View`
+  flex-direction: row;
+  justify-content: flex-end;
+  flex: 1;
+  background-color: ${props => props.theme.color.white};
+`;
+
+export const DeleteContainer: ComponentType<any> = styled.View`
+  flex-direction: row;
+  width: 100px;
+`;
+
+export const EditContainer: ComponentType<any> = styled.View`
+  width: 30px;
+`;
+
+export const DeletePaddingContainer: ComponentType<any> = styled.View`
+  width: 20px;
+  background-color: ${props => props.theme.color.white};
+`;
+
+export const DeleteImageContainer: ComponentType<any> = styled.View`
+  width: 80px;
+  background-color: ${props => props.theme.color.red};
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
+export const DeleteImage: ComponentType<any> = styled.Image`
+  width: 25px;
+  height: 25px;
+  resize-mode: cover;
+`;
+
 export const OrderCard: ComponentType<any> = styled.View`
   flex-direction: row;
-  margin-bottom: 15px;
+  padding-vertical: 15px;
+  background-color: ${props => props.theme.color.white};
 `;
 
 export const OrderImage: ComponentType<any> = styled.Image`
@@ -116,9 +152,24 @@ export const FooterButton: ComponentType<any> = styled(TouchableOpacity).attrs(p
   padding-vertical: 15px;
 `;
 
+export const EditButton: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
+  ...props,
+  activeOpacity: 0.9,
+}))`
+  width: 30px;
+`;
+
 export const FooterText: ComponentType<any> = styled(StyledText).attrs(props => ({
   ...props,
   color: props.theme.color.gray,
 }))`
   margin-right: 10px;
+`;
+
+export const NotesText: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
+  color: props.theme.color.gray,
+  fontSize: 11,
+}))`
+  margin-bottom: 10px;
 `;

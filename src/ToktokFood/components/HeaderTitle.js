@@ -114,18 +114,24 @@ const HeaderTitle = ({
 
   const onPressCart = async () => {
     if (allTemporaryCart) {
+      // if (newInstallFlag) {
+      //   removeSetInstall().then(() => {
+      //     setNewInstallFlag(false);
+      //     navigation.navigate('ToktokFoodEmptyCart');
+      //   });
+      // } else {
+      //   if (allTemporaryCart.cartItemsLength > 0 && newInstallFlag === false) {
+      //     navigation.navigate('ToktokFoodPlaceOrder', {userId: customerInfo.userId});
+      //   } else {
+      //     navigation.navigate('ToktokFoodEmptyCart');
+      //   }
+      // }
       if (newInstallFlag) {
         removeSetInstall().then(() => {
           setNewInstallFlag(false);
-          navigation.navigate('ToktokFoodEmptyCart');
         });
-      } else {
-        if (allTemporaryCart.cartItemsLength > 0 && newInstallFlag === false) {
-          navigation.navigate('ToktokFoodCart', {userId: customerInfo.userId});
-        } else {
-          navigation.navigate('ToktokFoodEmptyCart');
-        }
       }
+      navigation.navigate('ToktokFoodPlaceOrder', {userId: customerInfo.userId});
     }
   };
 

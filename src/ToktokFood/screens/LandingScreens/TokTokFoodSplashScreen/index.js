@@ -45,6 +45,7 @@ const TokTokFoodSplashScreen = () => {
         setCreatedFlag(true);
       }
     },
+    onError: err => console.log('createAccount', JSON.stringify(err)),
   });
 
   const [getConsumerStatus] = useLazyQuery(GET_CONSUMER_TYPE, {
