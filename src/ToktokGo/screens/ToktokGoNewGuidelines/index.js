@@ -23,6 +23,10 @@ import moment from 'moment';
 import normalize from 'react-native-normalize';
 const windowWidth = Dimensions.get('window').width;
 const ToktokGoNewGuidelines = ({navigation, route}) => {
+  const {voucherData} = route.params;
+  const onPress = () => {
+    navigation.replace('ToktokGoBookingStart', {voucherData});
+  };
   const ItemSeperatorView = () => {
     return <View style={styles.itemSeperatorStyle} />;
   };
@@ -81,7 +85,7 @@ const ToktokGoNewGuidelines = ({navigation, route}) => {
         </View>
       </ScrollView>
       <View style={styles.fabcontainer}>
-        <TouchableOpacity style={styles.fab}>
+        <TouchableOpacity style={styles.fab} onPress={onPress}>
           <Text style={styles.fabtext}>OK</Text>
         </TouchableOpacity>
       </View>
