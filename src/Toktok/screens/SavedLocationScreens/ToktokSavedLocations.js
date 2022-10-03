@@ -1,66 +1,95 @@
-import {
-  ActivityIndicator,
-  Alert,
-  Dimensions,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from 'react-native';
-import {BlackIcon, YellowIcon} from '../../../components/ui';
-import {COLOR, DARK, LIGHT, MEDIUM, ORANGE, COLORS} from '../../../res/constants';
-import {DELETE_SAVED_LOCATION, GET_SAVED_LOCATIONS} from '../../../graphql';
+import {ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {COLOR, ORANGE, COLORS} from '../../../res/constants';
+import {GET_ADDRESSES, DELETE_ADDRESS, TOKTOK_ADDRESS_CLIENT, GET_ADDRESS} from '../../../graphql';
 import {HeaderBack, HeaderTitle} from '../../../components';
-import React, {useEffect, useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import CONSTANTS from '../../../common/res/constants';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {SavedLocation} from './Components';
+import {SavedLocationCard, ConfirmOperationAddressModal, SuccesOperationAddressModal} from './Components';
 
-import AddIcon from '../../../assets/icons/add-icon.png';
-import NoData from '../../../assets/images/NoData.png';
 import {connect} from 'react-redux';
 import {onError} from '../../../util/ErrorUtility';
+import {useFocusEffect} from '@react-navigation/native';
 
 const imageWidth = Dimensions.get('window').width - 200;
 
-const SavedLocations = ({navigation, session}) => {
+const SavedLocations = ({navigation, session, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Saved', 'Address']} />,
   });
+  const [showConfirmOperationAddressModal, setShowConfirmOperationAddressModal] = useState(false);
+  const [showSuccessOperationModal, setShowSuccessOperationModal] = useState(false);
+  const [addressId, setAddressId] = useState();
+  const [showOffice, setShowOffice] = useState(true);
+  const [showHome, setShowHOme] = useState(true);
 
-  const [savedLocations, setSavedLocations] = useState([]);
-
-  const [getSavedLocations, {loading, error}] = useLazyQuery(GET_SAVED_LOCATIONS, {
-    fetchPolicy: 'network-only',
-    variables: {
-      filter: {
-        tokConsumerId: session.user.consumer.id,
-      },
-    },
-    onCompleted: ({getSavedLocations}) => {
-      setSavedLocations(getSavedLocations);
-    },
-  });
-
-  const [deleteSavedLocation] = useMutation(DELETE_SAVED_LOCATION, {
+  const [deleteAddress] = useMutation(DELETE_ADDRESS, {
+    client: TOKTOK_ADDRESS_CLIENT,
     onError: onError,
-    onCompleted: data => {
-      getSavedLocations();
+    onCompleted: () => {
+      getAddresses();
+      setShowConfirmOperationAddressModal(false);
+      setShowSuccessOperationModal(true);
     },
   });
 
-  const onSavedLocationAdded = newlyAddedLocation => {
-    setSavedLocations([...savedLocations, newlyAddedLocation]);
+  const [getAddresses, {data}] = useLazyQuery(GET_ADDRESSES, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: res => {
+      res.getAddresses.find(item => item.isOffice) ? setShowOffice(false) : setShowOffice(true);
+      res.getAddresses.find(item => item.isHome) ? setShowHOme(false) : setShowHOme(true);
+    },
+    onError: onError,
+  });
+
+  const [getAddress] = useLazyQuery(GET_ADDRESS, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: res => {
+      navigation.push('ToktokAddLocation', {addressObj: res.getAddress});
+    },
+    onError: onError,
+  });
+
+  const onPressAddress = address => {
+    if (route?.params?.getAddressObj) {
+      route.params.getAddressObj(address);
+      return navigation.pop();
+    } else {
+      getAddress({
+        variables: {
+          input: {
+            id: address.id,
+          },
+        },
+      });
+    }
   };
 
-  useEffect(() => {
-    getSavedLocations();
-  }, []);
+  const confirmDelete = () => {
+    deleteAddress({
+      variables: {
+        input: {
+          id: addressId,
+        },
+      },
+    });
+  };
 
-  if (loading) {
+  useFocusEffect(
+    useCallback(() => {
+      getAddresses();
+    }, []),
+  );
+
+  const initiateDeleteAddress = address => {
+    setShowConfirmOperationAddressModal(true);
+    setAddressId(address?.id);
+  };
+
+  if (false) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator size={24} color={COLOR} />
@@ -68,57 +97,50 @@ const SavedLocations = ({navigation, session}) => {
     );
   }
 
-  if (error) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Something Went Wrong</Text>
-      </View>
-    );
-  }
-
-  if (false) {
-    return (
-      <View style={{flex: 1}}>
-        <TouchableHighlight
-          onPress={() => {
-            navigation.push('ToktokAddLocation', {onSavedLocationAdded});
-          }}
-          style={styles.submitBox}>
-          <View style={styles.submit}>
-            <Text style={styles.addLocText}>Add new Address</Text>
-            <Image source={AddIcon} style={styles.addLocIcon} resizeMode={'contain'} />
-          </View>
-        </TouchableHighlight>
-        <View style={styles.center}>
-          <Image source={NoData} style={styles.image} resizeMode={'center'} />
-        </View>
-      </View>
-    );
-  }
-
   return (
     <View style={{flex: 1}}>
-      <SavedLocation />
+      <SuccesOperationAddressModal
+        visible={showSuccessOperationModal}
+        onSubmit={() => setShowSuccessOperationModal(false)}
+        operationType={'DELETE'}
+      />
+
+      <ConfirmOperationAddressModal
+        visible={showConfirmOperationAddressModal}
+        onReject={() => setShowConfirmOperationAddressModal(false)}
+        onSubmit={confirmDelete}
+        operationType={'DELETE'}
+      />
       <FlatList
+        style={{paddingTop: 16}}
         showsVerticalScrollIndicator={false}
-        data={savedLocations}
+        data={data?.getAddresses}
         keyExtractor={item => item.id}
         renderItem={({item, index}) => {
-          return <SavedLocation location={item} deleteSavedLocation={deleteSavedLocation} />;
+          return (
+            <SavedLocationCard
+              onPressAddress={onPressAddress}
+              address={item}
+              initiateDeleteAddress={initiateDeleteAddress}
+              setAddressId={setAddressId}
+            />
+          );
         }}
       />
-      <View style={styles.submitContainer}>
-        <TouchableHighlight
-          onPress={() => {
-            navigation.push('LocationAccess', {onSavedLocationAdded});
-          }}
-          underlayColor={COLOR}
-          style={{borderRadius: 10}}>
-          <View style={styles.submit}>
-            <Text style={styles.submitText}>Add Address</Text>
-          </View>
-        </TouchableHighlight>
-      </View>
+      {!route?.params?.getAddressObj && (
+        <View style={styles.submitContainer}>
+          <TouchableHighlight
+            onPress={() => {
+              navigation.push('ToktokAddLocation', {showHome, showOffice});
+            }}
+            underlayColor={COLOR}
+            style={{borderRadius: 10}}>
+            <View style={styles.submit}>
+              <Text style={styles.submitText}>Add Address</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
+      )}
     </View>
   );
 };
