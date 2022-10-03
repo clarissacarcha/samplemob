@@ -21,7 +21,8 @@ const BtProceedButton = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const {tokwaAccount} = useAccount({isOnErrorAlert: false});
   const {bankDetails, screenLabel} = props;
-  const {data, fees, changeDataValue, changeErrorMessages, computeConvenienceFeeLoading} = useContext(BtVerifyContext);
+  const {data, fees, changeDataValue, changeErrorMessages, postComputeConvenienceFee, computeConvenienceFeeLoading} =
+    useContext(BtVerifyContext);
   const {amount, emailAddress, accountName, accountNumber, purpose} = data;
 
   const isRequired = (key, value) => {
@@ -112,6 +113,18 @@ const BtProceedButton = (props: PropsType): React$Node => {
         amount: parseFloat(amount),
       };
       changeDataValue('purpose', purpose.trim());
+
+      if (fees.totalServiceFee === 0 && amount > 0) {
+        return postComputeConvenienceFee({
+          variables: {
+            input: {
+              amount: +amount,
+              cashOutBankId: bankDetails.id,
+            },
+          },
+        });
+      }
+
       navigation.navigate('ToktokWalletBankTransferPaymentSummary', {
         transactionDetails,
         screenLabel,

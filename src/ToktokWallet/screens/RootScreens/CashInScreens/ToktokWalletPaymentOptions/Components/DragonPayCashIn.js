@@ -148,6 +148,9 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
           level as regulated by the Bangko Sentral ng Pilipinas. You may expect a refund for an over-limit transaction
           within 3 to 5 business days. For the corresponding wallet size, please see "
         subTextNote1="User Level and Transaction Limit."
+        onPressNote1={() => {
+          navigation.navigate('ToktokWalletTransactionLimit');
+        }}
       />
       <View style={styles.container}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 16}}>

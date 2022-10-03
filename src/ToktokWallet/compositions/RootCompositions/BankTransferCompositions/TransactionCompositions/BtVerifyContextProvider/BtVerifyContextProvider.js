@@ -14,12 +14,18 @@ import {numberFormat, currencyCode} from 'toktokwallet/helper';
 import {useMutation} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {POST_COMPUTE_CONVENIENCE_FEE} from 'toktokwallet/graphql';
+import {TransactionUtility} from 'toktokwallet/util';
+import {usePrompt} from 'src/hooks';
+import {useNavigation} from '@react-navigation/native';
+
 export const BtVerifyContext: React$Context<any> = createContext<any>();
 const {Provider} = BtVerifyContext;
 
 export const BtVerifyContextProvider = (props: PropsType): React$Node => {
   const {tokwaAccount} = useAccount();
   const {children, favoriteDetails} = props;
+  const prompt = usePrompt();
+  const navigation = useNavigation();
 
   const [data, setData] = useState({
     accountName: favoriteDetails ? favoriteDetails.accountName : '',
@@ -66,7 +72,14 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
     POST_COMPUTE_CONVENIENCE_FEE,
     {
       client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-      // onError: (error)=> onErrorAlert({alert,error}),
+      onError: error => {
+        TransactionUtility.StandardErrorHandling({
+          error,
+          navigation,
+          prompt,
+          isPop: false,
+        });
+      },
       onCompleted: fee => {
         const {providerServiceFee, systemServiceFee, type} = fee.postComputeConvenienceFee;
         const totalServiceFee = providerServiceFee + systemServiceFee;

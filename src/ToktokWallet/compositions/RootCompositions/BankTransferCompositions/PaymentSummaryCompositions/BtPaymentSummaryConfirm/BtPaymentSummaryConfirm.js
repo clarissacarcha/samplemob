@@ -42,7 +42,7 @@ const BtPaymentSummaryConfirm = (props: PropsType): React$Node => {
         error,
         navigation,
         prompt,
-        onPress: () => navigation.pop(2),
+        isPop: false,
       });
     },
   });

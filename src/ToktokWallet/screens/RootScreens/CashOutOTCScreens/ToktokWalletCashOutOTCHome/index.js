@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {StyleSheet, ImageBackground} from 'react-native';
+import {StyleSheet, ImageBackground, View} from 'react-native';
 
 //COMPONENTS
 import {
@@ -23,7 +23,11 @@ const MainComponent = ({navigation}) => {
   const {getHighlightedPartnersError, getCashOutProviderPartnersHighlighted} = useContext(VerifyContext);
 
   if (getHighlightedPartnersError) {
-    return <SomethingWentWrong onRefetch={getCashOutProviderPartnersHighlighted} error={getHighlightedPartnersError} />;
+    return (
+      <View style={styles.contentContainer}>
+        <SomethingWentWrong onRefetch={getCashOutProviderPartnersHighlighted} error={getHighlightedPartnersError} />
+      </View>
+    );
   }
   return (
     <ImageBackground style={styles.container} source={backgrounds.gradient_bg} resizeMode="cover">
@@ -52,6 +56,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: moderateScale(16),
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
   shadowContainer: {
     shadowColor: '#000',
