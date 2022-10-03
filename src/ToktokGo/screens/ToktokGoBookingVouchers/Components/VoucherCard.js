@@ -13,7 +13,16 @@ import normalize from 'react-native-normalize';
 
 const decorHeight = Dimensions.get('window').height * 0.12;
 
-export const VoucherCard = ({details, data, navigation, onPressActionButton, loading, postCollectVoucher}) => {
+export const VoucherCard = ({
+  details,
+  data,
+  navigation,
+  onPressActionButton,
+  loading,
+  postCollectVoucher,
+  setProcessingVisible,
+  fromVoucherDetails,
+}) => {
   const [isApplicable, setIsApplicable] = useState(true);
 
   const getComputed = () => {
@@ -25,16 +34,34 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
   };
 
   const onPress = () => {
-    if (data.collectable && !data.voucherWallet) {
-      postCollectVoucher({
-        variables: {
-          input: {
-            voucherId: data.id,
-          },
-        },
-      });
+    if (fromVoucherDetails == false) {
+      setProcessingVisible(true);
+      setTimeout(() => {
+        if (data.collectable && !data.voucherWallet) {
+          postCollectVoucher({
+            variables: {
+              input: {
+                voucherId: data.id,
+              },
+            },
+          });
+        } else {
+          onPressActionButton(data);
+          setProcessingVisible(false);
+        }
+      }, 3000);
     } else {
-      onPressActionButton(data);
+      if (data.collectable && !data.voucherWallet) {
+        postCollectVoucher({
+          variables: {
+            input: {
+              voucherId: data.id,
+            },
+          },
+        });
+      } else {
+        onPressActionButton(data);
+      }
     }
   };
 
@@ -120,7 +147,13 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
             </ThrottledOpacity>
           )}
           <ThrottledOpacity
-            onPress={() => navigation.navigate('ToktokGoBookingSelectedVoucher', {id: data.id, onPress, isApplicable})}>
+            onPress={() =>
+              navigation.navigate('ToktokGoBookingSelectedVoucher', {
+                id: data.id,
+                onPress,
+                isApplicable,
+              })
+            }>
             <Text style={styles.TandC}>T&C</Text>
           </ThrottledOpacity>
         </View>
@@ -207,7 +240,7 @@ const styles = StyleSheet.create({
   },
   claimButtonText: {
     marginHorizontal: 16,
-    textAlignL: 'center',
+    textAlign: 'center',
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.WHITE,
     fontSize: CONSTANTS.FONT_SIZE.S,
@@ -223,7 +256,7 @@ const styles = StyleSheet.create({
   },
   useButtonText: {
     marginHorizontal: 19,
-    textAlignL: 'center',
+    textAlign: 'center',
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.S,

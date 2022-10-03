@@ -19,6 +19,7 @@ import SearchICN from '../../../assets/images/SearchIcon.png';
 import XICN from '../../../assets/icons/EraseTextInput.png';
 import {ThrottledOpacity} from '../../../components_section';
 import {useDebounce} from '../../helpers';
+import {ProcessingModal} from './Components/ProcessingModal';
 
 const decorWidth = Dimensions.get('window').width * 0.5;
 const FULL_HEIGHT = Dimensions.get('window').height;
@@ -32,6 +33,8 @@ const ToktokGoBookingVouchers = ({navigation}) => {
   const [searchedDatas, setSearchedDatas] = useState([]);
   const [noVouchers, setNoVouchers] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  const [processingVisible, setProcessingVisible] = useState(false);
+  const [fromVoucherDetails, setFromVoucherDetails] = useState(true);
 
   const [getVouchers, {loading, error: getVouchersError, refetch}] = useLazyQuery(GET_VOUCHERS, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
@@ -200,6 +203,7 @@ const ToktokGoBookingVouchers = ({navigation}) => {
     <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE}}>
       <Header navigation={navigation} title={'Vouchers'} />
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
+      <ProcessingModal visible={processingVisible} />
       <FlatList
         ListHeaderComponent={
           <ScrollView>
@@ -261,6 +265,8 @@ const ToktokGoBookingVouchers = ({navigation}) => {
                           onPressActionButton={onApply}
                           postCollectVoucher={postCollectVoucher}
                           loading={PCVLoading}
+                          setProcessingVisible={setProcessingVisible}
+                          fromVoucherDetails={fromVoucherDetails}
                         />
                       </View>
                     );
