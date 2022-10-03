@@ -11,7 +11,7 @@ const NumberBox = ({onPress, value, showPin, error}) => (
     underlayColor={COLOR}
     style={{
       borderRadius: 10,
-      marginHorizontal: 5,
+      margin: 5,
       ...(!error ? {} : {borderWidth: 1, borderRadius: 5, borderColor: '#ED3A19'}),
     }}>
     <View style={styles.inputView}>
@@ -61,7 +61,6 @@ export const NumberInputBox = ({
           showPin={showPin}
         />
         <TextInput
-          caretHidden
           value={pinCode}
           style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
           keyboardType="numeric"
@@ -75,6 +74,7 @@ export const NumberInputBox = ({
               onChangeText(replaceValue);
             }
           }}
+          autoFocus
         />
       </View>
       {errorMessage != '' && (
@@ -84,7 +84,7 @@ export const NumberInputBox = ({
             color: '#ED3A19',
             fontSize: 12,
             textAlign: 'center',
-            marginTop: 10,
+            paddingTop: 5,
           }}>
           {errorMessage}
         </Text>

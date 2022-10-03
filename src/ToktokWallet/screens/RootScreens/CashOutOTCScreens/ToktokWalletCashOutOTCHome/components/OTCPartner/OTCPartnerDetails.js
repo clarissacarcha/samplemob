@@ -22,15 +22,14 @@ export const OTCPartnerDetails = React.memo(({content, contentIndex, title}) => 
   const onThrottledPress = useThrottle(item => onPress(item), 2000);
 
   return (
-    <View>
+    <View style={{marginTop: moderateScale(20)}}>
       <Text style={{fontFamily: FONT.BOLD, marginHorizontal: moderateScale(16), marginBottom: moderateScale(10)}}>
         {title}
       </Text>
-      <FlatList
-        data={content[title]}
-        renderItem={({item, index}) => (
-          <TouchableOpacity onPress={() => onThrottledPress(item)} style={styles.container} activeOpacity={0.8}>
-            <View style={styles.item}>
+      <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+        {content[title].map((item, index) => {
+          return (
+            <TouchableOpacity onPress={() => onThrottledPress(item)} style={styles.container} activeOpacity={0.8}>
               <View style={{justifyContent: 'center'}}>
                 {imageLoading && (
                   <View style={styles.loadingContainer}>
@@ -48,25 +47,19 @@ export const OTCPartnerDetails = React.memo(({content, contentIndex, title}) => 
               <Text style={styles.itemName} numberOfLines={2}>
                 {item.description}
               </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        numColumns={4}
-      />
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     </View>
   );
 });
 
 const styles = StyleSheet.create({
   container: {
-    width: '33.3%',
-    justifyContent: 'center',
+    width: '33.33%',
     alignItems: 'center',
     marginVertical: SIZE.MARGIN / 2,
-  },
-  item: {
-    flex: 1,
-    alignItems: 'center',
   },
   itemLogo: {
     height: moderateScale(60),

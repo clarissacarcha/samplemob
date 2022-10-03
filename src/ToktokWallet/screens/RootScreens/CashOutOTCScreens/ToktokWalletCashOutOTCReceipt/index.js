@@ -1,5 +1,5 @@
-import React, {useState, useRef} from 'react';
-import {View, StyleSheet, ScrollView, ImageBackground, Platform} from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
+import {View, StyleSheet, ScrollView, ImageBackground, Platform, BackHandler} from 'react-native';
 import ViewShot from 'react-native-view-shot';
 import CONSTANTS from 'common/res/constants';
 
@@ -55,6 +55,14 @@ export const ToktokWalletCashOutOTCReceipt = ({navigation, route}) => {
       />
     ),
   });
+
+  useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <CheckIdleState>

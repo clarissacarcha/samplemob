@@ -58,7 +58,6 @@ const CashOutOtcPartnerDetails = (props: PropsType): React$Node => {
       </ButtonContainer>
     );
   };
-
   return (
     <View>
       {!isSearch && <OtcPartner>{title}</OtcPartner>}
