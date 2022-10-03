@@ -10,6 +10,7 @@ import {Header} from '../../components';
 import {AlertOverlay} from '../../../SuperApp/screens/Components';
 import {TOKTOK_WALLET_VOUCHER_CLIENT, GET_VOUCHER, POST_COLLECT_VOUCHER} from '../../../graphql';
 import GraphicsIMG from '../../../assets/images/Promos/toktokgo_voucher.png';
+import {ProcessingModal} from './Components/ProcessingModal';
 
 const FULL_HEIGHT = Dimensions.get('window').height;
 const FULL_WIDTH = Dimensions.get('window').width;
@@ -18,6 +19,7 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
   const {id, onPress, isApplicable} = route.params;
   const [data, setData] = useState({});
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
+  const [processingVisible, setProcessingVisible] = useState(false);
 
   const [getVoucher, {loading: GVLoading}] = useLazyQuery(GET_VOUCHER, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
@@ -57,24 +59,29 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
   });
 
   const onPressSelected = () => {
-    if (data?.collectable && !data.voucherWallet) {
-      postCollectVoucher({
-        variables: {
-          input: {
-            voucherId: data.id,
+    setProcessingVisible(true);
+    setTimeout(() => {
+      if (data?.collectable && !data.voucherWallet) {
+        postCollectVoucher({
+          variables: {
+            input: {
+              voucherId: data.id,
+            },
           },
-        },
-      });
-    } else {
-      navigation.pop();
-      onPress();
-    }
+        });
+      } else {
+        navigation.pop();
+        onPress();
+        setProcessingVisible(false);
+      }
+    }, 3000);
   };
 
   return (
     <View style={styles.outerContainer}>
       <AlertOverlay visible={PCVLoading} />
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
+      <ProcessingModal visible={processingVisible} />
       <ScrollView>
         <Header title={data.name} navigation={navigation} />
         <View style={styles.container}>
