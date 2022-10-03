@@ -61,6 +61,7 @@ export const NumberInputBox = ({
           showPin={showPin}
         />
         <TextInput
+          caretHidden
           value={pinCode}
           style={{height: '100%', width: '100%', position: 'absolute', color: 'transparent'}}
           keyboardType="numeric"
