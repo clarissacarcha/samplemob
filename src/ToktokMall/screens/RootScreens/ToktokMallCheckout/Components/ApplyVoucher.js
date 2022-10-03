@@ -23,6 +23,7 @@ import {
 } from '../../../../../graphql/toktokmall/model';
 import {
   placeholder, 
+  success2, 
   voucherIcon
 } from '../../../../assets';
 import { 
@@ -180,7 +181,8 @@ export const ApplyVoucherForm = (address, customer, payload) => {
           return
         }
 
-        setSucceeded(true)
+        // setSucceeded(true)
+        displayModal()
           
         let items = ArrayCopy(CheckoutContextData.shippingVouchers)
 
@@ -296,7 +298,8 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
       }else if(req.responseData.type == "promotion"){
 
-        setSucceeded(true)
+        // setSucceeded(true)
+        displayModal()
         let items = ArrayCopy(CheckoutContextData.shippingVouchers)
         items.push({...req.responseData.voucher, appliedToShop: item.shop.id, voucherCodeType: req.responseData.type})
         getShippingHashDeliveryAmount({variables: {
@@ -307,7 +310,8 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
       }else{
 
-        setSucceeded(true)
+        // setSucceeded(true)
+        displayModal()
         //DEFAULT
         let items = ArrayCopy(CheckoutContextData.defaultVouchers)
         // items[index] = req.responseData.voucher
@@ -370,6 +374,28 @@ export const ApplyVoucherForm = (address, customer, payload) => {
 
     }
     setloading(false)
+  }
+
+  const displayModal = () => {
+    dispatch({type: "TOKTOK_MALL_OPEN_MODAL", payload: {
+      ModalContent: () => <View
+        style={{
+          height: 180,
+          width: 180,
+          borderRadius: 12,
+          backgroundColor: 'white',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>            
+        <Image source={success2} width={100} height={100} resizeMode="cover" />
+        <View style={{marginTop: 20}}>
+          <Text style={{color: "#F6841F", fontFamily: FONT.BOLD}} >
+            Voucher Applied
+          </Text>
+        </View>
+      </View>,
+      autoCloseEnabled: true
+    }})
   }
 
   const displaySuccess = () => {

@@ -17,7 +17,6 @@ export const onError = error => {
         alertGO({message});
       } else if (code === 'BAD_USER_INPUT') {
         if (errorType === 'AREA_UNSERVICEABLE') {
-          console.log('unserviceable area');
         } else if (errorType === 'PLACE_NOT_FOUND') {
           alertGO({
             title: 'Location Not Available',
