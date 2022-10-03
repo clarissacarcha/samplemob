@@ -107,12 +107,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: FONT_SIZE.S,
   },
-
   logo: {
     marginTop: moderateScale(16),
-    alignSelf: 'center',
     width: moderateScale(102),
     height: moderateScale(23),
+    resizeMode: 'contain',
   },
   description: {
     color: COLOR.BLACK,
@@ -136,10 +135,5 @@ const styles = StyleSheet.create({
   brokenLine: {
     marginVertical: moderateScale(20),
     marginHorizontal: moderateScale(16),
-  },
-  logo: {
-    width: moderateScale(110),
-    height: moderateScale(80),
-    resizeMode: 'contain',
   },
 });

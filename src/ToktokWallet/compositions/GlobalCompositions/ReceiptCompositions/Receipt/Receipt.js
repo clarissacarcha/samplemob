@@ -3,12 +3,13 @@
  * @flow
  */
 
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 
 import type {PropsType} from './types';
 import {BackgroundImage, ContentContainer, ReceiptDownloadContainer, ScrollViewContainer} from './Styled';
 import ViewShot from 'react-native-view-shot';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {BackHandler} from 'react-native';
 
 //COMPONENTS
 import {OrangeButton, HeaderTitleRevamp, HeaderDownloadReceipt} from 'toktokwallet/components';
@@ -55,6 +56,14 @@ const Receipt = (props: PropsType): React$Node => {
       />
     ),
   });
+
+  useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, []);
 
   let status;
   switch (route.params.receipt.status) {

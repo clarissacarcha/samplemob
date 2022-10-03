@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useRef} from 'react';
 import {useEffect} from 'react';
 
 import type {PropsType} from './types';
@@ -36,6 +36,7 @@ const ToktokWalletCashOutOtcPartners = (props: PropsType): React$Node => {
     headerTitle: () => <HeaderTitleRevamp label={'OTC Partners'} />,
   });
 
+  const onEndReachedCalledDuringMomentum = useRef(null);
   const [cashOutProviderPartners, setCashOutProviderPartners] = useState([]);
   const [search, setSearch] = useState('');
   const [isMounted, setIsMounted] = useState([]);
@@ -59,7 +60,11 @@ const ToktokWalletCashOutOtcPartners = (props: PropsType): React$Node => {
         .sortBy(item => item.description)
         .groupBy(item => (item.category === 2 ? 'Bank Partners' : 'Non-bank Partners'))
         .value();
-      setCashOutProviderPartners([groupData]);
+
+      setCashOutProviderPartners([
+        {'Bank Partners': groupData['Bank Partners']},
+        {'Non-bank Partners': groupData['Non-bank Partners']},
+      ]);
       setRefreshing(false);
     },
   });
@@ -89,7 +94,7 @@ const ToktokWalletCashOutOtcPartners = (props: PropsType): React$Node => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onRefreshFavorite = () => {
+  const onRefreshCashOut = () => {
     setRefreshing(true);
     search ? processSearch(search) : getCashOutProviderPartners();
   };
@@ -167,11 +172,11 @@ const ToktokWalletCashOutOtcPartners = (props: PropsType): React$Node => {
       return (
         <List
           data={cashOutProviderPartners}
-          renderItem={({item, index}) => <CashOutOtcPartnerDetails item={item} title={Object.keys(item)[index]} />}
+          renderItem={({item, index}) => <CashOutOtcPartnerDetails item={item} title={Object.keys(item)[0]} />}
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={ListEmptyComponent}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-          extraData={cashOutProviderPartners}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshCashOut} />}
+          extraData={[filteredData, cashOutProviderPartners, pageInfo]}
         />
       );
     } else {
@@ -184,20 +189,32 @@ const ToktokWalletCashOutOtcPartners = (props: PropsType): React$Node => {
           keyExtractor={(item, index) => index.toString()}
           extraData={[filteredData, cashOutProviderPartners, pageInfo]}
           ListEmptyComponent={ListEmptyComponent}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-          onEndReachedThreshold={0.02}
-          onEndReached={() => fetchMoreData()}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshCashOut} />}
+          onEndReachedThreshold={0.03}
+          onEndReached={() => {
+            if (!onEndReachedCalledDuringMomentum.current) {
+              fetchMoreData();
+              onEndReachedCalledDuringMomentum.current = true;
+            }
+          }}
+          onMomentumScrollBegin={() => {
+            onEndReachedCalledDuringMomentum.current = false;
+          }}
           ListFooterComponent={ListFooterComponent}
-          getItemLayout={(data, index) => ({
-            length: data.length,
-            offset: data.length * index,
-            index,
-          })}
+          getItemLayout={
+            filteredData.length <= 30
+              ? (data, index) => ({
+                  length: filteredData.length,
+                  offset: filteredData.length * index,
+                  index,
+                })
+              : undefined
+          }
         />
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cashOutProviderPartners, filteredData, refreshing, search]);
+  }, [cashOutProviderPartners, filteredData, refreshing, search, fetchMoreData, ListFooterComponent]);
 
   if (getCashOutProviderPartnersError || getCashOutSearchProviderPartnersError) {
     return (

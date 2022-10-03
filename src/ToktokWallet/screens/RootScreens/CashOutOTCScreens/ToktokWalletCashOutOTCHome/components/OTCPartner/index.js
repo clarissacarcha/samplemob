@@ -14,19 +14,13 @@ import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 export const OTCPartner = ({navigation}) => {
-  const {cashOutProviderPartnersHighlighted, getHighlightedPartnersLoading} = useContext(VerifyContext);
+  const {refreshing, cashOutProviderPartnersHighlighted, getHighlightedPartnersLoading} = useContext(VerifyContext);
 
   const ListOTCPartnerComponent = useMemo(() => {
     return (
       <View style={styles.billerTypesContainer}>
         {cashOutProviderPartnersHighlighted.map((content, contentIndex) => {
-          return (
-            <OTCPartnerDetails
-              content={content}
-              contentIndex={contentIndex}
-              title={Object.keys(content)[contentIndex]}
-            />
-          );
+          return <OTCPartnerDetails content={content} contentIndex={contentIndex} title={Object.keys(content)[0]} />;
         })}
       </View>
     );
@@ -44,7 +38,7 @@ export const OTCPartner = ({navigation}) => {
             <VectorIcon color={COLOR.ORANGE} size={moderateScale(15)} iconSet={ICON_SET.Entypo} name="chevron-right" />
           </TouchableOpacity>
         </View>
-        {getHighlightedPartnersLoading ? (
+        {!refreshing && getHighlightedPartnersLoading ? (
           <LoadingIndicator isLoading={true} style={{marginVertical: moderateScale(30)}} size="small" />
         ) : (
           ListOTCPartnerComponent
@@ -107,8 +101,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   billerTypesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginVertical: moderateScale(20),
+    marginBottom: moderateScale(20),
   },
 });

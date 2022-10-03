@@ -54,4 +54,5 @@ export const OtcPartner: ComponentType<any> = styled.Text`
   font-size: ${FONT_SIZE.M}px;
   font-family: ${FONT.BOLD};
   padding-horizontal: ${moderateScale(16)}px;
+  margin-top: ${moderateScale(16)}px;
 `;

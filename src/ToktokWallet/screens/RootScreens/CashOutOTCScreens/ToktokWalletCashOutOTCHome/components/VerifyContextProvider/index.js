@@ -11,6 +11,7 @@ const {Provider} = VerifyContext;
 
 export const VerifyContextProvider = ({children}) => {
   const [cashOutProviderPartnersHighlighted, setCashOutProviderPartnersHighlighted] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const [
     getCashOutProviderPartnersHighlighted,
@@ -19,7 +20,7 @@ export const VerifyContextProvider = ({children}) => {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
-      // setRefreshing(false);
+      setRefreshing(false);
       console.log(error);
     },
     onCompleted: data => {
@@ -27,7 +28,12 @@ export const VerifyContextProvider = ({children}) => {
         .sortBy(item => item.description)
         .groupBy(item => (item.category === 2 ? 'Bank Partners' : 'Non-bank Partners'))
         .value();
-      setCashOutProviderPartnersHighlighted([groupData]);
+
+      setCashOutProviderPartnersHighlighted([
+        {'Bank Partners': groupData['Bank Partners']},
+        {'Non-bank Partners': groupData['Non-bank Partners']},
+      ]);
+      setRefreshing(false);
     },
   });
 
@@ -42,6 +48,8 @@ export const VerifyContextProvider = ({children}) => {
         getCashOutProviderPartnersHighlighted,
         getHighlightedPartnersLoading,
         getHighlightedPartnersError,
+        refreshing,
+        setRefreshing,
       }}>
       {children}
     </Provider>

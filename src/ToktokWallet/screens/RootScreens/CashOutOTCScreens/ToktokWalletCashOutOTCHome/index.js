@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {StyleSheet, ImageBackground, View} from 'react-native';
+import {StyleSheet, ImageBackground, View, ScrollView, RefreshControl} from 'react-native';
 
 //COMPONENTS
 import {
@@ -20,7 +20,13 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 import {backgrounds} from 'toktokwallet/assets';
 
 const MainComponent = ({navigation}) => {
-  const {getHighlightedPartnersError, getCashOutProviderPartnersHighlighted} = useContext(VerifyContext);
+  const {refreshing, setRefreshing, getHighlightedPartnersError, getCashOutProviderPartnersHighlighted} =
+    useContext(VerifyContext);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    getCashOutProviderPartnersHighlighted();
+  };
 
   if (getHighlightedPartnersError) {
     return (
@@ -31,8 +37,13 @@ const MainComponent = ({navigation}) => {
   }
   return (
     <ImageBackground style={styles.container} source={backgrounds.gradient_bg} resizeMode="cover">
-      <TransferableAndNonTransferableBalance />
-      <OTCPartner navigation={navigation} />
+      <ScrollView
+        contentContainerStyle={{padding: moderateScale(16)}}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        <TransferableAndNonTransferableBalance />
+        <OTCPartner navigation={navigation} />
+      </ScrollView>
     </ImageBackground>
   );
 };
@@ -55,7 +66,6 @@ export const ToktokWalletCashOutOTCHome = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: moderateScale(16),
   },
   contentContainer: {
     flex: 1,

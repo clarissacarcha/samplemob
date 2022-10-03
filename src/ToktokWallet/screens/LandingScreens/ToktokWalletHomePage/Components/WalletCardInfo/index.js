@@ -70,33 +70,31 @@ const WalletCardInfo = ({loading}) => {
     <View style={styles.container}>
       <HeaderHomeBackground>
         <View style={styles.headerContainer}>
-          <View>
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity onPress={redirectLinking} style={styles.accountLevelContainer}>
-                <View style={{marginRight: moderateScale(5)}}>
-                  <Image style={styles.level} source={levelIcon()} />
-                </View>
-                <Text style={styles.accountRank}>{tokwaAccount.person.accountType.title}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.walletContent}>
-              <View>
-                {
-                  <Text style={styles.balance}>
-                    {currencyCode}
-                    {numberFormat(+tokwaAccount.wallet.balance)}
-                  </Text>
-                }
-                <Text style={styles.balanceText}>Available Balance</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TouchableOpacity onPress={redirectLinking} style={styles.accountLevelContainer}>
+              <View style={{marginRight: moderateScale(5)}}>
+                <Image style={styles.level} source={levelIcon()} />
               </View>
-
-              <TouchableOpacity onPress={cashIn} style={styles.topUp}>
-                <View style={styles.topUpbtn}>
-                  <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="#EDAF1F" size={15} />
-                </View>
-              </TouchableOpacity>
-            </View>
+              <Text style={styles.accountRank}>{tokwaAccount.person.accountType.title}</Text>
+            </TouchableOpacity>
           </View>
+          <View style={styles.walletContent}>
+            <View>
+              {
+                <Text style={styles.balance}>
+                  {currencyCode}
+                  {numberFormat(+tokwaAccount.wallet.balance)}
+                </Text>
+              }
+            </View>
+
+            <TouchableOpacity onPress={cashIn} style={styles.topUp}>
+              <View style={styles.topUpbtn}>
+                <VectorIcon iconSet={ICON_SET.Entypo} name="plus" color="#EDAF1F" size={15} />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.balanceText}>Available Balance</Text>
         </View>
       </HeaderHomeBackground>
       <View style={styles.whitespace}>
@@ -120,12 +118,11 @@ const WalletCardInfo = ({loading}) => {
 const styles = StyleSheet.create({
   container: {
     height: moderateScale(230),
-    width: width,
+    // width: width,
   },
   whitespace: {
-    height: moderateScale(90),
+    height: moderateScale(80),
     backgroundColor: 'white',
-    position: 'relative',
   },
   walletbackgroundimage: {
     flex: 1,
@@ -139,14 +136,13 @@ const styles = StyleSheet.create({
   },
   walletContent: {
     flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 16,
   },
   topUp: {
-    justifyContent: 'flex-start',
-    alignItems: 'center',
     width: moderateScale(40),
-    marginLeft: 5,
-    marginTop: Platform.OS == 'android' ? moderateScale(10) : moderateScale(5),
+    marginLeft: moderateScale(15),
+    marginTop: Platform.OS === 'android' ? moderateScale(5) : 0,
   },
   topUpbtn: {
     height: moderateScale(24),
@@ -161,12 +157,13 @@ const styles = StyleSheet.create({
   walletSettings: {
     flex: 1,
     alignItems: 'flex-end',
-    marginTop: Platform.OS == 'android' ? moderateScale(10) : moderateScale(5),
+    marginTop: Platform.OS === 'android' ? moderateScale(10) : moderateScale(5),
   },
   balanceText: {
     fontSize: FONT_SIZE.S,
     fontFamily: FONT.REGULAR,
     color: COLOR.WHITE,
+    paddingHorizontal: 16,
   },
   balance: {
     fontSize: moderateScale(26),
@@ -184,14 +181,14 @@ const styles = StyleSheet.create({
   },
   informationContainer: {
     flex: 1,
-    marginTop: -40,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    paddingBottom: moderateScale(10),
   },
   informationContent: {
     flexDirection: 'row',
     padding: 2,
-    marginTop: moderateScale(10),
+    // marginVertical: moderateScale(5),
     alignItems: 'center',
   },
   walletVerifyIcon: {
@@ -206,11 +203,12 @@ const styles = StyleSheet.create({
   headerContainer: {
     flex: 1,
     justifyContent: 'center',
-    paddingBottom: moderateScale(35),
+    paddingBottom: moderateScale(40),
   },
   accountLevelContainer: {
     paddingHorizontal: 16,
     flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
