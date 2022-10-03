@@ -55,7 +55,7 @@ export const ToktokWalletDPCashInMethods = ({navigation, route}) => {
           error,
           navigation,
           prompt,
-          alert,
+          isPop: false,
         });
       },
       onCompleted: ({getCashInPartnerTypes}) => {
@@ -74,7 +74,7 @@ export const ToktokWalletDPCashInMethods = ({navigation, route}) => {
         error,
         navigation,
         prompt,
-        alert,
+        isPop: false,
       });
     },
     onCompleted: ({postComputeProcessingFee}) => {
@@ -95,7 +95,7 @@ export const ToktokWalletDPCashInMethods = ({navigation, route}) => {
         error,
         navigation,
         prompt,
-        alert,
+        isPop: false,
       });
     },
   });

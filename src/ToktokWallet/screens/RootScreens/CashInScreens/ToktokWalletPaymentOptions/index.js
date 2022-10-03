@@ -14,12 +14,12 @@ import {
   SomethingWentWrong,
 } from 'toktokwallet/components';
 import {numberFormat} from 'toktokwallet/helper';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import CONSTANTS from 'common/res/constants';
-import {onErrorAlert} from 'src/util/ErrorUtility';
-import {useAlert} from 'src/hooks';
+import {usePrompt} from 'src/hooks';
 import {useAccount} from 'toktokwallet/hooks';
 import {AlertOverlay} from 'src/components';
+import {TransactionUtility} from 'toktokwallet/util';
 //SELF IMPORTS
 import {DragonPayCashIn} from './Components';
 
@@ -31,7 +31,7 @@ export const ToktokWalletPaymentOptions = ({navigation, route}) => {
   const {tokwaAccount, getMyAccountLoading, getMyAccount, getGlobalSettings, getGlobalSettingsLoading} = useAccount();
   const [remainingCashIn, setRemainingCashIn] = useState(0);
   const dispatch = useDispatch();
-  const alert = useAlert();
+  const prompt = usePrompt();
   const {
     data: cashinmethods,
     error,
@@ -40,7 +40,12 @@ export const ToktokWalletPaymentOptions = ({navigation, route}) => {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: error => {
-      onErrorAlert({alert, error, navigation});
+      TransactionUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        isPop: false,
+      });
     },
   });
 
@@ -119,7 +124,11 @@ export const ToktokWalletPaymentOptions = ({navigation, route}) => {
   }
 
   if (error || remainingError) {
-    return <SomethingWentWrong error={error ?? remainingError} />;
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
+        <SomethingWentWrong error={error ?? remainingError} onRefetch={getWalletRemainingCashIn} />
+      </View>
+    );
   }
 
   const CashInMethod = ({item, index}) => {

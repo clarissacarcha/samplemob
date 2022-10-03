@@ -146,7 +146,7 @@ export class TransactionUtility {
         promptTitle = 'Transaction Pending';
         promptMessage = '';
       }
-      console.log('jsjsj', promptMessage, promptTitle);
+
       prompt({
         type: finalPrompType,
         message: promptMessage,
