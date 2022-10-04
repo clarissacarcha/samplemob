@@ -90,6 +90,8 @@ export const GET_CASH_OUT_OTC = gql`
             id
             referenceNumber
             amount
+            providerServiceFee
+            systemServiceFee
             isExported
             status
             accountId
