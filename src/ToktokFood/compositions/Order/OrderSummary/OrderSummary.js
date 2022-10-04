@@ -128,7 +128,7 @@ const OrderSummary = (props: PropsType): React$Node => {
     });
   };
 
-  useEffect(() => {
+  const getItemList = useCallback(() => {
     if (state?.length > 0) {
       const list = state.sort((a, b) => a.id - b.id);
       setFullList(list);
@@ -142,6 +142,10 @@ const OrderSummary = (props: PropsType): React$Node => {
       }
     }
   }, [state]);
+
+  useEffect(() => {
+    getItemList();
+  }, [getItemList]);
 
   const isJSON = text => {
     if (typeof text !== 'string') {
@@ -225,9 +229,10 @@ const OrderSummary = (props: PropsType): React$Node => {
               disableLeftSwipe={placement === 'OrderDetails'}
               rightOpenValue={-100}
               previewOpenValue={-40}
+              forceCloseToLeftThreshold={0}
               closeOnRowPress={true}>
               <HiddenContainer>{renderDeleteButtonComponent(item)}</HiddenContainer>
-              <OrderCard>
+              <OrderCard key={item.logId}>
                 {(item?.productDetails?.filename || item?.productLogo) &&
                   renderOrderImageComponent(
                     item?.productLogo || item?.productDetails?.filename,

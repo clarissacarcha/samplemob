@@ -96,9 +96,11 @@ export const Variations = ({data, productId}) => {
     if (Object.values(selected).length > 0) {
       let amount = 0;
       Object.values(selected).map(item => {
-        item.map(val => {
-          amount += val.addon_price;
-        });
+        if (item.length > 0) {
+          item.map(val => {
+            amount += val.addon_price;
+          });
+        }
       });
       setOptionsAmount(amount);
     } else {

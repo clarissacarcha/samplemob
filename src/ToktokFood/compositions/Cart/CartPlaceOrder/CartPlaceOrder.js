@@ -107,9 +107,13 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     const deductedPrice = promotions.length > 0 || deals.length > 0 ? totalPrice : cartData?.totalAmount;
 
     const amount = await getTotalAmount(promotionVoucher, 0);
-    const parsedAmount = Number((deductedPrice - amount).toFixed(2));
+    // const parsedAmount = Number((deductedPrice - amount).toFixed(2));
+    const parsedAmount = Number(deductedPrice.toFixed(2));
 
-    // console.log('totalPrice', totalPrice);
+    console.log('totalPrice', totalPrice);
+    console.log('deductedPrice', deductedPrice);
+    console.log('amount', amount);
+    console.log('parsedAmount', parsedAmount);
 
     const replaceName = deliveryReceiver.replace(/[^a-z0-9 ]/gi, '');
     const replaceLandMark = receiverLandmark.replace(/[^a-z0-9 ]/gi, '');
@@ -157,7 +161,7 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
       );
       const pabiliServiceFee = cartData?.pabiliShopResellerDiscount || cartData?.pabiliShopServiceFee;
       CUSTOMER_DATA.service_type = 'pabili';
-      CUSTOMER_DATA.service_fee = pabiliServiceFee;
+      CUSTOMER_DATA.service_fee = Number(pabiliServiceFee.toFixed(2));
     }
 
     const data = reformData(WALLET, CUSTOMER_DATA, ORDER_DATA, {});
@@ -327,16 +331,13 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
       parseAmount += pabiliServiceFee;
     }
 
-    console.log('parseAmount', parseAmount);
-    console.log('totalPrice', totalPrice);
-    console.log('deductedPrice', deductedPrice);
-    console.log('amount', amount);
+    console.log('requestTakeMoney', Number(parseAmount.toFixed(2)));
 
     requestTakeMoney({
       variables: {
         input: {
           currency: userWallet?.getMyAccount?.wallet?.currency?.code,
-          amount: parseAmount,
+          amount: Number(parseAmount.toFixed(2)),
           toktokuser_id: user.id,
           payment_method: paymentMethod.toUpperCase(),
           name: `${customerInfo.firstName} ${customerInfo.lastName}`,
@@ -383,7 +384,7 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
         });
         setTimeout(async () => {
           const evalDisabledResult = cartData?.items.filter(item => item.isDisabled === true);
-          console.log('evalDisabledResult', evalDisabledResult, cartData?.items);
+          // console.log('evalDisabledResult', evalDisabledResult, cartData?.items);
           if (evalDisabledResult.length > 0) {
             const payload = {...loader, isVisible: false};
             dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
