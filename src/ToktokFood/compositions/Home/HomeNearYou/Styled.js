@@ -46,7 +46,8 @@ export const ListWrapper: ComponentType<any> = styled.TouchableOpacity`
   flex: 1;
   flex-wrap: wrap;
   align-items: flex-start;
-  justify-content: center;
+  padding-left: 8;
+  /* justify-content: center; */
   /* border-width: 1px; */
 `;
 

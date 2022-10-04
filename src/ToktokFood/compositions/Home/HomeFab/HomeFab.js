@@ -13,7 +13,7 @@ import {BadgeContainer, CloseIcon, FAB, FABIcon} from './Styled';
 import {fab_activities, fab_food, fab_notification, fab_wallet} from 'toktokfood/assets/images';
 
 const fabItems = [
-  {label: 'toktokwallet', image: fab_wallet},
+  // {label: 'toktokwallet', image: fab_wallet}, remove for now
   {label: 'Notifications', image: fab_notification},
   {label: 'Activities', image: fab_activities},
 ];

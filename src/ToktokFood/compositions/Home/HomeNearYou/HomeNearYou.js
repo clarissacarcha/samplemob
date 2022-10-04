@@ -6,6 +6,7 @@
 
 import React, {useEffect, useState} from 'react';
 // import {useTheme} from 'styled-components';
+import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import _ from 'lodash';
@@ -37,6 +38,7 @@ import {shop_noimage} from 'toktokfood/assets/images';
 
 const HomeNearYou = (props: PropsType): React$Node => {
   const {page, setLoadMore} = props;
+  const navigation = useNavigation();
   // const theme = useTheme();
   const {location} = useSelector(state => state.toktokFood);
 
@@ -59,7 +61,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
     nextFetchPolicy: 'network-only',
     onCompleted: () => setLoadMore(false),
   });
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
     if (location) {
@@ -95,10 +97,12 @@ const HomeNearYou = (props: PropsType): React$Node => {
     }
   }, [page]);
 
+  const onShopOverview = item => navigation.navigate('ToktokFoodShopOverview', {item});
+
   const RestaurantList = ({item}) => {
     const [validImg, setValidImg] = useState(true);
     return (
-      <ListContainer>
+      <ListContainer onPress={() => onShopOverview(item)}>
         <ListImg source={validImg ? {uri: item.logo} : shop_noimage} onError={() => setValidImg(false)} />
 
         <ListInfo>
