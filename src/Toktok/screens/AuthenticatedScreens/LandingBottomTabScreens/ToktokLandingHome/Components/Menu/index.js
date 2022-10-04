@@ -104,7 +104,7 @@ export const Menu = ({setUserLocation, constants}) => {
       label: 'Food',
       icon: ToktokfoodIcon,
       onPress: () => {
-        SheetManager.hide('homeMenu_Services'), navigation.push('TokTokFoodSplashScreen');
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokFoodHomeScreen');
       },
       isNew: true,
     },

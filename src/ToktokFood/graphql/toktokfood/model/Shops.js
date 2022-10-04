@@ -212,3 +212,13 @@ export const GET_SHOP_BY_CATEGORY = gql`
     }
   }
 `;
+
+export const GET_SHOP_BANNERS = gql`
+  query getShopBanners {
+    getShopBanners {
+      id
+      filename
+      status
+    }
+  }
+`;

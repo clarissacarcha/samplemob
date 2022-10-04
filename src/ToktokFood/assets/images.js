@@ -79,6 +79,7 @@ export const burger_king = require('./images/sample_banners/burger_king.jpeg');
 export const splash = require('./images/splash.png');
 export const splash_new = require('./images/splash_new.png');
 export const starbucks_banner = require('./images/starbucks_banner.png');
+export const home_bg = require('./images/home-background.png');
 
 // Test Rider
 export const rider1 = require('./images/riders/rider1.png');
@@ -94,6 +95,7 @@ export const empty_cart = require('./images/empty_icons/empty-cart-2.png');
 export const no_image = require('./images/empty_icons/no-image.png');
 export const empty_promos = require('./images/empty_icons/empty-promos.png');
 export const food_placeholder = require('./images/empty_icons/food-placeholder.png');
+export const shop_noimage = require('./images/shop_noimage.png');
 
 // Rider Map Icons
 export const rider_ic = require('./images/rider_map_ic.png');
@@ -147,3 +149,9 @@ export const loading_animation = require('./images/prompts_icons/loading-animati
 //activities images
 export const empty_activities = require('./images/empty_icons/empty-activities.png');
 export const timer_ic = require('./images/timer.png');
+
+// Fab Icons
+export const fab_activities = require('./images/fab_icons/fab_activities.png');
+export const fab_food = require('./images/fab_icons/fab_food.png');
+export const fab_notification = require('./images/fab_icons/fab_notification.png');
+export const fab_wallet = require('./images/fab_icons/fab_wallet.png');
