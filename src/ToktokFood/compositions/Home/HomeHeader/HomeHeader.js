@@ -41,6 +41,7 @@ const HomeHeader = (props: PropsType): React$Node => {
   const {location} = useSelector(state => state.toktokFood);
 
   const onSetLocationDetails = () => navigation.navigate('ToktokFoodAddressDetails');
+  const onCartNavigate = () => navigation.navigate('ToktokFoodPlaceOrder');
 
   const AddressDetails = () => {
     return (
@@ -66,7 +67,7 @@ const HomeHeader = (props: PropsType): React$Node => {
   const CartOptions = () => {
     return (
       <Row>
-        <StyledIcon icon="cart-outline" />
+        <StyledIcon icon="cart-outline" onPress={onCartNavigate} />
         <StyledIcon />
       </Row>
     );

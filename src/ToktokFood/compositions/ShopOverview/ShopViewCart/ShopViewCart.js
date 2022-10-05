@@ -16,7 +16,7 @@ const ShopViewCart = (props: PropsType): React$Node => {
   const {customerInfo} = useSelector(state => state.toktokFood);
 
   const onRestaurantNavigate = () => {
-    navigation.navigate('ToktokFoodCart', {
+    navigation.navigate('ToktokFoodPlaceOrder', {
       shopId: shopId,
       userId: customerInfo.userId,
       shopname: 'Test',
