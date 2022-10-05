@@ -21,6 +21,7 @@ import {
   ToktokFoodEmptyCart,
   ToktokFoodOrder,
   ToktokFoodPlaceOrder,
+  ToktokFoodActivities,
 } from 'toktokfood/screens';
 import ToktokFoodHomeScreen from 'toktokfood/screens/RootScreens/ToktokFoodHomeScreen';
 
@@ -30,6 +31,7 @@ export default ({Navigator}) => (
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodDriver" component={ToktokFoodDriver} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodOrder" component={ToktokFoodOrder} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodPlaceOrder" component={ToktokFoodPlaceOrder} />
+    <Navigator.Screen options={{headerShown: false}} name="ToktokFoodActivities" component={ToktokFoodActivities} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodSearch" component={ToktokFoodSearch} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokRiderRating" component={ToktokRiderRating} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodMapSearch" component={ToktokFoodMapSearch} />

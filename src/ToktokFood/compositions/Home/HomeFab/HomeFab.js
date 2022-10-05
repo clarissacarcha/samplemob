@@ -5,7 +5,7 @@
 
 import React, {useState} from 'react';
 import {Avatar, withBadge} from 'react-native-elements';
-
+import {useNavigation} from '@react-navigation/native';
 import type {PropsType} from './types';
 import {BadgeContainer, CloseIcon, FAB, FABIcon} from './Styled';
 
@@ -20,6 +20,13 @@ const fabItems = [
 
 const HomeFab = (props: PropsType): React$Node => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigation = useNavigation();
+
+  const handlePressedSelection = (item, index) => {
+    if (item.label === 'Activities') {
+      navigation.navigate('ToktokFoodActivities');
+    }
+  };
 
   const BadgedIcon = withBadge(' ')(Avatar);
 
@@ -46,6 +53,7 @@ const HomeFab = (props: PropsType): React$Node => {
       onMenuToggle={() => setIsOpen(!isOpen)}
       renderMenuIcon={renderMenuIcon}
       renderItemIcon={renderItemIcon}
+      onItemPress={handlePressedSelection}
     />
   );
 };
