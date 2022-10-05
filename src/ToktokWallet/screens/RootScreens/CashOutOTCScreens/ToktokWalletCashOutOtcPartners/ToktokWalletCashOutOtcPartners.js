@@ -62,8 +62,8 @@ const ToktokWalletCashOutOtcPartners = (props: PropsType): React$Node => {
         .value();
 
       setCashOutProviderPartners([
-        {'Bank Partners': groupData['Bank Partners']},
-        {'Non-bank Partners': groupData['Non-bank Partners']},
+        {'Bank Partners': groupData['Bank Partners'] ? groupData['Bank Partners'] : []},
+        {'Non-bank Partners': groupData['Non-bank Partners'] ? groupData['Non-bank Partners'] : []},
       ]);
       setRefreshing(false);
     },

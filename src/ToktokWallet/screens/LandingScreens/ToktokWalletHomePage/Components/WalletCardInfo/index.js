@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   walletContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: moderateScale(16),
   },
   topUp: {
     width: moderateScale(40),
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.S,
     fontFamily: FONT.REGULAR,
     color: COLOR.WHITE,
-    paddingHorizontal: 16,
+    paddingHorizontal: moderateScale(16),
   },
   balance: {
     fontSize: moderateScale(26),
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     paddingBottom: moderateScale(40),
   },
   accountLevelContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: moderateScale(16),
     flexDirection: 'row',
     alignItems: 'center',
   },
