@@ -48,6 +48,11 @@ const HomeCategories = (props: PropsType): React$Node => {
     fetchPolicy: 'network-only',
   });
 
+  const onCategories = item => {
+    navigation.navigate('ToktokFoodShopCategories', {category: item});
+    // navigation.navigate('ToktokFoodSearch', {searchByCategory: item.categoryName, isSearchPage: true});
+  };
+
   const Loader = () => (
     <SkeletonPlaceholder backgroundColor="rgba(220, 220, 220, 1)">
       <SkeletonPlaceholder.Item paddingVertical={10} flexDirection="row" alignItems="center">
@@ -67,9 +72,8 @@ const HomeCategories = (props: PropsType): React$Node => {
     let image = item.filename ? {uri: item.filename} : fastfood;
     return (
       <CategoryTouchable
-      // style={horizontal ? styles.listItemVerticalContainer : {flexDirection: 'row', paddingBottom: 10}}
-      // onPress={() => showSearchPage(item)}
-      >
+        // style={horizontal ? styles.listItemVerticalContainer : {flexDirection: 'row', paddingBottom: 10}}
+        onPress={() => onCategories(item)}>
         <CategoryImg resizeMode="cover" source={image} />
         <CategoryText>{item.categoryName}</CategoryText>
       </CategoryTouchable>

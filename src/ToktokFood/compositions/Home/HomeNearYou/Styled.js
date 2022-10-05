@@ -11,12 +11,34 @@ import ContentLoader from 'react-native-easy-content-loader';
 
 import StyledText from 'toktokfood/components/StyledText';
 
-import {getDeviceWidth, scale} from 'toktokfood/helper/scale';
+import {getDeviceWidth, moderateScale, scale} from 'toktokfood/helper/scale';
 import {time} from 'toktokfood/assets/images';
 
 export const Container: ComponentType<any> = styled.View`
   background-color: ${props => props.theme.color.white};
   flex: 1;
+`;
+
+export const BtnContainer: ComponentType<any> = styled.View`
+  padding-top: 20px;
+`;
+
+export const EmptyContainer: ComponentType<any> = styled.View`
+  background-color: ${props => props.theme.color.white};
+  align-items: center;
+  justify-content: center;
+  flex: 10;
+  height: 300px;
+  padding-horizontal: 50px;
+`;
+
+export const EmptyImg: ComponentType<any> = styled(Image).attrs(props => ({
+  ...props,
+  // source: new_empty_shop_icon,
+  resizeMode: 'contain',
+}))`
+  width: ${moderateScale(193)}px;
+  height: ${moderateScale(146)}px;
 `;
 
 export const Row: ComponentType<any> = styled.View`

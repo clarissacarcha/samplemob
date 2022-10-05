@@ -26,6 +26,9 @@ const HomeFab = (props: PropsType): React$Node => {
     if (item.label === 'Activities') {
       navigation.navigate('ToktokFoodActivities');
     }
+    if (item.label === 'Notifications') {
+      navigation.navigate('ToktokFoodNotif');
+    }
   };
 
   const BadgedIcon = withBadge(' ')(Avatar);

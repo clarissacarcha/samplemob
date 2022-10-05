@@ -42,7 +42,7 @@ import {GET_PRODUCTS_BY_SHOP_CATEGORY} from 'toktokfood/graphql/toktokfood';
 
 const ShopItemList = (props: PropsType): React$Node => {
   const {onGetRef, onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag, route, shopId, scrollY} = props;
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
   // const theme = useTheme();
 
   const [hasMorePage, setHasMorePage] = useState(true);
@@ -109,9 +109,9 @@ const ShopItemList = (props: PropsType): React$Node => {
     }
   };
 
-  // const onNavigateToItem = Id => {
-  //   navigation.navigate('ToktokFoodItemDetails', {Id, temporaryCart: temporaryCart.items, shopDetails});
-  // };
+  const onNavigateToItem = Id => {
+    navigation.navigate('ToktokFoodItemDetails', {Id});
+  };
 
   const renderListHeader = () => (
     <TitleContainer>
@@ -132,7 +132,7 @@ const ShopItemList = (props: PropsType): React$Node => {
     const {discRatetype, referralDiscount} = resellerDiscount;
     const discountText = discRatetype === 'p' ? `${referralDiscount * 100}%` : referralDiscount;
     return (
-      <ItemContainer>
+      <ItemContainer onPress={() => onNavigateToItem(item?.Id)}>
         <Avatar
           size="medium"
           source={{
