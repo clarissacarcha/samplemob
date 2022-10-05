@@ -5,7 +5,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-// import {useTheme} from 'styled-components';
+import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -13,8 +13,11 @@ import _ from 'lodash';
 
 import type {PropsType} from './types';
 import {
+  BtnContainer,
   Container,
   ContentLoading,
+  EmptyContainer,
+  EmptyImg,
   ListContainer,
   ListImg,
   ListInfo,
@@ -27,6 +30,7 @@ import {
   TitleContainer,
   TimeImg,
 } from './Styled';
+import YellowButton from 'toktokfood/components/YellowButton';
 
 import StyledText from 'toktokfood/components/StyledText';
 
@@ -34,12 +38,12 @@ import StyledText from 'toktokfood/components/StyledText';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
-import {shop_noimage} from 'toktokfood/assets/images';
+import {shop_noimage, new_empty_shop_icon} from 'toktokfood/assets/images';
 
 const HomeNearYou = (props: PropsType): React$Node => {
   const {page, setLoadMore} = props;
   const navigation = useNavigation();
-  // const theme = useTheme();
+  const theme = useTheme();
   const {location} = useSelector(state => state.toktokFood);
 
   const variableInput = {
@@ -61,7 +65,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
     nextFetchPolicy: 'network-only',
     onCompleted: () => setLoadMore(false),
   });
-  // console.log(data);
+  console.log(data, 'data ----');
 
   useEffect(() => {
     if (location) {
@@ -98,6 +102,33 @@ const HomeNearYou = (props: PropsType): React$Node => {
   }, [page]);
 
   const onShopOverview = item => navigation.navigate('ToktokFoodShopOverview', {item});
+
+  const onSetLocationDetails = () => {
+    // dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
+    // dispatch({type: 'SET_TOKTOKFOOD_SHIPPING', payload: []});
+    navigation.navigate('ToktokFoodAddressDetails');
+  };
+
+  const EmptyList = () => (
+    <EmptyContainer>
+      <EmptyImg source={new_empty_shop_icon} />
+
+      <StyledText mode="bold" color={theme.color.orange}>
+        No Restaurant Available
+      </StyledText>
+      <StyledText style={{textAlign: 'center', marginTop: 10}}>
+        Sinubukan kong mag hanap, pero wala akong makita. Sa ibang lugar na lang kaya?
+      </StyledText>
+
+      <BtnContainer>
+        <YellowButton
+          onPress={onSetLocationDetails}
+          label="Try other location"
+          btnStyle={{width: 150, borderRadius: 5, height: 35}}
+        />
+      </BtnContainer>
+    </EmptyContainer>
+  );
 
   const RestaurantList = ({item}) => {
     const [validImg, setValidImg] = useState(true);
@@ -146,6 +177,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
           </ListWrapper>
         )
       )}
+      {data && !data.getShops.length && <EmptyList />}
     </Container>
   );
 };

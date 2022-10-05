@@ -36,6 +36,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 const ShopSearchItemList = (props: PropsType): React$Node => {
   const isFocused = useIsFocused();
   const {search, shopId} = props;
+  // const {searchProduct, setSearchProduct, temporaryCart, foodCartHeight, navBartHeight} = useContext(VerifyContext);
 
   // data fetching for product
   const [getSearchProductsByShop, {data}] = useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
@@ -74,6 +75,10 @@ const ShopSearchItemList = (props: PropsType): React$Node => {
   //     <Loader animating={showMore} />
   //   </LoaderContainer>
   // );
+
+  // const onNavigateToFoodItemDetails = Id => {
+  //   navigation.navigate('ToktokFoodItemDetails', {Id, temporaryCart: temporaryCart.items});
+  // };
 
   const renderItem = ({item}) => {
     const {filename, itemname, price, promoVoucher, resellerDiscount, summary} = item;
