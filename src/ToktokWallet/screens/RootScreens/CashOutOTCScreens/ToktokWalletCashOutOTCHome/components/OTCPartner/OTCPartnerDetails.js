@@ -21,6 +21,9 @@ export const OTCPartnerDetails = React.memo(({content, contentIndex, title}) => 
 
   const onThrottledPress = useThrottle(item => onPress(item), 2000);
 
+  if (content[title].length === 0) {
+    return null;
+  }
   return (
     <View style={{marginTop: moderateScale(20)}}>
       <Text style={{fontFamily: FONT.BOLD, marginHorizontal: moderateScale(16), marginBottom: moderateScale(10)}}>

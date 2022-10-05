@@ -60,7 +60,7 @@ const CashOutOtcPartnerDetails = (props: PropsType): React$Node => {
   };
   return (
     <View>
-      {!isSearch && <OtcPartner>{title}</OtcPartner>}
+      {!isSearch && item[title].length > 0 && <OtcPartner>{title}</OtcPartner>}
       {isSearch
         ? displayContent(item)
         : item[title].map(content => {

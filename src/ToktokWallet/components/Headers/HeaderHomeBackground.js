@@ -1,6 +1,7 @@
 import React from 'react';
 import {ImageBackground, StyleSheet} from 'react-native';
 import {home} from 'toktokwallet/assets';
+import {moderateScale} from 'toktokwallet/helper';
 
 export const HeaderHomeBackground = ({children}) => {
   return (
@@ -12,7 +13,7 @@ export const HeaderHomeBackground = ({children}) => {
 
 const styles = StyleSheet.create({
   walletbackgroundimage: {
-    height: 140,
+    height: moderateScale(140),
     flex: 1,
   },
 });
