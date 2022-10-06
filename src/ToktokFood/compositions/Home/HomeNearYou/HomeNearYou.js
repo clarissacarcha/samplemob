@@ -10,6 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import _ from 'lodash';
+import moment from 'moment';
 
 import type {PropsType} from './types';
 import {
@@ -20,8 +21,10 @@ import {
   EmptyImg,
   ListContainer,
   ListImg,
+  ListImgOverlay,
   ListInfo,
   ListInfoText,
+  ListOverlayText,
   ListWrapper,
   MapIcon,
   // SeeAllContainer,
@@ -39,6 +42,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
 import {shop_noimage, new_empty_shop_icon} from 'toktokfood/assets/images';
+import {getWeekDay} from 'toktokfood/helper/strings';
 
 const HomeNearYou = (props: PropsType): React$Node => {
   const {page, setLoadMore} = props;
@@ -109,6 +113,30 @@ const HomeNearYou = (props: PropsType): React$Node => {
     navigation.navigate('ToktokFoodAddressDetails');
   };
 
+  const DisplayOperatingHrs = ({item}) => {
+    const {currFromTime, dayLapsed, hasOpen, hasProduct, nextOperatingHrs} = item;
+    // return null;
+    if ((hasOpen && hasProduct) || !item) {
+      return null;
+    }
+    if (nextOperatingHrs === null || !hasProduct) {
+      return <ListOverlayText>Currently Unavailable</ListOverlayText>;
+    }
+    const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
+    if (isAboutToOpen || dayLapsed === 0) {
+      return (
+        <ListOverlayText>
+          Opens at {moment(dayLapsed === 0 ? nextOperatingHrs.fromTime : currFromTime, 'hh:mm:ss').format('hh:mm A')}
+        </ListOverlayText>
+      );
+    }
+    return (
+      <ListOverlayText>
+        Opens on {getWeekDay(nextOperatingHrs.day)} {moment(nextOperatingHrs.fromTime, 'hh:mm:ss').format('LT')}
+      </ListOverlayText>
+    );
+  };
+
   const EmptyList = () => (
     <EmptyContainer>
       <EmptyImg source={new_empty_shop_icon} />
@@ -135,7 +163,8 @@ const HomeNearYou = (props: PropsType): React$Node => {
     return (
       <ListContainer onPress={() => onShopOverview(item)}>
         <ListImg source={validImg ? {uri: item.logo} : shop_noimage} onError={() => setValidImg(false)} />
-
+        {(!item?.hasOpen || !item?.hasProduct) && <ListImgOverlay />}
+        <DisplayOperatingHrs item={item} />
         <ListInfo>
           <StyledText textProps={{numberOfLines: 1}} mode="semibold">
             {item.shopname}
