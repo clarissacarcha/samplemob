@@ -101,7 +101,7 @@ const ToktokFoodShopCategories = () => {
   };
 
   const onShopNavigate = item => {
-    navigation.navigate('ToktokFoodRestaurantOverview', {item});
+    navigation.navigate('ToktokFoodShopOverview', {item});
   };
 
   const onSetLocationDetails = () => {

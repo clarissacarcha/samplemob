@@ -345,7 +345,8 @@ export const FoodCart = ({loading, action}) => {
         setTimeout(() => {
           setLoader(false);
           Toast.show('Cart Updated', Toast.SHORT);
-          navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: productDetails.sysShop}});
+          navigation.goBack();
+          // navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: productDetails.sysShop}});
         }, 1000);
       } else {
         setLoader(false);
@@ -363,7 +364,8 @@ export const FoodCart = ({loading, action}) => {
         setTimeout(() => {
           setLoader(false);
           Toast.show('Added to cart', Toast.SHORT);
-          navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: productDetails.sysShop}});
+          navigation.goBack();
+          // navigation.navigate('ToktokFoodShopOverview', {item: items});
         }, 1000);
       } else {
         setLoader(false);

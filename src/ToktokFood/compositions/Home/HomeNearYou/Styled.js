@@ -19,6 +19,18 @@ export const Container: ComponentType<any> = styled.View`
   flex: 1;
 `;
 
+export const ListImgOverlay: ComponentType<any> = styled.View`
+  background-color: rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 10px;
+  opacity: 0.6;
+  height: 160px;
+`;
+
 export const BtnContainer: ComponentType<any> = styled.View`
   padding-top: 20px;
 `;
@@ -83,6 +95,16 @@ export const ListInfoText: ComponentType<any> = styled(StyledText).attrs(props =
   ...props,
 }))`
   margin-horizontal: 5px;
+`;
+
+export const ListOverlayText: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
+  color: props.theme.color.white,
+  mode: 'bold',
+}))`
+  align-self: center;
+  position: absolute;
+  top: 37%;
 `;
 
 export const MapIcon: ComponentType<any> = styled(MCIcon).attrs(props => ({
