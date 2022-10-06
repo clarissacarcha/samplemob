@@ -56,12 +56,12 @@ const HomeBanner = (props: PropsType): React$Node => {
       ) : (
         <SliderBox
           images={imageBanners}
-          sliderBoxHeight={180}
+          sliderBoxHeight={130}
           autoplayInterval={5000}
           autoplay={true}
           circleLoop={true}
           parentWidth={getDeviceWidth - 30}
-          resizeMode="contain"
+          resizeMode="stretch"
         />
       )}
     </Container>

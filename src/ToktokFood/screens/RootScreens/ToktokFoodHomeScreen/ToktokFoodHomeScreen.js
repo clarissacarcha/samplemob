@@ -17,6 +17,7 @@ import HomeFab from 'toktokfood/compositions/Home/HomeFab';
 import HomeCategories from 'toktokfood/compositions/Home/HomeCategories';
 import HomeBanner from 'toktokfood/compositions/Home/HomeBanner';
 import HomeNearYou from 'toktokfood/compositions/Home/HomeNearYou';
+import Divider from 'toktokfood/components/Divider';
 // Hooks
 // import {useUserLocation} from 'toktokfood/hooks';
 
@@ -55,6 +56,7 @@ const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
         <HomeSearchBar />
         <HomeBanner />
         <HomeCategories />
+        <Divider height={8} />
         <HomeNearYou
           page={page}
           isLoadMore={loadMore}

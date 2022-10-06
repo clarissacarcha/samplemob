@@ -44,6 +44,27 @@ export const EmptyContainer: ComponentType<any> = styled.View`
   padding-horizontal: 50px;
 `;
 
+export const Overlay: ComponentType<any> = styled.View`
+  background-color: ${props => props.theme.color.black};
+  border-radius: 10px;
+  width: 180px;
+  height: 160px;
+  position: absolute;
+  opacity: ${props => props.opacity || 0};
+`;
+
+export const OverlayText: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
+  mode: 'semibold',
+  color: props.theme.color.white,
+}))`
+  text-align: center;
+  position: absolute;
+  align-self: center;
+  top: 35%;
+  opacity: 1;
+`;
+
 export const EmptyImg: ComponentType<any> = styled(Image).attrs(props => ({
   ...props,
   // source: new_empty_shop_icon,
@@ -65,13 +86,14 @@ export const ListContainer: ComponentType<any> = styled.TouchableOpacity`
   /* border-width: 1px; */
   width: ${getDeviceWidth / 2 - 25};
   height: 200px;
-  margin: 8px;
+  margin: 9px;
+  margin-bottom: 20px;
 `;
 
 export const ListInfo: ComponentType<any> = styled.View`
   /* border-width: 1px; */
   flex: 1;
-  padding-top: 5px;
+  padding-top: 7px;
 `;
 
 export const ListWrapper: ComponentType<any> = styled.TouchableOpacity`
@@ -80,7 +102,7 @@ export const ListWrapper: ComponentType<any> = styled.TouchableOpacity`
   flex: 1;
   flex-wrap: wrap;
   align-items: flex-start;
-  padding-left: 8;
+  padding-left: 7;
   /* justify-content: center; */
   /* border-width: 1px; */
 `;
@@ -93,6 +115,8 @@ export const ListImg: ComponentType<any> = styled.Image`
 
 export const ListInfoText: ComponentType<any> = styled(StyledText).attrs(props => ({
   ...props,
+  fontSize: 11,
+  color: props.theme.color.darkgray,
 }))`
   margin-horizontal: 5px;
 `;
@@ -130,6 +154,8 @@ export const TitleContainer: ComponentType<any> = styled.View`
   /* border-width: 1px; */
   padding-vertical: 5px;
   /* padding-horizontal: 15px; */
+  margin-top: 15px;
+  margin-bottom: 10px;
 `;
 
 export const SeeAllContainer: ComponentType<any> = styled.TouchableOpacity`

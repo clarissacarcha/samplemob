@@ -3,7 +3,7 @@ import 'react-native-get-random-values';
 import React from 'react';
 import {StatusBar, LogBox} from 'react-native';
 import Splash from './Splash';
-
+import { MenuProvider } from 'react-native-popup-menu';
 import {
   ApolloProvider,
   PromptProvider,
@@ -25,7 +25,9 @@ const App = () => {
         <ApolloProvider>
           <AlertProvider>
             <PromptProvider>
-              <Splash />
+              <MenuProvider>
+                <Splash />
+              </MenuProvider>
             </PromptProvider>
           </AlertProvider>
         </ApolloProvider>

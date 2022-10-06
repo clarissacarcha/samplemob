@@ -13,8 +13,8 @@ export const Container: ComponentType<any> = styled.View`
   background-color: ${props => props.theme.color.white};
   border-width: 2px;
   border-bottom-width: 0;
-  border-top-right-radius: 18px;
-  border-top-left-radius: 18px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
   border-color: ${props => props.theme.color.orange};
   margin-horizontal: -2px;
   padding: 20px;

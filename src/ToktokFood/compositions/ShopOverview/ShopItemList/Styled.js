@@ -16,9 +16,16 @@ import {reseller_badge} from 'toktokfood/assets/images';
 const {StatusBarManager} = NativeModules;
 const headerHeight = Platform.OS === 'ios' ? 50 : 50 + StatusBarManager.HEIGHT;
 
+export const Container: ComponentType<any> = styled.View`
+  flex-direction: row;
+  padding: 15px;
+  padding-right: 0;
+  /* flex: 1; */
+`;
+
 export const Column: ComponentType<any> = styled.View`
   flex: ${props => props.flex || 1};
-  padding-horizontal: 7px;
+  /* padding-horizontal: 7px; */
 `;
 
 export const ContentContainer: ComponentType<any> = styled.View`
@@ -30,15 +37,15 @@ export const ContentContainer: ComponentType<any> = styled.View`
 
 export const Row: ComponentType<any> = styled.View`
   flex-direction: row;
+  justify-content: space-between;
   flex: 1;
 `;
 
 export const ItemContainer: ComponentType<any> = styled.TouchableOpacity`
-  flex-direction: row;
+  /* flex-direction: row;
   justify-content: space-between;
-  padding-vertical: 15px;
-  padding-horizontal: 15px;
-  width: 100%;
+  padding: 15px;
+  width: 100%; */
 `;
 
 export const PromoTag: ComponentType<any> = styled.View`

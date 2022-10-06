@@ -12,7 +12,7 @@ export const Container: ComponentType<any> = styled.View`
   background-color: ${props => props.theme.color.white};
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  height: 100;
+  /* height: 100; */
   flex: 1;
   flex-direction: row;
   justify-content: space-between;
@@ -21,17 +21,21 @@ export const Container: ComponentType<any> = styled.View`
   position: absolute;
   bottom: 0;
   width: 100%;
+  border-bottom-width: 1;
+  border-bottom-color: ${props => props.theme.divider.active};
 `;
 
 export const Column: ComponentType<any> = styled.View`
   flex: 1;
-  padding-horizontal: 7px;
+  margin-left: 15px;
+  /* padding-horizontal: 7px; */
 `;
 
 export const Row: ComponentType<any> = styled.View`
   /* flex: 1px; */
   align-items: center;
   flex-direction: row;
+  margin-top: 5px;
 `;
 
 export const InfoContainer: ComponentType<any> = styled.TouchableOpacity``;
@@ -44,8 +48,16 @@ export const InfoIcon: ComponentType<any> = styled(Icon).attrs(props => ({
 }))``;
 
 export const InfoText: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
   fontSize: 11,
+  color: props.theme.color.darkgray,
+}))`
+  margin-left: 5px;
+  margin-right: 10px;
+`;
+
+export const Text: ComponentType<any> = styled(StyledText).attrs(props => ({
   ...props,
 }))`
-  margin-horizontal: 5px;
+  margin-top: 3px;
 `;
