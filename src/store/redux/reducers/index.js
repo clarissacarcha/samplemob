@@ -7,7 +7,8 @@ import ToktokWallet from './ToktokWallet';
 import ToktokFood from './ToktokFood';
 import ToktokLoad from './ToktokLoad';
 import ToktokGo from './ToktokGo';
-import ToktokMall from './ToktokMall'
+import ToktokMall from './ToktokMall';
+import ToktokDelivery from './ToktokDelivery';
 
 export default {
   application: Application,
@@ -15,9 +16,10 @@ export default {
   session: Session,
   constants: Constants,
   nav: Nav,
+  toktokDelivery: ToktokDelivery,
   toktokFood: ToktokFood,
   toktokWallet: ToktokWallet,
   toktokLoad: ToktokLoad,
   toktokGo: ToktokGo,
-  toktokMall: ToktokMall
+  toktokMall: ToktokMall,
 };

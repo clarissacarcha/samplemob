@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
 import {View, FlatList, RefreshControl, Text, StyleSheet, Image, ActivityIndicator, ScrollView} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import {connect} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import {HeaderBack, DeliveryCard, HeaderTitle, SomethingWentWrong} from '../../../../components';
 // import {DeliveryCard} from '../../../../_toktok/components';
-import {useQuery} from '@apollo/react-hooks';
-import {GET_DELIVERIES} from '../../../../graphql';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
+import {GET_DELIVERIES, GET_DELIVERY_BY_DELIVERY_ID} from '../../../../graphql';
 import {COLOR} from '../../../../res/variables';
 
 import NoData from '../../../../assets/images/NoData.png';
@@ -18,6 +18,9 @@ const SelectedDeliveries = ({navigation, route, session}) => {
     headerTitle: () => <HeaderTitle label={headerTitleLabel} />,
   });
 
+  const dispatch = useDispatch();
+  const toktokDelivery = useSelector(state => state.toktokDelivery);
+
   const {data, loading, error, refetch} = useQuery(GET_DELIVERIES, {
     variables: {
       filter: {
@@ -28,11 +31,37 @@ const SelectedDeliveries = ({navigation, route, session}) => {
     fetchPolicy: 'network-only',
   });
 
+  const [getDeliveryByDeliveryId] = useLazyQuery(GET_DELIVERY_BY_DELIVERY_ID, {
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      dispatch({type: 'SET_TOKTOK_DELIVERY_INITIAL_STATE'});
+      navigation.push('SelectedDelivery', {delivery: response.getDeliveryByDeliveryId});
+    },
+    onError: err => {
+      console.log(err);
+    },
+  });
+
   // useFocusEffect(() => {
   //   refetch();
   // }, [session.user.id]);
+  const fetchSelectedDeliveryIfFromNotificationWithDeliveryId = () => {
+    if (toktokDelivery.notificationDeliveryId) {
+      getDeliveryByDeliveryId({
+        variables: {
+          filter: {
+            deliveryId: toktokDelivery.notificationDeliveryId,
+          },
+        },
+      });
+    }
+  };
 
-  const onPress = (delivery) => navigation.push('SelectedDelivery', {delivery});
+  useEffect(() => {
+    fetchSelectedDeliveryIfFromNotificationWithDeliveryId();
+  }, []);
+
+  const onPress = delivery => navigation.push('SelectedDelivery', {delivery});
 
   if (loading) {
     return (
@@ -59,7 +88,7 @@ const SelectedDeliveries = ({navigation, route, session}) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={data.getDeliveries}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         // ItemSeparatorComponent={() => <View style={{borderBottomWidth: 8, borderColor: COLOR.LIGHT}} />}
         renderItem={({item, index}) => (
           <DeliveryCard
@@ -73,7 +102,7 @@ const SelectedDeliveries = ({navigation, route, session}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 
