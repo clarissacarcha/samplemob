@@ -4,3 +4,4 @@ export * from './FrequentlyUsed';
 export * from './SavedLocations';
 export * from './SearchLocation';
 export * from './OutsideServiceableArea';
+export * from './SavedAddress';
