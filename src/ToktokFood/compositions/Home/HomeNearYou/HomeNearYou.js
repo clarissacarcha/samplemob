@@ -11,7 +11,6 @@ import {useSelector} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import _ from 'lodash';
 import moment from 'moment';
-import {getWeekDay} from 'toktokfood/helper/strings';
 import type {PropsType} from './types';
 import {
   BtnContainer,
@@ -21,8 +20,10 @@ import {
   EmptyImg,
   ListContainer,
   ListImg,
+  ListImgOverlay,
   ListInfo,
   ListInfoText,
+  ListOverlayText,
   ListWrapper,
   MapIcon,
   // SeeAllContainer,
@@ -42,9 +43,10 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
 
 import {shop_noimage, new_empty_shop_icon} from 'toktokfood/assets/images';
+import {getWeekDay} from 'toktokfood/helper/strings';
 
 const HomeNearYou = (props: PropsType): React$Node => {
-  const {page, setLoadMore} = props;
+  const {page, isReload, setIsReload, setLoadMore, setPage} = props;
   const navigation = useNavigation();
   const theme = useTheme();
   const {location} = useSelector(state => state.toktokFood);
@@ -59,7 +61,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
   };
 
   // data fetching for shops
-  const [getShops, {data, loading, fetchMore}] = useLazyQuery(GET_SHOPS, {
+  const [getShops, {data, loading, fetchMore, refetch}] = useLazyQuery(GET_SHOPS, {
     // onError: () => {
     //   setRefreshing(false);
     // },
@@ -68,7 +70,6 @@ const HomeNearYou = (props: PropsType): React$Node => {
     nextFetchPolicy: 'network-only',
     onCompleted: () => setLoadMore(false),
   });
-  console.log(data, 'data ----');
 
   useEffect(() => {
     if (location) {
@@ -104,12 +105,46 @@ const HomeNearYou = (props: PropsType): React$Node => {
     }
   }, [page]);
 
+  useEffect(() => {
+    if (isReload) {
+      refetch().then(() => {
+        setIsReload(false);
+        setPage(0);
+        setLoadMore(false);
+      });
+    }
+  }, [isReload]);
+
   const onShopOverview = item => navigation.navigate('ToktokFoodShopOverview', {item});
 
   const onSetLocationDetails = () => {
     // dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
     // dispatch({type: 'SET_TOKTOKFOOD_SHIPPING', payload: []});
     navigation.navigate('ToktokFoodAddressDetails');
+  };
+
+  const DisplayOperatingHrs = ({item}) => {
+    const {currFromTime, dayLapsed, hasOpen, hasProduct, nextOperatingHrs} = item;
+    // return null;
+    if ((hasOpen && hasProduct) || !item) {
+      return null;
+    }
+    if (nextOperatingHrs === null || !hasProduct) {
+      return <ListOverlayText>Currently Unavailable</ListOverlayText>;
+    }
+    const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
+    if (isAboutToOpen || dayLapsed === 0) {
+      return (
+        <ListOverlayText>
+          Opens at {moment(dayLapsed === 0 ? nextOperatingHrs.fromTime : currFromTime, 'hh:mm:ss').format('hh:mm A')}
+        </ListOverlayText>
+      );
+    }
+    return (
+      <ListOverlayText>
+        Opens on {getWeekDay(nextOperatingHrs.day)} {moment(nextOperatingHrs.fromTime, 'hh:mm:ss').format('LT')}
+      </ListOverlayText>
+    );
   };
 
   const EmptyList = () => (

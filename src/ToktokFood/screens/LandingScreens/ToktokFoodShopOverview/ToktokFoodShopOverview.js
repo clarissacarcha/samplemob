@@ -6,7 +6,10 @@
 
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Animated} from 'react-native';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, useNavigation} from '@react-navigation/native';
+import {useLazyQuery} from '@apollo/react-hooks';
+import moment from 'moment';
+import {useSelector} from 'react-redux';
 
 import type {PropsType} from './types';
 import {
@@ -29,21 +32,20 @@ import ShopInfo from 'toktokfood/compositions/ShopOverview/ShopInfo';
 import ShopTabView from 'toktokfood/compositions/ShopOverview/ShopTabView';
 import ShopSearchItemList from 'toktokfood/compositions/ShopOverview/ShopSearchItemList';
 import ShopViewCart from 'toktokfood/compositions/ShopOverview/ShopViewCart/ShopViewCart';
-import {useNavigation} from '@react-navigation/native';
 import {useDebounce} from 'toktokfood/util/debounce';
-import moment from 'moment';
 import {getWeekDay} from 'toktokfood/helper/strings';
 
 const AnimatedIcon = Animated.createAnimatedComponent(BackButton);
 
 const ToktokFoodShopOverview = (props: PropsType): React$Node => {
   const route = useRoute();
+  const navigation = useNavigation();
   const {item} = route.params;
   const theme = useTheme();
   // State
   const [search, setSearch] = useState('');
-  const navigation = useNavigation();
   const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const {location} = useSelector(state => state.toktokFood);
 
   // Ref for scrolling animation
   let isListGliding = useRef(false);
@@ -208,8 +210,6 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
       </React.Fragment>
     );
   });
-
-  // const onPress = (params: ParamTypes) => {};
 
   return (
     <Container>

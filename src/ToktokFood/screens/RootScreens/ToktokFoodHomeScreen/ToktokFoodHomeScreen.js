@@ -3,7 +3,8 @@
  * @flow
  */
 
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
+import {RefreshControl} from 'react-native';
 // import {useTheme} from 'styled-components';
 
 import type {PropsType} from './types';
@@ -24,6 +25,7 @@ const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
   // const theme = useTheme();
   const [page, setPage] = useState(0);
   const [loadMore, setLoadMore] = useState(false);
+  const [isReload, setIsReload] = useState(false);
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 100;
@@ -37,9 +39,14 @@ const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
     }
   };
 
+  const onRefresh = useCallback(() => {
+    setIsReload(true);
+  }, [setIsReload]);
+
   return (
     <Container>
       <ScrollContainer
+        refreshControl={<RefreshControl refreshing={isReload} onRefresh={onRefresh} />}
         onScroll={({nativeEvent}) => {
           if (isCloseToBottom(nativeEvent)) {
             onLoadMore(nativeEvent);
@@ -50,7 +57,14 @@ const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
         <HomeBanner />
         <HomeCategories />
         <Divider height={8} />
-        <HomeNearYou page={page} isLoadMore={loadMore} setLoadMore={setLoadMore} />
+        <HomeNearYou
+          page={page}
+          isLoadMore={loadMore}
+          isReload={isReload}
+          setLoadMore={setLoadMore}
+          setIsReload={setIsReload}
+          setPage={setPage}
+        />
       </ScrollContainer>
 
       <HomeFab />
