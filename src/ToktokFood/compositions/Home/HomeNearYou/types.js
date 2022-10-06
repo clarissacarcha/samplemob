@@ -7,5 +7,8 @@ export type PropsType = {
   accessibilityLabel?: string,
   theme?: Object,
   page?: number,
+  isReload?: boolean,
   setLoadMore: Function,
+  setIsReload: Function,
+  setPage: Function,
 };

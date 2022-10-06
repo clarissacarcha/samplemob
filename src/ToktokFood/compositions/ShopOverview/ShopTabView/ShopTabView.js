@@ -17,7 +17,7 @@ import {AnimatedTabBar, Loader, LoaderContainer, ShopTabBar, TabBarTitle} from '
 
 // Query
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_PRODUCT_CATEGORIES} from 'toktokfood/graphql/toktokfood';
+import {GET_PRODUCT_CATEGORIES, GET_SHOP_DETAILS} from 'toktokfood/graphql/toktokfood';
 
 const ShopTabView = (props: PropsType): React$Node => {
   const {scrollY, shopId, listRefArr, isListGliding} = props;

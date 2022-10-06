@@ -45,7 +45,7 @@ import {shop_noimage, new_empty_shop_icon} from 'toktokfood/assets/images';
 import {getWeekDay} from 'toktokfood/helper/strings';
 
 const HomeNearYou = (props: PropsType): React$Node => {
-  const {page, setLoadMore} = props;
+  const {page, isReload, setIsReload, setLoadMore, setPage} = props;
   const navigation = useNavigation();
   const theme = useTheme();
   const {location} = useSelector(state => state.toktokFood);
@@ -60,7 +60,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
   };
 
   // data fetching for shops
-  const [getShops, {data, loading, fetchMore}] = useLazyQuery(GET_SHOPS, {
+  const [getShops, {data, loading, fetchMore, refetch}] = useLazyQuery(GET_SHOPS, {
     // onError: () => {
     //   setRefreshing(false);
     // },
@@ -69,7 +69,6 @@ const HomeNearYou = (props: PropsType): React$Node => {
     nextFetchPolicy: 'network-only',
     onCompleted: () => setLoadMore(false),
   });
-  console.log(data, 'data ----');
 
   useEffect(() => {
     if (location) {
@@ -104,6 +103,16 @@ const HomeNearYou = (props: PropsType): React$Node => {
       });
     }
   }, [page]);
+
+  useEffect(() => {
+    if (isReload) {
+      refetch().then(() => {
+        setIsReload(false);
+        setPage(0);
+        setLoadMore(false);
+      });
+    }
+  }, [isReload]);
 
   const onShopOverview = item => navigation.navigate('ToktokFoodShopOverview', {item});
 
