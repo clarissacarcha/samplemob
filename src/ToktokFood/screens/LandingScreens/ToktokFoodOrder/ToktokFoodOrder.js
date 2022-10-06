@@ -287,8 +287,8 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         state?.serviceType === 'toktokfood' ? 'by the merchant.' : '.'
       } `;
       buttonText = 'OK';
-      // onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'});
-      onPress = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
+      onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'});
+      // onPress = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
     } else {
       if (toCancelOrder) {
         title = 'Cancel Order';
@@ -313,15 +313,16 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           buttonText = 'Browse Menu';
           onPress = () => navigation.goBack();
           buttonText2 = 'OK';
-          onPress2 = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
+          // onPress2 = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
+          onPress2 = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'});
           // onPress2 = () => navigation.navigate('ToktokFoodHome');
         } else {
           title = state?.orderIsfor === 1 ? 'Order Delivered' : 'Order Picked Up';
           subtitle = 'Yay! Cravings satisfied. Thank you for ordering in toktokfood!';
           type = 'success';
           buttonText = 'OK';
-          // onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 's'});
-          onPress = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 2});
+          onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 's'});
+          // onPress = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 2});
           buttonText2 = '';
         }
       }
