@@ -10,7 +10,8 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import _ from 'lodash';
-
+import moment from 'moment';
+import {getWeekDay} from 'toktokfood/helper/strings';
 import type {PropsType} from './types';
 import {
   BtnContainer,
@@ -29,6 +30,8 @@ import {
   Row,
   TitleContainer,
   TimeImg,
+  Overlay,
+  OverlayText,
 } from './Styled';
 import YellowButton from 'toktokfood/components/YellowButton';
 
@@ -132,16 +135,42 @@ const HomeNearYou = (props: PropsType): React$Node => {
 
   const RestaurantList = ({item}) => {
     const [validImg, setValidImg] = useState(true);
-    return (
-      <ListContainer onPress={() => onShopOverview(item)}>
-        <ListImg source={validImg ? {uri: item.logo} : shop_noimage} onError={() => setValidImg(false)} />
+    const {hasOpen, nextOperatingHrs, operatingHours, dayLapsed, hasProduct} = item;
+    const {fromTime: currFromTime} = operatingHours;
 
+    const displayNextOpeningHours = () => {
+      if (hasOpen && hasProduct) {
+        return null;
+      }
+      if (nextOperatingHrs === null || !hasProduct) {
+        return <OverlayText>Currently Unavailable</OverlayText>;
+      }
+      const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
+      if (isAboutToOpen || dayLapsed === 0) {
+        return (
+          <OverlayText>
+            Opens at {moment(dayLapsed === 0 ? nextOperatingHrs?.fromTime : currFromTime, 'hh:mm:ss').format('hh:mm A')}
+          </OverlayText>
+        );
+      }
+      return (
+        <OverlayText>
+          Opens on {getWeekDay(nextOperatingHrs?.day)} {moment(nextOperatingHrs?.fromTime, 'hh:mm:ss').format('LT')}
+        </OverlayText>
+      );
+    };
+
+    return (
+      <ListContainer activeOpacity={0.9} onPress={() => onShopOverview(item)}>
+        <ListImg source={validImg ? {uri: item.logo} : shop_noimage} onError={() => setValidImg(false)} />
+        <Overlay opacity={hasOpen && hasProduct ? 0 : 0.68} />
+        {displayNextOpeningHours()}
         <ListInfo>
           <StyledText textProps={{numberOfLines: 1}} mode="semibold">
             {item.shopname}
           </StyledText>
 
-          <Row>
+          <Row marginTop={5}>
             <TimeImg />
             <ListInfoText>{item.estimatedDeliveryTime} mins</ListInfoText>
 
@@ -158,7 +187,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
   return (
     <Container>
       <TitleContainer>
-        <StyledText>Near You</StyledText>
+        <StyledText mode="semibold">Near You</StyledText>
         {/* <SeeAllContainer>
           <StyledText color={theme.color.orange}>See All</StyledText>
           <RightIcon />
@@ -170,7 +199,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
       ) : (
         data &&
         data?.getShops && (
-          <ListWrapper>
+          <ListWrapper activeOpacity={1}>
             {data?.getShops.map(item => (
               <RestaurantList item={item} />
             ))}

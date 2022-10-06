@@ -6,6 +6,7 @@ import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
 import {Icon} from 'react-native-elements';
 import ContentLoader from 'react-native-easy-content-loader';
+import StyledText from 'toktokfood/components/StyledText';
 
 export const Container: ComponentType<any> = styled.View`
   /* flex: 1; */
@@ -52,3 +53,9 @@ export const Loader: ComponentType<any> = styled(ContentLoader).attrs(props => (
     left: -10,
   },
 }))``;
+
+export const Text: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
+}))`
+  line-height: 35px;
+`;

@@ -12,9 +12,9 @@ import {SliderBox} from 'react-native-image-slider-box';
 import {getDeviceWidth} from 'toktokfood/helper/scale';
 
 export const Container: ComponentType<any> = styled.View`
-  padding-vertical: 10px;
-  padding-top: 10px;
+  padding-top: 20px;
   padding-left: 15px;
+  /* padding: 20px; */
   background-color: ${props => props.theme.color.white};
   /* height: 200px; */
   /* align-items: center; */

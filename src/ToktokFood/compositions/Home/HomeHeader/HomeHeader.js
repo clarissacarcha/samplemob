@@ -9,11 +9,12 @@ import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 
 import type {PropsType} from './types';
-import {AddressContainer, Container, DownIcon, Loader, StyledIcon, Row} from './Styled';
+import {AddressContainer, Container, DownIcon, Loader, StyledIcon, Row, Text} from './Styled';
 
 // Components
 import Header from 'toktokfood/components/Header';
 import StyledText from 'toktokfood/components/StyledText';
+import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 
 // Hooks
 import {useUserLocation} from 'toktokfood/hooks';
@@ -33,12 +34,27 @@ const containerStyle = {
   height: 60,
 };
 
+const customPopupMenuStyle = {
+  optionsContainer: {
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 45,
+  },
+};
+
 const HomeHeader = (props: PropsType): React$Node => {
   useUserLocation();
 
   const navigation = useNavigation();
   const theme = useTheme();
   const {location} = useSelector(state => state.toktokFood);
+
+  const customOptionStyle = {
+    optionWrapper: {
+      borderBottomWidth: 1,
+      borderBottomColor: theme.divider.active,
+    },
+  };
 
   const onSetLocationDetails = () => navigation.navigate('ToktokFoodAddressDetails');
   const onCartNavigate = () => navigation.navigate('ToktokFoodPlaceOrder');
@@ -64,11 +80,28 @@ const HomeHeader = (props: PropsType): React$Node => {
     );
   };
 
+  const renderMenuOptions = (style = {}, text, screen) => {
+    return (
+      <MenuOption customStyles={style} onSelect={() => navigation.navigate(screen)}>
+        <Text>{text}</Text>
+      </MenuOption>
+    );
+  };
+
   const CartOptions = () => {
     return (
       <Row>
         <StyledIcon icon="cart-outline" onPress={onCartNavigate} />
-        <StyledIcon />
+        <Menu>
+          <MenuTrigger>
+            <StyledIcon />
+          </MenuTrigger>
+          <MenuOptions customStyles={customPopupMenuStyle}>
+            {renderMenuOptions(customOptionStyle, 'Contact Us', 'ToktokFoodContactUs')}
+            {renderMenuOptions(customOptionStyle, 'Privacy Policy', 'ToktokFoodPrivacyPolicy')}
+            {renderMenuOptions({}, 'Terms and Conditions', 'ToktokFoodTermsAndConditions')}
+          </MenuOptions>
+        </Menu>
       </Row>
     );
   };

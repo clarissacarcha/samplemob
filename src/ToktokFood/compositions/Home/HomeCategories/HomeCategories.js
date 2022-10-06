@@ -85,7 +85,7 @@ const HomeCategories = (props: PropsType): React$Node => {
   return (
     <Container>
       <TitleContainer>
-        <StyledText>Categories</StyledText>
+        <StyledText mode="semibold">Categories</StyledText>
         <SeeAllContainer onPress={onSeeAll}>
           <StyledText color={theme.color.orange}>See All</StyledText>
           <RightIcon />

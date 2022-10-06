@@ -9,22 +9,41 @@ import {Animated} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 
 import type {PropsType} from './types';
-import {AnimatedHeader, AnimatedImageHeader, Container, ImageBg, Pager, PageView, SearchBox} from './Styled';
-
-import Header from 'toktokfood/components/Header';
+import {
+  AnimatedHeader,
+  AnimatedImageHeader,
+  Container,
+  ImageBg,
+  Pager,
+  PageView,
+  SearchBox,
+  ImageHeader,
+  BackButton,
+  BodyContainer,
+  Text,
+} from './Styled';
+import {useTheme} from 'styled-components';
+import Alert from 'toktokfood/components/Alert';
+import StyledText from 'toktokfood/components/StyledText';
 import ShopInfo from 'toktokfood/compositions/ShopOverview/ShopInfo';
 import ShopTabView from 'toktokfood/compositions/ShopOverview/ShopTabView';
 import ShopSearchItemList from 'toktokfood/compositions/ShopOverview/ShopSearchItemList';
 import ShopViewCart from 'toktokfood/compositions/ShopOverview/ShopViewCart/ShopViewCart';
-
+import {useNavigation} from '@react-navigation/native';
 import {useDebounce} from 'toktokfood/util/debounce';
+import moment from 'moment';
+import {getWeekDay} from 'toktokfood/helper/strings';
+
+const AnimatedIcon = Animated.createAnimatedComponent(BackButton);
 
 const ToktokFoodShopOverview = (props: PropsType): React$Node => {
   const route = useRoute();
   const {item} = route.params;
-  console.log(item);
+  const theme = useTheme();
   // State
   const [search, setSearch] = useState('');
+  const navigation = useNavigation();
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
 
   // Ref for scrolling animation
   let isListGliding = useRef(false);
@@ -37,12 +56,42 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
   const debounceText = useDebounce(search, 1000);
 
   useEffect(() => {
+    if (item && Object.keys(item).length > 0) {
+      const {hasOpen, hasProduct} = item;
+      if (!hasOpen || !hasProduct) {
+        setIsAlertVisible(true);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     if (debounceText) {
       pagerViewRef?.current.setPage(1);
     } else {
       pagerViewRef?.current.setPage(0);
     }
   }, [debounceText]);
+
+  const LeftComponent = () => {
+    const arrowColor = scrollY.interpolate({
+      inputRange: [0, 300],
+      outputRange: [theme.color.black, theme.color.orange],
+    });
+    const backgroundColor = scrollY.interpolate({
+      inputRange: [0, 300],
+      outputRange: ['rgba(204, 204, 204, 0.5)', 'rgba(204, 204, 204, 0)'],
+    });
+    const style = {
+      backgroundColor,
+      borderRadius: 50,
+      padding: 5,
+    };
+    return (
+      <Animated.View style={style}>
+        <AnimatedIcon color={arrowColor} onPress={() => navigation.goBack()} />
+      </Animated.View>
+    );
+  };
 
   const SearchComponent = () => {
     // opacity animation for search bar
@@ -63,6 +112,59 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
           value={search}
         />
       </Animated.View>
+    );
+  };
+
+  const renderAlertComponent = () => {
+    const {dayLapsed, hasProduct, operatingHours, nextOperatingHrs} = item;
+
+    const BodyComponent = () => {
+      const {fromTime: currFromTime} = operatingHours;
+      const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
+
+      if (nextOperatingHrs === null || !hasProduct) {
+        return <Text>Restaurant is currently unavailable. Please come back at a later time.</Text>;
+      }
+      if (isAboutToOpen || dayLapsed === 0) {
+        return (
+          <Text>
+            Restaurant is currently closed. Please come back at{' '}
+            <Text mode="semibold">
+              {moment(dayLapsed === 0 ? nextOperatingHrs?.fromTime : currFromTime, 'hh:mm:ss').format('hh:mm A')}
+            </Text>
+          </Text>
+        );
+      }
+      return (
+        <Text>
+          Restaurant is currently closed. Please come back on{' '}
+          <Text mode="semibold">
+            {getWeekDay(nextOperatingHrs?.day, true)},{' '}
+            {moment(nextOperatingHrs?.fromTime, 'hh:mm:ss').add(dayLapsed, 'day').format('MMMM DD')} at{' '}
+            {moment(nextOperatingHrs?.fromTime, 'hh:mm:ss').format('hh:mm A')}.
+          </Text>
+        </Text>
+      );
+    };
+
+    const BodyComponentWrapper = () => (
+      <BodyContainer>
+        <BodyComponent />
+      </BodyContainer>
+    );
+
+    return (
+      <Alert
+        isVisible={isAlertVisible}
+        type="warning"
+        title="Currently Closed"
+        buttonText="OK"
+        onPress={() => {
+          setIsAlertVisible(false);
+          navigation.goBack();
+        }}
+        BodyComponent={() => <BodyComponentWrapper />}
+      />
     );
   };
 
@@ -90,8 +192,9 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
     return (
       <React.Fragment>
         <AnimatedHeader style={{backgroundColor}}>
-          <Header
-            hasBack
+          <ImageHeader
+            // hasBack
+            LeftComponent={LeftComponent}
             backgroundColor="transparent"
             leftContainerStyle={leftContainerStyle}
             centerContainerStyle={centerContainerStyle}
@@ -126,8 +229,8 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
       </Pager>
 
       {AnimatedHeaderTitle}
-
-      <ShopViewCart shopId={item?.id} />
+      {renderAlertComponent()}
+      {item?.hasOpen && item?.hasProduct && <ShopViewCart shopId={item?.id} />}
     </Container>
   );
 };
