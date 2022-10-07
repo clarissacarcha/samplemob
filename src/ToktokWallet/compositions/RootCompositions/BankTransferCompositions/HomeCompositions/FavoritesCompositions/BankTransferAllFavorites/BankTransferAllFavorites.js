@@ -12,6 +12,7 @@ import {LoadingIndicator} from 'toktokbills/components';
 import type {PropsType} from './types';
 import {
   ButtonContainer,
+  Container,
   ContentContainer,
   Description,
   DetailsContainer,
@@ -48,8 +49,8 @@ const BankTransferAllFavorites = (props: PropsType): React$Node => {
   const onThrottledPress = useThrottle(onPress, 2000);
 
   return (
-    <ButtonContainer onPress={onThrottledPress}>
-      <ContentContainer>
+    <Container>
+      <ButtonContainer onPress={onThrottledPress}>
         <LogoContainer>
           {imageLoading && image && (
             <LoadingContainer>
@@ -68,11 +69,11 @@ const BankTransferAllFavorites = (props: PropsType): React$Node => {
           <Description>{accountName}</Description>
           <Description>{accountNumber}</Description>
         </DetailsContainer>
-      </ContentContainer>
+      </ButtonContainer>
       <HeartButton onPress={onPressFavorite}>
         <HeartIcon isFavorite={isFavorite} />
       </HeartButton>
-    </ButtonContainer>
+    </Container>
   );
 };
 export default BankTransferAllFavorites;
