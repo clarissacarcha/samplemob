@@ -13,7 +13,6 @@ import type {PropsType} from './types';
 import {
   ButtonContainer,
   Container,
-  ContentContainer,
   Description,
   DetailsContainer,
   HeartButton,

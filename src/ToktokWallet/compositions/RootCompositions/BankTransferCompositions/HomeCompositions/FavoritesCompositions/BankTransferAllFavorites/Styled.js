@@ -24,6 +24,7 @@ export const ButtonContainer: ComponentType<any> = styled(TouchableOpacity).attr
   flex-direction: row;
   align-items: center;
   flex-shrink: 1;
+  flex: 1;
 `;
 export const ContentContainer: ComponentType<any> = styled.View`
   flex-direction: row;
