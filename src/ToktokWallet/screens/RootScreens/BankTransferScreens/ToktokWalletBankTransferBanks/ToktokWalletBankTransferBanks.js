@@ -255,7 +255,7 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
               onClear={() => {
                 setSearch('');
               }}
-              placeholder="Search OTC Partner"
+              placeholder="Search Bank"
             />
           )}
         </SearchContainer>

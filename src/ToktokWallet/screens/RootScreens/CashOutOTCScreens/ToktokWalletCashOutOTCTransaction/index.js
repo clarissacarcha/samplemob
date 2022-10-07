@@ -54,7 +54,7 @@ const MainComponent = ({navigation, route}) => {
 
   const checkAmount = () => {
     let error = amount === '' ? 'This is a required field' : '';
-    if (+amount < 1) {
+    if (+amount < 1 && amount !== '') {
       error = 'The minimum amount allowed to cash out is ₱1';
     }
     if (error === '') {

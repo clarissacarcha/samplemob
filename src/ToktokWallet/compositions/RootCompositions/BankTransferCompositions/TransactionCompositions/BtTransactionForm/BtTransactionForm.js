@@ -32,7 +32,7 @@ const BtTransactionForm = (props: PropsType): React$Node => {
   };
 
   useEffect(() => {
-    if (data.amount !== '' && bankDetails.id > 0) {
+    if (data.amount !== '' && bankDetails.id > 0 && +data.amount > 0) {
       postComputeConvenienceFee({
         variables: {
           input: {
