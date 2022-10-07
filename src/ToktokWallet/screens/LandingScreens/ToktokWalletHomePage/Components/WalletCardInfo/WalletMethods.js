@@ -19,7 +19,7 @@ const {height, width} = Dimensions.get('window');
 
 const Method = ({icon, label, iconstyle, onPress}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.services}>
+    <TouchableOpacity onPress={onPress} style={styles.servicesContainer}>
       <Image resizeMode="contain" style={[styles.icon, iconstyle]} source={icon} />
       <Text style={styles.servicesLabel}>{label}</Text>
     </TouchableOpacity>
@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   content: {
+    zIndex: 1,
     height: '100%',
     width: '92%',
     position: 'absolute',
@@ -233,9 +234,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 99999,
   },
-  services: {
+  servicesContainer: {
     width: '25%',
-    justifyContent: 'center',
     alignItems: 'center',
     marginVertical: SIZE.MARGIN / 1.5,
   },

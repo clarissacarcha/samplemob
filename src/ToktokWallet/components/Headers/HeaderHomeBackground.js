@@ -13,7 +13,7 @@ export const HeaderHomeBackground = ({children}) => {
 
 const styles = StyleSheet.create({
   walletbackgroundimage: {
-    height: moderateScale(140),
+    height: moderateScale(135),
     flex: 1,
   },
 });
