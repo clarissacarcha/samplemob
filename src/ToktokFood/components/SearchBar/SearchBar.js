@@ -9,14 +9,25 @@ import type {PropsType} from './types';
 import {TextInput, Container, CloseIcon, SearchIcon, PressableContainer} from './Styled';
 
 const SearchBar = (props: PropsType): React$Node => {
-  const {value, onValueChange, onClose, hasClose = false, style, onPress, color, textColor} = props;
+  const {
+    value,
+    onValueChange,
+    onClose,
+    hasClose = false,
+    style,
+    onPress,
+    color,
+    textColor,
+    placeholder = 'What would you like to eat?',
+    onPressIn,
+  } = props;
 
   if (onPress) {
     return (
       <PressableContainer onPress={onPress} style={style}>
         <SearchIcon color={color} />
         <TextInput
-          placeholder="Search"
+          placeholder={placeholder}
           value={value}
           onChangeText={text => onValueChange(text)}
           onFocus={onPress}
@@ -28,7 +39,13 @@ const SearchBar = (props: PropsType): React$Node => {
   return (
     <Container style={style}>
       <SearchIcon color={color} />
-      <TextInput placeholder="Search" value={value} onChangeText={text => onValueChange(text)} color={textColor} />
+      <TextInput
+        placeholder={placeholder}
+        value={value}
+        onChangeText={text => onValueChange(text)}
+        color={textColor}
+        onPressIn={onPressIn}
+      />
       {hasClose && <CloseIcon onPress={onClose} color={color} />}
     </Container>
   );

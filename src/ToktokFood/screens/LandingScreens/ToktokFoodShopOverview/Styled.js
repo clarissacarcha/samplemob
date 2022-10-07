@@ -49,8 +49,8 @@ export const SearchBox: ComponentType<any> = styled(SearchBar).attrs(props => ({
   color: props.theme.color.orange,
 }))`
   /* margin-bottom: 20px; */
-  /* width: 300; */
-  /* flex: 10; */
+  /* width: 100%; */
+  flex: 1;
 `;
 
 // Pager
