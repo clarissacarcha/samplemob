@@ -7,7 +7,6 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Animated} from 'react-native';
 import {useRoute, useNavigation} from '@react-navigation/native';
-import {useLazyQuery} from '@apollo/react-hooks';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
 
@@ -27,13 +26,13 @@ import {
 } from './Styled';
 import {useTheme} from 'styled-components';
 import Alert from 'toktokfood/components/Alert';
-import StyledText from 'toktokfood/components/StyledText';
 import ShopInfo from 'toktokfood/compositions/ShopOverview/ShopInfo';
 import ShopTabView from 'toktokfood/compositions/ShopOverview/ShopTabView';
 import ShopSearchItemList from 'toktokfood/compositions/ShopOverview/ShopSearchItemList';
 import ShopViewCart from 'toktokfood/compositions/ShopOverview/ShopViewCart/ShopViewCart';
 import {useDebounce} from 'toktokfood/util/debounce';
 import {getWeekDay} from 'toktokfood/helper/strings';
+import {useGetProductCategories} from 'toktokfood/hooks';
 
 const AnimatedIcon = Animated.createAnimatedComponent(BackButton);
 
@@ -45,7 +44,8 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
   // State
   const [search, setSearch] = useState('');
   const [isAlertVisible, setIsAlertVisible] = useState(false);
-  const {location} = useSelector(state => state.toktokFood);
+
+  const {loading, routes} = useGetProductCategories(item?.id);
 
   // Ref for scrolling animation
   let isListGliding = useRef(false);
@@ -172,10 +172,11 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
 
   const AnimatedHeaderTitle = useMemo(() => {
     const centerContainerStyle = {
-      flex: 15,
+      flex: 20,
+      marginRight: -10,
     };
     const leftContainerStyle = {
-      flex: 2,
+      flex: 3,
       paddingTop: 3,
     };
     // interpolate image and shopinfo
@@ -186,7 +187,7 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
     });
     // interpolate bgcolor for header
     const backgroundColor = scrollY.interpolate({
-      inputRange: [0, 300],
+      inputRange: [0, 250],
       outputRange: ['transparent', 'white'],
       extrapolate: 'clamp',
       // useNativeDriver: true,
@@ -221,16 +222,18 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
             listRefArr={listRefArr}
             listOffset={listOffset}
             scrollY={scrollY}
+            routes={routes}
+            loading={loading}
           />
         </PageView>
         <PageView key="2">
-          <ShopSearchItemList search={debounceText} shopId={item?.id} />
+          <ShopSearchItemList search={debounceText} shopId={item?.id} routes={routes} />
         </PageView>
       </Pager>
 
       {AnimatedHeaderTitle}
       {renderAlertComponent()}
-      {item?.hasOpen && item?.hasProduct && <ShopViewCart shopId={item?.id} />}
+      {item?.hasOpen && item?.hasProduct && !search && <ShopViewCart shopId={item?.id} />}
     </Container>
   );
 };

@@ -3,18 +3,21 @@
  */
 
 import type {ComponentType} from 'react';
-import {Animated} from 'react-native';
+import {Animated, SectionList} from 'react-native';
 import ContentLoader from 'react-native-easy-content-loader';
 import styled from 'styled-components/native';
-
+import StyledText from 'toktokfood/components/StyledText';
 import {getDeviceHeight} from 'toktokfood/helper/scale';
+import Divider from 'toktokfood/components/Divider';
+
+const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
 export const EmptyContainer: ComponentType<any> = styled.View`
   flex: 1;
   border-width: 1px;
 `;
 
-export const AnimatedList: ComponentType<any> = styled(Animated.FlatList).attrs(props => ({
+export const AnimatedList: ComponentType<any> = styled(AnimatedSectionList).attrs(props => ({
   ...props,
   showsVerticalScrollIndicator: false,
   //   scrollToOverflowEnabled: true,
@@ -48,4 +51,20 @@ export const ContentLoading: ComponentType<any> = styled(ContentLoader).attrs(pr
 }))`
   padding-horizontal: 10px;
   padding-top: 50;
+`;
+
+export const Title: ComponentType<any> = styled(StyledText).attrs(props => ({
+  ...props,
+  mode: 'semibold',
+  fontSize: 18,
+}))`
+  margin-vertical: 10px;
+  margin-left: 15px;
+`;
+
+export const Separator: ComponentType<any> = styled(Divider).attrs(props => ({
+  ...props,
+  height: 8,
+}))`
+  margin-vertical: 10px;
 `;
