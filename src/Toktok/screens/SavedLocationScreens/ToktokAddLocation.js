@@ -1,5 +1,5 @@
-import React, {useState, useCallback} from 'react';
-import {View, Text, StyleSheet, TextInput, Image, Pressable} from 'react-native';
+import React, {useState, useCallback, useEffect} from 'react';
+import {View, Text, StyleSheet, TextInput, Image, Pressable, BackHandler} from 'react-native';
 import {connect} from 'react-redux';
 import {COLOR, DARK, MEDIUM, LIGHT, MAP_DELTA_LOW} from '../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
@@ -17,20 +17,29 @@ import OfficeIcon from '../../../assets/icons/SavedAddress/office.png';
 import CustomIcon from '../../../assets/icons/SavedAddress/custom.png';
 import {currentLocation} from '../../../helper';
 import {useFocusEffect} from '@react-navigation/native';
-import {ConfirmOperationAddressModal, SuccesOperationAddressModal} from './Components';
+import {
+  ConfirmOperationAddressModal,
+  SuccesOperationAddressModal,
+  UnsaveEditModal,
+  InfoAddressModal,
+} from './Components';
 import {ThrottledOpacity} from '../../../components_section';
 
 const AddLocation = ({navigation, route, session}) => {
   navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Add', 'Address']} />,
+    headerLeft: () => <HeaderBack onBack={handleBackPress} />,
+    headerTitle: () => <HeaderTitle label={[addressObj?.id ? 'Edit' : 'Add', 'Address']} />,
   });
 
-  const {addressObj, showHome = true, showOffice = true} = route.params;
+  const {isFromLocationAccess, addressObj = null, showHome = true, showOffice = true} = route.params;
+
   const [locCoordinates, setLocCoordinates] = useState({});
+  const [isEdited, setIsEdited] = useState(false);
   const [modalOperationType, setModalOperationType] = useState('');
   const [showConfirmOperationAddressModal, setShowConfirmOperationAddressModal] = useState(false);
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
+  const [showUnsaveEditModal, setShowUnsaveEditModal] = useState(false);
+  const [showInfoAddressModal, setShowInfoAddressModal] = useState(false);
 
   const [confirmedLocation, setConfirmedLocation] = useState(addressObj?.id ? addressObj : {});
   const [isHomeSelected, setIsHomeSelected] = useState(addressObj?.id ? addressObj.isHome : false);
@@ -41,8 +50,6 @@ const AddLocation = ({navigation, route, session}) => {
   const [landmark, setLandMark] = useState(addressObj?.id ? addressObj.landmark : '');
   const [contactNumber, setContactNumber] = useState(addressObj?.id ? addressObj.contactDetails.mobile_no : '');
   const [contactName, setContactName] = useState(addressObj?.id ? addressObj.contactDetails.fullname : '');
-
-  console.log('zion', addressObj);
 
   const [deleteAddress] = useMutation(DELETE_ADDRESS, {
     client: TOKTOK_ADDRESS_CLIENT,
@@ -101,7 +108,7 @@ const AddLocation = ({navigation, route, session}) => {
           isHome: isHomeSelected,
           isOffice: isOfficeSelected,
           label: customLabel,
-          isDefault: isDefault,
+          isDefault: isFromLocationAccess ? true : isDefault,
           landmark: landmark,
           placeHash: confirmedLocation?.hash,
           contactDetails: {
@@ -113,17 +120,24 @@ const AddLocation = ({navigation, route, session}) => {
     });
   };
 
+  // const checkAddressName = () => {
+  //   if (isOfficeSelected) {
+  //     setCustomLabel('');
+  //   }
+  // };
+
   const saveEditAddress = () => {
+    const placeHash = confirmedLocation?.hash ? confirmedLocation?.hash : confirmedLocation?.placeHash;
     patchAddressChanges({
       variables: {
         input: {
           id: addressObj?.id,
           isHome: isHomeSelected,
           isOffice: isOfficeSelected,
-          label: customLabel,
+          label: customLabel ? (isHomeSelected || isOfficeSelected ? '' : customLabel) : '',
           isDefault: isDefault,
           landmark: landmark,
-          placeHash: confirmedLocation?.hash,
+          placeHash: placeHash,
           contactDetails: {
             fullname: contactName,
             mobile_no: contactNumber,
@@ -143,11 +157,24 @@ const AddLocation = ({navigation, route, session}) => {
     });
   };
 
+  const onAddressDelete = () => {
+    if (addressObj?.isDefault) {
+      setShowInfoAddressModal(true);
+      return;
+    }
+    setShowConfirmOperationAddressModal(true);
+    setModalOperationType('DELETE');
+  };
+
   const onSearchMap = () => {
-    navigation.navigate('PinLocation', {locCoordinates, setConfirmedLocation});
+    navigation.navigate('PinLocation', {locCoordinates, setConfirmedLocation, addressObj, setIsEdited});
   };
 
   const selectAddressLabel = selected => {
+    if (addressObj) {
+      setIsEdited(true);
+    }
+
     if (selected == 'Home') {
       setIsHomeSelected(true);
       setIsOfficeSelected(false);
@@ -164,6 +191,9 @@ const AddLocation = ({navigation, route, session}) => {
   };
 
   const onSelectContact = number => {
+    if (addressObj?.id) {
+      setIsEdited(true);
+    }
     setContactNumber(number);
   };
 
@@ -176,8 +206,65 @@ const AddLocation = ({navigation, route, session}) => {
     navigation.pop();
   };
 
+  const goToHome = () => {
+    setShowSuccessOperationAddressModal(false);
+    navigation.push('ConsumerLanding');
+  };
+
+  const showCustom = () => {
+    if (!showOffice && !showHome) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleBackPress = () => {
+    if (isEdited) {
+      setShowUnsaveEditModal(true);
+    } else {
+      navigation.pop();
+    }
+  };
+
+  useEffect(() => {
+    if (addressObj) return;
+
+    if (showOffice && showHome) {
+      setIsCustomSelected(false);
+    } else {
+      if (showOffice || showHome) {
+        setIsCustomSelected(false);
+      } else {
+        setIsCustomSelected(true);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      handleBackPress();
+      return true;
+    });
+    return () => {
+      backHandler.remove();
+    };
+  }, [isEdited]);
+
   return (
     <>
+      <InfoAddressModal
+        visible={showInfoAddressModal}
+        modalType={'DeleteDefault'}
+        onSubmit={() => setShowInfoAddressModal(false)}
+      />
+      <UnsaveEditModal
+        visible={showUnsaveEditModal}
+        onSubmit={() => {
+          setShowUnsaveEditModal(false), navigation.pop();
+        }}
+        onReject={() => setShowUnsaveEditModal(false)}
+      />
       <ConfirmOperationAddressModal
         visible={showConfirmOperationAddressModal}
         onSubmit={modalOperationType == 'UPDATE' ? saveEditAddress : confirmDeleteAddress}
@@ -186,7 +273,7 @@ const AddLocation = ({navigation, route, session}) => {
       />
       <SuccesOperationAddressModal
         visible={showSuccessOperationAddressModal}
-        onSubmit={goBackAfterSuccessPost}
+        onSubmit={isFromLocationAccess ? goToHome : goBackAfterSuccessPost}
         operationType={modalOperationType}
       />
       <ScrollView style={{flex: 1, backgroundColor: '#FFF'}}>
@@ -211,12 +298,14 @@ const AddLocation = ({navigation, route, session}) => {
             </TouchableOpacity>
           )}
 
-          <TouchableOpacity onPress={() => selectAddressLabel('Custom')}>
-            <View style={[styles.labelBox, isCustomSelected ? styles.labelSelected : null]}>
-              <Image source={CustomIcon} resizeMode={'contain'} style={styles.labelIcon} />
-              <Text>Custom</Text>
-            </View>
-          </TouchableOpacity>
+          {showCustom() && (
+            <TouchableOpacity onPress={() => selectAddressLabel('Custom')}>
+              <View style={[styles.labelBox, isCustomSelected ? styles.labelSelected : null]}>
+                <Image source={CustomIcon} resizeMode={'contain'} style={styles.labelIcon} />
+                <Text>Custom</Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
 
         {isCustomSelected && (
@@ -224,15 +313,19 @@ const AddLocation = ({navigation, route, session}) => {
             <Text style={styles.label}>Address Name</Text>
             <TextInput
               value={customLabel}
-              onChangeText={value => setCustomLabel(value)}
+              onChangeText={
+                addressObj?.id
+                  ? value => {
+                      setIsEdited(true), setCustomLabel(value);
+                    }
+                  : value => setCustomLabel(value)
+              }
               style={styles.input}
               placeholderTextColor={LIGHT}
               returnKeyType="done"
             />
           </>
         )}
-
-        {/*-------ON PRESS: NAVIGATE TO PIN ADDRESS SCREEN----*/}
 
         <Text style={styles.label}>Address</Text>
         <Pressable onPress={onSearchMap}>
@@ -252,25 +345,39 @@ const AddLocation = ({navigation, route, session}) => {
         </Text>
         <TextInput
           value={landmark}
-          onChangeText={value => setLandMark(value)}
-          style={[styles.input, {}]}
+          onChangeText={
+            addressObj?.id
+              ? value => {
+                  setIsEdited(true), setLandMark(value);
+                }
+              : value => setLandMark(value)
+          }
+          style={styles.input}
           multiline={true}
           placeholder="e.g. In front of sari-sari station "
           placeholderTextColor={LIGHT}
         />
 
         <View style={styles.lineDivider} />
-        <View style={styles.toggleContainer}>
-          <Text>Set as default address</Text>
-          {/*-------TO DO: ADD CONDITION----*/}
-          <ToggleSwitch
-            isOn={isDefault}
-            onColor={CONSTANTS.COLOR.ORANGE}
-            offColor={CONSTANTS.COLOR.MEDIUM}
-            size="small"
-            onToggle={() => setIsDefault(!isDefault)}
-          />
-        </View>
+        {!isFromLocationAccess && (
+          <View style={styles.toggleContainer}>
+            <Text>Set as default address</Text>
+            {/*-------TO DO: ADD CONDITION----*/}
+            <ToggleSwitch
+              isOn={isDefault}
+              onColor={CONSTANTS.COLOR.ORANGE}
+              offColor={CONSTANTS.COLOR.MEDIUM}
+              size="small"
+              onToggle={
+                addressObj?.id
+                  ? () => {
+                      setIsDefault(!isDefault), setIsEdited(true);
+                    }
+                  : () => setIsDefault(!isDefault)
+              }
+            />
+          </View>
+        )}
         <View style={styles.bottomlineDivider} />
 
         <Text style={[styles.label, {marginBottom: 0, color: 'black'}]}> Contact Details (optional)</Text>
@@ -278,7 +385,13 @@ const AddLocation = ({navigation, route, session}) => {
         <Text style={styles.label}>Contact Name</Text>
         <TextInput
           value={contactName}
-          onChangeText={value => setContactName(value)}
+          onChangeText={
+            addressObj?.id
+              ? value => {
+                  setContactName(value), setIsEdited(true);
+                }
+              : value => setContactName(value)
+          }
           style={styles.input}
           placeholderTextColor={LIGHT}
           returnKeyType="done"
@@ -311,7 +424,13 @@ const AddLocation = ({navigation, route, session}) => {
 
             <TextInput
               value={contactNumber}
-              onChangeText={value => setContactNumber(value)}
+              onChangeText={
+                addressObj?.id
+                  ? value => {
+                      setContactNumber(value), setIsEdited(true);
+                    }
+                  : value => setContactNumber(value)
+              }
               maxLength={10}
               defaultValue={contactNumber ? contactNumber : ''}
               style={{padding: 16, flex: 1}}
@@ -338,16 +457,9 @@ const AddLocation = ({navigation, route, session}) => {
         </View>
       )}
 
-      {/*-------TO DO: ADD CONDITION----*/}
       {addressObj?.id && (
         <View style={[styles.submitContainer, styles.editAddressContainer]}>
-          <ThrottledOpacity
-            delay={4000}
-            onPress={() => {
-              setShowConfirmOperationAddressModal(true), setModalOperationType('DELETE');
-            }}
-            underlayColor={COLOR}
-            style={{borderRadius: 10}}>
+          <ThrottledOpacity delay={4000} onPress={onAddressDelete} underlayColor={COLOR} style={{borderRadius: 10}}>
             <View style={styles.deleteButtonWraper}>
               <Text style={[styles.submitText, {color: CONSTANTS.COLOR.ORANGE}]}>Delete</Text>
             </View>

@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {useLazyQuery} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
 import {APP_FLAVOR} from '../res/constants';
+import {GET_DEFAULT_ADDRESS, TOKTOK_ADDRESS_CLIENT} from '../graphql';
 import {AUTH_CLIENT, GET_USER_SESSION, GET_GLOBAL_SETTINGS, GET_APP_SERVICES} from '../graphql';
 import {onError} from '../util/ErrorUtility';
 
@@ -14,7 +15,7 @@ import SplashImage from '../assets/images/LinearGradiant.png';
 import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
 import ToktokSuperApp from '../assets/images/ToktokLogo.png';
 
-const Landing = ({createSession, destroySession, setAppServices, navigation}) => {
+const Landing = ({createSession, destroySession, setAppServices, navigation, superApp, saveDefaultAddress}) => {
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
     client: AUTH_CLIENT,
     onError: error => {
@@ -74,12 +75,21 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
             },
           });
         } else {
-          navigation.replace('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'ConsumerLanding',
-            },
-          });
+          if (superApp?.defaultAddress) {
+            navigation.replace('RootDrawer', {
+              screen: 'AuthenticatedStack',
+              params: {
+                screen: 'ConsumerLanding',
+              },
+            });
+          } else {
+            navigation.replace('RootDrawer', {
+              screen: 'AuthenticatedStack',
+              params: {
+                screen: 'LocationAccess',
+              },
+            });
+          }
         }
       } catch (error) {
         console.log(error);
@@ -91,6 +101,7 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
     const storedUserId = await AsyncStorage.getItem('userId');
 
     if (storedUserId) {
+      getDefaultAddress();
       getUserSession({
         variables: {
           input: {
@@ -107,6 +118,15 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
     }
   };
 
+  const [getDefaultAddress] = useLazyQuery(GET_DEFAULT_ADDRESS, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: res => {
+      saveDefaultAddress(res.getDefaultAddress);
+    },
+    onError: onError,
+  });
+
   useEffect(() => {
     checkAsyncStorageSession();
   }, []);
@@ -120,12 +140,14 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
 
 const mapStateToProps = state => ({
   session: state.session,
+  superApp: state.superApp,
 });
 
 const mapDispatchToProps = dispatch => ({
   createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
   setAppServices: payload => dispatch({type: 'SET_APP_SERVICES', payload}),
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
+  saveDefaultAddress: payload => dispatch({type: 'SET_TOKTOK_DEFAULT_ADDRESS', payload}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);
