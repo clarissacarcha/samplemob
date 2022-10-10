@@ -5,6 +5,7 @@ export TokTokFoodSplashScreen from './TokTokFoodSplashScreen';
 export ToktokFoodCart from './ToktokFoodCart';
 export ToktokFoodHome from './ToktokFoodHome';
 export ToktokFoodSearch from './ToktokFoodSearch';
+export ToktokFoodHomeSearch from './ToktokFoodHomeSearch';
 export ToktokFoodDriver from './ToktokFoodDriver';
 export ToktokFoodOrder from './ToktokFoodOrder';
 export ToktokFoodActivities from './ToktokFoodActivities';

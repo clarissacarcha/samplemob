@@ -13,13 +13,7 @@ const HomeSearchBar = (props: PropsType): React$Node => {
   return (
     <Container>
       <SearchBg>
-        <SearchBox
-          onPressIn={e => navigation.navigate('ToktokFoodSearch')}
-        // hasClose={search || false}
-        // onClose={() => setSearch('')}
-        // onValueChange={text => setSearch(text)}
-        // value={search}
-        />
+        <SearchBox onPressIn={e => navigation.navigate('ToktokFoodHomeSearch')} />
       </SearchBg>
     </Container>
   );

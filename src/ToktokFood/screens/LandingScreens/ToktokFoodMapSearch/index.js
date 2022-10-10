@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -25,18 +25,25 @@ const ToktokFoodMapSearch = () => {
 
   const [mapMoveCount, setMapMoveCount] = useState(0);
 
-  const [mapInfo, setMapInfo] = useState({
-    coordinates: {
-      latitude: route.params.coordinates.latitude,
-      longitude: route.params.coordinates.longitude,
-    },
-    address: route.params.address,
-    fullInfo: {
-      latitude: route.params.coordinates.latitude,
-      longitude: route.params.coordinates.longitude,
-      address: route.params.address,
-    },
-  });
+  const [mapInfo, setMapInfo] = useState({});
+
+  useEffect(() => {
+    if (route.params) {
+      const {coordinates, address} = route.params;
+      setMapInfo({
+        coordinates: {
+          latitude: coordinates.latitude,
+          longitude: coordinates.longitude,
+        },
+        address,
+        fullInfo: {
+          latitude: coordinates.latitude,
+          longitude: coordinates.longitude,
+          address,
+        },
+      });
+    }
+  }, [route.params]);
 
   const onMapMove = async c => {
     setMapMoveCount(prevState => prevState + 1);

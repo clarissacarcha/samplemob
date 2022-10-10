@@ -52,6 +52,8 @@ const CartAmount = (props: PropsType): React$Node => {
       }))
       .value();
 
+    console.log('groupPromo', groupPromo);
+
     const groupedPromotions = groupPromo.filter(promo => promo.type === 'promotion');
     const groupedDeal = groupPromo.filter(promo => promo.type === 'deal');
     const autoApply = groupPromo.filter(promo => promo.type === 'auto');
@@ -63,8 +65,10 @@ const CartAmount = (props: PropsType): React$Node => {
       const totalBasketAmount = await getTotalResellerDiscount([...promotions, ...deal], cartItems);
       setResellerDiscount(totalBasketAmount);
 
+      console.log('promotions', promotions);
       const totalResellerDisc = await getResellerDiscount(promotions, deal, cartItems);
       setTotalPromotions(totalResellerDisc);
+      console.log('totalResellerDisc', totalResellerDisc);
       setCartSubTotalAmount(subTotal + (srpTotalAmount - totalAmount));
     } else {
       const getResDiscount = pabiliShopDetails.isShopPabiliMerchant ? 0 : srpTotalAmount - totalAmount;
