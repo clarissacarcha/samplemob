@@ -17,13 +17,17 @@ export const EmptyContainer: ComponentType<any> = styled.View`
   border-width: 1px;
 `;
 
+export const SeparatorContainer: ComponentType<any> = styled.View`
+  margin-bottom: 15px;
+`;
+
 export const AnimatedList: ComponentType<any> = styled(AnimatedSectionList).attrs(props => ({
   ...props,
   showsVerticalScrollIndicator: false,
   //   scrollToOverflowEnabled: true,
   scrollEventThrottle: 16,
   contentContainerStyle: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: props.theme.color.white,
     paddingTop: 80,
     // paddingHorizontal: 15,
@@ -58,13 +62,14 @@ export const Title: ComponentType<any> = styled(StyledText).attrs(props => ({
   mode: 'semibold',
   fontSize: 18,
 }))`
-  margin-vertical: 10px;
-  margin-left: 15px;
+  margin-bottom: -10px;
+  padding-left: 15px;
+  background-color: ${props => props.theme.color.white};
+  width: 100%;
+  z-index: 99;
 `;
 
 export const Separator: ComponentType<any> = styled(Divider).attrs(props => ({
   ...props,
   height: 8,
-}))`
-  margin-vertical: 10px;
-`;
+}))``;

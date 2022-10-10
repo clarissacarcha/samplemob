@@ -16,10 +16,15 @@ const groupByCategories = (products, routes) => {
   const productHolder = [];
   if (products.length > 0) {
     products.map(product => {
-      routes.map(route => {
-        product.categoryName = product.catId === route.id ? route.title : 'All Menu';
-        productHolder.push(product);
-      });
+      for (let i = 0; i < routes.length; i++) {
+        if (product.catId === routes[i].id) {
+          product.categoryName = routes[i].title;
+          break;
+        } else {
+          product.categoryName = 'All Menu';
+        }
+      }
+      productHolder.push(product);
     });
   }
 
