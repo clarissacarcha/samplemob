@@ -1,5 +1,5 @@
 import React, {useState, useRef} from 'react';
-import {View, TextInput, StyleSheet, ActivityIndicator, FlatList, Image, Text} from 'react-native';
+import {View, TextInput, StyleSheet, ActivityIndicator, FlatList, Image, Text, Dimensions} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {HeaderBack, HeaderTitle} from '../../../components';
 import {DARK} from '../../../res/constants';
@@ -10,8 +10,9 @@ import {POST_NEW_ADDRESS, TOKTOK_ADDRESS_CLIENT} from '../../../graphql';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import uuid from 'react-native-uuid';
 import {useDebounce} from '../../../ToktokGo/helpers';
-import {getCurrentLocation, reverseGeocode} from '../../../helper';
-3;
+import {currentLocation} from '../../../helper';
+
+import GpsDenied from '../../../assets/images/GpsDenied.png';
 import PinLocationIcon from '../../../assets/images/locationIcon.png';
 import {ThrottledOpacity} from '../../../components_section';
 import SearchICN from '../../../assets/images/SearchIcon.png';
@@ -20,12 +21,15 @@ import {MAP_DELTA_LOW} from '../../../res/constants';
 import {onError} from '../../../util/ErrorUtility';
 import {SuccesOperationAddressModal} from './Components';
 
+const FULL_WIDTH = Dimensions.get('window').width;
+
 const PinLocation = ({navigation, route}) => {
   const mapRef = useRef(null);
   const inputRef = useRef();
   const sessionToken = uuid.v4();
   const {isFromLocationAccess, locCoordinates, setConfirmedLocation, addressObj, setIsEdited} = route.params;
 
+  const [initialCoord, setInitialCoord] = useState(locCoordinates?.latitude ? locCoordinates : {});
   const [disableAddressBox, setDisableAddressBox] = useState(true);
   const [searchedData, setSearchedData] = useState('');
   const [searchedText, setSearchedText] = useState('');
@@ -171,6 +175,32 @@ const PinLocation = ({navigation, route}) => {
     setSearchedData(null);
   };
 
+  const getCurrentLocation = async () => {
+    const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
+    setInitialCoord({
+      latitude: latitude,
+      longitude: longitude,
+      ...MAP_DELTA_LOW,
+    });
+  };
+
+  if (!initialCoord?.latitude) {
+    return (
+      <View style={styles.container}>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <Image source={GpsDenied} resizeMode={'contain'} style={styles.gpsDeniedDimensions} />
+          <Text style={styles.gpsDeniedTitle}>Turn On Device Location</Text>
+          <Text style={styles.gpsDeniedDesc}>
+            Please turn on your device location. You can find it under your device Settings {`>`} Location.
+          </Text>
+          <ThrottledOpacity delay={4000} onPress={getCurrentLocation} style={styles.buttonWrapper}>
+            <Text style={styles.buttonText}>Try Again</Text>
+          </ThrottledOpacity>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <SuccesOperationAddressModal
@@ -182,7 +212,7 @@ const PinLocation = ({navigation, route}) => {
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{height: '100%', width: '100%'}}
-        initialRegion={locCoordinates}
+        initialRegion={initialCoord}
         showsUserLocation={true}
         onRegionChangeComplete={e => {
           onMapDrag(e);
@@ -260,6 +290,7 @@ export default PinLocation;
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'white',
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
@@ -333,5 +364,31 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  gpsDeniedDimensions: {
+    height: FULL_WIDTH * 0.5,
+    width: FULL_WIDTH * 0.5,
+    marginBottom: 24,
+  },
+  gpsDeniedTitle: {
+    color: CONSTANTS.COLOR.ORANGE,
+    fontSize: CONSTANTS.FONT_SIZE.XL,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+    marginBottom: 8,
+  },
+  gpsDeniedDesc: {
+    width: FULL_WIDTH * 0.6,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  buttonWrapper: {
+    width: FULL_WIDTH * 0.6,
+    backgroundColor: CONSTANTS.COLOR.ORANGE,
+    paddingVertical: 11,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
   },
 });
