@@ -19,7 +19,6 @@ export const ToktokWalletAccountLimit = ({navigation}) => {
           <Header />
           <Limits />
           <TransactionHistory />
-          <View style={{marginBottom: 40}} />
         </ScrollView>
       </CheckIdleState>
     </FlagSecureScreen>
@@ -28,7 +27,6 @@ export const ToktokWalletAccountLimit = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
     backgroundColor: 'white',
   },
 });
