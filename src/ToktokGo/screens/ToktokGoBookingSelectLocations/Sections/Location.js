@@ -61,7 +61,7 @@ export const Location = ({
                 setSearchOrigin(null);
                 dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: null});
               }}>
-              {loadingAutoComplete == true ? (
+              {loading == true ? (
                 <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
               ) : (
                 <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />

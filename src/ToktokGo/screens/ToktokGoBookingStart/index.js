@@ -20,14 +20,14 @@ import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import DestinationBC from '../../../assets/toktokgo/destination4.png';
 import {ThrottledHighlight, ThrottledOpacity} from '../../../components_section';
 import {useMutation} from '@apollo/client';
-import {onErrorAppSync} from '../../util';
+import {onErrorAppSync, onError} from '../../util';
 import {useAccount} from 'toktokwallet/hooks';
 import {CancellationPaymentSuccesfullModal, NoShowPaymentSuccesfullModal} from './Components';
 import {SavedLocations} from './Sections/SavedLocations';
 import {RecentDestinations} from './Sections/RecentDestinations';
 import AsyncStorage from '@react-native-community/async-storage';
 import {FlatList} from 'react-native-gesture-handler';
-import {onError} from '../../../util/ErrorUtility';
+// import {onError} from '../../../util/ErrorUtility';
 import {useAlertGO} from '../../hooks';
 
 const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
@@ -252,7 +252,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   const onPressRecentDestination = loc => {
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-      payload: {...route.params.details, noteToDriver: ''},
+      payload: {...route?.params?.details, noteToDriver: ''},
     });
     if (route?.params?.voucherData) {
       dispatch({
@@ -310,6 +310,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
           <Header navigation={navigation} constants={constants} />
           <Landing navigation={navigation} details={route?.params?.details} voucherData={route?.params?.voucherData} />
           <FlatList
+            showsVerticalScrollIndicator={false}
             ListHeaderComponent={
               <ScrollView
                 contentContainerStyle={{flexGrow: 1}}

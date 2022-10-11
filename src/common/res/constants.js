@@ -1,3 +1,4 @@
+import normalize from 'react-native-normalize';
 const COLOR = {
   WHITE: '#FFFFFF', // View backgroundColor
   LIGHT: '#F7F7FA', // Form backgroundColor and item separator

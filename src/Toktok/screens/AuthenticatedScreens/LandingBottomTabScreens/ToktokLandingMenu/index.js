@@ -211,13 +211,13 @@ export const ToktokLandingMenu = ({navigation}) => {
             </ImageBackground>
             <Text style={{paddingLeft: 20, paddingTop: 20, paddingBottom: 15, fontFamily: FONT.BOLD}}> Account</Text>
             {/*--------------- MY DELIVERIES ---------------*/}
-            {/* <DrawerButton
+            <DrawerButton
               label="Saved Addresses"
               onPress={() => {
                 navigation.push('ToktokSavedLocations');
               }}
               restrict="C"
-            /> */}
+            />
             <DrawerButton
               label="Personal Information"
               onPress={() => {
