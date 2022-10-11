@@ -155,7 +155,10 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
             },
           },
           updateQuery: (previousResult, {fetchMoreResult}) => {
-            if (!fetchMoreResult) {
+            if (
+              !fetchMoreResult ||
+              (fetchMoreResult && fetchMoreResult.getSearchBankAccountPaginate.edges.length > 10)
+            ) {
               return previousResult;
             }
             fetchMoreResult.getSearchBankAccountPaginate.edges = [
@@ -177,7 +180,7 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
             },
           },
           updateQuery: (previousResult, {fetchMoreResult}) => {
-            if (!fetchMoreResult) {
+            if (!fetchMoreResult || (fetchMoreResult && fetchMoreResult.getBankAccountsPaginate.edges.length > 10)) {
               return previousResult;
             }
             fetchMoreResult.getBankAccountsPaginate.edges = [
@@ -273,7 +276,7 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
         onEndReachedThreshold={0.03}
         ListFooterComponent={ListFooterComponent}
         onEndReached={() => {
-          if (!onEndReachedCalledDuringMomentum.current) {
+          if (!onEndReachedCalledDuringMomentum.current || search === '') {
             fetchMoreData();
             onEndReachedCalledDuringMomentum.current = true;
           }

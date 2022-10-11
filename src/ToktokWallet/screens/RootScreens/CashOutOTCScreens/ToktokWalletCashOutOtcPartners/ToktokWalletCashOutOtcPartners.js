@@ -142,7 +142,10 @@ const ToktokWalletCashOutOtcPartners = (props: PropsType): React$Node => {
             },
           },
           updateQuery: (previousResult, {fetchMoreResult}) => {
-            if (!fetchMoreResult) {
+            if (
+              !fetchMoreResult ||
+              (fetchMoreResult && fetchMoreResult.getCashOutSearchProviderPartners.edges.length > 10)
+            ) {
               return previousResult;
             }
             fetchMoreResult.getCashOutSearchProviderPartners.edges = [
@@ -192,7 +195,7 @@ const ToktokWalletCashOutOtcPartners = (props: PropsType): React$Node => {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshCashOut} />}
           onEndReachedThreshold={0.03}
           onEndReached={() => {
-            if (!onEndReachedCalledDuringMomentum.current) {
+            if (!onEndReachedCalledDuringMomentum.current || search === '') {
               fetchMoreData();
               onEndReachedCalledDuringMomentum.current = true;
             }
