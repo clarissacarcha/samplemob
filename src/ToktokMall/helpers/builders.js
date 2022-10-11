@@ -36,8 +36,8 @@ export const BuildPostCheckoutBody = async ({
 			regCode: addressData.regionId,
 			provCode: addressData.provinceId || "0155",  //Pangasinan
 			citymunCode: addressData.municipalityId,
-			total_amount: parseFloat(subTotal),
-			srp_totalamount: parseFloat(srpTotal),
+			total_amount: RoundOffValue(subTotal),
+			srp_totalamount: RoundOffValue(srpTotal),
 			order_type: orderType,
 			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates, shippingVouchers, orderType, vouchers}),
 			//Optional values
@@ -56,7 +56,7 @@ export const BuildPostCheckoutBody = async ({
 			hash_amount: hashAmount,
 			reference_num: referenceNum,
 			orderRefNum: referenceNum,
-			discounted_totalamount: orderType == 3 ? parseFloat(subTotal) : null			
+			discounted_totalamount: orderType == 3 ? RoundOffValue(subTotal) : null			
 		}
 			
 	}else{
@@ -197,4 +197,8 @@ export const GetItemOrderType = (orderType, promotion) => {
 		case 3: return 2
 		case 4: return 3
 	}
+}
+
+export const RoundOffValue = (value) => {
+	return Math.round(parseFloat(value) * 100) / 100
 }

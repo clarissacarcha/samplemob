@@ -7,6 +7,7 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FONT } from '../../../../../res/variables';
 import Icons from '../../../../Components/Icons';
+import { RoundOffValue } from '../../../../helpers';
 import { FormatToText } from '../../../../helpers/formats';
 import { CheckoutContext } from '../ContextProvider';
 
@@ -158,7 +159,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
               <Icons.AIcon name={toggleVouchers ? 'down' : 'up'} size={14} />
             </TouchableOpacity>
           </View>        
-          <Text style={styles.totalDeductionText}>- {FormatToText.currency(totalDeduction)}</Text>
+          <Text style={styles.totalDeductionText}>- {FormatToText.currency(RoundOffValue(totalDeduction))}</Text>
         </View>        
         <View>          
           {
@@ -173,7 +174,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
                   <>
                     <View style={styles.textContainer}>
                       <Text ellipsizeMode='tail' style={styles.voucherNameText}>{item.vname || item.voucher_name}</Text>
-                      <Text style={styles.deductionText}>- {FormatToText.currency(deduction)}</Text>
+                      <Text style={styles.deductionText}>- {FormatToText.currency(RoundOffValue(deduction))}</Text>
                     </View>
                   </>
                 )
@@ -231,7 +232,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
           } */}
 
             <Text style={styles.totalText}>
-            {FormatToText.currency((merchandiseTotal || 0) + (shippingFeeTotal || 0) - (shippingDiscountTotal || 0))}
+            {FormatToText.currency(RoundOffValue((merchandiseTotal || 0) + (shippingFeeTotal || 0) - (shippingDiscountTotal || 0)))}
             </Text>
           
         </View>

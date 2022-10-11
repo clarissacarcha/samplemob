@@ -20,7 +20,7 @@ import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
 import {emptyPlaceOrder} from "../../../assets"
-import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy, getRefComAccountType} from "../../../helpers"
+import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy, getRefComAccountType, RoundOffValue} from "../../../helpers"
 
 import {CheckoutContext} from './ContextProvider';
 import { EventRegister } from 'react-native-event-listeners';
@@ -558,7 +558,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       let transactionPayload = await BuildTransactionPayload({
         method: "TOKTOKWALLET", 
         notes: "", 
-        total: grandTotal, 
+        total: RoundOffValue(grandTotal), 
         toktokid: toktokSession.user.id,
         // toktokid: 1,
         // transactionTypeId: "TOKTOKWALLET PAYMENT"
