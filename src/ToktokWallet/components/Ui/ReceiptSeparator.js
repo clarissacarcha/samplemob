@@ -1,11 +1,11 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 
-export const ReceiptSeparator = ({bottomHeight = 80, roundLeftStyle, roundRightStyle}) => {
+export const ReceiptSeparator = ({bottomHeight = 80, left = -20, right = -20, roundLeftStyle, roundRightStyle}) => {
   return (
     <>
-      <View style={[styles.roundLeft, {bottom: bottomHeight}, roundLeftStyle]} />
-      <View style={[styles.roundRight, {bottom: bottomHeight}, roundRightStyle]} />
+      <View style={[styles.roundLeft, {bottom: bottomHeight, left}, roundLeftStyle]} />
+      <View style={[styles.roundRight, {bottom: bottomHeight, right}, roundRightStyle]} />
     </>
   );
 };
@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 30,
     position: 'absolute',
-    left: -20,
     bottom: 75,
     marginBottom: 8,
     borderTopRightRadius: 100,
@@ -28,7 +27,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 30,
     position: 'absolute',
-    right: -20,
     bottom: 75,
     marginBottom: 8,
     borderTopLeftRadius: 100,

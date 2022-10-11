@@ -131,4 +131,20 @@ export const POST_VERIFY_ACCOUNT_TPIN = gql`
         postVerifyAccountTPIN(input:$input)
     }
 `
+export const GET_ACCOUNT_USED_LIMITS = gql`
+    query {
+        getAccountUsedLimits {
+            incoming {
+                daily
+                monthly
+                annual
+            }
+            outgoing {
+                daily
+                monthly
+                annual
+            }
+        }
+    }
+`
 

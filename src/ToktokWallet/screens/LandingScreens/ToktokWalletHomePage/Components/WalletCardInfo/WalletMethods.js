@@ -1,4 +1,4 @@
-import React, {useContext, useState , useEffect} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Alert, FlatList, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {APP_FLAVOR, ACCOUNT_TYPE} from 'src/res/constants';
@@ -6,10 +6,10 @@ import {useThrottle} from 'src/hooks';
 import {useDispatch} from 'react-redux';
 import {useAccount} from 'toktokwallet/hooks';
 import {moderateScale} from 'toktokwallet/helper';
-import _ from "lodash";
+import _ from 'lodash';
 
 //COMPONENTS
-import {CustomBottomSheet} from 'toktokwallet/components';
+import ActionSheet, {SheetManager} from 'react-native-actions-sheet';
 
 import {SIZE} from 'src/res/variables';
 import CONSTANTS from 'common/res/constants';
@@ -19,7 +19,7 @@ const {height, width} = Dimensions.get('window');
 
 const Method = ({icon, label, iconstyle, onPress}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.services}>
+    <TouchableOpacity onPress={onPress} style={styles.servicesContainer}>
       <Image resizeMode="contain" style={[styles.icon, iconstyle]} source={icon} />
       <Text style={styles.servicesLabel}>{label}</Text>
     </TouchableOpacity>
@@ -30,56 +30,82 @@ const WalletMethods = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {checkIfTpinIsSet, tokwaAccount} = useAccount();
-  const [appServices,setAppServices] = useState([]);
+  const [appServices, setAppServices] = useState([]);
   const [menuData, setMenuData] = useState([]);
+  const [actionSheetMenuData, setActionSheetMenuData] = useState([]);
 
-  const [visibleMoreServices, setVisibleMoreServices] = useState(false);
+  const othersItem = {
+    label: 'More',
+    isEnabled: true,
+    icon: require('toktokwallet/assets/icons/services/more.png'),
+    onPress: () => SheetManager.show('walletMenu_Services'), //to be replaced later
+    identifier: 'more',
+  };
+
   const menuDataConstant = [
     {
       label: 'Cash In',
       icon: require('toktokwallet/assets/icons/services/cash-in.png'),
-      onPress: () => onPressThrottled('ToktokWalletPaymentOptions'),
+      onPress: () => {
+        SheetManager.hide('walletMenu_Services');
+        onPressThrottled('ToktokWalletPaymentOptions');
+      },
       isEnabled: true,
-      identifier: "cashIn",
+      identifier: 'cashIn',
     },
     {
-      label: 'Fund Transfer',
+      label: 'Bank Transfer',
       icon: require('toktokwallet/assets/icons/services/fund-transfer.png'),
-      onPress: () => onPressThrottled('ToktokWalletCashOutHomePage'),
+      onPress: () => {
+        SheetManager.hide('walletMenu_Services');
+        onPressThrottled('ToktokWalletBankTransferHome');
+      },
       isEnabled: tokwaAccount.constants.isFundTransferEnabled == '1',
-      identifier: "fundTransfer",
+      identifier: 'fundTransfer',
     },
     {
       label: 'Send Money',
       icon: require('toktokwallet/assets/icons/services/send-money.png'),
-      onPress: () => onPressThrottled('ToktokWalletSendMoney'),
+      onPress: () => {
+        SheetManager.hide('walletMenu_Services');
+        onPressThrottled('ToktokWalletSendMoney');
+      },
       isEnabled: true,
-      identifier: "sendMoney",
+      identifier: 'sendMoney',
     },
     {
       label: 'Scan QR',
       icon: require('toktokwallet/assets/icons/services/qr-code-scan.png'),
-      onPress: () => onPressThrottled('ToktokWalletScanQrHome'),
+      onPress: () => {
+        SheetManager.hide('walletMenu_Services');
+        onPressThrottled('ToktokWalletScanQrHome');
+      },
       isEnabled: true,
-      identifier: "scanQR",
+      identifier: 'scanQR',
     },
     {
       label: 'Cash Out',
       icon: require('toktokwallet/assets/icons/services/cash-out.png'),
-      onPress: () => onPressThrottled('ToktokWalletCashOutOTCHome'),
+      onPress: () => {
+        SheetManager.hide('walletMenu_Services');
+        onPressThrottled('ToktokWalletCashOutOTCHome');
+      },
       isEnabled: true,
-      identifier: `cashOut`,
+      identifier: 'cashOut',
     },
     {
       label: 'Request Money',
       icon: require('toktokwallet/assets/icons/services/send-money.png'),
-      onPress: () => onPressThrottled('ToktokWalletRequestMoney'),
+      onPress: () => {
+        SheetManager.hide('walletMenu_Services');
+        onPressThrottled('ToktokWalletRequestMoney');
+      },
       isEnabled: true,
-      identifier: `requestMoney`,
+      identifier: 'requestMoney',
     },
   ];
 
-  useEffect(()=>{
+  useEffect(() => {
     const appServicesObject = _.keyBy(tokwaAccount.appServices, 'identifier');
     setAppServices(appServicesObject);
 
@@ -101,12 +127,17 @@ const WalletMethods = () => {
       }
 
       return true;
-    })
-    
-    console.log(JSON.stringify({filteredMenuData}, null, 2));
+    });
+    if (filteredMenuData.length > 4) {
+      const slicedArr = filteredMenuData.slice(0, 3);
+      slicedArr.push(othersItem);
 
-    setMenuData(filteredMenuData);
-  },[])
+      setMenuData(slicedArr);
+      setActionSheetMenuData(filteredMenuData);
+    } else {
+      setMenuData(filteredMenuData);
+    }
+  }, []);
 
   const onPress = route => {
     if (APP_FLAVOR == 'D' && ACCOUNT_TYPE == 2) {
@@ -131,72 +162,57 @@ const WalletMethods = () => {
   const onPressThrottled = useThrottle(onPress, 2000);
 
   return (
-    <View style={styles.container}>
-      <CustomBottomSheet visible={visibleMoreServices} setVisible={setVisibleMoreServices}>
-        <View style={{flex: 1}}>
+    <View style={styles.content}>
+      <ActionSheet id="walletMenu_Services">
+        <View style={styles.bottomSheet}>
           <Text style={styles.servicesTitle}>Services</Text>
           <View style={styles.separator} />
           <FlatList
-            data={menuData}
+            data={actionSheetMenuData}
             renderItem={({item, index}) => (
               <Method
                 label={item.label}
                 icon={item.icon}
                 onPress={() => {
                   item.onPress();
-                  setVisibleMoreServices(false);
                 }}
               />
             )}
             numColumns={4}
           />
         </View>
-      </CustomBottomSheet>
-      <View style={styles.content}>
-        {menuData.slice(0, 4).map((item, index) => {
-          if (item.isEnabled) {
-            if (index === 3 && menuData.length > 4) {
-              return (
-                <Method
-                  label={'More'}
-                  icon={require('toktokwallet/assets/icons/services/more.png')}
-                  iconstyle={styles.moreIcon}
-                  onPress={() => {
-                    setVisibleMoreServices(true);
-                  }}
-                />
-              );
-            }
-            return (
-              <Method
-                label={item.label}
-                icon={item.icon}
-                onPress={() => {
-                  item.onPress();
-                  setVisibleMoreServices(false);
-                }}
-              />
-            );
-          }
-          return null;
-        })}
-        {/* <Method label="Request Money" icon={require('toktokwallet/assets/images/request-money.png')} iconstyle={{height: 30,width: 30,marginBottom: 2}} onPress={()=>onPressThrottled("ToktokWalletRequestMoney")}/> */}
-      </View>
+        <View style={{width: '100%', height: 10, backgroundColor: 'white', position: 'absolute', bottom: 0}} />
+      </ActionSheet>
+      {menuData.map((item, index) => {
+        if (item.isEnabled) {
+          return (
+            <Method
+              label={item.label}
+              icon={item.icon}
+              onPress={() => {
+                item.onPress();
+              }}
+            />
+          );
+        }
+        return null;
+      })}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: 70,
+    height: 80,
     width: width,
     paddingHorizontal: 16,
   },
   content: {
+    zIndex: 1,
     height: '100%',
-    width: '100%',
+    width: '92%',
     position: 'absolute',
-    top: -35,
+    bottom: Platform.OS === 'android' ? moderateScale(45) : moderateScale(50),
     alignSelf: 'center',
     backgroundColor: 'white',
     borderRadius: 5,
@@ -218,9 +234,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 99999,
   },
-  services: {
+  servicesContainer: {
     width: '25%',
-    justifyContent: 'center',
     alignItems: 'center',
     marginVertical: SIZE.MARGIN / 1.5,
   },
@@ -246,6 +261,15 @@ const styles = StyleSheet.create({
   moreIcon: {
     height: moderateScale(30),
     width: moderateScale(30),
+  },
+  bottomSheet: {
+    right: 4,
+    width: '102%',
+    borderWidth: 3,
+    borderTopColor: COLOR.ORANGE,
+    borderLeftColor: COLOR.ORANGE,
+    borderRightColor: COLOR.ORANGE,
+    borderRadius: 15,
   },
 });
 

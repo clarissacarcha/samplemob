@@ -22,7 +22,6 @@ import {
   SearchInputField,
 } from './Styled';
 import {NoData} from 'toktokwallet/components';
-import {Text} from 'react-native';
 
 const checkDisplay = ({item, defaultCondition}) => {
   if (defaultCondition) {

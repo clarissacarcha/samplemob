@@ -20,6 +20,9 @@ export class TransactionUtility {
     alert,
     title = 'Transaction Failed',
     event = null,
+    onPress = null,
+    isNewFt = false,
+    isPop = true,
   }) => {
     const {graphQLErrors, networkError} = error;
 
@@ -149,12 +152,16 @@ export class TransactionUtility {
         message: promptMessage,
         event: 'TOKTOKBILLSLOAD',
         title: promptTitle,
+        onPress: onPress ? onPress : () => {},
       });
 
-      if (graphQLErrors[0]?.payload?.code == 'fundTransferPending') {
-        return navigation.navigate('ToktokWalletCashOutOtherBanks');
+      if (graphQLErrors[0]?.payload?.code === 'fundTransferPending') {
+        return navigation.navigate(isNewFt ? 'ToktokWalletBankTransferTransaction' : 'ToktokWalletCashOutOtherBanks');
       }
+      // return;
     }
-    return navigation.pop();
+    if (isPop) {
+      return navigation.pop();
+    }
   };
 }

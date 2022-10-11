@@ -36,18 +36,18 @@ export const OTCPartnerForm = ({route, tokwaAccount}) => {
     setToktokServiceFee,
   } = useContext(VerifyContext);
 
-  useEffect(()=>{
-    setEmail(emailAddress)
-  },[])
+  useEffect(() => {
+    setEmail(emailAddress);
+  }, []);
 
   const changeEmail = value => {
     setEmailError('');
     setEmail(value);
   };
 
-  const checkProviderServiceFee = value => {
+  const checkProviderServiceFee = async value => {
     if (parseFloat(value) > 0 && parseFloat(value) <= parseFloat(maximumAmount)) {
-      let providerFee = cashOutProviderFee.filter(item => {
+      let providerFee = await cashOutProviderFee.filter(item => {
         return parseFloat(value) >= parseFloat(item.amountFrom) && parseFloat(value) <= parseFloat(item.amountTo);
       });
 
@@ -69,8 +69,8 @@ export const OTCPartnerForm = ({route, tokwaAccount}) => {
     setToktokServiceFee(0);
   };
 
-  const changeAmount = value => {
-    checkProviderServiceFee(value);
+  const changeAmount = async value => {
+    await checkProviderServiceFee(value);
     setIsInsufficientBalance(false);
     setAmountError('');
     const num = value.replace(/[^0-9.]/g, '');
