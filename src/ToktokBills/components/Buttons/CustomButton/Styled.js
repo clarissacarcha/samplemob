@@ -20,7 +20,7 @@ export const Container: ComponentType<any> = styled(View).attrs(props => ({
       padding-horizontal: ${moderateScale(32)};
       padding-vertical: ${moderateScale(16)};
       background: #FFFFFF;
-      ${Platform.OS === 'ios' ? 'box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.15)' : 'elevation: 5'};
+      ${Platform.OS === 'ios' ? 'box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25)' : 'elevation: 3'};
       background-color: #fff;
       ${
         Platform.OS === 'android'

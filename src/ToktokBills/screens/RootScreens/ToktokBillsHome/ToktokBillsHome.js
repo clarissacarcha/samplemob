@@ -171,7 +171,7 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
   }
   return (
     <BackgroundImage>
-      {((getAdsLoading && adsRegular.length === 0) ||
+      {((getAdsLoading && adsRegular.length === 0 && !isMounted) ||
         (loading && billTypes.length === 0) ||
         (getFavoritesLoading && favoriteBills.length === 0 && !isMounted)) &&
       !refreshing ? (

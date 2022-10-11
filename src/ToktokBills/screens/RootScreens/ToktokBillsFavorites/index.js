@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {
   View,
   Text,
@@ -25,6 +25,7 @@ import {
   ToastModal,
 } from 'toktokbills/components';
 import {FavoriteDetails} from './Components';
+import {AlertOverlay} from 'src/components';
 
 //IMAGES
 import {empty_search, empty_list, empty_fave} from 'toktokbills/assets/images';
@@ -57,6 +58,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   });
 
   const isFocused = useIsFocused();
+  const onEndReachedCalledDuringMomentum = useRef(null);
 
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState('');
@@ -174,7 +176,10 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
             },
           },
           updateQuery: (previousResult, {fetchMoreResult}) => {
-            if (!fetchMoreResult) {
+            if (
+              !fetchMoreResult ||
+              (fetchMoreResult && fetchMoreResult.getSearchFavoriteBillsPaginate.edges.length > 10)
+            ) {
               return previousResult;
             }
             fetchMoreResult.getSearchFavoriteBillsPaginate.edges = [
@@ -196,7 +201,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
             },
           },
           updateQuery: (previousResult, {fetchMoreResult}) => {
-            if (!fetchMoreResult) {
+            if (!fetchMoreResult || (fetchMoreResult && fetchMoreResult.getFavoriteBillsPaginate.edges.length > 10)) {
               return previousResult;
             }
             fetchMoreResult.getFavoriteBillsPaginate.edges = [
@@ -278,6 +283,7 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
   }
   return (
     <View style={styles.container}>
+      <AlertOverlay visible={patchFavoriteLoading} />
       <View style={styles.searchContainer}>
         <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
         {isMounted && favorites.length != 0 && (
@@ -311,14 +317,26 @@ export const ToktokBillsFavorites = ({navigation, route}) => {
           extraData={[filteredData, favorites, pageInfo]}
           ListEmptyComponent={ListEmptyComponent}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
-          onEndReachedThreshold={0.02}
-          onEndReached={() => fetchMoreData()}
+          onEndReachedThreshold={0.03}
+          onEndReached={() => {
+            if (!onEndReachedCalledDuringMomentum.current || search === '') {
+              fetchMoreData();
+              onEndReachedCalledDuringMomentum.current = true;
+            }
+          }}
+          onMomentumScrollBegin={() => {
+            onEndReachedCalledDuringMomentum.current = false;
+          }}
           ListFooterComponent={ListFooterComponent}
-          getItemLayout={(data, index) => ({
-            length: data.length,
-            offset: data.length * index,
-            index,
-          })}
+          getItemLayout={
+            getData().length <= 30
+              ? (data, index) => ({
+                  length: getData().length,
+                  offset: getData().length * index,
+                  index,
+                })
+              : undefined
+          }
         />
       )}
     </View>

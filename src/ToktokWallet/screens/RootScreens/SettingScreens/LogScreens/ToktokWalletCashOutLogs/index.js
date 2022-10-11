@@ -68,7 +68,7 @@ export const ToktokWalletCashOutLogs = ({navigation}) => {
           },
         },
         updateQuery: (previousResult, {fetchMoreResult}) => {
-          if (!fetchMoreResult) {
+          if (!fetchMoreResult || (fetchMoreResult && fetchMoreResult.getFundTransfer.edges.length > 10)) {
             return previousResult;
           }
           fetchMoreResult.getFundTransfer.edges = [
@@ -138,7 +138,7 @@ export const ToktokWalletCashOutLogs = ({navigation}) => {
                   tokwaAccount={tokwaAccount}
                 />
               )}
-              contentContainerStyle={{flexGrow: 1}}
+              contentContainerStyle={records.length === 0 ? {flexGrow: 1} : {}}
               onEndReachedThreshold={0.01}
               onEndReached={() => {
                 if (!onEndReachedCalledDuringMomentum.current) {

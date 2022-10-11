@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, FlatList, RefreshControl} from 'react-native';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
+import {View, StyleSheet, FlatList, RefreshControl, TouchableOpacity, Text} from 'react-native';
 
 //COMPONENTS
 import {
@@ -43,11 +43,12 @@ export const ToktokBiller = ({navigation, route}) => {
     headerTitle: () => <HeaderTitle label={billType.name} isRightIcon />,
   });
 
+  const onEndReachedCalledDuringMomentum = useRef(null);
   const [search, setSearch] = useState('');
-  const [allFilteredData, setAllFilteredData] = useState('');
+  const [allFilteredData, setAllFilteredData] = useState([]);
   const [allBillItems, setAllBillItems] = useState([]);
   const [allPageInfo, setAllPageInfo] = useState({});
-  const [filteredData, setFilteredData] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
   const [billItems, setBillItems] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [pageInfo, setPageInfo] = useState({});
@@ -67,6 +68,7 @@ export const ToktokBiller = ({navigation, route}) => {
       setBillItems(getBillItemsPaginate.edges);
       setPageInfo(getBillItemsPaginate.pageInfo);
       setRefreshing(false);
+      setIsMounted(true);
     },
   });
 
@@ -78,9 +80,12 @@ export const ToktokBiller = ({navigation, route}) => {
         setRefreshing(false);
       },
       onCompleted: ({getAllBillItems}) => {
-        setAllBillItems(getAllBillItems.edges);
-        setAllPageInfo(getAllBillItems.pageInfo);
-        setRefreshing(false);
+        if (getAllBillItems) {
+          setAllBillItems(getAllBillItems.edges);
+          setAllPageInfo(getAllBillItems.pageInfo);
+          setRefreshing(false);
+          setIsMounted(true);
+        }
       },
     });
 
@@ -122,12 +127,11 @@ export const ToktokBiller = ({navigation, route}) => {
 
   useEffect(() => {
     handleGetBillItems();
-    setIsMounted(true);
-  }, [handleGetBillItems]);
+  }, []);
 
-  const handleGetBillItems = useCallback(() => {
+  const handleGetBillItems = useCallback(async () => {
     if (billType.name !== 'Billers') {
-      return getBillItemsPaginate({
+      await getBillItemsPaginate({
         variables: {
           input: {
             billTypeId: billType.id,
@@ -137,7 +141,7 @@ export const ToktokBiller = ({navigation, route}) => {
         },
       });
     } else {
-      return getAllBillItems({
+      await getAllBillItems({
         variables: {
           input: {
             afterCursorId: null,
@@ -149,23 +153,20 @@ export const ToktokBiller = ({navigation, route}) => {
   }, [billType, getBillItemsPaginate, getAllBillItems]);
 
   useEffect(() => {
-    if (!search) {
+    if (search === '' && isMounted) {
+      setAllBillItems([]);
+      setBillItems([]);
       handleGetBillItems();
     }
   }, [search, handleGetBillItems]);
 
   const getData = () => {
-    if (search) {
-      return filteredData.length > 0 ? filteredData : [];
+    if (billType.name !== 'Billers') {
+      return search ? filteredData : billItems;
+    } else {
+      // FOR ALL TYPES OF BILLERS
+      return search ? allFilteredData : allBillItems;
     }
-    return billItems;
-  };
-  // FOR ALL TYPES OF BILLERS
-  const getAllData = () => {
-    if (search) {
-      return allFilteredData.length > 0 ? allFilteredData : [];
-    }
-    return allBillItems;
   };
 
   const onRefresh = () => {
@@ -186,7 +187,7 @@ export const ToktokBiller = ({navigation, route}) => {
             },
           },
           updateQuery: (previousResult, {fetchMoreResult}) => {
-            if (!fetchMoreResult) {
+            if (!fetchMoreResult || (fetchMoreResult && fetchMoreResult.getSearchBillItemsPaginate.edges.length > 10)) {
               return previousResult;
             }
             fetchMoreResult.getSearchBillItemsPaginate.edges = [
@@ -209,7 +210,7 @@ export const ToktokBiller = ({navigation, route}) => {
             },
           },
           updateQuery: (previousResult, {fetchMoreResult}) => {
-            if (!fetchMoreResult) {
+            if (!fetchMoreResult || (fetchMoreResult && fetchMoreResult.getBillItemsPaginate.edges.length > 10)) {
               return previousResult;
             }
             fetchMoreResult.getBillItemsPaginate.edges = [
@@ -238,7 +239,7 @@ export const ToktokBiller = ({navigation, route}) => {
             },
           },
           updateQuery: (previousResult, {fetchMoreResult}) => {
-            if (!fetchMoreResult) {
+            if (!fetchMoreResult || (fetchMoreResult && fetchMoreResult.getSearchAllBillItems.edges.length > 10)) {
               return previousResult;
             }
             fetchMoreResult.getSearchAllBillItems.edges = [
@@ -260,7 +261,7 @@ export const ToktokBiller = ({navigation, route}) => {
             },
           },
           updateQuery: (previousResult, {fetchMoreResult}) => {
-            if (!fetchMoreResult) {
+            if (!fetchMoreResult || (fetchMoreResult && fetchMoreResult.getAllBillItems.edges.length > 10)) {
               return previousResult;
             }
             fetchMoreResult.getAllBillItems.edges = [
@@ -313,11 +314,14 @@ export const ToktokBiller = ({navigation, route}) => {
 
   const ListFooterComponent = () => {
     return (
-      <View style={{marginTop: moderateScale(15)}}>
+      <View style={{marginVertical: moderateScale(15)}}>
         <LoadingIndicator
           isLoading={billType.name !== 'Billers' ? pageInfo.hasNextPage : allPageInfo.hasNextPage}
           size="small"
         />
+        {/* <TouchableOpacity onPress={fetchAllMoreData}>
+          <Text>Load More</Text>
+        </TouchableOpacity> */}
       </View>
     );
   };
@@ -345,7 +349,7 @@ export const ToktokBiller = ({navigation, route}) => {
     <>
       <View style={styles.container}>
         <View style={styles.searchContainer}>
-          {isMounted && (allBillItems.length !== 0 || billItems.length !== 0) && (
+          {(isMounted || allBillItems.length !== 0 || billItems.length !== 0) && (
             <SearchInput
               search={search}
               onChangeText={onSearchChange}
@@ -362,22 +366,33 @@ export const ToktokBiller = ({navigation, route}) => {
           <LoadingIndicator isLoading={true} isFlex />
         ) : (
           <FlatList
-            data={billType.name !== 'Billers' ? getData() : getAllData()}
+            data={getData()}
             renderItem={({item, index}) => <Biller item={item} index={index} />}
-            contentContainerStyle={getData().length === 0 && getAllData().length === 0 && styles.contentStyle}
-            style={styles.billers}
+            contentContainerStyle={getData().length === 0 && styles.contentStyle}
             keyExtractor={(item, index) => index.toString()}
-            extraData={billType.name !== 'Billers' ? {filteredData, billItems} : {allFilteredData, allBillItems}}
+            extraData={{filteredData, billItems, allFilteredData, allBillItems}}
             ListEmptyComponent={ListEmptyComponent}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-            onEndReachedThreshold={0.02}
-            onEndReached={billType.name !== 'Billers' ? fetchMoreData : fetchAllMoreData}
+            onEndReachedThreshold={0.3}
+            onEndReached={() => {
+              if (!onEndReachedCalledDuringMomentum.current || search === '') {
+                billType.name !== 'Billers' ? fetchMoreData() : fetchAllMoreData();
+                onEndReachedCalledDuringMomentum.current = true;
+              }
+            }}
+            onMomentumScrollBegin={() => {
+              onEndReachedCalledDuringMomentum.current = false;
+            }}
             ListFooterComponent={ListFooterComponent}
-            getItemLayout={(data, index) => ({
-              length: data.length,
-              offset: data.length * index,
-              index,
-            })}
+            getItemLayout={
+              getData().length <= 30
+                ? (data, index) => ({
+                    length: getData().length,
+                    offset: getData().length * index,
+                    index,
+                  })
+                : undefined
+            }
           />
         )}
       </View>

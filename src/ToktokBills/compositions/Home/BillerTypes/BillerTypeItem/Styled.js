@@ -16,7 +16,7 @@ export const ButtonContainer: ComponentType<any> = styled(TouchableOpacity).attr
 }))`
   width: ${'25%'};
   align-items: center;
-  margin-vertical: 8px;
+  margin-vertical: ${moderateScale(8)}px;
 `;
 export const LogoContainer: ComponentType<any> = styled.View`
   justify-content: center;
@@ -38,8 +38,8 @@ export const DetailsContainer: ComponentType<any> = styled.View`
 `;
 export const Description: ComponentType<any> = styled.Text`
   font-family: ${FONT.REGULAR};
-  font-size: ${moderateScale(FONT_SIZE.M)};
+  font-size: ${moderateScale(FONT_SIZE.M)}px;
   text-align: center;
-  margin-top: ${moderateScale(5)};
-  margin-horizontal: ${moderateScale(5)};
+  margin-top: ${moderateScale(5)}px;
+  margin-horizontal: ${moderateScale(5)}px;
 `;
