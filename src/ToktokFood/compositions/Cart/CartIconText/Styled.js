@@ -5,6 +5,7 @@
 import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
 import StyledText from 'toktokfood/components/StyledText';
+import ContentLoader from 'react-native-easy-content-loader';
 
 export const Container: ComponentType<any> = styled.View`
   flex-direction: row;
@@ -42,3 +43,12 @@ export const NameText: ComponentType<any> = styled(StyledText).attrs(props => ({
 }))`
   margin-top: 3px;
 `;
+
+export const Loader: ComponentType<any> = styled(ContentLoader).attrs(props => ({
+  ...props,
+  active: true,
+  title: false,
+  pRows: 2,
+  pWidth: ['75%', 100],
+  pHeight: 9,
+}))``;

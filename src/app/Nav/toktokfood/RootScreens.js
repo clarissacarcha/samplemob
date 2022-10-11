@@ -22,7 +22,8 @@ import {
   ToktokFoodOrder,
   ToktokFoodPlaceOrder,
   ToktokFoodActivities,
-  ToktokFoodNotifications
+  ToktokFoodNotifications,
+  ToktokFoodHomeSearch,
 } from 'toktokfood/screens';
 import ToktokFoodHomeScreen from 'toktokfood/screens/RootScreens/ToktokFoodHomeScreen';
 
@@ -35,6 +36,7 @@ export default ({Navigator}) => (
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodPlaceOrder" component={ToktokFoodPlaceOrder} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodActivities" component={ToktokFoodActivities} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodSearch" component={ToktokFoodSearch} />
+    <Navigator.Screen options={{headerShown: false}} name="ToktokFoodHomeSearch" component={ToktokFoodHomeSearch} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokRiderRating" component={ToktokRiderRating} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodMapSearch" component={ToktokFoodMapSearch} />
     <Navigator.Screen options={{headerShown: false}} name="ToktokFoodCategories" component={ToktokFoodCategories} />

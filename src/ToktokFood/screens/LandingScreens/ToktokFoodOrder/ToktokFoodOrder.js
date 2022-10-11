@@ -287,8 +287,10 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         state?.serviceType === 'toktokfood' ? 'by the merchant.' : '.'
       } `;
       buttonText = 'OK';
-      onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'});
-      // onPress = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
+      onPress = () => {
+        setIsAlertVisible(false);
+        setTimeout(() => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'}), 500);
+      };
     } else {
       if (toCancelOrder) {
         title = 'Cancel Order';
@@ -311,18 +313,24 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           title = isDeclined ? 'Order Declined' : 'Order Cancelled';
           type = 'warning';
           buttonText = 'Browse Menu';
-          onPress = () => navigation.goBack();
+          onPress = () => {
+            setIsAlertVisible(false);
+            setTimeout(() => navigation.goBack(), 500);
+          };
           buttonText2 = 'OK';
-          // onPress2 = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 3});
-          onPress2 = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'});
-          // onPress2 = () => navigation.navigate('ToktokFoodHome');
+          onPress2 = () => {
+            setIsAlertVisible(false);
+            setTimeout(() => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'}), 500);
+          };
         } else {
           title = state?.orderIsfor === 1 ? 'Order Delivered' : 'Order Picked Up';
           subtitle = 'Yay! Cravings satisfied. Thank you for ordering in toktokfood!';
           type = 'success';
           buttonText = 'OK';
-          onPress = () => navigation.navigate('ToktokFoodActivities', {orderStatus: 's'});
-          // onPress = () => navigation.navigate('ToktokFoodOrderTransactions', {tab: 2});
+          onPress = () => {
+            setIsAlertVisible(false);
+            setTimeout(() => navigation.navigate('ToktokFoodActivities', {orderStatus: 's'}), 500);
+          };
           buttonText2 = '';
         }
       }

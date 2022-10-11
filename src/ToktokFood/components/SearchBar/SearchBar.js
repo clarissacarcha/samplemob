@@ -20,6 +20,7 @@ const SearchBar = (props: PropsType): React$Node => {
     textColor,
     placeholder = 'What would you like to eat?',
     onPressIn,
+    ref,
   } = props;
 
   if (onPress) {
@@ -27,6 +28,7 @@ const SearchBar = (props: PropsType): React$Node => {
       <PressableContainer onPress={onPress} style={style}>
         <SearchIcon color={color} />
         <TextInput
+          ref={ref}
           placeholder={placeholder}
           value={value}
           onChangeText={text => onValueChange(text)}

@@ -16,4 +16,5 @@ export type PropsType = {
   hasClose?: boolean,
   placeholder?: string,
   onPressIn?: () => void,
+  ref?: any,
 };

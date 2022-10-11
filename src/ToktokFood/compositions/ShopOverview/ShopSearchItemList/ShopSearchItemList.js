@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable react-hooks/exhaustive-deps */
 /**
  * @format
@@ -10,7 +11,7 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import {useIsFocused} from '@react-navigation/native';
 
 import type {PropsType} from './types';
-import {AnimatedList, ContentLoading, Title, Separator} from './Styled';
+import {AnimatedList, ContentLoading, Title, Separator, SeparatorContainer} from './Styled';
 
 import EmptyList from 'toktokfood/components/EmptyList/EmptyList';
 import StyledText from 'toktokfood/components/StyledText';
@@ -34,11 +35,13 @@ import {empty_search_2} from 'toktokfood/assets/images';
 import {GET_SEARCH_PRODUCTS_BY_SHOP} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {filterAvailableProducts} from 'toktokfood/helper/product';
+import {useNavigation} from '@react-navigation/native';
 
 const ShopSearchItemList = (props: PropsType): React$Node => {
   const isFocused = useIsFocused();
   const {search, shopId, routes = []} = props;
   const [productList, setProductList] = useState([]);
+  const navigation = useNavigation();
 
   // data fetching for product
   const [getSearchProductsByShop] = useLazyQuery(GET_SEARCH_PRODUCTS_BY_SHOP, {
@@ -49,7 +52,6 @@ const ShopSearchItemList = (props: PropsType): React$Node => {
       const products = getSearchProductsByShop;
       const availableProducts = filterAvailableProducts(products, routes);
       setProductList(availableProducts);
-      console.log('availableProducts', availableProducts);
     },
   });
 
@@ -66,8 +68,11 @@ const ShopSearchItemList = (props: PropsType): React$Node => {
     }
   }, [isFocused, search]);
 
+  const onNavigateToItem = Id => {
+    navigation.navigate('ToktokFoodItemDetails', {Id});
+  };
+
   const renderItem = ({item}) => {
-    console.log('item', item);
     const {filename, itemname, price, promoVoucher, resellerDiscount, summary} = item;
     const avatarStyle = {borderRadius: 10};
     const containerStyle = {height: 70, width: 70, marginRight: 15};
@@ -77,7 +82,7 @@ const ShopSearchItemList = (props: PropsType): React$Node => {
     const discountText = discRatetype === 'p' ? `${referralDiscount * 100}%` : referralDiscount;
 
     return (
-      <ItemContainer>
+      <ItemContainer activeOpacity={0.9} onPress={() => onNavigateToItem(item?.Id)}>
         <Container>
           <Avatar
             size="medium"
@@ -121,6 +126,7 @@ const ShopSearchItemList = (props: PropsType): React$Node => {
       </ItemContainer>
     );
   };
+
   return (
     <AnimatedList
       sections={productList}
@@ -134,7 +140,11 @@ const ShopSearchItemList = (props: PropsType): React$Node => {
         }
         return <ContentLoading />;
       }}
-      SectionSeparatorComponent={() => <Separator />}
+      SectionSeparatorComponent={() => (
+        <SeparatorContainer>
+          <Separator />
+        </SeparatorContainer>
+      )}
     />
   );
 };

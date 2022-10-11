@@ -6,7 +6,7 @@
 import React, {useState} from 'react';
 import type {PropsType} from './types';
 import {TouchableOpacity} from 'react-native';
-import {Container, Column, Image, Title, Text, NameText} from './Styled';
+import {Container, Column, Image, Title, Text, NameText, Loader} from './Styled';
 import {useTheme} from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Alert from 'toktokfood/components/Alert';
@@ -40,8 +40,16 @@ const CartIconText = (props: PropsType): React$Node => {
         <Container id={id}>
           <Image source={source} width={20} height={20} id={id} />
           <Column flex={1}>
-            <Title>{title}</Title>
-            <Text>{text}</Text>
+            {title.length > 0 ? (
+              <React.Fragment>
+                <Title>{title}</Title>
+                <Text>{text}</Text>
+              </React.Fragment>
+            ) : (
+              <Column left={-10}>
+                <Loader />
+              </Column>
+            )}
             {landmark.length > 0 && <Text landmark>{landmark}</Text>}
             {name.length > 0 && <NameText>{name}</NameText>}
             {contactNumber.length > 0 && <Text>{contactNumber}</Text>}

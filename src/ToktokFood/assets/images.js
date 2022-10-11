@@ -147,8 +147,10 @@ export const question_image = require('./images/prompts_icons/question_ic.png');
 export const loading_animation = require('./images/prompts_icons/loading-animation.gif');
 
 //activities images
-export const empty_activities = require('./images/empty_icons/empty-activities.png');
-export const timer_ic = require('./images/timer.png');
+export const no_history = require('./images/no-history-outline.png');
+export const no_result_search = require('./images/no-result-search.png');
+
+//search images
 
 // Fab Icons
 export const fab_activities = require('./images/fab_icons/fab_activities.png');

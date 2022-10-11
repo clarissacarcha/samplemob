@@ -18,6 +18,7 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
       ) {
         cartItems.map(items => {
           const filteredProd = _.includes(productIds, items.productid);
+          console.log('filteredProd', filteredProd);
           if (filteredProd && totalReseller === 0) {
             const {discounted_totalamount, voucher_code} = item;
             const {basePrice, quantity, resellerDiscount} = items;
