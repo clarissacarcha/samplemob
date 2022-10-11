@@ -1,31 +1,46 @@
 import React from 'react';
 import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-native';
-import CONSTANTS from '../../../common/res/constants';
-import WarningIMG from '../../../assets/images/warning.png';
-import {ThrottledOpacity} from '../../../components_section';
+import CONSTANTS from '../../../../common/res/constants';
+import WarningIMG from '../../../../assets/images/alertQuestionmark.png';
+import {ThrottledOpacity} from '../../../../components_section';
 
-export const CancelBookingModal = ({isVisible, setVisible, setViewCancelReasonModal}) => {
+export const ConfirmOperationAddressModal = ({visible, onReject, onSubmit, operationType}) => {
+  const getTitle = operationType => {
+    switch (operationType) {
+      case 'CREATE':
+        return 'Address Saved';
+      case 'UPDATE':
+        return 'Update Saved Address';
+      case 'DELETE':
+        return 'Delete Saved Address';
+      default:
+        return '';
+    }
+  };
+
+  const getDescription = operationType => {
+    switch (operationType) {
+      case 'CREATE':
+        return 'New address has been saved successfully.';
+      case 'UPDATE':
+        return 'You are about to update your saved address. Are you sure you want to proceed?';
+      case 'DELETE':
+        return 'You are about to delete your saved address. Are you sure you want to proceed?';
+      default:
+        return '';
+    }
+  };
   return (
-    <Modal animationType="fade" transparent={true} visible={isVisible} style={StyleSheet.absoluteFill}>
+    <Modal animationType="fade" transparent={true} visible={visible} style={StyleSheet.absoluteFill}>
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={styles.container}>
             <Image source={WarningIMG} resizeMode={'contain'} style={styles.imageDimensions} />
-            <Text style={styles.modalTitle}>Cancel Booking</Text>
-            <Text style={styles.modalSubTitle}>Cancellation Fee: ₱50.00</Text>
-            <Text style={styles.modalDescription}>
-              You are cancelling <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD}}>5 minutes</Text> after
-              getting a driver, ka-toktok. May Cancellation Fee na machacharge sayo to compensate the driver. Sure ka na
-              ba? Please say no. :(
-            </Text>
+            <Text style={styles.modalTitle}>{getTitle(operationType)}</Text>
+            <Text style={styles.modalDescription}>{getDescription(operationType)}</Text>
 
             <View style={styles.retryContainer}>
-              <ThrottledOpacity
-                delay={500}
-                style={styles.cancelButtonContainer}
-                onPress={() => {
-                  setVisible(false);
-                }}>
+              <ThrottledOpacity delay={500} style={styles.cancelButtonContainer} onPress={() => onReject()}>
                 <Text style={styles.textStyle}>No</Text>
               </ThrottledOpacity>
 
@@ -33,9 +48,7 @@ export const CancelBookingModal = ({isVisible, setVisible, setViewCancelReasonMo
                 delay={500}
                 style={styles.retryButtonContainer}
                 underlayColor={CONSTANTS.COLOR.LIGHT}
-                onPress={() => {
-                  setVisible(false), setViewCancelReasonModal(true);
-                }}>
+                onPress={() => onSubmit()}>
                 <Text style={styles.cancelTextStyle}>Yes</Text>
               </ThrottledOpacity>
             </View>

@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   },
   claimButtonText: {
     marginHorizontal: 16,
-    textAlignL: 'center',
+    textAlign: 'center',
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.WHITE,
     fontSize: CONSTANTS.FONT_SIZE.S,
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   },
   useButtonText: {
     marginHorizontal: 19,
-    textAlignL: 'center',
+    textAlign: 'center',
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.S,

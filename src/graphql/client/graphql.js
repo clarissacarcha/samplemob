@@ -176,6 +176,7 @@ const wsLink = new WebSocketLink({
 });
 
 // Terminating Link
+
 const uploadLink = createUploadLink({
   uri: `${baseUrl}graphql/`,
 });
@@ -219,12 +220,17 @@ const toktokWalletVoucherUploadLink = createUploadLink({
   uri: `${toktokVoucherBaseUrl}graphql/`,
 });
 
+const toktokAddressGraphQLUploadLink = createUploadLink({
+  uri: `${baseUrl}address/graphql/`,
+});
+
 const splitLink = split(({query}) => {
   const definition = getMainDefinition(query);
   return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
 }, wsLink);
 
 // const link = ApolloLink.from([errorLink, setTokenLink, splitLink, uploadLink]);
+
 const link = ApolloLink.from([errorLinkLogger, setTokenLink, splitLink, uploadLink]);
 const authClientlink = ApolloLink.from([errorLinkLogger, setTokenLink, authUploadLink]);
 const toktokWalletGraphqlLink = ApolloLink.from([
@@ -265,6 +271,7 @@ const toktokGoGraphqlLink = ApolloLink.from([errorLinkLogger, setToktokGoGraphql
 const toktokWalletVoucherGraphqlLink = ApolloLink.from([errorLinkLogger, setTokenLink, toktokWalletVoucherUploadLink]);
 
 const toktokQuotationGraphqlLink = ApolloLink.from([errorLinkLogger, setTokenLink, toktokQuotationUploadLink]);
+const toktokAddressGraphqlLink = ApolloLink.from([errorLinkLogger, setTokenLink, toktokAddressGraphQLUploadLink]);
 
 export const CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
@@ -334,4 +341,9 @@ export const TOKTOK_GO_GRAPHQL_CLIENT = new ApolloClient({
 export const TOKTOK_WALLET_VOUCHER_CLIENT = new ApolloClient({
   cache: new InMemoryCache(),
   link: toktokWalletVoucherGraphqlLink,
+});
+
+export const TOKTOK_ADDRESS_CLIENT = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: toktokAddressGraphqlLink,
 });
