@@ -269,7 +269,8 @@ const styles = StyleSheet.create({
     borderTopColor: COLOR.ORANGE,
     borderLeftColor: COLOR.ORANGE,
     borderRightColor: COLOR.ORANGE,
-    borderRadius: 15,
+    borderRadius: moderateScale(15),
+    paddingBottom: moderateScale(15),
   },
 });
 
