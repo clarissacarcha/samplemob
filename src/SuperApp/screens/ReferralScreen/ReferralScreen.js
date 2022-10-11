@@ -256,6 +256,7 @@ const ReferralScreen = ({navigation, route, constants, session, createSession}) 
                 onChangeText={text => {
                   setRefCode(text), setIsValidDriverId(false);
                 }}
+                placeholderTextColor={'gray'}
               />
             </View>
             {isValidDriverId && (

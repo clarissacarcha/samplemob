@@ -17,15 +17,16 @@ export const SuccesCancelBookingModal = ({
         if (isViaTokwa) {
           return (
             <Text style={styles.modalDescription}>
-              Your booking has been cancelled. We received your payment for Cancellation Fee of{' '}
-              <Text style={styles.textHighlight}>₱50.00</Text>. Your e-receipt was sent to your registered email.
+              Your booking has been cancelled. ka-toktok. Thank you for paying the cancellation fee of{' '}
+              <Text style={styles.textHighlight}>₱50.00</Text>. Ang iyong resibo ay sinend na namin sa iyong email.
+              Iwasan mo na magcancel, ka-toktok, pang toktokfood din yan!
             </Text>
           );
         } else {
           return (
             <Text style={styles.modalDescription}>
-              Your booking has been cancelled. Cancellation Fee will be charged in your next booking. You may read more
-              about our{' '}
+              Your booking has been cancelled. Sa next booking na namin idadagdag ang Cancellation Fee. Thank you! You
+              may also read more about our{' '}
               <Text
                 onPress={() =>
                   Linking.openURL(
@@ -47,15 +48,16 @@ export const SuccesCancelBookingModal = ({
         if (isViaTokwa) {
           return (
             <Text style={styles.modalDescription}>
-              Your booking has been cancelled. We received your payment for No Show Fee of{' '}
-              <Text style={styles.textHighlight}>₱50.00</Text>. Your e-receipt was sent to your registered email.
+              Your booking has been cancelled. ka-toktok. Thank you for paying the cancellation fee of{' '}
+              <Text style={styles.textHighlight}>₱50.00</Text>. Ang iyong resibo ay sinend na namin sa iyong email.
+              Iwasan mo na magcancel, ka-toktok, pang toktokfood din yan!
             </Text>
           );
         } else {
           return (
             <Text style={styles.modalDescription}>
-              Your booking has been cancelled. No Show Fee will be charged in your next booking. You may read more about
-              our{' '}
+              Your booking has been cancelled. Sa next booking na namin idadagdag ang Cancellation Fee. Thank you! You
+              may also read more about our Cancellation{' '}
               <Text
                 onPress={() =>
                   Linking.openURL(
@@ -75,7 +77,12 @@ export const SuccesCancelBookingModal = ({
         }
       }
     } else {
-      return <Text style={styles.modalDescription}>Your booking has been cancelled.</Text>;
+      return (
+        <Text style={styles.modalDescription}>
+          Your booking has been cancelled, ka-toktok, please book with us again! Give us a chance to take you there
+          safely!
+        </Text>
+      );
     }
   };
 
