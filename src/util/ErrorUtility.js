@@ -3,12 +3,13 @@ import {Alert} from 'react-native';
 import {ApolloError} from 'apollo-client';
 import {navigate, replace} from 'src/app/Nav/RootNavigation';
 
-export const onError = (error) => {
+export const onError = error => {
   const {graphQLErrors, networkError} = error;
 
   if (networkError) {
     Alert.alert('', 'Network error occurred. Please check your internet connection.');
   } else if (graphQLErrors.length > 0) {
+    console.log(graphQLErrors);
     graphQLErrors.map(({message, locations, path, code}) => {
       if (code === 'INTERNAL_SERVER_ERROR') {
         Alert.alert('', 'Something went wrong.');
