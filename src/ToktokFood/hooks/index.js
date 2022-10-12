@@ -7,3 +7,4 @@ export * from './useGetDeliveryFee';
 export * from './useGetPaymentMethodValidation';
 export * from './useGetShopDetails';
 export * from './useGetProductCategories';
+export * from './useGetShopsPromotions';

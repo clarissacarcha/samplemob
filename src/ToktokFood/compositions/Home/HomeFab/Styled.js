@@ -27,7 +27,7 @@ export const IconBadge: ComponentType<any> = styled(Badge).attrs(props => ({
 }))`
   position: absolute;
   top: 5px;
-  left: 40px;
+  right: 40px;
 `;
 
 export const FABIcon: ComponentType<any> = styled(Image).attrs(props => ({

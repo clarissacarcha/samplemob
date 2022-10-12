@@ -117,9 +117,7 @@ const ToktokFoodPlaceOrder = (props: PropsType): React$Node => {
           <StyledText mode="semibold">My Orders</StyledText>
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() =>
-              navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: `${cartData.items[0]?.shopid}`}})
-            }>
+            onPress={() => navigation.navigate('ToktokFoodShopOverview', {item: shopDetails?.getShopDetails})}>
             <StyledText color={theme.color.orange}>Add Items</StyledText>
           </TouchableOpacity>
         </ComponentContainer>

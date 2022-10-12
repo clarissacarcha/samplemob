@@ -10,10 +10,11 @@ import StyledText from 'toktokfood/components/StyledText';
 
 export const Container: ComponentType<any> = styled.View`
   /* flex: 1; */
+  z-index: 1;
 `;
 
 export const AddressContainer: ComponentType<any> = styled.TouchableOpacity`
-  flex: 1;
+  /* flex: 1; */
   align-self: flex-start;
 `;
 

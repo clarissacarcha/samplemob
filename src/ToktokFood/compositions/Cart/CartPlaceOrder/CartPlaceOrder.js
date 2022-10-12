@@ -20,23 +20,17 @@ import {
 } from 'toktokfood/helper/cart';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {
-  GET_AUTO_SHIPPING,
-  GET_PAYMENT_METHOD_VALIDATION,
-  GET_SHIPPING_FEE,
   PATCH_PLACE_CUSTOMER_ORDER,
   DELETE_SHOP_TEMPORARY_CART,
-  CHECK_SHOP_VALIDATIONS,
   REQUEST_TAKE_MONEY,
-  VERIFY_PIN,
   GET_SHOP_STATUS,
-  GET_ALL_TEMPORARY_CART,
-  GET_SHOP_DETAILS,
 } from 'toktokfood/graphql/toktokfood';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import Alert from 'toktokfood/components/Alert';
 import StyledText from 'toktokfood/components/StyledText';
 import {useNavigation} from '@react-navigation/native';
 import {useGetActivities} from 'toktokfood/hooks';
+import _ from 'lodash';
 
 const MAX_AMOUNT_LIMIT_WITH_TOKWA = 3000;
 const MAX_AMOUNT_LIMIT_WITHOUT_TOKWA = 2000;
@@ -82,7 +76,6 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
 
   const reformData = (WALLET, CUSTOMER, ORDER, SHIPPING_VOUCHERS) => {
     if (promotionVoucher.length > 0) {
-      const deductedFee = getTotalDeductedDeliveryFee(promotionVoucher, cartDeliveryInfo?.price);
       const DEDUCTVOUCHER = {
         ...ORDER,
         order_logs: [{...ORDER.order_logs[0]}],
@@ -159,7 +152,10 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
         cartData?.pabiliShopServiceFee,
         cartData?.pabiliShopDetails,
       );
-      const pabiliServiceFee = cartData?.pabiliShopResellerDiscount || cartData?.pabiliShopServiceFee;
+      const serviceFeeDiscount = _.sumBy(promotionVoucher, e => e.service_fee_discount);
+      console.log('serviceFeeDiscount', serviceFeeDiscount);
+      const pabiliServiceFee =
+        (cartData?.pabiliShopResellerDiscount || cartData?.pabiliShopServiceFee) - serviceFeeDiscount;
       CUSTOMER_DATA.service_type = 'pabili';
       CUSTOMER_DATA.service_fee = Number(pabiliServiceFee.toFixed(2));
     }
@@ -331,6 +327,10 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
       parseAmount += pabiliServiceFee;
     }
 
+    // console.log('cartData', cartData?.totalAmountWithAddons, cartData?.addonsTotalAmount);
+    // console.log('totalPrice', totalPrice);
+    // console.log('deductedPrice', deductedPrice);
+    // console.log('amount', amount);
     console.log('requestTakeMoney', Number(parseAmount.toFixed(2)));
 
     requestTakeMoney({

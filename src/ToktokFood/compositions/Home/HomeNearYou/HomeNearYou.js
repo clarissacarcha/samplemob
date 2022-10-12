@@ -33,6 +33,7 @@ import {
   TimeImg,
   Overlay,
   OverlayText,
+  Column,
 } from './Styled';
 import YellowButton from 'toktokfood/components/YellowButton';
 
@@ -222,7 +223,14 @@ const HomeNearYou = (props: PropsType): React$Node => {
   return (
     <Container>
       <TitleContainer>
-        <StyledText mode="semibold">Near You</StyledText>
+        <Column>
+          <StyledText mode="semibold">Near You</StyledText>
+          <Column>
+            <StyledText fontSize={11} color={theme.color.darkgray}>
+              See restaurants near you.
+            </StyledText>
+          </Column>
+        </Column>
         {/* <SeeAllContainer>
           <StyledText color={theme.color.orange}>See All</StyledText>
           <RightIcon />

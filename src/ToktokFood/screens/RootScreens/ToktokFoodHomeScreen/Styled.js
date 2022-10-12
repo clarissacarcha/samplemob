@@ -14,6 +14,9 @@ export const Container: ComponentType<any> = styled.View`
 export const ScrollContainer: ComponentType<any> = styled(ScrollView).attrs(props => ({
   ...props,
   scrollEventThrottle: 16,
+  contentContainerStyle: {
+    padding: 0,
+  },
 }))`
   flex: 1;
 `;
