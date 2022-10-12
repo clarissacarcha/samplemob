@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {Text, StyleSheet} from 'react-native';
 import CONSTANTS from 'common/res/constants';
 //SELF IMPORTS
 import Card from './Card';
 import {toktokwalletLabel} from '../Limits';
 
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
+const {FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 const OutgoingLimits = ({limits, used}) => {
   return (
@@ -33,7 +33,7 @@ const OutgoingLimits = ({limits, used}) => {
           )}
         />
       )}
-      {limits?.monthly && (
+      {/* {limits?.monthly && (
         <Card
           title="Monthly Outgoing Limit"
           description={() => (
@@ -53,7 +53,7 @@ const OutgoingLimits = ({limits, used}) => {
             </>
           )}
         />
-      )}
+      )} */}
       {limits?.annual && (
         <Card
           title="Annual Outgoing Limit"
