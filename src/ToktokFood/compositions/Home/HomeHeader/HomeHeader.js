@@ -9,7 +9,7 @@ import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 
 import type {PropsType} from './types';
-import {AddressContainer, Container, DownIcon, Loader, StyledIcon, Row, Text} from './Styled';
+import {AddressContainer, DownIcon, Loader, StyledIcon, Row, Text} from './Styled';
 
 // Components
 import Header from 'toktokfood/components/Header';
@@ -31,7 +31,8 @@ const rightContainerStyle = {
   paddingTop: 4,
 };
 const containerStyle = {
-  height: 60,
+  // height: 60,
+  flex: 1,
 };
 
 const customPopupMenuStyle = {
@@ -107,17 +108,17 @@ const HomeHeader = (props: PropsType): React$Node => {
   };
 
   return (
-    <Container>
-      <Header
-        hasBack
-        containerStyle={containerStyle}
-        rightContainerStyle={rightContainerStyle}
-        leftContainerStyle={leftContainerStyle}
-        centerContainerStyle={centerContainerStyle}
-        CenterComponent={AddressDetails}
-        RightComponent={CartOptions}
-      />
-    </Container>
+    // <Container>
+    <Header
+      hasBack
+      containerStyle={containerStyle}
+      rightContainerStyle={rightContainerStyle}
+      leftContainerStyle={leftContainerStyle}
+      centerContainerStyle={centerContainerStyle}
+      CenterComponent={AddressDetails}
+      RightComponent={CartOptions}
+    />
+    // </Container>
   );
 };
 

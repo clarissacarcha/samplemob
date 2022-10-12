@@ -3,7 +3,7 @@
  */
 
 import type {ComponentType} from 'react';
-import {FlatList, Image} from 'react-native';
+import {FlatList, Image, Platform} from 'react-native';
 import styled from 'styled-components/native';
 import {Icon} from 'react-native-elements';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +17,10 @@ import {time} from 'toktokfood/assets/images';
 export const Container: ComponentType<any> = styled.View`
   background-color: ${props => props.theme.color.white};
   flex: 1;
+`;
+
+export const Column: ComponentType<any> = styled.View`
+  margin-top: 10px;
 `;
 
 export const ListImgOverlay: ComponentType<any> = styled.View`
@@ -47,8 +51,8 @@ export const EmptyContainer: ComponentType<any> = styled.View`
 export const Overlay: ComponentType<any> = styled.View`
   background-color: ${props => props.theme.color.black};
   border-radius: 10px;
-  width: 180px;
-  height: 160px;
+  width: ${props => (props.promo ? 150 : 180)}px;
+  height: ${props => (props.promo ? 150 : 160)}px;
   position: absolute;
   opacity: ${props => props.opacity || 0};
 `;
@@ -61,7 +65,8 @@ export const OverlayText: ComponentType<any> = styled(StyledText).attrs(props =>
   text-align: center;
   position: absolute;
   align-self: center;
-  top: 35%;
+  top: ${props => props.top || '36%'};
+  left: ${props => props.left || '13%'};
   opacity: 1;
 `;
 
@@ -84,9 +89,9 @@ export const Row: ComponentType<any> = styled.View`
 export const ListContainer: ComponentType<any> = styled.TouchableOpacity`
   background-color: ${props => props.theme.color.white};
   /* border-width: 1px; */
-  width: ${getDeviceWidth / 2 - 25};
+  width: ${getDeviceWidth / 2 - 25}px;
   height: 200px;
-  margin: 9px;
+  margin: ${props => (props.promo ? 0 : 9)}px;
   margin-bottom: 20px;
 `;
 
@@ -102,15 +107,13 @@ export const ListWrapper: ComponentType<any> = styled.TouchableOpacity`
   flex: 1;
   flex-wrap: wrap;
   align-items: flex-start;
-  padding-left: 7;
-  /* justify-content: center; */
-  /* border-width: 1px; */
+  padding-left: ${Platform.OS === 'android' ? 3 : 7}px;
 `;
 
 export const ListImg: ComponentType<any> = styled.Image`
   border-radius: 10px;
-  width: 180px;
-  height: 160px;
+  width: ${props => (props.promo ? 150 : 180)}px;
+  height: ${props => (props.promo ? 150 : 160)}px;
 `;
 
 export const ListInfoText: ComponentType<any> = styled(StyledText).attrs(props => ({
@@ -154,7 +157,7 @@ export const TitleContainer: ComponentType<any> = styled.View`
   /* border-width: 1px; */
   padding-vertical: 5px;
   /* padding-horizontal: 15px; */
-  margin-top: 15px;
+  margin-top: ${props => props.marginTop || 5}px;
   margin-bottom: 10px;
 `;
 

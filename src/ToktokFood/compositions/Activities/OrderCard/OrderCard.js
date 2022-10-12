@@ -140,7 +140,7 @@ const OrderCard = (props: PropsType): React$Node => {
         : data?.totalServiceFee
         ? data?.totalServiceFee
         : 0;
-    const deliveryFee = data?.deliveryAmount;
+    const deliveryFee = data?.deliveryAmount ?? data?.deliveryFee;
     const total = data?.totalAmount;
     const totalAmount = parseFloat(total + deliveryFee + serviceFee).toFixed(2);
     if (isLoaded) {

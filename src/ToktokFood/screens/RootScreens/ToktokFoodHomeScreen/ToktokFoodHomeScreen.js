@@ -4,7 +4,7 @@
  */
 
 import React, {useCallback, useState} from 'react';
-import {RefreshControl} from 'react-native';
+import {RefreshControl, SafeAreaView} from 'react-native';
 // import {useTheme} from 'styled-components';
 
 import type {PropsType} from './types';
@@ -17,9 +17,8 @@ import HomeFab from 'toktokfood/compositions/Home/HomeFab';
 import HomeCategories from 'toktokfood/compositions/Home/HomeCategories';
 import HomeBanner from 'toktokfood/compositions/Home/HomeBanner';
 import HomeNearYou from 'toktokfood/compositions/Home/HomeNearYou';
+import HomePromotions from 'toktokfood/compositions/Home/HomePromotions';
 import Divider from 'toktokfood/components/Divider';
-// Hooks
-// import {useUserLocation} from 'toktokfood/hooks';
 
 const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
   // const theme = useTheme();
@@ -57,6 +56,7 @@ const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
         <HomeBanner />
         <HomeCategories />
         <Divider height={8} />
+        <HomePromotions />
         <HomeNearYou
           page={page}
           isLoadMore={loadMore}
@@ -66,7 +66,6 @@ const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
           setPage={setPage}
         />
       </ScrollContainer>
-
       <HomeFab />
     </Container>
   );

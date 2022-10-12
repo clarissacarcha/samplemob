@@ -65,10 +65,9 @@ const CartAmount = (props: PropsType): React$Node => {
       const totalBasketAmount = await getTotalResellerDiscount([...promotions, ...deal], cartItems);
       setResellerDiscount(totalBasketAmount);
 
-      console.log('promotions', promotions);
       const totalResellerDisc = await getResellerDiscount(promotions, deal, cartItems);
       setTotalPromotions(totalResellerDisc);
-      console.log('totalResellerDisc', totalResellerDisc);
+
       setCartSubTotalAmount(subTotal + (srpTotalAmount - totalAmount));
     } else {
       const getResDiscount = pabiliShopDetails.isShopPabiliMerchant ? 0 : srpTotalAmount - totalAmount;
@@ -197,7 +196,9 @@ const CartAmount = (props: PropsType): React$Node => {
                     'discount',
                     '-',
                     activeVoucher?.vname,
-                    activeVoucher?.discount_totalamount ?? activeVoucher?.amount,
+                    activeVoucher?.service_fee_discount
+                      ? activeVoucher?.service_fee_discount
+                      : activeVoucher?.discount_totalamount ?? activeVoucher?.amount,
                   ),
                 )}
               {pabiliShopDetails?.isShopPabiliMerchant &&

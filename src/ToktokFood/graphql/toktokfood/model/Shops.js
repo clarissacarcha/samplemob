@@ -70,66 +70,69 @@ export const GET_SHOPS = gql`
 export const GET_SHOPS_W_PROMOTIONS = gql`
   query getPromoSections($input: ShopPromosInput) {
     getPromoSections(input: $input) {
-      id
-      address
-      shopname
-      banner
-      logo
-      latitude
-      longitude
-      ratings
-      estimatedDistance
-      estimatedDeliveryTime
-      allowPickup
-      promoName
-      promos {
+      voucherName
+      shopsWithPromo {
         id
-        shippingDiscountName
-        shippingDiscountCode
-        shopId
-        noOfStocks
+        address
+        shopname
+        banner
+        logo
+        latitude
+        longitude
+        ratings
+        estimatedDistance
+        estimatedDeliveryTime
+        allowPickup
+        promoName
+        promos {
+          id
+          shippingDiscountName
+          shippingDiscountCode
+          shopId
+          noOfStocks
+        }
+        promoByAdmin {
+          id
+          shippingDiscountName
+          shippingDiscountCode
+          shopId
+          noOfStocks
+        }
+        promoByMerchant {
+          id
+          shippingDiscountName
+          shippingDiscountCode
+          shopId
+          noOfStocks
+        }
+        promotionVouchers {
+          id
+          regionCodes
+          voucherCode
+          voucherName
+        }
+        hasOpen
+        hasProduct
+        operatingHours {
+          id
+          shopId
+          fromTime
+          toTime
+          day
+          status
+          dayStatus
+        }
+        nextOperatingHrs {
+          id
+          shopId
+          fromTime
+          toTime
+          day
+          status
+          dayStatus
+        }
+        dayLapsed
       }
-      promoByAdmin {
-        id
-        shippingDiscountName
-        shippingDiscountCode
-        shopId
-        noOfStocks
-      }
-      promoByMerchant {
-        id
-        shippingDiscountName
-        shippingDiscountCode
-        shopId
-        noOfStocks
-      }
-      promotionVouchers {
-        id
-        regionCodes
-        voucherCode
-        voucherName
-      }
-      hasOpen
-      hasProduct
-      operatingHours {
-        id
-        shopId
-        fromTime
-        toTime
-        day
-        status
-        dayStatus
-      }
-      nextOperatingHrs {
-        id
-        shopId
-        fromTime
-        toTime
-        day
-        status
-        dayStatus
-      }
-      dayLapsed
     }
   }
 `;

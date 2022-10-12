@@ -10,23 +10,31 @@ export const useGetActivities = (orderStatus, limit) => {
   const {customerInfo} = useSelector(s => s.toktokFood);
 
   const [getOrders, {data, error, refetch, loading, fetchMore}] = useLazyQuery(GET_ORDER_TRANSACTIONS, {
-    variables: {
-      input: {
-        userId: `${customerInfo.userId}`,
-        orderStatus,
-        page: 0,
-        limit,
-      },
-    },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {
     if (customerInfo && customerInfo?.userId) {
-      getOrders();
+      const input = {
+        userId: `${customerInfo.userId}`,
+        orderStatus,
+        page: 0,
+        limit,
+      };
+      console.log('input', input);
+      getOrders({
+        variables: {
+          input: {
+            userId: `${customerInfo.userId}`,
+            orderStatus,
+            page: 0,
+            limit,
+          },
+        },
+      });
     }
-  }, [customerInfo, getOrders]);
+  }, [customerInfo, getOrders, limit, orderStatus]);
 
   return {data, refetch, loading, fetchMore, error};
 };
