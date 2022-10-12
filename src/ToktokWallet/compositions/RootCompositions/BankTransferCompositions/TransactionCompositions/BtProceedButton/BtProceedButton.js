@@ -84,13 +84,16 @@ const BtProceedButton = (props: PropsType): React$Node => {
     const isAccountNumValid = checkAccountNumber();
     const isAmountValid = checkAmount();
     const isValidEmail = checkEmail();
+    let checkLimit = false;
 
-    const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
-      amount,
-      setErrorMessage: error => {
-        changeErrorMessages('amount', error);
-      },
-    });
+    if (isAmountValid) {
+      checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+        amount,
+        setErrorMessage: error => {
+          changeErrorMessages('amount', error);
+        },
+      });
+    }
 
     if (
       isAccountNameValid &&
