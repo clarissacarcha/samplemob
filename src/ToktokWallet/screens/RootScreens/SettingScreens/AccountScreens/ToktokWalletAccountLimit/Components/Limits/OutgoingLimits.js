@@ -28,7 +28,7 @@ const OutgoingLimits = ({
                 )}
             />
          }
-         { limits?.monthly && 
+         {/* { limits?.monthly && 
             <Card
               title="Monthly Outgoing Limit"
               description={()=><Text style={styles.labelRegular}>Maximum amount that you can transfer from your {toktokwalletLabel()} to other beneficiary accounts.</Text>}
@@ -42,7 +42,7 @@ const OutgoingLimits = ({
                 </>
             )}
           />
-         }
+         } */}
          { limits?.annual && 
             <Card
               title="Annual Outgoing Limit"
