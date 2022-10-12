@@ -17,6 +17,7 @@ export const Container: ComponentType<any> = styled.View`
   align-items: center;
   justify-content: space-between;
   padding-horizontal: ${moderateScale(16)}px;
+  padding-vertical: ${moderateScale(10)}px;
 `;
 export const ButtonContainer: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
   ...props,

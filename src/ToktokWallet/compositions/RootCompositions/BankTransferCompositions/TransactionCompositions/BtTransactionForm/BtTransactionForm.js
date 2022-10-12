@@ -12,8 +12,16 @@ import {BtVerifyContext} from '../BtVerifyContextProvider';
 import {alphanumericRegex, numericRegex} from 'toktokwallet/helper';
 
 const BtTransactionForm = (props: PropsType): React$Node => {
-  const {data, fees, errorMessages, changeDataValue, changeErrorMessages, changeFeesValue, postComputeConvenienceFee} =
-    useContext(BtVerifyContext);
+  const {
+    data,
+    fees,
+    errorMessages,
+    changeDataValue,
+    changeErrorMessages,
+    changeAmount,
+    changeFeesValue,
+    postComputeConvenienceFee,
+  } = useContext(BtVerifyContext);
   const {bankDetails} = props;
 
   const computeConvenienceFee = () => {
@@ -78,8 +86,7 @@ const BtTransactionForm = (props: PropsType): React$Node => {
           label={'Enter Amount'}
           value={data.amount}
           onChangeText={value => {
-            changeDataValue('amount', value);
-            changeErrorMessages('amount', '');
+            changeAmount(value);
           }}
           errorMessage={errorMessages.amount}
           onBlur={computeConvenienceFee}

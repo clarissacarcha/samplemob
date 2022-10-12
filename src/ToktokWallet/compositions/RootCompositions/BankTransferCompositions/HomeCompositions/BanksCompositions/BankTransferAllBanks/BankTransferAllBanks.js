@@ -24,10 +24,10 @@ const BankTransferAllBanks = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const [imageLoading, setImageLoading] = useState(true);
 
-  const {item, screenLabel} = props;
+  const {item, screenLabel, onRefreshFavorite} = props;
 
   const onPress = () => {
-    navigation.navigate('ToktokWalletBankTransferTransaction', {bankDetails: item, screenLabel});
+    navigation.navigate('ToktokWalletBankTransferTransaction', {bankDetails: item, screenLabel, onRefreshFavorite});
   };
 
   const onThrottledPress = useThrottle(onPress, 2000);

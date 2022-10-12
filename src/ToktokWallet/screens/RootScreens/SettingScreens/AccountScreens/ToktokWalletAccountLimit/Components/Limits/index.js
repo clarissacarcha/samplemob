@@ -97,5 +97,6 @@ const styles = StyleSheet.create({
   labelRegular: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
+    color: '#525252',
   },
 });
