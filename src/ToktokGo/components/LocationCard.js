@@ -1,6 +1,13 @@
 import React from 'react';
-import {Text, View, FlatList, Image, TouchableOpacity} from 'react-native';
+import {Text, View, FlatList, Image, TouchableOpacity, Dimensions} from 'react-native';
 import CONSTANTS from '../../common/res/constants';
+import HomeIcon from '../../assets/toktokgo/HomeIcon.png';
+import OfficeIcon from '../../assets/toktokgo/OfficeIcon.png';
+import CustomIcon from '../../assets/toktokgo/SavedIcon.png';
+import normalize from 'react-native-normalize';
+
+const windowWidth = Dimensions.get('window').width;
+
 export const LocationCard = ({item, image, onPress, lastItem = false}) => {
   // console.log(item);
   return (
@@ -16,6 +23,60 @@ export const LocationCard = ({item, image, onPress, lastItem = false}) => {
                 ? item.place.addressBreakdown.province
                 : item.place.addressBreakdown.city}
             </Text>
+            <Text
+              style={{
+                fontSize: CONSTANTS.FONT_SIZE.S,
+                color: CONSTANTS.COLOR.ALMOST_BLACK,
+              }}>
+              {item.place.formattedAddress}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+      {!lastItem && <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />}
+    </>
+  );
+};
+
+export const SavedAddressCard = ({item, image, onPress, lastItem = false}) => {
+  return (
+    <>
+      <TouchableOpacity
+        onPress={() => onPress(item)}
+        style={{paddingHorizontal: 20, paddingVertical: 16, backgroundColor: 'white'}}>
+        <View style={{flexDirection: 'row', width: windowWidth * 0.9}}>
+          {image && <Image source={image} resizeMode={'contain'} style={{height: 15, width: 15, marginRight: 10}} />}
+          <View>
+            {item.isHome && (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={HomeIcon}
+                  resizeMode={'contain'}
+                  style={{width: normalize(14), height: normalize(14), marginRight: 6}}
+                />
+                <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, color: CONSTANTS.COLOR.BLACK}}>Home</Text>
+              </View>
+            )}
+            {item.isOffice && (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={OfficeIcon}
+                  resizeMode={'contain'}
+                  style={{width: normalize(14), height: normalize(14), marginRight: 6}}
+                />
+                <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, color: CONSTANTS.COLOR.BLACK}}>Office</Text>
+              </View>
+            )}
+            {item.label != null && (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={CustomIcon}
+                  resizeMode={'contain'}
+                  style={{width: normalize(14), height: normalize(14), marginRight: 5}}
+                />
+                <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, color: CONSTANTS.COLOR.BLACK}}>{item.label}</Text>
+              </View>
+            )}
             <Text
               style={{
                 fontSize: CONSTANTS.FONT_SIZE.S,
