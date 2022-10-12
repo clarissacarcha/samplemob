@@ -47,20 +47,7 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
       setRefreshing(false);
     },
     onCompleted: data => {
-      let sameImage = data.getHighlightedBanks.filter(o1 => !banks.some(o2 => o1.image === o2.image));
-      let sameId = data.getHighlightedBanks.filter(o1 => !banks.some(o2 => o1.id === o2.id));
-      let sameName = data.getHighlightedBanks.filter(o1 => !banks.some(o2 => o1.name === o2.name));
-
-      if (
-        sameImage.length > 0 ||
-        sameId.length > 0 ||
-        sameName.length > 0 ||
-        data.getHighlightedBanks.length !== banks.length
-      ) {
-        setBanks(data.getHighlightedBanks);
-      }
-      // setBanks(data.getHighlightedBanks);
-
+      setBanks(data.getHighlightedBanks);
       setRefreshing(false);
       setIsMounted(true);
     },
@@ -75,18 +62,7 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
         setRefreshing(false);
       },
       onCompleted: data => {
-        let sameImage = data.getBankAccountsPaginate.edges.filter(o1 => !banks.some(o2 => o1.image === o2.image));
-        let sameId = data.getBankAccountsPaginate.edges.filter(o1 => !banks.some(o2 => o1.id === o2.id));
-        let sameName = data.getBankAccountsPaginate.edges.filter(o1 => !banks.some(o2 => o1.name === o2.name));
-
-        if (
-          sameImage.length > 0 ||
-          sameId.length > 0 ||
-          sameName.length > 0 ||
-          data.getBankAccountsPaginate.edges.length !== favoriteBankAccounts.length
-        ) {
-          setFavoriteBankAccounts(data.getBankAccountsPaginate.edges);
-        }
+        setFavoriteBankAccounts(data.getBankAccountsPaginate.edges);
         setRefreshing(false);
         setIsMounted(true);
       },
@@ -111,6 +87,7 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
 
   useEffect(() => {
     handleGetData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onRefresh = useCallback(() => {
@@ -152,9 +129,16 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
     if (banks.length === 0) {
       return null;
     } else {
-      return <BankTransferBankList data={banks} navigation={navigation} screenLabel={screenLabel} />;
+      return (
+        <BankTransferBankList
+          data={banks}
+          navigation={navigation}
+          screenLabel={screenLabel}
+          onRefreshFavorite={onRefresh}
+        />
+      );
     }
-  }, [banks, navigation, screenLabel]);
+  }, [banks, navigation, screenLabel, onRefresh]);
 
   if (banksError || getFavoritesError) {
     return (

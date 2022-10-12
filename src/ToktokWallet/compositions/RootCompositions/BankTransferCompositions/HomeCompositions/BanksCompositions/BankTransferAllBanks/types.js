@@ -10,4 +10,5 @@ export type PropsType = {
   title?: string,
   isSearch: Boolean,
   screenLabel: string,
+  onRefreshFavorite: any,
 };

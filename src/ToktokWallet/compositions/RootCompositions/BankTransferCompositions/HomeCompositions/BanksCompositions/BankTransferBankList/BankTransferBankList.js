@@ -13,13 +13,13 @@ import BankTransferBankItem from '../BankTransferBankItem';
 
 const BankTransferBankList = (props: PropsType): React$Node => {
   const navigation = useNavigation();
-  const {data, screenLabel} = props;
+  const {data, screenLabel, onRefreshFavorite} = props;
 
   const onPressSeeAll = () => {
-    navigation.navigate('ToktokWalletBankTransferBanks', {screenLabel});
+    navigation.navigate('ToktokWalletBankTransferBanks', {screenLabel, onRefreshFavorite});
   };
   const onPressItem = item => {
-    navigation.navigate('ToktokWalletBankTransferTransaction', {bankDetails: item, screenLabel});
+    navigation.navigate('ToktokWalletBankTransferTransaction', {bankDetails: item, screenLabel, onRefreshFavorite});
   };
 
   const onThrottledPress = useThrottle(onPressSeeAll, 2000);

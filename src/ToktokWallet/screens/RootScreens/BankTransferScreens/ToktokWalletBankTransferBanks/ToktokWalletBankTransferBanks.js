@@ -9,7 +9,7 @@ import {useEffect} from 'react';
 import type {PropsType} from './types';
 import {Container, SearchContainer, List, LoadMoreContainer} from './Styled';
 import {RefreshControl} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   CheckIdleState,
   HeaderBack,
@@ -29,6 +29,7 @@ import {GET_BANKS_PAGINATE, GET_SEARCH_BANKS_PAGINATE} from 'toktokwallet/graphq
 
 const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
   const navigation = useNavigation();
+  const route = useRoute();
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -43,6 +44,7 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
   const [pageInfo, setPageInfo] = useState({});
   const [refreshing, setRefreshing] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const onRefreshFavorite = route.params?.onRefreshFavorite ? route.params.onRefreshFavorite : null;
 
   const [
     getBanksPaginate,
@@ -89,7 +91,7 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
-  const onRefreshFavorite = () => {
+  const onRefresh = () => {
     setRefreshing(true);
     search ? processSearch(search) : handleGetBanks();
   };
@@ -206,11 +208,11 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
     return (
       <List
         data={search === '' ? banks : filteredData}
-        renderItem={({item, index}) => <BankTransferAllBanks item={item.node} />}
+        renderItem={({item, index}) => <BankTransferAllBanks item={item.node} onRefreshFavorite={onRefreshFavorite} />}
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={filteredData.length === 0 && {flexGrow: 1}}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshFavorite} />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         extraData={[filteredData, search, banks]}
         onEndReachedThreshold={0.03}
         ListFooterComponent={ListFooterComponent}
@@ -235,7 +237,7 @@ const ToktokWalletBankTransferBanks = (props: PropsType): React$Node => {
       />
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [banks, filteredData, refreshing, search, pageInfo, onRefreshFavorite, fetchMoreData, ListFooterComponent]);
+  }, [banks, filteredData, refreshing, search, pageInfo, onRefresh, fetchMoreData, ListFooterComponent]);
 
   if (getBanksPaginateError || getSearchBanksPaginateError) {
     return (
