@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
     borderColor: COLOR.ORANGE,
-    borderTopWidth: 2,
+    borderTopWidth: 3,
     borderRadius: moderateScale(8),
   },
   cardBottomLabel: {
