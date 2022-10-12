@@ -85,13 +85,16 @@ const MainComponent = ({navigation, route}) => {
   const onPressProceed = async () => {
     const isAmountValid = checkAmount();
     const isValidEmail = checkEmail();
+    let checkLimit = false;
 
-    const checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
-      amount,
-      setErrorMessage: value => {
-        setAmountError(value);
-      },
-    });
+    if (isAmountValid) {
+      checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+        amount,
+        setErrorMessage: value => {
+          setAmountError(value);
+        },
+      });
+    }
 
     if (isAmountValid && isValidEmail && checkLimit) {
       const transactionDetails = {
