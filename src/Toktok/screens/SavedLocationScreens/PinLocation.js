@@ -27,7 +27,8 @@ const PinLocation = ({navigation, route}) => {
   const mapRef = useRef(null);
   const inputRef = useRef();
   const sessionToken = uuid.v4();
-  const {isFromLocationAccess, locCoordinates, setConfirmedLocation, addressObj, setIsEdited} = route.params;
+  const {isFromLocationAccess, locCoordinates, setConfirmedLocation, addressObj, setIsEdited, setErrorAddressField} =
+    route.params;
 
   const [initialCoord, setInitialCoord] = useState(locCoordinates?.latitude ? locCoordinates : {});
   const [disableAddressBox, setDisableAddressBox] = useState(true);
@@ -167,6 +168,7 @@ const PinLocation = ({navigation, route}) => {
       setIsEdited(true);
     }
     setConfirmedLocation(searchedLocation);
+    setErrorAddressField(false);
     navigation.pop();
   };
 

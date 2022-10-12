@@ -47,12 +47,12 @@ export const SavedLocationCard = ({onPressAddress, address}) => {
         </View>
         <View style={styles.lineDivider} />
         <View style={styles.contentContainer}>
-          {address?.contactDetails?.fullname != '' && (
+          {address?.contactDetails?.fullname && (
             <Text style={styles.contactNameText}>{address?.contactDetails?.fullname}</Text>
           )}
           <Text style={styles.addressText}>{address?.place?.formattedAddress}</Text>
-          {address?.landmark != '' && <Text style={styles.landmarkText}>{address?.landmark}</Text>}
-          {address?.contactDetails?.mobile_no != '' && (
+          {address?.landmark && <Text style={styles.landmarkText}>{address?.landmark}</Text>}
+          {address?.contactDetails?.mobile_no && (
             <Text style={styles.mobNumberText}>+63{address?.contactDetails?.mobile_no}</Text>
           )}
         </View>

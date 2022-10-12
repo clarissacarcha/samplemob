@@ -1,5 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import {View, Text, StyleSheet, TextInput, Image, Pressable, BackHandler} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Image, Pressable, BackHandler, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {COLOR, DARK, MEDIUM, LIGHT, MAP_DELTA_LOW} from '../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
@@ -40,6 +40,9 @@ const AddLocation = ({navigation, route, session}) => {
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
   const [showUnsaveEditModal, setShowUnsaveEditModal] = useState(false);
   const [showInfoAddressModal, setShowInfoAddressModal] = useState(false);
+  const [erroText, setErrorText] = useState(false);
+  const [errorAddressNameField, setErrorAddressNameField] = useState(false);
+  const [errorAddressField, setErrorAddressField] = useState(false);
 
   const [confirmedLocation, setConfirmedLocation] = useState(addressObj?.id ? addressObj : {});
   const [isHomeSelected, setIsHomeSelected] = useState(addressObj?.id ? addressObj.isHome : false);
@@ -83,7 +86,39 @@ const AddLocation = ({navigation, route, session}) => {
     onCompleted: () => {
       setShowSuccessOperationAddressModal(true);
     },
-    onError: onError,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        console.log(graphQLErrors);
+        graphQLErrors.map(({message, locations, path, code, errorFields}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+          } else if (code === 'USER_INPUT_ERROR') {
+            Alert.alert('', message);
+          } else if (code === 'BAD_USER_INPUT') {
+            console.log('zion', errorFields[0]);
+            if (errorFields[0].field == 'label') {
+              console.log('zion here');
+              setErrorText(errorFields[0].message);
+              setErrorAddressNameField(true);
+            } else if (errorFields[0].field == 'formattedAddress') {
+              setErrorText(errorFields[0].message);
+              setErrorAddressField(true);
+            } else {
+              Alert.alert('', message);
+            }
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
   });
 
   useFocusEffect(
@@ -107,7 +142,7 @@ const AddLocation = ({navigation, route, session}) => {
         input: {
           isHome: isHomeSelected,
           isOffice: isOfficeSelected,
-          label: customLabel,
+          label: customLabel ? customLabel : '',
           isDefault: isFromLocationAccess ? true : isDefault,
           landmark: landmark,
           placeHash: confirmedLocation?.hash,
@@ -167,7 +202,13 @@ const AddLocation = ({navigation, route, session}) => {
   };
 
   const onSearchMap = () => {
-    navigation.navigate('PinLocation', {locCoordinates, setConfirmedLocation, addressObj, setIsEdited});
+    navigation.navigate('PinLocation', {
+      locCoordinates,
+      setConfirmedLocation,
+      addressObj,
+      setIsEdited,
+      setErrorAddressField,
+    });
   };
 
   const selectAddressLabel = selected => {
@@ -211,11 +252,35 @@ const AddLocation = ({navigation, route, session}) => {
     navigation.push('ConsumerLanding');
   };
 
-  const showCustom = () => {
+  const showCustomFunc = () => {
     if (!showOffice && !showHome) {
       return false;
     } else {
       return true;
+    }
+  };
+
+  const showHomeFunc = () => {
+    if (!addressObj) {
+      return showHome;
+    }
+
+    if (addressObj.isHome) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const showOfficeFunc = () => {
+    if (!addressObj) {
+      return showOffice;
+    }
+
+    if (addressObj.isOffice) {
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -230,8 +295,11 @@ const AddLocation = ({navigation, route, session}) => {
   useEffect(() => {
     if (addressObj) return;
 
-    if (showOffice && showHome) {
+    if (showHome && showOffice) {
+      setIsHomeSelected(true);
       setIsCustomSelected(false);
+    } else if (!showHome && showOffice) {
+      setIsOfficeSelected(true);
     } else {
       if (showOffice || showHome) {
         setIsCustomSelected(false);
@@ -280,7 +348,7 @@ const AddLocation = ({navigation, route, session}) => {
         <AlertOverlay visible={loading || PACLoading} />
 
         <View style={styles.labelContainer}>
-          {showHome && (
+          {showHomeFunc() && (
             <TouchableOpacity onPress={() => selectAddressLabel('Home')}>
               <View style={[styles.labelBox, isHomeSelected ? styles.labelSelected : null]}>
                 <Image source={HomeIcon} resizeMode={'contain'} style={styles.labelIcon} />
@@ -289,7 +357,7 @@ const AddLocation = ({navigation, route, session}) => {
             </TouchableOpacity>
           )}
 
-          {showOffice && (
+          {showOfficeFunc() && (
             <TouchableOpacity onPress={() => selectAddressLabel('Office')}>
               <View style={[styles.labelBox, isOfficeSelected ? styles.labelSelected : null]}>
                 <Image source={OfficeIcon} resizeMode={'contain'} style={styles.labelIcon} />
@@ -298,7 +366,7 @@ const AddLocation = ({navigation, route, session}) => {
             </TouchableOpacity>
           )}
 
-          {showCustom() && (
+          {showCustomFunc() && (
             <TouchableOpacity onPress={() => selectAddressLabel('Custom')}>
               <View style={[styles.labelBox, isCustomSelected ? styles.labelSelected : null]}>
                 <Image source={CustomIcon} resizeMode={'contain'} style={styles.labelIcon} />
@@ -318,26 +386,32 @@ const AddLocation = ({navigation, route, session}) => {
                   ? value => {
                       setIsEdited(true), setCustomLabel(value);
                     }
-                  : value => setCustomLabel(value)
+                  : value => {
+                      setCustomLabel(value), setErrorAddressNameField(false);
+                    }
               }
-              style={styles.input}
+              style={[styles.input, errorAddressNameField && {borderWidth: 1, borderColor: CONSTANTS.COLOR.RED}]}
               placeholderTextColor={LIGHT}
               returnKeyType="done"
             />
+            {errorAddressNameField && <Text style={{marginLeft: 16, color: CONSTANTS.COLOR.RED}}>{erroText}</Text>}
           </>
         )}
 
         <Text style={styles.label}>Address</Text>
-        <Pressable onPress={onSearchMap}>
-          <View pointerEvents="none">
-            <TextInput
-              numberOfLines={2}
-              multiline
-              value={confirmedLocation?.place?.formattedAddress}
-              style={styles.input}
-            />
-          </View>
-        </Pressable>
+        <View>
+          <Pressable onPress={onSearchMap}>
+            <View pointerEvents="none">
+              <TextInput
+                numberOfLines={2}
+                multiline
+                value={confirmedLocation?.place?.formattedAddress}
+                style={[styles.input, errorAddressField && {borderWidth: 1, borderColor: CONSTANTS.COLOR.RED}]}
+              />
+            </View>
+          </Pressable>
+          {errorAddressField && <Text style={{marginLeft: 16, color: CONSTANTS.COLOR.RED}}>{erroText}</Text>}
+        </View>
 
         <Text style={styles.label}>Landmark (optional)</Text>
         <Text style={styles.sublabel}>
