@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, {useMemo, useState, useCallback} from 'react';
+import React, {useMemo, useState, useCallback, useEffect} from 'react';
 
 import type {PropsType} from './types';
 import {BackgroundImage, Container, LoadingContainer, List, ReminderContainer} from './Styled';
@@ -47,11 +47,22 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
       setRefreshing(false);
     },
     onCompleted: data => {
-      let result = data.getHighlightedBanks.filter(o1 => !banks.some(o2 => o1.id === o2.id));
-      if (result.length > 0 || data.getHighlightedBanks.length !== banks.length) {
+      let sameImage = data.getHighlightedBanks.filter(o1 => !banks.some(o2 => o1.image === o2.image));
+      let sameId = data.getHighlightedBanks.filter(o1 => !banks.some(o2 => o1.id === o2.id));
+      let sameName = data.getHighlightedBanks.filter(o1 => !banks.some(o2 => o1.name === o2.name));
+
+      if (
+        sameImage.length > 0 ||
+        sameId.length > 0 ||
+        sameName.length > 0 ||
+        data.getHighlightedBanks.length !== banks.length
+      ) {
         setBanks(data.getHighlightedBanks);
       }
+      // setBanks(data.getHighlightedBanks);
+
       setRefreshing(false);
+      setIsMounted(true);
     },
   });
 
@@ -64,35 +75,43 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
         setRefreshing(false);
       },
       onCompleted: data => {
-        let result = data.getBankAccountsPaginate.edges.filter(
-          o1 => !favoriteBankAccounts.some(o2 => o1.node.id === o2.node.id),
-        );
+        let sameImage = data.getBankAccountsPaginate.edges.filter(o1 => !banks.some(o2 => o1.image === o2.image));
+        let sameId = data.getBankAccountsPaginate.edges.filter(o1 => !banks.some(o2 => o1.id === o2.id));
+        let sameName = data.getBankAccountsPaginate.edges.filter(o1 => !banks.some(o2 => o1.name === o2.name));
 
-        if (result.length > 0 || data.getBankAccountsPaginate.edges.length !== favoriteBankAccounts.length) {
+        if (
+          sameImage.length > 0 ||
+          sameId.length > 0 ||
+          sameName.length > 0 ||
+          data.getBankAccountsPaginate.edges.length !== favoriteBankAccounts.length
+        ) {
           setFavoriteBankAccounts(data.getBankAccountsPaginate.edges);
         }
         setRefreshing(false);
+        setIsMounted(true);
       },
     },
   );
 
-  useFocusEffect(
-    useCallback(
-      function getData() {
-        getHighlightedBanks();
-        getBankAccountsPaginate({
-          variables: {
-            input: {
-              afterCursorId: null,
-              afterCursorUpdatedAt: null,
-            },
-          },
-        });
-        setIsMounted(true);
-      },
-      [getHighlightedBanks, getBankAccountsPaginate],
-    ),
-  );
+  // useFocusEffect(
+  //   useCallback(
+  //     function getData() {
+  //       getBankAccountsPaginate({
+  //         variables: {
+  //           input: {
+  //             afterCursorId: null,
+  //             afterCursorUpdatedAt: null,
+  //           },
+  //         },
+  //       });
+  //     },
+  //     [getBankAccountsPaginate],
+  //   ),
+  // );
+
+  useEffect(() => {
+    handleGetData();
+  }, []);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -110,7 +129,6 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
         },
       },
     });
-    setIsMounted(true);
   };
 
   const ListFavoriteComponent = useMemo(() => {

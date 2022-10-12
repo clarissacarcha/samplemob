@@ -9,7 +9,7 @@ import type {PropsType} from './types';
 import {Container, SearchContainer, List} from './Styled';
 
 import {View, RefreshControl} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 //COMPONENTS
 import {
@@ -41,6 +41,7 @@ import {useDebounce} from 'toktokwallet/hooks';
 const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
   const prompt = usePrompt();
   const navigation = useNavigation();
+  const route = useRoute();
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -57,6 +58,7 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
   const [isMounted, setIsMounted] = useState(false);
   const onEndReachedCalledDuringMomentum = useRef(null);
+  const onRefreshHomeFavorite = route.params?.onRefreshHomeFavorite ? route.params.onRefreshHomeFavorite : null;
 
   const [
     getBankAccountsPaginate,
@@ -104,6 +106,9 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
     onCompleted: () => {
       processFavorite();
       setFavoriteModal({show: true, message: 'Removed from your Favorites'});
+      if (onRefreshHomeFavorite) {
+        onRefreshHomeFavorite();
+      }
     },
   });
 
@@ -141,6 +146,9 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
   const onRefreshFavorite = () => {
     setRefreshing(true);
     search ? processSearch(search) : handleGetFavoriteBills();
+    if (onRefreshHomeFavorite) {
+      onRefreshHomeFavorite();
+    }
   };
 
   const fetchMoreData = () => {

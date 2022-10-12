@@ -14,7 +14,7 @@ const BankTransferFavoriteList = (props: PropsType): React$Node => {
   const navigation = useNavigation();
 
   const onPressSeeAll = () => {
-    navigation.navigate('ToktokWalletBankTransferFavorites', {screenLabel});
+    navigation.navigate('ToktokWalletBankTransferFavorites', {screenLabel, onRefreshHomeFavorite: onRefreshFavorite});
   };
 
   return (

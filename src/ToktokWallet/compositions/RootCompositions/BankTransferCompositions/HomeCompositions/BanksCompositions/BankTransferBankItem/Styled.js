@@ -28,6 +28,7 @@ export const LoadingContainer: ComponentType<any> = styled.View`
 `;
 export const LogoImage: ComponentType<any> = styled(FastImage).attrs(props => ({
   ...props,
+  priority: FastImage.priority.high,
 }))`
   height: ${moderateScale(60)}px;
   width: ${moderateScale(60)}px;
