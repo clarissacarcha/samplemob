@@ -16,5 +16,6 @@ export const KeyboardAvoidingViewContainer: ComponentType<any> = styled(InputScr
   ...props,
   keyboardShouldPersistTaps: 'handled',
   showsVerticalScrollIndicator: false,
-  keyboardOffset: Platform.OS === 'ios' && moderateScale(props.headerHeight + getStatusbarHeight),
+  keyboardOffset: moderateScale(props.headerHeight + getStatusbarHeight),
+  topOffset: getStatusbarHeight,
 }))``;

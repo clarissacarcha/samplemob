@@ -150,17 +150,17 @@ const MainComponent = ({route, favoriteDetails}) => {
     );
   }
   return (
-    <Container>
+    <>
       <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} message={favoriteModal.message} />
       <AlertOverlay visible={postCashOutBankAccountLoading || patchRemoveAccountLoading} />
       <Container>
         <KeyboardAvoidingViewContainer headerHeight={headerHeight}>
           <BtTransactionHeader bankDetails={bankDetails} />
-          <BtTransactionForm bankDetails={bankDetails} />
+          <BtTransactionForm bankDetails={bankDetails} headerHeight={headerHeight} />
         </KeyboardAvoidingViewContainer>
       </Container>
       <BtProceedButton bankDetails={bankDetails} screenLabel={screenLabel} />
-    </Container>
+    </>
   );
 };
 
