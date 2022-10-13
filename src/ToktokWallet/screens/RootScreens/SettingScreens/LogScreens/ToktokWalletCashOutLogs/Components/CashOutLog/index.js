@@ -34,16 +34,16 @@ export const CashOutLog = ({item, tokwaAccount, index, data}) => {
       status = 'Pending';
       break;
     case '1':
-      status = 'Processed';
+      status = 'Success';
       break;
     case '2':
       status = 'Pending';
       break;
     case '3':
-      status = 'Rejected';
+      status = 'Failed';
       break;
     default:
-      status = 'Rejected';
+      status = 'Failed';
       break;
   }
 
