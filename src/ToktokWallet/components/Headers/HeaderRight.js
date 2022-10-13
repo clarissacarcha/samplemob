@@ -1,14 +1,23 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, Platform, StatusBar, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import CONSTANTS from 'common/res/constants';
-import {moderateScale, getStatusbarHeight} from 'toktokbills/helper';
-import {ICON_SET, VectorIcon} from 'src/revamp';
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
+import {moderateScale} from 'toktokbills/helper';
+import FIcon5 from 'react-native-vector-icons/FontAwesome';
+const {COLOR} = CONSTANTS;
+import {throttle} from 'lodash';
 
-export const HeaderRight = ({rightIconOnPress }) => {
+export const HeaderRight = ({onPress, isFavorite = false}) => {
+  const onPressThrottle = throttle(
+    () => {
+      onPress();
+    },
+    1000,
+    {trailing: false},
+  );
+
   return (
-    <TouchableOpacity onPress={rightIconOnPress} style={{justifyContent:"center",alignItems:"flex-end"}}>
-      <VectorIcon iconSet={ICON_SET.Entypo} name="dots-three-vertical" color="#F6841F" size={16} style={{marginRight: 16}}/>
+    <TouchableOpacity style={[styles.header]} onPress={onPressThrottle}>
+      <FIcon5 name={isFavorite ? 'heart' : 'heart-o'} color={COLOR.ORANGE} size={moderateScale(17)} />
     </TouchableOpacity>
   );
 };

@@ -70,7 +70,7 @@ export const ToktokWalletCashInLogs = ({navigation}) => {
           },
         },
         updateQuery: (previousResult, {fetchMoreResult}) => {
-          if (!fetchMoreResult) {
+          if (!fetchMoreResult || (fetchMoreResult && fetchMoreResult.getCashInsPaginate.edges.length > 10)) {
             return previousResult;
           }
           fetchMoreResult.getCashInsPaginate.edges = [

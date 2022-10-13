@@ -1,3 +1,4 @@
+export * from './BankTransferScreens';
 export * from './CashInScreens';
 export * from './CashOutOTCScreens';
 export * from './CashOutScreens';

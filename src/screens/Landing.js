@@ -1,22 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ImageBackground, Dimensions, Image, Alert} from 'react-native';
+import {Dimensions, Image, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useLazyQuery} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
-import {APP_FLAVOR} from '../res/constants';
-import {AUTH_CLIENT, GET_USER_SESSION, GET_GLOBAL_SETTINGS, GET_APP_SERVICES} from '../graphql';
-import {onError} from '../util/ErrorUtility';
-
+import {AUTH_CLIENT, GET_USER_SESSION} from '../graphql';
+import ToktokSuperAppSplash from '../assets/images/SplashScreen.png';
+import SafeArea from 'react-native-safe-area';
 import RNRestart from 'react-native-restart';
 
-const imageWidth = Dimensions.get('window').width - 80;
-
-import SplashImage from '../assets/images/LinearGradiant.png';
-import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
-import ToktokSuperApp from '../assets/images/ToktokLogo.png';
-
 const Landing = ({createSession, destroySession, setAppServices, navigation}) => {
+  const [safeAreaInset, setSafeAreaInset] = useState(0);
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
     client: AUTH_CLIENT,
     onError: error => {
@@ -115,13 +109,22 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
   };
 
   useEffect(() => {
+    SafeArea.getSafeAreaInsetsForRootView().then(result => {
+      setSafeAreaInset(result.safeAreaInsets.top);
+    });
     checkAsyncStorageSession();
   }, []);
 
   return (
-    <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
-      <Image source={ToktokSuperApp} style={styles.image} resizeMode="contain" />
-    </ImageBackground>
+    <Image
+      source={ToktokSuperAppSplash}
+      style={{
+        marginTop: -safeAreaInset,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+      }}
+      resizeMode="cover"
+    />
   );
 };
 
@@ -136,15 +139,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);
-
-const styles = StyleSheet.create({
-  splash: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    height: imageWidth - 70,
-    width: imageWidth - 150,
-  },
-});

@@ -6,6 +6,7 @@ import {PATCH_MPIN_CODE} from 'toktokwallet/graphql';
 import {useMutation} from '@apollo/react-hooks';
 import {usePrompt} from 'src/hooks';
 import {backgrounds} from 'toktokwallet/assets';
+import { getUniqueId , getBrand, getModel } from 'react-native-device-info';
 //UTIL, HELPER
 import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
 import {TransactionUtility} from 'toktokwallet/util';
@@ -73,13 +74,15 @@ export const ToktokWalletMPINCreate = ({navigation, route}) => {
     },
   });
 
-  const proceed = () => {
+  const proceed = async () => {
     patchMPinCode({
       variables: {
         input: {
           pinCode: pinCode,
           oldMPIN: oldMPIN,
           deviceType: Platform.OS === 'ios' ? 'IOS' : 'Android',
+          deviceName: `${await getBrand()} ${await getModel()}`,
+          deviceId: getUniqueId(),
         },
       },
     });

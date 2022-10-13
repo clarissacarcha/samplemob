@@ -17,4 +17,5 @@ export type PropsType = {
   maxLength?: number,
   editable?: Boolean,
   label?: string,
+  onBlur?: any,
 };

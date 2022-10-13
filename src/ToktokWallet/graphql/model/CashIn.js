@@ -1,133 +1,138 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 export const POST_CASH_IN_PAYPANDA_REQUEST = gql`
-    mutation postCashInPayPandaRequest($input: PostCashInPayPandaRequestInput){
-        postCashInPayPandaRequest(input: $input){
-            signature
-            merchantId
-            refNo
-            paypandaTransactionEntryEndpoint
-            paypandaReturnUrlEndpoint
-            providerServiceFee
-        }
+  mutation postCashInPayPandaRequest($input: PostCashInPayPandaRequestInput) {
+    postCashInPayPandaRequest(input: $input) {
+      signature
+      merchantId
+      refNo
+      paypandaTransactionEntryEndpoint
+      paypandaReturnUrlEndpoint
+      providerServiceFee
     }
-`
+  }
+`;
 
 export const POST_CASH_IN_SMS = gql`
-    mutation postCashInSms($input: PostCashInSmsInput){
-        postCashInSms(input: $input){
-            message
-        }
+  mutation postCashInSms($input: PostCashInSmsInput) {
+    postCashInSms(input: $input) {
+      message
     }
-`
+  }
+`;
 
 export const GET_CASH_INS = gql`
-    query {
-        getCashIns {
-                id
-                amount
-                referenceNumber
-                providerReferenceNumber
-                status
-                accountId
-                currencyId
-                cashInProviderId
-                fatherId
-                createdAt
-                updatedAt
-                provider {
-                    id
-                    name
-                }
-                transaction {
-                    id
-                    refNo
-                    createdAt
-                }
-                paymentMethod
-                cashInPartnerTypeId
-                cashInPartnerType {
-                    id
-                    name
-                    transactionTypeId
-                    status
-                }
-        }
+  query {
+    getCashIns {
+      id
+      amount
+      referenceNumber
+      providerReferenceNumber
+      status
+      accountId
+      currencyId
+      cashInProviderId
+      fatherId
+      createdAt
+      updatedAt
+      provider {
+        id
+        name
+      }
+      transaction {
+        id
+        refNo
+        createdAt
+      }
+      paymentMethod
+      cashInPartnerTypeId
+      cashInPartnerType {
+        id
+        name
+        transactionTypeId
+        status
+      }
     }
-`
+  }
+`;
 
 export const POST_REQUEST_CASH_IN = gql`
-    mutation {
-        postRequestCashIn
-    }
-`
+  mutation {
+    postRequestCashIn
+  }
+`;
 
-export const GET_DRAGON_PAY_CASH_IN_METHODS =gql`
-    query {
-        getDragonPayCashInMethods {
-            onlineBank
-            otcBank
-            otcNonBank
-        }
+export const GET_DRAGON_PAY_CASH_IN_METHODS = gql`
+  query {
+    getDragonPayCashInMethods {
+      onlineBank
+      otcBank
+      otcNonBank
     }
-`
-
+  }
+`;
 
 export const POST_COMPUTE_PROCESSING_FEE = gql`
-    mutation postComputeProcessingFee($input: PostComputeProcessingFeeInput){
-        postComputeProcessingFee(input: $input){
-            partner
-            processingFee
-            currency
-            newAmount
-            newAmountString
-            rf
-            rp
-        }
+  mutation postComputeProcessingFee($input: PostComputeProcessingFeeInput) {
+    postComputeProcessingFee(input: $input) {
+      partner
+      processingFee
+      currency
+      newAmount
+      newAmountString
+      rf
+      rp
     }
-`
+  }
+`;
 
 export const GET_CASH_INS_PAGINATE = gql`
-query getCashInsPaginate($input:GetCashInsPaginateInput){
-  getCashInsPaginate(input:$input){
-    edges {
-      cursorCreatedAt
-      cursorId
-      node {
-        id
-        amount
-        referenceNumber
-        providerReferenceNumber
-        status
-        accountId
-        currencyId
-        cashInProviderId
-        fatherId
-        createdAt
-        updatedAt
-        provider {
+  query getCashInsPaginate($input: GetCashInsPaginateInput) {
+    getCashInsPaginate(input: $input) {
+      edges {
+        cursorCreatedAt
+        cursorId
+        node {
+          id
+          amount
+          referenceNumber
+          providerReferenceNumber
+          status
+          accountId
+          currencyId
+          cashInProviderId
+          fatherId
+          createdAt
+          updatedAt
+          provider {
             id
             name
-        }
-        transaction {
+          }
+          transaction {
             id
             refNo
             createdAt
-        }
-        paymentMethod
-        cashInPartnerTypeId
-        cashInPartnerType {
+          }
+          paymentMethod
+          cashInPartnerTypeId
+          cashInPartnerType {
             id
             name
             transactionTypeId
             status
+          }
         }
       }
-    }
-    pageInfo {
-      endCursorId
-      hasNextPage
+      pageInfo {
+        endCursorId
+        hasNextPage
+      }
     }
   }
-}
-`
+`;
+
+export const GET_WALLET_REMAINING_CASH_IN = gql`
+  query {
+    getWalletRemainingCashIn
+  }
+`;

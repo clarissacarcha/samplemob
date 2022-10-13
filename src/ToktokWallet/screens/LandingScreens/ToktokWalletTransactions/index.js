@@ -92,7 +92,7 @@ export const ToktokWalletTransactions = connect(
           },
         },
         updateQuery: (previousResult, {fetchMoreResult}) => {
-          if (!fetchMoreResult) {
+          if (!fetchMoreResult || (fetchMoreResult && fetchMoreResult.getTransactionsPaginate.edges.length > 10)) {
             return previousResult;
           }
           fetchMoreResult.getTransactionsPaginate.edges = [
