@@ -57,7 +57,7 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
 
         createSession(getUserSession);
 
-        if (!serviceAccess) {
+        if (serviceAccess.length == 0) {
           RNRestart.Restart();
           return;
         }
