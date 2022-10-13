@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Dimensions, Image, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -6,8 +6,10 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
 import {AUTH_CLIENT, GET_USER_SESSION} from '../graphql';
 import ToktokSuperAppSplash from '../assets/images/SplashScreen.png';
+import SafeArea from 'react-native-safe-area';
 
 const Landing = ({createSession, destroySession, setAppServices, navigation}) => {
+  const [safeAreaInset, setSafeAreaInset] = useState(0);
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
     client: AUTH_CLIENT,
     onError: error => {
@@ -101,13 +103,20 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
   };
 
   useEffect(() => {
+    SafeArea.getSafeAreaInsetsForRootView().then(result => {
+      setSafeAreaInset(result.safeAreaInsets.top);
+    });
     checkAsyncStorageSession();
   }, []);
 
   return (
     <Image
       source={ToktokSuperAppSplash}
-      style={{marginTop: -47, width: Dimensions.get('window').width, height: Dimensions.get('window').height}}
+      style={{
+        marginTop: -safeAreaInset,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+      }}
       resizeMode="cover"
     />
   );

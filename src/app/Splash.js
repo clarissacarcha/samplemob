@@ -9,7 +9,6 @@ import {
   TouchableHighlight,
   Platform,
   Linking,
-  SafeAreaView,
 } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import {connect} from 'react-redux';
@@ -29,6 +28,9 @@ import UpdateLogo from '../assets/images/ToktokUpdateImage.png';
 // import MaintenanceImage from '../assets/images/MaintenanceImage.png';
 import CONSTANTS from '../common/res/constants';
 import LoginBanner from '../assets/images/ToktokLogo.png';
+import {withSafeArea} from 'react-native-safe-area';
+
+const SafeAreaView = withSafeArea(View, 'padding', 'all');
 
 const imageWidth = Dimensions.get('window').width - 80;
 
