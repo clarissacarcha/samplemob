@@ -8,6 +8,8 @@ import {APP_FLAVOR} from '../res/constants';
 import {AUTH_CLIENT, GET_USER_SESSION, GET_GLOBAL_SETTINGS, GET_APP_SERVICES} from '../graphql';
 import {onError} from '../util/ErrorUtility';
 
+import RNRestart from 'react-native-restart';
+
 const imageWidth = Dimensions.get('window').width - 80;
 
 import SplashImage from '../assets/images/LinearGradiant.png';
@@ -60,6 +62,11 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
         }
 
         createSession(getUserSession);
+
+        if (!serviceAccess) {
+          RNRestart.Restart();
+          return;
+        }
         setAppServices(serviceAccess);
 
         OneSignal.sendTags({
