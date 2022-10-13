@@ -156,7 +156,7 @@ export class TransactionUtility {
       });
 
       if (graphQLErrors[0]?.payload?.code === 'fundTransferPending') {
-        return navigation.navigate(isNewFt ? 'ToktokWalletBankTransferTransaction' : 'ToktokWalletCashOutOtherBanks');
+        return isNewFt ? navigation.pop() : navigation.navigate('ToktokWalletCashOutOtherBanks');
       }
       // return;
     }
