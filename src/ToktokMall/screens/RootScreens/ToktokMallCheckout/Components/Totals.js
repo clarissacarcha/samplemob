@@ -244,7 +244,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
           } */}
 
             <Text style={styles.totalText}>
-            {FormatToText.currency(RoundOffValue((merchandiseTotal || 0) + (shippingFeeTotal || 0) - (shippingDiscountTotal || 0)))}
+            {FormatToText.currency(RoundOffValue((merchandiseTotal || 0) + (shippingFeeTotal || 0) - (shippingDiscountTotal || 0) - (resellerDiscounts || 0)))}
             </Text>
           
         </View>

@@ -164,11 +164,7 @@ export const CheckoutContextProvider = ({children})=> {
 						let itemsrpprice = parseFloat(item.product.compareAtPrice * (item.qty - 1))
 						let discountedprice = parseFloat(item.product.price * (item.qty - 1))
 						resellerDiscount += itemsrpprice - discountedprice
-					}else{
-						let itemsrpprice = parseFloat(item.product.compareAtPrice * item.qty)
-						let discountedprice = parseFloat(item.product.price * item.qty)
-						resellerDiscount += itemsrpprice - discountedprice
-					}					
+					}				
 				}else{
 					let itemsrpprice = parseFloat(item.product.compareAtPrice * item.qty)
 					let discountedprice = parseFloat(item.product.price * item.qty)

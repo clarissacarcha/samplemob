@@ -378,7 +378,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             <ListVouchers type="shipping" />
           </View>}
 
-          {ApplyVoucherForm(address, customer, {
+          {ApplyVoucherForm(address, customer, referral, {
             index: i,
             item: item,
             subTotal: computeTotal(item.data[0], true)})}
