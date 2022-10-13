@@ -589,7 +589,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
           paymentMethod: "TOKTOKWALLET",
           hashAmount: req.responseData.hash_amount,
           referenceNum: req.responseData.orderRefNum,
-          referral: franchisee      
+          referral: {},
+          franchisee: franchisee    
         })
 
         console.log("VOUCHERS", CheckoutContextData.shippingVouchers)
@@ -729,6 +730,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       }
 
     }else if(req.responseError == null && req.responseData == null){
+      console.log(req)
       Toast.show("Something went wrong", Toast.LONG)
     }    
   }

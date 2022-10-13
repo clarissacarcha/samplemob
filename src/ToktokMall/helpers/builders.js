@@ -14,7 +14,8 @@ export const BuildPostCheckoutBody = async ({
 	shippingVouchers,
 	hashAmount,
 	referenceNum,
-	referral
+	referral,
+	franchisee
 }) => {
 	console.log(parseFloat(subTotal))
 
@@ -23,7 +24,7 @@ export const BuildPostCheckoutBody = async ({
 
 	if(session.userId){
 
-		let orderType = GetOrderType(referral)
+		let orderType = GetOrderType(franchisee)
 
 		return {
 			name: addressData.receiverName,
@@ -39,7 +40,15 @@ export const BuildPostCheckoutBody = async ({
 			total_amount: RoundOffValue(subTotal),
 			srp_totalamount: RoundOffValue(srpTotal),
 			order_type: orderType,
-			order_logs: BuildOrderLogsList({data: items, shipping: addressData.shippingSummary, shippingRates, shippingVouchers, orderType, vouchers}),
+			order_logs: BuildOrderLogsList({
+				data: items, 
+				shipping: addressData.shippingSummary, 
+				shippingRates, 
+				shippingVouchers, 
+				orderType, 
+				franchisee,
+				vouchers
+			}),
 			//Optional values
 			user_id: session.userId,
 			notes: addressData.landmark || "",
@@ -52,11 +61,13 @@ export const BuildPostCheckoutBody = async ({
 			shippingvouchers: CheckShippingVouchers(shippingVouchers),
 			referral_code: referral?.referralCode && referral?.referralCode != null ? referral?.referralCode : "",
 			referral_account_type: referral?.franchiseeAccountType && referral?.franchiseeAccountType != null ? referral?.franchiseeAccountType : "",
+			reseller_code: franchisee?.franchiseeCode,
+			reseller_account_type: franchisee?.franchiseeAccountType && franchisee?.franchiseeAccountType != null ? franchisee?.franchiseeAccountType : "",
 			payment_method: paymentMethod,
 			hash_amount: hashAmount,
 			reference_num: referenceNum,
 			orderRefNum: referenceNum,
-			discounted_totalamount: orderType == 3 ? RoundOffValue(subTotal) : null			
+			discounted_totalamount: orderType == 4 ? RoundOffValue(subTotal) : null			
 		}
 			
 	}else{
@@ -65,7 +76,7 @@ export const BuildPostCheckoutBody = async ({
 	
 }
 
-export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouchers, orderType, vouchers}) => {
+export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouchers, orderType, franchisee, vouchers}) => {
 
 	let logs = []
 	data.map((val, index) => {
@@ -86,10 +97,22 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 
 			console.log("ITEM DISCOUNT HANDLER", discount)
 			
-			let amount = discount ? discount.discounted_amount : item.product?.price
+			let amount = null 
+			let itemsrpamount = null 
+			let itemssubtotal = null 
+			let itemssrptotal = null
 
-			let itemssubtotal = parseFloat(amount) * item.qty
-			let itemssrptotal = parseFloat(item.product.price) * item.qty
+			if(franchisee){
+				amount = item.product?.price
+				itemsrpamount = item.product.compareAtPrice
+				itemssubtotal = parseFloat(amount) * item.qty
+				itemssrptotal = parseFloat(item.product.compareAtPrice) * item.qty
+			}else{
+				amount = discount ? discount.discounted_amount : item.product?.price
+				itemsrpamount = item.product.price
+				itemssubtotal = parseFloat(amount) * item.qty
+				itemssrptotal = parseFloat(item.product.price) * item.qty
+			}
 
 			//PROMOTIONS
 			let promo = {}
@@ -111,7 +134,7 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 				// srp_amount: parseFloat(item.amount),
 				// amount: item.product.price,
 				amount: amount,
-				srp_amount: item.product.price,
+				srp_amount: itemsrpamount,
 				srp_totalamount: itemssrptotal,
 				total_amount: itemssubtotal,
 				order_type: GetItemOrderType(orderType, promo),
@@ -178,11 +201,11 @@ export const CheckShippingVouchers = (data) => {
 	}
 }
 
-export const GetOrderType = (referral) => {
-	if(referral && referral?.referralCode != null
-		|| referral && referral?.franchiseeCode != null){
-		//referral
-		return 3
+export const GetOrderType = (franchisee) => {
+	if(franchisee && franchisee?.referralCode != null
+		|| franchisee && franchisee?.franchiseeCode != null){
+		//reseller
+		return 4
 	}else{
 		//regular
 		return 2
@@ -195,7 +218,7 @@ export const GetItemOrderType = (orderType, promotion) => {
 		case 1: return 1
 		case 2: return 1
 		case 3: return 2
-		case 4: return 3
+		case 4: return 3 //reseller
 	}
 }
 
