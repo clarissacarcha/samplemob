@@ -45,23 +45,29 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     setNumAppliedShippingVouchers(numOfShipVouchers.length)
     setNumAppliedPromoVouchers(numOfPromoVouchers.length)
 
+    CheckoutContextData.computeTotalResellerDiscount(data)
+
   }, [CheckoutContextData])
 
   const computeTotal = (item, raw = false) => {
+
     let total = 0
+
     for (let i = 0; i < item.length; i++){
       if(i == 0 && referral && referral?.referralCode != null || referral && referral?.franchiseeCode != null){
-        let shopDiscount = CheckoutContextData.getShopItemDiscount(item[i].shopId)
+        let shopDiscount = CheckoutContextData.getShopItemDiscount(item[i].shopId, item[i].id)
         if(shopDiscount){
           total = total + parseFloat(item[i].product.compareAtPrice)
         }else{
           // total = total + parseFloat(item[i].product.price)
-          total = total + parseFloat(item[i].product.price * item[i].qty)
-        }        
+          let itemsrpprice = parseFloat(item[i].product.compareAtPrice * item[i].qty)
+          total = total + itemsrpprice
+        }      
       }else{
         total = total + parseFloat(item[i].amount)
       }      
     }
+
     if(raw){
       return total == NaN ? 0 : total
     }else{

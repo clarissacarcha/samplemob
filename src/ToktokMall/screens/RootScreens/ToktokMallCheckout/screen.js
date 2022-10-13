@@ -950,7 +950,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     let isMounted = true;
 
     (async () => {
-      // console.log(JSON.stringify(route.params.data))
+      console.log("DATATATATAAAAA", JSON.stringify(route.params.data))
       await init(0)
     })();
 

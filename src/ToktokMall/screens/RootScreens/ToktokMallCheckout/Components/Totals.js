@@ -20,7 +20,8 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
   const [shippingFeeTotal, setShippingFeeTotal] = useState(0);
   const [shippingDiscountTotal, setShippingDiscountTotal] = useState(0);
   const [toggleVouchers, setToggleVouchers] = useState(true);
-  const [numOfVouchers, setOfNumVouchers] = useState(0)
+  const [numOfVouchers, setOfNumVouchers] = useState(0);
+  const [resellerDiscounts, setResellerDiscounts] = useState(0);
 
   useEffect(() => {
     setData(raw);
@@ -101,7 +102,10 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
       // computeShippingDiscount();
       setShippingDiscountTotal(CheckoutContextData.getTotalVoucherDeduction())
       const numvouchers = CheckoutContextData.shippingVouchers.filter((a) => a.valid != undefined || a.voucher_id != undefined)
+      const resellerDiscounts = CheckoutContextData.resellerDiscounts
       setOfNumVouchers(numvouchers.length)
+      setResellerDiscounts(resellerDiscounts)
+      console.log(resellerDiscounts)
     }
   }, [CheckoutContextData]);
 
@@ -115,12 +119,12 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
             let item2 = item.data[0][i]
             if(i == 0 && referral && referral?.referralCode != null || referral && referral?.franchiseeCode != null){
 
-              let shopDiscount = CheckoutContextData.getShopItemDiscount(item2.shopId)
+              let shopDiscount = CheckoutContextData.getShopItemDiscount(item2.shopId, item2.id)
               if(shopDiscount){
                 total = total + parseFloat(item2.product.compareAtPrice)
               }else{
                 // total = total + parseFloat(item2.product.price)
-                total = total + parseFloat(item2.product.price * item2.qty)
+                total = total + parseFloat(item2.product.compareAtPrice * item2.qty)
               }
               
             }else{
@@ -147,8 +151,8 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
   const RenderVouchersBreakdown = () => {
 
     // let vouchers = toggleVouchers ? CheckoutContextData.shippingVouchers.slice(0,2) : CheckoutContextData.shippingVouchers
-    let vouchers = toggleVouchers ? [] : CheckoutContextData.shippingVouchers
-    let totalDeduction = CheckoutContextData.getTotalVoucherDeduction()
+    let vouchers = toggleVouchers ? [] : CheckoutContextData.shippingVouchers    
+    let totalDeduction = CheckoutContextData.getTotalVoucherDeduction() + resellerDiscounts
 
     return (
       <>
@@ -180,6 +184,14 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
                 )
 
               })
+          }
+          {
+            referral && !toggleVouchers ? <>
+            <View style={styles.textContainer}>
+              <Text ellipsizeMode='tail' style={styles.voucherNameText}>Reseller</Text>
+              <Text style={styles.deductionText}>- {FormatToText.currency(RoundOffValue(resellerDiscounts))}</Text>
+            </View>
+            </> : <></>
           }
         </View>
       </>
@@ -214,7 +226,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
           <Text>{FormatToText.currency(merchandiseTotal)}</Text>
         </View>
         
-        {numOfVouchers > 0 && <RenderVouchersBreakdown />}
+        {numOfVouchers > 0 || resellerDiscounts > 0 ? <RenderVouchersBreakdown /> : null}
 
         <View style={styles.divider} />
 
