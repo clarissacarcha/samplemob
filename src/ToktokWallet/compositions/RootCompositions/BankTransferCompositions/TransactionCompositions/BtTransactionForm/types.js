@@ -7,4 +7,5 @@ export type PropsType = {
   accessibilityLabel?: string,
   theme?: Object,
   bankDetails: Object,
+  headerHeight: number,
 };

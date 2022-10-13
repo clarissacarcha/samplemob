@@ -3,13 +3,14 @@
  * @flow
  */
 
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import type {PropsType} from './types';
 import {Container, FeeInformation, InputContainer} from './Styled';
 import {CustomTextInput, CustomAmountInput} from 'toktokwallet/components';
 import {BtVerifyContext} from '../BtVerifyContextProvider';
 import {alphanumericRegex, numericRegex} from 'toktokwallet/helper';
+import {Keyboard} from 'react-native';
 
 const BtTransactionForm = (props: PropsType): React$Node => {
   const {
@@ -22,7 +23,22 @@ const BtTransactionForm = (props: PropsType): React$Node => {
     changeFeesValue,
     postComputeConvenienceFee,
   } = useContext(BtVerifyContext);
-  const {bankDetails} = props;
+  const {bankDetails, headerHeight} = props;
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true); // or some other action
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false); // or some other action
+    });
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   const computeConvenienceFee = () => {
     if (data.amount !== '' && +data.amount > 0) {
@@ -105,16 +121,18 @@ const BtTransactionForm = (props: PropsType): React$Node => {
           errorMessage={errorMessages.emailAddress}
         />
       </InputContainer>
-      <CustomTextInput
-        label="Purpose (optional)"
-        value={data.purpose}
-        maxLength={120}
-        placeholder="Enter purpose here"
-        onChangeText={value => changeDataValue('purpose', value)}
-        textAlignVertical="top"
-        numberOfLines={4}
-        multiline={true}
-      />
+      <InputContainer size={isKeyboardVisible ? headerHeight * 2 : 10}>
+        <CustomTextInput
+          label="Purpose (optional)"
+          value={data.purpose}
+          maxLength={120}
+          placeholder="Enter purpose here"
+          onChangeText={value => changeDataValue('purpose', value)}
+          textAlignVertical="top"
+          numberOfLines={4}
+          multiline={true}
+        />
+      </InputContainer>
     </Container>
   );
 };
