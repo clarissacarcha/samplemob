@@ -7,7 +7,7 @@ import OfficeImg from '../../../../assets/icons/SavedAddress/officeFilled.png';
 import CustomImg from '../../../../assets/icons/SavedAddress/customFilled.png';
 import {ThrottledOpacity} from '../../../../components_section';
 
-export const SavedLocationCard = ({onPressAddress, address}) => {
+export const SavedLocationCard = ({onPressAddress, address, lastItem}) => {
   const getTitle = () => {
     if (address?.isHome) {
       return 'Home';
@@ -36,7 +36,7 @@ export const SavedLocationCard = ({onPressAddress, address}) => {
     <ThrottledOpacity
       onPress={() => onPressAddress(address)}
       underlayColor={CONSTANTS.COLOR.WHITE_UNDERLAY}
-      style={styles.container}>
+      style={[styles.container, {marginBottom: lastItem ? 26 : 16}]}>
       <View style={styles.cardShadow}>
         <View style={styles.headerContainer}>
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
@@ -64,8 +64,8 @@ export const SavedLocationCard = ({onPressAddress, address}) => {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 5,
+    // marginBottom: 16,
     marginHorizontal: 16,
-    marginBottom: 16,
   },
   cardShadow: {
     flexDirection: 'column',

@@ -69,7 +69,37 @@ const AddLocation = ({navigation, route, session}) => {
       setShowConfirmOperationAddressModal(false);
       setShowSuccessOperationAddressModal(true);
     },
-    onError: onError,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        console.log(graphQLErrors);
+        graphQLErrors.map(({message, locations, path, code, errorFields}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+          } else if (code === 'USER_INPUT_ERROR') {
+            Alert.alert('', message);
+          } else if (code === 'BAD_USER_INPUT') {
+            if (errorFields[0].field == 'label') {
+              setErrorText(errorFields[0].message);
+              setErrorAddressNameField(true);
+            } else if (errorFields[0].field == 'formattedAddress') {
+              setErrorText(errorFields[0].message);
+              setErrorAddressField(true);
+            } else {
+              Alert.alert('', message);
+            }
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
   });
 
   const getCurrentLocation = async () => {
@@ -99,9 +129,7 @@ const AddLocation = ({navigation, route, session}) => {
           } else if (code === 'USER_INPUT_ERROR') {
             Alert.alert('', message);
           } else if (code === 'BAD_USER_INPUT') {
-            console.log('zion', errorFields[0]);
             if (errorFields[0].field == 'label') {
-              console.log('zion here');
               setErrorText(errorFields[0].message);
               setErrorAddressNameField(true);
             } else if (errorFields[0].field == 'formattedAddress') {
@@ -136,6 +164,18 @@ const AddLocation = ({navigation, route, session}) => {
   );
 
   const saveNewAddress = () => {
+    if (!isHomeSelected && !isOfficeSelected && !customLabel) {
+      setErrorAddressNameField(true);
+      setErrorText('This is a required field');
+      return;
+    }
+
+    if (!confirmedLocation?.hash) {
+      setErrorAddressField(true);
+      setErrorText('This is a required field');
+      return;
+    }
+
     setModalOperationType('CREATE');
     postNewAddress({
       variables: {
@@ -154,12 +194,6 @@ const AddLocation = ({navigation, route, session}) => {
       },
     });
   };
-
-  // const checkAddressName = () => {
-  //   if (isOfficeSelected) {
-  //     setCustomLabel('');
-  //   }
-  // };
 
   const saveEditAddress = () => {
     const placeHash = confirmedLocation?.hash ? confirmedLocation?.hash : confirmedLocation?.placeHash;
@@ -235,7 +269,11 @@ const AddLocation = ({navigation, route, session}) => {
     if (addressObj?.id) {
       setIsEdited(true);
     }
-    setContactNumber(number);
+    if (number.charAt(0) == '0') {
+      setContactNumber(number.substring(1));
+    } else {
+      setContactNumber(number);
+    }
   };
 
   const onPressContacts = () => {
@@ -256,7 +294,11 @@ const AddLocation = ({navigation, route, session}) => {
     if (!showOffice && !showHome) {
       return false;
     } else {
-      return true;
+      if (addressObj?.label) {
+        return false;
+      } else {
+        return true;
+      }
     }
   };
 
@@ -292,6 +334,19 @@ const AddLocation = ({navigation, route, session}) => {
     }
   };
 
+  const onMobileChange = value => {
+    if (value.length == 1 && value == '0') {
+      setContactNumber('');
+      return;
+    }
+
+    if (addressObj?.id) {
+      setContactNumber(value), setIsEdited(true);
+    } else {
+      setContactNumber(value);
+    }
+  };
+
   useEffect(() => {
     if (addressObj) return;
 
@@ -300,6 +355,8 @@ const AddLocation = ({navigation, route, session}) => {
       setIsCustomSelected(false);
     } else if (!showHome && showOffice) {
       setIsOfficeSelected(true);
+    } else if (showHome && !showOffice) {
+      setIsHomeSelected(true);
     } else {
       if (showOffice || showHome) {
         setIsCustomSelected(false);
@@ -475,6 +532,7 @@ const AddLocation = ({navigation, route, session}) => {
         <View
           style={{
             marginHorizontal: 16,
+            marginBottom: 16,
             flexDirection: 'row',
             alignItems: 'center',
           }}>
@@ -498,13 +556,8 @@ const AddLocation = ({navigation, route, session}) => {
 
             <TextInput
               value={contactNumber}
-              onChangeText={
-                addressObj?.id
-                  ? value => {
-                      setContactNumber(value), setIsEdited(true);
-                    }
-                  : value => setContactNumber(value)
-              }
+              keyboardType="number-pad"
+              onChangeText={onMobileChange}
               maxLength={10}
               defaultValue={contactNumber ? contactNumber : ''}
               style={{padding: 16, flex: 1}}

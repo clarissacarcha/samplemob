@@ -129,7 +129,10 @@ const SavedLocations = ({navigation, session, route}) => {
     // });
 
     return (
-      <ThrottledOpacity onPress={() => initiateDeleteAddress(item)} delay={4000}>
+      <ThrottledOpacity
+        onPress={() => initiateDeleteAddress(item)}
+        delay={4000}
+        style={{alignItems: 'center', justifyContent: 'center'}}>
         <Animated.View style={[styles.deleteBtn]}>
           {/* <Animated.Text>Delete</Animated.Text> */}
           <Image source={DeleteImg} resizeMode={'contain'} style={{width: 30, height: 30}} />
@@ -171,10 +174,12 @@ const SavedLocations = ({navigation, session, route}) => {
         data={data?.getAddresses}
         keyExtractor={item => item.id}
         renderItem={({item, index}) => {
+          const lastItem = index == data?.getAddresses.length - 1 ? true : false;
           return (
             <>
               {route?.params?.getAddressObj ? (
                 <SavedLocationCard
+                  lastItem={lastItem}
                   onPressAddress={onPressAddress}
                   address={item}
                   initiateDeleteAddress={initiateDeleteAddress}
@@ -183,6 +188,7 @@ const SavedLocations = ({navigation, session, route}) => {
               ) : (
                 <Swipeable disabled={true} renderRightActions={() => rightSwipe(item)} overshootRight={false}>
                   <SavedLocationCard
+                    lastItem={lastItem}
                     onPressAddress={onPressAddress}
                     address={item}
                     initiateDeleteAddress={initiateDeleteAddress}
@@ -287,12 +293,14 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
   },
   deleteBtn: {
+    alignSelf: 'center',
     backgroundColor: 'red',
-    marginTop: '25%',
+    marginTop: 0,
     borderRadius: 5,
     justifyContent: 'center',
     marginRight: 16,
-    height: '60%',
+    marginBottom: 16,
+    height: 90,
     paddingHorizontal: 16,
     shadowColor: '#000',
 

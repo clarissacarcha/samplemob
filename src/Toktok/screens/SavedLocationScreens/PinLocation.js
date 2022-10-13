@@ -74,6 +74,11 @@ const PinLocation = ({navigation, route}) => {
     fetchPolicy: 'network-only',
     onCompleted: response => {
       setSearchedLocation(response.getPlaceByLocation);
+      // if (response.getPlaceByLocation.place.formattedAddress.length < 30) {
+      //   setSearchedText(response.getPlaceByLocation.place.formattedAddress);
+      // } else {
+      //   setSearchedText(`${response.getPlaceByLocation.place.formattedAddress.substring(0, 30)}}...`);
+      // }
       setSearchedText(response.getPlaceByLocation.place.formattedAddress);
       setDisableAddressBox(false);
     },
@@ -220,16 +225,18 @@ const PinLocation = ({navigation, route}) => {
           onMapDrag(e);
         }}
       />
-      {/*---------------------------------------- ADDRESS BOX ----------------------------------------*/}
+
       <View style={{position: 'absolute', width: '100%', top: 16}}>
         <View style={styles.addressBox}>
           <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} />
           <TextInput
-            numberOfLines={1}
+            multiline
+            numberOfLines={2}
             ref={inputRef}
             editable={!GPLLoading && !disableAddressBox}
             value={searchedText}
             onChangeText={onChange}
+            textAlign={'left'}
             style={styles.input}
           />
           {loading || GPLLoading ? (
@@ -300,7 +307,7 @@ const styles = StyleSheet.create({
   addressBox: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    height: 50,
+    height: 60,
     marginHorizontal: 16,
     alignItems: 'center',
     paddingHorizontal: 8,
@@ -326,7 +333,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '80%',
-    padding: 16,
+    paddingLeft: 16,
     color: DARK,
   },
   searchedAddresses: {
