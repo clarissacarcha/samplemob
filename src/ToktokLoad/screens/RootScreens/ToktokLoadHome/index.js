@@ -176,7 +176,7 @@ const MainComponent = ({navigation, route}) => {
           topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
           displayInsets={{top: 0, bottom: 0, left: 0, right: 0}}
           contentStyle={{
-            width: Platform.OS === 'android' ? tooltipWidth : tooltipWidth - 36,
+            width: tooltipWidth,
           }}
           childrenWrapperStyle={{flex: 1}}
           backgroundColor="rgba(0,0,0,0.6)"
@@ -204,9 +204,9 @@ const MainComponent = ({navigation, route}) => {
               scrollEnabled={true}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
-              fitToScreen={false}
               overLap={false}
               disabled={onBoardingSteps === 1}
+              fitToScreen={false}
             />
           </View>
         </Tooltip>
