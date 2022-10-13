@@ -102,7 +102,7 @@ export const BuildOrderLogsList = ({data, shipping, shippingRates, shippingVouch
 			let itemssubtotal = null 
 			let itemssrptotal = null
 
-			if(franchisee){
+			if(franchisee && franchisee.franchiseeCode != null){
 				amount = item.product?.price
 				itemsrpamount = item.product.compareAtPrice
 				itemssubtotal = parseFloat(amount) * item.qty
@@ -202,8 +202,7 @@ export const CheckShippingVouchers = (data) => {
 }
 
 export const GetOrderType = (franchisee) => {
-	if(franchisee && franchisee?.referralCode != null
-		|| franchisee && franchisee?.franchiseeCode != null){
+	if(franchisee && franchisee?.franchiseeCode != null){
 		//reseller
 		return 4
 	}else{

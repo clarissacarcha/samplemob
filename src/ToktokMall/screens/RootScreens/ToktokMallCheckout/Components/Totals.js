@@ -75,37 +75,21 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
     setShippingFeeTotal(total);
   };
 
-  // const getTotalVoucherDeduction = () => {
-  //   let totalDeduction = 0
-  //   CheckoutContextData.shippingVouchers
-  //   .filter((a) => {                
-  //     return a.voucher_id != undefined || a.valid != undefined
-  //   })
-  //   .map((a) => a.deduction ? totalDeduction += a.deduction : totalDeduction += a.discount_totalamount)
-  //   setShippingDiscountTotal(totalDeduction)
-  //   return totalDeduction
-  // }
-
-  const getDiscount = (type) => {
-    if (type == 'shipping') {
-      if(CheckoutContextData.shippingVouchers.length > 0){
-        return CheckoutContextData.shippingVouchers[0]?.valid
-      }else{
-        return false
-      }
-    }
-  };
-
   useEffect(() => {
     if (CheckoutContextData) {
+      
+      const numvouchers = CheckoutContextData.shippingVouchers.filter((a) => a.valid != undefined || a.voucher_id != undefined)
+      const resellerDiscounts = CheckoutContextData.resellerDiscounts
+            
       computeShippingTotal();
       // computeShippingDiscount();
       setShippingDiscountTotal(CheckoutContextData.getTotalVoucherDeduction())
-      const numvouchers = CheckoutContextData.shippingVouchers.filter((a) => a.valid != undefined || a.voucher_id != undefined)
-      const resellerDiscounts = CheckoutContextData.resellerDiscounts
       setOfNumVouchers(numvouchers.length)
-      setResellerDiscounts(resellerDiscounts)
-      console.log(resellerDiscounts)
+
+      if(referral && referral.franchiseeCode != null){
+        setResellerDiscounts(resellerDiscounts)
+        console.log(resellerDiscounts)
+      }
     }
   }, [CheckoutContextData]);
 
@@ -117,7 +101,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
           console.log(item.data);
           for (let i = 0; i < item.data[0].length; i++) {
             let item2 = item.data[0][i]
-            if(i == 0 && referral && referral?.referralCode != null || referral && referral?.franchiseeCode != null){
+            if(i == 0 && referral && referral?.franchiseeCode != null){
 
               let shopDiscount = CheckoutContextData.getShopItemDiscount(item2.shopId, item2.id)
               if(shopDiscount){

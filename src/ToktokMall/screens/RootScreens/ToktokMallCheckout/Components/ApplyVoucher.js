@@ -96,7 +96,7 @@ export const ApplyVoucherForm = (address, customer, referral, payload) => {
     const shopProducts = item.data[0]
       
     const orders = item.data[0].map((data) => {
-      if(referral && referral?.referralCode != null || referral && referral?.franchiseeCode != null){
+      if(referral && referral?.franchiseeCode != null){
         return {
           product_id: data.id,
           amount: data.amount,

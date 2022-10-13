@@ -865,7 +865,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       for (var y = 0; y < route.params.data[x].data[0].length; y++) {
         
         let item = route.params.data[x].data[0][y];
-        if(franchisee){
+        if(franchisee && franchisee.franchiseeCode != null){
           orderTotal += parseFloat(item.product.compareAtPrice * item.qty)
         }else{
           orderTotal += parseFloat(item.amount)
@@ -903,10 +903,15 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     let discounts = CheckoutContextData.getTotalVoucherDeduction()
     let itemDiscounts = CheckoutContextData.getTotalItemDiscount()
-    let resellerDiscounts = CheckoutContextData.resellerDiscounts
 
-    let _subTotal = parseFloat(orderTotal) - parseFloat(itemDiscounts) - resellerDiscounts
-    let srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts) - resellerDiscounts
+    let _subTotal = parseFloat(orderTotal) - parseFloat(itemDiscounts)
+    let srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
+
+    if(franchisee && franchisee.franchiseeCode != null){
+      let resellerDiscounts = CheckoutContextData.resellerDiscounts
+      _subTotal = _subTotal - resellerDiscounts
+      srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
+    }
 
     setSubTotal(_subTotal)
     setSrpTotal(orderTotal)

@@ -45,7 +45,9 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     setNumAppliedShippingVouchers(numOfShipVouchers.length)
     setNumAppliedPromoVouchers(numOfPromoVouchers.length)
 
-    CheckoutContextData.computeTotalResellerDiscount(data)
+    if(referral && referral.franchiseeCode != null){
+      CheckoutContextData.computeTotalResellerDiscount(data)
+    }
 
   }, [CheckoutContextData])
 
@@ -54,7 +56,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     let total = 0
 
     for (let i = 0; i < item.length; i++){
-      if(i == 0 && referral && referral?.referralCode != null || referral && referral?.franchiseeCode != null){
+      if(i == 0 && referral && referral?.franchiseeCode != null){
         let shopDiscount = CheckoutContextData.getShopItemDiscount(item[i].shopId, item[i].id)
         if(shopDiscount){
           total = total + parseFloat(item[i].product.compareAtPrice)
