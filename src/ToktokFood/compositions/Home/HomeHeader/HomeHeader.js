@@ -9,15 +9,15 @@ import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
 
 import type {PropsType} from './types';
-import {AddressContainer, DownIcon, Loader, StyledIcon, Row, Text} from './Styled';
-
+import {AddressContainer, DownIcon, Loader, StyledIcon, Row, Text, Column} from './Styled';
+import {Badge} from 'react-native-elements';
 // Components
 import Header from 'toktokfood/components/Header';
 import StyledText from 'toktokfood/components/StyledText';
 import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 
 // Hooks
-import {useUserLocation} from 'toktokfood/hooks';
+import {useUserLocation, useGetCartItems} from 'toktokfood/hooks';
 
 // Static Header Style
 const centerContainerStyle = {
@@ -49,12 +49,19 @@ const HomeHeader = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const theme = useTheme();
   const {location} = useSelector(state => state.toktokFood);
+  const {cartData} = useGetCartItems();
 
   const customOptionStyle = {
     optionWrapper: {
       borderBottomWidth: 1,
       borderBottomColor: theme.divider.active,
     },
+  };
+
+  const badgeContainerStyle = {
+    position: 'absolute',
+    top: -4,
+    right: -4,
   };
 
   const onSetLocationDetails = () => navigation.navigate('ToktokFoodAddressDetails');
@@ -65,7 +72,7 @@ const HomeHeader = (props: PropsType): React$Node => {
       <AddressContainer onPress={onSetLocationDetails}>
         <Row>
           <StyledText mode="bold" fontSize={13}>
-            Home
+            Delivery Address
           </StyledText>
           <DownIcon />
         </Row>
@@ -92,7 +99,12 @@ const HomeHeader = (props: PropsType): React$Node => {
   const CartOptions = () => {
     return (
       <Row>
-        <StyledIcon icon="cart-outline" onPress={onCartNavigate} />
+        <Column>
+          <StyledIcon icon="cart-outline" onPress={onCartNavigate} />
+          {cartData?.items?.length > 0 && (
+            <Badge value={cartData?.items?.length} status="error" containerStyle={badgeContainerStyle} />
+          )}
+        </Column>
         <Menu>
           <MenuTrigger>
             <StyledIcon />

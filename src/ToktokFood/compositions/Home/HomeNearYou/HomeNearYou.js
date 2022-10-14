@@ -243,8 +243,8 @@ const HomeNearYou = (props: PropsType): React$Node => {
         data &&
         data?.getShops && (
           <ListWrapper activeOpacity={1}>
-            {data?.getShops.map(item => (
-              <RestaurantList item={item} />
+            {data?.getShops.map((item, index) => (
+              <RestaurantList item={item} key={index} />
             ))}
           </ListWrapper>
         )

@@ -107,6 +107,23 @@ const transaction = `
   serviceType
   totalServiceFee
   pabiliShopResellerDiscount
+  voucherDiscounts {
+    id
+    referenceNum
+    voucherId
+    voucherCode
+    voucherName
+    userId
+    shopId
+    productId
+    region
+    discountType
+    discountAmount
+    shoulderedBy
+    paymentMethod
+    status
+    discountServiceFee
+  }
 `;
 
 // Add this once back end merge - refundTotal
@@ -240,6 +257,7 @@ const transactionRef = `
     shoulderedBy
     paymentMethod
     status
+    discountServiceFee
   }
 `;
 

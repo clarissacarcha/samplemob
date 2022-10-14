@@ -41,6 +41,22 @@ import {useMutation} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 
+const arrangeAddons = addons => {
+  if (addons.length > 0) {
+    let selectedAddons = {};
+    addons.map(item => {
+      let {id, optionPrice, optionName, optionDetailsName} = item;
+      let data = {addon_id: id, addon_name: optionName, addon_price: optionPrice};
+      if (selectedAddons[optionDetailsName] != undefined) {
+        selectedAddons[optionDetailsName].push(data);
+      } else {
+        selectedAddons = {...selectedAddons, [optionDetailsName]: [data]};
+      }
+    });
+    return selectedAddons;
+  }
+};
+
 const OrderSummary = (props: PropsType): React$Node => {
   const {state, placement = 'Cart', cartRefetch = ({}) => {}} = props;
   const {loader, customerInfo} = useSelector(s => s.toktokFood);
@@ -115,16 +131,18 @@ const OrderSummary = (props: PropsType): React$Node => {
     } = item;
     dispatch({type: 'SET_TOKTOKFOOD_PROMOTIONS', payload: []});
     const totalAmountWithAddons = totalAmount + addonsTotalAmount;
+    const addons = arrangeAddons(addonsDetails);
     navigation.navigate('ToktokFoodItemDetails', {
       Id: productid,
       parentProductId,
-      selectedAddons: addonsDetails,
+      selectedAddons: addons,
       selectedItemId: id,
       selectedPrice: totalAmountWithAddons,
       selectedQty: quantity,
       selectedNotes: notes,
       action: 'edit',
       hasOrderInstruction: orderInstructions,
+      cartRefetch,
     });
   };
 
@@ -145,7 +163,7 @@ const OrderSummary = (props: PropsType): React$Node => {
 
   useEffect(() => {
     getItemList();
-  }, [getItemList]);
+  }, [getItemList, state]);
 
   const isJSON = text => {
     if (typeof text !== 'string') {

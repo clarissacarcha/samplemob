@@ -16,13 +16,6 @@ export const useGetActivities = (orderStatus, limit) => {
 
   useEffect(() => {
     if (customerInfo && customerInfo?.userId) {
-      const input = {
-        userId: `${customerInfo.userId}`,
-        orderStatus,
-        page: 0,
-        limit,
-      };
-      console.log('input', input);
       getOrders({
         variables: {
           input: {

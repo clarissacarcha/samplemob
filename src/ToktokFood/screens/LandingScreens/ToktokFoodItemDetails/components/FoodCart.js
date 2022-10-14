@@ -26,7 +26,7 @@ import Loader from 'toktokfood/components/Loader';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
-export const FoodCart = ({loading, action}) => {
+export const FoodCart = ({loading, action, cartRefetch}) => {
   const alert = useAlert();
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -345,6 +345,7 @@ export const FoodCart = ({loading, action}) => {
         setTimeout(() => {
           setLoader(false);
           Toast.show('Cart Updated', Toast.SHORT);
+          cartRefetch();
           navigation.goBack();
           // navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: productDetails.sysShop}});
         }, 1000);

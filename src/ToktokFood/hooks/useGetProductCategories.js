@@ -11,7 +11,7 @@ export const useGetProductCategories = shopId => {
       title: 'All Menu',
     },
   ]);
-  const [getProductCategories, {loading}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
+  const [getProductCategories, {loading, refetch}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
     variables: {
       input: {
         id: shopId,
@@ -30,5 +30,5 @@ export const useGetProductCategories = shopId => {
     }
   }, [getProductCategories, shopId]);
 
-  return {routes, loading};
+  return {routes, loading, refetch};
 };

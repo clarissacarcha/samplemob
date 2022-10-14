@@ -157,8 +157,8 @@ const CartVoucher = (props: PropsType): React$Node => {
     if (promotionVoucher?.length > 0) {
       return (
         <VouchersContainer>
-          {promotionVoucher.map(activeVoucher => (
-            <VoucherContainer type={activeVoucher?.type}>
+          {promotionVoucher.map((activeVoucher, index) => (
+            <VoucherContainer type={activeVoucher?.type} key={index}>
               <VoucherText>{activeVoucher?.vname}</VoucherText>
               {activeVoucher?.type !== 'auto' && activeVoucher?.type !== 'deal' && (
                 <Icon name="close" size={14} onPress={() => onRemoveVoucher(activeVoucher?.id)} />

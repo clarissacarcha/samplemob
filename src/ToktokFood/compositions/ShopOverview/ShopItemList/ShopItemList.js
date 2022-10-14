@@ -5,7 +5,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {Animated} from 'react-native';
+import {Animated, RefreshControl} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {useNavigation} from '@react-navigation/native';
@@ -49,12 +49,12 @@ const ShopItemList = (props: PropsType): React$Node => {
   const [hasMorePage, setHasMorePage] = useState(true);
   const [showMore, setShowMore] = useState(false);
   const [page, setPage] = useState(0);
-
   const avatarStyle = {borderRadius: 10};
   const containerStyle = {height: 70, width: 70, marginRight: 15};
   const textProps = {numberOfLines: 1};
 
-  const [getProductsByShopCategory, {data, fetchMore}] = useLazyQuery(GET_PRODUCTS_BY_SHOP_CATEGORY, {
+
+  const [getProductsByShopCategory, {data, fetchMore, refetch, loading}] = useLazyQuery(GET_PRODUCTS_BY_SHOP_CATEGORY, {
     variables: {
       input: {
         id: shopId,
@@ -210,6 +210,7 @@ const ShopItemList = (props: PropsType): React$Node => {
         return <ContentLoading />;
       }}
       ListFooterComponent={renderFooter}
+      refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}
     />
   );
 };
