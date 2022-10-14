@@ -10,7 +10,7 @@ import {
   TotalBreakdown,
   CancelRetryButton,
 } from './Sections';
-import {DriverFoundModal} from './Components';
+import {DriverFoundModal, DriverFoundModal2} from './Components';
 import {
   ReasonCancelModal,
   CancelBookingNoFeeModal,
@@ -38,6 +38,7 @@ import {useAlertGO} from '../../hooks';
 const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const {popTo} = route.params;
   const {booking} = useSelector(state => state.toktokGo);
+  const alertGO = useAlertGO();
   const [showDriverFoundModal, setShowDriverFoundModal] = useState(false);
   const [waitingStatus, setWaitingStatus] = useState(1);
   const [waitingText, setWaitingText] = useState(1);
@@ -51,7 +52,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
   const [driverData, setDriverData] = useState();
   const [textValue, setTextValue] = useState('');
-  const alertGO = useAlertGO();
+  const [driverFoundModal, setDriverFoundModal] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -487,6 +488,10 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     setTextValue(dataTitle[Math.floor(Math.random() * len)]);
   };
 
+  const findAnotherDriver = () => {
+    setDriverFoundModal(false);
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: constants.COLOR.WHITE}}>
       <CancelBookingNoFeeModal
@@ -521,6 +526,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         route={route}
         booking={booking}
       />
+      <DriverFoundModal2 driverFoundModal={driverFoundModal} findAnotherDriver={findAnotherDriver} />
       <BackButton navigation={navigation} popTo={popTo} />
       <FindingDriverStatus
         waitingStatus={waitingStatus}
