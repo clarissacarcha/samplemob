@@ -59,7 +59,7 @@ export const ProgressBar = ({}) => {
         overflow: 'hidden',
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
-        marginHorizontal: -16,
+        marginHorizontal: -25,
         bottom: 16,
       }}>
       <Progress.Bar

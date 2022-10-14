@@ -37,10 +37,9 @@ export const DriverFoundModal2 = ({driverFoundModal, findAnotherDriver}) => {
           <View style={{alignItems: 'center'}}>
             <View
               style={{
-                marginTop: -14,
-                marginHorizontal: -9.5,
+                marginTop: -14.5,
                 position: 'absolute',
-                width: windowWidth * 0.745,
+                width: '100%',
               }}>
               <ProgressBar />
             </View>
