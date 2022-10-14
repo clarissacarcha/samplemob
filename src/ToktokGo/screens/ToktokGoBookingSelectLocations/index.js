@@ -108,7 +108,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      // console.log(response.getTripDestinations);
       setrecentDestinationList(response.getTripDestinations);
     },
     onError: onErrorAppSync,
@@ -166,7 +165,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log(response);
       const payload = response.getPlaceByLocation;
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
       setSearchOrigin(payload?.place?.formattedAddress);
@@ -216,7 +214,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   };
 
   const onPressSavedAddress = loc => {
-    console.log(loc);
     if (selectedInput == 'D') {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
     } else {
