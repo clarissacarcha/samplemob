@@ -35,7 +35,13 @@ export const DriverFoundModal2 = ({driverFoundModal, findAnotherDriver}) => {
       <View style={styles.transparent}>
         <View style={styles.card}>
           <View style={{alignItems: 'center'}}>
-            <View style={{height: 25, marginTop: -14.2, marginHorizontal: -10, alignSelf: 'stretch'}}>
+            <View
+              style={{
+                marginTop: -14,
+                marginHorizontal: -9.5,
+                position: 'absolute',
+                width: windowWidth * 0.745,
+              }}>
               <ProgressBar />
             </View>
             <Image source={driverProfile} style={styles.profileImage} resizeMode="cover" />

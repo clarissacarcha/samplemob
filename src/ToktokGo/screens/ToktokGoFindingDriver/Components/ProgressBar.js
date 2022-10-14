@@ -70,6 +70,7 @@ export const ProgressBar = ({}) => {
         borderWidth={0}
         width={null}
         animationType={'timing'}
+        height={8}
       />
     </View>
   );

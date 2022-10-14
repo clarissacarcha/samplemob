@@ -504,6 +504,8 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     setDriverFoundModal(false);
   };
 
+  const yesWillingToWait = () => {};
+
   //TODO: Yes Im willing function
 
   return (
