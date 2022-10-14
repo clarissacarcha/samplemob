@@ -92,6 +92,17 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
             },
           });
         }
+        if (data?.onTripUpdate?.status == 'RESERVED') {
+          //TODO: SHOW MODAL
+          //TODO: Save progress bar duration to state
+          getBookingDriver({
+            variables: {
+              input: {
+                driverUserId: parseInt(data?.onTripUpdate?.driverUserId),
+              },
+            },
+          });
+        }
         if (data?.onTripUpdate?.status == 'EXPIRED') {
           setWaitingStatus(0);
           changeTextValue();
@@ -138,6 +149,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [getBookingDriver] = useLazyQuery(GET_BOOKING_DRIVER, {
     fetchPolicy: 'network-only',
     onCompleted: response => {
+      //TODO: Labas mo to para ma condition kung anong modal ang need i show.
       setShowDriverFoundModal(true);
       setDriverData(response.getBookingDriver.driver);
     },
@@ -491,6 +503,8 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const findAnotherDriver = () => {
     setDriverFoundModal(false);
   };
+
+  //TODO: Yes Im willing function
 
   return (
     <View style={{flex: 1, backgroundColor: constants.COLOR.WHITE}}>

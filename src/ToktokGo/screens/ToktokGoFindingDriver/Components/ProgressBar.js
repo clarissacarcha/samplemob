@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {useLayoutEffect} from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import _BackgroundTimer from 'react-native-background-timer';
 import * as Progress from 'react-native-progress';
 import {useDispatch, useSelector} from 'react-redux';
@@ -9,13 +9,15 @@ import CONSTANTS from '../../../../common/res/constants';
 
 export const ProgressBar = ({}) => {
   const {bookingTimer} = useSelector(state => state.toktokGo);
-  const [progressNum, setProgressNum] = useState(45);
-  const [timer, setTimer] = useState(45);
-  const [intervalSeconds, setIntervalSeconds] = useState(moment().diff(moment(), 'seconds', false));
+  const [progressNum, setProgressNum] = useState(0);
+  const [timer, setTimer] = useState(0);
+  // const [intervalSeconds, setIntervalSeconds] = useState(moment().diff(moment(), 'seconds', false));
+  const [intervalSeconds, setIntervalSeconds] = useState(45);
 
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
+    console.log('check', true);
     const intervalTimer = _BackgroundTimer.setInterval(() => {
       setTimer(prev => prev + 1);
     }, 1000);
