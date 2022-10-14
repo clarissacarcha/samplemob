@@ -173,7 +173,6 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
-          console.log(errorType);
           if (errorType === 'INTERNAL_SERVER_ERROR') {
             alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
