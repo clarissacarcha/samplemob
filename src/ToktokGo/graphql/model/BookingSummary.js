@@ -56,9 +56,9 @@ export const GET_QUOTATION = gql`
   }
 `;
 
-export const GET_TRIP_FARE = gql`
-  query getTripFare($input: GetTripFareInput!) {
-    getTripFare(input: $input) {
+export const GO_GET_TRIP_FARE = gql`
+  query goGetTripFare($input: GetTripFareInput!) {
+    goGetTripFare(input: $input) {
       charge {
         amount
         type

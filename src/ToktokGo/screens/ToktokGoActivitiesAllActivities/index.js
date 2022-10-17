@@ -8,14 +8,14 @@ import {ActivitiesCard} from '../../components';
 import {GET_DELIVERIES, TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import NoData from '../../../assets/images/NoTransactions.png';
 import CONSTANTS from '../../../common/res/constants';
-import {GET_TRIPS_CONSUMER} from '../../graphql';
+import {GO_GET_TRIPS_CONSUMER} from '../../graphql';
 import {SomethingWentWrong} from 'src/components';
 import {onErrorAppSync} from '../../util';
 
 const imageWidth = Dimensions.get('window').width - 200;
 
 const AllActivities = ({navigation, session}) => {
-  const {data, loading, error, refetch} = useQuery(GET_TRIPS_CONSUMER, {
+  const {data, loading, error, refetch} = useQuery(GO_GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
@@ -42,7 +42,7 @@ const AllActivities = ({navigation, session}) => {
     return <SomethingWentWrong />;
   }
 
-  if (data.getTripsConsumer.length === 0) {
+  if (data.goGetTripsConsumer.length === 0) {
     return (
       <View style={styles.center}>
         <Image source={NoData} style={styles.image} resizeMode={'contain'} />
@@ -56,14 +56,14 @@ const AllActivities = ({navigation, session}) => {
     <View style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={data.getTripsConsumer}
+        data={data.goGetTripsConsumer}
         keyExtractor={item => item.id}
         refreshControl={<RefreshControl colors={[COLOR]} tintColor={COLOR} onRefresh={refetch} refreshing={loading} />}
         renderItem={({item, index}) => (
           <ActivitiesCard
             booking={item}
             onPress={() => navigation.push('SelectedBookingDetails', {booking: item})}
-            lastItem={data.getTripsConsumer.length == index + 1 ? true : false}
+            lastItem={data.goGetTripsConsumer.length == index + 1 ? true : false}
           />
         )}
       />
