@@ -47,8 +47,8 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
   const [searchDestination, setSearchDestination] = useState(destination?.place?.formattedAddress);
   const [searchOrigin, setSearchOrigin] = useState(origin?.place?.formattedAddress);
-  const [recentSearchDataList, setrecentSearchDataList] = useState([]);
-  const [recentDestinationList, setrecentDestinationList] = useState([]);
+  const [recentSearchDataList, setRecentSearchDataList] = useState([]);
+  const [recentDestinationList, setRecentDestinationList] = useState([]);
   const [loadingAutoComplete, setLoadingAutoComplete] = useState(false);
   const [noRecordVisible, setNoRecordVisible] = useState(false);
   const [serviceableAreVisible, setServiceableAreVisible] = useState(false);
@@ -108,7 +108,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setrecentDestinationList(response.goGetTripDestinations);
+      setRecentDestinationList(response.goGetTripDestinations);
     },
     onError: onErrorAppSync,
   });
@@ -328,7 +328,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           if (obj != undefined) {
             console.log('SameAddress');
           } else {
-            setrecentSearchDataList([]);
+            setRecentSearchDataList([]);
             const removedItem = recentList.slice(0, 2);
             removedItem.unshift(response);
             const searchList = JSON.stringify(removedItem);
@@ -356,7 +356,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
       const output = JSON.parse(data);
       if (output != null) {
-        setrecentSearchDataList(output);
+        setRecentSearchDataList(output);
       }
     } catch (err) {
       console.log(err);
@@ -368,7 +368,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
       const output = JSON.parse(data);
       if (output != null) {
-        setrecentDestinationList(output);
+        setRecentDestinationList(output);
       }
     } catch (err) {
       console.log(err);

@@ -270,11 +270,15 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
         payload: {...route.params.details, voucher: route.params.voucherData, paymentMethod: 'TOKTOKWALLET'},
       });
     }
+    const addressObject = {
+      hash: loc.placeHash,
+      place: loc.place,
+    };
 
     if (selectedInput == 'D') {
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: addressObject});
     } else {
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: addressObject});
     }
     onPressLocation();
   };
