@@ -1,11 +1,17 @@
-import React, {useState, useCallback} from 'react';
-import {View, Text, StyleSheet, TextInput, Image, Pressable} from 'react-native';
+import React, {useState, useCallback, useEffect} from 'react';
+import {View, Text, StyleSheet, TextInput, Image, Pressable, BackHandler, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {COLOR, DARK, MEDIUM, LIGHT, MAP_DELTA_LOW} from '../../../res/constants';
 import {HeaderBack, HeaderTitle, AlertOverlay} from '../../../components';
-import {DELETE_ADDRESS, PATCH_ADDRESS_CHANGES, POST_NEW_ADDRESS, TOKTOK_ADDRESS_CLIENT} from '../../../graphql';
+import {
+  DELETE_ADDRESS,
+  PATCH_ADDRESS_CHANGES,
+  POST_NEW_ADDRESS,
+  TOKTOK_ADDRESS_CLIENT,
+  GET_ADDRESS,
+} from '../../../graphql';
 import {onError} from '../../../util/ErrorUtility';
-import {useMutation} from '@apollo/react-hooks';
+import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import CONSTANTS from '../../../common/res/constants';
 import ToggleSwitch from 'toggle-switch-react-native';
 
@@ -17,20 +23,39 @@ import OfficeIcon from '../../../assets/icons/SavedAddress/office.png';
 import CustomIcon from '../../../assets/icons/SavedAddress/custom.png';
 import {currentLocation} from '../../../helper';
 import {useFocusEffect} from '@react-navigation/native';
-import {ConfirmOperationAddressModal, SuccesOperationAddressModal} from './Components';
+import {
+  ConfirmOperationAddressModal,
+  SuccesOperationAddressModal,
+  UnsaveEditModal,
+  InfoAddressModal,
+} from './Components';
 import {ThrottledOpacity} from '../../../components_section';
 
 const AddLocation = ({navigation, route, session}) => {
   navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={['Add', 'Address']} />,
+    headerLeft: () => <HeaderBack onBack={handleBackPress} />,
+    headerTitle: () => <HeaderTitle label={[addressObj?.id ? 'Edit' : 'Add', 'Address']} />,
   });
 
-  const {addressObj, showHome = true, showOffice = true} = route.params;
-  const [locCoordinates, setLocCoordinates] = useState({});
+  const {
+    addressIdFromService,
+    coordsFromService = null,
+    isFromLocationAccess,
+    addressObj = null,
+    isHomeTaken = false,
+    isOfficeTaken = false,
+  } = route.params;
+
   const [modalOperationType, setModalOperationType] = useState('');
+  const [locCoordinates, setLocCoordinates] = useState({});
+  const [isEdited, setIsEdited] = useState(false);
   const [showConfirmOperationAddressModal, setShowConfirmOperationAddressModal] = useState(false);
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
+  const [showUnsaveEditModal, setShowUnsaveEditModal] = useState(false);
+  const [showInfoAddressModal, setShowInfoAddressModal] = useState(false);
+  const [erroText, setErrorText] = useState(false);
+  const [errorAddressNameField, setErrorAddressNameField] = useState(false);
+  const [errorAddressField, setErrorAddressField] = useState(false);
 
   const [confirmedLocation, setConfirmedLocation] = useState(addressObj?.id ? addressObj : {});
   const [isHomeSelected, setIsHomeSelected] = useState(addressObj?.id ? addressObj.isHome : false);
@@ -41,8 +66,6 @@ const AddLocation = ({navigation, route, session}) => {
   const [landmark, setLandMark] = useState(addressObj?.id ? addressObj.landmark : '');
   const [contactNumber, setContactNumber] = useState(addressObj?.id ? addressObj.contactDetails.mobile_no : '');
   const [contactName, setContactName] = useState(addressObj?.id ? addressObj.contactDetails.fullname : '');
-
-  console.log('zion', addressObj);
 
   const [deleteAddress] = useMutation(DELETE_ADDRESS, {
     client: TOKTOK_ADDRESS_CLIENT,
@@ -59,7 +82,97 @@ const AddLocation = ({navigation, route, session}) => {
       setShowConfirmOperationAddressModal(false);
       setShowSuccessOperationAddressModal(true);
     },
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        console.log(graphQLErrors);
+        graphQLErrors.map(({message, locations, path, code, errorFields}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+          } else if (code === 'USER_INPUT_ERROR') {
+            Alert.alert('', message);
+          } else if (code === 'BAD_USER_INPUT') {
+            if (errorFields[0].field == 'label') {
+              setErrorText(errorFields[0].message);
+              setErrorAddressNameField(true);
+            } else if (errorFields[0].field == 'formattedAddress') {
+              setErrorText(errorFields[0].message);
+              setErrorAddressField(true);
+            } else {
+              Alert.alert('', message);
+            }
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
+  });
+
+  const [getAddress, {loading: GALoading}] = useLazyQuery(GET_ADDRESS, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: res => {
+      setConfirmedLocation(res.getAddress);
+      setIsDefault(res.getAddress.isDefault);
+      setIsHomeSelected(res.getAddress.isHome);
+      setIsOfficeSelected(res.getAddress.isOffice);
+      setIsCustomSelected(res.getAddress.label ? true : false);
+      setCustomLabel(res.getAddress.label);
+      setLandMark(res.getAddress.landmark);
+      setContactNumber(res.getAddress.contactDetails.mobile_no);
+      setContactName(res.getAddress.contactDetails.fullname);
+      setLocCoordinates({
+        latitude: res.getAddress.place.location.latitude,
+        longitude: res.getAddress.place.location.longitude,
+        ...MAP_DELTA_LOW,
+      });
+    },
     onError: onError,
+  });
+
+  const [postNewAddress, {loading}] = useMutation(POST_NEW_ADDRESS, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    onCompleted: () => {
+      setShowSuccessOperationAddressModal(true);
+    },
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        console.log(graphQLErrors);
+        graphQLErrors.map(({message, locations, path, code, errorFields}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+          } else if (code === 'USER_INPUT_ERROR') {
+            Alert.alert('', message);
+          } else if (code === 'BAD_USER_INPUT') {
+            if (errorFields[0].field == 'label') {
+              setErrorText(errorFields[0].message);
+              setErrorAddressNameField(true);
+            } else if (errorFields[0].field == 'formattedAddress') {
+              setErrorText(errorFields[0].message);
+              setErrorAddressField(true);
+            } else {
+              Alert.alert('', message);
+            }
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
   });
 
   const getCurrentLocation = async () => {
@@ -70,14 +183,6 @@ const AddLocation = ({navigation, route, session}) => {
       ...MAP_DELTA_LOW,
     });
   };
-
-  const [postNewAddress, {loading}] = useMutation(POST_NEW_ADDRESS, {
-    client: TOKTOK_ADDRESS_CLIENT,
-    onCompleted: () => {
-      setShowSuccessOperationAddressModal(true);
-    },
-    onError: onError,
-  });
 
   useFocusEffect(
     useCallback(() => {
@@ -94,14 +199,26 @@ const AddLocation = ({navigation, route, session}) => {
   );
 
   const saveNewAddress = () => {
+    if (!isHomeSelected && !isOfficeSelected && !customLabel) {
+      setErrorAddressNameField(true);
+      setErrorText('This is a required field');
+      return;
+    }
+
+    if (!confirmedLocation?.hash) {
+      setErrorAddressField(true);
+      setErrorText('This is a required field');
+      return;
+    }
+
     setModalOperationType('CREATE');
     postNewAddress({
       variables: {
         input: {
           isHome: isHomeSelected,
           isOffice: isOfficeSelected,
-          label: customLabel,
-          isDefault: isDefault,
+          label: customLabel ? customLabel : '',
+          isDefault: isFromLocationAccess ? true : isDefault,
           landmark: landmark,
           placeHash: confirmedLocation?.hash,
           contactDetails: {
@@ -114,16 +231,18 @@ const AddLocation = ({navigation, route, session}) => {
   };
 
   const saveEditAddress = () => {
+    const placeHash = confirmedLocation?.hash ? confirmedLocation?.hash : confirmedLocation?.placeHash;
+    const addressId = addressObj?.id ? addressObj?.id : addressIdFromService;
     patchAddressChanges({
       variables: {
         input: {
-          id: addressObj?.id,
+          id: addressId,
           isHome: isHomeSelected,
           isOffice: isOfficeSelected,
-          label: customLabel,
+          label: customLabel ? (isHomeSelected || isOfficeSelected ? '' : customLabel) : '',
           isDefault: isDefault,
           landmark: landmark,
-          placeHash: confirmedLocation?.hash,
+          placeHash: placeHash,
           contactDetails: {
             fullname: contactName,
             mobile_no: contactNumber,
@@ -143,11 +262,48 @@ const AddLocation = ({navigation, route, session}) => {
     });
   };
 
+  const initiateSaveEdit = () => {
+    const placeHash = confirmedLocation?.hash ? confirmedLocation?.hash : confirmedLocation?.placeHash;
+
+    if (!isHomeSelected && !isOfficeSelected && !customLabel) {
+      setErrorAddressNameField(true);
+      setErrorText('This is a required field');
+      return;
+    }
+
+    if (!placeHash) {
+      setErrorAddressField(true);
+      setErrorText('This is a required field');
+      return;
+    }
+
+    setShowConfirmOperationAddressModal(true), setModalOperationType('UPDATE');
+  };
+
+  const onAddressDelete = () => {
+    if (addressObj?.isDefault) {
+      setShowInfoAddressModal(true);
+      return;
+    }
+    setShowConfirmOperationAddressModal(true);
+    setModalOperationType('DELETE');
+  };
+
   const onSearchMap = () => {
-    navigation.navigate('PinLocation', {locCoordinates, setConfirmedLocation});
+    navigation.navigate('PinLocation', {
+      locCoordinates,
+      setConfirmedLocation,
+      addressObj,
+      setIsEdited,
+      setErrorAddressField,
+    });
   };
 
   const selectAddressLabel = selected => {
+    if (addressObj) {
+      setIsEdited(true);
+    }
+
     if (selected == 'Home') {
       setIsHomeSelected(true);
       setIsOfficeSelected(false);
@@ -164,7 +320,14 @@ const AddLocation = ({navigation, route, session}) => {
   };
 
   const onSelectContact = number => {
-    setContactNumber(number);
+    if (addressObj?.id) {
+      setIsEdited(true);
+    }
+    if (number.charAt(0) == '0') {
+      setContactNumber(number.substring(1));
+    } else {
+      setContactNumber(number);
+    }
   };
 
   const onPressContacts = () => {
@@ -176,8 +339,135 @@ const AddLocation = ({navigation, route, session}) => {
     navigation.pop();
   };
 
+  const goToHome = () => {
+    setShowSuccessOperationAddressModal(false);
+    navigation.push('ConsumerLanding');
+  };
+
+  const showCustomFunc = () => {
+    if (isOfficeTaken && isHomeTaken) {
+      return false;
+    } else {
+      if (!isOfficeTaken || !isHomeTaken) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  const showHomeFunc = () => {
+    if (!addressObj) {
+      return !isHomeTaken;
+    } else {
+      if (isHomeTaken) {
+        return true;
+      }
+    }
+
+    // if (!isHomeTaken) {
+    //   return false;
+    // }
+  };
+
+  const showOfficeFunc = () => {
+    if (!addressObj) {
+      return !isOfficeTaken;
+    } else {
+      return !isOfficeTaken;
+    }
+  };
+
+  const handleBackPress = () => {
+    if (isEdited) {
+      setShowUnsaveEditModal(true);
+    } else {
+      navigation.pop();
+    }
+  };
+
+  const onMobileChange = value => {
+    if (value.length == 1 && value == '0') {
+      setContactNumber('');
+      return;
+    }
+
+    if (addressObj?.id) {
+      setContactNumber(value), setIsEdited(true);
+    } else {
+      setContactNumber(value);
+    }
+  };
+
+  useEffect(() => {
+    if (addressIdFromService) {
+      getAddress({
+        variables: {
+          input: {
+            id: addressIdFromService,
+          },
+        },
+      });
+    }
+
+    if (coordsFromService) {
+      let coordinates = {
+        latitude: coordsFromService?.latitude,
+        longitude: coordsFromService?.longitude,
+        ...MAP_DELTA_LOW,
+      };
+      // onSearchMap();
+      navigation.navigate('PinLocation', {
+        locCoordinates: coordinates,
+        setConfirmedLocation,
+        addressObj,
+        setIsEdited,
+        setErrorAddressField,
+      });
+    }
+
+    if (addressObj) return;
+
+    if (!isHomeTaken && !isOfficeTaken) {
+      setIsHomeSelected(true);
+      setIsCustomSelected(false);
+    } else if (isHomeTaken && !isOfficeTaken) {
+      setIsOfficeSelected(true);
+    } else if (!isHomeTaken && isOfficeTaken) {
+      setIsHomeSelected(true);
+    } else {
+      if (!isOfficeTaken || !isHomeTaken) {
+        setIsCustomSelected(false);
+      } else {
+        setIsCustomSelected(true);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      handleBackPress();
+      return true;
+    });
+    return () => {
+      backHandler.remove();
+    };
+  }, [isEdited]);
+
   return (
     <>
+      <InfoAddressModal
+        visible={showInfoAddressModal}
+        modalType={'DeleteDefault'}
+        onSubmit={() => setShowInfoAddressModal(false)}
+      />
+      <UnsaveEditModal
+        visible={showUnsaveEditModal}
+        onSubmit={() => {
+          setShowUnsaveEditModal(false), navigation.pop();
+        }}
+        onReject={() => setShowUnsaveEditModal(false)}
+      />
       <ConfirmOperationAddressModal
         visible={showConfirmOperationAddressModal}
         onSubmit={modalOperationType == 'UPDATE' ? saveEditAddress : confirmDeleteAddress}
@@ -186,14 +476,14 @@ const AddLocation = ({navigation, route, session}) => {
       />
       <SuccesOperationAddressModal
         visible={showSuccessOperationAddressModal}
-        onSubmit={goBackAfterSuccessPost}
+        onSubmit={isFromLocationAccess ? goToHome : goBackAfterSuccessPost}
         operationType={modalOperationType}
       />
       <ScrollView style={{flex: 1, backgroundColor: '#FFF'}}>
-        <AlertOverlay visible={loading || PACLoading} />
+        <AlertOverlay visible={loading || PACLoading || GALoading} />
 
         <View style={styles.labelContainer}>
-          {showHome && (
+          {!isHomeTaken && (
             <TouchableOpacity onPress={() => selectAddressLabel('Home')}>
               <View style={[styles.labelBox, isHomeSelected ? styles.labelSelected : null]}>
                 <Image source={HomeIcon} resizeMode={'contain'} style={styles.labelIcon} />
@@ -202,7 +492,7 @@ const AddLocation = ({navigation, route, session}) => {
             </TouchableOpacity>
           )}
 
-          {showOffice && (
+          {!isOfficeTaken && (
             <TouchableOpacity onPress={() => selectAddressLabel('Office')}>
               <View style={[styles.labelBox, isOfficeSelected ? styles.labelSelected : null]}>
                 <Image source={OfficeIcon} resizeMode={'contain'} style={styles.labelIcon} />
@@ -211,12 +501,14 @@ const AddLocation = ({navigation, route, session}) => {
             </TouchableOpacity>
           )}
 
-          <TouchableOpacity onPress={() => selectAddressLabel('Custom')}>
-            <View style={[styles.labelBox, isCustomSelected ? styles.labelSelected : null]}>
-              <Image source={CustomIcon} resizeMode={'contain'} style={styles.labelIcon} />
-              <Text>Custom</Text>
-            </View>
-          </TouchableOpacity>
+          {showCustomFunc() && (
+            <TouchableOpacity onPress={() => selectAddressLabel('Custom')}>
+              <View style={[styles.labelBox, isCustomSelected ? styles.labelSelected : null]}>
+                <Image source={CustomIcon} resizeMode={'contain'} style={styles.labelIcon} />
+                <Text>Custom</Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
 
         {isCustomSelected && (
@@ -224,27 +516,37 @@ const AddLocation = ({navigation, route, session}) => {
             <Text style={styles.label}>Address Name</Text>
             <TextInput
               value={customLabel}
-              onChangeText={value => setCustomLabel(value)}
-              style={styles.input}
+              onChangeText={
+                addressObj?.id
+                  ? value => {
+                      setIsEdited(true), setCustomLabel(value), setErrorAddressNameField(false);
+                    }
+                  : value => {
+                      setCustomLabel(value), setErrorAddressNameField(false);
+                    }
+              }
+              style={[styles.input, errorAddressNameField && {borderWidth: 1, borderColor: CONSTANTS.COLOR.RED}]}
               placeholderTextColor={LIGHT}
               returnKeyType="done"
             />
+            {errorAddressNameField && <Text style={{marginLeft: 16, color: CONSTANTS.COLOR.RED}}>{erroText}</Text>}
           </>
         )}
 
-        {/*-------ON PRESS: NAVIGATE TO PIN ADDRESS SCREEN----*/}
-
         <Text style={styles.label}>Address</Text>
-        <Pressable onPress={onSearchMap}>
-          <View pointerEvents="none">
-            <TextInput
-              numberOfLines={2}
-              multiline
-              value={confirmedLocation?.place?.formattedAddress}
-              style={styles.input}
-            />
-          </View>
-        </Pressable>
+        <View>
+          <Pressable onPress={onSearchMap}>
+            <View pointerEvents="none">
+              <TextInput
+                numberOfLines={2}
+                multiline
+                value={confirmedLocation?.place?.formattedAddress}
+                style={[styles.input, errorAddressField && {borderWidth: 1, borderColor: CONSTANTS.COLOR.RED}]}
+              />
+            </View>
+          </Pressable>
+          {errorAddressField && <Text style={{marginLeft: 16, color: CONSTANTS.COLOR.RED}}>{erroText}</Text>}
+        </View>
 
         <Text style={styles.label}>Landmark (optional)</Text>
         <Text style={styles.sublabel}>
@@ -252,25 +554,39 @@ const AddLocation = ({navigation, route, session}) => {
         </Text>
         <TextInput
           value={landmark}
-          onChangeText={value => setLandMark(value)}
-          style={[styles.input, {}]}
+          onChangeText={
+            addressObj?.id
+              ? value => {
+                  setIsEdited(true), setLandMark(value);
+                }
+              : value => setLandMark(value)
+          }
+          style={styles.input}
           multiline={true}
           placeholder="e.g. In front of sari-sari station "
           placeholderTextColor={LIGHT}
         />
 
         <View style={styles.lineDivider} />
-        <View style={styles.toggleContainer}>
-          <Text>Set as default address</Text>
-          {/*-------TO DO: ADD CONDITION----*/}
-          <ToggleSwitch
-            isOn={isDefault}
-            onColor={CONSTANTS.COLOR.ORANGE}
-            offColor={CONSTANTS.COLOR.MEDIUM}
-            size="small"
-            onToggle={() => setIsDefault(!isDefault)}
-          />
-        </View>
+        {!isFromLocationAccess && (
+          <View style={styles.toggleContainer}>
+            <Text>Set as default address</Text>
+            {/*-------TO DO: ADD CONDITION----*/}
+            <ToggleSwitch
+              isOn={isDefault}
+              onColor={CONSTANTS.COLOR.ORANGE}
+              offColor={CONSTANTS.COLOR.MEDIUM}
+              size="small"
+              onToggle={
+                addressObj?.id
+                  ? () => {
+                      setIsDefault(!isDefault), setIsEdited(true);
+                    }
+                  : () => setIsDefault(!isDefault)
+              }
+            />
+          </View>
+        )}
         <View style={styles.bottomlineDivider} />
 
         <Text style={[styles.label, {marginBottom: 0, color: 'black'}]}> Contact Details (optional)</Text>
@@ -278,7 +594,13 @@ const AddLocation = ({navigation, route, session}) => {
         <Text style={styles.label}>Contact Name</Text>
         <TextInput
           value={contactName}
-          onChangeText={value => setContactName(value)}
+          onChangeText={
+            addressObj?.id
+              ? value => {
+                  setContactName(value), setIsEdited(true);
+                }
+              : value => setContactName(value)
+          }
           style={styles.input}
           placeholderTextColor={LIGHT}
           returnKeyType="done"
@@ -288,6 +610,7 @@ const AddLocation = ({navigation, route, session}) => {
         <View
           style={{
             marginHorizontal: 16,
+            marginBottom: 16,
             flexDirection: 'row',
             alignItems: 'center',
           }}>
@@ -311,9 +634,10 @@ const AddLocation = ({navigation, route, session}) => {
 
             <TextInput
               value={contactNumber}
-              onChangeText={value => setContactNumber(value)}
+              keyboardType="number-pad"
+              onChangeText={onMobileChange}
               maxLength={10}
-              defaultValue={contactNumber ? contactNumber : ''}
+              defaultValue={contactNumber}
               style={{padding: 16, flex: 1}}
               placeholderTextColor={LIGHT}
               returnKeyType="done"
@@ -328,7 +652,7 @@ const AddLocation = ({navigation, route, session}) => {
         </View>
       </ScrollView>
 
-      {!addressObj?.id && (
+      {!addressObj?.id && !addressIdFromService && (
         <View style={styles.submitContainer}>
           <ThrottledOpacity delay={4000} onPress={saveNewAddress} underlayColor={COLOR} style={{borderRadius: 10}}>
             <View style={styles.submit}>
@@ -338,28 +662,25 @@ const AddLocation = ({navigation, route, session}) => {
         </View>
       )}
 
-      {/*-------TO DO: ADD CONDITION----*/}
+      {addressIdFromService && (
+        <View style={styles.submitContainer}>
+          <ThrottledOpacity delay={4000} onPress={initiateSaveEdit} underlayColor={COLOR} style={{borderRadius: 10}}>
+            <View style={styles.submit}>
+              <Text style={styles.submitText}>Save</Text>
+            </View>
+          </ThrottledOpacity>
+        </View>
+      )}
+
       {addressObj?.id && (
         <View style={[styles.submitContainer, styles.editAddressContainer]}>
-          <ThrottledOpacity
-            delay={4000}
-            onPress={() => {
-              setShowConfirmOperationAddressModal(true), setModalOperationType('DELETE');
-            }}
-            underlayColor={COLOR}
-            style={{borderRadius: 10}}>
+          <ThrottledOpacity delay={4000} onPress={onAddressDelete} underlayColor={COLOR} style={{borderRadius: 10}}>
             <View style={styles.deleteButtonWraper}>
               <Text style={[styles.submitText, {color: CONSTANTS.COLOR.ORANGE}]}>Delete</Text>
             </View>
           </ThrottledOpacity>
 
-          <ThrottledOpacity
-            delay={4000}
-            onPress={() => {
-              setShowConfirmOperationAddressModal(true), setModalOperationType('UPDATE');
-            }}
-            underlayColor={COLOR}
-            style={{borderRadius: 10}}>
+          <ThrottledOpacity delay={4000} onPress={initiateSaveEdit} underlayColor={COLOR} style={{borderRadius: 10}}>
             <View style={[styles.submit, {paddingHorizontal: '18%'}]}>
               <Text style={styles.submitText}>Save</Text>
             </View>
