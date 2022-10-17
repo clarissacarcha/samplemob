@@ -3,7 +3,7 @@ import {Image, StyleSheet, Text, View, Platform} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
 import toktokgoSplashBeta from '../../../assets/toktokgo/toktokgo-splash.png';
 import toktokgoSplash from '../../../assets/toktokgo/toktokgo-splash-improved.png';
-import {GET_TRIPS_CONSUMER} from '../../graphql/model/Trip';
+import {GO_GET_TRIPS_CONSUMER} from '../../graphql/model/Trip';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -30,35 +30,35 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
     }
   }, []);
 
-  const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
+  const [getTripsConsumer] = useLazyQuery(GO_GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      if (response.getTripsConsumer.length > 0) {
-        dispatchToSession(response.getTripsConsumer[0]);
+      if (response.goGetTripsConsumer.length > 0) {
+        dispatchToSession(response.goGetTripsConsumer[0]);
 
         setTimeout(() => {
-          console.log('HERE:', response.getTripsConsumer[0]?.status);
+          console.log('HERE:', response.goGetTripsConsumer[0]?.status);
           if (
-            response.getTripsConsumer[0]?.tag == 'ONGOING' &&
-            ['BOOKED', 'DISPATCHED'].includes(response.getTripsConsumer[0]?.status)
+            response.goGetTripsConsumer[0]?.tag == 'ONGOING' &&
+            ['BOOKED', 'DISPATCHED'].includes(response.goGetTripsConsumer[0]?.status)
           ) {
-            const decodedPolyline = decodeLegsPolyline(response.getTripsConsumer[0]?.route.legs);
+            const decodedPolyline = decodeLegsPolyline(response.goGetTripsConsumer[0]?.route.legs);
             navigation.replace('ToktokGoFindingDriver', {
               popTo: 1,
               decodedPolyline,
             });
-            checkNotificationToNavigate({trip: response.getTripsConsumer[0]});
+            checkNotificationToNavigate({trip: response.goGetTripsConsumer[0]});
           } else if (
             response.getTripsConsumer[0]?.tag == 'ONGOING' &&
-            ['ACCEPTED', 'ARRIVED', 'PICKED_UP'].includes(response.getTripsConsumer[0]?.status)
+            ['ACCEPTED', 'ARRIVED', 'PICKED_UP'].includes(response.goGetTripsConsumer[0]?.status)
           ) {
-            const decodedPolyline = decodeLegsPolyline(response.getTripsConsumer[0]?.route.legs);
+            const decodedPolyline = decodeLegsPolyline(response.goGetTripsConsumer[0]?.route.legs);
             navigation.replace('ToktokGoOnTheWayRoute', {
               popTo: 1,
               decodedPolyline,
             });
-            checkNotificationToNavigate({trip: response.getTripsConsumer[0]});
+            checkNotificationToNavigate({trip: response.goGetTripsConsumer[0]});
           } else {
             healthCareAccept();
           }
