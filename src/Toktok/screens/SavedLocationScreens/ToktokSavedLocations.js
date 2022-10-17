@@ -40,8 +40,8 @@ const SavedLocations = ({navigation, session, route}) => {
   const [showInfoAddressModal, setShowInfoAddressModal] = useState(false);
   const [infoModalType, setInfoModalType] = useState(false);
   const [addressId, setAddressId] = useState();
-  const [showOffice, setShowOffice] = useState(true);
-  const [showHome, setShowHOme] = useState(true);
+  const [isOfficeTaken, setIsOfficeTaken] = useState(true);
+  const [isHomeTaken, setIsHomeTaken] = useState(true);
 
   const [deleteAddress] = useMutation(DELETE_ADDRESS, {
     client: TOKTOK_ADDRESS_CLIENT,
@@ -57,8 +57,8 @@ const SavedLocations = ({navigation, session, route}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      res.getAddresses.find(item => item.isOffice) ? setShowOffice(false) : setShowOffice(true);
-      res.getAddresses.find(item => item.isHome) ? setShowHOme(false) : setShowHOme(true);
+      res.getAddresses.find(item => item.isOffice) ? setIsOfficeTaken(true) : setIsOfficeTaken(false);
+      res.getAddresses.find(item => item.isHome) ? setIsHomeTaken(true) : setIsHomeTaken(false);
     },
     onError: onError,
   });
@@ -67,7 +67,7 @@ const SavedLocations = ({navigation, session, route}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      navigation.push('ToktokAddLocation', {addressObj: res.getAddress});
+      navigation.push('ToktokAddLocation', {addressObj: res.getAddress, isHomeTaken, isOfficeTaken});
     },
     onError: onError,
   });
@@ -119,7 +119,7 @@ const SavedLocations = ({navigation, session, route}) => {
       setShowInfoAddressModal(true);
       return;
     }
-    navigation.push('ToktokAddLocation', {showHome, showOffice});
+    navigation.push('ToktokAddLocation', {isHomeTaken, isOfficeTaken});
   };
 
   const rightSwipe = (item, progress, dragX) => {
