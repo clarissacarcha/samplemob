@@ -63,8 +63,6 @@ const BtProceedButton = (props: PropsType): React$Node => {
     // } else
     if (isInsufficientBalance) {
       error = 'You have insufficient balance. Kindly cash in or enter lower amount.';
-    } else {
-      error = '';
     }
     changeErrorMessages('amount', error);
     return !error;
@@ -85,7 +83,6 @@ const BtProceedButton = (props: PropsType): React$Node => {
     const isAmountValid = checkAmount();
     const isValidEmail = checkEmail();
     let checkLimit = false;
-
     if (isAmountValid) {
       checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
         amount,
