@@ -22,6 +22,7 @@ export const Location = ({
   loading,
   setLoadingAutoComplete,
   loadingAutoComplete,
+  setSearchResponse,
 }) => {
   const dispatch = useDispatch();
   return (
@@ -60,6 +61,7 @@ export const Location = ({
               onPress={() => {
                 setSearchOrigin(null);
                 dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: null});
+                setSearchResponse([]);
               }}>
               {loading == true ? (
                 <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
@@ -105,6 +107,7 @@ export const Location = ({
                 onPress={() => {
                   setSearchDestination(null);
                   dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: null});
+                  setSearchResponse([]);
                 }}>
                 <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
               </ThrottledOpacity>

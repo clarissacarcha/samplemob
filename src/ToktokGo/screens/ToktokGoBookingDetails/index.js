@@ -14,7 +14,7 @@ import {ScrollView, StyleSheet, View, Dimensions} from 'react-native';
 import {AlertOverlay, HeaderBack, HeaderTitle} from '../../../components';
 import CONSTANTS from '../../../common/res/constants';
 import {connect, useSelector} from 'react-redux';
-import {GET_TRIP} from '../../graphql';
+import {GO_GET_TRIP} from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {onErrorAppSync} from '../../util';
@@ -31,12 +31,12 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
   const [showSuccessfull, setShowSuccessfull] = useState(false);
   const [booking, setBooking] = useState(route.params.booking);
 
-  const [getTrip, {loading, error}] = useLazyQuery(GET_TRIP, {
+  const [getTrip, {loading, error}] = useLazyQuery(GO_GET_TRIP, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: onErrorAppSync,
     onCompleted: response => {
-      setBooking(response.getTrip);
+      setBooking(response.goGetTrip);
     },
   });
 
