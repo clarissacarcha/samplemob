@@ -9,23 +9,23 @@ import {
   Animated,
   Image,
 } from 'react-native';
-import {COLOR, ORANGE, COLORS} from '../../../res/constants';
-import {GET_ADDRESSES, DELETE_ADDRESS, TOKTOK_ADDRESS_CLIENT, GET_ADDRESS} from '../../../graphql';
-import {HeaderBack, HeaderTitle} from '../../../components';
+import {COLOR, ORANGE, COLORS} from '../../../../res/constants';
+import {GET_ADDRESSES, DELETE_ADDRESS, TOKTOK_ADDRESS_CLIENT, GET_ADDRESS} from '../../../../graphql';
+import {HeaderBack, HeaderTitle} from '../../../../components';
 import React, {useState, useCallback} from 'react';
-import CONSTANTS from '../../../common/res/constants';
+import CONSTANTS from '../../../../common/res/constants';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {
-  SavedLocationCard,
   ConfirmOperationAddressModal,
   SuccesOperationAddressModal,
   InfoAddressModal,
-} from './Components';
-import DeleteImg from '../../../assets/icons/deleteIcon.png';
+  SavedLocationCard,
+} from '.././Components';
+import DeleteImg from '../../../../assets/icons/deleteIcon.png';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import {ThrottledOpacity} from '../../../components_section';
+import {ThrottledOpacity} from '../../../../components_section';
 import {connect} from 'react-redux';
-import {onError} from '../../../util/ErrorUtility';
+import {onError} from '../../../../util/ErrorUtility';
 import {useFocusEffect} from '@react-navigation/native';
 
 const imageWidth = Dimensions.get('window').width - 200;
@@ -67,7 +67,7 @@ const SavedLocations = ({navigation, session, route}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      navigation.push('ToktokAddLocation', {addressObj: res.getAddress, isHomeTaken, isOfficeTaken});
+      navigation.push('ToktokAddEditLocation', {addressObj: res.getAddress, isHomeTaken, isOfficeTaken});
     },
     onError: onError,
   });
@@ -119,7 +119,7 @@ const SavedLocations = ({navigation, session, route}) => {
       setShowInfoAddressModal(true);
       return;
     }
-    navigation.push('ToktokAddLocation', {isHomeTaken, isOfficeTaken});
+    navigation.push('ToktokAddEditLocation', {isHomeTaken, isOfficeTaken});
   };
 
   const rightSwipe = (item, progress, dragX) => {

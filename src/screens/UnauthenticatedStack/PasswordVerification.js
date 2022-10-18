@@ -143,7 +143,7 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices,
           navigation.replace('RootDrawer', {
             screen: 'AuthenticatedStack',
             params: {
-              screen: 'LocationAccess',
+              screen: 'ToktokLocationAccess',
             },
           });
         }

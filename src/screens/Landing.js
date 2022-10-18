@@ -86,7 +86,7 @@ const Landing = ({createSession, destroySession, setAppServices, navigation, sup
             navigation.replace('RootDrawer', {
               screen: 'AuthenticatedStack',
               params: {
-                screen: 'LocationAccess',
+                screen: 'ToktokLocationAccess',
               },
             });
           }

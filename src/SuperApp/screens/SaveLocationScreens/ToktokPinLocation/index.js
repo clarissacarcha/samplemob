@@ -1,29 +1,29 @@
 import React, {useState, useRef} from 'react';
 import {View, TextInput, StyleSheet, ActivityIndicator, FlatList, Image, Text, Dimensions} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import {HeaderBack, HeaderTitle} from '../../../components';
-import {DARK} from '../../../res/constants';
-import CONSTANTS from '../../../common/res/constants';
+import {HeaderBack, HeaderTitle} from '../../../../components';
+import {DARK} from '../../../../res/constants';
+import CONSTANTS from '../../../../common/res/constants';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION} from '../../../ToktokGo/graphql';
-import {POST_NEW_ADDRESS, TOKTOK_ADDRESS_CLIENT} from '../../../graphql';
+import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION} from '../../../../ToktokGo/graphql';
+import {POST_NEW_ADDRESS, TOKTOK_ADDRESS_CLIENT} from '../../../../graphql';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import uuid from 'react-native-uuid';
-import {useDebounce} from '../../../ToktokGo/helpers';
-import {currentLocation} from '../../../helper';
+import {useDebounce} from '../../../../ToktokGo/helpers';
+import {currentLocation} from '../../../../helper';
 
-import GpsDenied from '../../../assets/images/GpsDenied.png';
-import PinLocationIcon from '../../../assets/images/locationIcon.png';
-import {ThrottledOpacity} from '../../../components_section';
-import SearchICN from '../../../assets/images/SearchIcon.png';
-import ClearTextInput from '../../../assets/icons/EraseTextInput.png';
-import {MAP_DELTA_LOW} from '../../../res/constants';
-import {onError} from '../../../util/ErrorUtility';
-import {SuccesOperationAddressModal} from './Components';
+import GpsDenied from '../../../../assets/images/GpsDenied.png';
+import PinLocationIcon from '../../../../assets/images/locationIcon.png';
+import {ThrottledOpacity} from '../../../../components_section';
+import SearchICN from '../../../../assets/images/SearchIcon.png';
+import ClearTextInput from '../../../../assets/icons/EraseTextInput.png';
+import {MAP_DELTA_LOW} from '../../../../res/constants';
+import {onError} from '../../../../util/ErrorUtility';
+import {SuccesOperationAddressModal} from '../Components';
 
 const FULL_WIDTH = Dimensions.get('window').width;
 
-const PinLocation = ({navigation, route}) => {
+const ToktokPinLocation = ({navigation, route}) => {
   const mapRef = useRef(null);
   const inputRef = useRef();
   const sessionToken = uuid.v4();
@@ -292,10 +292,11 @@ const PinLocation = ({navigation, route}) => {
         </ThrottledOpacity>
       </View>
     </View>
+    // <Text>here</Text>
   );
 };
 
-export default PinLocation;
+export default ToktokPinLocation;
 
 const styles = StyleSheet.create({
   container: {

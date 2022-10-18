@@ -2,19 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Dimensions, Image, ImageBackground} from 'react-native';
 
 // helper
-import CONSTANTS from '../../../common/res/constants';
-import {MAP_DELTA_LOW} from '../../../res/constants';
-import {ThrottledOpacity} from '../../../components_section';
-import {currentLocation} from '../../../helper';
+import CONSTANTS from '../../../../common/res/constants';
+import {MAP_DELTA_LOW} from '../../../../res/constants';
+import {ThrottledOpacity} from '../../../../components_section';
+import {currentLocation} from '../../../../helper';
 
 // images
-import GradiantBG from '../../../assets/images/LinearGradiant.png';
-import TokLogo from '../../../assets/images/ToktokGoIcon.png';
-import LocatioAccessIMG from '../../../assets/images/LocationAccess.png';
+import GradiantBG from '../../../../assets/images/LinearGradiant.png';
+import TokLogo from '../../../../assets/images/ToktokGoIcon.png';
+import LocatioAccessIMG from '../../../../assets/images/LocationAccess.png';
 
 const FULL_WIDTH = Dimensions.get('window').width;
 
-export const LocationAccess = ({navigation, route}) => {
+export const ToktokLocationAccess = ({navigation, route}) => {
   const [locCoordinates, setLocCoordinates] = useState({});
 
   const getCurrentLocation = async () => {
@@ -44,13 +44,13 @@ export const LocationAccess = ({navigation, route}) => {
         <ThrottledOpacity
           delay={4000}
           style={styles.primaryBtn}
-          onPress={() => navigation.push('ToktokAddLocation', {addressObj: null, isFromLocationAccess: true})}>
+          onPress={() => navigation.push('ToktokAddEditLocation', {addressObj: null, isFromLocationAccess: true})}>
           <Text style={styles.primaryBtnText}>Enter My Address</Text>
         </ThrottledOpacity>
         <ThrottledOpacity
           delay={4000}
           style={styles.secondaryBtn}
-          onPress={() => navigation.push('PinLocation', {locCoordinates, isFromLocationAccess: true})}>
+          onPress={() => navigation.push('ToktokPinLocation', {locCoordinates, isFromLocationAccess: true})}>
           <Text style={styles.secondaryBtnText}>Use My Current Location</Text>
         </ThrottledOpacity>
       </View>

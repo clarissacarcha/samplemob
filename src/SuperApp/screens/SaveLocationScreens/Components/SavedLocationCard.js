@@ -64,7 +64,6 @@ export const SavedLocationCard = ({onPressAddress, address, lastItem}) => {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 5,
-    // marginBottom: 16,
     marginHorizontal: 16,
   },
   cardShadow: {
