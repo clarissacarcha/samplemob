@@ -346,7 +346,11 @@ const AddLocation = ({navigation, route, session}) => {
 
   const showCustomFunc = () => {
     if (isOfficeTaken && isHomeTaken) {
-      return false;
+      if (addressObj && !addressObj?.label) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       if (!isOfficeTaken || !isHomeTaken) {
         return true;
@@ -360,21 +364,27 @@ const AddLocation = ({navigation, route, session}) => {
     if (!addressObj) {
       return !isHomeTaken;
     } else {
-      if (isHomeTaken) {
+      if (isHomeTaken && addressObj?.isHome) {
         return true;
+      } else if (!isHomeTaken) {
+        return true;
+      } else {
+        return false;
       }
     }
-
-    // if (!isHomeTaken) {
-    //   return false;
-    // }
   };
 
   const showOfficeFunc = () => {
     if (!addressObj) {
       return !isOfficeTaken;
     } else {
-      return !isOfficeTaken;
+      if (isOfficeTaken && addressObj?.isOffice) {
+        return true;
+      } else if (!isOfficeTaken) {
+        return true;
+      } else {
+        return false;
+      }
     }
   };
 
@@ -483,7 +493,7 @@ const AddLocation = ({navigation, route, session}) => {
         <AlertOverlay visible={loading || PACLoading || GALoading} />
 
         <View style={styles.labelContainer}>
-          {!isHomeTaken && (
+          {showHomeFunc() && (
             <TouchableOpacity onPress={() => selectAddressLabel('Home')}>
               <View style={[styles.labelBox, isHomeSelected ? styles.labelSelected : null]}>
                 <Image source={HomeIcon} resizeMode={'contain'} style={styles.labelIcon} />
@@ -492,7 +502,7 @@ const AddLocation = ({navigation, route, session}) => {
             </TouchableOpacity>
           )}
 
-          {!isOfficeTaken && (
+          {showOfficeFunc() && (
             <TouchableOpacity onPress={() => selectAddressLabel('Office')}>
               <View style={[styles.labelBox, isOfficeSelected ? styles.labelSelected : null]}>
                 <Image source={OfficeIcon} resizeMode={'contain'} style={styles.labelIcon} />
