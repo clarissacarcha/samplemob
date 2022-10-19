@@ -73,7 +73,7 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
       if (networkError) {
         alertGO({message: 'Network error occurred. Please check your internet connection.'});
       } else if (graphQLErrors.length > 0) {
-        navigation.replace('ToktokGoMaintance');
+        navigation.replace('SuperAppServiceMaintenance', {service: 'GO'});
       }
     },
   });

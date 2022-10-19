@@ -4,6 +4,7 @@ import SuperAppPromosScreen from '../../../SuperApp/screens/SuperAppPromos/Super
 import {SelectedVoucherScreen, VoucherScreen} from '../../../SuperApp/screens';
 import ReferralScreen from '../../../SuperApp/screens/ReferralScreen/ReferralScreen';
 import ReferralExistScreen from '../../../SuperApp/screens/ReferralScreen/ReferralExistScreen';
+import SuperAppServiceMaintenance from '../../../SuperApp/screens/SuperAppServiceMaintenance';
 
 export default ({Navigator}) => (
   <>
@@ -12,5 +13,10 @@ export default ({Navigator}) => (
     <Navigator.Screen name="VoucherScreen" component={VoucherScreen} options={{headerShown: false}} />
     <Navigator.Screen name="SelectedVoucherScreen" component={SelectedVoucherScreen} options={{headerShown: false}} />
     <Navigator.Screen name="ReferralExistScreen" component={ReferralExistScreen} options={{headerShown: false}} />
+    <Navigator.Screen
+      name="SuperAppServiceMaintenance"
+      component={SuperAppServiceMaintenance}
+      options={{headerShown: false}}
+    />
   </>
 );
