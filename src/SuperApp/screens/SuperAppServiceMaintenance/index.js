@@ -81,10 +81,8 @@ const SuperAppServiceMaintenance = ({navigation, route}) => {
       <ThrottledOpacity style={styles.backButton} onPress={onBackPress}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </ThrottledOpacity>
-      <View style={{alignItems: 'center'}}>
-        <View style={{marginTop: StatusBar.currentHeight + 120}}>
-          <Image source={serviceImage('logo')} resizeMode={'contain'} style={{height: 30}} />
-        </View>
+      <View style={{alignItems: 'center', flex: 1, justifyContent: 'center'}}>
+        <Image source={serviceImage('logo')} resizeMode={'contain'} style={{height: 30}} />
         <Image
           source={serviceImage('image')}
           resizeMode={'contain'}
