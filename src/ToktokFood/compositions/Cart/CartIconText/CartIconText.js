@@ -13,7 +13,16 @@ import Alert from 'toktokfood/components/Alert';
 import {useNavigation} from '@react-navigation/native';
 
 const CartIconText = (props: PropsType): React$Node => {
-  const {id = 1, source = null, title = '', text = '', contactNumber = '', landmark = '', name = ''} = props;
+  const {
+    id = 1,
+    source = null,
+    title = '',
+    text = '',
+    contactNumber = '',
+    landmark = '',
+    name = '',
+    cartRefetch,
+  } = props;
   const theme = useTheme();
   const navigation = useNavigation();
   const [isAlertVisible, setIsAlertVisible] = useState(false);
@@ -29,7 +38,7 @@ const CartIconText = (props: PropsType): React$Node => {
       buttonText2="Yes"
       onPress2={() => {
         setIsAlertVisible(false);
-        navigation.navigate('ToktokFoodAddressDetails', {isCart: true});
+        navigation.navigate('ToktokFoodAddressDetails', {isCart: true, cartRefetch});
       }}
     />
   );

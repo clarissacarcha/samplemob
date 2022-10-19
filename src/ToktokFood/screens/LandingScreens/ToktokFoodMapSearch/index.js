@@ -18,6 +18,13 @@ import {getFormattedAddress} from 'toktokfood/helper';
 
 import {PickUpDetails} from './component';
 
+const PHILIPPINE_REGION = {
+  latitude: 11.22309004847093,
+  latitudeDelta: 19.887065883877668,
+  longitude: 121.97818368673325,
+  longitudeDelta: 10.145791545510278,
+};
+
 const ToktokFoodMapSearch = () => {
   const route = useRoute();
   const dispatch = useDispatch();
@@ -76,6 +83,9 @@ const ToktokFoodMapSearch = () => {
       dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...mapInfo.fullInfo}});
       dispatch({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: {...details}});
     });
+    if (route.params?.cartRefetch) {
+      route.params?.cartRefetch();
+    }
   };
 
   const closeMap = () => {
@@ -87,15 +97,18 @@ const ToktokFoodMapSearch = () => {
       const {coordinates} = route.params;
       const isCoordinate = !isNaN(coordinates.latitude) && !isNaN(coordinates.longitude);
       if (isCoordinate) {
-        return mapViewRef.current.animateToRegion({
-          latitude: parseFloat(coordinates.latitude),
-          longitude: parseFloat(coordinates.longitude),
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        });
+        return mapViewRef.current.animateToRegion(
+          {
+            latitude: parseFloat(coordinates.latitude),
+            longitude: parseFloat(coordinates.longitude),
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.0121,
+          },
+          1000,
+        );
       }
     }
-    return mapViewRef.current.animateToRegion(MAP_DELTA_LOW, 1000);
+    return mapViewRef.current.animateToRegion(PHILIPPINE_REGION, 1000);
   };
 
   return (
@@ -108,7 +121,7 @@ const ToktokFoodMapSearch = () => {
               onLayout={() => setTimeout(() => onMapReady(), 500)}
               style={styles.mapView}
               provider={PROVIDER_GOOGLE}
-              initialRegion={MAP_DELTA_LOW}
+              initialRegion={PHILIPPINE_REGION}
               onRegionChangeComplete={r => onMapMove(r)}
             />
 
