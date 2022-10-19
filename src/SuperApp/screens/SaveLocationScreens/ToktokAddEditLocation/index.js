@@ -32,7 +32,7 @@ const AddEditLocation = ({navigation, route, session}) => {
   const {
     addressIdFromService,
     coordsFromService = null,
-    isFromLocationAccess,
+    isFromLocationAccess = false,
     addressObj = null,
     isHomeTaken = false,
     isOfficeTaken = false,
@@ -288,6 +288,7 @@ const AddEditLocation = ({navigation, route, session}) => {
       addressObj,
       setIsEdited,
       setErrorAddressField,
+      isFromLocationAccess,
     });
   };
 
@@ -336,7 +337,8 @@ const AddEditLocation = ({navigation, route, session}) => {
 
   const goToHome = () => {
     setShowSuccessOperationAddressModal(false);
-    navigation.push('ConsumerLanding');
+    navigation.pop();
+    navigation.replace('ConsumerLanding');
   };
 
   const showCustomFunc = () => {

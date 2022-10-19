@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {View, TextInput, StyleSheet, ActivityIndicator, FlatList, Image, Text, Dimensions} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {HeaderBack, HeaderTitle} from '../../../../components';
@@ -6,7 +6,7 @@ import {DARK} from '../../../../res/constants';
 import CONSTANTS from '../../../../common/res/constants';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION} from '../../../../ToktokGo/graphql';
-import {POST_NEW_ADDRESS, TOKTOK_ADDRESS_CLIENT} from '../../../../graphql';
+import {GET_ADDRESSES, POST_NEW_ADDRESS, TOKTOK_ADDRESS_CLIENT} from '../../../../graphql';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import uuid from 'react-native-uuid';
 import {useDebounce} from '../../../../ToktokGo/helpers';
@@ -27,8 +27,14 @@ const ToktokPinLocation = ({navigation, route}) => {
   const mapRef = useRef(null);
   const inputRef = useRef();
   const sessionToken = uuid.v4();
-  const {isFromLocationAccess, locCoordinates, setConfirmedLocation, addressObj, setIsEdited, setErrorAddressField} =
-    route.params;
+  const {
+    isFromLocationAccess = false,
+    locCoordinates,
+    setConfirmedLocation,
+    addressObj,
+    setIsEdited,
+    setErrorAddressField,
+  } = route.params;
 
   const [initialCoord, setInitialCoord] = useState(locCoordinates?.latitude ? locCoordinates : {});
   const [disableAddressBox, setDisableAddressBox] = useState(true);
@@ -74,11 +80,6 @@ const ToktokPinLocation = ({navigation, route}) => {
     fetchPolicy: 'network-only',
     onCompleted: response => {
       setSearchedLocation(response.getPlaceByLocation);
-      // if (response.getPlaceByLocation.place.formattedAddress.length < 30) {
-      //   setSearchedText(response.getPlaceByLocation.place.formattedAddress);
-      // } else {
-      //   setSearchedText(`${response.getPlaceByLocation.place.formattedAddress.substring(0, 30)}}...`);
-      // }
       setSearchedText(response.getPlaceByLocation.place.formattedAddress);
       setDisableAddressBox(false);
     },
@@ -90,6 +91,12 @@ const ToktokPinLocation = ({navigation, route}) => {
     onCompleted: () => {
       setShowSuccessOperationAddressModal(true);
     },
+    onError: onError,
+  });
+
+  const [getAddresses, {data: AddressesData}] = useLazyQuery(GET_ADDRESSES, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
     onError: onError,
   });
 
@@ -154,9 +161,14 @@ const ToktokPinLocation = ({navigation, route}) => {
     });
   };
 
+  useEffect(() => {
+    getAddresses();
+  }, []);
+
   const goToHome = () => {
     setShowSuccessOperationAddressModal(false);
-    navigation.push('ConsumerLanding');
+    navigation.pop();
+    navigation.replace('ConsumerLanding');
   };
 
   const onChange = value => {
@@ -165,7 +177,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   };
 
   const onSubmit = () => {
-    if (isFromLocationAccess) {
+    if (AddressesData?.getAddresses.length < 1 && !isFromLocationAccess) {
       saveDefaultAddress();
       return;
     }

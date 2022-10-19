@@ -6,6 +6,7 @@ import CONSTANTS from '../../../../common/res/constants';
 import {MAP_DELTA_LOW} from '../../../../res/constants';
 import {ThrottledOpacity} from '../../../../components_section';
 import {currentLocation} from '../../../../helper';
+import {GeolocationUtility} from '../../../../util';
 
 // images
 import GradiantBG from '../../../../assets/images/LinearGradiant.png';
@@ -18,7 +19,9 @@ export const ToktokLocationAccess = ({navigation, route}) => {
   const [locCoordinates, setLocCoordinates] = useState({});
 
   const getCurrentLocation = async () => {
-    const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
+    const currentLocation = await GeolocationUtility.getCurrentLocation();
+    const {latitude, longitude} = currentLocation.coords;
+    console.log('ziondsan', latitude, longitude);
     setLocCoordinates({
       latitude: latitude,
       longitude: longitude,
@@ -50,7 +53,7 @@ export const ToktokLocationAccess = ({navigation, route}) => {
         <ThrottledOpacity
           delay={4000}
           style={styles.secondaryBtn}
-          onPress={() => navigation.push('ToktokPinLocation', {locCoordinates, isFromLocationAccess: true})}>
+          onPress={() => navigation.push('ToktokPinLocation', {locCoordinates})}>
           <Text style={styles.secondaryBtnText}>Use My Current Location</Text>
         </ThrottledOpacity>
       </View>
