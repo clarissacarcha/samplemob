@@ -124,5 +124,6 @@ const styles = StyleSheet.create({
     top: StatusBar.currentHeight + 23,
     left: 16,
     padding: 6,
+    zIndex: 1
   },
 });

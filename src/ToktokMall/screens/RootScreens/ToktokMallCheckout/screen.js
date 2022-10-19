@@ -20,7 +20,7 @@ import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
 import {emptyPlaceOrder} from "../../../assets"
-import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy, getRefComAccountType} from "../../../helpers"
+import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy, getRefComAccountType, RoundOffValue} from "../../../helpers"
 
 import {CheckoutContext} from './ContextProvider';
 import { EventRegister } from 'react-native-event-listeners';
@@ -558,7 +558,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       let transactionPayload = await BuildTransactionPayload({
         method: "TOKTOKWALLET", 
         notes: "", 
-        total: grandTotal, 
+        total: RoundOffValue(grandTotal), 
         toktokid: toktokSession.user.id,
         // toktokid: 1,
         // transactionTypeId: "TOKTOKWALLET PAYMENT"
@@ -589,7 +589,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
           paymentMethod: "TOKTOKWALLET",
           hashAmount: req.responseData.hash_amount,
           referenceNum: req.responseData.orderRefNum,
-          referral: franchisee      
+          referral: {},
+          franchisee: franchisee    
         })
 
         console.log("VOUCHERS", CheckoutContextData.shippingVouchers)
@@ -729,6 +730,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       }
 
     }else if(req.responseError == null && req.responseData == null){
+      console.log(req)
       Toast.show("Something went wrong", Toast.LONG)
     }    
   }
@@ -863,8 +865,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
       for (var y = 0; y < route.params.data[x].data[0].length; y++) {
         
         let item = route.params.data[x].data[0][y];
-        orderTotal += parseFloat(item.amount)
-        
+        if(franchisee && franchisee.franchiseeCode != null){
+          orderTotal += parseFloat(item.product.compareAtPrice * item.qty)
+        }else{
+          orderTotal += parseFloat(item.amount)
+        }        
       }
 
       let order = route.params.data[x]
@@ -898,8 +903,15 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     let discounts = CheckoutContextData.getTotalVoucherDeduction()
     let itemDiscounts = CheckoutContextData.getTotalItemDiscount()
+
     let _subTotal = parseFloat(orderTotal) - parseFloat(itemDiscounts)
     let srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
+
+    if(franchisee && franchisee.franchiseeCode != null){
+      let resellerDiscounts = CheckoutContextData.resellerDiscounts
+      _subTotal = _subTotal - resellerDiscounts
+      srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
+    }
 
     setSubTotal(_subTotal)
     setSrpTotal(orderTotal)
@@ -950,7 +962,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
     let isMounted = true;
 
     (async () => {
-      // console.log(JSON.stringify(route.params.data))
+      console.log("DATATATATAAAAA", JSON.stringify(route.params.data))
       await init(0)
     })();
 
