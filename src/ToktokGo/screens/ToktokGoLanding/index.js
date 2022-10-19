@@ -41,7 +41,7 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
           console.log('HERE:', response.goGetTripsConsumer[0]?.status);
           if (
             response.goGetTripsConsumer[0]?.tag == 'ONGOING' &&
-            ['BOOKED', 'DISPATCHED'].includes(response.goGetTripsConsumer[0]?.status)
+            ['BOOKED', 'DISPATCHED', 'REQUESTED'].includes(response.goGetTripsConsumer[0]?.status)
           ) {
             const decodedPolyline = decodeLegsPolyline(response.goGetTripsConsumer[0]?.route.legs);
             navigation.replace('ToktokGoFindingDriver', {

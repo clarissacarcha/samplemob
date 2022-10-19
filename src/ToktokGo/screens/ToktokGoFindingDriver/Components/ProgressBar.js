@@ -7,14 +7,13 @@ import * as Progress from 'react-native-progress';
 import {useDispatch, useSelector} from 'react-redux';
 import CONSTANTS from '../../../../common/res/constants';
 
-export const ProgressBar = ({}) => {
-  const {bookingTimer} = useSelector(state => state.toktokGo);
+export const ProgressBar = ({booking, setDriverFoundModal}) => {
   const [progressNum, setProgressNum] = useState(0);
   const [timer, setTimer] = useState(0);
-  // const [intervalSeconds, setIntervalSeconds] = useState(moment().diff(moment(), 'seconds', false));
-  const [intervalSeconds, setIntervalSeconds] = useState(45);
-
-  const dispatch = useDispatch();
+  const [intervalSeconds, setIntervalSeconds] = useState(
+    moment(booking?.request?.expiresAt).diff(moment(), 'seconds', false),
+  );
+  // const [intervalSeconds, setIntervalSeconds] = useState(45);
 
   useLayoutEffect(() => {
     console.log('check', true);
@@ -29,26 +28,11 @@ export const ProgressBar = ({}) => {
 
   useEffect(() => {
     let interval = parseFloat(timer) / parseFloat(intervalSeconds);
-    // dispatch({
-    //   type: 'SET_BOOKING_TIMER',
-    //   payload: {
-    //     timer: timer,
-    //     progress: interval,
-    //   },
-    // });
     setProgressNum(interval);
 
     if (interval >= 1 || intervalSeconds <= 0) {
+      setDriverFoundModal(false);
       console.log('TIMER DONE!');
-      //   dispatch({type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE'});
-      //   dispatch({
-      //     type: 'SET_BOOKING_TIMER',
-      //     payload: {
-      //       expireSecond: 0,
-      //       timer: 1,
-      //       progress: 0,
-      //     },
-      //   });
     }
   }, [timer]);
 

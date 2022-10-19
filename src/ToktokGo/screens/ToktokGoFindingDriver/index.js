@@ -10,7 +10,7 @@ import {
   TotalBreakdown,
   CancelRetryButton,
 } from './Sections';
-import {DriverFoundModal, DriverFoundModal2} from './Components';
+import {DriverFoundModal, DriverFoundRequestModal} from './Components';
 import {
   ReasonCancelModal,
   CancelBookingNoFeeModal,
@@ -27,6 +27,7 @@ import {
   GO_TRIP_REBOOK_INITIALIZE_PAYMENT,
   GO_GET_TRIPS_CONSUMER,
   GET_BOOKING_DRIVER,
+  GO_TRIP_REQUEST_ACCEPT,
 } from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
@@ -34,6 +35,7 @@ import {onErrorAppSync} from '../../util';
 import {AlertOverlay} from '../../../components';
 import {useFocusEffect} from '@react-navigation/native';
 import {useAlertGO} from '../../hooks';
+import {onError} from 'apollo-link-error';
 
 const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const {popTo} = route.params;
@@ -52,7 +54,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
   const [driverData, setDriverData] = useState();
   const [textValue, setTextValue] = useState('');
-  const [driverFoundModal, setDriverFoundModal] = useState(true);
+  const [driverFoundModal, setDriverFoundModal] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -91,6 +93,17 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
               },
             },
           });
+          setShowDriverFoundModal(true);
+        }
+        if (data?.goOnTripUpdate?.status == 'REQUESTED') {
+          getBookingDriver({
+            variables: {
+              input: {
+                driverUserId: parseInt(data?.goOnTripUpdate?.driverUserId),
+              },
+            },
+          });
+          setDriverFoundModal(true);
         }
         if (data?.goOnTripUpdate?.status == 'EXPIRED') {
           setWaitingStatus(0);
@@ -138,11 +151,19 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [getBookingDriver] = useLazyQuery(GET_BOOKING_DRIVER, {
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      //TODO: Labas mo to para ma condition kung anong modal ang need i show.
-      setShowDriverFoundModal(true);
       setDriverData(response.getBookingDriver.driver);
     },
     onError: onErrorAppSync,
+  });
+
+  const [goTripRequestAccept] = useMutation(GO_TRIP_REQUEST_ACCEPT, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onCompleted: response => {
+      setDriverFoundModal(false);
+    },
+    onError: error => {
+      console.log(error);
+    },
   });
 
   const [getTripsConsumer] = useLazyQuery(GO_GET_TRIPS_CONSUMER, {
@@ -493,9 +514,16 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     setDriverFoundModal(false);
   };
 
-  const yesWillingToWait = () => {};
-
-  //TODO: Yes Im willing function
+  const yesWillingToWait = () => {
+    goTripRequestAccept({
+      variables: {
+        input: {
+          requestHash: booking?.request?.hash,
+          userHash: session?.userHash,
+        },
+      },
+    });
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: constants.COLOR.WHITE}}>
@@ -531,7 +559,14 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         route={route}
         booking={booking}
       />
-      <DriverFoundModal2 driverFoundModal={driverFoundModal} findAnotherDriver={findAnotherDriver} />
+      <DriverFoundRequestModal
+        driverFoundModal={driverFoundModal}
+        findAnotherDriver={findAnotherDriver}
+        booking={booking}
+        yesWillingToWait={yesWillingToWait}
+        setDriverFoundModal={setDriverFoundModal}
+        driverData={driverData}
+      />
       <BackButton navigation={navigation} popTo={popTo} />
       <FindingDriverStatus
         waitingStatus={waitingStatus}

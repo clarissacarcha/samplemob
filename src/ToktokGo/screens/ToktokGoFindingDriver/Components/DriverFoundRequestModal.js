@@ -11,24 +11,21 @@ import {ProgressBar} from './ProgressBar';
 const ImageWidth = (Dimensions.get('window').width - 190) / 2;
 const windowWidth = Dimensions.get('window').width;
 
-export const DriverFoundModal2 = ({driverFoundModal, findAnotherDriver}) => {
-  //   const {popTo, decodedPolyline} = route.params;
-
-  //   const navigateTo = () => {
-  //     setShowDriverFoundModal(false);
-  //     navigation.replace('ToktokGoOnTheWayRoute', {
-  //       popTo: popTo + 1,
-  //       decodedPolyline,
-  //     });
-  //   };
-
-  //   const imageRender = () => {
-  //     if (driverData?.user?.person?.avatarThumbnail) {
-  //       return {uri: driverData?.user?.person?.avatarThumbnail};
-  //     } else {
-  //       return User;
-  //     }
-  //   };
+export const DriverFoundRequestModal = ({
+  driverFoundModal,
+  findAnotherDriver,
+  booking,
+  yesWillingToWait,
+  setDriverFoundModal,
+  driverData,
+}) => {
+  const imageRender = () => {
+    if (driverData?.user?.person?.avatarThumbnail) {
+      return {uri: driverData?.user?.person?.avatarThumbnail};
+    } else {
+      return User;
+    }
+  };
 
   return (
     <Modal animationType="fade" transparent={true} visible={driverFoundModal} style={StyleSheet.absoluteFill}>
@@ -41,18 +38,20 @@ export const DriverFoundModal2 = ({driverFoundModal, findAnotherDriver}) => {
                 position: 'absolute',
                 width: '100%',
               }}>
-              <ProgressBar />
+              <ProgressBar booking={booking} setDriverFoundModal={setDriverFoundModal} />
             </View>
-            <Image source={driverProfile} style={styles.profileImage} resizeMode="cover" />
+            <Image source={imageRender()} style={styles.profileImage} resizeMode="cover" />
             <Text style={styles.modalTitle}>Driver Found</Text>
             <View style={{marginTop: 15, width: windowWidth * 0.65}}>
               <Text style={{textAlign: 'center', fontSize: normalize(14)}}>
                 Your toktok driver may take some time to arrive at pick-up location. Estimated waiting time is{' '}
-                <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD, fontSize: normalize(14)}}>15 minutes.</Text>{' '}
+                <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD, fontSize: normalize(14)}}>
+                  {booking?.request?.minutes} minutes.
+                </Text>{' '}
                 Willing to wait po?
               </Text>
             </View>
-            <TouchableOpacity style={styles.yesContainer}>
+            <TouchableOpacity onPress={yesWillingToWait} style={styles.yesContainer}>
               <Text style={styles.textStyle}>Yes, I’m willing</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={findAnotherDriver} style={styles.findAnotherContainer}>
