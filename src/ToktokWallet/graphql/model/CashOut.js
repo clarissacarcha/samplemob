@@ -66,6 +66,50 @@ export const GET_CASH_OUTS = gql`
     }
 ` 
 
+export const GET_FUND_TRANSFER = gql`
+   query getFundTransfer($input:GetFundTransferInput){
+    getFundTransfer(input:$input){
+        edges {
+            cursorCreatedAt
+            cursorId
+            node {
+                    id
+                    amount
+                    isExported
+                    status
+                    accountId
+                    currencyId
+                    cashOutProviderId
+                    createdAt
+                    updatedAt
+                    provider {
+                        id
+                        name
+                    }
+                    refNo
+                    referenceNumber
+                    systemServiceFee
+                    providerServiceFee
+                    transaction {
+                        id
+                        refNo
+                        createdAt
+                        name
+                        phrase
+                        details
+                    }
+                
+            }
+        }
+        pageInfo {
+            startCursorId
+            endCursorId
+            hasNextPage
+        }
+        }
+    }
+`
+
 export const POST_CASH_OUT_OTHER_BANKS = gql`
       mutation postCashOutOtherBank($input: PostCashOutInput){
         postCashOutOtherBank(input: $input){

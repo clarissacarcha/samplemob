@@ -28,7 +28,7 @@ import {FeedbackModal} from './components';
 import {useDispatch} from 'react-redux';
 import ArrowLeft from '../../../assets/icons/arrow-left-icon.png';
 import {DRIVER_RATING} from '../../graphql';
-import {onErrorAppSync} from '../../util';
+import {onError} from '../../../util/ErrorUtility';
 
 const Keyboard_Height = -(Dimensions.get('window').height * 0.1);
 
@@ -75,7 +75,7 @@ const RateDriver = ({navigation, route}) => {
   });
 
   const [postGoDriverRating] = useMutation(DRIVER_RATING, {
-    onError: onErrorAppSync,
+    onError: onError,
     onCompleted: response => {
       console.log(response, 'response');
       setShowModal(!showModal);

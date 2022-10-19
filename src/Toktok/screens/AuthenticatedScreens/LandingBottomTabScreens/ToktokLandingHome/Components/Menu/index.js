@@ -106,7 +106,6 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => {
         SheetManager.hide('homeMenu_Services'), navigation.push('TokTokFoodSplashScreen');
       },
-      isNew: true,
     },
     {
       identifier:
@@ -153,7 +152,9 @@ export const Menu = ({setUserLocation, constants}) => {
       identifier: `${Platform.OS}Bills`,
       label: 'Bills',
       icon: BillsIcon,
-      onPress: () => navigation.push('ToktokBillsSplashScreen'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokBillsSplashScreen');
+      },
       isNew: true,
     },
     {

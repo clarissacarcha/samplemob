@@ -8,11 +8,17 @@ import {ThrottledOpacity} from '../../../../components_section';
 import {Card} from './Card';
 import {numberFormat} from '../../../../helper';
 import moment from 'moment';
-import {UnpaidModal} from '../Components';
+import {UnpaidModal, NotEnoughBalanceModal} from '../Components';
 
 const windowWidth = Dimensions.get('window').width;
 
-export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction, tripConsumerPending}) => {
+export const OutstandingFee = ({
+  navigation,
+  tripChargeInitializePaymentFunction,
+  tripConsumerPending,
+  showNotEnoughBalanceModal,
+  setShowNotEnoughBalanceModal,
+}) => {
   const [unpaid, setUnpaid] = useState(false);
   const {logs, cancellation} = tripConsumerPending[0];
   const lastItem = logs[logs.length - 1];
@@ -31,6 +37,11 @@ export const OutstandingFee = ({navigation, tripChargeInitializePaymentFunction,
   return (
     <View style={{marginBottom: 24}}>
       <UnpaidModal visible={unpaid} setVisible={setUnpaid} />
+      <NotEnoughBalanceModal
+        visible={showNotEnoughBalanceModal}
+        setVisible={setShowNotEnoughBalanceModal}
+        navigation={navigation}
+      />
       <View
         style={{
           flexDirection: 'row',

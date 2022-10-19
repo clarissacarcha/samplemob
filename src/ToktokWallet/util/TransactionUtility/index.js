@@ -20,6 +20,9 @@ export class TransactionUtility {
     alert,
     title = 'Transaction Failed',
     event = null,
+    onPress = null,
+    isNewFt = false,
+    isPop = true,
   }) => {
     const {graphQLErrors, networkError} = error;
 
@@ -33,6 +36,12 @@ export class TransactionUtility {
         });
       }
       return alert({message: 'Network error occurred. Please check your internet connection.'});
+    }
+
+    if (graphQLErrors[0]?.message === 'Account Blocked') {
+      navigation.navigate('ToktokLandingHome');
+      navigation.push('ToktokWalletLoginPage');
+      return;
     }
 
     if (graphQLErrors[0]?.code === 'FORBIDDEN' && graphQLErrors[0]?.message === 'toktokwallet account not active') {
@@ -64,6 +73,20 @@ export class TransactionUtility {
         return;
       }
       navigation.navigate('ToktokWalletTPINValidator', {
+        errorMessage: message,
+      });
+      return;
+    }
+
+    if (graphQLErrors[0]?.message === 'Invalid MPincode') {
+      const remainingAttempt = graphQLErrors[0].payload.remainingAttempts;
+      const times = remainingAttempt == '1' ? 'attempt' : 'attempts';
+      const message = `Incorrect MPIN. You have ${numWordArray[remainingAttempt]} (${remainingAttempt}) ${times} left.`;
+      if (setErrorMessage) {
+        setErrorMessage(message);
+        return;
+      }
+      navigation.navigate('ToktokWalletMPINCreate', {
         errorMessage: message,
       });
       return;
@@ -129,12 +152,16 @@ export class TransactionUtility {
         message: promptMessage,
         event: 'TOKTOKBILLSLOAD',
         title: promptTitle,
+        onPress: onPress ? onPress : () => {},
       });
 
-      if (graphQLErrors[0]?.payload?.code == 'fundTransferPending') {
-        return navigation.navigate('ToktokWalletCashOutOtherBanks');
+      if (graphQLErrors[0]?.payload?.code === 'fundTransferPending') {
+        return isNewFt ? navigation.pop() : navigation.navigate('ToktokWalletCashOutOtherBanks');
       }
+      // return;
     }
-    return navigation.pop();
+    if (isPop) {
+      return navigation.pop();
+    }
   };
 }

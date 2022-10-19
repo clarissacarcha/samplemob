@@ -43,9 +43,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
       newSession.user.person.emailAddress = emailAddress;
       newSession.user.consumer.referralCode = referralCode;
       createSession(newSession);
-      navigation.replace('ReferralScreen', {
-        fromRegistration: true,
-      });
+      navigation.replace('ConsumerLanding');
     },
   });
 

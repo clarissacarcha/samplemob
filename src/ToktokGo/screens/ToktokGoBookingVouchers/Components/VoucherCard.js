@@ -4,14 +4,25 @@ import CONSTANTS from '../../../../common/res/constants';
 import {ThrottledOpacity} from '../../../../components_section';
 import * as Progress from 'react-native-progress';
 import voucherPaperDesign from '../../../../assets/toktokgo/voucher-paper-design.png';
-import VoucherImage from '../../../../assets/toktokgo/voucher-sedan-image.png';
+import voucherPaperDesign2 from '../../../../assets/toktokgo/VectorShadow.png';
+import VoucherImage from '../../../../assets/toktokgo/newCarIcon.png';
 import voucherPaperDesignDisabled from '../../../../assets/toktokgo/voucher-paper-design-disabled.png';
-import VoucherImageDisabled from '../../../../assets/toktokgo/voucher-sedan-image-disabled.png';
+import VoucherImageDisabled from '../../../../assets/toktokgo/car-grayout.png';
 import moment from 'moment';
+import normalize from 'react-native-normalize';
 
 const decorHeight = Dimensions.get('window').height * 0.12;
 
-export const VoucherCard = ({details, data, navigation, onPressActionButton, loading, postCollectVoucher}) => {
+export const VoucherCard = ({
+  details,
+  data,
+  navigation,
+  onPressActionButton,
+  loading,
+  postCollectVoucher,
+  setProcessingVisible,
+  fromVoucherDetails,
+}) => {
   const [isApplicable, setIsApplicable] = useState(true);
 
   const getComputed = () => {
@@ -23,16 +34,34 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
   };
 
   const onPress = () => {
-    if (data.collectable && !data.voucherWallet) {
-      postCollectVoucher({
-        variables: {
-          input: {
-            voucherId: data.id,
-          },
-        },
-      });
+    if (fromVoucherDetails == false) {
+      setProcessingVisible(true);
+      setTimeout(() => {
+        if (data.collectable && !data.voucherWallet) {
+          postCollectVoucher({
+            variables: {
+              input: {
+                voucherId: data.id,
+              },
+            },
+          });
+        } else {
+          onPressActionButton(data);
+          setProcessingVisible(false);
+        }
+      }, 3000);
     } else {
-      onPressActionButton(data);
+      if (data.collectable && !data.voucherWallet) {
+        postCollectVoucher({
+          variables: {
+            input: {
+              voucherId: data.id,
+            },
+          },
+        });
+      } else {
+        onPressActionButton(data);
+      }
     }
   };
 
@@ -55,6 +84,7 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
           resizeMode={'contain'}
           style={styles.floatingImage}
         />
+        <Image source={voucherPaperDesign2} resizeMode={'contain'} style={styles.floatingImage2} />
         <Image
           source={isApplicable ? VoucherImageDisabled : VoucherImage}
           resizeMode={'contain'}
@@ -62,10 +92,12 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
         />
         <View style={styles.voucherText}>
           <Text style={styles.voucherName}>{data.name}</Text>
-          <Text style={styles.voucherDescription}>
-            {data?.description?.length < 30 ? `${data?.description}` : `${data?.description.substring(0, 30)}...`}
-          </Text>
-          {data.endAt && <Text style={styles.voucherDescription}>Valid unitl {moment(data.endAt).format('LL')}</Text>}
+          <View style={{width: normalize(155)}}>
+            <Text style={styles.voucherDescription} numberOfLines={1}>
+              {data?.description}
+            </Text>
+          </View>
+          {data.endAt && <Text style={styles.voucherDescription}>Valid until {moment(data.endAt).format('LL')}</Text>}
           {data.voucherWallet?.total > 1 && (
             <>
               <View
@@ -115,7 +147,13 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
             </ThrottledOpacity>
           )}
           <ThrottledOpacity
-            onPress={() => navigation.navigate('ToktokGoBookingSelectedVoucher', {id: data.id, onPress, isApplicable})}>
+            onPress={() =>
+              navigation.navigate('ToktokGoBookingSelectedVoucher', {
+                id: data.id,
+                onPress,
+                isApplicable,
+              })
+            }>
             <Text style={styles.TandC}>T&C</Text>
           </ThrottledOpacity>
         </View>
@@ -141,7 +179,7 @@ export const VoucherCard = ({details, data, navigation, onPressActionButton, loa
 const styles = StyleSheet.create({
   card: {
     borderRadius: 5,
-    height: decorHeight,
+    height: normalize(95),
     marginHorizontal: 16,
     backgroundColor: CONSTANTS.COLOR.WHITE,
     flexDirection: 'row',
@@ -157,33 +195,41 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   floatingImage: {
-    height: decorHeight,
+    height: normalize(95),
     position: 'absolute',
     left: -20,
+  },
+  floatingImage2: {
+    height: normalize(95),
+    position: 'absolute',
+    right: -45,
   },
   voucherText: {
     flex: 1,
     justifyContent: 'center',
-    marginLeft: 20,
+    marginLeft: 15,
   },
   computed: {
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.S,
+    fontSize: normalize(11),
   },
   voucherName: {
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     marginBottom: 8,
+    fontSize: normalize(13),
   },
   voucherDescription: {
-    color: '#000',
+    fontFamily: Platform.OS === 'ios' ? CONSTANTS.FONT_FAMILY.SEMI_BOLD : CONSTANTS.FONT_FAMILY.REGULAR,
     fontSize: CONSTANTS.FONT_SIZE.S,
-    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    fontWeight: 'normal',
+    fontSize: normalize(11),
   },
   voucherImage: {
     alignSelf: 'center',
     marginLeft: 18,
-    width: decorHeight - 20,
-    height: decorHeight - 20,
+    width: normalize(73),
+    height: normalize(73),
   },
   claimButton: {
     marginTop: 20,
@@ -194,7 +240,7 @@ const styles = StyleSheet.create({
   },
   claimButtonText: {
     marginHorizontal: 16,
-    textAlignL: 'center',
+    textAlign: 'center',
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.WHITE,
     fontSize: CONSTANTS.FONT_SIZE.S,
@@ -210,7 +256,7 @@ const styles = StyleSheet.create({
   },
   useButtonText: {
     marginHorizontal: 19,
-    textAlignL: 'center',
+    textAlign: 'center',
     fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.S,
@@ -224,5 +270,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ORANGE,
+    fontSize: normalize(11),
   },
 });

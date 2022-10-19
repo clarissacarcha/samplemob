@@ -2,7 +2,7 @@ import React, {createContext, useState, useEffect} from 'react';
 
 export const ContextChannelForm = createContext(null);
 const {Provider} = ContextChannelForm;
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
+import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_CALL_CHANNELS} from 'toktokwallet/graphql/model';
 import {onErrorAlert} from 'src/util/ErrorUtility';
@@ -17,7 +17,7 @@ export const ContextProvider = ({children, pepInfo}) => {
   });
   const [callChannels, setCallChannels] = useState('');
   const [numberOrLink, setNumberOrLink] = useState(
-    videocall.videoCallContactDetails ? videocall.videoCallContactDetails.replace('+63', '0') : '',
+    videocall.videoCallContactDetails ? videocall.videoCallContactDetails.replace('+63', '') : '',
   );
   const [dayPicked, setDayPicked] = useState({
     index: 0,
@@ -39,7 +39,8 @@ export const ContextProvider = ({children, pepInfo}) => {
       onErrorAlert({alert, error});
     },
     onCompleted: ({getCallChannels}) => {
-      const channels = getCallChannels.splice(0, 3);
+      // const channels = getCallChannels.splice(0, 3);
+      const channels = getCallChannels;
       setCallChannels(channels);
     },
   });

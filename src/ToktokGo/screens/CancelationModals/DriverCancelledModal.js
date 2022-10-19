@@ -24,13 +24,8 @@ export const DriverCancelledModal = ({
             <Text style={styles.modalTitle}>Driver Cancelled</Text>
             <Text style={styles.modalSubTitle}>No Show Fee: ₱{numberFormat(cancellationState?.charge?.amount)}</Text>
             <Text style={styles.modalDescription}>
-              Driver cancelled your booking after waiting for more than{' '}
-              <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD}}>5 minutes</Text> at the pick up location. You will
-              be charged{' '}
-              <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.BOLD, color: CONSTANTS.COLOR.ORANGE}}>
-                ₱{numberFormat(cancellationState?.charge?.amount)}
-              </Text>{' '}
-              to compensate the driver. Would you like to pay now?
+              We're sorry ka-toktok, ang inyong toktok driver ay nag-cancel sapagkat kayo ay hindi dumating sa pick-up
+              location. May No Show Fee na macha-charge sayo to compensate the driver. Would you like to pay now?
             </Text>
 
             {hastokwa ? (

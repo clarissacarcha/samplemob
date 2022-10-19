@@ -9,3 +9,7 @@ export * from './SwipeDownToRefresh';
 export * from './TransactionDetails';
 export * from './TransferableHeaderReminder';
 export * from './WalletLog';
+
+import TransferableAndNonTransferableBalance from './TransferableAndNonTransferableBalance';
+
+export {TransferableAndNonTransferableBalance};

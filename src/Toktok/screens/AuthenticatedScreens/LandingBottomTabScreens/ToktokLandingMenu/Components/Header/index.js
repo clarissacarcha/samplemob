@@ -14,9 +14,6 @@ export const Header = ({children}) => {
         </View>
       </View>
       <View></View>
-      <ImageBackground style={{height: 160}} source={HeaderImage} resizeMode="cover">
-        {children}
-      </ImageBackground>
     </View>
   );
 };

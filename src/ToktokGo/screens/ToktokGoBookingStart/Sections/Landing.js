@@ -16,7 +16,7 @@ export const Landing = ({navigation, voucherData, details}) => {
       <ImageBackground source={BackgroundLanding} resizeMode={'cover'} style={{height: 112}}>
         <View style={{marginTop: 20, marginLeft: 20}}>
           <Text style={{color: CONSTANTS.COLOR.WHITE, fontSize: CONSTANTS.FONT_SIZE.XL}}>Hello ka-toktok!</Text>
-          <Text style={{color: CONSTANTS.COLOR.WHITE, fontSize: CONSTANTS.FONT_SIZE.M}}>May pupuntahan ka ba?</Text>
+          <Text style={{color: CONSTANTS.COLOR.WHITE, fontSize: CONSTANTS.FONT_SIZE.M}}>Saan tayo today?</Text>
         </View>
       </ImageBackground>
       <View style={styles.searchContainer}>

@@ -14,7 +14,9 @@ export const BookingConfirmButton = ({SheetManager, tokwaAccount, details}) => {
       total = details?.rate?.tripFare?.total;
     }
 
-    if (id && wallet.balance < total) {
+    if (details.paymentMethod == 'TOKTOKWALLET' && !id) {
+      return true;
+    } else if (details.paymentMethod == 'TOKTOKWALLET' && id && wallet.balance < total) {
       return true;
     } else {
       return false;

@@ -1,16 +1,29 @@
-import React, {useRef, useEffect, useState} from 'react';
-import {View, StyleSheet, Image, Text} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, StyleSheet, Image} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import {MAP_DELTA_LOW} from '../../../../res/constants';
 import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
 
 export const DestinationMap = ({onDragEndMarker, mapRegion}) => {
+  const INITIAL_REGION = {
+    latitude: 14.584027386653853,
+    longitude: 121.0634614077012,
+    ...MAP_DELTA_LOW,
+  };
+
+  useEffect(() => {
+    if (!mapRegion.latitude) {
+      onDragEndMarker({latitude: INITIAL_REGION.latitude, longitude: INITIAL_REGION.longitude});
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
       <MapView
         provider={PROVIDER_GOOGLE}
         style={{height: '100%', width: '100%'}}
-        initialRegion={{...mapRegion}}
+        initialRegion={mapRegion.latitude ? {...mapRegion} : {...INITIAL_REGION}}
         onRegionChangeComplete={e => {
           onDragEndMarker(e);
         }}></MapView>

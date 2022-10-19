@@ -33,6 +33,7 @@ import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {onErrorAppSync} from '../../util';
 import {AlertOverlay} from '../../../components';
 import {useFocusEffect} from '@react-navigation/native';
+import {useAlertGO} from '../../hooks';
 
 const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const {popTo} = route.params;
@@ -49,6 +50,8 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [cancellationChargeResponse, setCancellationChargeResponse] = useState(null);
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
   const [driverData, setDriverData] = useState();
+  const [textValue, setTextValue] = useState('');
+  const alertGO = useAlertGO();
 
   useFocusEffect(
     useCallback(() => {
@@ -90,7 +93,8 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         }
         if (data?.onTripUpdate?.status == 'EXPIRED') {
           setWaitingStatus(0);
-          setWaitingText(6);
+          changeTextValue();
+          setWaitingText(8);
         }
         // if (data?.onTripUpdate?.status == 'CANCELLED') {
         //   setChargeAmount(data?.onTripUpdate?.cancellation?.charge?.amount);
@@ -128,7 +132,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     );
 
     return () => subscription.unsubscribe();
-  }, [tripUpdateRetrySwitch]);
+  }, [tripUpdateRetrySwitch, changeTextValue]);
 
   const [getBookingDriver] = useLazyQuery(GET_BOOKING_DRIVER, {
     fetchPolicy: 'network-only',
@@ -150,7 +154,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         });
       } else {
         setWaitingStatus(0);
-        setWaitingText(6);
+        setWaitingText(8);
       }
       setTimeout(() => {
         if (
@@ -167,22 +171,23 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
           });
         } else if (response.getTripsConsumer[0]?.status == 'EXPIRED') {
           setWaitingStatus(0);
-          setWaitingText(6);
+          changeTextValue();
+          setWaitingText(8);
         }
       }, 1000);
     },
     onError: onErrorAppSync,
   });
   useEffect(() => {
-    if (waitingText <= 5 && waitingStatus) {
+    if (waitingText <= 7 && waitingStatus) {
       const interval = setTimeout(() => {
         setWaitingText(waitingText + 1);
       }, 10000);
       return () => clearInterval(interval);
-    } else if (waitingText > 5 && waitingStatus) {
+    } else if (waitingText > 7 && waitingStatus) {
       setWaitingText(1);
     } else {
-      setWaitingText(6);
+      setWaitingText(8);
     }
   }, [waitingText]);
 
@@ -207,13 +212,13 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'TRIP_EXPIRED') {
             dispatch({
               type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
@@ -223,7 +228,8 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
             });
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
@@ -244,13 +250,13 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'TRIP_EXPIRED') {
             dispatch({
               type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
@@ -260,7 +266,8 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
             });
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
@@ -277,20 +284,23 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           console.log('ERROR TYPE:', errorType, 'MESSAGE:', message);
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
-            Alert.alert('', JSON.parse(message).message);
+            // Alert.alert('', JSON.parse(message).message);
+            alertGO({message: JSON.parse(message).message});
           } else if (errorType === 'WALLET_INVALID_PIN_CODE') {
-            Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+            // Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+            alertGO({message: `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`});
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
@@ -320,18 +330,20 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message.message);
+            alertGO({message: message.message});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
-            Alert.alert('', JSON.parse(message).message);
+            // Alert.alert('', JSON.parse(message).message);
+            alertGO({message: JSON.parse(message).message});
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
@@ -425,24 +437,54 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const renderStatus = type => {
     switch (type) {
       case 1: {
-        return 'Looking for your nearby driver!';
+        return 'Kaunti nalang ka-toktok! Paparating na ang iyong toktok driver!';
       }
       case 2: {
-        return "We're finding you a nearby driver.";
+        return 'Chill ka muna, while we look for your driver.';
       }
       case 3: {
-        return 'Getting ready for your driver.';
+        return 'Ka-toktok, please wear your mask before you ride para safe tayo. Ingat!';
       }
       case 4: {
-        return 'Patience is a virtue!';
+        return 'Ready ka na ba? Malapit na mag-accept ang ating mga toktok drivers!';
       }
       case 5: {
-        return "Let's wait for your driver to arrive!";
+        return 'Ka-toktok, pwede ka muna mag check ng aming other services while we look for your toktok driver!';
       }
       case 6: {
-        return 'We’re sorry ka-toktok, our drivers are busy at the moment. Please retry.';
+        return 'Did you know you can pay less with toktokwallet?';
+      }
+      case 7: {
+        return 'Maghintay ka lamang, ako’y darating - toktok driver';
+      }
+      case 8: {
+        return 'Kaunti na lang, ka-toktok! Paparating na ang toktok driver!';
       }
     }
+  };
+
+  const dataTitle = [
+    {
+      title: 'Find Driver Again',
+      body: 'Kaunti na lang, ka-toktok! Paparating na ang toktok driver!',
+    },
+    {
+      title: 'Drivers are Busy at the Moment',
+      body: 'Try lang nang try mag-book ka-toktok! Toktok driver naman ang susundo sayo!',
+    },
+    {
+      title: 'Book Again',
+      body: 'Wait lang po. We are still looking for drivers, pa-wait lang po ng few minutes, please?',
+    },
+    {
+      title: 'Wait lang po',
+      body: 'Drivers are busy at the moment, try ulit natin?',
+    },
+  ];
+
+  const changeTextValue = () => {
+    const len = dataTitle.length;
+    setTextValue(dataTitle[Math.floor(Math.random() * len)]);
   };
 
   return (
@@ -480,7 +522,12 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         booking={booking}
       />
       <BackButton navigation={navigation} popTo={popTo} />
-      <FindingDriverStatus waitingStatus={waitingStatus} renderStatus={renderStatus} waitingText={waitingText} />
+      <FindingDriverStatus
+        waitingStatus={waitingStatus}
+        renderStatus={renderStatus}
+        waitingText={waitingText}
+        textValue={textValue}
+      />
 
       <View style={styles.card}>
         <BookingDistanceTime booking={booking} />

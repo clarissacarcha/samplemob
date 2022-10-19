@@ -102,12 +102,14 @@ const Splash = ({
         setFailed(false)
         
       }else{
+        navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
         setFailed(true)
       }
     },
     onError: (err) => {
       console.log(err)
       setFailed(true)
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       // authUser()
     }
 	})  
@@ -132,12 +134,15 @@ const Splash = ({
       setRegisterRetries(1)
       authUser()
     }else if(req.responseError && req.responseError.success == 0){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       Toast.show(req.responseError.message, Toast.LONG)
     }else if(req.responseError){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       Toast.show("Something went wrong", Toast.LONG)
     }else if(req.responseError == null && req.responseData == null){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       Toast.show("Something went wrong", Toast.LONG)
     }
@@ -162,12 +167,15 @@ const Splash = ({
       setRegisterRetries(1)
       authUser()
     }else if(req.responseError && req.responseError.success == 0){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       ToastAndroid.show(req.responseError.message, ToastAndroid.LONG)
     }else if(req.responseError){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       ToastAndroid.show("Something went wrong", ToastAndroid.LONG)
     }else if(req.responseError == null && req.responseData == null){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       ToastAndroid.show("Something went wrong", ToastAndroid.LONG)
     }
@@ -279,51 +287,7 @@ const Splash = ({
 
 	const init = async () => {
     setFailed(false)
-    await FetchAsyncStorageData()
-    
-    await AsyncStorage.getItem("ToktokMallUser").then(async (raw) => {
-      const data = JSON.parse(raw) || null
-      console.log("user data", data)
-      console.log("TOKTOKT RECORD", session?.user.person)
-      if(data && data.userId){
-        // await getCustomerRecords({
-        //   variables: {
-        //     input: {
-        //       userId: data.userId
-        //     }
-        //   }
-        // })
-        getMyCartData({
-          variables: {
-            input: {
-              userId: data.userId
-            }
-          }
-        })
-        getOrderNotifications({
-          variables: {
-            input: {
-              userId: data.userId
-            }
-          }
-        })
-
-        if(session?.user.person.emailAddress != data.email){
-          //UPDATE CUSTOMER RECORD
-          await UpdateUser(data)
-        }else{
-          setTimeout(() => {
-            navigation.navigate("ToktokMallLanding");
-          }, 2000);
-        }
-        
-      }else{
-        await authUser()
-      }
-    }).catch((error) => {
-      console.log(error)      
-    })
-
+    authUser()
 	}
 
 	useEffect(() => {

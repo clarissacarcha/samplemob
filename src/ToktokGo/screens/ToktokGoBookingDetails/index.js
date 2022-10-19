@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   BookingID,
   BookingDriverDetails,
@@ -26,14 +26,9 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
     headerTitle: () => <HeaderTitle label={['Booking Details', '']} />,
   });
 
-  const dropDownRef = useRef(null);
-
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [showSuccessCancelBooking, setShowSuccessCancelBooking] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showReason, setShowReason] = useState(false);
   const [showSuccessfull, setShowSuccessfull] = useState(false);
-  const [confirmed, setConfirmed] = useState('');
   const [booking, setBooking] = useState(route.params.booking);
 
   const [getTrip, {loading, error}] = useLazyQuery(GET_TRIP, {
@@ -45,15 +40,19 @@ const SelectedBookingDetails = ({navigation, session, createSession, route}) => 
     },
   });
 
-  const showBookingReason = () => {
-    setShowReason(!showReason);
-    setShowModal(!showModal);
-  };
-
-  const succefullCancel = () => {
-    setShowReason(!showReason);
-    setShowSuccessfull(!showSuccessfull);
-  };
+  useEffect(() => {
+    const subscribe = navigation.addListener('focus', async () => {
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      route.params.setDriverArrivedState(true);
+      return subscribe;
+    });
+    const unsubscribe = navigation.addListener('blur', async () => {
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      route.params.setDriverArrivedState(false);
+      console.log('exit');
+      return unsubscribe;
+    });
+  }, [navigation]);
 
   useEffect(() => {
     if (!booking) {

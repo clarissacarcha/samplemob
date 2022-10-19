@@ -16,9 +16,9 @@ export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
     return showSeatsArray.map((value, index) => {
       const lastItem = index == showSeatsArray.length - 1 ? true : false;
       return (
-        <View style={{alignItems: 'center'}}>
+        <View style={{alignItems: 'center'}} key={index}>
           <View style={styles.divider} />
-          <ThrottledOpacity delay={500} onPress={() => confirmBooking(index + 1)} key={index}>
+          <ThrottledOpacity delay={4000} onPress={() => confirmBooking(index + 1)} key={index}>
             <Text>{value}</Text>
           </ThrottledOpacity>
           {lastItem && <View style={styles.divider} />}
@@ -48,7 +48,7 @@ export const PassengerCapacityActionSheet = ({details, confirmBooking}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: FULLSCREEN_HEIGHT * 0.52,
+    height: 400,
     right: 4,
     width: '102%',
     borderWidth: 3,

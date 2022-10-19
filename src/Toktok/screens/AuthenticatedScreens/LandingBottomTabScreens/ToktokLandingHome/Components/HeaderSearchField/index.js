@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     color: COLOR.ORANGE,
     fontSize: FONT_SIZE.XL,
     fontFamily: FONT.BOLD,
+    textTransform: 'capitalize',
   },
   searchBox: {
     bottom: 5,

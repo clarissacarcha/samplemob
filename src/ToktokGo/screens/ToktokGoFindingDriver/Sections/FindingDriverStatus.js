@@ -6,7 +6,7 @@ import CONSTANTS from '../../../../common/res/constants';
 
 const ImageDimension = (Dimensions.get('window').width - 130) / 2;
 
-export const FindingDriverStatus = ({waitingStatus, renderStatus, waitingText}) => {
+export const FindingDriverStatus = ({waitingStatus, renderStatus, waitingText, textValue}) => {
   return (
     <View style={styles.container}>
       <Image
@@ -15,8 +15,8 @@ export const FindingDriverStatus = ({waitingStatus, renderStatus, waitingText}) 
         style={{width: ImageDimension, height: ImageDimension}}
       />
       {/*---todo: assign text based on status---*/}
-      <Text style={styles.titleStyle}>{waitingStatus ? 'Finding Driver' : 'Find Driver Again'}</Text>
-      <Text style={{textAlign: 'center'}}>{renderStatus(waitingText)}</Text>
+      <Text style={styles.titleStyle}>{waitingStatus ? 'Finding Driver' : textValue.title}</Text>
+      <Text style={{textAlign: 'center'}}>{waitingStatus ? renderStatus(waitingText) : textValue.body}</Text>
     </View>
   );
 };

@@ -1,9 +1,11 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, Modal} from 'react-native';
+import {Text, StyleSheet, Image, View, Modal, Dimensions} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import Success from '../../../../assets/images/Sucess.png';
 import {ThrottledOpacity} from '../../../../components_section';
 import {numberFormat} from '../../../../helper';
+
+const windowWidth = Dimensions.get('window').width;
 
 export const TokwaPaymentProcessedModal = ({viewTokwaPaymentProcessedModal, tokwaPaymentConfirmed, amount}) => {
   return (
@@ -17,10 +19,12 @@ export const TokwaPaymentProcessedModal = ({viewTokwaPaymentProcessedModal, tokw
           <View style={styles.container}>
             <Image source={Success} resizeMode={'contain'} style={styles.imageDimensions} />
             <Text style={styles.modalTitle}>Payment Processed</Text>
-            <Text style={styles.modalDescription}>
-              <Text style={styles.textHighlight}>₱{numberFormat(amount)}</Text> payment is processed and will be
-              returned to you in the event of any cancellation.
-            </Text>
+            <View style={{width: windowWidth * 0.5}}>
+              <Text style={styles.modalDescription}>
+                <Text style={styles.textHighlight}>₱{numberFormat(amount)}</Text> payment is processed and will be
+                returned to you in the event of any cancellation.
+              </Text>
+            </View>
             <ThrottledOpacity delay={500} style={styles.buttonContainer} onPress={tokwaPaymentConfirmed}>
               <Text style={styles.buttonText}>OK</Text>
             </ThrottledOpacity>

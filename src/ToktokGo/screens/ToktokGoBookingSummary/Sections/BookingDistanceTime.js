@@ -19,7 +19,8 @@ export const BookingDistanceTime = ({quotationData, loading}) => {
       <View style={styles.container}>
         <ShimmerPlaceHolder
           style={{
-            width: !loading ? 150 : 138,
+            alignItems: 'center',
+            width: !loading ? '100%' : 138,
             height: !loading ? (Platform.OS == 'ios' ? 28 : 35) : 16,
           }}
           visible={!loading}>

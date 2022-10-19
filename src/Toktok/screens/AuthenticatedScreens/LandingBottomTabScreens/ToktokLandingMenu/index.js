@@ -7,7 +7,19 @@ import {onError} from '../../../../../util/ErrorUtility';
 import {AlertOverlay} from '../../../../../SuperApp/screens/Components';
 import {useMutation} from '@apollo/react-hooks';
 import CONSTANTS from '../../../../../common/res/constants';
-import {Image, ScrollView, StyleSheet, Text, TouchableHighlight, View, StatusBar, TouchableOpacity} from 'react-native';
+import HeaderImage from '../../../../../assets/toktok/images/ProfileBackground.png';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  Platform,
+  ImageBackground,
+} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import RNFS from 'react-native-fs';
 
@@ -37,12 +49,24 @@ const DrawerButton = ({isNew, label, onPress, restrict}) => {
         /> */}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {isNew && (
-            <View style={{backgroundColor: COLOR.RED, borderRadius: 20, marginVertical: -5}}>
+            <View
+              style={{
+                height: 18,
+                width: 40,
+                backgroundColor: '#ED3A19',
+                position: 'absolute',
+                top: -2.5,
+                right: 20,
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
               <Text
                 style={{
-                  paddingHorizontal: 12,
-                  color: CONSTANTS.COLOR.WHITE,
+                  fontSize: 10,
+                  color: 'white',
                   fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+                  bottom: Platform.OS === 'ios' ? 0 : 1,
                 }}>
                 New
               </Text>
@@ -124,11 +148,10 @@ export const ToktokLandingMenu = ({navigation}) => {
     <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'space-between'}}>
       <AlertOverlay visible={loading} />
       <View style={{flex: 1}}>
-        {/* <View style={{height: SIZE.MARGIN / 2, backgroundColor: COLOR.LIGHT}} /> */}
-
         <View style={{flex: 1, backgroundColor: 'white'}}>
+          <Header />
           <ScrollView>
-            <Header>
+            <ImageBackground style={{height: 160}} source={HeaderImage} resizeMode="cover">
               <View style={{margin: SIZE.MARGIN}}>
                 {/*--------------- AVATAR ---------------*/}
                 {`${constants.awsS3BaseUrl}${constants.defaultAvatar}` != session.user.person.avatar ? (
@@ -144,7 +167,15 @@ export const ToktokLandingMenu = ({navigation}) => {
                       resizeMode={'cover'}
                       style={{width: 80, height: 80, borderRadius: 50}}
                     />
-                    <Text style={{fontSize: FONT_SIZE.XL, fontFamily: FONT.BOLD, paddingTop: 5}}>{fullName}</Text>
+                    <Text
+                      style={{
+                        fontSize: FONT_SIZE.XL,
+                        fontFamily: FONT.BOLD,
+                        paddingTop: 5,
+                        textTransform: 'capitalize',
+                      }}>
+                      {fullName}
+                    </Text>
                     <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, paddingTop: 3}}>
                       {session.user.username}
                     </Text>
@@ -177,16 +208,16 @@ export const ToktokLandingMenu = ({navigation}) => {
                 )}
                 {/*--------------- FULL NAME ---------------*/}
               </View>
-            </Header>
+            </ImageBackground>
             <Text style={{paddingLeft: 20, paddingTop: 20, paddingBottom: 15, fontFamily: FONT.BOLD}}> Account</Text>
             {/*--------------- MY DELIVERIES ---------------*/}
-            {/* <DrawerButton
+            <DrawerButton
               label="Saved Addresses"
               onPress={() => {
                 navigation.push('ToktokSavedLocations');
               }}
               restrict="C"
-            /> */}
+            />
             <DrawerButton
               label="Personal Information"
               onPress={() => {

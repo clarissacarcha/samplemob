@@ -1,14 +1,9 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {Text, View, TouchableHighlight, Image} from 'react-native';
-import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation} from './Sections';
+import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation, OutsideServiceableArea} from './Sections';
 import CONSTANTS from '../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {
-  GET_PLACE_AUTOCOMPLETE,
-  GET_PLACE_BY_ID,
-  GET_PLACE_BY_LOCATION,
-  GET_CONSUMER_RECENT_DESTINATION,
-} from '../../graphql';
+import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION, GET_TRIP_DESTINATIONS} from '../../graphql';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT, TOKTOK_GO_GRAPHQL_CLIENT} from 'src/graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {throttle, debounce, get} from 'lodash';
@@ -20,10 +15,14 @@ import DestinationBC from '../../../assets/toktokgo/destination4.png';
 import {useFocusEffect} from '@react-navigation/native';
 import {currentLocation} from '../../../helper';
 import {ThrottledHighlight} from '../../../components_section';
-import {onErrorAppSync} from '../../util';
+import {onErrorAppSync, onError} from '../../util';
+// import {onError} from '../../../util/ErrorUtility';
+import {NoRecordFound, ServiceableArea} from './Components';
 import AsyncStorage from '@react-native-community/async-storage';
+import {useAlertGO} from '../../hooks';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
+  const alertGO = useAlertGO();
   const {popTo, selectInput} = route.params;
   const [selectedInput, setSelectedInput] = useState('D');
   const [searchResponse, setSearchResponse] = useState([]);
@@ -36,12 +35,17 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const [searchOrigin, setSearchOrigin] = useState(origin?.place?.formattedAddress);
   const [recentSearchDataList, setrecentSearchDataList] = useState([]);
   const [recentDestinationList, setrecentDestinationList] = useState([]);
+  const [loadingAutoComplete, setLoadingAutoComplete] = useState(false);
+  const [noRecordVisible, setNoRecordVisible] = useState(false);
+  const [serviceableAreVisible, setServiceableAreVisible] = useState(false);
+  const [serviceableAreaScreen, setServiceableAreaScreen] = useState(false);
+  const [serviceableAreaList, setServiceableAreaList] = useState('');
 
   useEffect(() => {
     async function tempFunction() {
       await getSearchList();
       await getDestinationList();
-      getRecentDestination();
+      getTripDestinations();
     }
 
     tempFunction();
@@ -53,17 +57,30 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log('COMPLETED');
-      setSearchResponse(response.getPlaceAutocomplete);
+      if (response.getPlaceAutocomplete.length == 0) {
+        alertGO({
+          title: 'Location Not Available',
+          message: 'Location is no longer available. Please select another location.',
+        });
+      } else {
+        setNoRecordVisible(false);
+        setSearchResponse(response.getPlaceAutocomplete);
+        setLoadingAutoComplete(false);
+        setServiceableAreaScreen(false);
+      }
     },
-    onError: error => console.log('getPlaceAutocomplete', error),
+    onError: error => {
+      setLoadingAutoComplete(false);
+      setNoRecordVisible(false);
+      console.log('getPlaceAutocomplete', error);
+    },
   });
 
-  const [getRecentDestination] = useLazyQuery(GET_CONSUMER_RECENT_DESTINATION, {
+  const [getTripDestinations] = useLazyQuery(GET_TRIP_DESTINATIONS, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setrecentDestinationList(response.getConsumerPreviousDestinations);
+      setrecentDestinationList(response.getTripDestinations);
     },
     onError: onErrorAppSync,
   });
@@ -80,7 +97,40 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       onPressLocation();
       addItemToList(response.getPlaceById);
     },
-    onError: error => console.log('error', error),
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+
+      if (networkError) {
+        alertGO({message: 'Network error occurred. Please check your internet connection.'});
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, code, errorType, serviceableArea}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
+          } else if (code === 'USER_INPUT_ERROR') {
+            alertGO({message});
+          } else if (code === 'BAD_USER_INPUT') {
+            if (errorType === 'AREA_UNSERVICEABLE') {
+              setServiceableAreaScreen(true);
+              setSearchResponse(null);
+              setServiceableAreaList(serviceableArea);
+            } else if (errorType === 'PLACE_NOT_FOUND') {
+              alertGO({
+                title: 'Location Not Available',
+                message: 'Location is no longer available. Please select another location.',
+              });
+            } else {
+              alertGO({message});
+              setServiceableAreaScreen(false);
+            }
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else {
+            console.log('ELSE ERROR:', error);
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
+          }
+        });
+      }
+    },
   });
 
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
@@ -92,7 +142,39 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
       setSearchOrigin(payload?.place?.formattedAddress);
     },
-    onError: error => console.log('error', error),
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+
+      if (networkError) {
+        alertGO({message: 'Network error occurred. Please check your internet connection.'});
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, code, errorType, serviceableArea}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
+          } else if (code === 'USER_INPUT_ERROR') {
+            alertGO({message});
+          } else if (code === 'BAD_USER_INPUT') {
+            if (errorType === 'AREA_UNSERVICEABLE') {
+              setServiceableAreaScreen(true);
+              setServiceableAreaList(serviceableArea);
+            } else if (errorType === 'PLACE_NOT_FOUND') {
+              alertGO({
+                title: 'Location Not Available',
+                message: 'Location is no longer available. Please select another location.',
+              });
+            } else {
+              alertGO({message});
+              setServiceableAreaScreen(false);
+            }
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else {
+            console.log('ELSE ERROR:', error);
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
+          }
+        });
+      }
+    },
   });
 
   const onPressRecentSearch = loc => {
@@ -281,6 +363,8 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           setSearchDestination={setSearchDestination}
           setSearchOrigin={setSearchOrigin}
           loading={loading}
+          setLoadingAutoComplete={setLoadingAutoComplete}
+          loadingAutoComplete={loadingAutoComplete}
         />
         {searchResponse?.length == 0 ? (
           <View>
@@ -304,27 +388,37 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
               </View>
             ) : (
               <View>
-                {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
+                {serviceableAreaScreen == true ? (
+                  <OutsideServiceableArea
+                    setServiceableAreVisible={setServiceableAreVisible}
+                    serviceableAreVisible={serviceableAreVisible}
+                    serviceableAreaList={serviceableAreaList}
+                  />
+                ) : (
                   <View>
-                    {recentSearchDataList.length == 0 ? null : (
-                      <FrequentlyUsed
-                        navigation={navigation}
-                        popTo={popTo}
-                        recentSearchDataList={recentSearchDataList}
-                        onPressRecentSearch={onPressRecentSearch}
-                      />
-                    )}
-                    {recentDestinationList.length == 0 ? null : (
+                    {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
                       <View>
-                        {recentSearchDataList.length != 0 && (
-                          <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+                        {recentSearchDataList.length == 0 ? null : (
+                          <FrequentlyUsed
+                            navigation={navigation}
+                            popTo={popTo}
+                            recentSearchDataList={recentSearchDataList}
+                            onPressRecentSearch={onPressRecentSearch}
+                          />
                         )}
-                        <SavedLocations
-                          navigation={navigation}
-                          popTo={popTo}
-                          recentDestinationList={recentDestinationList}
-                          onPressRecentDestination={onPressRecentDestination}
-                        />
+                        {recentDestinationList.length == 0 ? null : (
+                          <View>
+                            {recentSearchDataList.length != 0 && (
+                              <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+                            )}
+                            <SavedLocations
+                              navigation={navigation}
+                              popTo={popTo}
+                              recentDestinationList={recentDestinationList}
+                              onPressRecentDestination={onPressRecentDestination}
+                            />
+                          </View>
+                        )}
                       </View>
                     )}
                   </View>
@@ -333,8 +427,17 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
             )}
           </View>
         ) : (
-          // <ToktokgoBeta />
-          <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />
+          <View>
+            {serviceableAreaScreen == true ? (
+              <OutsideServiceableArea
+                setServiceableAreVisible={setServiceableAreVisible}
+                serviceableAreVisible={serviceableAreVisible}
+                serviceableAreaList={serviceableAreaList}
+              />
+            ) : (
+              <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />
+            )}
+          </View>
         )}
       </View>
       <ThrottledHighlight

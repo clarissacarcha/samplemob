@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   largeIcon: {
-    width: moderateScale(160),
-    height: moderateScale(160),
+    width: moderateScale(130),
+    height: moderateScale(130),
     resizeMode: 'contain',
   },
   title: {

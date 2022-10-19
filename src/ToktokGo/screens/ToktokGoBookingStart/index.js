@@ -9,7 +9,7 @@ import {
   GET_TRIPS_CONSUMER,
   TRIP_CHARGE_FINALIZE_PAYMENT,
   TRIP_CHARGE_INITIALIZE_PAYMENT,
-  GET_CONSUMER_RECENT_DESTINATION,
+  GET_TRIP_DESTINATIONS,
 } from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT, TOKTOK_QUOTATION_GRAPHQL_CLIENT} from '../../../graphql';
@@ -20,13 +20,15 @@ import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import DestinationBC from '../../../assets/toktokgo/destination4.png';
 import {ThrottledHighlight, ThrottledOpacity} from '../../../components_section';
 import {useMutation} from '@apollo/client';
-import {onErrorAppSync} from '../../util';
+import {onErrorAppSync, onError} from '../../util';
 import {useAccount} from 'toktokwallet/hooks';
 import {CancellationPaymentSuccesfullModal, NoShowPaymentSuccesfullModal} from './Components';
 import {SavedLocations} from './Sections/SavedLocations';
 import {RecentDestinations} from './Sections/RecentDestinations';
 import AsyncStorage from '@react-native-community/async-storage';
 import {FlatList} from 'react-native-gesture-handler';
+// import {onError} from '../../../util/ErrorUtility';
+import {useAlertGO} from '../../hooks';
 
 const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   // const {popTo, selectInput} = route.params;
@@ -38,11 +40,13 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   const dispatch = useDispatch();
   const [recentSearchDataList, setrecentSearchDataList] = useState([]);
   const [recentDestinationList, setrecentDestinationList] = useState([]);
+  const [showNotEnoughBalanceModal, setShowNotEnoughBalanceModal] = useState(false);
+  const alertGO = useAlertGO();
 
   useEffect(() => {
     const subscribe = navigation.addListener('focus', async () => {
       await getSearchList();
-      getRecentDestination();
+      getTripDestinations();
       // Return the function to unsubscribe from the event so it gets removed on unmount
       return subscribe;
     });
@@ -56,11 +60,11 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
   };
 
-  const [getRecentDestination] = useLazyQuery(GET_CONSUMER_RECENT_DESTINATION, {
+  const [getTripDestinations] = useLazyQuery(GET_TRIP_DESTINATIONS, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setrecentDestinationList(response.getConsumerPreviousDestinations);
+      setrecentDestinationList(response.getTripDestinations);
     },
     onError: onErrorAppSync,
   });
@@ -71,7 +75,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     onCompleted: response => {
       setBookingInitialState(response.getPlaceByLocation);
     },
-    onError: error => console.log('error', error),
+    onError: onError,
   });
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
@@ -100,20 +104,23 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
           if (errorType === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
-            Alert.alert('', message);
+            alertGO({message});
           } else if (errorType === 'WALLET_PIN_CODE_MAX_ATTEMPT') {
-            Alert.alert('', JSON.parse(message).message);
+            // Alert.alert('', JSON.parse(message).message);
+            alertGO({message: JSON.parse(message).message});
           } else if (errorType === 'WALLET_PIN_CODE_INVALID') {
-            Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+            // Alert.alert('', `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`);
+            alertGO({message: `Incorrect Pin, remaining attempts: ${JSON.parse(message).remainingAttempts}`});
           } else if (errorType === 'AUTHENTICATION_ERROR') {
             // Do Nothing. Error handling should be done on the scren
           } else if (errorType === 'ExecutionTimeout') {
-            Alert.alert('', message);
+            alertGO({message});
           } else {
             console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
           }
         });
       }
@@ -149,7 +156,29 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
         Alert.alert('', 'Something went wrong...');
       }
     },
-    onError: onErrorAppSync,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          console.log(errorType);
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            alertGO({message});
+          } else if (errorType === 'BAD_USER_INPUT') {
+            setShowNotEnoughBalanceModal(true);
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            alertGO({message});
+          } else {
+            console.log('ELSE ERROR:', error);
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
+          }
+        });
+      }
+    },
   });
 
   useEffect(() => {
@@ -201,6 +230,10 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   );
 
   const onPressRecentSearch = loc => {
+    dispatch({
+      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+      payload: {...route.params.details, noteToDriver: ''},
+    });
     if (route?.params?.voucherData) {
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING_DETAILS',
@@ -217,6 +250,10 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   };
 
   const onPressRecentDestination = loc => {
+    dispatch({
+      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+      payload: {...route?.params?.details, noteToDriver: ''},
+    });
     if (route?.params?.voucherData) {
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING_DETAILS',
@@ -273,6 +310,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
           <Header navigation={navigation} constants={constants} />
           <Landing navigation={navigation} details={route?.params?.details} voucherData={route?.params?.voucherData} />
           <FlatList
+            showsVerticalScrollIndicator={false}
             ListHeaderComponent={
               <ScrollView
                 contentContainerStyle={{flexGrow: 1}}
@@ -286,6 +324,8 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
                     navigation={navigation}
                     tripChargeInitializePaymentFunction={tripChargeInitializePaymentFunction}
                     tripConsumerPending={tripConsumerPending}
+                    showNotEnoughBalanceModal={showNotEnoughBalanceModal}
+                    setShowNotEnoughBalanceModal={setShowNotEnoughBalanceModal}
                   />
                 )}
                 {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? (

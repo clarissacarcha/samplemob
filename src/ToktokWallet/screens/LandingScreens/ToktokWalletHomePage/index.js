@@ -10,20 +10,19 @@ import CONSTANTS from 'common/res/constants';
 //SELF IMPORTS
 import {WalletLandingPage} from './Components';
 
-const {COLOR} = CONSTANTS;
-
 export const ToktokWalletHomePage = ({navigation, route}) => {
   const [refreshing, setRefreshing] = useState(false);
-  const {refreshWallet, getMyAccountLoading} = useAccount();
+  const {refreshWallet, getMyAccount, getMyAccountLoading} = useAccount();
   const dispatch = useDispatch();
 
-  const onRefresh = useCallback(() => {
+  const getData = useCallback(() => {
     refreshWallet();
+    getMyAccount();
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      onRefresh();
+      getData();
     }, []),
   );
 
@@ -37,9 +36,20 @@ export const ToktokWalletHomePage = ({navigation, route}) => {
     });
   }, []);
 
+  useEffect(() => {
+    if (refreshing) {
+      setRefreshing(getMyAccountLoading);
+    }
+  }, [getMyAccountLoading, refreshing]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    refreshWallet();
+    getMyAccount();
+  };
+
   return (
     <FlagSecureScreen>
-      <AlertOverlay visible={getMyAccountLoading} />
       <CheckIdleState>
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
         <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing} />

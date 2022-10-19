@@ -1,30 +1,44 @@
 import gql from 'graphql-tag';
 
+const otcDetails = `
+  id
+  procId
+  email
+  mobileNumber
+  name
+  description
+  logo
+  cashOutProvider
+  maximumAmount
+  type
+  status
+  validity
+  isHighlight
+  category
+  cashOutProviderFee {
+    id
+    cashOutProviderPartnerId
+    amountFrom
+    amountTo
+    percentageFee
+    amountFee
+    toktokServiceFee
+    status
+  }
+`;
+
 export const GET_CASH_OUT_PROVIDER_PARTNERS = gql`
   query {
     getCashOutProviderPartners {
-      id
-      procId
-      email
-      mobileNumber
-      name
-      description
-      logo
-      cashOutProvider
-      maximumAmount
-      type
-      status
-      validity
-      cashOutProviderFee {
-        id
-        cashOutProviderPartnerId
-        amountFrom
-        amountTo
-        percentageFee
-        amountFee
-        toktokServiceFee
-        status
-      }
+      ${otcDetails}
+    }
+  }
+`;
+
+export const GET_CASH_OUT_PROVIDER_PARTNERS_HIGHLIGHTED = gql`
+  query {
+    getCashOutProviderPartnersHighlighted {
+      ${otcDetails}
     }
   }
 `;
@@ -76,6 +90,8 @@ export const GET_CASH_OUT_OTC = gql`
             id
             referenceNumber
             amount
+            providerServiceFee
+            systemServiceFee
             isExported
             status
             accountId
@@ -118,6 +134,29 @@ export const GET_CASH_OUT_OTC = gql`
       pageInfo {
         startCursorId
         endCursorId
+        hasNextPage
+      }
+    }
+  }
+`;
+
+export const GET_CASH_OUT_SEARCH_PROVIDER_PARTNERS = gql`
+  query getCashOutSearchProviderPartners($input: GetCashOutSearchProviderPartnersInput) {
+    getCashOutSearchProviderPartners(input: $input) {
+      edges {
+        node {
+          id
+          name
+          category
+          logo
+          description
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        startCursorName
+        endCursorName
         hasNextPage
       }
     }
