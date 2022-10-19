@@ -9,6 +9,7 @@ import {moderateScale, numberFormat, getStatusbarHeight, AmountLimitHelper} from
 //COMPONENTS
 import {HeaderBack, HeaderTitleRevamp, OrangeButton, LoadingIndicator, CheckIdleState} from 'toktokwallet/components';
 import {VerifyContextProvider, VerifyContext, OTCPartnerForm, Header} from './components';
+import {AlertOverlay} from 'src/components';
 
 // FONTS AND COLORS
 import CONSTANTS from 'common/res/constants';
@@ -34,8 +35,18 @@ const MainComponent = ({navigation, route}) => {
   const {firstName, middleName, lastName} = tokwaAccount.person;
   const recipientName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
 
-  const {amount, setAmountError, email, setEmailError, purpose, setPurpose, providerServiceFee, toktokServiceFee} =
-    useContext(VerifyContext);
+  const {
+    amount,
+    setAmountError,
+    email,
+    setEmailError,
+    purpose,
+    setPurpose,
+    providerServiceFee,
+    toktokServiceFee,
+    setLoading,
+    loading,
+  } = useContext(VerifyContext);
 
   useEffect(() => {
     if (user.toktokWalletAccountId) {
@@ -88,6 +99,7 @@ const MainComponent = ({navigation, route}) => {
     let checkLimit = false;
 
     if (isAmountValid) {
+      setLoading(true);
       checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
         amount,
         setErrorMessage: value => {
@@ -113,9 +125,12 @@ const MainComponent = ({navigation, route}) => {
         totalServiceFee: parseFloat(providerServiceFee) + parseFloat(toktokServiceFee),
       };
       setPurpose(purpose.trim());
+      setLoading(false);
       navigation.navigate('ToktokWalletCashOutOTCPaymentSummary', {
         transactionDetails,
       });
+    } else {
+      setLoading(false);
     }
   };
 
@@ -135,6 +150,7 @@ const MainComponent = ({navigation, route}) => {
   // }
   return (
     <View style={styles.container}>
+      <AlertOverlay visible={loading} />
       <KeyboardAvoidingView
         style={styles.container}
         ref={scrollRef}
