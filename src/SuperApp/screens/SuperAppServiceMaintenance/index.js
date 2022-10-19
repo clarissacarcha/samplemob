@@ -67,18 +67,18 @@ const SuperAppServiceMaintenance = ({navigation, route}) => {
     }
   };
 
+  const onBackPress = () => {
+    navigation.replace('RootDrawer', {
+      screen: 'AuthenticatedStack',
+      params: {
+        screen: 'ConsumerLanding',
+      },
+    });
+  };
+
   return (
     <ImageBackground source={GradientBackground} style={styles.container}>
-      <ThrottledOpacity
-        style={styles.backButton}
-        onPress={() => {
-          navigation.replace('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'ConsumerLanding',
-            },
-          });
-        }}>
+      <ThrottledOpacity style={styles.backButton} onPress={onBackPress}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </ThrottledOpacity>
       <View style={{alignItems: 'center'}}>
@@ -121,8 +121,9 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
+    zIndex: 1,
     top: StatusBar.currentHeight + 23,
-    left: 16,
-    padding: 6,
+    left: 6,
+    padding: 10,
   },
 });
