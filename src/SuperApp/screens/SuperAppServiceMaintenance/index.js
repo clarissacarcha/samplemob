@@ -86,7 +86,7 @@ const SuperAppServiceMaintenance = ({navigation, route}) => {
         <Image
           source={serviceImage('image')}
           resizeMode={'contain'}
-          style={{height: 255, width: 300, marginVertical: 16}}
+          style={{height: 255, width: 300, marginVertical: 25}}
         />
         <View style={{alignItems: 'center', marginHorizontal: 20}}>
           <Text
@@ -97,7 +97,7 @@ const SuperAppServiceMaintenance = ({navigation, route}) => {
             }}>
             Katok ka ulit mamaya!
           </Text>
-          <Text style={{fontSize: constants.FONT_SIZE.M, textAlign: 'center', marginTop: 8}}>
+          <Text style={{fontSize: constants.FONT_SIZE.M, textAlign: 'center', marginTop: 8, marginHorizontal: 25}}>
             We are performing some maintenance to serve you better. We will be right back. Thank you.
           </Text>
         </View>
