@@ -97,7 +97,7 @@ const SuperAppServiceMaintenance = ({navigation, route}) => {
               fontFamily: constants.FONT_FAMILY.BOLD,
               fontSize: constants.FONT_SIZE.XL + 1,
             }}>
-            Katok ka ulit mamaya!s
+            Katok ka ulit mamaya!
           </Text>
           <Text style={{fontSize: constants.FONT_SIZE.M, textAlign: 'center', marginTop: 8}}>
             We are performing some maintenance to serve you better. We will be right back. Thank you.
