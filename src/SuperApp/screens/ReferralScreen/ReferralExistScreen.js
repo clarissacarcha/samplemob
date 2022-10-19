@@ -88,9 +88,9 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: StatusBar.currentHeight + 23,
-    left: 16,
-    padding: 6,
+    top: StatusBar.currentHeight + 17,
+    left: 10,
+    padding: 17,
   },
   inputContainer: {
     backgroundColor: '#F8F8F8',
