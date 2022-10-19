@@ -6,7 +6,7 @@ import {numberFormat, AmountLimitHelper, currencyCode} from 'toktokwallet/helper
 import {useDispatch} from 'react-redux';
 import CONSTANTS from 'common/res/constants';
 import {useAlert, usePrompt} from 'src/hooks';
-import {useDebounce} from 'toktokwallet/hooks';
+import {AlertOverlay} from 'src/components';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW} = CONSTANTS;
 
@@ -33,7 +33,7 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
   const [maxLimitMessage, setMaxLimitMessage] = useState('');
   const [isFocus, setIsFocus] = useState(false);
   const [inputWidth, setInputWidth] = useState(inputAmountLength['0']);
-  const [isCertify, setCertify] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef(null);
 
   const dispatch = useDispatch();
@@ -75,6 +75,7 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
   }, [onCashIn, tokwaAccount]);
 
   const confirmAmount = async () => {
+    setIsLoading(true);
     const checkLimit = await AmountLimitHelper.postCheckIncomingLimit({
       amount,
       setErrorMessage: setMessage,
@@ -82,12 +83,15 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
     const isValid = checkValidAmount(amount);
 
     if (checkLimit && isValid && !(amount > transactionType.cashInLimit) && amount > 1) {
+      setIsLoading(false);
       navigation.navigate('ToktokWalletDPCashInMethods', {
         transactionType,
         amount,
         cashInAmount,
         onCashIn,
       });
+    } else {
+      setIsLoading(false);
     }
   };
 
@@ -143,6 +147,7 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
 
   return (
     <>
+      <AlertOverlay visible={isLoading} />
       <PolicyNote
         note1="All transactions are subject to our Cash In Limits that are set to its users based on their approved account
           level as regulated by the Bangko Sentral ng Pilipinas. You may expect a refund for an over-limit transaction

@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 
 import type {PropsType} from './types';
 import {} from './Styled';
@@ -13,6 +13,7 @@ import {AmountLimitHelper} from 'toktokwallet/helper';
 //COMPONENTS
 import {OrangeButton} from 'toktokwallet/components';
 import {BtVerifyContext} from '../BtVerifyContextProvider';
+import {AlertOverlay} from 'src/components';
 //GRAPHQL & HOOKS
 import {useAccount} from 'toktokwallet/hooks';
 import {useNavigation} from '@react-navigation/native';
@@ -21,8 +22,16 @@ const BtProceedButton = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const {tokwaAccount} = useAccount({isOnErrorAlert: false});
   const {bankDetails, screenLabel} = props;
-  const {data, fees, changeDataValue, changeErrorMessages, postComputeConvenienceFee, computeConvenienceFeeLoading} =
-    useContext(BtVerifyContext);
+  const {
+    loading,
+    setLoading,
+    data,
+    fees,
+    changeDataValue,
+    changeErrorMessages,
+    postComputeConvenienceFee,
+    computeConvenienceFeeLoading,
+  } = useContext(BtVerifyContext);
   const {amount, emailAddress, accountName, accountNumber, purpose} = data;
 
   const isRequired = (key, value) => {
@@ -83,13 +92,28 @@ const BtProceedButton = (props: PropsType): React$Node => {
     const isAmountValid = checkAmount();
     const isValidEmail = checkEmail();
     let checkLimit = false;
+    let feeData = {};
+
     if (isAmountValid) {
+      setLoading(true);
       checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
         amount,
         setErrorMessage: error => {
           changeErrorMessages('amount', error);
         },
       });
+      if (fees.totalServiceFee === 0 && amount > 0) {
+        await postComputeConvenienceFee({
+          variables: {
+            input: {
+              amount: +amount,
+              cashOutBankId: bankDetails.id,
+            },
+          },
+        }).then(res => {
+          feeData = res.data.postComputeConvenienceFee;
+        });
+      }
     }
 
     if (
@@ -106,33 +130,32 @@ const BtProceedButton = (props: PropsType): React$Node => {
         emailAddress,
         bankDetails,
         purpose: purpose.trim(),
-        providerServiceFee: fees.providerServiceFee,
-        systemServiceFee: fees.systemServiceFee,
-        totalServiceFee: fees.totalServiceFee,
+        providerServiceFee: fees.providerServiceFee ? fees.providerServiceFee : feeData.providerServiceFee,
+        systemServiceFee: fees.systemServiceFee ? fees.systemServiceFee : feeData.systemServiceFee,
+        totalServiceFee: fees.totalServiceFee
+          ? fees.totalServiceFee
+          : parseFloat(feeData.providerServiceFee) + parseFloat(feeData.systemServiceFee),
         type: fees.type,
         amount: parseFloat(amount),
       };
       changeDataValue('purpose', purpose.trim());
 
-      if (fees.totalServiceFee === 0 && amount > 0) {
-        return postComputeConvenienceFee({
-          variables: {
-            input: {
-              amount: +amount,
-              cashOutBankId: bankDetails.id,
-            },
-          },
-        });
-      }
-
+      setLoading(false);
       navigation.navigate('ToktokWalletBankTransferPaymentSummary', {
         transactionDetails,
         screenLabel,
       });
+    } else {
+      setLoading(false);
     }
   };
 
-  return <OrangeButton label="Proceed" onPress={onPressProceed} hasShadow />;
+  return (
+    <>
+      <AlertOverlay visible={loading} />
+      <OrangeButton label="Proceed" onPress={onPressProceed} hasShadow />
+    </>
+  );
 };
 
 export default BtProceedButton;

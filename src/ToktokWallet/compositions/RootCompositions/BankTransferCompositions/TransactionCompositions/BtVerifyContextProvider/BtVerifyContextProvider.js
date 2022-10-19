@@ -50,6 +50,8 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
     purpose: '',
   });
 
+  const [loading, setLoading] = useState(false);
+
   const changeDataValue = (key, value) => {
     setData(oldstate => ({
       ...oldstate,
@@ -98,7 +100,6 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
       },
       onCompleted: fee => {
         const {providerServiceFee, systemServiceFee, type} = fee.postComputeConvenienceFee;
-        console.log(type);
         const totalServiceFee = providerServiceFee + systemServiceFee;
         const feeInformation =
           totalServiceFee > 0
@@ -131,6 +132,8 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
         postComputeConvenienceFee,
         computeConvenienceFeeLoading,
         changeAmount,
+        loading,
+        setLoading,
       }}>
       {children}
     </Provider>
