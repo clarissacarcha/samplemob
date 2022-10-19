@@ -127,7 +127,6 @@ const Splash = ({
       birthday: session?.user.person.birthdate ? moment(session?.user.person.birthdate).format("Y-m-d") : "",
       gender: session?.user.person.gender || "NA"
     }
-    console.log(variables)
     const req = await DynamicApiCall("create_user", signature, variables, {debug: true})
 
     if(req.responseData && req.responseData.success == 1){
@@ -160,9 +159,7 @@ const Splash = ({
       birthday: session?.user.person.birthdate ? moment(session?.user.person.birthdate).format("Y-m-d") : "",
       gender: session?.user.person.gender || "N"
     }
-    console.log(variables, appSignature)
     const req = await DynamicApiCall("updateCustomerProfile", appSignature, variables, {debug: true})
-    console.log("UPDATE PROFILE", req)
     if(req.responseData && req.responseData.success == 1){
       setRegisterRetries(1)
       authUser()
@@ -199,7 +196,6 @@ const Splash = ({
 
     //CART
     await AsyncStorage.getItem('ToktokMallMyCart').then((value) => {
-      // console.log('cart async storage',value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createMyCartSession('set', parsedValue)
@@ -210,7 +206,6 @@ const Splash = ({
 
     //DEFAULT ADDRESS
     await AsyncStorage.getItem('ToktokMallUserDefaultAddress').then((value) => {
-      // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createDefaultAddressSession('set', parsedValue)
@@ -221,7 +216,6 @@ const Splash = ({
 
     //NOTIFICATION
     await AsyncStorage.getItem('ToktokMallNotifications').then((value) => {
-      // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createNotificationsSession('set', parsedValue)
@@ -232,7 +226,6 @@ const Splash = ({
 
     //SEARCH HISTORY
     await AsyncStorage.getItem('ToktokMallSearchHistory').then((value) => {
-      // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createSearchHistorySession('set', parsedValue)
