@@ -32,6 +32,7 @@ const BtPaymentSummaryConfirm = (props: PropsType): React$Node => {
       const screen = validator === 'TPIN' ? 'ToktokWalletTPINValidator' : 'ToktokWalletOTPValidator';
       return navigation.navigate(screen, {
         callBackFunc: ProceedTransaction,
+        resendRequest: onPressConfirm,
         data: {
           requestFundTransferId: requestFundTransferId,
         },
