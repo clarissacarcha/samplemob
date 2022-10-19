@@ -26,6 +26,8 @@ export const CheckoutContextProvider = ({children})=> {
 
 	const [voucherRemoved, setVoucherRemoved] = useState(false)
 
+	const [resellerDiscounts, setResellerDiscounts] = useState(0)
+
 	const [getShippingHashDeliveryAmount, {data}] = useLazyQuery(GET_HASH_AMOUNT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
@@ -64,10 +66,19 @@ export const CheckoutContextProvider = ({children})=> {
 		else return null
 	}
 
-	const getShopItemDiscount = (shopid) => {
+	const getShopItemDiscount = (shopid, productId) => {
 		let discount = null
 		shippingVouchers.filter((a) => a.voucherCodeType == "promotion").map((a) => {
-			if(a?.shopid == shopid || a?.shop_id == shopid) discount = a
+			if(a?.shopid == shopid || a?.shop_id == shopid){
+				discount = a
+			}else if(a?.shopid == 0 || a?.shop_id == 0){
+				let discountedItems = a.product_id?.split(",")
+				discountedItems.map((discountedItem) => {
+					if(discountedItem == productId){
+						discount = a
+					}
+				})
+			}
 		})
 		return discount
 	}
@@ -141,6 +152,30 @@ export const CheckoutContextProvider = ({children})=> {
 		}, 100)
 	}
 
+	const computeTotalResellerDiscount = (data) => {
+		let resellerDiscount = 0
+		data.map((items) => {
+			items.data[0].map((item, index) => {
+				
+				let shopDiscount = getShopItemDiscount(item.shopId, item.product.Id)
+				console.log("shop discount", shopDiscount, item.shopId, item)
+				if(shopDiscount){
+					if(item.qty > 1){
+						let itemsrpprice = parseFloat(item.product.compareAtPrice * (item.qty - 1))
+						let discountedprice = parseFloat(item.product.price * (item.qty - 1))
+						resellerDiscount += itemsrpprice - discountedprice
+					}				
+				}else{
+					let itemsrpprice = parseFloat(item.product.compareAtPrice * item.qty)
+					let discountedprice = parseFloat(item.product.price * item.qty)
+					resellerDiscount += itemsrpprice - discountedprice
+				}
+				
+			})
+		})
+		setResellerDiscounts(resellerDiscount)
+	}
+
 	const getErrorMessageByCode = (code) => {
 		switch(code) {
 			case '001': 
@@ -181,6 +216,9 @@ export const CheckoutContextProvider = ({children})=> {
 				unavailableItems,
 				setUnavailableItems,
 
+				resellerDiscounts,
+				setResellerDiscounts,
+
 				getTotalItemDiscount,
 				getTotalVoucherDeduction,
 				getVoucherDeduction,
@@ -192,9 +230,11 @@ export const CheckoutContextProvider = ({children})=> {
 				getShopDiscountCount,
 				getVouchersApplied,
 
+				computeTotalResellerDiscount,
+
 				voucherRemoved,
 				setVoucherRemoved,
-				deleteVoucher,
+				deleteVoucher,				
 
 				getErrorMessageByCode
 			}}
