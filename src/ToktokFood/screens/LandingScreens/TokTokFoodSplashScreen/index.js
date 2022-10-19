@@ -2,11 +2,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {ImageBackground, StyleSheet, View, Image, Text, Platform, Dimensions} from 'react-native';
+import {ImageBackground, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {splash_new, toktokfood_logo, maintenance_logo, maintenance_bg} from 'toktokfood/assets/images';
+import {splash_new} from 'toktokfood/assets/images';
 
 import {
   CREATE_ACCOUNT,
@@ -17,14 +17,9 @@ import {
   DELETE_SHOP_TEMPORARY_CART,
   CHECK_HAS_TEMPORARY_CART,
 } from 'toktokfood/graphql/toktokfood';
-import {moderateScale, getStatusbarHeight} from 'toktokbills/helper';
 import {useUserLocation} from 'toktokfood/hooks';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
-import {HeaderBack} from 'toktokbills/components';
 import {setNewInstall} from 'toktokfood/helper/PersistentLocation';
-import CONSTANTS from 'common/res/constants';
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
-const {width, height} = Dimensions.get('window');
 
 const TokTokFoodSplashScreen = () => {
   useUserLocation(); // user location hook
@@ -36,13 +31,6 @@ const TokTokFoodSplashScreen = () => {
   const [errorModal, setErrorModal] = useState({error: {}, visible: false});
   const [createdFlag, setCreatedFlag] = useState(false);
 
-  //Checkpoint
-  //A is default which is everything is working and can proceed to home
-  //Maintenance for maintenance screen.
-  //10-19-2022 Proceed to maintenance screen once api fails to load
-  //
-  const [checkPoint, setCheckPoint] = useState('A');
-
   const [createAccount] = useMutation(CREATE_ACCOUNT, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onCompleted: ({createAccount}) => {
@@ -50,12 +38,12 @@ const TokTokFoodSplashScreen = () => {
       if (status === 200) {
         setCreatedFlag(true);
       } else {
-        setCheckPoint('MAINTENANCE');
+        return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
       }
     },
     onError: error => {
-      setCheckPoint('MAINTENANCE');
       console.log('createAccount', error);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
     },
   });
 
@@ -76,8 +64,8 @@ const TokTokFoodSplashScreen = () => {
       dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_FRANCHISEE', payload: {...getConsumer}});
     },
     onError: error => {
-      setCheckPoint('MAINTENANCE');
       console.log('getConsumerStatus', error);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
     },
   });
 
@@ -104,8 +92,8 @@ const TokTokFoodSplashScreen = () => {
       return showHomPage();
     },
     onError: error => {
-      setCheckPoint('MAINTENANCE');
       console.log('getKycStatus', error);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
     },
   });
 
@@ -114,13 +102,13 @@ const TokTokFoodSplashScreen = () => {
     onCompleted: ({patchToktokFoodUserId}) => {
       // console.log('patchToktokFoodUserId: ' + JSON.stringify(patchToktokFoodUserId));
       if (patchToktokFoodUserId.status !== 200) {
-        setCheckPoint('MAINTENANCE');
+        return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
         // Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
       }
     },
     onError: error => {
-      setCheckPoint('MAINTENANCE');
       console.log('updateToktokUser', error);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
     },
   });
 
@@ -130,7 +118,7 @@ const TokTokFoodSplashScreen = () => {
     onError: error => {
       console.log('getToktokUserInfo', error);
       // setErrorModal({error, visible: true});
-      setCheckPoint('MAINTENANCE');
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
     },
     onCompleted: async ({getAccount}) => {
       await getConsumerStatus();
@@ -173,9 +161,9 @@ const TokTokFoodSplashScreen = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: err => {
-      setCheckPoint('MAINTENANCE');
-      // Alert.alert('', 'Something went wrong.');
       console.log(`🍔 Temporary cart error: ' ToktokFoodSplashScreen.js`, err);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
+      // Alert.alert('', 'Something went wrong.');
     },
   });
 
@@ -194,8 +182,8 @@ const TokTokFoodSplashScreen = () => {
     },
     onError: () => {
       // Alert.alert('', 'Something went wrong.');
-      setCheckPoint('MAINTENANCE');
       console.log(`🍔 Temporary cart error: ' ToktokFoodSplashScreen.js`);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
     },
   });
 
@@ -279,69 +267,13 @@ const TokTokFoodSplashScreen = () => {
     });
   };
 
-  if (checkPoint === 'A') {
-    return <ImageBackground style={styles.splashContainer} source={splash_new} resizeMode="cover" />;
-  }
-
-  return (
-    <ImageBackground
-      source={maintenance_bg}
-      style={[styles.container, {paddingTop: Platform.OS === 'android' ? getStatusbarHeight : 0}]}>
-      <HeaderBack styleContainer={{marginVertical: moderateScale(16)}} />
-      <View style={styles.contentContainer}>
-        <View style={[styles.subContainer, {marginBottom: getStatusbarHeight}]}>
-          <Image style={styles.logo} source={toktokfood_logo} resizeMode="contain" />
-          <Image style={styles.maintenanceBills} source={maintenance_logo} resizeMode="cover" />
-          <Text style={styles.title}>Katok ka ulit mamaya!</Text>
-          <Text style={styles.message}>
-            We are performing some maintenance to serve you better. We will be right back. Thank you.
-          </Text>
-        </View>
-      </View>
-    </ImageBackground>
-  );
+  return <ImageBackground style={styles.splashContainer} source={splash_new} resizeMode="cover" />;
 };
 
 const styles = StyleSheet.create({
   splashContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-  },
-  container: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
-  logo: {
-    height: moderateScale(25),
-    width: moderateScale(166),
-    marginBottom: moderateScale(30),
-  },
-  contentContainer: {
-    paddingHorizontal: moderateScale(16),
-    alignItems: 'center',
-    flex: 1,
-  },
-  title: {
-    color: COLOR.ORANGE,
-    fontSize: FONT_SIZE.XL,
-    fontFamily: FONT.SEMI_BOLD,
-    marginTop: moderateScale(10),
-  },
-  message: {
-    marginHorizontal: moderateScale(20),
-    textAlign: 'center',
-    marginTop: 8,
-  },
-  maintenanceBills: {
-    height: null,
-    aspectRatio: 1.05,
-    width: width * 0.8,
-    marginBottom: moderateScale(15),
-  },
-  subContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
