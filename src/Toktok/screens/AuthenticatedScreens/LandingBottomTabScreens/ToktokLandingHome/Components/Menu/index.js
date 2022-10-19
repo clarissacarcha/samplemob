@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useCallback, useState} from 'react';
+import React, {useRef, useEffect, useCallback, useState, useLayoutEffect} from 'react';
 import _ from 'lodash';
 import {useSelector} from 'react-redux';
 import {View, Text, StyleSheet, TouchableOpacity, Image, Share, FlatList, Dimensions, Platform} from 'react-native';
@@ -184,6 +184,14 @@ export const Menu = ({setUserLocation, constants}) => {
   ];
 
   useEffect(() => {
+    filterMenus();
+  }, [state.appServices]);
+
+  useLayoutEffect(() => {
+    filterMenus();
+  }, []);
+
+  const filterMenus = () => {
     const appServicesObject = _.keyBy(state.appServices, 'identifier');
     setAppServices(appServicesObject);
 
@@ -227,7 +235,7 @@ export const Menu = ({setUserLocation, constants}) => {
     } else {
       setMenuData(filteredMenuData);
     }
-  }, []);
+  };
 
   if (!appServices) {
     return <View />;

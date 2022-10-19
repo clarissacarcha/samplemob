@@ -42,6 +42,7 @@ import {BuyLoad, Favorites, VerifyContextProvider, VerifyContext, Advertisement,
 
 import CONSTANTS from 'common/res/constants';
 import {KeyboardAvoidingView} from 'react-native';
+
 const {COLOR, FONT_FAMILY: FONT, SIZE, FONT_SIZE, MARGIN, SHADOW} = CONSTANTS;
 const {width} = Dimensions.get('screen');
 const FavoritesNav = ({onPress}) => {
@@ -73,6 +74,7 @@ const MainComponent = ({navigation, route}) => {
   const [activeTab, setActiveTab] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
   const [categoryNames, setCategoryNames] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
   const prompt = usePrompt();
   const {user} = useSelector(state => state.session);
   const tooltipWidth = width - (Platform.OS === 'android' ? 16 : width > 375 ? 36 : 0);
@@ -86,14 +88,15 @@ const MainComponent = ({navigation, route}) => {
     onCompleted: ({getLoadCategories}) => {
       const names = _.map(getLoadCategories, 'name').join(', ');
       setCategoryNames(names.replace(/,(?=[^,]*$)/, ' and'));
-      setRefreshing(false);
       setActiveTab(getLoadCategories[0]);
       setCategories(getLoadCategories);
+      setIsMounted(true);
+      setRefreshing(false);
     },
   });
 
   navigation.setOptions({
-    headerShown: !showSplash,
+    headerShown: !showSplash && (!error || !adsActions.error || isMounted),
   });
 
   const getActiveCategoryName = activeTab => {
@@ -101,6 +104,9 @@ const MainComponent = ({navigation, route}) => {
   };
 
   const showOnboarding = async () => {
+    if (error || adsActions.error) {
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'LOAD'});
+    }
     let isViewOnboarding = await checkViewOnboarding(user.id);
     if (!isViewOnboarding) {
       prompt({
@@ -119,14 +125,19 @@ const MainComponent = ({navigation, route}) => {
 
   useEffect(() => {
     setTimeout(() => {
-      showOnboarding();
       setShowSplash(false);
     }, 1500);
   }, [user]);
 
+  useEffect(() => {
+    if (user?.id && !showSplash) {
+      showOnboarding();
+    }
+  }, [user, showSplash]);
+
   const getDataList = () => {
-    getLoadCategories();
     getAdvertisements();
+    getLoadCategories();
   };
 
   const onRefresh = () => {
@@ -143,22 +154,22 @@ const MainComponent = ({navigation, route}) => {
     }
   };
 
-  if (!showSplash && !refreshing && (loading || adsActions.loading)) {
+  if (!showSplash && !isMounted && (loading || adsActions.loading)) {
     return (
       <View style={styles.container}>
         <LoadingIndicator isLoading={true} isFlex />
       </View>
     );
   }
-  if (showSplash || ((loading || adsActions.loading) && !refreshing)) {
+  if (showSplash || ((loading || adsActions.loading) && !isMounted)) {
     return <SplashHome />;
   }
   if (error || adsActions.error) {
-    return (
+    return isMounted ? (
       <View style={styles.container}>
         <SomethingWentWrong error={error ?? adsActions.error} onRefetch={getDataList} />
       </View>
-    );
+    ) : null;
   }
   return (
     // <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "padding"} keyboardVerticalOffset={30}>

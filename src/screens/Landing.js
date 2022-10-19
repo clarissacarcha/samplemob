@@ -7,7 +7,6 @@ import OneSignal from 'react-native-onesignal';
 import {AUTH_CLIENT, GET_USER_SESSION} from '../graphql';
 import ToktokSuperAppSplash from '../assets/images/SplashScreen.png';
 import SafeArea from 'react-native-safe-area';
-import RNRestart from 'react-native-restart';
 
 const Landing = ({createSession, destroySession, setAppServices, navigation}) => {
   const [safeAreaInset, setSafeAreaInset] = useState(0);
@@ -56,11 +55,6 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
         }
 
         createSession(getUserSession);
-
-        if (serviceAccess.length == 0) {
-          RNRestart.Restart();
-          return;
-        }
         setAppServices(serviceAccess);
 
         OneSignal.sendTags({

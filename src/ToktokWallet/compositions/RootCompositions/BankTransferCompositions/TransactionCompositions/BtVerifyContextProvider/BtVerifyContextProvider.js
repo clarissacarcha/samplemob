@@ -72,10 +72,7 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
   };
 
   const changeErrorMessages = (key, value) => {
-    setErrorMessages(oldstate => ({
-      ...oldstate,
-      [key]: value,
-    }));
+    setErrorMessages(oldstate => ({...oldstate, [key]: value}));
   };
 
   const changeFeesValue = (key, value) => {
@@ -87,15 +84,21 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
     {
       client: TOKTOK_WALLET_GRAPHQL_CLIENT,
       onError: error => {
-        TransactionUtility.StandardErrorHandling({
-          error,
-          navigation,
-          prompt,
-          isPop: false,
-        });
+        const {graphQLErrors} = error;
+        if (graphQLErrors.length > 0 && graphQLErrors[0].code === 'BAD_USER_INPUT') {
+          setErrorMessages(oldstate => ({...oldstate, amount: graphQLErrors[0].message}));
+        } else {
+          TransactionUtility.StandardErrorHandling({
+            error,
+            navigation,
+            prompt,
+            isPop: false,
+          });
+        }
       },
       onCompleted: fee => {
         const {providerServiceFee, systemServiceFee, type} = fee.postComputeConvenienceFee;
+        console.log(type);
         const totalServiceFee = providerServiceFee + systemServiceFee;
         const feeInformation =
           totalServiceFee > 0
