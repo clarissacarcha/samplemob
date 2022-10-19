@@ -4,10 +4,10 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import validator from 'validator';
 
 //HELPER & UTIL
-import {moderateScale, numberFormat, getStatusbarHeight} from 'toktokbills/helper';
+import {moderateScale, numberFormat, getStatusbarHeight, AmountLimitHelper} from 'toktokwallet/helper';
 
 //COMPONENTS
-import {HeaderBack, HeaderTitleRevamp, OrangeButton, LoadingIndicator} from 'toktokwallet/components';
+import {HeaderBack, HeaderTitleRevamp, OrangeButton, LoadingIndicator, CheckIdleState} from 'toktokwallet/components';
 import {VerifyContextProvider, VerifyContext, OTCPartnerForm, Header} from './components';
 
 // FONTS AND COLORS
@@ -54,8 +54,8 @@ const MainComponent = ({navigation, route}) => {
 
   const checkAmount = () => {
     let error = amount === '' ? 'This is a required field' : '';
-    if (+amount < 1) {
-      error = 'The minimum amount is ₱1';
+    if (+amount < 1 && amount !== '') {
+      error = 'The minimum amount allowed to cash out is ₱1';
     }
     if (error === '') {
       return checkInsufficientBalance();
@@ -67,12 +67,12 @@ const MainComponent = ({navigation, route}) => {
   const checkInsufficientBalance = () => {
     let totalServiceFee = parseFloat(toktokServiceFee) + parseFloat(providerServiceFee);
     let totalAmount = totalServiceFee + parseFloat(amount);
-    let isInsufficientBalance = parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.balance);
+    let isInsufficientBalance = parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.transferableBalance);
     let isMaxAmount = parseFloat(amount) > parseFloat(maximumAmount);
     let error = '';
 
     if (isMaxAmount) {
-      error = `The maximum amount is up to ₱${numberFormat(maximumAmount).replace('.00', '')} only`;
+      error = `The maximum amount allowed to cash out is up to ₱${numberFormat(maximumAmount).replace('.00', '')}`;
     } else if (isInsufficientBalance) {
       error = `You have insufficient balance. ₱${totalServiceFee} service fee is added to this transaction. Kindly cash in or edit the amount.`;
     } else {
@@ -82,10 +82,21 @@ const MainComponent = ({navigation, route}) => {
     return !error;
   };
 
-  const onPressProceed = () => {
+  const onPressProceed = async () => {
     const isAmountValid = checkAmount();
     const isValidEmail = checkEmail();
-    if (isAmountValid && isValidEmail) {
+    let checkLimit = false;
+
+    if (isAmountValid) {
+      checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
+        amount,
+        setErrorMessage: value => {
+          setAmountError(value);
+        },
+      });
+    }
+
+    if (isAmountValid && isValidEmail && checkLimit) {
       const transactionDetails = {
         recipientName,
         recipientMobileNo: tokwaAccount.mobileNumber,
@@ -142,9 +153,11 @@ const MainComponent = ({navigation, route}) => {
 };
 export const ToktokWalletCashOutOTCTransaction = ({navigation, route}) => {
   return (
-    <VerifyContextProvider>
-      <MainComponent navigation={navigation} route={route} />
-    </VerifyContextProvider>
+    <CheckIdleState>
+      <VerifyContextProvider>
+        <MainComponent navigation={navigation} route={route} />
+      </VerifyContextProvider>
+    </CheckIdleState>
   );
 };
 

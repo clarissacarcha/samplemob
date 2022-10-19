@@ -12,7 +12,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {useFocusEffect} from '@react-navigation/native';
-import {Separator, QuestionModal, FlagSecureScreen, HeaderTitleRevamp} from 'toktokwallet/components';
+import {HeaderBack, QuestionModal, FlagSecureScreen, HeaderTitleRevamp} from 'toktokwallet/components';
 import RNFS from 'react-native-fs';
 import CONSTANTS from 'common/res/constants';
 import {VerifyContextProvider, VerifyContext} from './Components';
@@ -42,29 +42,34 @@ const MainSetupComponent = () => {
   const [visible, setVisible] = useState(false);
 
   navigation.setOptions({
-    headerLeft: () => (
-      <HeaderBackClose
-        closeScreen={() => {
-          if (
-            person.middleName ||
-            !person.hasMiddleName ||
-            person.gender ||
-            birthInfo.birthdate ||
-            birthInfo.birthPlace ||
-            incomeInfo.source ||
-            incomeInfo.occupation
-          ) {
-            setVisible(true);
-          } else {
-            navigation.goBack();
-          }
-        }}
-        currentIndex={currentIndex}
-        setCurrentIndex={setCurrentIndex}
-      />
-    ),
+    headerLeft: () => <HeaderBack onBack={closeScreen} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />,
     headerTitle: () => <HeaderTitleRevamp label={'Create Account'} />,
   });
+
+  useFocusEffect(() => {
+    const backAction = () => {
+      closeScreen();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  });
+
+  const closeScreen = () => {
+    if (
+      person.middleName ||
+      !person.hasMiddleName ||
+      person.gender ||
+      birthInfo.birthdate ||
+      birthInfo.birthPlace ||
+      incomeInfo.source ||
+      incomeInfo.occupation
+    ) {
+      setVisible(true);
+    } else {
+      navigation.goBack();
+    }
+  };
 
   return (
     <>

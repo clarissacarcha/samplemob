@@ -81,7 +81,7 @@ export const ToktokWalletCashOutOtcLogs = ({navigation}) => {
           },
         },
         updateQuery: (previousResult, {fetchMoreResult}) => {
-          if (!fetchMoreResult) {
+          if (!fetchMoreResult || (fetchMoreResult && fetchMoreResult.getCashOutOtc.edges.length > 10)) {
             return previousResult;
           }
           fetchMoreResult.getCashOutOtc.edges = [
@@ -166,12 +166,16 @@ export const ToktokWalletCashOutOtcLogs = ({navigation}) => {
                   return <ListFooterComponent />;
                 }}
                 style={{flex: 1}}
-                contentContainerStyle={records.length == 0 && {flexGrow: 1}}
-                getItemLayout={(data, index) => ({
-                  length: data.length,
-                  offset: data.length * index,
-                  index,
-                })}
+                contentContainerStyle={records.length === 0 && {flexGrow: 1}}
+                getItemLayout={
+                  records.length <= 30
+                    ? (data, index) => ({
+                        length: records.length,
+                        offset: records.length * index,
+                        index,
+                      })
+                    : undefined
+                }
               />
             </View>
           </View>

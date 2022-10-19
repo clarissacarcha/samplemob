@@ -1,34 +1,18 @@
-import React, {useContext, useEffect, useState, useRef} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Dimensions,
-  StatusBar,
-  BackHandler,
-  ImageBackground,
-  Platform,
-} from 'react-native';
-import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
-import ViewShot, {captureScreen, releaseCapture} from 'react-native-view-shot';
-import {useHeaderHeight} from '@react-navigation/stack';
+import React, {useState, useRef, useEffect} from 'react';
+import {View, StyleSheet, ScrollView, ImageBackground, Platform, BackHandler} from 'react-native';
+import ViewShot from 'react-native-view-shot';
 import CONSTANTS from 'common/res/constants';
 
 //COMPONENTS
-import {OrangeButton, HeaderTitleRevamp, HeaderDownloadReceipt} from 'toktokwallet/components';
-import {HeaderBack, HeaderTitle} from 'src/revamp';
+import {OrangeButton, HeaderTitleRevamp, HeaderDownloadReceipt, CheckIdleState} from 'toktokwallet/components';
 import {Header, ReceiptDetails} from './components';
 
 //UTIL
-import {moderateScale, numberFormat, getStatusbarHeight} from 'toktokwallet/helper';
-const {width, height} = Dimensions.get('window');
+import {moderateScale} from 'toktokwallet/helper';
 
 //FONTS & COLORS & IMAGES
 import LinearGradient from 'toktokwallet/assets/images/screen-bg.png';
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 const MainComponent = ({route}) => {
   return (
@@ -72,8 +56,16 @@ export const ToktokWalletCashOutOTCReceipt = ({navigation, route}) => {
     ),
   });
 
+  useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, []);
+
   return (
-    <>
+    <CheckIdleState>
       <ImageBackground source={LinearGradient} resizeMode="cover" style={styles.container}>
         <ScrollView
           style={styles.container}
@@ -92,7 +84,7 @@ export const ToktokWalletCashOutOTCReceipt = ({navigation, route}) => {
       <View style={styles.buttonContainer}>
         <OrangeButton label="OK" onPress={() => navigation.navigate('ToktokWalletHomePage')} />
       </View>
-    </>
+    </CheckIdleState>
   );
 };
 

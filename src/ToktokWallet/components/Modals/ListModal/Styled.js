@@ -52,6 +52,7 @@ export const BackButtonIcon: ComponentType<any> = styled(FIcon).attrs(props => (
 export const SearchInputField: ComponentType<any> = styled(SearchInput).attrs(props => ({
   ...props,
   placeholderTextColor: '#525252',
+  containerStyle: {flex: 1},
 }))``;
 
 export const ContainerList: ComponentType<any> = styled.View`

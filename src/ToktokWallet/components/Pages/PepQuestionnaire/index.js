@@ -81,7 +81,7 @@ const Question = ({question, errorMessage, setErrorMessage, index, chooseAnswer,
   );
 };
 
-export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex, hasPreviousButton = true}) => {
+export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex, hasPreviousButton = true , isKyc = true}) => {
   const [errorMessage, setErrorMessage] = useState(['', '', '', '', '', '']);
   const [readMorePEP, setReadMorePEP] = useState(false);
   const headerHeight = useHeaderHeight();
@@ -232,6 +232,7 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
                 setPepInfo={setPepInfo}
                 errorMessage={errorMessage}
                 setErrorMessage={setErrorMessage}
+                isKyc={isKyc}
               />
 
               <SourceOfWealth
@@ -244,6 +245,7 @@ export const PepQuestionnaire = ({pepInfo, setPepInfo, callback, setCurrentIndex
                 setPepInfo={setPepInfo}
                 errorMessage={errorMessage}
                 setErrorMessage={setErrorMessage}
+                isKyc={isKyc}
               />
             </View>
             <View style={{flexDirection: 'row', marginVertical: 20, alignItems: 'center'}}>

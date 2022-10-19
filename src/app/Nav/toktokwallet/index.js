@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, PanResponder} from 'react-native';
+import BankTransferScreens from './BankTransferScreens';
 import CashInScreens from './CashInScreens';
 import CashOutOTCScreens from './CashOutOTCScreens';
 import CashOutScreens from './CashOutScreens';
@@ -15,6 +15,7 @@ import TestingScreens from './TestingScreens';
 export default ({Navigator}) => {
   return (
     <>
+      {BankTransferScreens({Navigator})}
       {CashInScreens({Navigator})}
       {CashOutOTCScreens({Navigator})}
       {CashOutScreens({Navigator})}

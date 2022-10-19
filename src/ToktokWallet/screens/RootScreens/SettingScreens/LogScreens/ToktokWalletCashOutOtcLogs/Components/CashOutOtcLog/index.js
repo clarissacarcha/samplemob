@@ -51,7 +51,9 @@ export const CashOutOtcLog = ({item, tokwaAccount, index, data}) => {
   const refDate = transaction
     ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
     : moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
-  const transactionAmount = `${currencyCode}${numberFormat(item.cashOut.amount)}`;
+  const totalServiceFee = parseFloat(item.cashOut.systemServiceFee) + parseFloat(item.cashOut.providerServiceFee);
+  const transactionAmount = `${currencyCode}${numberFormat(item.cashOut.amount + totalServiceFee)}`;
+
   const provider = item.cashOutProviderPartner.description;
   const phrase = `Cash Out through ${item.cashOutProviderPartner ? item.cashOutProviderPartner.description : provider}`;
   const showDetails = () => {
@@ -109,7 +111,7 @@ export const CashOutOtcLog = ({item, tokwaAccount, index, data}) => {
 
 const styles = StyleSheet.create({
   transaction: {
-    paddingVertical: 10,
+    paddingVertical: 20,
     borderBottomWidth: 0.2,
     borderColor: 'silver',
     flexDirection: 'row',
