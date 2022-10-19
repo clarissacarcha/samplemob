@@ -19,22 +19,29 @@ export const getResellerDiscount = async (promotions, deals, cartItems, hasTotal
         cartItems.map(items => {
           const filteredProd = _.includes(productIds, items.productid);
           if (filteredProd && totalReseller === 0) {
-            const {discounted_totalamount, voucher_code, service_fee_discount = 0} = item;
-            const {basePrice, quantity, resellerDiscount} = items;
-            const totalItemsNotIncluded = (resellerDiscount || basePrice) * (quantity - 1);
-            const totalItemsResellerNotIncluded = (basePrice - resellerDiscount) * (quantity - 1);
-            const hasReseller = resellerDiscount ? totalItemsResellerNotIncluded : 0;
-            const deductedDiscount =
-              item?.discount_type === '3'
-                ? items?.basePrice - discounted_totalamount + (hasTotal ? totalItemsNotIncluded : 0)
-                : item?.discount_totalamount;
-            totalReseller += service_fee_discount;
-            totalReseller += deductedDiscount + hasReseller;
-            totalAmount += discounted_totalamount + (hasTotal ? totalItemsNotIncluded : 0);
-            deductedProducts.push({id: items.productid, amount: totalReseller, code: voucher_code});
-            // totalReseller += (items?.resellerDiscount || items?.basePrice) - item?.discounted_totalamount;
+            const {discounted_totalamount, voucher_code, service_fee_discount = 0, voucher_category} = item;
+            if (voucher_category === '2') {
+              totalReseller += service_fee_discount;
+            } else {
+              const {basePrice, quantity, resellerDiscount} = items;
+              const totalItemsNotIncluded = (resellerDiscount || basePrice) * (quantity - 1);
+              const totalItemsResellerNotIncluded = (basePrice - resellerDiscount) * (quantity - 1);
+              const hasReseller = resellerDiscount ? totalItemsResellerNotIncluded : 0;
+              const deductedDiscount =
+                item?.discount_type === '3'
+                  ? items?.basePrice - discounted_totalamount + (hasTotal ? totalItemsNotIncluded : 0)
+                  : item?.discount_totalamount;
+              totalReseller += deductedDiscount + hasReseller;
+              totalAmount += discounted_totalamount + (hasTotal ? totalItemsNotIncluded : 0);
+              deductedProducts.push({id: items.productid, amount: totalReseller, code: voucher_code});
+            }
           } else {
-            totalAmount += (items?.resellerDiscount ?? items?.basePrice) * items.quantity;
+            const {voucher_category, service_fee_discount = 0} = item;
+            if (voucher_category === '2') {
+              totalAmount += service_fee_discount;
+            } else {
+              totalAmount += (items?.resellerDiscount ?? items?.basePrice) * items.quantity;
+            }
           }
         });
       }

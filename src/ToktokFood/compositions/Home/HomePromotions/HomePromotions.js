@@ -29,7 +29,6 @@ import {
 } from '../HomeNearYou/Styled';
 import {SeeAllContainer, RightIcon} from '../HomeCategories/Styled';
 import StyledText from 'toktokfood/components/StyledText';
-import {useGetShopsPromotions} from 'toktokfood/hooks';
 import ContentLoader from 'react-native-easy-content-loader';
 import moment from 'moment';
 import {getWeekDay} from 'toktokfood/helper/strings';
@@ -39,9 +38,9 @@ import Divider from 'toktokfood/components/Divider';
 import {useTheme} from 'styled-components';
 
 const HomePromotions = (props: PropsType): React$Node => {
+  const {shopPromotionLoading = false, shopPromotions = []} = props;
   const navigation = useNavigation();
   const theme = useTheme();
-  const {shopPromotions, shopPromotionLoading} = useGetShopsPromotions();
 
   const onShopOverview = item => navigation.navigate('ToktokFoodShopOverview', {item});
   const onSeeAll = item => navigation.navigate('ToktokFoodHomePromotionScreen', {item});
@@ -102,7 +101,7 @@ const HomePromotions = (props: PropsType): React$Node => {
       <ListContainer promo activeOpacity={0.9} onPress={() => onShopOverview(item)}>
         <ListImg promo source={validImg ? {uri: item.logo} : shop_noimage} onError={() => setValidImg(false)} />
         <Overlay promo opacity={hasOpen && hasProduct ? 0 : 0.68} />
-        {/* {displayNextOpeningHours()} */}
+        {displayNextOpeningHours()}
         <ListInfo>
           <ShopNameText>{item.shopname}</ShopNameText>
           <Row marginTop={5}>
@@ -124,24 +123,26 @@ const HomePromotions = (props: PropsType): React$Node => {
       <Container>
         {shopPromotions.map(promos => (
           <React.Fragment>
-            <Row>
-              <TitleContainer marginTop={15} flex={1} justifyContent="space-between">
-                <StyledText textProps={{numberOfLines: 1}} mode="semibold">
-                  {promos.voucherName.length < 20 ? promos.voucherName : `${promos.voucherName.substring(0, 20)}...`}
-                </StyledText>
-                <SeeAllContainer onPress={() => onSeeAll(promos)}>
-                  <StyledText color={theme.color.orange}>See All</StyledText>
-                  <RightIcon />
-                </SeeAllContainer>
-              </TitleContainer>
-            </Row>
+            {promos?.shopsWithPromo?.length > 0 && (
+              <Row>
+                <TitleContainer marginTop={15} flex={1} justifyContent="space-between">
+                  <StyledText textProps={{numberOfLines: 1}} mode="semibold">
+                    {promos.name.length < 20 ? promos.name : `${promos.name.substring(0, 20)}...`}
+                  </StyledText>
+                  <SeeAllContainer onPress={() => onSeeAll(promos)}>
+                    <StyledText color={theme.color.orange}>See All</StyledText>
+                    <RightIcon />
+                  </SeeAllContainer>
+                </TitleContainer>
+              </Row>
+            )}
             <ShopList
               data={promos?.shopsWithPromo?.slice(0, 7)}
               keyExtractor={item => item.id}
               renderItem={({item}) => <RestaurantItem item={item} />}
               ItemSeparatorComponent={() => <Separator />}
             />
-            <Divider height={8} />
+            {promos?.shopsWithPromo?.length > 0 && <Divider height={8} />}
           </React.Fragment>
         ))}
       </Container>

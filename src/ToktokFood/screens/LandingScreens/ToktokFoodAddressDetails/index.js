@@ -54,6 +54,7 @@ const ToktokFoodAddressDetails = ({route}) => {
         coordinates: c,
         address: state.pickUpCompleteAddress,
         isCart: route.params?.isCart,
+        cartRefetch: route.params?.cartRefetch,
       });
     }
   };

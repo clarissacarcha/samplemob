@@ -28,13 +28,13 @@ const ToktokFoodHomePromotionScreen = (props: PropsType): React$Node => {
   const route = useRoute();
   const navigation = useNavigation();
   const {item = {}} = route.params;
-  const {voucherName = '', shopsWithPromo = []} = item;
+  const {name = '', shopsWithPromo = []} = item;
 
   const renderTitle = () => {
-    if (voucherName.length < 20) {
-      return voucherName;
+    if (name.length < 20) {
+      return name;
     }
-    return `${voucherName.substring(0, 20)}...`;
+    return `${name.substring(0, 20)}...`;
   };
 
   const onShopOverview = item => navigation.navigate('ToktokFoodShopOverview', {item});

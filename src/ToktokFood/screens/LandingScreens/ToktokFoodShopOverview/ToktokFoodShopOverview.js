@@ -45,7 +45,7 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
   const [search, setSearch] = useState('');
   const [isAlertVisible, setIsAlertVisible] = useState(false);
 
-  const {loading, routes} = useGetProductCategories(item?.id);
+  const {loading, routes, refetch} = useGetProductCategories(item?.id);
 
   // Ref for scrolling animation
   let isListGliding = useRef(false);
@@ -224,6 +224,7 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
             scrollY={scrollY}
             routes={routes}
             loading={loading}
+            refetch={refetch}
           />
         </PageView>
         <PageView key="2">

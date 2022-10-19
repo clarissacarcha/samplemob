@@ -25,8 +25,17 @@ const MainComponent = () => {
   const routes = useRoute();
   const navigation = useNavigation();
   const alert = useAlert();
-  const {Id, parentProductId, selectedItemId, selectedAddons, selectedPrice, selectedQty, selectedNotes, action} =
-    routes.params;
+  const {
+    Id,
+    parentProductId,
+    selectedItemId,
+    selectedAddons,
+    selectedPrice,
+    selectedQty,
+    selectedNotes,
+    action,
+    cartRefetch,
+  } = routes.params;
   const {customerInfo} = useSelector(state => state.toktokFood);
 
   const {
@@ -212,7 +221,7 @@ const MainComponent = () => {
   return (
     <View style={styles.container}>
       <HeaderImageBackground searchBox={false}>
-        <HeaderTitle isHome={true} forFoodItem={true}/>
+        <HeaderTitle isHome={true} forFoodItem={true} />
       </HeaderImageBackground>
       {productDetails === null || Object.entries(productDetails).length === 0 || getLoading || getError ? (
         <LoadingIndicator isLoading={true} isFlex />
@@ -240,7 +249,7 @@ const MainComponent = () => {
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
-          <FoodCart loading={loading} basePrice={0} action={action} />
+          <FoodCart loading={loading} basePrice={0} action={action} cartRefetch={cartRefetch} />
         </>
       )}
       <DialogMessage

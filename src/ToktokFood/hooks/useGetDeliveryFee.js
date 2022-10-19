@@ -88,8 +88,6 @@ export const useGetDeliveryFee = (shippingType, items, totalAmount, paymentMetho
       const shipping = promotionVoucher.filter(promo => promo.type === 'shipping');
       const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
 
-      console.log(shipping);
-
       if (shipping.length > 0 || promotions.length > 0) {
         getPaymentMethodValidation({
           variables: {

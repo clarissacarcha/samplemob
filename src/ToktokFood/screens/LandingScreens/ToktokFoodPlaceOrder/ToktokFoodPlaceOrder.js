@@ -69,6 +69,7 @@ const ToktokFoodPlaceOrder = (props: PropsType): React$Node => {
         landmark={landmark}
         contactNumber={contactNumber}
         name={name}
+        cartRefetch={cartRefetch}
       />
     );
   };

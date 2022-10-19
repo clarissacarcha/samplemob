@@ -107,7 +107,7 @@ export const ListWrapper: ComponentType<any> = styled.TouchableOpacity`
   flex: 1;
   flex-wrap: wrap;
   align-items: flex-start;
-  padding-left: ${Platform.OS === 'android' ? 3 : 7}px;
+  padding-left: ${Platform.OS === 'android' ? 3 : 8}px;
 `;
 
 export const ListImg: ComponentType<any> = styled.Image`

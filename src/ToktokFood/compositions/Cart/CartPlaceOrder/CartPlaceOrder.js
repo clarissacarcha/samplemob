@@ -112,7 +112,7 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     const replaceLandMark = receiverLandmark.replace(/[^a-z0-9 ]/gi, '');
 
     const ORDER_DATA = {
-      total_amount: promotions.length > 0 || deals.length > 0 ? parsedAmount : cartData?.totalAmount,
+      total_amount: deductedPrice > 0 ? parsedAmount : cartData?.totalAmount,
       srp_totalamount: cartData?.totalAmountWithAddons,
       notes: cartDriverNote.replace(/[^a-z0-9 ]/gi, ''),
       order_isfor: cartServiceType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
@@ -140,7 +140,7 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
       reseller_account_type: customerFranchisee?.franchiseeAccountType || '',
       reseller_code: customerFranchisee?.franchiseeCode || '',
       referral_code: customerFranchisee?.franchiseeCode ? '' : customerFranchisee?.referralCode || '',
-      discounted_totalamount: promotions.length > 0 || deals.length > 0 ? parsedAmount : cartData?.totalAmount,
+      discounted_totalamount: deductedPrice > 0 ? parsedAmount : cartData?.totalAmount,
       service_type: 'toktokfood',
       service_fee: 0,
     };
@@ -153,7 +153,6 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
         cartData?.pabiliShopDetails,
       );
       const serviceFeeDiscount = _.sumBy(promotionVoucher, e => e.service_fee_discount);
-      console.log('serviceFeeDiscount', serviceFeeDiscount);
       const pabiliServiceFee =
         (cartData?.pabiliShopResellerDiscount || cartData?.pabiliShopServiceFee) - serviceFeeDiscount;
       CUSTOMER_DATA.service_type = 'pabili';
@@ -331,13 +330,13 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     // console.log('totalPrice', totalPrice);
     // console.log('deductedPrice', deductedPrice);
     // console.log('amount', amount);
-    console.log('requestTakeMoney', Number(parseAmount.toFixed(2)));
+    console.log('requestTakeMoney', Number(amountText.toFixed(2)));
 
     requestTakeMoney({
       variables: {
         input: {
           currency: userWallet?.getMyAccount?.wallet?.currency?.code,
-          amount: Number(parseAmount.toFixed(2)),
+          amount: Number(amountText.toFixed(2)),
           toktokuser_id: user.id,
           payment_method: paymentMethod.toUpperCase(),
           name: `${customerInfo.firstName} ${customerInfo.lastName}`,

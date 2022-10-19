@@ -4,8 +4,7 @@
  */
 
 import React, {useCallback, useState} from 'react';
-import {RefreshControl, SafeAreaView} from 'react-native';
-// import {useTheme} from 'styled-components';
+import {RefreshControl} from 'react-native';
 
 import type {PropsType} from './types';
 import {Container, ScrollContainer} from './Styled';
@@ -19,12 +18,13 @@ import HomeBanner from 'toktokfood/compositions/Home/HomeBanner';
 import HomeNearYou from 'toktokfood/compositions/Home/HomeNearYou';
 import HomePromotions from 'toktokfood/compositions/Home/HomePromotions';
 import Divider from 'toktokfood/components/Divider';
+import {useGetShopsPromotions} from 'toktokfood/hooks';
 
 const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
-  // const theme = useTheme();
   const [page, setPage] = useState(0);
   const [loadMore, setLoadMore] = useState(false);
   const [isReload, setIsReload] = useState(false);
+  const {shopPromotions, shopPromotionLoading, shopPromotionRefetch} = useGetShopsPromotions();
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 100;
@@ -40,7 +40,8 @@ const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
 
   const onRefresh = useCallback(() => {
     setIsReload(true);
-  }, [setIsReload]);
+    shopPromotionRefetch();
+  }, [shopPromotionRefetch]);
 
   return (
     <Container>
@@ -56,7 +57,7 @@ const ToktokFoodHomeScreen = (props: PropsType): React$Node => {
         <HomeBanner />
         <HomeCategories />
         <Divider height={8} />
-        <HomePromotions />
+        <HomePromotions shopPromotions={shopPromotions} shopPromotionLoading={shopPromotionLoading} />
         <HomeNearYou
           page={page}
           isLoadMore={loadMore}

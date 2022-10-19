@@ -5,7 +5,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_ALL_TEMPORARY_CART} from 'toktokfood/graphql/toktokfood';
 import {useSelector} from 'react-redux';
 
-const removeSpecialCharacters = text => text.replace(/[^a-z0-9 ]/gi, '');
+const removeSpecialCharacters = text => text?.replace(/[^a-z0-9 ]/gi, '');
 const formatMobileNumber = number => (number.charAt(0) === '6' ? `+${number}` : number);
 
 export const useGetCartItems = () => {

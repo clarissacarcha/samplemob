@@ -35,7 +35,7 @@ const HomeFab = (props: PropsType): React$Node => {
 
   const Badge = () => (
     <BadgeContainer>
-      <BadgedIcon imageProps={{resizeMode: 'contain'}} source={fab_food} size="small" />
+      <Avatar imageProps={{resizeMode: 'contain'}} source={fab_food} size="small" />
       {/* <Avatar rounded imageProps={{resizeMode: 'contain'}} source={fab_food} size="small" /> */}
       {/* <IconBadge /> */}
       {/* <Badge status="success" /> */}

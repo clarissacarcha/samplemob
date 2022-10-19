@@ -9,6 +9,7 @@ import type {PropsType, StateTypes} from './types';
 import {Container, AmountContainer, AmountText, AmountBreakdownContainer, Loader, DiscountIcon} from './Styled';
 import {useTheme} from 'styled-components';
 import Alert from 'toktokfood/components/Alert';
+import _ from 'lodash';
 
 const OrderAmount = (props: PropsType): React$Node => {
   const {state, placement} = props;
@@ -90,8 +91,10 @@ const OrderAmount = (props: PropsType): React$Node => {
   const renderDiscountComponent = () => {
     if (resellerDiscountTotal || promoDiscounts || shippingFeeAmount() > 0 || pabiliShopResellerDiscount) {
       const serviceFeeDiscount = state?.totalServiceFee - pabiliShopResellerDiscount;
+      const serviceFeeVoucherDiscount = _.sumBy(voucherDiscounts, 'discountServiceFee');
       const totalDiscount =
         promoDiscounts +
+        serviceFeeVoucherDiscount +
         shippingFeeAmount() +
         (state?.serviceType === 'toktokfood' ? resellerDiscountTotal : serviceFeeDiscount);
       return (
@@ -109,9 +112,14 @@ const OrderAmount = (props: PropsType): React$Node => {
               {resellerDiscountTotal > 0 &&
                 state?.serviceType === 'toktokfood' &&
                 amountComponent('Discount', 'Reseller', resellerDiscountTotal, '-')}
-              {promoDiscounts > 0 &&
+              {(promoDiscounts > 0 || serviceFeeVoucherDiscount > 0) &&
                 voucherDiscounts.map(voucher =>
-                  amountComponent('Discount', voucher?.voucherName, voucher?.discountAmount, '-'),
+                  amountComponent(
+                    'Discount',
+                    voucher?.voucherName,
+                    voucher?.discountAmount || voucher?.discountServiceFee,
+                    '-',
+                  ),
                 )}
               {shippingFeeAmount() > 0 &&
                 amountComponent('Discount', state?.promoDetails?.shippingDiscountName, shippingFeeAmount(), '-')}
@@ -127,12 +135,14 @@ const OrderAmount = (props: PropsType): React$Node => {
   const renderTotalAmountComponent = () => {
     let icon;
     const serviceFee = pabiliShopResellerDiscount || state?.totalServiceFee;
+    const serviceFeeVoucherDiscount = _.sumBy(voucherDiscounts, 'discountServiceFee');
     if (
       resellerDiscountTotal ||
       promoDiscounts ||
       shippingFeeAmount() ||
       originalShippingFee ||
-      pabiliShopResellerDiscount
+      pabiliShopResellerDiscount ||
+      serviceFeeVoucherDiscount
     ) {
       icon = showAmountBreakdown ? 'chevron-down' : 'chevron-up';
     }
@@ -141,6 +151,7 @@ const OrderAmount = (props: PropsType): React$Node => {
       'Total',
       state?.totalAmount +
         state?.originalShippingFee -
+        serviceFeeVoucherDiscount -
         shippingFeeAmount() +
         (state?.serviceType === 'pabili' ? serviceFee : 0),
       '',

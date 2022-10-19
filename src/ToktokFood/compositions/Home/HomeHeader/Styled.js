@@ -7,10 +7,15 @@ import styled from 'styled-components/native';
 import {Icon} from 'react-native-elements';
 import ContentLoader from 'react-native-easy-content-loader';
 import StyledText from 'toktokfood/components/StyledText';
+import {Badge} from 'react-native-elements';
 
 export const Container: ComponentType<any> = styled.View`
   /* flex: 1; */
   z-index: 1;
+`;
+
+export const Column: ComponentType<any> = styled.View`
+  /* flex: 1; */
 `;
 
 export const AddressContainer: ComponentType<any> = styled.TouchableOpacity`

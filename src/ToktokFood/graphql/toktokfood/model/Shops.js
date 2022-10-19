@@ -71,6 +71,7 @@ export const GET_SHOPS_W_PROMOTIONS = gql`
   query getPromoSections($input: ShopPromosInput) {
     getPromoSections(input: $input) {
       voucherName
+      name
       shopsWithPromo {
         id
         address

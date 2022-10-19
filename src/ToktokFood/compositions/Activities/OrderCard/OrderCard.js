@@ -27,6 +27,7 @@ import moment from 'moment';
 import OrderPaymentMethod from '../../Order/OrderPaymentMethod/OrderPaymentMethod';
 import ContentLoader from 'react-native-easy-content-loader';
 import {useNavigation} from '@react-navigation/native';
+import _ from 'lodash';
 
 const OrderCard = (props: PropsType): React$Node => {
   const {data} = props;
@@ -141,8 +142,9 @@ const OrderCard = (props: PropsType): React$Node => {
         ? data?.totalServiceFee
         : 0;
     const deliveryFee = data?.deliveryAmount ?? data?.deliveryFee;
+    const serviceFeeDiscount = _.sumBy(data?.voucherDiscounts, 'discountServiceFee');
     const total = data?.totalAmount;
-    const totalAmount = parseFloat(total + deliveryFee + serviceFee).toFixed(2);
+    const totalAmount = parseFloat(total + deliveryFee + serviceFee - serviceFeeDiscount).toFixed(2);
     if (isLoaded) {
       return (
         <Row justifyContent="space-between">

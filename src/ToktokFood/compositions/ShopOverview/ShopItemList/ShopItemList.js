@@ -5,11 +5,10 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {Animated} from 'react-native';
+import {Animated, RefreshControl} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {useNavigation} from '@react-navigation/native';
-// import {useTheme} from 'styled-components/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import _ from 'lodash';
 
 import type {PropsType} from './types';
@@ -44,17 +43,16 @@ import {GET_PRODUCTS_BY_SHOP_CATEGORY} from 'toktokfood/graphql/toktokfood';
 const ShopItemList = (props: PropsType): React$Node => {
   const {onGetRef, onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag, route, shopId, scrollY} = props;
   const navigation = useNavigation();
-  // const theme = useTheme();
+  const isFocused = useIsFocused();
 
   const [hasMorePage, setHasMorePage] = useState(true);
   const [showMore, setShowMore] = useState(false);
   const [page, setPage] = useState(0);
-
   const avatarStyle = {borderRadius: 10};
   const containerStyle = {height: 70, width: 70, marginRight: 15};
   const textProps = {numberOfLines: 1};
 
-  const [getProductsByShopCategory, {data, fetchMore}] = useLazyQuery(GET_PRODUCTS_BY_SHOP_CATEGORY, {
+  const [getProductsByShopCategory, {data, fetchMore, refetch, loading}] = useLazyQuery(GET_PRODUCTS_BY_SHOP_CATEGORY, {
     variables: {
       input: {
         id: shopId,
@@ -64,7 +62,7 @@ const ShopItemList = (props: PropsType): React$Node => {
       },
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'cache and network',
+    fetchPolicy: 'cache-and-network',
     // onCompleted: ({getProductsByShopCategory}) => {
     //   const products = getProductsByShopCategory;
     //   filterProducts(products);
@@ -72,8 +70,10 @@ const ShopItemList = (props: PropsType): React$Node => {
   });
 
   useEffect(() => {
-    getProductsByShopCategory();
-  }, [shopId, route]);
+    if (isFocused) {
+      getProductsByShopCategory();
+    }
+  }, [shopId, route, isFocused]);
 
   const onLoadMore = () => {
     if (!showMore && hasMorePage) {
@@ -210,6 +210,7 @@ const ShopItemList = (props: PropsType): React$Node => {
         return <ContentLoading />;
       }}
       ListFooterComponent={renderFooter}
+      refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}
     />
   );
 };

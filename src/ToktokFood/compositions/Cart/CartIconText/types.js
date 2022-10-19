@@ -14,4 +14,5 @@ export type PropsType = {
   landmark?: string,
   id: number,
   name?: string,
+  cartRefetch?: Function,
 };
