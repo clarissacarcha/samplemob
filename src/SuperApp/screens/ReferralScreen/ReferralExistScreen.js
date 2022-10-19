@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
+    zIndex: 1,
     top: StatusBar.currentHeight + 17,
     left: 10,
     padding: 17,
