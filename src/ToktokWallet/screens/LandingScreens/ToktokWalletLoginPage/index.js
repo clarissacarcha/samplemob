@@ -55,7 +55,7 @@ export const ToktokWalletLoginPage = ({navigation, route}) => {
   const session = useSelector(state => state.session);
   const [isRooted, setIsRooted] = useState(false);
   const [pinSet, setPinSet] = useState(false);
-  const {refreshWallet, tokwaAccount} = useAccount();
+  const {refreshWallet, tokwaAccount} = useAccount({options: {isOnErrorAlert: false}});
   const dispatch = useDispatch();
   const alert = useAlert();
 
@@ -68,7 +68,7 @@ export const ToktokWalletLoginPage = ({navigation, route}) => {
 
   useEffect(() => {
     CheckIfDeviceIsRooted();
-    // refreshWallet();
+    refreshWallet();
     getGlobalSettings();
     getAppServices();
     getAppServiceLogs();
@@ -82,6 +82,23 @@ export const ToktokWalletLoginPage = ({navigation, route}) => {
 
     return result;
   };
+
+  const {loading: globalLoading, error: globalError} = useQuery(GET_GLOBAL_SETTINGS, {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onCompleted: ({getGlobalSettings}) => {
+      getUserToktokWalletData();
+
+      const constantObject = mapKeyValueToObject(getGlobalSettings);
+      dispatch({
+        type: 'SET_TOKWA_CONSTANTS',
+        payload: constantObject,
+      });
+    },
+    onError: () => {
+      navigation.replace('SuperAppServiceMaintenance', {service: 'WALLET'});
+    },
+  });
 
   const [getAppServices] = useLazyQuery(GET_APP_SERVICES, {
     fetchPolicy: 'network-only',
@@ -118,28 +135,24 @@ export const ToktokWalletLoginPage = ({navigation, route}) => {
     // onError: error => onErrorAlert({alert, error}),
   });
 
-  const {data, error, loading, refetch} = useQuery(GET_USER_TOKTOK_WALLET_DATA, {
+  const [getUserToktokWalletData, {data, error, loading}] = useLazyQuery(GET_USER_TOKTOK_WALLET_DATA, {
     fetchPolicy: 'network-only',
     variables: {
       input: {
         userId: session.user.id,
       },
     },
-    onError: () => {
-      navigation.replace('SuperAppServiceMaintenance', {service: 'WALLET'});
-    },
     onCompleted: async ({getUserToktokWalletData}) => {
-      // if( getUserToktokWalletData.accountToken ) {
-      //     await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
-      // }
+      if (getUserToktokWalletData.accountToken) {
+        await AsyncStorage.setItem('toktokWalletAccountToken', getUserToktokWalletData.accountToken);
+      }
       if (getUserToktokWalletData.toktokWalletAccountId && !session.user.toktokWalletAccountId) {
-        // UPDATE SESSION HERE
+        // UPDATE SESSION HEREr
         dispatch({
           type: 'UPDATE_TOKWA_ACCOUNT_ID_SESSION',
           payload: getUserToktokWalletData.toktokWalletAccountId,
         });
       }
-
       if (getUserToktokWalletData.enterpriseToken) {
         await AsyncStorage.setItem('toktokWalletEnterpriseToken', getUserToktokWalletData.enterpriseToken);
       }
@@ -149,12 +162,11 @@ export const ToktokWalletLoginPage = ({navigation, route}) => {
   const kycStatus = useMemo(() => data?.getUserToktokWalletData?.kycStatus, [data]);
   const kycPep = useMemo(() => data?.getUserToktokWalletData?.pepId, [data]);
 
-  if (loading) {
+  if (loading || globalLoading) {
     return <SplashHome />;
   }
 
-  if (error) {
-    //<SomethingWentWrong />
+  if (error || globalError) {
     return null;
   }
 
