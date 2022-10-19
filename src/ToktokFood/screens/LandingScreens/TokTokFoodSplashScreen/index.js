@@ -1,16 +1,12 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {ImageBackground, StyleSheet} from 'react-native';
+import {ImageBackground, StyleSheet, View, Image, Text, Platform, Dimensions} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
-
-import {Alert} from 'react-native';
-
-import {COLOR} from 'res/variables';
-import {CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT, TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
-import {splash_new} from 'toktokfood/assets/images';
-import AlertModal from 'toktokfood/components/AlertModal';
+import {CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import {splash_new, toktokfood_logo, maintenance_logo, maintenance_bg} from 'toktokfood/assets/images';
 
 import {
   CREATE_ACCOUNT,
@@ -21,11 +17,14 @@ import {
   DELETE_SHOP_TEMPORARY_CART,
   CHECK_HAS_TEMPORARY_CART,
 } from 'toktokfood/graphql/toktokfood';
-
+import {moderateScale, getStatusbarHeight} from 'toktokbills/helper';
 import {useUserLocation} from 'toktokfood/hooks';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
-
+import {HeaderBack} from 'toktokbills/components';
 import {setNewInstall} from 'toktokfood/helper/PersistentLocation';
+import CONSTANTS from 'common/res/constants';
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
+const {width, height} = Dimensions.get('window');
 
 const TokTokFoodSplashScreen = () => {
   useUserLocation(); // user location hook
@@ -37,13 +36,26 @@ const TokTokFoodSplashScreen = () => {
   const [errorModal, setErrorModal] = useState({error: {}, visible: false});
   const [createdFlag, setCreatedFlag] = useState(false);
 
+  //Checkpoint
+  //A is default which is everything is working and can proceed to home
+  //Maintenance for maintenance screen.
+  //10-19-2022 Proceed to maintenance screen once api fails to load
+  //
+  const [checkPoint, setCheckPoint] = useState('A');
+
   const [createAccount] = useMutation(CREATE_ACCOUNT, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onCompleted: ({createAccount}) => {
       let {status} = createAccount;
-      if (status == 200) {
+      if (status === 200) {
         setCreatedFlag(true);
+      } else {
+        setCheckPoint('MAINTENANCE');
       }
+    },
+    onError: error => {
+      setCheckPoint('MAINTENANCE');
+      console.log('createAccount', error);
     },
   });
 
@@ -63,7 +75,10 @@ const TokTokFoodSplashScreen = () => {
     onCompleted: ({getConsumer}) => {
       dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_FRANCHISEE', payload: {...getConsumer}});
     },
-    onError: error => console.log('getConsumerStatus', error),
+    onError: error => {
+      setCheckPoint('MAINTENANCE');
+      console.log('getConsumerStatus', error);
+    },
   });
 
   const [getKycStatus] = useLazyQuery(GET_KYC_STATUS, {
@@ -88,16 +103,24 @@ const TokTokFoodSplashScreen = () => {
       dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: null});
       return showHomPage();
     },
-    onError: error => console.log('getKycStatus', error),
+    onError: error => {
+      setCheckPoint('MAINTENANCE');
+      console.log('getKycStatus', error);
+    },
   });
 
   const [updateToktokUser] = useMutation(PATCH_PERSON_HAS_TOKTOKFOOD, {
     client: CLIENT,
     onCompleted: ({patchToktokFoodUserId}) => {
       // console.log('patchToktokFoodUserId: ' + JSON.stringify(patchToktokFoodUserId));
-      if (patchToktokFoodUserId.status != 200) {
-        Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
+      if (patchToktokFoodUserId.status !== 200) {
+        setCheckPoint('MAINTENANCE');
+        // Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
       }
+    },
+    onError: error => {
+      setCheckPoint('MAINTENANCE');
+      console.log('updateToktokUser', error);
     },
   });
 
@@ -106,7 +129,8 @@ const TokTokFoodSplashScreen = () => {
     fetchPolicy: 'network-only',
     onError: error => {
       console.log('getToktokUserInfo', error);
-      setErrorModal({error, visible: true});
+      // setErrorModal({error, visible: true});
+      setCheckPoint('MAINTENANCE');
     },
     onCompleted: async ({getAccount}) => {
       await getConsumerStatus();
@@ -149,7 +173,8 @@ const TokTokFoodSplashScreen = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: err => {
-      Alert.alert('', 'Something went wrong.');
+      setCheckPoint('MAINTENANCE');
+      // Alert.alert('', 'Something went wrong.');
       console.log(`🍔 Temporary cart error: ' ToktokFoodSplashScreen.js`, err);
     },
   });
@@ -168,7 +193,8 @@ const TokTokFoodSplashScreen = () => {
       navigation.replace('ToktokFoodLanding');
     },
     onError: () => {
-      Alert.alert('', 'Something went wrong.');
+      // Alert.alert('', 'Something went wrong.');
+      setCheckPoint('MAINTENANCE');
       console.log(`🍔 Temporary cart error: ' ToktokFoodSplashScreen.js`);
     },
   });
@@ -253,57 +279,69 @@ const TokTokFoodSplashScreen = () => {
     });
   };
 
-  // const patchToktokFoodUserId = async getAccount => {
-  // try {
-  // console.log(getAccount.userId);
-  // console.log(user.id);
-  // const API_RESULT = await axios({
-  //   url: `https://dev.toktok.ph:2096/graphql`,
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   data: {
-  //     query: `
-  //       mutation {
-  //         patchToktokFoodUserId(input: {
-  //           toktokfoodUserId: "${getAccount.userId}"
-  //           toktokUserId: "${user.id}"
-  //         }) {
-  //           status
-  //           message
-  //         }
-  //     }`,
-  //   },
-  // });
-  //   const res = API_RESULT.data.data;
-  //   console.log(JSON.stringify(res));
-
-  //   if (res.patchToktokFoodUserId.status == 200) {
-  //     dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
-  //     showHomPage();
-  //   } else {
-  //     Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
-  // };
+  if (checkPoint === 'A') {
+    return <ImageBackground style={styles.splashContainer} source={splash_new} resizeMode="cover" />;
+  }
 
   return (
-    <>
-      <AlertModal visible={errorModal.visible} error={errorModal.error} close={() => navigation.pop()} />
-      <ImageBackground style={styles.container} source={splash_new} resizeMode="cover">
-        {/* <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.ORANGE} /> */}
-      </ImageBackground>
-    </>
+    <ImageBackground
+      source={maintenance_bg}
+      style={[styles.container, {paddingTop: Platform.OS === 'android' ? getStatusbarHeight : 0}]}>
+      <HeaderBack styleContainer={{marginVertical: moderateScale(16)}} />
+      <View style={styles.contentContainer}>
+        <View style={[styles.subContainer, {marginBottom: getStatusbarHeight}]}>
+          <Image style={styles.logo} source={toktokfood_logo} resizeMode="contain" />
+          <Image style={styles.maintenanceBills} source={maintenance_logo} resizeMode="cover" />
+          <Text style={styles.title}>Katok ka ulit mamaya!</Text>
+          <Text style={styles.message}>
+            We are performing some maintenance to serve you better. We will be right back. Thank you.
+          </Text>
+        </View>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  splashContainer: {
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  container: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
+  logo: {
+    height: moderateScale(25),
+    width: moderateScale(166),
+    marginBottom: moderateScale(30),
+  },
+  contentContainer: {
+    paddingHorizontal: moderateScale(16),
+    alignItems: 'center',
+    flex: 1,
+  },
+  title: {
+    color: COLOR.ORANGE,
+    fontSize: FONT_SIZE.XL,
+    fontFamily: FONT.SEMI_BOLD,
+    marginTop: moderateScale(10),
+  },
+  message: {
+    marginHorizontal: moderateScale(20),
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  maintenanceBills: {
+    height: null,
+    aspectRatio: 1.05,
+    width: width * 0.8,
+    marginBottom: moderateScale(15),
+  },
+  subContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
