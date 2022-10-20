@@ -97,7 +97,7 @@ const ToktokFoodMapSearch = () => {
       const {coordinates} = route.params;
       const isCoordinate = !isNaN(coordinates.latitude) && !isNaN(coordinates.longitude);
       if (isCoordinate) {
-        return mapViewRef.current.animateToRegion(
+        return mapViewRef.current?.animateToRegion(
           {
             latitude: parseFloat(coordinates.latitude),
             longitude: parseFloat(coordinates.longitude),
@@ -108,7 +108,7 @@ const ToktokFoodMapSearch = () => {
         );
       }
     }
-    return mapViewRef.current.animateToRegion(PHILIPPINE_REGION, 1000);
+    return mapViewRef.current?.animateToRegion(PHILIPPINE_REGION, 1000);
   };
 
   return (
@@ -118,7 +118,7 @@ const ToktokFoodMapSearch = () => {
           <View style={styles.mapViewContainer}>
             <MapView
               ref={mapViewRef}
-              onLayout={() => setTimeout(() => onMapReady(), 500)}
+              onMapReady={() => setTimeout(() => onMapReady(), 500)}
               style={styles.mapView}
               provider={PROVIDER_GOOGLE}
               initialRegion={PHILIPPINE_REGION}
