@@ -43,7 +43,7 @@ const BtProceedButton = (props: PropsType): React$Node => {
   const checkAmount = () => {
     let error = amount === '' ? 'This is a required field' : '';
     if (+amount < 1 && amount !== '') {
-      error = 'The minimum amount allowed to cash out is ₱1';
+      error = 'The minimum amount allowed to transfer is ₱1';
     }
     if (error === '') {
       return checkInsufficientBalance();
