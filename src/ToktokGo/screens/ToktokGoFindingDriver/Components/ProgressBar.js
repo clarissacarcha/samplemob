@@ -8,11 +8,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import CONSTANTS from '../../../../common/res/constants';
 
 export const ProgressBar = ({booking, setDriverFoundModal}) => {
-  const [progressNum, setProgressNum] = useState(0);
-  const [timer, setTimer] = useState(0);
-  const [intervalSeconds, setIntervalSeconds] = useState(
-    moment(booking?.request?.expiresAt).diff(moment(), 'seconds', false),
-  );
+  const remainingTime = moment().diff(booking.request?.createdAt, 'seconds', false);
+  const totalDispatchTime = moment(booking.request?.expiresAt).diff(booking.request?.createdAt, 'seconds', false);
+
+  const [progressNum, setProgressNum] = useState(remainingTime);
+  const [timer, setTimer] = useState(remainingTime + 1);
+  const [intervalSeconds, setIntervalSeconds] = useState(totalDispatchTime);
   // const [intervalSeconds, setIntervalSeconds] = useState(45);
 
   useLayoutEffect(() => {
@@ -30,7 +31,7 @@ export const ProgressBar = ({booking, setDriverFoundModal}) => {
     let interval = parseFloat(timer) / parseFloat(intervalSeconds);
     setProgressNum(interval);
 
-    if (interval >= 1 || intervalSeconds <= 0) {
+    if (interval >= 1) {
       setDriverFoundModal(false);
       console.log('TIMER DONE!');
     }

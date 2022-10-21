@@ -36,9 +36,7 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
     onCompleted: response => {
       if (response.goGetTripsConsumer.length > 0) {
         dispatchToSession(response.goGetTripsConsumer[0]);
-
         setTimeout(() => {
-          console.log('HERE:', response.goGetTripsConsumer[0]?.status);
           if (
             response.goGetTripsConsumer[0]?.tag == 'ONGOING' &&
             ['BOOKED', 'DISPATCHED', 'REQUESTED'].includes(response.goGetTripsConsumer[0]?.status)
@@ -50,7 +48,7 @@ const ToktokGoLanding = ({navigation, session, route, constants}) => {
             });
             checkNotificationToNavigate({trip: response.goGetTripsConsumer[0]});
           } else if (
-            response.getTripsConsumer[0]?.tag == 'ONGOING' &&
+            response.goGetTripsConsumer[0]?.tag == 'ONGOING' &&
             ['ACCEPTED', 'ARRIVED', 'PICKED_UP'].includes(response.goGetTripsConsumer[0]?.status)
           ) {
             const decodedPolyline = decodeLegsPolyline(response.goGetTripsConsumer[0]?.route.legs);

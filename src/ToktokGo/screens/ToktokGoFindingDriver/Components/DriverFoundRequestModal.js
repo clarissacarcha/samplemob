@@ -4,7 +4,6 @@ import CONSTANTS from '../../../../common/res/constants';
 import User from '../../../../assets/images/user-icon.png';
 import Vaccinated from '../../../../assets/images/vaccinated.png';
 import Star from '../../../../assets/images/star.png';
-import driverProfile from '../../../../assets/toktokgo/driverProfile.png';
 import normalize from 'react-native-normalize';
 import {ProgressBar} from './ProgressBar';
 

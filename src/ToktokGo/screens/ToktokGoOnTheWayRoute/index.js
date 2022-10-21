@@ -208,7 +208,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      if (response.getTripsConsumer.length > 0) {
+      if (response.goGetTripsConsumer.length > 0) {
         dispatch({
           type: 'SET_TOKTOKGO_BOOKING',
           payload: response.goGetTripsConsumer[0],

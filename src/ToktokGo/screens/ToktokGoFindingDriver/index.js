@@ -28,6 +28,7 @@ import {
   GO_GET_TRIPS_CONSUMER,
   GET_BOOKING_DRIVER,
   GO_TRIP_REQUEST_ACCEPT,
+  GO_TRIP_REQUEST_REJECT,
 } from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
@@ -166,6 +167,16 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     },
   });
 
+  const [goTripRequestReject] = useMutation(GO_TRIP_REQUEST_REJECT, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onCompleted: response => {
+      setDriverFoundModal(false);
+    },
+    onError: error => {
+      console.log(error);
+    },
+  });
+
   const [getTripsConsumer] = useLazyQuery(GO_GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
@@ -192,6 +203,23 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
               },
             },
           });
+        } else if (
+          response.goGetTripsConsumer[0]?.tag == 'ONGOING' &&
+          ['BOOKED'].includes(response.goGetTripsConsumer[0]?.status)
+        ) {
+          setDriverFoundModal(false);
+        } else if (
+          response.goGetTripsConsumer[0]?.tag == 'ONGOING' &&
+          ['REQUESTED'].includes(response.goGetTripsConsumer[0]?.status)
+        ) {
+          getBookingDriver({
+            variables: {
+              input: {
+                driverUserId: parseInt(response.goGetTripsConsumer[0]?.driverUserId),
+              },
+            },
+          });
+          setDriverFoundModal(true);
         } else if (response.goGetTripsConsumer[0]?.status == 'EXPIRED') {
           setWaitingStatus(0);
           changeTextValue();
@@ -511,7 +539,13 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   };
 
   const findAnotherDriver = () => {
-    setDriverFoundModal(false);
+    goTripRequestReject({
+      variables: {
+        input: {
+          requestHash: booking?.request?.hash,
+        },
+      },
+    });
   };
 
   const yesWillingToWait = () => {

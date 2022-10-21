@@ -268,3 +268,11 @@ mutation goTripRequestAccept($input: GoTripRequestAcceptInput!) {
   }
 }
 `;
+
+export const GO_TRIP_REQUEST_REJECT = gql`
+mutation goTripRequestReject($input: TripRequestRejectInput!) {
+  goTripRequestReject (input: $input) {
+    ${trip}
+  }
+}
+`;

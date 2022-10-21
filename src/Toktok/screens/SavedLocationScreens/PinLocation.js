@@ -97,6 +97,7 @@ const PinLocation = ({navigation, route}) => {
           sessionToken: sessionToken,
           placeId: item.placeId,
           formattedAddress: item.formattedAddress,
+          service: 'PREF',
         },
       },
     });
