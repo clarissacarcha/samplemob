@@ -34,7 +34,7 @@ const ToktokWalletBankTransferReceipt = (props: PropsType): React$Node => {
     <CheckIdleState>
       <Receipt>
         <Container>
-          <Label>Reference Number</Label>
+          <Label>Service Reference Number</Label>
           <Value isRefNum>{referenceNumber}</Value>
         </Container>
         <Container>
