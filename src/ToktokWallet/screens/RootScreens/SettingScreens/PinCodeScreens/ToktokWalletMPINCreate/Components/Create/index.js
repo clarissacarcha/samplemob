@@ -37,22 +37,19 @@ export const Create = ({pinCode, setPinCode, pageIndex, setPageIndex, tokwaAccou
           break;
         }
       }
+      setPinCode(newPinCode);
       if (isWeakPin || checkfIfSequential(newPinCode)) {
         setShowPin(true);
-        return setErrorMessage(
+        setErrorMessage(
           `Your MPIN must not contain ${isWeakPin ? 'repeating' : 'sequential'} digits ex. ${
             isWeakPin ? '0000' : '1234'
           }`,
         );
+      } else {
+        setPageIndex(oldstate => oldstate + 1);
       }
-      setPageIndex(oldstate => oldstate + 1);
-      setPinCode(newPinCode);
     }
   };
-
-  useEffect(() => {
-    setErrorMessage('');
-  }, [newPinCode]);
 
   return (
     <EnterNewConfirmPinValidator

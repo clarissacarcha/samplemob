@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {TouchableHighlight, View, Text, StyleSheet, Dimensions, TextInput} from 'react-native';
 import CONSTANTS from 'common/res/constants';
 
@@ -50,6 +50,13 @@ export const NumberInputBox = ({
   numberOfBox = 6,
   showPin,
 }) => {
+  useEffect(() => {
+    if (pinCode.length === numberOfBox && callBackFunc) {
+      callBackFunc();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pinCode]);
+
   return (
     <View style={{marginBottom: 30}}>
       <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
@@ -67,7 +74,9 @@ export const NumberInputBox = ({
           keyboardType="numeric"
           returnKeyType="done"
           onSubmitEditing={() => {
-            if (pinCode.length == numberOfBox && callBackFunc) callBackFunc();
+            // if (pinCode.length === numberOfBox && callBackFunc) {
+            //   callBackFunc();
+            // }
           }}
           onChangeText={value => {
             if (value.length <= numberOfBox) {
@@ -78,7 +87,7 @@ export const NumberInputBox = ({
           autoFocus
         />
       </View>
-      {errorMessage != '' && (
+      {errorMessage !== '' && (
         <Text
           style={{
             fontFamily: FONT.REGULAR,

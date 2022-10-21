@@ -48,6 +48,7 @@ const EnterNewConfirmPinValidator = (props: PropsType): React$Node => {
           onChangeText={onChangeText}
           onNumPress={onNumPress}
           numberOfBox={numberOfBox}
+          callBackFunc={onConfirm}
         />
         <ShowTpinButton onPress={() => setShowPin(!showPin)}>
           <ShowTpinText>{showPin ? `Hide ${type}` : `Show ${type}`}</ShowTpinText>

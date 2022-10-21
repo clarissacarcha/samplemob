@@ -33,15 +33,18 @@ export const New = ({pinCode, setPinCode, pageIndex, setPageIndex}) => {
           break;
         }
       }
+      setPinCode(pinCode);
       if (isWeakPin || checkfIfSequential(pinCode)) {
         setShowPin(true);
-        return setErrorMessage(
+        setErrorMessage(
           `Your MPIN must not contain ${isWeakPin ? 'repeating' : 'sequential'} digits ex. ${
             isWeakPin ? '0000' : '1234'
           }`,
         );
+      } else {
+        console.log('HAHA');
+        setPageIndex(oldstate => oldstate + 1);
       }
-      setPageIndex(oldstate => oldstate + 1);
     }
   };
 
@@ -53,7 +56,7 @@ export const New = ({pinCode, setPinCode, pageIndex, setPageIndex}) => {
       type="MPIN"
       showPin={showPin}
       setShowPin={setShowPin}
-      onConfirm={onSubmit}
+      onConfirm={() => onSubmit()}
       onNumPress={onNumPress}
       onChangeText={val => {
         setPinCode(val);

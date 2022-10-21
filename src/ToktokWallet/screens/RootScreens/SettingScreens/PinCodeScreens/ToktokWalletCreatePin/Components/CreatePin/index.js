@@ -22,18 +22,15 @@ export const CreatePin = ({pinCode, setPinCode, pageIndex, setPageIndex, tokwaAc
           break;
         }
       }
+      setPinCode(newPinCode);
       if (isWeakPin) {
         setShowPin(true);
-        return setErrorMessage('Your TPIN must not contain repeating digits ex. 000000');
+        setErrorMessage('Your TPIN must not contain repeating digits ex. 000000');
+      } else {
+        setPageIndex(oldstate => oldstate + 1);
       }
-      setPageIndex(oldstate => oldstate + 1);
-      setPinCode(newPinCode);
     }
   };
-
-  useEffect(() => {
-    setErrorMessage('');
-  }, [newPinCode]);
 
   return (
     <EnterNewConfirmPinValidator
