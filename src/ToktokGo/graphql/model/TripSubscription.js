@@ -111,6 +111,12 @@ const trip = `
       imageClass
       name
     }
+    request {
+      createdAt
+      expiresAt
+      hash
+      minutes
+    }
 `;
 
 export const GO_ON_TRIP_UPDATE = gql`

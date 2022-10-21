@@ -214,10 +214,14 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   };
 
   const onPressSavedAddress = loc => {
+    const addressObject = {
+      hash: loc.placeHash,
+      place: loc.place,
+    };
     if (selectedInput == 'D') {
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: addressObject});
     } else {
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: addressObject});
     }
     onPressLocation();
   };
@@ -308,6 +312,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           sessionToken: sessionToken,
           placeId: value.placeId,
           formattedAddress: value.formattedAddress,
+          service: 'PREF',
         },
       },
     });
@@ -385,11 +390,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   };
 
   const getAddressObj = address => {
-    const addresses = {hash: address.placeHash, place: address.place};
-    onPressSavedAddress(addresses);
-    navigation.push('ToktokGoBookingConfirmDestination', {
-      popTo: popTo + 1,
-    });
+    onPressSavedAddress(address);
   };
 
   const navigateToSavedAddress = () => {
@@ -417,7 +418,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
         />
         {searchResponse?.length == 0 ? (
           <View>
-            {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? (
+            {recentSearchDataList.length == 0 && recentDestinationList.length == 0 && savedAddressList.length == 0 ? (
               <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 110}}>
                 <Image source={DestinationBC} resizeMode={'contain'} style={{height: 200, width: 200}} />
                 <Text
@@ -445,7 +446,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
                   />
                 ) : (
                   <View>
-                    {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
+                    {recentSearchDataList.length == 0 &&
+                    recentDestinationList.length == 0 &&
+                    savedAddressList.length == 0 ? null : (
                       <View>
                         {recentSearchDataList.length == 0 ? null : (
                           <FrequentlyUsed
@@ -468,9 +471,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
                             />
                           </View>
                         )}
-                        {savedAddressList.length == 0 ? null : (
+                        {recentDestinationList.length == 0 ? null : (
                           <View>
-                            {recentSearchDataList.length != 0 && (
+                            {savedAddressList.length != 0 && (
                               <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
                             )}
                             <SavedLocations

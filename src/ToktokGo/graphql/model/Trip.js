@@ -112,6 +112,12 @@ vehicleType {
   name
 }
 cancellationChargeStatus
+request {
+      createdAt
+      expiresAt
+      hash
+      minutes
+    }
 `;
 
 const DriverData = `
@@ -253,4 +259,20 @@ export const GO_GET_TRIP_SUPPLY = gql`
       }
     }
   }
+`;
+
+export const GO_TRIP_REQUEST_ACCEPT = gql`
+mutation goTripRequestAccept($input: GoTripRequestAcceptInput!) {
+  goTripRequestAccept (input: $input) {
+    ${trip}
+  }
+}
+`;
+
+export const GO_TRIP_REQUEST_REJECT = gql`
+mutation goTripRequestReject($input: TripRequestRejectInput!) {
+  goTripRequestReject (input: $input) {
+    ${trip}
+  }
+}
 `;
