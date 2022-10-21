@@ -18,6 +18,7 @@ import { GET_MY_FAVORITES } from '../../../../../graphql/toktokmall/model';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { useLazyQuery } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
+import environments from '../../../../../common/res/environments';
 
 const Component = ({
   data, 
@@ -144,7 +145,7 @@ const Component = ({
     let options = {
       message: data?.itemname,
       // url: `http://ec2-18-178-242-131.ap-northeast-1.compute.amazonaws.com/products/${data?.Id}`,
-      url: `https://toktokmall.ph/products/${data?.Id}`
+      url: `${environments.TOKTOKMALL_WEBSITE}products/${data?.Id}`
     }
     Share.open(options)
     .then((res) => {

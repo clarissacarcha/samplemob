@@ -73,25 +73,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
       total = total + parseFloat(CheckoutContextData.shippingFeeRates[i].shippingfee);
     }
     setShippingFeeTotal(total);
-  };
-
-  useEffect(() => {
-    if (CheckoutContextData) {
-      
-      const numvouchers = CheckoutContextData.shippingVouchers.filter((a) => a.valid != undefined || a.voucher_id != undefined)
-      const resellerDiscounts = CheckoutContextData.resellerDiscounts
-            
-      computeShippingTotal();
-      // computeShippingDiscount();
-      setShippingDiscountTotal(CheckoutContextData.getTotalVoucherDeduction())
-      setOfNumVouchers(numvouchers.length)
-
-      if(referral && referral.franchiseeCode != null){
-        setResellerDiscounts(resellerDiscounts)
-        console.log(resellerDiscounts)
-      }
-    }
-  }, [CheckoutContextData]);
+  };  
 
   useEffect(() => {
     if (data) {
@@ -122,15 +104,36 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
   }, [data]);
 
   useEffect(() => {
-    if (merchandiseTotal && shippingFeeTotal) {
-      // if(getDiscount("shipping")){
-      //   setGrandTotal(merchandiseTotal + shippingDiscountTotal);
-      // }else{
-      //   setGrandTotal(merchandiseTotal + shippingFeeTotal);
-      // }
-      setGrandTotal(merchandiseTotal + shippingFeeTotal - shippingDiscountTotal)
+    if (CheckoutContextData) {
+      
+      const numvouchers = CheckoutContextData.shippingVouchers.filter((a) => a.valid != undefined || a.voucher_id != undefined)
+      const resellerDiscount = CheckoutContextData.resellerDiscounts
+            
+      computeShippingTotal();
+      // computeShippingDiscount();
+      setShippingDiscountTotal(CheckoutContextData.getTotalVoucherDeduction())
+      setOfNumVouchers(numvouchers.length)
+
+      if(referral && referral.franchiseeCode != null){
+        setResellerDiscounts(resellerDiscount)
+        console.log("RESELLER DISCOUNT", resellerDiscount)
+        console.log("RESELLER", referral)
+      }
     }
-  }, [merchandiseTotal, shippingFeeTotal, shippingDiscountTotal]);
+  }, [CheckoutContextData]);
+
+  useEffect(() => {
+    if (merchandiseTotal && shippingFeeTotal) {
+      
+      if(referral && referral.franchiseeCode != null){
+        const discounts = shippingDiscountTotal + resellerDiscounts
+        setGrandTotal((merchandiseTotal + shippingFeeTotal) - discounts)
+      }else{
+        setGrandTotal(merchandiseTotal + shippingFeeTotal - shippingDiscountTotal)
+      }
+      
+    }
+  }, [merchandiseTotal, shippingFeeTotal, shippingDiscountTotal, resellerDiscounts]);
 
   const RenderVouchersBreakdown = () => {
 
