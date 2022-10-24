@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { RenderStars, RenderVariations } from './subComponents';
 import ContentLoader from 'react-native-easy-content-loader';
 import {ApiCall, PaypandaApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall} from "../../../../helpers";
-import { GET_MY_FAVORITES } from '../../../../../graphql/toktokmall/model';
+import { GET_MY_FAVORITES, GET_SHARE_PRODUCT } from '../../../../../graphql/toktokmall/model';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../../graphql';
 import { useLazyQuery } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -51,6 +51,33 @@ const Component = ({
       if(response.getMyFavorites){
         setFavorites(response.getMyFavorites)
       }
+    },
+    onError: (err) => {
+      console.log(err)
+    }
+  })
+
+  const [getShareProduct, {error2}] = useLazyQuery(GET_SHARE_PRODUCT, {
+    client: TOKTOK_MALL_GRAPHQL_CLIENT,
+    variables: {
+      input: {
+        productId: data?.Id
+      }
+    },
+    fetchPolicy: 'network-only',
+    onCompleted: ({getShareProduct}) => {
+      let options = {
+        message: data?.itemname,
+        // url: `http://ec2-18-178-242-131.ap-northeast-1.compute.amazonaws.com/products/${data?.Id}`,
+        url: getShareProduct
+      }
+      Share.open(options)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        err && console.log(err);
+      });
     },
     onError: (err) => {
       console.log(err)
@@ -142,6 +169,7 @@ const Component = ({
   }
 
   const HandleShare = async () => {
+
     let options = {
       message: data?.itemname,
       // url: `http://ec2-18-178-242-131.ap-northeast-1.compute.amazonaws.com/products/${data?.Id}`,
