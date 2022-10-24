@@ -123,8 +123,8 @@ const ChangePassword = ({navigation, session, route}) => {
     }
 
     /** SPECIAL CONDITION */
-    let regSpecialCase = new RegExp('^(?=.*[!@#$%^&])');
-    if (!regSpecialCase.test(password)) {
+    const specialChars = /[`!@#$%{()}^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (!specialChars.test(password)) {
       errorArray.push(4);
       result = false;
     }
