@@ -1,14 +1,31 @@
-import {ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
-import {COLOR, ORANGE, COLORS} from '../../../res/constants';
-import {GET_ADDRESSES, DELETE_ADDRESS, TOKTOK_ADDRESS_CLIENT, GET_ADDRESS} from '../../../graphql';
-import {HeaderBack, HeaderTitle} from '../../../components';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+  Animated,
+  Image,
+} from 'react-native';
+import {COLOR, ORANGE, COLORS} from '../../../../res/constants';
+import {GET_ADDRESSES, DELETE_ADDRESS, TOKTOK_ADDRESS_CLIENT, GET_ADDRESS} from '../../../../graphql';
+import {HeaderBack, HeaderTitle} from '../../../../components';
 import React, {useState, useCallback} from 'react';
-import CONSTANTS from '../../../common/res/constants';
+import CONSTANTS from '../../../../common/res/constants';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {SavedLocationCard, ConfirmOperationAddressModal, SuccesOperationAddressModal} from './Components';
-
+import {
+  ConfirmOperationAddressModal,
+  SuccesOperationAddressModal,
+  InfoAddressModal,
+  SavedLocationCard,
+} from '.././Components';
+import DeleteImg from '../../../../assets/icons/deleteIcon.png';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import {ThrottledOpacity} from '../../../../components_section';
 import {connect} from 'react-redux';
-import {onError} from '../../../util/ErrorUtility';
+import {onError} from '../../../../util/ErrorUtility';
 import {useFocusEffect} from '@react-navigation/native';
 
 const imageWidth = Dimensions.get('window').width - 200;
@@ -20,9 +37,11 @@ const SavedLocations = ({navigation, session, route}) => {
   });
   const [showConfirmOperationAddressModal, setShowConfirmOperationAddressModal] = useState(false);
   const [showSuccessOperationModal, setShowSuccessOperationModal] = useState(false);
+  const [showInfoAddressModal, setShowInfoAddressModal] = useState(false);
+  const [infoModalType, setInfoModalType] = useState(false);
   const [addressId, setAddressId] = useState();
-  const [showOffice, setShowOffice] = useState(true);
-  const [showHome, setShowHOme] = useState(true);
+  const [isOfficeTaken, setIsOfficeTaken] = useState(true);
+  const [isHomeTaken, setIsHomeTaken] = useState(true);
 
   const [deleteAddress] = useMutation(DELETE_ADDRESS, {
     client: TOKTOK_ADDRESS_CLIENT,
@@ -38,8 +57,8 @@ const SavedLocations = ({navigation, session, route}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      res.getAddresses.find(item => item.isOffice) ? setShowOffice(false) : setShowOffice(true);
-      res.getAddresses.find(item => item.isHome) ? setShowHOme(false) : setShowHOme(true);
+      res.getAddresses.find(item => item.isOffice) ? setIsOfficeTaken(true) : setIsOfficeTaken(false);
+      res.getAddresses.find(item => item.isHome) ? setIsHomeTaken(true) : setIsHomeTaken(false);
     },
     onError: onError,
   });
@@ -48,7 +67,7 @@ const SavedLocations = ({navigation, session, route}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      navigation.push('ToktokAddLocation', {addressObj: res.getAddress});
+      navigation.push('ToktokAddEditLocation', {addressObj: res.getAddress, isHomeTaken, isOfficeTaken});
     },
     onError: onError,
   });
@@ -85,8 +104,41 @@ const SavedLocations = ({navigation, session, route}) => {
   );
 
   const initiateDeleteAddress = address => {
+    if (address.isDefault) {
+      setInfoModalType('DeleteDefault');
+      setShowInfoAddressModal(true);
+      return;
+    }
     setShowConfirmOperationAddressModal(true);
     setAddressId(address?.id);
+  };
+
+  const toAddAddress = () => {
+    if (data?.getAddresses.length >= 10) {
+      setInfoModalType('MaxAddressReached');
+      setShowInfoAddressModal(true);
+      return;
+    }
+    navigation.push('ToktokAddEditLocation', {isHomeTaken, isOfficeTaken});
+  };
+
+  const rightSwipe = (item, progress, dragX) => {
+    // const scale = dragX.interpolate({
+    //   inputRange: [0, 900],
+    //   outputRange: [1, 0],
+    // });
+
+    return (
+      <ThrottledOpacity
+        onPress={() => initiateDeleteAddress(item)}
+        delay={4000}
+        style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Animated.View style={[styles.deleteBtn]}>
+          {/* <Animated.Text>Delete</Animated.Text> */}
+          <Image source={DeleteImg} resizeMode={'contain'} style={{width: 30, height: 30}} />
+        </Animated.View>
+      </ThrottledOpacity>
+    );
   };
 
   if (false) {
@@ -99,6 +151,11 @@ const SavedLocations = ({navigation, session, route}) => {
 
   return (
     <View style={{flex: 1}}>
+      <InfoAddressModal
+        visible={showInfoAddressModal}
+        modalType={infoModalType}
+        onSubmit={() => setShowInfoAddressModal(false)}
+      />
       <SuccesOperationAddressModal
         visible={showSuccessOperationModal}
         onSubmit={() => setShowSuccessOperationModal(false)}
@@ -117,24 +174,35 @@ const SavedLocations = ({navigation, session, route}) => {
         data={data?.getAddresses}
         keyExtractor={item => item.id}
         renderItem={({item, index}) => {
+          const lastItem = index == data?.getAddresses.length - 1 ? true : false;
           return (
-            <SavedLocationCard
-              onPressAddress={onPressAddress}
-              address={item}
-              initiateDeleteAddress={initiateDeleteAddress}
-              setAddressId={setAddressId}
-            />
+            <>
+              {route?.params?.getAddressObj ? (
+                <SavedLocationCard
+                  lastItem={lastItem}
+                  onPressAddress={onPressAddress}
+                  address={item}
+                  initiateDeleteAddress={initiateDeleteAddress}
+                  setAddressId={setAddressId}
+                />
+              ) : (
+                <Swipeable disabled={true} renderRightActions={() => rightSwipe(item)} overshootRight={false}>
+                  <SavedLocationCard
+                    lastItem={lastItem}
+                    onPressAddress={onPressAddress}
+                    address={item}
+                    initiateDeleteAddress={initiateDeleteAddress}
+                    setAddressId={setAddressId}
+                  />
+                </Swipeable>
+              )}
+            </>
           );
         }}
       />
       {!route?.params?.getAddressObj && (
         <View style={styles.submitContainer}>
-          <TouchableHighlight
-            onPress={() => {
-              navigation.push('ToktokAddLocation', {showHome, showOffice});
-            }}
-            underlayColor={COLOR}
-            style={{borderRadius: 10}}>
+          <TouchableHighlight onPress={toAddAddress} underlayColor={COLOR} style={{borderRadius: 10}}>
             <View style={styles.submit}>
               <Text style={styles.submitText}>Add Address</Text>
             </View>
@@ -147,6 +215,7 @@ const SavedLocations = ({navigation, session, route}) => {
 
 const mapStateToProps = state => ({
   session: state.session,
+  superApp: state.superApp,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -222,5 +291,25 @@ const styles = StyleSheet.create({
     color: CONSTANTS.COLOR.WHITE,
     fontSize: CONSTANTS.FONT_SIZE.L,
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+  },
+  deleteBtn: {
+    alignSelf: 'center',
+    backgroundColor: 'red',
+    marginTop: 0,
+    borderRadius: 5,
+    justifyContent: 'center',
+    marginRight: 16,
+    marginBottom: 16,
+    height: 90,
+    paddingHorizontal: 16,
+    shadowColor: '#000',
+
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

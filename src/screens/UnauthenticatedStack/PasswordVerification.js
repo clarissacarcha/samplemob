@@ -24,7 +24,7 @@ import {getUniqueId} from 'react-native-device-info';
 import {COLOR, DARK, APP_FLAVOR, FONT_SIZE, ORANGE, COLORS, FONTS, SIZES, ACCOUNT_TYPE} from '../../res/constants';
 import constants from '../../common/res/constants';
 import {FONT} from '../../res/variables';
-import {AUTH_CLIENT, VERIFY_LOGIN, FORGOT_PASSWORD} from '../../graphql';
+import {AUTH_CLIENT, VERIFY_LOGIN, FORGOT_PASSWORD, GET_DEFAULT_ADDRESS, TOKTOK_ADDRESS_CLIENT} from '../../graphql';
 import {AlertOverlay} from '../../SuperApp/screens/Components';
 import {onError, onErrorAlert} from '../../util/ErrorUtility';
 import {useAlert} from '../../hooks/useAlert';
@@ -34,14 +34,14 @@ import Icon from 'react-native-vector-icons/Entypo';
 import ShowPassword from '../../assets/icons/ShowPassword.png';
 import HidePassword from '../../assets/icons/HidePassword.png';
 import ArrowLeft from '../../assets/icons/arrow-left-icon.png';
-import { ThrottledHighlight, ThrottledOpacity } from '../../components_section';
+import {ThrottledHighlight, ThrottledOpacity} from '../../components_section';
 
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
 
 const imageWidth = Dimensions.get('window').width - 80;
 const screenheight = Dimensions.get('screen').height;
 
-const PasswordVerification = ({navigation, route, createSession, setAppServices}) => {
+const PasswordVerification = ({navigation, route, createSession, setAppServices, superApp, saveDefaultAddress}) => {
   const {mobile} = route.params;
   const inputRef = useRef();
 
@@ -49,6 +49,7 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [inCorrectPassword, setIncorrectPassword] = useState(false);
+  const [sessionData, setSessionData] = useState({});
 
   const [verifyLogin, {loading}] = useMutation(VERIFY_LOGIN, {
     client: AUTH_CLIENT,
@@ -100,6 +101,8 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
     },
 
     onCompleted: data => {
+      setSessionData(data.verifyLogin);
+      getDefaultAddress(); // Check if user has already saved default address
       const {user, accessToken, serviceAccess} = data.verifyLogin;
 
       AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
@@ -111,6 +114,15 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
       OneSignal.sendTags({
         userId: user.id,
       }); // Set onesignal userId tag for the phone
+    },
+  });
+
+  const [getDefaultAddress] = useLazyQuery(GET_DEFAULT_ADDRESS, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: res => {
+      saveDefaultAddress(res.getDefaultAddress);
+      const {user} = sessionData;
 
       if (user.person.firstName == null || user.person.lastName == null) {
         navigation.replace('RootDrawer', {
@@ -120,14 +132,24 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
           },
         });
       } else {
-        navigation.replace('RootDrawer', {
-          screen: 'AuthenticatedStack',
-          params: {
-            screen: 'ConsumerLanding',
-          },
-        });
+        if (res.getDefaultAddress) {
+          navigation.replace('RootDrawer', {
+            screen: 'AuthenticatedStack',
+            params: {
+              screen: 'ConsumerLanding',
+            },
+          });
+        } else {
+          navigation.replace('RootDrawer', {
+            screen: 'AuthenticatedStack',
+            params: {
+              screen: 'ToktokLocationAccess',
+            },
+          });
+        }
       }
     },
+    onError: onError,
   });
 
   const onSubmit = () => {
@@ -274,7 +296,11 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
             </ThrottledHighlight>
 
             {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
-            <ThrottledOpacity delay={500} onPress={() => sendOTP()} underlayColor={COLOR.YELLOW} style={styles.autoFillBox}>
+            <ThrottledOpacity
+              delay={500}
+              onPress={() => sendOTP()}
+              underlayColor={COLOR.YELLOW}
+              style={styles.autoFillBox}>
               <View style={styles.autoFill}>
                 <Text
                   style={{
@@ -299,6 +325,7 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
 const mapDispatchToProps = dispatch => ({
   createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
   setAppServices: payload => dispatch({type: 'SET_APP_SERVICES', payload}),
+  saveDefaultAddress: payload => dispatch({type: 'SET_TOKTOK_DEFAULT_ADDRESS', payload}),
 });
 
 export default connect(null, mapDispatchToProps)(PasswordVerification);
