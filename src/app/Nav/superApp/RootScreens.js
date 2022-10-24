@@ -6,6 +6,7 @@ import ReferralScreen from '../../../SuperApp/screens/ReferralScreen/ReferralScr
 import ReferralExistScreen from '../../../SuperApp/screens/ReferralScreen/ReferralExistScreen';
 import ToktokPinLocation from '../../../SuperApp/screens/SaveLocationScreens/ToktokPinLocation';
 import {ToktokAddEditLocation, ToktokSavedLocations, ToktokLocationAccess} from '../../../SuperApp/screens';
+import {ContactsScreen} from '../../../SuperApp/screens/ContactsScreen';
 
 export default ({Navigator}) => (
   <>
@@ -18,5 +19,6 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokSavedLocations" component={ToktokSavedLocations} />
     <Navigator.Screen name="ToktokAddEditLocation" component={ToktokAddEditLocation} />
     <Navigator.Screen name="ToktokLocationAccess" component={ToktokLocationAccess} options={{headerShown: false}} />
+    <Navigator.Screen name="ContactsScreen" component={ContactsScreen} />
   </>
 );

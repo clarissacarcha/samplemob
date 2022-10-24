@@ -137,6 +137,7 @@ const ToktokPinLocation = ({navigation, route}) => {
               latitude: value.latitude,
               longitude: value.longitude,
             },
+            service: 'PREF',
           },
         },
       }),

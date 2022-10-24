@@ -327,7 +327,7 @@ const AddEditLocation = ({navigation, route, session}) => {
   };
 
   const onPressContacts = () => {
-    navigation.push('ToktokLoadContacts', {onSelectContact});
+    navigation.push('ContactsScreen', {onSelectContact});
   };
 
   const goBackAfterSuccessPost = () => {
