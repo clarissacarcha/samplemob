@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import {Text, View, TouchableHighlight, Image} from 'react-native';
+import {Text, View, TouchableHighlight, Image, ScrollView} from 'react-native';
 import {
   Location,
   Header,
@@ -399,7 +399,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
-      <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Header navigation={navigation} />
         <Location
           onChangeOrigin={onChangeOrigin}
@@ -468,6 +468,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
                               navigateToSavedAddress={navigateToSavedAddress}
                               onPressSavedAddress={onPressSavedAddress}
                               recentSearchDataList={recentSearchDataList}
+                              navigation={navigation}
                             />
                           </View>
                         )}
@@ -504,7 +505,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
             )}
           </View>
         )}
-      </View>
+      </ScrollView>
       <ThrottledHighlight
         delay={500}
         onPress={() => {

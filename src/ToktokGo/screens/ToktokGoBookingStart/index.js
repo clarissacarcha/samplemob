@@ -337,6 +337,14 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     navigation.push('ToktokSavedLocations', {getAddressObj});
   };
 
+  // const navigateToAddSavedAddress = () => {
+  //   navigate.push('ToktokAddLocation', {coordsFromService: item?.place?.location})
+  // }
+
+  // const navigateToEditSavedAddress = () => {
+  //   navigate.push('ToktokAddLocation', {addressIdFromService: item?.place?.location});
+  // };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
@@ -379,6 +387,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
                             savedAddressList={savedAddressList}
                             navigateToSavedAddress={navigateToSavedAddress}
                             onPressSavedAddress={onPressSavedAddress}
+                            navigation={navigation}
                           />
                         }
                         {recentDestinationList.length == 0 ? null : (
