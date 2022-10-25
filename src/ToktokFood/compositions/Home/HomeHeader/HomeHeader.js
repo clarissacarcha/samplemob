@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {useSelector} from 'react-redux';
 import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
@@ -13,6 +13,7 @@ import {AddressContainer, DownIcon, Loader, StyledIcon, Row, Text, Column} from 
 import {Badge} from 'react-native-elements';
 // Components
 import Header from 'toktokfood/components/Header';
+import Alert from 'toktokfood/components/Alert';
 import StyledText from 'toktokfood/components/StyledText';
 import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 
@@ -50,6 +51,7 @@ const HomeHeader = (props: PropsType): React$Node => {
   const theme = useTheme();
   const {location} = useSelector(state => state.toktokFood);
   const {cartData} = useGetCartItems();
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
 
   const customOptionStyle = {
     optionWrapper: {
@@ -64,7 +66,14 @@ const HomeHeader = (props: PropsType): React$Node => {
     right: -4,
   };
 
-  const onSetLocationDetails = () => navigation.navigate('ToktokFoodAddressDetails');
+  const onSetLocationDetails = () => {
+    if (cartData?.items?.length > 0) {
+      setIsAlertVisible(true);
+    } else {
+      navigation.navigate('ToktokFoodAddressDetails');
+    }
+  };
+
   const onCartNavigate = () => navigation.navigate('ToktokFoodPlaceOrder');
 
   const AddressDetails = () => {
@@ -120,17 +129,30 @@ const HomeHeader = (props: PropsType): React$Node => {
   };
 
   return (
-    // <Container>
-    <Header
-      hasBack
-      containerStyle={containerStyle}
-      rightContainerStyle={rightContainerStyle}
-      leftContainerStyle={leftContainerStyle}
-      centerContainerStyle={centerContainerStyle}
-      CenterComponent={AddressDetails}
-      RightComponent={CartOptions}
-    />
-    // </Container>
+    <React.Fragment>
+      <Header
+        hasBack
+        containerStyle={containerStyle}
+        rightContainerStyle={rightContainerStyle}
+        leftContainerStyle={leftContainerStyle}
+        centerContainerStyle={centerContainerStyle}
+        CenterComponent={AddressDetails}
+        RightComponent={CartOptions}
+      />
+      <Alert
+        isVisible={isAlertVisible}
+        type="question"
+        title="Change Location"
+        subtitle="You will lose the items in your cart if you change location. Proceed?"
+        buttonText="No"
+        onPress={() => setIsAlertVisible(false)}
+        buttonText2="Yes"
+        onPress2={() => {
+          setIsAlertVisible(false);
+          navigation.navigate('ToktokFoodAddressDetails');
+        }}
+      />
+    </React.Fragment>
   );
 };
 

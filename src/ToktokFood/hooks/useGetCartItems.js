@@ -23,7 +23,8 @@ export const useGetCartItems = () => {
       },
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
+    onError: err => console.log('getCartItems', JSON.stringify(err)),
   });
 
   useEffect(() => {

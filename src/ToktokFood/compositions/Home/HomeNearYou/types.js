@@ -11,4 +11,5 @@ export type PropsType = {
   setLoadMore: Function,
   setIsReload: Function,
   setPage: Function,
+  isLoadMore?: boolean,
 };

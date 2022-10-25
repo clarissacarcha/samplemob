@@ -113,7 +113,7 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
 
     const ORDER_DATA = {
       total_amount: deductedPrice > 0 ? parsedAmount : cartData?.totalAmount,
-      srp_totalamount: cartData?.totalAmountWithAddons,
+      srp_totalamount: cartData?.totalAmount,
       notes: cartDriverNote.replace(/[^a-z0-9 ]/gi, ''),
       order_isfor: cartServiceType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       order_type: await getOrderType(customerFranchisee),

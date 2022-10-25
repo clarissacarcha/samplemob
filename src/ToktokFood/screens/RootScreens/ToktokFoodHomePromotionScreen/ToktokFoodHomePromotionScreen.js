@@ -54,13 +54,13 @@ const ToktokFoodHomePromotionScreen = (props: PropsType): React$Node => {
       const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
       if (isAboutToOpen || dayLapsed === 0) {
         return (
-          <OverlayText>
+          <OverlayText left={33}>
             Opens at {moment(dayLapsed === 0 ? nextOperatingHrs?.fromTime : currFromTime, 'hh:mm:ss').format('hh:mm A')}
           </OverlayText>
         );
       }
       return (
-        <OverlayText>
+        <OverlayText left={16}>
           Opens on {getWeekDay(nextOperatingHrs?.day)} {moment(nextOperatingHrs?.fromTime, 'hh:mm:ss').format('LT')}
         </OverlayText>
       );

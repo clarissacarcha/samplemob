@@ -508,9 +508,9 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
         <Scroll>
           <OrderReferenceNumber state={state} />
           {riderDetails?.driver && <OrderDriverDetails state={riderDetails} />}
-          <Divider height={8} />
-          <OrderInformation state={{...state, riderDetails, duration}} />
           {renderModifiedTextComponent(true)}
+          {!isOrderModified() && <Divider height={8} />}
+          <OrderInformation state={{...state, riderDetails, duration}} />
           <OrderSummary state={state?.orderDetails} placement="OrderDetails" />
           {state?.notes?.length > 0 && <OrderNote state={state} />}
           <OrderAddresses state={state} />

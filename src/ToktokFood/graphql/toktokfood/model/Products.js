@@ -62,6 +62,7 @@ const products = `
     voucherName
     vname
   }
+  orderOnOff
 `;
 
 export const GET_PRODUCT_CATEGORIES = gql`
