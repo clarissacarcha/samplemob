@@ -81,48 +81,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
     setAlertModal(true)
   }
 
-  const [checkItemFromCheckoutx] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
-    client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',    
-    onCompleted: async (response) => {
-      const data = response.checkItemFromCheckout
-
-      const newData = []
-
-      for(var item of data){
-        const cartQty = 0
-        route.params.data.map(({data}) => {
-          data[0].map(({id, qty}) => {
-
-            if(id === item.id){
-              cartQty = qty
-            }
-          })
-        })
-         newData.push({
-          ...item,
-          cartQty
-        })
-      }
-
-
-      //SCENARIO: While entering TPIN, the product got out of stock. We can simulate this by bypassing the current validation
-      // await postCheckoutSetting(data);
-      // return
-      const temp= newData.filter(({status, cartQty, noOfStocks, contSellingIsset}) => status ? !contSellingIsset && cartQty > noOfStocks : true);
-
-      if(temp.length > 0){
-        onProductUnavailable(temp, "id")
-      }else{
-        await postCheckoutSetting(data);
-      }
-
-    },
-    onError: (err) => {
-      console.log(err)
-    }
-  })
-
   const [checkItemFromCheckout] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
@@ -155,7 +113,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           let shippingrates = await getShippingRates(data.shippingRatePayload, data.cartrawdata)
           if(shippingrates.length > 0){
             data.autoShippingPayload.cartitems = shippingrates    
-            await getAutoShipping(data.autoShippingPayload)
+            // await getAutoShipping(data.autoShippingPayload)
             await getAutoApplyVouchers(data.promotionVoucherPayload)
           }
         }

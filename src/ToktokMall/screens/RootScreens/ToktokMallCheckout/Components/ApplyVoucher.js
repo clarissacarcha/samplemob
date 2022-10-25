@@ -117,7 +117,7 @@ export const ApplyVoucherForm = (address, customer, referral, payload) => {
       }      
     })
 
-    if(!address){
+    if(!address || address.length == 0){
       setVoucherIsValid(-1)
       seterrormessage("Please select your default address and re apply this voucher.")
       setloading(false)
