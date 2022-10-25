@@ -1,9 +1,10 @@
 import React from 'react';
-import {Text, View, FlatList, TouchableOpacity, SafeAreaView} from 'react-native';
+import {Text, View, FlatList, TouchableOpacity, SafeAreaView, Image} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/dist/MaterialIcons';
 import Data from '../../../components/BookingDummyData';
 import {SavedAddressCard} from '../../../components';
+import saveIcon from '../../../../assets/toktokgo/editIcon.png';
 import normalize from 'react-native-normalize';
 export const SavedAddress = ({navigation, savedAddressList, navigateToSavedAddress, onPressSavedAddress}) => {
   return (
@@ -49,7 +50,9 @@ export const SavedAddress = ({navigation, savedAddressList, navigateToSavedAddre
         data={savedAddressList}
         // keyExtractor={item => item.id}
         listKey={item => item.id}
-        renderItem={({item, index}) => <SavedAddressCard item={item} onPress={onPressSavedAddress} />}
+        renderItem={({item, index}) => (
+          <SavedAddressCard item={item} onPress={onPressSavedAddress} navigation={navigation} />
+        )}
       />
     </SafeAreaView>
   );

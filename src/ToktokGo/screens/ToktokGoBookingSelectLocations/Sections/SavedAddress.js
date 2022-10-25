@@ -55,7 +55,9 @@ export const SavedAddress = ({
         data={savedAddressList}
         // keyExtractor={item => item.id}
         listKey={item => item.id}
-        renderItem={({item, index}) => <SavedAddressCard item={item} onPress={onPressSavedAddress} />}
+        renderItem={({item, index}) => (
+          <SavedAddressCard item={item} onPress={onPressSavedAddress} navigation={navigation} />
+        )}
       />
     </>
   );

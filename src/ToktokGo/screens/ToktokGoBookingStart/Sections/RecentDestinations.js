@@ -41,7 +41,9 @@ export const RecentDestinations = ({
         data={recentDestinationList}
         // keyExtractor={item => item.id}
         listKey={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressRecentDestination} />}
+        renderItem={({item, index}) => (
+          <LocationCard item={item} onPress={onPressRecentDestination} navigation={navigation} />
+        )}
       />
     </SafeAreaView>
   );
