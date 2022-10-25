@@ -18,7 +18,7 @@ export const FavoriteBillerType = React.memo(({item}) => {
   const {descriptions, logo, billType} = billItem;
 
   const onPress = () => {
-    navigation.navigate('ToktokBillsPaymentProcess', {
+    navigation.navigate('ToktokBillsTransaction', {
       billItemId: billItemId,
       billType: billItem.billType,
       favoriteDetails: {

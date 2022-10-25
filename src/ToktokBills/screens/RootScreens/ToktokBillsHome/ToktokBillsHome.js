@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, {useMemo, useState, useCallback} from 'react';
+import React, {useMemo, useState, useCallback, useEffect} from 'react';
 
 import type {PropsType} from './types';
 import {BackgroundImage, Container, LoadingContainer, List} from './Styled';
@@ -18,6 +18,8 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_BILL_TYPES, GET_FAVORITES_BILLS_ITEMS, GET_ADVERTISEMENTS} from 'toktokbills/graphql/model';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {useAccount} from 'toktokwallet/hooks';
+import {useSelector} from 'react-redux';
 
 const ToktokBillsHome = (props: PropsType): React$Node => {
   const navigation = useNavigation();
@@ -32,6 +34,8 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
   const [refreshing, setRefreshing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const {getMyAccount} = useAccount({options: {isOnErrorAlert: false}});
+  const {user} = useSelector(state => state.session);
 
   const [getAdvertisements, {loading: getAdsLoading, error: getAdsError}] = useLazyQuery(GET_ADVERTISEMENTS, {
     fetchPolicy: 'network-only',
@@ -118,6 +122,12 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
       [getBillTypes, getAdvertisements, getFavoriteBillsPaginate],
     ),
   );
+
+  useEffect(() => {
+    if (user.toktokWalletAccountId) {
+      getMyAccount();
+    }
+  }, [user]);
 
   const onRefresh = () => {
     setRefreshing(true);

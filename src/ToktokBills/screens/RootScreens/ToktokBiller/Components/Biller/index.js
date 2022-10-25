@@ -16,9 +16,21 @@ export const Biller = ({item, index}) => {
   const [imageLoading, setImageLoading] = useState(true);
 
   const onPress = () => {
-    navigation.navigate('ToktokBillsPaymentProcess', {
+    let screen = '';
+    switch (item.node?.itemCode) {
+      case 'SSS':
+        screen = 'ToktokBillsSssTransaction';
+        break;
+      case 'PAG_IBIG':
+        screen = 'ToktokBillsTransaction';
+        break;
+      default:
+        screen = 'ToktokBillsTransaction';
+    }
+    navigation.navigate(screen, {
       billItemId: item.node.id,
       billType: route.params.billType,
+      itemCode: item.node.itemCode,
     });
   };
 
