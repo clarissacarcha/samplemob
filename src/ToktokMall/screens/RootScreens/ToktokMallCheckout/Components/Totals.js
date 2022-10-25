@@ -173,7 +173,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
               })
           }
           {
-            referral && !toggleVouchers ? <>
+            referral && referral.franchiseeCode != null && !toggleVouchers ? <>
             <View style={styles.textContainer}>
               <Text ellipsizeMode='tail' style={styles.voucherNameText}>Reseller</Text>
               <Text style={styles.deductionText}>- {FormatToText.currency(RoundOffValue(resellerDiscounts))}</Text>

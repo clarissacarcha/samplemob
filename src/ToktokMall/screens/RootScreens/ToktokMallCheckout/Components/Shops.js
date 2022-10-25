@@ -253,7 +253,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           <>            
             {getDeliveryFee(shopid)}
             <View>
-              <Text style = {styles.receiveText}>Receive by {shipping?.deliveryDate || "Add address to calculate"} </Text>
+              <Text style = {styles.receiveText}>{address ? "Receive by" : ""} {shipping?.deliveryDate || "Add address to calculate"} </Text>
             </View>
             <View style={styles.orderContainer}>
               <View style={{flex: 0}}>
