@@ -57,6 +57,10 @@ export const Item = ({active, data, onSelect}) => {
     )
   }
 
+  if(orderStatus?.content?.title == null && orderStatus?.content?.description == null){
+    return null
+  }
+
   return (
   	<>
       <NewTouchableOpacity 
