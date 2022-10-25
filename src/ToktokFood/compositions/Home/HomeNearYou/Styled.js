@@ -3,7 +3,7 @@
  */
 
 import type {ComponentType} from 'react';
-import {FlatList, Image, Platform} from 'react-native';
+import {FlatList, Image, Platform, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {Icon} from 'react-native-elements';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -209,5 +209,26 @@ export const ContentLoading: ComponentType<any> = styled(ContentLoader).attrs(pr
     // borderWidth: 1,
     bottom: 5,
     marginLeft: 3,
+  },
+}))``;
+
+export const ShopList: ComponentType<any> = styled(FlatList).attrs(props => ({
+  ...props,
+  contentContainerStyle: {
+    paddingVertical: 10,
+    paddingLeft: props.itemLength > 0 ? 8.5 : 0,
+    flexGrow: 1,
+  },
+  numColumns: 2,
+  scrollEnabled: false,
+}))``;
+
+export const HorizontalView: ComponentType<any> = styled(ScrollView).attrs(props => ({
+  ...props,
+  horizontal: true,
+  showsHorizontalScrollIndicator: false,
+  scrollEnabled: false,
+  contentContainerStyle: {
+    width: '100%',
   },
 }))``;

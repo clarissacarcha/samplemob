@@ -19,21 +19,21 @@ export const GET_SHOPS = gql`
         id
         shippingDiscountName
         shippingDiscountCode
-        shopId
+        shopIds
         noOfStocks
       }
       promoByAdmin {
         id
         shippingDiscountName
         shippingDiscountCode
-        shopId
+        shopIds
         noOfStocks
       }
       promoByMerchant {
         id
         shippingDiscountName
         shippingDiscountCode
-        shopId
+        shopIds
         noOfStocks
       }
       promotionVouchers {
@@ -63,6 +63,8 @@ export const GET_SHOPS = gql`
         dayStatus
       }
       dayLapsed
+      orderOnOff
+      customerReqOpt
     }
   }
 `;
@@ -89,21 +91,21 @@ export const GET_SHOPS_W_PROMOTIONS = gql`
           id
           shippingDiscountName
           shippingDiscountCode
-          shopId
+          shopIds
           noOfStocks
         }
         promoByAdmin {
           id
           shippingDiscountName
           shippingDiscountCode
-          shopId
+          shopIds
           noOfStocks
         }
         promoByMerchant {
           id
           shippingDiscountName
           shippingDiscountCode
-          shopId
+          shopIds
           noOfStocks
         }
         promotionVouchers {
@@ -133,6 +135,8 @@ export const GET_SHOPS_W_PROMOTIONS = gql`
           dayStatus
         }
         dayLapsed
+        orderOnOff
+        customerReqOpt
       }
     }
   }

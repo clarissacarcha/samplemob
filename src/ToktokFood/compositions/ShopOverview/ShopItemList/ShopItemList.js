@@ -8,7 +8,7 @@ import React, {useEffect, useState} from 'react';
 import {Animated, RefreshControl} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
+import {useNavigation, useIsFocused, useRoute} from '@react-navigation/native';
 import _ from 'lodash';
 
 import type {PropsType} from './types';
@@ -43,6 +43,7 @@ import {GET_PRODUCTS_BY_SHOP_CATEGORY} from 'toktokfood/graphql/toktokfood';
 const ShopItemList = (props: PropsType): React$Node => {
   const {onGetRef, onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag, route, shopId, scrollY} = props;
   const navigation = useNavigation();
+  const routes = useRoute();
   const isFocused = useIsFocused();
 
   const [hasMorePage, setHasMorePage] = useState(true);
@@ -111,7 +112,7 @@ const ShopItemList = (props: PropsType): React$Node => {
   };
 
   const onNavigateToItem = Id => {
-    navigation.navigate('ToktokFoodItemDetails', {Id});
+    navigation.navigate('ToktokFoodItemDetails', {Id, shopHasOrderInstruction: routes.params?.orderOnOff});
   };
 
   const renderListHeader = () => (

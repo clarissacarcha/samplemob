@@ -34,6 +34,8 @@ import {
   Overlay,
   OverlayText,
   Column,
+  ShopList,
+  HorizontalView,
 } from './Styled';
 import YellowButton from 'toktokfood/components/YellowButton';
 
@@ -47,7 +49,7 @@ import {shop_noimage, new_empty_shop_icon} from 'toktokfood/assets/images';
 import {getWeekDay} from 'toktokfood/helper/strings';
 
 const HomeNearYou = (props: PropsType): React$Node => {
-  const {page, isReload, setIsReload, setLoadMore, setPage} = props;
+  const {page, isReload, setIsReload, setLoadMore, setPage, isLoadMore} = props;
   const navigation = useNavigation();
   const theme = useTheme();
   const {location} = useSelector(state => state.toktokFood);
@@ -61,15 +63,17 @@ const HomeNearYou = (props: PropsType): React$Node => {
     version: 2,
   };
 
+  console.log(variableInput);
   // data fetching for shops
   const [getShops, {data, loading, fetchMore, refetch}] = useLazyQuery(GET_SHOPS, {
     // onError: () => {
     //   setRefreshing(false);
     // },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'cache and network',
-    nextFetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-and-network',
     onCompleted: () => setLoadMore(false),
+    onError: err => console.log('getShops', JSON.stringify(err)),
   });
 
   useEffect(() => {
@@ -87,7 +91,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
   }, [location]);
 
   useEffect(() => {
-    if (page !== 0 && data && data.getShops.length > 0) {
+    if (page !== 0 && data?.getShops?.length > 0) {
       fetchMore({
         variables: {
           input: {
@@ -102,7 +106,9 @@ const HomeNearYou = (props: PropsType): React$Node => {
           const mergeData = _.unionBy(previousResult.getShops, fetchMoreResult.getShops, 'id');
           return {getShops: mergeData};
         },
+        onError: error => console.log('fetchMoreShopsNearYou', JSON.stringify(error)),
       });
+      console.log('will trigger', page);
     }
   }, [page]);
 
@@ -184,13 +190,13 @@ const HomeNearYou = (props: PropsType): React$Node => {
       const isAboutToOpen = moment().isBefore(moment(currFromTime, 'HH:mm:ss'));
       if (isAboutToOpen || dayLapsed === 0) {
         return (
-          <OverlayText>
+          <OverlayText left={33}>
             Opens at {moment(dayLapsed === 0 ? nextOperatingHrs?.fromTime : currFromTime, 'hh:mm:ss').format('hh:mm A')}
           </OverlayText>
         );
       }
       return (
-        <OverlayText>
+        <OverlayText left={16}>
           Opens on {getWeekDay(nextOperatingHrs?.day)} {moment(nextOperatingHrs?.fromTime, 'hh:mm:ss').format('LT')}
         </OverlayText>
       );
@@ -237,7 +243,18 @@ const HomeNearYou = (props: PropsType): React$Node => {
         </SeeAllContainer> */}
       </TitleContainer>
 
-      {loading ? (
+      <HorizontalView>
+        <ShopList
+          // extraData={isLoadMore}
+          data={data?.getShops}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => <RestaurantList item={item} key={item.id} />}
+          ListEmptyComponent={() => <EmptyList />}
+          itemLength={data?.getShops?.length}
+        />
+      </HorizontalView>
+
+      {/* {loading ? (
         <ContentLoading />
       ) : (
         data &&
@@ -249,7 +266,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
           </ListWrapper>
         )
       )}
-      {data && !data.getShops.length && <EmptyList />}
+      {data && !data.getShops.length && <EmptyList />} */}
     </Container>
   );
 };

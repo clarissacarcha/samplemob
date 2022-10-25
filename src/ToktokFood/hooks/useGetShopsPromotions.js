@@ -18,6 +18,7 @@ export const useGetShopsPromotions = () => {
     onCompleted: ({getPromoSections}) => {
       setState(getPromoSections);
     },
+    onError: err => console.log('getShopsPromotions', JSON.stringify(err)),
   });
 
   useEffect(() => {
