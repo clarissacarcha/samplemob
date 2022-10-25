@@ -117,6 +117,14 @@ export const ApplyVoucherForm = (address, customer, referral, payload) => {
       }      
     })
 
+    if(!address){
+      setVoucherIsValid(-1)
+      seterrormessage("Please select your default address and re apply this voucher.")
+      setloading(false)
+      setSucceeded(false)
+      return 
+    }
+
     let payload = {
       shop: item.shop.id,
       branch: CheckoutContextData.getShopBranchId(item.shop.id),
@@ -127,20 +135,6 @@ export const ApplyVoucherForm = (address, customer, referral, payload) => {
       promo_count: CheckoutContextData.getShopDiscountCount(item.shop.id),
       payment_method: "TOKTOKWALLET",
       orders: orders
-    }
-
-    if(vcode == "MAGIC"){
-      payload = {
-        "branch": 23,
-        "shop": item.shop.id,
-        "code": "BRYANFREE",
-        "region": "03",
-        "email": "vdomingo@cloudpanda.ph",
-        "subtotal": subTotal,
-        "promoCount": CheckoutContextData.shippingVouchers.length,
-        "is_mystery": 0,
-        "orders":[]
-      }
     }
 
 		console.log("Voucher Payload", JSON.stringify(payload))
