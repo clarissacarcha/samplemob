@@ -29,7 +29,7 @@ import {location_pin_ic, carbon_user_filled, carbon_marker_filled} from 'toktokf
 import {useGetCartItems, useGetShopDetails} from 'toktokfood/hooks';
 import StyledText from 'toktokfood/components/StyledText';
 import {useTheme} from 'styled-components';
-import {TouchableOpacity, Animated} from 'react-native';
+import {TouchableOpacity, Animated, ActivityIndicator} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useNavigation} from '@react-navigation/native';
 
@@ -47,7 +47,7 @@ const ToktokFoodPlaceOrder = (props: PropsType): React$Node => {
   const [cartPaymentMethodCoordinates, setCartPaymentMethodCoordinates] = useState(0);
   const [animation] = useState(new Animated.Value(0));
   const scrollViewRef = useRef(null);
-  const {cartData, cartRefetch, deliveryReceiver, receiverContact, receiverAddress, receiverLandmark} =
+  const {cartData, cartRefetch, cartLoading, deliveryReceiver, receiverContact, receiverAddress, receiverLandmark} =
     useGetCartItems();
   const {shopDetails} = useGetShopDetails(cartData?.items[0]?.shopid);
 
@@ -130,7 +130,7 @@ const ToktokFoodPlaceOrder = (props: PropsType): React$Node => {
     );
   };
 
-  if (cartData?.items?.length > 0) {
+  if (cartLoading || cartData?.items?.length > 0) {
     return (
       <Container>
         <HeaderContainer>
