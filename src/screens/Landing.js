@@ -16,6 +16,8 @@ import ToktokMotorcycle from '../assets/images/ToktokMotorcycle.png';
 import ToktokSuperApp from '../assets/images/ToktokLogo.png';
 
 const Landing = ({createSession, destroySession, setAppServices, navigation, superApp, saveDefaultAddress}) => {
+  const [sessionData, setSessionData] = useState({});
+
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
     client: AUTH_CLIENT,
     onError: error => {
@@ -67,30 +69,8 @@ const Landing = ({createSession, destroySession, setAppServices, navigation, sup
           userId: user.id,
         });
 
-        if (user.person.firstName == null || user.person.lastName == null) {
-          navigation.replace('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'PostRegistration',
-            },
-          });
-        } else {
-          if (superApp?.defaultAddress) {
-            navigation.replace('RootDrawer', {
-              screen: 'AuthenticatedStack',
-              params: {
-                screen: 'ConsumerLanding',
-              },
-            });
-          } else {
-            navigation.replace('RootDrawer', {
-              screen: 'AuthenticatedStack',
-              params: {
-                screen: 'ToktokLocationAccess',
-              },
-            });
-          }
-        }
+        setSessionData(getUserSession);
+        getDefaultAddress();
       } catch (error) {
         console.log(error);
       }
@@ -101,7 +81,6 @@ const Landing = ({createSession, destroySession, setAppServices, navigation, sup
     const storedUserId = await AsyncStorage.getItem('userId');
 
     if (storedUserId) {
-      getDefaultAddress();
       getUserSession({
         variables: {
           input: {
@@ -122,7 +101,33 @@ const Landing = ({createSession, destroySession, setAppServices, navigation, sup
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      saveDefaultAddress(res.getDefaultAddress);
+      console.log('zion', res);
+      const {user} = sessionData;
+      if (user.person.firstName == null || user.person.lastName == null) {
+        navigation.replace('RootDrawer', {
+          screen: 'AuthenticatedStack',
+          params: {
+            screen: 'PostRegistration',
+          },
+        });
+      } else {
+        if (res?.getDefaultAddress !== null) {
+          saveDefaultAddress(res.getDefaultAddress);
+          navigation.replace('RootDrawer', {
+            screen: 'AuthenticatedStack',
+            params: {
+              screen: 'ConsumerLanding',
+            },
+          });
+        } else {
+          navigation.replace('RootDrawer', {
+            screen: 'AuthenticatedStack',
+            params: {
+              screen: 'ToktokLocationAccess',
+            },
+          });
+        }
+      }
     },
     onError: onError,
   });
