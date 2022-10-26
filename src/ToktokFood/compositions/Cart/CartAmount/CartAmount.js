@@ -52,7 +52,7 @@ const CartAmount = (props: PropsType): React$Node => {
       }))
       .value();
 
-    console.log('groupPromo', groupPromo);
+    console.log('promotionVoucher', promotionVoucher);
 
     const groupedPromotions = groupPromo.filter(promo => promo.type === 'promotion');
     const groupedDeal = groupPromo.filter(promo => promo.type === 'deal');

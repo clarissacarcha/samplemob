@@ -17,19 +17,20 @@ export const useGetCartItems = () => {
   const RECEIVER_LANDMARK = receiver?.landmark;
 
   const [getCartItems, {data, error, refetch, loading}] = useLazyQuery(GET_ALL_TEMPORARY_CART, {
-    variables: {
-      input: {
-        userId: customerInfo.userId,
-      },
-    },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     onError: err => console.log('getCartItems', JSON.stringify(err)),
   });
 
   useEffect(() => {
     if (customerInfo && customerInfo?.userId) {
-      getCartItems();
+      getCartItems({
+        variables: {
+          input: {
+            userId: customerInfo.userId,
+          },
+        },
+      });
     }
   }, [customerInfo, getCartItems]);
 

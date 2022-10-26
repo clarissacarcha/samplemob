@@ -3,11 +3,11 @@
  * @flow
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {useTheme} from 'styled-components';
 import {useNavigation} from '@react-navigation/native';
-
+import {useIsFocused} from '@react-navigation/native';
 import type {PropsType} from './types';
 import {AddressContainer, DownIcon, Loader, StyledIcon, Row, Text, Column} from './Styled';
 import {Badge} from 'react-native-elements';
@@ -46,12 +46,18 @@ const customPopupMenuStyle = {
 
 const HomeHeader = (props: PropsType): React$Node => {
   useUserLocation();
-
+  const isFocused = useIsFocused();
   const navigation = useNavigation();
   const theme = useTheme();
   const {location} = useSelector(state => state.toktokFood);
-  const {cartData} = useGetCartItems();
+  const {cartData, cartRefetch} = useGetCartItems();
   const [isAlertVisible, setIsAlertVisible] = useState(false);
+
+  useEffect(() => {
+    if (isFocused && cartRefetch) {
+      cartRefetch();
+    }
+  }, [cartRefetch, isFocused]);
 
   const customOptionStyle = {
     optionWrapper: {
@@ -64,6 +70,12 @@ const HomeHeader = (props: PropsType): React$Node => {
     position: 'absolute',
     top: -4,
     right: -4,
+  };
+
+  const badgeStyle = {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: 1,
   };
 
   const onSetLocationDetails = () => {
@@ -111,7 +123,12 @@ const HomeHeader = (props: PropsType): React$Node => {
         <Column>
           <StyledIcon icon="cart-outline" onPress={onCartNavigate} />
           {cartData?.items?.length > 0 && (
-            <Badge value={cartData?.items?.length} status="error" containerStyle={badgeContainerStyle} />
+            <Badge
+              value={cartData?.items?.length}
+              status="error"
+              containerStyle={badgeContainerStyle}
+              badgeStyle={badgeStyle}
+            />
           )}
         </Column>
         <Menu>

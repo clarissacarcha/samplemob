@@ -7,9 +7,9 @@ import React, {useState} from 'react';
 import {SliderBox} from 'react-native-image-slider-box';
 import {useQuery} from '@apollo/client';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-
+import Carousel, {Pagination} from 'react-native-snap-carousel';
 import type {PropsType} from './types';
-import {Container} from './Styled';
+import {Container, BannerImage, Slider, Dots} from './Styled';
 
 import {starbucks, burger_king, yellow_cab, banner_1} from 'toktokfood/assets/images';
 import {getDeviceWidth} from 'toktokfood/helper/scale';
@@ -19,6 +19,7 @@ import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
 const HomeBanner = (props: PropsType): React$Node => {
   const [imageBanners, setImageBanners] = useState([banner_1, starbucks, yellow_cab, burger_king]);
+  const [activeSlide, setActiveSlide] = useState(0);
 
   // fetch data in categoties
   const {loading} = useQuery(GET_SHOP_BANNERS, {
@@ -32,7 +33,7 @@ const HomeBanner = (props: PropsType): React$Node => {
 
   const Loader = () => (
     <SkeletonPlaceholder backgroundColor="rgba(220, 220, 220, 1)">
-      <SkeletonPlaceholder.Item paddingVertical={10} alignItems="center" marginRight={15} height={150} />
+      <SkeletonPlaceholder.Item paddingVertical={10} alignItems="center" marginRight={15} height={130} />
     </SkeletonPlaceholder>
   );
 
@@ -54,15 +55,14 @@ const HomeBanner = (props: PropsType): React$Node => {
       {loading ? (
         <Loader />
       ) : (
-        <SliderBox
-          images={imageBanners}
-          sliderBoxHeight={130}
-          autoplayInterval={5000}
-          autoplay={true}
-          circleLoop={true}
-          parentWidth={getDeviceWidth - 30}
-          resizeMode="stretch"
-        />
+        <React.Fragment>
+          <Slider
+            data={imageBanners}
+            renderItem={({item}) => <BannerImage source={{uri: item}} />}
+            onSnapToItem={index => setActiveSlide(index)}
+          />
+          <Dots dotsLength={imageBanners.length} activeDotIndex={activeSlide} />
+        </React.Fragment>
       )}
     </Container>
   );

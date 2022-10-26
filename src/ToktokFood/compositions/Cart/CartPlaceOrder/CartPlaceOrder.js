@@ -89,30 +89,54 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
   };
 
   const getOrderData = async (CUSTOMER_CART, WALLET) => {
-    const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
-    const deals = promotionVoucher.filter(promo => promo.type === 'deal');
+    // const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
+    // const deals = promotionVoucher.filter(promo => promo.type === 'deal');
     const {items} = cartData;
 
-    const totalPrice =
-      promotions.length > 0 || deals.length > 0
-        ? await getResellerDiscount(promotions, deals, cartData?.items, true)
-        : cartData?.totalAmount;
-    const deductedPrice = promotions.length > 0 || deals.length > 0 ? totalPrice : cartData?.totalAmount;
+    // const totalPrice =
+    //   promotions.length > 0 || deals.length > 0
+    //     ? await getResellerDiscount(promotions, deals, cartData?.items, false)
+    //     : cartData?.totalAmount;
+    // const deductedPrice = promotions.length > 0 || deals.length > 0 ? totalPrice : cartData?.totalAmount;
 
-    const amount = await getTotalAmount(promotionVoucher, 0);
-    // const parsedAmount = Number((deductedPrice - amount).toFixed(2));
-    const parsedAmount = Number(deductedPrice.toFixed(2));
+    // const amount = await getTotalAmount(promotionVoucher, 0);
+    // // const parsedAmount = Number((deductedPrice - amount).toFixed(2));
+    // const parsedAmount = Number(deductedPrice.toFixed(2));
 
-    console.log('totalPrice', totalPrice);
-    console.log('deductedPrice', deductedPrice);
-    console.log('amount', amount);
-    console.log('parsedAmount', parsedAmount);
+    // console.log('totalPrice', totalPrice);
+    // console.log('deductedPrice', deductedPrice);
+    // console.log('amount', amount);
+    // console.log('parsedAmount', parsedAmount);
+    const totalDiscount = _.sumBy(promotionVoucher, voucher => voucher.discount_totalamount ?? voucher.amount);
+    const totalAmountWoAddons = _.sumBy(cartData?.items, item => {
+      let total = 0;
+      if (promotionVoucher.length > 0) {
+        promotionVoucher.map(voucher => {
+          voucher.items.map(itm => {
+            if (item.productid === itm.product_id) {
+              if (item.quantity > 1) {
+                total += item.resellerDiscount * (item.quantity - 1);
+                total += item.basePrice * 1;
+              } else {
+                total += item.basePrice * item.quantity;
+              }
+            } else {
+              total += item.resellerDiscount * item.quantity;
+            }
+          });
+        });
+      } else {
+        total += item.basePrice * item.quantity;
+      }
+      return total;
+    });
 
+    const computedTotal = Number((totalAmountWoAddons - totalDiscount).toFixed(2));
     const replaceName = deliveryReceiver.replace(/[^a-z0-9 ]/gi, '');
     const replaceLandMark = receiverLandmark.replace(/[^a-z0-9 ]/gi, '');
 
     const ORDER_DATA = {
-      total_amount: deductedPrice > 0 ? parsedAmount : cartData?.totalAmount,
+      total_amount: totalDiscount > 0 ? computedTotal : cartData?.totalAmount,
       srp_totalamount: cartData?.totalAmount,
       notes: cartDriverNote.replace(/[^a-z0-9 ]/gi, ''),
       order_isfor: cartServiceType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
@@ -140,7 +164,7 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
       reseller_account_type: customerFranchisee?.franchiseeAccountType || '',
       reseller_code: customerFranchisee?.franchiseeCode || '',
       referral_code: customerFranchisee?.franchiseeCode ? '' : customerFranchisee?.referralCode || '',
-      discounted_totalamount: deductedPrice > 0 ? parsedAmount : cartData?.totalAmount,
+      discounted_totalamount: totalDiscount > 0 ? computedTotal : cartData?.totalAmount,
       service_type: 'toktokfood',
       service_fee: 0,
     };
