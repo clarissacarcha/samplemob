@@ -98,10 +98,13 @@ export const ToktokWalletOTPValidator = forwardRef(({navigation, route}, ref) =>
                 navigation.setParams({errorMessage: ''});
               }}
             />
-            <TouchableOpacity style={styles.sendOtpContainer}>
+            <TouchableOpacity
+              style={styles.sendOtpContainer}
+              disabled={otpTimer > 0}
+              onPress={otpTimer > 0 ? () => {} : resendRequest}>
               <Text>
                 <Text style={styles.didntReceive}>{'Didn’t receive OTP code? '}</Text>
-                <Text onPress={otpTimer > 0 ? () => {} : resendRequest} style={{textDecorationLine: 'underline'}}>
+                <Text style={{textDecorationLine: 'underline'}}>
                   <Text
                     style={[
                       styles.resendText,

@@ -7,7 +7,7 @@ export const Header = ({navigation, title}) => {
   return (
     <View style={styles.headerBox}>
       <View style={styles.greetingBox}>
-        <TouchableOpacity onPress={() => navigation.pop()}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.pop()}>
           <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
         </TouchableOpacity>
         <View style={{flex: 1, alignItems: 'center', marginRight: 30}}>
@@ -50,5 +50,9 @@ const styles = StyleSheet.create({
     color: CONSTANTS.COLOR.BLACK,
     fontSize: CONSTANTS.FONT_SIZE.XL + 1,
     fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+  },
+  button: {
+    justifyContent: 'center',
+    paddingRight: 17,
   },
 });
