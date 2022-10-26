@@ -8,12 +8,17 @@ import {verticalScale} from 'toktokbills/helper';
 
 //SELF IMPORTS
 import {HeaderBack, HeaderTitle, LoadingIndicator, Separator, SomethingWentWrong} from 'toktokbills/components';
-import {SplashHome} from 'src/ToktokLoad/components';
 
 //IMAGE, FONT & COLOR
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 const {width, height} = Dimensions.get('window');
+
+//GRAPHQL & HOOKS
+import {useLazyQuery} from '@apollo/react-hooks';
+import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
+import {GET_BILL_TYPES} from 'toktokbills/graphql/model';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 
 export const ToktokBillsSplashScreen = ({navigation, route}) => {
   navigation.setOptions({
@@ -23,11 +28,22 @@ export const ToktokBillsSplashScreen = ({navigation, route}) => {
   const {person} = useSelector(state => state.session.user);
   const [showSplash, setShowSplash] = useState(true);
 
+  const [getBillTypes, {loading, error}] = useLazyQuery(GET_BILL_TYPES, {
+    fetchPolicy: 'network-only',
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+  });
+
+  useEffect(() => {
+    getBillTypes();
+  }, []);
+
   useEffect(() => {
     setTimeout(() => {
-      setShowSplash(false);
+      if (!loading) {
+        setShowSplash(false);
+      }
     }, 1500);
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
     if (person?.id && !showSplash) {
@@ -36,6 +52,10 @@ export const ToktokBillsSplashScreen = ({navigation, route}) => {
   }, [person, showSplash]);
 
   const showOnboarding = async () => {
+    if (error) {
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'BILLS'});
+    }
+
     let isViewOnboarding = await checkViewOnboarding(person.id);
     if (!isViewOnboarding) {
       navigation.replace('ToktokBillsOnboarding');

@@ -102,12 +102,14 @@ const Splash = ({
         setFailed(false)
         
       }else{
+        navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
         setFailed(true)
       }
     },
     onError: (err) => {
       console.log(err)
       setFailed(true)
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       // authUser()
     }
 	})  
@@ -125,19 +127,21 @@ const Splash = ({
       birthday: session?.user.person.birthdate ? moment(session?.user.person.birthdate).format("Y-m-d") : "",
       gender: session?.user.person.gender || "NA"
     }
-    console.log(variables)
     const req = await DynamicApiCall("create_user", signature, variables, {debug: true})
 
     if(req.responseData && req.responseData.success == 1){
       setRegisterRetries(1)
       authUser()
     }else if(req.responseError && req.responseError.success == 0){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       Toast.show(req.responseError.message, Toast.LONG)
     }else if(req.responseError){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       Toast.show("Something went wrong", Toast.LONG)
     }else if(req.responseError == null && req.responseData == null){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       Toast.show("Something went wrong", Toast.LONG)
     }
@@ -155,19 +159,20 @@ const Splash = ({
       birthday: session?.user.person.birthdate ? moment(session?.user.person.birthdate).format("Y-m-d") : "",
       gender: session?.user.person.gender || "N"
     }
-    console.log(variables, appSignature)
     const req = await DynamicApiCall("updateCustomerProfile", appSignature, variables, {debug: true})
-    console.log("UPDATE PROFILE", req)
     if(req.responseData && req.responseData.success == 1){
       setRegisterRetries(1)
       authUser()
     }else if(req.responseError && req.responseError.success == 0){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       ToastAndroid.show(req.responseError.message, ToastAndroid.LONG)
     }else if(req.responseError){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       ToastAndroid.show("Something went wrong", ToastAndroid.LONG)
     }else if(req.responseError == null && req.responseData == null){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       ToastAndroid.show("Something went wrong", ToastAndroid.LONG)
     }
@@ -191,7 +196,6 @@ const Splash = ({
 
     //CART
     await AsyncStorage.getItem('ToktokMallMyCart').then((value) => {
-      // console.log('cart async storage',value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createMyCartSession('set', parsedValue)
@@ -202,7 +206,6 @@ const Splash = ({
 
     //DEFAULT ADDRESS
     await AsyncStorage.getItem('ToktokMallUserDefaultAddress').then((value) => {
-      // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createDefaultAddressSession('set', parsedValue)
@@ -213,7 +216,6 @@ const Splash = ({
 
     //NOTIFICATION
     await AsyncStorage.getItem('ToktokMallNotifications').then((value) => {
-      // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createNotificationsSession('set', parsedValue)
@@ -224,7 +226,6 @@ const Splash = ({
 
     //SEARCH HISTORY
     await AsyncStorage.getItem('ToktokMallSearchHistory').then((value) => {
-      // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createSearchHistorySession('set', parsedValue)
@@ -279,51 +280,7 @@ const Splash = ({
 
 	const init = async () => {
     setFailed(false)
-    await FetchAsyncStorageData()
-    
-    await AsyncStorage.getItem("ToktokMallUser").then(async (raw) => {
-      const data = JSON.parse(raw) || null
-      console.log("user data", data)
-      console.log("TOKTOKT RECORD", session?.user.person)
-      if(data && data.userId){
-        // await getCustomerRecords({
-        //   variables: {
-        //     input: {
-        //       userId: data.userId
-        //     }
-        //   }
-        // })
-        getMyCartData({
-          variables: {
-            input: {
-              userId: data.userId
-            }
-          }
-        })
-        getOrderNotifications({
-          variables: {
-            input: {
-              userId: data.userId
-            }
-          }
-        })
-
-        if(session?.user.person.emailAddress != data.email){
-          //UPDATE CUSTOMER RECORD
-          await UpdateUser(data)
-        }else{
-          setTimeout(() => {
-            navigation.navigate("ToktokMallLanding");
-          }, 2000);
-        }
-        
-      }else{
-        await authUser()
-      }
-    }).catch((error) => {
-      console.log(error)      
-    })
-
+    authUser()
 	}
 
 	useEffect(() => {

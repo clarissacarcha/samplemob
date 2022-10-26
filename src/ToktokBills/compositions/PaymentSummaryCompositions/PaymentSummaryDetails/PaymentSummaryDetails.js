@@ -31,11 +31,19 @@ import {pesonetPolicy, currencyCode, numberFormat, moderateScale} from 'toktokwa
 const PaymentSummaryDetails = (props: PropsType): React$Node => {
   const {navigation, route} = props;
   const {paymentData} = route.params;
-  const {firstField, secondField, amount, emailAddress, billType, totalServiceFee, billItemSettings} = paymentData;
-  const totalAmount =
-    parseFloat(amount) +
-    billItemSettings?.commissionRateDetails?.providerServiceFee +
-    billItemSettings?.commissionRateDetails?.systemServiceFee;
+  const {
+    firstField,
+    secondField,
+    amount,
+    payorTypeName,
+    emailAddress,
+    billType,
+    totalServiceFee,
+    providerServiceFee,
+    systemServiceFee,
+    billItemSettings,
+  } = paymentData;
+  const totalAmount = parseFloat(amount) + parseFloat(totalServiceFee);
   const [logo, setLogo] = useState({height: 0, width: 0});
   const [imageLoading, setImageLoading] = useState(true);
   let firstFieldName = '';
@@ -44,7 +52,7 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
   switch (paymentData.itemCode) {
     case 'SSS':
       firstFieldName = 'Payment Reference Number (PRN)';
-      secondFieldName = 'Payor Type';
+      secondFieldName = 'Customer Name';
       break;
     case 'PAG_IBIG':
       firstFieldName = 'Payment Type';
@@ -103,6 +111,12 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
           <Label>{firstFieldName}</Label>
           <Value>{firstField}</Value>
         </DetailsContainer>
+        {payorTypeName != '' && (
+          <DetailsContainer>
+            <Label>Payor Type</Label>
+            <Value>{payorTypeName}</Value>
+          </DetailsContainer>
+        )}
         <DetailsContainer>
           <Label>{secondFieldName}</Label>
           <Value>{secondField}</Value>
@@ -129,7 +143,14 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
           <Label>Convenience Fee</Label>
           <Value>
             {currencyCode}
-            {numberFormat(totalServiceFee)}
+            {numberFormat(providerServiceFee)}
+          </Value>
+        </DetailsContainer>
+        <DetailsContainer>
+          <Label>Toktok Service Fee</Label>
+          <Value>
+            {currencyCode}
+            {numberFormat(systemServiceFee)}
           </Value>
         </DetailsContainer>
       </ContentContainer>
@@ -138,7 +159,7 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
         <Total>Total</Total>
         <Total>
           {currencyCode}
-          {numberFormat(totalServiceFee + amount)}
+          {numberFormat(totalAmount)}
         </Total>
       </DetailsContainer>
       <TotalSeparator />
