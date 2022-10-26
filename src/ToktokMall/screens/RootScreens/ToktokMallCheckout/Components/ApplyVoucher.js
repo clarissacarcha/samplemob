@@ -99,8 +99,8 @@ export const ApplyVoucherForm = (address, customer, referral, payload) => {
       if(referral && referral?.franchiseeCode != null){
         return {
           product_id: data.id,
-          amount: data.amount,
-          total_amount: data.amount * data.qty,
+          amount: data.product.price,
+          total_amount: data.product.price * data.qty,
           srp_amount: data.product.compareAtPrice,
           srp_totalamount: data.product.compareAtPrice * data.qty,
           quantity: data.qty
@@ -108,8 +108,8 @@ export const ApplyVoucherForm = (address, customer, referral, payload) => {
       }else{
         return {
           product_id: data.id,
-          amount: data.amount,
-          total_amount: data.amount * data.qty,
+          amount: data.product.price,
+          total_amount: data.product.price * data.qty,
           srp_amount: data.product.price,
           srp_totalamount: data.product.price * data.qty,
           quantity: data.qty

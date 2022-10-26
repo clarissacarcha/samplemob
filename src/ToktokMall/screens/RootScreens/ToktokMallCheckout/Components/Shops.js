@@ -59,7 +59,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       if(i == 0 && referral && referral?.franchiseeCode != null){
         let shopDiscount = CheckoutContextData.getShopItemDiscount(item[i].shopId, item[i].id)
         if(shopDiscount){
-          total = total + parseFloat(item[i].product.compareAtPrice)
+          total = total + parseFloat(item[i].product.compareAtPrice * item[i].qty)
         }else{
           // total = total + parseFloat(item[i].product.price)
           let itemsrpprice = parseFloat(item[i].product.compareAtPrice * item[i].qty)
@@ -253,7 +253,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           <>            
             {getDeliveryFee(shopid)}
             <View>
-              <Text style = {styles.receiveText}>{address.length == 0 ? "Receive by " : "Add address to calculate"}{shipping?.deliveryDate || ""} </Text>
+              <Text style = {styles.receiveText}>{address?.address != "" ? "Receive by " : "Add address to calculate"}{shipping?.deliveryDate || ""} </Text>
             </View>
             <View style={styles.orderContainer}>
               <View style={{flex: 0}}>
