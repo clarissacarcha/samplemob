@@ -88,6 +88,7 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     }
   };
 
+  console.log('cartData', cartData);
   const getOrderData = async (CUSTOMER_CART, WALLET) => {
     // const promotions = promotionVoucher.filter(promo => promo.type === 'promotion');
     // const deals = promotionVoucher.filter(promo => promo.type === 'deal');
@@ -115,18 +116,18 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
           voucher.items.map(itm => {
             if (item.productid === itm.product_id) {
               if (item.quantity > 1) {
-                total += item.resellerDiscount * (item.quantity - 1);
+                total += (item.resellerDiscount || item.basePrice) * (item.quantity - 1);
                 total += item.basePrice * 1;
               } else {
-                total += item.basePrice * item.quantity;
+                total += item.basePrice * 1;
               }
             } else {
-              total += item.resellerDiscount * item.quantity;
+              total += (item.resellerDiscount || item.basePrice) * item.quantity;
             }
           });
         });
       } else {
-        total += item.basePrice * item.quantity;
+        total += (item.resellerDiscount || item.basePrice) * item.quantity;
       }
       return total;
     });

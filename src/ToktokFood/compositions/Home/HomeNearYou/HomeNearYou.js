@@ -196,7 +196,7 @@ const HomeNearYou = (props: PropsType): React$Node => {
         );
       }
       return (
-        <OverlayText left={16}>
+        <OverlayText left={23}>
           Opens on {getWeekDay(nextOperatingHrs?.day)} {moment(nextOperatingHrs?.fromTime, 'hh:mm:ss').format('LT')}
         </OverlayText>
       );
