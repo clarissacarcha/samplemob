@@ -18,6 +18,7 @@ import uuid from 'react-native-uuid';
 import MapView, {Marker, PROVIDER_GOOGLE, Callout, Overlay} from 'react-native-maps';
 import validator from 'validator';
 import {useAlert} from '../../../../../hooks';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import {HeaderBack, HeaderTitle} from '../../../../../components';
 import {Shadow, YellowButton, VectorIcon, ICON_SET} from '../../../../../revamp';
@@ -27,6 +28,7 @@ import {COLOR, FONT, FONT_SIZE, SIZE, MAP_DELTA} from '../../../../../res/variab
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
 //SELF IMPORTS
+import RecentSearch from './RecentSearch';
 import AutocompleteResult from './AutocompleteResult';
 import SearchBar from './SearchBar';
 import {SearchLoadingIndicator} from './SearchLoadingIndicator';
@@ -55,8 +57,10 @@ const StopDetails = ({navigation, route}) => {
 
   const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [recentSearchDataList, setRecentSearchDataList] = useState([]);
 
   const onLocationSelect = value => {
+    addItemToList(value);
     console.log({value});
     setShowMap(true);
     setStopData({
@@ -222,6 +226,66 @@ const StopDetails = ({navigation, route}) => {
     );
     navigation.pop();
   };
+
+  const addItemToList = async response => {
+    console.log(response);
+    try {
+      const data = await AsyncStorage.getItem('recentSearchDeliveryList');
+      if (data === null) {
+        const searchList = JSON.stringify([response]);
+
+        await AsyncStorage.setItem('recentSearchDeliveryList', searchList);
+      } else {
+        const recentList = JSON.parse(data);
+        if (recentList.length >= 3) {
+          let obj = recentList.find(o => o.formattedAddress === response.formattedAddress);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            setRecentSearchDataList([]);
+            const removedItem = recentList.slice(0, 2);
+            removedItem.unshift(response);
+            const searchList = JSON.stringify(removedItem);
+            await AsyncStorage.setItem('recentSearchDeliveryList', searchList);
+          }
+        } else {
+          let obj = recentList.find(o => o.formattedAddress === response.formattedAddress);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            recentSearchDataList.push(response);
+            const searchList = JSON.stringify(recentSearchDataList);
+            await AsyncStorage.setItem('recentSearchDeliveryList', searchList);
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getSearchList = async () => {
+    try {
+      const data = await AsyncStorage.getItem('recentSearchDeliveryList');
+
+      const output = JSON.parse(data);
+      if (output != null) {
+        setRecentSearchDataList(output);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    async function tempFunction() {
+      await getSearchList();
+    }
+
+    tempFunction();
+
+    return () => {};
+  }, [showMap]);
 
   return (
     <View style={styles.screenBox}>
@@ -397,6 +461,15 @@ const StopDetails = ({navigation, route}) => {
           sessionToken={sessionToken}
           setSessionToken={setSessionToken}
           onLocationSelect={onLocationSelect}
+          setSearchText={setSearchText}
+        />
+      )}
+      {!showMap && searchText == '' && (
+        <RecentSearch
+          recentSearchDataList={recentSearchDataList}
+          setShowMap={setShowMap}
+          stopData={stopData}
+          setStopData={setStopData}
           setSearchText={setSearchText}
         />
       )}
