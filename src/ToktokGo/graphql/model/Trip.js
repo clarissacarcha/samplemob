@@ -141,9 +141,9 @@ driver {
   }
 }`;
 
-export const GO_TRIP_BOOK = gql`
-  mutation goTripBook($input: TripBookInput!) {
-    goTripBook(input: $input) {
+export const TRIP_BOOK = gql`
+  mutation tripBook($input: TripBookInput!) {
+    tripBook(input: $input) {
       message
       trip {
         ${trip}
@@ -152,25 +152,25 @@ export const GO_TRIP_BOOK = gql`
   }
 `;
 
-export const GO_GET_TRIP = gql`
-query goGetTrip($input: GetTripInput) {
-  goGetTrip(input: $input) {
+export const GET_TRIP = gql`
+query getTrip($input: GetTripInput) {
+  getTrip(input: $input) {
     ${trip}
   }
 }
 `;
 
-export const GO_GET_TRIPS_CONSUMER = gql`
-  query goGetTripsConsumer($input: GetTripsConsumerInput) {
-    goGetTripsConsumer(input: $input) {
+export const GET_TRIPS_CONSUMER = gql`
+  query getTripsConsumer($input: GetTripsConsumerInput) {
+    getTripsConsumer(input: $input) {
       ${trip}
     }
   }
 `;
 
-export const GO_GET_TRIP_CANCELLATION_CHARGE = gql`
-  query goGetTripCancellationCharge($input: GetTripCancellationChargeInput!) {
-    goGetTripCancellationCharge(input: $input) {
+export const GET_TRIP_CANCELLATION_CHARGE = gql`
+  query getTripCancellationCharge($input: GetTripCancellationChargeInput!) {
+    getTripCancellationCharge(input: $input) {
       amount
       type
       hash
@@ -186,25 +186,25 @@ export const GET_BOOKING_DRIVER = gql`
   }
 `;
 
-export const GO_TRIP_CONSUMER_CANCEL = gql`
-mutation goTripConsumerCancel ($input: TripConsumerCancelInput!){
-  goTripConsumerCancel (input: $input){
+export const TRIP_CONSUMER_CANCEL = gql`
+mutation tripConsumerCancel ($input: TripConsumerCancelInput!){
+  tripConsumerCancel (input: $input){
     ${trip}
   }
 }
 `;
-export const GO_TRIP_INITIALIZE_PAYMENT = gql`
-  mutation goTripInitializePayment($input: TripInitializePaymentInput!) {
-    goTripInitializePayment(input: $input) {
+export const TRIP_INITIALIZE_PAYMENT = gql`
+  mutation tripInitializePayment($input: TripInitializePaymentInput!) {
+    tripInitializePayment(input: $input) {
       hash
       validator
     }
   }
 `;
 
-export const GO_TRIP_REBOOK = gql`
-  mutation goTripRebook($input: TripRebookInput!) {
-    goTripRebook(input: $input) {
+export const TRIP_REBOOK = gql`
+  mutation tripRebook($input: TripRebookInput!) {
+    tripRebook(input: $input) {
       message
       trip{
         ${trip}
@@ -213,27 +213,27 @@ export const GO_TRIP_REBOOK = gql`
   }
 `;
 
-export const GO_TRIP_REBOOK_INITIALIZE_PAYMENT = gql`
-  mutation goTripRebookInitializePayment($input: TripRebookInitializePaymentInput!) {
-    goTripRebookInitializePayment(input: $input) {
+export const TRIP_REBOOK_INITIALIZE_PAYMENT = gql`
+  mutation tripRebookInitializePayment($input: TripRebookInitializePaymentInput!) {
+    tripRebookInitializePayment(input: $input) {
       hash
       validator
     }
   }
 `;
 
-export const GO_TRIP_CHARGE_INITIALIZE_PAYMENT = gql`
-  mutation goTripChargeInitializePayment($input: TripChargeInitializePaymentInput!) {
-    goTripChargeInitializePayment(input: $input) {
+export const TRIP_CHARGE_INITIALIZE_PAYMENT = gql`
+  mutation tripChargeInitializePayment($input: TripChargeInitializePaymentInput!) {
+    tripChargeInitializePayment(input: $input) {
       hash
       validator
     }
   }
 `;
 
-export const GO_TRIP_CHARGE_FINALIZE_PAYMENT = gql`
-  mutation goTripChargeFinalizePayment($input: TripChargeFinalizePaymentInput!) {
-    goTripChargeFinalizePayment(input: $input) {
+export const TRIP_CHARGE_FINALIZE_PAYMENT = gql`
+  mutation tripChargeFinalizePayment($input: TripChargeFinalizePaymentInput!) {
+    tripChargeFinalizePayment(input: $input) {
       message
       trip {
         ${trip}
@@ -250,9 +250,9 @@ export const DRIVER_RATING = gql`
   }
 `;
 
-export const GO_GET_TRIP_SUPPLY = gql`
-  query goGetTripSupply($input: GetTripSupplyInput!) {
-    goGetTripSupply(input: $input) {
+export const GET_TRIP_SUPPLY = gql`
+  query getTripSupply($input: GetTripSupplyInput!) {
+    getTripSupply(input: $input) {
       location {
         latitude
         longitude
@@ -261,17 +261,17 @@ export const GO_GET_TRIP_SUPPLY = gql`
   }
 `;
 
-export const GO_TRIP_REQUEST_ACCEPT = gql`
-mutation goTripRequestAccept($input: GoTripRequestAcceptInput!) {
-  goTripRequestAccept (input: $input) {
+export const TRIP_REQUEST_ACCEPT = gql`
+mutation tripRequestAccept($input: TripRequestAcceptInput!) {
+  tripRequestAccept (input: $input) {
     ${trip}
   }
 }
 `;
 
-export const GO_TRIP_REQUEST_REJECT = gql`
-mutation goTripRequestReject($input: TripRequestRejectInput!) {
-  goTripRequestReject (input: $input) {
+export const TRIP_REQUEST_REJECT = gql`
+mutation tripRequestReject($input: TripRequestRejectInput!) {
+  tripRequestReject (input: $input) {
     ${trip}
   }
 }

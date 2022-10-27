@@ -119,9 +119,9 @@ const trip = `
     }
 `;
 
-export const GO_ON_TRIP_UPDATE = gql`
-subscription goOnTripUpdate ($consumerUserId: ID) {
-  goOnTripUpdate(consumerUserId: $consumerUserId) {
+export const ON_TRIP_UPDATE = gql`
+subscription onTripUpdate ($consumerUserId: ID) {
+  onTripUpdate(consumerUserId: $consumerUserId) {
       ${trip}
     }
   }

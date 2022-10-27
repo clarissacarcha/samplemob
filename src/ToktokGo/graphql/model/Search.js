@@ -53,9 +53,9 @@ export const GET_PLACE_BY_LOCATION = gql`
   }
 `;
 
-export const GO_GET_TRIP_DESTINATIONS = gql`
+export const GET_TRIP_DESTINATIONS = gql`
   query {
-    goGetTripDestinations {
+    getTripDestinations {
       hash
       place {
         addressBreakdown {

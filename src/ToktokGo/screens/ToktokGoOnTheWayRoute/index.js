@@ -30,16 +30,16 @@ import {connect, useDispatch, useSelector} from 'react-redux';
 import BottomSheet from 'reanimated-bottom-sheet';
 import {useSubscription} from '@apollo/client';
 import {
-  GO_ON_TRIP_UPDATE,
+  ON_TRIP_UPDATE,
   TOKTOKGO_SUBSCRIPTION_CLIENT,
-  GO_TRIP_REBOOK,
-  GO_TRIP_CONSUMER_CANCEL,
-  GO_GET_TRIP_CANCELLATION_CHARGE,
-  GO_GET_TRIPS_CONSUMER,
-  GO_TRIP_CHARGE_FINALIZE_PAYMENT,
-  GO_TRIP_CHARGE_INITIALIZE_PAYMENT,
+  TRIP_REBOOK,
+  TRIP_CONSUMER_CANCEL,
+  GET_TRIP_CANCELLATION_CHARGE,
+  GET_TRIPS_CONSUMER,
+  TRIP_CHARGE_FINALIZE_PAYMENT,
+  TRIP_CHARGE_INITIALIZE_PAYMENT,
   GET_BOOKING_DRIVER,
-  GO_GET_TRIP_SUPPLY,
+  GET_TRIP_SUPPLY,
 } from '../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
@@ -86,7 +86,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
   useEffect(() => {
     console.log('[effect] Observe Trip Update!');
     const observer = TOKTOKGO_SUBSCRIPTION_CLIENT.subscribe({
-      query: GO_ON_TRIP_UPDATE,
+      query: ON_TRIP_UPDATE,
       variables: {
         consumerUserId: session.user.id,
       },
@@ -94,7 +94,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     const subscription = observer.subscribe(
       ({data}) => {
         console.log('[subscription] TripUpdate:', data);
-        const {id, status, cancellation} = data?.goOnTripUpdate;
+        const {id, status, cancellation} = data?.onTripUpdate;
 
         if (id != booking.id) {
           Alert.alert('', 'Magandang araw ka-toktok! Stay safe!');
@@ -103,7 +103,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         if (id && status != 'CANCELLED' && cancellation?.initiatedBy == 'CONSUMER') {
           dispatch({
             type: 'SET_TOKTOKGO_BOOKING',
-            payload: data?.goOnTripUpdate,
+            payload: data?.onTripUpdate,
           });
         }
         if (status == 'CANCELLED' && cancellation?.initiatedBy == 'DRIVER') {
@@ -118,7 +118,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         if (['ARRIVED', 'PICKED_UP', 'COMPLETED'].includes(status)) {
           dispatch({
             type: 'SET_TOKTOKGO_BOOKING',
-            payload: data?.goOnTripUpdate,
+            payload: data?.onTripUpdate,
           });
           if (status === 'ARRIVED') {
             setmodal(true);
@@ -195,23 +195,23 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     onError: onErrorAppSync,
   });
 
-  const [getTripSupply] = useLazyQuery(GO_GET_TRIP_SUPPLY, {
+  const [getTripSupply] = useLazyQuery(GET_TRIP_SUPPLY, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setDriverCoordinates(response?.goGetTripSupply?.location);
+      setDriverCoordinates(response?.getTripSupply?.location);
     },
     onError: onErrorAppSync,
   });
 
-  const [getTripsConsumer] = useLazyQuery(GO_GET_TRIPS_CONSUMER, {
+  const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      if (response.goGetTripsConsumer.length > 0) {
+      if (response.getTripsConsumer.length > 0) {
         dispatch({
           type: 'SET_TOKTOKGO_BOOKING',
-          payload: response.goGetTripsConsumer[0],
+          payload: response.getTripsConsumer[0],
         });
       } else {
         navigation.replace('ToktokGoBookingStart');
@@ -220,14 +220,14 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     onError: onErrorAppSync,
   });
 
-  const [getTripCancellationCharge] = useLazyQuery(GO_GET_TRIP_CANCELLATION_CHARGE, {
+  const [getTripCancellationCharge] = useLazyQuery(GET_TRIP_CANCELLATION_CHARGE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setChargeAmount(response.goGetTripCancellationCharge?.amount);
-      if (response.goGetTripCancellationCharge?.amount > 0) {
+      setChargeAmount(response.getTripCancellationCharge?.amount);
+      if (response.getTripCancellationCharge?.amount > 0) {
         setDriverCancel(true);
-        setCancellationChargeResponse(response.goGetTripCancellationCharge);
+        setCancellationChargeResponse(response.getTripCancellationCharge);
       } else {
         setViewCancelBookingModal(true);
       }
@@ -264,7 +264,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     },
   });
 
-  const [tripConsumerCancel] = useMutation(GO_TRIP_CONSUMER_CANCEL, {
+  const [tripConsumerCancel] = useMutation(TRIP_CONSUMER_CANCEL, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -300,7 +300,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     },
     onCompleted: response => {
       if (chargeAmount) {
-        setCancellationState(response.goTripConsumerCancel.cancellation);
+        setCancellationState(response.tripConsumerCancel.cancellation);
         sheetRef.current.snapTo(1);
       } else {
         setViewSuccessCancelBookingModal(true);
@@ -308,13 +308,13 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     },
   });
 
-  const [tripRebook] = useMutation(GO_TRIP_REBOOK, {
+  const [tripRebook] = useMutation(TRIP_REBOOK, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onError: onErrorAppSync,
     onCompleted: response => {
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING',
-        payload: response.goTripRebook.trip,
+        payload: response.tripRebook.trip,
       });
     },
   });
@@ -444,7 +444,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     else return <DriverStatusDestination booking={booking} />;
   };
 
-  const [tripChargeFinalizePayment] = useMutation(GO_TRIP_CHARGE_FINALIZE_PAYMENT, {
+  const [tripChargeFinalizePayment] = useMutation(TRIP_CHARGE_FINALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
       navigation.pop();
@@ -500,10 +500,10 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
     });
   };
 
-  const [tripChargeInitializePayment] = useMutation(GO_TRIP_CHARGE_INITIALIZE_PAYMENT, {
+  const [tripChargeInitializePayment] = useMutation(TRIP_CHARGE_INITIALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
-      const data = response.goTripChargeInitializePayment;
+      const data = response.tripChargeInitializePayment;
       console.log('DATA', data.hash);
       if (data.validator == 'TPIN') {
         navigation.push('ToktokWalletTPINValidator', {
