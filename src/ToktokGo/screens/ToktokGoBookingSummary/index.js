@@ -27,7 +27,7 @@ import {
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
-import {GO_GET_TRIP_FARE, GO_TRIP_BOOK, GO_TRIP_INITIALIZE_PAYMENT, GO_GET_TRIPS_CONSUMER} from '../../graphql';
+import {GET_TRIP_FARE, TRIP_BOOK, TRIP_INITIALIZE_PAYMENT, GET_TRIPS_CONSUMER} from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import BottomSheet from 'reanimated-bottom-sheet';
@@ -83,13 +83,13 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     }
   }, []);
 
-  const [getTripFare, {called}] = useLazyQuery(GO_GET_TRIP_FARE, {
+  const [getTripFare, {called}] = useLazyQuery(GET_TRIP_FARE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-        payload: {...details, rate: response.goGetTripFare},
+        payload: {...details, rate: response.getTripFare},
       });
       setLoading(false);
       if (bookingState) {
@@ -122,7 +122,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     },
   });
 
-  const [tripBook, {loading: TBLoading}] = useMutation(GO_TRIP_BOOK, {
+  const [tripBook, {loading: TBLoading}] = useMutation(TRIP_BOOK, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -171,7 +171,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     onCompleted: response => {
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING',
-        payload: response.goTripBook.trip,
+        payload: response.tripBook.trip,
       });
       if (details.paymentMethod == 'TOKTOKWALLET') {
         navigation.pop();
@@ -186,7 +186,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     },
   });
 
-  const [tripInitializePayment, {loading: TIPLoading}] = useMutation(GO_TRIP_INITIALIZE_PAYMENT, {
+  const [tripInitializePayment, {loading: TIPLoading}] = useMutation(TRIP_INITIALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -216,11 +216,11 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       }
     },
     onCompleted: response => {
-      if (response?.goTripInitializePayment?.validator == 'TPIN') {
+      if (response?.tripInitializePayment?.validator == 'TPIN') {
         navigation.navigate('ToktokWalletTPINValidator', {
           callBackFunc: tripBooking,
           data: {
-            paymentHash: response?.goTripInitializePayment?.hash,
+            paymentHash: response?.tripInitializePayment?.hash,
           },
           errorMessage: tripBookError,
         });
@@ -389,12 +389,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     }
   }, [proceedBooking]);
 
-  const [getTripsConsumer] = useLazyQuery(GO_GET_TRIPS_CONSUMER, {
+  const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
       if (response) {
-        setOutstandingFee(response?.goGetTripsConsumer[0]?.cancellation);
+        setOutstandingFee(response?.getTripsConsumer[0]?.cancellation);
       }
     },
   });

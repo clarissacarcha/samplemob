@@ -6,10 +6,10 @@ import {Landing, Header, OutstandingFee} from './Sections';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   GET_PLACE_BY_LOCATION,
-  GO_GET_TRIPS_CONSUMER,
-  GO_TRIP_CHARGE_FINALIZE_PAYMENT,
-  GO_TRIP_CHARGE_INITIALIZE_PAYMENT,
-  GO_GET_TRIP_DESTINATIONS,
+  GET_TRIPS_CONSUMER,
+  TRIP_CHARGE_FINALIZE_PAYMENT,
+  TRIP_CHARGE_INITIALIZE_PAYMENT,
+  GET_TRIP_DESTINATIONS,
   GET_SAVED_ADDRESS,
 } from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
@@ -63,11 +63,11 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
   };
 
-  const [getTripDestinations] = useLazyQuery(GO_GET_TRIP_DESTINATIONS, {
+  const [getTripDestinations] = useLazyQuery(GET_TRIP_DESTINATIONS, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setrecentDestinationList(response.goGetTripDestinations);
+      setrecentDestinationList(response.getTripDestinations);
     },
     onError: onErrorAppSync,
   });
@@ -90,15 +90,15 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     onError: onError,
   });
 
-  const [getTripsConsumer] = useLazyQuery(GO_GET_TRIPS_CONSUMER, {
+  const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setTripConsumerPending(response.goGetTripsConsumer);
+      setTripConsumerPending(response.getTripsConsumer);
     },
   });
 
-  const [tripChargeFinalizePayment] = useMutation(GO_TRIP_CHARGE_FINALIZE_PAYMENT, {
+  const [tripChargeFinalizePayment] = useMutation(TRIP_CHARGE_FINALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
       navigation.pop();
@@ -151,10 +151,10 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     });
   };
 
-  const [tripChargeInitializePayment] = useMutation(GO_TRIP_CHARGE_INITIALIZE_PAYMENT, {
+  const [tripChargeInitializePayment] = useMutation(TRIP_CHARGE_INITIALIZE_PAYMENT, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     onCompleted: response => {
-      const data = response.goTripChargeInitializePayment;
+      const data = response.tripChargeInitializePayment;
       console.log('DATA', data.hash);
       if (data.validator == 'TPIN') {
         navigation.navigate('ToktokWalletTPINValidator', {

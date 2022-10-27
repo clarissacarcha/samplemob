@@ -15,7 +15,7 @@ import {
   GET_PLACE_AUTOCOMPLETE,
   GET_PLACE_BY_ID,
   GET_PLACE_BY_LOCATION,
-  GO_GET_TRIP_DESTINATIONS,
+  GET_TRIP_DESTINATIONS,
   GET_SAVED_ADDRESS,
 } from '../../graphql';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT, TOKTOK_GO_GRAPHQL_CLIENT, TOKTOK_ADDRESS_CLIENT} from 'src/graphql';
@@ -104,11 +104,11 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     },
   });
 
-  const [getTripDestinations] = useLazyQuery(GO_GET_TRIP_DESTINATIONS, {
+  const [getTripDestinations] = useLazyQuery(GET_TRIP_DESTINATIONS, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setRecentDestinationList(response.goGetTripDestinations);
+      setRecentDestinationList(response.getTripDestinations);
     },
     onError: onErrorAppSync,
   });
