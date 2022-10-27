@@ -1,2 +1,1 @@
-export * from "./LoadingIndicator";
-export * from "./SplashLoading";
+export * from './LoadingIndicator';

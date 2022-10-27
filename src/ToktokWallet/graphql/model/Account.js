@@ -1,23 +1,5 @@
 import gql from 'graphql-tag'
 
-
-// export const GET_ACCOUNT = gql`
-//     query getAccount($input: GetAccountInput){
-//         getAccount(input: $input){
-//             id
-//             mobileNumber
-//             status
-//             motherId
-//             person {
-//                 id
-//                 firstName
-//                 middleName
-//                 lastName
-//             }
-//         }
-//     }
-// `
-
 export const GET_ACCOUNT = gql`
     query getAccount($input: GetAccountInput){
         getAccount(input: $input){
@@ -43,6 +25,7 @@ export const GET_MY_ACCOUNT = gql`
             mpindCodeAttempts
             isLinked
             isPep
+            merchantSettlement
             person {
                 id
                 firstName
@@ -146,6 +129,22 @@ export const POST_GENERATE_ACCOUNT_QR_CODE = gql`
 export const POST_VERIFY_ACCOUNT_TPIN = gql`
     mutation postVerifyAccountTPIN($input:PostVerifyAccountTPINInput){
         postVerifyAccountTPIN(input:$input)
+    }
+`
+export const GET_ACCOUNT_USED_LIMITS = gql`
+    query {
+        getAccountUsedLimits {
+            incoming {
+                daily
+                monthly
+                annual
+            }
+            outgoing {
+                daily
+                monthly
+                annual
+            }
+        }
     }
 `
 

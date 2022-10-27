@@ -1,25 +1,34 @@
 import React from 'react';
-import {Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View, Dimensions} from 'react-native';
 import GradientBackground from '../../../assets/toktokgo/toktokgo-gradient-background.png';
 import Graphics from '../../../assets/toktokgo/toktokgo-health-care-graphics.png';
-import constants from '../../../common/res/constants';
+import CONSTANTS from '../../../common/res/constants';
 import FAIcons from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
-const ToktokGoHealthCare = ({navigation}) => {
+import {connect, useDispatch, useSelector} from 'react-redux';
+const windowWidth = Dimensions.get('window').width;
+const ToktokGoHealthCare = ({navigation, route, constants}) => {
+  const {voucherData} = route.params;
   const onPress = () => {
-    const date = moment(new Date()).format('MMM D, YYYY');
-    AsyncStorage.setItem('ToktokGoHealthCare', date);
-    navigation.replace('ToktokGoBookingStart');
+    if (constants.show1022GoRates == 1) {
+      const date = moment(new Date()).format('MMM D, YYYY');
+      AsyncStorage.setItem('ToktokGoHealthCare', date);
+      navigation.replace('ToktokGoNewGuidelines', {voucherData});
+    } else {
+      const date = moment(new Date()).format('MMM D, YYYY');
+      AsyncStorage.setItem('ToktokGoHealthCare', date);
+      navigation.replace('ToktokGoBookingStart', {voucherData});
+    }
   };
   return (
     <ImageBackground source={GradientBackground} style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <Image source={Graphics} style={{flex: 0.6, width: undefined, height: undefined}} resizeMode={'contain'} />
-        <View style={{flex: 1}}>
-          <Text style={[styles.textBase, {color: constants.COLOR.BLACK}]}>
-            <Text style={[styles.textBase, {color: constants.COLOR.YELLOW}]}>
-              toktok<Text style={[styles.textBase, {color: constants.COLOR.ORANGE}]}>go</Text>
+        <View style={{flex: 1, width: windowWidth * 0.9}}>
+          <Text style={[styles.textBase, {color: CONSTANTS.COLOR.BLACK}]}>
+            <Text style={[styles.textBase, {color: CONSTANTS.COLOR.YELLOW}]}>
+              toktok<Text style={[styles.textBase, {color: CONSTANTS.COLOR.ORANGE}]}>go</Text>
             </Text>{' '}
             Health Care
           </Text>
@@ -34,23 +43,23 @@ const ToktokGoHealthCare = ({navigation}) => {
             follow the guidelines:
           </Text>
           <View style={styles.textContainer}>
-            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 8}} />
+            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 6}} />
             <Text style={styles.textContent}>Face mask is a must</Text>
           </View>
           <View style={styles.textContainer}>
-            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 8}} />
+            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 6}} />
             <Text style={styles.textContent}>
               If in case you feel sick or rather not feeling well better to stay at home to avoid spreading the virus
             </Text>
           </View>
           <View style={styles.textContainer}>
-            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 8}} />
+            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 6}} />
             <Text style={styles.textContent}>
               Vaccination card and/or travel pass shall always be readily available
             </Text>
           </View>
           <View style={styles.textContainer}>
-            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 8}} />
+            <FAIcons name="circle" size={5} style={{marginRight: 5, marginTop: 6}} />
             <Text style={styles.textContent}>
               Make sure that all of your colleagues that will ride the vehicle are fully vaccinated
             </Text>
@@ -65,8 +74,12 @@ const ToktokGoHealthCare = ({navigation}) => {
     </ImageBackground>
   );
 };
+const mapStateToProps = state => ({
+  session: state.session,
+  constants: state.constants,
+});
 
-export default ToktokGoHealthCare;
+export default connect(mapStateToProps, null)(ToktokGoHealthCare);
 
 const styles = StyleSheet.create({
   container: {
@@ -78,23 +91,23 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   textBase: {
-    fontSize: constants.FONT_SIZE.XL + 1,
-    fontFamily: constants.FONT_FAMILY.REGULAR,
+    fontSize: CONSTANTS.FONT_SIZE.XL + 1,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
   },
   textContent: {
-    fontSize: constants.FONT_SIZE.M,
-    fontFamily: constants.FONT_FAMILY.REGULAR,
-    color: constants.COLOR.BLACK,
+    fontSize: CONSTANTS.FONT_SIZE.M,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    color: CONSTANTS.COLOR.BLACK,
   },
   textContainer: {
-    marginLeft: 16,
+    marginLeft: 10,
     marginTop: 16,
     flexDirection: 'row',
   },
   fabcontainer: {
     position: 'absolute',
     bottom: 0,
-    backgroundColor: constants.COLOR.WHITE,
+    backgroundColor: CONSTANTS.COLOR.WHITE,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
@@ -112,7 +125,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
   },
   fab: {
-    backgroundColor: constants.COLOR.ORANGE,
+    backgroundColor: CONSTANTS.COLOR.ORANGE,
     borderRadius: 5,
     width: '100%',
     justifyContent: 'center',
@@ -120,8 +133,8 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
   },
   fabtext: {
-    color: constants.COLOR.WHITE,
-    fontFamily: constants.FONT_FAMILY.BOLD,
-    fontSize: constants.FONT_SIZE.L,
+    color: CONSTANTS.COLOR.WHITE,
+    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontSize: CONSTANTS.FONT_SIZE.L,
   },
 });

@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useCallback, useState} from 'react';
+import React, {useRef, useEffect, useCallback, useState, useLayoutEffect} from 'react';
 import _ from 'lodash';
 import {useSelector} from 'react-redux';
 import {View, Text, StyleSheet, TouchableOpacity, Image, Share, FlatList, Dimensions, Platform} from 'react-native';
@@ -106,7 +106,6 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => {
         SheetManager.hide('homeMenu_Services'), navigation.push('TokTokFoodSplashScreen');
       },
-      isNew: true,
     },
     {
       identifier:
@@ -153,7 +152,9 @@ export const Menu = ({setUserLocation, constants}) => {
       identifier: `${Platform.OS}Bills`,
       label: 'Bills',
       icon: BillsIcon,
-      onPress: () => navigation.push('ToktokBillsSplashScreen'),
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokBillsSplashScreen');
+      },
       isNew: true,
     },
     {
@@ -165,7 +166,7 @@ export const Menu = ({setUserLocation, constants}) => {
       },
     },
     {
-      identifier: 'profile',
+      identifier: `${Platform.OS}Profile`,
       label: 'Profile',
       icon: ProfileIcon,
       onPress: () => {
@@ -173,7 +174,7 @@ export const Menu = ({setUserLocation, constants}) => {
       },
     },
     {
-      identifier: 'help',
+      identifier: `${Platform.OS}Help`,
       label: 'Help',
       icon: HelpIcon,
       onPress: () => {
@@ -183,14 +184,18 @@ export const Menu = ({setUserLocation, constants}) => {
   ];
 
   useEffect(() => {
+    filterMenus();
+  }, [state.appServices]);
+
+  useLayoutEffect(() => {
+    filterMenus();
+  }, []);
+
+  const filterMenus = () => {
     const appServicesObject = _.keyBy(state.appServices, 'identifier');
     setAppServices(appServicesObject);
 
     const filteredMenuData = menuDataConstant.filter(menuDataItem => {
-      if (['profile', 'help'].includes(menuDataItem.identifier)) {
-        return true;
-      }
-
       const appService = appServicesObject[menuDataItem.identifier];
 
       /**
@@ -230,7 +235,7 @@ export const Menu = ({setUserLocation, constants}) => {
     } else {
       setMenuData(filteredMenuData);
     }
-  }, []);
+  };
 
   if (!appServices) {
     return <View />;

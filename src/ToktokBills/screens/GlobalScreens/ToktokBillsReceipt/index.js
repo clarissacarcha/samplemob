@@ -22,7 +22,7 @@ const {width, height} = Dimensions.get('window');
 
 //COMPONENTS
 import {
-  OrangeButton,
+  CustomButton,
   HeaderBack,
   HeaderTitle,
   LoadingIndicator,
@@ -185,12 +185,11 @@ export const ToktokBillsReceipt = ({navigation, route}) => {
           </ViewShot>
         </ScrollView>
       </ImageBackground>
-      <View style={styles.buttonContainer}>
-        <OrangeButton
-          label="OK"
-          onPress={() => (favoriteExisting.result ? navigation.navigate('ToktokBillsHome') : setVisible(true))}
-        />
-      </View>
+      <CustomButton
+        label="OK"
+        onPress={() => (favoriteExisting.result ? navigation.navigate('ToktokBillsHome') : setVisible(true))}
+        hasShadow
+      />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Image} from 'react-native';
+import {Text, View, Image, Dimensions} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import EIcon from 'react-native-vector-icons/Entypo';
@@ -28,6 +28,7 @@ import ActivitiesTopTab from './ActivitiesTopTab';
 import NotificationsTopTab from './NotificationsTopTab';
 
 const ToktokLandingBottomTab = createBottomTabNavigator();
+const windowWidth = Dimensions.get('window').width;
 
 const ToktokLanding = () => (
   <ToktokLandingBottomTab.Navigator
@@ -48,7 +49,17 @@ const ToktokLanding = () => (
       name="ToktokLandingHome"
       component={ToktokLandingHome}
       options={{
-        tabBarLabel: ({focused}) => <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Home</Text>,
+        tabBarLabel: ({focused}) => (
+          <Text
+            style={{
+              fontSize: 10,
+              color: COLOR.BLACK,
+              marginBottom: 0,
+              marginLeft: windowWidth >= 700 ? windowWidth * 0.02 : 0,
+            }}>
+            Home
+          </Text>
+        ),
         tabBarIcon: ({color}) => (
           <Image
             source={color == COLOR.ORANGE ? HomeFill : HomeNoFill}
@@ -62,7 +73,17 @@ const ToktokLanding = () => (
       name="ToktokLandingDeliveries"
       component={ActivitiesTopTab}
       options={{
-        tabBarLabel: ({focused}) => <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Activities</Text>,
+        tabBarLabel: ({focused}) => (
+          <Text
+            style={{
+              fontSize: 10,
+              color: COLOR.BLACK,
+              marginBottom: 0,
+              marginLeft: windowWidth >= 700 ? windowWidth * 0.02 : 0,
+            }}>
+            Activities
+          </Text>
+        ),
         tabBarIcon: ({color}) => (
           <Image
             source={color == COLOR.ORANGE ? ActivitiesFill : ActivitiesNoFill}
@@ -78,7 +99,15 @@ const ToktokLanding = () => (
       // component={NotificationsTopTab}
       options={{
         tabBarLabel: ({focused}) => (
-          <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Notifications</Text>
+          <Text
+            style={{
+              fontSize: 10,
+              color: COLOR.BLACK,
+              marginBottom: 0,
+              marginLeft: windowWidth >= 700 ? windowWidth * 0.02 : 0,
+            }}>
+            Notifications
+          </Text>
         ),
         tabBarIcon: ({color}) => (
           <Image
@@ -93,7 +122,17 @@ const ToktokLanding = () => (
       name="ToktokLandingMenu"
       component={ToktokLandingMenu}
       options={{
-        tabBarLabel: ({focused}) => <Text style={{fontSize: 10, color: COLOR.BLACK, marginBottom: 5}}>Menu</Text>,
+        tabBarLabel: ({focused}) => (
+          <Text
+            style={{
+              fontSize: 10,
+              color: COLOR.BLACK,
+              marginBottom: 0,
+              marginLeft: windowWidth >= 700 ? windowWidth * 0.02 : 0,
+            }}>
+            Menu
+          </Text>
+        ),
         tabBarIcon: ({color}) => (
           <Image
             source={color == COLOR.ORANGE ? MenuFill : MenuNoFill}

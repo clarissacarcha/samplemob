@@ -9,7 +9,6 @@ import {
   TouchableHighlight,
   Platform,
   Linking,
-  SafeAreaView,
 } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import {connect} from 'react-redux';
@@ -22,12 +21,16 @@ import SplashImage from '../assets/images/LinearGradiant.png';
 import Maintenance from '../assets/images/Maintenance.png';
 import NoNetworkConnection from '../assets/images/NoNetworkConnection.png';
 import ToktokSuperApp from '../assets/images/ToktokLogo.png';
+import ToktokSuperAppSplash from '../assets/images/SplashScreen.png';
 import ServerDown from '../assets/images/ServerDown.png';
 import MaintenanceLogo from '../assets/images/MaintenanceLogo.png';
 import UpdateLogo from '../assets/images/ToktokUpdateImage.png';
 // import MaintenanceImage from '../assets/images/MaintenanceImage.png';
 import CONSTANTS from '../common/res/constants';
 import LoginBanner from '../assets/images/ToktokLogo.png';
+import {withSafeArea} from 'react-native-safe-area';
+
+const SafeAreaView = withSafeArea(View, 'padding', 'all');
 
 const imageWidth = Dimensions.get('window').width - 80;
 
@@ -323,9 +326,9 @@ const Splash = ({setConstants, setAppServices}) => {
   }
 
   return (
-    <ImageBackground style={styles.splash} source={SplashImage} resizeMode={'cover'}>
-      <Image source={ToktokSuperApp} style={styles.image} resizeMode="contain" />
-    </ImageBackground>
+    <View style={styles.splash}>
+      <Image source={ToktokSuperAppSplash} style={{flex: 1}} resizeMode="contain" />
+    </View>
   );
 };
 

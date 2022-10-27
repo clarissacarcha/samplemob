@@ -27,7 +27,7 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote, no
         }}>
         <View style={{flexDirection: 'row', textAlign: 'center', marginHorizontal: 5}}>
           <FA5Icon name="map-pin" size={18} color={constants.COLOR.YELLOW} style={{marginRight: 10}} />
-          <Text style={{paddingRight: 20}}>{origin.place.formattedAddress}</Text>
+          <Text style={{paddingRight: 20}}>{origin?.place?.formattedAddress}</Text>
         </View>
       </ThrottledOpacity>
       <Text
@@ -42,7 +42,7 @@ export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote, no
       <View style={styles.containerTextInput}>
         <TextInput
           ref={dropDownRef}
-          // value={note}
+          defaultValue={notes.text}
           placeholder="e.g. I have two luggage"
           keyboardType="default"
           onChangeText={value => notesToDriver(value)}

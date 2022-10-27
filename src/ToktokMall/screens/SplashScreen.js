@@ -9,20 +9,17 @@ import {
   TouchableOpacity,
   ToastAndroid
 } from 'react-native';
-import {connect, useDispatch} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-import SplashImage from '../assets/images/toktokmall-splash-screen.png';
-import {useSelector} from 'react-redux';
-import { useLazyQuery, useQuery } from '@apollo/react-hooks';
+import { connect, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../graphql';
-import { TOKTOK_MALL_AUTH_GRAPHQL_CLIENT } from '../../graphql';
 import { GET_CUSTOMER_IF_EXIST, GET_CUSTOMER_RECORDS, GET_MY_CART, GET_ORDERS_NOTIFICATION } from '../../graphql/toktokmall/model';
-import {DynamicApiCall} from '../helpers'
-import {GET_SIGNATURE} from '../../graphql/toktokmall/virtual';
-import axios from 'axios';
+import { DynamicApiCall } from '../helpers';
+import { splashImage, newSplashImage } from '../assets';
+import CONSTANTS from '../../common/res/constants';
 import moment from 'moment';
 import AsyncStorage from '@react-native-community/async-storage';
-import { EventRegister } from 'react-native-event-listeners';
 
 const imageWidth = Dimensions.get('screen').width;
 const imageHeight = Dimensions.get('screen').height;
@@ -105,12 +102,14 @@ const Splash = ({
         setFailed(false)
         
       }else{
+        navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
         setFailed(true)
       }
     },
     onError: (err) => {
       console.log(err)
       setFailed(true)
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       // authUser()
     }
 	})  
@@ -128,19 +127,21 @@ const Splash = ({
       birthday: session?.user.person.birthdate ? moment(session?.user.person.birthdate).format("Y-m-d") : "",
       gender: session?.user.person.gender || "NA"
     }
-    console.log(variables)
     const req = await DynamicApiCall("create_user", signature, variables, {debug: true})
 
     if(req.responseData && req.responseData.success == 1){
       setRegisterRetries(1)
       authUser()
     }else if(req.responseError && req.responseError.success == 0){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       Toast.show(req.responseError.message, Toast.LONG)
     }else if(req.responseError){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       Toast.show("Something went wrong", Toast.LONG)
     }else if(req.responseError == null && req.responseData == null){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       Toast.show("Something went wrong", Toast.LONG)
     }
@@ -158,19 +159,20 @@ const Splash = ({
       birthday: session?.user.person.birthdate ? moment(session?.user.person.birthdate).format("Y-m-d") : "",
       gender: session?.user.person.gender || "N"
     }
-    console.log(variables, appSignature)
     const req = await DynamicApiCall("updateCustomerProfile", appSignature, variables, {debug: true})
-    console.log("UPDATE PROFILE", req)
     if(req.responseData && req.responseData.success == 1){
       setRegisterRetries(1)
       authUser()
     }else if(req.responseError && req.responseError.success == 0){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       ToastAndroid.show(req.responseError.message, ToastAndroid.LONG)
     }else if(req.responseError){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       ToastAndroid.show("Something went wrong", ToastAndroid.LONG)
     }else if(req.responseError == null && req.responseData == null){
+      navigation.replace('SuperAppServiceMaintenance', {service: 'MALL'});
       setFailed(true)
       ToastAndroid.show("Something went wrong", ToastAndroid.LONG)
     }
@@ -194,7 +196,6 @@ const Splash = ({
 
     //CART
     await AsyncStorage.getItem('ToktokMallMyCart').then((value) => {
-      // console.log('cart async storage',value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createMyCartSession('set', parsedValue)
@@ -205,7 +206,6 @@ const Splash = ({
 
     //DEFAULT ADDRESS
     await AsyncStorage.getItem('ToktokMallUserDefaultAddress').then((value) => {
-      // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createDefaultAddressSession('set', parsedValue)
@@ -216,7 +216,6 @@ const Splash = ({
 
     //NOTIFICATION
     await AsyncStorage.getItem('ToktokMallNotifications').then((value) => {
-      // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createNotificationsSession('set', parsedValue)
@@ -227,7 +226,6 @@ const Splash = ({
 
     //SEARCH HISTORY
     await AsyncStorage.getItem('ToktokMallSearchHistory').then((value) => {
-      // console.log('Notifications async storage', value)
       const parsedValue = JSON.parse(value)
       if(value != null){
         createSearchHistorySession('set', parsedValue)
@@ -282,51 +280,7 @@ const Splash = ({
 
 	const init = async () => {
     setFailed(false)
-    await FetchAsyncStorageData()
-    
-    await AsyncStorage.getItem("ToktokMallUser").then(async (raw) => {
-      const data = JSON.parse(raw) || null
-      console.log("user data", data)
-      console.log("TOKTOKT RECORD", session?.user.person)
-      if(data && data.userId){
-        // await getCustomerRecords({
-        //   variables: {
-        //     input: {
-        //       userId: data.userId
-        //     }
-        //   }
-        // })
-        getMyCartData({
-          variables: {
-            input: {
-              userId: data.userId
-            }
-          }
-        })
-        getOrderNotifications({
-          variables: {
-            input: {
-              userId: data.userId
-            }
-          }
-        })
-
-        if(session?.user.person.emailAddress != data.email){
-          //UPDATE CUSTOMER RECORD
-          await UpdateUser(data)
-        }else{
-          setTimeout(() => {
-            navigation.navigate("ToktokMallLanding");
-          }, 2000);
-        }
-        
-      }else{
-        await authUser()
-      }
-    }).catch((error) => {
-      console.log(error)      
-    })
-
+    authUser()
 	}
 
 	useEffect(() => {
@@ -345,11 +299,16 @@ const Splash = ({
 
   return (
     <View style={styles.container}>
-      <Image 
-				source={SplashImage} 
+      {/* <Image 
+				source={splashImage} 
 				style={styles.splashImage} 
 				resizeMode="cover" 
-			/>
+			/> */}
+
+      <Image 
+        source={newSplashImage}
+        style={styles.newSplashImage}
+      />
 
       {failed && 
       <View style={styles.subContainer}>
@@ -380,11 +339,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1, 
     justifyContent:'center', 
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: CONSTANTS.COLOR.BACKGROUND_YELLOW
   },
   splashImage: {
     height: '100%', 
     width: '100%' 
+  },
+  newSplashImage: {
+    height: 150,
+    resizeMode: 'contain'
   },
   subContainer: {
     position:'absolute', 
@@ -403,6 +367,6 @@ const styles = StyleSheet.create({
   tryAgainButton: {
     fontSize: 14, 
     color: "#F6841F"
-  }
+  },
 })
 

@@ -1,16 +1,12 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {ImageBackground, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
-
-import {Alert} from 'react-native';
-
-import {COLOR} from 'res/variables';
-import {CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT, TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
+import {CLIENT, TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {splash_new} from 'toktokfood/assets/images';
-import AlertModal from 'toktokfood/components/AlertModal';
 
 import {
   CREATE_ACCOUNT,
@@ -21,10 +17,8 @@ import {
   DELETE_SHOP_TEMPORARY_CART,
   CHECK_HAS_TEMPORARY_CART,
 } from 'toktokfood/graphql/toktokfood';
-
 import {useUserLocation} from 'toktokfood/hooks';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
-
 import {setNewInstall} from 'toktokfood/helper/PersistentLocation';
 
 const TokTokFoodSplashScreen = () => {
@@ -41,11 +35,16 @@ const TokTokFoodSplashScreen = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     onCompleted: ({createAccount}) => {
       let {status} = createAccount;
-      if (status == 200) {
+      if (status === 200) {
         setCreatedFlag(true);
+      } else {
+        return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
       }
     },
-    onError: err => console.log('createAccount', JSON.stringify(err)),
+    onError: error => {
+      console.log('createAccount', error);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
+    },
   });
 
   const [getConsumerStatus] = useLazyQuery(GET_CONSUMER_TYPE, {
@@ -64,7 +63,10 @@ const TokTokFoodSplashScreen = () => {
     onCompleted: ({getConsumer}) => {
       dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_FRANCHISEE', payload: {...getConsumer}});
     },
-    onError: error => console.log('getConsumerStatus', error),
+    onError: error => {
+      console.log('getConsumerStatus', error);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
+    },
   });
 
   const [getKycStatus] = useLazyQuery(GET_KYC_STATUS, {
@@ -89,16 +91,24 @@ const TokTokFoodSplashScreen = () => {
       dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_WALLET_ACCOUNT', payload: null});
       return showHomPage();
     },
-    onError: error => console.log('getKycStatus', error),
+    onError: error => {
+      console.log('getKycStatus', error);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
+    },
   });
 
   const [updateToktokUser] = useMutation(PATCH_PERSON_HAS_TOKTOKFOOD, {
     client: CLIENT,
     onCompleted: ({patchToktokFoodUserId}) => {
       // console.log('patchToktokFoodUserId: ' + JSON.stringify(patchToktokFoodUserId));
-      if (patchToktokFoodUserId.status != 200) {
-        Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
+      if (patchToktokFoodUserId.status !== 200) {
+        return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
+        // Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
       }
+    },
+    onError: error => {
+      console.log('updateToktokUser', error);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
     },
   });
 
@@ -107,7 +117,8 @@ const TokTokFoodSplashScreen = () => {
     fetchPolicy: 'network-only',
     onError: error => {
       console.log('getToktokUserInfo', error);
-      setErrorModal({error, visible: true});
+      // setErrorModal({error, visible: true});
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
     },
     onCompleted: async ({getAccount}) => {
       await getConsumerStatus();
@@ -150,8 +161,9 @@ const TokTokFoodSplashScreen = () => {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onError: err => {
-      Alert.alert('', 'Something went wrong.');
       console.log(`🍔 Temporary cart error: ' ToktokFoodSplashScreen.js`, err);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
+      // Alert.alert('', 'Something went wrong.');
     },
   });
 
@@ -169,8 +181,9 @@ const TokTokFoodSplashScreen = () => {
       navigation.replace('ToktokFoodHomeScreen');
     },
     onError: () => {
-      Alert.alert('', 'Something went wrong.');
+      // Alert.alert('', 'Something went wrong.');
       console.log(`🍔 Temporary cart error: ' ToktokFoodSplashScreen.js`);
+      return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
     },
   });
 
@@ -254,55 +267,11 @@ const TokTokFoodSplashScreen = () => {
     });
   };
 
-  // const patchToktokFoodUserId = async getAccount => {
-  // try {
-  // console.log(getAccount.userId);
-  // console.log(user.id);
-  // const API_RESULT = await axios({
-  //   url: `https://dev.toktok.ph:2096/graphql`,
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   data: {
-  //     query: `
-  //       mutation {
-  //         patchToktokFoodUserId(input: {
-  //           toktokfoodUserId: "${getAccount.userId}"
-  //           toktokUserId: "${user.id}"
-  //         }) {
-  //           status
-  //           message
-  //         }
-  //     }`,
-  //   },
-  // });
-  //   const res = API_RESULT.data.data;
-  //   console.log(JSON.stringify(res));
-
-  //   if (res.patchToktokFoodUserId.status == 200) {
-  //     dispatch({type: 'SET_TOKTOKFOOD_CUSTOMER_INFO', payload: {...getAccount}});
-  //     showHomPage();
-  //   } else {
-  //     Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
-  // };
-
-  return (
-    <>
-      <AlertModal visible={errorModal.visible} error={errorModal.error} close={() => navigation.pop()} />
-      <ImageBackground style={styles.container} source={splash_new} resizeMode="cover">
-        {/* <ActivityIndicator style={{marginBottom: 30}} size="large" color={COLOR.ORANGE} /> */}
-      </ImageBackground>
-    </>
-  );
+  return <ImageBackground style={styles.splashContainer} source={splash_new} resizeMode="cover" />;
 };
 
 const styles = StyleSheet.create({
-  container: {
+  splashContainer: {
     flex: 1,
     justifyContent: 'flex-end',
   },

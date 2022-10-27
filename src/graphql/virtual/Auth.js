@@ -41,6 +41,7 @@ user {
     rating
     referralCode
     goReferralDriverUserId
+    goReferralDriverCode
     referralName
     franchiseeCode
     franchiseeFirstName

@@ -133,7 +133,7 @@ const RenderItem = ({item}) => {
                   </Text>
                 </View> : <></>}       
             <View style={styles.soldContainer}>
-              <Text style={styles.soldText}>{item?.soldCount || 0} sold</Text>
+              {/* <Text style={styles.soldText}>{item?.soldCount || 0} sold</Text> */}
             </View>
           </View>
           {

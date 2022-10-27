@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, StyleSheet, Text, Platform,Dimensions} from 'react-native';
-import {FONT, COLOR} from '../../res/variables'
+import {View, StyleSheet, Text, Platform, Dimensions} from 'react-native';
+import {FONT, COLOR} from '../../res/variables';
 
-const {width,height} = Dimensions.get("window")
+const {width, height} = Dimensions.get('window');
 
-export const HeaderTitle = ({label , headerRightIsSet}) => {
+export const HeaderTitle = ({label, headerRightIsSet}) => {
   return (
     <View style={[styles.box]}>
       <Text style={styles.outer}>
@@ -18,8 +18,7 @@ export const HeaderTitle = ({label , headerRightIsSet}) => {
 const styles = StyleSheet.create({
   box: {
     alignItems: 'center',
-     width:"100%",
-     paddingRight: Platform.OS == "android" ? 66 : 0,
+    width: '100%',
   },
   outer: {
     fontSize: 16,

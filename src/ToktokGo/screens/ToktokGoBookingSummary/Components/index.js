@@ -4,3 +4,6 @@ export * from './PassengerCapacityActionSheet';
 export * from './OutstandingFeeModal';
 export * from './TokwaPaymentProcessedModal';
 export * from './VoucherRemovedModal';
+export * from './FeeInfoModal';
+export * from './VoucherUsedModal';
+export * from './VoucherUsedModalRemoved';

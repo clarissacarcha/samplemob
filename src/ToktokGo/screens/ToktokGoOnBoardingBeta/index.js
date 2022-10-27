@@ -22,7 +22,8 @@ import {connect} from 'react-redux';
 
 const {width} = Dimensions.get('screen');
 
-const ImageDimension = Dimensions.get('screen').height / 2.5;
+const ImageDimension = Dimensions.get('screen').height * 0.3;
+const SCREEN_HEIGHT_MARGIN = Dimensions.get('screen').height * 0.1;
 
 const slides = [
   {
@@ -63,7 +64,8 @@ const Slide = ({item}) => {
   );
 };
 
-const ToktokGoOnBoardingBeta = ({navigation, session}) => {
+const ToktokGoOnBoardingBeta = ({navigation, session, route}) => {
+  const {voucherData} = route.params;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const ref = useRef();
   const {tokwaAccount, getMyAccount} = useAccount();
@@ -85,11 +87,24 @@ const ToktokGoOnBoardingBeta = ({navigation, session}) => {
     AsyncStorage.setItem('ToktokGoOnBoardingBeta', data);
 
     if (date === moment(new Date()).format('MMM D, YYYY')) {
-      navigation.replace('ToktokGoBookingStart');
-    } else if (tokwaAccount.wallet.id) {
-      navigation.replace('ToktokGoHealthCare');
+      navigation.replace('ToktokGoBookingStart', {voucherData});
+    }
+    // if no tokwa acc; navigate to create TOKWA SCREEN
+    else if (!session.user.toktokWalletAccountId) {
+      navigation.replace('ToktokGoCreateTokwa', {voucherData});
+      // else navigate to next screen
     } else {
-      navigation.replace('ToktokGoCreateTokwa');
+      // if no ref code; navigate to REF SCREEN
+      if (!session.user.consumer.goReferralDriverCode) {
+        navigation.replace('ReferralScreen', {
+          fromRegistration: true,
+          voucherData,
+        });
+      }
+      // if has ref code; navigate to HEALTHCARE SCREEN
+      else {
+        navigation.replace('ToktokGoHealthCare', {voucherData});
+      }
     }
   };
 
@@ -149,7 +164,7 @@ const ToktokGoOnBoardingBeta = ({navigation, session}) => {
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
       <View style={{alignItems: 'center'}}>
-        <View style={{marginTop: StatusBar.currentHeight + 40}}>
+        <View style={{marginTop: StatusBar.currentHeight + SCREEN_HEIGHT_MARGIN}}>
           <Image source={ToktokgoIcon} resizeMode={'contain'} style={{height: 45, width: 190}} />
         </View>
         <FlatList

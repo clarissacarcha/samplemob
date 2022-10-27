@@ -134,7 +134,7 @@ const RenderItem = ({item, loading}) => {
                   </Text> : <></>}
             </View>
             <View style={{flex: 1.3, justifyContent: 'center', alignItems: 'flex-end'}}>
-              <Text style={{fontSize: 9}}>{item.weeklySold || 0} sold</Text>
+              {/* <Text style={{fontSize: 9}}>{item.weeklySold || 0} sold</Text> */}
             </View>
             
           </View>

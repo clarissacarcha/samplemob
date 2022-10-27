@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 import React from 'react';
+import {MenuProvider as PopUpMenuProvider} from 'react-native-popup-menu';
 import {StatusBar, LogBox} from 'react-native';
 import Splash from './Splash';
 import { MenuProvider } from 'react-native-popup-menu';
@@ -14,6 +15,7 @@ import {
   // SubscriptionProvider,
 } from '../provider';
 import AlertProvider from '../provider/AlertProvider';
+import {PromptProviderGo} from '../ToktokGo/Provider';
 
 LogBox.ignoreAllLogs();
 
@@ -21,17 +23,19 @@ const App = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
-      <ReduxProvider>
-        <ApolloProvider>
-          <AlertProvider>
-            <PromptProvider>
-              <MenuProvider>
-                <Splash />
-              </MenuProvider>
-            </PromptProvider>
-          </AlertProvider>
-        </ApolloProvider>
-      </ReduxProvider>
+      <PopUpMenuProvider>
+        <ReduxProvider>
+          <ApolloProvider>
+            <AlertProvider>
+              <PromptProvider>
+                <PromptProviderGo>
+                  <Splash />
+                </PromptProviderGo>
+              </PromptProvider>
+            </AlertProvider>
+          </ApolloProvider>
+        </ReduxProvider>
+      </PopUpMenuProvider>
     </>
   );
 };

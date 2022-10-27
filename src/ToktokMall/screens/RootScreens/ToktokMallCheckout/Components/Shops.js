@@ -45,23 +45,31 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     setNumAppliedShippingVouchers(numOfShipVouchers.length)
     setNumAppliedPromoVouchers(numOfPromoVouchers.length)
 
+    if(referral && referral.franchiseeCode != null){
+      CheckoutContextData.computeTotalResellerDiscount(data)
+    }
+
   }, [CheckoutContextData])
 
   const computeTotal = (item, raw = false) => {
+
     let total = 0
+
     for (let i = 0; i < item.length; i++){
-      if(i == 0 && referral && referral?.referralCode != null || referral && referral?.franchiseeCode != null){
-        let shopDiscount = CheckoutContextData.getShopItemDiscount(item[i].shopId)
+      if(i == 0 && referral && referral?.franchiseeCode != null){
+        let shopDiscount = CheckoutContextData.getShopItemDiscount(item[i].shopId, item[i].id)
         if(shopDiscount){
           total = total + parseFloat(item[i].product.compareAtPrice)
         }else{
           // total = total + parseFloat(item[i].product.price)
-          total = total + parseFloat(item[i].product.price * item[i].qty)
-        }        
+          let itemsrpprice = parseFloat(item[i].product.compareAtPrice * item[i].qty)
+          total = total + itemsrpprice
+        }      
       }else{
         total = total + parseFloat(item[i].amount)
       }      
     }
+
     if(raw){
       return total == NaN ? 0 : total
     }else{
@@ -69,9 +77,9 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
     }    
   }
 
-  const getImageSource = (imgs) => {
-    if(imgs && typeof imgs == "string"){
-      return {uri: imgs}
+  const getImageSource = (images) => {
+    if(images && images.length > 0){
+      return {uri: images[0]?.filename}
     }else {
       return placeholder
     }
@@ -95,7 +103,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         return(
           <View style={styles.itemContainer}>
             <Image //source = {item.image} 
-            source = {getImageSource(product?.img?.filename)} 
+            source = {getImageSource(product?.images)} 
             style ={styles.itemImage}/>
             <View style = {styles.itemInfoContainer}>
               <Text style={styles.itemNameText}>{product?.name ? product?.name.trim() : product?.itemname.trim()}</Text>
@@ -372,7 +380,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
             <ListVouchers type="shipping" />
           </View>}
 
-          {ApplyVoucherForm(address, customer, {
+          {ApplyVoucherForm(address, customer, referral, {
             index: i,
             item: item,
             subTotal: computeTotal(item.data[0], true)})}

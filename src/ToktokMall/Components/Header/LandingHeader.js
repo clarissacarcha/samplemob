@@ -24,7 +24,7 @@ const MainHeader = ({onSearch, animatedValue}) => {
           </View>
           <View style={{flex: 2}}></View>
           <View style={{flex: 8, alignItems: 'center', paddingTop: 15, backgroundColor: 'red'}}>
-            <Image source={toktokmallH} style={{width: '100%', height: 35, resizeMode: 'stretch'}} />
+            <Image source={toktokmallH} style={{width: '100%', height: 35, resizeMode: 'cover'}} />
           </View>
           <View style={{flex: 2}}></View>
           <View style={{flex: 0, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 15, paddingTop: 8}}>

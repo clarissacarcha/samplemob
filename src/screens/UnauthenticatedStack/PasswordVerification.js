@@ -34,6 +34,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import ShowPassword from '../../assets/icons/ShowPassword.png';
 import HidePassword from '../../assets/icons/HidePassword.png';
 import ArrowLeft from '../../assets/icons/arrow-left-icon.png';
+import { ThrottledHighlight, ThrottledOpacity } from '../../components_section';
 
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
 
@@ -138,7 +139,7 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
     verifyLogin();
   };
 
-  const [forgotPassword] = useMutation(FORGOT_PASSWORD, {
+  const [forgotPassword, {loading: FPLoading}] = useMutation(FORGOT_PASSWORD, {
     client: AUTH_CLIENT,
     variables: {
       input: {
@@ -203,7 +204,7 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
           justifyContent: 'space-between',
         }}>
         {/* <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}> */}
-        <AlertOverlay visible={loading} />
+        <AlertOverlay visible={loading || FPLoading} />
         <TouchableOpacity onPress={() => navigation.pop()} style={{zIndex: 999}}>
           <Image
             style={{height: 15, width: 10, margin: 16, top: StatusBar.currentHeight - 10}}
@@ -257,7 +258,7 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
               )}
             </View>
             {/*-------------------- SUBMIT INPUT --------------------*/}
-            <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
+            <ThrottledHighlight delay={500} onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
               <View style={styles.submit}>
                 <Text
                   style={{
@@ -270,10 +271,10 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
                   Login
                 </Text>
               </View>
-            </TouchableHighlight>
+            </ThrottledHighlight>
 
             {/* -------------------- FORGOT PASSWORD BUTTON--------------------*/}
-            <TouchableHighlight onPress={() => sendOTP()} underlayColor={COLOR.YELLOW} style={styles.autoFillBox}>
+            <ThrottledOpacity delay={500} onPress={() => sendOTP()} underlayColor={COLOR.YELLOW} style={styles.autoFillBox}>
               <View style={styles.autoFill}>
                 <Text
                   style={{
@@ -286,7 +287,7 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices}
                   Forgot Password?
                 </Text>
               </View>
-            </TouchableHighlight>
+            </ThrottledOpacity>
           </View>
         </View>
         {/* </View> */}

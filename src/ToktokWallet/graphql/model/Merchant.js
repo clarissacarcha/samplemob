@@ -70,6 +70,58 @@ export const GET_MERCHANT_PAYMENTS = gql`
     }
 `
 
+export const GET_MERCHANT_PAYMENTS_PAGINATE = gql`
+    query getMerchantPaymentsPaginate($input: GetMerchantPaymentsPaginateInput){
+        getMerchantPaymentsPaginate(input: $input){
+            edges{
+                node {
+                    id
+                    createdAt
+                    amount
+                    serviceFee
+                    paymentType
+                    serviceFeeAmount
+                    transaction {
+                        id
+                        refNo
+                        createdAt
+                        amount
+                        name
+                        phrase
+                    }
+                }
+            }
+            pageInfo {
+                startCursorId
+                endCursorId
+                hasNextPage
+            }
+        }
+    }
+`
+export const GET_MERCHANT_SETTLEMENT = gql`
+  query getMerchantSettlements($input: GetMerchantSettlementsInput) {
+    getMerchantSettlements(input: $input) {
+      edges{
+        node {
+            id
+            refNo
+            name
+            phrase
+            createdAt
+            updatedAt
+            displayInfo
+        }
+      }
+      pageInfo {
+        startCursorId
+        endCursorId
+        hasNextPage
+      }
+    }
+  }
+`
+
 export const POST_REQUEST_MERCHANT_PAYMENT = gql`
     mutation {
         postRequestMerchantPayment

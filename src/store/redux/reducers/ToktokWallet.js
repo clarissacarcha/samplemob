@@ -31,6 +31,8 @@ const INITIAL_STATE = {
   },
   constants: {},
   contacts: [],
+  appServices: [],
+  appServiceLogs: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -45,8 +47,7 @@ export default (state = INITIAL_STATE, action) => {
         wallet: {
           ...state.wallet,
           currency: {...state.wallet.currency},
-          allTransactions: action.payload.allTransactions,
-          recentTransactions: action.payload.recentTransactions,
+          transactions: payload.transactions,
         },
       };
     case 'SET_REFRESH_TOKTOKWALLET':
@@ -59,8 +60,7 @@ export default (state = INITIAL_STATE, action) => {
           balance: +payload.wallet.balance,
           creditCardBalance: +payload.wallet.creditCardBalance,
           transferableBalance: +payload.wallet.transferableBalance,
-          recentTransactions: payload.transactions.recentTransactions,
-          allTransactions: payload.transactions.allTransactions,
+          transactions: payload.transactions,
         },
       };
     case 'SET_TOKWA_EVENTS_REDIRECT':
@@ -78,6 +78,16 @@ export default (state = INITIAL_STATE, action) => {
           ...state.constants,
           ...action.payload,
         },
+      };
+    case 'SET_TOKWA_APP_SERVICES':
+      return {
+        ...state,
+        appServices:[...action.payload]
+      };
+    case 'SET_TOKWA_APP_SERVICE_LOGS':
+      return {
+        ...state,
+        appServiceLogs:[...action.payload]
       };
     case 'SET_CONTACTS':
       return {

@@ -1,65 +1,59 @@
-import React , {useState,useRef,useCallback,useEffect} from 'react'
-import { View ,ActivityIndicator,StatusBar,Text,BackHandler} from 'react-native'
-import {SomethingWentWrong,AlertOverlay} from 'src/components'
-import { useDispatch } from 'react-redux'
-import { useAccount } from 'toktokwallet/hooks'
-import { CheckIdleState , FlagSecureScreen } from 'toktokwallet/components'
-import {useFocusEffect} from '@react-navigation/native'
-import CONSTANTS from 'common/res/constants'
+import React, {useState, useRef, useCallback, useEffect} from 'react';
+import {View, ActivityIndicator, StatusBar, Text, BackHandler} from 'react-native';
+import {SomethingWentWrong, AlertOverlay} from 'src/components';
+import {useDispatch} from 'react-redux';
+import {useAccount} from 'toktokwallet/hooks';
+import {CheckIdleState, FlagSecureScreen} from 'toktokwallet/components';
+import {useFocusEffect} from '@react-navigation/native';
+import CONSTANTS from 'common/res/constants';
 
 //SELF IMPORTS
-import {
-    WalletLandingPage,
-} from "./Components";
+import {WalletLandingPage} from './Components';
 
-const {COLOR} = CONSTANTS
+export const ToktokWalletHomePage = ({navigation, route}) => {
+  const [refreshing, setRefreshing] = useState(false);
+  const {refreshWallet, getMyAccount, getMyAccountLoading} = useAccount();
+  const dispatch = useDispatch();
 
-export const ToktokWalletHomePage = ({navigation,route})=> {
+  const getData = useCallback(() => {
+    refreshWallet();
+    getMyAccount();
+  }, []);
 
-    navigation.setOptions({
-        headerShown: false,
-    })
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, []),
+  );
 
-    const [refreshing,setRefreshing] = useState(false)
-    const { refreshWallet , getMyAccountLoading} = useAccount();
-    const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch({
+      type: 'SET_TOKWA_EVENTS_REDIRECT',
+      payload: {
+        event: 'cashInTopUp',
+        value: false,
+      },
+    });
+  }, []);
 
-    const onRefresh = useCallback(()=>{
-       refreshWallet();
-    },[])
+  useEffect(() => {
+    if (refreshing) {
+      setRefreshing(getMyAccountLoading);
+    }
+  }, [getMyAccountLoading, refreshing]);
 
-    useEffect(()=>{
-        refreshWallet();
-        dispatch({
-            type: "SET_TOKWA_EVENTS_REDIRECT",
-            payload: {
-                event: "cashInTopUp",
-                value: false,
-            }
-        })
-    },[])
+  const onRefresh = () => {
+    setRefreshing(true);
+    refreshWallet();
+    getMyAccount();
+  };
 
-    // useFocusEffect(() => {
-    //     const backAction = () => {
-    //       navigation.pop(2);
-    //       return true;
-    //     };
-    
-    //     const backHandler = BackHandler.addEventListener(
-    //       "hardwareBackPress",
-    //       backAction
-    //     );
-    
-    //     return () => backHandler.remove();
-    //   }, []);
-
-    return (
-        <FlagSecureScreen>
-        <AlertOverlay visible={getMyAccountLoading}/>
-        <CheckIdleState>
-            <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-            <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing}/>
-        </CheckIdleState>
-        </FlagSecureScreen>
-    )
-}
+  return (
+    <FlagSecureScreen>
+      <CheckIdleState>
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+        <WalletLandingPage onRefresh={onRefresh} refreshing={refreshing} />
+      </CheckIdleState>
+    </FlagSecureScreen>
+  );
+};
