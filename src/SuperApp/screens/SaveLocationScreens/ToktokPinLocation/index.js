@@ -6,7 +6,7 @@ import {DARK} from '../../../../res/constants';
 import CONSTANTS from '../../../../common/res/constants';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION} from '../../../../ToktokGo/graphql';
-import {GET_ADDRESSES, POST_NEW_ADDRESS, TOKTOK_ADDRESS_CLIENT} from '../../../../graphql';
+import {PREF_GET_SAVED_ADDRESSES, PREF_USER_ADDRESS_CREATE, TOKTOK_ADDRESS_CLIENT} from '../../../../graphql';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import uuid from 'react-native-uuid';
 import {useDebounce} from '../../../../ToktokGo/helpers';
@@ -86,7 +86,7 @@ const ToktokPinLocation = ({navigation, route}) => {
     onError: onError,
   });
 
-  const [postNewAddress, {loading: PNALoading}] = useMutation(POST_NEW_ADDRESS, {
+  const [prefUserAddressCreate, {loading: PNALoading}] = useMutation(PREF_USER_ADDRESS_CREATE, {
     client: TOKTOK_ADDRESS_CLIENT,
     onCompleted: () => {
       setShowSuccessOperationAddressModal(true);
@@ -94,7 +94,7 @@ const ToktokPinLocation = ({navigation, route}) => {
     onError: onError,
   });
 
-  const [getAddresses, {data: AddressesData}] = useLazyQuery(GET_ADDRESSES, {
+  const [prefGetSavedAddresses, {data: AddressesData}] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onError: onError,
@@ -145,7 +145,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   );
 
   const saveDefaultAddress = () => {
-    postNewAddress({
+    prefUserAddressCreate({
       variables: {
         input: {
           isHome: true,
@@ -164,7 +164,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    getAddresses();
+    prefGetSavedAddresses();
   }, []);
 
   const goToHome = () => {
@@ -179,7 +179,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   };
 
   const onSubmit = () => {
-    if (AddressesData?.getAddresses.length < 1 && !isFromLocationAccess) {
+    if (AddressesData?.prefGetSavedAddresses.length < 1 && !isFromLocationAccess) {
       saveDefaultAddress();
       return;
     }

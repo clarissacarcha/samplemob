@@ -10,9 +10,9 @@ import {currentLocation} from '../../../../helper';
 import {useFocusEffect} from '@react-navigation/native';
 import {AddressChip, AddressForm, AddressButtons} from './Sections';
 import {
-  DELETE_ADDRESS,
-  PATCH_ADDRESS_CHANGES,
-  POST_NEW_ADDRESS,
+  PREF_USER_ADDRESS_DELETE,
+  PREF_USER_ADDRESS_UPDATE,
+  PREF_USER_ADDRESS_CREATE,
   TOKTOK_ADDRESS_CLIENT,
   GET_ADDRESS,
 } from '../../../../graphql';
@@ -59,7 +59,7 @@ const AddEditLocation = ({navigation, route, session}) => {
   const [contactNumber, setContactNumber] = useState(addressObj?.id ? addressObj.contactDetails.mobile_no : '');
   const [contactName, setContactName] = useState(addressObj?.id ? addressObj.contactDetails.fullname : '');
 
-  const [deleteAddress] = useMutation(DELETE_ADDRESS, {
+  const [prefUserAddressDelete] = useMutation(PREF_USER_ADDRESS_DELETE, {
     client: TOKTOK_ADDRESS_CLIENT,
     onError: onError,
     onCompleted: () => {
@@ -68,7 +68,7 @@ const AddEditLocation = ({navigation, route, session}) => {
     },
   });
 
-  const [patchAddressChanges, {loading: PACLoading}] = useMutation(PATCH_ADDRESS_CHANGES, {
+  const [prefUserAddressUpdate, {loading: PACLoading}] = useMutation(PREF_USER_ADDRESS_UPDATE, {
     client: TOKTOK_ADDRESS_CLIENT,
     onCompleted: () => {
       setShowConfirmOperationAddressModal(false);
@@ -129,7 +129,7 @@ const AddEditLocation = ({navigation, route, session}) => {
     onError: onError,
   });
 
-  const [postNewAddress, {loading}] = useMutation(POST_NEW_ADDRESS, {
+  const [prefUserAddressCreate, {loading}] = useMutation(PREF_USER_ADDRESS_CREATE, {
     client: TOKTOK_ADDRESS_CLIENT,
     onCompleted: () => {
       setShowSuccessOperationAddressModal(true);
@@ -204,7 +204,7 @@ const AddEditLocation = ({navigation, route, session}) => {
     }
 
     setModalOperationType('CREATE');
-    postNewAddress({
+    prefUserAddressCreate({
       variables: {
         input: {
           isHome: isHomeSelected,
@@ -225,7 +225,7 @@ const AddEditLocation = ({navigation, route, session}) => {
   const saveEditAddress = () => {
     const placeHash = confirmedLocation?.hash ? confirmedLocation?.hash : confirmedLocation?.placeHash;
     const addressId = addressObj?.id ? addressObj?.id : addressIdFromService;
-    patchAddressChanges({
+    prefUserAddressUpdate({
       variables: {
         input: {
           id: addressId,
@@ -245,7 +245,7 @@ const AddEditLocation = ({navigation, route, session}) => {
   };
 
   const confirmDeleteAddress = () => {
-    deleteAddress({
+    prefUserAddressDelete({
       variables: {
         input: {
           id: addressObj?.id,
