@@ -31,7 +31,7 @@ export const Container: ComponentType<any> = styled(View).attrs(props => ({
     errorMessage !== '' &&
     `
       border-color: ${theme.color.red};
-      border-width: 1;
+      border-width: 1px;
     `}
 `;
 

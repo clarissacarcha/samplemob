@@ -9,7 +9,7 @@ export type PropsType = {
   style?: Object,
   placeholder: string,
   errorMessage: string,
-  onSelectedValue: Object => any,
+  onSelectedValue: any,
   selectedValue: string,
   setSelectedValue: any,
   data: Array<Object>,

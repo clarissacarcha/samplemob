@@ -1,8 +1,17 @@
 import React from 'react';
-import {ToktokBillsSssTransaction, ToktokBillsTransaction} from 'toktokbills/screens';
+import {
+  ToktokBillsPagIbigFundTransaction,
+  ToktokBillsSssTransaction,
+  ToktokBillsTransaction,
+} from 'toktokbills/screens';
 
 export default ({Navigator}) => (
   <>
+    <Navigator.Screen
+      name="ToktokBillsPagIbigFundTransaction"
+      component={ToktokBillsPagIbigFundTransaction}
+      options={options}
+    />
     <Navigator.Screen name="ToktokBillsSssTransaction" component={ToktokBillsSssTransaction} options={options} />
     <Navigator.Screen name="ToktokBillsTransaction" component={ToktokBillsTransaction} options={options} />
   </>

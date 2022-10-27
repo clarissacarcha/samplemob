@@ -7,7 +7,7 @@ import React, {useState} from 'react';
 
 import type {PropsType} from './types';
 import {ArrowDown, ErrorText, Label, Placeholder, SelectionInput} from './Styled';
-import {ListModal} from 'toktokwallet/components';
+import {ListModal} from 'toktokbills/components';
 
 const CustomSelectionList = (props: PropsType): React$Node => {
   const {
@@ -32,8 +32,8 @@ const CustomSelectionList = (props: PropsType): React$Node => {
   const hasError = !!errorMessage;
   const [visible, setVisible] = useState(false);
 
-  const onChangeSelect = ({value, index}) => {
-    onSelectedValue({value, index});
+  const onChangeSelect = item => {
+    onSelectedValue(item);
   };
 
   const onPressInput = () => {

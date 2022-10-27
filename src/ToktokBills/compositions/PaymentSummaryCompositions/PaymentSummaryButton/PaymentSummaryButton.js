@@ -26,10 +26,10 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
   const {user} = useSelector(state => state.session);
   const {tokwaAccount} = useAccount();
   const prompt = usePrompt();
-  const {firstField, secondField, amount, email, billType, convenienceFee, billItemSettings, referenceNumber} =
+  const {firstField, secondField, amount, emailAddress, billType, totalServiceFee, billItemSettings, referenceNumber} =
     paymentData;
   const {termsAndConditions, paymentPolicy1, paymentPolicy2} = billItemSettings.itemDocumentDetails;
-  const totalAmount = parseFloat(amount) + parseFloat(convenienceFee);
+  const totalAmount = parseFloat(amount) + parseFloat(totalServiceFee);
   const tokwaBalance = user?.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : '0.00';
 
   const [postToktokWalletRequestMoney, {loading, error}] = useMutation(POST_TOKTOKWALLET_REQUEST_MONEY, {
@@ -61,12 +61,13 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
   const [postBillsTransaction, {loading: postBillsTransactionLoading}] = useMutation(POST_BILLS_TRANSACTION, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: error => {
-      ErrorUtility.StandardErrorHandling({
-        error,
-        navigation,
-        prompt,
-        onPress: () => navigation.navigate('ToktokBillsHome'),
-      });
+      console.log(error, 'ssdsd');
+      // ErrorUtility.StandardErrorHandling({
+      //   error,
+      //   navigation,
+      //   prompt,
+      //   onPress: () => navigation.navigate('ToktokBillsHome'),
+      // });
     },
     onCompleted: ({postBillsTransaction}) => {
       navigation.navigate('ToktokBillsReceipt', {receipt: postBillsTransaction.data, paymentData});
@@ -76,6 +77,7 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
   const handleProcessProceed = ({pinCode, data}) => {
     let {totalAmount, requestMoneyDetails, paymentData, hash} = data;
     let {firstName, lastName} = user.person;
+    // console.log(totalServiceFee);
 
     let input = {
       hash,
@@ -84,22 +86,23 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
         TPIN: requestMoneyDetails.validator === 'TPIN' ? pinCode : '',
         OTP: requestMoneyDetails.validator === 'OTP' ? pinCode : '',
       },
-      referenceNumber: requestMoneyDetails.referenceNumber,
+      referenceNumber: requestMoneyDetails?.referenceNumber,
       senderName: `${firstName} ${lastName}`,
       senderFirstName: firstName,
       senderMobileNumber: user.username,
-      destinationNumber: paymentData.firstField,
-      destinationIdentifier: paymentData.secondField,
-      billItemId: paymentData.billItemSettings.id,
+      destinationNumber: firstField,
+      destinationIdentifier: secondField,
+      billItemId: billItemSettings.id,
       senderWalletBalance: parseFloat(data.tokwaBalance),
-      amount: parseFloat(paymentData.amount),
+      amount: parseFloat(amount),
       senderWalletEndingBalance: parseFloat(data.tokwaBalance) - parseFloat(totalAmount),
-      convenienceFee: parseFloat(paymentData.convenienceFee),
+      convenienceFee: parseFloat(totalServiceFee),
       discount: 0,
-      comRateId: paymentData.billItemSettings.commissionRateDetails.id,
-      email: paymentData.email.toLowerCase(),
+      comRateId: billItemSettings.commissionRateDetails.id,
+      email: emailAddress.toLowerCase(),
       referralCode: user.consumer.referralCode,
     };
+
     postBillsTransaction({
       variables: {
         input,

@@ -7,8 +7,7 @@ import React from 'react';
 
 import type {PropsType} from './types';
 import {Error, Label, Input} from './Styled';
-import CONSTANTS from 'src/common/res/constants';
-const {COLOR} = CONSTANTS;
+import {View} from 'react-native';
 
 const CustomTextInput = (props: PropsType): React$Node => {
   const {
@@ -33,7 +32,7 @@ const CustomTextInput = (props: PropsType): React$Node => {
   } = props;
 
   return (
-    <>
+    <View>
       {label !== '' && <Label>{label}</Label>}
       <Input
         style={style}
@@ -56,7 +55,7 @@ const CustomTextInput = (props: PropsType): React$Node => {
         textAlignVertical={textAlignVertical}
       />
       {errorMessage !== '' && <Error>{errorMessage}</Error>}
-    </>
+    </View>
   );
 };
 export default CustomTextInput;

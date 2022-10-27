@@ -12,13 +12,12 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {useHeaderHeight} from '@react-navigation/stack';
 //COMPONENTS
 import {
-  TransactionButton,
-  SssForm,
+  PagIbigFundForm,
   TransactionHeader,
   TransactionVerifyContext,
   TransactionVerifyContextProvider,
   TransactionPaymentMethod,
-  SssTransactionButton,
+  PagIbigFundButton,
 } from 'toktokbills/compositions';
 import {
   HeaderBack,
@@ -58,8 +57,17 @@ const MainComponent = ({route, favoriteDetails}) => {
   });
 
   const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount({options: {isOnErrorAlert: false}});
-  const {data, changeErrorMessages, fees, errorMessages, checkIsValidField, isFieldRequired} =
-    useContext(TransactionVerifyContext);
+  const {
+    data,
+    changeErrorMessages,
+    fees,
+    errorMessages,
+    checkIsValidField,
+    isFieldRequired,
+    checkContactNumber,
+    isInsufficientBalance,
+    setIsInsufficientBalance,
+  } = useContext(TransactionVerifyContext);
   const {user} = useSelector(state => state.session);
 
   // GET BILL ITEM SETTINGS
@@ -141,23 +149,24 @@ const MainComponent = ({route, favoriteDetails}) => {
       });
     }
 
-    const isFirstFieldValid = checkIsValidField(
-      'firstField',
-      data.firstField,
-      'Payment Reference Number (PRN)',
-      14,
-      1,
-      null,
-    );
-    const isSecondFieldValid = checkIsValidField('secondField', data.secondField, 'Customer Name', 30, 2, 3);
+    const isFirstFieldValid = checkIsValidField('firstField', data.firstField, 'Account Number', 20, 2, 12);
+    const isSecondFieldValid = checkContactNumber('secondField', data.secondField);
 
     if (errorMessages.amount !== '') {
       changeErrorMessages('amount', '');
     }
-    if (errorMessages.payorTypeName !== '') {
-      changeErrorMessages('payorTypeName', '');
+    if (errorMessages.paymentTypeName !== '') {
+      changeErrorMessages('paymentTypeName', '');
     }
-
+    if (errorMessages.periodCoveredFrom !== '') {
+      changeErrorMessages('periodCoveredFrom', '');
+    }
+    if (errorMessages.periodCoveredTo !== '') {
+      changeErrorMessages('periodCoveredTo', '');
+    }
+    if (setIsInsufficientBalance) {
+      setIsInsufficientBalance(false);
+    }
     if (isFirstFieldValid && isSecondFieldValid) {
       postFavoriteBill({
         variables: {
@@ -192,7 +201,7 @@ const MainComponent = ({route, favoriteDetails}) => {
       <Container>
         <KeyboardAvoidingViewContainer headerHeight={headerHeight}>
           <TransactionHeader billItemSettings={billItemSettings?.getBillItemSettings} billType={billType} />
-          <SssForm
+          <PagIbigFundForm
             billItemSettings={billItemSettings?.getBillItemSettings}
             billType={billType}
             headerHeight={headerHeight}
@@ -201,7 +210,7 @@ const MainComponent = ({route, favoriteDetails}) => {
           <TransactionPaymentMethod />
         </KeyboardAvoidingViewContainer>
       </Container>
-      <SssTransactionButton
+      <PagIbigFundButton
         billItemSettings={billItemSettings?.getBillItemSettings}
         billType={billType}
         itemCode={itemCode}
