@@ -63,49 +63,49 @@ export const DELETE_SAVED_LOCATION = gql`
   }
 `;
 
-export const POST_NEW_ADDRESS = gql`
-  mutation postNewAddress($input: PostAddressInput!) {
-    postNewAddress(input: $input) {
+export const PREF_USER_ADDRESS_CREATE = gql`
+  mutation prefUserAddressCreate($input: PrefUserAddressCreateInput!) {
+    prefUserAddressCreate(input: $input) {
       message
     }
   }
 `;
 
-export const DELETE_ADDRESS = gql`
-  mutation deleteAddress($input: DeleteAddressInput!) {
-    deleteAddress(input: $input) {
+export const PREF_USER_ADDRESS_DELETE = gql`
+  mutation prefUserAddressDelete($input: PrefUserAddressDeleteInput!) {
+    prefUserAddressDelete(input: $input) {
       message
     }
   }
 `;
 
-export const PATCH_ADDRESS_CHANGES = gql`
-  mutation patchAddressChanges($input: PatchAddressChangesInput!) {
-    patchAddressChanges(input: $input) {
+export const PREF_USER_ADDRESS_UPDATE = gql`
+  mutation prefUserAddressUpdate($input: PrefUserAddressUpdateInput!) {
+    prefUserAddressUpdate(input: $input) {
       message
     }
   }
 `;
 
-export const GET_ADDRESS = gql`
-  query getAddress($input: getAddressInput!) {
-    getAddress(input: $input) {
+export const PREF_GET_SAVED_ADDRESS = gql`
+  query prefGetSavedAddress($input: PrefGetSavedAddressInput!) {
+    prefGetSavedAddress(input: $input) {
       ${address}
     }
   }
 `;
 
-export const GET_ADDRESSES = gql`
+export const PREF_GET_SAVED_ADDRESSES = gql`
   query {
-    getAddresses {
+    prefGetSavedAddresses {
       ${address}
     }
   }
 `;
 
-export const GET_DEFAULT_ADDRESS = gql`
+export const PREF_GET_SAVED_ADDRESS_DEFAULT = gql`
   query {
-    getDefaultAddress {
+    prefGetSavedAddressDefault {
       ${address}
     }
   }

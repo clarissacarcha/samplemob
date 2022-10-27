@@ -24,7 +24,13 @@ import {getUniqueId} from 'react-native-device-info';
 import {COLOR, DARK, APP_FLAVOR, FONT_SIZE, ORANGE, COLORS, FONTS, SIZES, ACCOUNT_TYPE} from '../../res/constants';
 import constants from '../../common/res/constants';
 import {FONT} from '../../res/variables';
-import {AUTH_CLIENT, VERIFY_LOGIN, FORGOT_PASSWORD, GET_DEFAULT_ADDRESS, TOKTOK_ADDRESS_CLIENT} from '../../graphql';
+import {
+  AUTH_CLIENT,
+  VERIFY_LOGIN,
+  FORGOT_PASSWORD,
+  PREF_GET_SAVED_ADDRESS_DEFAULT,
+  TOKTOK_ADDRESS_CLIENT,
+} from '../../graphql';
 import {AlertOverlay} from '../../SuperApp/screens/Components';
 import {onError, onErrorAlert} from '../../util/ErrorUtility';
 import {useAlert} from '../../hooks/useAlert';
@@ -102,7 +108,7 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices,
 
     onCompleted: data => {
       setSessionData(data.verifyLogin);
-      getDefaultAddress(); // Check if user has already saved default address
+      prefGetSavedAddressDefault(); // Check if user has already saved default address
       const {user, accessToken, serviceAccess} = data.verifyLogin;
 
       AsyncStorage.setItem('userId', user.id); // Set userId value in asyncStorage for persistent login
@@ -117,11 +123,11 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices,
     },
   });
 
-  const [getDefaultAddress] = useLazyQuery(GET_DEFAULT_ADDRESS, {
+  const [prefGetSavedAddressDefault] = useLazyQuery(PREF_GET_SAVED_ADDRESS_DEFAULT, {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      saveDefaultAddress(res.getDefaultAddress);
+      saveDefaultAddress(res.prefGetSavedAddressDefault);
       const {user} = sessionData;
 
       if (user.person.firstName == null || user.person.lastName == null) {
@@ -132,7 +138,7 @@ const PasswordVerification = ({navigation, route, createSession, setAppServices,
           },
         });
       } else {
-        if (res.getDefaultAddress) {
+        if (res.prefGetSavedAddressDefault) {
           navigation.replace('RootDrawer', {
             screen: 'AuthenticatedStack',
             params: {

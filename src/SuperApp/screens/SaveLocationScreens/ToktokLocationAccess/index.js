@@ -21,7 +21,6 @@ export const ToktokLocationAccess = ({navigation, route}) => {
   const getCurrentLocation = async () => {
     const currentLocation = await GeolocationUtility.getCurrentLocation();
     const {latitude, longitude} = currentLocation.coords;
-    console.log('ziondsan', latitude, longitude);
     setLocCoordinates({
       latitude: latitude,
       longitude: longitude,

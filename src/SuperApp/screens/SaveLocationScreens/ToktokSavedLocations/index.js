@@ -10,7 +10,12 @@ import {
   Image,
 } from 'react-native';
 import {COLOR, ORANGE, COLORS} from '../../../../res/constants';
-import {GET_ADDRESSES, DELETE_ADDRESS, TOKTOK_ADDRESS_CLIENT, GET_ADDRESS} from '../../../../graphql';
+import {
+  PREF_GET_SAVED_ADDRESS,
+  PREF_GET_SAVED_ADDRESSES,
+  PREF_USER_ADDRESS_DELETE,
+  TOKTOK_ADDRESS_CLIENT,
+} from '../../../../graphql';
 import {HeaderBack, HeaderTitle} from '../../../../components';
 import React, {useState, useCallback} from 'react';
 import CONSTANTS from '../../../../common/res/constants';
@@ -43,31 +48,31 @@ const SavedLocations = ({navigation, session, route}) => {
   const [isOfficeTaken, setIsOfficeTaken] = useState(true);
   const [isHomeTaken, setIsHomeTaken] = useState(true);
 
-  const [deleteAddress] = useMutation(DELETE_ADDRESS, {
+  const [prefUserAddressDelete] = useMutation(PREF_USER_ADDRESS_DELETE, {
     client: TOKTOK_ADDRESS_CLIENT,
     onError: onError,
     onCompleted: () => {
-      getAddresses();
+      prefGetSavedAddresses();
       setShowConfirmOperationAddressModal(false);
       setShowSuccessOperationModal(true);
     },
   });
 
-  const [getAddresses, {data}] = useLazyQuery(GET_ADDRESSES, {
+  const [prefGetSavedAddresses, {data}] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      res.getAddresses.find(item => item.isOffice) ? setIsOfficeTaken(true) : setIsOfficeTaken(false);
-      res.getAddresses.find(item => item.isHome) ? setIsHomeTaken(true) : setIsHomeTaken(false);
+      res.prefGetSavedAddresses.find(item => item.isOffice) ? setIsOfficeTaken(true) : setIsOfficeTaken(false);
+      res.prefGetSavedAddresses.find(item => item.isHome) ? setIsHomeTaken(true) : setIsHomeTaken(false);
     },
     onError: onError,
   });
 
-  const [getAddress] = useLazyQuery(GET_ADDRESS, {
+  const [prefGetSavedAddress] = useLazyQuery(PREF_GET_SAVED_ADDRESS, {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      navigation.push('ToktokAddEditLocation', {addressObj: res.getAddress, isHomeTaken, isOfficeTaken});
+      navigation.push('ToktokAddEditLocation', {addressObj: res.prefGetSavedAddress, isHomeTaken, isOfficeTaken});
     },
     onError: onError,
   });
@@ -77,7 +82,7 @@ const SavedLocations = ({navigation, session, route}) => {
       route.params.getAddressObj(address);
       return navigation.pop();
     } else {
-      getAddress({
+      prefGetSavedAddress({
         variables: {
           input: {
             id: address.id,
@@ -88,7 +93,7 @@ const SavedLocations = ({navigation, session, route}) => {
   };
 
   const confirmDelete = () => {
-    deleteAddress({
+    prefUserAddressDelete({
       variables: {
         input: {
           id: addressId,
@@ -99,7 +104,7 @@ const SavedLocations = ({navigation, session, route}) => {
 
   useFocusEffect(
     useCallback(() => {
-      getAddresses();
+      prefGetSavedAddresses();
     }, []),
   );
 
@@ -114,7 +119,7 @@ const SavedLocations = ({navigation, session, route}) => {
   };
 
   const toAddAddress = () => {
-    if (data?.getAddresses.length >= 10) {
+    if (data?.prefGetSavedAddresses.length >= 10) {
       setInfoModalType('MaxAddressReached');
       setShowInfoAddressModal(true);
       return;
@@ -171,10 +176,10 @@ const SavedLocations = ({navigation, session, route}) => {
       <FlatList
         style={{paddingTop: 16}}
         showsVerticalScrollIndicator={false}
-        data={data?.getAddresses}
+        data={data?.prefGetSavedAddresses}
         keyExtractor={item => item.id}
         renderItem={({item, index}) => {
-          const lastItem = index == data?.getAddresses.length - 1 ? true : false;
+          const lastItem = index == data?.prefGetSavedAddresses.length - 1 ? true : false;
           return (
             <>
               {route?.params?.getAddressObj ? (
