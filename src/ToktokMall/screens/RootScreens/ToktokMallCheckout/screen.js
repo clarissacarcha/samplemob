@@ -154,10 +154,19 @@ const Component = ({route, navigation, createMyCartSession}) => {
     const res = await ShippingApiCall("get_shipping_rate", payload, true)
     if(res.responseData && res.responseData.success == 1){
       result = res.responseData.newCart
-      CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
-      if(res.responseData?.removedCart){
-        CheckoutContextData.setUnserviceableShipping(res.responseData.removedCart)   
-      }
+      //CHECK IF THERE IS SHIPPING FEE = 0
+      let invalidArray = result.filter(item => parseFloat(item?.shippingfee) == 0)
+      if(invalidArray.length > 0){
+        //THERE IS INVALID
+        let validArray = result.filter(item => parseFloat(item?.shippingfee) > 0)
+        CheckoutContextData.setShippingFeeRates(validArray)
+        CheckoutContextData.setUnserviceableShipping(invalidArray)
+      }else{
+        CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
+        if(res.responseData?.removedCart){
+          CheckoutContextData.setUnserviceableShipping(res.responseData.removedCart)   
+        }
+      }      
     }else if(res.responseError && res.responseError.success == 0){
       CheckoutContextData.setUnserviceableShipping(res.responseError.removedCart)      
     }else{
