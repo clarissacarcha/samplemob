@@ -109,12 +109,14 @@ const Component = ({route, navigation, createMyCartSession}) => {
         setFranchisee(data.consumer)        
         await setPaymentList(data.paymentMethods)
 
+        console.log("CHECKOUT RENDER DATA", JSON.stringify(data))
+
         if(paramsData.length > 0){
           let shippingrates = await getShippingRates(data.shippingRatePayload, data.cartrawdata)
           if(shippingrates.length > 0){
             data.autoShippingPayload.cartitems = shippingrates    
             // await getAutoShipping(data.autoShippingPayload)
-            await getAutoApplyVouchers(data.promotionVoucherPayload)
+            // await getAutoApplyVouchers(data.promotionVoucherPayload)
           }
         }
 
@@ -762,15 +764,18 @@ const Component = ({route, navigation, createMyCartSession}) => {
       CheckoutContextData.setShippingFeeRates([])
       CheckoutContextData.setUnserviceableShipping([])
 
-      
+      const payload = {
+        userId: userData.userId,
+        shops: shops,
+        refCom: getRefComAccountType({session: toktokSession}),
+        addressId: id
+      }
+
+      console.log("CHECKOUT RENDER PAYLOAD", JSON.stringify(payload))
+
       getCheckoutData({
         variables: {
-          input: {
-            userId: userData.userId,
-            shops: shops,
-            refCom: getRefComAccountType({session: toktokSession}),
-            addressId: id
-          }
+          input: payload
         }
       })
     }

@@ -206,8 +206,8 @@ export const GetOrderType = (franchisee) => {
 		//reseller
 		return 4
 	}else if(franchisee && franchisee?.referralCode != null){
-		//reseller
-		return 4
+		//shoplink
+		return 3
 	}else{
 		//regular
 		return 2

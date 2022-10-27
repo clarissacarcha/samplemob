@@ -69,12 +69,12 @@ export const CheckoutContextProvider = ({children})=> {
 	const getShopItemDiscount = (shopid, productId) => {
 		let discount = null
 		shippingVouchers.filter((a) => a.voucherCodeType == "promotion").map((a) => {
-			if(a?.shopid == shopid || a?.shop_id == shopid){
+			if(a?.shopid == shopid && a?.appliedToShop == shopid || a?.shop_id == shopid && a?.appliedToShop == shopid){
 				discount = a
 			}else if(a?.shopid == 0 || a?.shop_id == 0){
 				let discountedItems = a.product_id?.split(",")
 				discountedItems.map((discountedItem) => {
-					if(discountedItem == productId){
+					if(discountedItem == productId && a?.appliedToShop == shopid){
 						discount = a
 					}
 				})
@@ -153,26 +153,32 @@ export const CheckoutContextProvider = ({children})=> {
 	}
 
 	const computeTotalResellerDiscount = (data) => {
+		let discountsLog = []
 		let resellerDiscount = 0
 		data.map((items) => {
 			items.data[0].map((item, index) => {
 				
 				let shopDiscount = getShopItemDiscount(item.shopId, item.product.Id)
-				console.log("shop discount", shopDiscount, item.shopId, item)
+				// console.log("shop discount", shopDiscount, item.shopId, item)
 				if(shopDiscount){
 					if(item.qty > 1){
 						let itemsrpprice = parseFloat(item.product.compareAtPrice * (item.qty - 1))
 						let discountedprice = parseFloat(item.product.price * (item.qty - 1))
 						resellerDiscount += itemsrpprice - discountedprice
+						discountsLog.push(itemsrpprice - discountedprice)
 					}				
 				}else{
 					let itemsrpprice = parseFloat(item.product.compareAtPrice * item.qty)
 					let discountedprice = parseFloat(item.product.price * item.qty)
 					resellerDiscount += itemsrpprice - discountedprice
+					discountsLog.push(itemsrpprice - discountedprice)
 				}
+
+				// console.log("Shop Reseller Discount", resellerDiscount)
 				
 			})
 		})
+		console.log("Reseller discounts logs", discountsLog)
 		setResellerDiscounts(resellerDiscount)
 	}
 
