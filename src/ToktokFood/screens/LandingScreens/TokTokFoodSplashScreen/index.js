@@ -202,10 +202,12 @@ const TokTokFoodSplashScreen = () => {
       if (temporaryCart.checkHasTemporaryCart.shopid !== 0 && Object.keys(receiver).length !== 3) {
         deleteShopTemporaryCart();
       } else {
-        navigation.replace('ToktokFoodHomeScreen');
+        // navigation.replace('ToktokFoodHomeScreen');
+        navigation.replace('ToktokFoodHomeLanding');
       }
     } else {
-      navigation.replace('ToktokFoodHomeScreen');
+      // navigation.replace('ToktokFoodHomeScreen');
+      navigation.replace('ToktokFoodHomeLanding');
     }
   };
 
