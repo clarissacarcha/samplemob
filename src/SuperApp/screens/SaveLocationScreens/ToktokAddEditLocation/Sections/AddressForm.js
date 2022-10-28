@@ -83,7 +83,6 @@ export const AddressForm = ({
             : value => setLandMark(value)
         }
         style={styles.input}
-        multiline={true}
         placeholder="e.g. In front of sari-sari station "
         placeholderTextColor={LIGHT}
       />
@@ -142,14 +141,15 @@ export const AddressForm = ({
           style={{
             backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
             flex: 1,
+
             flexDirection: 'row',
             marginRight: 16,
-            borderRadius: 10,
+            borderRadius: 5,
           }}>
           <View
             style={{
               borderRightColor: '#CCCCCC',
-              borderRightWidth: 2,
+              borderRightWidth: 1,
               padding: 16,
               justifyContent: 'center',
             }}>
@@ -168,7 +168,13 @@ export const AddressForm = ({
           />
         </View>
         <ThrottledOpacity delay={4000} onPress={() => onPressContacts()}>
-          <View style={{backgroundColor: CONSTANTS.COLOR.ORANGE, padding: 10, borderRadius: 5, alignSelf: 'flex-end'}}>
+          <View
+            style={{
+              backgroundColor: CONSTANTS.COLOR.ORANGE,
+              padding: 10,
+              flex: 1,
+              borderRadius: 5,
+            }}>
             <Image source={ContactIcon} resizeMode={'contain'} style={{height: 35, width: 35}} />
           </View>
         </ThrottledOpacity>
@@ -183,20 +189,19 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 8,
     fontSize: CONSTANTS.FONT_SIZE.M,
-    color: MEDIUM,
+    color: CONSTANTS.COLOR.ALMOST_BLACK,
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
   },
   sublabel: {
     marginBottom: 8,
     marginHorizontal: 16,
     fontSize: CONSTANTS.FONT_SIZE.S,
-    color: MEDIUM,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    color: CONSTANTS.COLOR.ALMOST_BLACK,
   },
   input: {
     marginHorizontal: 16,
     backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
-    borderRadius: 10,
+    borderRadius: 5,
     padding: 16,
     color: DARK,
   },

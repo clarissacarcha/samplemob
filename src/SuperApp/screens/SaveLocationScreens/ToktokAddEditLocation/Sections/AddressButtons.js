@@ -68,12 +68,12 @@ const styles = StyleSheet.create({
   },
   submit: {
     backgroundColor: CONSTANTS.COLOR.ORANGE,
-    height: 50,
-    borderRadius: 10,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
   submitText: {
+    marginVertical: 11,
     color: CONSTANTS.COLOR.WHITE,
     fontSize: CONSTANTS.FONT_SIZE.L,
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
@@ -83,11 +83,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   deleteButtonWraper: {
-    borderRadius: 10,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: '18%',
-    height: 49,
     borderWidth: 1,
     borderColor: CONSTANTS.COLOR.ORANGE,
     backgroundColor: CONSTANTS.COLOR.WHITE,
