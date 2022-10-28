@@ -204,17 +204,19 @@ const AddEditLocation = ({navigation, route, session}) => {
     }
 
     setModalOperationType('CREATE');
+    const detachedCustomLabel = customLabel ? removeEmoji(customLabel) : '';
+    const detachedContactName = contactName ? removeEmoji(contactName) : '';
     prefUserAddressCreate({
       variables: {
         input: {
           isHome: isHomeSelected,
           isOffice: isOfficeSelected,
-          label: customLabel ? customLabel : '',
+          label: customLabel ? detachedCustomLabel : '',
           isDefault: isFromLocationAccess ? true : isDefault,
           landmark: landmark,
           placeHash: confirmedLocation?.hash,
           contactDetails: {
-            fullname: contactName,
+            fullname: detachedContactName,
             mobile_no: contactNumber,
           },
         },
@@ -223,6 +225,8 @@ const AddEditLocation = ({navigation, route, session}) => {
   };
 
   const saveEditAddress = () => {
+    const detachedCustomLabel = customLabel ? removeEmoji(customLabel) : '';
+    const detachedContactName = contactName ? removeEmoji(contactName) : '';
     const placeHash = confirmedLocation?.hash ? confirmedLocation?.hash : confirmedLocation?.placeHash;
     const addressId = addressObj?.id ? addressObj?.id : addressIdFromService;
     prefUserAddressUpdate({
@@ -231,17 +235,21 @@ const AddEditLocation = ({navigation, route, session}) => {
           id: addressId,
           isHome: isHomeSelected,
           isOffice: isOfficeSelected,
-          label: customLabel ? (isHomeSelected || isOfficeSelected ? '' : customLabel) : '',
+          label: customLabel ? (isHomeSelected || isOfficeSelected ? '' : detachedCustomLabel) : '',
           isDefault: isDefault,
           landmark: landmark,
           placeHash: placeHash,
           contactDetails: {
-            fullname: contactName,
+            fullname: detachedContactName,
             mobile_no: contactNumber,
           },
         },
       },
     });
+  };
+
+  const removeEmoji = input => {
+    return input.replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, '');
   };
 
   const confirmDeleteAddress = () => {
