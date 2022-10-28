@@ -4,6 +4,9 @@ import SuperAppPromosScreen from '../../../SuperApp/screens/SuperAppPromos/Super
 import {SelectedVoucherScreen, VoucherScreen} from '../../../SuperApp/screens';
 import ReferralScreen from '../../../SuperApp/screens/ReferralScreen/ReferralScreen';
 import ReferralExistScreen from '../../../SuperApp/screens/ReferralScreen/ReferralExistScreen';
+import ToktokPinLocation from '../../../SuperApp/screens/SaveLocationScreens/ToktokPinLocation';
+import {ToktokAddEditLocation, ToktokSavedLocations, ToktokLocationAccess} from '../../../SuperApp/screens';
+import {ContactsScreen} from '../../../SuperApp/screens/ContactsScreen';
 
 export default ({Navigator}) => (
   <>
@@ -12,5 +15,10 @@ export default ({Navigator}) => (
     <Navigator.Screen name="VoucherScreen" component={VoucherScreen} options={{headerShown: false}} />
     <Navigator.Screen name="SelectedVoucherScreen" component={SelectedVoucherScreen} options={{headerShown: false}} />
     <Navigator.Screen name="ReferralExistScreen" component={ReferralExistScreen} options={{headerShown: false}} />
+    <Navigator.Screen name="ToktokPinLocation" component={ToktokPinLocation} />
+    <Navigator.Screen name="ToktokSavedLocations" component={ToktokSavedLocations} />
+    <Navigator.Screen name="ToktokAddEditLocation" component={ToktokAddEditLocation} />
+    <Navigator.Screen name="ToktokLocationAccess" component={ToktokLocationAccess} options={{headerShown: false}} />
+    <Navigator.Screen name="ContactsScreen" component={ContactsScreen} />
   </>
 );

@@ -21,6 +21,8 @@ import {
   OutstandingFeeModal,
   TokwaPaymentProcessedModal,
   FeeInfoModal,
+  VoucherUsedModal,
+  VoucherUsedModalRemoved,
 } from './Components';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
@@ -72,21 +74,13 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [proceedBooking, setProceedBooking] = useState(false);
   const [bookingState, setBookingState] = useState(false);
   const [viewOutstandingFeeInfoModal, setViewOutstandingFeeInfoModal] = useState(false);
+  const [voucherUsed, setVoucherUsed] = useState(false);
+  const [voucherRemoved, setVoucherRemoved] = useState(false);
 
   useEffect(() => {
     if (session.user.toktokWalletAccountId) {
       getMyAccount();
     }
-  }, []);
-
-  useEffect(() => {
-    async function tempFunction() {
-      await getDestinationList();
-    }
-
-    tempFunction();
-
-    return () => {};
   }, []);
 
   const [getTripFare, {called}] = useLazyQuery(GET_TRIP_FARE, {
@@ -252,6 +246,10 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
       payload: {...details, voucher: null},
     });
+    setVoucherRemoved(true);
+    setTimeout(() => {
+      setVoucherRemoved(false);
+    }, 3000);
   };
 
   // TODO: This will be used on onSelectVoucher
@@ -279,6 +277,14 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
   useEffect(() => {
     setSelectedVouchers(details.voucher);
+    if (details.voucher != null) {
+      setVoucherUsed(true);
+      setTimeout(() => {
+        setVoucherUsed(false);
+      }, 3000);
+    } else {
+      setVoucherUsed(false);
+    }
   }, [details.voucher]);
 
   useEffect(() => {
@@ -580,6 +586,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         voucherTextMessage={voucherTextMessage}
         onProceedToBooking={onProceedToBooking}
       />
+      <VoucherUsedModal isVissible={voucherUsed} />
+      <VoucherUsedModalRemoved isVissible={voucherRemoved} />
       <BookingMap
         decodedPolyline={decodedPolyline}
         routeDetails={routeDetails}

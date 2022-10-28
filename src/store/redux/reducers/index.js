@@ -9,6 +9,7 @@ import ToktokLoad from './ToktokLoad';
 import ToktokGo from './ToktokGo';
 import ToktokMall from './ToktokMall';
 import ToktokDelivery from './ToktokDelivery';
+import SuperApp from './SuperApp';
 
 export default {
   application: Application,
@@ -22,4 +23,5 @@ export default {
   toktokLoad: ToktokLoad,
   toktokGo: ToktokGo,
   toktokMall: ToktokMall,
+  superApp: SuperApp,
 };

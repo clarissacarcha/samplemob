@@ -43,7 +43,9 @@ export const FrequentlyUsed = ({navigation, popTo, recentSearchDataList, onPress
         showsVerticalScrollIndicator={false}
         data={recentSearchDataList}
         // keyExtractor={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressRecentSearch} />}
+        renderItem={({item, index}) => (
+          <LocationCard item={item} onPress={onPressRecentSearch} navigation={navigation} />
+        )}
       />
     </>
   );

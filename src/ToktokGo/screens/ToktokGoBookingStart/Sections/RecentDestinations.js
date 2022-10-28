@@ -9,6 +9,7 @@ export const RecentDestinations = ({
   onPressRecentDestination,
   recentDestinationList,
   recentSearchDataList,
+  savedAddressList,
 }) => {
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -21,7 +22,7 @@ export const RecentDestinations = ({
               alignItems: 'center',
               paddingHorizontal: 13,
               backgroundColor: CONSTANTS.COLOR.WHITE,
-              marginTop: recentSearchDataList.length == 0 ? 0 : 16,
+              marginTop: savedAddressList.length == 0 ? 0 : 16,
               // paddingVertical: 10,
             }}>
             <Text
@@ -40,7 +41,9 @@ export const RecentDestinations = ({
         data={recentDestinationList}
         // keyExtractor={item => item.id}
         listKey={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressRecentDestination} />}
+        renderItem={({item, index}) => (
+          <LocationCard item={item} onPress={onPressRecentDestination} navigation={navigation} />
+        )}
       />
     </SafeAreaView>
   );

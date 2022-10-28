@@ -26,7 +26,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     ...MAP_DELTA_LOW,
   };
   const {details, destination, origin} = useSelector(state => state.toktokGo);
-  const [mapRegion, setMapRegion] = useState({...origin.place.location, ...MAP_DELTA_LOW});
+  const [mapRegion, setMapRegion] = useState({...origin?.place?.location, ...MAP_DELTA_LOW});
   const [initialRegionChange, setInitialRegionChange] = useState(!mapRegion.latitude ? false : true);
   const [note, setNote] = useState('');
   const [notes, setNotes] = useState({
@@ -61,6 +61,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
 
   const onConfirm = throttle(
     () => {
+      console.log('ORIGIN:', origin.hash, 'DESTINATIONS:', destination.hash);
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING_DETAILS',
         payload: {...details, paymentMethod: 'TOKTOKWALLET'},

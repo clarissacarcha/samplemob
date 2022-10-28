@@ -2,26 +2,33 @@ import React from 'react';
 import {Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View, Dimensions} from 'react-native';
 import GradientBackground from '../../../assets/toktokgo/toktokgo-gradient-background.png';
 import Graphics from '../../../assets/toktokgo/toktokgo-health-care-graphics.png';
-import constants from '../../../common/res/constants';
+import CONSTANTS from '../../../common/res/constants';
 import FAIcons from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
+import {connect, useDispatch, useSelector} from 'react-redux';
 const windowWidth = Dimensions.get('window').width;
-const ToktokGoHealthCare = ({navigation, route}) => {
+const ToktokGoHealthCare = ({navigation, route, constants}) => {
   const {voucherData} = route.params;
   const onPress = () => {
-    const date = moment(new Date()).format('MMM D, YYYY');
-    AsyncStorage.setItem('ToktokGoHealthCare', date);
-    navigation.replace('ToktokGoBookingStart', {voucherData});
+    if (constants.show1022GoRates == 1) {
+      const date = moment(new Date()).format('MMM D, YYYY');
+      AsyncStorage.setItem('ToktokGoHealthCare', date);
+      navigation.replace('ToktokGoNewGuidelines', {voucherData});
+    } else {
+      const date = moment(new Date()).format('MMM D, YYYY');
+      AsyncStorage.setItem('ToktokGoHealthCare', date);
+      navigation.replace('ToktokGoBookingStart', {voucherData});
+    }
   };
   return (
     <ImageBackground source={GradientBackground} style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <Image source={Graphics} style={{flex: 0.6, width: undefined, height: undefined}} resizeMode={'contain'} />
         <View style={{flex: 1, width: windowWidth * 0.9}}>
-          <Text style={[styles.textBase, {color: constants.COLOR.BLACK}]}>
-            <Text style={[styles.textBase, {color: constants.COLOR.YELLOW}]}>
-              toktok<Text style={[styles.textBase, {color: constants.COLOR.ORANGE}]}>go</Text>
+          <Text style={[styles.textBase, {color: CONSTANTS.COLOR.BLACK}]}>
+            <Text style={[styles.textBase, {color: CONSTANTS.COLOR.YELLOW}]}>
+              toktok<Text style={[styles.textBase, {color: CONSTANTS.COLOR.ORANGE}]}>go</Text>
             </Text>{' '}
             Health Care
           </Text>
@@ -67,8 +74,12 @@ const ToktokGoHealthCare = ({navigation, route}) => {
     </ImageBackground>
   );
 };
+const mapStateToProps = state => ({
+  session: state.session,
+  constants: state.constants,
+});
 
-export default ToktokGoHealthCare;
+export default connect(mapStateToProps, null)(ToktokGoHealthCare);
 
 const styles = StyleSheet.create({
   container: {
@@ -80,13 +91,13 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   textBase: {
-    fontSize: constants.FONT_SIZE.XL + 1,
-    fontFamily: constants.FONT_FAMILY.REGULAR,
+    fontSize: CONSTANTS.FONT_SIZE.XL + 1,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
   },
   textContent: {
-    fontSize: constants.FONT_SIZE.M,
-    fontFamily: constants.FONT_FAMILY.REGULAR,
-    color: constants.COLOR.BLACK,
+    fontSize: CONSTANTS.FONT_SIZE.M,
+    fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+    color: CONSTANTS.COLOR.BLACK,
   },
   textContainer: {
     marginLeft: 10,
@@ -96,7 +107,7 @@ const styles = StyleSheet.create({
   fabcontainer: {
     position: 'absolute',
     bottom: 0,
-    backgroundColor: constants.COLOR.WHITE,
+    backgroundColor: CONSTANTS.COLOR.WHITE,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
@@ -114,7 +125,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
   },
   fab: {
-    backgroundColor: constants.COLOR.ORANGE,
+    backgroundColor: CONSTANTS.COLOR.ORANGE,
     borderRadius: 5,
     width: '100%',
     justifyContent: 'center',
@@ -122,8 +133,8 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
   },
   fabtext: {
-    color: constants.COLOR.WHITE,
-    fontFamily: constants.FONT_FAMILY.BOLD,
-    fontSize: constants.FONT_SIZE.L,
+    color: CONSTANTS.COLOR.WHITE,
+    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    fontSize: CONSTANTS.FONT_SIZE.L,
   },
 });
