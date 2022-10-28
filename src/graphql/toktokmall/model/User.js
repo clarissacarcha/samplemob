@@ -66,3 +66,9 @@ export const POST_CONTACT_SUPPORT = gql`
 		}
 	}
 `
+
+export const GET_SHARE_PRODUCT = gql`
+	query getShareProduct($input: GetShareProductInput) {
+		getShareProduct(input: $input)
+	}
+`
