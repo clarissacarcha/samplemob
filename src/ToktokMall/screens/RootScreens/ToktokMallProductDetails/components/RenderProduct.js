@@ -170,18 +170,19 @@ const Component = ({
 
   const HandleShare = async () => {
 
-    let options = {
-      message: data?.itemname,
-      // url: `http://ec2-18-178-242-131.ap-northeast-1.compute.amazonaws.com/products/${data?.Id}`,
-      url: `${environments.TOKTOKMALL_WEBSITE}products/${data?.Id}`
-    }
-    Share.open(options)
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      err && console.log(err);
-    });
+    getShareProduct()
+    // let options = {
+    //   message: data?.itemname,
+    //   // url: `http://ec2-18-178-242-131.ap-northeast-1.compute.amazonaws.com/products/${data?.Id}`,
+    //   url: `${environments.TOKTOKMALL_WEBSITE}products/${data?.Id}`
+    // }
+    // Share.open(options)
+    // .then((res) => {
+    //   console.log(res);
+    // })
+    // .catch((err) => {
+    //   err && console.log(err);
+    // });
   }
 
   const HandleToggleFavorites = () => {

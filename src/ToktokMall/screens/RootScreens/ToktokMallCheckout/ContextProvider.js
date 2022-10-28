@@ -1,5 +1,6 @@
-import React, {createContext,useState} from 'react'
+import React, {createContext,useState, useRef} from 'react'
 import {useSelector} from 'react-redux'
+import { Animated } from "react-native"
 
 import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks'
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../../../graphql'
@@ -11,6 +12,9 @@ export const CheckoutContext = createContext()
 const {Provider} = CheckoutContext
 
 export const CheckoutContextProvider = ({children})=> {
+
+	//ANIMATIONS
+	const [animatePayments, setAnimatePayments] = useState(false)
 
 	const [shippingFeeRates, setShippingFeeRates] = useState([])
 	const [unserviceableShipping, setUnserviceableShipping] = useState([])
@@ -200,6 +204,10 @@ export const CheckoutContextProvider = ({children})=> {
 	return (
 		<Provider 
 			value={{
+
+				animatePayments,
+				setAnimatePayments,
+				
 				shippingFeeRates,
 				setShippingFeeRates,
 				unserviceableShipping,
