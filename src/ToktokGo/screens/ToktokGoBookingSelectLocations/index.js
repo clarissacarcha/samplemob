@@ -313,7 +313,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           sessionToken: sessionToken,
           placeId: value.placeId,
           formattedAddress: value.formattedAddress,
-          service: 'PREF',
         },
       },
     });
