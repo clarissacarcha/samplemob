@@ -14,7 +14,7 @@ import {
   PREF_USER_ADDRESS_UPDATE,
   PREF_USER_ADDRESS_CREATE,
   TOKTOK_ADDRESS_CLIENT,
-  GET_ADDRESS,
+  PREF_GET_SAVED_ADDRESS,
 } from '../../../../graphql';
 import {
   ConfirmOperationAddressModal,
@@ -107,22 +107,22 @@ const AddEditLocation = ({navigation, route, session}) => {
     },
   });
 
-  const [getAddress, {loading: GALoading}] = useLazyQuery(GET_ADDRESS, {
+  const [prefGetSavedAddress, {loading: GALoading}] = useLazyQuery(PREF_GET_SAVED_ADDRESS, {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      setConfirmedLocation(res.getAddress);
-      setIsDefault(res.getAddress.isDefault);
-      setIsHomeSelected(res.getAddress.isHome);
-      setIsOfficeSelected(res.getAddress.isOffice);
-      setIsCustomSelected(res.getAddress.label ? true : false);
-      setCustomLabel(res.getAddress.label);
-      setLandMark(res.getAddress.landmark);
-      setContactNumber(res.getAddress.contactDetails.mobile_no);
-      setContactName(res.getAddress.contactDetails.fullname);
+      setConfirmedLocation(res.prefGetSavedAddress);
+      setIsDefault(res.prefGetSavedAddress.isDefault);
+      setIsHomeSelected(res.prefGetSavedAddress.isHome);
+      setIsOfficeSelected(res.prefGetSavedAddress.isOffice);
+      setIsCustomSelected(res.prefGetSavedAddress.label ? true : false);
+      setCustomLabel(res.prefGetSavedAddress.label);
+      setLandMark(res.prefGetSavedAddress.landmark);
+      setContactNumber(res.prefGetSavedAddress.contactDetails.mobile_no);
+      setContactName(res.prefGetSavedAddress.contactDetails.fullname);
       setLocCoordinates({
-        latitude: res.getAddress.place.location.latitude,
-        longitude: res.getAddress.place.location.longitude,
+        latitude: res.prefGetSavedAddress.place.location.latitude,
+        longitude: res.prefGetSavedAddress.place.location.longitude,
         ...MAP_DELTA_LOW,
       });
     },
@@ -424,7 +424,7 @@ const AddEditLocation = ({navigation, route, session}) => {
 
   useEffect(() => {
     if (addressIdFromService) {
-      getAddress({
+      prefGetSavedAddress({
         variables: {
           input: {
             id: addressIdFromService,

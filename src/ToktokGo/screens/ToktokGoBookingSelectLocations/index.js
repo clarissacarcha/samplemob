@@ -75,7 +75,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setSavedAddressList(response.getAddresses.slice(0, 3));
+      setSavedAddressList(response.prefGetSavedAddresses.slice(0, 3));
     },
     onError: onError,
   });
