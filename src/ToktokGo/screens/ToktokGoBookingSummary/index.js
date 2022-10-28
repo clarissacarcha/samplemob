@@ -83,16 +83,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     }
   }, []);
 
-  useEffect(() => {
-    async function tempFunction() {
-      await getDestinationList();
-    }
-
-    tempFunction();
-
-    return () => {};
-  }, []);
-
   const [getTripFare, {called}] = useLazyQuery(GET_TRIP_FARE, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',

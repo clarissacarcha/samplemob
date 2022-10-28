@@ -52,7 +52,9 @@ export const SavedLocations = ({recentDestinationList, popTo, navigation, onPres
         showsVerticalScrollIndicator={false}
         data={recentDestinationList}
         // keyExtractor={item => item.id}
-        renderItem={({item, index}) => <LocationCard item={item} onPress={onPressRecentDestination} />}
+        renderItem={({item, index}) => (
+          <LocationCard item={item} onPress={onPressRecentDestination} navigation={navigation} />
+        )}
       />
     </>
   );

@@ -4,12 +4,17 @@ import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useLazyQuery} from '@apollo/react-hooks';
 import OneSignal from 'react-native-onesignal';
-import {AUTH_CLIENT, GET_USER_SESSION} from '../graphql';
+import {APP_FLAVOR} from '../res/constants';
+import {PREF_GET_SAVED_ADDRESS_DEFAULT, TOKTOK_ADDRESS_CLIENT} from '../graphql';
+import {AUTH_CLIENT, GET_USER_SESSION, GET_GLOBAL_SETTINGS, GET_APP_SERVICES} from '../graphql';
+import {onError} from '../util/ErrorUtility';
 import ToktokSuperAppSplash from '../assets/images/SplashScreen.png';
 import SafeArea from 'react-native-safe-area';
 
-const Landing = ({createSession, destroySession, setAppServices, navigation}) => {
+const Landing = ({createSession, destroySession, setAppServices, navigation, superApp, saveDefaultAddress}) => {
+  const [sessionData, setSessionData] = useState({});
   const [safeAreaInset, setSafeAreaInset] = useState(0);
+
   const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
     client: AUTH_CLIENT,
     onError: error => {
@@ -61,21 +66,8 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
           userId: user.id,
         });
 
-        if (user.person.firstName == null || user.person.lastName == null) {
-          navigation.replace('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'PostRegistration',
-            },
-          });
-        } else {
-          navigation.replace('RootDrawer', {
-            screen: 'AuthenticatedStack',
-            params: {
-              screen: 'ConsumerLanding',
-            },
-          });
-        }
+        setSessionData(getUserSession);
+        prefGetSavedAddressDefault();
       } catch (error) {
         console.log(error);
       }
@@ -102,6 +94,40 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
     }
   };
 
+  const [prefGetSavedAddressDefault] = useLazyQuery(PREF_GET_SAVED_ADDRESS_DEFAULT, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: res => {
+      const {user} = sessionData;
+      if (user.person.firstName == null || user.person.lastName == null) {
+        navigation.replace('RootDrawer', {
+          screen: 'AuthenticatedStack',
+          params: {
+            screen: 'PostRegistration',
+          },
+        });
+      } else {
+        if (res?.prefGetSavedAddressDefault !== null) {
+          saveDefaultAddress(res.prefGetSavedAddressDefault);
+          navigation.replace('RootDrawer', {
+            screen: 'AuthenticatedStack',
+            params: {
+              screen: 'ConsumerLanding',
+            },
+          });
+        } else {
+          navigation.replace('RootDrawer', {
+            screen: 'AuthenticatedStack',
+            params: {
+              screen: 'ToktokLocationAccess',
+            },
+          });
+        }
+      }
+    },
+    onError: onError,
+  });
+
   useEffect(() => {
     SafeArea.getSafeAreaInsetsForRootView().then(result => {
       setSafeAreaInset(result.safeAreaInsets.top);
@@ -124,12 +150,14 @@ const Landing = ({createSession, destroySession, setAppServices, navigation}) =>
 
 const mapStateToProps = state => ({
   session: state.session,
+  superApp: state.superApp,
 });
 
 const mapDispatchToProps = dispatch => ({
   createSession: payload => dispatch({type: 'CREATE_SESSION', payload}),
   setAppServices: payload => dispatch({type: 'SET_APP_SERVICES', payload}),
   destroySession: () => dispatch({type: 'DESTROY_SESSION'}),
+  saveDefaultAddress: payload => dispatch({type: 'SET_TOKTOK_DEFAULT_ADDRESS', payload}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);

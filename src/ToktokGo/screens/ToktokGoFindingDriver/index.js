@@ -10,7 +10,7 @@ import {
   TotalBreakdown,
   CancelRetryButton,
 } from './Sections';
-import {DriverFoundModal} from './Components';
+import {DriverFoundModal, DriverFoundRequestModal} from './Components';
 import {
   ReasonCancelModal,
   CancelBookingNoFeeModal,
@@ -27,6 +27,8 @@ import {
   TRIP_REBOOK_INITIALIZE_PAYMENT,
   GET_TRIPS_CONSUMER,
   GET_BOOKING_DRIVER,
+  TRIP_REQUEST_ACCEPT,
+  TRIP_REQUEST_REJECT,
 } from '../../graphql';
 import {TOKTOK_GO_GRAPHQL_CLIENT} from '../../../graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
@@ -34,10 +36,12 @@ import {onErrorAppSync} from '../../util';
 import {AlertOverlay} from '../../../components';
 import {useFocusEffect} from '@react-navigation/native';
 import {useAlertGO} from '../../hooks';
+import {onError} from 'apollo-link-error';
 
 const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const {popTo} = route.params;
   const {booking} = useSelector(state => state.toktokGo);
+  const alertGO = useAlertGO();
   const [showDriverFoundModal, setShowDriverFoundModal] = useState(false);
   const [waitingStatus, setWaitingStatus] = useState(1);
   const [waitingText, setWaitingText] = useState(1);
@@ -51,7 +55,7 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [tripUpdateRetrySwitch, setTripUpdateRetrySwitch] = useState(true);
   const [driverData, setDriverData] = useState();
   const [textValue, setTextValue] = useState('');
-  const alertGO = useAlertGO();
+  const [driverFoundModal, setDriverFoundModal] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -90,6 +94,17 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
               },
             },
           });
+          setShowDriverFoundModal(true);
+        }
+        if (data?.onTripUpdate?.status == 'REQUESTED') {
+          getBookingDriver({
+            variables: {
+              input: {
+                driverUserId: parseInt(data?.onTripUpdate?.driverUserId),
+              },
+            },
+          });
+          setDriverFoundModal(true);
         }
         if (data?.onTripUpdate?.status == 'EXPIRED') {
           setWaitingStatus(0);
@@ -137,10 +152,29 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
   const [getBookingDriver] = useLazyQuery(GET_BOOKING_DRIVER, {
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setShowDriverFoundModal(true);
       setDriverData(response.getBookingDriver.driver);
     },
     onError: onErrorAppSync,
+  });
+
+  const [goTripRequestAccept] = useMutation(TRIP_REQUEST_ACCEPT, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onCompleted: response => {
+      setDriverFoundModal(false);
+    },
+    onError: error => {
+      console.log(error);
+    },
+  });
+
+  const [goTripRequestReject] = useMutation(TRIP_REQUEST_REJECT, {
+    client: TOKTOK_GO_GRAPHQL_CLIENT,
+    onCompleted: response => {
+      setDriverFoundModal(false);
+    },
+    onError: error => {
+      console.log(error);
+    },
   });
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
@@ -169,6 +203,23 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
               },
             },
           });
+        } else if (
+          response.getTripsConsumer[0]?.tag == 'ONGOING' &&
+          ['BOOKED'].includes(response.getTripsConsumer[0]?.status)
+        ) {
+          setDriverFoundModal(false);
+        } else if (
+          response.getTripsConsumer[0]?.tag == 'ONGOING' &&
+          ['REQUESTED'].includes(response.getTripsConsumer[0]?.status)
+        ) {
+          getBookingDriver({
+            variables: {
+              input: {
+                driverUserId: parseInt(response.getTripsConsumer[0]?.driverUserId),
+              },
+            },
+          });
+          setDriverFoundModal(true);
         } else if (response.getTripsConsumer[0]?.status == 'EXPIRED') {
           setWaitingStatus(0);
           changeTextValue();
@@ -487,6 +538,27 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
     setTextValue(dataTitle[Math.floor(Math.random() * len)]);
   };
 
+  const findAnotherDriver = () => {
+    goTripRequestReject({
+      variables: {
+        input: {
+          requestHash: booking?.request?.hash,
+        },
+      },
+    });
+  };
+
+  const yesWillingToWait = () => {
+    goTripRequestAccept({
+      variables: {
+        input: {
+          requestHash: booking?.request?.hash,
+          userHash: session?.userHash,
+        },
+      },
+    });
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: constants.COLOR.WHITE}}>
       <CancelBookingNoFeeModal
@@ -520,6 +592,14 @@ const ToktokGoFindingDriver = ({navigation, route, session}) => {
         navigation={navigation}
         route={route}
         booking={booking}
+      />
+      <DriverFoundRequestModal
+        driverFoundModal={driverFoundModal}
+        findAnotherDriver={findAnotherDriver}
+        booking={booking}
+        yesWillingToWait={yesWillingToWait}
+        setDriverFoundModal={setDriverFoundModal}
+        driverData={driverData}
       />
       <BackButton navigation={navigation} popTo={popTo} />
       <FindingDriverStatus

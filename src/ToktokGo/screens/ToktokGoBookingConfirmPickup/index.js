@@ -61,6 +61,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
 
   const onConfirm = throttle(
     () => {
+      console.log('ORIGIN:', origin.hash, 'DESTINATIONS:', destination.hash);
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING_DETAILS',
         payload: {...details, paymentMethod: 'TOKTOKWALLET'},

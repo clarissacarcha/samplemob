@@ -153,8 +153,8 @@ const PostRegistration = ({navigation, route}) => {
     }
 
     /** SPECIAL CONDITION */
-    let regSpecialCase = new RegExp('^(?=.*[!@#$%^&_.])');
-    if (!regSpecialCase.test(password)) {
+    const specialChars = /[`!@#$%{()}^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (!specialChars.test(password)) {
       errorArray.push(4);
       result = false;
     }
