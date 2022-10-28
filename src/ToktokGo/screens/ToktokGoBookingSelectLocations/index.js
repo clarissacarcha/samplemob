@@ -34,6 +34,7 @@ import {onErrorAppSync, onError} from '../../util';
 import {NoRecordFound, ServiceableArea} from './Components';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useAlertGO} from '../../hooks';
+import {PREF_GET_SAVED_ADDRESSES} from '../../../graphql';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const alertGO = useAlertGO();
@@ -70,7 +71,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     return () => {};
   }, []);
 
-  const [getSavedAddress] = useLazyQuery(GET_SAVED_ADDRESS, {
+  const [getSavedAddress] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {

@@ -13,7 +13,12 @@ import {
   GET_SAVED_ADDRESS,
 } from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_GO_GRAPHQL_CLIENT, TOKTOK_QUOTATION_GRAPHQL_CLIENT, TOKTOK_ADDRESS_CLIENT} from '../../../graphql';
+import {
+  TOKTOK_GO_GRAPHQL_CLIENT,
+  TOKTOK_QUOTATION_GRAPHQL_CLIENT,
+  TOKTOK_ADDRESS_CLIENT,
+  PREF_GET_SAVED_ADDRESSES,
+} from '../../../graphql';
 import {ToktokgoBeta, EmptyRecent} from '../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {currentLocation} from '../../../helper';
@@ -72,7 +77,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     onError: onErrorAppSync,
   });
 
-  const [getSavedAddress] = useLazyQuery(GET_SAVED_ADDRESS, {
+  const [getSavedAddress] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
