@@ -1,9 +1,10 @@
 import React from 'react';
-import {ToktokWalletPaymentChart, ToktokWalletTransactionLimit} from 'toktokwallet/screens';
+import {ToktokWalletAccountLimit, ToktokWalletPaymentChart, ToktokWalletTransactionLimit} from 'toktokwallet/screens';
 import UpgradeAccountScreens from './UpgradeAccountScreens';
 
 export default ({Navigator}) => (
   <>
+    <Navigator.Screen name="ToktokWalletAccountLimit" component={ToktokWalletAccountLimit} options={options} />
     <Navigator.Screen name="ToktokWalletPaymentChart" component={ToktokWalletPaymentChart} options={options} />
     <Navigator.Screen name="ToktokWalletTransactionLimit" component={ToktokWalletTransactionLimit} options={options} />
     {UpgradeAccountScreens({Navigator})}

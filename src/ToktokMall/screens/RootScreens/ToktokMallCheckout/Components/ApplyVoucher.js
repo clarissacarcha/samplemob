@@ -42,7 +42,7 @@ import { FONT } from '../../../../../res/variables';
 import CustomIcon from '../../../../Components/Icons';
 import Spinner from 'react-native-spinkit';
 
-export const ApplyVoucherForm = (address, customer, payload) => {
+export const ApplyVoucherForm = (address, customer, referral, payload) => {
 
 	const {i, item, subTotal} = payload
 	const dispatch = useDispatch()
@@ -96,15 +96,34 @@ export const ApplyVoucherForm = (address, customer, payload) => {
     const shopProducts = item.data[0]
       
     const orders = item.data[0].map((data) => {
-      return {
-        product_id: data.id,
-        amount: data.amount,
-        total_amount: data.amount * data.qty,
-        srp_amount: data.product.price,
-        srp_totalamount: data.product.price * data.qty,
-        quantity: data.qty
-      }
+      if(referral && referral?.franchiseeCode != null){
+        return {
+          product_id: data.id,
+          amount: data.product.price,
+          total_amount: data.product.price * data.qty,
+          srp_amount: data.product.compareAtPrice,
+          srp_totalamount: data.product.compareAtPrice * data.qty,
+          quantity: data.qty
+        }
+      }else{
+        return {
+          product_id: data.id,
+          amount: data.product.price,
+          total_amount: data.product.price * data.qty,
+          srp_amount: data.product.price,
+          srp_totalamount: data.product.price * data.qty,
+          quantity: data.qty
+        }
+      }      
     })
+
+    if(!address || address.length == 0){
+      setVoucherIsValid(-1)
+      seterrormessage("Please select your default address and re apply this voucher.")
+      setloading(false)
+      setSucceeded(false)
+      return 
+    }
 
     let payload = {
       shop: item.shop.id,
@@ -116,20 +135,6 @@ export const ApplyVoucherForm = (address, customer, payload) => {
       promo_count: CheckoutContextData.getShopDiscountCount(item.shop.id),
       payment_method: "TOKTOKWALLET",
       orders: orders
-    }
-
-    if(vcode == "MAGIC"){
-      payload = {
-        "branch": 23,
-        "shop": item.shop.id,
-        "code": "BRYANFREE",
-        "region": "03",
-        "email": "vdomingo@cloudpanda.ph",
-        "subtotal": subTotal,
-        "promoCount": CheckoutContextData.shippingVouchers.length,
-        "is_mystery": 0,
-        "orders":[]
-      }
     }
 
 		console.log("Voucher Payload", JSON.stringify(payload))

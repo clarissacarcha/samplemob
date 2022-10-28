@@ -111,7 +111,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
         value: true,
       },
     });
-    return navigation.navigate('ToktokWalletCashOutHomePage', {screenLabel: 'Link Account'});
+    return navigation.navigate('ToktokWalletBankTransferHome', {screenLabel: 'Link Account'});
   };
 
   if (loadingCheckVcs || loadingCheckPendingDisbursement || getMyAccountLoading) {
@@ -145,12 +145,12 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
         <DisplayComponent
           onPress={redirectLinking} // Navigate here the screen for link bank account
           disabled={isLinkedBankAccount || isPendingLinking}
-          headerTitle={!isLinkedBankAccount ? 'Link Account via Fund Transfer' : 'Account Linked'}
-          notFinishLabel="Link your toktokwallet account to your bank account via fund transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified."
+          headerTitle={!isLinkedBankAccount ? 'Link Account via Bank Transfer' : 'Account Linked'}
+          notFinishLabel="Link your toktokwallet account to your bank account via Bank Transfer. It is a faster and easier way to verify your account. One successful transfer will automatically upgrade your account from basic to fully verified."
           notFinishComponent={() => (
             <Text style={{marginTop: 10, marginBottom: 0}}>
               Link your <Text style={{color: '#FDBA1C'}}>toktok</Text>
-              <Text style={{color: '#F6841F'}}>wallet</Text> account to your bank account via fund transfer. It is a
+              <Text style={{color: '#F6841F'}}>wallet</Text> account to your bank account via Bank Transfer. It is a
               faster and easier way to verify your account. One successful transfer will automatically upgrade your
               account from basic to fully verified.
             </Text>
@@ -175,7 +175,7 @@ export const ToktokWalletFullyVerifiedApplication = ({navigation, route}) => {
               ? 'Video Call Requested'
               : 'Video Call Approved'
           }
-          notFinishLabel="The Customer Service Representative will assess your chosen schedule and contact you within 24hrs for verification and approval of your request for a fully verified account."
+          notFinishLabel="Request a video call for verification. The Customer Service Representative will assess your chosen schedule and contact you within 24-72hrs for verification and approval of your request for a fully verified account."
           btnLabel="Schedule Now"
           finishLabel={
             checkVcs.isPendingVcs

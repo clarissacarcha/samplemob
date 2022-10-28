@@ -34,23 +34,24 @@ export const CashOutLog = ({item, tokwaAccount, index, data}) => {
       status = 'Pending';
       break;
     case '1':
-      status = 'Processed';
+      status = 'Success';
       break;
     case '2':
       status = 'Pending';
       break;
     case '3':
-      status = 'Rejected';
+      status = 'Failed';
       break;
     default:
-      status = 'Rejected';
+      status = 'Failed';
       break;
   }
 
   // const refNo = MaskLeftZero(item.id)
   const transaction = item.transaction;
-  const requestNo = item.referenceNumber ? item.referenceNumber : item.refNo;
-  const refNo = transaction?.refNo ? transaction.refNo : MaskLeftZero(item.id);
+  // const requestNo = item.referenceNumber ? item.referenceNumber : item.refNo;
+  const serviceRefNo = item?.referenceNumber;
+  const tokwaRefNo = transaction?.refNo ? transaction.refNo : MaskLeftZero(item.id);
   const refDate = transaction
     ? moment(transaction.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')
     : moment(item.createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
@@ -65,7 +66,7 @@ export const CashOutLog = ({item, tokwaAccount, index, data}) => {
 
   const showDetails = () => {
     setInfo({
-      refNo,
+      tokwaRefNo,
       refDate,
       name,
       phrase,
@@ -74,7 +75,7 @@ export const CashOutLog = ({item, tokwaAccount, index, data}) => {
       status,
       // details: item.details,
       details,
-      requestNo,
+      serviceRefNo,
     });
     setOpenModal(true);
   };
@@ -87,10 +88,10 @@ export const CashOutLog = ({item, tokwaAccount, index, data}) => {
       {!!upperText && <Text style={styles.dayTitle}>{upperText}</Text>}
       <TouchableOpacity style={styles.transaction} onPress={onthrottledPress}>
         <View style={styles.transactionDetails}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Request # {requestNo}</Text>
-          <Text style={{color: '#909294', fontSize: FONT_SIZE.S, marginTop: 0, fontFamily: FONT.REGULAR}}>
+          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Service Reference #{serviceRefNo}</Text>
+          {/* <Text style={{color: '#909294', fontSize: FONT_SIZE.S, marginTop: 0, fontFamily: FONT.REGULAR}}>
             {status}
-          </Text>
+          </Text> */}
         </View>
         <View style={styles.transactionAmount}>
           <Text style={{color: COLOR.ORANGE, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>
@@ -118,7 +119,7 @@ export const CashOutLog = ({item, tokwaAccount, index, data}) => {
 
 const styles = StyleSheet.create({
   transaction: {
-    paddingVertical: 10,
+    paddingVertical: 20,
     borderBottomWidth: 0.2,
     borderColor: 'silver',
     flexDirection: 'row',

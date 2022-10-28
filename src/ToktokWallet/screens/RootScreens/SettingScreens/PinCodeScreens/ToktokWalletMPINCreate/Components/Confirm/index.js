@@ -25,10 +25,6 @@ export const Confirm = ({pinCode, setPageIndex, walletinfo, patchPincodeToktokWa
     }
   };
 
-  useEffect(() => {
-    setErrorMessage('');
-  }, [confirmpinCode]);
-
   return (
     <EnterNewConfirmPinValidator
       errorMessage={errorMessage}

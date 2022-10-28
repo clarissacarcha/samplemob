@@ -31,7 +31,7 @@ export const ToktokWalletSettings = ({navigation, route}) => {
       service: 'internal',
     },
     {
-      label: 'Fund Transfer',
+      label: 'Bank Transfer',
       route: 'ToktokWalletCashOutLogs',
       identifier: 'logFundTransfer',
       checkIfMerchantLinked: false,
@@ -186,6 +186,7 @@ export const ToktokWalletSettings = ({navigation, route}) => {
         {/* <Biometrics/> */}
         <Separator />
         <SettingHeaderTitle title="Account" />
+        <SettingOption route="ToktokWalletAccountLimit" title="Account Summary Limits" />
         <SettingOption route="ToktokWalletPaymentChart" title="Payment Chart" />
         {(!tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 3) ||
         (tokwaAccount.isPep && +tokwaAccount.person.accountType.level < 2) ? (

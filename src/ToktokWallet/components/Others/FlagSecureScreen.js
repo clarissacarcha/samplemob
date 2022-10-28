@@ -1,14 +1,13 @@
-import React , {useEffect , useCallback , useState } from 'react'
-import { View , Platform } from 'react-native'
+import React from 'react';
+import {View, Platform} from 'react-native';
 import FlagSecure from 'react-native-flag-secure-android';
-import { useNavigation , useFocusEffect  , useRoute} from '@react-navigation/native';
-import { useAccount } from 'toktokwallet/hooks'
+import {useAccount} from 'toktokwallet/hooks';
 
-export const FlagSecureScreen = ({children , enable = true})=> {
-  const { tokwaAccount } = useAccount();
+export const FlagSecureScreen = ({children, enable = true}) => {
+  const {tokwaAccount} = useAccount();
 
-  if(Platform.OS == "android" && tokwaAccount.constants.androidFlagSecure === 1){
-    enable ? FlagSecure.activate() : FlagSecure.deactivate()
+  if (Platform.OS === 'android' && tokwaAccount.constants.androidFlagSecure === 1) {
+    enable ? FlagSecure.activate() : FlagSecure.deactivate();
   }
 
   // useFocusEffect(useCallback(()=>{
@@ -18,9 +17,5 @@ export const FlagSecureScreen = ({children , enable = true})=> {
   //     }
   // },[]))
 
-  return (
-    <View style={{flex: 1,}}>
-      {children}
-    </View>
-  )
-}
+  return <View style={{flex: 1}}>{children}</View>;
+};

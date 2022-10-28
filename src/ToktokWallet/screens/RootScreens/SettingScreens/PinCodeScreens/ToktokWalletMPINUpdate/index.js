@@ -6,6 +6,7 @@ import {useMutation} from '@apollo/react-hooks';
 import {usePrompt} from 'src/hooks';
 import {backgrounds} from 'toktokwallet/assets';
 import {useAccount} from 'toktokwallet/hooks';
+import {getUniqueId, getBrand, getModel} from 'react-native-device-info';
 
 //UTIL, HELPER
 import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
@@ -61,21 +62,25 @@ export const ToktokWalletMPINUpdate = ({navigation, route}) => {
   const [LeaveModalvisible, setLeaveModalVisible] = useState(false);
   const prompt = usePrompt();
 
-  const backAction = useCallback(() => {
+  const backAction = () => {
     closeScreen();
     return true;
-  }, [closeScreen]);
+  };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const closeScreen = () => {
-    pageIndex === 0 ? navigation.pop() : setPageIndex(oldstate => oldstate - 1);
+    if (pageIndex === 0) {
+      navigation.pop();
+    } else {
+      setPinCode('');
+      setPageIndex(oldstate => oldstate - 1);
+    }
   };
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-
     return () => backHandler.remove();
-  }, [backAction, pageIndex]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageIndex]);
 
   const [patchMPinCode, {loading}] = useMutation(PATCH_MPIN_CODE, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -114,19 +119,23 @@ export const ToktokWalletMPINUpdate = ({navigation, route}) => {
     },
   });
 
-  const proceed = () => {
+  const proceed = async () => {
     patchMPinCode({
       variables: {
         input: {
           pinCode: pinCode,
           otp: otp,
           deviceType: Platform.OS === 'ios' ? 'IOS' : 'Android',
+          deviceName: `${await getBrand()} ${await getModel()}`,
+          deviceId: getUniqueId(),
         },
       },
     });
   };
 
   const DisplayComponent = () => {
+    console.log(pageIndex, 'INDEX');
+
     switch (pageIndex) {
       case 0:
         return <New pinCode={pinCode} setPinCode={setPinCode} pageIndex={pageIndex} setPageIndex={setPageIndex} />;

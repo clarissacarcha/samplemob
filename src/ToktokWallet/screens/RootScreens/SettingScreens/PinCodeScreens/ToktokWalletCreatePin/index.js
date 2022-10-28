@@ -7,6 +7,7 @@ import {useMutation} from '@apollo/react-hooks';
 import {useSelector} from 'react-redux';
 import {usePrompt} from 'src/hooks';
 import {useAccount} from 'toktokwallet/hooks';
+import { getUniqueId , getBrand, getModel } from 'react-native-device-info';
 //ASSETS
 import {backgrounds} from 'toktokwallet/assets';
 //UTIL, HELPER
@@ -112,13 +113,15 @@ export const ToktokWalletCreatePin = ({navigation, route}) => {
     },
   });
 
-  const proceed = () => {
+  const proceed = async () => {
     patchPinCode({
       variables: {
         input: {
           pinCode: pinCode,
           oldTPIN: oldTPIN,
           deviceType: Platform.OS === 'ios' ? 'IOS' : 'Android',
+          deviceName: `${await getBrand()} ${await getModel()}`,
+          deviceId: getUniqueId(),
         },
       },
     });

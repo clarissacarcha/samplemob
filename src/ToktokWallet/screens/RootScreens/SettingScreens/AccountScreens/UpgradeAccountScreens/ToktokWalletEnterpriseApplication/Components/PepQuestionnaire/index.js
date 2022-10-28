@@ -13,6 +13,7 @@ export const PepQuestionnaire = () => {
         setPepInfo={setPepInfo}
         setCurrentIndex={setCurrentIndex}
         hasPreviousButton={false}
+        isKyc={false}
       />
     </View>
   );

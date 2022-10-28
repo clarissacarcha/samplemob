@@ -20,7 +20,7 @@ import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
 import {emptyPlaceOrder} from "../../../assets"
-import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy, getRefComAccountType} from "../../../helpers"
+import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy, getRefComAccountType, RoundOffValue} from "../../../helpers"
 
 import {CheckoutContext} from './ContextProvider';
 import { EventRegister } from 'react-native-event-listeners';
@@ -47,7 +47,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
   const [paramsData, setParamsData] = useState([])
   const [addressData, setAddressData] = useState([])
 
-  console.log("addressData",addressData)
   const [payment, setPaymentMethod] = useState("toktokwallet")
   const [paymentList, setPaymentList] = useState([])
   const [vouchers, setVouchers] = useState([])
@@ -82,54 +81,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
     setAlertModal(true)
   }
 
-  const [checkItemFromCheckoutx] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
-    client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',    
-    onCompleted: async (response) => {
-      const data = response.checkItemFromCheckout
-
-      const newData = []
-
-      for(var item of data){
-        const cartQty = 0
-        route.params.data.map(({data}) => {
-          data[0].map(({id, qty}) => {
-
-      console.log("onProductUnavailable 1", id === item.id, item.id, id)
-            if(id === item.id){
-              cartQty = qty
-            }
-          })
-        })
-         newData.push({
-          ...item,
-          cartQty
-        })
-      }
-
-      console.log("onProductUnavailable", newData)
-
-      //SCENARIO: While entering TPIN, the product got out of stock. We can simulate this by bypassing the current validation
-      // await postCheckoutSetting(data);
-      // return
-      console.log(
-        'onProductUnavailable',
-        newData.filter(({status, cartQty, noOfStocks}) => status === false || (status === true && cartQty > noOfStocks)),
-      );
-      const temp= newData.filter(({status, cartQty, noOfStocks, contSellingIsset}) => status ? !contSellingIsset && cartQty > noOfStocks : true);
-
-      if(temp.length > 0){
-        onProductUnavailable(temp, "id")
-      }else{
-        await postCheckoutSetting(data);
-      }
-
-    },
-    onError: (err) => {
-      console.log(err)
-    }
-  })
-
   const [checkItemFromCheckout] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
@@ -158,12 +109,14 @@ const Component = ({route, navigation, createMyCartSession}) => {
         setFranchisee(data.consumer)        
         await setPaymentList(data.paymentMethods)
 
+        console.log("CHECKOUT RENDER DATA", JSON.stringify(data))
+
         if(paramsData.length > 0){
           let shippingrates = await getShippingRates(data.shippingRatePayload, data.cartrawdata)
           if(shippingrates.length > 0){
             data.autoShippingPayload.cartitems = shippingrates    
-            await getAutoShipping(data.autoShippingPayload)
-            await getAutoApplyVouchers(data.promotionVoucherPayload)
+            // await getAutoShipping(data.autoShippingPayload)
+            // await getAutoApplyVouchers(data.promotionVoucherPayload)
           }
         }
 
@@ -193,20 +146,27 @@ const Component = ({route, navigation, createMyCartSession}) => {
   })
 
   const getShippingRates = async (payload, raw) => {
-    console.log("SHIPPING RATES PAYLOAD", JSON.stringify(payload))
     // console.log(JSON.stringify(raw))
     // console.log(JSON.stringify(payload.cart)) 
     if(!payload) return
 
     let result = []
     const res = await ShippingApiCall("get_shipping_rate", payload, true)
-    console.log("SHipping Rates", JSON.stringify(res.responseData))
     if(res.responseData && res.responseData.success == 1){
       result = res.responseData.newCart
-      CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
-      if(res.responseData?.removedCart){
-        CheckoutContextData.setUnserviceableShipping(res.responseData.removedCart)   
-      }
+      //CHECK IF THERE IS SHIPPING FEE = 0
+      let invalidArray = result.filter(item => parseFloat(item?.shippingfee) == 0)
+      if(invalidArray.length > 0){
+        //THERE IS INVALID
+        let validArray = result.filter(item => parseFloat(item?.shippingfee) > 0)
+        CheckoutContextData.setShippingFeeRates(validArray)
+        CheckoutContextData.setUnserviceableShipping(invalidArray)
+      }else{
+        CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
+        if(res.responseData?.removedCart){
+          CheckoutContextData.setUnserviceableShipping(res.responseData.removedCart)   
+        }
+      }      
     }else if(res.responseError && res.responseError.success == 0){
       CheckoutContextData.setUnserviceableShipping(res.responseError.removedCart)      
     }else{
@@ -226,7 +186,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
     payload.subtotal = stotal
 
     setInitialLoading(true)
-    console.log("Auto Shipping Payload", JSON.stringify(payload))
     const res = await ApiCall("get_autoshipping_discount", payload, true)
 
     // console.log("AUTO SHIPPING RESULT", JSON.stringify(res))
@@ -366,7 +325,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
       }
     },
     onCompleted: async ({getUserToktokWalletData})=> {
-      console.log(getUserToktokWalletData)
       const {kycStatus} = getUserToktokWalletData
       setWalletAccountStatus(kycStatus)
       setwalletmodal(true)
@@ -380,7 +338,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: ({ getMyAccount })=> {
       if(getMyAccount){
-        console.log(getMyAccount)
         setwalletmodal(false)
         setWalletAccount(getMyAccount)
         setWalletAccountStatus(1)
@@ -414,7 +371,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
             type: 'fill',
             onPress: async () => {
               
-              console.log("NEW PARAMS PAYLOAD", JSON.stringify(payload))
     
               // return //used for debugging
               EventRegister.emit("refreshToktokmallShoppingCart")
@@ -438,7 +394,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
     let paramsDataCopy = ArrayCopy(route.params)
 
     items.map(({id, name, cartQty, noOfStocks, enabled}) => {
-      console.log(noOfStocks < cartQty, noOfStocks ,cartQty, "noOfStocks < cartQty")
       
       if(enabled && noOfStocks != 0 && noOfStocks < cartQty){
 
@@ -487,7 +442,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     })
     
-    console.log("TOKTOK_MALL_OPEN_MODAL_2", paramsDataCopy.data.filter((val) => val !== null))
     dispatch({
       type: 'TOKTOK_MALL_OPEN_MODAL',
       payload: {
@@ -503,8 +457,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
                 ...paramsDataCopy,
                 data: paramsDataCopy.data.filter((val) => val !== null)
               }
-              console.log("PARAMS DATA COPY", JSON.stringify(paramsDataCopy))
-              console.log("FILTERED PARAMS DATA", JSON.stringify(filtered))
     
               // return //used for debugging
               EventRegister.emit("refreshToktokmallShoppingCart")
@@ -558,7 +510,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
       let transactionPayload = await BuildTransactionPayload({
         method: "TOKTOKWALLET", 
         notes: "", 
-        total: grandTotal, 
+        total: RoundOffValue(grandTotal), 
         toktokid: toktokSession.user.id,
         // toktokid: 1,
         // transactionTypeId: "TOKTOKWALLET PAYMENT"
@@ -566,7 +518,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
       })
       setIsLoading(false)
 
-      console.log("request money body", JSON.stringify(transactionPayload))
            
       const req = await WalletApiCall("request_money", transactionPayload, true)
 
@@ -589,12 +540,10 @@ const Component = ({route, navigation, createMyCartSession}) => {
           paymentMethod: "TOKTOKWALLET",
           hashAmount: req.responseData.hash_amount,
           referenceNum: req.responseData.orderRefNum,
-          referral: franchisee      
+          referral: {},
+          franchisee: franchisee    
         })
 
-        console.log("VOUCHERS", CheckoutContextData.shippingVouchers)
-        console.log("SHIPPING VOUCHERS", shippingVouchers)
-        console.log("CHECKOUT BODY FFFFF", JSON.stringify(checkoutBody))
 
         // your logic or process after TPIN validation is successful
         const handleProcessProceed = async ({pinCode, data}) => {
@@ -654,7 +603,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     setProcessingCheckout(true)
 
-    console.log("CHECKOUT BODY JSON", JSON.stringify(checkoutBody))
 
     //FOR TESTING OF FAILED TRANSACTION
     // checkoutBody = {"name":"Old Levi","request_id":"1654136111782","pin":"123456","pin_type":"TPIN","contactnumber":"09753351699","email":"lfeudo@cloudpanda.ph","address":"Camba Street Metro Manil","regCode":"13","provCode":"1339","citymunCode":"133902","total_amount":250,"srp_totalamount":300,"order_type":2,"order_logs":[{"sys_shop":3,"branchid":"11","delivery_amount":150,"original_shipping_fee":150,"handle_shipping_promo":1,"hash":"","hash_delivery_amount":"cWxWNHl0MElPY1VwZ2ZGRzBpVU05UT09","daystoship":5,"daystoship_to":7,"items":[{"sys_shop":3,"product_id":"121aa4c6b3264625b7dca29f9804d4e3","itemname":"Gyoza to-go","quantity":1,"amount":250,"srp_amount":"300.00","srp_totalamount":300,"total_amount":250,"order_type":1}]}],"user_id":8834,"notes":"Yes","latitude":"","longitude":"","postalcode":"","account_type":0,"disrate":[],"vouchers":[{"voucher_id":"23","voucher_type":"2","voucher_code":"","voucher_name":"TEST ONLY SCENARIO 1","discounted_totalamount":250,"discount_totalamount":50,"shouldered_by":"2","start_date":"2022-06-01 10:49:00","end_date":"2022-06-02 10:49:00","shop_id":"0","product_id":"ced50626f3764dadb8e4e28278ceb679,121aa4c6b3264625b7dca29f9804d4e3,3fe8ef03ab0c437f9874f8b7744f5af0,7122e1dcb7814e2499ecae17a7ed719c,5aa12e1f96004c668d211890282dc722","regions":"13","payment_method":"0","discount_type":"1","discount_amount":"50","discount_cap":"","minimum_purchase":"100","on_top":null,"vcode_isset":"0","items":[{"product_id":"121aa4c6b3264625b7dca29f9804d4e3","amount":"300.00","total_amount":300,"srp_amount":"300.00","srp_totalamount":300,"quantity":1,"discounted_amount":250,"discounted_totalamount":250,"discount_amount":50,"discount_totalamount":50}],"autoApply":true,"voucherCodeType":"promotion","hash_delivery_amount":"dFg4RXhKb3htN01naW9QOFk1YWw0QT09"}],"shippingvouchers":[],"referral_code":"","referral_account_type":"","payment_method":"TOKTOKWALLET","hash_amount":"efd7df5ea029797ee9c693f863236444","reference_num":"TOK62981D2F71D61","orderRefNum":"TOK62981D2F71D61","discounted_totalamount":null}
@@ -665,8 +613,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     if(req.responseData && req.responseData.success == 1){
 
-      console.log(paramsData)
-      console.log(req.responseData)
 
       if(req.responseData.order_status == "Paid"){
         postOrderNotifications(req.responseData)
@@ -718,7 +664,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
       let error = req.responseError
       
-      console.log("ERROR", error, error?.items)
       if(error?.items && error?.items.length > 0){
 
         let items = removeUnavailableItems(error?.items)
@@ -749,7 +694,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
         })
       }      
     })
-    console.log("REMOVE UNAVAILABLE ITEMS RESULT", result)
     return result
   }
 
@@ -770,10 +714,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
         instructions: ""
       }
 
-      console.log(notificationPayload)
 
       const req = await ApiCall("save_customer_notification", notificationPayload, true)
-      console.log(req)
       if(req.responseData.success == 1){
         console.log("Saved customer notification ")
       }else{
@@ -830,21 +772,19 @@ const Component = ({route, navigation, createMyCartSession}) => {
       
       CheckoutContextData.setShippingFeeRates([])
       CheckoutContextData.setUnserviceableShipping([])
-      console.log("addressData",JSON.stringify({
+
+      const payload = {
         userId: userData.userId,
         shops: shops,
         refCom: getRefComAccountType({session: toktokSession}),
         addressId: id
-      }))
-      
+      }
+
+      console.log("CHECKOUT RENDER PAYLOAD", JSON.stringify(payload))
+
       getCheckoutData({
         variables: {
-          input: {
-            userId: userData.userId,
-            shops: shops,
-            refCom: getRefComAccountType({session: toktokSession}),
-            addressId: id
-          }
+          input: payload
         }
       })
     }
@@ -863,8 +803,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
       for (var y = 0; y < route.params.data[x].data[0].length; y++) {
         
         let item = route.params.data[x].data[0][y];
-        orderTotal += parseFloat(item.amount)
-        
+        if(franchisee && franchisee.franchiseeCode != null){
+          orderTotal += parseFloat(item.product.compareAtPrice * item.qty)
+        }else{
+          orderTotal += parseFloat(item.amount)
+        }        
       }
 
       let order = route.params.data[x]
@@ -898,8 +841,15 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     let discounts = CheckoutContextData.getTotalVoucherDeduction()
     let itemDiscounts = CheckoutContextData.getTotalItemDiscount()
+
     let _subTotal = parseFloat(orderTotal) - parseFloat(itemDiscounts)
     let srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
+
+    if(franchisee && franchisee.franchiseeCode != null){
+      let resellerDiscounts = CheckoutContextData.resellerDiscounts
+      _subTotal = _subTotal - resellerDiscounts
+      srpGrandTotal = parseFloat(orderTotal) + parseFloat(shippingFeeSrp) - parseFloat(discounts)
+    }
 
     setSubTotal(_subTotal)
     setSrpTotal(orderTotal)
@@ -950,7 +900,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
     let isMounted = true;
 
     (async () => {
-      // console.log(JSON.stringify(route.params.data))
       await init(0)
     })();
 
@@ -967,14 +916,11 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
   useEffect(() => {
 
-    console.log("Checkout body data", JSON.stringify(route?.params?.data), route?.params)
-
     setParamsData(route?.params?.data)
     setNewCartData(route?.params.newCart)
 
   }, [route.params])
 
-  console.log("addressData", addressData)
 
   // useEffect(() => { 
   //   //AUTO SHIPPING
@@ -1075,7 +1021,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
             data={addressData}
             onEdit={() => navigation.push("ToktokMallAddressesMenu", {
               onGoBack: (id) => {
-                console.log("addressData",id)
                 init(id)
               },
               fromPlaceOrderScreen: true

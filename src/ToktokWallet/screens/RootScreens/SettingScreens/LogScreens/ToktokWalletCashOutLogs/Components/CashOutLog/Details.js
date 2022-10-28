@@ -27,7 +27,7 @@ const renderDetails = ({details}) => {
 };
 
 const Details = ({transaction, visible, setVisible}) => {
-  const {name, phrase, details, amount, convenienceFee, refNo, refDate, status, requestNo} = transaction;
+  const {name, phrase, amount, serviceRefNo, refDate, status, tokwaRefNo} = transaction;
 
   return (
     <TransactionModal visible={visible} setVisible={setVisible}>
@@ -38,19 +38,17 @@ const Details = ({transaction, visible, setVisible}) => {
           <Text style={styles.labelText}>
             <Text style={{fontFamily: FONT.BOLD}}>Status:</Text> {status}
           </Text>
-          {renderDetails({details})}
           <Text style={styles.labelText}>
             <Text style={{fontFamily: FONT.BOLD}}>Amount:</Text> {amount}
           </Text>
-          {/* { convenienceFee >= 0 && <Text style={styles.labelText}>Convenience Fee: PHP {convenienceFee}</Text> } */}
-          {requestNo && (
+          {serviceRefNo && (
             <Text style={styles.labelText}>
-              <Text style={{fontFamily: FONT.BOLD}}>Request No:</Text> {requestNo}
+              <Text style={{fontFamily: FONT.BOLD}}>Service Reference Number:</Text> {serviceRefNo}
             </Text>
           )}
-          {refNo && (
+          {tokwaRefNo && (
             <Text style={styles.labelText}>
-              <Text style={{fontFamily: FONT.BOLD}}>Ref No:</Text> {refNo}
+              <Text style={{fontFamily: FONT.BOLD}}>Toktokwallet Reference Number:</Text> {tokwaRefNo}
             </Text>
           )}
           {refDate && (
@@ -77,7 +75,7 @@ const styles = StyleSheet.create({
   labelText: {
     fontFamily: FONT.REGULAR,
     fontSize: FONT_SIZE.M,
-    marginBottom: 2,
+    marginBottom: 5,
   },
 });
 

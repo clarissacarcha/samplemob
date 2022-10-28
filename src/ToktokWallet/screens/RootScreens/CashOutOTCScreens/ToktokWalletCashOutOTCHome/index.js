@@ -1,34 +1,49 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {Dimensions, StyleSheet, Text, View, ImageBackground} from 'react-native';
+import React, {useContext} from 'react';
+import {StyleSheet, ImageBackground, View, ScrollView, RefreshControl} from 'react-native';
 
 //COMPONENTS
-import {HeaderBack, HeaderTitleRevamp, LoadingIndicator, SomethingWentWrong} from 'toktokwallet/components';
-import {OTCPartner, TransferableAndNonTransferableBalance, VerifyContext, VerifyContextProvider} from './components';
-
-//GRAPHQL & HOOKS
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CASH_OUT_PROVIDER_PARTNERS} from 'toktokwallet/graphql';
+import {
+  HeaderBack,
+  HeaderTitleRevamp,
+  TransferableAndNonTransferableBalance,
+  SomethingWentWrong,
+  CheckIdleState,
+} from 'toktokwallet/components';
+import {OTCPartner, VerifyContext, VerifyContextProvider} from './components';
 
 //HELPER
 import {moderateScale} from 'toktokwallet/helper';
 import CONSTANTS from 'common/res/constants';
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
-const {height, width} = Dimensions.get('window');
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 //IMAGES
 import {backgrounds} from 'toktokwallet/assets';
 
 const MainComponent = ({navigation}) => {
-  const {getCashOutProviderPartnersError, getCashOutProviderPartners} = useContext(VerifyContext);
+  const {refreshing, setRefreshing, getHighlightedPartnersError, getCashOutProviderPartnersHighlighted} =
+    useContext(VerifyContext);
 
-  if (getCashOutProviderPartnersError) {
-    return <SomethingWentWrong onRefetch={getCashOutProviderPartners} error={getCashOutProviderPartnersError} />;
+  const onRefresh = () => {
+    setRefreshing(true);
+    getCashOutProviderPartnersHighlighted();
+  };
+
+  if (getHighlightedPartnersError) {
+    return (
+      <View style={styles.contentContainer}>
+        <SomethingWentWrong onRefetch={getCashOutProviderPartnersHighlighted} error={getHighlightedPartnersError} />
+      </View>
+    );
   }
   return (
     <ImageBackground style={styles.container} source={backgrounds.gradient_bg} resizeMode="cover">
-      <TransferableAndNonTransferableBalance />
-      <OTCPartner />
+      <ScrollView
+        contentContainerStyle={{padding: moderateScale(16)}}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        <TransferableAndNonTransferableBalance />
+        <OTCPartner navigation={navigation} />
+      </ScrollView>
     </ImageBackground>
   );
 };
@@ -40,16 +55,23 @@ export const ToktokWalletCashOutOTCHome = ({navigation}) => {
   });
 
   return (
-    <VerifyContextProvider>
-      <MainComponent />
-    </VerifyContextProvider>
+    <CheckIdleState>
+      <VerifyContextProvider>
+        <MainComponent navigation={navigation} />
+      </VerifyContextProvider>
+    </CheckIdleState>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: moderateScale(16),
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
   shadowContainer: {
     shadowColor: '#000',
