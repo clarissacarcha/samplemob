@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {connect} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import {View, StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl, Platform} from 'react-native';
 import OneSignal from 'react-native-onesignal';
 import FlagSecure from 'react-native-flag-secure-android';
@@ -27,10 +27,11 @@ const Screen = ({navigation, constants, session, createSession}) => {
 
   const [userLocation, setUserLocation] = useState(null);
 
+  const dispatch = useDispatch();
+
   const onNotificationOpened = ({notification}) => {
     try {
-
-      console.log("Notification", JSON.stringify(notification))
+      console.log('Notification', JSON.stringify(notification));
 
       if (notification.additionalData.classification === 'toktokwallet') {
         setTimeout(() => {
@@ -39,7 +40,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
           // navigation.navigate('ToktokLandingNotifications');
         }, 10);
         return;
-      }else if (notification.additionalData.classification === 'toktokmall') {
+      } else if (notification.additionalData.classification === 'toktokmall') {
         setTimeout(() => {
           navigation.navigate('ToktokMallSplashScreen');
         }, 10);
@@ -68,6 +69,17 @@ const Screen = ({navigation, constants, session, createSession}) => {
           });
         }, 10);
         return;
+      }
+      if (notification.additionalData.service === 'DELIVERY') {
+        if (notification.additionalData.deliveryId) {
+          dispatch({
+            type: 'SET_TOKTOK_DELIVERY_NOTIFICATION_DELIVERY',
+            payload: {notificationDeliveryId: notification.additionalData.deliveryId},
+          });
+        }
+        navigation.navigate('ToktokLandingDeliveries', {
+          screen: 'ToktokDeliveryActivities',
+        });
       }
       const type = notification.additionalData.type;
 
