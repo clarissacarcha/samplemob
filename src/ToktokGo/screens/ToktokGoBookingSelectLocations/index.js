@@ -56,7 +56,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const [serviceableAreaScreen, setServiceableAreaScreen] = useState(false);
   const [serviceableAreaList, setServiceableAreaList] = useState('');
   const [savedAddressList, setSavedAddressList] = useState([]);
-  const [addressObj, setAddressObj] = useState({});
+  const [addressObj, setAddressObj] = useState(null);
 
   useEffect(() => {
     async function tempFunction() {
@@ -389,8 +389,14 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     }
   };
 
+  useEffect(() => {
+    if (addressObj) {
+      onPressSavedAddress(addressObj);
+    }
+  }, [addressObj]);
+
   const getAddressObj = address => {
-    onPressSavedAddress(address);
+    setAddressObj(address);
   };
 
   const navigateToSavedAddress = () => {

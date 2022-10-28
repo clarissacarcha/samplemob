@@ -48,7 +48,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   const [recentDestinationList, setrecentDestinationList] = useState([]);
   const [showNotEnoughBalanceModal, setShowNotEnoughBalanceModal] = useState(false);
   const [savedAddressList, setSavedAddressList] = useState([]);
-  const [addressObj, setAddressObj] = useState({});
+  const [addressObj, setAddressObj] = useState(null);
 
   useEffect(() => {
     const subscribe = navigation.addListener('focus', async () => {
@@ -333,6 +333,12 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (addressObj) {
+      onPressSavedAddress(addressObj);
+    }
+  }, [addressObj]);
 
   const getAddressObj = address => {
     setAddressObj(address);

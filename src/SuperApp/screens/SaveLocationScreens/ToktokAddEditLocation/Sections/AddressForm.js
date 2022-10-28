@@ -141,7 +141,6 @@ export const AddressForm = ({
           style={{
             backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
             flex: 1,
-
             flexDirection: 'row',
             marginRight: 16,
             borderRadius: 5,
@@ -150,7 +149,7 @@ export const AddressForm = ({
             style={{
               borderRightColor: '#CCCCCC',
               borderRightWidth: 1,
-              padding: 16,
+              paddingHorizontal: 16,
               justifyContent: 'center',
             }}>
             <Text>+63</Text>
@@ -162,7 +161,7 @@ export const AddressForm = ({
             onChangeText={onMobileChange}
             maxLength={10}
             defaultValue={contactNumber}
-            style={{padding: 16, flex: 1}}
+            style={{paddingVertical: 12, flex: 1}}
             placeholderTextColor={LIGHT}
             returnKeyType="done"
           />
@@ -172,10 +171,9 @@ export const AddressForm = ({
             style={{
               backgroundColor: CONSTANTS.COLOR.ORANGE,
               padding: 10,
-              flex: 1,
               borderRadius: 5,
             }}>
-            <Image source={ContactIcon} resizeMode={'contain'} style={{height: 35, width: 35}} />
+            <Image source={ContactIcon} resizeMode={'contain'} style={{height: 30, width: 30}} />
           </View>
         </ThrottledOpacity>
       </View>
