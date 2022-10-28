@@ -4,18 +4,17 @@ import CONSTANTS from '../../../../../common/res/constants';
 
 const windowWidth = Dimensions.get('window').width;
 
-const LocationCard = ({item, onSelect, actionIcon}) => {
-  const label = item.formattedAddress.split(',');
+const LocationCard = ({item, label, formattedAddress, onSelect, actionIcon, onActionPress}) => {
   return (
     <View style={styles.container}>
       <View style={styles.addressContainer}>
         {/* {image && <Image source={image} resizeMode={'contain'} style={{height: 15, width: 15, marginRight: 10}} />} */}
         <TouchableOpacity onPress={() => onSelect(item)}>
-          <Text style={styles.addressLabel}>{label[0]}</Text>
-          <Text style={styles.formattedAddress}>{item.formattedAddress}</Text>
+          <Text style={styles.addressLabel}>{label}</Text>
+          <Text style={styles.formattedAddress}>{formattedAddress}</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={{alignSelf: 'center'}}>
+      <TouchableOpacity style={{alignSelf: 'center'}} onPress={() => onActionPress(item)}>
         <Image source={actionIcon} resizeMode={'contain'} style={styles.dimensions} />
       </TouchableOpacity>
     </View>

@@ -1,5 +1,7 @@
 import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react';
 import {View, StyleSheet, Text, StatusBar, TouchableOpacity, TouchableHighlight, Image} from 'react-native';
+import {PREF_GET_SAVED_ADDRESSES, TOKTOK_ADDRESS_CLIENT} from '../../../../../graphql';
+import {onError} from '../../../../../util/ErrorUtility';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import moment from 'moment-timezone';
@@ -19,6 +21,7 @@ import ToktokHeader from '../../../../../assets/toktok/images/ToktokHeader.png';
 //SELF IMPORTS
 import Greeting from './Greeting';
 import SenderRecipientCard from './SenderRecipientCard';
+import SavedAddresses from '../Components/SavedAddresses';
 
 const SCHEDULES = [
   {label: 'Anytime', value: '23:59:59'},
@@ -190,6 +193,12 @@ const ToktokDelivery = ({navigation, session, route}) => {
     onError: error => console.log({error}),
   });
 
+  const [prefGetSavedAddresses, {data: AddressesData}] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: onError,
+  });
+
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['toktok', 'Delivery']} />,
@@ -240,6 +249,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
   };
 
   useEffect(() => {
+    prefGetSavedAddresses();
     if (route.params.formattedAddressFromSearch) {
       setOrderData({
         ...orderData,
@@ -371,6 +381,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
           }}
           hasAddressFromSearch={route.params.formattedAddressFromSearch ? true : false}
         />
+        <SavedAddresses data={AddressesData?.prefGetSavedAddresses} />
 
         <View style={{flex: 1}} />
         <View style={{backgroundColor: COLOR.LIGHT}}>

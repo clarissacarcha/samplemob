@@ -2,39 +2,30 @@ import React from 'react';
 import {View, StyleSheet, Text, FlatList} from 'react-native';
 import CONSTANTS from '../../../../../common/res/constants';
 import {DIRTY_WHITE} from '../../../../../res/constants';
-import LocationCard from '../Components/LocationCard';
-import EditIcon from '../../../../../assets/icons/SavedAddress/custom.png';
+import LocationCard from './LocationCard';
+import EditIcon from '../../../../../assets/toktokgo/editIcon.png';
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RecentSearch = ({recentSearchDataList, setShowMap, stopData, setStopData, setSearchText, onPressAddAddress}) => {
-  const onSelect = item => {
-    setShowMap(true);
-    setStopData({
-      ...stopData,
-      latitude: item.location.latitude,
-      longitude: item.location.longitude,
-      formattedAddress: item.formattedAddress,
-    });
-    setSearchText(item.formattedAddress);
-  };
+const SavedAddresses = ({data, setShowMap, stopData, setStopData, setSearchText, onPressAddAddress}) => {
+  const onSelect = item => {};
 
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.title}>Recent Search</Text>
+        <Text style={styles.title}>Saved Addresses</Text>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={recentSearchDataList}
+          data={data}
           ItemSeparatorComponent={ItemSeparator}
-          keyExtractor={item => item.placeId}
+          keyExtractor={item => item.id}
           renderItem={({item, index}) => {
-            const label = item.formattedAddress.split(',');
+            const label = item.place.formattedAddress.split(',');
             return (
               <LocationCard
                 item={item}
                 label={label[0]}
-                formattedAddress={item.formattedAddress}
+                formattedAddress={item.place.formattedAddress}
                 onSelect={onSelect}
                 actionIcon={EditIcon}
                 onActionPress={onPressAddAddress}
@@ -48,7 +39,7 @@ const RecentSearch = ({recentSearchDataList, setShowMap, stopData, setStopData, 
   );
 };
 
-export default RecentSearch;
+export default SavedAddresses;
 
 const styles = StyleSheet.create({
   separator: {

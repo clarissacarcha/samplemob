@@ -19,8 +19,6 @@ import MapView, {Marker, PROVIDER_GOOGLE, Callout, Overlay} from 'react-native-m
 import validator from 'validator';
 import {useAlert} from '../../../../../hooks';
 import AsyncStorage from '@react-native-community/async-storage';
-
-import {HeaderBack, HeaderTitle} from '../../../../../components';
 import {Shadow, YellowButton, VectorIcon, ICON_SET} from '../../../../../revamp';
 import {MEDIUM, DARK} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE, SIZE, MAP_DELTA} from '../../../../../res/variables';
@@ -287,6 +285,10 @@ const StopDetails = ({navigation, route}) => {
     return () => {};
   }, [showMap]);
 
+  const onPressAddAddress = item => {
+    navigation.push('ToktokAddEditLocation', {coordsFromService: item.location});
+  };
+
   return (
     <View style={styles.screenBox}>
       <View style={{height: StatusBar.currentHeight}} />
@@ -471,6 +473,7 @@ const StopDetails = ({navigation, route}) => {
           stopData={stopData}
           setStopData={setStopData}
           setSearchText={setSearchText}
+          onPressAddAddress={onPressAddAddress}
         />
       )}
       {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
