@@ -353,9 +353,9 @@ const styles = StyleSheet.create({
   backButton: {
     position: 'absolute',
     zIndex: 1,
-    top: StatusBar.currentHeight + 23,
-    left: 16,
-    padding: 6,
+    top: StatusBar.currentHeight + 17,
+    left: 10,
+    padding: 17,
   },
   skipButton: {
     position: 'absolute',

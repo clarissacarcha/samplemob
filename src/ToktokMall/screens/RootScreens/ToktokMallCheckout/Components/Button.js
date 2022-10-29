@@ -10,6 +10,7 @@ import { FONT } from '../../../../../res/variables';
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
 
 import {CheckoutContext} from '../ContextProvider';
+import { RoundOffValue } from '../../../../helpers';
 
 const REAL_WIDTH = Dimensions.get('window').width;
 
@@ -44,7 +45,7 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
             <View style= {styles.totalContainer}>
               <Text style = {styles.totalTitle}>Total</Text>
               <Text style = {styles.totalText}>{
-                !total ? FormatToText.currency(0) : FormatToText.currency(total)
+                !total ? FormatToText.currency(0) : FormatToText.currency(RoundOffValue(total))
               }</Text>
             </View>
             <TouchableOpacity disabled={isDisabled()} style={isDisabled() ? styles.invalidButton : styles.activeButton} onPress={() => {
