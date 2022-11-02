@@ -7,7 +7,8 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from 'styled-components';
 import {useQuery} from '@apollo/react-hooks';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+// import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import ContentLoader from 'react-native-easy-content-loader';
 
 import type {PropsType} from './types';
 import {
@@ -30,6 +31,7 @@ import {GET_CATEGORIES_BY_LIMIT} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 
 import {getDeviceWidth, scale} from 'toktokfood/helper/scale';
+import {View} from 'react-native';
 
 const HomeCategories = (props: PropsType): React$Node => {
   const navigation = useNavigation();
@@ -54,18 +56,14 @@ const HomeCategories = (props: PropsType): React$Node => {
   };
 
   const Loader = () => (
-    <SkeletonPlaceholder backgroundColor="rgba(220, 220, 220, 1)">
-      <SkeletonPlaceholder.Item paddingVertical={10} flexDirection="row" alignItems="center">
-        {[1, 2, 3, 4].map(() => (
-          <SkeletonPlaceholder.Item
-            width={(getDeviceWidth - scale(60)) / 4 - 1}
-            height={80}
-            marginRight={10}
-            borderRadius={10}
-          />
-        ))}
-      </SkeletonPlaceholder.Item>
-    </SkeletonPlaceholder>
+    <View style={{flexDirection: 'row'}}>
+      {[1, 2, 3, 4].map(() => (
+        <View style={{width: (getDeviceWidth - scale(60)) / 4 - 1, marginRight: 10}}>
+          <ContentLoader active title={false} pRows={1} pWidth={(getDeviceWidth - scale(60)) / 4 - 1} pHeight={70} />
+          <ContentLoader active title={false} pRows={1} pWidth={(getDeviceWidth - scale(60)) / 4 - 1} pHeight={10} />
+        </View>
+      ))}
+    </View>
   );
 
   const renderItem = ({item}) => {

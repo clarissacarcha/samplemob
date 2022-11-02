@@ -6,9 +6,9 @@
 import React, {useState} from 'react';
 import {SliderBox} from 'react-native-image-slider-box';
 import {useQuery} from '@apollo/client';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+
+import ContentLoader from 'react-native-easy-content-loader';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
-import type {PropsType} from './types';
 import {Container, BannerImage, Slider, Dots} from './Styled';
 
 import {starbucks, burger_king, yellow_cab, banner_1} from 'toktokfood/assets/images';
@@ -16,6 +16,7 @@ import {getDeviceWidth} from 'toktokfood/helper/scale';
 
 import {GET_SHOP_BANNERS} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import { Dimensions } from 'react-native';
 
 const HomeBanner = (props: PropsType): React$Node => {
   const [imageBanners, setImageBanners] = useState([banner_1, starbucks, yellow_cab, burger_king]);
@@ -31,11 +32,7 @@ const HomeBanner = (props: PropsType): React$Node => {
     },
   });
 
-  const Loader = () => (
-    <SkeletonPlaceholder backgroundColor="rgba(220, 220, 220, 1)">
-      <SkeletonPlaceholder.Item paddingVertical={10} alignItems="center" marginRight={15} height={130} />
-    </SkeletonPlaceholder>
-  );
+  const Loader = () => <ContentLoader active title={false} pRows={1} pWidth={'95%'} pHeight={120} />;
 
   // const temp_banners = [
   //   {shop_banner: banner_1},
