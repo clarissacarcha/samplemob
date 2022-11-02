@@ -8,7 +8,7 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Animated} from 'react-native';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import moment from 'moment';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import type {PropsType} from './types';
 import {
@@ -44,6 +44,8 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
   // State
   const [search, setSearch] = useState('');
   const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const {scrollAnimation} = useSelector(state => state.toktokFood)
+  const dispatch = useDispatch()
 
   const {loading, routes, refetch} = useGetProductCategories(item?.id);
 
@@ -117,6 +119,15 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
     );
   };
 
+  useEffect(() => {
+    const {shopVoucher} = route.params?.item;
+    if (shopVoucher && shopVoucher?.length !== 0) {
+      dispatch({type: 'SET_TOKTOKFOOD_SCROLL_ANIMATION', payload: [480, -480, 430]});
+    } else {
+      dispatch({type: 'SET_TOKTOKFOOD_SCROLL_ANIMATION', payload: [350, -350, 300]});
+    }
+  }, [route]);
+
   const renderAlertComponent = () => {
     const {dayLapsed, hasProduct, operatingHours, nextOperatingHrs} = item;
 
@@ -181,8 +192,8 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
     };
     // interpolate image and shopinfo
     const translateY = scrollY.interpolate({
-      inputRange: [0, 350],
-      outputRange: [0, -350],
+      inputRange: [0, scrollAnimation[0]],
+      outputRange: [0, scrollAnimation[1]],
       extrapolateRight: 'clamp',
     });
     // interpolate bgcolor for header
@@ -204,7 +215,7 @@ const ToktokFoodShopOverview = (props: PropsType): React$Node => {
             CenterComponent={SearchComponent}
           />
         </AnimatedHeader>
-        <AnimatedImageHeader style={{transform: [{translateY}]}}>
+        <AnimatedImageHeader style={{transform: [{translateY}]}} scrollAnimation={scrollAnimation}>
           <ImageBg source={item?.banner} />
           <ShopInfo shopInfo={item} />
         </AnimatedImageHeader>

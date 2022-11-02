@@ -90,7 +90,7 @@ export const AnimatedImageHeader: ComponentType<any> = styled(Animated.View).att
   position: absolute;
   top: 0;
   width: 100%;
-  height: 350px;
+  height: ${(props) => props.scrollAnimation[0]}px;
 `;
 
 export const ImageBg: ComponentType<any> = styled(ImageBackground).attrs(props => ({

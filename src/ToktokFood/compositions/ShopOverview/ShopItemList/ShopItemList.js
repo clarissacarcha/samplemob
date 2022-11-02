@@ -39,12 +39,14 @@ import {empty_search_2} from 'toktokfood/assets/images';
 // Queries
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_PRODUCTS_BY_SHOP_CATEGORY} from 'toktokfood/graphql/toktokfood';
+import { useSelector } from 'react-redux';
 
 const ShopItemList = (props: PropsType): React$Node => {
   const {onGetRef, onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag, route, shopId, scrollY} = props;
   const navigation = useNavigation();
   const routes = useRoute();
   const isFocused = useIsFocused();
+  const {scrollAnimation} = useSelector(state => state.toktokFood)
 
   const [hasMorePage, setHasMorePage] = useState(true);
   const [showMore, setShowMore] = useState(false);
@@ -212,6 +214,7 @@ const ShopItemList = (props: PropsType): React$Node => {
       }}
       ListFooterComponent={renderFooter}
       refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}
+      scrollAnimation={scrollAnimation}
     />
   );
 };

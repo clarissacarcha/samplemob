@@ -13,9 +13,12 @@ import ShopItemList from 'toktokfood/compositions/ShopOverview/ShopItemList';
 
 import type {PropsType} from './types';
 import {AnimatedTabBar, Loader, LoaderContainer, ShopTabBar, TabBarTitle} from './Styled';
+import { useSelector } from 'react-redux';
 
 const ShopTabView = (props: PropsType): React$Node => {
   const {scrollY, shopId, listRefArr, isListGliding, loading = false, routes = []} = props;
+
+  const {scrollAnimation} = useSelector(state => state.toktokFood)
   let listOffset = useRef({});
 
   const layout = useWindowDimensions();
@@ -107,8 +110,8 @@ const ShopTabView = (props: PropsType): React$Node => {
 
   const renderTabBar = tabprops => {
     const y = scrollY.interpolate({
-      inputRange: [0, 300],
-      outputRange: [300, 0],
+      inputRange: [0, scrollAnimation[2]],
+      outputRange: [scrollAnimation[2], 0],
       extrapolateRight: 'clamp',
     });
     return (

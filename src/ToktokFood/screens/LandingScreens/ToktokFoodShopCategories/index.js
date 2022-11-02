@@ -50,6 +50,8 @@ const ToktokFoodShopCategories = () => {
     },
   };
 
+  console.log(JSON.stringify(variablesInput))
+
   // fetch data in categoties
   const {data, error, loading, fetchMore, refetch} = useQuery(GET_SHOP_BY_CATEGORY, {
     variables: {

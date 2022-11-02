@@ -203,11 +203,11 @@ const TokTokFoodSplashScreen = () => {
         deleteShopTemporaryCart();
       } else {
         // navigation.replace('ToktokFoodHomeScreen');
-        navigation.replace('ToktokFoodHomeLanding');
+        navigation.replace('ToktokFoodLanding');
       }
     } else {
       // navigation.replace('ToktokFoodHomeScreen');
-      navigation.replace('ToktokFoodHomeLanding');
+      navigation.replace('ToktokFoodLanding');
     }
   };
 

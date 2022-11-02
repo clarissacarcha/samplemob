@@ -94,10 +94,8 @@ export const AnimatedList: ComponentType<any> = styled(Animated.FlatList).attrs(
   scrollEventThrottle: 16,
   contentContainerStyle: {
     backgroundColor: props.theme.color.white,
-    paddingTop: 350 + headerHeight,
-    // paddingHorizontal: 15,
+    paddingTop: props.scrollAnimation[0] + headerHeight,
     minHeight: getDeviceHeight + 300,
-    // minHeight: getDeviceHeight + (props.totalItems < 9 ? 300 : 400),
   },
   onEndReachedThreshold: 0.2,
 }))``;

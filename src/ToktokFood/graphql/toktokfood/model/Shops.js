@@ -15,6 +15,11 @@ export const GET_SHOPS = gql`
       estimatedDeliveryTime
       allowPickup
       promoName
+      shopVoucher {
+        voucherName
+        voucherCode
+        validUntil
+      }
       promos {
         id
         shippingDiscountName
@@ -87,6 +92,11 @@ export const GET_SHOPS_W_PROMOTIONS = gql`
         estimatedDeliveryTime
         allowPickup
         promoName
+        shopVoucher {
+          voucherName
+          voucherCode
+          validUntil
+        }
         promos {
           id
           shippingDiscountName
@@ -187,6 +197,11 @@ export const GET_SHOP_DETAILS = gql`
       mobile
       hasProduct
       hasOpen
+      shopVoucher {
+        voucherName
+        voucherCode
+        validUntil
+      }
       nextOperatingHrs {
         id
         shopId
@@ -232,6 +247,11 @@ export const GET_SEARCH_FOOD = gql`
       estimatedDeliveryTime
       hasOpen
       hasProduct
+      shopVoucher {
+        voucherName
+        voucherCode
+        validUntil
+      }
       nextOperatingHrs {
         id
         shopId
@@ -267,6 +287,11 @@ export const GET_SHOP_BY_CATEGORY = gql`
       estimatedDeliveryTime
       hasOpen
       hasProduct
+      shopVoucher {
+        voucherName
+        voucherCode
+        validUntil
+      }
       nextOperatingHrs {
         id
         shopId
