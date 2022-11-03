@@ -57,6 +57,7 @@ const CartVoucher = (props: PropsType): React$Node => {
     deliveryFee = 0,
     errorVoucherMessage = '',
     setErrorVoucherMessage = string => null,
+    setIsInsufficientBalance
   } = props;
   const {promotionVoucher, customerInfo, loader} = useSelector(state => state.toktokFood);
   const dispatch = useDispatch();
@@ -116,6 +117,7 @@ const CartVoucher = (props: PropsType): React$Node => {
   const onlySpaces = str => str.trim().length === 0;
 
   const onApplyVoucher = async () => {
+    setIsInsufficientBalance(false)
     if (voucherCode.length === 0 || onlySpaces(voucherCode)) {
       return;
     }

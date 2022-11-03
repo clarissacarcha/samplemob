@@ -157,6 +157,7 @@ const ToktokFoodPlaceOrder = (props: PropsType): React$Node => {
             deliveryFee={cartDeliveryInfo?.price}
             errorVoucherMessage={errorVoucherMessage}
             setErrorVoucherMessage={setErrorVoucherMessage}
+            setIsInsufficientBalance={setIsInsufficientBalance}
           />
           <Divider height={8} />
           <CartPaymentMethod

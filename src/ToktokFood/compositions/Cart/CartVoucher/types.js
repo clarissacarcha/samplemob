@@ -12,4 +12,5 @@ export type PropsType = {
   deliveryFee?: number,
   errorVoucherMessage?: string,
   setErrorVoucherMessage?: Function,
+  setIsInsufficientBalance?:Function
 };
