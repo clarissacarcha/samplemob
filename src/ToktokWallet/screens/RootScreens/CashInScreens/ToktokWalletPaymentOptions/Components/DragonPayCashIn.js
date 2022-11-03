@@ -76,13 +76,16 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
 
   const confirmAmount = async () => {
     setIsLoading(true);
-    const checkLimit = await AmountLimitHelper.postCheckIncomingLimit({
-      amount,
-      setErrorMessage: setMessage,
-    });
+    let checkLimit;
     const isValid = checkValidAmount(amount);
+    if (isValid) {
+      checkLimit = await AmountLimitHelper.postCheckIncomingLimit({
+        amount,
+        setErrorMessage: setMessage,
+      });
+    }
 
-    if (checkLimit && isValid && !(amount > transactionType.cashInLimit) && amount > 1) {
+    if (checkLimit && isValid && !(amount > transactionType.cashInLimit) && amount >= 1) {
       setIsLoading(false);
       navigation.navigate('ToktokWalletDPCashInMethods', {
         transactionType,
@@ -96,12 +99,8 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
   };
 
   const checkValidAmount = num => {
-    if (num == '') {
-      setMessage('');
-      return false;
-    }
-    if (num < 1) {
-      setMessage(`Please enter atleast ${tokwaAccount.wallet.currency.code} 1.00`);
+    if (num < 1 || num === '') {
+      setMessage(`The minimum amount allowed to cash in is ${currencyCode}1`);
       return false;
     }
     return true;
