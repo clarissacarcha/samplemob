@@ -111,8 +111,14 @@ const ToktokFoodNotifications = () => {
           title: 'Edited Order',
           desc: `Heads-up, ka-toktok! Your order ${referenceNum} from ${shopname} has been modified.`,
         };
+      case 'lf': 
+        return {
+          title: 'Looking for driver',
+          desc: `Your order ${referenceNum} has been confirmed. We're now finding you a nearby driver!`,
+        };
       default:
-        return {title: '', desc: ''};
+        return {title: '', desc: ''}
+ 
     }
   };
 

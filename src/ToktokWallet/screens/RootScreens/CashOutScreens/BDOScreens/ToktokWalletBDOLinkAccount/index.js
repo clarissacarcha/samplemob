@@ -38,7 +38,7 @@ export const ToktokWalletBDOLinkAccount = ({navigation,route})=> {
                 return setErrorMessage("Invalid verification code.")
             }
             if(graphQLErrors[0].message == "Verification code already expired."){
-                return setErrorMessage("Verification code already expired.")
+                return setErrorMessage("OTP already expired.")
             }
             onErrorAlert({alert,error,navigation})
         }

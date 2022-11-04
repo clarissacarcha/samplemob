@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {
   StyleSheet,
   View,
@@ -10,6 +10,7 @@ import {
   ScrollView,
   TextInput,
   Picker,
+  Animated,
   Platform
 } from 'react-native';
 import {Price, FormatToText} from '../../../../helpers/formats';
@@ -24,8 +25,9 @@ import {FONT} from '../../../../../res/variables';
 import { useDispatch, useSelector } from 'react-redux';
 import { EventRegister } from 'react-native-event-listeners';
 import AIcons from 'react-native-vector-icons/dist/AntDesign';
+import { CheckoutContext } from '../ContextProvider';
 
-const walletIcon = require('../../../../assets/icons/wallet1.png')
+const walletIcon = require('../../../../assets/icons/toktokwalleticon.png')
 
 const testData = [
   {
@@ -44,7 +46,7 @@ const testData = [
   },
 ];
 
-const RenderToktokWalletStatus = ({status}) => {
+const RenderToktokWalletStatusx = ({status}) => {
 
   const navigation = useNavigation()
 
@@ -103,15 +105,149 @@ const RenderToktokWalletStatus = ({status}) => {
 
 }
 
-export const Payment = ({list, payment, total, setPaymentMethod, currentBalance, setCurrenctBalance, status}) => {
+const RenderToktokWalletStatus = ({status}) => {
+
+  const navigation = useNavigation()
+
+    return (
+      <>
+        <View style={styles.container}>
+          <Text style={styles.paymentMethodText}>Payment Method</Text>          
+          <View style={styles.margin2} />
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={{flex: 3}}>
+
+              <View style={{flex: 1, flexDirection: 'row'}}>
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                  <Image
+                    source={walletIcon}
+                    style={styles.walletIcon1}
+                  />
+                </View>
+                <View style={{flex: 2, flexDirection: 'column', justifyContent: 'center'}}>
+                  <View style={{flex: 1, justifyContent: 'center', marginTop: 4}}>
+                    <Text style={{color: "#FDBA1C", fontSize: 13}}>toktok<Text style={{color: "#F6841F"}}>wallet</Text></Text>
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'flex-start'}}>
+                    <Text style={{fontSize: 11, color: "#525252", marginBottom: 8}}>
+                    Balance: {FormatToText.currency(0)}
+                    </Text> 
+                  </View>
+                </View>
+              </View>
+
+            </View>
+            <View style={{flex: 1}} />
+            <View style={{flex: 2.5}}>
+              <View style={styles.gotoButtonContainer}>
+                <TouchableOpacity onPress={() => {
+                  navigation.push('ToktokWalletLoginPage');
+                }}>
+                  <Text style={styles.gotoButtonText}>{status == 2 ? "Go to toktokwallet" : "Create your toktokwallet account now!"}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          
+        </View>
+      </>
+    )
+
+}
+
+export const Payment = ({
+  list, 
+  payment, 
+  total, 
+  setPaymentMethod, 
+  currentBalance, 
+  setCurrenctBalance, 
+  status
+}) => {
+
+  const animationRef = useRef(new Animated.Value(0)).current;
+  
+  const CheckoutContextData = useContext(CheckoutContext)
   const navigation = useNavigation();
   const toktokMall = useSelector(state=> state.toktokMall)
   const dispatch = useDispatch()
+
   // const [currentBalance, setCurrenctBalance] = useState(0)
-  console.log("status ssss", status)
+  // console.log("status ssss", status)
+
+  useEffect(() => {
+    console.log("ANIMATION REF", animationRef)
+    if(CheckoutContextData?.animatePayments){
+      Animated.sequence([
+        Animated.timing(animationRef, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: false
+        }),
+        Animated.timing(animationRef, {
+            toValue: 0,
+            duration: 1000,
+            useNativeDriver: false
+        })
+      ]).start();
+      setTimeout(() => {
+        CheckoutContextData.setAnimatePayments(false)
+      }, 1000)
+    }
+  }, [CheckoutContextData])
 
   if(status != 1){
-    return <RenderToktokWalletStatus status={status} />
+    return <>
+      <Animated.View
+        style={[
+          styles.container,
+          {
+            backgroundColor: animationRef.interpolate({
+              inputRange: [0, 1],
+              outputRange: ["#fff", "#FFFCF4"]
+            })
+          }
+        ]}
+      >
+        <Text style={styles.paymentMethodText}>Payment Method</Text>          
+        <View style={styles.margin2} />
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <View style={{flex: 3}}>
+
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                <Image
+                  source={walletIcon}
+                  style={styles.walletIcon1}
+                />
+              </View>
+              <View style={{flex: 2, flexDirection: 'column', justifyContent: 'center'}}>
+                <View style={{flex: 1, justifyContent: 'center', marginTop: 4}}>
+                  <Text style={{color: "#FDBA1C", fontSize: 13}}>toktok<Text style={{color: "#F6841F"}}>wallet</Text></Text>
+                </View>
+                <View style={{flex: 1, justifyContent: 'flex-start'}}>
+                  <Text style={{fontSize: 11, color: "#525252", marginBottom: 8}}>
+                  Balance: {FormatToText.currency(0)}
+                  </Text> 
+                </View>
+              </View>
+            </View>
+
+          </View>
+          <View style={{flex: 1}} />
+          <View style={{flex: 2.5}}>
+            <View style={styles.gotoButtonContainer}>
+              <TouchableOpacity onPress={() => {
+                navigation.push('ToktokWalletLoginPage');
+              }}>
+                <Text style={styles.gotoButtonText}>{status == 2 ? "Go to toktokwallet" : "Create your toktokwallet account now!"}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        
+        </Animated.View>
+      </>
   }
 
   return (
@@ -258,6 +394,8 @@ const styles = StyleSheet.create({
     marginTop: 15, 
     marginBottom: 5,
     fontSize: 13, 
+    fontFamily: FONT.SEMI_BOLD,
+    color: "#525252"
   },
   margin1: {
     paddingTop: 30
@@ -277,13 +415,15 @@ const styles = StyleSheet.create({
   },
   gotoButtonContainer: {
     alignItems: 'center', 
-    justifyContent: 'center', 
+    justifyContent: 'flex-end', 
     paddingVertical: 8},
-    gotoButtonText: {color: "#FFA700", 
-    fontSize: 14, 
-    fontFamily: FONT.BOLD, 
-    textDecorationLine: 'underline'
-  },
+    gotoButtonText: {
+      color: "#F6841F", 
+      fontSize: 11, 
+      textAlign: 'center',
+      // fontFamily: FONT.BOLD, 
+      textDecorationLine: 'underline'
+    },
   tokwalletCotainer: {
     backgroundColor: 'white',
   },
@@ -293,8 +433,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   walletIcon1: {
-    width: 25, 
-    height: 25, 
+    width: 36, 
+    height: 28, 
     resizeMode: 'stretch'
   },
   tokwalletInfoTitle1: (size)  => {

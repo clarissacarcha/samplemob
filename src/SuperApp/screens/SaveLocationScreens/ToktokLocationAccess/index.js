@@ -1,32 +1,37 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableHighlight,
-  Alert,
-  Platform,
-  Dimensions,
-  Image,
-  ImageBackground,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Dimensions, Image, ImageBackground} from 'react-native';
 
 // helper
-import CONSTANTS from '../../../common/res/constants';
-import {ThrottledOpacity} from '../../../components_section';
+import CONSTANTS from '../../../../common/res/constants';
+import {MAP_DELTA_LOW} from '../../../../res/constants';
+import {ThrottledOpacity} from '../../../../components_section';
+import {currentLocation} from '../../../../helper';
+import {GeolocationUtility} from '../../../../util';
 
 // images
-import GradiantBG from '../../../assets/images/LinearGradiant.png';
-import TokLogo from '../../../assets/images/ToktokGoIcon.png';
-import LocatioAccessIMG from '../../../assets/images/LocationAccess.png';
+import GradiantBG from '../../../../assets/images/LinearGradiant.png';
+import TokLogo from '../../../../assets/images/ToktokGoIcon.png';
+import LocatioAccessIMG from '../../../../assets/images/LocationAccess.png';
 
 const FULL_WIDTH = Dimensions.get('window').width;
 
-export const LocationAccess = ({navigation, route}) => {
+export const ToktokLocationAccess = ({navigation, route}) => {
+  const [locCoordinates, setLocCoordinates] = useState({});
+
+  const getCurrentLocation = async () => {
+    const currentLocation = await GeolocationUtility.getCurrentLocation();
+    const {latitude, longitude} = currentLocation.coords;
+    setLocCoordinates({
+      latitude: latitude,
+      longitude: longitude,
+      ...MAP_DELTA_LOW,
+    });
+  };
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
   return (
     <ImageBackground source={GradiantBG} style={{flex: 1}}>
       <View style={styles.wrapper}>
@@ -38,10 +43,16 @@ export const LocationAccess = ({navigation, route}) => {
         <Image source={LocatioAccessIMG} resizeMode={'contain'} style={styles.locationImgDimensions} />
       </View>
       <View style={styles.buttonWrapper}>
-        <ThrottledOpacity delay={4000} style={styles.primaryBtn}>
+        <ThrottledOpacity
+          delay={4000}
+          style={styles.primaryBtn}
+          onPress={() => navigation.push('ToktokAddEditLocation', {addressObj: null, isFromLocationAccess: true})}>
           <Text style={styles.primaryBtnText}>Enter My Address</Text>
         </ThrottledOpacity>
-        <ThrottledOpacity delay={4000} style={styles.secondaryBtn}>
+        <ThrottledOpacity
+          delay={4000}
+          style={styles.secondaryBtn}
+          onPress={() => navigation.push('ToktokPinLocation', {locCoordinates})}>
           <Text style={styles.secondaryBtnText}>Use My Current Location</Text>
         </ThrottledOpacity>
       </View>
@@ -92,7 +103,7 @@ const styles = StyleSheet.create({
   primaryBtnText: {
     color: CONSTANTS.COLOR.WHITE,
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontWeight: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     textAlign: 'center',
   },
   secondaryBtn: {
@@ -106,7 +117,7 @@ const styles = StyleSheet.create({
   secondaryBtnText: {
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontWeight: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     textAlign: 'center',
   },
 });

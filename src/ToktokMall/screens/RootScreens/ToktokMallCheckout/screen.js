@@ -81,48 +81,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
     setAlertModal(true)
   }
 
-  const [checkItemFromCheckoutx] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
-    client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',    
-    onCompleted: async (response) => {
-      const data = response.checkItemFromCheckout
-
-      const newData = []
-
-      for(var item of data){
-        const cartQty = 0
-        route.params.data.map(({data}) => {
-          data[0].map(({id, qty}) => {
-
-            if(id === item.id){
-              cartQty = qty
-            }
-          })
-        })
-         newData.push({
-          ...item,
-          cartQty
-        })
-      }
-
-
-      //SCENARIO: While entering TPIN, the product got out of stock. We can simulate this by bypassing the current validation
-      // await postCheckoutSetting(data);
-      // return
-      const temp= newData.filter(({status, cartQty, noOfStocks, contSellingIsset}) => status ? !contSellingIsset && cartQty > noOfStocks : true);
-
-      if(temp.length > 0){
-        onProductUnavailable(temp, "id")
-      }else{
-        await postCheckoutSetting(data);
-      }
-
-    },
-    onError: (err) => {
-      console.log(err)
-    }
-  })
-
   const [checkItemFromCheckout] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
@@ -151,12 +109,14 @@ const Component = ({route, navigation, createMyCartSession}) => {
         setFranchisee(data.consumer)        
         await setPaymentList(data.paymentMethods)
 
+        console.log("CHECKOUT RENDER DATA", JSON.stringify(data))
+
         if(paramsData.length > 0){
           let shippingrates = await getShippingRates(data.shippingRatePayload, data.cartrawdata)
           if(shippingrates.length > 0){
             data.autoShippingPayload.cartitems = shippingrates    
-            await getAutoShipping(data.autoShippingPayload)
-            await getAutoApplyVouchers(data.promotionVoucherPayload)
+            // await getAutoShipping(data.autoShippingPayload)
+            // await getAutoApplyVouchers(data.promotionVoucherPayload)
           }
         }
 
@@ -194,10 +154,19 @@ const Component = ({route, navigation, createMyCartSession}) => {
     const res = await ShippingApiCall("get_shipping_rate", payload, true)
     if(res.responseData && res.responseData.success == 1){
       result = res.responseData.newCart
-      CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
-      if(res.responseData?.removedCart){
-        CheckoutContextData.setUnserviceableShipping(res.responseData.removedCart)   
-      }
+      //CHECK IF THERE IS SHIPPING FEE = 0
+      let invalidArray = result.filter(item => parseFloat(item?.shippingfee) == 0)
+      if(invalidArray.length > 0){
+        //THERE IS INVALID
+        let validArray = result.filter(item => parseFloat(item?.shippingfee) > 0)
+        CheckoutContextData.setShippingFeeRates(validArray)
+        CheckoutContextData.setUnserviceableShipping(invalidArray)
+      }else{
+        CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
+        if(res.responseData?.removedCart){
+          CheckoutContextData.setUnserviceableShipping(res.responseData.removedCart)   
+        }
+      }      
     }else if(res.responseError && res.responseError.success == 0){
       CheckoutContextData.setUnserviceableShipping(res.responseError.removedCart)      
     }else{
@@ -634,13 +603,15 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
     setProcessingCheckout(true)
 
-
     //FOR TESTING OF FAILED TRANSACTION
     // checkoutBody = {"name":"Old Levi","request_id":"1654136111782","pin":"123456","pin_type":"TPIN","contactnumber":"09753351699","email":"lfeudo@cloudpanda.ph","address":"Camba Street Metro Manil","regCode":"13","provCode":"1339","citymunCode":"133902","total_amount":250,"srp_totalamount":300,"order_type":2,"order_logs":[{"sys_shop":3,"branchid":"11","delivery_amount":150,"original_shipping_fee":150,"handle_shipping_promo":1,"hash":"","hash_delivery_amount":"cWxWNHl0MElPY1VwZ2ZGRzBpVU05UT09","daystoship":5,"daystoship_to":7,"items":[{"sys_shop":3,"product_id":"121aa4c6b3264625b7dca29f9804d4e3","itemname":"Gyoza to-go","quantity":1,"amount":250,"srp_amount":"300.00","srp_totalamount":300,"total_amount":250,"order_type":1}]}],"user_id":8834,"notes":"Yes","latitude":"","longitude":"","postalcode":"","account_type":0,"disrate":[],"vouchers":[{"voucher_id":"23","voucher_type":"2","voucher_code":"","voucher_name":"TEST ONLY SCENARIO 1","discounted_totalamount":250,"discount_totalamount":50,"shouldered_by":"2","start_date":"2022-06-01 10:49:00","end_date":"2022-06-02 10:49:00","shop_id":"0","product_id":"ced50626f3764dadb8e4e28278ceb679,121aa4c6b3264625b7dca29f9804d4e3,3fe8ef03ab0c437f9874f8b7744f5af0,7122e1dcb7814e2499ecae17a7ed719c,5aa12e1f96004c668d211890282dc722","regions":"13","payment_method":"0","discount_type":"1","discount_amount":"50","discount_cap":"","minimum_purchase":"100","on_top":null,"vcode_isset":"0","items":[{"product_id":"121aa4c6b3264625b7dca29f9804d4e3","amount":"300.00","total_amount":300,"srp_amount":"300.00","srp_totalamount":300,"quantity":1,"discounted_amount":250,"discounted_totalamount":250,"discount_amount":50,"discount_totalamount":50}],"autoApply":true,"voucherCodeType":"promotion","hash_delivery_amount":"dFg4RXhKb3htN01naW9QOFk1YWw0QT09"}],"shippingvouchers":[],"referral_code":"","referral_account_type":"","payment_method":"TOKTOKWALLET","hash_amount":"efd7df5ea029797ee9c693f863236444","reference_num":"TOK62981D2F71D61","orderRefNum":"TOK62981D2F71D61","discounted_totalamount":null}
     
     const req = await ApiCall("checkout", checkoutBody, false)
     
     setProcessingCheckout(false)
+
+    console.log("CHECKOUT PAYLOAD", JSON.stringify(checkoutBody))
+    console.log("API RESPONSE", JSON.stringify(req))
 
     if(req.responseData && req.responseData.success == 1){
 
@@ -804,15 +775,18 @@ const Component = ({route, navigation, createMyCartSession}) => {
       CheckoutContextData.setShippingFeeRates([])
       CheckoutContextData.setUnserviceableShipping([])
 
-      
+      const payload = {
+        userId: userData.userId,
+        shops: shops,
+        refCom: getRefComAccountType({session: toktokSession}),
+        addressId: id
+      }
+
+      console.log("CHECKOUT RENDER PAYLOAD", JSON.stringify(payload))
+
       getCheckoutData({
         variables: {
-          input: {
-            userId: userData.userId,
-            shops: shops,
-            refCom: getRefComAccountType({session: toktokSession}),
-            addressId: id
-          }
+          input: payload
         }
       })
     }
