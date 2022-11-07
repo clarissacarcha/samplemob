@@ -80,10 +80,10 @@ export const ReceiptDetails = ({route}) => {
           <Text style={styles.title}>Transaction Date </Text>
           <Text style={styles.description}>{moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}</Text>
         </View>
-        {paymentType.name != '' && (
+        {!!paymentType?.description && (
           <View style={[styles.bodyContainer, styles.marginBottom15]}>
             <Text style={styles.title}>Payment Type</Text>
-            <Text style={styles.description}>{paymentType.name}</Text>
+            <Text style={styles.description}>{paymentType.description}</Text>
           </View>
         )}
         <View style={[styles.bodyContainer, styles.marginBottom15]}>

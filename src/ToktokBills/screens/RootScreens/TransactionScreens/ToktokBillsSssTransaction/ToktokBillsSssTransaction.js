@@ -132,7 +132,7 @@ const MainComponent = ({route, favoriteDetails}) => {
     },
   });
 
-  // PATCH REMOVE FAVORITE BILL
+  // GET SSS MEMBERSHIP TYPES
   const [getSSSMembershipTypes, {loading: sssMembershipTypesLoading, error: sssMembershipTypesError}] = useLazyQuery(
     GET_SSS_MEMBERSHIP_TYPES,
     {
@@ -157,6 +157,7 @@ const MainComponent = ({route, favoriteDetails}) => {
   const onRefresh = () => {
     refetch();
     getMyAccount();
+    getSSSMembershipTypes();
   };
 
   const onPressFavorite = () => {

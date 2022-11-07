@@ -111,10 +111,10 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
         note2={billItemSettings?.itemDocumentDetails?.paymentPolicy2}
       />
       <ContentContainer>
-        {paymentType.name != '' && (
+        {!!paymentType?.description && (
           <DetailsContainer>
             <Label>Payment Type</Label>
-            <Value>{paymentType.name}</Value>
+            <Value>{paymentType.description}</Value>
           </DetailsContainer>
         )}
         <DetailsContainer>

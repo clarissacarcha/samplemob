@@ -41,6 +41,7 @@ const PagIbigFundForm = (props: PropsType): React$Node => {
     changeFeesValue,
     postComputeConvenienceFee,
     getConvenienceFeeText,
+    pagibigPaymentTypes,
   } = useContext(TransactionVerifyContext);
   const {billItemSettings, headerHeight} = props;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -87,13 +88,9 @@ const PagIbigFundForm = (props: PropsType): React$Node => {
     <Container>
       <InputContainer>
         <CustomSelectionList
-          selectedValue={data.paymentType.name}
+          selectedValue={data.paymentType?.description}
           label="Payment Type"
-          data={[
-            {id: 1, name: 'Contribution', minAmount: 100},
-            {id: 2, name: 'Housing Loan', minAmount: 5},
-            {id: 3, name: 'Modified Pag-IBIG 2 (MP2)', minAmount: 500},
-          ]}
+          data={pagibigPaymentTypes}
           onSelectedValue={({item}) => {
             changeDataValue('paymentType', item);
             changeErrorMessages('paymentType', '');

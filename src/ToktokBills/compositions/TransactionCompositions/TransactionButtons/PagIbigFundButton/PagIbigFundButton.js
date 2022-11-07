@@ -92,7 +92,7 @@ const PagIbigFundButton = (props: PropsType): React$Node => {
     }
 
     const isFirstFieldValid = checkIsValidField('firstField', data.firstField, 'Account Number', 20, 2, 12);
-    const isPaymentTypeValid = isFieldRequired('paymentType', data.paymentType.name, 'selection');
+    const isPaymentTypeValid = isFieldRequired('paymentType', data.paymentType?.description, 'selection');
     const isSecondFieldValid = checkContactNumber('secondField', data.secondField);
     const isPcfValid = isFieldRequired('periodCoveredFrom', data.periodCoveredFrom);
     const isPctValid = isFieldRequired('periodCoveredTo', data.periodCoveredTo);

@@ -40,8 +40,6 @@ export const TransactionVerifyContextProvider = (props: PropsType): React$Node =
     firstField: favoriteDetails ? favoriteDetails.firstFieldValue : '', //sss = prn; pag-ibig = account number;
     secondField: secondField, //sss = customer name; pag-ibig = contact number;
     amount: '',
-    // payorTypeName: '', //membership type = sss
-    // payorTypeId: '', //membership type = sss
     periodCoveredFrom: '', //pag-ibig
     periodCoveredTo: '', //pag-ibig
     paymentType: {name: '', id: ''}, //pag-ibig
@@ -66,6 +64,7 @@ export const TransactionVerifyContextProvider = (props: PropsType): React$Node =
   });
   const [isInsufficientBalance, setIsInsufficientBalance] = useState(false);
   const [sssMembershipTypes, setSssMembershipTypes] = useState([]);
+  const [pagibigPaymentTypes, setPagibigPaymentTypes] = useState([]);
 
   const changeDataValue = (key, value) => {
     setData(oldstate => ({
@@ -175,6 +174,8 @@ export const TransactionVerifyContextProvider = (props: PropsType): React$Node =
         checkContactNumber,
         sssMembershipTypes,
         setSssMembershipTypes,
+        pagibigPaymentTypes,
+        setPagibigPaymentTypes,
       }}>
       {children}
     </Provider>

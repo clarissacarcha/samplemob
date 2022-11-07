@@ -33,12 +33,16 @@ import {AlertOverlay} from 'src/components';
 import {useAccount} from 'toktokwallet/hooks';
 import {useSelector} from 'react-redux';
 //GRAPHQL
-import {useMutation, useQuery} from '@apollo/react-hooks';
+import {useMutation, useQuery, useLazyQuery} from '@apollo/react-hooks';
 import {usePrompt} from 'src/hooks';
 import {ErrorUtility} from 'toktokbills/util';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_BILL_ITEM_SETTINGS, PATCH_REMOVE_FAVORITE_BILL, POST_FAVORITE_BILL} from 'toktokbills/graphql/model';
-import {setTimeout} from 'react-native/Libraries/Core/Timers/JSTimers';
+import {
+  GET_BILL_ITEM_SETTINGS,
+  GET_PAGIBIG_PAYMENT_TYPES,
+  PATCH_REMOVE_FAVORITE_BILL,
+  POST_FAVORITE_BILL,
+} from 'toktokbills/graphql/model';
 
 const MainComponent = ({route, favoriteDetails}) => {
   const navigation = useNavigation();
@@ -67,6 +71,7 @@ const MainComponent = ({route, favoriteDetails}) => {
     checkContactNumber,
     isInsufficientBalance,
     setIsInsufficientBalance,
+    setPagibigPaymentTypes,
   } = useContext(TransactionVerifyContext);
   const {user} = useSelector(state => state.session);
 
@@ -127,6 +132,23 @@ const MainComponent = ({route, favoriteDetails}) => {
       }
     },
   });
+
+  // GET PAGIBIG PAYMENT TYPES
+  const [getPagibigPaymentTypes, {loading: pagibigTypesLoading, error: pagibigTypesError}] = useLazyQuery(
+    GET_PAGIBIG_PAYMENT_TYPES,
+    {
+      fetchPolicy: 'cache-and-network',
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onCompleted: ({getPagibigPaymentTypes}) => {
+        setPagibigPaymentTypes(getPagibigPaymentTypes);
+      },
+    },
+  );
+
+  useEffect(() => {
+    getPagibigPaymentTypes();
+  }, []);
+
   useEffect(() => {
     if (user.toktokWalletAccountId) {
       getMyAccount();
@@ -136,6 +158,7 @@ const MainComponent = ({route, favoriteDetails}) => {
   const onRefresh = () => {
     refetch();
     getMyAccount();
+    getPagibigPaymentTypes();
   };
 
   const onPressFavorite = () => {
@@ -180,17 +203,17 @@ const MainComponent = ({route, favoriteDetails}) => {
     }
   };
 
-  if (loading || (getMyAccountLoading && !isMounted)) {
+  if (loading || pagibigTypesLoading || (getMyAccountLoading && !isMounted)) {
     return (
       <Container>
         <LoadingIndicator isLoading={true} isFlex />
       </Container>
     );
   }
-  if (error || (getMyAccountError && !getMyAccountError?.networkError)) {
+  if (error || pagibigTypesError || (getMyAccountError && !getMyAccountError?.networkError)) {
     return (
       <Container>
-        <SomethingWentWrong onRefetch={onRefresh} error={error ?? getMyAccountError} />
+        <SomethingWentWrong onRefetch={onRefresh} error={error ?? getMyAccountError ?? pagibigTypesError} />
       </Container>
     );
   }
