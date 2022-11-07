@@ -36,7 +36,7 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
     firstField,
     secondField,
     amount,
-    payorTypeName, //sss
+    payorType, //sss
     paymentType, //pag-ibig
     periodCoveredFrom, //pag-ibig
     periodCoveredTo, //pag-ibig
@@ -121,10 +121,10 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
           <Label>{firstFieldName}</Label>
           <Value>{firstField}</Value>
         </DetailsContainer>
-        {payorTypeName != '' && (
+        {!!payorType?.description && (
           <DetailsContainer>
             <Label>Payor Type</Label>
-            <Value>{payorTypeName}</Value>
+            <Value>{payorType.description}</Value>
           </DetailsContainer>
         )}
         <DetailsContainer>

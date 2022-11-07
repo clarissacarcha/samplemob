@@ -29,7 +29,7 @@ export const ReceiptDetails = ({route}) => {
     providerServiceFee,
     systemServiceFee,
   } = receipt;
-  const {emailAddress, billItemSettings, paymentType, payorTypeName, itemCode, periodCoveredFrom, periodCoveredTo} =
+  const {emailAddress, billItemSettings, paymentType, payorType, itemCode, periodCoveredFrom, periodCoveredTo} =
     paymentData;
   const totalAmount = parseInt(amount) + convenienceFee;
   const [logo, setLogo] = useState({height: 0, width: 0});
@@ -90,10 +90,10 @@ export const ReceiptDetails = ({route}) => {
           <Text style={styles.title}>{firstFieldName}</Text>
           <Text style={styles.description}>{destinationNumber}</Text>
         </View>
-        {payorTypeName != '' && (
+        {!!payorType?.description && (
           <View style={[styles.bodyContainer, styles.marginBottom15]}>
             <Text style={styles.title}>Payor Type</Text>
-            <Text style={styles.description}>{payorTypeName}</Text>
+            <Text style={styles.description}>{payorType.description}</Text>
           </View>
         )}
         <View style={[styles.bodyContainer, styles.marginBottom15]}>

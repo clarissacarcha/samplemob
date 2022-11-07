@@ -93,7 +93,7 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
         TPIN: requestMoneyDetails.validator === 'TPIN' ? pinCode : '',
         OTP: requestMoneyDetails.validator === 'OTP' ? pinCode : '',
       },
-      referenceNumber: itemCode !== '' ? '' : requestMoneyDetails?.referenceNumber,
+      referenceNumber: requestMoneyDetails?.referenceNumber,
       senderName: `${firstName} ${lastName}`,
       senderFirstName: firstName,
       senderMobileNumber: user.username,

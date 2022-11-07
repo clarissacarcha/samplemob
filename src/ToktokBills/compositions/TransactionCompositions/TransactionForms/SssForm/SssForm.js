@@ -7,8 +7,8 @@ import React, {useContext, useEffect, useState} from 'react';
 
 import type {PropsType} from './types';
 import {Container, FeeInformation, InputContainer} from './Styled';
-import {CustomAmountInput, CustomSelectionList, PolicyNote} from 'toktokwallet/components';
-import {CustomTextInput} from 'toktokbills/components';
+import {CustomAmountInput, PolicyNote} from 'toktokwallet/components';
+import {CustomTextInput, CustomSelectionList} from 'toktokbills/components';
 import {TransactionVerifyContext} from '../../TransactionVerifyContextProvider';
 //HELPER
 import {
@@ -40,6 +40,7 @@ const SssForm = (props: PropsType): React$Node => {
     changeFeesValue,
     postComputeConvenienceFee,
     getConvenienceFeeText,
+    sssMembershipTypes,
   } = useContext(TransactionVerifyContext);
   const {billItemSettings, headerHeight} = props;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -103,20 +104,14 @@ const SssForm = (props: PropsType): React$Node => {
         </InputContainer>
         <InputContainer>
           <CustomSelectionList
-            selectedValue={data.payorTypeName}
+            selectedValue={data.payorType?.description}
             label="Payor Type"
-            data={[
-              {description: 'Farmers & Fisherman'},
-              {description: 'Non-working Spouse'},
-              {description: 'Overseas Filipino Worker (OFW)'},
-              {description: 'Self-employed'},
-              {description: 'Voluntary'},
-            ]}
-            onSelectedValue={({value}) => {
-              changeDataValue('payorTypeName', value);
-              changeErrorMessages('payorTypeName', '');
+            data={sssMembershipTypes}
+            onSelectedValue={({item}) => {
+              changeDataValue('payorType', item);
+              changeErrorMessages('payorType', '');
             }}
-            errorMessage={errorMessages.payorTypeName}
+            errorMessage={errorMessages.payorType}
             placeholder="Select Payor Type"
           />
         </InputContainer>

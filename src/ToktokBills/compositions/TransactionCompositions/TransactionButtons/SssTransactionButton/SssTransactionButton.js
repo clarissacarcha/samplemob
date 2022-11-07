@@ -94,7 +94,7 @@ const SssTransactionButton = (props: PropsType): React$Node => {
       1,
       null,
     );
-    const isPayorTypeValid = isFieldRequired('payorTypeName', data.payorTypeName, 'selection');
+    const isPayorTypeValid = isFieldRequired('payorType', data.payorType?.description, 'selection');
     const isSecondFieldValid = checkIsValidField('secondField', data.secondField, 'Customer Name', 30, 2, null);
     const isAmountValid = checkAmount();
     const isValidEmail = checkEmail();

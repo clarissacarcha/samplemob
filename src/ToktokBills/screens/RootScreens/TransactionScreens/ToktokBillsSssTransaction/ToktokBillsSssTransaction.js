@@ -34,12 +34,16 @@ import {AlertOverlay} from 'src/components';
 import {useAccount} from 'toktokwallet/hooks';
 import {useSelector} from 'react-redux';
 //GRAPHQL
-import {useMutation, useQuery} from '@apollo/react-hooks';
+import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
 import {usePrompt} from 'src/hooks';
 import {ErrorUtility} from 'toktokbills/util';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_BILL_ITEM_SETTINGS, PATCH_REMOVE_FAVORITE_BILL, POST_FAVORITE_BILL} from 'toktokbills/graphql/model';
-import {setTimeout} from 'react-native/Libraries/Core/Timers/JSTimers';
+import {
+  GET_BILL_ITEM_SETTINGS,
+  GET_SSS_MEMBERSHIP_TYPES,
+  PATCH_REMOVE_FAVORITE_BILL,
+  POST_FAVORITE_BILL,
+} from 'toktokbills/graphql/model';
 
 const MainComponent = ({route, favoriteDetails}) => {
   const navigation = useNavigation();
@@ -58,8 +62,16 @@ const MainComponent = ({route, favoriteDetails}) => {
   });
 
   const {getMyAccountLoading, getMyAccount, getMyAccountError} = useAccount({options: {isOnErrorAlert: false}});
-  const {data, changeErrorMessages, fees, errorMessages, checkIsValidField, isFieldRequired} =
-    useContext(TransactionVerifyContext);
+  const {
+    data,
+    changeErrorMessages,
+    fees,
+    errorMessages,
+    checkIsValidField,
+    isFieldRequired,
+    setSssMembershipTypes,
+    sssMembershipTypes,
+  } = useContext(TransactionVerifyContext);
   const {user} = useSelector(state => state.session);
 
   // GET BILL ITEM SETTINGS
@@ -119,6 +131,23 @@ const MainComponent = ({route, favoriteDetails}) => {
       }
     },
   });
+
+  // PATCH REMOVE FAVORITE BILL
+  const [getSSSMembershipTypes, {loading: sssMembershipTypesLoading, error: sssMembershipTypesError}] = useLazyQuery(
+    GET_SSS_MEMBERSHIP_TYPES,
+    {
+      fetchPolicy: 'cache-and-network',
+      client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+      onCompleted: ({getSSSMembershipTypes}) => {
+        setSssMembershipTypes(getSSSMembershipTypes);
+      },
+    },
+  );
+
+  useEffect(() => {
+    getSSSMembershipTypes();
+  }, []);
+
   useEffect(() => {
     if (user.toktokWalletAccountId) {
       getMyAccount();
@@ -154,8 +183,8 @@ const MainComponent = ({route, favoriteDetails}) => {
     if (errorMessages.amount !== '') {
       changeErrorMessages('amount', '');
     }
-    if (errorMessages.payorTypeName !== '') {
-      changeErrorMessages('payorTypeName', '');
+    if (errorMessages.payorType !== '') {
+      changeErrorMessages('payorType', '');
     }
 
     if (isFirstFieldValid && isSecondFieldValid) {
@@ -171,17 +200,17 @@ const MainComponent = ({route, favoriteDetails}) => {
     }
   };
 
-  if (loading || (getMyAccountLoading && !isMounted)) {
+  if (loading || sssMembershipTypesLoading || (getMyAccountLoading && !isMounted)) {
     return (
       <Container>
         <LoadingIndicator isLoading={true} isFlex />
       </Container>
     );
   }
-  if (error || (getMyAccountError && !getMyAccountError?.networkError)) {
+  if (error || sssMembershipTypesError || (getMyAccountError && !getMyAccountError?.networkError)) {
     return (
       <Container>
-        <SomethingWentWrong onRefetch={onRefresh} error={error ?? getMyAccountError} />
+        <SomethingWentWrong onRefetch={onRefresh} error={error ?? getMyAccountError ?? sssMembershipTypesError} />
       </Container>
     );
   }
