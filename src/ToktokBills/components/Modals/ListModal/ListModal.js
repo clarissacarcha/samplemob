@@ -66,7 +66,7 @@ const ItemDetails = ({
     <ItemDetailsContainer
       disabled={disabled}
       onPress={() => {
-        onChangeSelect({value: display.name, index});
+        onChangeSelect({item, index});
         setVisible(false);
         setSearch('');
       }}>

@@ -11,4 +11,9 @@ export type PropsType = {
   errorMessage: string,
   label?: string,
   dateFormat?: string,
+  placeholder?: string,
+  minDate?: Date,
+  isMinDateToday?: boolean,
+  displaySelectedValue: string,
+  hasIcon?: boolean,
 };

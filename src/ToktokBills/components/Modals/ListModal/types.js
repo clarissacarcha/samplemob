@@ -9,7 +9,7 @@ export type PropsType = {
   visible: boolean,
   setVisible: any,
   data: Array<Object>,
-  onChangeSelect: Function,
+  onChangeSelect: any,
   withSearch?: boolean,
   onSearchValue: string => void,
   hasDefault?: boolean,

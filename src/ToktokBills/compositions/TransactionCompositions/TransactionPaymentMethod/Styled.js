@@ -61,7 +61,7 @@ export const Wallet: ComponentType<any> = styled.Text`
 `;
 export const TokwaBalance: ComponentType<any> = styled.Text`
   color: #525252;
-  font-size: ${FONT_SIZE.M}px;
+  font-size: ${FONT_SIZE.S}px;
 `;
 export const CashInContainer: ComponentType<any> = styled.View`
   flex-direction: row;

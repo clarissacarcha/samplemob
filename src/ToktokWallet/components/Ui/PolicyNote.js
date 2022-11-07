@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   noteLogo: {
     height: moderateScale(12),
     width: moderateScale(12),
-    marginTop: Platform.OS === 'android' ? moderateScale(3) : 0,
+    marginTop: moderateScale(3),
   },
   subTextNote1: {
     fontFamily: FONT.BOLD,

@@ -17,20 +17,34 @@ import {useSelector} from 'react-redux';
 export const TransactionVerifyContext: React$Context<any> = createContext<any>();
 const {Provider} = TransactionVerifyContext;
 
+const secondFieldValue = (itemCode, user, favoriteDetails) => {
+  switch (itemCode) {
+    case 'SSS':
+      return `${user.person.firstName} ${user.person.lastName}`;
+    case 'PAG_IBIG':
+      const mobNum = favoriteDetails ? favoriteDetails.secondFieldValue : user.person.mobileNumber;
+      return mobNum.includes('+63') ? mobNum.replace('+63', '') : mobNum.replace('0', '');
+    default:
+      return '';
+  }
+};
 export const TransactionVerifyContextProvider = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const {tokwaAccount} = useAccount();
   const {user} = useSelector(state => state.session);
   const {children, favoriteDetails, itemCode} = props;
-  const secondField = itemCode === 'SSS' ? `${user.person.firstName} ${user.person.lastName}` : '';
+  const secondField = secondFieldValue(itemCode, user, favoriteDetails);
 
   const [data, setData] = useState({
-    emailAddress: tokwaAccount.person.emailAddress,
-    firstField: favoriteDetails ? favoriteDetails.firstFieldValue : '',
-    secondField: favoriteDetails ? favoriteDetails.secondFieldValue : secondField,
+    emailAddress: user.person.emailAddress,
+    firstField: favoriteDetails ? favoriteDetails.firstFieldValue : '', //sss = prn; pag-ibig = account number;
+    secondField: secondField, //sss = customer name; pag-ibig = contact number;
     amount: '',
-    payorTypeName: '',
-    payorTypeId: '',
+    payorTypeName: '', //membership type = sss
+    payorTypeId: '', //membership type = sss
+    periodCoveredFrom: '', //pag-ibig
+    periodCoveredTo: '', //pag-ibig
+    paymentType: {name: '', id: ''}, //pag-ibig
   });
   const [errorMessages, setErrorMessages] = useState({
     amount: '',
@@ -38,6 +52,9 @@ export const TransactionVerifyContextProvider = (props: PropsType): React$Node =
     firstField: '',
     secondField: '',
     payorTypeName: '',
+    paymentType: '',
+    periodCoveredFrom: '',
+    periodCoveredTo: '',
   });
   const [fees, setFees] = useState({
     systemServiceFee: 0,
@@ -112,7 +129,6 @@ export const TransactionVerifyContextProvider = (props: PropsType): React$Node =
   };
 
   const checkIsValidField = (key, fieldValue, fieldName, fieldWidth, fieldType, minWidth) => {
-    console.log(fieldValue, fieldWidth);
     let errorMessage = fieldValue
       ? processErrorMessage(fieldValue, fieldName, fieldWidth, fieldType, minWidth)
       : 'This is a required field';
@@ -124,6 +140,15 @@ export const TransactionVerifyContextProvider = (props: PropsType): React$Node =
   const isFieldRequired = (key, value, type) => {
     const errorType = type === 'selection' ? 'Please make a selection' : 'This is a required field';
     const error = value === '' ? errorType : '';
+    changeErrorMessages(key, error);
+    return !error;
+  };
+
+  const checkContactNumber = (key, value) => {
+    let error = value === '' ? 'This is a required field' : '';
+    if (error === '' && value.length < 10) {
+      error = 'Invalid contact number';
+    }
     changeErrorMessages(key, error);
     return !error;
   };
@@ -145,6 +170,7 @@ export const TransactionVerifyContextProvider = (props: PropsType): React$Node =
         setIsInsufficientBalance,
         checkIsValidField,
         isFieldRequired,
+        checkContactNumber,
       }}>
       {children}
     </Provider>

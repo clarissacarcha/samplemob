@@ -7,7 +7,7 @@ import React, {useContext, useEffect, useState} from 'react';
 
 import type {PropsType} from './types';
 import {Container, FeeInformation, InputContainer} from './Styled';
-import {CustomAmountInput, CustomSelectionList} from 'toktokwallet/components';
+import {CustomAmountInput, CustomSelectionList, PolicyNote} from 'toktokwallet/components';
 import {CustomTextInput} from 'toktokbills/components';
 import {TransactionVerifyContext} from '../../TransactionVerifyContextProvider';
 //HELPER
@@ -83,77 +83,80 @@ const SssForm = (props: PropsType): React$Node => {
   };
 
   return (
-    <Container>
-      <InputContainer>
-        <CustomTextInput
-          label="Payment Reference Number (PRN)"
+    <>
+      <PolicyNote note1="Member loans and Real-state loan is currently not available on ECPAY service. Only individual contributions are accepted until further notice." />
+      <Container>
+        <InputContainer>
+          <CustomTextInput
+            label="Payment Reference Number (PRN)"
+            onChangeText={value => {
+              changeData('firstField', value, 1, 14, 1);
+              changeErrorMessages('firstField', '');
+            }}
+            value={data.firstField}
+            errorMessage={errorMessages.firstField}
+            keyboardType={'numeric'}
+            maxLength={14}
+            returnKeyType="done"
+            information="Payment Reference Number is a unique number given to SSS members for identification when paying contributions and loan."
+          />
+        </InputContainer>
+        <InputContainer>
+          <CustomSelectionList
+            selectedValue={data.payorTypeName}
+            label="Payor Type"
+            data={[
+              {description: 'Farmers & Fisherman'},
+              {description: 'Non-working Spouse'},
+              {description: 'Overseas Filipino Worker (OFW)'},
+              {description: 'Self-employed'},
+              {description: 'Voluntary'},
+            ]}
+            onSelectedValue={({value}) => {
+              changeDataValue('payorTypeName', value);
+              changeErrorMessages('payorTypeName', '');
+            }}
+            errorMessage={errorMessages.payorTypeName}
+            placeholder="Select Payor Type"
+          />
+        </InputContainer>
+        <InputContainer>
+          <CustomTextInput
+            label="Customer Name"
+            onChangeText={value => {
+              changeDataValue('secondField', value);
+              changeErrorMessages('secondField', '');
+            }}
+            value={data.secondField}
+            returnKeyType="done"
+            maxLength={30}
+            errorMessage={errorMessages.secondField}
+          />
+        </InputContainer>
+        <InputContainer>
+          <CustomTextInput
+            label="Email Address"
+            onChangeText={value => {
+              changeDataValue('emailAddress', value);
+              changeErrorMessages('emailAddress', '');
+            }}
+            value={data.emailAddress}
+            returnKeyType="done"
+            errorMessage={errorMessages.emailAddress}
+          />
+        </InputContainer>
+        <CustomAmountInput
+          label={'Enter Amount'}
+          value={data.amount}
           onChangeText={value => {
-            changeData('firstField', value, 1, 14, 1);
-            changeErrorMessages('firstField', '');
+            changeAmount(value);
           }}
-          value={data.firstField}
-          errorMessage={errorMessages.firstField}
-          keyboardType={'numeric'}
-          maxLength={14}
-          returnKeyType="done"
-          information="Payment Reference Number is a unique number given to SSS members for identification when paying contributions and loan."
+          errorMessage={errorMessages.amount}
+          // onBlur={computeConvenienceFee}
         />
-      </InputContainer>
-      <InputContainer>
-        <CustomSelectionList
-          selectedValue={data.payorTypeName}
-          label="Payor Type"
-          data={[
-            {description: 'Farmers & Fisherman'},
-            {description: 'Non-working Spouse'},
-            {description: 'Overseas Filipino Worker (OFW)'},
-            {description: 'Self-employed'},
-            {description: 'Voluntary'},
-          ]}
-          onSelectedValue={({value}) => {
-            changeDataValue('payorTypeName', value);
-            changeErrorMessages('payorTypeName', '');
-          }}
-          errorMessage={errorMessages.payorTypeName}
-          placeholder="Select Payor Type"
-        />
-      </InputContainer>
-      <InputContainer>
-        <CustomTextInput
-          label="Customer Name"
-          onChangeText={value => {
-            changeDataValue('secondField', value);
-            changeErrorMessages('secondField', '');
-          }}
-          value={data.secondField}
-          returnKeyType="done"
-          maxLength={30}
-          errorMessage={errorMessages.secondField}
-        />
-      </InputContainer>
-      <InputContainer>
-        <CustomTextInput
-          label="Email Address"
-          onChangeText={value => {
-            changeDataValue('emailAddress', value);
-            changeErrorMessages('emailAddress', '');
-          }}
-          value={data.emailAddress}
-          returnKeyType="done"
-          errorMessage={errorMessages.emailAddress}
-        />
-      </InputContainer>
-      <CustomAmountInput
-        label={'Enter Amount'}
-        value={data.amount}
-        onChangeText={value => {
-          changeAmount(value);
-        }}
-        errorMessage={errorMessages.amount}
-        // onBlur={computeConvenienceFee}
-      />
-      <FeeInformation>{convenienceFeeText}</FeeInformation>
-    </Container>
+        <FeeInformation>{convenienceFeeText}</FeeInformation>
+      </Container>
+    </>
   );
 };
 

@@ -36,7 +36,7 @@ const FavoriteItems = (props: PropsType): React$Node => {
         screen = 'ToktokBillsSssTransaction';
         break;
       case 'PAG_IBIG':
-        screen = 'ToktokBillsTransaction';
+        screen = 'ToktokBillsPagIbigFundTransaction';
         break;
       default:
         screen = 'ToktokBillsTransaction';

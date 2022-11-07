@@ -28,6 +28,14 @@ const MobileNumberInput = (props: PropsType): React$Node => {
     label = '',
   } = props;
 
+  const onChangeTextProcess = value => {
+    let mobile = value.replace(/[^0-9]/g, '');
+    if (mobile.length > 10) {
+      return;
+    }
+    onChangeText(value[0] !== '9' && value !== '' ? '9' : mobile);
+  };
+
   return (
     <>
       {label !== '' && <Label>{label}</Label>}
@@ -38,7 +46,7 @@ const MobileNumberInput = (props: PropsType): React$Node => {
         <Input
           style={style}
           value={value}
-          onChangeText={onChangeText}
+          onChangeText={value => onChangeTextProcess(value)}
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
           returnKeyType={returnKeyType}

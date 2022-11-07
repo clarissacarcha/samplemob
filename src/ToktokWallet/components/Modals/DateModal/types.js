@@ -13,4 +13,5 @@ export type PropsType = {
   isCurrentDate?: boolean,
   minDate?: Date,
   maxDate?: Date,
+  isMinDateToday?: boolean,
 };

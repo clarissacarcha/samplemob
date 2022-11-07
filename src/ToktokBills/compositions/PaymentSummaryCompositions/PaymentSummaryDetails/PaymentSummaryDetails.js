@@ -27,6 +27,7 @@ import {
 import {LoadingIndicator, PolicyNote, Separator} from 'toktokwallet/components';
 //HELPER
 import {pesonetPolicy, currencyCode, numberFormat, moderateScale} from 'toktokwallet/helper';
+import moment from 'moment/moment';
 
 const PaymentSummaryDetails = (props: PropsType): React$Node => {
   const {navigation, route} = props;
@@ -35,7 +36,10 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
     firstField,
     secondField,
     amount,
-    payorTypeName,
+    payorTypeName, //sss
+    paymentType, //pag-ibig
+    periodCoveredFrom, //pag-ibig
+    periodCoveredTo, //pag-ibig
     emailAddress,
     billType,
     totalServiceFee,
@@ -55,8 +59,8 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
       secondFieldName = 'Customer Name';
       break;
     case 'PAG_IBIG':
-      firstFieldName = 'Payment Type';
-      secondFieldName = 'Account Number';
+      firstFieldName = 'Account Number';
+      secondFieldName = 'Contact Number';
       break;
     default:
       firstFieldName = billItemSettings.firstFieldName;
@@ -78,7 +82,7 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
       }
     });
   }, []);
-
+  console.log(paymentType);
   return (
     <>
       <BackgroundContainer>
@@ -107,6 +111,12 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
         note2={billItemSettings?.itemDocumentDetails?.paymentPolicy2}
       />
       <ContentContainer>
+        {paymentType.name != '' && (
+          <DetailsContainer>
+            <Label>Payment Type</Label>
+            <Value>{paymentType.name}</Value>
+          </DetailsContainer>
+        )}
         <DetailsContainer>
           <Label>{firstFieldName}</Label>
           <Value>{firstField}</Value>
@@ -121,6 +131,18 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
           <Label>{secondFieldName}</Label>
           <Value>{secondField}</Value>
         </DetailsContainer>
+        {periodCoveredFrom != '' && (
+          <DetailsContainer>
+            <Label>Period Covered From</Label>
+            <Value>{moment(periodCoveredFrom).format('MM YYYY').replace(' ', '')}</Value>
+          </DetailsContainer>
+        )}
+        {periodCoveredTo != '' && (
+          <DetailsContainer>
+            <Label>Period Covered To</Label>
+            <Value>{moment(periodCoveredTo).format('MM YYYY').replace(' ', '')}</Value>
+          </DetailsContainer>
+        )}
         <DetailsContainer>
           <Label>Email Address</Label>
           <Value>{emailAddress}</Value>
