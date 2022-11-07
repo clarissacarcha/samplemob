@@ -101,7 +101,7 @@ const TokTokFoodSplashScreen = () => {
     client: CLIENT,
     onCompleted: ({patchToktokFoodUserId}) => {
       // console.log('patchToktokFoodUserId: ' + JSON.stringify(patchToktokFoodUserId));
-      if (patchToktokFoodUserId.status !== 200) {
+      if (parseInt(patchToktokFoodUserId.status) !== 200) {
         return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
         // Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
       }
