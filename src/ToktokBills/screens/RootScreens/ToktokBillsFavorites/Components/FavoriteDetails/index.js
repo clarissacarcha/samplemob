@@ -15,11 +15,23 @@ export const FavoriteDetails = ({item, index, onPressFavorite, onRefreshFavorite
   const navigation = useNavigation();
   const route = useRoute();
   const [imageLoading, setImageLoading] = useState(true);
-  const {billItemId, billItem, id, firstFieldValue, secondFieldValue} = item.node;
+  const {billItemId, billItem, id, firstFieldValue, secondFieldValue, itemCode} = item.node;
   const {descriptions, logo, billType} = billItem;
 
   const onPress = () => {
-    navigation.navigate('ToktokBillsPaymentProcess', {
+    let screen = '';
+    switch (itemCode) {
+      case 'SSS':
+        screen = 'ToktokBillsSssTransaction';
+        break;
+      case 'PAG_IBIG':
+        screen = 'ToktokBillsTransaction';
+        break;
+      default:
+        screen = 'ToktokBillsTransaction';
+    }
+
+    navigation.navigate(screen, {
       billItemId: billItemId,
       billType: billItem.billType,
       favoriteDetails: {
@@ -28,6 +40,7 @@ export const FavoriteDetails = ({item, index, onPressFavorite, onRefreshFavorite
         secondFieldValue: secondFieldValue,
       },
       onRefreshFavorite,
+      itemCode,
     });
   };
 
