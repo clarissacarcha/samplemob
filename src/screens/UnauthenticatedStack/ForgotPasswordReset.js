@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import {AlertOverlay, HeaderBack, HeaderTitle} from '../../components';
 import {COLOR, DARK, LIGHT, MEDIUM, ACCOUNT_TYPE} from '../../res/constants';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Splash from '../../assets/images/LinearGradiant.png';
 import ToktokGoIcon from '../../assets/images/ToktokGoIcon.png';
 import constants from '../../common/res/constants';
@@ -58,6 +58,7 @@ const PostRegistration = ({navigation, route}) => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [secureConfirmPassword, setSecureConfirmPassword] = useState(true);
   const [successModal, setSuccessModal] = useState(false);
+  const confirmInputRef = useRef();
 
   const [forgotPasswordReset, {loading}] = useMutation(FORGOT_PASSWORD_RESET, {
     client: AUTH_CLIENT,
@@ -153,8 +154,8 @@ const PostRegistration = ({navigation, route}) => {
     }
 
     /** SPECIAL CONDITION */
-    let regSpecialCase = new RegExp('^(?=.*[!@#$%^&_.])');
-    if (!regSpecialCase.test(password)) {
+    const specialChars = /[`!@#$%{()}^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (!specialChars.test(password)) {
       errorArray.push(4);
       result = false;
     }
@@ -301,7 +302,7 @@ const PostRegistration = ({navigation, route}) => {
                 },
               ]}>
               <TextInput
-                // ref={confirmInputRef}
+                ref={confirmInputRef}
                 style={styles.textInputWithContainer}
                 value={repeatPassword}
                 onChangeText={value => setRepeatPassword(value)}

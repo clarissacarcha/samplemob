@@ -7,7 +7,8 @@ import React, {useContext, useEffect, useState} from 'react';
 
 import type {PropsType} from './types';
 import {Container, FeeInformation, InputContainer} from './Styled';
-import {CustomTextInput, CustomAmountInput, CustomSelectionList} from 'toktokwallet/components';
+import {CustomAmountInput, CustomSelectionList} from 'toktokwallet/components';
+import {CustomTextInput} from 'toktokbills/components';
 import {TransactionVerifyContext} from '../../TransactionVerifyContextProvider';
 //HELPER
 import {
@@ -95,6 +96,7 @@ const SssForm = (props: PropsType): React$Node => {
           keyboardType={'numeric'}
           maxLength={14}
           returnKeyType="done"
+          information="Payment Reference Number is a unique number given to SSS members for identification when paying contributions and loan."
         />
       </InputContainer>
       <InputContainer>

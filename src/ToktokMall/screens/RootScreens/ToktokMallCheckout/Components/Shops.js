@@ -59,7 +59,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
       if(i == 0 && referral && referral?.franchiseeCode != null){
         let shopDiscount = CheckoutContextData.getShopItemDiscount(item[i].shopId, item[i].id)
         if(shopDiscount){
-          total = total + parseFloat(item[i].product.compareAtPrice)
+          total = total + parseFloat(item[i].product.compareAtPrice * item[i].qty)
         }else{
           // total = total + parseFloat(item[i].product.price)
           let itemsrpprice = parseFloat(item[i].product.compareAtPrice * item[i].qty)
@@ -253,7 +253,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           <>            
             {getDeliveryFee(shopid)}
             <View>
-              <Text style = {styles.receiveText}>Receive by {shipping?.deliveryDate || "Add address to calculate"} </Text>
+              <Text style = {styles.receiveText}>{address?.address != "" ? "Receive by " : "Add address to calculate"}{shipping?.deliveryDate || ""} </Text>
             </View>
             <View style={styles.orderContainer}>
               <View style={{flex: 0}}>
@@ -296,7 +296,7 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
                   }
                 }else if(a?.shop_id == "0" || a?.shopid == "0"){
                   let findItem = shopProducts.filter((product) => a.product_id.includes(product.id))
-                  return findItem[0]?.shopId && findItem[0]?.shopId == shop.id
+                  return findItem[0]?.shopId && findItem[0]?.shopId == shop.id && a?.appliedToShop == shop.id
                 }else if(typeof a?.shop_id == "string" && a?.shop_id.includes(",")){
                  return a?.appliedToShop == shop.id
                 }else if(a.autoApply){

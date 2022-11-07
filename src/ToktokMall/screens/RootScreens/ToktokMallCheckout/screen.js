@@ -81,48 +81,6 @@ const Component = ({route, navigation, createMyCartSession}) => {
     setAlertModal(true)
   }
 
-  const [checkItemFromCheckoutx] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
-    client: TOKTOK_MALL_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',    
-    onCompleted: async (response) => {
-      const data = response.checkItemFromCheckout
-
-      const newData = []
-
-      for(var item of data){
-        const cartQty = 0
-        route.params.data.map(({data}) => {
-          data[0].map(({id, qty}) => {
-
-            if(id === item.id){
-              cartQty = qty
-            }
-          })
-        })
-         newData.push({
-          ...item,
-          cartQty
-        })
-      }
-
-
-      //SCENARIO: While entering TPIN, the product got out of stock. We can simulate this by bypassing the current validation
-      // await postCheckoutSetting(data);
-      // return
-      const temp= newData.filter(({status, cartQty, noOfStocks, contSellingIsset}) => status ? !contSellingIsset && cartQty > noOfStocks : true);
-
-      if(temp.length > 0){
-        onProductUnavailable(temp, "id")
-      }else{
-        await postCheckoutSetting(data);
-      }
-
-    },
-    onError: (err) => {
-      console.log(err)
-    }
-  })
-
   const [checkItemFromCheckout] = useLazyQuery(CHECK_ITEM_FROM_CHECKOUT, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',    
@@ -151,12 +109,14 @@ const Component = ({route, navigation, createMyCartSession}) => {
         setFranchisee(data.consumer)        
         await setPaymentList(data.paymentMethods)
 
+        console.log("CHECKOUT RENDER DATA", JSON.stringify(data))
+
         if(paramsData.length > 0){
           let shippingrates = await getShippingRates(data.shippingRatePayload, data.cartrawdata)
           if(shippingrates.length > 0){
             data.autoShippingPayload.cartitems = shippingrates    
-            await getAutoShipping(data.autoShippingPayload)
-            await getAutoApplyVouchers(data.promotionVoucherPayload)
+            // await getAutoShipping(data.autoShippingPayload)
+            // await getAutoApplyVouchers(data.promotionVoucherPayload)
           }
         }
 
@@ -194,10 +154,19 @@ const Component = ({route, navigation, createMyCartSession}) => {
     const res = await ShippingApiCall("get_shipping_rate", payload, true)
     if(res.responseData && res.responseData.success == 1){
       result = res.responseData.newCart
-      CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
-      if(res.responseData?.removedCart){
-        CheckoutContextData.setUnserviceableShipping(res.responseData.removedCart)   
-      }
+      //CHECK IF THERE IS SHIPPING FEE = 0
+      let invalidArray = result.filter(item => parseFloat(item?.shippingfee) == 0)
+      if(invalidArray.length > 0){
+        //THERE IS INVALID
+        let validArray = result.filter(item => parseFloat(item?.shippingfee) > 0)
+        CheckoutContextData.setShippingFeeRates(validArray)
+        CheckoutContextData.setUnserviceableShipping(invalidArray)
+      }else{
+        CheckoutContextData.setShippingFeeRates(res.responseData.newCart)
+        if(res.responseData?.removedCart){
+          CheckoutContextData.setUnserviceableShipping(res.responseData.removedCart)   
+        }
+      }      
     }else if(res.responseError && res.responseError.success == 0){
       CheckoutContextData.setUnserviceableShipping(res.responseError.removedCart)      
     }else{
@@ -804,15 +773,18 @@ const Component = ({route, navigation, createMyCartSession}) => {
       CheckoutContextData.setShippingFeeRates([])
       CheckoutContextData.setUnserviceableShipping([])
 
-      
+      const payload = {
+        userId: userData.userId,
+        shops: shops,
+        refCom: getRefComAccountType({session: toktokSession}),
+        addressId: id
+      }
+
+      console.log("CHECKOUT RENDER PAYLOAD", JSON.stringify(payload))
+
       getCheckoutData({
         variables: {
-          input: {
-            userId: userData.userId,
-            shops: shops,
-            refCom: getRefComAccountType({session: toktokSession}),
-            addressId: id
-          }
+          input: payload
         }
       })
     }

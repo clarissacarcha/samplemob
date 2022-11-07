@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import _ from 'lodash';
 import {
   View,
@@ -11,9 +11,9 @@ import {
   Platform,
   RefreshControl,
 } from 'react-native';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import {throttle} from 'lodash';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useQuery} from '@apollo/react-hooks';
 import {GET_DELIVERIES_COUNT_BY_STATUS} from '../../../../../graphql';
 import {DARK} from '../../../../../res/constants';
@@ -59,11 +59,13 @@ const RoundedButton = ({label, data = {}}) => {
   );
 };
 
-const MyDeliveries = ({navigation, session}) => {
+const MyDeliveries = ({navigation, session, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['My', 'Deliveries']} />,
   });
+
+  const toktokDelivery = useSelector(state => state.toktokDelivery);
 
   const {data, loading, error, refetch} = useQuery(GET_DELIVERIES_COUNT_BY_STATUS, {
     fetchPolicy: 'network-only',
@@ -73,6 +75,21 @@ const MyDeliveries = ({navigation, session}) => {
       },
     },
   });
+
+  const navigateIfFromNotificationWithDeliveryId = () => {
+    navigation.push('SelectedDeliveries', {
+      headerTitleLabel: ['Placed', 'Orders'],
+      status: 1,
+    });
+  };
+  console.log(toktokDelivery.notificationDeliveryId);
+  useFocusEffect(
+    useCallback(() => {
+      if (toktokDelivery.notificationDeliveryId) {
+        navigateIfFromNotificationWithDeliveryId();
+      }
+    }, [toktokDelivery.notificationDeliveryId]),
+  );
 
   // useFocusEffect(() => {
   //   refetch();
