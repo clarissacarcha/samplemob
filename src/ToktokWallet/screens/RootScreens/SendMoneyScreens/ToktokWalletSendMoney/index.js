@@ -163,7 +163,7 @@ export const ToktokWalletSendMoney = ({navigation, route}) => {
 
             <Favorites ref={favoritesRef} setMobileNo={setMobileNo} />
 
-            <View style={{flex: 1, height: SIZE.FORM_HEIGHT, marginTop: 50, justifyContent: 'flex-end'}}>
+            <View style={{flex: 1, marginTop: 10, justifyContent: 'flex-end'}}>
               <TouchableOpacity
                 // onPress={()=>Linking.openURL("https://toktok.ph/terms-and-conditions")}
                 onPress={() => navigation.navigate('ToktokWalletTermsConditions')}

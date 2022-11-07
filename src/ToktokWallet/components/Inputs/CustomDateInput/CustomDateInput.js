@@ -25,12 +25,13 @@ const CustomDateInput = (props: PropsType): React$Node => {
     selectedValue,
     errorMessage,
     onSelectedValue,
-    label,
+    label = '',
     dateFormat = 'MM/DD/YYYY',
     placeholder = 'mm/dd/yyyy',
     minDate,
     isMinDateToday = false,
     displaySelectedValue,
+    hasIcon = true,
   } = props;
   const btnText = processValue(selectedValue, placeholder, dateFormat, displaySelectedValue);
   const hasError = !!errorMessage;
@@ -42,7 +43,7 @@ const CustomDateInput = (props: PropsType): React$Node => {
   };
 
   return (
-    <Container>
+    <Container label={label}>
       <DateModal
         onDateChange={onDateChange}
         visible={visible}
@@ -54,7 +55,7 @@ const CustomDateInput = (props: PropsType): React$Node => {
       {label !== '' && <Label>{label}</Label>}
       <Button hasError={hasError} onPress={() => setVisible(true)}>
         <ButtonText selectedValue={selectedValue}>{btnText}</ButtonText>
-        <ButtonImage />
+        {hasIcon && <ButtonImage />}
       </Button>
       {hasError && <ErrorText>{errorMessage}</ErrorText>}
     </Container>

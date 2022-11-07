@@ -150,6 +150,7 @@ const PagIbigFundForm = (props: PropsType): React$Node => {
           errorMessage={errorMessages.periodCoveredFrom}
           placeholder="mm yyyy"
           isMinDateToday
+          hasIcon={false}
         />
         <Space />
         <CustomDateInput
@@ -168,6 +169,7 @@ const PagIbigFundForm = (props: PropsType): React$Node => {
           placeholder="mm yyyy"
           minDate={data.periodCoveredFrom}
           isMinDateToday
+          hasIcon={false}
         />
       </RowContainer>
       <InputContainer>

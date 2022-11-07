@@ -1,10 +1,24 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import {Text, View, TouchableHighlight, Image} from 'react-native';
-import {Location, Header, FrequentlyUsed, SavedLocations, SearchLocation, OutsideServiceableArea} from './Sections';
+import {Text, View, TouchableHighlight, Image, ScrollView} from 'react-native';
+import {
+  Location,
+  Header,
+  FrequentlyUsed,
+  SavedLocations,
+  SearchLocation,
+  OutsideServiceableArea,
+  SavedAddress,
+} from './Sections';
 import CONSTANTS from '../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
-import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION, GET_TRIP_DESTINATIONS} from '../../graphql';
-import {TOKTOK_QUOTATION_GRAPHQL_CLIENT, TOKTOK_GO_GRAPHQL_CLIENT} from 'src/graphql';
+import {
+  GET_PLACE_AUTOCOMPLETE,
+  GET_PLACE_BY_ID,
+  GET_PLACE_BY_LOCATION,
+  GET_TRIP_DESTINATIONS,
+  GET_SAVED_ADDRESS,
+} from '../../graphql';
+import {TOKTOK_QUOTATION_GRAPHQL_CLIENT, TOKTOK_GO_GRAPHQL_CLIENT, TOKTOK_ADDRESS_CLIENT} from 'src/graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {throttle, debounce, get} from 'lodash';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -20,6 +34,7 @@ import {onErrorAppSync, onError} from '../../util';
 import {NoRecordFound, ServiceableArea} from './Components';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useAlertGO} from '../../hooks';
+import {PREF_GET_SAVED_ADDRESSES} from '../../../graphql';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const alertGO = useAlertGO();
@@ -33,25 +48,37 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
   const [searchDestination, setSearchDestination] = useState(destination?.place?.formattedAddress);
   const [searchOrigin, setSearchOrigin] = useState(origin?.place?.formattedAddress);
-  const [recentSearchDataList, setrecentSearchDataList] = useState([]);
-  const [recentDestinationList, setrecentDestinationList] = useState([]);
+  const [recentSearchDataList, setRecentSearchDataList] = useState([]);
+  const [recentDestinationList, setRecentDestinationList] = useState([]);
   const [loadingAutoComplete, setLoadingAutoComplete] = useState(false);
   const [noRecordVisible, setNoRecordVisible] = useState(false);
   const [serviceableAreVisible, setServiceableAreVisible] = useState(false);
   const [serviceableAreaScreen, setServiceableAreaScreen] = useState(false);
   const [serviceableAreaList, setServiceableAreaList] = useState('');
+  const [savedAddressList, setSavedAddressList] = useState([]);
+  const [addressObj, setAddressObj] = useState(null);
 
   useEffect(() => {
     async function tempFunction() {
       await getSearchList();
       await getDestinationList();
       getTripDestinations();
+      getSavedAddress();
     }
 
     tempFunction();
 
     return () => {};
   }, []);
+
+  const [getSavedAddress] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setSavedAddressList(response.prefGetSavedAddresses.slice(0, 3));
+    },
+    onError: onError,
+  });
 
   const [getPlaceAutocomplete, {loading}] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
@@ -62,6 +89,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           title: 'Location Not Available',
           message: 'Location is no longer available. Please select another location.',
         });
+        setSearchResponse([]);
       } else {
         setNoRecordVisible(false);
         setSearchResponse(response.getPlaceAutocomplete);
@@ -72,6 +100,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     onError: error => {
       setLoadingAutoComplete(false);
       setNoRecordVisible(false);
+      setSearchResponse([]);
       console.log('getPlaceAutocomplete', error);
     },
   });
@@ -80,7 +109,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setrecentDestinationList(response.getTripDestinations);
+      setRecentDestinationList(response.getTripDestinations);
     },
     onError: onErrorAppSync,
   });
@@ -137,7 +166,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log(response);
       const payload = response.getPlaceByLocation;
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
       setSearchOrigin(payload?.place?.formattedAddress);
@@ -182,6 +210,19 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
     } else {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: loc});
+    }
+    onPressLocation();
+  };
+
+  const onPressSavedAddress = loc => {
+    const addressObject = {
+      hash: loc.placeHash,
+      place: loc.place,
+    };
+    if (selectedInput == 'D') {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: addressObject});
+    } else {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: addressObject});
     }
     onPressLocation();
   };
@@ -292,7 +333,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           if (obj != undefined) {
             console.log('SameAddress');
           } else {
-            setrecentSearchDataList([]);
+            setRecentSearchDataList([]);
             const removedItem = recentList.slice(0, 2);
             removedItem.unshift(response);
             const searchList = JSON.stringify(removedItem);
@@ -320,7 +361,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
       const output = JSON.parse(data);
       if (output != null) {
-        setrecentSearchDataList(output);
+        setRecentSearchDataList(output);
       }
     } catch (err) {
       console.log(err);
@@ -332,7 +373,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
       const output = JSON.parse(data);
       if (output != null) {
-        setrecentDestinationList(output);
+        setRecentDestinationList(output);
       }
     } catch (err) {
       console.log(err);
@@ -348,9 +389,23 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     }
   };
 
+  useEffect(() => {
+    if (addressObj) {
+      onPressSavedAddress(addressObj);
+    }
+  }, [addressObj]);
+
+  const getAddressObj = address => {
+    setAddressObj(address);
+  };
+
+  const navigateToSavedAddress = () => {
+    navigation.push('ToktokSavedLocations', {getAddressObj});
+  };
+
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
-      <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Header navigation={navigation} />
         <Location
           onChangeOrigin={onChangeOrigin}
@@ -365,10 +420,11 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           loading={loading}
           setLoadingAutoComplete={setLoadingAutoComplete}
           loadingAutoComplete={loadingAutoComplete}
+          setSearchResponse={setSearchResponse}
         />
         {searchResponse?.length == 0 ? (
           <View>
-            {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? (
+            {recentSearchDataList.length == 0 && recentDestinationList.length == 0 && savedAddressList.length == 0 ? (
               <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 110}}>
                 <Image source={DestinationBC} resizeMode={'contain'} style={{height: 200, width: 200}} />
                 <Text
@@ -396,7 +452,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
                   />
                 ) : (
                   <View>
-                    {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
+                    {recentSearchDataList.length == 0 &&
+                    recentDestinationList.length == 0 &&
+                    savedAddressList.length == 0 ? null : (
                       <View>
                         {recentSearchDataList.length == 0 ? null : (
                           <FrequentlyUsed
@@ -406,9 +464,23 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
                             onPressRecentSearch={onPressRecentSearch}
                           />
                         )}
-                        {recentDestinationList.length == 0 ? null : (
+                        {savedAddressList.length == 0 ? null : (
                           <View>
                             {recentSearchDataList.length != 0 && (
+                              <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
+                            )}
+                            <SavedAddress
+                              savedAddressList={savedAddressList}
+                              navigateToSavedAddress={navigateToSavedAddress}
+                              onPressSavedAddress={onPressSavedAddress}
+                              recentSearchDataList={recentSearchDataList}
+                              navigation={navigation}
+                            />
+                          </View>
+                        )}
+                        {recentDestinationList.length == 0 ? null : (
+                          <View>
+                            {savedAddressList.length != 0 && (
                               <View style={{borderBottomWidth: 6, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />
                             )}
                             <SavedLocations
@@ -439,7 +511,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
             )}
           </View>
         )}
-      </View>
+      </ScrollView>
       <ThrottledHighlight
         delay={500}
         onPress={() => {

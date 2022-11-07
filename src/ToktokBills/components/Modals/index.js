@@ -3,5 +3,6 @@ export * from './ToastModal';
 export * from './TransactionModal';
 export * from './QuestionModal';
 
+import InformationModal from './InformationModal';
 import ListModal from './ListModal';
-export {ListModal};
+export {InformationModal, ListModal};

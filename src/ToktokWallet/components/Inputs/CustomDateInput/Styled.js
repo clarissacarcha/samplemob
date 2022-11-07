@@ -61,5 +61,5 @@ export const Label: ComponentType<any> = styled(Text).attrs(props => ({
   margin-bottom: ${moderateScale(5)}px;
 `;
 export const Container: ComponentType<any> = styled.View`
-  flex: 1;
+  ${({label}) => label !== '' && 'flex: 1;'}
 `;

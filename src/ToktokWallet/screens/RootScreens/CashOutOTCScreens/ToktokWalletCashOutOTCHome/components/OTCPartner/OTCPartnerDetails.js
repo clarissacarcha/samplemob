@@ -25,10 +25,9 @@ export const OTCPartnerDetails = React.memo(({content, contentIndex, title}) => 
     return null;
   }
   return (
-    <View style={{marginTop: moderateScale(20)}}>
-      <Text style={{fontFamily: FONT.BOLD, marginHorizontal: moderateScale(16), marginBottom: moderateScale(10)}}>
-        {title}
-      </Text>
+    <View style={{marginTop: moderateScale(20), marginHorizontal: moderateScale(16)}}>
+      <Text style={{fontFamily: FONT.BOLD, marginBottom: moderateScale(10)}}>{title}</Text>
+
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
         {content[title].map((item, index) => {
           return (

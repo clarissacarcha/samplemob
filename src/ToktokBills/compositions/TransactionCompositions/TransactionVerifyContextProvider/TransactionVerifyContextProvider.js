@@ -17,14 +17,13 @@ import {useSelector} from 'react-redux';
 export const TransactionVerifyContext: React$Context<any> = createContext<any>();
 const {Provider} = TransactionVerifyContext;
 
-const secondFieldValue = (itemCode, user) => {
+const secondFieldValue = (itemCode, user, favoriteDetails) => {
   switch (itemCode) {
     case 'SSS':
       return `${user.person.firstName} ${user.person.lastName}`;
     case 'PAG_IBIG':
-      return user.person.mobileNumber.includes('+63')
-        ? user.person.mobileNumber.replace('+63', '')
-        : user.person.mobileNumber.replace('0', '');
+      const mobNum = favoriteDetails ? favoriteDetails.secondFieldValue : user.person.mobileNumber;
+      return mobNum.includes('+63') ? mobNum.replace('+63', '') : mobNum.replace('0', '');
     default:
       return '';
   }
@@ -34,12 +33,12 @@ export const TransactionVerifyContextProvider = (props: PropsType): React$Node =
   const {tokwaAccount} = useAccount();
   const {user} = useSelector(state => state.session);
   const {children, favoriteDetails, itemCode} = props;
-  const secondField = secondFieldValue(itemCode, user);
+  const secondField = secondFieldValue(itemCode, user, favoriteDetails);
 
   const [data, setData] = useState({
     emailAddress: user.person.emailAddress,
     firstField: favoriteDetails ? favoriteDetails.firstFieldValue : '', //sss = prn; pag-ibig = account number;
-    secondField: favoriteDetails ? favoriteDetails.secondFieldValue : secondField, //sss = customer name; pag-ibig = contact number;
+    secondField: secondField, //sss = customer name; pag-ibig = contact number;
     amount: '',
     payorTypeName: '', //membership type = sss
     payorTypeId: '', //membership type = sss

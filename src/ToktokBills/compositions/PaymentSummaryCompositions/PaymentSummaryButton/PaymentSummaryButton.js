@@ -26,8 +26,17 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
   const {user} = useSelector(state => state.session);
   const {tokwaAccount} = useAccount();
   const prompt = usePrompt();
-  const {firstField, secondField, amount, emailAddress, billType, totalServiceFee, billItemSettings, referenceNumber} =
-    paymentData;
+  const {
+    firstField,
+    secondField,
+    amount,
+    emailAddress,
+    billType,
+    totalServiceFee,
+    billItemSettings,
+    referenceNumber,
+    itemCode,
+  } = paymentData;
   const {termsAndConditions, paymentPolicy1, paymentPolicy2} = billItemSettings.itemDocumentDetails;
   const totalAmount = parseFloat(amount) + parseFloat(totalServiceFee);
   const tokwaBalance = user?.toktokWalletAccountId ? tokwaAccount?.wallet?.balance : '0.00';
@@ -61,13 +70,12 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
   const [postBillsTransaction, {loading: postBillsTransactionLoading}] = useMutation(POST_BILLS_TRANSACTION, {
     client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
     onError: error => {
-      console.log(error, 'ssdsd');
-      // ErrorUtility.StandardErrorHandling({
-      //   error,
-      //   navigation,
-      //   prompt,
-      //   onPress: () => navigation.navigate('ToktokBillsHome'),
-      // });
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        onPress: () => navigation.navigate('ToktokBillsHome'),
+      });
     },
     onCompleted: ({postBillsTransaction}) => {
       navigation.navigate('ToktokBillsReceipt', {receipt: postBillsTransaction.data, paymentData});
@@ -77,7 +85,6 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
   const handleProcessProceed = ({pinCode, data}) => {
     let {totalAmount, requestMoneyDetails, paymentData, hash} = data;
     let {firstName, lastName} = user.person;
-    // console.log(totalServiceFee);
 
     let input = {
       hash,
@@ -86,7 +93,7 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
         TPIN: requestMoneyDetails.validator === 'TPIN' ? pinCode : '',
         OTP: requestMoneyDetails.validator === 'OTP' ? pinCode : '',
       },
-      referenceNumber: requestMoneyDetails?.referenceNumber,
+      referenceNumber: itemCode !== '' ? '' : requestMoneyDetails?.referenceNumber,
       senderName: `${firstName} ${lastName}`,
       senderFirstName: firstName,
       senderMobileNumber: user.username,

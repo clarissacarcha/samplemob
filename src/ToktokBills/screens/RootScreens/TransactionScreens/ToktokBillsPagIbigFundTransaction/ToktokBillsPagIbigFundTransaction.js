@@ -150,7 +150,7 @@ const MainComponent = ({route, favoriteDetails}) => {
     }
 
     const isFirstFieldValid = checkIsValidField('firstField', data.firstField, 'Account Number', 20, 2, 12);
-    const isSecondFieldValid = checkContactNumber('secondField', data.secondField);
+    const isSecondFieldValid = checkContactNumber('secondField', data.secondField.replace('+63', ''));
 
     if (errorMessages.amount !== '') {
       changeErrorMessages('amount', '');
@@ -173,7 +173,7 @@ const MainComponent = ({route, favoriteDetails}) => {
           input: {
             billItemId,
             firstFieldValue: data.firstField,
-            secondFieldValue: data.secondField,
+            secondFieldValue: `+63${data.secondField}`,
           },
         },
       });

@@ -15,4 +15,5 @@ export type PropsType = {
   minDate?: Date,
   isMinDateToday?: boolean,
   displaySelectedValue: string,
+  hasIcon?: boolean,
 };

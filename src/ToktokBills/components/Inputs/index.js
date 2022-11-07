@@ -3,4 +3,5 @@ export * from './NumberBoxes';
 export * from './SearchInput';
 
 import CustomSelectionList from './CustomSelectionList';
-export {CustomSelectionList};
+import CustomTextInput from './CustomTextInput';
+export {CustomSelectionList, CustomTextInput};

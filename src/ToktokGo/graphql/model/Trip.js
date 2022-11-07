@@ -112,6 +112,12 @@ vehicleType {
   name
 }
 cancellationChargeStatus
+request {
+      createdAt
+      expiresAt
+      hash
+      minutes
+    }
 `;
 
 const DriverData = `
@@ -253,4 +259,20 @@ export const GET_TRIP_SUPPLY = gql`
       }
     }
   }
+`;
+
+export const TRIP_REQUEST_ACCEPT = gql`
+mutation tripRequestAccept($input: TripRequestAcceptInput!) {
+  tripRequestAccept (input: $input) {
+    ${trip}
+  }
+}
+`;
+
+export const TRIP_REQUEST_REJECT = gql`
+mutation tripRequestReject($input: TripRequestRejectInput!) {
+  tripRequestReject (input: $input) {
+    ${trip}
+  }
+}
 `;
