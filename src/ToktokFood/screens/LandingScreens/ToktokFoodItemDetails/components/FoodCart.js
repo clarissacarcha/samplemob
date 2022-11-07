@@ -345,7 +345,7 @@ export const FoodCart = ({loading, action, cartRefetch}) => {
         setTimeout(() => {
           setLoader(false);
           Toast.show('Cart Updated', Toast.SHORT);
-          cartRefetch();
+          cartRefetch?.();
           navigation.goBack();
           // navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: productDetails.sysShop}});
         }, 1000);

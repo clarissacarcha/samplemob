@@ -204,7 +204,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
   const onBackOrderDetails = () => {
     if (state?.orderStatus === 'c' || state?.orderStatus === 's') {
       setShowOrderDetails(false);
-      navigation.navigate('ToktokFoodActivities');
+      navigation.goBack();
       // navigation.navigate('ToktokFoodOrderTransactions');
     } else {
       setShowOrderDetails(false);
