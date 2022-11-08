@@ -113,6 +113,8 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
       let total = 0;
       if (promotionVoucher.length > 0) {
         promotionVoucher.map(voucher => {
+          console.log("promotion vouch", voucher)
+          if(!voucher.items) return
           voucher.items.map(itm => {
             if (item.productid === itm.product_id) {
               if (item.quantity > 1) {
@@ -138,7 +140,7 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
 
     const ORDER_DATA = {
       total_amount: totalDiscount > 0 ? computedTotal : cartData?.totalAmount,
-      srp_totalamount: cartData?.totalAmount,
+      srp_totalamount: cartData?.srpTotalAmount,
       notes: cartDriverNote.replace(/[^a-z0-9 ]/gi, ''),
       order_isfor: cartServiceType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       order_type: await getOrderType(customerFranchisee),
@@ -259,6 +261,8 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     };
     const result = await getOrderData(CUSTOMER_CART, WALLET);
     console.log('RESULT', JSON.stringify(result));
+
+    // return
     postCustomerOrder({
       variables: {
         input: result,
