@@ -13,26 +13,32 @@ export const GET_SHOPS = gql`
       ratings
       estimatedDistance
       estimatedDeliveryTime
+      allowPickup
       promoName
+      shopVoucher {
+        voucherName
+        voucherCode
+        validUntil
+      }
       promos {
         id
         shippingDiscountName
         shippingDiscountCode
-        shopId
+        shopIds
         noOfStocks
       }
       promoByAdmin {
         id
         shippingDiscountName
         shippingDiscountCode
-        shopId
+        shopIds
         noOfStocks
       }
       promoByMerchant {
         id
         shippingDiscountName
         shippingDiscountCode
-        shopId
+        shopIds
         noOfStocks
       }
       promotionVouchers {
@@ -62,6 +68,86 @@ export const GET_SHOPS = gql`
         dayStatus
       }
       dayLapsed
+      orderOnOff
+      customerReqOpt
+    }
+  }
+`;
+
+export const GET_SHOPS_W_PROMOTIONS = gql`
+  query getPromoSections($input: ShopPromosInput) {
+    getPromoSections(input: $input) {
+      voucherName
+      name
+      shopsWithPromo {
+        id
+        address
+        shopname
+        banner
+        logo
+        latitude
+        longitude
+        ratings
+        estimatedDistance
+        estimatedDeliveryTime
+        allowPickup
+        promoName
+        shopVoucher {
+          voucherName
+          voucherCode
+          validUntil
+        }
+        promos {
+          id
+          shippingDiscountName
+          shippingDiscountCode
+          shopIds
+          noOfStocks
+        }
+        promoByAdmin {
+          id
+          shippingDiscountName
+          shippingDiscountCode
+          shopIds
+          noOfStocks
+        }
+        promoByMerchant {
+          id
+          shippingDiscountName
+          shippingDiscountCode
+          shopIds
+          noOfStocks
+        }
+        promotionVouchers {
+          id
+          regionCodes
+          voucherCode
+          voucherName
+        }
+        hasOpen
+        hasProduct
+        operatingHours {
+          id
+          shopId
+          fromTime
+          toTime
+          day
+          status
+          dayStatus
+        }
+        nextOperatingHrs {
+          id
+          shopId
+          fromTime
+          toTime
+          day
+          status
+          dayStatus
+        }
+        dayLapsed
+        orderOnOff
+        customerReqOpt
+      }
     }
   }
 `;
@@ -111,6 +197,11 @@ export const GET_SHOP_DETAILS = gql`
       mobile
       hasProduct
       hasOpen
+      shopVoucher {
+        voucherName
+        voucherCode
+        validUntil
+      }
       nextOperatingHrs {
         id
         shopId
@@ -156,6 +247,11 @@ export const GET_SEARCH_FOOD = gql`
       estimatedDeliveryTime
       hasOpen
       hasProduct
+      shopVoucher {
+        voucherName
+        voucherCode
+        validUntil
+      }
       nextOperatingHrs {
         id
         shopId
@@ -191,6 +287,11 @@ export const GET_SHOP_BY_CATEGORY = gql`
       estimatedDeliveryTime
       hasOpen
       hasProduct
+      shopVoucher {
+        voucherName
+        voucherCode
+        validUntil
+      }
       nextOperatingHrs {
         id
         shopId
@@ -209,6 +310,16 @@ export const GET_SHOP_BY_CATEGORY = gql`
         status
         dayStatus
       }
+    }
+  }
+`;
+
+export const GET_SHOP_BANNERS = gql`
+  query getShopBanners {
+    getShopBanners {
+      id
+      filename
+      status
     }
   }
 `;

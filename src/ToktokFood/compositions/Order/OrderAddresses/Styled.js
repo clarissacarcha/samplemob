@@ -26,6 +26,7 @@ export const Image: ComponentType<any> = styled.Image`
   resize-mode: contain;
   height: 22px;
   width: 12px;
+  margin-right: 15px;
 `;
 
 export const IconContainer: ComponentType<any> = styled.View``;

@@ -42,6 +42,8 @@ export const toktokfood_ic = require('./images/toktokfood_logo.png');
 export const toktokfood_logo = require('./images/toktok-food-logo-new.png');
 export const maintenance_logo = require('./images/maintenance-logo.png');
 export const maintenance_bg = require('./images/maintenance-bg.png');
+export const voucher_border = require('./images/voucher_border.png');
+export const shop_voucher = require('./images/shop_voucher.png');
 
 // Notifications
 export const empty_notification = require('./images/empty_icons/empty-notification.png');
@@ -82,6 +84,7 @@ export const burger_king = require('./images/sample_banners/burger_king.jpeg');
 export const splash = require('./images/splash.png');
 export const splash_new = require('./images/splash_new.png');
 export const starbucks_banner = require('./images/starbucks_banner.png');
+export const home_bg = require('./images/home-background.png');
 
 // Test Rider
 export const rider1 = require('./images/riders/rider1.png');
@@ -97,6 +100,8 @@ export const empty_cart = require('./images/empty_icons/empty-cart-2.png');
 export const no_image = require('./images/empty_icons/no-image.png');
 export const empty_promos = require('./images/empty_icons/empty-promos.png');
 export const food_placeholder = require('./images/empty_icons/food-placeholder.png');
+export const shop_noimage = require('./images/shop_noimage.png');
+export const empty_activities = require('./images/empty_icons/empty-activities.png');
 
 // Rider Map Icons
 export const rider_ic = require('./images/rider_map_ic.png');
@@ -119,6 +124,7 @@ export const new_empty_shop_icon = require('./images/empty_icons/empty_result.pn
 //json animations
 export const restaurant_confirmation = require('./images/animations/restaurant-confirmation.gif');
 export const driver_on_the_way = require('./images/animations/driver-on-the-way.gif');
+export const no_driver_found = require('./images/animations/no-driver-found.png');
 export const ready_for_pick_up = require('./images/animations/ready-for-pickup.gif');
 export const preparing_order = require('./images/animations/preparing-order.gif');
 
@@ -126,11 +132,18 @@ export const preparing_order = require('./images/animations/preparing-order.gif'
 export const carbon_delivery = require('./images/carbon-delivery.png');
 export const carbon_check = require('./images/carbon-check.png');
 export const carbon_x = require('./images/carbon-x.png');
+export const carbon_user_filled = require('./images/carbon-user-filled.png');
+export const carbon_marker_filled = require('./images/carbon-marker-filled.png');
 export const cash_ic = require('./images/cash-ic.png');
 export const toktokwallet_ic = require('./images/toktokwallet-ic.png');
 export const calendar_ic = require('./images/calendar-icon.png');
 export const map_ic = require('./images/map-icon.png');
 export const location_pin_ic = require('./images/location-pin-ic.png');
+export const clock_ic = require('./images/clock_ic.png');
+
+//cart icons
+export const carbon_voucher_ticket = require('./images/carbon-voucher-ticket.png');
+export const carbon_empty_cart = require('./images/carbon-empty-cart.png');
 
 //alert images
 export const success_image = require('./images/prompts_icons/success.png');
@@ -140,5 +153,13 @@ export const question_image = require('./images/prompts_icons/question_ic.png');
 export const loading_animation = require('./images/prompts_icons/loading-animation.gif');
 
 //activities images
-export const empty_activities = require('./images/empty_icons/empty-activities.png');
-export const timer_ic = require('./images/timer.png');
+export const no_history = require('./images/no-history-outline.png');
+export const no_result_search = require('./images/no-result-search.png');
+
+//search images
+
+// Fab Icons
+export const fab_activities = require('./images/fab_icons/fab_activities.png');
+export const fab_food = require('./images/fab_icons/fab_food.png');
+export const fab_notification = require('./images/fab_icons/fab_notification.png');
+export const fab_wallet = require('./images/fab_icons/fab_wallet.png');

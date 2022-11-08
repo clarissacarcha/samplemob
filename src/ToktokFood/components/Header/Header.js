@@ -18,6 +18,7 @@ const Header = (props: PropsType): React$Node => {
     containerStyle,
     centerContainerStyle,
     leftContainerStyle,
+    rightContainerStyle,
     title = '',
     titleStyle,
     CenterComponent,
@@ -73,6 +74,7 @@ const Header = (props: PropsType): React$Node => {
       containerStyle={containerStyle}
       centerContainerStyle={centerContainerStyle}
       leftContainerStyle={leftContainerStyle}
+      rightContainerStyle={rightContainerStyle}
       leftComponent={renderLeftComponent()}
       centerComponent={renderCenterComponent()}
       rightComponent={renderRightComponent()}

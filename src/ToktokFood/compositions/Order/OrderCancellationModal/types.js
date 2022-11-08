@@ -9,4 +9,5 @@ export type PropsType = {
   isVisible: boolean,
   onCancel: () => void,
   onConfirm: string => string,
+  serviceType: string,
 };
