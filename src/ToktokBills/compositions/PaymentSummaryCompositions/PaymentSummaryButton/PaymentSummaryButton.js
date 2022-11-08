@@ -14,7 +14,7 @@ import {AlertOverlay} from 'src/components';
 import {useAccount} from 'toktokbills/hooks';
 import {useMutation} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {POST_BILLS_TRANSACTION, POST_TOKTOKWALLET_REQUEST_MONEY} from 'toktokbills/graphql/model';
+import {POST_BILLS_TRANSACTION, POST_TOKTOKWALLET_REQUEST_MONEY, POST_BILLS_SSS} from 'toktokbills/graphql/model';
 import {usePrompt} from 'src/hooks';
 import {ErrorUtility} from 'toktokbills/util';
 import {useAlert, useThrottle} from 'src/hooks';
@@ -36,6 +36,7 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
     billItemSettings,
     referenceNumber,
     itemCode,
+    payorType,
   } = paymentData;
   const {termsAndConditions, paymentPolicy1, paymentPolicy2} = billItemSettings.itemDocumentDetails;
   const totalAmount = parseFloat(amount) + parseFloat(totalServiceFee);
@@ -82,6 +83,21 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
     },
   });
 
+  const [postBillsSSS, {loading: postBillsSssLoading}] = useMutation(POST_BILLS_SSS, {
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: error => {
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        onPress: () => navigation.navigate('ToktokBillsHome'),
+      });
+    },
+    onCompleted: ({postBillsSSS}) => {
+      navigation.navigate('ToktokBillsReceipt', {receipt: postBillsSSS.data, paymentData});
+    },
+  });
+
   const handleProcessProceed = ({pinCode, data}) => {
     let {totalAmount, requestMoneyDetails, paymentData, hash} = data;
     let {firstName, lastName} = user.person;
@@ -110,11 +126,25 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
       referralCode: user.consumer.referralCode,
     };
 
-    postBillsTransaction({
-      variables: {
-        input,
-      },
-    });
+    if (itemCode === 'SSS') {
+      postBillsSSS({
+        variables: {
+          input: {
+            ...input,
+            ...{
+              prn: firstField,
+              membershipType: +payorType.code,
+            },
+          },
+        },
+      });
+    } else {
+      postBillsTransaction({
+        variables: {
+          input,
+        },
+      });
+    }
   };
 
   const onPressConfirm = () => {
@@ -144,7 +174,7 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
 
   return (
     <>
-      <AlertOverlay visible={loading || postBillsTransactionLoading} />
+      <AlertOverlay visible={loading || postBillsTransactionLoading || postBillsSssLoading} />
       <OrangeButton label={'Confirm'} hasShadow onPress={onPressThrottled} />
     </>
   );

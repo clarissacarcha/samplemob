@@ -118,3 +118,14 @@ export const POST_BILLS_VALIDATE_TRANSACTION = gql`
     }
   }
 `;
+
+export const POST_BILLS_SSS = gql`
+  mutation postBillsSSS($input: PostBillsSSSInput!) {
+    postBillsSSS(input: $input) {
+      status
+      data {
+        ${transaction}
+      }
+    }
+  }
+`;
