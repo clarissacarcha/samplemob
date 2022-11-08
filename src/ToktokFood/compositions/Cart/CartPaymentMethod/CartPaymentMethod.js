@@ -98,10 +98,6 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
     }
     setCartPaymentMethod(pm);
     setIsModalVisible(false);
-    setTimeout(() => {
-      const payload = {isVisible: true, text: 'Please Wait', type: null};
-      dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
-    }, 500);
   };
 
   const isButtonDisabled = () => {
