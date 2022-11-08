@@ -35,10 +35,10 @@ const ToktokFoodLanding = () => (
       }}
     />
     <ToktokFoodLandingBottomTab.Screen
-      // name="ToktokFoodActivities"
-      // component={ToktokFoodActivities}
-      name="ToktokFoodOrderTransactions"
-      component={ToktokFoodOrderTransactions}
+      name="ToktokFoodActivities"
+      component={ToktokFoodActivities}
+      // name="ToktokFoodOrderTransactions"
+      // component={ToktokFoodOrderTransactions}
       options={{
         tabBarLabel: ({focused}) => (
           <>

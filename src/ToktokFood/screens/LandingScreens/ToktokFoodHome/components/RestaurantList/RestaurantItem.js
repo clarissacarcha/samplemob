@@ -51,8 +51,9 @@ const RestaurantItem = ({activeTab, item}) => {
 
   const onRestaurantNavigate = () => {
     // Revamp for Restaurant Overview
-    // navigation.navigate('ToktokFoodShopOverview', {item});
-    navigation.navigate('ToktokFoodRestaurantOverview', {item});
+    navigation.navigate('ToktokFoodShopOverview', {item});
+    // navigation.navigate('ToktokFoodShopOverview', {item: {...item, shopVouchers: [1,2]}}); // for testing voucher code display
+    // navigation.navigate('ToktokFoodRestaurantOverview', {item});
   };
 
   const renderPromos = ({item}) => (
@@ -102,7 +103,7 @@ const RestaurantItem = ({activeTab, item}) => {
           <Text style={styles.branches}>{`${item.estimatedDeliveryTime} mins`}</Text>
           <MCIcon name="map-marker-outline" color={'#868686'} size={13} />
           <Text style={styles.branches}>
-            {item.estimatedDistance.indexOf('KM') === -1 ? `${item.estimatedDistance} KM` : item.estimatedDistance}
+            {item.estimatedDistance.indexOf('KM') === -1 ? `${item.estimatedDistance} km` : item.estimatedDistance}
           </Text>
         </View>
 

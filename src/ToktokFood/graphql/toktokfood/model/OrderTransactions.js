@@ -21,6 +21,7 @@ const transaction = `
   actualTotalamount
   totalAmount
   deliveryAmount
+  deliveryFee
   originalShippingFee
   paymentMethod
   dateAssigned
@@ -102,6 +103,26 @@ const transaction = `
   deliveryLogs {
     status
     createdAt
+  }
+  serviceType
+  totalServiceFee
+  pabiliShopResellerDiscount
+  voucherDiscounts {
+    id
+    referenceNum
+    voucherId
+    voucherCode
+    voucherName
+    userId
+    shopId
+    productId
+    region
+    discountType
+    discountAmount
+    shoulderedBy
+    paymentMethod
+    status
+    discountServiceFee
   }
 `;
 
@@ -217,6 +238,10 @@ const transactionRef = `
   }
   rebooked
   estimatedDistance
+  serviceType
+  totalServiceFee
+  pabiliShopResellerDiscount
+  declinedBy
   voucherDiscounts {
     id
     referenceNum
@@ -232,6 +257,7 @@ const transactionRef = `
     shoulderedBy
     paymentMethod
     status
+    discountServiceFee
   }
 `;
 

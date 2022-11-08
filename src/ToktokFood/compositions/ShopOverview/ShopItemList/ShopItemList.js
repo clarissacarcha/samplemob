@@ -5,11 +5,10 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {Animated} from 'react-native';
+import {Animated, RefreshControl} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {useNavigation} from '@react-navigation/native';
-// import {useTheme} from 'styled-components/native';
+import {useNavigation, useIsFocused, useRoute} from '@react-navigation/native';
 import _ from 'lodash';
 
 import type {PropsType} from './types';
@@ -29,6 +28,7 @@ import {
   ResellerTag,
   Row,
   TitleContainer,
+  Container,
 } from './Styled';
 
 import EmptyList from 'toktokfood/components/EmptyList/EmptyList';
@@ -39,21 +39,23 @@ import {empty_search_2} from 'toktokfood/assets/images';
 // Queries
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_PRODUCTS_BY_SHOP_CATEGORY} from 'toktokfood/graphql/toktokfood';
+import { useSelector } from 'react-redux';
 
 const ShopItemList = (props: PropsType): React$Node => {
   const {onGetRef, onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag, route, shopId, scrollY} = props;
-  // const navigation = useNavigation();
-  // const theme = useTheme();
+  const navigation = useNavigation();
+  const routes = useRoute();
+  const isFocused = useIsFocused();
+  const {scrollAnimation} = useSelector(state => state.toktokFood)
 
   const [hasMorePage, setHasMorePage] = useState(true);
   const [showMore, setShowMore] = useState(false);
   const [page, setPage] = useState(0);
-
   const avatarStyle = {borderRadius: 10};
-  const containerStyle = {height: 70, width: 70};
+  const containerStyle = {height: 70, width: 70, marginRight: 15};
   const textProps = {numberOfLines: 1};
 
-  const [getProductsByShopCategory, {data, fetchMore}] = useLazyQuery(GET_PRODUCTS_BY_SHOP_CATEGORY, {
+  const [getProductsByShopCategory, {data, fetchMore, refetch, loading}] = useLazyQuery(GET_PRODUCTS_BY_SHOP_CATEGORY, {
     variables: {
       input: {
         id: shopId,
@@ -63,7 +65,7 @@ const ShopItemList = (props: PropsType): React$Node => {
       },
     },
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'cache and network',
+    fetchPolicy: 'cache-and-network',
     // onCompleted: ({getProductsByShopCategory}) => {
     //   const products = getProductsByShopCategory;
     //   filterProducts(products);
@@ -71,8 +73,10 @@ const ShopItemList = (props: PropsType): React$Node => {
   });
 
   useEffect(() => {
-    getProductsByShopCategory();
-  }, [shopId, route]);
+    if (isFocused) {
+      getProductsByShopCategory();
+    }
+  }, [shopId, route, isFocused]);
 
   const onLoadMore = () => {
     if (!showMore && hasMorePage) {
@@ -109,9 +113,9 @@ const ShopItemList = (props: PropsType): React$Node => {
     }
   };
 
-  // const onNavigateToItem = Id => {
-  //   navigation.navigate('ToktokFoodItemDetails', {Id, temporaryCart: temporaryCart.items, shopDetails});
-  // };
+  const onNavigateToItem = Id => {
+    navigation.navigate('ToktokFoodItemDetails', {Id, shopHasOrderInstruction: routes.params?.orderOnOff});
+  };
 
   const renderListHeader = () => (
     <TitleContainer>
@@ -132,43 +136,46 @@ const ShopItemList = (props: PropsType): React$Node => {
     const {discRatetype, referralDiscount} = resellerDiscount;
     const discountText = discRatetype === 'p' ? `${referralDiscount * 100}%` : referralDiscount;
     return (
-      <ItemContainer>
-        <Avatar
-          size="medium"
-          source={{
-            uri: filename,
-          }}
-          avatarStyle={avatarStyle}
-          containerStyle={containerStyle}
-        />
-
-        <Column flex={2}>
-          <StyledText mode="semibold" textProps={textProps}>
-            {itemname}
-          </StyledText>
-          <Description>{summary}</Description>
-
-          <TagContainer>
-            {promoVoucher && (
-              <PromoTag>
-                <PromoText>{promoVoucher?.vname}</PromoText>
-              </PromoTag>
-            )}
-
-            {resellerDiscount?.referralShopRate > 0 && (
-              <ResellerTag>
-                <PromoText>`Reseller ${discountText}`</PromoText>
-              </ResellerTag>
-            )}
-          </TagContainer>
-        </Column>
-
-        <Column>
+      <ItemContainer activeOpacity={0.9} onPress={() => onNavigateToItem(item?.Id)}>
+        <Container>
+          <Avatar
+            size="medium"
+            source={{
+              uri: filename,
+            }}
+            avatarStyle={avatarStyle}
+            containerStyle={containerStyle}
+          />
           <Row>
-            <StyledText>from </StyledText>
-            <Pricetext>&#8369;{price.toFixed(2)}</Pricetext>
+            <Column flex={2} marginRight={20}>
+              <StyledText mode="semibold" textProps={textProps}>
+                {itemname}
+              </StyledText>
+              <Description>{summary}</Description>
+
+              <TagContainer>
+                {promoVoucher && (
+                  <PromoTag>
+                    <PromoText>{promoVoucher?.vname}</PromoText>
+                  </PromoTag>
+                )}
+
+                {resellerDiscount?.referralShopRate > 0 && (
+                  <ResellerTag>
+                    <PromoText>Reseller {discountText}</PromoText>
+                  </ResellerTag>
+                )}
+              </TagContainer>
+            </Column>
+
+            <Column>
+              <Row>
+                <StyledText>from </StyledText>
+                <Pricetext>&#8369;{price.toFixed(2)}</Pricetext>
+              </Row>
+            </Column>
           </Row>
-        </Column>
+        </Container>
       </ItemContainer>
     );
   };
@@ -206,6 +213,8 @@ const ShopItemList = (props: PropsType): React$Node => {
         return <ContentLoading />;
       }}
       ListFooterComponent={renderFooter}
+      refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}
+      scrollAnimation={scrollAnimation}
     />
   );
 };
