@@ -45,6 +45,7 @@ export const LocationCard = ({navigation, item, image, onPress, lastItem = false
 
 export const SavedAddressCard = ({navigation, item, image, onPress, lastItem = false}) => {
   const navigateToEditSavedAddress = () => {
+    console.log('id', item?.id);
     navigation.push('ToktokAddEditLocation', {addressIdFromService: item?.id});
   };
   return (
