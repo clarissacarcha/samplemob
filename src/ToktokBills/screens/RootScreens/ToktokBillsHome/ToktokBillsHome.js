@@ -69,10 +69,15 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
     },
     onCompleted: data => {
       let result = data.getBillTypes.filter(o1 => !billTypes.some(o2 => o1.id === o2.id));
+
       if (result.length > 0 || data.getBillTypes.length !== billTypes.length) {
+        data.getBillTypes.sort((x, y) => {
+          const sorted = y.name === 'Others' ? -1 : 1;
+          return x.name === 'Others' ? 1 : sorted;
+        });
         setBillTypes(data.getBillTypes);
       }
-      setShowMore(data.getBillTypes.length > 12);
+      // setShowMore(data.getBillTypes.length > 12);
       setRefreshing(false);
     },
   });

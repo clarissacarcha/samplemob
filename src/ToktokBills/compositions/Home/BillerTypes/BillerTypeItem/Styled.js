@@ -14,7 +14,7 @@ const {FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 export const ButtonContainer: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
   ...props,
 }))`
-  width: ${'25%'};
+  width: 33.33%;
   align-items: center;
   margin-vertical: ${moderateScale(8)}px;
 `;
