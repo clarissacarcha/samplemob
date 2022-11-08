@@ -71,6 +71,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: CONSTANTS.COLOR.ORANGE,
   },
   submitText: {
     marginVertical: 11,

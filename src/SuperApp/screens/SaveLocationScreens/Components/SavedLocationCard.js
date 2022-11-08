@@ -5,7 +5,7 @@ import CONSTANTS from '../../../../common/res/constants';
 import HomeImg from '../../../../assets/icons/SavedAddress/homeFilled.png';
 import OfficeImg from '../../../../assets/icons/SavedAddress/officeFilled.png';
 import CustomImg from '../../../../assets/icons/SavedAddress/customFilled.png';
-import {ThrottledOpacity} from '../../../../components_section';
+import {ThrottledHighlight, ThrottledOpacity} from '../../../../components_section';
 import normalize from 'react-native-normalize';
 
 export const SavedLocationCard = ({onPressAddress, address, lastItem}) => {
@@ -34,7 +34,7 @@ export const SavedLocationCard = ({onPressAddress, address, lastItem}) => {
   };
 
   return (
-    <ThrottledOpacity
+    <ThrottledHighlight
       onPress={() => onPressAddress(address)}
       underlayColor={CONSTANTS.COLOR.WHITE_UNDERLAY}
       style={[styles.container, {marginBottom: lastItem ? 26 : 16}]}>
@@ -62,7 +62,7 @@ export const SavedLocationCard = ({onPressAddress, address, lastItem}) => {
           )}
         </View>
       </View>
-    </ThrottledOpacity>
+    </ThrottledHighlight>
   );
 };
 

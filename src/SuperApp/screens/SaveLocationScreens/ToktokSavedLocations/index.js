@@ -28,7 +28,7 @@ import {
 } from '.././Components';
 import DeleteImg from '../../../../assets/icons/deleteIcon.png';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import {ThrottledOpacity} from '../../../../components_section';
+import {ThrottledHighlight, ThrottledOpacity} from '../../../../components_section';
 import {connect} from 'react-redux';
 import {onError} from '../../../../util/ErrorUtility';
 import {useFocusEffect} from '@react-navigation/native';

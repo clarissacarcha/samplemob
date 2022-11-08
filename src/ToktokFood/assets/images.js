@@ -43,7 +43,7 @@ export const toktokfood_logo = require('./images/toktok-food-logo-new.png');
 export const maintenance_logo = require('./images/maintenance-logo.png');
 export const maintenance_bg = require('./images/maintenance-bg.png');
 export const voucher_border = require('./images/voucher_border.png');
-export const shop_voucher= require('./images/shop_voucher.png');
+export const shop_voucher = require('./images/shop_voucher.png');
 
 // Notifications
 export const empty_notification = require('./images/empty_icons/empty-notification.png');
@@ -101,6 +101,7 @@ export const no_image = require('./images/empty_icons/no-image.png');
 export const empty_promos = require('./images/empty_icons/empty-promos.png');
 export const food_placeholder = require('./images/empty_icons/food-placeholder.png');
 export const shop_noimage = require('./images/shop_noimage.png');
+export const empty_activities = require('./images/empty_icons/empty-activities.png');
 
 // Rider Map Icons
 export const rider_ic = require('./images/rider_map_ic.png');

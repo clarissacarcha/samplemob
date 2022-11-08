@@ -5,7 +5,8 @@ import {useLazyQuery} from '@apollo/react-hooks';
 import {PROTOCOL, HOST_PORT} from 'res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import React, {useReducer, useState, useEffect, useRef, useCallback} from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableWithoutFeedback, FlatList} from 'react-native';
+import {View, Text, StyleSheet, TextInput, TouchableWithoutFeedback, FlatList, Image, Dimensions} from 'react-native';
+import StyledText from 'toktokfood/components/StyledText';
 
 import {useNavigation} from '@react-navigation/native';
 
@@ -17,6 +18,7 @@ import {useSelector} from 'react-redux';
 
 // Utils
 import {verticalScale, getStatusbarHeight, moderateScale, getDeviceWidth} from 'toktokfood/helper/scale';
+import {empty_search_2} from '../../../assets/images';
 
 const initialPickUpDetails = {
   pickUpAddress: '',
@@ -24,6 +26,7 @@ const initialPickUpDetails = {
   contactPersonNumber: '',
   pickUpCompleteAddress: '',
   pickUpAddressLatLong: {},
+  loading: false,
 };
 
 const ToktokFoodAddressDetails = ({route}) => {
@@ -43,6 +46,8 @@ const ToktokFoodAddressDetails = ({route}) => {
         return {...state, contactPerson: action.value};
       case 'SET_PICKUP_CONTACT_NUMBER':
         return {...state, contactPersonNumber: action.value};
+      case 'SET_LOADING':
+        return {...state, loading: action.value};
     }
   };
 
@@ -120,6 +125,7 @@ const ToktokFoodAddressDetails = ({route}) => {
         },
       });
       const {payload, predictions} = API_RESULT?.data.data?.getGooglePlaceAutocomplete;
+      dispatch({type: 'SET_LOADING', value: false});
       if (payload.success) {
         setAddressList(predictions);
         setSessionToken(uuid.v4());
@@ -166,13 +172,23 @@ const ToktokFoodAddressDetails = ({route}) => {
   };
 
   const renderLoader = () => {
-    if (state.pickUpAddress !== '') {
+    if (state.pickUpAddress !== '' && !state.loading) {
+      return (
+        <View style={styles.emptyList}>
+          <Image source={empty_search_2} style={styles.emptyImage} />
+          <StyledText mode="semibold" fontSize={18} style={{color: COLOR.ORANGE}}>
+            No Result Found
+          </StyledText>
+          <StyledText style={{marginTop: 8}}>Try to search something similar.</StyledText>
+        </View>
+      );
+    } else if (state.pickUpAddress !== '' && state.loading) {
       return (
         <>
-          {[1, 2, 3, 4, 5].map((v) => (
+          {[1, 2, 3, 4, 5].map(v => (
             <View key={v}>
               <View style={styles.placeItem}>
-                <View style={styles.iconLoader}></View>
+                <View style={styles.iconLoader}/>
                 <View style={{flex: 1}}>
                   <View style={{width: '100%'}}>
                     <ContentLoader
@@ -248,7 +264,10 @@ const ToktokFoodAddressDetails = ({route}) => {
                 placeholder="Enter Location"
                 style={[styles.searchBox, styles.textInputFontStyles]}
                 onFocus={() => debouncedGetGooglePlaceAutocomplete()}
-                onChangeText={query => dispatch({type: 'SET_PICKUP_ADDRESS', value: query})}
+                onChangeText={query => {
+                  dispatch({type: 'SET_PICKUP_ADDRESS', value: query});
+                  dispatch({type: 'SET_LOADING', value: true});
+                }}
               />
               <MIcon
                 onPress={() => dispatch({type: 'SET_PICKUP_ADDRESS', value: ''})}
@@ -366,6 +385,16 @@ const styles = StyleSheet.create({
     height: 25,
     borderRadius: 50,
     backgroundColor: 'rgba(256,186,28,0.4)',
+  },
+  emptyList: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: Dimensions.get('screen').height * 0.75,
+  },
+  emptyImage: {
+    width: 215,
+    height: 180,
+    marginBottom: 16,
   },
 });
 

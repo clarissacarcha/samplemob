@@ -15,6 +15,7 @@ import {throttle} from 'lodash';
 import {onError} from '../../../util/ErrorUtility';
 import {ThrottledOpacity} from '../../../components_section';
 import {AlertOverlay} from '../../../SuperApp/screens/Components';
+import {useAlertGO} from '../../hooks';
 
 const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const {popTo, source} = route.params;
@@ -25,6 +26,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     longitude: 121.0634614077012,
     ...MAP_DELTA_LOW,
   };
+  const alertGO = useAlertGO();
   const {details, destination, origin} = useSelector(state => state.toktokGo);
   const [mapRegion, setMapRegion] = useState({...origin?.place?.location, ...MAP_DELTA_LOW});
   const [initialRegionChange, setInitialRegionChange] = useState(!mapRegion.latitude ? false : true);
@@ -56,7 +58,30 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
         decodedPolyline: decodeLegsPolyline(response.getQuotation.quotation.route.legs),
       });
     },
-    onError: error => console.log('error', error),
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, errorType}) => {
+          if (errorType === 'INTERNAL_SERVER_ERROR') {
+            alertGO({message});
+          } else if (errorType === 'BAD_USER_INPUT') {
+            alertGO({message});
+          } else if (errorType === 'AREA_UNSERVICEABLE') {
+            alertGO({message});
+          } else if (errorType === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else if (errorType === 'ExecutionTimeout') {
+            alertGO({message});
+          } else {
+            console.log('ELSE ERROR:', error);
+            // Alert.alert('', 'Something went wrong...');
+            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
+          }
+        });
+      }
+    },
   });
 
   const onConfirm = throttle(
