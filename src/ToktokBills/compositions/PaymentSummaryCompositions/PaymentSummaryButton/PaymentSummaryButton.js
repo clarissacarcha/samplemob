@@ -14,7 +14,12 @@ import {AlertOverlay} from 'src/components';
 import {useAccount} from 'toktokbills/hooks';
 import {useMutation} from '@apollo/react-hooks';
 import {TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT} from 'src/graphql';
-import {POST_BILLS_TRANSACTION, POST_TOKTOKWALLET_REQUEST_MONEY, POST_BILLS_SSS} from 'toktokbills/graphql/model';
+import {
+  POST_BILLS_TRANSACTION,
+  POST_TOKTOKWALLET_REQUEST_MONEY,
+  POST_BILLS_SSS,
+  POST_BILLS_PAGIBIG,
+} from 'toktokbills/graphql/model';
 import {usePrompt} from 'src/hooks';
 import {ErrorUtility} from 'toktokbills/util';
 import {useAlert, useThrottle} from 'src/hooks';
@@ -37,6 +42,9 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
     referenceNumber,
     itemCode,
     payorType,
+    paymentType,
+    periodCoveredFrom,
+    periodCoveredTo,
   } = paymentData;
   const {termsAndConditions, paymentPolicy1, paymentPolicy2} = billItemSettings.itemDocumentDetails;
   const totalAmount = parseFloat(amount) + parseFloat(totalServiceFee);
@@ -98,6 +106,21 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
     },
   });
 
+  const [postBillsPagibig, {loading: postBillsPagibigLoading}] = useMutation(POST_BILLS_PAGIBIG, {
+    client: TOKTOK_BILLS_LOAD_GRAPHQL_CLIENT,
+    onError: error => {
+      ErrorUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        onPress: () => navigation.navigate('ToktokBillsHome'),
+      });
+    },
+    onCompleted: ({postBillsPagibig}) => {
+      navigation.navigate('ToktokBillsReceipt', {receipt: postBillsPagibig.data, paymentData});
+    },
+  });
+
   const handleProcessProceed = ({pinCode, data}) => {
     let {totalAmount, requestMoneyDetails, paymentData, hash} = data;
     let {firstName, lastName} = user.person;
@@ -138,6 +161,22 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
           },
         },
       });
+    } else if (itemCode === 'PAG_IBIG') {
+      postBillsPagibig({
+        variables: {
+          input: {
+            ...input,
+            ...{
+              paymentType: +paymentType.code,
+              accountNo: firstField,
+              contactNo: secondField,
+              perCov1: periodCoveredFrom,
+              perCov2: periodCoveredTo,
+              paymentOption: 'R',
+            },
+          },
+        },
+      });
     } else {
       postBillsTransaction({
         variables: {
@@ -174,7 +213,9 @@ const PaymentSummaryButton = (props: PropsType): React$Node => {
 
   return (
     <>
-      <AlertOverlay visible={loading || postBillsTransactionLoading || postBillsSssLoading} />
+      <AlertOverlay
+        visible={loading || postBillsTransactionLoading || postBillsSssLoading || postBillsPagibigLoading}
+      />
       <OrangeButton label={'Confirm'} hasShadow onPress={onPressThrottled} />
     </>
   );

@@ -129,3 +129,14 @@ export const POST_BILLS_SSS = gql`
     }
   }
 `;
+
+export const POST_BILLS_PAGIBIG = gql`
+  mutation postBillsPagibig($input: PostBillsPagibigInput!) {
+    postBillsPagibig(input: $input) {
+      status
+      data {
+        ${transaction}
+      }
+    }
+  }
+`;
