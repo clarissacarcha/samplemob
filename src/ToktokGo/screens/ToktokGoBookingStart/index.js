@@ -10,9 +10,15 @@ import {
   TRIP_CHARGE_FINALIZE_PAYMENT,
   TRIP_CHARGE_INITIALIZE_PAYMENT,
   GET_TRIP_DESTINATIONS,
+  GET_SAVED_ADDRESS,
 } from '../../graphql';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_GO_GRAPHQL_CLIENT, TOKTOK_QUOTATION_GRAPHQL_CLIENT} from '../../../graphql';
+import {
+  TOKTOK_GO_GRAPHQL_CLIENT,
+  TOKTOK_QUOTATION_GRAPHQL_CLIENT,
+  TOKTOK_ADDRESS_CLIENT,
+  PREF_GET_SAVED_ADDRESSES,
+} from '../../../graphql';
 import {ToktokgoBeta, EmptyRecent} from '../../components';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {currentLocation} from '../../../helper';
@@ -23,8 +29,7 @@ import {useMutation} from '@apollo/client';
 import {onErrorAppSync, onError} from '../../util';
 import {useAccount} from 'toktokwallet/hooks';
 import {CancellationPaymentSuccesfullModal, NoShowPaymentSuccesfullModal} from './Components';
-import {SavedLocations} from './Sections/SavedLocations';
-import {RecentDestinations} from './Sections/RecentDestinations';
+import {RecentDestinations, SavedAddress} from './Sections';
 import AsyncStorage from '@react-native-community/async-storage';
 import {FlatList} from 'react-native-gesture-handler';
 // import {onError} from '../../../util/ErrorUtility';
@@ -32,6 +37,7 @@ import {useAlertGO} from '../../hooks';
 
 const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   // const {popTo, selectInput} = route.params;
+  const alertGO = useAlertGO();
   const [selectedInput, setSelectedInput] = useState('D');
   const {tokwaAccount, getMyAccount} = useAccount();
   const [tripConsumerPending, setTripConsumerPending] = useState([]);
@@ -41,12 +47,14 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   const [recentSearchDataList, setrecentSearchDataList] = useState([]);
   const [recentDestinationList, setrecentDestinationList] = useState([]);
   const [showNotEnoughBalanceModal, setShowNotEnoughBalanceModal] = useState(false);
-  const alertGO = useAlertGO();
+  const [savedAddressList, setSavedAddressList] = useState([]);
+  const [addressObj, setAddressObj] = useState(null);
 
   useEffect(() => {
     const subscribe = navigation.addListener('focus', async () => {
       await getSearchList();
       getTripDestinations();
+      getSavedAddress();
       // Return the function to unsubscribe from the event so it gets removed on unmount
       return subscribe;
     });
@@ -67,6 +75,15 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
       setrecentDestinationList(response.getTripDestinations);
     },
     onError: onErrorAppSync,
+  });
+
+  const [getSavedAddress] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setSavedAddressList(response.prefGetSavedAddresses.slice(0, 3));
+    },
+    onError: onError,
   });
 
   const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
@@ -98,7 +115,6 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
-      console.log(graphQLErrors);
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
@@ -162,7 +178,6 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
-          console.log(errorType);
           if (errorType === 'INTERNAL_SERVER_ERROR') {
             alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
@@ -249,6 +264,30 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     onPressLocation();
   };
 
+  const onPressSavedAddress = loc => {
+    dispatch({
+      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+      payload: {...route.params.details, noteToDriver: ''},
+    });
+    if (route?.params?.voucherData) {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+        payload: {...route.params.details, voucher: route.params.voucherData, paymentMethod: 'TOKTOKWALLET'},
+      });
+    }
+    const addressObject = {
+      hash: loc.placeHash,
+      place: loc.place,
+    };
+
+    if (selectedInput == 'D') {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: addressObject});
+    } else {
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: addressObject});
+    }
+    onPressLocation();
+  };
+
   const onPressRecentDestination = loc => {
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
@@ -295,6 +334,20 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     }
   };
 
+  useEffect(() => {
+    if (addressObj) {
+      onPressSavedAddress(addressObj);
+    }
+  }, [addressObj]);
+
+  const getAddressObj = address => {
+    setAddressObj(address);
+  };
+
+  const navigateToSavedAddress = () => {
+    navigation.push('ToktokSavedLocations', {getAddressObj});
+  };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={{flex: 1, backgroundColor: CONSTANTS.COLOR.WHITE, justifyContent: 'space-between'}}>
@@ -315,9 +368,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
               <ScrollView
                 contentContainerStyle={{flexGrow: 1}}
                 scrollEnabled={
-                  tripConsumerPending.length > 0 ||
-                  recentSearchDataList.length != 0 ||
-                  recentDestinationList.length != 0
+                  tripConsumerPending.length > 0 || savedAddressList.length != 0 || recentDestinationList.length != 0
                 }>
                 {tripConsumerPending.length > 0 && (
                   <OutstandingFee
@@ -328,20 +379,20 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
                     setShowNotEnoughBalanceModal={setShowNotEnoughBalanceModal}
                   />
                 )}
-                {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? (
+                {savedAddressList.length == 0 && recentDestinationList.length == 0 ? (
                   <ToktokgoBeta />
                 ) : (
                   <View>
-                    {recentSearchDataList.length == 0 && recentDestinationList.length == 0 ? null : (
+                    {savedAddressList.length == 0 && recentDestinationList.length == 0 ? null : (
                       <View>
-                        {recentSearchDataList.length == 0 ? null : (
-                          <SavedLocations
+                        {
+                          <SavedAddress
+                            savedAddressList={savedAddressList}
+                            navigateToSavedAddress={navigateToSavedAddress}
+                            onPressSavedAddress={onPressSavedAddress}
                             navigation={navigation}
-                            // popTo={popTo}
-                            recentSearchDataList={recentSearchDataList}
-                            onPressRecentSearch={onPressRecentSearch}
                           />
-                        )}
+                        }
                         {recentDestinationList.length == 0 ? null : (
                           <View>
                             {recentSearchDataList.length != 0 && (
@@ -352,6 +403,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
                               recentDestinationList={recentDestinationList}
                               onPressRecentDestination={onPressRecentDestination}
                               recentSearchDataList={recentSearchDataList}
+                              savedAddressList={savedAddressList}
                             />
                           </View>
                         )}

@@ -82,8 +82,8 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
       <AlertOverlay visible={PCVLoading} />
       <SuccessVoucherClaimedModal isVissible={viewSuccesVoucherClaimedModal} />
       <ProcessingModal visible={processingVisible} />
-      <ScrollView>
-        <Header title={data.name} navigation={navigation} />
+      <Header title={data.name} navigation={navigation} />
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <Image
             source={GraphicsIMG}
@@ -95,23 +95,23 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
           <Text style={{fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD}}>Promo Terms and Conditions</Text>
           <Text style={{marginVertical: 16}}>{data.policies}</Text>
         </View>
-
-        {!isApplicable && (
-          <View style={styles.buttonContainer}>
-            {GVLoading ? (
-              <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{paddingVertical: 16}} />
-            ) : data?.collectable && !data?.voucherWallet ? (
-              <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPressSelected}>
-                <Text style={styles.claimText}>Claim</Text>
-              </ThrottledOpacity>
-            ) : (
-              <ThrottledOpacity style={styles.useButtonWrapper} onPress={onPressSelected}>
-                <Text style={styles.useText}>Use</Text>
-              </ThrottledOpacity>
-            )}
-          </View>
-        )}
       </ScrollView>
+
+      {!isApplicable && (
+        <View style={styles.buttonContainer}>
+          {GVLoading ? (
+            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{paddingVertical: 16}} />
+          ) : data?.collectable && !data?.voucherWallet ? (
+            <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPressSelected}>
+              <Text style={styles.claimText}>Claim</Text>
+            </ThrottledOpacity>
+          ) : (
+            <ThrottledOpacity style={styles.useButtonWrapper} onPress={onPressSelected}>
+              <Text style={styles.useText}>Use</Text>
+            </ThrottledOpacity>
+          )}
+        </View>
+      )}
     </View>
   );
 };
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
     marginTop: 24,
+    marginBottom: 80,
   },
   buttonContainer: {
     position: 'absolute',

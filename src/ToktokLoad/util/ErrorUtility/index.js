@@ -60,7 +60,7 @@ export class ErrorUtility {
     }
 
     if(graphQLErrors[0]?.message == "Verification code already expired."){
-      const message = `Verification code already expired.`
+      const message = `OTP already expired.`;
       if(setErrorMessage){
         setErrorMessage(message)
         return;

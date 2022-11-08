@@ -65,6 +65,7 @@ export const ToktokBiller = ({navigation, route}) => {
       setRefreshing(false);
     },
     onCompleted: ({getBillItemsPaginate}) => {
+      console.log(getBillItemsPaginate.edges);
       setBillItems(getBillItemsPaginate.edges);
       setPageInfo(getBillItemsPaginate.pageInfo);
       setRefreshing(false);

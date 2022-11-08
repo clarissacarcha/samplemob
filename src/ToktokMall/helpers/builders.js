@@ -60,7 +60,7 @@ export const BuildPostCheckoutBody = async ({
 			vouchers: vouchers,
 			shippingvouchers: CheckShippingVouchers(shippingVouchers),
 			referral_code: referral?.referralCode && referral?.referralCode != null ? referral?.referralCode : "",
-			referral_account_type: referral?.franchiseeAccountType && referral?.franchiseeAccountType != null ? referral?.franchiseeAccountType : "",
+			referral_account_type: referral?.referralName && referral?.referralName != null ? referral?.referralName : "",
 			reseller_code: franchisee?.franchiseeCode,
 			reseller_account_type: franchisee?.franchiseeAccountType && franchisee?.franchiseeAccountType != null ? franchisee?.franchiseeAccountType : "",
 			payment_method: paymentMethod,
@@ -205,6 +205,9 @@ export const GetOrderType = (franchisee) => {
 	if(franchisee && franchisee?.franchiseeCode != null){
 		//reseller
 		return 4
+	}else if(franchisee && franchisee?.referralCode != null){
+		//shoplink
+		return 3
 	}else{
 		//regular
 		return 2
