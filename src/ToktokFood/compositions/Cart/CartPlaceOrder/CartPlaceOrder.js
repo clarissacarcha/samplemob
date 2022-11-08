@@ -108,13 +108,21 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     // console.log('deductedPrice', deductedPrice);
     // console.log('amount', amount);
     // console.log('parsedAmount', parsedAmount);
-    const totalDiscount = _.sumBy(promotionVoucher, voucher => voucher.discount_totalamount ?? voucher.amount);
+    const totalDiscount = _.sumBy(promotionVoucher, voucher => {
+      if(voucher.type == "promotion"){
+        return voucher.discount_totalamount ?? voucher.amount
+      }
+      return 0
+    });
     const totalAmountWoAddons = _.sumBy(cartData?.items, item => {
       let total = 0;
       if (promotionVoucher.length > 0) {
         promotionVoucher.map(voucher => {
-          console.log("promotion vouch", voucher)
-          if(!voucher.items) return
+          console.log("promotion vouch", voucher, item.resellerDiscount, item.basePrice, item)
+          if(!voucher.items){
+            total += (item.resellerDiscount || item.basePrice) * item.quantity;
+            return total
+          }
           voucher.items.map(itm => {
             if (item.productid === itm.product_id) {
               if (item.quantity > 1) {
