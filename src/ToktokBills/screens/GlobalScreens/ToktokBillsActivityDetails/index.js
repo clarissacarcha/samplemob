@@ -27,6 +27,28 @@ const getStatus = status => {
   }
 };
 
+const getSecondFieldName = billerDetails => {
+  switch (billerDetails.itemCode) {
+    case 'SSS':
+      return 'Account Name';
+    case 'PAG_IBIG':
+      return '';
+    default:
+      return billerDetails.secondFieldName;
+  }
+};
+
+const getFirstFieldName = billerDetails => {
+  switch (billerDetails.itemCode) {
+    case 'SSS':
+      return 'Payment Reference Number';
+    case 'PAG_IBIG':
+      return 'Account Number';
+    default:
+      return billerDetails.secondFieldName;
+  }
+};
+
 export const ToktokBillsActivityDetails = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -45,11 +67,15 @@ export const ToktokBillsActivityDetails = ({navigation, route}) => {
     referenceNumber,
     status,
     toktokwalletReturnRefNo,
+    transactionSSSBill,
+    transactionPagibigBill,
   } = route.params?.activityDetails;
   const transactionDateTime = moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
   const convenienceFee = `${providerServiceFee + systemServiceFee}`;
   const totalAmount = `${currencyCode}${numberFormat(parseFloat(amount) + parseFloat(convenienceFee))}`;
   const statusData = getStatus(status);
+  const secondFieldName = getSecondFieldName(billerDetails);
+  const firstFieldName = getFirstFieldName(billerDetails);
 
   return (
     <View style={styles.container}>
@@ -80,16 +106,39 @@ export const ToktokBillsActivityDetails = ({navigation, route}) => {
             <View style={{marginBottom: moderateScale(10)}}>
               <Text style={styles.fontBigBold}>Account Information</Text>
             </View>
+            {transactionPagibigBill && (
+              <View style={styles.accountInfo}>
+                <Text style={styles.accountColor}>
+                  Payment Type: {transactionPagibigBill.billsPagibigPaymentType.description}
+                </Text>
+              </View>
+            )}
+            {secondFieldName != '' && (
+              <View style={styles.accountInfo}>
+                <Text style={styles.accountColor}>
+                  {secondFieldName}: {destinationIdentifier}
+                </Text>
+              </View>
+            )}
             <View style={styles.accountInfo}>
               <Text style={styles.accountColor}>
-                {billerDetails?.secondFieldName}: {destinationIdentifier}
+                {firstFieldName}: {destinationNumber}
               </Text>
             </View>
-            <View style={styles.accountInfo}>
-              <Text style={styles.accountColor}>
-                {billerDetails?.firstFieldName}: {destinationNumber}
-              </Text>
-            </View>
+            {transactionPagibigBill && (
+              <View style={styles.accountInfo}>
+                <Text style={styles.accountColor}>
+                  Period Covered From: {moment(transactionPagibigBill.perCov1).format('MM YYYY').replace(' ', '')}
+                </Text>
+              </View>
+            )}
+            {transactionPagibigBill && (
+              <View style={styles.accountInfo}>
+                <Text style={styles.accountColor}>
+                  Period Covered To: {moment(transactionPagibigBill.perCov2).format('MM YYYY').replace(' ', '')}
+                </Text>
+              </View>
+            )}
             <View style={styles.accountInfo}>
               <Text style={styles.accountColor}>Toktokwallet Account Number: {senderMobileNumber}</Text>
             </View>

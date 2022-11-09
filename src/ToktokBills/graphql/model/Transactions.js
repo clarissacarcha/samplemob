@@ -14,6 +14,7 @@ const transaction = `
     descriptions
     firstFieldName
     secondFieldName
+    itemCode
   }
   loadDetails {
     id
@@ -46,6 +47,21 @@ const transaction = `
   providerComRate
   comType
   createdAt
+  transactionPagibigBill{
+    accountNumber
+    contactNumber
+    perCov1
+    perCov2
+    billsPagibigPaymentType {
+      description
+    }
+  }
+  transactionSSSBill {
+    prn
+    billsSSSMembershipType {
+      description
+    }
+  }
 `;
 
 export const GET_TRANSACTIONS_BY_STATUS = gql`
