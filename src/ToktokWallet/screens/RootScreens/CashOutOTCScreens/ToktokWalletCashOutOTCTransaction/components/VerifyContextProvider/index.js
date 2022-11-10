@@ -20,13 +20,7 @@ export const VerifyContextProvider = ({children}) => {
   const [purpose, setPurpose] = useState('');
   const [providerServiceFee, setProviderServiceFee] = useState(0);
   const [toktokServiceFee, setToktokServiceFee] = useState(0);
-
-  const changeErrorMessages = (key, value) => {
-    setPerson(oldstate => ({
-      ...oldstate,
-      [key]: value,
-    }));
-  };
+  const [loading, setLoading] = useState(false);
 
   return (
     <Provider
@@ -55,6 +49,8 @@ export const VerifyContextProvider = ({children}) => {
         setProviderServiceFee,
         toktokServiceFee,
         setToktokServiceFee,
+        setLoading,
+        loading,
       }}>
       {children}
     </Provider>

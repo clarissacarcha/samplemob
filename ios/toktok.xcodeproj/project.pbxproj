@@ -11,6 +11,7 @@
 		00E356F31AD99517003FC87E /* toktokTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* toktokTests.m */; };
 		03F357427E67434B925EFC69 /* FiraSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8FCBB909868F41E3A6996C66 /* FiraSans-Regular.ttf */; };
 		0757D170AB5949A0AACCDD76 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CAAB68DB961A4966B227363B /* Rubik-Italic.ttf */; };
+		0C4D5B2A2C7A4E2285B4CD84 /* FiraSans-RegularItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42F3FDECAC424046842C1BD4 /* FiraSans-RegularItalic.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -19,18 +20,25 @@
 		1AB59A7CC71B483898BA6E62 /* FiraSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0369F8E2AE8146819D419DE0 /* FiraSans-SemiBold.ttf */; };
 		2443EF124E174E6E8E727696 /* Jost-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 66E50FAEE478426DB4E60B97 /* Jost-BlackItalic.ttf */; };
 		26A9C76EE5E9403D9B05A69E /* Rubik-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7FB1883B37304F5D93DE3F8B /* Rubik-ExtraBoldItalic.ttf */; };
+		299B5BCD084E43088388EA37 /* FiraSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B36B06F222145D79EA2E567 /* FiraSans-Medium.ttf */; };
 		2CC9AFE5A01A421E8012198B /* Rubik-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97DC8883B33F4A3B9EDD7AF7 /* Rubik-Black.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* toktokTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* toktokTests.m */; };
+		335EE13D729A4C06B05E09BA /* FiraSans-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B24FB26F7AA348068CA511F5 /* FiraSans-Black.ttf */; };
 		339CAC044D3440279207DDC0 /* Jost-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 939E3009171A4981A1B88BDB /* Jost-LightItalic.ttf */; };
+		3833400CD33C45D88F6B785E /* FiraSans-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C843752ADECD497381A18D26 /* FiraSans-SemiBoldItalic.ttf */; };
 		39670FC581DD4F029763FAE6 /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AFABA08D9EED457CBBE6CED7 /* Rubik-SemiBoldItalic.ttf */; };
 		4C7AEFD7022D4FA4A814A186 /* Jost-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 72810EE0A992469DB9D07601 /* Jost-ThinItalic.ttf */; };
+		4EF4085534E24F23833A3F8E /* FiraSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B57407EF241C442BBBAF7F7C /* FiraSans-BoldItalic.ttf */; };
 		53A7D436DEC44D4E9B3468AD /* Jost-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F7C587EEFA74933A809127D /* Jost-Italic.ttf */; };
 		5DF82E20605045268133C6FC /* Jost-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3EDD890412F14AEFA0ABA0A0 /* Jost-Light.ttf */; };
+		5E2EE415954743E3A481D834 /* FiraSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C876A7D70B564947A7BF91E8 /* FiraSans-MediumItalic.ttf */; };
 		6B4B3099EC954F2CBEC4C7C2 /* Jost-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40886CC3397B49AAB1B800AA /* Jost-ExtraLightItalic.ttf */; };
+		71998BCA066D45FAA7EB7716 /* FiraSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A2E4BE662A0462E8A040525 /* FiraSans-ExtraBoldItalic.ttf */; };
 		719E4AC926514BCFB7B2779B /* Jost-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9DDC796A2684F44864D6D2C /* Jost-SemiBoldItalic.ttf */; };
+		73801D54137A4C2E81D1E45D /* FiraSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 074D0C7D71F347769107C7F6 /* FiraSans-ExtraBold.ttf */; };
 		869B7ED20BFD4137B023FC07 /* Jost-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BAD6027FDB054C6899F98E98 /* Jost-ExtraBoldItalic.ttf */; };
 		8A40AA2E6CD74F449163883E /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6567E73D3AE44F7E9AD051CC /* Rubik-BoldItalic.ttf */; };
 		8DCA398E402D4388B10B2DE8 /* Jost-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D8D7886C9F24AC8B4DB0979 /* Jost-BoldItalic.ttf */; };
@@ -38,6 +46,7 @@
 		97304C9A6BBA446789910E4F /* Akrobat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB69349A9D084E02B2BE3E73 /* Akrobat-Regular.ttf */; };
 		991F4733565F460FB736076B /* Jost-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 74272DE63E01472C927DDC3C /* Jost-ExtraBold.ttf */; };
 		9ACBD6E58476408DA5D615CC /* Satisfy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF1371E7922C4FD6840D4906 /* Satisfy-Regular.ttf */; };
+		A5F8245B861C46D5BF77A22F /* FiraSans-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27CAF37A5DE44726A99FDCC9 /* FiraSans-BlackItalic.ttf */; };
 		AA5D22FC17104B8CB4AA6F52 /* FiraSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F9FD6E347EC84AC6A43C96C1 /* FiraSans-Bold.ttf */; };
 		AC427F513972FACC8E4A4FD2 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91AC80FCD23D5D1BD18834E9 /* libPods-OneSignalNotificationServiceExtension.a */; };
 		AF4459EE935AE65CAF957A52 /* libPods-toktok.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED6F21D4AAD1C98246257427 /* libPods-toktok.a */; };
@@ -107,7 +116,9 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* toktokTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = toktokTests.m; sourceTree = "<group>"; };
 		0369F8E2AE8146819D419DE0 /* FiraSans-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-SemiBold.ttf"; path = "../src/assets/fonts/FiraSans-SemiBold.ttf"; sourceTree = "<group>"; };
+		074D0C7D71F347769107C7F6 /* FiraSans-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-ExtraBold.ttf"; path = "../src/assets/fonts/FiraSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		08EADD7CBAB0454A89BB1962 /* Jost-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-ExtraLight.ttf"; path = "../src/assets/fonts/Jost-ExtraLight.ttf"; sourceTree = "<group>"; };
+		0A2E4BE662A0462E8A040525 /* FiraSans-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/FiraSans-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		0CF2B3DB46654800A596A6A6 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		0DF3D6A4EA76479B9C60F6DC /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../src/assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
 		105479CA8121656DB4970609 /* Pods-toktok-toktokTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok-toktokTests.release.xcconfig"; path = "Target Support Files/Pods-toktok-toktokTests/Pods-toktok-toktokTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -121,6 +132,7 @@
 		1E93751434AA499CAA9172DA /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		1EE64892DABA4006BD3F1814 /* Jost-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-MediumItalic.ttf"; path = "../src/assets/fonts/Jost-MediumItalic.ttf"; sourceTree = "<group>"; };
 		230274B98E4A4E07D3C98360 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
+		27CAF37A5DE44726A99FDCC9 /* FiraSans-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-BlackItalic.ttf"; path = "../src/assets/fonts/FiraSans-BlackItalic.ttf"; sourceTree = "<group>"; };
 		2C98132163784E50AEAB0173 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* toktok-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "toktok-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* toktok-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "toktok-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +142,8 @@
 		2FFE2FBFCEFA4B0E90CC954F /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		3EDD890412F14AEFA0ABA0A0 /* Jost-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-Light.ttf"; path = "../src/assets/fonts/Jost-Light.ttf"; sourceTree = "<group>"; };
 		40886CC3397B49AAB1B800AA /* Jost-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Jost-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
+		42F3FDECAC424046842C1BD4 /* FiraSans-RegularItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-RegularItalic.ttf"; path = "../src/assets/fonts/FiraSans-RegularItalic.ttf"; sourceTree = "<group>"; };
+		4B36B06F222145D79EA2E567 /* FiraSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-Medium.ttf"; path = "../src/assets/fonts/FiraSans-Medium.ttf"; sourceTree = "<group>"; };
 		50CA3E8424B73BC00017B60C /* toktok.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = toktok.entitlements; path = toktok/toktok.entitlements; sourceTree = "<group>"; };
 		5BC4CD3E711344AF95533B2F /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		5D2628C549D54DC991656EF2 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
@@ -157,7 +171,9 @@
 		A4D8F889652D4C4BB327B994 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		AF9F317F86B045D3950D47D2 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../src/assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
 		AFABA08D9EED457CBBE6CED7 /* Rubik-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Rubik-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		B24FB26F7AA348068CA511F5 /* FiraSans-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-Black.ttf"; path = "../src/assets/fonts/FiraSans-Black.ttf"; sourceTree = "<group>"; };
 		B2A24D02662A44A5A9A2CD5C /* Rubik-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BlackItalic.ttf"; path = "../src/assets/fonts/Rubik-BlackItalic.ttf"; sourceTree = "<group>"; };
+		B57407EF241C442BBBAF7F7C /* FiraSans-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-BoldItalic.ttf"; path = "../src/assets/fonts/FiraSans-BoldItalic.ttf"; sourceTree = "<group>"; };
 		B6CD6C4614AE38F82AEB17A3 /* Pods-toktok.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-toktok.debug.xcconfig"; path = "Target Support Files/Pods-toktok/Pods-toktok.debug.xcconfig"; sourceTree = "<group>"; };
 		B9DDC796A2684F44864D6D2C /* Jost-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Jost-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		BAD6027FDB054C6899F98E98 /* Jost-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Jost-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
@@ -170,6 +186,8 @@
 		C039FBFE165F4AD5B6B250F4 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		C5B393ABF5C342BE92EEBE26 /* Jost-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-SemiBold.ttf"; path = "../src/assets/fonts/Jost-SemiBold.ttf"; sourceTree = "<group>"; };
 		C6DFC60BFECF4A19B760B0B6 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		C843752ADECD497381A18D26 /* FiraSans-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-SemiBoldItalic.ttf"; path = "../src/assets/fonts/FiraSans-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		C876A7D70B564947A7BF91E8 /* FiraSans-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FiraSans-MediumItalic.ttf"; path = "../src/assets/fonts/FiraSans-MediumItalic.ttf"; sourceTree = "<group>"; };
 		C89B4AC3BD2A44AEB7BE6002 /* Jost-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-Thin.ttf"; path = "../src/assets/fonts/Jost-Thin.ttf"; sourceTree = "<group>"; };
 		CAAB68DB961A4966B227363B /* Rubik-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Italic.ttf"; path = "../src/assets/fonts/Rubik-Italic.ttf"; sourceTree = "<group>"; };
 		CC9C69126165444AA7A31B36 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
@@ -335,6 +353,15 @@
 				8FCBB909868F41E3A6996C66 /* FiraSans-Regular.ttf */,
 				DB69349A9D084E02B2BE3E73 /* Akrobat-Regular.ttf */,
 				0369F8E2AE8146819D419DE0 /* FiraSans-SemiBold.ttf */,
+				B24FB26F7AA348068CA511F5 /* FiraSans-Black.ttf */,
+				27CAF37A5DE44726A99FDCC9 /* FiraSans-BlackItalic.ttf */,
+				B57407EF241C442BBBAF7F7C /* FiraSans-BoldItalic.ttf */,
+				074D0C7D71F347769107C7F6 /* FiraSans-ExtraBold.ttf */,
+				0A2E4BE662A0462E8A040525 /* FiraSans-ExtraBoldItalic.ttf */,
+				4B36B06F222145D79EA2E567 /* FiraSans-Medium.ttf */,
+				C876A7D70B564947A7BF91E8 /* FiraSans-MediumItalic.ttf */,
+				42F3FDECAC424046842C1BD4 /* FiraSans-RegularItalic.ttf */,
+				C843752ADECD497381A18D26 /* FiraSans-SemiBoldItalic.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -618,6 +645,15 @@
 				03F357427E67434B925EFC69 /* FiraSans-Regular.ttf in Resources */,
 				97304C9A6BBA446789910E4F /* Akrobat-Regular.ttf in Resources */,
 				1AB59A7CC71B483898BA6E62 /* FiraSans-SemiBold.ttf in Resources */,
+				335EE13D729A4C06B05E09BA /* FiraSans-Black.ttf in Resources */,
+				A5F8245B861C46D5BF77A22F /* FiraSans-BlackItalic.ttf in Resources */,
+				4EF4085534E24F23833A3F8E /* FiraSans-BoldItalic.ttf in Resources */,
+				73801D54137A4C2E81D1E45D /* FiraSans-ExtraBold.ttf in Resources */,
+				71998BCA066D45FAA7EB7716 /* FiraSans-ExtraBoldItalic.ttf in Resources */,
+				299B5BCD084E43088388EA37 /* FiraSans-Medium.ttf in Resources */,
+				5E2EE415954743E3A481D834 /* FiraSans-MediumItalic.ttf in Resources */,
+				0C4D5B2A2C7A4E2285B4CD84 /* FiraSans-RegularItalic.ttf in Resources */,
+				3833400CD33C45D88F6B785E /* FiraSans-SemiBoldItalic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1063,7 +1099,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1360900;
+				CURRENT_PROJECT_VERSION = 1380000;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1077,7 +1113,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 1.36.9;
+				MARKETING_VERSION = 1.38.0;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1104,7 +1140,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1360900;
+				CURRENT_PROJECT_VERSION = 1380000;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = toktok/Info.plist;
@@ -1114,7 +1150,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 1.36.9;
+				MARKETING_VERSION = 1.38.0;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1368,14 +1404,14 @@
 				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1360900;
+				CURRENT_PROJECT_VERSION = 1380000;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.36.9;
+				MARKETING_VERSION = 1.38.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
@@ -1402,14 +1438,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1360900;
+				CURRENT_PROJECT_VERSION = 1380000;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GB5B4BE7QP;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.36.9;
+				MARKETING_VERSION = 1.38.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ph.cloudpanda.toktok.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";

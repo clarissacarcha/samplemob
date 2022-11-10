@@ -141,6 +141,14 @@ export const GET_DELIVERIES_COUNT_BY_STATUS = gql`
   }
 `;
 
+export const GET_DELIVERY_BY_DELIVERY_ID = gql`
+  query getDeliveryByDeliveryId($filter: GetDeliveryByDeliveryIdFilter) {
+    getDeliveryByDeliveryId(filter: $filter) {
+      ${Delivery}
+    }
+  }
+`;
+
 export const POST_DELIVERY = gql`
   mutation postDelivery($input: PostDeliveryInput!) {
     postDelivery(input: $input) {

@@ -1,44 +1,44 @@
-import React, {useEffect, useMemo, useState, useContext} from 'react';
-import {Dimensions, StyleSheet, Text, View, Animated, FlatList} from 'react-native';
+import React, {useMemo, useContext} from 'react';
+import {StyleSheet, Text, View, Animated, TouchableOpacity} from 'react-native';
 
 //COMPONENTS
-import {HeaderBack, HeaderTitle} from 'src/revamp';
-import {LoadingIndicator, SomethingWentWrong} from 'toktokwallet/components';
+import {LoadingIndicator} from 'toktokwallet/components';
 import {OTCPartnerDetails} from './OTCPartnerDetails';
 import {VerifyContext} from '../VerifyContextProvider';
 
-//GRAPHQL & HOOKS
-import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_CASH_OUT_PROVIDER_PARTNERS} from 'toktokwallet/graphql';
-import {useAccount} from 'toktokwallet/hooks';
-
 import {moderateScale} from 'toktokwallet/helper';
 
+//ASSETS
+import {VectorIcon, ICON_SET} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
-const {height, width} = Dimensions.get('window');
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
-export const OTCPartner = ({data}) => {
-  const {cashOutProviderPartners, getCashOutProviderPartnersLoading} = useContext(VerifyContext);
+export const OTCPartner = ({navigation}) => {
+  const {refreshing, cashOutProviderPartnersHighlighted, getHighlightedPartnersLoading} = useContext(VerifyContext);
 
   const ListOTCPartnerComponent = useMemo(() => {
     return (
       <View style={styles.billerTypesContainer}>
-        <FlatList
-          data={cashOutProviderPartners}
-          renderItem={({item, index}) => <OTCPartnerDetails item={item} index={index} />}
-          numColumns={4}
-        />
+        {cashOutProviderPartnersHighlighted.map((content, contentIndex) => {
+          return <OTCPartnerDetails content={content} contentIndex={contentIndex} title={Object.keys(content)[0]} />;
+        })}
       </View>
     );
-  }, [cashOutProviderPartners]);
+  }, [cashOutProviderPartnersHighlighted]);
 
   return (
     <View style={styles.container}>
       <Animated.View style={styles.shadowContainer}>
-        <Text style={[styles.title, styles.lineSeperator]}>Select OTC Partner</Text>
-        {getCashOutProviderPartnersLoading ? (
+        <View style={styles.lineSeperator}>
+          <Text style={[styles.title]}>Select OTC Partner</Text>
+          <TouchableOpacity
+            style={{flexDirection: 'row'}}
+            onPress={() => navigation.navigate('ToktokWalletCashOutOtcPartners')}>
+            <Text style={[styles.seeAllText]}>See All</Text>
+            <VectorIcon color={COLOR.ORANGE} size={moderateScale(15)} iconSet={ICON_SET.Entypo} name="chevron-right" />
+          </TouchableOpacity>
+        </View>
+        {!refreshing && getHighlightedPartnersLoading ? (
           <LoadingIndicator isLoading={true} style={{marginVertical: moderateScale(30)}} size="small" />
         ) : (
           ListOTCPartnerComponent
@@ -72,13 +72,15 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
-    paddingHorizontal: moderateScale(15),
-    paddingVertical: moderateScale(15),
     color: COLOR.ORANGE,
   },
   lineSeperator: {
     borderWidth: 1,
     borderColor: '#C4C4C436',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: moderateScale(15),
+    paddingVertical: moderateScale(15),
   },
   loadingContainer: {
     flex: 1,
@@ -99,8 +101,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   billerTypesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginVertical: moderateScale(20),
+    marginBottom: moderateScale(20),
   },
 });

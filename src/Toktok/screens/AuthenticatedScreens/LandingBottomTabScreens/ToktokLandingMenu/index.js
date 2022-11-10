@@ -211,6 +211,7 @@ export const ToktokLandingMenu = ({navigation}) => {
             </ImageBackground>
             <Text style={{paddingLeft: 20, paddingTop: 20, paddingBottom: 15, fontFamily: FONT.BOLD}}> Account</Text>
             {/*--------------- MY DELIVERIES ---------------*/}
+            {/*---- FIXME: HIDDEN FOR THIS RELEASE -----*/}
             <DrawerButton
               label="Saved Addresses"
               onPress={() => {

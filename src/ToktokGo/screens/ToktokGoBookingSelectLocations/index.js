@@ -34,6 +34,7 @@ import {onErrorAppSync, onError} from '../../util';
 import {NoRecordFound, ServiceableArea} from './Components';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useAlertGO} from '../../hooks';
+import {PREF_GET_SAVED_ADDRESSES} from '../../../graphql';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const alertGO = useAlertGO();
@@ -55,7 +56,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const [serviceableAreaScreen, setServiceableAreaScreen] = useState(false);
   const [serviceableAreaList, setServiceableAreaList] = useState('');
   const [savedAddressList, setSavedAddressList] = useState([]);
-  const [addressObj, setAddressObj] = useState({});
+  const [addressObj, setAddressObj] = useState(null);
 
   useEffect(() => {
     async function tempFunction() {
@@ -70,11 +71,11 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     return () => {};
   }, []);
 
-  const [getSavedAddress] = useLazyQuery(GET_SAVED_ADDRESS, {
+  const [getSavedAddress] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setSavedAddressList(response.getAddresses.slice(0, 3));
+      setSavedAddressList(response.prefGetSavedAddresses.slice(0, 3));
     },
     onError: onError,
   });
@@ -312,7 +313,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           sessionToken: sessionToken,
           placeId: value.placeId,
           formattedAddress: value.formattedAddress,
-          service: 'PREF',
         },
       },
     });
@@ -389,8 +389,14 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     }
   };
 
+  useEffect(() => {
+    if (addressObj) {
+      onPressSavedAddress(addressObj);
+    }
+  }, [addressObj]);
+
   const getAddressObj = address => {
-    onPressSavedAddress(address);
+    setAddressObj(address);
   };
 
   const navigateToSavedAddress = () => {

@@ -33,6 +33,7 @@ const CustomAmountInput = (props: PropsType): React$Node => {
     editable = true,
     errorMessage = '',
     label = '',
+    onBlur,
   } = props;
   const [isFocus, setIsFocus] = useState(false);
 
@@ -54,6 +55,9 @@ const CustomAmountInput = (props: PropsType): React$Node => {
           maxLength={maxLength}
           keyboardType={'numeric'}
           onBlur={() => {
+            if (onBlur) {
+              onBlur();
+            }
             setIsFocus(false);
           }}
           onFocus={() => setIsFocus(true)}

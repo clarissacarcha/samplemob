@@ -174,7 +174,9 @@ const ToktokPinLocation = ({navigation, route}) => {
   };
 
   const onChange = value => {
-    debouncedRequest(value);
+    if (value.length >= 3) {
+      debouncedRequest(value);
+    }
     setSearchedText(value);
   };
 
@@ -242,22 +244,21 @@ const ToktokPinLocation = ({navigation, route}) => {
 
       <View style={{position: 'absolute', width: '100%', top: 16}}>
         <View style={styles.addressBox}>
-          <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} />
+          <Image source={SearchICN} resizeMode={'contain'} style={{width: 17, height: 17, marginLeft: 16}} />
           <TextInput
-            multiline
-            numberOfLines={2}
+            numberOfLines={1}
             ref={inputRef}
             editable={!GPLLoading && !disableAddressBox}
-            value={searchedText}
+            value={searchedText.length >= 40 ? searchedText.substring(0, 40) + '...' : searchedText}
             onChangeText={onChange}
             textAlign={'left'}
             style={styles.input}
           />
           {loading || GPLLoading ? (
-            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{height: 20, width: 20, marginRight: 16}} />
+            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{height: 17, width: 17, marginRight: 16}} />
           ) : searchedText ? (
             <ThrottledOpacity disabled={GPLLoading} delay={4000} onPress={clearSearhedData}>
-              <Image source={ClearTextInput} style={{height: 20, width: 20, marginRight: 16}} resizeMode={'contain'} />
+              <Image source={ClearTextInput} style={{height: 17, width: 17, marginRight: 16}} resizeMode={'contain'} />
             </ThrottledOpacity>
           ) : null}
         </View>
@@ -299,7 +300,7 @@ const ToktokPinLocation = ({navigation, route}) => {
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
 
       <View style={styles.submitContainer}>
-        <ThrottledOpacity disabled={data ? false : true} delay={4000} onPress={onSubmit} style={{borderRadius: 10}}>
+        <ThrottledOpacity disabled={data ? false : true} delay={4000} onPress={onSubmit} style={{borderRadius: 5}}>
           <View style={styles.submit}>
             <Text style={styles.submitText}>Confirm</Text>
           </View>
@@ -366,7 +367,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 50,
+    // height: 50,
     margin: 16,
     shadowColor: '#000',
     shadowOffset: {
@@ -384,8 +385,8 @@ const styles = StyleSheet.create({
   },
   submit: {
     backgroundColor: CONSTANTS.COLOR.ORANGE,
-    height: 50,
-    borderRadius: 10,
+    paddingVertical: 11,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },

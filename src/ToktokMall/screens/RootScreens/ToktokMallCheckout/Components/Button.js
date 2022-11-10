@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, AsyncStorage} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, AsyncStorage, Animated} from 'react-native';
 import { Price, FormatToText } from '../../../../helpers/formats';
 import Spinner from 'react-native-spinkit';
 import { FONT } from '../../../../../res/variables';
@@ -10,33 +10,37 @@ import { FONT } from '../../../../../res/variables';
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
 
 import {CheckoutContext} from '../ContextProvider';
+import { RoundOffValue } from '../../../../helpers';
 
 const REAL_WIDTH = Dimensions.get('window').width;
 
 export const Button = ({enabled, loading, shipping, balance, shippingRates, total, onPress}) => {
 
   const CheckoutContextData = useContext(CheckoutContext)
-
-  const onCheckout = () => {
-    // let stringyfiedArr = JSON.stringify(unSelectedItemsArr)
-    // AsyncStorage.setItem('MyCart', stringyfiedArr)
-    // setIsVisible(true)
-  }
+  const [btnDisabled, setBtnDisabled] = useState(false)
 
   const isDisabled = () => {
-
-    // if(!total) return true
-    // else if(total > 0) return false
-    // else if(loading) return true
-    // else if(!loading) return false
-    // else if(!shipping) return false
-    // else if(shippingRates.length == 0) return true
-    // else if(shippingRates.length > 0) return false
-
     if(total > 0 && !loading && shipping && CheckoutContextData.shippingFeeRates.length > 0 && balance >= total && CheckoutContextData.voucherErrors.length === 0) return false
     else return true
   }
     
+  const onPressPlaceOrder = () => {
+    let isInvalid = isDisabled()
+
+    if(balance <= total){
+      //INSUFFICIENT FUNDS
+      CheckoutContextData.setAnimatePayments(true)
+      return
+    }
+
+    if(!isInvalid && enabled){
+      onPress()
+      return
+    }else{
+      setBtnDisabled(true)
+    }
+  }
+
   return (
     <>
         {/* <View style={styles.footer}> */}
@@ -44,12 +48,16 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
             <View style= {styles.totalContainer}>
               <Text style = {styles.totalTitle}>Total</Text>
               <Text style = {styles.totalText}>{
-                !total ? FormatToText.currency(0) : FormatToText.currency(total)
+                !total ? FormatToText.currency(0) : FormatToText.currency(RoundOffValue(total))
               }</Text>
             </View>
-            <TouchableOpacity disabled={isDisabled()} style={isDisabled() ? styles.invalidButton : styles.activeButton} onPress={() => {
-              if(enabled) onPress()
-            }}>
+            <TouchableOpacity 
+              disabled={btnDisabled} 
+              style={btnDisabled ? styles.invalidButton : styles.activeButton} 
+              onPress={() => {
+                onPressPlaceOrder()
+              }}
+            >
                 {!loading && <Text style={styles.buttonText}>Place Order</Text>}
                 {loading && <Spinner type="ThreeBounce" size={30} color="#fff" isVisible={loading} />}
             </TouchableOpacity>

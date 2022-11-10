@@ -33,7 +33,7 @@ export const Confirm = ({pinCode, pageIndex, setPageIndex, patchPincodeToktokWal
       type="MPIN"
       showPin={showPin}
       setShowPin={setShowPin}
-      onConfirm={onSubmit}
+      onConfirm={() => onSubmit()}
       onChangeText={val => {
         setConfirmPinCode(val);
         setErrorMessage('');

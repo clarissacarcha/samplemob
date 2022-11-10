@@ -28,10 +28,11 @@ import {
 } from '.././Components';
 import DeleteImg from '../../../../assets/icons/deleteIcon.png';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import {ThrottledOpacity} from '../../../../components_section';
+import {ThrottledHighlight, ThrottledOpacity} from '../../../../components_section';
 import {connect} from 'react-redux';
 import {onError} from '../../../../util/ErrorUtility';
 import {useFocusEffect} from '@react-navigation/native';
+import normalize from 'react-native-normalize';
 
 const imageWidth = Dimensions.get('window').width - 200;
 
@@ -140,7 +141,7 @@ const SavedLocations = ({navigation, session, route}) => {
         style={{alignItems: 'center', justifyContent: 'center'}}>
         <Animated.View style={[styles.deleteBtn]}>
           {/* <Animated.Text>Delete</Animated.Text> */}
-          <Image source={DeleteImg} resizeMode={'contain'} style={{width: 30, height: 30}} />
+          <Image source={DeleteImg} resizeMode={'contain'} style={{width: normalize(23), height: normalize(23)}} />
         </Animated.View>
       </ThrottledOpacity>
     );
@@ -174,7 +175,7 @@ const SavedLocations = ({navigation, session, route}) => {
         operationType={'DELETE'}
       />
       <FlatList
-        style={{paddingTop: 16}}
+        style={{paddingTop: 16, backgroundColor: 'white'}}
         showsVerticalScrollIndicator={false}
         data={data?.prefGetSavedAddresses}
         keyExtractor={item => item.id}
@@ -207,7 +208,7 @@ const SavedLocations = ({navigation, session, route}) => {
       />
       {!route?.params?.getAddressObj && (
         <View style={styles.submitContainer}>
-          <TouchableHighlight onPress={toAddAddress} underlayColor={COLOR} style={{borderRadius: 10}}>
+          <TouchableHighlight onPress={toAddAddress} underlayColor={COLOR} style={{borderRadius: 5}}>
             <View style={styles.submit}>
               <Text style={styles.submitText}>Add Address</Text>
             </View>
@@ -274,8 +275,8 @@ const styles = StyleSheet.create({
   },
   submit: {
     backgroundColor: CONSTANTS.COLOR.ORANGE,
-    height: 50,
-    borderRadius: 10,
+
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -293,6 +294,7 @@ const styles = StyleSheet.create({
     elevation: 24,
   },
   submitText: {
+    marginVertical: 11,
     color: CONSTANTS.COLOR.WHITE,
     fontSize: CONSTANTS.FONT_SIZE.L,
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,

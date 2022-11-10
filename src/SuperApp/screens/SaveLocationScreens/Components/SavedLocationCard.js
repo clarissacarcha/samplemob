@@ -5,7 +5,8 @@ import CONSTANTS from '../../../../common/res/constants';
 import HomeImg from '../../../../assets/icons/SavedAddress/homeFilled.png';
 import OfficeImg from '../../../../assets/icons/SavedAddress/officeFilled.png';
 import CustomImg from '../../../../assets/icons/SavedAddress/customFilled.png';
-import {ThrottledOpacity} from '../../../../components_section';
+import {ThrottledHighlight, ThrottledOpacity} from '../../../../components_section';
+import normalize from 'react-native-normalize';
 
 export const SavedLocationCard = ({onPressAddress, address, lastItem}) => {
   const getTitle = () => {
@@ -33,14 +34,18 @@ export const SavedLocationCard = ({onPressAddress, address, lastItem}) => {
   };
 
   return (
-    <ThrottledOpacity
+    <ThrottledHighlight
       onPress={() => onPressAddress(address)}
       underlayColor={CONSTANTS.COLOR.WHITE_UNDERLAY}
       style={[styles.container, {marginBottom: lastItem ? 26 : 16}]}>
       <View style={styles.cardShadow}>
         <View style={styles.headerContainer}>
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-            <Image source={getImage()} resizeMode={'contain'} style={{width: 20, height: 20, marginRight: 6}} />
+            <Image
+              source={getImage()}
+              resizeMode={'contain'}
+              style={{width: normalize(20), height: normalize(20), marginRight: 6}}
+            />
             <Text style={styles.headerText}>{getTitle()}</Text>
           </View>
           <Text style={styles.headerDefaultText}>{address?.isDefault ? 'Default' : null}</Text>
@@ -57,7 +62,7 @@ export const SavedLocationCard = ({onPressAddress, address, lastItem}) => {
           )}
         </View>
       </View>
-    </ThrottledOpacity>
+    </ThrottledHighlight>
   );
 };
 
@@ -84,13 +89,13 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   headerContainer: {
+    paddingVertical: 16,
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
   headerText: {
     fontSize: CONSTANTS.FONT_SIZE.M,
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
-    marginBottom: 8,
   },
   headerDefaultText: {
     fontSize: CONSTANTS.FONT_SIZE.S,

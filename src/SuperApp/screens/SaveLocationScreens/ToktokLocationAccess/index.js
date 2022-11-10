@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   primaryBtnText: {
     color: CONSTANTS.COLOR.WHITE,
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontWeight: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     textAlign: 'center',
   },
   secondaryBtn: {
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   secondaryBtnText: {
     color: CONSTANTS.COLOR.ORANGE,
     fontSize: CONSTANTS.FONT_SIZE.L,
-    fontWeight: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
     textAlign: 'center',
   },
 });

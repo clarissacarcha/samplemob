@@ -84,7 +84,7 @@ export const ToktokWalletOTPValidator = forwardRef(({navigation, route}, ref) =>
               <Text style={styles.title}>Enter OTP</Text>
             </View>
             <Text style={styles.description}>
-              {'We have sent an OTP code to yourmobile number ending with '}
+              {'We have sent an OTP code to your mobile number ending with '}
               {tokwaAccount.mobileNumber.substr(tokwaAccount.mobileNumber.length - 3)}.
             </Text>
             <NumberInputBox
@@ -98,10 +98,13 @@ export const ToktokWalletOTPValidator = forwardRef(({navigation, route}, ref) =>
                 navigation.setParams({errorMessage: ''});
               }}
             />
-            <TouchableOpacity style={styles.sendOtpContainer}>
+            <TouchableOpacity
+              style={styles.sendOtpContainer}
+              disabled={otpTimer > 0}
+              onPress={otpTimer > 0 ? () => {} : resendRequest}>
               <Text>
                 <Text style={styles.didntReceive}>{'Didn’t receive OTP code? '}</Text>
-                <Text onPress={otpTimer > 0 ? () => {} : resendRequest} style={{textDecorationLine: 'underline'}}>
+                <Text style={{textDecorationLine: 'underline'}}>
                   <Text
                     style={[
                       styles.resendText,
@@ -166,7 +169,7 @@ const styles = StyleSheet.create({
     marginHorizontal: moderateScale(30),
   },
   title: {
-    fontFamily: FONT.REGULAR,
+    fontFamily: FONT.SEMI_BOLD,
     fontSize: FONT_SIZE.XL + 1,
     marginTop: moderateScale(30),
   },

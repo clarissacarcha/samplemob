@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, TouchableHighlight, TextInput} from 'react-native';
 import {YellowButton, VectorIcon, ICON_SET} from 'src/revamp';
 import {useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT} from 'src/graphql';
+import {TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT, TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_SOURCE_OF_WEALTH} from 'toktokwallet/graphql';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
@@ -14,14 +14,14 @@ import {CustomTextInput} from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, SIZE, FONT_SIZE} = CONSTANTS;
 
-export const SourceOfWealth = ({pepInfoAnswer, setPepInfo, errorMessage, setErrorMessage}) => {
+export const SourceOfWealth = ({pepInfoAnswer, setPepInfo, errorMessage, setErrorMessage, isKyc}) => {
   const [data, setData] = useState([]);
   const [visible, setVisible] = useState(false);
   const [selectedData, setSelectedData] = useState(pepInfoAnswer.selected);
   const [sourceOfWealths, setSourceOfWealths] = useState([]);
 
   const [getSourceOfWealth, {loading}] = useLazyQuery(GET_SOURCE_OF_WEALTH, {
-    client: TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT,
+    client: isKyc ? TOKTOK_WALLET_ENTEPRISE_GRAPHQL_CLIENT : TOKTOK_WALLET_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: ({getSourceOfWealth}) => {
       const data = [...getSourceOfWealth, {id: '0', description: 'Others'}];

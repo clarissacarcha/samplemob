@@ -6,6 +6,7 @@ import {PATCH_MPIN_CODE} from 'toktokwallet/graphql';
 import {useMutation} from '@apollo/react-hooks';
 import {usePrompt} from 'src/hooks';
 import {backgrounds} from 'toktokwallet/assets';
+import {getUniqueId, getBrand, getModel} from 'react-native-device-info';
 //UTIL, HELPER
 import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
 import {TransactionUtility} from 'toktokwallet/util';
@@ -43,6 +44,7 @@ export const ToktokWalletMPINCreate = ({navigation, route}) => {
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
     return () => backHandler.remove();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageIndex]);
 
   const [patchMPinCode, {loading}] = useMutation(PATCH_MPIN_CODE, {
@@ -73,13 +75,15 @@ export const ToktokWalletMPINCreate = ({navigation, route}) => {
     },
   });
 
-  const proceed = () => {
+  const proceed = async () => {
     patchMPinCode({
       variables: {
         input: {
           pinCode: pinCode,
           oldMPIN: oldMPIN,
           deviceType: Platform.OS === 'ios' ? 'IOS' : 'Android',
+          deviceName: `${await getBrand()} ${await getModel()}`,
+          deviceId: getUniqueId(),
         },
       },
     });

@@ -83,7 +83,6 @@ export const AddressForm = ({
             : value => setLandMark(value)
         }
         style={styles.input}
-        multiline={true}
         placeholder="e.g. In front of sari-sari station "
         placeholderTextColor={LIGHT}
       />
@@ -144,13 +143,13 @@ export const AddressForm = ({
             flex: 1,
             flexDirection: 'row',
             marginRight: 16,
-            borderRadius: 10,
+            borderRadius: 5,
           }}>
           <View
             style={{
               borderRightColor: '#CCCCCC',
-              borderRightWidth: 2,
-              padding: 16,
+              borderRightWidth: 1,
+              paddingHorizontal: 16,
               justifyContent: 'center',
             }}>
             <Text>+63</Text>
@@ -162,14 +161,19 @@ export const AddressForm = ({
             onChangeText={onMobileChange}
             maxLength={10}
             defaultValue={contactNumber}
-            style={{padding: 16, flex: 1}}
+            style={{paddingVertical: 12, flex: 1}}
             placeholderTextColor={LIGHT}
             returnKeyType="done"
           />
         </View>
         <ThrottledOpacity delay={4000} onPress={() => onPressContacts()}>
-          <View style={{backgroundColor: CONSTANTS.COLOR.ORANGE, padding: 10, borderRadius: 5, alignSelf: 'flex-end'}}>
-            <Image source={ContactIcon} resizeMode={'contain'} style={{height: 35, width: 35}} />
+          <View
+            style={{
+              backgroundColor: CONSTANTS.COLOR.ORANGE,
+              padding: 10,
+              borderRadius: 5,
+            }}>
+            <Image source={ContactIcon} resizeMode={'contain'} style={{height: 30, width: 30}} />
           </View>
         </ThrottledOpacity>
       </View>
@@ -183,20 +187,19 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 8,
     fontSize: CONSTANTS.FONT_SIZE.M,
-    color: MEDIUM,
+    color: CONSTANTS.COLOR.ALMOST_BLACK,
     fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
   },
   sublabel: {
     marginBottom: 8,
     marginHorizontal: 16,
     fontSize: CONSTANTS.FONT_SIZE.S,
-    color: MEDIUM,
-    fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+    color: CONSTANTS.COLOR.ALMOST_BLACK,
   },
   input: {
     marginHorizontal: 16,
     backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
-    borderRadius: 10,
+    borderRadius: 5,
     padding: 16,
     color: DARK,
   },

@@ -7,6 +7,7 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FONT } from '../../../../../res/variables';
 import Icons from '../../../../Components/Icons';
+import { RoundOffValue } from '../../../../helpers';
 import { FormatToText } from '../../../../helpers/formats';
 import { CheckoutContext } from '../ContextProvider';
 
@@ -19,7 +20,8 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
   const [shippingFeeTotal, setShippingFeeTotal] = useState(0);
   const [shippingDiscountTotal, setShippingDiscountTotal] = useState(0);
   const [toggleVouchers, setToggleVouchers] = useState(true);
-  const [numOfVouchers, setOfNumVouchers] = useState(0)
+  const [numOfVouchers, setOfNumVouchers] = useState(0);
+  const [resellerDiscounts, setResellerDiscounts] = useState(0);
 
   useEffect(() => {
     setData(raw);
@@ -71,38 +73,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
       total = total + parseFloat(CheckoutContextData.shippingFeeRates[i].shippingfee);
     }
     setShippingFeeTotal(total);
-  };
-
-  // const getTotalVoucherDeduction = () => {
-  //   let totalDeduction = 0
-  //   CheckoutContextData.shippingVouchers
-  //   .filter((a) => {                
-  //     return a.voucher_id != undefined || a.valid != undefined
-  //   })
-  //   .map((a) => a.deduction ? totalDeduction += a.deduction : totalDeduction += a.discount_totalamount)
-  //   setShippingDiscountTotal(totalDeduction)
-  //   return totalDeduction
-  // }
-
-  const getDiscount = (type) => {
-    if (type == 'shipping') {
-      if(CheckoutContextData.shippingVouchers.length > 0){
-        return CheckoutContextData.shippingVouchers[0]?.valid
-      }else{
-        return false
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (CheckoutContextData) {
-      computeShippingTotal();
-      // computeShippingDiscount();
-      setShippingDiscountTotal(CheckoutContextData.getTotalVoucherDeduction())
-      const numvouchers = CheckoutContextData.shippingVouchers.filter((a) => a.valid != undefined || a.voucher_id != undefined)
-      setOfNumVouchers(numvouchers.length)
-    }
-  }, [CheckoutContextData]);
+  };  
 
   useEffect(() => {
     if (data) {
@@ -112,14 +83,14 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
           console.log(item.data);
           for (let i = 0; i < item.data[0].length; i++) {
             let item2 = item.data[0][i]
-            if(i == 0 && referral && referral?.referralCode != null || referral && referral?.franchiseeCode != null){
+            if(i == 0 && referral && referral?.franchiseeCode != null){
 
-              let shopDiscount = CheckoutContextData.getShopItemDiscount(item2.shopId)
+              let shopDiscount = CheckoutContextData.getShopItemDiscount(item2.shopId, item2.id)
               if(shopDiscount){
                 total = total + parseFloat(item2.product.compareAtPrice)
               }else{
                 // total = total + parseFloat(item2.product.price)
-                total = total + parseFloat(item2.product.price * item2.qty)
+                total = total + parseFloat(item2.product.compareAtPrice * item2.qty)
               }
               
             }else{
@@ -133,21 +104,42 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
   }, [data]);
 
   useEffect(() => {
-    if (merchandiseTotal && shippingFeeTotal) {
-      // if(getDiscount("shipping")){
-      //   setGrandTotal(merchandiseTotal + shippingDiscountTotal);
-      // }else{
-      //   setGrandTotal(merchandiseTotal + shippingFeeTotal);
-      // }
-      setGrandTotal(merchandiseTotal + shippingFeeTotal - shippingDiscountTotal)
+    if (CheckoutContextData) {
+      
+      const numvouchers = CheckoutContextData.shippingVouchers.filter((a) => a.valid != undefined || a.voucher_id != undefined)
+      const resellerDiscount = CheckoutContextData.resellerDiscounts
+            
+      computeShippingTotal();
+      // computeShippingDiscount();
+      setShippingDiscountTotal(CheckoutContextData.getTotalVoucherDeduction())
+      setOfNumVouchers(numvouchers.length)
+
+      if(referral && referral.franchiseeCode != null){
+        setResellerDiscounts(resellerDiscount)
+        console.log("RESELLER DISCOUNT", resellerDiscount)
+        console.log("RESELLER", referral)
+      }
     }
-  }, [merchandiseTotal, shippingFeeTotal, shippingDiscountTotal]);
+  }, [CheckoutContextData]);
+
+  useEffect(() => {
+    if (merchandiseTotal && shippingFeeTotal) {
+      
+      if(referral && referral.franchiseeCode != null){
+        const discounts = shippingDiscountTotal + resellerDiscounts
+        setGrandTotal((merchandiseTotal + shippingFeeTotal) - discounts)
+      }else{
+        setGrandTotal(merchandiseTotal + shippingFeeTotal - shippingDiscountTotal)
+      }
+      
+    }
+  }, [merchandiseTotal, shippingFeeTotal, shippingDiscountTotal, resellerDiscounts]);
 
   const RenderVouchersBreakdown = () => {
 
     // let vouchers = toggleVouchers ? CheckoutContextData.shippingVouchers.slice(0,2) : CheckoutContextData.shippingVouchers
-    let vouchers = toggleVouchers ? [] : CheckoutContextData.shippingVouchers
-    let totalDeduction = CheckoutContextData.getTotalVoucherDeduction()
+    let vouchers = toggleVouchers ? [] : CheckoutContextData.shippingVouchers    
+    let totalDeduction = CheckoutContextData.getTotalVoucherDeduction() + resellerDiscounts
 
     return (
       <>
@@ -158,7 +150,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
               <Icons.AIcon name={toggleVouchers ? 'down' : 'up'} size={14} />
             </TouchableOpacity>
           </View>        
-          <Text style={styles.totalDeductionText}>- {FormatToText.currency(totalDeduction)}</Text>
+          <Text style={styles.totalDeductionText}>- {FormatToText.currency(RoundOffValue(totalDeduction))}</Text>
         </View>        
         <View>          
           {
@@ -173,12 +165,20 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
                   <>
                     <View style={styles.textContainer}>
                       <Text ellipsizeMode='tail' style={styles.voucherNameText}>{item.vname || item.voucher_name}</Text>
-                      <Text style={styles.deductionText}>- {FormatToText.currency(deduction)}</Text>
+                      <Text style={styles.deductionText}>- {FormatToText.currency(RoundOffValue(deduction))}</Text>
                     </View>
                   </>
                 )
 
               })
+          }
+          {
+            referral && referral.franchiseeCode != null && !toggleVouchers ? <>
+            <View style={styles.textContainer}>
+              <Text ellipsizeMode='tail' style={styles.voucherNameText}>Reseller</Text>
+              <Text style={styles.deductionText}>- {FormatToText.currency(RoundOffValue(resellerDiscounts))}</Text>
+            </View>
+            </> : <></>
           }
         </View>
       </>
@@ -213,7 +213,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
           <Text>{FormatToText.currency(merchandiseTotal)}</Text>
         </View>
         
-        {numOfVouchers > 0 && <RenderVouchersBreakdown />}
+        {numOfVouchers > 0 || resellerDiscounts > 0 ? <RenderVouchersBreakdown /> : null}
 
         <View style={styles.divider} />
 
@@ -231,7 +231,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
           } */}
 
             <Text style={styles.totalText}>
-            {FormatToText.currency((merchandiseTotal || 0) + (shippingFeeTotal || 0) - (shippingDiscountTotal || 0))}
+            {FormatToText.currency(RoundOffValue((merchandiseTotal || 0) + (shippingFeeTotal || 0) - (shippingDiscountTotal || 0) - (resellerDiscounts || 0)))}
             </Text>
           
         </View>

@@ -12,6 +12,7 @@ import CONSTANTS from 'common/res/constants';
 import {backgrounds} from 'toktokwallet/assets';
 import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
 import {usePrompt} from 'src/hooks';
+import { getUniqueId , getBrand, getModel } from 'react-native-device-info';
 
 //SELF IMPORTS
 import {ConfirmPin, NewPin, SuccessModal} from './Components';
@@ -81,13 +82,15 @@ export const ToktokWalletUpdatePin = ({navigation, route}) => {
     },
   });
 
-  const proceed = () => {
+  const proceed = async () => {
     patchPinCode({
       variables: {
         input: {
           pinCode: pinCode,
           otp: otp,
           deviceType: Platform.OS === 'ios' ? 'IOS' : 'Android',
+          deviceName: `${await getBrand()} ${await getModel()}`,
+          deviceId: getUniqueId(),
         },
       },
     });

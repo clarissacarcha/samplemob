@@ -20,6 +20,9 @@ export class TransactionUtility {
     alert,
     title = 'Transaction Failed',
     event = null,
+    onPress = null,
+    isNewFt = false,
+    isPop = true,
   }) => {
     const {graphQLErrors, networkError} = error;
 
@@ -104,7 +107,7 @@ export class TransactionUtility {
     }
 
     if (graphQLErrors[0]?.message == 'Verification code already expired.') {
-      const message = `Verification code already expired.`;
+      const message = `OTP already expired.`;
       if (setErrorMessage) {
         setErrorMessage(message);
         return;
@@ -149,12 +152,16 @@ export class TransactionUtility {
         message: promptMessage,
         event: 'TOKTOKBILLSLOAD',
         title: promptTitle,
+        onPress: onPress ? onPress : () => {},
       });
 
-      if (graphQLErrors[0]?.payload?.code == 'fundTransferPending') {
-        return navigation.navigate('ToktokWalletCashOutOtherBanks');
+      if (graphQLErrors[0]?.payload?.code === 'fundTransferPending') {
+        return isNewFt ? navigation.pop() : navigation.navigate('ToktokWalletCashOutOtherBanks');
       }
+      // return;
     }
-    return navigation.pop();
+    if (isPop) {
+      return navigation.pop();
+    }
   };
 }
