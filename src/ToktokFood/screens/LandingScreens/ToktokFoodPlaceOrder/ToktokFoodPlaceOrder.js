@@ -130,7 +130,7 @@ const ToktokFoodPlaceOrder = (props: PropsType): React$Node => {
     );
   };
 
-  if (cartLoading || cartData?.items?.length > 0) {
+  if (cartData?.items?.length > 0) {
     return (
       <Container>
         <HeaderContainer>
