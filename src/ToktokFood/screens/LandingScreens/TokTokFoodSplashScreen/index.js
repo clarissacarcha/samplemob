@@ -101,7 +101,7 @@ const TokTokFoodSplashScreen = () => {
     client: CLIENT,
     onCompleted: ({patchToktokFoodUserId}) => {
       // console.log('patchToktokFoodUserId: ' + JSON.stringify(patchToktokFoodUserId));
-      if (patchToktokFoodUserId.status !== 200) {
+      if (parseInt(patchToktokFoodUserId.status) !== 200) {
         return navigation.replace('SuperAppServiceMaintenance', {service: 'FOOD'});
         // Alert.alert('', 'Something went wrong.', [{text: 'Okay', onPress: () => navigation.pop()}]);
       }
@@ -178,7 +178,7 @@ const TokTokFoodSplashScreen = () => {
     },
     onCompleted: () => {
       setNewInstall();
-      navigation.replace('ToktokFoodLanding');
+      navigation.replace('ToktokFoodHomeScreen');
     },
     onError: () => {
       // Alert.alert('', 'Something went wrong.');
@@ -202,9 +202,11 @@ const TokTokFoodSplashScreen = () => {
       if (temporaryCart.checkHasTemporaryCart.shopid !== 0 && Object.keys(receiver).length !== 3) {
         deleteShopTemporaryCart();
       } else {
+        // navigation.replace('ToktokFoodHomeScreen');
         navigation.replace('ToktokFoodLanding');
       }
     } else {
+      // navigation.replace('ToktokFoodHomeScreen');
       navigation.replace('ToktokFoodLanding');
     }
   };

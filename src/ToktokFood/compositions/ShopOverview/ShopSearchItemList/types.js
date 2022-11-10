@@ -8,4 +8,5 @@ export type PropsType = {
   theme?: Object,
   search: string,
   shopId: string,
+  routes: Array<Object>,
 };

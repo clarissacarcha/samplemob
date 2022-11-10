@@ -12,9 +12,9 @@ import {Header, Icon} from 'react-native-elements';
 export const NHeader: ComponentType<any> = styled(Header).attrs(props => ({
   ...props,
   backgroundColor: props.backgroundColor || props.theme.color.white,
-  containerStyle: {
-    borderBottomWidth: 0,
-  },
+  // containerStyle: {
+  //   borderBottomWidth: 0,
+  // },
 }))``;
 
 export const BackButton: ComponentType<any> = styled(Icon).attrs(props => ({

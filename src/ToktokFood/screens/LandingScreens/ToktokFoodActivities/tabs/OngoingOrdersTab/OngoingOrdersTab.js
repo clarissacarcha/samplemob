@@ -26,7 +26,7 @@ const OngoingOrdersTab = (props: PropsType): React$Node => {
   const [refreshing, setRefreshing] = useState(false);
   const [reloading, setReloading] = useState(false);
   const orderStatus = 'p, po, rp, f';
-  const {data, refetch, loading, fetchMore} = useGetActivities(orderStatus);
+  const {data, refetch, loading, fetchMore} = useGetActivities(orderStatus, 10);
 
   useEffect(() => {
     if (page !== 0 && data?.getTransactions.length > 0) {

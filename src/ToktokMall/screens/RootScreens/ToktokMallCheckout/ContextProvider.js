@@ -76,12 +76,21 @@ export const CheckoutContextProvider = ({children})=> {
 			if(a?.shopid == shopid && a?.appliedToShop == shopid || a?.shop_id == shopid && a?.appliedToShop == shopid){
 				discount = a
 			}else if(a?.shopid == 0 || a?.shop_id == 0){
+				//APPLIED TO ALL
 				let discountedItems = a.product_id?.split(",")
 				discountedItems.map((discountedItem) => {
 					if(discountedItem == productId && a?.appliedToShop == shopid){
 						discount = a
 					}
 				})
+			}else if(a?.shop_id?.includes(",") || a?.shopid?.includes(",")){
+				//MULTIPLE SHOPS
+				let shops = a?.shop_id?.split(",") || a?.shopid?.split(",")
+				if(shops && shops.length > 0){
+					if(shops.includes(shopid + "") && a?.appliedToShop == shopid){
+						discount = a
+					}
+				}
 			}
 		})
 		return discount

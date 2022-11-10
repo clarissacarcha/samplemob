@@ -5,7 +5,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {useLazyQuery} from '@apollo/react-hooks';
 import BackgroundTimer from 'react-native-background-timer';
 
-import {info_ic} from 'toktokfood/assets/images';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 // Components
 import HeaderImageBackground from 'toktokfood/components/HeaderImageBackground';
@@ -386,7 +386,7 @@ const ToktokFoodOrderDetails = ({route, navigation}) => {
         styles.modifiedWrapper,
         {justifyContent: transaction?.paymentMethod === 'COD' ? 'center' : 'flex-start'},
       ]}>
-      <Image resizeMode="center" source={info_ic} style={styles.modifiedIcon} />
+      <MIcon name="info-outline" color="#F6841F" size={22} style={styles.seviceFeeIcon} />
       <Text style={styles.modifiedText}>
         {transaction.paymentMethod === 'COD'
           ? `Total amount for this order has been updated.`
@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
     height: 80,
     paddingHorizontal: 12,
   },
-  modifiedIcon: {height: 20, width: 20, marginRight: 8, marginLeft: 5},
+  seviceFeeIcon: {marginLeft: 5},
   modifiedText: {fontSize: 12, color: '#F6841F', maxWidth: '95%'},
 });
 

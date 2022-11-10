@@ -18,7 +18,7 @@ const ORDER_INSTRUCTIONS_OPTIONS = ['Remove or edit unavailable item', 'Cancel m
 
 export const Variations = ({data, productId}) => {
   const routes = useRoute();
-  const {shopDetails, hasOrderInstruction} = routes.params;
+  const {shopDetails, hasOrderInstruction = '', shopHasOrderInstruction} = routes.params;
   const {
     // totalPrice,
     // productDetails,
@@ -45,14 +45,18 @@ export const Variations = ({data, productId}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    if (data?.orderOnOff < 1 && shopDetails?.orderOnOff < 1) {
-      setOrderInstructions('');
+    console.log('data?.orderOnOff', data?.orderOnOff);
+    if (hasOrderInstruction.length > 0) {
+      setOrderInstructions(hasOrderInstruction);
     } else {
-      if (hasOrderInstruction) {
-        setOrderInstructions(hasOrderInstruction);
+      if (shopDetails?.orderOnOff < 1 || shopHasOrderInstruction < 1) {
+        setOrderInstructions('');
+      }
+      if (data?.orderOnOff < 1) {
+        setOrderInstructions('');
       }
     }
-  }, []);
+  }, [hasOrderInstruction, shopHasOrderInstruction, data]);
 
   useEffect(() => {
     const variants = filterVariants();
@@ -96,9 +100,11 @@ export const Variations = ({data, productId}) => {
     if (Object.values(selected).length > 0) {
       let amount = 0;
       Object.values(selected).map(item => {
-        item.map(val => {
-          amount += val.addon_price;
-        });
+        if (item.length > 0) {
+          item.map(val => {
+            amount += val.addon_price;
+          });
+        }
       });
       setOptionsAmount(amount);
     } else {
@@ -394,21 +400,25 @@ export const Variations = ({data, productId}) => {
   };
 
   const orderInstructionComponent = () => {
-    return (
-      <View style={[styles.variations, {borderBottomWidth: 0}]}>
-        <View style={{...styles.instructionContainer}}>
-          <Text style={{...styles.variationTitle, fontWeight: '400'}}>Order Instruction</Text>
-        </View>
-        <View style={styles.divider} />
-        <Text style={{color: '#525252'}}>If this item is unavailable</Text>
-        <TouchableOpacity activeOpacity={0.9} onPress={() => setIsModalVisible(true)}>
-          <View style={styles.orderInstructionContainer}>
-            <Text>{orderInstructions}</Text>
-            <FA5Icon name={'chevron-down'} size={12} color={'#FFA700'} />
+    if (orderInstructions.length > 0) {
+      return (
+        <View style={[styles.variations, {borderBottomWidth: 0}]}>
+          <View style={{...styles.instructionContainer}}>
+            <Text style={{...styles.variationTitle, fontWeight: '400'}}>Order Instruction</Text>
           </View>
-        </TouchableOpacity>
-      </View>
-    );
+          <View style={styles.divider} />
+          <Text style={{color: '#525252'}}>If this item is unavailable</Text>
+          <TouchableOpacity activeOpacity={0.9} onPress={() => setIsModalVisible(true)}>
+            <View style={styles.orderInstructionContainer}>
+              <Text>{orderInstructions}</Text>
+              <FA5Icon name={'chevron-down'} size={12} color={'#FFA700'} />
+            </View>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    return null;
   };
 
   const orderInstructionModalComponent = () => {
@@ -444,7 +454,7 @@ export const Variations = ({data, productId}) => {
       <Variants />
       <Options />
       {specialInstructionsComponent()}
-      {/* {orderInstructionComponent()} */}
+      {orderInstructionComponent()}
       {orderInstructionModalComponent()}
     </>
   );
