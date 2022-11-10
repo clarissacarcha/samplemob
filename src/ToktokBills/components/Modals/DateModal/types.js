@@ -9,8 +9,9 @@ export type PropsType = {
   visible: boolean,
   setVisible: any,
   value: string,
-  onDateChange: string => void,
+  onDateChange: any,
   isCurrentDate?: boolean,
   minDate?: Date,
   maxDate?: Date,
+  isMinDateToday?: boolean,
 };

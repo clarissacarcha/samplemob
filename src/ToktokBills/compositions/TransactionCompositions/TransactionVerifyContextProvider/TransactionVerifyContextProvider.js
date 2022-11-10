@@ -140,7 +140,7 @@ export const TransactionVerifyContextProvider = (props: PropsType): React$Node =
 
   const isFieldRequired = (key, value, type) => {
     const errorType = type === 'selection' ? 'Please make a selection' : 'This is a required field';
-    const error = value === '' ? errorType : '';
+    const error = !value ? errorType : '';
     changeErrorMessages(key, error);
     return !error;
   };

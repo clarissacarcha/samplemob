@@ -17,8 +17,8 @@ export const Container: ComponentType<any> = styled.View`
 `;
 export const InputContainer: ComponentType<any> = styled.View`
   ${props => `
-        margin-bottom: ${props.size ? moderateScale(Platform.OS === 'ios' ? props.size : 20) : moderateScale(20)}px;
-      `}
+    margin-bottom: ${props.size ? moderateScale(Platform.OS === 'ios' ? props.size : 20) : moderateScale(20)}px;
+  `}
 `;
 export const FeeInformation: ComponentType<any> = styled.Text`
   margin-top: ${moderateScale(10)}px;
@@ -26,10 +26,9 @@ export const FeeInformation: ComponentType<any> = styled.Text`
 `;
 export const RowContainer: ComponentType<any> = styled.View`
   flex-direction: row;
-  justify-content: space-between;
   ${props => `
-        margin-bottom: ${props.size ? moderateScale(Platform.OS === 'ios' ? props.size : 20) : moderateScale(20)}px;
-      `}
+    margin-bottom: ${props.size ? moderateScale(Platform.OS === 'ios' ? props.size : 20) : moderateScale(20)}px;
+  `}
 `;
 export const Space: ComponentType<any> = styled.View`
   margin: ${moderateScale(10)}px;
