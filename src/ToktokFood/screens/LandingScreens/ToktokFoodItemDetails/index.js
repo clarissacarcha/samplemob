@@ -107,8 +107,9 @@ const MainComponent = () => {
             basePrice = parseFloat(selectedVariants?.basePrice);
           } else {
             basePrice = parseFloat(selectedVariants?.price);
-            // basePrice = parseFloat(productDetails?.price || productDetails?.basePrice);
           }
+        } else {
+          basePrice = productDetails?.price || productDetails?.basePrice;
         }
       } else {
         basePrice = productDetails?.price || productDetails?.basePrice;
