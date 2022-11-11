@@ -2,7 +2,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import {View, Text, StyleSheet, TextInput, Platform} from 'react-native';
 import {PolicyNote, OrangeButton} from 'toktokwallet/components';
 import {useAccount} from 'toktokwallet/hooks';
-import {numberFormat, AmountLimitHelper, currencyCode} from 'toktokwallet/helper';
+import {numberFormat, AmountLimitHelper, currencyCode, moderateScale} from 'toktokwallet/helper';
 import {useDispatch} from 'react-redux';
 import CONSTANTS from 'common/res/constants';
 import {useAlert, usePrompt} from 'src/hooks';
@@ -15,7 +15,7 @@ const inputAmountLength = {
   1: 90,
   2: 90,
   3: 90,
-  4: 90,
+  4: 100,
   5: 120,
   6: 140,
   7: 150,
@@ -157,18 +157,20 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
         }}
       />
       <View style={styles.container}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 16}}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: 10}}>Current Balance </Text>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, marginTop: 10}}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: moderateScale(16)}}>
+          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: moderateScale(10)}}>
+            Current Balance{' '}
+          </Text>
+          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, marginTop: moderateScale(10)}}>
             {currencyCode}
             {numberFormat(tokwaAccount.wallet.balance)}
           </Text>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 16}}>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: 10}}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: moderateScale(16)}}>
+          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR, marginTop: moderateScale(10)}}>
             Remaining Limit to Cash In{' '}
           </Text>
-          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, marginTop: 10}}>
+          <Text style={{fontSize: FONT_SIZE.M, fontFamily: FONT.BOLD, marginTop: moderateScale(10)}}>
             {currencyCode}
             {numberFormat(remainingCashIn)}
           </Text>
@@ -177,9 +179,11 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
           <View style={styles.amountcontent}>
             <View style={{flexDirection: 'row'}}>
               <View style={styles.input}>
-                <Text style={{fontSize: 40, marginRight: 10}}>{currencyCode}</Text>
+                <Text style={{fontSize: moderateScale(40), marginRight: moderateScale(10)}}>{currencyCode}</Text>
                 {!isFocus && amount != '' && (
-                  <Text style={{fontSize: 40, marginLeft: 10}}>{amount ? numberFormat(amount) : '0.00'}</Text>
+                  <Text style={{fontSize: moderateScale(40), marginLeft: moderateScale(10)}}>
+                    {amount ? numberFormat(amount) : '0.00'}
+                  </Text>
                 )}
                 <TextInput
                   onFocus={() => setIsFocus(true)}
@@ -197,9 +201,9 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
                   textAlign="right"
                   textAlignVertical="center"
                   style={{
-                    fontSize: 40,
-                    marginLeft: 5,
-                    width: inputWidth,
+                    fontSize: moderateScale(40),
+                    marginLeft: moderateScale(5),
+                    width: moderateScale(inputWidth),
                     ...(!isFocus && amount != '' ? {position: 'absolute', color: 'transparent', zIndex: 1} : {}),
                   }}
                 />
@@ -211,15 +215,15 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
                   textAlign: 'center',
                   fontFamily: FONT.REGULAR,
                   color: 'red',
-                  marginTop: 10,
-                  marginBottom: 10,
+                  marginTop: moderateScale(10),
+                  marginBottom: moderateScale(10),
                   fontSize: FONT_SIZE.S,
                 }}>
                 {message}
               </Text>
             )}
-            <Text style={{marginTop: 10}}>Cash In Amount</Text>
-            <Text style={{fontFamily: FONT.REGULAR, color: 'red', marginTop: 5, fontSize: FONT_SIZE.S}}>
+            <Text style={{marginTop: moderateScale(10)}}>Cash In Amount</Text>
+            <Text style={{fontFamily: FONT.REGULAR, color: 'red', marginTop: moderateScale(5), fontSize: FONT_SIZE.S}}>
               {maxLimitMessage}
             </Text>
           </View>
@@ -245,11 +249,11 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingHorizontal: moderateScale(16),
+    paddingBottom: moderateScale(16),
   },
   headerReminder: {
-    padding: 16,
+    padding: moderateScale(16),
     backgroundColor: '#FFFCF4',
     flexDirection: 'row',
   },
@@ -257,23 +261,23 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: moderateScale(50),
   },
   amountcontent: {
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: 30,
+    paddingTop: moderateScale(30),
     // width:width * 0.7,
     // alignSelf:"center"
   },
   cashinbutton: {
-    height: 50,
+    height: moderateScale(50),
     width: '100%',
   },
   input: {
-    borderRadius: 5,
-    height: 70,
+    borderRadius: moderateScale(5),
+    height: moderateScale(70),
     flex: 1,
     justifyContent: 'center',
     ...(Platform.OS === 'ios' ? {alignItems: 'center'} : {}),
