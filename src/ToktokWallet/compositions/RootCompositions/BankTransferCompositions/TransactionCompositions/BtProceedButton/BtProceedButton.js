@@ -31,6 +31,8 @@ const BtProceedButton = (props: PropsType): React$Node => {
     changeErrorMessages,
     postComputeConvenienceFee,
     computeConvenienceFeeLoading,
+    setIsPromptModalError,
+    patchRemoveAccountLoading,
   } = useContext(BtVerifyContext);
   const {amount, emailAddress, accountName, accountNumber, purpose} = data;
 
@@ -103,18 +105,6 @@ const BtProceedButton = (props: PropsType): React$Node => {
           changeErrorMessages('amount', error);
         },
       });
-      if (fees.totalServiceFee === 0 && amount > 0) {
-        await postComputeConvenienceFee({
-          variables: {
-            input: {
-              amount: +amount,
-              cashOutBankId: bankDetails.id,
-            },
-          },
-        }).then(res => {
-          feeData = res.data.postComputeConvenienceFee;
-        });
-      }
     }
 
     if (
@@ -125,27 +115,42 @@ const BtProceedButton = (props: PropsType): React$Node => {
       checkLimit &&
       !computeConvenienceFeeLoading
     ) {
-      const transactionDetails = {
-        accountName,
-        accountNumber,
-        emailAddress,
-        bankDetails,
-        purpose: purpose.trim(),
-        providerServiceFee: fees.providerServiceFee ? fees.providerServiceFee : feeData.providerServiceFee,
-        systemServiceFee: fees.systemServiceFee ? fees.systemServiceFee : feeData.systemServiceFee,
-        totalServiceFee: fees.totalServiceFee
-          ? fees.totalServiceFee
-          : parseFloat(feeData.providerServiceFee) + parseFloat(feeData.systemServiceFee),
-        type: fees.type,
-        amount: parseFloat(amount),
-      };
-      changeDataValue('purpose', purpose.trim());
-
+      if (fees.totalServiceFee === 0 && amount > 0) {
+        setIsPromptModalError(true);
+        await postComputeConvenienceFee({
+          variables: {
+            input: {
+              amount: +amount,
+              cashOutBankId: bankDetails.id,
+            },
+          },
+        }).then(res => {
+          setIsPromptModalError(false);
+          feeData = res?.data ? res.data.postComputeConvenienceFee : res;
+        });
+      }
       setLoading(false);
-      navigation.navigate('ToktokWalletBankTransferPaymentSummary', {
-        transactionDetails,
-        screenLabel,
-      });
+      if (feeData) {
+        const transactionDetails = {
+          accountName,
+          accountNumber,
+          emailAddress,
+          bankDetails,
+          purpose: purpose.trim(),
+          providerServiceFee: fees.providerServiceFee ? fees.providerServiceFee : feeData.providerServiceFee,
+          systemServiceFee: fees.systemServiceFee ? fees.systemServiceFee : feeData.systemServiceFee,
+          totalServiceFee: fees.totalServiceFee
+            ? fees.totalServiceFee
+            : parseFloat(feeData.providerServiceFee) + parseFloat(feeData.systemServiceFee),
+          type: fees.type,
+          amount: parseFloat(amount),
+        };
+        changeDataValue('purpose', purpose.trim());
+        navigation.navigate('ToktokWalletBankTransferPaymentSummary', {
+          transactionDetails,
+          screenLabel,
+        });
+      }
     } else {
       setLoading(false);
     }
@@ -153,7 +158,7 @@ const BtProceedButton = (props: PropsType): React$Node => {
 
   return (
     <>
-      <AlertOverlay visible={loading} />
+      <AlertOverlay visible={loading || patchRemoveAccountLoading} />
       <OrangeButton label="Proceed" onPress={onPressProceed} hasShadow />
     </>
   );

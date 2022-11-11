@@ -19,16 +19,20 @@ import {
   TransferableAndNonTransferableBalance,
 } from 'toktokwallet/components';
 import {BankTransferBankList, BankTransferFavoriteList} from 'toktokwallet/compositions';
+import {AlertOverlay} from 'src/components';
 
 //GRAPHQL & HOOKS
-import {useLazyQuery} from '@apollo/react-hooks';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {useNavigation, useFocusEffect, useRoute} from '@react-navigation/native';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_HIGHLIGHTED_BANKS, GET_BANK_ACCOUNTS_PAGINATE} from 'toktokwallet/graphql';
+import {GET_HIGHLIGHTED_BANKS, GET_BANK_ACCOUNTS_PAGINATE, POST_COMPUTE_CONVENIENCE_FEE} from 'toktokwallet/graphql';
+import {TransactionUtility} from 'toktokwallet/util';
+import {usePrompt} from 'src/hooks';
 
 const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const route = useRoute();
+  const prompt = usePrompt();
   const screenLabel = route.params?.screenLabel ? route.params.screenLabel : 'Bank Transfer';
 
   navigation.setOptions({
@@ -69,21 +73,44 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
     },
   );
 
-  // useFocusEffect(
-  //   useCallback(
-  //     function getData() {
-  //       getBankAccountsPaginate({
-  //         variables: {
-  //           input: {
-  //             afterCursorId: null,
-  //             afterCursorUpdatedAt: null,
-  //           },
-  //         },
-  //       });
-  //     },
-  //     [getBankAccountsPaginate],
-  //   ),
-  // );
+  const [postCheckFavorite, {loading: postCheckFavoriteLoading}] = useMutation(POST_COMPUTE_CONVENIENCE_FEE, {
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onError: error => {
+      const {graphQLErrors} = error;
+      TransactionUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        isPop: false,
+        message:
+          graphQLErrors[0]?.payload?.errorCode === 'BANK_DEACTIVATED'
+            ? 'Bank is no longer available. This will be removed from your favorites.'
+            : '',
+        onPress: () => {
+          if (graphQLErrors[0]?.payload?.errorCode === 'BANK_DEACTIVATED') {
+            onRefresh();
+          }
+        },
+      });
+    },
+    onCompleted: fee => {},
+  });
+
+  useFocusEffect(
+    useCallback(
+      function getData() {
+        getBankAccountsPaginate({
+          variables: {
+            input: {
+              afterCursorId: null,
+              afterCursorUpdatedAt: null,
+            },
+          },
+        });
+      },
+      [getBankAccountsPaginate],
+    ),
+  );
 
   useEffect(() => {
     handleGetData();
@@ -119,11 +146,12 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
             data={favoriteBankAccounts}
             onRefreshFavorite={onRefresh}
             screenLabel={screenLabel}
+            postCheckFavorite={postCheckFavorite}
           />
         )}
       </>
     );
-  }, [favoriteBankAccounts, onRefresh, screenLabel]);
+  }, [favoriteBankAccounts, onRefresh, screenLabel, postCheckFavorite]);
 
   const ListBillerTypesComponent = useMemo(() => {
     if (banks.length === 0) {
@@ -149,6 +177,7 @@ const ToktokWalletBankTransferHome = (props: PropsType): React$Node => {
   }
   return (
     <CheckIdleState>
+      <AlertOverlay visible={postCheckFavoriteLoading} />
       <BackgroundImage>
         {((banksLoading && banks.length === 0) ||
           (getFavoritesLoading && favoriteBankAccounts.length === 0 && !isMounted)) &&

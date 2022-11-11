@@ -31,13 +31,10 @@ import {useMutation} from '@apollo/react-hooks';
 import {usePrompt} from 'src/hooks';
 import {TransactionUtility} from 'toktokwallet/util';
 
-const MainComponent = ({route, favoriteDetails}) => {
+const MainComponent = ({route, favoriteDetails, onRefreshFavorite}) => {
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const prompt = usePrompt();
-  const [favoriteId, setFavoriteId] = useState(favoriteDetails ? favoriteDetails.id : 0);
-  const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
-  const onRefreshFavorite = route.params?.onRefreshFavorite ? route.params.onRefreshFavorite : null;
   const screenLabel = route.params?.screenLabel ? route.params.screenLabel : 'Bank Transfer';
 
   navigation.setOptions({
@@ -47,7 +44,8 @@ const MainComponent = ({route, favoriteDetails}) => {
   });
 
   const {getMyAccountLoading, getMyAccount} = useAccount({isOnErrorAlert: false});
-  const {data, changeErrorMessages, fees, errorMessages} = useContext(BtVerifyContext);
+  const {data, changeErrorMessages, fees, errorMessages, favoriteId, setFavoriteId, favoriteModal, setFavoriteModal} =
+    useContext(BtVerifyContext);
   const {user} = useSelector(state => state.session);
   const {bankDetails} = route.params;
 
@@ -167,11 +165,13 @@ const MainComponent = ({route, favoriteDetails}) => {
 const ToktokWalletBankTransferTransaction = (props: PropsType): React$Node => {
   const route = useRoute();
   const favoriteDetails = route.params?.favoriteDetails ? route.params.favoriteDetails : null;
+  const onRefreshFavorite = route.params?.onRefreshFavorite ? route.params.onRefreshFavorite : null;
+  const event = route.params?.event ? route.params.event : '';
 
   return (
     <CheckIdleState>
-      <BtVerifyContextProvider favoriteDetails={favoriteDetails}>
-        <MainComponent route={route} favoriteDetails={favoriteDetails} />
+      <BtVerifyContextProvider event={event} favoriteDetails={favoriteDetails} onRefreshFavorite={onRefreshFavorite}>
+        <MainComponent route={route} favoriteDetails={favoriteDetails} onRefreshFavorite={onRefreshFavorite} />
       </BtVerifyContextProvider>
     </CheckIdleState>
   );
